@@ -3,7 +3,7 @@ function placeMenu() {
 }
 
 function getMenu() {
-	return	'<script type="text/javascript" src="js/mainmenu.js"></script>' +
+	return	'<script type="text/javascript" src="js/expanding_menu.js"></script>' +
 			'<link rel="stylesheet" href="css/menu/menu.css">' +
 			'<div id="menu">' +
 			'	<h1>' +
@@ -14,7 +14,7 @@ function getMenu() {
 			'			class="contentLink">Home</a></li>' +
 			'		<li class="header"><h3>Classes I\'m In</h3></li>' +
 			'		<!-- listofClasses is appended by the js in mainmenu.js . It uses GAPI to get the classes-->' +
-			'		<li onclick="listMenuClasses()">' +
+			'		<li onclick="list_menu_classes()">' +
 			'			<div class="class_button">' +
 			'				<img id="expandable_arow_button" src="images/menu/triangle_right.png" width="15" height="15">' +
 			'				<a href="javascript:void(0)">View All Classes</a>' +

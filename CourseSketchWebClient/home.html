@@ -4,10 +4,10 @@
     <title>Welcome!</title>
     <link rel="stylesheet" href="css/jquery/jquery.mobile-1.0rc2.min.css">
     <link rel="stylesheet" href="css/home.css">
-    <link rel="stylesheet" href="css/assignments/assignment.css">
+   	<link rel="stylesheet" href="css/school/school_item.css">
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
-    <script type="text/javascript" src="js/menu/menu.js"></script>
+    <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
     <script type="text/javascript" src="js/menu/add_menu.js"></script>
     <script type="text/javascript" src="js/upcoming_assignments/add_upcoming_home.js"></script>
     <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
@@ -17,8 +17,11 @@
 	  		addLoadEvent(
 					function()
 					{
+						if(!is_touch) {
+							disable_menu_swiping();
+						}
 						placeMenu();
-						placeAssignments();
+						placeAssignments('');
 					}
 				);
 	</script>
@@ -37,6 +40,7 @@
     </div>
     <!-- Center Section -->
     <div id="home">
+    	<link rel="stylesheet" href="css/school/assignments/assignment_list.css">
     	<div id="due_assignments">
 		</div>
         <h2>Most Recent Assignment</h2>

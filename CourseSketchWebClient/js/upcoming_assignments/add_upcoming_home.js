@@ -1,5 +1,5 @@
-function placeAssignments() {
-	document.getElementById('due_assignments').innerHTML = createAssignments();
+function placeAssignments(id) {
+	document.getElementById('due_assignments' + id).innerHTML = createAssignments();
 }
 
 function createAssignments() {
@@ -11,7 +11,7 @@ function createAssignments() {
 		var dueDate = list[2];
 		var dateType = getDateType(dueDate, currentDate);
 		html+='<li>';
-		html+='<div class="assignment">';
+		html+='<div class="assignment_item school_item">';
 		html+='	<div class="text">';
 		html+='		<h3 class="name"><a href="'+list[0][1]+'">'+list[0][0]+'</a></h3>';
 		html+='		<h1 class="'+dateType+'">'+dueDate+'</h1>';

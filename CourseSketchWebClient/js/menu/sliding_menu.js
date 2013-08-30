@@ -26,7 +26,7 @@
 
 //Swiping motion for phone
     $('#menu, .pages').live("swipeleft", function () {
-        if (menuStatus) {
+        if (menuStatus && enable_menu_swiping) {
             $(".ui-page-active").animate({
                 marginLeft: "0px",
             }, 300, function () {
@@ -36,7 +36,7 @@
     });
 
     $('.pages').live("swiperight", function () {
-        if (!menuStatus) {
+        if (!menuStatus && enable_menu_swiping) {
             $(".ui-page-active").animate({
                 marginLeft: "200px",
             }, 300, function () {
@@ -61,3 +61,12 @@
         }
     });
 });
+
+var enable_menu_swiping = true;
+function enable_menu_swiping() {
+	enable_menu_swiping = true;
+}
+
+function disable_menu_swiping() {
+	enable_menu_swiping = false;
+}
