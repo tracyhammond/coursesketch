@@ -1,0 +1,68 @@
+body{
+    -webkit-text-size-adjust:none;
+    background: #5a5959 url(../images/menuBg.gif) top left repeat-y;
+}
+
+.showMenu {
+    color: rgb(126, 181, 214);
+}
+.pages #home{
+    padding-left: 20px;
+}
+
+.pages #home a {
+    text-decoration: none;
+    color: rgb(42,117,169);
+}
+
+.pages #home  a:hover {
+    color: rgb(60,101,134);
+}
+
+.pages h1 {
+    color: #A9D0F5;
+    font-size: large !important;
+}
+
+.pages h2 {
+    font-family: 'Baskerville Old Face';
+}
+
+#home h3 {
+    color: rgb(248,248,248)  ;
+}
+
+.pages h3{
+    margin:0;
+    font-size:20px;
+}
+
+.contentWrap{
+    width:310px;
+    margin: 0 auto;
+    padding:15px 5px 0px 5px;
+}
+
+.ui-body-c{
+	background-color:#fff;
+    text-shadow: none;
+}
+
+.ui-bar-a{
+	background:  rgb(128, 128, 128);
+	border-bottom:solid #878787 1px !important;
+	height:42px !important;
+    text-shadow: none;
+}
+
+.active{
+	color: #fff;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(30,29,29,1)), color-stop(21%,rgba(56,55,55,1)));
+	text-shadow: 0px 1px 1px #000;
+}
+
+.ui-btn-corner-all {
+	-webkit-border-radius: 0 !important;
+	border-radius: 0 !important;
+}
+
