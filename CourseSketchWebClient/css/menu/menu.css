@@ -85,6 +85,38 @@
 	float:left;
 }
 
-#menu ul li.inner_list {
+#menu ul li.inner_list, #menu ul li.inner_list:hover,#menu ul li.inner_list:active  {
+	border-bottom:none;
+}
+
+.inner_menu_list ul {
+	position: relative;
+	left: 10%;
+}
+
+
+.inner_menu_list {
+	border-bottom: solid #333 1px;
+
+	background-image: linear-gradient(left , rgb(61,61,61) 0%, rgb(90,89,89) 10%);
+	background-image: -o-linear-gradient(left , rgb(61,61,61) 0%, rgb(90,89,89) 10%);
+	background-image: -moz-linear-gradient(left , rgb(61,61,61) 0%, rgb(90,89,89) 10%);
+	background-image: -webkit-linear-gradient(left , rgb(61,61,61) 0%, rgb(90,89,89) 10%);
+	background-image: -ms-linear-gradient(left , rgb(61,61,61) 0%, rgb(90,89,89) 10%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		right bottom,
+		color-stop(0, rgb(61,61,61)),
+		color-stop(0.1, rgb(90,89,89))
+	);
+}
+
+/**
+	This hides the shadow and border so that tabbed list look nice.
+*/
+#menu ul li.inner_list .inner_menu_list ul li:last-child {
+	box-shadow:none;
 	border-bottom:none;
 }
