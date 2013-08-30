@@ -13,9 +13,9 @@ function getMenu() {
 			'			class="contentLink">Home</a></li>' +
 			'		<li class="header"><h3>Classes I\'m In</h3></li>' +
 			'		<!-- listofClasses is appended by the js in add_menu.js . It uses class_data.js to get the classes -->' +
-			'		<li onclick="list_menu_classes()">' +
-			'			<div class="class_button">' +
-			'				<img id="expandable_arow_button" src="images/menu/triangle_right.png" width="15" height="15">' +
+			'		<li onclick="list_menu_classes('+"0"+')">' +
+			'			<div class="expandable_button">' +
+			'				<img id="expandable_arow_button0" src="images/menu/triangle_right.png" width="15" height="15">' +
 			'				<a href="javascript:void(0)">View All Classes</a>' +
 			'			</div>' +
 			'		</li>' +
@@ -33,16 +33,19 @@ function getMenu() {
 			'</div>';
 }
 
-function list_menu_classes() {
+function list_menu_classes(id) {
 	var html = '';
 	var class_list = document.getElementById('list_of_classes');
+	var expanding_button = document.getElementById('expandable_arow_button' + id);
 	if(class_list_showing) {
 		class_list_showing = false;
 		class_list.style.display = "none";
+		expanding_button.src = "images/menu/triangle_right.png";
 	} else {
 		class_list_showing = true;
 		html = createClassList(false, false);
 		class_list.style.display = "block";
+		expanding_button.src = "images/menu/triangle_down.png";
 		// ADD CLASSES HERE
 	}
 	class_list.innerHTML = html;
