@@ -79,6 +79,7 @@
 
 #menu ul li.inner_list, #menu ul li.inner_list:hover,#menu ul li.inner_list:active  {
 	border-bottom:none;
+	cursor:default;
 }
 
 .inner_menu_list ul {
@@ -106,6 +107,7 @@
 		color-stop(0, rgb(61,61,61)),
 		color-stop(0.1, rgb(90,89,89))
 	);
+	cursor:default;
 }
 
 /**
