@@ -1,8 +1,10 @@
 package display.menu;
 
+import java.awt.Color;
 import java.awt.Font;
-import java.awt.font.TextAttribute;
-import java.util.Map;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -17,14 +19,18 @@ import display.SideBorder;
 import display.style.Colors;
 
 public class MenuItemPanel extends JPanel {
-	int mySize;
-	private JComponent mLabel;
+	boolean isHeader;
 
 	public MenuItemPanel(ActionableItem actionableItem, boolean isHighlighted,
 			boolean lastItem) {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		setBackground(isHighlighted);
-		add(createLabelPanel(actionableItem));
+		if (actionableItem instanceof HeaderMenuItem) {
+			isHeader = true;
+			add(createLabelPanel(actionableItem));
+		} else {
+			add(createLabel(actionableItem));
+		}
 		setBorder(lastItem);
 		// setPreferredSize(getPreferredSize());
 	}
@@ -32,7 +38,7 @@ public class MenuItemPanel extends JPanel {
 	private void setBorder(boolean lastItem) {
 		Border inside = new SideBorder(false, false, false, true,
 				Colors.MENU_ITEM_BORDER);
-		if (lastItem) {
+		if (false) {
 			setBorder(BorderFactory.createCompoundBorder(
 					new SideBorder(false, false, false, true,
 							Colors.BOTTOM_MENU_ITEM_OUTSIDE_BORDER), inside));
@@ -51,28 +57,41 @@ public class MenuItemPanel extends JPanel {
 
 	private JPanel createLabelPanel(ActionableItem actionableItem) {
 		final JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		panel.setOpaque(false);
+		panel.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 0));
 		JLabel label = createLabel(actionableItem);
 		panel.add(label);
-		mLabel = panel;
 		return panel;
 	}
 
 	private JLabel createLabel(ActionableItem actionableItem) {
 		JLabel label = new JLabel(actionableItem.getLabel());
-
 		if (actionableItem instanceof HeaderMenuItem) {
-			Font font = new Font("arial", Font.ITALIC, 14);
-			Map attributes = font.getAttributes();
-			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-			label.setFont(font.deriveFont(attributes));
+			label.setFont(new Font("arial", Font.BOLD + Font.ITALIC, 14));
 			label.setForeground(Colors.HEADER_3_TEXT);
-			label.setBorder(BorderFactory.createEmptyBorder(-3, 3, -3, 0));
+			label.setBorder(new SideBorder(false, false, false, true,
+					Colors.HEADER_3_TEXT));
 		} else {
 			label.setFont(new Font("arial", Font.BOLD, 14));
 			label.setForeground(Colors.MENU_ITEM_TEXT);
-			label.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 0));
+			label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
 		}
 		return label;
 	}
+
+
+	@Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if(isHeader) {
+	        Graphics2D g2d = (Graphics2D) g;
+	        int w = getWidth();
+	        int h = getHeight();
+	        GradientPaint gp = new GradientPaint(
+	            0, 0, Colors.MENU_BACKGROUND, 0, h, Colors.MENU_GRADIENT_DARK);
+	        g2d.setPaint(gp);
+	        g2d.fillRect(0, 0, w, h);
+        }
+    }
 }

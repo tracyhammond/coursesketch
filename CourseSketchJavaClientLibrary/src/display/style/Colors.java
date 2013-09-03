@@ -4,6 +4,7 @@ import java.awt.Color;
 
 public class Colors {
 	public static final Color MENU_BACKGROUND = new Color(0x5a5959);
+	public static final Color MENU_GRADIENT_DARK = new Color(0x424141);
 	public static final Color MENU_ITEM_HIGHLIGHT_BACKGROUND = new Color(
 			0x716f6f);
 	public static final Color MENU_ITEM_BORDER = new Color(0x333333);
