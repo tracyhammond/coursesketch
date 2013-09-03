@@ -1,31 +1,43 @@
 package display.menu;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.plaf.basic.BasicTreeUI;
+import javax.swing.tree.AbstractLayoutCache;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import menu.ActionableItem;
 import menu.MenuBackend;
 import menu.list.ExpandableMenuItem;
 import menu.list.HeaderMenuItem;
+import display.style.Colors;
 
-public class MenuDisplay extends MenuBackend {
-
-	JPanel panel;
-	JTree tree;
+public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
+	private JPanel panel;
+	private JTree tree;
 	private DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 
 	public MenuDisplay() {
 		addFakeMenu();
 		tree = new JTree(root);
+		tree.setRootVisible(false);
+		tree.setUI(getTreeUI()); // This must be set before the Renderer.
+		tree.setCellRenderer(this);
+		tree.setBackground(Colors.MENU_BACKGROUND);
+		tree.setRowHeight(0); // 
 		panel = new JPanel();
+		panel.setBackground(Color.green);
 		panel.add(tree);
 		addListener();
 	}
@@ -67,10 +79,10 @@ public class MenuDisplay extends MenuBackend {
 		return panel;
 	}
 
-
 	public void addListener() {
 		MouseListener ml = new MouseAdapter() {
-			ActionableTreeNode highlight = null;
+			ActionableTreeNode highlightedNode = null;
+
 			@Override
 			public void mousePressed(MouseEvent e) {
 				TreePath selectedPath = tree.getPathForLocation(e.getX(),
@@ -80,11 +92,13 @@ public class MenuDisplay extends MenuBackend {
 						DefaultMutableTreeNode node = ((DefaultMutableTreeNode) selectedPath
 								.getLastPathComponent());
 						if (node == root) {
-							// Do nothing
+							// Do nothing.
 							return;
 						}
-						ActionableTreeNode realNode = (ActionableTreeNode) node;
-						realNode.onClickItem.executeAction();
+						if (node instanceof ActionableTreeNode) {
+							((ActionableItem) node.getUserObject())
+									.executeAction();
+						}
 					} else if (e.getClickCount() == 2) {
 						// Ignore double click for now.
 					}
@@ -99,15 +113,80 @@ public class MenuDisplay extends MenuBackend {
 					DefaultMutableTreeNode node = ((DefaultMutableTreeNode) selectedPath
 							.getLastPathComponent());
 					if (node != root) {
-						ActionableTreeNode realNode = (ActionableTreeNode) node;
-						realNode.onClickItem.executeAction();
-						// HIGHLIGHT
+						if (node instanceof ActionableTreeNode) {
+							// Highlight.
+							if (highlightedNode != null) {
+								highlightedNode.clearHighlight();
+							}
+							if(!(node.getUserObject() instanceof HeaderMenuItem)) {
+								highlightedNode = ((ActionableTreeNode) node);
+								highlightedNode.highlight();
+							}else {
+								highlightedNode = null;
+							}
+						}
+						tree.repaint();
 						return;
 					}
 				}
+				// Clear the highlight.
+				if (highlightedNode != null) {
+					highlightedNode.clearHighlight();
+					highlightedNode = null;
+					tree.repaint();
+				}
 			}
-			// CLEAR HIGHLIGHT
 		};
 		tree.addMouseListener(ml);
+		tree.addMouseMotionListener((MouseMotionListener) ml);
+	}
+
+	/**
+	 * Makes a Component depending on the type of TreeNode it is.
+	 *
+	 * This supports Three different types,
+	 *
+	 */
+	@Override
+	public Component getTreeCellRendererComponent(JTree tree, Object value,
+			boolean selected, boolean expanded, boolean leaf, int row,
+			boolean hasFocus) {
+		TreePath path = tree.getPathForRow(row);
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path
+				.getLastPathComponent();
+		if (node == root || !(node instanceof ActionableTreeNode)) {
+			return new JPanel();
+		}
+		ActionableTreeNode actionableNode = (ActionableTreeNode) node;
+		ActionableItem actionableItem = (ActionableItem) actionableNode
+				.getUserObject();
+		System.out.println(row +" "+ actionableItem.getLabel());
+		MenuItemPanel panel = new MenuItemPanel(actionableItem, actionableNode.isHighlighted(), true);
+		return panel;
+	}
+
+	/**
+	 * Creates a {@link BasicTreeUI} that ensures that the width of the Node expands to  the right.
+	 *
+	 * All nodes that implement this will be expanded to the right most edge of the {@link JTree}.
+	 */
+	public BasicTreeUI getTreeUI() {
+		return new BasicTreeUI() {
+			@Override
+			protected AbstractLayoutCache.NodeDimensions createNodeDimensions() {
+				return new NodeDimensionsHandler() {
+					@Override
+					public Rectangle getNodeDimensions(Object value, int row,
+							int depth, boolean expanded, Rectangle size) {
+						Rectangle dimensions = super.getNodeDimensions(value,
+								row, depth, expanded, size);
+						dimensions.width = Math.max(200, tree.getWidth()
+								- getRowX(row, depth));
+						return dimensions;
+					}
+				};
+
+			}
+		};
 	}
 }
