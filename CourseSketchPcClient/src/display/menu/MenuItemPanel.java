@@ -1,6 +1,5 @@
 package display.menu;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -8,7 +7,6 @@ import java.awt.Graphics2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -19,14 +17,14 @@ import display.SideBorder;
 import display.style.Colors;
 
 public class MenuItemPanel extends JPanel {
-	boolean isHeader;
+	private boolean mIsHeader;
 
 	public MenuItemPanel(ActionableItem actionableItem, boolean isHighlighted,
 			boolean lastItem) {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		setBackground(isHighlighted);
 		if (actionableItem instanceof HeaderMenuItem) {
-			isHeader = true;
+			mIsHeader = true;
 			add(createLabelPanel(actionableItem));
 		} else {
 			add(createLabel(actionableItem));
@@ -38,10 +36,9 @@ public class MenuItemPanel extends JPanel {
 	private void setBorder(boolean lastItem) {
 		Border inside = new SideBorder(false, false, false, true,
 				Colors.MENU_ITEM_BORDER);
-		if (false) {
-			setBorder(BorderFactory.createCompoundBorder(
-					new SideBorder(false, false, false, true,
-							Colors.BOTTOM_MENU_ITEM_OUTSIDE_BORDER), inside));
+		if (mIsHeader) {
+			setBorder(new SideBorder(false, true, false, false,
+					Colors.BOTTOM_MENU_ITEM_OUTSIDE_BORDER));
 		} else {
 			setBorder(inside);
 		}
@@ -84,14 +81,14 @@ public class MenuItemPanel extends JPanel {
 	@Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if(isHeader) {
+        if(mIsHeader) {
 	        Graphics2D g2d = (Graphics2D) g;
-	        int w = getWidth();
-	        int h = getHeight();
+	        float w = getWidth();
+	        float h = getHeight();
 	        GradientPaint gp = new GradientPaint(
-	            0, 0, Colors.MENU_BACKGROUND, 0, h, Colors.MENU_GRADIENT_DARK);
+	            0, 0, Colors.MENU_BACKGROUND, 0, h*.85f , Colors.MENU_GRADIENT_DARK);
 	        g2d.setPaint(gp);
-	        g2d.fillRect(0, 0, w, h);
+	        g2d.fillRect(0, 0, (int)w, (int)h);
         }
     }
 }

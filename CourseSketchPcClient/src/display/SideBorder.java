@@ -42,23 +42,23 @@ import java.awt.Insets;
 import javax.swing.border.Border;
 
 public class SideBorder implements Border {
-	int m_top;
-	int m_left;
-	int m_bottom;
-	int m_right;
+	protected int mTop;
+	protected int mLeft;
+	protected int mBottom;
+	protected int mRight;
 
-	boolean top = true;
-	boolean right = true;
-	boolean bottom = true;
-	boolean left = true;
+	protected boolean mIsTopVisible = true;
+	protected boolean mIsRightVisible = true;
+	protected boolean mIsBottomVisible = true;
+	protected boolean mIsLeftVisible = true;
 
-	Color m_color = Color.LIGHT_GRAY;
+	Color mBorderColor = Color.LIGHT_GRAY;
 
 	public SideBorder() {
-		m_top = 1;
-		m_left = 1;
-		m_bottom = 1;
-		m_right = 1;
+		mTop = 1;
+		mLeft = 1;
+		mBottom = 1;
+		mRight = 1;
 	}
 
 	/**
@@ -70,43 +70,43 @@ public class SideBorder implements Border {
 	 */
 	public SideBorder(boolean l, boolean t, boolean r, boolean b) {
 		this();
-		top = t;
-		right = r;
-		bottom = b;
-		left = l;
+		mIsTopVisible = t;
+		mIsRightVisible = r;
+		mIsBottomVisible = b;
+		mIsLeftVisible = l;
 	}
 
 	public SideBorder(boolean l, boolean t, boolean r, boolean b, Color c) {
 		this(l, t, r, b);
-		m_color = c;
+		mBorderColor = c;
 	}
 
 	public void setColor(Color c) {
-		m_color = c;
+		mBorderColor = c;
 	}
 
 	public void paintBorder(Component c, Graphics g, int x, int y, int width,
 			int height) {
 		Insets insets = getBorderInsets(c);
-		g.setColor(m_color);
+		g.setColor(mBorderColor);
 
-		if (top)
+		if (mIsTopVisible)
 			g.fillRect(0, 0, width - insets.right + 1, insets.top);
 
-		if (right)
+		if (mIsRightVisible)
 			g.fillRect(width - insets.right, 0, insets.right, height
 					- insets.bottom + 1);
 
-		if (bottom)
+		if (mIsBottomVisible)
 			g.fillRect(insets.left - 1, height - insets.bottom, width
 					- insets.left + 1, insets.bottom);
 
-		if (left)
+		if (mIsLeftVisible)
 			g.fillRect(0, 0, insets.right, height - insets.bottom + 1);
 	}
 
 	public Insets getBorderInsets(Component c) {
-		return new Insets(m_top, m_left, m_bottom, m_right);
+		return new Insets(mTop, mLeft, mBottom, mRight);
 	}
 
 	public boolean isBorderOpaque() {

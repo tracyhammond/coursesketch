@@ -9,7 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import menu.ActionableItem;
 
 public class ActionableTreeNode extends DefaultMutableTreeNode {
-	private boolean highlighted = false;
+	private boolean mIsHighlighted = false;
 	public ActionableTreeNode() {
 		super();
 	}
@@ -23,14 +23,14 @@ public class ActionableTreeNode extends DefaultMutableTreeNode {
 	}
 
 	public void highlight() {
-		highlighted = true;
+		mIsHighlighted = true;
 	}
 
 	public void clearHighlight() {
-		highlighted = false;
+		mIsHighlighted = false;
 	}
 
 	public boolean isHighlighted() {
-		return highlighted;
+		return mIsHighlighted;
 	}
 }

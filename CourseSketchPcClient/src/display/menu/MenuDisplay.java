@@ -24,26 +24,26 @@ import menu.list.HeaderMenuItem;
 import display.style.Colors;
 
 public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
-	private JPanel panel;
-	private JTree tree;
-	private DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+	private JPanel mPanel;
+	private JTree mTree;
+	private DefaultMutableTreeNode mRoot = new DefaultMutableTreeNode();
 
 	public MenuDisplay() {
 		addFakeMenu();
-		tree = new JTree(root);
-		tree.setRootVisible(false);
-		tree.setUI(getTreeUI()); // This must be set before the Renderer.
-		tree.setCellRenderer(this);
-		tree.setBackground(Colors.MENU_BACKGROUND);
-		tree.setRowHeight(0); // 
-		panel = new JPanel();
-		panel.setBackground(Color.green);
-		panel.add(tree);
+		mTree = new JTree(mRoot);
+		mTree.setRootVisible(false);
+		mTree.setUI(getTreeUI()); // This must be set before the Renderer.
+		mTree.setCellRenderer(this);
+		mTree.setBackground(Colors.MENU_BACKGROUND);
+		mTree.setRowHeight(0); // 
+		mPanel = new JPanel();
+		mPanel.setBackground(Color.green);
+		mPanel.add(mTree);
 		addListener();
 	}
 
 	public void addMenuItem(ActionableItem item) {
-		addMenuItem(root, item);
+		addMenuItem(mRoot, item);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 	}
 
 	public Component getDisplay() {
-		return panel;
+		return mPanel;
 	}
 
 	public void addListener() {
@@ -85,13 +85,13 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				TreePath selectedPath = tree.getPathForLocation(e.getX(),
+				TreePath selectedPath = mTree.getPathForLocation(e.getX(),
 						e.getY());
 				if (selectedPath != null) {
 					if (e.getClickCount() == 1) {
 						DefaultMutableTreeNode node = ((DefaultMutableTreeNode) selectedPath
 								.getLastPathComponent());
-						if (node == root) {
+						if (node == mRoot) {
 							// Do nothing.
 							return;
 						}
@@ -107,12 +107,12 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				TreePath selectedPath = tree.getPathForLocation(e.getX(),
+				TreePath selectedPath = mTree.getPathForLocation(e.getX(),
 						e.getY());
 				if (selectedPath != null) {
 					DefaultMutableTreeNode node = ((DefaultMutableTreeNode) selectedPath
 							.getLastPathComponent());
-					if (node != root) {
+					if (node != mRoot) {
 						if (node instanceof ActionableTreeNode) {
 							// Highlight.
 							if (highlightedNode != null) {
@@ -125,7 +125,7 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 								highlightedNode = null;
 							}
 						}
-						tree.repaint();
+						mTree.repaint();
 						return;
 					}
 				}
@@ -133,12 +133,12 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 				if (highlightedNode != null) {
 					highlightedNode.clearHighlight();
 					highlightedNode = null;
-					tree.repaint();
+					mTree.repaint();
 				}
 			}
 		};
-		tree.addMouseListener(ml);
-		tree.addMouseMotionListener((MouseMotionListener) ml);
+		mTree.addMouseListener(ml);
+		mTree.addMouseMotionListener((MouseMotionListener) ml);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 		TreePath path = tree.getPathForRow(row);
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path
 				.getLastPathComponent();
-		if (node == root || !(node instanceof ActionableTreeNode)) {
+		if (node == mRoot || !(node instanceof ActionableTreeNode)) {
 			return new JPanel();
 		}
 		ActionableTreeNode actionableNode = (ActionableTreeNode) node;
