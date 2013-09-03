@@ -35,7 +35,7 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 		mTree.setUI(getTreeUI()); // This must be set before the Renderer.
 		mTree.setCellRenderer(this);
 		mTree.setBackground(Colors.MENU_BACKGROUND);
-		mTree.setRowHeight(0); // 
+		mTree.setRowHeight(0); // This allows the elements to have different heights.
 		mPanel = new JPanel();
 		mPanel.setBackground(Color.green);
 		mPanel.add(mTree);
@@ -180,8 +180,8 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 							int depth, boolean expanded, Rectangle size) {
 						Rectangle dimensions = super.getNodeDimensions(value,
 								row, depth, expanded, size);
-						dimensions.width = Math.max(200, tree.getWidth()
-								- getRowX(row, depth));
+						dimensions.width = Math.max(200, tree.getWidth());
+						dimensions.width -= getRowX(row, depth);
 						return dimensions;
 					}
 				};

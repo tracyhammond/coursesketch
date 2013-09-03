@@ -8,14 +8,14 @@ import java.awt.event.ActionListener;
  *
  */
 public class ActionableItem {
-	private String name;
-	private String label;
-	private ActionListener action;
+	private String mName;
+	private String mLabel;
+	private ActionListener mAction;
 
 	public ActionableItem(String name, String label, ActionListener action) {
-		this.name = name;
-		this.label = label;
-		this.action = action;
+		this.mName = name;
+		this.mLabel = label;
+		this.mAction = action;
 	}
 
 	/**
@@ -25,22 +25,22 @@ public class ActionableItem {
 	}
 
 	public String getName() {
-		return name;
+		return mName;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.mName = name;
 	}
 
 	public String getLabel() {
-		return label;
+		return mLabel;
 	}
 
 	public void setLabel(String label) {
-		this.label = label;
+		this.mLabel = label;
 	}
 
 	public void setAction(ActionListener action) {
-		this.action = action;
+		this.mAction = action;
 	}
 }
