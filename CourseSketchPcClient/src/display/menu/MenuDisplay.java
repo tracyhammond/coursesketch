@@ -2,6 +2,10 @@ package display.menu;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -9,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.plaf.basic.BasicTreeUI;
@@ -21,6 +26,7 @@ import menu.ActionableItem;
 import menu.MenuBackend;
 import menu.list.ExpandableMenuItem;
 import menu.list.HeaderMenuItem;
+import display.SideBorder;
 import display.style.Colors;
 
 public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
@@ -36,6 +42,8 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 		mTree.setCellRenderer(this);
 		mTree.setBackground(Colors.MENU_BACKGROUND);
 		mTree.setRowHeight(0); // This allows the elements to have different heights.
+		mTree.setBorder(new SideBorder(false, false, false, true,
+				Colors.BOTTOM_MENU_ITEM_OUTSIDE_BORDER));
 		mPanel = new JPanel();
 		mPanel.setBackground(Color.green);
 		mPanel.add(mTree);
@@ -160,7 +168,6 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 		ActionableTreeNode actionableNode = (ActionableTreeNode) node;
 		ActionableItem actionableItem = (ActionableItem) actionableNode
 				.getUserObject();
-		System.out.println(row +" "+ actionableItem.getLabel());
 		MenuItemPanel panel = new MenuItemPanel(actionableItem, actionableNode.isHighlighted(), true);
 		return panel;
 	}
@@ -185,8 +192,31 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 						return dimensions;
 					}
 				};
-
 			}
+
+			 @Override
+		        protected void paintHorizontalLine(Graphics g, JComponent c,
+		                                           int y, int left, int right) {
+		            // do nothing.
+				// do nothing.
+				 /*
+					Graphics2D g2d = (Graphics2D) g;
+					float w = right;
+					float h = c.getHeight();
+					GradientPaint gp = new GradientPaint(
+					    0, 0, Colors.MENU_GRADIENT_DARK, right, 0 , Colors.MENU_BACKGROUND);
+					g2d.setPaint(gp);
+					g2d.fillRect(0, y, (int)w, (int)h);
+					*/
+					g.setColor(Color.white);
+					g.drawLine(left,y,right,y);
+		        }
+
+		        @Override
+		        protected void paintVerticalLine(Graphics g, JComponent c, int x, int top, int bottom) {
+		     //   	g.setColor(Color.white);
+			//		g.drawLine(x,top,x,bottom);
+		        }
 		};
 	}
 }

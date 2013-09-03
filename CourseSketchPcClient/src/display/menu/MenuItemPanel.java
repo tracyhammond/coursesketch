@@ -77,7 +77,6 @@ public class MenuItemPanel extends JPanel {
 		return label;
 	}
 
-
 	@Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
