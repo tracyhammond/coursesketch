@@ -1,5 +1,6 @@
 package display.menu;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -35,10 +36,10 @@ public class MenuItemPanel extends JPanel {
 
 	private void setBorder(boolean lastItem) {
 		Border inside = new SideBorder(false, false, false, true,
-				Colors.MENU_ITEM_BORDER);
+				new Color(Colors.MENU_ITEM_BORDER));
 		if (mIsHeader) {
 			setBorder(new SideBorder(false, true, false, false,
-					Colors.BOTTOM_MENU_ITEM_OUTSIDE_BORDER));
+					new Color(Colors.BOTTOM_MENU_ITEM_OUTSIDE_BORDER)));
 		} else {
 			setBorder(inside);
 		}
@@ -46,9 +47,9 @@ public class MenuItemPanel extends JPanel {
 
 	private void setBackground(boolean isHighlighted) {
 		if (isHighlighted) {
-			setBackground(Colors.MENU_ITEM_HIGHLIGHT_BACKGROUND);
+			setBackground(new Color(Colors.MENU_ITEM_HIGHLIGHT_BACKGROUND));
 		} else {
-			setBackground(Colors.MENU_BACKGROUND);
+			setBackground(new Color(Colors.MENU_BACKGROUND));
 		}
 	}
 
@@ -66,12 +67,12 @@ public class MenuItemPanel extends JPanel {
 		JLabel label = new JLabel(actionableItem.getLabel());
 		if (actionableItem instanceof HeaderMenuItem) {
 			label.setFont(new Font("arial", Font.BOLD + Font.ITALIC, 14));
-			label.setForeground(Colors.HEADER_3_TEXT);
+			label.setForeground(new Color(Colors.HEADER_3_TEXT));
 			label.setBorder(new SideBorder(false, false, false, true,
-					Colors.HEADER_3_TEXT));
+					new Color(Colors.HEADER_3_TEXT)));
 		} else {
 			label.setFont(new Font("arial", Font.BOLD, 14));
-			label.setForeground(Colors.MENU_ITEM_TEXT);
+			label.setForeground(new Color(Colors.MENU_ITEM_TEXT));
 			label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
 		}
 		return label;
@@ -85,7 +86,7 @@ public class MenuItemPanel extends JPanel {
 	        float w = getWidth();
 	        float h = getHeight();
 	        GradientPaint gp = new GradientPaint(
-	            0, 0, Colors.MENU_BACKGROUND, 0, h*.85f , Colors.MENU_GRADIENT_DARK);
+	            0, 0, new Color(Colors.MENU_BACKGROUND), 0, h*.85f , new Color(Colors.MENU_GRADIENT_DARK));
 	        g2d.setPaint(gp);
 	        g2d.fillRect(0, 0, (int)w, (int)h);
         }

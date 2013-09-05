@@ -1,15 +1,11 @@
 package display.style;
 
-import java.awt.Color;
-
 public class Colors {
-	public static final Color MENU_BACKGROUND = new Color(0x5a5959);
-	public static final Color MENU_GRADIENT_DARK = new Color(0x3d3d3d);
-	public static final Color MENU_ITEM_HIGHLIGHT_BACKGROUND = new Color(
-			0x716f6f);
-	public static final Color MENU_ITEM_BORDER = new Color(0x333333);
-	public static final Color BOTTOM_MENU_ITEM_OUTSIDE_BORDER = new Color(
-			0x727272);
-	public static final Color MENU_ITEM_TEXT = Color.WHITE;
-	public static final Color HEADER_3_TEXT = new Color(126, 181, 214);
+	public static final int MENU_BACKGROUND = 0x5a5959;
+	public static final int MENU_GRADIENT_DARK = 0x3d3d3d;
+	public static final int MENU_ITEM_HIGHLIGHT_BACKGROUND = 0x716f6f;
+	public static final int MENU_ITEM_BORDER = 0x333333;
+	public static final int BOTTOM_MENU_ITEM_OUTSIDE_BORDER = 0x727272;
+	public static final int MENU_ITEM_TEXT = 0xFFFFFF;
+	public static final int HEADER_3_TEXT = 0x7EB5D6;
 }
