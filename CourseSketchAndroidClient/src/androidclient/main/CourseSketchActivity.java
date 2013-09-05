@@ -1,5 +1,6 @@
-package tamu.whoop.coursesketch.androidclient;
+package androidclient.main;
 
+import tamu.whoop.coursesketch.androidclient.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
