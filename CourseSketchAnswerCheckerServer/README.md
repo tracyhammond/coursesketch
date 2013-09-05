@@ -1,8 +1,6 @@
 coursesketch
 ============
-Successfully got github work within ubuntu! lol~
-
-
+AnswerChecker
 AggieChallenge 2013 Fall GitHub
  
     

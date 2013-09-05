@@ -11,12 +11,12 @@ import menu.ActionableItem;
  * This ExpandableMenuItem can contain more menu items if needed.
  */
 public class ExpandableMenuItem extends ActionableItem {
-	private boolean expandable;
-	private ArrayList<ActionableItem> subItems;
+	private boolean mISExpandable;
+	private ArrayList<ActionableItem> mSubItems;
 
 	public ExpandableMenuItem(String name, String label, ActionListener action) {
 		super(name, label, action);
-		subItems = new ArrayList<ActionableItem>();
+		mSubItems = new ArrayList<ActionableItem>();
 	}
 
 	/**
@@ -27,9 +27,9 @@ public class ExpandableMenuItem extends ActionableItem {
 	}
 
 	public void addSubItem(ActionableItem subItem) {
-		subItems.add(subItem);
+		mSubItems.add(subItem);
 	}
 	public ArrayList<ActionableItem> getSubItems() {
-		return subItems;
+		return mSubItems;
 	}
 }

@@ -11,18 +11,19 @@ import menu.list.HeaderMenuItem;
  * The subclass should make the display based on what is added to it.
  */
 public class MenuBackend {
-	public static final String header1 = "Classes I'm In";
-	public static final String header2 = "Classes I'm Teaching";
-	public static final String header3 = "Account";
+	public static final String MENU_HEADER1 = "Classes I'm In";
+	public static final String MENU_HEADER2 = "Classes I'm Teaching";
+	public static final String MENU_HEADER3 = "Account";
 
-	private final ArrayList<ActionableItem> menuList = new ArrayList<ActionableItem>();
+	private final ArrayList<ActionableItem> mMenuList = new ArrayList<ActionableItem>();
 
 	public void addMenuItem(ActionableItem item) {
-		menuList.add(item);
+		mMenuList.add(item);
 	}
 
+	// TODO: remove this!
 	public void addFakeMenu() {
-		addMenuItem(new ActionableItem("home","home",null));
+		addMenuItem(new ActionableItem("home","Home",null));
 		addMenuItem(new HeaderMenuItem("currentClasses","Classes I'm In",null));
 		ExpandableMenuItem expander = new ExpandableMenuItem("viewClasses","View All Classes",null);
 		addSubItems(expander);
@@ -30,7 +31,6 @@ public class MenuBackend {
 		addMenuItem(new ActionableItem("newClass","Add New Class",null));
 		addMenuItem(new ActionableItem("grades","My Grades",null));
 		addMenuItem(new ActionableItem("hideClass","Hide Class",null));
-		addMenuItem(new ActionableItem("HOME","home",null));
 		addMenuItem(new HeaderMenuItem("teachingClasses","Classes I'm Teaching",null));
 		addMenuItem(new ActionableItem("classGrade","Grades",null));
 		addMenuItem(new ActionableItem("viewKey","View Class Keys",null));

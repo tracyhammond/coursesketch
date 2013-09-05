@@ -12,5 +12,4 @@ public class HeaderMenuItem extends ActionableItem {
 	public HeaderMenuItem(String name, String label, ActionListener action) {
 		super(name, label, action);
 	}
-
 }
