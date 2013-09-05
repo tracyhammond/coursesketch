@@ -40,10 +40,10 @@ public class MenuDisplay extends MenuBackend implements TreeCellRenderer {
 		mTree.setRootVisible(false);
 		mTree.setUI(getTreeUI()); // This must be set before the Renderer.
 		mTree.setCellRenderer(this);
-		mTree.setBackground(Colors.MENU_BACKGROUND);
+		mTree.setBackground(new Color(Colors.MENU_BACKGROUND));
 		mTree.setRowHeight(0); // This allows the elements to have different heights.
 		mTree.setBorder(new SideBorder(false, false, false, true,
-				Colors.BOTTOM_MENU_ITEM_OUTSIDE_BORDER));
+				new Color(Colors.BOTTOM_MENU_ITEM_OUTSIDE_BORDER)));
 		mPanel = new JPanel();
 		mPanel.setBackground(Color.green);
 		mPanel.add(mTree);
