@@ -19,5 +19,4 @@ public class CourseSketchActivity extends Activity {
 		getMenuInflater().inflate(R.menu.course_sketch, menu);
 		return true;
 	}
-
 }
