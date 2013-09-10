@@ -1,0 +1,30 @@
+The different parts:
+Components
+Constraints
+Meanings
+Style
+Conventions
+
+The different ways of checking:
+Comparing
+Evaluating
+Satisfying
+
+The above can be combined together to create vastly different answer checkers.  Not all domains will require every single one.
+
+Definitions:
+
+	Components
+		Checking components is saying do the required parts of the sketch exist for this answer to be correct. In most cases this can be the most grevious error that can be comitted.  But not all.
+
+	Constraints
+		This is making sure that the constraints of the problem are met.  This could be saying that a truss has to have the forces add up to zero and if it does not then it is wrong.  This could also be that a kanji has to be left to right.
+
+	Meanings
+		This is more abstract and may be purely created from inferred information and not explicitly created on the sketch.  An example is saying that there is a bridge that must hold X lbs and seeing if the bridge does hold that.  As you can tell this is very similar to constraints but has more abstractions and will require a more advance answer checker.
+
+	Style
+		This is visual artifacts of the sketch that are correct but… there are something that could look better.  This could be that the tail of a kanji does not end correctly (please correct wording of this).  Or that the Axis of a truss diagram is drawn with a open triangle arrow but should be drawn with a 3 stroke arrow.  This applies to only things where the meaning is exactly the same but visually it is different.
+
+	Conventsions
+		Similar to style this applies to items that are correct but against convention.  An example of this is drawing the arrow upside down for a truss diagram, even though the the math can be worked out to still be correct it is better if the arrow is facing the correct direction.  This applies to things where the meaning is changed but can be visually different or visually the same.
