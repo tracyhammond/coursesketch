@@ -26,5 +26,53 @@ Definitions:
 	Style
 		This is visual artifacts of the sketch that are correct but… there are something that could look better.  This could be that the tail of a kanji does not end correctly (please correct wording of this).  Or that the Axis of a truss diagram is drawn with a open triangle arrow but should be drawn with a 3 stroke arrow.  This applies to only things where the meaning is exactly the same but visually it is different.
 
-	Conventsions
-		Similar to style this applies to items that are correct but against convention.  An example of this is drawing the arrow upside down for a truss diagram, even though the the math can be worked out to still be correct it is better if the arrow is facing the correct direction.  This applies to things where the meaning is changed but can be visually different or visually the same.
+	Conventions
+		Similar to style this applies to items that are correct but against convention.  An example of this is drawing the arrow upside down for a truss diagram, even though the the math can be worked out to still be correct it is better if the arrow is facing the correct direction.  This applies to things where the meaning is changed but can be visually different or visually the same.  NOTE: the meaning of an individual part can change but the meaning of the whole remains the same.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	Comparing
+		This is as simple as saying: is this the same for the student as it is for the instructor? If not then wrong.  An example is if the answer has force A = 10lbs then the student must have force A = 10lbs
+
+	Evaluating
+		This is inferring or number crunching or finding meanings and saying does this evaluate to the same as the instructor.  An example is if the answer is 2+2 and the student got 1+3 they both evaluate to 4 so 2+2 = 1+3 so the answer is correct.
+
+	Satisfying
+		This can also be inferring or meaning finding to make sure that the student satisfies the instructor and example is the instructor says the answer has to be greater than 3 so if the student got 1+3 then the answer is correct.
+
+
+
+EXAMPLES:
+
+		Instructor	Student		Student		Student
+		2 + 2		2+2		2 + 2		1 + 3
+Components			has 2, 2, +	has 2, 2, +	has 1, 3, +
+				Correct		Correct		Incorrect
+								(missing 2)
+
+		Instructor	Student		Student		Student		Student
+		>3		2+2		2 + 2		1 + 1		>4
+				Correct		Correct		Incorrect	Correct
+								Not >3
+
+Meanings
+		Instructor	Student		Student		Student		Student
+		has to be even	2+2		2 * 3		1 + 2		8
+				Correct		Correct		Incorrect	Correct
+								is Odd
+Style
+		Instructor	Student		Student		Student
+		2 + 2		2+2		2 + 2		1 + 3
+				Incorrect	Correct		Correct
+				(or warning)
+				Need spacing
+
+Conventions
+		Instructor	Student			Student				Student
+		1 + 3		3 + 1			2 - (-2)			2+2
+				Correct			Incorrect			Correct
+				(unless we require	we are adding not	
+				that it be sorted)	subtracting but it
+							still gets the correct
+							answer.
