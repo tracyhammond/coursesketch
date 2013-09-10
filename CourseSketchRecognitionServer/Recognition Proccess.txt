@@ -1,0 +1,36 @@
+The recognition process:
+
+R	Points
+E	Basic Shapes
+C	Domain Specific Shapes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+G	Meanings / contraints
+E	Interactions
+N	Feedback
+
+	Answer rules if this is an answer for use by the answer checker (this will be implemented in the long future)
+
+Points
+	Given a series of points (x, y, timestamp, pen-tilt, pressure, size, speed, direction) and a set of shapes that you want to recogonize, generate basic shapes: lines, arcs, circle, triangle, square, oval, dot.  And the different properties that are unique to each shape.
+
+Basic Shapes
+	Given a bunch of basic shapes and a list of shapes we want to recognize that are not domain specific then we recognize them.  I.E. create Semi-Circle with a line and a arc.
+Some examples: Semi-Circle,  Pizza-shape <), square triangle, LETTERS (this would go here).
+
+Domain Specific
+	Given the above create domain specific shapes.  This can be made with rules and abstractions that go beyond recognition.
+
+Meanings/Constraints
+	This starts to not be recognition anymore and generation.  We start to piece shapes together.  For example we can define a truss as a set lines that are connected.  We do not recognize a truss but we give meaning to the collection of lines that is consistant with the rules of a truss.  This is giving meaning and creating constraints.  A level of abstraction that is typically created by a human and may be too difficult to define with machine learning.
+
+Domain Interactions
+	Given the meanings we can assign defined interactions in the user interface that can interact with certain pieces of the sketch.  An example is labeling lengths on a truss.  Assigning a picture to a kanji.  Being asked to give solve an equation to solve for a force.  These interactions are written in a scripting language and can appear to be very specific to a specific homework while being general in nature.
+
+Feedback
+	We can also give feedback about the recognition.  This could be changing the color of a shape, or replacing it with an image, or animating it, or even causing an interaction to occur.  An example is changing the color of the axis to gray when it is recognized.  Changing the color of a force to green when it is recognized.
+
+
+
+
+Answer
+	If an instructor is creating an answer, this is the part that can generate rules from what is recognized to be used by an answer checker.  An example is recognizing a truss then deciding that a correct answer requires a truss.  This basic components needed can be decided based off of recognition alone which is why it can go here.
