@@ -1,8 +1,17 @@
-function placeAssignments(id, showClass, showTitle, showImage, assignments) {
-	document.getElementById('due_assignments' + id).innerHTML = createAssignments(showClass, showTitle, showImage, assignments);
+/**
+ * Width is either 'small', 'medium', 'large'
+ */
+function placeAssignments(id, assignments, showClass, showTitle, showImage, center, width) {
+	document.getElementById('due_assignments' + id).innerHTML = createAssignments(assignments, showClass, showTitle, showImage, center, width);
 }
 
-function createAssignments(showClass, showTitle, showImage, assignments) {
+function createAssignments(assignments, showClass, showTitle, showImage, center, width) {
+
+	if(width) {
+	} else {
+		width = 'large';
+	}
+
 	var html = "";
 	if(showTitle) {
 		html += '<h1>Uncompleted Assignments</h1>\n';
@@ -13,7 +22,7 @@ function createAssignments(showClass, showTitle, showImage, assignments) {
 		var list = assignments[i];
 		var dueDate = list[2];
 		var dateType = getDateType(dueDate, currentDate);
-		html+='<li>';
+		html+='<li '+ (center?'class = "child_center"':'') +'>';
 		html+='<div class="assignment_item school_item">';
 		html+='	<div class="text">';
 		html+='		<h3 class="name"><a href="' + list[0][1] + '">' + list[0][0] + '</a></h3>';
@@ -23,7 +32,7 @@ function createAssignments(showClass, showTitle, showImage, assignments) {
 			html+='		<h1 class="class"><a href="' + list[1][1] + '">' + list[1][0] + '</a></h1>';
 		}
 		
-		html+='		<p>'+list[3]+'</p>';
+		html+='		<p class="'+width+'">'+list[3]+'</p>';
 		html+='	</div>';
 
 		if(showImage) {
