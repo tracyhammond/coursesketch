@@ -16,3 +16,10 @@
 .school_item p {
 	width: 45ex;
 }
+
+.school_list li {
+	list-style-type: none;
+}
+.school_div {
+	margin: 10px 10px 10px 10px;
+}
