@@ -1,8 +1,10 @@
 .school_item {
+	text-align:left;
 	box-shadow: 0px 1px 1px #808080;
 	display:inline-block;
 	padding: 10px 10px 10px 10px;
 	margin-bottom: 5px;
+	background: #eee;
 }
 
 .school_item .text {
@@ -11,10 +13,6 @@
 
 .school_item img {
 	margin-right: 5px;
-}
-
-.school_item p {
-	width: 45ex;
 }
 
 .school_list li {
@@ -33,4 +31,33 @@
 	-webkit-margin-start: 0px;
 	-webkit-margin-end: 0px;
 	-webkit-padding-start: 0px;
+}
+
+
+.school_item h3.large {
+	width: 45ex;
+}
+
+.school_item h3.medium {
+	width: 30ex;
+}
+
+.school_item h3.small {
+	width: 15ex;
+}
+
+.school_item p.large {
+	width: 45ex;
+}
+
+.school_item p.medium {
+	width: 30ex;
+}
+
+.school_item p.small {
+	width: 15ex;
+}
+
+.school_item p {
+	width: 45ex;
 }

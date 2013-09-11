@@ -1,24 +1,30 @@
-function addClassList(id, isComplex, showTitle, showImage, classes) {
-	document.getElementById('class_list' + id).innerHTML = createClassList(isComplex, showTitle , showImage, classes);
+/**
+ * Width is either 'small', 'medium', 'large'
+ */
+function addClassList(id, classes, isComplex, showTitle, showImage, center, width) {
+	document.getElementById('class_list' + id).innerHTML = createClassList(classes, isComplex, showTitle, showImage, center, width);
 }
 
-function createClassList(isComplex, showTitle, showImage, classes) {
+function createClassList(classes, isComplex, showTitle, showImage, center, width) {
+	
+	if(width) {
+	} else {
+		width = 'large';
+	}
+	
 	var html = "";
 	if(showTitle) {
 		html = '<h1>Classes</h1>'
 	}
 	html += '<ul class = "school_list">';
-	var currentDate = new Date();
 	for(var i = 0; i< classes.length; i++) {
 		var list = classes[i];
-		var dueDate = list[2];
-		var dateType = getDateType(dueDate, currentDate);
-		html+='<li>';
+		html+='<li '+ (center?'class = "child_center"':'') +'>';
 		html+='	<div class="' + (isComplex ? 'school_item':'class_item' ) + '">';
 		html+='		<div class="text">';
 		if(isComplex) {
 			html+='			<h3 class="name"><a href="'+list[0][1]+'">'+list[0][0]+'</a></h3>';
-			html+='			<p>'+list[1]+'</p>';
+			html+='			<p class="'+width+'">'+list[1]+'</p>';
 		}else {
 			html+='			<a href="'+list[0][1]+'">'+list[0][0]+'</a>';
 		}

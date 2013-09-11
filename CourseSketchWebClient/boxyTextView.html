@@ -24,26 +24,26 @@
 						}
 						placeMenu();
 
-						/* show all */
-						placeAssignments('_1', true, true, true, upcomming_assignments);
-						addClassList('_1',true, true, true, user_classes);
+						/* show all - default width */
+						placeAssignments('_1', upcomming_assignments, true, true, true, true);
+						addClassList('_1', user_classes, true, true, true, true);
 						
 						/* no title */
-						placeAssignments('_2', true, false, true, upcomming_assignments);
-						addClassList('_2',true, false, true, user_classes);
+						placeAssignments('_2', upcomming_assignments, true, false, true, false, 'medium');
+						addClassList('_2', user_classes, true, false, true, false, 'small');
 						
 						/* assignment does not show class
 						   class is not complex */
-						placeAssignments('_3', false, false, true, upcomming_assignments);
-						addClassList('_3',false, false, true, user_classes);
+						placeAssignments('_3', upcomming_assignments, false, false, true, false);
+						addClassList('_3', user_classes, false, false, true, false);
 						
 						/* no images */
-						placeAssignments('_4', true, false, false, upcomming_assignments);
-						addClassList('_4',true, false, false, user_classes);
+						placeAssignments('_4', upcomming_assignments, true, false, false, false);
+						addClassList('_4', user_classes, true, false, false, false);
 						
 						/* no everything */
-						placeAssignments('_5', false, false, false, upcomming_assignments);
-						addClassList('_5',false, false, false, user_classes);
+						placeAssignments('_5', upcomming_assignments, false, false, false, false, 'small');
+						addClassList('_5', user_classes, false, false, false, false, 'small');
 					}
 				);
 	</script>
@@ -81,12 +81,12 @@
 			
 	    	<div  class="col-group2">
 	    		<div>
-	    			<h1>NO TITLE</h1>
+	    			<h1>NO TITLE-SMALL</h1>
 			    	<div id="class_list_2" class="school_div">
 			    	</div>
 		    	</div>
 		    	<div>
-		    		<h1>NO TITLE</h1>
+		    		<h1>NO TITLE-MEDIUM</h1>
 			    	<div id="due_assignments_2" class="school_div">
 					</div>
 				</div>

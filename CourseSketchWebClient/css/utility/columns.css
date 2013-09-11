@@ -39,3 +39,7 @@ Specifically for a 4 group column
     width: 25%;
   }
 }
+
+.child_center {
+	text-align:center;
+}

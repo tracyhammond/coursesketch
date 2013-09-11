@@ -23,7 +23,7 @@ var user_classes =
 	 	 	'test/truss_thumb.png'],
 	 	[['Chemistry','ChemistryLink'],'Description for the chemistry class!',
 	 	 	'test/chemistry_thumb.png'],
-	 	[['Class 3','Class3Link'],'Description for the 3rd class!', 'test/NO_IMAGE.png'],
+	 	[['Class 3','Class3Link'],'Description for the 3rd class!', 'test/no_image.png'],
 	];
 
 if(typeof(Storage)!=="undefined")
