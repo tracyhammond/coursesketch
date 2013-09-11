@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href=".">
+    <title>Welcome!</title>
+    <link rel="stylesheet" href="css/jquery/jquery.mobile-1.0rc2.min.css">
+    <link rel="stylesheet" href="css/home.css">
+   	<link rel="stylesheet" href="css/school/school_item.css">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
+    <script type="text/javascript" src="js/menu/add_menu.js"></script>
+    <script type="text/javascript" src="js/school/upcoming_assignments/add_upcoming_home.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
+	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
+	<script type="text/javascript" src="js/school/class/add_class_list.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+	  		addLoadEvent(
+					function()
+					{
+						if(!is_touch) {
+							disable_menu_swiping();
+						}
+						placeMenu();
+
+						/* show all */
+						placeAssignments('_1', true, true, true, upcomming_assignments);
+						addClassList('_1',true, true, true, user_classes);
+						
+						/* no title */
+						placeAssignments('_2', true, false, true, upcomming_assignments);
+						addClassList('_2',true, false, true, user_classes);
+						
+						/* assignment does not show class
+						   class is not complex */
+						placeAssignments('_3', false, false, true, upcomming_assignments);
+						addClassList('_3',false, false, true, user_classes);
+						
+						/* no images */
+						placeAssignments('_4', true, false, false, upcomming_assignments);
+						addClassList('_4',true, false, false, user_classes);
+						
+						/* no everything */
+						placeAssignments('_5', false, false, false, upcomming_assignments);
+						addClassList('_5',false, false, false, user_classes);
+					}
+				);
+	</script>
+</head>
+<body>
+
+<!-- Menu Bar -->
+	<div id="menuBar">
+	</div>
+
+	<div data-role="page" class="pages ui-page ui-body-c ui-page-active" id="Div1" data-url="Div1" tabindex="0" style="margin-left: 0px; min-height: 739px;">
+    <!-- Section in the Header bar -->
+    <div data-role="header" class="ui-header ui-bar-a" role="banner">
+        <a class="showMenu ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" data-theme="a"><span class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span class="ui-btn-text">Menu</span></span></a>
+        <h1 id="nameBlock" class="ui-title" tabindex="0" role="heading" aria-level="1">Welcome!</h1>
+    </div>
+    <!-- Center Section -->
+    <div id="home">
+    	<link rel="stylesheet" href="css/school/assignments/assignment_list.css">
+    	<div class = "centre">
+	    	<div  class="col-group2">
+	    		<div>
+	    			<h1>SHOW ALL</h1>
+			    	<div id="class_list_1" class="school_div">
+			    	</div>
+		    	</div>
+		    	<div>
+		    		<h1>SHOW ALL</h1>
+			    	<div id="due_assignments_1" class="school_div">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class = "centre" style="clear:left;">
+			
+	    	<div  class="col-group2">
+	    		<div>
+	    			<h1>NO TITLE</h1>
+			    	<div id="class_list_2" class="school_div">
+			    	</div>
+		    	</div>
+		    	<div>
+		    		<h1>NO TITLE</h1>
+			    	<div id="due_assignments_2" class="school_div">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class = "centre" style="clear:left;">
+	    	<div  class="col-group2">
+	    		<div>
+	    			<h1>CLASS IS NOT COMPLEX</h1>
+			    	<div id="class_list_3" class="school_div">
+			    	</div>
+		    	</div>
+		    	<div>
+		    		<h1>ASSIGNMENT DOES NOT SHOW CLASS.</h1>
+			    	<div id="due_assignments_3" class="school_div">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class = "centre" style="clear:left;">
+	    	<div  class="col-group2">
+	    		<div>
+	    			<h1>NO IMAGES</h1>
+			    	<div id="class_list_4" class="school_div">
+			    	</div>
+		    	</div>
+		    	<div>
+		    		<h1>NO IMAGES</h1>
+			    	<div id="due_assignments_4" class="school_div">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class = "centre" style="clear:left;">
+	    	<div  class="col-group2">
+	    		<div>
+	    			<h1>ALL FALSE</h1>
+			    	<div id="class_list_5" class="school_div">
+			    	</div>
+		    	</div>
+		    	<div>
+		    		<h1>ALL FALSE</h1>
+			    	<div id="due_assignments_5" class="school_div">
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+
+
+<div class="ui-loader ui-body-a ui-corner-all" style="top: 391.5px;"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div></body></html>
