@@ -21,5 +21,16 @@
 	list-style-type: none;
 }
 .school_div {
-	margin: 10px 10px 10px 10px;
+	padding: 0px 5px;
+}
+
+.school_div ul {
+	margin: 0px;
+	display: block;
+	list-style-type: disc;
+	-webkit-margin-before: 0em;
+	-webkit-margin-after: 0em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	-webkit-padding-start: 0px;
 }

@@ -1,0 +1,17 @@
+.col-group > div {
+}
+
+@media screen and (min-width: 44em) {
+  .col-group {
+  }
+  .col-group > div {
+    float: left;
+    width: 50%;
+  }
+}
+
+div.centre
+{
+	width: 90%;
+	margin:0px auto;
+}
