@@ -43,3 +43,7 @@ Specifically for a 4 group column
 .child_center {
 	text-align:center;
 }
+
+.faded_column{
+	background: #DDDDDD;
+}
