@@ -1,17 +1,41 @@
-.col-group > div {
+div.centre
+{
+	width: 90%;
+	margin:0px auto;
 }
 
+/**
+Specifically for a 2 group column
+*/
 @media screen and (min-width: 44em) {
-  .col-group {
+  .col-group2 {
   }
-  .col-group > div {
+  .col-group2 > div {
     float: left;
     width: 50%;
   }
 }
 
-div.centre
-{
-	width: 90%;
-	margin:0px auto;
+/**
+Specifically for a 3 group column
+*/
+@media screen and (min-width: 44em) {
+  .col-group3 {
+  }
+  .col-group3 > div {
+    float: left;
+    width: 33%;
+  }
+}
+
+/**
+Specifically for a 4 group column
+*/
+@media screen and (min-width: 44em) {
+  .col-group4 {
+  }
+  .col-group4 > div {
+    float: left;
+    width: 25%;
+  }
 }

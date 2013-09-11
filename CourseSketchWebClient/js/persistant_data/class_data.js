@@ -25,3 +25,11 @@ var user_classes =
 	 	 	'test/chemistry_thumb.png'],
 	 	[['Class 3','Class3Link'],'Description for the 3rd class!', 'test/NO_IMAGE.png'],
 	];
+
+if(typeof(Storage)!=="undefined")
+  {
+  }
+else
+  {
+  // Sorry! No web storage support..
+  }

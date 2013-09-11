@@ -1,13 +1,16 @@
-function addClassList(id, isComplex, showImage) {
-	document.getElementById('class_list' + id).innerHTML = createClassList(isComplex, showImage);
+function addClassList(id, isComplex, showTitle, showImage, classes) {
+	document.getElementById('class_list' + id).innerHTML = createClassList(isComplex, showTitle , showImage, classes);
 }
 
-function createClassList(isComplex, showImage) {
-	var html = '<h1>Classes</h1>'
+function createClassList(isComplex, showTitle, showImage, classes) {
+	var html = "";
+	if(showTitle) {
+		html = '<h1>Classes</h1>'
+	}
 	html += '<ul class = "school_list">';
 	var currentDate = new Date();
-	for(var i = 0; i< user_classes.length; i++) {
-		var list = user_classes[i];
+	for(var i = 0; i< classes.length; i++) {
+		var list = classes[i];
 		var dueDate = list[2];
 		var dateType = getDateType(dueDate, currentDate);
 		html+='<li>';
