@@ -1,9 +1,10 @@
-function addClassList(id, isSimple, showImage) {
-	document.getElementById('due_assignments' + id).innerHTML = addClassList(isSimple);
+function addClassList(id, isComplex, showImage) {
+	document.getElementById('class_list' + id).innerHTML = createClassList(isComplex, showImage);
 }
 
 function createClassList(isComplex, showImage) {
-	var html = '<ul>';
+	var html = '<h1>Classes</h1>'
+	html += '<ul class = "school_list">';
 	var currentDate = new Date();
 	for(var i = 0; i< user_classes.length; i++) {
 		var list = user_classes[i];
@@ -14,13 +15,13 @@ function createClassList(isComplex, showImage) {
 		html+='		<div class="text">';
 		if(isComplex) {
 			html+='			<h3 class="name"><a href="'+list[0][1]+'">'+list[0][0]+'</a></h3>';
-			html+='			<p>'+list[2]+'</p>';
+			html+='			<p>'+list[1]+'</p>';
 		}else {
 			html+='			<a href="'+list[0][1]+'">'+list[0][0]+'</a>';
 		}
 		html+='		</div>';
 		if(showImage) {
-			html+='		<a href="'+list[0][1]+'"><img src="images/'+ list[4]+'" width="128" height="128"></a>';
+			html+='		<a href="'+list[0][1]+'"><img src="images/'+ list[2]+'" width="128" height="128"></a>';
 		}
 		html+='	</div>';
 		html+='</li>';
