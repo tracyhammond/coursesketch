@@ -15,6 +15,9 @@
 	<script type="text/javascript" src="js/school/school_item.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
+		    function clickerFunction(list) {
+				alert(list);
+			}
 	  		addLoadEvent(
 					function()
 					{
@@ -27,6 +30,8 @@
 						builder.setWidth('medium');
 						builder.centerItem(true);
 						builder.showImage = false;
+						builder.setOnBoxClick('clickerFunction');
+
 						builder.build('class_list_column');
 					}
 				);

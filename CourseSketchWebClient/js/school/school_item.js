@@ -83,6 +83,20 @@ function schoolItemBuilder() {
 	}
 
 	/**
+	 * sets the function for clicking the entire box.
+	 *
+	 * This overrides all other functions.
+	 * So if you want other function based on different things, then you must set those afterwards.
+	 */	
+	this.setOnBoxClick = function onBoxClick(clickFunction) {
+		this.entireBoxClicked =  clickFunction;
+	}
+	//*********
+	// CREATION METHODS BELOW
+	//*********
+
+
+	/**
 	 * Returns the HTML for a school_item based off of the specified school builder
 	 */
 	this.createFancySchoolItem = function createFancySchoolItem(list, currentDate) {
@@ -176,7 +190,7 @@ function schoolItemBuilder() {
 			html += 'school_item ';
 		}
 		if (entireBoxClicked) {
-			html+= ' hoverBox ';
+			html+= ' hover_box ';
 		}
 		return html + '"';
 	}
@@ -190,7 +204,7 @@ function schoolItemBuilder() {
 		if (replacingFunction) {
 			// <a href="javascript:void(0)" onclick = "FUNCTIONNAME(listdata)"
 			html+= 'javascript:void(0)"';
-			html+= ' onclick ="' + replacingFunction;
+			html+= ' onclick ="' + replacingFunction.name;
 			html+= '(' + list + ')';
 		} else {
 			// <a href="LINKLOCATION"
