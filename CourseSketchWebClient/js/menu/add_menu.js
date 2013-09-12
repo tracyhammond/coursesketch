@@ -43,7 +43,10 @@ function list_menu_classes(id) {
 		expanding_button.src = "images/menu/triangle_right.png";
 	} else {
 		class_list_showing = true;
-		html = createClassList(false, false, false, user_classes);
+		var builder = new schoolItemBuilder();
+		builder.setList(user_classes);
+		builder.showAsSimpleList(true);
+		html = builder.createSchoolList();
 		class_list.style.display = "block";
 		expanding_button.src = "images/menu/triangle_down.png";
 		// ADD CLASSES HERE
