@@ -50,9 +50,6 @@
 	width: 45ex;
 }
 
-.hover_box:hover {
-	background: #D4D4D4;
-}
 .school_item p.medium {
 	width: 30ex;
 }
@@ -63,4 +60,12 @@
 
 .school_item p {
 	width: 45ex;
+}
+
+.hover_box {
+	cursor:pointer;
+}
+
+.hover_box:hover {
+	background: #D4D4D4;
 }
