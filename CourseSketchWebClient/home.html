@@ -10,10 +10,9 @@
     <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
     <script type="text/javascript" src="js/menu/add_menu.js"></script>
-    <script type="text/javascript" src="js/school/upcoming_assignments/add_upcoming_home.js"></script>
     <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
-	<script type="text/javascript" src="js/school/class/add_class_list.js"></script>
+	<script type="text/javascript" src="js/school/school_item.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 	  		addLoadEvent(
@@ -23,8 +22,14 @@
 							disable_menu_swiping();
 						}
 						placeMenu();
-						placeAssignments('', upcomming_assignments, true, true, true, false, 'large');
-						addClassList('_home', user_classes, true, true, true, false, 'large');
+						var builder = new schoolItemBuilder();
+						builder.setTitle('Current Classes');
+						builder.setList(user_classes);
+						builder.build('class_list_home');
+						
+						builder.setTitle('Uncompleted Assignments');
+						builder.setList(upcomming_assignments);
+						builder.build('due_assignments');
 					}
 				);
 	</script>
@@ -43,7 +48,6 @@
     </div>
     <!-- Center Section -->
     <div id="home">
-    	<link rel="stylesheet" href="css/school/assignments/assignment_list.css">
     	<div class = "centre">
 	    	<div  class="col-group2">
 	    		<div>

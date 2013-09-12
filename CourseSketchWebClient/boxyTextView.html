@@ -10,10 +10,9 @@
     <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
     <script type="text/javascript" src="js/menu/add_menu.js"></script>
-    <script type="text/javascript" src="js/school/upcoming_assignments/add_upcoming_home.js"></script>
     <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
-	<script type="text/javascript" src="js/school/class/add_class_list.js"></script>
+	<script type="text/javascript" src="js/school/school_item.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 	  		addLoadEvent(
@@ -25,25 +24,54 @@
 						placeMenu();
 
 						/* show all - default width */
+						var builder = new schoolItemBuilder();
+						builder.setList(user_classes);
+						builder.setTitle('SHOW ALL');
+						builder.build('class_list_1');
+
+						builder.setList(upcomming_assignments);
+						builder.build('due_assignments_1');
+
+						builder.setTitle('SIMPLE LIST');
+						builder.setList(user_classes);
+						builder.showAsSimpleList(true);
+						builder.build('class_list_2');
+						
+						builder.setTitle('SIMPLE LIST');
+						builder.setList(upcomming_assignments);
+						builder.showAsSimpleList(true);
+						builder.build('due_assignments_2');
+
+						
+						/*
 						placeAssignments('_1', upcomming_assignments, true, true, true, true);
 						addClassList('_1', user_classes, true, true, true, true);
+						*/
 						
 						/* no title */
+						/*
 						placeAssignments('_2', upcomming_assignments, true, false, true, false, 'medium');
 						addClassList('_2', user_classes, true, false, true, false, 'small');
+						*/
 						
 						/* assignment does not show class
 						   class is not complex */
+						   /*
 						placeAssignments('_3', upcomming_assignments, false, false, true, false);
 						addClassList('_3', user_classes, false, false, true, false);
+						*/
 						
 						/* no images */
+						/*
 						placeAssignments('_4', upcomming_assignments, true, false, false, false);
 						addClassList('_4', user_classes, true, false, false, false);
+						*/
 						
 						/* no everything */
+						/*
 						placeAssignments('_5', upcomming_assignments, false, false, false, false, 'small');
 						addClassList('_5', user_classes, false, false, false, false, 'small');
+						*/
 					}
 				);
 	</script>
@@ -66,12 +94,10 @@
     	<div class = "centre">
 	    	<div  class="col-group2">
 	    		<div>
-	    			<h1>SHOW ALL</h1>
 			    	<div id="class_list_1" class="school_div">
 			    	</div>
 		    	</div>
 		    	<div>
-		    		<h1>SHOW ALL</h1>
 			    	<div id="due_assignments_1" class="school_div">
 					</div>
 				</div>
@@ -81,12 +107,10 @@
 			
 	    	<div  class="col-group2">
 	    		<div>
-	    			<h1>NO TITLE-SMALL</h1>
 			    	<div id="class_list_2" class="school_div">
 			    	</div>
 		    	</div>
 		    	<div>
-		    		<h1>NO TITLE-MEDIUM</h1>
 			    	<div id="due_assignments_2" class="school_div">
 					</div>
 				</div>
@@ -95,12 +119,10 @@
 		<div class = "centre" style="clear:left;">
 	    	<div  class="col-group2">
 	    		<div>
-	    			<h1>CLASS IS NOT COMPLEX</h1>
 			    	<div id="class_list_3" class="school_div">
 			    	</div>
 		    	</div>
 		    	<div>
-		    		<h1>ASSIGNMENT DOES NOT SHOW CLASS.</h1>
 			    	<div id="due_assignments_3" class="school_div">
 					</div>
 				</div>
@@ -109,12 +131,10 @@
 		<div class = "centre" style="clear:left;">
 	    	<div  class="col-group2">
 	    		<div>
-	    			<h1>NO IMAGES</h1>
 			    	<div id="class_list_4" class="school_div">
 			    	</div>
 		    	</div>
 		    	<div>
-		    		<h1>NO IMAGES</h1>
 			    	<div id="due_assignments_4" class="school_div">
 					</div>
 				</div>
@@ -123,12 +143,10 @@
 		<div class = "centre" style="clear:left;">
 	    	<div  class="col-group2">
 	    		<div>
-	    			<h1>ALL FALSE</h1>
 			    	<div id="class_list_5" class="school_div">
 			    	</div>
 		    	</div>
 		    	<div>
-		    		<h1>ALL FALSE</h1>
 			    	<div id="due_assignments_5" class="school_div">
 					</div>
 				</div>
