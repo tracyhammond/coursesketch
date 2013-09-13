@@ -87,6 +87,7 @@ function schoolItemBuilder() {
 	 *
 	 * This overrides all other functions.
 	 * So if you want other function based on different things, then you must set those afterwards.
+	 * The input is json of the current list of elements
 	 */	
 	this.setOnBoxClick = function onBoxClick(clickFunction) {
 		this.entireBoxClicked =  clickFunction;
@@ -204,13 +205,12 @@ function schoolItemBuilder() {
 		if (replacingFunction) {
 			// <a href="javascript:void(0)" onclick = "FUNCTIONNAME(listdata)"
 			html+= 'javascript:void(0)"';
-			html+= ' onclick ="' + replacingFunction.name;
-			html+= '(' + list + ')';
+			html+= addClickFunction(replacingFunction, list);
 		} else {
 			// <a href="LINKLOCATION"
-			html+= link;
+			html+= link + '"';
 		}
-		html+='"> ';
+		html+='> ';
 		return html;
 	}
 
@@ -221,7 +221,7 @@ function schoolItemBuilder() {
 	 */
 	this.addClickFunction = function addClickFunction(functionToAdd, list) {
 		if (functionToAdd) {
-			return ' onclick = "' + functionToAdd + '(' + list + ')"';
+			return ' onclick = "' + functionToAdd + '(' + replaceAll('"', '\'', JSON.stringify(list)) + ')"';
 		} else {
 			return '';
 		}
@@ -237,4 +237,8 @@ function get_formatted_date(currentDate, dueDate) {
 		var curr_month = dueDate.getMonth() + 1; //Months are zero based
 		var curr_year = dueDate.getFullYear();
 		return (curr_date + "-" + curr_month + "-" + curr_year);
+}
+
+function replaceAll(find, replace, str) {
+  return str.replace(new RegExp(find, 'g'), replace);
 }
