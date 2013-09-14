@@ -4,6 +4,12 @@ div.centre
 	margin:0px auto;
 }
 
+div.wide_centre
+{
+	width: 98%;
+	margin:0px auto;
+}
+
 /**
 Specifically for a 2 group column
 */
@@ -44,6 +50,22 @@ Specifically for a 4 group column
 	text-align:center;
 }
 
-.faded_column{
+.faded_column {
 	background: #DDDDDD;
+}
+
+.gradient_faded_column {
+	background-image: linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	background-image: -o-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	background-image: -moz-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	background-image: -webkit-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	background-image: -ms-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #DDDDDD),
+		color-stop(1, #CCCCCC)
+	);
 }
