@@ -138,6 +138,11 @@ function schoolItemBuilder() {
 	 */
 	this.createSchoolList = function createSchoolList() {
 		var html = "";
+		if(!this.dataList) {
+			html += '<h1>There are no items in this list!</h1>\n';
+			return html;
+		}
+		
 		if(this.listTitle) {
 			html += '<h1>' + this.listTitle + '</h1>\n';
 		}

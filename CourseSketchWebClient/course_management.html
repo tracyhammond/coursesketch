@@ -15,9 +15,32 @@
 	<script type="text/javascript" src="js/school/school_item.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
-		    function clickerFunction(list) {
-				alert(list);
+		    function classClickerFunction(list) {
+		    	//we get the list from the id.
+		    	var assignmentList = classAssignments.getList(list[0][0]);
+		    	var builder = new schoolItemBuilder();
+				builder.setList(assignmentList);
+				builder.setWidth('medium');
+				builder.centerItem(true);
+				builder.showImage = false;
+				builder.setOnBoxClick('assignmentClickerFunction');
+				builder.build('assignment_list_column');
 			}
+		    
+		    function assignmentClickerFunction(list) {
+		    	var questionList = assignmentQuestions.getList(list[0][0]);
+		    	var builder = new schoolItemBuilder();
+				builder.setList(questionList);
+				builder.setWidth('medium');
+				builder.centerItem(true);
+				builder.showImage = false;
+				builder.setOnBoxClick('blankFunction');
+				builder.build('question_list_column');
+			}
+		    
+		    function blankFunction(list) {
+		    	
+		    }
 	  		addLoadEvent(
 					function()
 					{
@@ -30,8 +53,7 @@
 						builder.setWidth('medium');
 						builder.centerItem(true);
 						builder.showImage = false;
-						builder.setOnBoxClick('clickerFunction');
-
+						builder.setOnBoxClick('classClickerFunction');
 						builder.build('class_list_column');
 					}
 				);
@@ -63,7 +85,7 @@
 		    	<div>
 		    		<h2 style = "text-align:center">Assignments</h2>
 			    	<div class = "centre faded_column" style = "padding-top: 5px;">
-				    	<div id="due_assignments" class="school_div">
+				    	<div id="assignment_list_column" class="school_div">
 				    	Hi
 						</div>
 					</div>
@@ -71,7 +93,9 @@
 				<div>
 					<h2 style = "text-align:center">Problems</h2>
 					<div class = "centre faded_column" style = "padding-top: 5px;">
-					Hi
+						<div id="question_list_column" class="school_div">
+					    	Hi
+						</div>
 					</div>
 				</div>
 			</div>
