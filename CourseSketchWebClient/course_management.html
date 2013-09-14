@@ -25,6 +25,7 @@
 				builder.showImage = false;
 				builder.setOnBoxClick('assignmentClickerFunction');
 				builder.build('assignment_list_column');
+				replaceIframe('html/course_managment_frames/edit_course.html');
 			}
 		    
 		    function assignmentClickerFunction(list) {
@@ -37,7 +38,7 @@
 				builder.setOnBoxClick('blankFunction');
 				builder.build('question_list_column');
 			}
-		    
+
 		    function blankFunction(list) {
 		    	
 		    }
@@ -57,6 +58,27 @@
 						builder.build('class_list_column');
 					}
 				);
+
+	  		function manageHeight() {
+	  			var iframe = document.getElementById('edit_frame_id');
+	  			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+	  			// Gets the visual height.
+	  			var height = innerDoc.getElementsByTagName('body')[0].clientHeight;
+	  			iframe.height = height;
+	  		}
+	  		
+	  		/**
+	  			Given the source this will create an iframe that will manage its own height.
+	  		*/
+	  		function replaceIframe(src) {
+	  			var toReplace = document.getElementById('editable_unit');
+	  			if (src) {
+	  				toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" height="100%" width = 100% seamless = "seamless" onload="manageHeight()">';
+	  			} else {
+	  				toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
+					'<h2 style = "text-align:center">Click an item to edit</h2>';
+	  			}
+	  		}
 	</script>
 </head>
 <body>
@@ -104,11 +126,10 @@
 			<div style="width:25%; float:right;">
 				<h2 style = "text-align:center; visibility: hidden;">Hidden Title</h2>
 				<div style = "padding: 10px; min-height:600px; background:#A9D0F5;">
-					<div style ="background:#FFFFFF;">
-						<div id = "editable_unit" style = "text">
+					<div style ="background:#FFFFFF; height:100%; padding-right:1px;">
+						<div id = "editable_unit">
 							<h2 style = "text-align:center">Nothing is selected yet</h2>
 							<h2 style = "text-align:center">Click an item to edit</h2>
-							<!-- Replace with an IFRAME for the different options that are possible. :) -->
 						</div>
 					</div>
 				</div>
