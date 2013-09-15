@@ -69,3 +69,7 @@
 .hover_box:hover {
 	background: #D4D4D4;
 }
+
+.selected_box {
+	background: #C4C4C4;
+}

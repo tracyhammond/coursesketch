@@ -13,35 +13,9 @@
     <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
 	<script type="text/javascript" src="js/school/school_item.js"></script>
+	<script type="text/javascript" src="js/school/course_manager.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
-		    function classClickerFunction(list) {
-		    	//we get the list from the id.
-		    	var assignmentList = classAssignments.getList(list[0][0]);
-		    	var builder = new schoolItemBuilder();
-				builder.setList(assignmentList);
-				builder.setWidth('medium');
-				builder.centerItem(true);
-				builder.showImage = false;
-				builder.setOnBoxClick('assignmentClickerFunction');
-				builder.build('assignment_list_column');
-				replaceIframe('html/course_managment_frames/edit_course.html');
-			}
-		    
-		    function assignmentClickerFunction(list) {
-		    	var questionList = assignmentQuestions.getList(list[0][0]);
-		    	var builder = new schoolItemBuilder();
-				builder.setList(questionList);
-				builder.setWidth('medium');
-				builder.centerItem(true);
-				builder.showImage = false;
-				builder.setOnBoxClick('blankFunction');
-				builder.build('question_list_column');
-			}
-
-		    function blankFunction(list) {
-		    	
-		    }
 	  		addLoadEvent(
 					function()
 					{
@@ -50,35 +24,13 @@
 						}
 						placeMenu();
 						var builder = new schoolItemBuilder();
-						builder.setList(user_classes);
-						builder.setWidth('medium');
-						builder.centerItem(true);
+						builder.setList(user_classes).setWidth('medium').centerItem(true);
 						builder.showImage = false;
 						builder.setOnBoxClick('classClickerFunction');
 						builder.build('class_list_column');
+						clearLists(2);
 					}
 				);
-
-	  		function manageHeight() {
-	  			var iframe = document.getElementById('edit_frame_id');
-	  			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-	  			// Gets the visual height.
-	  			var height = innerDoc.getElementsByTagName('body')[0].clientHeight;
-	  			iframe.height = height;
-	  		}
-	  		
-	  		/**
-	  			Given the source this will create an iframe that will manage its own height.
-	  		*/
-	  		function replaceIframe(src) {
-	  			var toReplace = document.getElementById('editable_unit');
-	  			if (src) {
-	  				toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" height="100%" width = 100% seamless = "seamless" onload="manageHeight()">';
-	  			} else {
-	  				toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
-					'<h2 style = "text-align:center">Click an item to edit</h2>';
-	  			}
-	  		}
 	</script>
 </head>
 <body>
@@ -109,8 +61,8 @@
 			    	<div>
 			    		<h2 style = "text-align:center">Assignments</h2>
 				    	<div class = "centre faded_column" style = "padding-top: 5px; min-height:600px;">
-				    		<div id="assignment_button">
-				    			
+				    		<div id="assignment_button" style = "display:none;">
+				    			<button>Add New Assignment</button>
 				    		</div>
 					    	<div id="assignment_list_column" class="school_div">
 					    	Hi
@@ -120,10 +72,10 @@
 					<div>
 						<h2 style = "text-align:center">Problems</h2>
 						<div class = "centre faded_column" style = "padding-top: 5px; min-height:600px;">
-							<div id="question_button">
-								<button>Add New Question</button>
+							<div id="problem_button" style = "display:none;">
+								<button>Add New Problem</button>
 				    		</div>
-							<div id="question_list_column" class="school_div">
+							<div id="problem_list_column" class="school_div">
 						    	Hi
 							</div>
 						</div>

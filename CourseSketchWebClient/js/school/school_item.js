@@ -29,22 +29,30 @@ function schoolItemBuilder() {
 		this.subClicked = false;
 		this.entireBoxClicked = false;
 		this.descriptionClicked = false;
+		
+		//custom text.
+		this.noItemMessage = false;
 	}
 
 	this.resetValues();
 	
+	this.setEmptyListMessage = function(message) {
+		this.noItemMessage = message;
+	};
+	
+	
 	this.setList = function setList(list) {
 		this.dataList = list;
 		return this;
-	}
+	};
 	
 	this.setTitle = function setTitle(title) {
 		this.listTitle = title;
-	}
+	};
 
 	this.build = function build(id) {
 		document.getElementById(id).innerHTML = this.createSchoolList();
-	}
+	};
 	
 	/**
 	 * Sets all of the show options at one time.
@@ -59,19 +67,19 @@ function schoolItemBuilder() {
 		this.showItemSubTitle = showItemSubTitle;
 		this.showDate = showDate;
 		return this;
-	}
+	};
 	
 	this.setWidth = function setWidth(width) {
 		if (width == 'small' || width == 'medium' || width == 'large') {
 			this.width = width;
 		}
 		return this;
-	}
+	};
 
 	this.centerItem = function centerItem(center) {
 		this.centerInDiv = center;
 		return this;
-	}
+	};
 
 	/**
 	 * This overrides all other options to make it show a simple list.
@@ -80,7 +88,7 @@ function schoolItemBuilder() {
 	 */
 	this.showAsSimpleList = function showAsSimpleList(isSimpleList) {
 		this.isSimpleList = isSimpleList;
-	}
+	};
 
 	/**
 	 * sets the function for clicking the entire box.
@@ -91,58 +99,24 @@ function schoolItemBuilder() {
 	 */	
 	this.setOnBoxClick = function onBoxClick(clickFunction) {
 		this.entireBoxClicked =  clickFunction;
-	}
+	};
 	//*********
 	// CREATION METHODS BELOW
 	//*********
-
-
-	/**
-	 * Returns the HTML for a school_item based off of the specified school builder
-	 */
-	this.createFancySchoolItem = function createFancySchoolItem(list, currentDate) {
-		// Required Items
-		var html = '';
-		
-		//<div class = "school_item hoverbox";
-		html+='	<div ' + this.createBoxClass(this.showBox,this.entireBoxClicked);
-		html+= this.addClickFunction(this.entireBoxClicked, list) + '>';
-		
-
-		html+='		<div class="text">';
-		html+=			this.writeTextData(list, currentDate);
-		html+='	</div>';
-		if (this.showImage) {
-			html+= this.replaceLink(this.imageClicked, list, list[0][1]);
-			html+='<img src="images/' + list[2] + '" width="128" height="128"></a>';
-		}
-		html+='</div>';
-		return html;
-	}
-
-	/**
-	 * Returns the HTML for a very basic school item.
-	 * This only consist of the title
-	 */
-	this.createSimpleSchoolItem = function createSimpleSchoolItem(list) {
-		var html = '';
-		html+='<div class="text">';
-		html += this.replaceLink(this.titleClicked, list, list[0][1]);
-		html += list[0][0] + '</a>';
-		html+='</div>';
-		return html;
-	}
 	
 	/**
-	 * Creates a very 
+	 * Creates a list of school items with the parameters set by the builder.
 	 */
 	this.createSchoolList = function createSchoolList() {
 		var html = "";
 		if(!this.dataList) {
-			html += '<h1>There are no items in this list!</h1>\n';
-			return html;
+			if(this.noItemMessage) {
+				return '<h1>'+this.noItemMessage+'</h1>\n';
+			} else {
+				return '<h1>There are no items in this list!</h1>\n';
+			}
 		}
-		
+
 		if(this.listTitle) {
 			html += '<h1>' + this.listTitle + '</h1>\n';
 		}
@@ -161,8 +135,44 @@ function schoolItemBuilder() {
 		}
 		html+='</ul>';
 		return html;
-	}
-	
+	};
+
+	/**
+	 * Returns the HTML for a very basic school item.
+	 * This only consist of the title
+	 */
+	this.createSimpleSchoolItem = function createSimpleSchoolItem(list) {
+		var html = '';
+		html+='<div class="text" id = "'+list[0][2]+'">';
+		html += this.replaceLink(this.titleClicked, list, list[0][1]);
+		html += list[0][0] + '</a>';
+		html+='</div>';
+		return html;
+	};
+
+	/**
+	 * Returns the HTML for a school_item based off of the specified school builder
+	 */
+	this.createFancySchoolItem = function createFancySchoolItem(list, currentDate) {
+		// Required Items
+		var html = '';
+		
+		//<div class = "school_item hoverbox";
+		html+='	<div id = "' + list[0][2] + '"' + this.createBoxClass(this.showBox,this.entireBoxClicked);
+		html+= this.addClickFunction(this.entireBoxClicked, list) + '>';
+		
+
+		html+='		<div class="text">';
+		html+=			this.writeTextData(list, currentDate);
+		html+='	</div>';
+		if (this.showImage) {
+			html+= this.replaceLink(this.imageClicked, list, list[0][1]);
+			html+='<img src="images/' + list[2] + '" width="128" height="128"></a>';
+		}
+		html+='</div>';
+		return html;
+	};	
+
 	/**
 	 * Writes out the data that composes the text portion of the box.
 	 * (Title,subTitle, date, description)
@@ -185,8 +195,8 @@ function schoolItemBuilder() {
 
 		html+='		<p class="' + this.width + '" ' + this.addClickFunction(this.descriptionClicked, list) + '>' + list[1] + '</p>';
 		return html;
-	}
-	
+	};
+
 	this.createBoxClass = function createBoxClass(showBox, entireBoxClicked) {
 		if (!showBox && !entireBoxClicked) {
 			return '';
@@ -199,8 +209,7 @@ function schoolItemBuilder() {
 			html+= ' hover_box ';
 		}
 		return html + '"';
-	}
-	
+	};
 
 	/**
 	 * Returns: <a href="link or function">
@@ -217,7 +226,7 @@ function schoolItemBuilder() {
 		}
 		html+='> ';
 		return html;
-	}
+	};
 
 	/**
 	 * Adds a function to the html if it exist.
@@ -230,8 +239,43 @@ function schoolItemBuilder() {
 		} else {
 			return '';
 		}
+	};
+}
+
+function clickSelectionManager() {
+	this.selectedItems = [];
+	this.selectionClassName = ' selected_box';
+
+	this.addSelectedItem = function(id) {
+		this.selectedItems.push(id);
+		this.selectItem(id);
+	}
+
+	this.selectItem = function(id) {
+		document.getElementById(id).className+=this.selectionClassName;
+	}
+
+	this.clearItem = function(id) {
+		var toSelect = document.getElementById(id);
+		if(!toSelect) {
+			return;
+		}	
+		var className = toSelect.className;
+		var index = className.indexOf(this.selectionClassName);
+		var firstHalf = className.substring(0,index);
+		var secondHalf = className.substring(index + this.selectionClassName.length);
+		toSelect.className = firstHalf + secondHalf;
+	}
+
+	this.clearAllSelectedItems = function() {
+		for(var i = 0; i < this.selectedItems.length; i++) {
+			this.clearItem(this.selectedItems[i]);
+		}
+		// Clears array.
+		this.selectedItems = [];
 	}
 }
+
 
 function getDateType() {
 		return 'late';
