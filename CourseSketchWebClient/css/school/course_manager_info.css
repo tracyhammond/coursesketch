@@ -9,7 +9,7 @@ body {
 	left: 0;
 	width: 100%;
 	outline: 0;
-	background:#F4F4F4;
+	background:#FFFFFF;
 }
 
 input {
@@ -23,9 +23,17 @@ input {
 	/*
 	add shadow
 	*/
+	/* 
 	-moz-box-shadow: 0 0 12px #387bbe;
 	-webkit-box-shadow: 0 0 12px #387BBE;
 	box-shadow: 0 0 12px #387BBE;
+	*/
+	
+	-moz-box-shadow: 0 0 12px #a9D0f5;
+	-webkit-box-shadow: 0 0 12px #A9D0F5;
+	box-shadow: 0 0 12px #A9D0F5;
+	
+	
 	/*
 	clip the background
 	*/
