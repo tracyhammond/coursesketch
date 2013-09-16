@@ -25,6 +25,7 @@ function assignmentClickerFunction(list) {
 	builder.setEmptyListMessage('There are no problems for this assignment!');
 	builder.setOnBoxClick('problemClickerFunction');
 	builder.build('problem_list_column');
+	replaceIframe('html/course_managment_frames/edit_assignment.html');
 	showButton('problem_button');
 }
 
@@ -65,8 +66,10 @@ function manageHeight() {
 	var iframe = document.getElementById('edit_frame_id');
 	var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
 	// Gets the visual height.
-	var height = innerDoc.getElementsByTagName('body')[0].clientHeight;
-	iframe.height = height;
+	if(innerDoc) {
+		var height = innerDoc.getElementsByTagName('body')[0].clientHeight;
+		iframe.height = height;
+	}
 }
 
 /**
@@ -75,7 +78,9 @@ function manageHeight() {
 function replaceIframe(src) {
 	var toReplace = document.getElementById('editable_unit');
 	if (src) {
-		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" height="100%" width = 100% seamless = "seamless" onload="manageHeight()">';
+		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" height="500px" width = 100% ' +
+		'sanbox = "allow-same-origin allow-scripts"' +
+		'seamless = "seamless" onload="manageHeight()">';
 	} else {
 		toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
 		'<h2 style = "text-align:center">Click an item to edit</h2>';

@@ -1,0 +1,48 @@
+h1, h2, h3, input {
+	font-family: Helvetica,Arial,sans-serif;
+	color: #333;
+	text-shadow: 0 1px 0 #FFF;
+}
+
+body {
+	top: 0;
+	left: 0;
+	width: 100%;
+	outline: 0;
+	background:#F4F4F4;
+}
+
+input {
+	-webkit-appearance: none;
+	background-image: none;
+	padding: .4em 1.5%;
+	line-height: 1.4;
+	font-size: 16px;
+	display: block;
+	width: 97%;
+	/*
+	add shadow
+	*/
+	-moz-box-shadow: 0 0 12px #387bbe;
+	-webkit-box-shadow: 0 0 12px #387BBE;
+	box-shadow: 0 0 12px #387BBE;
+	/*
+	clip the background
+	*/
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
+	/*
+	round it out
+	*/
+	-webkit-border-radius: .6em;
+	border-radius: .6em;
+}
+
+input.notEditing {
+	/*
+	background
+	*/
+	border: 1px solid #B3B3B3;
+	background: #F0F0F0;
+}
