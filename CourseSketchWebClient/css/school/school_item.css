@@ -34,32 +34,32 @@
 }
 
 
-.school_item h3.large {
-	width: 45ex;
+.school_item h3.large,  {
+	width: 375px;
 }
 
 .school_item h3.medium {
-	width: 30ex;
+	width: 250px;
 }
 
 .school_item h3.small {
-	width: 15ex;
+	width: 125px;
 }
 
 .school_item p.large {
-	width: 45ex;
+	width: 375px;
 }
 
 .school_item p.medium {
-	width: 30ex;
+	width: 250px;
 }
 
 .school_item p.small {
-	width: 15ex;
+	width: 125px;
 }
 
 .school_item p {
-	width: 45ex;
+	width: 375px;
 }
 
 .hover_box {
