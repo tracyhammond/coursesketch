@@ -31,6 +31,7 @@ function assignmentClickerFunction(list) {
 
 function problemClickerFunction(list) {
 	changeSelection(list);
+	replaceIframe('html/course_managment_frames/edit_problem.html');
 }
 
 function showButton(id) {
