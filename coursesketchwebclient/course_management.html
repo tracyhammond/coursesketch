@@ -2,15 +2,11 @@
 <html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <base href=".">
     <title>Course Management</title>
-    <link rel="stylesheet" href="css/jquery/jquery.mobile-1.0rc2.min.css">
-    <link rel="stylesheet" href="css/home.css">
    	<link rel="stylesheet" href="css/school/school_item.css">
   	<link rel="stylesheet" href="css/utility/columns.css">
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
-    <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
-    <script type="text/javascript" src="js/menu/add_menu.js"></script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
 	<script type="text/javascript" src="js/school/school_item.js"></script>
 	<script type="text/javascript" src="js/school/course_manager.js"></script>
@@ -19,10 +15,6 @@
 	  		addLoadEvent(
 					function()
 					{
-						if(!is_touch) {
-							disable_menu_swiping();
-						}
-						placeMenu();
 						var builder = new schoolItemBuilder();
 						builder.setList(user_classes).setWidth('medium').centerItem(true);
 						builder.showImage = false;
@@ -31,6 +23,8 @@
 						clearLists(2);
 					}
 				);
+	  		function popupLatePolicy() {
+	  		}
 	</script>
 </head>
 <body>
