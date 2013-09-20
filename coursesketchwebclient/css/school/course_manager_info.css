@@ -16,26 +16,29 @@ body {
 	background:#FFFFFF;
 }
 
+.rounded_shadow {
+	
+	/*
+	add shadow
+	*/
+	-moz-box-shadow: 0 0 12px #a9D0f5;
+	-webkit-box-shadow: 0 0 12px #A9D0F5;
+	box-shadow: 0 0 12px #A9D0F5;
+	
+	/*
+	round it out
+	*/
+	-webkit-border-radius: .6em;
+	border-radius: .6em;
+}
+
 input {
-	-webkit-appearance: none;
 	background-image: none;
 	padding: .4em 1.5%;
 	line-height: 1.4;
 	font-size: 16px;
 	display: block;
 	width: 97%;
-	/*
-	add shadow
-	*/
-	/* 
-	-moz-box-shadow: 0 0 12px #387bbe;
-	-webkit-box-shadow: 0 0 12px #387BBE;
-	box-shadow: 0 0 12px #387BBE;
-	*/
-	
-	-moz-box-shadow: 0 0 12px #a9D0f5;
-	-webkit-box-shadow: 0 0 12px #A9D0F5;
-	box-shadow: 0 0 12px #A9D0F5;
 	
 	
 	/*
@@ -44,11 +47,6 @@ input {
 	-webkit-background-clip: padding-box;
 	-moz-background-clip: padding;
 	background-clip: padding-box;
-	/*
-	round it out
-	*/
-	-webkit-border-radius: .6em;
-	border-radius: .6em;
 }
 
 input.notEditing {
