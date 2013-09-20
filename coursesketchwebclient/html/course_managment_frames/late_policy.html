@@ -5,8 +5,12 @@
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script>
-    	function updateTimeType(timeType) {
-    		
+    	var daysLate = 0;
+    	var hoursLate = 0;
+    	var minutesLate = 0;
+    	var subtractionType = "total";
+    	function updateValue() {
+    		document.getElementById('showLateTime').innerHTML = 'Days: ' + daysLate + ' Hours: '+ hoursLate + ' Minutes: ' +minutesLate;
     	}
     	
     	function changeValue(changingValue) {
@@ -20,6 +24,8 @@
     	// x% off each hour
     	// option group #3 // exponential rate
     	// 
+    	
+    	addLoadEvent(updateValue);
 
     </script>
     <script type="text/javascript">
@@ -44,7 +50,8 @@
 		}
     </script>
 </head>
-<body class = "wide_centre">
+<body class = "wide_centre" style = "background: #D4D4D4">
+	<div style = "display:none">
 		<div>
 			<h2 style = "text-align:center">Late Policy</h2>
 			<div class = "rounded_shadow" style = "width: 100px; clear:right;">
@@ -60,7 +67,30 @@
 			</select>
 			</div>
 		</div>
-		<div id="chart_div" style="width: 900px; height: 500px;"></div>
+		<div id="chart_div" style="width: 900px; height: 500px; display:none;"></div>
+	</div>
+	<div>
+		<div>
+		<input type="radio" name="subtractionType" value="total" onclick = "subtractionType = this.value; updateValue();" checked>Cap Score<br>
+		<input type="radio" name="subtractionType" value="grade" onclick = "subtractionType = this.value; updateValue();">Take off of grade<br><br>
+		</div>
+		Days
+		<div class = "rounded_shadow" style = "width: 100px; clear:right;">
+			<input type="range" class = "centre" name="time" min="0" max="10" value = "0" onchange = "daysLate = this.value; updateValue();">
+		</div>
+		<br>
+		Hours
+		<div class = "rounded_shadow" style = "width: 100px; clear:right;">
+			<input type="range" class = "centre" name="time" min="0" max="23" value = "0" onchange = "hoursLate = this.value; updateValue();">
+		</div>
+		<br>
+		Minutes
+		<div class = "rounded_shadow" style = "width: 100px; clear:right;">
+			<input type="range" class = "centre" name="time" min="0" max="59" value = "0" onchange = "minutesLate = this.value; updateValue();">
+		</div>
+		<div id = "showLateTime" >
+		</div>
+	</div>
 </body>
 
 <!-- 
