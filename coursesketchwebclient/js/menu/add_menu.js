@@ -1,10 +1,17 @@
 function placeMenu() {
 	document.getElementById('menuBar').innerHTML = getMenu();
+	loadDynamicFile('js/menu/sliding_menu.js', 'js', swipeCheck);
+	loadDynamicFile('css/menu/menu.css', 'css', false);
+	//<script type="text/javascript" src="js/menu/sliding_menu.js"></script>
+}
+function swipeCheck() {
+	if(!is_touch) {
+		disable_menu_swiping();
+	}
 }
 
 function getMenu() {
-	return	'<link rel="stylesheet" href="css/menu/menu.css">' +
-			'<div id="menu">' +
+	return	'<div id="menu">' +
 			'	<h1>' +
 			'		<a href="home.html" data-ajax="false"><img src="images/smallTitle.svg"></a>' +
 			'	</h1>' +
