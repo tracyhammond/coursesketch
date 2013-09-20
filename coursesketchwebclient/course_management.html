@@ -21,27 +21,35 @@
 						builder.setOnBoxClick('classClickerFunction');
 						builder.build('class_list_column');
 						clearLists(2);
+						var loader = new DynamicFileLoader();
+						loader.loadFile("js/utils/popup.js",'js');
 					}
 				);
 	  		function popupLatePolicy() {
-	  			alert('late policy popup');
+	  			var popupId = 'togglePopup1';
+	  			var builder = new PopupBoxBuilder();
+	  			builder.setBody(true,'html/course_managment_frames/late_policy.html');
+	  			builder.setHeader(true,'Late Policy Information');
+	  			builder.setFooter(true,'<button onclick = "togglePopup(\'' + popupId + '\')">close</button>');
+	  			builder.setBodyHeight('500px');
+	  			builder.build('popupDiv', popupId);
+	  			builder.togglePopup(popupId);
 	  		}
 	</script>
 </head>
 <body>
-
 <!-- Menu Bar -->
 	<div id="menuBar">
 	</div>
-
+	<!-- Top Bar -->
 	<div data-role="page" class="pages ui-page ui-body-c ui-page-active" id="Div1" data-url="Div1" tabindex="0" style="margin-left: 0px; min-height: 739px;">
-    <!-- Section in the Header bar -->
-    <div data-role="header" class="ui-header ui-bar-a" role="banner">
-        <a class="showMenu ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" data-theme="a"><span class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span class="ui-btn-text">Menu</span></span></a>
-        <h1 id="nameBlock" class="ui-title" tabindex="0" role="heading" aria-level="1">Course Management</h1>
-    </div>
-    <!-- Center Section -->
-    <div id="home" style="padding-top: 5px;" >
+	    <!-- Section in the Header bar -->
+	    <div data-role="header" class="ui-header ui-bar-a" role="banner">
+	        <a class="showMenu ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" data-theme="a"><span class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span class="ui-btn-text">Menu</span></span></a>
+	        <h1 id="nameBlock" class="ui-title" tabindex="0" role="heading" aria-level="1">Course Management</h1>
+	    </div>
+	    <!-- Center Section -->
+	    <div id="home" style="padding-top: 5px;" >
     	<div class = "wide_centre">
 	    	<div style="width:75%; float:left;">
 		    	<div class="col-group3">
@@ -90,7 +98,12 @@
 			</div>
 		</div>
     </div>
-</div>
+	</div>
 
+	<div class="ui-loader ui-body-a ui-corner-all" style="top: 391.5px;"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div>
 
-<div class="ui-loader ui-body-a ui-corner-all" style="top: 391.5px;"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div></body></html>
+<!-- PopupDiv -->
+	<div id="popupDiv">
+	</div>
+
+</body></html>

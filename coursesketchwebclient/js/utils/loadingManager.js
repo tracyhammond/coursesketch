@@ -15,7 +15,7 @@ function addLoadEvent(func) {
 /**
  * A class that handles the dynamic loading of files.
  */
-function dynamicFileLoader() {
+function DynamicFileLoader() {
 
 	this.loadFile = function loadFile(filename, filetype, callBack) {
 		var fileref = this.createFile(filename, filetype, callBack);
@@ -80,7 +80,7 @@ function dynamicFileLoader() {
 }
 
 
-var loader = new dynamicFileLoader();
+var loader = new DynamicFileLoader();
 loader.loadFile("css/jquery/jquery.mobile-1.0rc2.min.css",'css');
 loader.loadFile("css/home.css",'css');
 
