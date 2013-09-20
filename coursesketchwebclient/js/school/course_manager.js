@@ -68,18 +68,23 @@ function manageHeight() {
 	var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
 	// Gets the visual height.
 	if(innerDoc) {
-		var height = innerDoc.getElementsByTagName('body')[0].clientHeight;
+		var iFrameElement = innerDoc.getElementById('iframeBody') || innerDoc.getElementsByTagName('body')[0];
+		if(!iFrameElement) {
+			return;
+		}
+		var height = iFrameElement.scrollHeight;
 		iframe.height = height;
 	}
 }
 
 /**
 	Given the source this will create an iframe that will manage its own height.
+	TODO: make this more general.
 */
 function replaceIframe(src) {
 	var toReplace = document.getElementById('editable_unit');
 	if (src) {
-		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" height="500px" width = 100% ' +
+		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" width = 100% ' +
 		'sanbox = "allow-same-origin allow-scripts"' +
 		'seamless = "seamless" onload="manageHeight()">';
 	} else {

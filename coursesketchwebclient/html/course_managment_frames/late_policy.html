@@ -2,11 +2,16 @@
 <base href="../../">
     <link rel="stylesheet" href="css/school/course_manager_info.css">
     <link rel="stylesheet" href="css/utility/columns.css">
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script>
     	function updateTimeType(timeType) {
     		
     	}
     	
+    	function changeValue(changingValue) {
+    		document.getElementById('current_number').innerHTML = '' + changingValue;
+    	}
     	// option group #1
     	// x% off of total (meaning you cap the score)
     	// x% off of grade (meaning x% * your score)
@@ -17,11 +22,37 @@
     	// 
 
     </script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+		function drawChart() {
+			var data = google.visualization.arrayToDataTable([
+				['Minutes', 'Policy1', 'Expenses'],
+				[0,  1000,      400],
+				[10,  1170,      460],
+				[20,  660,       1120],
+				[30,  1030,      540],
+				[60,  5000,      540]
+			]);
+			
+			var options = {
+				title: 'Company Performance'
+			};
+			
+			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+			chart.draw(data, options);
+		}
+    </script>
 </head>
 <body class = "wide_centre">
 		<div>
 			<h2 style = "text-align:center">Late Policy</h2>
-			<input type="range" name="range" min="1" max="60">
+			<div class = "rounded_shadow" style = "width: 100px; clear:right;">
+				<input type="range" class = "centre" name="time" min="1" max="60" value = "5" onchange = "changeValue(this.value);">
+			</div>
+			<div id="current_number">
+			5
+			</div>
 			<select onchange="updateLatePolicy()">
 				<option value = "days">Days</option>
 				<option value = "hours">Hours</option>
@@ -29,6 +60,7 @@
 			</select>
 			</div>
 		</div>
+		<div id="chart_div" style="width: 900px; height: 500px;"></div>
 </body>
 
 <!-- 

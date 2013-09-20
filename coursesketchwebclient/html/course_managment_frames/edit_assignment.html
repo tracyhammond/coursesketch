@@ -3,12 +3,17 @@
     <link rel="stylesheet" href="css/school/course_manager_info.css">
     <link rel="stylesheet" href="css/utility/columns.css">
     <script type="text/javascript" src="js/utils/input_focus_manager.js"></script>
+    <script type="text/javascript">
+    	function selectParent() {
+    		window.parent.popupLatePolicy();
+    	}
+    </script>
 </head>
-<body class = "wide_centre">
+<body id="iframeBody" class = "wide_centre">
 		<div>
 			<h2 class = "title">Edit Assignment Content</h2>
 			<h3 id="uniqueIDHolder">Assignment ID: </h3>
-			<input type="text" class = "notEditing" value="assignment name" readonly="true" onclick="makeUnEditable(this);"
+			<input type="text" class = "notEditing rounded_shadow" value="assignment name" readonly="true" onclick="makeUnEditable(this);"
 			onblur="makeEditable(this);" onkeypress="checkEnter(this)" onfocus="this.value = this.value;">
 			<div>
 			<h3>Late Policy</h3>
@@ -18,7 +23,7 @@
 				<option value="policy2">policy 2 descript</option>
 				<option value="policy3">policy 3 descript</option>
 			</select>
-			<button style="float:right">View Late Policy Examples</button>
+			<button style="float:right" onclick='selectParent()'>View Late Policy Examples</button>
 			</div>
 		</div>
 </body>

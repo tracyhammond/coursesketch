@@ -4,11 +4,11 @@
     <link rel="stylesheet" href="css/utility/columns.css">
     <script type="text/javascript" src="js/utils/input_focus_manager.js"></script>
 </head>
-<body class = "wide_centre">
+<body id="iframeBody" class = "wide_centre">
 		<div>
 			<h2 class = "title">Edit Course Content</h2>
 			<h3 id="uniqueIDHolder">Class ID: </h3>
-			<input type="text" class = "notEditing" value="class name here" readonly="true" onclick="makeUnEditable(this);"
+			<input type="text" class = "notEditing rounded_shadow" value="class name here" readonly="true" onclick="makeUnEditable(this);"
 			onblur="makeEditable(this);" onkeypress="checkEnter(this)" onfocus="this.value = this.value;">
 		</div>
 </body>
