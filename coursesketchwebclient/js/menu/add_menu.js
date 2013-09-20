@@ -1,9 +1,11 @@
 function placeMenu() {
 	document.getElementById('menuBar').innerHTML = getMenu();
-	loadDynamicFile('js/menu/sliding_menu.js', 'js', swipeCheck);
-	loadDynamicFile('css/menu/menu.css', 'css', false);
+	var loader = new dynamicFileLoader();
+	loader.loadFile('js/menu/sliding_menu.js', 'js', swipeCheck);
+	loader.loadFile('css/menu/menu.css', 'css', false);
 	//<script type="text/javascript" src="js/menu/sliding_menu.js"></script>
 }
+
 function swipeCheck() {
 	if(!is_touch) {
 		disable_menu_swiping();
