@@ -1,8 +1,3 @@
-body{
-    -webkit-text-size-adjust:none;
-    background: #5a5959 url(../images/menuBg.gif) top left repeat-y;
-}
-
 .showMenu {
     color: rgb(126, 181, 214);
 }
