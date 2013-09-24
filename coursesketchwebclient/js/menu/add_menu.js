@@ -1,8 +1,12 @@
 function placeMenu() {
-	document.getElementById('menuBar').innerHTML = getMenu();
-	var loader = new DynamicFileLoader();
-	loader.loadFile('js/menu/sliding_menu.js', 'js', swipeCheck);
-	loader.loadFile('css/menu/menu.css', 'css', false);
+	var menuElement = document.getElementById('menuBar');
+	if(menuElement) {
+		menuElement.innerHTML = getMenu();
+		var loader = new DynamicFileLoader();
+		loader.loadFile('js/menu/sliding_menu.js', 'js', swipeCheck);
+		loader.loadFile('css/menu/menu.css', 'css', false);
+	}
+	
 	//<script type="text/javascript" src="js/menu/sliding_menu.js"></script>
 }
 
