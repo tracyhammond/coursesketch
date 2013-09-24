@@ -146,7 +146,7 @@ function inputListener() {
 	
 	this.mouseExit = function mouseExit(event)  {
 		if(this.touchDown) {
-			mouseUp(event);
+			this.mouseUp(event);
 		}
 		this.touchInBounds = false;
 		var touchPos = this.getTouchPos(event);
