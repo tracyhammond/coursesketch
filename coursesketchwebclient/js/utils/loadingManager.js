@@ -85,10 +85,12 @@ loader.loadFile("css/jquery/jquery.mobile-1.0rc2.min.css",'css');
 loader.loadFile("css/home.css",'css');
 
 addLoadEvent(function () {
-	loader.loadFile("js/menu/add_menu.js",'js',function() {
-		placeMenu();	
+	if(document.getElementById('menuBar')) {
+		loader.loadFile("js/menu/add_menu.js",'js',function() {
+			placeMenu();	
+		}
+		);
 	}
-	);
 });
 
 /*
