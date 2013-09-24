@@ -4,30 +4,35 @@ function inputListener() {
 		METHODS
 	**************/
 
-	this.initialize = function initialize(canvasId) {
+	this.initializeCanvas = function initializeCanvas(canvasId) {
 		this.canvas = document.getElementById(canvasId);
 		this.canvasBounds = this.canvas.getBoundingClientRect();
 		this.registerListeners(this.canvas);
 	 	this.context = this.canvas.getContext('2d');
 	}
 
+	this.initializeElement = function initializeElement(elementId) {
+		this.inputElement = document.getElementById(elementId);
+		this.registerListeners(this.inputElement);
+	}
+
 	// Registers all of the touch listeners
-	this.registerListeners = function registerListeners(canvas) {
-		canvas.addEventListener('mousemove',
+	this.registerListeners = function registerListeners(element) {
+		element.addEventListener('mousemove',
 			function(event){this.listenerScope.mouseMoved(event);}, false);
-		canvas.addEventListener('mousedown',
+		element.addEventListener('mousedown',
 		function(event){this.listenerScope.mouseDown(event);}, false);
-		canvas.addEventListener('mouseup',
+		element.addEventListener('mouseup',
 		function(event){this.listenerScope.mouseUp(event);}, false);
-		canvas.addEventListener ("mouseout",
+		element.addEventListener ("mouseout",
 		function(event){this.listenerScope.mouseExit(event);}, false);
-		canvas.addEventListener('touchend', 
+		element.addEventListener('touchend', 
 		function(event){this.listenerScope.mouseUp(event);}, false);
-		canvas.addEventListener('touchstart', 
+		element.addEventListener('touchstart', 
 		function(event){this.listenerScope.mouseDown(event);}, false);
-		canvas.addEventListener('touchmove', 
+		element.addEventListener('touchmove', 
 		function(event){this.listenerScope.mouseMoved(event);}, false);
-		canvas.listenerScope = this;
+		element.listenerScope = this;
 	}
 
 	/*********************
@@ -42,36 +47,23 @@ function inputListener() {
 	// subtracts the location of the box
 	// subtracts how much the user has scrolled on the page
 	this.getTouchPos = function getTouchPos(event) {
-		/*
-		var xCoord = -1;
-		var yCoord = -1;
-		if (event.x != undefined && event.y != undefined)
-		{
-			xCoord = event.x;
-			yCoord = event.y;
-		}
-		else // Firefox method to get the position
-		{
-			xCoord = event.clientX + document.body.scrollLeft +
-					document.documentElement.scrollLeft;
-			yCoord = event.clientY + document.body.scrollTop +
-					document.documentElement.scrollTop;
-		}
-		xCoord -= this.canvas.offsetLeft;
-		yCoord -= this.canvas.offsetTop;
-        return {
-          x: xCoord,
-          y: yCoord
-        };
-        */
-        
-        this.canvasBounds = this.canvas.getBoundingClientRect();
-		var scrollLeft = (window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
-		var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+        if(this.canvas) {
+        	/*
+        	 * TODO: delete if browser compatibility is fixed
+        	 */
+     //   	var scrollLeft = (window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
+    //		var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+	  //      this.canvasBounds = this.canvas.getBoundingClientRect();
 	        return {
- 	          x: event.pageX - this.canvasBounds.left - scrollLeft,
- 	          y: event.pageY - this.canvasBounds.top - scrollTop
+ 	          x: event.pageX - this.inputElement.offsetLeft,//this.canvasBounds.left - scrollLeft,
+ 	          y: event.pageY - this.inputElement.offsetTop//this.canvasBounds.top - scrollTop
  	        };
+        } else {
+        	return {
+   	          x: event.pageX - this.inputElement.offsetLeft,
+   	          y: event.pageY - this.inputElement.offsetTop
+   	        };
+        }
 	}
 
 	this.getThickness = function getThickness(speed, size, pressure, index, lastStroke, type) {
@@ -166,11 +158,12 @@ function inputListener() {
 	***********/
 
 	this.touchDown = false;
-	this.touchInBounds = true;
-	this.canvas; // The HTML5 element where sketching happens.
-	this.canvasBounds;
-	this.context;
+	this.touchInBounds = false;
+	this.canvas = false; // The HTML5 element where sketching happens.
+	this.canvasBounds = false;
+	this.context = false;
 	this.inputListener = false;
+	this.inputElement = false; // The element that needs touch input.
 }
 
 /**
