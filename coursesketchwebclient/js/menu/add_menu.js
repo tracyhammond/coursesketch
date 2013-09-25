@@ -6,8 +6,6 @@ function placeMenu() {
 		loader.loadFile('js/menu/sliding_menu.js', 'js', swipeCheck);
 		loader.loadFile('css/menu/menu.css', 'css', false);
 	}
-	
-	//<script type="text/javascript" src="js/menu/sliding_menu.js"></script>
 }
 
 function swipeCheck() {

@@ -1,47 +1,45 @@
 ﻿$(function () {
-    var menuStatus;
+    var menuStatus = false;
 
     $("menu").collapsible({
         effect: 'slide',
     });
 
-    // Show menu
-    $("a.showMenu").click(function () {
-        if (menuStatus != true) {
-            $(".ui-page-active").animate({
-                marginLeft: "200px",
-            }, 300, function () {
-                menuStatus = true
-            });
-            return false;
-        } else {
-            $(".ui-page-active").animate({
+    function animateMenu(value) {
+		if(value != true) {
+			document.getElementById("menuBar").style.display = "block";
+			 $(".ui-page-active").animate({
+	                marginLeft: "200px",
+	            }, 300, function () {
+	                menuStatus = true;
+	            });
+	            return false;
+		} else {
+			$(".ui-page-active").animate({
                 marginLeft: "0px",
             }, 300, function () {
-                menuStatus = false
+                menuStatus = false;
+    			document.getElementById("menuBar").style.display = "none";
             });
             return false;
-        }
+		}
+    }
+    
+    // Show menu
+    $("a.showMenu").click(function () {
+    	return animateMenu(menuStatus);
     });
 
 //Swiping motion for phone
     $('#menu, .pages').live("swipeleft", function () {
         if (menuStatus && enable_menu_swiping) {
-            $(".ui-page-active").animate({
-                marginLeft: "0px",
-            }, 300, function () {
-                menuStatus = false
-            });
+        	animateMenu(menuStatus);
         }
     });
 
     $('.pages').live("swiperight", function () {
         if (!menuStatus && enable_menu_swiping) {
-            $(".ui-page-active").animate({
-                marginLeft: "200px",
-            }, 300, function () {
-                menuStatus = true
-            });
+        	animateMenu(menuStatus);
         }
     });
 
@@ -51,15 +49,6 @@
     });
 
     // Menu behaviour
-    $("#menu li a").click(function () {
-        var p = $(this).parent();
-        if ($(p).hasClass('active')) {
-            $("#menu li").removeClass('active');
-        } else {
-            $("#menu li").removeClass('active');
-            $(p).addClass('active');
-        }
-    });
 });
 
 var enable_menu_swiping = true;
