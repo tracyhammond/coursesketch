@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="../../">
+    <title>Welcome!</title>
+   	<link rel="stylesheet" href="css/school/school_item.css">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
+	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
+	<script type="text/javascript" src="js/school/school_item.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+	  		addLoadEvent(
+					function()
+					{
+						var builder = new schoolItemBuilder();
+						builder.setTitle('Current Classes');
+						builder.setList(user_classes);
+						builder.build('class_list_home');
+						
+						builder.setTitle('Uncompleted Assignments');
+						builder.setList(upcomming_assignments);
+						builder.build('due_assignments');
+					}
+				);
+	</script>
+</head>
+<body>
+<!-- Menu Bar -->
+	<div id="menuBar">
+	</div>
+
+	<div id = "header">
+		<script>
+			document.getElementById('header').innerHTML = getHeader('DRAWING TEST HERE');
+		</script>
+    </div>
+    <!-- Center Section -->
+    <div id="home">
+    	<div class = "centre">
+    		My text centered here
+    	</div>
+    </div>
+</div>
+
+
+<div class="ui-loader ui-body-a ui-corner-all" style="top: 391.5px;"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div></body></html>
