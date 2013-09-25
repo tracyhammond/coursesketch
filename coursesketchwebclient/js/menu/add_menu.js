@@ -35,8 +35,8 @@ function getMenu() {
 			'		<li><a href="myGrades.php" data-ajax="false" class="contentLink">My Grades</a></li>' +
 			'		<li><a href="toggleClasses.php" data-ajax="false" class="contentLink">Hide Class</a></li>' +
 			'		<li class="header"><h3>Classes I\'m Teaching</h3></li>' +
-			'		<li><a href="professorGradebook.php" data-ajax="false" class="contentLink">Grades</a></li>' +
-			'		<li><a href="course_management.html" data-ajax="false" class="contentLink">Course Management</a></li>' +
+			'		<li><a href="html/instructor/gradebook.html" data-ajax="false" class="contentLink">Grades</a></li>' +
+			'		<li><a href="html/instructor/course_management.html" data-ajax="false" class="contentLink">Course Management</a></li>' +
 			'		<li><a href="viewClassKeys.php" data-ajax="false" class="contentLink">View Class Keys</a></li>' +
 			'		<li class="header"><h3>Account</h3></li>' +
 			'		<li><a href="changePassword.php" data-ajax="false" class="contentLink">Change Password</a></li>' +
