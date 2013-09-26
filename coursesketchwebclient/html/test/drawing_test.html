@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <base href="../../">
-    <title>Welcome!</title>
+    <title>Drawing!</title>
    	<link rel="stylesheet" href="css/school/school_item.css">
   	<link rel="stylesheet" href="css/utility/columns.css">
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
@@ -9,21 +9,18 @@
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
     <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
 	<script type="text/javascript" src="js/school/school_item.js"></script>
+	<script type="text/javascript" src="js/input/drawing.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/input/touch_event.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
-	  		addLoadEvent(
-					function()
-					{
-						var builder = new schoolItemBuilder();
-						builder.setTitle('Current Classes');
-						builder.setList(user_classes);
-						builder.build('class_list_home');
-						
-						builder.setTitle('Uncompleted Assignments');
-						builder.setList(upcomming_assignments);
-						builder.build('due_assignments');
-					}
-				);
+
+		var drawingCreator = false;
+	    addLoadEvent(function () {
+			var input = new inputListener();
+			input.initializeElement("drawingCanvas");
+			drawingCreator = new drawingInputCreator(input);
+		});
 	</script>
 </head>
 <body>
@@ -31,15 +28,16 @@
 	<div id="menuBar">
 	</div>
 
-	<div id = "header">
-		<script>
-			document.getElementById('header').innerHTML = getHeader('DRAWING TEST HERE');
-		</script>
+<div data-role="page" class="pages ui-page ui-body-c ui-page-active" id="Div1" data-url="Div1" tabindex="0" style="margin-left: 0px; min-height: 739px;">
+    <!-- Section in the Header bar -->
+    <div data-role="header" class="ui-header ui-bar-a" role="banner">
+        <a class="showMenu ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" data-theme="a"><span class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span class="ui-btn-text">Menu</span></span></a>
+        <h1 id="nameBlock" class="ui-title" tabindex="0" role="heading" aria-level="1">Drawing!</h1>
     </div>
     <!-- Center Section -->
     <div id="home">
     	<div class = "centre">
-    		My text centered here
+   				<canvas id="drawingCanvas" width="100%" height="100%" style="top:0px; left:0px; width: 100%; height: 100%; background:#FFFFFF;"></canvas>
     	</div>
     </div>
 </div>

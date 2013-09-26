@@ -147,8 +147,8 @@ function SRL_Object() {
 	/**
 	 * The creation time of the object.
 	 */
-	//TODO have Avid fill in the functions for time
-	//var m_time = this.getTime();
+
+	var m_time;
 	/**
 	 * An object can be created by a user 
 	 * (like drawing a shape, or speaking a phrase)
@@ -833,6 +833,10 @@ function SRL_Point(x, y) {
 	 * Points can have pressure depending on the input device
 	 */
 	var m_pressure = 1;
+	/**
+	 * Points can have size depending on the input device
+	 */
+	var m_size = 1;
 	/**
 	 * Holds an history list of the x points 
 	 * Purpose is so that we can redo and undo and go back to the original points
