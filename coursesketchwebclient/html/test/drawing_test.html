@@ -16,10 +16,19 @@
     <script type="text/javascript">
 
 		var drawingCreator = false;
+		var sketch = false;
 	    addLoadEvent(function () {
 			var input = new inputListener();
 			input.initializeElement("drawingCanvas");
-			drawingCreator = new drawingInputCreator(input);
+			sketch = new sketchContainer();
+			drawingCreator = new drawingInputCreator(input, sketch, false, function() {
+				element = document.getElementById('output');
+				var html = "";
+				for(object in sketch.getList()) {
+					html+= "added Stroke<br>";
+				}
+				element.innerHTML = html;
+			});
 		});
 	</script>
 </head>
@@ -37,6 +46,7 @@
     <!-- Center Section -->
     <div id="home">
     	<div class = "centre">
+    			<div id = "output"></div>
    				<canvas id="drawingCanvas" width="100%" height="100%" style="top:0px; left:0px; width: 100%; height: 100%; background:#FFFFFF;"></canvas>
     	</div>
     </div>

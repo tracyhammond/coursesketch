@@ -1,4 +1,4 @@
- *******************************
+ /*******************************
  *
  *
  * Overload data class
@@ -838,6 +838,10 @@ function SRL_Point(x, y) {
 	 */
 	var m_size = 1;
 	/**
+	 * Gives the instantaneous speed calculated from this and the previous point.
+	 */
+	var m_speed = 0;
+	/**
 	 * Holds an history list of the x points 
 	 * Purpose is so that we can redo and undo and go back to the original points
 	 */
@@ -865,6 +869,17 @@ function SRL_Point(x, y) {
 	this.setPressure = function(pressure) {
 		if (typeof pressure === "number") {
 			m_pressure = pressure;
+		} else {
+			throw "argument of .setPressure must be a 'number'";
+		}
+	}
+	/**
+	 * Points can have pressure depending on the input device
+	 * @param pressure
+	 */
+	this.setSize = function(size) {
+		if (typeof size === "number") {
+			m_size = size;
 		} else {
 			throw "argument of .setPressure must be a 'number'";
 		}
@@ -911,7 +926,18 @@ function SRL_Point(x, y) {
 		return m_yList[m_currentElement];
 	}
 
-
+	this.setSpeed = function(point) {
+		if (point instanceof SRL_Point) {
+			var distance = this.distance(point.getX(), point.getY());
+			var timeDiff = point.getTime() - this.getTime();
+			if (timeDiff == 0) {
+				return false;
+			}
+			m_speed = distance / timeDiff;
+			return true;
+		}
+	}
+	
 	this.distance.SRL_Point = function(arg1, arg2, arg3, arg4) {
 		/**
 	 	 * Return the distance from point rp to this point.
@@ -1758,7 +1784,7 @@ SRL_Line.prototype = new SRL_Shape();
 //
 //
 //************************************************************************
-
+/*
 console.log("****************SRL_Stroke()****************");
 var test_stroke = new SRL_Stroke();
 test_stroke.temp_print();
