@@ -4,24 +4,62 @@
  * SRL_Library.js
  */
 
-function drawingInputCreator(externalInputListener) {
+/**
+ * Gets input events and creates sketch components out of the events.
+ */
+function drawingInputCreator(externalInputListener, externalSketchContainer, recognitionSender, strokeCreationCallback) {
 	var inputListener = externalInputListener;
+	var sketchContainer = externalSketchContainer;
 	var currentPoint;
+	var pastPoint;
 	var currentStroke;
-	this.inputListener.setInputDraggedListener(function(drawingEvent) {
-		this.currentPoint = new SRL_Point(drawingEvent.x, drawingEvent.y);
-		this.currentPoint.setTime(drawingEvent.time);
-		this.currentPoint.setPressure(drawingEvent.pressure);
-		this.currentPoint.setSize(drawingEvent.size);
+
+	inputListener.listenerScope = this;
+
+	/**
+	 * Creates a new stroke and point and adds the point to the stroke.
+	 */
+	inputListener.setDraggingStartListener(function(drawingEvent) {
+		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
+		currentStroke = new SRL_Stroke(currentPoint);
+		pastPoint = currentPoint;
 	});
 
-	this.inputListener.setDraggingStartListener(function(drawingEvent) {
-	
+	/**
+	 * Sets the drag function that creates a new stroke and adds a point to the stroke.
+	 */
+	inputListener.setInputDraggedListener(function(drawingEvent) {
+		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
+		currentPoint.setSpeed(pastPoint);
+		currentStroke.addPoint(currentPoint);
+		pastPoint = currentPoint;
 	});
-	
-	this.inputListener.setDraggingEndListener(function(drawingEvent) {
-	
+
+	/**
+	 * Adds the point to the stroke, adds the stroke to the sketch container.
+	 */
+	inputListener.setDraggingEndListener(function(drawingEvent) {
+		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
+		currentPoint.setSpeed(pastPoint);
+		currentStroke.addPoint(currentPoint);
+		sketchContainer.addObject(currentStroke);
+		if (strokeCreationCallback)
+			strokeCreationCallback(); // sends back the sketch to be recognized
+		currentStroke = false;
+		currentPoint = false;
 	});
+
+	/**
+	 * Creates an {@link SRL_Point} from a drawing event.
+	 */
+	this.createPointFromEvent = function (drawingEvent) {
+		var currentPoint = new SRL_Point(drawingEvent.x, drawingEvent.y);
+		currentPoint.setTime(drawingEvent.time);
+		currentPoint.setPressure(drawingEvent.pressure);
+		currentPoint.setSize(drawingEvent.size);
+		currentPoint.setUserCreated(true);
+		return currentPoint;
+	}
 }
 
 function sketchContainer() {
@@ -34,11 +72,13 @@ function sketchContainer() {
 	};
 
 	var objectMap = {};
-	this.addObject(srl_object) {
+	this.addObject = function(srl_object) {
 		objectList.push(srl_object);
+		objectMap[srl_object.get]
 	}
-
-	this.addObject(srl_object) {
-		objectList.push(srl_object);
+	
+	this.getList = function() {
+		return objectList;
 	}
+	
 }
