@@ -5,18 +5,18 @@ function inputListener() {
 	**************/
 
 	this.initializeCanvas = function initializeCanvas(canvasId) {
-		this.canvas = document.getElementById(canvasId);
-		this.canvasBounds = this.canvas.getBoundingClientRect();
-		this.registerListeners(this.canvas);
-	 	this.context = this.canvas.getContext('2d');
+		canvas = document.getElementById(canvasId);
+		canvasBounds = canvas.getBoundingClientRect();
+		this.canvasContext = canvas.getContext('2d');
+		this.initializeElement(canvasId);
 	}
 
 	this.initializeElement = function initializeElement(elementId) {
-		this.inputElement = document.getElementById(elementId);
-		this.registerListeners(this.inputElement);
+		inputElement = document.getElementById(elementId);
+		this.registerListeners(inputElement);
 	}
 
-	// Registers all of the touch listeners
+	// Registers all of the touch listeners.
 	this.registerListeners = function registerListeners(element) {
 		element.addEventListener('mousemove',
 			function(event){this.listenerScope.mouseMoved(event);}, false);
@@ -47,21 +47,21 @@ function inputListener() {
 	// subtracts the location of the box
 	// subtracts how much the user has scrolled on the page
 	this.getTouchPos = function getTouchPos(event) {
-        if(this.canvas) {
+        if (false) {
         	/*
         	 * TODO: delete if browser compatibility is fixed
         	 */
      //   	var scrollLeft = (window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
     //		var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-	  //      this.canvasBounds = this.canvas.getBoundingClientRect();
+	  //      canvasBounds = canvas.getBoundingClientRect();
 	        return {
- 	          x: event.pageX - this.inputElement.offsetLeft,//this.canvasBounds.left - scrollLeft,
- 	          y: event.pageY - this.inputElement.offsetTop//this.canvasBounds.top - scrollTop
+ 	          x: event.pageX - this.canvas.offsetLeft,//canvasBounds.left - scrollLeft,
+ 	          y: event.pageY - this.canvas.offsetTop//canvasBounds.top - scrollTop
  	        };
         } else {
         	return {
-   	          x: event.pageX - this.inputElement.offsetLeft,
-   	          y: event.pageY - this.inputElement.offsetTop
+   	          x: event.pageX - inputElement.offsetLeft,
+   	          y: event.pageY - inputElement.offsetTop
    	        };
         }
 	}
@@ -75,7 +75,7 @@ function inputListener() {
 	*******************/
 
 	this.draggingStart = function draggingStart(event)  {
-		this.dragging = true;
+		dragging = true;
 		var touchPos = this.getTouchPos(event);
 		var time = this.createTimeStamp();
 		var newEvent = new inputEvent(touchPos.x, touchPos.y, time, 0.5, 0.5, 'draggingStart');
@@ -87,7 +87,7 @@ function inputListener() {
 	}
 
 	this.draggingEnd = function draggingEnd(event)  {
-		this.dragging = false;
+		dragging = false;
 		var touchPos = this.getTouchPos(event);
 		var time = this.createTimeStamp();
 		var newEvent = new inputEvent(touchPos.x, touchPos.y, time, 0.5, 0.5, 'draggingEnd');
@@ -103,11 +103,11 @@ function inputListener() {
 	*******************/
 
 	this.mouseMoved = function mouseMoved(event) {
-		if(!this.touchInBounds) {
+		if(!touchInBounds) {
 			this.mouseEnter(event);
 			return;
 		}
-		if(this.touchDown) {
+		if(touchDown) {
 			this.mouseDragged(event);
 			return;
 		}
@@ -122,7 +122,7 @@ function inputListener() {
 	}
 
 	this.mouseDragged = function mouseDragged(event)  {
-		if(!this.dragging) {
+		if(!dragging) {
 			this.draggingStart(event);
 			return;
 		}
@@ -137,7 +137,7 @@ function inputListener() {
 	}
 
 	this.mouseEnter = function mouseEnter(event) {
-		this.touchInBounds = true;
+		touchInBounds = true;
 		var touchPos = this.getTouchPos(event);
 		var time = this.createTimeStamp();
 		var newEvent = new inputEvent(touchPos.x, touchPos.y, time, 0.5, 0.5, 'inputEnter');
@@ -149,10 +149,10 @@ function inputListener() {
 	}
 
 	this.mouseExit = function mouseExit(event)  {
-		if(this.touchDown) {
+		if(touchDown) {
 			this.mouseUp(event);
 		}
-		this.touchInBounds = false;
+		touchInBounds = false;
 		var touchPos = this.getTouchPos(event);
 		var time = this.createTimeStamp();
 		var newEvent = new inputEvent(touchPos.x, touchPos.y, time, 0.5, 0.5, 'inputExit');
@@ -164,8 +164,8 @@ function inputListener() {
 	}
 
 	this.mouseDown = function mouseDown(event)  {
-		this.touchDown = true;
-		if(!this.touchInBounds) {
+		touchDown = true;
+		if(!touchInBounds) {
 			this.mouseEnter(event);
 		}
 		var touchPos = this.getTouchPos(event);
@@ -179,12 +179,12 @@ function inputListener() {
 	}
 
 	this.mouseUp = function mouseUp(event)  {
-		if (this.dragging) {
+		if (dragging) {
 			this.draggingEnd(event);
 		}
 
-		if(this.touchInBounds && this.touchDown) {
-			this.touchDown = false;
+		if(touchInBounds && touchDown) {
+			touchDown = false;
 			var touchPos = this.getTouchPos(event);
 			var time = this.createTimeStamp();
 			var newEvent = new inputEvent(touchPos.x, touchPos.y, time, 0.5, 0.5, 'inputUp');
@@ -275,7 +275,7 @@ function inputListener() {
 	var touchInBounds = false;
 	var canvas = false; // The HTML5 element where sketching happens.
 	var canvasBounds = false;
-	var context = false;
+	this.canvasContext = false;
 	var inputElement = false; // The element that needs touch input.
 	var dragging = false;
 	

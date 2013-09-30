@@ -2,17 +2,19 @@
  * Requires:
  * touch_event.js
  * SRL_Library.js
+ * srl_display.js
  */
 
 /**
  * Gets input events and creates sketch components out of the events.
  */
-function drawingInputCreator(externalInputListener, externalSketchContainer, recognitionSender, strokeCreationCallback) {
+function drawingInputCreator(externalInputListener, externalSketchContainer, strokeCreationCallback, graphics) {
 	var inputListener = externalInputListener;
 	var sketchContainer = externalSketchContainer;
 	var currentPoint;
 	var pastPoint;
 	var currentStroke;
+	var graphics = graphics;
 
 	inputListener.listenerScope = this;
 
@@ -33,6 +35,7 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, rec
 		currentPoint.setSpeed(pastPoint);
 		currentStroke.addPoint(currentPoint);
 		pastPoint = currentPoint;
+		currentStroke.drawStroke(graphics);
 	});
 
 	/**
