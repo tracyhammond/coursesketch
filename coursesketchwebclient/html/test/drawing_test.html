@@ -23,7 +23,7 @@
 			input.initializeCanvas("drawingCanvas");
 			canvasContext = input.canvasContext;
 			sketch = new sketchContainer();
-			drawingCreator = new drawingInputCreator(input, sketch, false, canvasContext);
+			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
 		});
 	    
 	    function callback() {
