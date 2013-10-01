@@ -8,8 +8,20 @@
 		addLoadEvent(function () {
 			var input = new inputListener();
 			input.initializeElement("drawingCanvas");
-			input.setListener(function(event) {
+			input.setUnifiedListener(function(event) {
 				var element = document.getElementById('output');
+				var html = "x: " + event.x + "y: " + event.y + "time: " + event.time +'<br>' +
+				'type ' + event.inputType;
+				element.innerHTML = html;
+			});
+			input.setDraggingStartListener(function(event) {
+				var element = document.getElementById('dragging');
+				var html = "x: " + event.x + "y: " + event.y + "time: " + event.time +'<br>' +
+				'type ' + event.inputType;
+				element.innerHTML = html;
+			});
+			input.setDraggingEndListener(function(event) {
+				var element = document.getElementById('dragging');
 				var html = "x: " + event.x + "y: " + event.y + "time: " + event.time +'<br>' +
 				'type ' + event.inputType;
 				element.innerHTML = html;
@@ -22,7 +34,7 @@
 		<div>
 		<canvas id="drawingCanvas" width="800" height="800" style="top:0px; left:0px; width: 800px; height: 800px; background-color:blue;"></canvas>
 		<div id="output" style = "float:right;"></div>
+		<div id="dragging" style = "float:right;"></div>
 		<div id="drawingDiv" width="800" height="800" style="top:0px; left:0px; width: 800px; height: 800px; background-color:red;"></div>
-		
 	</body>
 </html>

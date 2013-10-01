@@ -1,6 +1,8 @@
 function classClickerFunction(list) {
 	clearLists(2);
-	changeSelection(list);
+	changeSelection(list, courseSelectionManager);
+	assignmentSelectionManager.clearAllSelectedItems();
+	problemSelectionManager.clearAllSelectedItems();
 	//we get the list from the id.
 	var assignmentList = classAssignments.getList(list[0][2]);
 	var builder = new schoolItemBuilder();
@@ -15,7 +17,8 @@ function classClickerFunction(list) {
 
 function assignmentClickerFunction(list) {
 	// clears the problems
-	changeSelection(list);
+	changeSelection(list, assignmentSelectionManager);
+	problemSelectionManager.clearAllSelectedItems();
 	clearLists(1);
 	new schoolItemBuilder().build('problem_list_column');
 	var problemList = assignmentProblems.getList(list[0][2]);
@@ -30,7 +33,7 @@ function assignmentClickerFunction(list) {
 }
 
 function problemClickerFunction(list) {
-	changeSelection(list);
+	changeSelection(list, problemSelectionManager);
 	replaceIframe('html/course_managment_frames/edit_problem.html');
 }
 
@@ -57,7 +60,7 @@ function clearLists(number) {
 	}
 }
 
-function changeSelection(list) {
+function changeSelection(list, selectionManager) {
 	selectionManager.clearAllSelectedItems();
 	selectionManager.addSelectedItem(list[0][2]);
 }
@@ -93,4 +96,6 @@ function replaceIframe(src) {
 	}
 }
 
-var selectionManager = new clickSelectionManager();
+var courseSelectionManager = new clickSelectionManager();
+var assignmentSelectionManager = new clickSelectionManager();
+var problemSelectionManager = new clickSelectionManager();

@@ -11,12 +11,12 @@
     	var subtractionType = "total";
     	var policyType = 'exponential';
     	var inputGrade = 100;
-    	var rate = 0.4;
+    	var rate = 1;
     	function updateValue() {
     		document.getElementById('showLateTime').innerHTML = 'Days: ' + daysLate + ' Hours: '+ hoursLate + ' Minutes: ' +minutesLate;
     		document.getElementById('showGrade').innerHTML = 'OutputGrade: ' + createValue(
     				subtractionType == 'total', inputGrade, parseInt(minutesLate), parseInt(hoursLate), parseInt(daysLate),
-    				policyType, rate, 1.2) + ' ' + hoursLate;
+    				policyType, rate, .9998) + ' ' + hoursLate;
     	}
     	// option group #1
     	// x% off of total (meaning you cap the score)
@@ -24,7 +24,8 @@
     	// option group #2  // constant rate
     	// x% off each day
     	// x% off each hour
-    	// option group #3 // exponential rate
+    	// option group #3 // exponential rate  (has a rate and an exponentRate)
+    	//					rate must be 0-1 exponentRate must be 0-1 exponentRate (but should be closer to .9999)
     	// 
     	/**
     		Returns a grade for the given inputs.
@@ -40,7 +41,7 @@
     			var totalTime = hoursLate + (daysLate * 24);
     			percentOff = rate * totalTime;
     		} else if(policyType == "exponential") {
-    			percentOff = (rate * Math.pow(exponentRate, convertToSeconds/(60 * 60)));
+    			percentOff = (1 - (rate * Math.pow(exponentRate, convertToSeconds/(60)))) * 100;
     		}
     		percentOff = percentOff / 100;
     		if (isOffMax) {

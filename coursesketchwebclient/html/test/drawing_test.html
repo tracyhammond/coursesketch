@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="../../">
+    <title>Drawing!</title>
+  	<link rel="stylesheet" href="css/utility/columns.css">
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
+	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
+	<script type="text/javascript" src="js/school/school_item.js"></script>
+	<script type="text/javascript" src="js/input/drawing.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/input/touch_event.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+
+		var drawingCreator = false;
+		var sketch = false;
+		var canvasContext = false;
+	    addLoadEvent(function () {
+			var input = new inputListener();
+			input.initializeCanvas("drawingCanvas");
+			canvasContext = input.canvasContext;
+			sketch = new sketchContainer();
+			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+		});
+	    
+	    function callback() {
+			element = document.getElementById('output');
+			var html = "";
+			var list = sketch.getList();
+			for(var i = 0; i < list.length; i++) {
+				var object = list[i];
+				object.draw(canvasContext);
+			}
+		//	element.innerHTML = html;
+		}
+	</script>
+</head>
+<body>
+<!-- Menu Bar -->
+	<div id="menuBar">
+	</div>
+
+<div data-role="page" class="pages ui-page ui-body-c ui-page-active" id="Div1" data-url="Div1" tabindex="0" style="margin-left: 0px; min-height: 739px;">
+    <!-- Section in the Header bar -->
+    <div data-role="header" class="ui-header ui-bar-a" role="banner">
+        <a class="showMenu ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" data-theme="a"><span class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span class="ui-btn-text">Menu</span></span></a>
+        <h1 id="nameBlock" class="ui-title" tabindex="0" role="heading" aria-level="1">Drawing!</h1>
+    </div>
+    <!-- Center Section -->
+    <div id="home">
+    	<div class = "centre">
+    			<div id = "output"></div>
+   				<canvas id="drawingCanvas" width="600" height="700" style="top:0px; left:0px; width: 600; height: 700; background:#FFFFFF;"></canvas>
+    	</div>
+    </div>
+</div>
+
+
+<div class="ui-loader ui-body-a ui-corner-all" style="top: 391.5px;"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div></body></html>
