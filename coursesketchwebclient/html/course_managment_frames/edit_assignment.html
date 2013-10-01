@@ -3,11 +3,15 @@
     <link rel="stylesheet" href="css/school/course_manager_info.css">
     <link rel="stylesheet" href="css/utility/columns.css">
     <script type="text/javascript" src="js/utils/input_focus_manager.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <!--  Added above line for working with expandable menus -->
     <script type="text/javascript">
     	function selectParent() {
     		window.parent.popupLatePolicy();
     	}
     </script>
+    
+    
 </head>
 <body id="iframeBody" class = "wide_centre">
 		<div>
@@ -27,30 +31,30 @@
 			</div>
 			
 			<div>
-			<h3>Due Date</h3>
-			<select>
-				<option value="no_option">-Day-</option>
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-			</select>
-			<select>
-				<option value="no_option">-Month-</option>
-				<option value="Jan">Jan</option>
-				<option value="Feb">Feb</option>
-				<option value="Mar">Mar</option>		
-			</select>
-			<select>
-				<option value="no_option">-Time-</option>
-				<option value="0800">0800</option>
-				<option value="1200">1200</option>
-				<option value="1600">1600</option>		
-			</select>
+			<h3>Access Date</h3> <!--  Controls when students can access assignment -->
+			<form>
+ 			  Date: <input type="date" name="access_date">
+ 			  Time: <input type="time" name="access_time">
+			</form>
 			<button style="float:right">Save</button>
+			<h3>Due Date</h3> <!--  Controls when the assignment is due -->
+			<form>
+ 			  Date: <input type="date" name="due_date">
+ 			  Time: <input type="time" name="due_time">
+			</form>
+			<h3>Close Date</h3> <!--  Controls when the assignment is closed to student access -->
+			<form>
+ 			  Date: <input type="date" name="close_date">
+ 			  Time: <input type="time" name="close_time">
+			</form>
+			
+			
+			
+			<button style="float:right">Save</button>
+			
 			<h3>Test</h3>
-			</div>
-			
-			
+		
+
 		</div>
 </body>
 
