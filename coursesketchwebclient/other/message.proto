@@ -1,0 +1,36 @@
+message Message {
+	required LoginInformation login = 1;
+	required MessageType = 2 [default=LOGIN];
+
+	enum MessageType {
+		LOGIN = 0;
+        DATA_REQUEST = 1;
+        DATA_SENDING = 2;
+        RECOGNITION = 3;
+        ANSWER_CHECKING = 4;
+    }
+    
+    optional SRL_Sketch = 3;
+}
+
+message LoginInformation {
+	required string username = 1;
+    optional string password = 2;
+	optional string session_info = 3;
+}
+
+message SRL_Sketch {
+
+}
+message SRL_Object {
+
+}
+message SRL_Shape {
+	required uint64 time = 1;
+}
+
+message SRL_Point {
+	required uint64 time = 1
+	required float x = 2;
+	required float y = 3;
+}
