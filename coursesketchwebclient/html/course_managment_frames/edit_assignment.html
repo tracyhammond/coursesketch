@@ -2,6 +2,9 @@
 <base href="../../">
     <link rel="stylesheet" href="css/school/course_manager_info.css">
     <link rel="stylesheet" href="css/utility/columns.css">
+    <link rel="stylesheet" href="css/test/expand_menu_test.css">
+  	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+  	<script type="text/javascript" src="js/test/expand_menu_test.js"></script>
     <script type="text/javascript" src="js/utils/input_focus_manager.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
     <!--  Added above line for working with expandable menus -->
@@ -14,48 +17,65 @@
     
 </head>
 <body id="iframeBody" class = "wide_centre">
-		<div>
-			<h2 class = "title">Edit Assignment Content</h2>
-			<h3 id="uniqueIDHolder">Assignment ID: </h3>
-			<input type="text" class = "notEditing rounded_shadow" value="assignment name" readonly="true" onclick="makeUnEditable(this);"
-			onblur="makeEditable(this);" onkeypress="checkEnter(this)" onfocus="this.value = this.value;">
-			<div>
-			<h3>Late Policy</h3>
-			<select>
-				<option value="no_option">Select a late policy</option>
-				<option value="policy1">policy 1 descript</option>
-				<option value="policy2">policy 2 descript</option>
-				<option value="policy3">policy 3 descript</option>
-			</select>
-			<button style="float:right" onclick='selectParent()'>View Late Policy Examples</button>
-			</div>
-			
-			<div>
-			<h3>Access Date</h3> <!--  Controls when students can access assignment -->
-			<form>
- 			  Date: <input type="date" name="access_date">
- 			  Time: <input type="time" name="access_time">
-			</form>
-			<button style="float:right">Save</button>
-			<h3>Due Date</h3> <!--  Controls when the assignment is due -->
-			<form>
- 			  Date: <input type="date" name="due_date">
- 			  Time: <input type="time" name="due_time">
-			</form>
-			<h3>Close Date</h3> <!--  Controls when the assignment is closed to student access -->
-			<form>
- 			  Date: <input type="date" name="close_date">
- 			  Time: <input type="time" name="close_time">
-			</form>
-			
-			
-			
-			<button style="float:right">Save</button>
-			
-			<h3>Test</h3>
-		
+	<h2 class = "title">Edit Assignment Content</h2>
+	<h3 id="uniqueIDHolder">Assignment ID: </h3>
+	<input type="text" class = "notEditing rounded_shadow" value="assignment name" readonly="true" onclick="makeUnEditable(this);"
+	onblur="makeEditable(this);" onkeypress="checkEnter(this)" onfocus="this.value = this.value;">
 
-		</div>
+	<div id="container">
+	    <div class="expandable-panel" id="cp-1">
+	        <div class="expandable-panel-heading">
+	            <h2>Late Policy<span class="icon-close-open"></span></h2>
+	         </div>
+	        <div class="expandable-panel-content">
+	        	<div>
+					<select>
+						<option value="no_option">Select a late policy</option>
+						<option value="policy1">policy 1 descript</option>
+						<option value="policy2">policy 2 descript</option>
+						<option value="policy3">policy 3 descript</option>
+					</select>
+					<button style="float:right" onclick='selectParent()'>View Late Policy Examples</button>
+	        	</div>
+	        </div>
+	    </div>
+	     
+	    <div class="expandable-panel" id="cp-2">
+	        <div class="expandable-panel-heading">
+	            <h2>Assignment Dates<span class="icon-close-open"></span></h2>
+	         </div>
+	        <div class="expandable-panel-content">
+	            <div>
+					<h3>Access Date</h3> <!--  Controls when students can access assignment -->
+					<form>
+		 			  Date: <input type="date" name="access_date">
+		 			  Time: <input type="time" name="access_time">
+					</form>
+					<button style="float:right">Save</button>
+					<h3>Due Date</h3> <!--  Controls when the assignment is due -->
+					<form>
+		 			  Date: <input type="date" name="due_date">
+		 			  Time: <input type="time" name="due_time">
+					</form>
+					<h3>Close Date</h3> <!--  Controls when the assignment is closed to student access -->
+					<form>
+		 			  Date: <input type="date" name="close_date">
+		 			  Time: <input type="time" name="close_time">
+					</form>
+	             </div>
+	        </div>
+	  </div>
+	     
+	  <div class="expandable-panel" id="cp-3">
+	     <div class="expandable-panel-heading">
+	         <h2>Test<span class="icon-close-open"></span></h2>
+	     </div>
+	     <div class="expandable-panel-content">
+	         <p>Panel HTML...</p>
+	     </div>
+	  </div> 
+	 
+	</div>
 </body>
 
 

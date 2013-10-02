@@ -1,12 +1,15 @@
+
 h2, p, ol, ul, li {
     margin:0px;
     padding:0px;
+    /*
     font-size:13px;
     font-family:Arial, Helvetica, sans-serif;
+    */
 }
  
 #container {
-    width:300px;    
+    width:100%;    
     margin:auto;
     margin-top:100px;
 }
@@ -14,7 +17,7 @@ h2, p, ol, ul, li {
 /* --------- COLLAPSIBLE PANELS ----------*/
  
 .expandable-panel {
-    width:100%; 
+    width:98%; 
     position:relative;
     min-height:50px;
     overflow:auto;
@@ -41,14 +44,13 @@ h2, p, ol, ul, li {
     padding:0 15px 0 15px;
     margin-top:-999px;
 }
-.expandable-panel-content p {
-    padding:4px 0 6px 0;
+.expandable-panel-content div {
+    padding:2px 0 6px 0;
 }
-.expandable-panel-content p:first-child  {
-    padding-top:10px;
+.expandable-panel-content div:first-child  {
 }
-.expandable-panel-content p:last-child {
-    padding-bottom:15px;    
+.expandable-panel-content div:last-child {
+    padding-bottom:30px;    
 }
 .icon-close-open {
     width:20px;
