@@ -49,7 +49,7 @@
                 }
             }
         });
-          
+
         function resetpanels() {
             for (var i=1; i<=totalpanels; i++) {
                 if (currentpanel != i) {

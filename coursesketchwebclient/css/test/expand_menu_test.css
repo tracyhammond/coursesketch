@@ -52,11 +52,19 @@ h2, p, ol, ul, li {
 .expandable-panel-content div:last-child {
     padding-bottom:30px;    
 }
-.icon-close-open {
+.icon-close {
     width:20px;
     height:20px;
     position:absolute;
-    background-image:url(images/menu/triangle_right.png);
+    background-image:url(../../images/menu/triangle_right.png);
+    right:15px;
+}
+
+.icon-open {
+    width:20px;
+    height:20px;
+    position:absolute;
+    background-image:url(../../images/menu/triangle_down.png);
     right:15px;
 }
 .header-active {
