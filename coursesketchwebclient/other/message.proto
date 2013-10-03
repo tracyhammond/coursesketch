@@ -1,3 +1,4 @@
+// Always sent and is filled out properly.
 message Message {
 	required LoginInformation login = 1;
 	required MessageType = 2 [default=LOGIN];
@@ -11,26 +12,94 @@ message Message {
     }
     
     optional SRL_Sketch = 3;
+    optional Data = 4;
+    optional text = 5;
 }
 
 message LoginInformation {
 	required string username = 1;
     optional string password = 2;
-	optional string session_info = 3;
+	optional string sessionInfo = 3; // This may be separated out more.
 }
 
 message SRL_Sketch {
-
+	optional assignmentInformation lookupInfo = 1;
+	optional string domainId = 4; // used to find the domain for recognition
+	repeated SRL_Object sketch = 2;
 }
+
+// inheritance does not exist so this will replace shape
 message SRL_Object {
-
+	required string id = 1;
+	required uint64 time = 2;
+	optional string name = 3;
+	optional bool isUserCreated = 4;
+	repeated Interpretation interpretations= 5 [packed=true];
+	repeated SRL_Object objects = 6;
+	repeated SRL_Stroke strokes = 7;
 }
-message SRL_Shape {
-	required uint64 time = 1;
+
+message SRL_Stroke {
+	required string id = 1;
+	required uint64 time = 2;
+	optional string name = 3;
+	repeated SRL_Point points = 1;
 }
 
+// If a point is added directly on the sketch surface then it is in a SRL_Stroke
+// in a SRL_Object all with the same id and time and name.
 message SRL_Point {
-	required uint64 time = 1
-	required float x = 2;
-	required float y = 3;
+	required string id = 1;
+	required uint64 time = 2;
+	optional string name = 3;
+	required double x = 4;
+	required double y = 5;
+	optional double pressure = 6;
+	optional double size = 7;
+	optional double speed = 8;
+}
+
+message Interpretation {
+	required string name = 1;
+	required double confidence = 2;
+	optional double complexity = 3;
+}
+
+// holds all data that is sent from server. (grades, roster, classes, assignments, problems
+message Data {
+	repeated classInformation classes;
+	repeated assignmentInformation assignments;
+}
+
+message courseInformation {
+	required string courseId = 1; // This must be globally unique.
+	optional string courseName = 2;
+	optional string 
+}
+
+message assignmentInformation {
+	required classInformation parentClass = 1; // To know who the parent is.
+	required string assignmentId = 2; // This must be unique within a course.
+	optional string assignmentName = 3;
+	// TODO: date information
+}
+
+message problemInformation {
+	require assignmentInformation parentAssignment = 1; // To know who the parent is.
+	required string problemId = 2; // This must be unique within an assignment.
+	optional string problemName = 3;
+	optional subproblemInformation mainProblem = 4;
+	repeated subproblemInformation subProblems = 5; // only if there are multiple subproblems
+}
+
+message subproblemInformation {
+	optional string questionText = 2;
+	optional QuestionType questionType = 3 [default=SKETCH];
+	repeated string questionChoices = 5;
+	enum QuestionType {
+		SKETCH = 1;	
+		MULT_CHOICE = 2;
+		FREE_RESP = 3;
+		CHECK_BOX = 4;	
+	}
 }
