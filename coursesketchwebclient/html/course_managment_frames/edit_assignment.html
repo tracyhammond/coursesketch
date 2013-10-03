@@ -5,12 +5,15 @@
     <link rel="stylesheet" href="css/test/expand_menu_test.css">
     <script type="text/javascript" src="js/utils/input_focus_manager.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript" src="js/test/expand_menu_test.js"></script>
+<!--     <script type="text/javascript" src="js/test/expand_menu_test.js"></script> -->
+    <script type="text/javascript" src="js/menu/expand_menu.js"></script>
     <!--  Added above two lines for working with expandable menus -->
     <script type="text/javascript">
     	function selectParent() {
     		window.parent.popupLatePolicy();
     	}
+    	
+    	new expandingMenu(3,'expandableMenuContainer', true);
     </script>
     
     
@@ -24,7 +27,7 @@
 	<div id="expandableMenuContainer">
 	    <div class="expandable-panel" id="cp-1">
 	        <div class="expandable-panel-heading">
-	            <h2>Late Policy<span class="icon-close-open"></span></h2>
+	            <h2>Late Policy<span id = 'expandable-panel-icon' class="icon-close"></span></h2>
 	         </div>
 	        <div class="expandable-panel-content">
 	        	<div>
@@ -41,7 +44,7 @@
 	     
 	    <div class="expandable-panel" id="cp-2">
 	        <div class="expandable-panel-heading">
-	            <h2>Assignment Dates<span class="icon-close-open"></span></h2>
+	            <h2>Assignment Dates<span id = 'expandable-panel-icon' class="icon-close"></span></h2>
 	         </div>
 	        <div class="expandable-panel-content">
 	            <div>
@@ -67,7 +70,7 @@
 	     
 	  <div class="expandable-panel" id="cp-3">
 	     <div class="expandable-panel-heading">
-	         <h2>Test<span id = 'expandable-panel-icon' class="icon-close-open"></span></h2>
+	         <h2>Test<span id = 'expandable-panel-icon' class="icon-close"></span></h2>
 	     </div>
 	     <div class="expandable-panel-content">
 	         <p>Panel HTML...</p>

@@ -57,6 +57,8 @@ h2, p, ol, ul, li {
     height:20px;
     position:absolute;
     background-image:url(../../images/menu/triangle_right.png);
+    background-size:20px 20px;
+	background-repeat:no-repeat;
     right:15px;
 }
 
@@ -65,6 +67,8 @@ h2, p, ol, ul, li {
     height:20px;
     position:absolute;
     background-image:url(../../images/menu/triangle_down.png);
+    background-size:20px 20px;
+	background-repeat:no-repeat;
     right:15px;
 }
 .header-active {
