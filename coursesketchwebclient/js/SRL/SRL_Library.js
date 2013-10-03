@@ -202,6 +202,7 @@ function SRL_Object() {
 		}
 		return completeList;
 	}
+
 	/**
 	 * add an interpretation for an object
 	 * @param interpretation a string name representing the interpretation
