@@ -1,10 +1,12 @@
 .school_item {
+	position:relative;
 	text-align:left;
 	box-shadow: 0px 1px 1px #808080;
 	display:inline-block;
 	padding: 10px 10px 10px 10px;
 	margin-bottom: 5px;
 	background: #eee;
+	z-index:1; /* in case we need to place other items behind it with a z-index*/
 }
 
 .school_item .text {
@@ -20,6 +22,7 @@
 }
 .school_div {
 	padding: 0px 5px;
+	z-index:1;
 }
 
 .school_div ul {
@@ -72,4 +75,16 @@
 
 .selected_box {
 	background: #C4C4C4;
+}
+
+.construction_tape {
+    width:35%;
+    height:50%;
+    position:absolute;
+    background-image:url(../../images/schoolItem/constructionTapeCorner2.svg);
+	background-repeat:no-repeat;
+	background-position:right top;
+	top:0px;
+    right:0px;
+    z-index:-1;
 }

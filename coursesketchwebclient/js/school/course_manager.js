@@ -4,7 +4,7 @@ function classClickerFunction(list) {
 	assignmentSelectionManager.clearAllSelectedItems();
 	problemSelectionManager.clearAllSelectedItems();
 	//we get the list from the id.
-	var assignmentList = classAssignments.getList(list[0][2]);
+	var assignmentList = classAssignments.getList(list[1][2]);
 	var builder = new schoolItemBuilder();
 	builder.setList(assignmentList).setWidth('medium').centerItem(true);
 	builder.showImage = false;
@@ -21,7 +21,7 @@ function assignmentClickerFunction(list) {
 	problemSelectionManager.clearAllSelectedItems();
 	clearLists(1);
 	new schoolItemBuilder().build('problem_list_column');
-	var problemList = assignmentProblems.getList(list[0][2]);
+	var problemList = assignmentProblems.getList(list[1][2]);
 	var builder = new schoolItemBuilder();
 	builder.setList(problemList).setWidth('medium').centerItem(true);
 	builder.showImage = false;
@@ -62,7 +62,7 @@ function clearLists(number) {
 
 function changeSelection(list, selectionManager) {
 	selectionManager.clearAllSelectedItems();
-	selectionManager.addSelectedItem(list[0][2]);
+	selectionManager.addSelectedItem(list[1][2]);
 }
 
 

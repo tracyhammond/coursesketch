@@ -25,11 +25,23 @@
 
 						/* show all - default width */
 						var builder = new schoolItemBuilder();
-						builder.setList(user_classes);
+						builder.setList(upcomming_assignments);
 						builder.setTitle('SHOW ALL');
-						builder.setWidth('small');
+						builder.setWidth('large');
 						builder.build('class_list_1');
+						
+						var builder = new schoolItemBuilder();
+						builder.setList(upcomming_assignments);
+						builder.setTitle('SHOW ALL');
+						builder.setWidth('large');
+						builder.build('due_assignments_1');
+						
+						builder.setList(upcomming_assignments);
+						builder.setTitle('SHOW ALL');
+						builder.setWidth('medium');
+						builder.build('class_list_2');
 
+						/*
 						builder.setList(upcomming_assignments);
 						builder.build('due_assignments_1');
 
@@ -42,6 +54,7 @@
 						builder.setList(upcomming_assignments);
 						builder.showAsSimpleList(true);
 						builder.build('due_assignments_2');
+						*/
 					}
 				);
 	</script>
@@ -60,7 +73,6 @@
     </div>
     <!-- Center Section -->
     <div id="home">
-    	<link rel="stylesheet" href="css/school/assignments/assignment_list.css">
     	<div class = "centre">
 	    	<div  class="col-group2">
 	    		<div>
@@ -86,42 +98,42 @@
 				</div>
 			</div>
 		</div>
-		<div class = "centre" style="clear:left;">
-	    	<div  class="col-group2">
-	    		<div>
-			    	<div id="class_list_3" class="school_div">
-			    	</div>
-		    	</div>
-		    	<div>
-			    	<div id="due_assignments_3" class="school_div">
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class = "centre" style="clear:left;">
-	    	<div  class="col-group2">
-	    		<div>
-			    	<div id="class_list_4" class="school_div">
-			    	</div>
-		    	</div>
-		    	<div>
-			    	<div id="due_assignments_4" class="school_div">
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class = "centre" style="clear:left;">
-	    	<div  class="col-group2">
-	    		<div>
-			    	<div id="class_list_5" class="school_div">
-			    	</div>
-		    	</div>
-		    	<div>
-			    	<div id="due_assignments_5" class="school_div">
-					</div>
-				</div>
-			</div>
-		</div>
+<!-- 		<div class = "centre" style="clear:left;"> -->
+<!-- 	    	<div  class="col-group2"> -->
+<!-- 	    		<div> -->
+<!-- 			    	<div id="class_list_3" class="school_div"> -->
+<!-- 			    	</div> -->
+<!-- 		    	</div> -->
+<!-- 		    	<div> -->
+<!-- 			    	<div id="due_assignments_3" class="school_div"> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 		<div class = "centre" style="clear:left;"> -->
+<!-- 	    	<div  class="col-group2"> -->
+<!-- 	    		<div> -->
+<!-- 			    	<div id="class_list_4" class="school_div"> -->
+<!-- 			    	</div> -->
+<!-- 		    	</div> -->
+<!-- 		    	<div> -->
+<!-- 			    	<div id="due_assignments_4" class="school_div"> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 		<div class = "centre" style="clear:left;"> -->
+<!-- 	    	<div  class="col-group2"> -->
+<!-- 	    		<div> -->
+<!-- 			    	<div id="class_list_5" class="school_div"> -->
+<!-- 			    	</div> -->
+<!-- 		    	</div> -->
+<!-- 		    	<div> -->
+<!-- 			    	<div id="due_assignments_5" class="school_div"> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
     </div>
 </div>
 

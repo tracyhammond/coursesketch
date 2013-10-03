@@ -22,6 +22,7 @@ function schoolItemBuilder() {
 		this.showBox = true;
 		this.showDescription = true;
 		this.showDate = true;
+		this.showCompletionStatus = false;
 		
 		// functions
 		this.imageClicked = false;
@@ -29,23 +30,22 @@ function schoolItemBuilder() {
 		this.subClicked = false;
 		this.entireBoxClicked = false;
 		this.descriptionClicked = false;
-		
+
 		//custom text.
 		this.noItemMessage = false;
 	}
 
 	this.resetValues();
-	
+
 	this.setEmptyListMessage = function(message) {
 		this.noItemMessage = message;
 	};
-	
-	
+
 	this.setList = function setList(list) {
 		this.dataList = list;
 		return this;
 	};
-	
+
 	this.setTitle = function setTitle(title) {
 		this.listTitle = title;
 	};
@@ -53,7 +53,7 @@ function schoolItemBuilder() {
 	this.build = function build(id) {
 		document.getElementById(id).innerHTML = this.createSchoolList();
 	};
-	
+
 	/**
 	 * Sets all of the show options at one time.
 	 *
@@ -68,7 +68,7 @@ function schoolItemBuilder() {
 		this.showDate = showDate;
 		return this;
 	};
-	
+
 	this.setWidth = function setWidth(width) {
 		if (width == 'small' || width == 'medium' || width == 'large') {
 			this.width = width;
@@ -103,7 +103,7 @@ function schoolItemBuilder() {
 	//*********
 	// CREATION METHODS BELOW
 	//*********
-	
+
 	/**
 	 * Creates a list of school items with the parameters set by the builder.
 	 */
@@ -124,12 +124,12 @@ function schoolItemBuilder() {
 		var currentDate = new Date();
 		for(var i = 0; i< this.dataList.length; i++) {
 			var list = this.dataList[i];
-
+			var type = list[0]; // We establish the type that it is.
 			html+='<li ' + (this.centerInDiv?'class = "child_center"':'') + '>';
 			if (this.isSimpleList) {
 				html += this.createSimpleSchoolItem(list);
 			} else {
-				html += this.createFancySchoolItem(list, currentDate);
+				html += this.createFancySchoolItem(list, currentDate, type);
 			}
 			html+='</li>';
 		}
@@ -143,9 +143,9 @@ function schoolItemBuilder() {
 	 */
 	this.createSimpleSchoolItem = function createSimpleSchoolItem(list) {
 		var html = '';
-		html+='<div class="text" id = "'+list[0][2]+'">';
-		html += this.replaceLink(this.titleClicked, list, list[0][1]);
-		html += list[0][0] + '</a>';
+		html+='<div class="text" id = "'+list[1][2]+'">';
+		html += this.replaceLink(this.titleClicked, list, list[1][1]);
+		html += list[1][0] + '</a>';
 		html+='</div>';
 		return html;
 	};
@@ -153,23 +153,24 @@ function schoolItemBuilder() {
 	/**
 	 * Returns the HTML for a school_item based off of the specified school builder
 	 */
-	this.createFancySchoolItem = function createFancySchoolItem(list, currentDate) {
+	this.createFancySchoolItem = function createFancySchoolItem(list, currentDate, type) {
 		// Required Items
 		var html = '';
 		
 		//<div class = "school_item hoverbox";
-		html+='	<div id = "' + list[0][2] + '"' + this.createBoxClass(this.showBox,this.entireBoxClicked);
-		html+= this.addClickFunction(this.entireBoxClicked, list) + '>';
+		html+='	<div id = "' + list[1][2] + '"' + this.createBoxClass(this.showBox,this.entireBoxClicked);
+		html+= this.addClickFunction(this.entireBoxClicked, list) + '>\n';
 		
+		html+= this.createCompletionStatus(list,type);
 
-		html+='		<div class="text">';
-		html+=			this.writeTextData(list, currentDate);
-		html+='	</div>';
+		html+='		<div class="text">\n';
+		html+=			this.writeTextData(list, currentDate, type);
+		html+='	</div>\n';
 		if (this.showImage) {
-			html+= this.replaceLink(this.imageClicked, list, list[0][1]);
-			html+='<img src="images/' + list[2] + '" width="128" height="128"></a>';
+			html+= this.replaceLink(this.imageClicked, list, list[1][1]);
+			html+='<img src="images/' + list[3] + '" width="128" height="128"></a>\n';
 		}
-		html+='</div>';
+		html+='</div>\n';
 		return html;
 	};	
 
@@ -177,23 +178,23 @@ function schoolItemBuilder() {
 	 * Writes out the data that composes the text portion of the box.
 	 * (Title,subTitle, date, description)
 	 */
-	this.writeTextData = function writeTextData(list, currentDate) {
+	this.writeTextData = function writeTextData(list, currentDate, type) {
 		var html = '';
 		html+= '		<h3 class="name">';
-		html += this.replaceLink(this.titleClicked, list, list[0][1]);
-		html += list[0][0] + '</a></h3>';
+		html += this.replaceLink(this.titleClicked, list, list[1][1]);
+		html += list[1][0] + '</a></h3>\n';
 
-		if (list.length > 3 && this.showDate) {
-			var dueDate = list[4];
-			html+='		<h1 class="' + getDateType() + '">' + get_formatted_date(currentDate, dueDate) + '</h1>';
+		if (type == 'assignment' && this.showDate) {
+			var dueDate = list[5];
+			html+='		<h1 class="' + getDateType() + '">' + get_formatted_date(currentDate, dueDate) + '</h1>\n';
 		}
-		if (list.length > 3 && this.showItemSubTitle) {
+		if (type == 'assignment' && this.showItemSubTitle) {
 			html += '		<h1 class="class">';
-			html += this.replaceLink(this.subClicked, list, list[3][1]);
-			html += list[3][0] + '</a></h1>';
+			html += this.replaceLink(this.subClicked, list, list[4][1]);
+			html += list[4][0] + '</a></h1>\n';
 		}
 
-		html+='		<p class="' + this.width + '" ' + this.addClickFunction(this.descriptionClicked, list) + '>' + list[1] + '</p>';
+		html+='		<p class="' + this.width + '" ' + this.addClickFunction(this.descriptionClicked, list) + '>' + list[2] + '</p>\n';
 		return html;
 	};
 
@@ -211,6 +212,22 @@ function schoolItemBuilder() {
 		return html + '"';
 	};
 
+	this.createCompletionStatus = function(list, type) {
+		var index = type == 'class'?
+				4 : type == 'assignment'?
+						6 : type == 'problem'?
+								4 : list.length -1
+		var html = '';
+		var completionStatus = list[index];
+		if (completionStatus == 'completed') {
+			// show completed status (yayyy)
+		} else if(completionStatus == 'started') {
+			html = '<span class="construction_tape"></span>';
+		} else if(completionStatus == 'notStarted') {
+		}
+		return html;
+	}
+	
 	/**
 	 * Returns: <a href="link or function">
 	 */
