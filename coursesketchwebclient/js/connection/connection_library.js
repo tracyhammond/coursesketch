@@ -15,7 +15,6 @@ function connection(uri, encrypted) {
 	function createWebSocket() {
 		try {
 			websocket = new WebSocket(wsUri);
-			alert('created socket ' +wsUri);
 			websocket.binaryType = "arraybuffer"; // We are talking binary
 			websocket.onopen = function(evt) {
 				onOpen(evt);
@@ -31,7 +30,6 @@ function connection(uri, encrypted) {
 			    } catch (err) {
 			    	onError(evt,err);
 			    }
-			    alert(evt.data);
 				// decode with protobuff and pass object to client
 	
 			};
