@@ -9,7 +9,9 @@
 	<title>WebSocket Test</title>
 	<script language="javascript" type="text/javascript">
 		var wsUri = "echo.websocket.org/";
-		var output;  
+		var wsUri = "goldberglinux.tamu.edu:8887";
+		//var wsUri = "165.91.85.94";
+		var output;
 		var connection;
 
 		function init() {
@@ -17,7 +19,7 @@
 		}
 
 		function testWebSocket() {
-			connection = new connection(wsUri,true);
+			connection = new connection(wsUri,false);
 			connection.setListeners(onOpen, onClose, onMessage, onError);
 		}
 
@@ -37,7 +39,7 @@
 			if (evt)
 				writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
 			if (error)
-				writeToScreen('<span style="color: red;">ERROR:</span> ' + error);
+				writeToScreen('<span style="color: red;">PROTO ERROR:</span> ' + error);
 		}
 		
 		function doSend(message) {

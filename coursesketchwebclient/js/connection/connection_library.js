@@ -13,29 +13,35 @@ function connection(uri, encrypted) {
 	var wsUri = (encrypted?'wss://' : 'ws://') + uri;
 
 	function createWebSocket() {
-		alert('creating websocket');
-		websocket = new WebSocket(wsUri);
-		websocket.binaryType = "arraybuffer"; // We are talking binary
-		websocket.onopen = function(evt) {
-			onOpen(evt);
-		};
-		websocket.onclose = function(evt) {
-			onClose(evt);
-		};
-		websocket.onmessage = function(evt) {
-			try {
-		        // Decode the Message
-		        var msg = Message.decode(evt.data);
-				onMessage(evt, msg);
-		    } catch (err) {
-		    	onError(evt,err);
-		    }
-			// decode with protobuff and pass object to client
-
-		};
-		websocket.onerror = function(evt) {
-			onError(evt,error);
-		};
+		try {
+			websocket = new WebSocket(wsUri);
+			alert('created socket ' +wsUri);
+			websocket.binaryType = "arraybuffer"; // We are talking binary
+			websocket.onopen = function(evt) {
+				onOpen(evt);
+			};
+			websocket.onclose = function(evt) {
+				onClose(evt);
+			};
+			websocket.onmessage = function(evt) {
+				try {
+			        // Decode the Message
+			        var msg = Message.decode(evt.data);
+					onMessage(evt, msg);
+			    } catch (err) {
+			    	onError(evt,err);
+			    }
+			    alert(evt.data);
+				// decode with protobuff and pass object to client
+	
+			};
+			websocket.onerror = function(evt) {
+				onError(evt,error);
+			};
+		} catch(error) {
+			onError(null,error);
+		}
+		
 	}
 
 	/**
