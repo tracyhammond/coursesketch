@@ -8,8 +8,9 @@
 <body>
 	<title>WebSocket Test</title>
 	<script language="javascript" type="text/javascript">
-		var wsUri = "echo.websocket.org/";
-		var wsUri = "goldberglinux.tamu.edu:8887";
+	//	var wsUri = "echo.websocket.org/"; // echo server
+	//	var wsUri = "goldberglinux.tamu.edu:8887"; // our server
+		var wsUri = "localhost:8887"; // our server
 		//var wsUri = "165.91.85.94";
 		var output;
 		var connection;
@@ -40,6 +41,7 @@
 				writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
 			if (error)
 				writeToScreen('<span style="color: red;">PROTO ERROR:</span> ' + error);
+			connection.close();
 		}
 		
 		function doSend(message) {

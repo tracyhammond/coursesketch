@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 
 import org.java_websocket.WebSocket;
@@ -28,7 +29,8 @@ public class ChatServer extends WebSocketServer {
 
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		this.sendToAll( "new connection: " + handshake.getResourceDescriptor() );
+	//	this.sendToAll( "new connection: " + handshake.getResourceDescriptor() );
+		System.out.println("I HAVE A NEW GEST \n\n");
 		System.out.println( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!" );
 	}
 
@@ -40,8 +42,17 @@ public class ChatServer extends WebSocketServer {
 
 	@Override
 	public void onMessage( WebSocket conn, String message ) {
-		this.sendToAll( message );
-		System.out.println( conn + ": " + message );
+
+		//this.sendToAll( message );
+		conn.send(message);
+		System.out.println("INPUT MESSAGE " + message);
+		//System.out.println( conn + ": " + message );
+	}
+	
+	@Override
+	public void onMessage(WebSocket conn, ByteBuffer buffer) {
+		conn.send(buffer);
+		System.out.println("ECHO BUFFER " + buffer);
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {
