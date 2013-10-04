@@ -15,28 +15,29 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 /**
- * A simple WebSocketServer implementation. Keeps track of a "chatroom".
+ * A simple WebSocketServer implementation.
+ *
+ * Contains simple proxy information that is sent to other servers.
  */
-public class ChatServer extends WebSocketServer {
+public class ProxyServer extends WebSocketServer {
 
-	public ChatServer( int port ) throws UnknownHostException {
-		super( new InetSocketAddress( port ) );
+	public ProxyServer( int port ) throws UnknownHostException {
+		this( new InetSocketAddress( port ) );
 	}
 
-	public ChatServer( InetSocketAddress address ) {
+	public ProxyServer( InetSocketAddress address ) {
 		super( address );
 	}
 
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 	//	this.sendToAll( "new connection: " + handshake.getResourceDescriptor() );
-		System.out.println("I HAVE A NEW GEST \n\n");
+		System.out.println("new connection: " + handshake.getResourceDescriptor());
 		System.out.println( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!" );
 	}
 
 	@Override
 	public void onClose( WebSocket conn, int code, String reason, boolean remote ) {
-		this.sendToAll( conn + " has left the room!" );
 		System.out.println( conn + " has left the room!" );
 	}
 
@@ -48,7 +49,7 @@ public class ChatServer extends WebSocketServer {
 		System.out.println("INPUT MESSAGE " + message);
 		//System.out.println( conn + ": " + message );
 	}
-	
+
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		conn.send(buffer);
@@ -66,7 +67,7 @@ public class ChatServer extends WebSocketServer {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
-		ChatServer s = new ChatServer( port );
+		ProxyServer s = new ProxyServer( port );
 		s.start();
 		System.out.println( "ChatServer started on port: " + s.getPort() );
 
