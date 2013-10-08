@@ -56,3 +56,11 @@ input.notEditing {
 	border: 1px solid #B3B3B3;
 	background: #F0F0F0;
 }
+
+input.editing {
+	/*
+	background
+	*/
+	border: 1px solid #B3B3B3;
+	background: #FFFFFF;
+}
