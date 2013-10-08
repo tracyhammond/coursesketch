@@ -4,13 +4,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <base href=".">
     <title>Welcome!</title>
-   	<link rel="stylesheet" href="css/school/school_item.css">
-  	<link rel="stylesheet" href="css/utility/columns.css">
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
     <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
-	<script type="text/javascript" src="js/school/school_item.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 	  		addLoadEvent(
@@ -18,15 +15,29 @@
 					{
 						var body = document.body,
 					    html = document.documentElement;
-
-						var height = Math.max( body.scrollHeight, body.offsetHeight, 
+						var height = Math.min( body.scrollHeight, body.offsetHeight, 
 					                       html.clientHeight, html.scrollHeight, html.offsetHeight );
-						var headerHeight = document.getElementById('header').clientHeight;
+						var header = document.getElementById('header');
+						var headerHeight = Math.max(header.clientHeight, header.offsetHeight, header.scrollHeight) + header.offsetTop;
 						var iframeHeight = height - headerHeight;
 						var iframe = document.getElementById('iframeContent');
-						iframe.height = iframeHeight;
+						iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
 					}
 				);
+	  		/**
+	  		Resizes the iframe inside the window
+	  		*/
+	  		window.onresize = function() {
+	  			var body = document.body,
+			    html = document.documentElement;
+				var height = Math.min( body.scrollHeight, body.offsetHeight, 
+			                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+				var header = document.getElementById('header');
+				var headerHeight = Math.max(header.clientHeight, header.offsetHeight, header.scrollHeight) + header.offsetTop;
+				var iframeHeight = height - headerHeight;
+				var iframe = document.getElementById('iframeContent');
+				iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
+	  		}
 	</script>
 </head>
 <meta charset="UTF-8">
