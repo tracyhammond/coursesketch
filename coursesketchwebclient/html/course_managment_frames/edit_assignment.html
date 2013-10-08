@@ -21,11 +21,44 @@
 <body id="iframeBody" class = "wide_centre">
 	<h2 class = "title">Edit Assignment Content</h2>
 	<h3 id="uniqueIDHolder">Assignment ID: </h3>
-	<input type="text" class = "notEditing rounded_shadow" value="assignment name" readonly="true" onclick="makeUnEditable(this);"
+	<input type="text" class = "notEditing rounded_shadow" value="*Assignment Name" readonly="true" onclick="makeUnEditable(this);"
 	onblur="makeEditable(this);" onkeypress="checkEnter(this)" onfocus="this.value = this.value;">
-
+	
+	<select>
+	  <option value="default">--*Assignment Category--</option>
+	  <option value="homework">Homework</option>
+	  <option value="quiz">Quiz</option>
+	  <option value="lab">Lab</option>
+	  <option value="exam">Exam</option>
+	  <option value="extra_credit">Extra Credit</option>
+	  <option value="other">Other</option>
+	</select> 
+	
+	<form style="font-size:small;">
+		Category Grade % \t   <input type="number" name="category_grade_%" min="0" max="100">
+	</form>
+	
 	<div id="expandableMenuContainer">
-	    <div class="expandable-panel" id="cp-1">
+	  <div class="expandable-panel" id="cp-1">
+	     <div class="expandable-panel-heading">
+	         <h2>Description<span id = 'expandable-panel-icon' class="icon-close"></span></h2>
+	     </div>
+	     <div class="expandable-panel-content">
+	         
+	         <h3>Description</h3>
+	         <form>
+	         	<input type="text" name="description">
+	         </form>
+	         <h3>Resources</h3>
+	         <form>
+	         	<input type="text" name="Resources">
+	         </form>
+	         
+	     </div>
+	  </div>	
+
+
+	    <div class="expandable-panel" id="cp-2">
 	        <div class="expandable-panel-heading">
 	            <h2>Late Policy<span id = 'expandable-panel-icon' class="icon-close"></span></h2>
 	         </div>
@@ -42,7 +75,7 @@
 	        </div>
 	    </div>
 	     
-	    <div class="expandable-panel" id="cp-2">
+	    <div class="expandable-panel" id="cp-3">
 	        <div class="expandable-panel-heading">
 	            <h2>Assignment Dates<span id = 'expandable-panel-icon' class="icon-close"></span></h2>
 	         </div>
@@ -66,16 +99,10 @@
 					</form>
 	             </div>
 	        </div>
-	  </div>
-	     
-	  <div class="expandable-panel" id="cp-3">
-	     <div class="expandable-panel-heading">
-	         <h2>Test<span id = 'expandable-panel-icon' class="icon-close"></span></h2>
-	     </div>
-	     <div class="expandable-panel-content">
-	         <p>Panel HTML...</p>
-	     </div>
 	  </div> 
+	 
+	 <button>Save</button>
+	 <p style="font-size:small;">* Required field </p>
 	 
 	</div>
 </body>
@@ -88,18 +115,18 @@ Editing fields
 Required: 
 	Assignment ID
 	Name
-	Assignment Type //(is it a homework/quiz/exam/lab/etc?) could be incorporated into name?
+	Assignment Category //(is it a homework/quiz/exam/lab/etc?) could be incorporated into name?
 	
 Optional:
 	Description/Links/Resources
 	Late Policy
 	Start (Access) Date/Time
 	Due Date/Time
+	Close Date/Time
 	
 Other: 
 	Grade Weight
 	SAVE
-	Required/Extra Credit
 	
 	
 
