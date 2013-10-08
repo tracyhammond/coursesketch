@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href=".">
+    <title>Welcome!</title>
+   	<link rel="stylesheet" href="css/school/school_item.css">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
+	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
+	<script type="text/javascript" src="js/school/school_item.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+	  		addLoadEvent(
+					function()
+					{
+						var body = document.body,
+					    html = document.documentElement;
+
+						var height = Math.max( body.scrollHeight, body.offsetHeight, 
+					                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+						var headerHeight = document.getElementById('header').clientHeight;
+						var iframeHeight = height - headerHeight;
+						var iframe = document.getElementById('iframeContent');
+						iframe.height = iframeHeight;
+					}
+				);
+	</script>
+</head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<!-- Menu Bar -->
+	<div id="menuBar">
+	</div>
+
+	<div data-role="page" class="pages ui-page ui-body-c ui-page-active" id="Div1" data-url="Div1" tabindex="0" style="margin-left: 0px; min-height: 739px;">
+    <!-- Section in the Header bar -->
+    <div id="header" data-role="header" class="ui-header ui-bar-a" role="banner">
+        <a class="showMenu ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" data-theme="a"><span class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span class="ui-btn-text">Menu</span></span></a>
+        <h1 id="nameBlock" class="ui-title" tabindex="0" role="heading" aria-level="1">Welcome!</h1>
+    </div>
+    <!-- Center Section -->
+    <div id="content">
+    	<iframe id="iframeContent" name="wrapper" src = "/html/home.html" height = "100%" width = 100% frameborder="0">
+    	</iframe>
+	</div>
+</body>
+</html>

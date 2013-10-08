@@ -17,10 +17,10 @@ function swipeCheck() {
 function getMenu() {
 	return	'<div id="menu">' +
 			'	<h1>' +
-			'		<a href="home.html" data-ajax="false"><img src="images/smallTitle.svg"></a>' +
+			'		<a href="html/home.html" target ="wrapper" data-ajax="false"><img src="images/smallTitle.svg"></a>' +
 			'	</h1>' +
 			'	<ul id="menu">' +
-			'		<li><a href="home.html" data-ajax="false"' +
+			'		<li><a href="html/home.html" target ="wrapper" data-ajax="false"' +
 			'			class="contentLink">Home</a></li>' +
 			'		<li class="header"><h3>Classes I\'m In</h3></li>' +
 			'		<!-- listofClasses is appended by the js in add_menu.js . It uses class_data.js to get the classes -->' +
@@ -36,7 +36,7 @@ function getMenu() {
 			'		<li><a href="toggleClasses.php" data-ajax="false" class="contentLink">Hide Class</a></li>' +
 			'		<li class="header"><h3>Classes I\'m Teaching</h3></li>' +
 			'		<li><a href="html/instructor/gradebook.html" data-ajax="false" class="contentLink">Grades</a></li>' +
-			'		<li><a href="html/instructor/course_management.html" data-ajax="false" class="contentLink">Course Management</a></li>' +
+			'		<li><a href="html/instructor/course_management.html" target ="wrapper" data-ajax="false" class="contentLink">Course Management</a></li>' +
 			'		<li><a href="viewClassKeys.php" data-ajax="false" class="contentLink">View Class Keys</a></li>' +
 			'		<li class="header"><h3>Account</h3></li>' +
 			'		<li><a href="changePassword.php" data-ajax="false" class="contentLink">Change Password</a></li>' +
