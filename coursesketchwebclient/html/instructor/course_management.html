@@ -4,24 +4,22 @@
     <title>Course Management</title>
    	<link rel="stylesheet" href="css/school/school_item.css">
   	<link rel="stylesheet" href="css/utility/columns.css">
-    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
-	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
+	<link rel="stylesheet" href="css/courseSketch2.css">
 	<script type="text/javascript" src="js/school/school_item.js"></script>
 	<script type="text/javascript" src="js/school/course_manager.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
-	  		addLoadEvent(
+	  		parent.addScopedLoadEvent(window,
 					function()
 					{
 						var builder = new schoolItemBuilder();
-						builder.setList(user_classes).setWidth('medium').centerItem(true);
+						builder.setList(parent.user_courses).setWidth('medium').centerItem(true);
 						builder.showImage = false;
-						builder.setOnBoxClick('classClickerFunction');
+						builder.setOnBoxClick('courseClickerFunction');
 						builder.build('class_list_column');
 						clearLists(2);
-						var loader = new DynamicFileLoader();
+						var loader = new parent.DynamicFileLoader();
+						loader.sope = document;
 						loader.loadFile("js/utils/popup.js",'js');
 					}
 				);
@@ -39,69 +37,56 @@
 </head>
 <body>
 <!-- Menu Bar -->
-	<div id="menuBar">
-	</div>
-	<!-- Top Bar -->
-	<div data-role="page" class="pages ui-page ui-body-c ui-page-active" id="Div1" data-url="Div1" tabindex="0" style="margin-left: 0px; min-height: 739px;">
-	    <!-- Section in the Header bar -->
-	    <div data-role="header" class="ui-header ui-bar-a" role="banner">
-	        <a class="showMenu ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" data-theme="a"><span class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span class="ui-btn-text">Menu</span></span></a>
-	        <h1 id="nameBlock" class="ui-title" tabindex="0" role="heading" aria-level="1">Course Management</h1>
-	    </div>
-	    <!-- Center Section -->
-	    <div id="home" style="padding-top: 5px;" >
-    	<div class = "wide_centre">
-	    	<div style="width:75%; float:left;">
-		    	<div class="col-group3">
-		    		<div>
-		    			<h2 style = "text-align:center">Courses</h2>
-			    		<div class = "centre faded_column" style = "padding-top: 5px; min-height:600px;">
-			    			<button>Add New Course</button>
-					    	<div id="class_list_column" class="school_div">
-				    		</div>
-				    	</div>
+    <!-- Center Section -->
+<div id="home" style="padding-top: 5px;" >
+   	<div class = "wide_centre">
+    	<div style="width:75%; float:left;">
+	    	<div class="col-group3">
+	    		<div>
+	    			<h2 style = "text-align:center">Courses</h2>
+		    		<div class = "centre faded_column" style = "padding-top: 5px; min-height:600px;">
+		    			<button>Add New Course</button>
+				    	<div id="class_list_column" class="school_div">
+			    		</div>
 			    	</div>
-			    	<div>
-			    		<h2 style = "text-align:center">Assignments</h2>
-				    	<div class = "centre faded_column" style = "padding-top: 5px; min-height:600px;">
-				    		<div id="assignment_button" style = "display:none;">
-				    			<button>Add New Assignment</button>
-				    		</div>
-					    	<div id="assignment_list_column" class="school_div">
-					    	Hi
-							</div>
-						</div>
-					</div>
-					<div>
-						<h2 style = "text-align:center">Problems</h2>
-						<div class = "centre faded_column" style = "padding-top: 5px; min-height:600px;">
-							<div id="problem_button" style = "display:none;">
-								<button>Add New Problem</button>
-				    		</div>
-							<div id="problem_list_column" class="school_div">
-						    	Hi
-							</div>
+		    	</div>
+		    	<div>
+		    		<h2 style = "text-align:center">Assignments</h2>
+			    	<div class = "centre faded_column" style = "padding-top: 5px; min-height:600px;">
+			    		<div id="assignment_button" style = "display:none;">
+			    			<button>Add New Assignment</button>
+			    		</div>
+				    	<div id="assignment_list_column" class="school_div">
+				    	Hi
 						</div>
 					</div>
 				</div>
-			</div>
-			<div style="width:25%; float:right;">
-				<h2 style = "text-align:center; visibility: hidden;">Hidden Title</h2>
-				<div style = "padding: 10px; min-height:600px; background:#A9D0F5;">
-					<div style ="background:#FFFFFF; height:100%; padding-right:1px;">
-						<div id = "editable_unit">
-							<h2 style = "text-align:center">Nothing is selected yet</h2>
-							<h2 style = "text-align:center">Click an item to edit</h2>
+				<div>
+					<h2 style = "text-align:center">Problems</h2>
+					<div class = "centre faded_column" style = "padding-top: 5px; min-height:600px;">
+						<div id="problem_button" style = "display:none;">
+							<button>Add New Problem</button>
+			    		</div>
+						<div id="problem_list_column" class="school_div">
+					    	Hi
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-    </div>
+		<div style="width:25%; float:right;">
+			<h2 style = "text-align:center; visibility: hidden;">Hidden Title</h2>
+			<div style = "padding: 10px; min-height:600px; background:#A9D0F5;">
+				<div style ="background:#FFFFFF; height:100%; padding-right:1px;">
+					<div id = "editable_unit">
+						<h2 style = "text-align:center">Nothing is selected yet</h2>
+						<h2 style = "text-align:center">Click an item to edit</h2>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-
-	<div class="ui-loader ui-body-a ui-corner-all" style="top: 391.5px;"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div>
-
+</div>
 <!-- PopupDiv -->
 	<div id="popupDiv">
 	</div>
