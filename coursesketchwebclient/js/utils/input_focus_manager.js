@@ -3,13 +3,15 @@ function checkEnter(element) {
 		element.blur();
 	}
 }
-    	
+
 function makeEditable(element) {
-	element.readOnly='true';
-	element.className = 'notEditing';
+	element.readOnly='';
+	var name = element.className;
+	element.className = name.replace('notEditing','editing');
 }
 
 function makeUnEditable(element) {
-	element.readOnly='';
-	element.className = '';
+	element.readOnly='true';
+	var name = element.className;
+	element.className = name.replace('editing','notEditing');
 }
