@@ -1,14 +1,14 @@
-function classClickerFunction(list) {
+function courseClickerFunction(list) {
 	clearLists(2);
 	changeSelection(list, courseSelectionManager);
 	assignmentSelectionManager.clearAllSelectedItems();
 	problemSelectionManager.clearAllSelectedItems();
 	//we get the list from the id.
-	var assignmentList = classAssignments.getList(list[1][2]);
+	var assignmentList = parent.courseAssignments.getList(list[1][2]);
 	var builder = new schoolItemBuilder();
 	builder.setList(assignmentList).setWidth('medium').centerItem(true);
 	builder.showImage = false;
-	builder.setEmptyListMessage('There are no assignments for this class!');
+	builder.setEmptyListMessage('There are no assignments for this course!');
 	builder.setOnBoxClick('assignmentClickerFunction');
 	builder.build('assignment_list_column');
 	replaceIframe('html/course_managment_frames/edit_course.html');
@@ -21,7 +21,7 @@ function assignmentClickerFunction(list) {
 	problemSelectionManager.clearAllSelectedItems();
 	clearLists(1);
 	new schoolItemBuilder().build('problem_list_column');
-	var problemList = assignmentProblems.getList(list[1][2]);
+	var problemList = parent.assignmentProblems.getList(list[1][2]);
 	var builder = new schoolItemBuilder();
 	builder.setList(problemList).setWidth('medium').centerItem(true);
 	builder.showImage = false;
@@ -55,7 +55,7 @@ function clearLists(number) {
 	}
 	if(number>1) {
 		hideButton('assignment_button');
-		builder.setEmptyListMessage('Please select a class to see the list of assignments.');
+		builder.setEmptyListMessage('Please select a course to see the list of assignments.');
 		builder.build('assignment_list_column');
 	}
 }
