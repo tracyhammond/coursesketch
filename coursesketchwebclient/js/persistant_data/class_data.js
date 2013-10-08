@@ -49,32 +49,32 @@ var upcomming_assignments =
 	 	[
 	 	 	'assignment',
 	 	 	['Class Assignment1','Class_Link3', 'Assignment_Class_1_ID'],
-	 	 	'n this assignment we will do a class item.',
-	 	 	'test/class_thumb.png',
+	 	 	'n this assignment we will do a course item.',
+	 	 	'test/course_thumb.png',
 	 	 	['Class 3','Class3Link','Class_Class_3_ID'],
 	 	 	new Date('Sun Sep 1 2013 11:24:27 GMT-0500 (CDT)'),
 	 	 	'notVisible'
  	 	],
 	];
 
-var user_classes =
+var user_courses =
 	[
 	 	[
-	 	 	'class',
+	 	 	'course',
 		 	['Physics','PhysicsLink','Class_Physics_ID'],
-		 	'Description for me class blah blah blabity blah',
+		 	'Description for me course blah blah blabity blah',
 	 	 	'test/truss_thumb.png'
 	 	],
 	 	[
-	 	 	'class',
+	 	 	'course',
 	 	 	['Chemistry','ChemistryLink','Class_Chemistry_ID'],
-	 	 	'Description for the chemistry class!',
+	 	 	'Description for the chemistry course!',
 	 	 	'test/chemistry_thumb.png'
 	 	],
 	 	[
-	 	 	'class',
+	 	 	'course',
 	 	 	['Class 3','Class3Link','Class_Class_3_ID'],
-	 	 	'Description for the 3rd class!',
+	 	 	'Description for the 3rd course!',
 	 	 	'test/no_image.png'
 	 	 ],
 	];
@@ -89,11 +89,11 @@ var questions =
 	 	 ]
 	];
 
-var classAssignments = new listMap();	
+var courseAssignments = new listMap();	
 var assignmentProblems = new listMap();	
 initialize();
 /**
- * This map will hold a map of classes to a list of assignments.
+ * This map will hold a map of coursees to a list of assignments.
  */
 
 function listMap() {
@@ -116,12 +116,12 @@ function listMap() {
 
 // TODO change the keys to actually be unique
 function initialize() {
-	classAssignments.addObject('Class_Physics_ID',upcomming_assignments[0]);
-	classAssignments.addObject('Class_Physics_ID',upcomming_assignments[1]);
-	classAssignments.addObject('Class_Chemistry_ID',upcomming_assignments[2]);
-	classAssignments.addObject('Class_Chemistry_ID',upcomming_assignments[3]);
-	classAssignments.addObject('Class_Chemistry_ID',upcomming_assignments[4]);
-	classAssignments.addObject('Class_Class_3_ID',upcomming_assignments[5]);
+	courseAssignments.addObject('Class_Physics_ID',upcomming_assignments[0]);
+	courseAssignments.addObject('Class_Physics_ID',upcomming_assignments[1]);
+	courseAssignments.addObject('Class_Chemistry_ID',upcomming_assignments[2]);
+	courseAssignments.addObject('Class_Chemistry_ID',upcomming_assignments[3]);
+	courseAssignments.addObject('Class_Chemistry_ID',upcomming_assignments[4]);
+	courseAssignments.addObject('Class_Class_3_ID',upcomming_assignments[5]);
 	assignmentProblems.addObject('Assignment_Truss_2_ID',questions[0]);
 }
 
