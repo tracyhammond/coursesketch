@@ -19,7 +19,7 @@ import webapp2
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
-        self.redirect('/home.html',permanent=True)
+        self.redirect('/main.html',permanent=True)
         #self.redirect('http://www.percussionstudio.org',permanent=True)
 
 
