@@ -1,0 +1,41 @@
+package protobuf.srl.school;
+
+// holds all data that is sent from server. (grades, roster, classes, assignments, problems
+message SRL_School {
+	repeated SRL_Course courses = 1;
+	repeated SRL_Assignment assignments = 2;
+	repeated SRL_Problem problems = 3;
+}
+
+message SRL_Course {
+	required string courseId = 1; // This must be globally unique.
+	optional string courseName = 2;
+}
+
+message SRL_Assignment {
+	required uint64 courseId = 1; // To know who the parent is.
+	required string assignmentId = 2; // This must be unique within a course.
+	optional string assignmentName = 3;
+	// TODO: date information
+}
+
+message SRL_Problem {
+	required uint64 courseId = 1; // To know who the grandParent is.
+	required uint64 assignmentId = 2; // To know who the parent is.
+	required string problemId = 3; // This must be unique within an assignment.
+	optional string problemName = 4;
+	optional subproblemInformation mainProblem = 5;
+	repeated subproblemInformation subProblems = 6; // only if there are multiple subproblems
+}
+
+message subproblemInformation {
+	optional string questionText = 1;
+	optional QuestionType questionType = 2 [default=SKETCH];
+	optional bytes options = 3;
+	enum QuestionType {
+		SKETCH = 1;	
+		MULT_CHOICE = 2;
+		FREE_RESP = 3;
+		CHECK_BOX = 4;	
+	}
+}

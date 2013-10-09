@@ -1,0 +1,45 @@
+package protobuf.srl.sketch;
+message SRL_Sketch {
+	optional uint64 courseId = 1;
+	optional uint64 assignmentId = 2;
+	optional uint64 problemId = 3;
+	optional string domainId = 4; // used to find the domain for recognition
+	repeated SRL_Shape sketch = 5;
+}
+
+// inheritance does not exist so this will replace shape
+message SRL_Shape {
+	required string id = 1;
+	required uint64 time = 2;
+	optional string name = 3;
+	optional bool isUserCreated = 4;
+	repeated Interpretation interpretations= 5;
+	repeated SRL_Shape objects = 6;
+	repeated SRL_Stroke strokes = 7;
+}
+
+message SRL_Stroke {
+	required string id = 1;
+	required uint64 time = 2;
+	optional string name = 3;
+	repeated SRL_Point points = 4;
+}
+
+// If a point is added directly on the sketch surface then it is in a SRL_Stroke
+// in a SRL_Object all with the same id and time and name.
+message SRL_Point {
+	required string id = 1;
+	required uint64 time = 2;
+	optional string name = 3;
+	required double x = 4;
+	required double y = 5;
+	optional double pressure = 6;
+	optional double size = 7;
+	optional double speed = 8;
+}
+
+message Interpretation {
+	required string name = 1;
+	required double confidence = 2;
+	optional double complexity = 3;
+}
