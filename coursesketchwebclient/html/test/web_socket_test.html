@@ -9,8 +9,8 @@
 	<title>WebSocket Test</title>
 	<script language="javascript" type="text/javascript">
 	//	var wsUri = "echo.websocket.org/"; // echo server
-	//	var wsUri = "goldberglinux.tamu.edu:8887"; // our server
-		var wsUri = "localhost:8887"; // our server
+		var wsUri = "goldberglinux.tamu.edu:8887"; // our server
+	//	var wsUri = "localhost:8887"; // local server
 		//var wsUri = "165.91.85.94";
 		var output;
 		var connection;
@@ -46,7 +46,7 @@
 		
 		function doSend(message) {
 			writeToScreen("SENT: " + message);
-			connection.sendMessage(new Message(message));
+			connection.sendMessage(new Request(message));
 		}
 		
 		function writeToScreen(message) {
