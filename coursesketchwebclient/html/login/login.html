@@ -4,45 +4,64 @@
         <meta charset="utf-8">
         <base href="../../">
         <title>Course Sketch</title>
-		<script src="https://apis.google.com/js/client.js?onload=init"></script>
+        <script type="text/javascript" src="js/connection/connection_library.js"></script>
+    	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
         <link rel="stylesheet" type="text/css" href="css/login/introForms.css" />
        <link rel="icon" 
             type="image/ico" 
             href="/images/CSpencil.ico" />   
 		<script type='text/javascript'>
-			//set the cookie on successful login
-			function setCookie(c_name,value,exdays)
-			{
-               var exdate=new Date();
-               exdate.setDate(exdate.getDate() + exdays);
-               var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
-               document.cookie=c_name + "=" + c_value;
-			}
             function init() {
-            }
-
-			//check to see if it was a valid login and if so, set cookie and direct to home.php
-            function response(data) {
-				var userId = data['id'];
-				if(userId != null){
-					console.log("I have received data!");
-					setCookie("userId", userId, 7);
-					window.location.href = "home.php";
-				}
+            	setup();
             }
 
 			//called when login button is pressed
             function formSubmit() {
-				var username = document.getElementById("username");
-				var password = document.getElementById("password");
-				var ROOT = "https://coursesketchtamu.appspot.com/_ah/api";
-				gapi.client.load('coursesketch', 'v2', function() {
-					console.log("About to Send Data");
-					//call users.login and call the response function with the results from the call
-					gapi.client.coursesketch.users.login({"username":username.value, "password":password.value}).execute(response);
-                }, ROOT);
+				function sendLogin(arg1, arg2) {
+	  				var request = new Request(Request.MessageType.LOGIN);
+	  				var loginInfo = new LoginInformation(arg1, arg2);
+	  				request.login = loginInfo;
+	  				connection.sendRequest(request);
+	  			}
+				sendLogin(document.getElementById("username").value, document.getElementById("password").value);
             }
-				
+
+            function setup() {
+	  			//	var wsUri = "echo.websocket.org/"; // echo server
+	  			//var wsUri = "goldberglinux.tamu.edu:8887"; // our server
+	  			var wsUri = "localhost:8887"; // local server
+	  			connection = new Connection(wsUri,false);
+	  			function onOpen(evt) {
+	  			}
+
+	  			function onClose(evt) {
+	  				// logout.
+	  				if (evt.code == 1006) {
+	  					alert('can not connect to the server');
+	  				} else if(evt.code == 4001) {
+	  					alert(evt.reason);
+	  				} else if(evt.code == 4002) {
+	  					alert(evt.reason);
+	  				}
+	  			}
+
+	  			function onMessage(evt, message) {
+	  				if (message.login.isLoggedIn) {
+	  					// Redirect to main.html
+	  					parent.connection = connection;
+	  					window.location.assign("/main.html");
+	  				} else {
+	  					alert('Incorrect Password please try again');
+	  				}
+	  			}
+
+	  			function onError(evt, error) {
+	  				// through an uhoh oreo.
+	  				alert('OMG AN ERROR ' + error);
+	  			}
+	  			connection.setListeners(onOpen, onClose, onMessage, onError);
+	  		}
+	  		var connection = false;
         </script>
     </head>
     <body onload="init();">

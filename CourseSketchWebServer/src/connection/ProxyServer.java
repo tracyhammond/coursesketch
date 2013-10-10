@@ -29,8 +29,9 @@ public class ProxyServer extends WebSocketServer {
 	public static final int MAX_CONNECTIONS = 20;
 	public static final int STATE_SERVER_FULL = 4001;
 	public static final int STATE_INVALID_LOGIN = 4002;
+	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String FULL_SERVER_MESSAGE = "Sorry the server is full";
-	public static final String INVALID_LOGIN_MESSAGE = "Incorrect password or username";
+	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
 	
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
@@ -83,24 +84,19 @@ public class ProxyServer extends WebSocketServer {
 			if (LoginChecker.checkLogin(req)) {
 				state.logIn();
 				// Create the Request to respond.
-				Request.Builder requestBuilder = Request.newBuilder();
-				requestBuilder.setRequestType(MessageType.LOGIN);
-				requestBuilder.setResponseText("Login Succesful");
-				
-				// Create the Login Response.
-				LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
-				loginBuilder.setUsername(req.getLogin().getUsername());
-				loginBuilder.setIsLoggedIn(true);
-				
-				// Add login info.
-				requestBuilder.setLogin(loginBuilder.build());
-				
-				// Build and send.
-				conn.send(requestBuilder.build().toByteArray());
+				conn.send(LoginChecker.createResponse(req, true).toByteArray());
 			} else {
-				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
+				state.addTry();
+				if(state.getTries() > MAX_LOGIN_TRIES) {
+					conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
+				}
+				conn.send(LoginChecker.createResponse(req, false).toByteArray());
 			}
 		} else {
+			if (state.getTries() > MAX_LOGIN_TRIES) {
+				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
+				return;
+			}
 			// Parse message.
 			conn.send(buffer);
 			return;

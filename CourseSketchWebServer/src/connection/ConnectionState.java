@@ -5,6 +5,7 @@ public class ConnectionState {
 	private int key;
 	private boolean isLoggedIn = false; 
 	private int previousMessageType = 0;
+	private int loginTries = 0;
 	
 	public ConnectionState(int key) {
 		this.key = key;
@@ -25,7 +26,15 @@ public class ConnectionState {
 		return isLoggedIn;
 	}
 	
-	public void logIn() {
+	/* package-private */ void logIn() {
 		isLoggedIn = true;
+	}
+
+	public void addTry() {
+		loginTries++;
+	}
+	
+	public int getTries() {
+		return loginTries;
 	}
 }
