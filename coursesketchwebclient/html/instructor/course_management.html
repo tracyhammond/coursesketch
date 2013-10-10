@@ -12,6 +12,7 @@
 	  		parent.addScopedLoadEvent(window,
 					function()
 					{
+	  					parent.parent.redirector.setRedirect('html/instructor/course_management.html');
 						var builder = new schoolItemBuilder();
 						builder.setList(parent.user_courses).setWidth('medium').centerItem(true);
 						builder.showImage = false;

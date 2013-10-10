@@ -49,6 +49,7 @@
 	  				if (message.login.isLoggedIn) {
 	  					// Redirect to main.html
 	  					parent.connection = connection;
+	  					parent.location.hash = "main"; // tells url to go to main page (for re-redirects?)
 	  					window.location.assign("/main.html");
 	  				} else {
 	  					alert('Incorrect Password please try again');

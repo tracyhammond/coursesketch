@@ -15,6 +15,27 @@
 	</style>
 	<script>
 	var connection;
+	function Redirector(scope) {
+		var scope = scope;
+		/**
+		Sets the hash url to the file location.
+		
+		This allows us to find the url if something were to happen.
+		*/
+		this.setRedirect = function setRedirect(url) {
+			var shortUrl = replaceAll('html','',url); // remove html from file ending
+			var hashUrl = replaceAll('/','.',shortUrl);
+			var trimmedHash = hashUrl.substring(1,hashUrl.length-1); // trim ending
+			scope.location.hash = trimmedHash;
+		}
+		function replaceAll(find, replace, str) {
+			  return str.replace(new RegExp(find, 'g'), replace);
+		}
+	}
+	var redirector = new Redirector(window);
+	window.onload = function() {
+		redirector.setRedirect('html/login/login.html');
+	}
 	</script>
 </head>
 <body>
