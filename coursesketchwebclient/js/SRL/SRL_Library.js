@@ -139,23 +139,23 @@ function SRL_Object() {
 	/**
 	 * Each object has a unique ID associated with it.
 	 */
-	var m_id; // = guid();
+	var id; // = guid();
 	/**
 	 * The name of the object, such as "triangle1"
 	 */
-	var m_name = "";
+	var name = "";
 	/**
 	 * The creation time of the object.
 	 */
 
-	var m_time;
+	var time;
 	/**
 	 * An object can be created by a user 
 	 * (like drawing a shape, or speaking a phrase)
 	 * or it can be created by a system
 	 * (like a recognition of a higher level shape)
 	 */
-	var m_isUserCreated = false;
+	var isUserCreated = false;
 	/**
 	 * A list of possible interpretations for an object
 	 */
@@ -218,21 +218,21 @@ function SRL_Object() {
 	 * @return unique UUID for an object
 	 */
 	this.getId = function() {
-		return m_id;
+		return id;
 	}
 	/**
 	 * An object can have a name, such as "triangle1". 
 	 * @return the string name of the object
 	 */
 	this.getName = function() {
-		return m_name;
+		return name;
 	}
 	/**
 	 * An object can have a name, such as "triangle1". 
 	 * @param name object name
 	 */
 	this.setName = function(name) {
-		m_name = name;
+		name = name;
 	}
 	/**
 	 * Gets the time associated with the object. 
@@ -240,7 +240,7 @@ function SRL_Object() {
 	 * @return the time the object was created.
 	 */
 	this.getTime = function() {
-		return m_time;
+		return time;
 	}
 	/**
 	 * Sets the time the object was created. This probably should 
@@ -248,7 +248,7 @@ function SRL_Object() {
 	 * @param time the time the object was created.
 	 */
 	this.setTime = function(time) {
-		m_time = time;
+		time = time;
 	}
 	/**
 	 * An object can be created by a user 
@@ -259,7 +259,7 @@ function SRL_Object() {
 	 * @return true if a user created the shape
 	 */
 	this.isUserCreated = function() {
-		return m_isUserCreated;
+		return isUserCreated;
 	}
 	/**
 	 * An object can be created by a user 
@@ -269,7 +269,7 @@ function SRL_Object() {
 	 * @param isUserCreated true if the user created the shape, else false
 	 */
 	this.setUserCreated = function(isUserCreated) {
-		m_isUserCreated = isUserCreated;
+		isUserCreated = isUserCreated;
 	}
 };
 
@@ -399,13 +399,13 @@ function SRL_Stroke(startPoint) {
 	/**
 	 * List of points in the stroke
 	 */
-	var m_points = new Array();
+	var points = new Array();
 	/**
 	 * Constructor setting the initial point in the stroke
 	 * @param startPoint
 	 */
 	if (startPoint instanceof SRL_Point) {
-		m_points.push(startPoint);
+		points.push(startPoint);
 		//addInterpretation("Stroke", 1, 1);
 
 	/**
@@ -420,7 +420,7 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.addPoint = function(point){
 		if (point instanceof SRL_Point) {
-			m_points.push(point);
+			points.push(point);
 		}
 	}
 	/**
@@ -428,7 +428,7 @@ function SRL_Stroke(startPoint) {
 	 * @return list of points in the stroke
 	 */
 	this.getPoints = function(){
-		return m_points;
+		return points;
 	}
 	/**
 	 * Get the i'th point in the stroke 
@@ -438,10 +438,10 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getPoint = function(i){
 		if (typeof i === "number") {
-			if(i >= m_points.length){
+			if(i >= points.length){
 				return null;
 			}
-			return m_points[i];
+			return points[i];
 		}
 	}
 	/**
@@ -449,7 +449,7 @@ function SRL_Stroke(startPoint) {
 	 * @return number of points in the stroke
 	 */
 	this.getNumPoints = function(){
-		return m_points.length;
+		return points.length;
 	}
 	/**
 	 * Returns the first point in the stroke.
@@ -457,10 +457,10 @@ function SRL_Stroke(startPoint) {
 	 * @return first point in the stroke
 	 */
 	this.getFirstPoint = function(){
-		if (m_points.length == 0){
+		if (points.length == 0){
 			return null;
 		}
-		return m_points[0];
+		return points[0];
 	}
 	/**
 	 * Returns the last point in the stroke
@@ -468,10 +468,10 @@ function SRL_Stroke(startPoint) {
 	 * @return last point in the stroke.
 	 */
 	this.getLastPoint = function(){
-		if (m_points.length == 0){
+		if (points.length == 0){
 			return null;
 		}
-		return m_points[m_points.length-1];
+		return points[points.length-1];
 	}
 	/**
 	 * Returns a Graphics2Ddrawable awt object
@@ -481,7 +481,7 @@ function SRL_Stroke(startPoint) {
 		console.log("IGNORE AWT");
 		/*
 		GeneralPath path = new GeneralPath();
-		for(SRL_Point p : m_points){
+		for(SRL_Point p : points){
 			path.lineTo(p.getX(), p.getY());
 		}
 		return path;
@@ -492,9 +492,9 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getMinX.SRL_Stroke = function() {
 		var minx = this.getFirstPoint().getX();
-		for(var i=0; i<m_points.length; i++){
-			if(m_points[i].getX() < minx){
-				minx = m_points[i].getX();
+		for(var i=0; i<points.length; i++){
+			if(points[i].getX() < minx){
+				minx = points[i].getX();
 			}
 		}
 		return minx;
@@ -504,9 +504,9 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getMinY.SRL_Stroke = function() {
 		var miny = this.getFirstPoint().getY();
-		for(var i=0; i<m_points.length; i++){
-			if(m_points[i].getY() < miny){
-				miny = m_points[i].getY();
+		for(var i=0; i<points.length; i++){
+			if(points[i].getY() < miny){
+				miny = points[i].getY();
 			}
 		}
 		return miny;
@@ -516,9 +516,9 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getMaxX.SRL_Stroke = function() {
 		var maxx = this.getFirstPoint().getX();
-		for(var i=0; i<m_points.length; i++){
-			if(m_points[i].getX() > maxx){
-				maxx = m_points[i].getX();
+		for(var i=0; i<points.length; i++){
+			if(points[i].getX() > maxx){
+				maxx = points[i].getX();
 			}
 		}
 		return maxx;
@@ -528,9 +528,9 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getMaxY.SRL_Stroke = function() {
 		var maxy = this.getFirstPoint().getY();
-		for(var i=0; i<m_points.length; i++){
-			if(m_points[i].getY() > maxy){
-				maxy = m_points[i].getY();
+		for(var i=0; i<points.length; i++){
+			if(points[i].getY() > maxy){
+				maxy = points[i].getY();
 			}
 		}
 		return maxy;
@@ -671,7 +671,7 @@ function SRL_Stroke(startPoint) {
 	this.removeTimeDuplicates = function() {
 		console.log("TODO - need to implement a .getTime()");
 		var points = new Array();
-		for(var i=0; i<m_points.length; i++){
+		for(var i=0; i<points.length; i++){
 			if(points.length > 0){
 				/*
 				if(points[points.size()-1].getTime() == p.getTime()){
@@ -679,7 +679,7 @@ function SRL_Stroke(startPoint) {
 				}
 				//*/
 			}
-			points.push(m_points[i]);
+			points.push(points[i]);
 		}
 		return points;
 	}
@@ -811,8 +811,8 @@ function SRL_Stroke(startPoint) {
 
 
 	this.temp_print = function() {
-		for (var i=0; i<m_points.length; i++) {
-			m_points[i].temp_print();
+		for (var i=0; i<points.length; i++) {
+			points[i].temp_print();
 		}
 	}
 };
@@ -833,15 +833,15 @@ function SRL_Point(x, y) {
 	/**
 	 * Points can have pressure depending on the input device
 	 */
-	var m_pressure = 1;
+	var pressure = 1;
 	/**
 	 * Points can have size depending on the input device
 	 */
-	var m_size = 1;
+	var size = 1;
 	/**
 	 * Gives the instantaneous speed calculated from this and the previous point.
 	 */
-	var m_speed = 0;
+	var speed = 0;
 	/**
 	 * Holds an history list of the x points 
 	 * Purpose is so that we can redo and undo and go back to the original points
@@ -861,7 +861,7 @@ function SRL_Point(x, y) {
 	 * @return the pressure of the point
 	 */
 	this.getPressure = function() {
-		return m_pressure;
+		return pressure;
 	}
 	/**
 	 * Points can have pressure depending on the input device
@@ -869,7 +869,7 @@ function SRL_Point(x, y) {
 	 */
 	this.setPressure = function(pressure) {
 		if (typeof pressure === "number") {
-			m_pressure = pressure;
+			pressure = pressure;
 		} else {
 			throw "argument of .setPressure must be a 'number'";
 		}
@@ -880,7 +880,7 @@ function SRL_Point(x, y) {
 	 */
 	this.setSize = function(size) {
 		if (typeof size === "number") {
-			m_size = size;
+			size = size;
 		} else {
 			throw "argument of .setPressure must be a 'number'";
 		}
@@ -934,7 +934,7 @@ function SRL_Point(x, y) {
 			if (timeDiff == 0) {
 				return false;
 			}
-			m_speed = distance / timeDiff;
+			speed = distance / timeDiff;
 			return true;
 		}
 	}
