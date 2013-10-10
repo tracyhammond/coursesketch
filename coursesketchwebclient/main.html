@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <base href=".">
     <title>Welcome!</title>
+    <script type="text/javascript" src="js/connection/connection_library.js"></script>
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
@@ -22,6 +23,7 @@
 						var iframeHeight = height - headerHeight;
 						var iframe = document.getElementById('iframeContent');
 						iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
+						setup();
 					}
 				);
 	  		/**
@@ -38,6 +40,50 @@
 				var iframe = document.getElementById('iframeContent');
 				iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
 	  		}
+
+	  		function setup() {
+	  			//	var wsUri = "echo.websocket.org/"; // echo server
+	  			//var wsUri = "goldberglinux.tamu.edu:8887"; // our server
+	  			var wsUri = "localhost:8887"; // local server
+	  			connection = new Connection(wsUri,false);
+	  			function onOpen(evt) {
+	  				// do open stuff.
+	  				//prompt login.
+	  				// EVEN THOUGH WE SHOULD ALREADY HAVE THIS DATA!
+	  				sendLogin();
+	  			}
+	  			function onClose(evt) {
+	  				// logout.
+	  				if (evt.code == 1006) {
+	  					alert('can not connect to the server');
+	  				} else if(evt.code == 4001) {
+	  					alert(evt.reason);
+	  				} else if(evt.code == 4002) {
+	  					alert(evt.reason);
+	  				}
+	  			}
+	  			
+	  			function onMessage(evt, message) {
+	  				alert(message.requestType);
+	  			}
+
+	  			function onError(evt, error) {
+	  				// through an uhoh oreo.
+	  			}
+
+	  			function sendLogin() {
+	  				var request = new Request(Request.MessageType.LOGIN);
+	  				var loginInfo = new LoginInformation();
+	  				loginInfo.username = 'Matt';
+	  				loginInfo.password = 'japanese';
+	  				request.login = loginInfo;
+	  				alert(request);
+	  				connection.sendRequest(request);
+	  				//connection.sendSelf(request);
+	  			}
+	  			connection.setListeners(onOpen, onClose, onMessage, onError);
+	  		}
+	  		var connection = false;
 	</script>
 </head>
 <meta charset="UTF-8">

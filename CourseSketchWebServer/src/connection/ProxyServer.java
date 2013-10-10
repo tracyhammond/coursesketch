@@ -15,6 +15,10 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import protobuf.srl.request.Message.LoginInformation;
+import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
+
 /**
  * A simple WebSocketServer implementation.
  *
@@ -22,10 +26,16 @@ import org.java_websocket.server.WebSocketServer;
  */
 public class ProxyServer extends WebSocketServer {
 
-	// id
+	public static final int MAX_CONNECTIONS = 20;
+	public static final int STATE_SERVER_FULL = 4001;
+	public static final int STATE_INVALID_LOGIN = 4002;
+	public static final String FULL_SERVER_MESSAGE = "Sorry the server is full";
+	public static final String INVALID_LOGIN_MESSAGE = "Incorrect password or username";
+	
+	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
-	public static final int MAX_CONNECTIONS = 20;
+
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) throws UnknownHostException {
 		this( new InetSocketAddress( port ) );
@@ -38,54 +48,60 @@ public class ProxyServer extends WebSocketServer {
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 		if(connectionToId.size() >= MAX_CONNECTIONS) {
-			//return negatative state
+			// Return negatative state.
+			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
+			System.out.println("FULL SERVER"); // send message to someone?
 			return;
 		}
 		ConnectionState id = getUniqueId();
 		connectionToId.put(conn, id);
 		idToConnection.put(id, conn);
-		
-		//return positive status 
-
-		
-		//	this.sendToAll( "new connection: " + handshake.getResourceDescriptor() );
-		//	System.out.println("new connection: " + handshake.getResourceDescriptor());
-		//	System.out.println( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!" );
+		System.out.println("ID ASSIGNED");
 	}
 
 	@Override
-	public void onClose( WebSocket conn, int code, String reason, boolean remote ) {
-		System.out.println( conn + " has left the room!" );
+	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
+		System.out.println( conn + " has left the room!");
 		idToConnection.remove(connectionToId.remove(conn));
 	}
 
 	@Override
 	public void onMessage( WebSocket conn, String message ) {
-		ConnectionState state = connectionToId.get(conn);
-		if(!state.isLoggedIn()) {
-			// Check log in information
-			// return failed log in information on failure
-			boolean goodLogin = true;
-			if (goodLogin) {
-				state.logIn();
-				return;
-			} else {
-				return;
-			}
-		} else {
-			// Parse message
-			conn.send(message);
-			return;
-		}
 	}
 
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
-		if(!connectionToId.get(conn).isLoggedIn()) {
-			// Check log in information
-			// return failed log in information on failure
+		Request req = Decoder.prarseRequest(buffer);
+		ConnectionState state = connectionToId.get(conn);
+		if (req == null) {
+			System.out.println("protobuf error");
+			//this.
+			// we need to somehow send an error to the client here
+			return;
+		}
+		if (!state.isLoggedIn()) {
+			if (LoginChecker.checkLogin(req)) {
+				state.logIn();
+				// Create the Request to respond.
+				Request.Builder requestBuilder = Request.newBuilder();
+				requestBuilder.setRequestType(MessageType.LOGIN);
+				requestBuilder.setResponseText("Login Succesful");
+				
+				// Create the Login Response.
+				LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
+				loginBuilder.setUsername(req.getLogin().getUsername());
+				loginBuilder.setIsLoggedIn(true);
+				
+				// Add login info.
+				requestBuilder.setLogin(loginBuilder.build());
+				
+				// Build and send.
+				conn.send(requestBuilder.build().toByteArray());
+			} else {
+				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
+			}
 		} else {
-			// Parse message
+			// Parse message.
 			conn.send(buffer);
 			return;
 		}
@@ -99,6 +115,7 @@ public class ProxyServer extends WebSocketServer {
 	 * Returns a number that should be unique.
 	 */
 	public ConnectionState getUniqueId() {
+		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
 		return new ConnectionState(numberOfConnections++);
 	}
 	

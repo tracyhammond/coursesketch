@@ -144,21 +144,21 @@ class Request : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required .protobuf.srl.request.LoginInformation login = 1;
+  // required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];
+  inline bool has_requesttype() const;
+  inline void clear_requesttype();
+  static const int kRequestTypeFieldNumber = 1;
+  inline ::protobuf::srl::request::Request_MessageType requesttype() const;
+  inline void set_requesttype(::protobuf::srl::request::Request_MessageType value);
+
+  // optional .protobuf.srl.request.LoginInformation login = 2;
   inline bool has_login() const;
   inline void clear_login();
-  static const int kLoginFieldNumber = 1;
+  static const int kLoginFieldNumber = 2;
   inline const ::protobuf::srl::request::LoginInformation& login() const;
   inline ::protobuf::srl::request::LoginInformation* mutable_login();
   inline ::protobuf::srl::request::LoginInformation* release_login();
   inline void set_allocated_login(::protobuf::srl::request::LoginInformation* login);
-
-  // required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];
-  inline bool has_requesttype() const;
-  inline void clear_requesttype();
-  static const int kRequestTypeFieldNumber = 2;
-  inline ::protobuf::srl::request::Request_MessageType requesttype() const;
-  inline void set_requesttype(::protobuf::srl::request::Request_MessageType value);
 
   // optional bytes otherData = 3;
   inline bool has_otherdata() const;
@@ -172,23 +172,38 @@ class Request : public ::google::protobuf::Message {
   inline ::std::string* release_otherdata();
   inline void set_allocated_otherdata(::std::string* otherdata);
 
+  // optional string responseText = 4;
+  inline bool has_responsetext() const;
+  inline void clear_responsetext();
+  static const int kResponseTextFieldNumber = 4;
+  inline const ::std::string& responsetext() const;
+  inline void set_responsetext(const ::std::string& value);
+  inline void set_responsetext(const char* value);
+  inline void set_responsetext(const char* value, size_t size);
+  inline ::std::string* mutable_responsetext();
+  inline ::std::string* release_responsetext();
+  inline void set_allocated_responsetext(::std::string* responsetext);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.request.Request)
  private:
-  inline void set_has_login();
-  inline void clear_has_login();
   inline void set_has_requesttype();
   inline void clear_has_requesttype();
+  inline void set_has_login();
+  inline void clear_has_login();
   inline void set_has_otherdata();
   inline void clear_has_otherdata();
+  inline void set_has_responsetext();
+  inline void clear_has_responsetext();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::protobuf::srl::request::LoginInformation* login_;
   ::std::string* otherdata_;
+  ::std::string* responsetext_;
   int requesttype_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fmessage_2eproto();
   friend void protobuf_AssignDesc_input_2fmessage_2eproto();
@@ -277,10 +292,17 @@ class LoginInformation : public ::google::protobuf::Message {
   inline ::std::string* release_password();
   inline void set_allocated_password(::std::string* password);
 
-  // optional string sessionInfo = 3;
+  // optional bool isLoggedIn = 3;
+  inline bool has_isloggedin() const;
+  inline void clear_isloggedin();
+  static const int kIsLoggedInFieldNumber = 3;
+  inline bool isloggedin() const;
+  inline void set_isloggedin(bool value);
+
+  // optional string sessionInfo = 4;
   inline bool has_sessioninfo() const;
   inline void clear_sessioninfo();
-  static const int kSessionInfoFieldNumber = 3;
+  static const int kSessionInfoFieldNumber = 4;
   inline const ::std::string& sessioninfo() const;
   inline void set_sessioninfo(const ::std::string& value);
   inline void set_sessioninfo(const char* value);
@@ -295,6 +317,8 @@ class LoginInformation : public ::google::protobuf::Message {
   inline void clear_has_username();
   inline void set_has_password();
   inline void clear_has_password();
+  inline void set_has_isloggedin();
+  inline void clear_has_isloggedin();
   inline void set_has_sessioninfo();
   inline void clear_has_sessioninfo();
 
@@ -303,9 +327,10 @@ class LoginInformation : public ::google::protobuf::Message {
   ::std::string* username_;
   ::std::string* password_;
   ::std::string* sessioninfo_;
+  bool isloggedin_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fmessage_2eproto();
   friend void protobuf_AssignDesc_input_2fmessage_2eproto();
@@ -321,15 +346,38 @@ class LoginInformation : public ::google::protobuf::Message {
 
 // Request
 
-// required .protobuf.srl.request.LoginInformation login = 1;
-inline bool Request::has_login() const {
+// required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];
+inline bool Request::has_requesttype() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Request::set_has_login() {
+inline void Request::set_has_requesttype() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Request::clear_has_login() {
+inline void Request::clear_has_requesttype() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void Request::clear_requesttype() {
+  requesttype_ = 0;
+  clear_has_requesttype();
+}
+inline ::protobuf::srl::request::Request_MessageType Request::requesttype() const {
+  return static_cast< ::protobuf::srl::request::Request_MessageType >(requesttype_);
+}
+inline void Request::set_requesttype(::protobuf::srl::request::Request_MessageType value) {
+  assert(::protobuf::srl::request::Request_MessageType_IsValid(value));
+  set_has_requesttype();
+  requesttype_ = value;
+}
+
+// optional .protobuf.srl.request.LoginInformation login = 2;
+inline bool Request::has_login() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Request::set_has_login() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Request::clear_has_login() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void Request::clear_login() {
   if (login_ != NULL) login_->::protobuf::srl::request::LoginInformation::Clear();
@@ -357,29 +405,6 @@ inline void Request::set_allocated_login(::protobuf::srl::request::LoginInformat
   } else {
     clear_has_login();
   }
-}
-
-// required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];
-inline bool Request::has_requesttype() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Request::set_has_requesttype() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void Request::clear_has_requesttype() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void Request::clear_requesttype() {
-  requesttype_ = 0;
-  clear_has_requesttype();
-}
-inline ::protobuf::srl::request::Request_MessageType Request::requesttype() const {
-  return static_cast< ::protobuf::srl::request::Request_MessageType >(requesttype_);
-}
-inline void Request::set_requesttype(::protobuf::srl::request::Request_MessageType value) {
-  assert(::protobuf::srl::request::Request_MessageType_IsValid(value));
-  set_has_requesttype();
-  requesttype_ = value;
 }
 
 // optional bytes otherData = 3;
@@ -449,6 +474,76 @@ inline void Request::set_allocated_otherdata(::std::string* otherdata) {
   } else {
     clear_has_otherdata();
     otherdata_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string responseText = 4;
+inline bool Request::has_responsetext() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Request::set_has_responsetext() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Request::clear_has_responsetext() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Request::clear_responsetext() {
+  if (responsetext_ != &::google::protobuf::internal::kEmptyString) {
+    responsetext_->clear();
+  }
+  clear_has_responsetext();
+}
+inline const ::std::string& Request::responsetext() const {
+  return *responsetext_;
+}
+inline void Request::set_responsetext(const ::std::string& value) {
+  set_has_responsetext();
+  if (responsetext_ == &::google::protobuf::internal::kEmptyString) {
+    responsetext_ = new ::std::string;
+  }
+  responsetext_->assign(value);
+}
+inline void Request::set_responsetext(const char* value) {
+  set_has_responsetext();
+  if (responsetext_ == &::google::protobuf::internal::kEmptyString) {
+    responsetext_ = new ::std::string;
+  }
+  responsetext_->assign(value);
+}
+inline void Request::set_responsetext(const char* value, size_t size) {
+  set_has_responsetext();
+  if (responsetext_ == &::google::protobuf::internal::kEmptyString) {
+    responsetext_ = new ::std::string;
+  }
+  responsetext_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Request::mutable_responsetext() {
+  set_has_responsetext();
+  if (responsetext_ == &::google::protobuf::internal::kEmptyString) {
+    responsetext_ = new ::std::string;
+  }
+  return responsetext_;
+}
+inline ::std::string* Request::release_responsetext() {
+  clear_has_responsetext();
+  if (responsetext_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = responsetext_;
+    responsetext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Request::set_allocated_responsetext(::std::string* responsetext) {
+  if (responsetext_ != &::google::protobuf::internal::kEmptyString) {
+    delete responsetext_;
+  }
+  if (responsetext) {
+    set_has_responsetext();
+    responsetext_ = responsetext;
+  } else {
+    clear_has_responsetext();
+    responsetext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -596,15 +691,37 @@ inline void LoginInformation::set_allocated_password(::std::string* password) {
   }
 }
 
-// optional string sessionInfo = 3;
-inline bool LoginInformation::has_sessioninfo() const {
+// optional bool isLoggedIn = 3;
+inline bool LoginInformation::has_isloggedin() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void LoginInformation::set_has_sessioninfo() {
+inline void LoginInformation::set_has_isloggedin() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void LoginInformation::clear_has_sessioninfo() {
+inline void LoginInformation::clear_has_isloggedin() {
   _has_bits_[0] &= ~0x00000004u;
+}
+inline void LoginInformation::clear_isloggedin() {
+  isloggedin_ = false;
+  clear_has_isloggedin();
+}
+inline bool LoginInformation::isloggedin() const {
+  return isloggedin_;
+}
+inline void LoginInformation::set_isloggedin(bool value) {
+  set_has_isloggedin();
+  isloggedin_ = value;
+}
+
+// optional string sessionInfo = 4;
+inline bool LoginInformation::has_sessioninfo() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void LoginInformation::set_has_sessioninfo() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void LoginInformation::clear_has_sessioninfo() {
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void LoginInformation::clear_sessioninfo() {
   if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {
