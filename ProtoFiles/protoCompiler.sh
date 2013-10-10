@@ -20,6 +20,9 @@ do
   echo "copying java files to coursesketchwebserver/src/"
   cp -r -f output/java/$DIR/ ../coursesketchwebserver/src/
 
+  echo "copying java files to CourseSketchRecognitionServer/src/"
+  cp -r -f output/java/$DIR/ ../CourseSketchRecognitionServer/src/
+
   #javac -cp "protobuf-2.5.0.jar" -d "output/java/$DIR/" -sourcepath output/java/$DIR/srl/ *.java
   #echo "creating compiled java files"
   mkdir -p jars
