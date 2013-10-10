@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <base href="../../">
+        <title>Course Sketch</title>
+		<script src="https://apis.google.com/js/client.js?onload=init"></script>
+        <link rel="stylesheet" type="text/css" href="css/login/introForms.css" />
+       <link rel="icon" 
+            type="image/ico" 
+            href="/images/CSpencil.ico" />   
+		<script type='text/javascript'>
+			//set the cookie on successful login
+			function setCookie(c_name,value,exdays)
+			{
+               var exdate=new Date();
+               exdate.setDate(exdate.getDate() + exdays);
+               var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+               document.cookie=c_name + "=" + c_value;
+			}
+            function init() {
+            }
+
+			//check to see if it was a valid login and if so, set cookie and direct to home.php
+            function response(data) {
+				var userId = data['id'];
+				if(userId != null){
+					console.log("I have received data!");
+					setCookie("userId", userId, 7);
+					window.location.href = "home.php";
+				}
+            }
+
+			//called when login button is pressed
+            function formSubmit() {
+				var username = document.getElementById("username");
+				var password = document.getElementById("password");
+				var ROOT = "https://coursesketchtamu.appspot.com/_ah/api";
+				gapi.client.load('coursesketch', 'v2', function() {
+					console.log("About to Send Data");
+					//call users.login and call the response function with the results from the call
+					gapi.client.coursesketch.users.login({"username":username.value, "password":password.value}).execute(response);
+                }, ROOT);
+            }
+				
+        </script>
+    </head>
+    <body onload="init();">
+        <div class="container">
+          <section id="content">
+            <!-- Login Form: Username and Password field. Checks with Middle for confirmation -->
+            <div id="form">
+                <form onsubmit="return false">
+                    <h1>CourseSketch</h1>
+                    <div id="user">
+                        <input type="text" name="username" placeholder="Username" required="" id="username" />
+                    </div>
+                    <div id="user">
+                        <input type="password" name="password" placeholder="Password" required="" id="password" />
+                    </div>
+                    <div>
+    					<input type="submit" onclick="formSubmit()" value="Login">
+    					<a href="recovery.php">Lost your password?</a>
+                    </div>
+                </form>
+            </div>
+            <div class="button" >
+                <a href="register.php">Register</a>
+            </div>
+          </section>
+        </div>
+    </body>
+</html>
