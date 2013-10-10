@@ -15,6 +15,7 @@
 					function()
 					{
 						connection = parent.connection;
+						copyProtosFromParentProtos();
 						parent.connection = false;
 						var body = document.body,
 					    html = document.documentElement;
@@ -41,6 +42,11 @@
 				var iframe = document.getElementById('iframeContent');
 				iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
 	  		}
+	  		
+	  		function reloadContent() {
+	  			var value = redirector.getRedirect();
+	  			document.getElementById('iframeContent').src = value;
+	  		}
 	  		var connection = false;
 	  		var redirector = parent.redirector;
 	</script>
@@ -66,7 +72,7 @@
     <!-- Section in the Header bar -->
     <div id="header" data-role="header" class="ui-header ui-bar-a" role="banner">
         <a class="showMenu ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" data-theme="a"><span class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span class="ui-btn-text">Menu</span></span></a>
-        <div onclick = "document.getElementById('iframeContent').contentWindow.location.reload();" style="position:fixed; right:20px;">refresh</div>
+        <div onclick = "reloadContent();" style="position:fixed; right:20px;">refresh</div>
         <h1 id="nameBlock" class="ui-title" tabindex="0" role="heading" aria-level="1">Welcome!</h1>
     </div>
     <!-- Center Section -->

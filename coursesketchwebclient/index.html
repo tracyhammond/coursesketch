@@ -3,6 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Welcome!</title>
+    <script type="text/javascript" src="js/connection/connection_library.js"></script>
+   	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
 	<style>
 	html, body {
@@ -14,7 +16,10 @@
 	}
 	</style>
 	<script>
-	var connection;
+	//	var wsUri = "echo.websocket.org/"; // echo server
+	//var wsUri = "goldberglinux.tamu.edu:8887"; // our server
+	var wsUri = "localhost:8887"; // local server
+	var connection = new Connection(wsUri,false);;
 	function Redirector(scope) {
 		var scope = scope;
 		/**
@@ -30,6 +35,12 @@
 		}
 		function replaceAll(find, replace, str) {
 			  return str.replace(new RegExp(find, 'g'), replace);
+		}
+		
+		this.getRedirect = function getRedirect() {
+			var starting = scope.location.hash.substring(1);
+			var addedSlashes = 'html/' + replaceAll('\\.','/',starting) + '.html';
+			return addedSlashes;
 		}
 	}
 	var redirector = new Redirector(window);
