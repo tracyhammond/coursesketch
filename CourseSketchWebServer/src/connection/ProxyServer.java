@@ -48,7 +48,7 @@ public class ProxyServer extends WebSocketServer {
 
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		if(connectionToId.size() >= MAX_CONNECTIONS) {
+		if (connectionToId.size() >= MAX_CONNECTIONS) {
 			// Return negatative state.
 			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
 			System.out.println("FULL SERVER"); // send message to someone?
@@ -87,7 +87,7 @@ public class ProxyServer extends WebSocketServer {
 				conn.send(LoginChecker.createResponse(req, true).toByteArray());
 			} else {
 				state.addTry();
-				if(state.getTries() > MAX_LOGIN_TRIES) {
+				if (state.getTries() > MAX_LOGIN_TRIES) {
 					conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 				}
 				conn.send(LoginChecker.createResponse(req, false).toByteArray());
