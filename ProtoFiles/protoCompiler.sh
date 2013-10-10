@@ -15,16 +15,17 @@ do
   protoc --cpp_out=output/cpp/$DIR/ --java_out=output/java/$DIR/ --python_out=output/py/$DIR/ $f
 
   echo "copying files to coursesketchwebclient/other/"
-  cp $f ../coursesketchwebclient/other/
+  cp -f $f ../coursesketchwebclient/other/
 
   echo "copying java files to coursesketchwebserver/src/"
-  cp -r output/java/$DIR/ ../coursesketchwebserver/src/
+  cp -r -f output/java/$DIR/ ../coursesketchwebserver/src/
 
   #javac -cp "protobuf-2.5.0.jar" -d "output/java/$DIR/" -sourcepath output/java/$DIR/srl/ *.java
   #echo "creating compiled java files"
-  mkdir jars
+  mkdir -p jars
   cd jars
   jar cf $DIR.jar -C ../output/java/$DIR .
   echo "creating jar files they are located in jars"
   cd ..
+  echo ""
 done

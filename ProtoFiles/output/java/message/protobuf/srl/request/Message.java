@@ -11,29 +11,29 @@ public final class Message {
   public interface RequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required .protobuf.srl.request.LoginInformation login = 1;
+    // required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];
     /**
-     * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
-     */
-    boolean hasLogin();
-    /**
-     * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
-     */
-    protobuf.srl.request.Message.LoginInformation getLogin();
-    /**
-     * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
-     */
-    protobuf.srl.request.Message.LoginInformationOrBuilder getLoginOrBuilder();
-
-    // required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];
-    /**
-     * <code>required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];</code>
+     * <code>required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];</code>
      */
     boolean hasRequestType();
     /**
-     * <code>required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];</code>
+     * <code>required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];</code>
      */
     protobuf.srl.request.Message.Request.MessageType getRequestType();
+
+    // optional .protobuf.srl.request.LoginInformation login = 2;
+    /**
+     * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
+     */
+    boolean hasLogin();
+    /**
+     * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
+     */
+    protobuf.srl.request.Message.LoginInformation getLogin();
+    /**
+     * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
+     */
+    protobuf.srl.request.Message.LoginInformationOrBuilder getLoginOrBuilder();
 
     // optional bytes otherData = 3;
     /**
@@ -44,6 +44,21 @@ public final class Message {
      * <code>optional bytes otherData = 3;</code>
      */
     com.google.protobuf.ByteString getOtherData();
+
+    // optional string responseText = 4;
+    /**
+     * <code>optional string responseText = 4;</code>
+     */
+    boolean hasResponseText();
+    /**
+     * <code>optional string responseText = 4;</code>
+     */
+    java.lang.String getResponseText();
+    /**
+     * <code>optional string responseText = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getResponseTextBytes();
   }
   /**
    * Protobuf type {@code protobuf.srl.request.Request}
@@ -100,9 +115,20 @@ public final class Message {
               }
               break;
             }
-            case 10: {
+            case 8: {
+              int rawValue = input.readEnum();
+              protobuf.srl.request.Message.Request.MessageType value = protobuf.srl.request.Message.Request.MessageType.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                requestType_ = value;
+              }
+              break;
+            }
+            case 18: {
               protobuf.srl.request.Message.LoginInformation.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 subBuilder = login_.toBuilder();
               }
               login_ = input.readMessage(protobuf.srl.request.Message.LoginInformation.PARSER, extensionRegistry);
@@ -110,23 +136,17 @@ public final class Message {
                 subBuilder.mergeFrom(login_);
                 login_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000001;
-              break;
-            }
-            case 16: {
-              int rawValue = input.readEnum();
-              protobuf.srl.request.Message.Request.MessageType value = protobuf.srl.request.Message.Request.MessageType.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(2, rawValue);
-              } else {
-                bitField0_ |= 0x00000002;
-                requestType_ = value;
-              }
+              bitField0_ |= 0x00000002;
               break;
             }
             case 26: {
               bitField0_ |= 0x00000004;
               otherData_ = input.readBytes();
+              break;
+            }
+            case 34: {
+              bitField0_ |= 0x00000008;
+              responseText_ = input.readBytes();
               break;
             }
           }
@@ -278,42 +298,42 @@ public final class Message {
     }
 
     private int bitField0_;
-    // required .protobuf.srl.request.LoginInformation login = 1;
-    public static final int LOGIN_FIELD_NUMBER = 1;
-    private protobuf.srl.request.Message.LoginInformation login_;
+    // required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];
+    public static final int REQUESTTYPE_FIELD_NUMBER = 1;
+    private protobuf.srl.request.Message.Request.MessageType requestType_;
     /**
-     * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+     * <code>required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];</code>
      */
-    public boolean hasLogin() {
+    public boolean hasRequestType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+     * <code>required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];</code>
+     */
+    public protobuf.srl.request.Message.Request.MessageType getRequestType() {
+      return requestType_;
+    }
+
+    // optional .protobuf.srl.request.LoginInformation login = 2;
+    public static final int LOGIN_FIELD_NUMBER = 2;
+    private protobuf.srl.request.Message.LoginInformation login_;
+    /**
+     * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
+     */
+    public boolean hasLogin() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
      */
     public protobuf.srl.request.Message.LoginInformation getLogin() {
       return login_;
     }
     /**
-     * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+     * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
      */
     public protobuf.srl.request.Message.LoginInformationOrBuilder getLoginOrBuilder() {
       return login_;
-    }
-
-    // required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];
-    public static final int REQUESTTYPE_FIELD_NUMBER = 2;
-    private protobuf.srl.request.Message.Request.MessageType requestType_;
-    /**
-     * <code>required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];</code>
-     */
-    public boolean hasRequestType() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];</code>
-     */
-    public protobuf.srl.request.Message.Request.MessageType getRequestType() {
-      return requestType_;
     }
 
     // optional bytes otherData = 3;
@@ -332,27 +352,69 @@ public final class Message {
       return otherData_;
     }
 
+    // optional string responseText = 4;
+    public static final int RESPONSETEXT_FIELD_NUMBER = 4;
+    private java.lang.Object responseText_;
+    /**
+     * <code>optional string responseText = 4;</code>
+     */
+    public boolean hasResponseText() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string responseText = 4;</code>
+     */
+    public java.lang.String getResponseText() {
+      java.lang.Object ref = responseText_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          responseText_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string responseText = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getResponseTextBytes() {
+      java.lang.Object ref = responseText_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        responseText_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
-      login_ = protobuf.srl.request.Message.LoginInformation.getDefaultInstance();
       requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
+      login_ = protobuf.srl.request.Message.LoginInformation.getDefaultInstance();
       otherData_ = com.google.protobuf.ByteString.EMPTY;
+      responseText_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasLogin()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       if (!hasRequestType()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!getLogin().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
+      if (hasLogin()) {
+        if (!getLogin().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -362,13 +424,16 @@ public final class Message {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, login_);
+        output.writeEnum(1, requestType_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, requestType_.getNumber());
+        output.writeMessage(2, login_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, otherData_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(4, getResponseTextBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -381,15 +446,19 @@ public final class Message {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, login_);
+          .computeEnumSize(1, requestType_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, requestType_.getNumber());
+          .computeMessageSize(2, login_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, otherData_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, getResponseTextBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -512,16 +581,18 @@ public final class Message {
 
       public Builder clear() {
         super.clear();
+        requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
+        bitField0_ = (bitField0_ & ~0x00000001);
         if (loginBuilder_ == null) {
           login_ = protobuf.srl.request.Message.LoginInformation.getDefaultInstance();
         } else {
           loginBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
         bitField0_ = (bitField0_ & ~0x00000002);
         otherData_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
+        responseText_ = "";
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -553,19 +624,23 @@ public final class Message {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
+        result.requestType_ = requestType_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
         if (loginBuilder_ == null) {
           result.login_ = login_;
         } else {
           result.login_ = loginBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.requestType_ = requestType_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
         result.otherData_ = otherData_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.responseText_ = responseText_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -582,31 +657,34 @@ public final class Message {
 
       public Builder mergeFrom(protobuf.srl.request.Message.Request other) {
         if (other == protobuf.srl.request.Message.Request.getDefaultInstance()) return this;
-        if (other.hasLogin()) {
-          mergeLogin(other.getLogin());
-        }
         if (other.hasRequestType()) {
           setRequestType(other.getRequestType());
         }
+        if (other.hasLogin()) {
+          mergeLogin(other.getLogin());
+        }
         if (other.hasOtherData()) {
           setOtherData(other.getOtherData());
+        }
+        if (other.hasResponseText()) {
+          bitField0_ |= 0x00000008;
+          responseText_ = other.responseText_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (!hasLogin()) {
-          
-          return false;
-        }
         if (!hasRequestType()) {
           
           return false;
         }
-        if (!getLogin().isInitialized()) {
-          
-          return false;
+        if (hasLogin()) {
+          if (!getLogin().isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -630,18 +708,54 @@ public final class Message {
       }
       private int bitField0_;
 
-      // required .protobuf.srl.request.LoginInformation login = 1;
+      // required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];
+      private protobuf.srl.request.Message.Request.MessageType requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
+      /**
+       * <code>required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];</code>
+       */
+      public boolean hasRequestType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];</code>
+       */
+      public protobuf.srl.request.Message.Request.MessageType getRequestType() {
+        return requestType_;
+      }
+      /**
+       * <code>required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];</code>
+       */
+      public Builder setRequestType(protobuf.srl.request.Message.Request.MessageType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        requestType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .protobuf.srl.request.Request.MessageType requestType = 1 [default = LOGIN];</code>
+       */
+      public Builder clearRequestType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
+        onChanged();
+        return this;
+      }
+
+      // optional .protobuf.srl.request.LoginInformation login = 2;
       private protobuf.srl.request.Message.LoginInformation login_ = protobuf.srl.request.Message.LoginInformation.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.request.Message.LoginInformation, protobuf.srl.request.Message.LoginInformation.Builder, protobuf.srl.request.Message.LoginInformationOrBuilder> loginBuilder_;
       /**
-       * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+       * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
        */
       public boolean hasLogin() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+       * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
        */
       public protobuf.srl.request.Message.LoginInformation getLogin() {
         if (loginBuilder_ == null) {
@@ -651,7 +765,7 @@ public final class Message {
         }
       }
       /**
-       * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+       * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
        */
       public Builder setLogin(protobuf.srl.request.Message.LoginInformation value) {
         if (loginBuilder_ == null) {
@@ -663,11 +777,11 @@ public final class Message {
         } else {
           loginBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+       * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
        */
       public Builder setLogin(
           protobuf.srl.request.Message.LoginInformation.Builder builderForValue) {
@@ -677,15 +791,15 @@ public final class Message {
         } else {
           loginBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+       * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
        */
       public Builder mergeLogin(protobuf.srl.request.Message.LoginInformation value) {
         if (loginBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
               login_ != protobuf.srl.request.Message.LoginInformation.getDefaultInstance()) {
             login_ =
               protobuf.srl.request.Message.LoginInformation.newBuilder(login_).mergeFrom(value).buildPartial();
@@ -696,11 +810,11 @@ public final class Message {
         } else {
           loginBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
-       * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+       * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
        */
       public Builder clearLogin() {
         if (loginBuilder_ == null) {
@@ -709,19 +823,19 @@ public final class Message {
         } else {
           loginBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       /**
-       * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+       * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
        */
       public protobuf.srl.request.Message.LoginInformation.Builder getLoginBuilder() {
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         onChanged();
         return getLoginFieldBuilder().getBuilder();
       }
       /**
-       * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+       * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
        */
       public protobuf.srl.request.Message.LoginInformationOrBuilder getLoginOrBuilder() {
         if (loginBuilder_ != null) {
@@ -731,7 +845,7 @@ public final class Message {
         }
       }
       /**
-       * <code>required .protobuf.srl.request.LoginInformation login = 1;</code>
+       * <code>optional .protobuf.srl.request.LoginInformation login = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.request.Message.LoginInformation, protobuf.srl.request.Message.LoginInformation.Builder, protobuf.srl.request.Message.LoginInformationOrBuilder> 
@@ -745,42 +859,6 @@ public final class Message {
           login_ = null;
         }
         return loginBuilder_;
-      }
-
-      // required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];
-      private protobuf.srl.request.Message.Request.MessageType requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
-      /**
-       * <code>required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];</code>
-       */
-      public boolean hasRequestType() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];</code>
-       */
-      public protobuf.srl.request.Message.Request.MessageType getRequestType() {
-        return requestType_;
-      }
-      /**
-       * <code>required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];</code>
-       */
-      public Builder setRequestType(protobuf.srl.request.Message.Request.MessageType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000002;
-        requestType_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.request.Request.MessageType requestType = 2 [default = LOGIN];</code>
-       */
-      public Builder clearRequestType() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
-        onChanged();
-        return this;
       }
 
       // optional bytes otherData = 3;
@@ -815,6 +893,80 @@ public final class Message {
       public Builder clearOtherData() {
         bitField0_ = (bitField0_ & ~0x00000004);
         otherData_ = getDefaultInstance().getOtherData();
+        onChanged();
+        return this;
+      }
+
+      // optional string responseText = 4;
+      private java.lang.Object responseText_ = "";
+      /**
+       * <code>optional string responseText = 4;</code>
+       */
+      public boolean hasResponseText() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional string responseText = 4;</code>
+       */
+      public java.lang.String getResponseText() {
+        java.lang.Object ref = responseText_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          responseText_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string responseText = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getResponseTextBytes() {
+        java.lang.Object ref = responseText_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          responseText_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string responseText = 4;</code>
+       */
+      public Builder setResponseText(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        responseText_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string responseText = 4;</code>
+       */
+      public Builder clearResponseText() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        responseText_ = getDefaultInstance().getResponseText();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string responseText = 4;</code>
+       */
+      public Builder setResponseTextBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        responseText_ = value;
         onChanged();
         return this;
       }
@@ -863,9 +1015,19 @@ public final class Message {
     com.google.protobuf.ByteString
         getPasswordBytes();
 
-    // optional string sessionInfo = 3;
+    // optional bool isLoggedIn = 3;
     /**
-     * <code>optional string sessionInfo = 3;</code>
+     * <code>optional bool isLoggedIn = 3;</code>
+     */
+    boolean hasIsLoggedIn();
+    /**
+     * <code>optional bool isLoggedIn = 3;</code>
+     */
+    boolean getIsLoggedIn();
+
+    // optional string sessionInfo = 4;
+    /**
+     * <code>optional string sessionInfo = 4;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -873,7 +1035,7 @@ public final class Message {
      */
     boolean hasSessionInfo();
     /**
-     * <code>optional string sessionInfo = 3;</code>
+     * <code>optional string sessionInfo = 4;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -881,7 +1043,7 @@ public final class Message {
      */
     java.lang.String getSessionInfo();
     /**
-     * <code>optional string sessionInfo = 3;</code>
+     * <code>optional string sessionInfo = 4;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -951,8 +1113,13 @@ public final class Message {
               password_ = input.readBytes();
               break;
             }
-            case 26: {
+            case 24: {
               bitField0_ |= 0x00000004;
+              isLoggedIn_ = input.readBool();
+              break;
+            }
+            case 34: {
+              bitField0_ |= 0x00000008;
               sessionInfo_ = input.readBytes();
               break;
             }
@@ -1082,21 +1249,37 @@ public final class Message {
       }
     }
 
-    // optional string sessionInfo = 3;
-    public static final int SESSIONINFO_FIELD_NUMBER = 3;
+    // optional bool isLoggedIn = 3;
+    public static final int ISLOGGEDIN_FIELD_NUMBER = 3;
+    private boolean isLoggedIn_;
+    /**
+     * <code>optional bool isLoggedIn = 3;</code>
+     */
+    public boolean hasIsLoggedIn() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional bool isLoggedIn = 3;</code>
+     */
+    public boolean getIsLoggedIn() {
+      return isLoggedIn_;
+    }
+
+    // optional string sessionInfo = 4;
+    public static final int SESSIONINFO_FIELD_NUMBER = 4;
     private java.lang.Object sessionInfo_;
     /**
-     * <code>optional string sessionInfo = 3;</code>
+     * <code>optional string sessionInfo = 4;</code>
      *
      * <pre>
      * This may be separated out more.
      * </pre>
      */
     public boolean hasSessionInfo() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional string sessionInfo = 3;</code>
+     * <code>optional string sessionInfo = 4;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -1117,7 +1300,7 @@ public final class Message {
       }
     }
     /**
-     * <code>optional string sessionInfo = 3;</code>
+     * <code>optional string sessionInfo = 4;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -1140,6 +1323,7 @@ public final class Message {
     private void initFields() {
       username_ = "";
       password_ = "";
+      isLoggedIn_ = false;
       sessionInfo_ = "";
     }
     private byte memoizedIsInitialized = -1;
@@ -1165,7 +1349,10 @@ public final class Message {
         output.writeBytes(2, getPasswordBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getSessionInfoBytes());
+        output.writeBool(3, isLoggedIn_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(4, getSessionInfoBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -1186,7 +1373,11 @@ public final class Message {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getSessionInfoBytes());
+          .computeBoolSize(3, isLoggedIn_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, getSessionInfoBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1308,8 +1499,10 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000001);
         password_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        sessionInfo_ = "";
+        isLoggedIn_ = false;
         bitField0_ = (bitField0_ & ~0x00000004);
+        sessionInfo_ = "";
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1349,6 +1542,10 @@ public final class Message {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
+        result.isLoggedIn_ = isLoggedIn_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
         result.sessionInfo_ = sessionInfo_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -1376,8 +1573,11 @@ public final class Message {
           password_ = other.password_;
           onChanged();
         }
+        if (other.hasIsLoggedIn()) {
+          setIsLoggedIn(other.getIsLoggedIn());
+        }
         if (other.hasSessionInfo()) {
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
           sessionInfo_ = other.sessionInfo_;
           onChanged();
         }
@@ -1560,20 +1760,53 @@ public final class Message {
         return this;
       }
 
-      // optional string sessionInfo = 3;
+      // optional bool isLoggedIn = 3;
+      private boolean isLoggedIn_ ;
+      /**
+       * <code>optional bool isLoggedIn = 3;</code>
+       */
+      public boolean hasIsLoggedIn() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional bool isLoggedIn = 3;</code>
+       */
+      public boolean getIsLoggedIn() {
+        return isLoggedIn_;
+      }
+      /**
+       * <code>optional bool isLoggedIn = 3;</code>
+       */
+      public Builder setIsLoggedIn(boolean value) {
+        bitField0_ |= 0x00000004;
+        isLoggedIn_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool isLoggedIn = 3;</code>
+       */
+      public Builder clearIsLoggedIn() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        isLoggedIn_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional string sessionInfo = 4;
       private java.lang.Object sessionInfo_ = "";
       /**
-       * <code>optional string sessionInfo = 3;</code>
+       * <code>optional string sessionInfo = 4;</code>
        *
        * <pre>
        * This may be separated out more.
        * </pre>
        */
       public boolean hasSessionInfo() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional string sessionInfo = 3;</code>
+       * <code>optional string sessionInfo = 4;</code>
        *
        * <pre>
        * This may be separated out more.
@@ -1591,7 +1824,7 @@ public final class Message {
         }
       }
       /**
-       * <code>optional string sessionInfo = 3;</code>
+       * <code>optional string sessionInfo = 4;</code>
        *
        * <pre>
        * This may be separated out more.
@@ -1611,7 +1844,7 @@ public final class Message {
         }
       }
       /**
-       * <code>optional string sessionInfo = 3;</code>
+       * <code>optional string sessionInfo = 4;</code>
        *
        * <pre>
        * This may be separated out more.
@@ -1622,26 +1855,26 @@ public final class Message {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         sessionInfo_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string sessionInfo = 3;</code>
+       * <code>optional string sessionInfo = 4;</code>
        *
        * <pre>
        * This may be separated out more.
        * </pre>
        */
       public Builder clearSessionInfo() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         sessionInfo_ = getDefaultInstance().getSessionInfo();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string sessionInfo = 3;</code>
+       * <code>optional string sessionInfo = 4;</code>
        *
        * <pre>
        * This may be separated out more.
@@ -1652,7 +1885,7 @@ public final class Message {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         sessionInfo_ = value;
         onChanged();
         return this;
@@ -1689,15 +1922,16 @@ public final class Message {
   static {
     java.lang.String[] descriptorData = {
       "\n\023input/message.proto\022\024protobuf.srl.requ" +
-      "est\"\376\001\n\007Request\0225\n\005login\030\001 \002(\0132&.protobu" +
-      "f.srl.request.LoginInformation\022E\n\013reques" +
-      "tType\030\002 \002(\0162).protobuf.srl.request.Reque" +
-      "st.MessageType:\005LOGIN\022\021\n\totherData\030\003 \001(\014" +
-      "\"b\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_REQUE" +
-      "ST\020\001\022\020\n\014DATA_SENDING\020\002\022\017\n\013RECOGNITION\020\003\022" +
-      "\023\n\017ANSWER_CHECKING\020\004\"K\n\020LoginInformation" +
-      "\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\022\023\n\013" +
-      "sessionInfo\030\003 \001(\t"
+      "est\"\224\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
+      "rotobuf.srl.request.Request.MessageType:" +
+      "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req" +
+      "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014" +
+      "\022\024\n\014responseText\030\004 \001(\t\"b\n\013MessageType\022\t\n" +
+      "\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SENDI" +
+      "NG\020\002\022\017\n\013RECOGNITION\020\003\022\023\n\017ANSWER_CHECKING" +
+      "\020\004\"_\n\020LoginInformation\022\020\n\010username\030\001 \002(\t" +
+      "\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\023",
+      "\n\013sessionInfo\030\004 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1709,13 +1943,13 @@ public final class Message {
           internal_static_protobuf_srl_request_Request_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_request_Request_descriptor,
-              new java.lang.String[] { "Login", "RequestType", "OtherData", });
+              new java.lang.String[] { "RequestType", "Login", "OtherData", "ResponseText", });
           internal_static_protobuf_srl_request_LoginInformation_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_request_LoginInformation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_request_LoginInformation_descriptor,
-              new java.lang.String[] { "Username", "Password", "SessionInfo", });
+              new java.lang.String[] { "Username", "Password", "IsLoggedIn", "SessionInfo", });
           return null;
         }
       };

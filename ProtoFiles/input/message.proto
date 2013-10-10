@@ -2,21 +2,23 @@ package protobuf.srl.request;
 
 // Always sent and is filled out properly.
 message Request {
-	required LoginInformation login = 1;
-	required MessageType requestType= 2 [default=LOGIN];
+	required MessageType requestType= 1 [default=LOGIN];
+	optional LoginInformation login = 2;
+    optional bytes otherData = 3;
+	optional string responseText = 4;
 
-	enum MessageType {
+    enum MessageType {
 		LOGIN = 0;
         DATA_REQUEST = 1;
         DATA_SENDING = 2;
         RECOGNITION = 3;
         ANSWER_CHECKING = 4;
     }
-    optional bytes otherData = 3;
 }
 
 message LoginInformation {
 	required string username = 1;
     optional string password = 2;
-	optional string sessionInfo = 3; // This may be separated out more.
+    optional bool isLoggedIn = 3;
+	optional string sessionInfo = 4; // This may be separated out more.
 }

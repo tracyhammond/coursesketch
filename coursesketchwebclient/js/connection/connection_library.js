@@ -3,11 +3,11 @@
  *
  * With this connection you can send information which is encoded via protobufs.
  */
-function connection(uri, encrypted) {
+function Connection(uri, encrypted) {
 	
 	var onOpen;
 	var onClose;
-	var onMessage;
+	var onRequest;
 	var onError;
 	var websocket;
 	var wsUri = (encrypted?'wss://' : 'ws://') + uri;
@@ -24,9 +24,9 @@ function connection(uri, encrypted) {
 			};
 			websocket.onmessage = function(evt) {
 				try {
-			        // Decode the Message
-			        var msg = Message.decode(evt.data);
-					onMessage(evt, msg);
+			        // Decode the Request
+			        var msg = Request.decode(evt.data);
+					onRequest(evt, msg);
 			    } catch (err) {
 			    	onError(evt,err);
 			    }
@@ -53,16 +53,16 @@ function connection(uri, encrypted) {
 	this.setListeners = function(open, close, message, error) {
 		onOpen = open;
 		onClose = close;
-		onMessage = message;
+		onRequest = message;
 		onError = error;
 	}
 
 	/**
-	 * Given a Message object (message defined in proto), send it over the wire.
+	 * Given a Request object (message defined in proto), send it over the wire.
 	 *
 	 * The message must be a protobuf object.
 	 */
-	this.sendMessage = function(message) {
+	this.sendRequest = function(message) {
 		try {
 		websocket.send(message.toArrayBuffer());
 		} catch(err) {
@@ -70,6 +70,18 @@ function connection(uri, encrypted) {
 		}
 	}
 
+	/**
+	 * This is a test function that allows you to spoof messages to yourself.
+	 *
+	 * Only the data is the same right now.
+	 * The message is delayed but the function returns immediately.
+	 * TODO: complete the entirety of the event that can be spoofed.
+	 */
+	this.sendSelf = function(message) {
+		var event =  { data : message.toArrayBuffer()};
+		setTimeout(function() {websocket.onmessage(event);},500);
+	}
+	
 	/**
 	 * Closes the websocket.
 	 *
@@ -106,18 +118,41 @@ function connection(uri, encrypted) {
 				ProtoBuf = dcodeIO.ProtoBuf;
 			}
 			if (!builder) {
-				builder = ProtoBuf.protoFromFile("other/test.proto");
+				builder = ProtoBuf.protoFromFile("other/message.proto");
 			}
-			if (!Message) {
-				Message = builder.build("Message");
+			if (!Request) {
+				var requestPackage = builder.build("protobuf").srl.request;
+				Request = requestPackage.Request;
+				LoginInformation = requestPackage.LoginInformation;
 			}
+			buildSchool();
+			buildSketch();
 			postFunction();
 		}
 		
+		function buildSchool() {
+			var schoolBuilder = ProtoBuf.protoFromFile("other/school.proto");
+			if(!SRL_Course)
+				SRL_Course = schoolBuilder.build('SRL_Course');
+			if(!SRL_Assignment)
+				SRL_Assignment = schoolBuilder.build('SRL_Assignment');
+			if(!SRL_Problem)
+				SRL_Problem = schoolBuilder.build('SRL_Problem');
+		}
+		
+		function buildSketch() {
+			var schoolBuilder = ProtoBuf.protoFromFile("other/sketch.proto");
+			if(!SRL_Sketch)
+				SRL_Sketch = schoolBuilder.build('SRL_Sketch');
+			if(!SRL_Object)
+				SRL_Object = schoolBuilder.build('SRL_Object');
+			if(!SRL_Point)
+				SRL_Point = schoolBuilder.build('SRL_Point');
+		}
 		load1();
 	}
 
-	if(!(filesLoaded && builder && ProtoBuf && Message)) {
+	if(!(filesLoaded && builder && ProtoBuf && Request)) {
 		new protobufSetup(createWebSocket.bind(this));
 	}
 }
@@ -125,4 +160,11 @@ function connection(uri, encrypted) {
 var filesLoaded = false;
 var builder = false;
 var ProtoBuf = false;
-var Message = false; 
+var Request = false;
+var LoginInformation = false;
+var SRL_Course = false;
+var SRL_Assignment = false;
+var SRL_Problem = false;
+var SRL_Sketch = false;
+var SRL_Object = false;
+var SRL_Point = false;
