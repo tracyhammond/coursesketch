@@ -5,8 +5,12 @@
         effect: 'slide',
     });
 
+    $("#menu").find("a").click(function() {
+    	animateMenu(true);
+    });
+
     function animateMenu(value) {
-		if(value != true) {
+		if(value != true) { // value = false;
 			document.getElementById("menuBar").style.display = "block";
 			 $(".ui-page-active").animate({
 	                marginLeft: "200px",

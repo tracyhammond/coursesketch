@@ -12,6 +12,7 @@
 		parent.addScopedLoadEvent(window,
 					function()
 					{
+						parent.redirector.setRedirect('html/home.html');
 				    	var loader = new parent.DynamicFileLoader();
 				    	loader.scope = document;
 						

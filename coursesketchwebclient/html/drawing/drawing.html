@@ -8,7 +8,6 @@
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
-
 		var drawingCreator = false;
 		var sketch = false;
 		var canvasContext = false;
@@ -28,15 +27,53 @@
 				var object = list[i];
 				object.draw(canvasContext);
 			}
+			parent.connection.send(new parent.Message());
 		//	element.innerHTML = html;
 		}
+	    
+	    function setUpProtobufInheritance() {
+	    	parent.SRL_Shape.prototype = new SRL_Shape();
+	    	parent.SRL_Stroke.prototype = new SRL_Stroke();
+	    	parent.SRL_Point.prototype = new SRL_Point();
+	    	SRL_Shape = parent.SRL_Shape;
+	    	SRL_Stroke = parent.SRL_Stroke;
+	    	SRL_Point = parent.SRL_Point;
+	    }
+	    setUpProtobufInheritance();
 	</script>
+	<script type="text/javascript">
+			parent.addScopedLoadEvent(window, function() {
+	  				matchParent('drawingCanvas');
+	  		});
+
+			window.onresize = function() {
+					matchParent('drawingCanvas');
+				}
+
+	  		function matchParent(id) {
+	  			var body = document.body,
+			    html = document.documentElement;
+	  			alert('body '+ body);
+				var height = window.innerHeight - 4;
+				var width = window.innerWidth - 4;
+	  			alert('window height ' + window.innerHeight +' other height '+ height);
+				var element = document.getElementById('drawingCanvas');
+				element.height = height;
+				element.width = width;
+				element.style.width = element.width;
+				element.style.height = element.height;
+	  		}
+	  		
+	  		
+	</script>
+	<style>
+	html, body {
+	    margin: 0px;
+	    padding: 0px;
+	    border: 0px;
+	}
+	</style>
 </head>
 <body>
-    <!-- Center Section -->
-    <div id="home">
-    	<div class = "centre">
-    			<div id = "output"></div>
-   				<canvas id="drawingCanvas" width="800" height="700" style="top:0px; left:0px; width: 100%; height: 100%; background:#FFFFFF;"></canvas>
-    	</div>
-    </div>
+		<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
+</body>
