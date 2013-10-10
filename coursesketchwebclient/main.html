@@ -14,6 +14,8 @@
 	  		addLoadEvent(
 					function()
 					{
+						connection = parent.connection;
+						parent.connection = false;
 						var body = document.body,
 					    html = document.documentElement;
 						var height = Math.min( body.scrollHeight, body.offsetHeight, 
@@ -23,7 +25,6 @@
 						var iframeHeight = height - headerHeight;
 						var iframe = document.getElementById('iframeContent');
 						iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
-						setup();
 					}
 				);
 	  		/**
@@ -40,51 +41,17 @@
 				var iframe = document.getElementById('iframeContent');
 				iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
 	  		}
-
-	  		function setup() {
-	  			//	var wsUri = "echo.websocket.org/"; // echo server
-	  			//var wsUri = "goldberglinux.tamu.edu:8887"; // our server
-	  			var wsUri = "localhost:8887"; // local server
-	  			connection = new Connection(wsUri,false);
-	  			function onOpen(evt) {
-	  				// do open stuff.
-	  				//prompt login.
-	  				// EVEN THOUGH WE SHOULD ALREADY HAVE THIS DATA!
-	  				sendLogin();
-	  			}
-	  			function onClose(evt) {
-	  				// logout.
-	  				if (evt.code == 1006) {
-	  					alert('can not connect to the server');
-	  				} else if(evt.code == 4001) {
-	  					alert(evt.reason);
-	  				} else if(evt.code == 4002) {
-	  					alert(evt.reason);
-	  				}
-	  			}
-	  			
-	  			function onMessage(evt, message) {
-	  				alert(message.requestType);
-	  			}
-
-	  			function onError(evt, error) {
-	  				// through an uhoh oreo.
-	  			}
-
-	  			function sendLogin() {
-	  				var request = new Request(Request.MessageType.LOGIN);
-	  				var loginInfo = new LoginInformation();
-	  				loginInfo.username = 'Matt';
-	  				loginInfo.password = 'japanese';
-	  				request.login = loginInfo;
-	  				alert(request);
-	  				connection.sendRequest(request);
-	  				//connection.sendSelf(request);
-	  			}
-	  			connection.setListeners(onOpen, onClose, onMessage, onError);
-	  		}
 	  		var connection = false;
 	</script>
+	<style>
+	html, body {
+	    margin: 0px;
+	    padding: 0px;
+	    border: 0px;
+	    width: 100%;
+	    height: 100%;
+	}
+	</style>
 </head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -102,7 +69,7 @@
     </div>
     <!-- Center Section -->
     <div id="content">
-    	<iframe id="iframeContent" name="wrapper" src = "/html/home.html" height = "100%" width = 100% frameborder="0">
+    	<iframe id="iframeContent" name="wrapper" src = "/html/home.html" height = "100%" width = "100%" frameborder="0">
     	</iframe>
 	</div>
 </body>
