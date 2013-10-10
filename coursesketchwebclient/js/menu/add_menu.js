@@ -19,7 +19,7 @@ function getMenu() {
 			'	<h1>' +
 			'		<a href="html/home.html" target ="wrapper" data-ajax="false"><img src="images/smallTitle.svg"></a>' +
 			'	</h1>' +
-			'	<ul id="menu">' +
+			'	<ul id="menuList">' +
 			'		<li><a href="html/home.html" target ="wrapper" data-ajax="false"' +
 			'			class="contentLink">Home</a></li>' +
 			'		<li class="header"><h3>Classes I\'m In</h3></li>' +
