@@ -8,16 +8,25 @@
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
+    	function init() {
+    		parent.redirector.setRedirect('html/drawing/drawing.html');
+    		initializeInput();
+    		matchParent('drawingCanvas');
+    	}
+		var serverConnection = parent.connection;
 		var drawingCreator = false;
 		var sketch = false;
 		var canvasContext = false;
-	    parent.addScopedLoadEvent(window,function () {
+	    function initializeInput() {
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
 			canvasContext = input.canvasContext;
 			sketch = new sketchContainer();
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
-		});
+			serverConnection.setOnMessageListener(function(evt, message) {
+				alert('I AM GETTING A MESSAGE');
+			});
+		}
 	    
 	    function callback() {
 			element = document.getElementById('output');
@@ -27,7 +36,10 @@
 				var object = list[i];
 				object.draw(canvasContext);
 			}
-			parent.connection.send(new parent.Message());
+		//	alert(serverConnection.sendRequest);
+			//var Message = parent.Message;
+		//	alert(parent.Request);
+			serverConnection.sendRequest(new parent.Request());
 		//	element.innerHTML = html;
 		}
 	    
@@ -39,7 +51,7 @@
 	    	SRL_Stroke = parent.SRL_Stroke;
 	    	SRL_Point = parent.SRL_Point;
 	    }
-	    setUpProtobufInheritance();
+	    //setUpProtobufInheritance();
 	</script>
 	<script type="text/javascript">
 			parent.addScopedLoadEvent(window, function() {
@@ -53,10 +65,8 @@
 	  		function matchParent(id) {
 	  			var body = document.body,
 			    html = document.documentElement;
-	  			alert('body '+ body);
 				var height = window.innerHeight - 4;
 				var width = window.innerWidth - 4;
-	  			alert('window height ' + window.innerHeight +' other height '+ height);
 				var element = document.getElementById('drawingCanvas');
 				element.height = height;
 				element.width = width;
@@ -74,6 +84,6 @@
 	}
 	</style>
 </head>
-<body>
+<body onload="init()">
 		<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
 </body>

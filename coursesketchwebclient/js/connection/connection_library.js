@@ -17,16 +17,19 @@ function Connection(uri, encrypted) {
 			websocket = new WebSocket(wsUri);
 			websocket.binaryType = "arraybuffer"; // We are talking binary
 			websocket.onopen = function(evt) {
-				onOpen(evt);
+				if (onOpen)
+					onOpen(evt);
 			};
 			websocket.onclose = function(evt) {
-				onClose(evt);
+				if (onClose)
+					onClose(evt);
 			};
 			websocket.onmessage = function(evt) {
 				try {
 			        // Decode the Request
 			        var msg = Request.decode(evt.data);
-					onRequest(evt, msg);
+			        if (onRequest)
+			        	onRequest(evt, msg);
 			    } catch (err) {
 			    	onError(evt,err);
 			    }
@@ -34,7 +37,8 @@ function Connection(uri, encrypted) {
 	
 			};
 			websocket.onerror = function(evt) {
-				onError(evt,error);
+				if (onError)
+					onError(evt,error);
 			};
 		} catch(error) {
 			onError(null,error);
@@ -55,8 +59,24 @@ function Connection(uri, encrypted) {
 		onClose = close;
 		onRequest = message;
 		onError = error;
-	}
+	};
 
+	this.setOnOpenListener = function(listener) {
+		onOpen = listener;
+	};
+
+	this.setOnCloseListener = function(listener) {
+		onClose = listener;
+	};
+
+	this.setOnMessageListener = function(listener) {
+		onRequest = listener;
+	};
+
+	this.setOnErrorListener = function(listener) {
+		onError = listener;
+	};
+	
 	/**
 	 * Given a Request object (message defined in proto), send it over the wire.
 	 *
@@ -68,7 +88,7 @@ function Connection(uri, encrypted) {
 		} catch(err) {
 			onError(null, err);
 		}
-	}
+	};
 
 	/**
 	 * This is a test function that allows you to spoof messages to yourself.
@@ -80,7 +100,7 @@ function Connection(uri, encrypted) {
 	this.sendSelf = function(message) {
 		var event =  { data : message.toArrayBuffer()};
 		setTimeout(function() {websocket.onmessage(event);},500);
-	}
+	};
 	
 	/**
 	 * Closes the websocket.
@@ -89,7 +109,7 @@ function Connection(uri, encrypted) {
 	 */
 	this.close = function() {
 		websocket.close();
-	}
+	};
 
 	function protobufSetup(postLoadedFunction) {		
 		var barrierCount = 0;
@@ -129,7 +149,7 @@ function Connection(uri, encrypted) {
 			buildSketch();
 			postFunction();
 		}
-		
+
 		function buildSchool() {
 			var schoolBuilder = ProtoBuf.protoFromFile("other/school.proto");
 			if(!SRL_Course)
@@ -139,15 +159,15 @@ function Connection(uri, encrypted) {
 			if(!SRL_Problem)
 				SRL_Problem = schoolBuilder.build('SRL_Problem');
 		}
-		
+
 		function buildSketch() {
 			var schoolBuilder = ProtoBuf.protoFromFile("other/sketch.proto");
-			if(!SRL_Sketch)
-				SRL_Sketch = schoolBuilder.build('SRL_Sketch');
-			if(!SRL_Object)
-				SRL_Object = schoolBuilder.build('SRL_Object');
-			if(!SRL_Point)
-				SRL_Point = schoolBuilder.build('SRL_Point');
+			if(!Proto_SRL_Sketch)
+				Proto_SRL_Sketch = schoolBuilder.build('SRL_Sketch');
+			if(!Proto_SRL_Object)
+				Proto_SRL_Object = schoolBuilder.build('SRL_Object');
+			if(!Proto_SRL_Point)
+				Proto_SRL_Point = schoolBuilder.build('SRL_Point');
 		}
 		load1();
 	}
@@ -165,6 +185,21 @@ var LoginInformation = false;
 var SRL_Course = false;
 var SRL_Assignment = false;
 var SRL_Problem = false;
-var SRL_Sketch = false;
-var SRL_Object = false;
-var SRL_Point = false;
+var Proto_SRL_Sketch = false;
+var Proto_SRL_Object = false;
+var Proto_SRL_Stroke = false;
+var Proto_SRL_Point = false;
+
+function copyProtosFromParentProtos() {
+	filesLoaded = parent.filesLoaded;
+	builder = parent.builder;
+	ProtoBuf = parent.ProtoBuf;
+	Request = parent.Request;
+	LoginInformation = parent.LoginInformation;
+	SRL_Course = parent.SRL_Course;
+	SRL_Assignment = parent.SRL_Assignment;
+	SRL_Problem = parent.SRL_Problem;
+	Proto_SRL_Sketch = parent.Proto_SRL_Sketch;
+	Proto_SRL_Object = parent.Proto_SRL_Object;
+	Proto_SRL_Point = parent.Proto_SRL_Point;
+}
