@@ -19,7 +19,14 @@
 	//	var wsUri = "echo.websocket.org/"; // echo server
 	//var wsUri = "goldberglinux.tamu.edu:8887"; // our server
 	var wsUri = "localhost:8887"; // local server
-	var connection = new Connection(wsUri,false);;
+	var connection = new Connection(wsUri,false);
+	connection.setOnCloseListener(function(evt) {
+		if (evt.code == CONNECTION_LOST) {
+			alert('can not connect to the server');
+		} else if(evt.code == SERVER_FULL) {
+			alert(evt.reason); // Here we can try to connect to other servers.
+		}
+	});
 	function Redirector(scope) {
 		var scope = scope;
 		/**

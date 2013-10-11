@@ -189,7 +189,9 @@ var Proto_SRL_Sketch = false;
 var Proto_SRL_Object = false;
 var Proto_SRL_Stroke = false;
 var Proto_SRL_Point = false;
-
+const CONNECTION_LOST = 1006;
+const INCORRECT_LOGIN = 4002;
+const SERVER_FULL = 4001;
 function copyProtosFromParentProtos() {
 	filesLoaded = parent.filesLoaded;
 	builder = parent.builder;

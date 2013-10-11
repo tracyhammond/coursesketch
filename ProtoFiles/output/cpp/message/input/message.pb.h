@@ -299,10 +299,17 @@ class LoginInformation : public ::google::protobuf::Message {
   inline bool isloggedin() const;
   inline void set_isloggedin(bool value);
 
-  // optional string sessionInfo = 4;
+  // optional bool isInstructor = 4;
+  inline bool has_isinstructor() const;
+  inline void clear_isinstructor();
+  static const int kIsInstructorFieldNumber = 4;
+  inline bool isinstructor() const;
+  inline void set_isinstructor(bool value);
+
+  // optional string sessionInfo = 5;
   inline bool has_sessioninfo() const;
   inline void clear_sessioninfo();
-  static const int kSessionInfoFieldNumber = 4;
+  static const int kSessionInfoFieldNumber = 5;
   inline const ::std::string& sessioninfo() const;
   inline void set_sessioninfo(const ::std::string& value);
   inline void set_sessioninfo(const char* value);
@@ -319,6 +326,8 @@ class LoginInformation : public ::google::protobuf::Message {
   inline void clear_has_password();
   inline void set_has_isloggedin();
   inline void clear_has_isloggedin();
+  inline void set_has_isinstructor();
+  inline void clear_has_isinstructor();
   inline void set_has_sessioninfo();
   inline void clear_has_sessioninfo();
 
@@ -328,9 +337,10 @@ class LoginInformation : public ::google::protobuf::Message {
   ::std::string* password_;
   ::std::string* sessioninfo_;
   bool isloggedin_;
+  bool isinstructor_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fmessage_2eproto();
   friend void protobuf_AssignDesc_input_2fmessage_2eproto();
@@ -713,15 +723,37 @@ inline void LoginInformation::set_isloggedin(bool value) {
   isloggedin_ = value;
 }
 
-// optional string sessionInfo = 4;
-inline bool LoginInformation::has_sessioninfo() const {
+// optional bool isInstructor = 4;
+inline bool LoginInformation::has_isinstructor() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void LoginInformation::set_has_sessioninfo() {
+inline void LoginInformation::set_has_isinstructor() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void LoginInformation::clear_has_sessioninfo() {
+inline void LoginInformation::clear_has_isinstructor() {
   _has_bits_[0] &= ~0x00000008u;
+}
+inline void LoginInformation::clear_isinstructor() {
+  isinstructor_ = false;
+  clear_has_isinstructor();
+}
+inline bool LoginInformation::isinstructor() const {
+  return isinstructor_;
+}
+inline void LoginInformation::set_isinstructor(bool value) {
+  set_has_isinstructor();
+  isinstructor_ = value;
+}
+
+// optional string sessionInfo = 5;
+inline bool LoginInformation::has_sessioninfo() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void LoginInformation::set_has_sessioninfo() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void LoginInformation::clear_has_sessioninfo() {
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void LoginInformation::clear_sessioninfo() {
   if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {

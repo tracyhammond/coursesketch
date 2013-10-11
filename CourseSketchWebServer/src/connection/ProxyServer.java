@@ -32,6 +32,9 @@ public class ProxyServer extends WebSocketServer {
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String FULL_SERVER_MESSAGE = "Sorry the server is full";
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
+	public static final String INCORRECT_LOGIN_MESSAGE = "Incorrect username or password";
+	public static final String INCORRECT_LOGIN_TYPE_MESSAGE = "You do not have the ability to login as that type!";
+	public static final String PERMISSION_ERROR_MESSAGE = "There was an error assigning permissions";
 	
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
@@ -70,6 +73,9 @@ public class ProxyServer extends WebSocketServer {
 	public void onMessage( WebSocket conn, String message ) {
 	}
 
+	/**
+	 * Accepts messages and sends the request to the correct server and holds minimum client state.
+	 */
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		Request req = Decoder.prarseRequest(buffer);
@@ -82,15 +88,40 @@ public class ProxyServer extends WebSocketServer {
 		}
 		if (!state.isLoggedIn()) {
 			if (LoginChecker.checkLogin(req)) {
-				state.logIn();
+				System.out.println("\n\nUSER IS LOGGING IN!");
+				boolean success = true;
+				String message = "Successful Login";
+
+				int loginType = LoginChecker.checkInstructor(req);
+				switch (loginType) {
+					case LoginChecker.INSTRUCTOR_LOGIN:
+						System.out.println("Welcome instructor");
+						Permission permission = LoginChecker.assignPermission(state,req);
+						if (permission == Permission.ERROR_PERMISSON) {
+							success = false;
+							message = PERMISSION_ERROR_MESSAGE;
+						}
+					break;
+
+					case LoginChecker.ERROR:
+						success = false;
+						message = INCORRECT_LOGIN_TYPE_MESSAGE;
+					break;
+
+					default: // do nothing
+				}
+
 				// Create the Request to respond.
-				conn.send(LoginChecker.createResponse(req, true).toByteArray());
+				conn.send(LoginChecker.createResponse(req, success, message).toByteArray());
+				return;
 			} else {
 				state.addTry();
 				if (state.getTries() > MAX_LOGIN_TRIES) {
 					conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
+					return;
 				}
-				conn.send(LoginChecker.createResponse(req, false).toByteArray());
+				conn.send(LoginChecker.createResponse(req, false, INCORRECT_LOGIN_MESSAGE).toByteArray());
+				return;
 			}
 		} else {
 			if (state.getTries() > MAX_LOGIN_TRIES) {
@@ -114,7 +145,7 @@ public class ProxyServer extends WebSocketServer {
 		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
 		return new ConnectionState(numberOfConnections++);
 	}
-	
+
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
@@ -140,6 +171,7 @@ public class ProxyServer extends WebSocketServer {
 			}
 		}
 	}
+
 	@Override
 	public void onError( WebSocket conn, Exception ex ) {
 		ex.printStackTrace();
