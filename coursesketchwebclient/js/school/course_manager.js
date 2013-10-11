@@ -11,7 +11,7 @@ function courseClickerFunction(list) {
 	builder.setEmptyListMessage('There are no assignments for this course!');
 	builder.setOnBoxClick('assignmentClickerFunction');
 	builder.build('assignment_list_column');
-	replaceIframe('html/course_managment_frames/edit_course.html');
+	replaceIframe('html/instructor/course_managment_frames/edit_course.html');
 	showButton('assignment_button');
 }
 
@@ -28,13 +28,13 @@ function assignmentClickerFunction(list) {
 	builder.setEmptyListMessage('There are no problems for this assignment!');
 	builder.setOnBoxClick('problemClickerFunction');
 	builder.build('problem_list_column');
-	replaceIframe('html/course_managment_frames/edit_assignment.html');
+	replaceIframe('html/instructor/course_managment_frames/edit_assignment.html');
 	showButton('problem_button');
 }
 
 function problemClickerFunction(list) {
 	changeSelection(list, problemSelectionManager);
-	replaceIframe('html/course_managment_frames/edit_problem.html');
+	replaceIframe('html/instructor/course_managment_frames/edit_problem.html');
 }
 
 function showButton(id) {
