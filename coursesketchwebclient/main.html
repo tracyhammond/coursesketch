@@ -26,6 +26,7 @@
 						var iframeHeight = height - headerHeight;
 						var iframe = document.getElementById('iframeContent');
 						iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
+						contentHeight = iframe.height;
 					}
 				);
 	  		/**
@@ -41,6 +42,7 @@
 				var iframeHeight = height - headerHeight;
 				var iframe = document.getElementById('iframeContent');
 				iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
+				contentHeight = iframe.height;
 	  		}
 	  		
 	  		function reloadContent() {
@@ -49,7 +51,9 @@
 	  		}
 	  		var connection = false;
 	  		var redirector = parent.redirector;
+	  		var contentHeight = 0;
 	</script>
+
 	<style>
 	html, body {
 	    margin: 0px;
