@@ -17,13 +17,14 @@
 
 			//called when login button is pressed
             function formSubmit() {
-				function sendLogin(arg1, arg2) {
+				function sendLogin(arg1, arg2, arg3) {
+					alert(arg3);
 	  				var request = new Request(Request.MessageType.LOGIN);
-	  				var loginInfo = new LoginInformation(arg1, arg2);
+	  				var loginInfo = new LoginInformation(arg1, arg2, false, arg3, "");
 	  				request.login = loginInfo;
 	  				connection.sendRequest(request);
 	  			}
-				sendLogin(document.getElementById("username").value, document.getElementById("password").value);
+				sendLogin(document.getElementById("username").value, document.getElementById("password").value, document.getElementById("instructorIntent").checked);
             }
 
             function setup() {
@@ -34,11 +35,11 @@
 
 	  			function onClose(evt) {
 	  				// logout.
-	  				if (evt.code == 1006) {
+	  				if (evt.code == CONNECTION_LOST) {
 	  					alert('can not connect to the server');
-	  				} else if(evt.code == 4001) {
+	  				} else if(evt.code == SERVER_FULL) {
 	  					alert(evt.reason);
-	  				} else if(evt.code == 4002) {
+	  				} else if(evt.code == INCORRECT_LOGIN) {
 	  					alert(evt.reason);
 	  				}
 	  			}
@@ -50,7 +51,7 @@
 	  					parent.location.hash = "main"; // tells url to go to main page (for re-redirects?)
 	  					window.location.assign("/main.html");
 	  				} else {
-	  					alert('Incorrect Password please try again');
+	  					alert(message.responseText);
 	  				}
 	  			}
 
@@ -75,6 +76,9 @@
                     </div>
                     <div id="user">
                         <input type="password" name="password" placeholder="Password" required="" id="password" />
+                    </div>
+                    <div id="user">
+                        <input type="checkbox" name="instructorIntent" id="instructorIntent" />Log on as an Instructor?
                     </div>
                     <div>
     					<input type="submit" onclick="formSubmit()" value="Login">

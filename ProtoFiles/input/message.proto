@@ -20,5 +20,6 @@ message LoginInformation {
 	required string username = 1;
     optional string password = 2;
     optional bool isLoggedIn = 3;
-	optional string sessionInfo = 4; // This may be separated out more.
+    optional bool isInstructor = 4; // to see if the peson is logging in as an instructor.  (TA log in this way too)
+	optional string sessionInfo = 5; // This may be separated out more.
 }
