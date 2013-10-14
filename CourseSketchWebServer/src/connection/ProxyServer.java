@@ -112,7 +112,8 @@ public class ProxyServer extends WebSocketServer {
 				}
 
 				// Create the Request to respond.
-				conn.send(LoginChecker.createResponse(req, success, message).toByteArray());
+				Request r = LoginChecker.createLoginResponse(req, success, message, loginType == LoginChecker.INSTRUCTOR_LOGIN);
+				conn.send(r.toByteArray());
 				return;
 			} else {
 				state.addTry();
@@ -120,7 +121,7 @@ public class ProxyServer extends WebSocketServer {
 					conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 					return;
 				}
-				conn.send(LoginChecker.createResponse(req, false, INCORRECT_LOGIN_MESSAGE).toByteArray());
+				conn.send(LoginChecker.createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false).toByteArray());
 				return;
 			}
 		} else {

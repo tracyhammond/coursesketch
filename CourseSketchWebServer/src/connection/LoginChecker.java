@@ -24,7 +24,7 @@ public class LoginChecker {
 		return false;
 	}
 	
-	/* package-private */ static Request createResponse(Request req, boolean success, String message) {
+	/* package-private */ static Request createLoginResponse(Request req, boolean success, String message, boolean instructorIntent) {
 		Request.Builder requestBuilder = Request.newBuilder();
 		requestBuilder.setRequestType(MessageType.LOGIN);
 		requestBuilder.setResponseText(message);
@@ -33,6 +33,7 @@ public class LoginChecker {
 		LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
 		loginBuilder.setUsername(req.getLogin().getUsername());
 		loginBuilder.setIsLoggedIn(success);
+		loginBuilder.setIsInstructor(instructorIntent);
 
 		// Add login info.
 		requestBuilder.setLogin(loginBuilder.build());
