@@ -6,6 +6,7 @@
         <title>Course Sketch</title>
         <script type="text/javascript" src="js/connection/connection_library.js"></script>
     	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    	<link rel="stylesheet" href="css/utility/toggleswitch.css">
         <link rel="stylesheet" type="text/css" href="css/login/introForms.css" />
        <link rel="icon" 
             type="image/ico" 
@@ -18,7 +19,6 @@
 			//called when login button is pressed
             function formSubmit() {
 				function sendLogin(arg1, arg2, arg3) {
-					alert(arg3);
 	  				var request = new Request(Request.MessageType.LOGIN);
 	  				var loginInfo = new LoginInformation(arg1, arg2, false, arg3, "");
 	  				request.login = loginInfo;
@@ -47,8 +47,9 @@
 	  			function onMessage(evt, message) {
 	  				if (message.login.isLoggedIn) {
 	  					// Redirect to main.html
+	  					connection.isInstructor = message.login.isInstructor;
+	  					alert(" instructor? " + connection.isInstructor);
 	  					parent.connection = connection;
-	  					parent.location.hash = "main"; // tells url to go to main page (for re-redirects?)
 	  					window.location.assign("/main.html");
 	  				} else {
 	  					alert(message.responseText);
@@ -77,8 +78,14 @@
                     <div id="user">
                         <input type="password" name="password" placeholder="Password" required="" id="password" />
                     </div>
-                    <div id="user">
-                        <input type="checkbox" name="instructorIntent" id="instructorIntent" />Log on as an Instructor?
+                    <div id="user" style="cursor:pointer; position:relative; text-align:center;">
+	                    <div class="onoffswitch" style = "display: inline-block;">
+						    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="instructorIntent">
+						    <label class="onoffswitch-label" for="instructorIntent">
+						        <div class="onoffswitch-inner"></div>
+						        <div class="onoffswitch-switch"></div>
+						    </label>
+						</div>
                     </div>
                     <div>
     					<input type="submit" onclick="formSubmit()" value="Login">

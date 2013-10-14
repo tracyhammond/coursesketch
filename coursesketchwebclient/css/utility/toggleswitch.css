@@ -9,7 +9,7 @@
 
 .onoffswitch-label {
     display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999; border-radius: 7px;
+    border: 1px solid #C8C8C8; border-radius: 5px;
 }
 
 .onoffswitch-inner {
@@ -20,30 +20,39 @@
 
 .onoffswitch-inner:before, .onoffswitch-inner:after {
     float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
-    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif;
     -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+    text-shadow: none;
+
+    -webkit-box-shadow: 0 1px 0 #FFF, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
+	-moz-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+	-ms-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+	-o-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+	box-shadow: 0 1px 0 #FFF, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
 }
 
 .onoffswitch-inner:before {
-    content: "off total";
+    content: "Instructor";
     padding-left: 10px;
+    text-align:left;
     background-color: #A9D0F5; color: #FFFFFF;
 }
 
 .onoffswitch-inner:after {
-    content: "off grade";
+    content: "Student";
+    text-align:right;
     padding-right: 10px;
-    background-color: #DDDDDD; color: #999999;
+    background-color: #EAE7E7; color: #999999;
     text-align: right;
 }
 
 .onoffswitch-switch {
     width: 20px; margin: 5px;
     background: #FFFFFF;
-    border: 2px solid #999999; border-radius: .6em;
+    border: 1px solid #C8C8C8; border-radius: .6em;
     position: absolute; top: 0; bottom: 0; right: 80px;
     -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
-    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
 }
 
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {

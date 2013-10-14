@@ -27,6 +27,12 @@
 						var iframe = document.getElementById('iframeContent');
 						iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
 						contentHeight = iframe.height;
+						alert(connection.isInstructor);
+						if (connection.isInstructor) {
+							redirectContent("html/instructor/course_management.html");
+						} else {
+							redirectContent("html/student/course_management.html");
+						}
 					}
 				);
 	  		/**
@@ -52,6 +58,16 @@
 	  		var connection = false;
 	  		var redirector = parent.redirector;
 	  		var contentHeight = 0;
+
+	  		function redirectContent(url, title) {
+	  			document.getElementById('iframeContent').src = url;
+	  			redirector.setRedirect(url);
+
+	  			if (title) {
+	  				document.getElementById("nameBlock").textContent = title;
+	  			}
+	  		}
+	  		redirectContent = redirectContent.bind(this);
 	</script>
 
 	<style>
@@ -81,7 +97,7 @@
     </div>
     <!-- Center Section -->
     <div id="content">
-    	<iframe id="iframeContent" name="wrapper" src = "/html/home.html" height = "100%" width = "100%" frameborder="0">
+    	<iframe id="iframeContent" name="wrapper" src = "" height = "100%" width = "100%" frameborder="0">
     	</iframe>
 	</div>
 </body>

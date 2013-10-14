@@ -38,11 +38,17 @@ function problemClickerFunction(list) {
 }
 
 function showButton(id) {
-	document.getElementById(id).style.display = "block";
+	var element = document.getElementById(id);
+	if (element) {
+		element.style.display = "block";
+	}
 }
 
 function hideButton(id) {
-	document.getElementById(id).style.display = "none";
+	var element = document.getElementById(id);
+	if (element) {
+		element.style.display = "none";
+	}
 }
 
 function clearLists(number) {
