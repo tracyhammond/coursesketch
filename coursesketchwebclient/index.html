@@ -35,10 +35,11 @@
 		This allows us to find the url if something were to happen.
 		*/
 		this.setRedirect = function setRedirect(url) {
-			var shortUrl = replaceAll('html','',url); // remove html from file ending
+			var shortUrl = replaceAll('html','',url); // Remove html from file ending
 			var hashUrl = replaceAll('/','.',shortUrl);
-			var trimmedHash = hashUrl.substring(1,hashUrl.length-1); // trim ending
-			scope.location.hash = trimmedHash;
+			var trimmedHash = hashUrl.substring(1,hashUrl.length-1); // Trim ending
+			var replacedHash = ('' + window.location).split('#')[0] + '#' + trimmedHash;
+			scope.location.replace(replacedHash);
 		}
 		function replaceAll(find, replace, str) {
 			  return str.replace(new RegExp(find, 'g'), replace);
