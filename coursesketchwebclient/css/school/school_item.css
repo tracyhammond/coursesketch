@@ -88,3 +88,15 @@
     right:0px;
     z-index:-1;
 }
+
+.closed_sign {
+    width:35%;
+    height:50%;
+    position:absolute;
+    background-image:url(../../images/schoolItem/closed_sign.svg);
+	background-repeat:no-repeat;
+	background-position:right top;
+	top:0px;
+    right:0px;
+    z-index:-1;
+}

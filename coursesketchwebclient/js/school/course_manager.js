@@ -92,7 +92,7 @@ function manageHeight() {
 */
 function replaceIframe(src) {
 	var toReplace = document.getElementById('editable_unit');
-	if (src) {
+	if (src && toReplace != null) {
 		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" width = 100% ' +
 		'sanbox = "allow-same-origin allow-scripts"' +
 		'seamless = "seamless" onload="manageHeight()">';

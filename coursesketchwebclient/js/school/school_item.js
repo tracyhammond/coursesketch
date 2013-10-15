@@ -223,7 +223,9 @@ function schoolItemBuilder() {
 			// show completed status (yayyy)
 		} else if(completionStatus == 'started') {
 			html = '<span class="construction_tape"></span>';
-		} else if(completionStatus == 'notStarted') {
+		} else if(completionStatus == 'visible') {
+		} else if(completionStatus == 'closed') {
+			html = '<span class="closed_sign"></span>';
 		}
 		return html;
 	}
