@@ -27,7 +27,6 @@
 						var iframe = document.getElementById('iframeContent');
 						iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
 						contentHeight = iframe.height;
-						alert(connection.isInstructor);
 						if (connection.isInstructor) {
 							redirectContent("html/instructor/course_management.html");
 						} else {

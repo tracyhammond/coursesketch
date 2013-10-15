@@ -7,6 +7,7 @@
         <script type="text/javascript" src="js/connection/connection_library.js"></script>
     	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
     	<link rel="stylesheet" href="css/utility/toggleswitch.css">
+    	<link rel="stylesheet" href="css/inputStyles/style1.css">
         <link rel="stylesheet" type="text/css" href="css/login/introForms.css" />
        <link rel="icon" 
             type="image/ico" 
@@ -24,7 +25,8 @@
 	  				request.login = loginInfo;
 	  				connection.sendRequest(request);
 	  			}
-				sendLogin(document.getElementById("username").value, document.getElementById("password").value, document.getElementById("instructorIntent").checked);
+				sendLogin(document.getElementById("username").value, document.getElementById("password").value,
+						document.getElementById("instructorIntent").value == "Instructor");
             }
 
             function setup() {
@@ -48,7 +50,6 @@
 	  				if (message.login.isLoggedIn) {
 	  					// Redirect to main.html
 	  					connection.isInstructor = message.login.isInstructor;
-	  					alert(" instructor? " + connection.isInstructor);
 	  					parent.connection = connection;
 	  					window.location.assign("/main.html");
 	  				} else {
@@ -69,26 +70,25 @@
         <div class="container">
           <section id="content">
             <!-- Login Form: Username and Password field. Checks with Middle for confirmation -->
-            <div id="form">
-                <form onsubmit="return false">
+            <div id="form" stlye = "position:relative;">
+                <form onsubmit="formSubmit()">
                     <h1>CourseSketch</h1>
                     <div id="user">
-                        <input type="text" name="username" placeholder="Username" required="" id="username" />
+                        <input type="text" name="username" placeholder="Username" required="" id="username" autofocus/>
                     </div>
                     <div id="user">
                         <input type="password" name="password" placeholder="Password" required="" id="password" />
                     </div>
-                    <div id="user" style="cursor:pointer; position:relative; text-align:center;">
-	                    <div class="onoffswitch" style = "display: inline-block;">
-						    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="instructorIntent">
-						    <label class="onoffswitch-label" for="instructorIntent">
-						        <div class="onoffswitch-inner"></div>
-						        <div class="onoffswitch-switch"></div>
-						    </label>
+                    <div id="user" style="cursor:pointer; position:relative;">
+                    	<div class = "styled-select" style = "display: inline-block; width: 100px;">
+                    		<select required="" id="instructorIntent">
+							  <option value="Student">Student</option>
+							  <option value="Instructor">Instructor</option>
+							</select>
 						</div>
                     </div>
                     <div>
-    					<input type="submit" onclick="formSubmit()" value="Login">
+    					<input type="submit" value="Login">
     					<a href="recovery.php">Lost your password?</a>
                     </div>
                 </form>
