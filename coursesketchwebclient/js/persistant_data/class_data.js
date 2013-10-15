@@ -17,7 +17,7 @@ var upcomming_assignments =
 		 	'test/truss_thumb.png',
 		 	['Phyics','PhysicsLink','Class_Physics_ID'],
 		 	new Date('Thu Aug 29 2013 11:24:27 GMT-0500 (CDT)'),
-		 	'notStarted'
+		 	'visible'
 		],
 	 	[
 	 	 	'assignment',
@@ -35,7 +35,7 @@ var upcomming_assignments =
 	 	 	'test/chemistry_thumb.png',
 	 	 	['Chemistry','ChemistryLink','Class_Chemistry_ID'],
 	 	 	new Date('Sun Sep 1 2013 11:24:27 GMT-0500 (CDT)'),
-	 	 	'studentStarted'
+	 	 	'closed'
 	 	],
 	 	[
 	 	 	'assignment',
