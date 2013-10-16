@@ -33,6 +33,8 @@ public class ConnectionState {
 		isInstructor = instructorFlag;
 		if (instructorFlag) {
 			this.permissionLevel = permissionLevel;
+		} else {
+			this.permissionLevel = Permission.NO_PERMISSION;
 		}
 	}
 
