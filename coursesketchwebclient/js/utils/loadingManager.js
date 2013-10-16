@@ -101,19 +101,9 @@ function DynamicFileLoader() {
 	}
 }
 
-
 var loader = new DynamicFileLoader();
 loader.loadFile("css/jquery/jquery.mobile-1.0rc2.min.css",'css');
 loader.loadFile("css/main.css",'css');
-
-addLoadEvent(function () {
-	if(document.getElementById('menuBar')) {
-		loader.loadFile("js/menu/add_menu.js",'js',function() {
-			placeMenu();	
-		}
-		);
-	}
-});
 
 /*
 
