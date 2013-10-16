@@ -19,14 +19,13 @@
 
 			//called when login button is pressed
             function formSubmit() {
-				function sendLogin(arg1, arg2, arg3) {
+				function sendLogin(arg1, arg2) {
 	  				var request = new Request(Request.MessageType.LOGIN);
-	  				var loginInfo = new LoginInformation(arg1, arg2, false, arg3, "");
+	  				var loginInfo = new LoginInformation(arg1, arg2, false, false, "");
 	  				request.login = loginInfo;
 	  				connection.sendRequest(request);
 	  			}
-				sendLogin(document.getElementById("username").value, document.getElementById("password").value,
-						document.getElementById("instructorIntent").value == "Instructor");
+				sendLogin(document.getElementById("username").value, document.getElementById("password").value);
             }
 
             function setup() {
@@ -78,14 +77,6 @@
                     </div>
                     <div id="user">
                         <input type="password" name="password" placeholder="Password" required="" id="password" />
-                    </div>
-                    <div id="user" style="cursor:pointer; position:relative;">
-                    	<div class = "styled-select" style = "display: inline-block; width: 100px;">
-                    		<select required="" id="instructorIntent">
-							  <option value="Student">Student</option>
-							  <option value="Instructor">Instructor</option>
-							</select>
-						</div>
                     </div>
                     <div>
     					<input type="submit" value="Login">

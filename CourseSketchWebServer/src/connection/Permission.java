@@ -5,7 +5,7 @@ package connection;
  * @author gigemjt
  */
 public enum Permission {
-	ADMIN(100), INSTRUCTOR(10), ASSISTANT(5), PEER(3), MONITOR(2), ERROR_PERMISSON(-1);
+	ADMIN(100), INSTRUCTOR(10), ASSISTANT(5), PEER(3), MONITOR(2), NO_PERMISSION(0), ERROR_PERMISSON(-1);
 	private final int permission;
 
 	private Permission(int p) {
