@@ -15,12 +15,13 @@ function swipeCheck() {
 }
 
 function getMenu(isInstructor) {
+	var home = isInstructor? "html/instructor/course_management.html" : "html/student/course_management.html";
 	return	'<div id="menu">' +
 			'	<h1>' +
-			'		<a href="html/home.html" target ="wrapper" data-ajax="false"><img src="images/smallTitle.svg"></a>' +
+			'		<a href="' + home + '" target ="wrapper" data-ajax="false"><img src="images/smallTitle.svg"></a>' +
 			'	</h1>' +
 			'	<ul id="menuList">' +
-			'		<li><a href="html/home.html" target ="wrapper" data-ajax="false"' +
+			'		<li><a href="' + home + '" target ="wrapper" data-ajax="false"' +
 			'			class="contentLink">Home</a></li>' +
 			((!isInstructor) ?
 			'		<li class="header"><h3>Classes I\'m In</h3></li>' +
@@ -35,7 +36,7 @@ function getMenu(isInstructor) {
 			) +
 			'		<li class="header"><h3>Account</h3></li>' +
 			'		<li><a href="changePassword.php" data-ajax="false" class="contentLink">Change Password</a></li>' +
-			'		<li><a href="logOut.php" data-ajax="false" class="contentLink">Sign Out</a></li>' +
+			'		<li><a href="javascript:void(0)" data-ajax="false" class="contentLink">Sign Out</a></li>' +
 			'	</ul>' +
 			'</div>';
 }

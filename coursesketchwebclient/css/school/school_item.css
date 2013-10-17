@@ -36,7 +36,6 @@
 	-webkit-padding-start: 0px;
 }
 
-
 .school_item h3.large,  {
 	width: 375px;
 }
@@ -77,6 +76,19 @@
 	background: #C4C4C4;
 }
 
+.school_item h3 span {
+		display:none;
+}
+.school_item h3:hover span {
+	display:inline;
+}
+
+.editButton {
+    height:100%;
+    background-image:url(../../images/schoolItem/pencil_tilted.svg);
+	background-repeat:no-repeat;
+	background-position:right top;
+}
 .construction_tape {
     width:35%;
     height:50%;
