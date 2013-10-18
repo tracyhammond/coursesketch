@@ -2,9 +2,10 @@ package connection;
 
 import java.nio.ByteBuffer;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
+import protobuf.srl.action.Action.Command;
 import protobuf.srl.request.Message.Request;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 public class Decoder {
 
 	/**
@@ -14,9 +15,9 @@ public class Decoder {
 	 * @param buffer
 	 * @return
 	 */
-	public static Request prarseRequest(ByteBuffer buffer) {
+	public static Command prarsecommand(ByteBuffer buffer) {
 		try {
-			return Request.parseFrom(buffer.array());
+			return Command.parseFrom(buffer.array());
 		} catch (InvalidProtocolBufferException e) {
 			e.printStackTrace();
 			return null;
