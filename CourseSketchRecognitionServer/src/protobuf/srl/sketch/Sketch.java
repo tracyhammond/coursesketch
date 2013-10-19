@@ -14,30 +14,54 @@ public final class Sketch {
     // optional uint64 courseId = 1;
     /**
      * <code>optional uint64 courseId = 1;</code>
+     *
+     * <pre>
+     * so we know what class it links to
+     * </pre>
      */
     boolean hasCourseId();
     /**
      * <code>optional uint64 courseId = 1;</code>
+     *
+     * <pre>
+     * so we know what class it links to
+     * </pre>
      */
     long getCourseId();
 
     // optional uint64 assignmentId = 2;
     /**
      * <code>optional uint64 assignmentId = 2;</code>
+     *
+     * <pre>
+     * so we know what assignment it links to
+     * </pre>
      */
     boolean hasAssignmentId();
     /**
      * <code>optional uint64 assignmentId = 2;</code>
+     *
+     * <pre>
+     * so we know what assignment it links to
+     * </pre>
      */
     long getAssignmentId();
 
     // optional uint64 problemId = 3;
     /**
      * <code>optional uint64 problemId = 3;</code>
+     *
+     * <pre>
+     * so we know what problem it links to
+     * </pre>
      */
     boolean hasProblemId();
     /**
      * <code>optional uint64 problemId = 3;</code>
+     *
+     * <pre>
+     * so we know what problem it links to
+     * </pre>
      */
     long getProblemId();
 
@@ -68,29 +92,29 @@ public final class Sketch {
     com.google.protobuf.ByteString
         getDomainIdBytes();
 
-    // repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;
+    // repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
-    java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> 
+    java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> 
         getSketchList();
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
-    protobuf.srl.sketch.Sketch.SRL_Shape getSketch(int index);
+    protobuf.srl.sketch.Sketch.SRL_Object getSketch(int index);
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
     int getSketchCount();
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
-    java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> 
+    java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> 
         getSketchOrBuilderList();
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
-    protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder getSketchOrBuilder(
+    protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder getSketchOrBuilder(
         int index);
   }
   /**
@@ -166,10 +190,10 @@ public final class Sketch {
             }
             case 42: {
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                sketch_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Shape>();
+                sketch_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Object>();
                 mutable_bitField0_ |= 0x00000010;
               }
-              sketch_.add(input.readMessage(protobuf.srl.sketch.Sketch.SRL_Shape.PARSER, extensionRegistry));
+              sketch_.add(input.readMessage(protobuf.srl.sketch.Sketch.SRL_Object.PARSER, extensionRegistry));
               break;
             }
           }
@@ -220,12 +244,20 @@ public final class Sketch {
     private long courseId_;
     /**
      * <code>optional uint64 courseId = 1;</code>
+     *
+     * <pre>
+     * so we know what class it links to
+     * </pre>
      */
     public boolean hasCourseId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
      * <code>optional uint64 courseId = 1;</code>
+     *
+     * <pre>
+     * so we know what class it links to
+     * </pre>
      */
     public long getCourseId() {
       return courseId_;
@@ -236,12 +268,20 @@ public final class Sketch {
     private long assignmentId_;
     /**
      * <code>optional uint64 assignmentId = 2;</code>
+     *
+     * <pre>
+     * so we know what assignment it links to
+     * </pre>
      */
     public boolean hasAssignmentId() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>optional uint64 assignmentId = 2;</code>
+     *
+     * <pre>
+     * so we know what assignment it links to
+     * </pre>
      */
     public long getAssignmentId() {
       return assignmentId_;
@@ -252,12 +292,20 @@ public final class Sketch {
     private long problemId_;
     /**
      * <code>optional uint64 problemId = 3;</code>
+     *
+     * <pre>
+     * so we know what problem it links to
+     * </pre>
      */
     public boolean hasProblemId() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
      * <code>optional uint64 problemId = 3;</code>
+     *
+     * <pre>
+     * so we know what problem it links to
+     * </pre>
      */
     public long getProblemId() {
       return problemId_;
@@ -318,38 +366,38 @@ public final class Sketch {
       }
     }
 
-    // repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;
+    // repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
     public static final int SKETCH_FIELD_NUMBER = 5;
-    private java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> sketch_;
+    private java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> sketch_;
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
-    public java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> getSketchList() {
+    public java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> getSketchList() {
       return sketch_;
     }
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
-    public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> 
+    public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> 
         getSketchOrBuilderList() {
       return sketch_;
     }
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
     public int getSketchCount() {
       return sketch_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
-    public protobuf.srl.sketch.Sketch.SRL_Shape getSketch(int index) {
+    public protobuf.srl.sketch.Sketch.SRL_Object getSketch(int index) {
       return sketch_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
      */
-    public protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder getSketchOrBuilder(
+    public protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder getSketchOrBuilder(
         int index) {
       return sketch_.get(index);
     }
@@ -700,18 +748,30 @@ public final class Sketch {
       private long courseId_ ;
       /**
        * <code>optional uint64 courseId = 1;</code>
+       *
+       * <pre>
+       * so we know what class it links to
+       * </pre>
        */
       public boolean hasCourseId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>optional uint64 courseId = 1;</code>
+       *
+       * <pre>
+       * so we know what class it links to
+       * </pre>
        */
       public long getCourseId() {
         return courseId_;
       }
       /**
        * <code>optional uint64 courseId = 1;</code>
+       *
+       * <pre>
+       * so we know what class it links to
+       * </pre>
        */
       public Builder setCourseId(long value) {
         bitField0_ |= 0x00000001;
@@ -721,6 +781,10 @@ public final class Sketch {
       }
       /**
        * <code>optional uint64 courseId = 1;</code>
+       *
+       * <pre>
+       * so we know what class it links to
+       * </pre>
        */
       public Builder clearCourseId() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -733,18 +797,30 @@ public final class Sketch {
       private long assignmentId_ ;
       /**
        * <code>optional uint64 assignmentId = 2;</code>
+       *
+       * <pre>
+       * so we know what assignment it links to
+       * </pre>
        */
       public boolean hasAssignmentId() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>optional uint64 assignmentId = 2;</code>
+       *
+       * <pre>
+       * so we know what assignment it links to
+       * </pre>
        */
       public long getAssignmentId() {
         return assignmentId_;
       }
       /**
        * <code>optional uint64 assignmentId = 2;</code>
+       *
+       * <pre>
+       * so we know what assignment it links to
+       * </pre>
        */
       public Builder setAssignmentId(long value) {
         bitField0_ |= 0x00000002;
@@ -754,6 +830,10 @@ public final class Sketch {
       }
       /**
        * <code>optional uint64 assignmentId = 2;</code>
+       *
+       * <pre>
+       * so we know what assignment it links to
+       * </pre>
        */
       public Builder clearAssignmentId() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -766,18 +846,30 @@ public final class Sketch {
       private long problemId_ ;
       /**
        * <code>optional uint64 problemId = 3;</code>
+       *
+       * <pre>
+       * so we know what problem it links to
+       * </pre>
        */
       public boolean hasProblemId() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
        * <code>optional uint64 problemId = 3;</code>
+       *
+       * <pre>
+       * so we know what problem it links to
+       * </pre>
        */
       public long getProblemId() {
         return problemId_;
       }
       /**
        * <code>optional uint64 problemId = 3;</code>
+       *
+       * <pre>
+       * so we know what problem it links to
+       * </pre>
        */
       public Builder setProblemId(long value) {
         bitField0_ |= 0x00000004;
@@ -787,6 +879,10 @@ public final class Sketch {
       }
       /**
        * <code>optional uint64 problemId = 3;</code>
+       *
+       * <pre>
+       * so we know what problem it links to
+       * </pre>
        */
       public Builder clearProblemId() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -893,23 +989,23 @@ public final class Sketch {
         return this;
       }
 
-      // repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;
-      private java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> sketch_ =
+      // repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
+      private java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> sketch_ =
         java.util.Collections.emptyList();
       private void ensureSketchIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-          sketch_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Shape>(sketch_);
+          sketch_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Object>(sketch_);
           bitField0_ |= 0x00000010;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.sketch.Sketch.SRL_Shape, protobuf.srl.sketch.Sketch.SRL_Shape.Builder, protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> sketchBuilder_;
+          protobuf.srl.sketch.Sketch.SRL_Object, protobuf.srl.sketch.Sketch.SRL_Object.Builder, protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> sketchBuilder_;
 
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
-      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> getSketchList() {
+      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> getSketchList() {
         if (sketchBuilder_ == null) {
           return java.util.Collections.unmodifiableList(sketch_);
         } else {
@@ -917,7 +1013,7 @@ public final class Sketch {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
       public int getSketchCount() {
         if (sketchBuilder_ == null) {
@@ -927,9 +1023,9 @@ public final class Sketch {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_Shape getSketch(int index) {
+      public protobuf.srl.sketch.Sketch.SRL_Object getSketch(int index) {
         if (sketchBuilder_ == null) {
           return sketch_.get(index);
         } else {
@@ -937,10 +1033,10 @@ public final class Sketch {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
       public Builder setSketch(
-          int index, protobuf.srl.sketch.Sketch.SRL_Shape value) {
+          int index, protobuf.srl.sketch.Sketch.SRL_Object value) {
         if (sketchBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -954,10 +1050,10 @@ public final class Sketch {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
       public Builder setSketch(
-          int index, protobuf.srl.sketch.Sketch.SRL_Shape.Builder builderForValue) {
+          int index, protobuf.srl.sketch.Sketch.SRL_Object.Builder builderForValue) {
         if (sketchBuilder_ == null) {
           ensureSketchIsMutable();
           sketch_.set(index, builderForValue.build());
@@ -968,9 +1064,9 @@ public final class Sketch {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
-      public Builder addSketch(protobuf.srl.sketch.Sketch.SRL_Shape value) {
+      public Builder addSketch(protobuf.srl.sketch.Sketch.SRL_Object value) {
         if (sketchBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -984,10 +1080,10 @@ public final class Sketch {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
       public Builder addSketch(
-          int index, protobuf.srl.sketch.Sketch.SRL_Shape value) {
+          int index, protobuf.srl.sketch.Sketch.SRL_Object value) {
         if (sketchBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1001,10 +1097,10 @@ public final class Sketch {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
       public Builder addSketch(
-          protobuf.srl.sketch.Sketch.SRL_Shape.Builder builderForValue) {
+          protobuf.srl.sketch.Sketch.SRL_Object.Builder builderForValue) {
         if (sketchBuilder_ == null) {
           ensureSketchIsMutable();
           sketch_.add(builderForValue.build());
@@ -1015,10 +1111,10 @@ public final class Sketch {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
       public Builder addSketch(
-          int index, protobuf.srl.sketch.Sketch.SRL_Shape.Builder builderForValue) {
+          int index, protobuf.srl.sketch.Sketch.SRL_Object.Builder builderForValue) {
         if (sketchBuilder_ == null) {
           ensureSketchIsMutable();
           sketch_.add(index, builderForValue.build());
@@ -1029,10 +1125,10 @@ public final class Sketch {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
       public Builder addAllSketch(
-          java.lang.Iterable<? extends protobuf.srl.sketch.Sketch.SRL_Shape> values) {
+          java.lang.Iterable<? extends protobuf.srl.sketch.Sketch.SRL_Object> values) {
         if (sketchBuilder_ == null) {
           ensureSketchIsMutable();
           super.addAll(values, sketch_);
@@ -1043,7 +1139,7 @@ public final class Sketch {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
       public Builder clearSketch() {
         if (sketchBuilder_ == null) {
@@ -1056,7 +1152,7 @@ public final class Sketch {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
       public Builder removeSketch(int index) {
         if (sketchBuilder_ == null) {
@@ -1069,16 +1165,16 @@ public final class Sketch {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_Shape.Builder getSketchBuilder(
+      public protobuf.srl.sketch.Sketch.SRL_Object.Builder getSketchBuilder(
           int index) {
         return getSketchFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder getSketchOrBuilder(
+      public protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder getSketchOrBuilder(
           int index) {
         if (sketchBuilder_ == null) {
           return sketch_.get(index);  } else {
@@ -1086,9 +1182,9 @@ public final class Sketch {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
-      public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> 
+      public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> 
            getSketchOrBuilderList() {
         if (sketchBuilder_ != null) {
           return sketchBuilder_.getMessageOrBuilderList();
@@ -1097,33 +1193,33 @@ public final class Sketch {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_Shape.Builder addSketchBuilder() {
+      public protobuf.srl.sketch.Sketch.SRL_Object.Builder addSketchBuilder() {
         return getSketchFieldBuilder().addBuilder(
-            protobuf.srl.sketch.Sketch.SRL_Shape.getDefaultInstance());
+            protobuf.srl.sketch.Sketch.SRL_Object.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_Shape.Builder addSketchBuilder(
+      public protobuf.srl.sketch.Sketch.SRL_Object.Builder addSketchBuilder(
           int index) {
         return getSketchFieldBuilder().addBuilder(
-            index, protobuf.srl.sketch.Sketch.SRL_Shape.getDefaultInstance());
+            index, protobuf.srl.sketch.Sketch.SRL_Object.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object sketch = 5;</code>
        */
-      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape.Builder> 
+      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Object.Builder> 
            getSketchBuilderList() {
         return getSketchFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.sketch.Sketch.SRL_Shape, protobuf.srl.sketch.Sketch.SRL_Shape.Builder, protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> 
+          protobuf.srl.sketch.Sketch.SRL_Object, protobuf.srl.sketch.Sketch.SRL_Object.Builder, protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> 
           getSketchFieldBuilder() {
         if (sketchBuilder_ == null) {
           sketchBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.sketch.Sketch.SRL_Shape, protobuf.srl.sketch.Sketch.SRL_Shape.Builder, protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder>(
+              protobuf.srl.sketch.Sketch.SRL_Object, protobuf.srl.sketch.Sketch.SRL_Object.Builder, protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder>(
                   sketch_,
                   ((bitField0_ & 0x00000010) == 0x00000010),
                   getParentForChildren(),
@@ -1142,6 +1238,629 @@ public final class Sketch {
     }
 
     // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Sketch)
+  }
+
+  public interface SRL_ObjectOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+    /**
+     * <code>required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;</code>
+     */
+    boolean hasType();
+    /**
+     * <code>required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;</code>
+     */
+    protobuf.srl.sketch.Sketch.SRL_Object.ObjectType getType();
+
+    // required bytes object = 2;
+    /**
+     * <code>required bytes object = 2;</code>
+     */
+    boolean hasObject();
+    /**
+     * <code>required bytes object = 2;</code>
+     */
+    com.google.protobuf.ByteString getObject();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.sketch.SRL_Object}
+   *
+   * <pre>
+   **
+   * Wraps all of the sketch objects so we can fake inheritance.
+   * </pre>
+   */
+  public static final class SRL_Object extends
+      com.google.protobuf.GeneratedMessage
+      implements SRL_ObjectOrBuilder {
+    // Use SRL_Object.newBuilder() to construct.
+    private SRL_Object(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SRL_Object(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SRL_Object defaultInstance;
+    public static SRL_Object getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SRL_Object getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SRL_Object(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              protobuf.srl.sketch.Sketch.SRL_Object.ObjectType value = protobuf.srl.sketch.Sketch.SRL_Object.ObjectType.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                type_ = value;
+              }
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              object_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SRL_Object_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SRL_Object_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.sketch.Sketch.SRL_Object.class, protobuf.srl.sketch.Sketch.SRL_Object.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SRL_Object> PARSER =
+        new com.google.protobuf.AbstractParser<SRL_Object>() {
+      public SRL_Object parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SRL_Object(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SRL_Object> getParserForType() {
+      return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code protobuf.srl.sketch.SRL_Object.ObjectType}
+     */
+    public enum ObjectType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>SHAPE = 0;</code>
+       */
+      SHAPE(0, 0),
+      /**
+       * <code>STROKE = 1;</code>
+       */
+      STROKE(1, 1),
+      /**
+       * <code>POINT = 2;</code>
+       */
+      POINT(2, 2),
+      /**
+       * <code>LINE = 3;</code>
+       *
+       * <pre>
+       * not supported at this time.
+       * </pre>
+       */
+      LINE(3, 3),
+      ;
+
+      /**
+       * <code>SHAPE = 0;</code>
+       */
+      public static final int SHAPE_VALUE = 0;
+      /**
+       * <code>STROKE = 1;</code>
+       */
+      public static final int STROKE_VALUE = 1;
+      /**
+       * <code>POINT = 2;</code>
+       */
+      public static final int POINT_VALUE = 2;
+      /**
+       * <code>LINE = 3;</code>
+       *
+       * <pre>
+       * not supported at this time.
+       * </pre>
+       */
+      public static final int LINE_VALUE = 3;
+
+
+      public final int getNumber() { return value; }
+
+      public static ObjectType valueOf(int value) {
+        switch (value) {
+          case 0: return SHAPE;
+          case 1: return STROKE;
+          case 2: return POINT;
+          case 3: return LINE;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<ObjectType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<ObjectType>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<ObjectType>() {
+              public ObjectType findValueByNumber(int number) {
+                return ObjectType.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return protobuf.srl.sketch.Sketch.SRL_Object.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final ObjectType[] VALUES = values();
+
+      public static ObjectType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private ObjectType(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:protobuf.srl.sketch.SRL_Object.ObjectType)
+    }
+
+    private int bitField0_;
+    // required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private protobuf.srl.sketch.Sketch.SRL_Object.ObjectType type_;
+    /**
+     * <code>required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;</code>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;</code>
+     */
+    public protobuf.srl.sketch.Sketch.SRL_Object.ObjectType getType() {
+      return type_;
+    }
+
+    // required bytes object = 2;
+    public static final int OBJECT_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString object_;
+    /**
+     * <code>required bytes object = 2;</code>
+     */
+    public boolean hasObject() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required bytes object = 2;</code>
+     */
+    public com.google.protobuf.ByteString getObject() {
+      return object_;
+    }
+
+    private void initFields() {
+      type_ = protobuf.srl.sketch.Sketch.SRL_Object.ObjectType.SHAPE;
+      object_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasObject()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeEnum(1, type_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, object_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, type_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, object_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.sketch.Sketch.SRL_Object parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.sketch.Sketch.SRL_Object prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.sketch.SRL_Object}
+     *
+     * <pre>
+     **
+     * Wraps all of the sketch objects so we can fake inheritance.
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SRL_Object_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SRL_Object_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.sketch.Sketch.SRL_Object.class, protobuf.srl.sketch.Sketch.SRL_Object.Builder.class);
+      }
+
+      // Construct using protobuf.srl.sketch.Sketch.SRL_Object.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        type_ = protobuf.srl.sketch.Sketch.SRL_Object.ObjectType.SHAPE;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        object_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SRL_Object_descriptor;
+      }
+
+      public protobuf.srl.sketch.Sketch.SRL_Object getDefaultInstanceForType() {
+        return protobuf.srl.sketch.Sketch.SRL_Object.getDefaultInstance();
+      }
+
+      public protobuf.srl.sketch.Sketch.SRL_Object build() {
+        protobuf.srl.sketch.Sketch.SRL_Object result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.sketch.Sketch.SRL_Object buildPartial() {
+        protobuf.srl.sketch.Sketch.SRL_Object result = new protobuf.srl.sketch.Sketch.SRL_Object(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.type_ = type_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.object_ = object_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.sketch.Sketch.SRL_Object) {
+          return mergeFrom((protobuf.srl.sketch.Sketch.SRL_Object)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.sketch.Sketch.SRL_Object other) {
+        if (other == protobuf.srl.sketch.Sketch.SRL_Object.getDefaultInstance()) return this;
+        if (other.hasType()) {
+          setType(other.getType());
+        }
+        if (other.hasObject()) {
+          setObject(other.getObject());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasType()) {
+          
+          return false;
+        }
+        if (!hasObject()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.sketch.Sketch.SRL_Object parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.sketch.Sketch.SRL_Object) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+      private protobuf.srl.sketch.Sketch.SRL_Object.ObjectType type_ = protobuf.srl.sketch.Sketch.SRL_Object.ObjectType.SHAPE;
+      /**
+       * <code>required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;</code>
+       */
+      public protobuf.srl.sketch.Sketch.SRL_Object.ObjectType getType() {
+        return type_;
+      }
+      /**
+       * <code>required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;</code>
+       */
+      public Builder setType(protobuf.srl.sketch.Sketch.SRL_Object.ObjectType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = protobuf.srl.sketch.Sketch.SRL_Object.ObjectType.SHAPE;
+        onChanged();
+        return this;
+      }
+
+      // required bytes object = 2;
+      private com.google.protobuf.ByteString object_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>required bytes object = 2;</code>
+       */
+      public boolean hasObject() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required bytes object = 2;</code>
+       */
+      public com.google.protobuf.ByteString getObject() {
+        return object_;
+      }
+      /**
+       * <code>required bytes object = 2;</code>
+       */
+      public Builder setObject(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        object_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bytes object = 2;</code>
+       */
+      public Builder clearObject() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        object_ = getDefaultInstance().getObject();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.sketch.SRL_Object)
+    }
+
+    static {
+      defaultInstance = new SRL_Object(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Object)
   }
 
   public interface SRL_ShapeOrBuilder
@@ -1222,62 +1941,33 @@ public final class Sketch {
     protobuf.srl.sketch.Sketch.InterpretationOrBuilder getInterpretationsOrBuilder(
         int index);
 
-    // repeated .protobuf.srl.sketch.SRL_Shape objects = 6;
+    // repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> 
-        getObjectsList();
+    java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> 
+        getSubComponentsList();
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    protobuf.srl.sketch.Sketch.SRL_Shape getObjects(int index);
+    protobuf.srl.sketch.Sketch.SRL_Object getSubComponents(int index);
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    int getObjectsCount();
+    int getSubComponentsCount();
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> 
-        getObjectsOrBuilderList();
+    java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> 
+        getSubComponentsOrBuilderList();
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder getObjectsOrBuilder(
-        int index);
-
-    // repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    java.util.List<protobuf.srl.sketch.Sketch.SRL_Stroke> 
-        getStrokesList();
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    protobuf.srl.sketch.Sketch.SRL_Stroke getStrokes(int index);
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    int getStrokesCount();
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_StrokeOrBuilder> 
-        getStrokesOrBuilderList();
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    protobuf.srl.sketch.Sketch.SRL_StrokeOrBuilder getStrokesOrBuilder(
+    protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder getSubComponentsOrBuilder(
         int index);
   }
   /**
    * Protobuf type {@code protobuf.srl.sketch.SRL_Shape}
-   *
-   * <pre>
-   * inheritance does not exist so this will replace shape
-   * </pre>
    */
   public static final class SRL_Shape extends
       com.google.protobuf.GeneratedMessage
@@ -1357,18 +2047,10 @@ public final class Sketch {
             }
             case 50: {
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-                objects_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Shape>();
+                subComponents_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Object>();
                 mutable_bitField0_ |= 0x00000020;
               }
-              objects_.add(input.readMessage(protobuf.srl.sketch.Sketch.SRL_Shape.PARSER, extensionRegistry));
-              break;
-            }
-            case 58: {
-              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                strokes_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Stroke>();
-                mutable_bitField0_ |= 0x00000040;
-              }
-              strokes_.add(input.readMessage(protobuf.srl.sketch.Sketch.SRL_Stroke.PARSER, extensionRegistry));
+              subComponents_.add(input.readMessage(protobuf.srl.sketch.Sketch.SRL_Object.PARSER, extensionRegistry));
               break;
             }
           }
@@ -1383,10 +2065,7 @@ public final class Sketch {
           interpretations_ = java.util.Collections.unmodifiableList(interpretations_);
         }
         if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-          objects_ = java.util.Collections.unmodifiableList(objects_);
-        }
-        if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-          strokes_ = java.util.Collections.unmodifiableList(strokes_);
+          subComponents_ = java.util.Collections.unmodifiableList(subComponents_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -1574,76 +2253,40 @@ public final class Sketch {
       return interpretations_.get(index);
     }
 
-    // repeated .protobuf.srl.sketch.SRL_Shape objects = 6;
-    public static final int OBJECTS_FIELD_NUMBER = 6;
-    private java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> objects_;
+    // repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
+    public static final int SUBCOMPONENTS_FIELD_NUMBER = 6;
+    private java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> subComponents_;
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    public java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> getObjectsList() {
-      return objects_;
+    public java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> getSubComponentsList() {
+      return subComponents_;
     }
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> 
-        getObjectsOrBuilderList() {
-      return objects_;
+    public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> 
+        getSubComponentsOrBuilderList() {
+      return subComponents_;
     }
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    public int getObjectsCount() {
-      return objects_.size();
+    public int getSubComponentsCount() {
+      return subComponents_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    public protobuf.srl.sketch.Sketch.SRL_Shape getObjects(int index) {
-      return objects_.get(index);
+    public protobuf.srl.sketch.Sketch.SRL_Object getSubComponents(int index) {
+      return subComponents_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+     * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
      */
-    public protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder getObjectsOrBuilder(
+    public protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder getSubComponentsOrBuilder(
         int index) {
-      return objects_.get(index);
-    }
-
-    // repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;
-    public static final int STROKES_FIELD_NUMBER = 7;
-    private java.util.List<protobuf.srl.sketch.Sketch.SRL_Stroke> strokes_;
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    public java.util.List<protobuf.srl.sketch.Sketch.SRL_Stroke> getStrokesList() {
-      return strokes_;
-    }
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_StrokeOrBuilder> 
-        getStrokesOrBuilderList() {
-      return strokes_;
-    }
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    public int getStrokesCount() {
-      return strokes_.size();
-    }
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    public protobuf.srl.sketch.Sketch.SRL_Stroke getStrokes(int index) {
-      return strokes_.get(index);
-    }
-    /**
-     * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-     */
-    public protobuf.srl.sketch.Sketch.SRL_StrokeOrBuilder getStrokesOrBuilder(
-        int index) {
-      return strokes_.get(index);
+      return subComponents_.get(index);
     }
 
     private void initFields() {
@@ -1652,8 +2295,7 @@ public final class Sketch {
       name_ = "";
       isUserCreated_ = false;
       interpretations_ = java.util.Collections.emptyList();
-      objects_ = java.util.Collections.emptyList();
-      strokes_ = java.util.Collections.emptyList();
+      subComponents_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1674,14 +2316,8 @@ public final class Sketch {
           return false;
         }
       }
-      for (int i = 0; i < getObjectsCount(); i++) {
-        if (!getObjects(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      for (int i = 0; i < getStrokesCount(); i++) {
-        if (!getStrokes(i).isInitialized()) {
+      for (int i = 0; i < getSubComponentsCount(); i++) {
+        if (!getSubComponents(i).isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -1708,11 +2344,8 @@ public final class Sketch {
       for (int i = 0; i < interpretations_.size(); i++) {
         output.writeMessage(5, interpretations_.get(i));
       }
-      for (int i = 0; i < objects_.size(); i++) {
-        output.writeMessage(6, objects_.get(i));
-      }
-      for (int i = 0; i < strokes_.size(); i++) {
-        output.writeMessage(7, strokes_.get(i));
+      for (int i = 0; i < subComponents_.size(); i++) {
+        output.writeMessage(6, subComponents_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -1743,13 +2376,9 @@ public final class Sketch {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, interpretations_.get(i));
       }
-      for (int i = 0; i < objects_.size(); i++) {
+      for (int i = 0; i < subComponents_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, objects_.get(i));
-      }
-      for (int i = 0; i < strokes_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, strokes_.get(i));
+          .computeMessageSize(6, subComponents_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1831,10 +2460,6 @@ public final class Sketch {
     }
     /**
      * Protobuf type {@code protobuf.srl.sketch.SRL_Shape}
-     *
-     * <pre>
-     * inheritance does not exist so this will replace shape
-     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -1864,8 +2489,7 @@ public final class Sketch {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getInterpretationsFieldBuilder();
-          getObjectsFieldBuilder();
-          getStrokesFieldBuilder();
+          getSubComponentsFieldBuilder();
         }
       }
       private static Builder create() {
@@ -1888,17 +2512,11 @@ public final class Sketch {
         } else {
           interpretationsBuilder_.clear();
         }
-        if (objectsBuilder_ == null) {
-          objects_ = java.util.Collections.emptyList();
+        if (subComponentsBuilder_ == null) {
+          subComponents_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000020);
         } else {
-          objectsBuilder_.clear();
-        }
-        if (strokesBuilder_ == null) {
-          strokes_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000040);
-        } else {
-          strokesBuilder_.clear();
+          subComponentsBuilder_.clear();
         }
         return this;
       }
@@ -1953,23 +2571,14 @@ public final class Sketch {
         } else {
           result.interpretations_ = interpretationsBuilder_.build();
         }
-        if (objectsBuilder_ == null) {
+        if (subComponentsBuilder_ == null) {
           if (((bitField0_ & 0x00000020) == 0x00000020)) {
-            objects_ = java.util.Collections.unmodifiableList(objects_);
+            subComponents_ = java.util.Collections.unmodifiableList(subComponents_);
             bitField0_ = (bitField0_ & ~0x00000020);
           }
-          result.objects_ = objects_;
+          result.subComponents_ = subComponents_;
         } else {
-          result.objects_ = objectsBuilder_.build();
-        }
-        if (strokesBuilder_ == null) {
-          if (((bitField0_ & 0x00000040) == 0x00000040)) {
-            strokes_ = java.util.Collections.unmodifiableList(strokes_);
-            bitField0_ = (bitField0_ & ~0x00000040);
-          }
-          result.strokes_ = strokes_;
-        } else {
-          result.strokes_ = strokesBuilder_.build();
+          result.subComponents_ = subComponentsBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -2029,55 +2638,29 @@ public final class Sketch {
             }
           }
         }
-        if (objectsBuilder_ == null) {
-          if (!other.objects_.isEmpty()) {
-            if (objects_.isEmpty()) {
-              objects_ = other.objects_;
+        if (subComponentsBuilder_ == null) {
+          if (!other.subComponents_.isEmpty()) {
+            if (subComponents_.isEmpty()) {
+              subComponents_ = other.subComponents_;
               bitField0_ = (bitField0_ & ~0x00000020);
             } else {
-              ensureObjectsIsMutable();
-              objects_.addAll(other.objects_);
+              ensureSubComponentsIsMutable();
+              subComponents_.addAll(other.subComponents_);
             }
             onChanged();
           }
         } else {
-          if (!other.objects_.isEmpty()) {
-            if (objectsBuilder_.isEmpty()) {
-              objectsBuilder_.dispose();
-              objectsBuilder_ = null;
-              objects_ = other.objects_;
+          if (!other.subComponents_.isEmpty()) {
+            if (subComponentsBuilder_.isEmpty()) {
+              subComponentsBuilder_.dispose();
+              subComponentsBuilder_ = null;
+              subComponents_ = other.subComponents_;
               bitField0_ = (bitField0_ & ~0x00000020);
-              objectsBuilder_ = 
+              subComponentsBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getObjectsFieldBuilder() : null;
+                   getSubComponentsFieldBuilder() : null;
             } else {
-              objectsBuilder_.addAllMessages(other.objects_);
-            }
-          }
-        }
-        if (strokesBuilder_ == null) {
-          if (!other.strokes_.isEmpty()) {
-            if (strokes_.isEmpty()) {
-              strokes_ = other.strokes_;
-              bitField0_ = (bitField0_ & ~0x00000040);
-            } else {
-              ensureStrokesIsMutable();
-              strokes_.addAll(other.strokes_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.strokes_.isEmpty()) {
-            if (strokesBuilder_.isEmpty()) {
-              strokesBuilder_.dispose();
-              strokesBuilder_ = null;
-              strokes_ = other.strokes_;
-              bitField0_ = (bitField0_ & ~0x00000040);
-              strokesBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getStrokesFieldBuilder() : null;
-            } else {
-              strokesBuilder_.addAllMessages(other.strokes_);
+              subComponentsBuilder_.addAllMessages(other.subComponents_);
             }
           }
         }
@@ -2100,14 +2683,8 @@ public final class Sketch {
             return false;
           }
         }
-        for (int i = 0; i < getObjectsCount(); i++) {
-          if (!getObjects(i).isInitialized()) {
-            
-            return false;
-          }
-        }
-        for (int i = 0; i < getStrokesCount(); i++) {
-          if (!getStrokes(i).isInitialized()) {
+        for (int i = 0; i < getSubComponentsCount(); i++) {
+          if (!getSubComponents(i).isInitialized()) {
             
             return false;
           }
@@ -2588,484 +3165,244 @@ public final class Sketch {
         return interpretationsBuilder_;
       }
 
-      // repeated .protobuf.srl.sketch.SRL_Shape objects = 6;
-      private java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> objects_ =
+      // repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
+      private java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> subComponents_ =
         java.util.Collections.emptyList();
-      private void ensureObjectsIsMutable() {
+      private void ensureSubComponentsIsMutable() {
         if (!((bitField0_ & 0x00000020) == 0x00000020)) {
-          objects_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Shape>(objects_);
+          subComponents_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Object>(subComponents_);
           bitField0_ |= 0x00000020;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.sketch.Sketch.SRL_Shape, protobuf.srl.sketch.Sketch.SRL_Shape.Builder, protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> objectsBuilder_;
+          protobuf.srl.sketch.Sketch.SRL_Object, protobuf.srl.sketch.Sketch.SRL_Object.Builder, protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> subComponentsBuilder_;
 
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape> getObjectsList() {
-        if (objectsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(objects_);
+      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Object> getSubComponentsList() {
+        if (subComponentsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(subComponents_);
         } else {
-          return objectsBuilder_.getMessageList();
+          return subComponentsBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public int getObjectsCount() {
-        if (objectsBuilder_ == null) {
-          return objects_.size();
+      public int getSubComponentsCount() {
+        if (subComponentsBuilder_ == null) {
+          return subComponents_.size();
         } else {
-          return objectsBuilder_.getCount();
+          return subComponentsBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_Shape getObjects(int index) {
-        if (objectsBuilder_ == null) {
-          return objects_.get(index);
+      public protobuf.srl.sketch.Sketch.SRL_Object getSubComponents(int index) {
+        if (subComponentsBuilder_ == null) {
+          return subComponents_.get(index);
         } else {
-          return objectsBuilder_.getMessage(index);
+          return subComponentsBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public Builder setObjects(
-          int index, protobuf.srl.sketch.Sketch.SRL_Shape value) {
-        if (objectsBuilder_ == null) {
+      public Builder setSubComponents(
+          int index, protobuf.srl.sketch.Sketch.SRL_Object value) {
+        if (subComponentsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureObjectsIsMutable();
-          objects_.set(index, value);
+          ensureSubComponentsIsMutable();
+          subComponents_.set(index, value);
           onChanged();
         } else {
-          objectsBuilder_.setMessage(index, value);
+          subComponentsBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public Builder setObjects(
-          int index, protobuf.srl.sketch.Sketch.SRL_Shape.Builder builderForValue) {
-        if (objectsBuilder_ == null) {
-          ensureObjectsIsMutable();
-          objects_.set(index, builderForValue.build());
+      public Builder setSubComponents(
+          int index, protobuf.srl.sketch.Sketch.SRL_Object.Builder builderForValue) {
+        if (subComponentsBuilder_ == null) {
+          ensureSubComponentsIsMutable();
+          subComponents_.set(index, builderForValue.build());
           onChanged();
         } else {
-          objectsBuilder_.setMessage(index, builderForValue.build());
+          subComponentsBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public Builder addObjects(protobuf.srl.sketch.Sketch.SRL_Shape value) {
-        if (objectsBuilder_ == null) {
+      public Builder addSubComponents(protobuf.srl.sketch.Sketch.SRL_Object value) {
+        if (subComponentsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureObjectsIsMutable();
-          objects_.add(value);
+          ensureSubComponentsIsMutable();
+          subComponents_.add(value);
           onChanged();
         } else {
-          objectsBuilder_.addMessage(value);
+          subComponentsBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public Builder addObjects(
-          int index, protobuf.srl.sketch.Sketch.SRL_Shape value) {
-        if (objectsBuilder_ == null) {
+      public Builder addSubComponents(
+          int index, protobuf.srl.sketch.Sketch.SRL_Object value) {
+        if (subComponentsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureObjectsIsMutable();
-          objects_.add(index, value);
+          ensureSubComponentsIsMutable();
+          subComponents_.add(index, value);
           onChanged();
         } else {
-          objectsBuilder_.addMessage(index, value);
+          subComponentsBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public Builder addObjects(
-          protobuf.srl.sketch.Sketch.SRL_Shape.Builder builderForValue) {
-        if (objectsBuilder_ == null) {
-          ensureObjectsIsMutable();
-          objects_.add(builderForValue.build());
+      public Builder addSubComponents(
+          protobuf.srl.sketch.Sketch.SRL_Object.Builder builderForValue) {
+        if (subComponentsBuilder_ == null) {
+          ensureSubComponentsIsMutable();
+          subComponents_.add(builderForValue.build());
           onChanged();
         } else {
-          objectsBuilder_.addMessage(builderForValue.build());
+          subComponentsBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public Builder addObjects(
-          int index, protobuf.srl.sketch.Sketch.SRL_Shape.Builder builderForValue) {
-        if (objectsBuilder_ == null) {
-          ensureObjectsIsMutable();
-          objects_.add(index, builderForValue.build());
+      public Builder addSubComponents(
+          int index, protobuf.srl.sketch.Sketch.SRL_Object.Builder builderForValue) {
+        if (subComponentsBuilder_ == null) {
+          ensureSubComponentsIsMutable();
+          subComponents_.add(index, builderForValue.build());
           onChanged();
         } else {
-          objectsBuilder_.addMessage(index, builderForValue.build());
+          subComponentsBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public Builder addAllObjects(
-          java.lang.Iterable<? extends protobuf.srl.sketch.Sketch.SRL_Shape> values) {
-        if (objectsBuilder_ == null) {
-          ensureObjectsIsMutable();
-          super.addAll(values, objects_);
+      public Builder addAllSubComponents(
+          java.lang.Iterable<? extends protobuf.srl.sketch.Sketch.SRL_Object> values) {
+        if (subComponentsBuilder_ == null) {
+          ensureSubComponentsIsMutable();
+          super.addAll(values, subComponents_);
           onChanged();
         } else {
-          objectsBuilder_.addAllMessages(values);
+          subComponentsBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public Builder clearObjects() {
-        if (objectsBuilder_ == null) {
-          objects_ = java.util.Collections.emptyList();
+      public Builder clearSubComponents() {
+        if (subComponentsBuilder_ == null) {
+          subComponents_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000020);
           onChanged();
         } else {
-          objectsBuilder_.clear();
+          subComponentsBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public Builder removeObjects(int index) {
-        if (objectsBuilder_ == null) {
-          ensureObjectsIsMutable();
-          objects_.remove(index);
+      public Builder removeSubComponents(int index) {
+        if (subComponentsBuilder_ == null) {
+          ensureSubComponentsIsMutable();
+          subComponents_.remove(index);
           onChanged();
         } else {
-          objectsBuilder_.remove(index);
+          subComponentsBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_Shape.Builder getObjectsBuilder(
+      public protobuf.srl.sketch.Sketch.SRL_Object.Builder getSubComponentsBuilder(
           int index) {
-        return getObjectsFieldBuilder().getBuilder(index);
+        return getSubComponentsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder getObjectsOrBuilder(
+      public protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder getSubComponentsOrBuilder(
           int index) {
-        if (objectsBuilder_ == null) {
-          return objects_.get(index);  } else {
-          return objectsBuilder_.getMessageOrBuilder(index);
+        if (subComponentsBuilder_ == null) {
+          return subComponents_.get(index);  } else {
+          return subComponentsBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> 
-           getObjectsOrBuilderList() {
-        if (objectsBuilder_ != null) {
-          return objectsBuilder_.getMessageOrBuilderList();
+      public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> 
+           getSubComponentsOrBuilderList() {
+        if (subComponentsBuilder_ != null) {
+          return subComponentsBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(objects_);
+          return java.util.Collections.unmodifiableList(subComponents_);
         }
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_Shape.Builder addObjectsBuilder() {
-        return getObjectsFieldBuilder().addBuilder(
-            protobuf.srl.sketch.Sketch.SRL_Shape.getDefaultInstance());
+      public protobuf.srl.sketch.Sketch.SRL_Object.Builder addSubComponentsBuilder() {
+        return getSubComponentsFieldBuilder().addBuilder(
+            protobuf.srl.sketch.Sketch.SRL_Object.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public protobuf.srl.sketch.Sketch.SRL_Shape.Builder addObjectsBuilder(
+      public protobuf.srl.sketch.Sketch.SRL_Object.Builder addSubComponentsBuilder(
           int index) {
-        return getObjectsFieldBuilder().addBuilder(
-            index, protobuf.srl.sketch.Sketch.SRL_Shape.getDefaultInstance());
+        return getSubComponentsFieldBuilder().addBuilder(
+            index, protobuf.srl.sketch.Sketch.SRL_Object.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Shape objects = 6;</code>
+       * <code>repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;</code>
        */
-      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Shape.Builder> 
-           getObjectsBuilderList() {
-        return getObjectsFieldBuilder().getBuilderList();
+      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Object.Builder> 
+           getSubComponentsBuilderList() {
+        return getSubComponentsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.sketch.Sketch.SRL_Shape, protobuf.srl.sketch.Sketch.SRL_Shape.Builder, protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder> 
-          getObjectsFieldBuilder() {
-        if (objectsBuilder_ == null) {
-          objectsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.sketch.Sketch.SRL_Shape, protobuf.srl.sketch.Sketch.SRL_Shape.Builder, protobuf.srl.sketch.Sketch.SRL_ShapeOrBuilder>(
-                  objects_,
+          protobuf.srl.sketch.Sketch.SRL_Object, protobuf.srl.sketch.Sketch.SRL_Object.Builder, protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder> 
+          getSubComponentsFieldBuilder() {
+        if (subComponentsBuilder_ == null) {
+          subComponentsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              protobuf.srl.sketch.Sketch.SRL_Object, protobuf.srl.sketch.Sketch.SRL_Object.Builder, protobuf.srl.sketch.Sketch.SRL_ObjectOrBuilder>(
+                  subComponents_,
                   ((bitField0_ & 0x00000020) == 0x00000020),
                   getParentForChildren(),
                   isClean());
-          objects_ = null;
+          subComponents_ = null;
         }
-        return objectsBuilder_;
-      }
-
-      // repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;
-      private java.util.List<protobuf.srl.sketch.Sketch.SRL_Stroke> strokes_ =
-        java.util.Collections.emptyList();
-      private void ensureStrokesIsMutable() {
-        if (!((bitField0_ & 0x00000040) == 0x00000040)) {
-          strokes_ = new java.util.ArrayList<protobuf.srl.sketch.Sketch.SRL_Stroke>(strokes_);
-          bitField0_ |= 0x00000040;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.sketch.Sketch.SRL_Stroke, protobuf.srl.sketch.Sketch.SRL_Stroke.Builder, protobuf.srl.sketch.Sketch.SRL_StrokeOrBuilder> strokesBuilder_;
-
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Stroke> getStrokesList() {
-        if (strokesBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(strokes_);
-        } else {
-          return strokesBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public int getStrokesCount() {
-        if (strokesBuilder_ == null) {
-          return strokes_.size();
-        } else {
-          return strokesBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public protobuf.srl.sketch.Sketch.SRL_Stroke getStrokes(int index) {
-        if (strokesBuilder_ == null) {
-          return strokes_.get(index);
-        } else {
-          return strokesBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public Builder setStrokes(
-          int index, protobuf.srl.sketch.Sketch.SRL_Stroke value) {
-        if (strokesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureStrokesIsMutable();
-          strokes_.set(index, value);
-          onChanged();
-        } else {
-          strokesBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public Builder setStrokes(
-          int index, protobuf.srl.sketch.Sketch.SRL_Stroke.Builder builderForValue) {
-        if (strokesBuilder_ == null) {
-          ensureStrokesIsMutable();
-          strokes_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          strokesBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public Builder addStrokes(protobuf.srl.sketch.Sketch.SRL_Stroke value) {
-        if (strokesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureStrokesIsMutable();
-          strokes_.add(value);
-          onChanged();
-        } else {
-          strokesBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public Builder addStrokes(
-          int index, protobuf.srl.sketch.Sketch.SRL_Stroke value) {
-        if (strokesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureStrokesIsMutable();
-          strokes_.add(index, value);
-          onChanged();
-        } else {
-          strokesBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public Builder addStrokes(
-          protobuf.srl.sketch.Sketch.SRL_Stroke.Builder builderForValue) {
-        if (strokesBuilder_ == null) {
-          ensureStrokesIsMutable();
-          strokes_.add(builderForValue.build());
-          onChanged();
-        } else {
-          strokesBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public Builder addStrokes(
-          int index, protobuf.srl.sketch.Sketch.SRL_Stroke.Builder builderForValue) {
-        if (strokesBuilder_ == null) {
-          ensureStrokesIsMutable();
-          strokes_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          strokesBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public Builder addAllStrokes(
-          java.lang.Iterable<? extends protobuf.srl.sketch.Sketch.SRL_Stroke> values) {
-        if (strokesBuilder_ == null) {
-          ensureStrokesIsMutable();
-          super.addAll(values, strokes_);
-          onChanged();
-        } else {
-          strokesBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public Builder clearStrokes() {
-        if (strokesBuilder_ == null) {
-          strokes_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000040);
-          onChanged();
-        } else {
-          strokesBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public Builder removeStrokes(int index) {
-        if (strokesBuilder_ == null) {
-          ensureStrokesIsMutable();
-          strokes_.remove(index);
-          onChanged();
-        } else {
-          strokesBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public protobuf.srl.sketch.Sketch.SRL_Stroke.Builder getStrokesBuilder(
-          int index) {
-        return getStrokesFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public protobuf.srl.sketch.Sketch.SRL_StrokeOrBuilder getStrokesOrBuilder(
-          int index) {
-        if (strokesBuilder_ == null) {
-          return strokes_.get(index);  } else {
-          return strokesBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public java.util.List<? extends protobuf.srl.sketch.Sketch.SRL_StrokeOrBuilder> 
-           getStrokesOrBuilderList() {
-        if (strokesBuilder_ != null) {
-          return strokesBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(strokes_);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public protobuf.srl.sketch.Sketch.SRL_Stroke.Builder addStrokesBuilder() {
-        return getStrokesFieldBuilder().addBuilder(
-            protobuf.srl.sketch.Sketch.SRL_Stroke.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public protobuf.srl.sketch.Sketch.SRL_Stroke.Builder addStrokesBuilder(
-          int index) {
-        return getStrokesFieldBuilder().addBuilder(
-            index, protobuf.srl.sketch.Sketch.SRL_Stroke.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;</code>
-       */
-      public java.util.List<protobuf.srl.sketch.Sketch.SRL_Stroke.Builder> 
-           getStrokesBuilderList() {
-        return getStrokesFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.sketch.Sketch.SRL_Stroke, protobuf.srl.sketch.Sketch.SRL_Stroke.Builder, protobuf.srl.sketch.Sketch.SRL_StrokeOrBuilder> 
-          getStrokesFieldBuilder() {
-        if (strokesBuilder_ == null) {
-          strokesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.sketch.Sketch.SRL_Stroke, protobuf.srl.sketch.Sketch.SRL_Stroke.Builder, protobuf.srl.sketch.Sketch.SRL_StrokeOrBuilder>(
-                  strokes_,
-                  ((bitField0_ & 0x00000040) == 0x00000040),
-                  getParentForChildren(),
-                  isClean());
-          strokes_ = null;
-        }
-        return strokesBuilder_;
+        return subComponentsBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:protobuf.srl.sketch.SRL_Shape)
@@ -5987,6 +6324,11 @@ public final class Sketch {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_sketch_SRL_Sketch_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_sketch_SRL_Object_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_sketch_SRL_Object_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_sketch_SRL_Shape_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -6016,23 +6358,26 @@ public final class Sketch {
   static {
     java.lang.String[] descriptorData = {
       "\n\022input/sketch.proto\022\023protobuf.srl.sketc" +
-      "h\"\211\001\n\nSRL_Sketch\022\020\n\010courseId\030\001 \001(\004\022\024\n\014as" +
+      "h\"\212\001\n\nSRL_Sketch\022\020\n\010courseId\030\001 \001(\004\022\024\n\014as" +
       "signmentId\030\002 \001(\004\022\021\n\tproblemId\030\003 \001(\004\022\020\n\010d" +
-      "omainId\030\004 \001(\t\022.\n\006sketch\030\005 \003(\0132\036.protobuf" +
-      ".srl.sketch.SRL_Shape\"\353\001\n\tSRL_Shape\022\n\n\002i" +
-      "d\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\025\n\ri" +
-      "sUserCreated\030\004 \001(\010\022<\n\017interpretations\030\005 " +
-      "\003(\0132#.protobuf.srl.sketch.Interpretation" +
-      "\022/\n\007objects\030\006 \003(\0132\036.protobuf.srl.sketch." +
-      "SRL_Shape\0220\n\007strokes\030\007 \003(\0132\037.protobuf.sr",
-      "l.sketch.SRL_Stroke\"d\n\nSRL_Stroke\022\n\n\002id\030" +
-      "\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022.\n\006poi" +
-      "nts\030\004 \003(\0132\036.protobuf.srl.sketch.SRL_Poin" +
-      "t\"x\n\tSRL_Point\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004" +
-      "\022\014\n\004name\030\003 \001(\t\022\t\n\001x\030\004 \002(\001\022\t\n\001y\030\005 \002(\001\022\020\n\010" +
-      "pressure\030\006 \001(\001\022\014\n\004size\030\007 \001(\001\022\r\n\005speed\030\010 " +
-      "\001(\001\"F\n\016Interpretation\022\014\n\004name\030\001 \002(\t\022\022\n\nc" +
-      "onfidence\030\002 \002(\001\022\022\n\ncomplexity\030\003 \001(\001"
+      "omainId\030\004 \001(\t\022/\n\006sketch\030\005 \003(\0132\037.protobuf" +
+      ".srl.sketch.SRL_Object\"\220\001\n\nSRL_Object\0228\n" +
+      "\004type\030\001 \002(\0162*.protobuf.srl.sketch.SRL_Ob" +
+      "ject.ObjectType\022\016\n\006object\030\002 \002(\014\"8\n\nObjec" +
+      "tType\022\t\n\005SHAPE\020\000\022\n\n\006STROKE\020\001\022\t\n\005POINT\020\002\022" +
+      "\010\n\004LINE\020\003\"\300\001\n\tSRL_Shape\022\n\n\002id\030\001 \002(\t\022\014\n\004t" +
+      "ime\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\025\n\risUserCreated",
+      "\030\004 \001(\010\022<\n\017interpretations\030\005 \003(\0132#.protob" +
+      "uf.srl.sketch.Interpretation\0226\n\rsubCompo" +
+      "nents\030\006 \003(\0132\037.protobuf.srl.sketch.SRL_Ob" +
+      "ject\"d\n\nSRL_Stroke\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002" +
+      " \002(\004\022\014\n\004name\030\003 \001(\t\022.\n\006points\030\004 \003(\0132\036.pro" +
+      "tobuf.srl.sketch.SRL_Point\"x\n\tSRL_Point\022" +
+      "\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022" +
+      "\t\n\001x\030\004 \002(\001\022\t\n\001y\030\005 \002(\001\022\020\n\010pressure\030\006 \001(\001\022" +
+      "\014\n\004size\030\007 \001(\001\022\r\n\005speed\030\010 \001(\001\"F\n\016Interpre" +
+      "tation\022\014\n\004name\030\001 \002(\t\022\022\n\nconfidence\030\002 \002(\001",
+      "\022\022\n\ncomplexity\030\003 \001(\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6045,26 +6390,32 @@ public final class Sketch {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_SRL_Sketch_descriptor,
               new java.lang.String[] { "CourseId", "AssignmentId", "ProblemId", "DomainId", "Sketch", });
-          internal_static_protobuf_srl_sketch_SRL_Shape_descriptor =
+          internal_static_protobuf_srl_sketch_SRL_Object_descriptor =
             getDescriptor().getMessageTypes().get(1);
+          internal_static_protobuf_srl_sketch_SRL_Object_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_sketch_SRL_Object_descriptor,
+              new java.lang.String[] { "Type", "Object", });
+          internal_static_protobuf_srl_sketch_SRL_Shape_descriptor =
+            getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_srl_sketch_SRL_Shape_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_SRL_Shape_descriptor,
-              new java.lang.String[] { "Id", "Time", "Name", "IsUserCreated", "Interpretations", "Objects", "Strokes", });
+              new java.lang.String[] { "Id", "Time", "Name", "IsUserCreated", "Interpretations", "SubComponents", });
           internal_static_protobuf_srl_sketch_SRL_Stroke_descriptor =
-            getDescriptor().getMessageTypes().get(2);
+            getDescriptor().getMessageTypes().get(3);
           internal_static_protobuf_srl_sketch_SRL_Stroke_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_SRL_Stroke_descriptor,
               new java.lang.String[] { "Id", "Time", "Name", "Points", });
           internal_static_protobuf_srl_sketch_SRL_Point_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_protobuf_srl_sketch_SRL_Point_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_SRL_Point_descriptor,
               new java.lang.String[] { "Id", "Time", "Name", "X", "Y", "Pressure", "Size", "Speed", });
           internal_static_protobuf_srl_sketch_Interpretation_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_protobuf_srl_sketch_Interpretation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_Interpretation_descriptor,
