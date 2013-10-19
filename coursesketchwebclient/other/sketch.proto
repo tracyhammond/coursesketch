@@ -1,21 +1,33 @@
 package protobuf.srl.sketch;
 message SRL_Sketch {
-	optional uint64 courseId = 1;
-	optional uint64 assignmentId = 2;
-	optional uint64 problemId = 3;
+	optional uint64 courseId = 1; // so we know what class it links to
+	optional uint64 assignmentId = 2; // so we know what assignment it links to
+	optional uint64 problemId = 3; // so we know what problem it links to
 	optional string domainId = 4; // used to find the domain for recognition
-	repeated SRL_Shape sketch = 5;
+	repeated SRL_Object sketch = 5;
 }
 
-// inheritance does not exist so this will replace shape
+/**
+ * Wraps all of the sketch objects so we can fake inheritance.
+ */
+message SRL_Object {
+	required ObjectType type = 1;
+	enum ObjectType {
+		SHAPE = 0;
+		STROKE = 1;
+		POINT = 2;
+		LINE = 3; // not supported at this time.
+	}
+	required bytes object = 2;
+}
+
 message SRL_Shape {
 	required string id = 1;
 	required uint64 time = 2;
 	optional string name = 3;
 	optional bool isUserCreated = 4;
 	repeated Interpretation interpretations= 5;
-	repeated SRL_Shape objects = 6;
-	repeated SRL_Stroke strokes = 7;
+	repeated SRL_Object subComponents = 6;
 }
 
 message SRL_Stroke {
