@@ -9,6 +9,7 @@
     <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
     <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
+    <script type="text/javascript" src="js/menu/add_menu.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 	  		addLoadEvent(
@@ -32,6 +33,7 @@
 						} else {
 							redirectContent("html/student/course_management.html");
 						}
+						placeMenu(connection.isInstructor);
 					}
 				);
 	  		/**

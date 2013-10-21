@@ -25,6 +25,10 @@ namespace {
 const ::google::protobuf::Descriptor* SRL_Sketch_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SRL_Sketch_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SRL_Object_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SRL_Object_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* SRL_Object_ObjectType_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* SRL_Shape_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SRL_Shape_reflection_ = NULL;
@@ -66,15 +70,31 @@ void protobuf_AssignDesc_input_2fsketch_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SRL_Sketch));
-  SRL_Shape_descriptor_ = file->message_type(1);
-  static const int SRL_Shape_offsets_[7] = {
+  SRL_Object_descriptor_ = file->message_type(1);
+  static const int SRL_Object_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Object, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Object, object_),
+  };
+  SRL_Object_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SRL_Object_descriptor_,
+      SRL_Object::default_instance_,
+      SRL_Object_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Object, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Object, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SRL_Object));
+  SRL_Object_ObjectType_descriptor_ = SRL_Object_descriptor_->enum_type(0);
+  SRL_Shape_descriptor_ = file->message_type(2);
+  static const int SRL_Shape_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Shape, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Shape, time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Shape, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Shape, isusercreated_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Shape, interpretations_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Shape, objects_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Shape, strokes_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Shape, subcomponents_),
   };
   SRL_Shape_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -87,7 +107,7 @@ void protobuf_AssignDesc_input_2fsketch_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SRL_Shape));
-  SRL_Stroke_descriptor_ = file->message_type(2);
+  SRL_Stroke_descriptor_ = file->message_type(3);
   static const int SRL_Stroke_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Stroke, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Stroke, time_),
@@ -105,7 +125,7 @@ void protobuf_AssignDesc_input_2fsketch_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SRL_Stroke));
-  SRL_Point_descriptor_ = file->message_type(3);
+  SRL_Point_descriptor_ = file->message_type(4);
   static const int SRL_Point_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Point, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Point, time_),
@@ -127,7 +147,7 @@ void protobuf_AssignDesc_input_2fsketch_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SRL_Point));
-  Interpretation_descriptor_ = file->message_type(4);
+  Interpretation_descriptor_ = file->message_type(5);
   static const int Interpretation_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, confidence_),
@@ -159,6 +179,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SRL_Sketch_descriptor_, &SRL_Sketch::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SRL_Object_descriptor_, &SRL_Object::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SRL_Shape_descriptor_, &SRL_Shape::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SRL_Stroke_descriptor_, &SRL_Stroke::default_instance());
@@ -173,6 +195,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void protobuf_ShutdownFile_input_2fsketch_2eproto() {
   delete SRL_Sketch::default_instance_;
   delete SRL_Sketch_reflection_;
+  delete SRL_Object::default_instance_;
+  delete SRL_Object_reflection_;
   delete SRL_Shape::default_instance_;
   delete SRL_Shape_reflection_;
   delete SRL_Stroke::default_instance_;
@@ -191,31 +215,36 @@ void protobuf_AddDesc_input_2fsketch_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\022input/sketch.proto\022\023protobuf.srl.sketc"
-    "h\"\211\001\n\nSRL_Sketch\022\020\n\010courseId\030\001 \001(\004\022\024\n\014as"
+    "h\"\212\001\n\nSRL_Sketch\022\020\n\010courseId\030\001 \001(\004\022\024\n\014as"
     "signmentId\030\002 \001(\004\022\021\n\tproblemId\030\003 \001(\004\022\020\n\010d"
-    "omainId\030\004 \001(\t\022.\n\006sketch\030\005 \003(\0132\036.protobuf"
-    ".srl.sketch.SRL_Shape\"\353\001\n\tSRL_Shape\022\n\n\002i"
-    "d\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\025\n\ri"
-    "sUserCreated\030\004 \001(\010\022<\n\017interpretations\030\005 "
-    "\003(\0132#.protobuf.srl.sketch.Interpretation"
-    "\022/\n\007objects\030\006 \003(\0132\036.protobuf.srl.sketch."
-    "SRL_Shape\0220\n\007strokes\030\007 \003(\0132\037.protobuf.sr"
-    "l.sketch.SRL_Stroke\"d\n\nSRL_Stroke\022\n\n\002id\030"
-    "\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022.\n\006poi"
-    "nts\030\004 \003(\0132\036.protobuf.srl.sketch.SRL_Poin"
-    "t\"x\n\tSRL_Point\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004"
-    "\022\014\n\004name\030\003 \001(\t\022\t\n\001x\030\004 \002(\001\022\t\n\001y\030\005 \002(\001\022\020\n\010"
-    "pressure\030\006 \001(\001\022\014\n\004size\030\007 \001(\001\022\r\n\005speed\030\010 "
-    "\001(\001\"F\n\016Interpretation\022\014\n\004name\030\001 \002(\t\022\022\n\nc"
-    "onfidence\030\002 \002(\001\022\022\n\ncomplexity\030\003 \001(\001", 715);
+    "omainId\030\004 \001(\t\022/\n\006sketch\030\005 \003(\0132\037.protobuf"
+    ".srl.sketch.SRL_Object\"\220\001\n\nSRL_Object\0228\n"
+    "\004type\030\001 \002(\0162*.protobuf.srl.sketch.SRL_Ob"
+    "ject.ObjectType\022\016\n\006object\030\002 \002(\014\"8\n\nObjec"
+    "tType\022\t\n\005SHAPE\020\000\022\n\n\006STROKE\020\001\022\t\n\005POINT\020\002\022"
+    "\010\n\004LINE\020\003\"\300\001\n\tSRL_Shape\022\n\n\002id\030\001 \002(\t\022\014\n\004t"
+    "ime\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\025\n\risUserCreated"
+    "\030\004 \001(\010\022<\n\017interpretations\030\005 \003(\0132#.protob"
+    "uf.srl.sketch.Interpretation\0226\n\rsubCompo"
+    "nents\030\006 \003(\0132\037.protobuf.srl.sketch.SRL_Ob"
+    "ject\"d\n\nSRL_Stroke\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002"
+    " \002(\004\022\014\n\004name\030\003 \001(\t\022.\n\006points\030\004 \003(\0132\036.pro"
+    "tobuf.srl.sketch.SRL_Point\"x\n\tSRL_Point\022"
+    "\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022"
+    "\t\n\001x\030\004 \002(\001\022\t\n\001y\030\005 \002(\001\022\020\n\010pressure\030\006 \001(\001\022"
+    "\014\n\004size\030\007 \001(\001\022\r\n\005speed\030\010 \001(\001\"F\n\016Interpre"
+    "tation\022\014\n\004name\030\001 \002(\t\022\022\n\nconfidence\030\002 \002(\001"
+    "\022\022\n\ncomplexity\030\003 \001(\001", 820);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/sketch.proto", &protobuf_RegisterTypes);
   SRL_Sketch::default_instance_ = new SRL_Sketch();
+  SRL_Object::default_instance_ = new SRL_Object();
   SRL_Shape::default_instance_ = new SRL_Shape();
   SRL_Stroke::default_instance_ = new SRL_Stroke();
   SRL_Point::default_instance_ = new SRL_Point();
   Interpretation::default_instance_ = new Interpretation();
   SRL_Sketch::default_instance_->InitAsDefaultInstance();
+  SRL_Object::default_instance_->InitAsDefaultInstance();
   SRL_Shape::default_instance_->InitAsDefaultInstance();
   SRL_Stroke::default_instance_->InitAsDefaultInstance();
   SRL_Point::default_instance_->InitAsDefaultInstance();
@@ -382,7 +411,7 @@ bool SRL_Sketch::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;
+      // repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -439,7 +468,7 @@ void SRL_Sketch::SerializeWithCachedSizes(
       4, this->domainid(), output);
   }
 
-  // repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;
+  // repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
   for (int i = 0; i < this->sketch_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->sketch(i), output);
@@ -478,7 +507,7 @@ void SRL_Sketch::SerializeWithCachedSizes(
         4, this->domainid(), target);
   }
 
-  // repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;
+  // repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
   for (int i = 0; i < this->sketch_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -525,7 +554,7 @@ int SRL_Sketch::ByteSize() const {
     }
 
   }
-  // repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;
+  // repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
   total_size += 1 * this->sketch_size();
   for (int i = 0; i < this->sketch_size(); i++) {
     total_size +=
@@ -620,14 +649,301 @@ void SRL_Sketch::Swap(SRL_Sketch* other) {
 
 // ===================================================================
 
+const ::google::protobuf::EnumDescriptor* SRL_Object_ObjectType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SRL_Object_ObjectType_descriptor_;
+}
+bool SRL_Object_ObjectType_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const SRL_Object_ObjectType SRL_Object::SHAPE;
+const SRL_Object_ObjectType SRL_Object::STROKE;
+const SRL_Object_ObjectType SRL_Object::POINT;
+const SRL_Object_ObjectType SRL_Object::LINE;
+const SRL_Object_ObjectType SRL_Object::ObjectType_MIN;
+const SRL_Object_ObjectType SRL_Object::ObjectType_MAX;
+const int SRL_Object::ObjectType_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int SRL_Object::kTypeFieldNumber;
+const int SRL_Object::kObjectFieldNumber;
+#endif  // !_MSC_VER
+
+SRL_Object::SRL_Object()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SRL_Object::InitAsDefaultInstance() {
+}
+
+SRL_Object::SRL_Object(const SRL_Object& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SRL_Object::SharedCtor() {
+  _cached_size_ = 0;
+  type_ = 0;
+  object_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SRL_Object::~SRL_Object() {
+  SharedDtor();
+}
+
+void SRL_Object::SharedDtor() {
+  if (object_ != &::google::protobuf::internal::kEmptyString) {
+    delete object_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void SRL_Object::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SRL_Object::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SRL_Object_descriptor_;
+}
+
+const SRL_Object& SRL_Object::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_input_2fsketch_2eproto();
+  return *default_instance_;
+}
+
+SRL_Object* SRL_Object::default_instance_ = NULL;
+
+SRL_Object* SRL_Object::New() const {
+  return new SRL_Object;
+}
+
+void SRL_Object::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    type_ = 0;
+    if (has_object()) {
+      if (object_ != &::google::protobuf::internal::kEmptyString) {
+        object_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SRL_Object::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::protobuf::srl::sketch::SRL_Object_ObjectType_IsValid(value)) {
+            set_type(static_cast< ::protobuf::srl::sketch::SRL_Object_ObjectType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_object;
+        break;
+      }
+
+      // required bytes object = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_object:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_object()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SRL_Object::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+  if (has_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->type(), output);
+  }
+
+  // required bytes object = 2;
+  if (has_object()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      2, this->object(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SRL_Object::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+  if (has_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->type(), target);
+  }
+
+  // required bytes object = 2;
+  if (has_object()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        2, this->object(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SRL_Object::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+    if (has_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // required bytes object = 2;
+    if (has_object()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->object());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SRL_Object::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SRL_Object* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SRL_Object*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SRL_Object::MergeFrom(const SRL_Object& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_type()) {
+      set_type(from.type());
+    }
+    if (from.has_object()) {
+      set_object(from.object());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SRL_Object::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SRL_Object::CopyFrom(const SRL_Object& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SRL_Object::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+
+  return true;
+}
+
+void SRL_Object::Swap(SRL_Object* other) {
+  if (other != this) {
+    std::swap(type_, other->type_);
+    std::swap(object_, other->object_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SRL_Object::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SRL_Object_descriptor_;
+  metadata.reflection = SRL_Object_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
 #ifndef _MSC_VER
 const int SRL_Shape::kIdFieldNumber;
 const int SRL_Shape::kTimeFieldNumber;
 const int SRL_Shape::kNameFieldNumber;
 const int SRL_Shape::kIsUserCreatedFieldNumber;
 const int SRL_Shape::kInterpretationsFieldNumber;
-const int SRL_Shape::kObjectsFieldNumber;
-const int SRL_Shape::kStrokesFieldNumber;
+const int SRL_Shape::kSubComponentsFieldNumber;
 #endif  // !_MSC_VER
 
 SRL_Shape::SRL_Shape()
@@ -705,8 +1021,7 @@ void SRL_Shape::Clear() {
     isusercreated_ = false;
   }
   interpretations_.Clear();
-  objects_.Clear();
-  strokes_.Clear();
+  subcomponents_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -793,36 +1108,21 @@ bool SRL_Shape::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(42)) goto parse_interpretations;
-        if (input->ExpectTag(50)) goto parse_objects;
+        if (input->ExpectTag(50)) goto parse_subComponents;
         break;
       }
 
-      // repeated .protobuf.srl.sketch.SRL_Shape objects = 6;
+      // repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
       case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_objects:
+         parse_subComponents:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_objects()));
+                input, add_subcomponents()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(50)) goto parse_objects;
-        if (input->ExpectTag(58)) goto parse_strokes;
-        break;
-      }
-
-      // repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;
-      case 7: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_strokes:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_strokes()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(58)) goto parse_strokes;
+        if (input->ExpectTag(50)) goto parse_subComponents;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -879,16 +1179,10 @@ void SRL_Shape::SerializeWithCachedSizes(
       5, this->interpretations(i), output);
   }
 
-  // repeated .protobuf.srl.sketch.SRL_Shape objects = 6;
-  for (int i = 0; i < this->objects_size(); i++) {
+  // repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
+  for (int i = 0; i < this->subcomponents_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, this->objects(i), output);
-  }
-
-  // repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;
-  for (int i = 0; i < this->strokes_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      7, this->strokes(i), output);
+      6, this->subcomponents(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -936,18 +1230,11 @@ void SRL_Shape::SerializeWithCachedSizes(
         5, this->interpretations(i), target);
   }
 
-  // repeated .protobuf.srl.sketch.SRL_Shape objects = 6;
-  for (int i = 0; i < this->objects_size(); i++) {
+  // repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
+  for (int i = 0; i < this->subcomponents_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        6, this->objects(i), target);
-  }
-
-  // repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;
-  for (int i = 0; i < this->strokes_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        7, this->strokes(i), target);
+        6, this->subcomponents(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -996,20 +1283,12 @@ int SRL_Shape::ByteSize() const {
         this->interpretations(i));
   }
 
-  // repeated .protobuf.srl.sketch.SRL_Shape objects = 6;
-  total_size += 1 * this->objects_size();
-  for (int i = 0; i < this->objects_size(); i++) {
+  // repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
+  total_size += 1 * this->subcomponents_size();
+  for (int i = 0; i < this->subcomponents_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->objects(i));
-  }
-
-  // repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;
-  total_size += 1 * this->strokes_size();
-  for (int i = 0; i < this->strokes_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->strokes(i));
+        this->subcomponents(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -1038,8 +1317,7 @@ void SRL_Shape::MergeFrom(const ::google::protobuf::Message& from) {
 void SRL_Shape::MergeFrom(const SRL_Shape& from) {
   GOOGLE_CHECK_NE(&from, this);
   interpretations_.MergeFrom(from.interpretations_);
-  objects_.MergeFrom(from.objects_);
-  strokes_.MergeFrom(from.strokes_);
+  subcomponents_.MergeFrom(from.subcomponents_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_id()) {
       set_id(from.id());
@@ -1075,11 +1353,8 @@ bool SRL_Shape::IsInitialized() const {
   for (int i = 0; i < interpretations_size(); i++) {
     if (!this->interpretations(i).IsInitialized()) return false;
   }
-  for (int i = 0; i < objects_size(); i++) {
-    if (!this->objects(i).IsInitialized()) return false;
-  }
-  for (int i = 0; i < strokes_size(); i++) {
-    if (!this->strokes(i).IsInitialized()) return false;
+  for (int i = 0; i < subcomponents_size(); i++) {
+    if (!this->subcomponents(i).IsInitialized()) return false;
   }
   return true;
 }
@@ -1091,8 +1366,7 @@ void SRL_Shape::Swap(SRL_Shape* other) {
     std::swap(name_, other->name_);
     std::swap(isusercreated_, other->isusercreated_);
     interpretations_.Swap(&other->interpretations_);
-    objects_.Swap(&other->objects_);
-    strokes_.Swap(&other->strokes_);
+    subcomponents_.Swap(&other->subcomponents_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

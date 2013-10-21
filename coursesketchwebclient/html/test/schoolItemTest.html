@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<base href="../../">
+    <title>Welcome!</title>
+    <link rel="stylesheet" href="css/jquery/jquery.mobile-1.0rc2.min.css">
+    <link rel="stylesheet" href="css/home.css">
+   	<link rel="stylesheet" href="css/school/school_item.css">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+	<script type="text/javascript" src="js/school/school_item.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+	  		addLoadEvent(
+					function()
+					{
+						if(!is_touch) {
+							disable_menu_swiping();
+						}
+						//placeMenu();
+
+						/* show all - default width */
+						var builder = new schoolItemBuilder();
+						builder.setList(upcomming_assignments);
+						builder.setTitle('SHOW ALL');
+						builder.setWidth('large');
+						//builder.build('class_list_1');
+						
+						var builder = new schoolItemBuilder();
+						builder.setList(upcomming_assignments);
+						builder.setTitle('SHOW ALL');
+						builder.setWidth('large');
+					//	builder.build('due_assignments_1');
+						
+						builder.setList(upcomming_assignments);
+						builder.setTitle('SHOW ALL');
+						builder.setWidth('medium');
+					//	builder.build('class_list_2');
+
+						/*
+						builder.setList(upcomming_assignments);
+						builder.build('due_assignments_1');
+
+						builder.setTitle('SIMPLE LIST');
+						builder.setList(user_classes);
+						builder.showAsSimpleList(true);
+						builder.build('class_list_2');
+						
+						builder.setTitle('SIMPLE LIST');
+						builder.setList(upcomming_assignments);
+						builder.showAsSimpleList(true);
+						builder.build('due_assignments_2');
+						*/
+					}
+				);
+	</script>
+	<style>
+	/*
+	h3 span {
+		display:none;
+	}
+	h3:hover span {
+		display:inline;
+	}
+
+	.editButton {
+	    height:100%;
+	    background-image:url(../../images/schoolItem/pencil_tilted.svg);
+		background-repeat:no-repeat;
+		background-position:right top;
+	}
+	*/
+	</style>
+</head>
+<body>
+
+<!-- Menu Bar -->
+
+	<div data-role="page" class="pages ui-page ui-body-c ui-page-active" id="Div1" data-url="Div1" tabindex="0" style="margin-left: 0px; min-height: 739px;">
+    <!-- Center Section -->
+    <div id="home">
+    <div class="centre">
+	    	<div class="col-group2">
+	    		<div>
+			    	<div id="class_list_1" class="school_div"><h1>SHOW ALL</h1>
+					<ul class="school_list">
+					<li>
+						<div id="Assignment_Truss_1_ID" class="school_item ">
+							<span class="construction_tape"></span>
+							<div class="text">
+							<h3 class="name">Truss Assignment1<span class="editButton" onclick="alert('editing');">&nbsp;&nbsp;&nbsp;&nbsp;</span></h3>
+							<h1 class="late">29-8-2013</h1>
+							<h1 class="class"> <a href="PhysicsLink"> Phyics</a></h1>
+							<p class="large">In this assignment we will draw a truss trussty truss. This truss trussty truss will allow us to save sience.</p>
+						</div>
+						<a href="Truss_Link1"><img src="images/test/truss_thumb.png" width="128" height="128"></a></div>
+					</li>
+					
+
+					<li>	<div id="Assignment_Chemistry_1_ID" class="school_item ">		<div class="text">		<h3 class="name"> <a href="Chemistry_Link1"> Chemistry Assignment1</a></h3>		<h1 class="late">1-9-2013</h1>		<h1 class="class"> <a href="ChemistryLink"> Chemistry</a></h1>		<p class="large">n this assignment we will do a chemistry diagram.</p>	</div> <a href="Chemistry_Link1"> <img src="images/test/chemistry_thumb.png" width="128" height="128"></a></div></li><li>	<div id="Assignment_Truss_2_ID" class="school_item ">		<div class="text">		<h3 class="name"> <a href="Truss_Link2"> Truss Assignment2</a></h3>		<h1 class="late">29-8-2013</h1>		<h1 class="class"> <a href="PhysicsLink"> Phyics</a></h1>		<p class="large">In this second assignment we will make something cool. YAYYYYYY</p>	</div> <a href="Truss_Link2"> <img src="images/test/truss_thumb.png" width="128" height="128"></a></div></li></ul></div>
+		    	</div>
+		    	<div>
+			    	<div id="due_assignments_1" class="school_div"><h1>SHOW ALL</h1>
+<ul class="school_list"><li>	<div id="Assignment_Truss_1_ID" class="school_item ">		<div class="text">		<h3 class="name"> <a href="Truss_Link1"> Truss Assignment1</a></h3>		<h1 class="late">29-8-2013</h1>		<h1 class="class"> <a href="PhysicsLink"> Phyics</a></h1>		<p class="large">In this assignment we will draw a truss trussty truss. This truss trussty truss will allow us to save sience.</p>	</div> <a href="Truss_Link1"> <img src="images/test/truss_thumb.png" width="128" height="128"></a></div></li><li>	<div id="Assignment_Chemistry_1_ID" class="school_item ">		<div class="text">		<h3 class="name"> <a href="Chemistry_Link1"> Chemistry Assignment1</a></h3>		<h1 class="late">1-9-2013</h1>		<h1 class="class"> <a href="ChemistryLink"> Chemistry</a></h1>		<p class="large">n this assignment we will do a chemistry diagram.</p>	</div> <a href="Chemistry_Link1"> <img src="images/test/chemistry_thumb.png" width="128" height="128"></a></div></li><li>	<div id="Assignment_Truss_2_ID" class="school_item ">		<div class="text">		<h3 class="name"> <a href="Truss_Link2"> Truss Assignment2</a></h3>		<h1 class="late">29-8-2013</h1>		<h1 class="class"> <a href="PhysicsLink"> Phyics</a></h1>		<p class="large">In this second assignment we will make something cool. YAYYYYYY</p>	</div> <a href="Truss_Link2"> <img src="images/test/truss_thumb.png" width="128" height="128"></a></div></li></ul></div>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
