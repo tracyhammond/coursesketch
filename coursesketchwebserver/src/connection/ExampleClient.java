@@ -1,3 +1,5 @@
+package connection;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -12,7 +14,6 @@ public class ExampleClient extends WebSocketClient {
 
 	public ExampleClient( URI serverUri , Draft draft ) {
 		super( serverUri, draft );
-		draft.
 	}
 
 	public ExampleClient( URI serverURI ) {
@@ -30,7 +31,7 @@ public class ExampleClient extends WebSocketClient {
 		System.out.println( "received: " + message );
 	}
 
-	@Override
+
 	public void onFragment( Framedata fragment ) {
 		System.out.println( "received fragment: " + new String( fragment.getPayloadData().array() ) );
 	}

@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
@@ -18,6 +15,8 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import com.google.protobuf.ByteString;
+
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -27,7 +26,7 @@ import protobuf.srl.request.Message.Request.MessageType;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-public class ProxyServer extends WebSocketServer {
+public class RecognitionServer extends WebSocketServer {
 
 	public static final int MAX_CONNECTIONS = 20;
 	public static final int STATE_SERVER_FULL = 4001;
@@ -35,20 +34,17 @@ public class ProxyServer extends WebSocketServer {
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String FULL_SERVER_MESSAGE = "Sorry the server is full";
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
-	public static final String INCORRECT_LOGIN_MESSAGE = "Incorrect username or password";
-	public static final String INCORRECT_LOGIN_TYPE_MESSAGE = "You do not have the ability to login as that type!";
-	public static final String PERMISSION_ERROR_MESSAGE = "There was an error assigning permissions";
 	
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public ProxyServer( int port ) throws UnknownHostException {
+	public RecognitionServer( int port ) throws UnknownHostException {
 		this( new InetSocketAddress( port ) );
 	}
 
-	public ProxyServer( InetSocketAddress address ) {
+	public RecognitionServer( InetSocketAddress address ) {
 		super( address );
 	}
 
@@ -76,66 +72,56 @@ public class ProxyServer extends WebSocketServer {
 	public void onMessage( WebSocket conn, String message ) {
 	}
 
-	/**
-	 * Accepts messages and sends the request to the correct server and holds minimum client state.
-	 */
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
-		Request req = Decoder.prarseRequest(buffer);
+		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
+		
+		
 		if (req == null) {
 			System.out.println("protobuf error");
-			//this.
 			// we need to somehow send an error to the client here
 			return;
 		}
+		
+		if(req.getRequestType() == Request.MessageType.RECOGNITION) {
+			ByteString rawSketchData = req.getOtherData();
+			protobuf.srl.sketch.Sketch.SRL_Sketch savedSketch = Decoder.parseSketch(rawSketchData);
+			//pass to them
+			//use a function that they will give
+			
+			
+			/*String name = req.getLogin().getUsername();
+			String password = req.getLogin().getPassword();
+			System.out.println("USERNAME: " + name +"\nPASSWORD: " + password);
+			if( (name.equalsIgnoreCase("matt") && password.equalsIgnoreCase("japan"))) {
+				return;
+			}*/
+		}
+		return;
+		/*
 		if (!state.isLoggedIn()) {
 			if (LoginChecker.checkLogin(req)) {
-				System.out.println("\n\nUSER IS LOGGING IN!");
-				boolean success = true;
-				String message = "Successful Login";
-
-				int loginType = LoginChecker.checkInstructor(req);
-				switch (loginType) {
-					case LoginChecker.INSTRUCTOR_LOGIN:
-						System.out.println("Welcome instructor");
-						Permission permission = LoginChecker.assignPermission(state,req);
-						if (permission == Permission.ERROR_PERMISSON) {
-							success = false;
-							message = PERMISSION_ERROR_MESSAGE;
-						}
-					break;
-
-					case LoginChecker.ERROR:
-						success = false;
-						message = INCORRECT_LOGIN_TYPE_MESSAGE;
-					break;
-
-					default: // do nothing
-				}
-
+				state.logIn();
 				// Create the Request to respond.
-				Request r = LoginChecker.createLoginResponse(req, success, message, loginType == LoginChecker.INSTRUCTOR_LOGIN);
-				conn.send(r.toByteArray());
-				return;
+				conn.send(LoginChecker.createResponse(req, true).toByteArray());
 			} else {
 				state.addTry();
 				if (state.getTries() > MAX_LOGIN_TRIES) {
 					conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
-					return;
 				}
-				conn.send(LoginChecker.createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false).toByteArray());
-				return;
+				conn.send(LoginChecker.createResponse(req, false).toByteArray());
 			}
 		} else {
 			if (state.getTries() > MAX_LOGIN_TRIES) {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 				return;
 			}
+			
 			// Parse message.
 			conn.send(buffer);
 			return;
-		}
+		}*/
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {
@@ -150,26 +136,16 @@ public class ProxyServer extends WebSocketServer {
 		return new ConnectionState(numberOfConnections++);
 	}
 	
-	public static void ConnectToServer() throws URISyntaxException {
-		ExampleClient c = new ExampleClient( new URI( "ws://goldberglinux02.tamu.edu:8880" ) );
-		c.connect();
-	}
-
-	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
+	public static void main( String[] args ) throws InterruptedException , IOException {
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
-		ProxyServer s = new ProxyServer( port );
+		RecognitionServer s = new RecognitionServer( port );
 		s.start();
 		System.out.println( "ChatServer started on port: " + s.getPort() );
-		
-		//attempt to connect to recognition
-		ConnectToServer();
-		//attempt to connect to answer server
-		//attempt to connect to user database
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
@@ -185,7 +161,6 @@ public class ProxyServer extends WebSocketServer {
 			}
 		}
 	}
-
 	@Override
 	public void onError( WebSocket conn, Exception ex ) {
 		ex.printStackTrace();
