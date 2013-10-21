@@ -17,9 +17,14 @@ import org.java_websocket.server.WebSocketServer;
 
 import com.google.protobuf.ByteString;
 
+import protobuf.srl.commands.Commands.AddStroke;
+import protobuf.srl.commands.Commands.Command;
+import protobuf.srl.commands.Commands.CommandType;
+import protobuf.srl.commands.Commands.Update;
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.sketch.Sketch.SrlStroke;
 
 /**
  * A simple WebSocketServer implementation.
@@ -85,12 +90,32 @@ public class RecognitionServer extends WebSocketServer {
 		}
 		
 		if(req.getRequestType() == Request.MessageType.RECOGNITION) {
-			ByteString rawSketchData = req.getOtherData();
-			protobuf.srl.sketch.Sketch.SRL_Sketch savedSketch = Decoder.parseSketch(rawSketchData);
+			ByteString rawUpdateData = req.getOtherData();
+			Update savedUpdate = Decoder.parseNextUpdate(rawUpdateData);
 			//pass to them
 			//use a function that they will give
 			
+			//post function they will give (package the information received)
+			SrlStroke receivedStroke;
+			receivedStroke.toByteString();
 			
+			AddStroke.Builder addBuilder = AddStroke.newBuilder();
+			addBuilder.setStroke(receivedStroke.toByteString());
+			
+			Command.Builder cmdBuilder = Command.newBuilder();
+			cmdBuilder.setCommandType(CommandType.ADD_STROKE);
+			cmdBuilder.setCommandData(addBuilder.build().toByteString());
+			
+			
+			Update.Builder updateBuilder = Update.newBuilder();
+			updateBuilder.addCommands(cmdBuilder.build());
+			
+			Request.Builder requestBuilder = Request.newBuilder();
+			requestBuilder.setOtherData(updateBuilder.build().toByteString());
+			
+			conn.send(requestBuilder.build().toByteArray());
+			
+			// Build and send.
 			/*String name = req.getLogin().getUsername();
 			String password = req.getLogin().getPassword();
 			System.out.println("USERNAME: " + name +"\nPASSWORD: " + password);

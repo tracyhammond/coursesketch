@@ -14,7 +14,7 @@ public class Decoder {
 	 * @param buffer
 	 * @return
 	 */
-	public static Request prarseRequest(ByteBuffer buffer) {
+	public static Request parseRequest(ByteBuffer buffer) {
 		try {
 			return Request.parseFrom(buffer.array());
 		} catch (InvalidProtocolBufferException e) {

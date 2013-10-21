@@ -1,10 +1,13 @@
 package connection;
 
+import java.nio.ByteBuffer;
+
 import protobuf.srl.commands.Commands.AddShape;
 import protobuf.srl.commands.Commands.AddStroke;
 import protobuf.srl.commands.Commands.Command;
 import protobuf.srl.commands.Commands.PackageShape;
 import protobuf.srl.commands.Commands.Update;
+import protobuf.srl.request.Message.Request;
 import protobuf.srl.sketch.Sketch;
 import protobuf.srl.sketch.Sketch.SrlSketch;
 
@@ -26,6 +29,15 @@ public class Decoder {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static Request parseRequest(ByteBuffer buffer) {
+		try {
+			return Request.parseFrom(buffer.array());
+		} catch (InvalidProtocolBufferException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
