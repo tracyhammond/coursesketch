@@ -23,6 +23,7 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
+#include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
@@ -36,11 +37,33 @@ void protobuf_AssignDesc_input_2fsketch_2eproto();
 void protobuf_ShutdownFile_input_2fsketch_2eproto();
 
 class SRL_Sketch;
+class SRL_Object;
 class SRL_Shape;
 class SRL_Stroke;
 class SRL_Point;
 class Interpretation;
 
+enum SRL_Object_ObjectType {
+  SRL_Object_ObjectType_SHAPE = 0,
+  SRL_Object_ObjectType_STROKE = 1,
+  SRL_Object_ObjectType_POINT = 2,
+  SRL_Object_ObjectType_LINE = 3
+};
+bool SRL_Object_ObjectType_IsValid(int value);
+const SRL_Object_ObjectType SRL_Object_ObjectType_ObjectType_MIN = SRL_Object_ObjectType_SHAPE;
+const SRL_Object_ObjectType SRL_Object_ObjectType_ObjectType_MAX = SRL_Object_ObjectType_LINE;
+const int SRL_Object_ObjectType_ObjectType_ARRAYSIZE = SRL_Object_ObjectType_ObjectType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* SRL_Object_ObjectType_descriptor();
+inline const ::std::string& SRL_Object_ObjectType_Name(SRL_Object_ObjectType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    SRL_Object_ObjectType_descriptor(), value);
+}
+inline bool SRL_Object_ObjectType_Parse(
+    const ::std::string& name, SRL_Object_ObjectType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SRL_Object_ObjectType>(
+    SRL_Object_ObjectType_descriptor(), name, value);
+}
 // ===================================================================
 
 class SRL_Sketch : public ::google::protobuf::Message {
@@ -130,16 +153,16 @@ class SRL_Sketch : public ::google::protobuf::Message {
   inline ::std::string* release_domainid();
   inline void set_allocated_domainid(::std::string* domainid);
 
-  // repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;
+  // repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
   inline int sketch_size() const;
   inline void clear_sketch();
   static const int kSketchFieldNumber = 5;
-  inline const ::protobuf::srl::sketch::SRL_Shape& sketch(int index) const;
-  inline ::protobuf::srl::sketch::SRL_Shape* mutable_sketch(int index);
-  inline ::protobuf::srl::sketch::SRL_Shape* add_sketch();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape >&
+  inline const ::protobuf::srl::sketch::SRL_Object& sketch(int index) const;
+  inline ::protobuf::srl::sketch::SRL_Object* mutable_sketch(int index);
+  inline ::protobuf::srl::sketch::SRL_Object* add_sketch();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >&
       sketch() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >*
       mutable_sketch();
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Sketch)
@@ -159,7 +182,7 @@ class SRL_Sketch : public ::google::protobuf::Message {
   ::google::protobuf::uint64 assignmentid_;
   ::google::protobuf::uint64 problemid_;
   ::std::string* domainid_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape > sketch_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object > sketch_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
@@ -170,6 +193,129 @@ class SRL_Sketch : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SRL_Sketch* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SRL_Object : public ::google::protobuf::Message {
+ public:
+  SRL_Object();
+  virtual ~SRL_Object();
+
+  SRL_Object(const SRL_Object& from);
+
+  inline SRL_Object& operator=(const SRL_Object& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SRL_Object& default_instance();
+
+  void Swap(SRL_Object* other);
+
+  // implements Message ----------------------------------------------
+
+  SRL_Object* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SRL_Object& from);
+  void MergeFrom(const SRL_Object& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef SRL_Object_ObjectType ObjectType;
+  static const ObjectType SHAPE = SRL_Object_ObjectType_SHAPE;
+  static const ObjectType STROKE = SRL_Object_ObjectType_STROKE;
+  static const ObjectType POINT = SRL_Object_ObjectType_POINT;
+  static const ObjectType LINE = SRL_Object_ObjectType_LINE;
+  static inline bool ObjectType_IsValid(int value) {
+    return SRL_Object_ObjectType_IsValid(value);
+  }
+  static const ObjectType ObjectType_MIN =
+    SRL_Object_ObjectType_ObjectType_MIN;
+  static const ObjectType ObjectType_MAX =
+    SRL_Object_ObjectType_ObjectType_MAX;
+  static const int ObjectType_ARRAYSIZE =
+    SRL_Object_ObjectType_ObjectType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  ObjectType_descriptor() {
+    return SRL_Object_ObjectType_descriptor();
+  }
+  static inline const ::std::string& ObjectType_Name(ObjectType value) {
+    return SRL_Object_ObjectType_Name(value);
+  }
+  static inline bool ObjectType_Parse(const ::std::string& name,
+      ObjectType* value) {
+    return SRL_Object_ObjectType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::protobuf::srl::sketch::SRL_Object_ObjectType type() const;
+  inline void set_type(::protobuf::srl::sketch::SRL_Object_ObjectType value);
+
+  // required bytes object = 2;
+  inline bool has_object() const;
+  inline void clear_object();
+  static const int kObjectFieldNumber = 2;
+  inline const ::std::string& object() const;
+  inline void set_object(const ::std::string& value);
+  inline void set_object(const char* value);
+  inline void set_object(const void* value, size_t size);
+  inline ::std::string* mutable_object();
+  inline ::std::string* release_object();
+  inline void set_allocated_object(::std::string* object);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Object)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_object();
+  inline void clear_has_object();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* object_;
+  int type_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fsketch_2eproto();
+  friend void protobuf_AssignDesc_input_2fsketch_2eproto();
+  friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
+
+  void InitAsDefaultInstance();
+  static SRL_Object* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -277,29 +423,17 @@ class SRL_Shape : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation >*
       mutable_interpretations();
 
-  // repeated .protobuf.srl.sketch.SRL_Shape objects = 6;
-  inline int objects_size() const;
-  inline void clear_objects();
-  static const int kObjectsFieldNumber = 6;
-  inline const ::protobuf::srl::sketch::SRL_Shape& objects(int index) const;
-  inline ::protobuf::srl::sketch::SRL_Shape* mutable_objects(int index);
-  inline ::protobuf::srl::sketch::SRL_Shape* add_objects();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape >&
-      objects() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape >*
-      mutable_objects();
-
-  // repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;
-  inline int strokes_size() const;
-  inline void clear_strokes();
-  static const int kStrokesFieldNumber = 7;
-  inline const ::protobuf::srl::sketch::SRL_Stroke& strokes(int index) const;
-  inline ::protobuf::srl::sketch::SRL_Stroke* mutable_strokes(int index);
-  inline ::protobuf::srl::sketch::SRL_Stroke* add_strokes();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Stroke >&
-      strokes() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Stroke >*
-      mutable_strokes();
+  // repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
+  inline int subcomponents_size() const;
+  inline void clear_subcomponents();
+  static const int kSubComponentsFieldNumber = 6;
+  inline const ::protobuf::srl::sketch::SRL_Object& subcomponents(int index) const;
+  inline ::protobuf::srl::sketch::SRL_Object* mutable_subcomponents(int index);
+  inline ::protobuf::srl::sketch::SRL_Object* add_subcomponents();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >&
+      subcomponents() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >*
+      mutable_subcomponents();
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Shape)
  private:
@@ -318,12 +452,11 @@ class SRL_Shape : public ::google::protobuf::Message {
   ::google::protobuf::uint64 time_;
   ::std::string* name_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation > interpretations_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape > objects_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Stroke > strokes_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object > subcomponents_;
   bool isusercreated_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fsketch_2eproto();
   friend void protobuf_AssignDesc_input_2fsketch_2eproto();
@@ -869,29 +1002,126 @@ inline void SRL_Sketch::set_allocated_domainid(::std::string* domainid) {
   }
 }
 
-// repeated .protobuf.srl.sketch.SRL_Shape sketch = 5;
+// repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
 inline int SRL_Sketch::sketch_size() const {
   return sketch_.size();
 }
 inline void SRL_Sketch::clear_sketch() {
   sketch_.Clear();
 }
-inline const ::protobuf::srl::sketch::SRL_Shape& SRL_Sketch::sketch(int index) const {
+inline const ::protobuf::srl::sketch::SRL_Object& SRL_Sketch::sketch(int index) const {
   return sketch_.Get(index);
 }
-inline ::protobuf::srl::sketch::SRL_Shape* SRL_Sketch::mutable_sketch(int index) {
+inline ::protobuf::srl::sketch::SRL_Object* SRL_Sketch::mutable_sketch(int index) {
   return sketch_.Mutable(index);
 }
-inline ::protobuf::srl::sketch::SRL_Shape* SRL_Sketch::add_sketch() {
+inline ::protobuf::srl::sketch::SRL_Object* SRL_Sketch::add_sketch() {
   return sketch_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape >&
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >&
 SRL_Sketch::sketch() const {
   return sketch_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape >*
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >*
 SRL_Sketch::mutable_sketch() {
   return &sketch_;
+}
+
+// -------------------------------------------------------------------
+
+// SRL_Object
+
+// required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+inline bool SRL_Object::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SRL_Object::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SRL_Object::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SRL_Object::clear_type() {
+  type_ = 0;
+  clear_has_type();
+}
+inline ::protobuf::srl::sketch::SRL_Object_ObjectType SRL_Object::type() const {
+  return static_cast< ::protobuf::srl::sketch::SRL_Object_ObjectType >(type_);
+}
+inline void SRL_Object::set_type(::protobuf::srl::sketch::SRL_Object_ObjectType value) {
+  assert(::protobuf::srl::sketch::SRL_Object_ObjectType_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// required bytes object = 2;
+inline bool SRL_Object::has_object() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SRL_Object::set_has_object() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SRL_Object::clear_has_object() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SRL_Object::clear_object() {
+  if (object_ != &::google::protobuf::internal::kEmptyString) {
+    object_->clear();
+  }
+  clear_has_object();
+}
+inline const ::std::string& SRL_Object::object() const {
+  return *object_;
+}
+inline void SRL_Object::set_object(const ::std::string& value) {
+  set_has_object();
+  if (object_ == &::google::protobuf::internal::kEmptyString) {
+    object_ = new ::std::string;
+  }
+  object_->assign(value);
+}
+inline void SRL_Object::set_object(const char* value) {
+  set_has_object();
+  if (object_ == &::google::protobuf::internal::kEmptyString) {
+    object_ = new ::std::string;
+  }
+  object_->assign(value);
+}
+inline void SRL_Object::set_object(const void* value, size_t size) {
+  set_has_object();
+  if (object_ == &::google::protobuf::internal::kEmptyString) {
+    object_ = new ::std::string;
+  }
+  object_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SRL_Object::mutable_object() {
+  set_has_object();
+  if (object_ == &::google::protobuf::internal::kEmptyString) {
+    object_ = new ::std::string;
+  }
+  return object_;
+}
+inline ::std::string* SRL_Object::release_object() {
+  clear_has_object();
+  if (object_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = object_;
+    object_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SRL_Object::set_allocated_object(::std::string* object) {
+  if (object_ != &::google::protobuf::internal::kEmptyString) {
+    delete object_;
+  }
+  if (object) {
+    set_has_object();
+    object_ = object;
+  } else {
+    clear_has_object();
+    object_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------
@@ -1107,54 +1337,29 @@ SRL_Shape::mutable_interpretations() {
   return &interpretations_;
 }
 
-// repeated .protobuf.srl.sketch.SRL_Shape objects = 6;
-inline int SRL_Shape::objects_size() const {
-  return objects_.size();
+// repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
+inline int SRL_Shape::subcomponents_size() const {
+  return subcomponents_.size();
 }
-inline void SRL_Shape::clear_objects() {
-  objects_.Clear();
+inline void SRL_Shape::clear_subcomponents() {
+  subcomponents_.Clear();
 }
-inline const ::protobuf::srl::sketch::SRL_Shape& SRL_Shape::objects(int index) const {
-  return objects_.Get(index);
+inline const ::protobuf::srl::sketch::SRL_Object& SRL_Shape::subcomponents(int index) const {
+  return subcomponents_.Get(index);
 }
-inline ::protobuf::srl::sketch::SRL_Shape* SRL_Shape::mutable_objects(int index) {
-  return objects_.Mutable(index);
+inline ::protobuf::srl::sketch::SRL_Object* SRL_Shape::mutable_subcomponents(int index) {
+  return subcomponents_.Mutable(index);
 }
-inline ::protobuf::srl::sketch::SRL_Shape* SRL_Shape::add_objects() {
-  return objects_.Add();
+inline ::protobuf::srl::sketch::SRL_Object* SRL_Shape::add_subcomponents() {
+  return subcomponents_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape >&
-SRL_Shape::objects() const {
-  return objects_;
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >&
+SRL_Shape::subcomponents() const {
+  return subcomponents_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Shape >*
-SRL_Shape::mutable_objects() {
-  return &objects_;
-}
-
-// repeated .protobuf.srl.sketch.SRL_Stroke strokes = 7;
-inline int SRL_Shape::strokes_size() const {
-  return strokes_.size();
-}
-inline void SRL_Shape::clear_strokes() {
-  strokes_.Clear();
-}
-inline const ::protobuf::srl::sketch::SRL_Stroke& SRL_Shape::strokes(int index) const {
-  return strokes_.Get(index);
-}
-inline ::protobuf::srl::sketch::SRL_Stroke* SRL_Shape::mutable_strokes(int index) {
-  return strokes_.Mutable(index);
-}
-inline ::protobuf::srl::sketch::SRL_Stroke* SRL_Shape::add_strokes() {
-  return strokes_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Stroke >&
-SRL_Shape::strokes() const {
-  return strokes_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Stroke >*
-SRL_Shape::mutable_strokes() {
-  return &strokes_;
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >*
+SRL_Shape::mutable_subcomponents() {
+  return &subcomponents_;
 }
 
 // -------------------------------------------------------------------
@@ -1753,6 +1958,10 @@ inline void Interpretation::set_complexity(double value) {
 namespace google {
 namespace protobuf {
 
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::sketch::SRL_Object_ObjectType>() {
+  return ::protobuf::srl::sketch::SRL_Object_ObjectType_descriptor();
+}
 
 }  // namespace google
 }  // namespace protobuf

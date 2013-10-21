@@ -1,7 +1,7 @@
-function placeMenu() {
+function placeMenu(isInstructor) {
 	var menuElement = document.getElementById('menuBar');
 	if(menuElement) {
-		menuElement.innerHTML = getMenu();
+		menuElement.innerHTML = getMenu(isInstructor);
 		var loader = new DynamicFileLoader();
 		loader.loadFile('js/menu/sliding_menu.js', 'js', swipeCheck);
 		loader.loadFile('css/menu/menu.css', 'css', false);
@@ -14,33 +14,29 @@ function swipeCheck() {
 	}
 }
 
-function getMenu() {
+function getMenu(isInstructor) {
+	var home = isInstructor? "html/instructor/course_management.html" : "html/student/course_management.html";
 	return	'<div id="menu">' +
 			'	<h1>' +
-			'		<a href="html/home.html" target ="wrapper" data-ajax="false"><img src="images/smallTitle.svg"></a>' +
+			'		<a href="' + home + '" target ="wrapper" data-ajax="false"><img src="images/smallTitle.svg"></a>' +
 			'	</h1>' +
 			'	<ul id="menuList">' +
-			'		<li><a href="html/home.html" target ="wrapper" data-ajax="false"' +
+			'		<li><a href="' + home + '" target ="wrapper" data-ajax="false"' +
 			'			class="contentLink">Home</a></li>' +
+			((!isInstructor) ?
 			'		<li class="header"><h3>Classes I\'m In</h3></li>' +
-			'		<!-- listofClasses is appended by the js in add_menu.js . It uses class_data.js to get the classes -->' +
-			'		<li onclick="list_menu_classes('+"0"+')">' +
-			'			<div class="expandable_button">' +
-			'				<img id="expandable_arow_button0" src="images/menu/triangle_right.png" width="15" height="15">' +
-			'				<a href="javascript:void(0)">View All Classes</a>' +
-			'			</div>' +
-			'		</li>' +
-			'		<li class="inner_list"><div id="list_of_classes" class="inner_menu_list" style="display: none;"></div></li>' +
-			'		<li><a href="addAClass.php" data-ajax="false" class="contentLink">Add New Class</a></li>' +
-			'		<li><a href="myGrades.php" data-ajax="false" class="contentLink">My Grades</a></li>' +
-			'		<li><a href="toggleClasses.php" data-ajax="false" class="contentLink">Hide Class</a></li>' +
+			'		<li><a href="html/student/classSearch.html" data-ajax="false" class="contentLink">Add New Class</a></li>' +
+			'		<li><a href="html/student/grades.html" data-ajax="false" class="contentLink">My Grades</a></li>' +
+			'		<li><a href="html/student/classOptions.html" data-ajax="false" class="contentLink">Remove Class</a></li>'
+			:
 			'		<li class="header"><h3>Classes I\'m Teaching</h3></li>' +
 			'		<li><a href="html/instructor/gradebook.html" data-ajax="false" class="contentLink">Grades</a></li>' +
 			'		<li><a href="html/instructor/course_management.html" target ="wrapper" data-ajax="false" class="contentLink">Course Management</a></li>' +
-			'		<li><a href="viewClassKeys.php" data-ajax="false" class="contentLink">View Class Keys</a></li>' +
+			'		<li><a href="viewClassKeys.php" data-ajax="false" class="contentLink">View Class Keys</a></li>'
+			) +
 			'		<li class="header"><h3>Account</h3></li>' +
 			'		<li><a href="changePassword.php" data-ajax="false" class="contentLink">Change Password</a></li>' +
-			'		<li><a href="logOut.php" data-ajax="false" class="contentLink">Sign Out</a></li>' +
+			'		<li><a href="javascript:void(0)" data-ajax="false" class="contentLink">Sign Out</a></li>' +
 			'	</ul>' +
 			'</div>';
 }
