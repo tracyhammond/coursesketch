@@ -36,44 +36,44 @@ void  protobuf_AddDesc_input_2fsketch_2eproto();
 void protobuf_AssignDesc_input_2fsketch_2eproto();
 void protobuf_ShutdownFile_input_2fsketch_2eproto();
 
-class SRL_Sketch;
-class SRL_Object;
-class SRL_Shape;
-class SRL_Stroke;
-class SRL_Point;
+class SrlSketch;
+class SrlObject;
+class SrlShape;
+class SrlStroke;
+class SrlPoint;
 class Interpretation;
 
-enum SRL_Object_ObjectType {
-  SRL_Object_ObjectType_SHAPE = 0,
-  SRL_Object_ObjectType_STROKE = 1,
-  SRL_Object_ObjectType_POINT = 2,
-  SRL_Object_ObjectType_LINE = 3
+enum SrlObject_ObjectType {
+  SrlObject_ObjectType_SHAPE = 0,
+  SrlObject_ObjectType_STROKE = 1,
+  SrlObject_ObjectType_POINT = 2,
+  SrlObject_ObjectType_LINE = 3
 };
-bool SRL_Object_ObjectType_IsValid(int value);
-const SRL_Object_ObjectType SRL_Object_ObjectType_ObjectType_MIN = SRL_Object_ObjectType_SHAPE;
-const SRL_Object_ObjectType SRL_Object_ObjectType_ObjectType_MAX = SRL_Object_ObjectType_LINE;
-const int SRL_Object_ObjectType_ObjectType_ARRAYSIZE = SRL_Object_ObjectType_ObjectType_MAX + 1;
+bool SrlObject_ObjectType_IsValid(int value);
+const SrlObject_ObjectType SrlObject_ObjectType_ObjectType_MIN = SrlObject_ObjectType_SHAPE;
+const SrlObject_ObjectType SrlObject_ObjectType_ObjectType_MAX = SrlObject_ObjectType_LINE;
+const int SrlObject_ObjectType_ObjectType_ARRAYSIZE = SrlObject_ObjectType_ObjectType_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* SRL_Object_ObjectType_descriptor();
-inline const ::std::string& SRL_Object_ObjectType_Name(SRL_Object_ObjectType value) {
+const ::google::protobuf::EnumDescriptor* SrlObject_ObjectType_descriptor();
+inline const ::std::string& SrlObject_ObjectType_Name(SrlObject_ObjectType value) {
   return ::google::protobuf::internal::NameOfEnum(
-    SRL_Object_ObjectType_descriptor(), value);
+    SrlObject_ObjectType_descriptor(), value);
 }
-inline bool SRL_Object_ObjectType_Parse(
-    const ::std::string& name, SRL_Object_ObjectType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<SRL_Object_ObjectType>(
-    SRL_Object_ObjectType_descriptor(), name, value);
+inline bool SrlObject_ObjectType_Parse(
+    const ::std::string& name, SrlObject_ObjectType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SrlObject_ObjectType>(
+    SrlObject_ObjectType_descriptor(), name, value);
 }
 // ===================================================================
 
-class SRL_Sketch : public ::google::protobuf::Message {
+class SrlSketch : public ::google::protobuf::Message {
  public:
-  SRL_Sketch();
-  virtual ~SRL_Sketch();
+  SrlSketch();
+  virtual ~SrlSketch();
 
-  SRL_Sketch(const SRL_Sketch& from);
+  SrlSketch(const SrlSketch& from);
 
-  inline SRL_Sketch& operator=(const SRL_Sketch& from) {
+  inline SrlSketch& operator=(const SrlSketch& from) {
     CopyFrom(from);
     return *this;
   }
@@ -87,17 +87,17 @@ class SRL_Sketch : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SRL_Sketch& default_instance();
+  static const SrlSketch& default_instance();
 
-  void Swap(SRL_Sketch* other);
+  void Swap(SrlSketch* other);
 
   // implements Message ----------------------------------------------
 
-  SRL_Sketch* New() const;
+  SrlSketch* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SRL_Sketch& from);
-  void MergeFrom(const SRL_Sketch& from);
+  void CopyFrom(const SrlSketch& from);
+  void MergeFrom(const SrlSketch& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -153,19 +153,19 @@ class SRL_Sketch : public ::google::protobuf::Message {
   inline ::std::string* release_domainid();
   inline void set_allocated_domainid(::std::string* domainid);
 
-  // repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
+  // repeated .protobuf.srl.sketch.SrlObject sketch = 5;
   inline int sketch_size() const;
   inline void clear_sketch();
   static const int kSketchFieldNumber = 5;
-  inline const ::protobuf::srl::sketch::SRL_Object& sketch(int index) const;
-  inline ::protobuf::srl::sketch::SRL_Object* mutable_sketch(int index);
-  inline ::protobuf::srl::sketch::SRL_Object* add_sketch();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >&
+  inline const ::protobuf::srl::sketch::SrlObject& sketch(int index) const;
+  inline ::protobuf::srl::sketch::SrlObject* mutable_sketch(int index);
+  inline ::protobuf::srl::sketch::SrlObject* add_sketch();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >&
       sketch() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >*
       mutable_sketch();
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Sketch)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlSketch)
  private:
   inline void set_has_courseid();
   inline void clear_has_courseid();
@@ -182,7 +182,7 @@ class SRL_Sketch : public ::google::protobuf::Message {
   ::google::protobuf::uint64 assignmentid_;
   ::google::protobuf::uint64 problemid_;
   ::std::string* domainid_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object > sketch_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject > sketch_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
@@ -192,18 +192,18 @@ class SRL_Sketch : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
 
   void InitAsDefaultInstance();
-  static SRL_Sketch* default_instance_;
+  static SrlSketch* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class SRL_Object : public ::google::protobuf::Message {
+class SrlObject : public ::google::protobuf::Message {
  public:
-  SRL_Object();
-  virtual ~SRL_Object();
+  SrlObject();
+  virtual ~SrlObject();
 
-  SRL_Object(const SRL_Object& from);
+  SrlObject(const SrlObject& from);
 
-  inline SRL_Object& operator=(const SRL_Object& from) {
+  inline SrlObject& operator=(const SrlObject& from) {
     CopyFrom(from);
     return *this;
   }
@@ -217,17 +217,17 @@ class SRL_Object : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SRL_Object& default_instance();
+  static const SrlObject& default_instance();
 
-  void Swap(SRL_Object* other);
+  void Swap(SrlObject* other);
 
   // implements Message ----------------------------------------------
 
-  SRL_Object* New() const;
+  SrlObject* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SRL_Object& from);
-  void MergeFrom(const SRL_Object& from);
+  void CopyFrom(const SrlObject& from);
+  void MergeFrom(const SrlObject& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -248,40 +248,40 @@ class SRL_Object : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef SRL_Object_ObjectType ObjectType;
-  static const ObjectType SHAPE = SRL_Object_ObjectType_SHAPE;
-  static const ObjectType STROKE = SRL_Object_ObjectType_STROKE;
-  static const ObjectType POINT = SRL_Object_ObjectType_POINT;
-  static const ObjectType LINE = SRL_Object_ObjectType_LINE;
+  typedef SrlObject_ObjectType ObjectType;
+  static const ObjectType SHAPE = SrlObject_ObjectType_SHAPE;
+  static const ObjectType STROKE = SrlObject_ObjectType_STROKE;
+  static const ObjectType POINT = SrlObject_ObjectType_POINT;
+  static const ObjectType LINE = SrlObject_ObjectType_LINE;
   static inline bool ObjectType_IsValid(int value) {
-    return SRL_Object_ObjectType_IsValid(value);
+    return SrlObject_ObjectType_IsValid(value);
   }
   static const ObjectType ObjectType_MIN =
-    SRL_Object_ObjectType_ObjectType_MIN;
+    SrlObject_ObjectType_ObjectType_MIN;
   static const ObjectType ObjectType_MAX =
-    SRL_Object_ObjectType_ObjectType_MAX;
+    SrlObject_ObjectType_ObjectType_MAX;
   static const int ObjectType_ARRAYSIZE =
-    SRL_Object_ObjectType_ObjectType_ARRAYSIZE;
+    SrlObject_ObjectType_ObjectType_ARRAYSIZE;
   static inline const ::google::protobuf::EnumDescriptor*
   ObjectType_descriptor() {
-    return SRL_Object_ObjectType_descriptor();
+    return SrlObject_ObjectType_descriptor();
   }
   static inline const ::std::string& ObjectType_Name(ObjectType value) {
-    return SRL_Object_ObjectType_Name(value);
+    return SrlObject_ObjectType_Name(value);
   }
   static inline bool ObjectType_Parse(const ::std::string& name,
       ObjectType* value) {
-    return SRL_Object_ObjectType_Parse(name, value);
+    return SrlObject_ObjectType_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
 
-  // required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
+  // required .protobuf.srl.sketch.SrlObject.ObjectType type = 1;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 1;
-  inline ::protobuf::srl::sketch::SRL_Object_ObjectType type() const;
-  inline void set_type(::protobuf::srl::sketch::SRL_Object_ObjectType value);
+  inline ::protobuf::srl::sketch::SrlObject_ObjectType type() const;
+  inline void set_type(::protobuf::srl::sketch::SrlObject_ObjectType value);
 
   // required bytes object = 2;
   inline bool has_object() const;
@@ -295,7 +295,7 @@ class SRL_Object : public ::google::protobuf::Message {
   inline ::std::string* release_object();
   inline void set_allocated_object(::std::string* object);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Object)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlObject)
  private:
   inline void set_has_type();
   inline void clear_has_type();
@@ -315,18 +315,18 @@ class SRL_Object : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
 
   void InitAsDefaultInstance();
-  static SRL_Object* default_instance_;
+  static SrlObject* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class SRL_Shape : public ::google::protobuf::Message {
+class SrlShape : public ::google::protobuf::Message {
  public:
-  SRL_Shape();
-  virtual ~SRL_Shape();
+  SrlShape();
+  virtual ~SrlShape();
 
-  SRL_Shape(const SRL_Shape& from);
+  SrlShape(const SrlShape& from);
 
-  inline SRL_Shape& operator=(const SRL_Shape& from) {
+  inline SrlShape& operator=(const SrlShape& from) {
     CopyFrom(from);
     return *this;
   }
@@ -340,17 +340,17 @@ class SRL_Shape : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SRL_Shape& default_instance();
+  static const SrlShape& default_instance();
 
-  void Swap(SRL_Shape* other);
+  void Swap(SrlShape* other);
 
   // implements Message ----------------------------------------------
 
-  SRL_Shape* New() const;
+  SrlShape* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SRL_Shape& from);
-  void MergeFrom(const SRL_Shape& from);
+  void CopyFrom(const SrlShape& from);
+  void MergeFrom(const SrlShape& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -423,19 +423,19 @@ class SRL_Shape : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation >*
       mutable_interpretations();
 
-  // repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
+  // repeated .protobuf.srl.sketch.SrlObject subComponents = 6;
   inline int subcomponents_size() const;
   inline void clear_subcomponents();
   static const int kSubComponentsFieldNumber = 6;
-  inline const ::protobuf::srl::sketch::SRL_Object& subcomponents(int index) const;
-  inline ::protobuf::srl::sketch::SRL_Object* mutable_subcomponents(int index);
-  inline ::protobuf::srl::sketch::SRL_Object* add_subcomponents();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >&
+  inline const ::protobuf::srl::sketch::SrlObject& subcomponents(int index) const;
+  inline ::protobuf::srl::sketch::SrlObject* mutable_subcomponents(int index);
+  inline ::protobuf::srl::sketch::SrlObject* add_subcomponents();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >&
       subcomponents() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >*
       mutable_subcomponents();
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Shape)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlShape)
  private:
   inline void set_has_id();
   inline void clear_has_id();
@@ -452,7 +452,7 @@ class SRL_Shape : public ::google::protobuf::Message {
   ::google::protobuf::uint64 time_;
   ::std::string* name_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation > interpretations_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object > subcomponents_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject > subcomponents_;
   bool isusercreated_;
 
   mutable int _cached_size_;
@@ -463,18 +463,18 @@ class SRL_Shape : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
 
   void InitAsDefaultInstance();
-  static SRL_Shape* default_instance_;
+  static SrlShape* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class SRL_Stroke : public ::google::protobuf::Message {
+class SrlStroke : public ::google::protobuf::Message {
  public:
-  SRL_Stroke();
-  virtual ~SRL_Stroke();
+  SrlStroke();
+  virtual ~SrlStroke();
 
-  SRL_Stroke(const SRL_Stroke& from);
+  SrlStroke(const SrlStroke& from);
 
-  inline SRL_Stroke& operator=(const SRL_Stroke& from) {
+  inline SrlStroke& operator=(const SrlStroke& from) {
     CopyFrom(from);
     return *this;
   }
@@ -488,17 +488,17 @@ class SRL_Stroke : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SRL_Stroke& default_instance();
+  static const SrlStroke& default_instance();
 
-  void Swap(SRL_Stroke* other);
+  void Swap(SrlStroke* other);
 
   // implements Message ----------------------------------------------
 
-  SRL_Stroke* New() const;
+  SrlStroke* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SRL_Stroke& from);
-  void MergeFrom(const SRL_Stroke& from);
+  void CopyFrom(const SrlStroke& from);
+  void MergeFrom(const SrlStroke& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -552,19 +552,19 @@ class SRL_Stroke : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
-  // repeated .protobuf.srl.sketch.SRL_Point points = 4;
+  // repeated .protobuf.srl.sketch.SrlPoint points = 4;
   inline int points_size() const;
   inline void clear_points();
   static const int kPointsFieldNumber = 4;
-  inline const ::protobuf::srl::sketch::SRL_Point& points(int index) const;
-  inline ::protobuf::srl::sketch::SRL_Point* mutable_points(int index);
-  inline ::protobuf::srl::sketch::SRL_Point* add_points();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Point >&
+  inline const ::protobuf::srl::sketch::SrlPoint& points(int index) const;
+  inline ::protobuf::srl::sketch::SrlPoint* mutable_points(int index);
+  inline ::protobuf::srl::sketch::SrlPoint* add_points();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint >&
       points() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Point >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint >*
       mutable_points();
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Stroke)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlStroke)
  private:
   inline void set_has_id();
   inline void clear_has_id();
@@ -578,7 +578,7 @@ class SRL_Stroke : public ::google::protobuf::Message {
   ::std::string* id_;
   ::google::protobuf::uint64 time_;
   ::std::string* name_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Point > points_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint > points_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
@@ -588,18 +588,18 @@ class SRL_Stroke : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
 
   void InitAsDefaultInstance();
-  static SRL_Stroke* default_instance_;
+  static SrlStroke* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class SRL_Point : public ::google::protobuf::Message {
+class SrlPoint : public ::google::protobuf::Message {
  public:
-  SRL_Point();
-  virtual ~SRL_Point();
+  SrlPoint();
+  virtual ~SrlPoint();
 
-  SRL_Point(const SRL_Point& from);
+  SrlPoint(const SrlPoint& from);
 
-  inline SRL_Point& operator=(const SRL_Point& from) {
+  inline SrlPoint& operator=(const SrlPoint& from) {
     CopyFrom(from);
     return *this;
   }
@@ -613,17 +613,17 @@ class SRL_Point : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SRL_Point& default_instance();
+  static const SrlPoint& default_instance();
 
-  void Swap(SRL_Point* other);
+  void Swap(SrlPoint* other);
 
   // implements Message ----------------------------------------------
 
-  SRL_Point* New() const;
+  SrlPoint* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SRL_Point& from);
-  void MergeFrom(const SRL_Point& from);
+  void CopyFrom(const SrlPoint& from);
+  void MergeFrom(const SrlPoint& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -712,7 +712,7 @@ class SRL_Point : public ::google::protobuf::Message {
   inline double speed() const;
   inline void set_speed(double value);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SRL_Point)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlPoint)
  private:
   inline void set_has_id();
   inline void clear_has_id();
@@ -750,7 +750,7 @@ class SRL_Point : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
 
   void InitAsDefaultInstance();
-  static SRL_Point* default_instance_;
+  static SrlPoint* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -864,122 +864,122 @@ class Interpretation : public ::google::protobuf::Message {
 
 // ===================================================================
 
-// SRL_Sketch
+// SrlSketch
 
 // optional uint64 courseId = 1;
-inline bool SRL_Sketch::has_courseid() const {
+inline bool SrlSketch::has_courseid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SRL_Sketch::set_has_courseid() {
+inline void SrlSketch::set_has_courseid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SRL_Sketch::clear_has_courseid() {
+inline void SrlSketch::clear_has_courseid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SRL_Sketch::clear_courseid() {
+inline void SrlSketch::clear_courseid() {
   courseid_ = GOOGLE_ULONGLONG(0);
   clear_has_courseid();
 }
-inline ::google::protobuf::uint64 SRL_Sketch::courseid() const {
+inline ::google::protobuf::uint64 SrlSketch::courseid() const {
   return courseid_;
 }
-inline void SRL_Sketch::set_courseid(::google::protobuf::uint64 value) {
+inline void SrlSketch::set_courseid(::google::protobuf::uint64 value) {
   set_has_courseid();
   courseid_ = value;
 }
 
 // optional uint64 assignmentId = 2;
-inline bool SRL_Sketch::has_assignmentid() const {
+inline bool SrlSketch::has_assignmentid() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SRL_Sketch::set_has_assignmentid() {
+inline void SrlSketch::set_has_assignmentid() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SRL_Sketch::clear_has_assignmentid() {
+inline void SrlSketch::clear_has_assignmentid() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SRL_Sketch::clear_assignmentid() {
+inline void SrlSketch::clear_assignmentid() {
   assignmentid_ = GOOGLE_ULONGLONG(0);
   clear_has_assignmentid();
 }
-inline ::google::protobuf::uint64 SRL_Sketch::assignmentid() const {
+inline ::google::protobuf::uint64 SrlSketch::assignmentid() const {
   return assignmentid_;
 }
-inline void SRL_Sketch::set_assignmentid(::google::protobuf::uint64 value) {
+inline void SrlSketch::set_assignmentid(::google::protobuf::uint64 value) {
   set_has_assignmentid();
   assignmentid_ = value;
 }
 
 // optional uint64 problemId = 3;
-inline bool SRL_Sketch::has_problemid() const {
+inline bool SrlSketch::has_problemid() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SRL_Sketch::set_has_problemid() {
+inline void SrlSketch::set_has_problemid() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void SRL_Sketch::clear_has_problemid() {
+inline void SrlSketch::clear_has_problemid() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void SRL_Sketch::clear_problemid() {
+inline void SrlSketch::clear_problemid() {
   problemid_ = GOOGLE_ULONGLONG(0);
   clear_has_problemid();
 }
-inline ::google::protobuf::uint64 SRL_Sketch::problemid() const {
+inline ::google::protobuf::uint64 SrlSketch::problemid() const {
   return problemid_;
 }
-inline void SRL_Sketch::set_problemid(::google::protobuf::uint64 value) {
+inline void SrlSketch::set_problemid(::google::protobuf::uint64 value) {
   set_has_problemid();
   problemid_ = value;
 }
 
 // optional string domainId = 4;
-inline bool SRL_Sketch::has_domainid() const {
+inline bool SrlSketch::has_domainid() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void SRL_Sketch::set_has_domainid() {
+inline void SrlSketch::set_has_domainid() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void SRL_Sketch::clear_has_domainid() {
+inline void SrlSketch::clear_has_domainid() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void SRL_Sketch::clear_domainid() {
+inline void SrlSketch::clear_domainid() {
   if (domainid_ != &::google::protobuf::internal::kEmptyString) {
     domainid_->clear();
   }
   clear_has_domainid();
 }
-inline const ::std::string& SRL_Sketch::domainid() const {
+inline const ::std::string& SrlSketch::domainid() const {
   return *domainid_;
 }
-inline void SRL_Sketch::set_domainid(const ::std::string& value) {
+inline void SrlSketch::set_domainid(const ::std::string& value) {
   set_has_domainid();
   if (domainid_ == &::google::protobuf::internal::kEmptyString) {
     domainid_ = new ::std::string;
   }
   domainid_->assign(value);
 }
-inline void SRL_Sketch::set_domainid(const char* value) {
+inline void SrlSketch::set_domainid(const char* value) {
   set_has_domainid();
   if (domainid_ == &::google::protobuf::internal::kEmptyString) {
     domainid_ = new ::std::string;
   }
   domainid_->assign(value);
 }
-inline void SRL_Sketch::set_domainid(const char* value, size_t size) {
+inline void SrlSketch::set_domainid(const char* value, size_t size) {
   set_has_domainid();
   if (domainid_ == &::google::protobuf::internal::kEmptyString) {
     domainid_ = new ::std::string;
   }
   domainid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Sketch::mutable_domainid() {
+inline ::std::string* SrlSketch::mutable_domainid() {
   set_has_domainid();
   if (domainid_ == &::google::protobuf::internal::kEmptyString) {
     domainid_ = new ::std::string;
   }
   return domainid_;
 }
-inline ::std::string* SRL_Sketch::release_domainid() {
+inline ::std::string* SrlSketch::release_domainid() {
   clear_has_domainid();
   if (domainid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -989,7 +989,7 @@ inline ::std::string* SRL_Sketch::release_domainid() {
     return temp;
   }
 }
-inline void SRL_Sketch::set_allocated_domainid(::std::string* domainid) {
+inline void SrlSketch::set_allocated_domainid(::std::string* domainid) {
   if (domainid_ != &::google::protobuf::internal::kEmptyString) {
     delete domainid_;
   }
@@ -1002,106 +1002,106 @@ inline void SRL_Sketch::set_allocated_domainid(::std::string* domainid) {
   }
 }
 
-// repeated .protobuf.srl.sketch.SRL_Object sketch = 5;
-inline int SRL_Sketch::sketch_size() const {
+// repeated .protobuf.srl.sketch.SrlObject sketch = 5;
+inline int SrlSketch::sketch_size() const {
   return sketch_.size();
 }
-inline void SRL_Sketch::clear_sketch() {
+inline void SrlSketch::clear_sketch() {
   sketch_.Clear();
 }
-inline const ::protobuf::srl::sketch::SRL_Object& SRL_Sketch::sketch(int index) const {
+inline const ::protobuf::srl::sketch::SrlObject& SrlSketch::sketch(int index) const {
   return sketch_.Get(index);
 }
-inline ::protobuf::srl::sketch::SRL_Object* SRL_Sketch::mutable_sketch(int index) {
+inline ::protobuf::srl::sketch::SrlObject* SrlSketch::mutable_sketch(int index) {
   return sketch_.Mutable(index);
 }
-inline ::protobuf::srl::sketch::SRL_Object* SRL_Sketch::add_sketch() {
+inline ::protobuf::srl::sketch::SrlObject* SrlSketch::add_sketch() {
   return sketch_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >&
-SRL_Sketch::sketch() const {
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >&
+SrlSketch::sketch() const {
   return sketch_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >*
-SRL_Sketch::mutable_sketch() {
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >*
+SrlSketch::mutable_sketch() {
   return &sketch_;
 }
 
 // -------------------------------------------------------------------
 
-// SRL_Object
+// SrlObject
 
-// required .protobuf.srl.sketch.SRL_Object.ObjectType type = 1;
-inline bool SRL_Object::has_type() const {
+// required .protobuf.srl.sketch.SrlObject.ObjectType type = 1;
+inline bool SrlObject::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SRL_Object::set_has_type() {
+inline void SrlObject::set_has_type() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SRL_Object::clear_has_type() {
+inline void SrlObject::clear_has_type() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SRL_Object::clear_type() {
+inline void SrlObject::clear_type() {
   type_ = 0;
   clear_has_type();
 }
-inline ::protobuf::srl::sketch::SRL_Object_ObjectType SRL_Object::type() const {
-  return static_cast< ::protobuf::srl::sketch::SRL_Object_ObjectType >(type_);
+inline ::protobuf::srl::sketch::SrlObject_ObjectType SrlObject::type() const {
+  return static_cast< ::protobuf::srl::sketch::SrlObject_ObjectType >(type_);
 }
-inline void SRL_Object::set_type(::protobuf::srl::sketch::SRL_Object_ObjectType value) {
-  assert(::protobuf::srl::sketch::SRL_Object_ObjectType_IsValid(value));
+inline void SrlObject::set_type(::protobuf::srl::sketch::SrlObject_ObjectType value) {
+  assert(::protobuf::srl::sketch::SrlObject_ObjectType_IsValid(value));
   set_has_type();
   type_ = value;
 }
 
 // required bytes object = 2;
-inline bool SRL_Object::has_object() const {
+inline bool SrlObject::has_object() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SRL_Object::set_has_object() {
+inline void SrlObject::set_has_object() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SRL_Object::clear_has_object() {
+inline void SrlObject::clear_has_object() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SRL_Object::clear_object() {
+inline void SrlObject::clear_object() {
   if (object_ != &::google::protobuf::internal::kEmptyString) {
     object_->clear();
   }
   clear_has_object();
 }
-inline const ::std::string& SRL_Object::object() const {
+inline const ::std::string& SrlObject::object() const {
   return *object_;
 }
-inline void SRL_Object::set_object(const ::std::string& value) {
+inline void SrlObject::set_object(const ::std::string& value) {
   set_has_object();
   if (object_ == &::google::protobuf::internal::kEmptyString) {
     object_ = new ::std::string;
   }
   object_->assign(value);
 }
-inline void SRL_Object::set_object(const char* value) {
+inline void SrlObject::set_object(const char* value) {
   set_has_object();
   if (object_ == &::google::protobuf::internal::kEmptyString) {
     object_ = new ::std::string;
   }
   object_->assign(value);
 }
-inline void SRL_Object::set_object(const void* value, size_t size) {
+inline void SrlObject::set_object(const void* value, size_t size) {
   set_has_object();
   if (object_ == &::google::protobuf::internal::kEmptyString) {
     object_ = new ::std::string;
   }
   object_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Object::mutable_object() {
+inline ::std::string* SrlObject::mutable_object() {
   set_has_object();
   if (object_ == &::google::protobuf::internal::kEmptyString) {
     object_ = new ::std::string;
   }
   return object_;
 }
-inline ::std::string* SRL_Object::release_object() {
+inline ::std::string* SrlObject::release_object() {
   clear_has_object();
   if (object_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1111,7 +1111,7 @@ inline ::std::string* SRL_Object::release_object() {
     return temp;
   }
 }
-inline void SRL_Object::set_allocated_object(::std::string* object) {
+inline void SrlObject::set_allocated_object(::std::string* object) {
   if (object_ != &::google::protobuf::internal::kEmptyString) {
     delete object_;
   }
@@ -1126,56 +1126,56 @@ inline void SRL_Object::set_allocated_object(::std::string* object) {
 
 // -------------------------------------------------------------------
 
-// SRL_Shape
+// SrlShape
 
 // required string id = 1;
-inline bool SRL_Shape::has_id() const {
+inline bool SrlShape::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SRL_Shape::set_has_id() {
+inline void SrlShape::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SRL_Shape::clear_has_id() {
+inline void SrlShape::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SRL_Shape::clear_id() {
+inline void SrlShape::clear_id() {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     id_->clear();
   }
   clear_has_id();
 }
-inline const ::std::string& SRL_Shape::id() const {
+inline const ::std::string& SrlShape::id() const {
   return *id_;
 }
-inline void SRL_Shape::set_id(const ::std::string& value) {
+inline void SrlShape::set_id(const ::std::string& value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(value);
 }
-inline void SRL_Shape::set_id(const char* value) {
+inline void SrlShape::set_id(const char* value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(value);
 }
-inline void SRL_Shape::set_id(const char* value, size_t size) {
+inline void SrlShape::set_id(const char* value, size_t size) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Shape::mutable_id() {
+inline ::std::string* SrlShape::mutable_id() {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   return id_;
 }
-inline ::std::string* SRL_Shape::release_id() {
+inline ::std::string* SrlShape::release_id() {
   clear_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1185,7 +1185,7 @@ inline ::std::string* SRL_Shape::release_id() {
     return temp;
   }
 }
-inline void SRL_Shape::set_allocated_id(::std::string* id) {
+inline void SrlShape::set_allocated_id(::std::string* id) {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     delete id_;
   }
@@ -1199,75 +1199,75 @@ inline void SRL_Shape::set_allocated_id(::std::string* id) {
 }
 
 // required uint64 time = 2;
-inline bool SRL_Shape::has_time() const {
+inline bool SrlShape::has_time() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SRL_Shape::set_has_time() {
+inline void SrlShape::set_has_time() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SRL_Shape::clear_has_time() {
+inline void SrlShape::clear_has_time() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SRL_Shape::clear_time() {
+inline void SrlShape::clear_time() {
   time_ = GOOGLE_ULONGLONG(0);
   clear_has_time();
 }
-inline ::google::protobuf::uint64 SRL_Shape::time() const {
+inline ::google::protobuf::uint64 SrlShape::time() const {
   return time_;
 }
-inline void SRL_Shape::set_time(::google::protobuf::uint64 value) {
+inline void SrlShape::set_time(::google::protobuf::uint64 value) {
   set_has_time();
   time_ = value;
 }
 
 // optional string name = 3;
-inline bool SRL_Shape::has_name() const {
+inline bool SrlShape::has_name() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SRL_Shape::set_has_name() {
+inline void SrlShape::set_has_name() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void SRL_Shape::clear_has_name() {
+inline void SrlShape::clear_has_name() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void SRL_Shape::clear_name() {
+inline void SrlShape::clear_name() {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
     name_->clear();
   }
   clear_has_name();
 }
-inline const ::std::string& SRL_Shape::name() const {
+inline const ::std::string& SrlShape::name() const {
   return *name_;
 }
-inline void SRL_Shape::set_name(const ::std::string& value) {
+inline void SrlShape::set_name(const ::std::string& value) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
-inline void SRL_Shape::set_name(const char* value) {
+inline void SrlShape::set_name(const char* value) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
-inline void SRL_Shape::set_name(const char* value, size_t size) {
+inline void SrlShape::set_name(const char* value, size_t size) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Shape::mutable_name() {
+inline ::std::string* SrlShape::mutable_name() {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   return name_;
 }
-inline ::std::string* SRL_Shape::release_name() {
+inline ::std::string* SrlShape::release_name() {
   clear_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1277,7 +1277,7 @@ inline ::std::string* SRL_Shape::release_name() {
     return temp;
   }
 }
-inline void SRL_Shape::set_allocated_name(::std::string* name) {
+inline void SrlShape::set_allocated_name(::std::string* name) {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
@@ -1291,129 +1291,129 @@ inline void SRL_Shape::set_allocated_name(::std::string* name) {
 }
 
 // optional bool isUserCreated = 4;
-inline bool SRL_Shape::has_isusercreated() const {
+inline bool SrlShape::has_isusercreated() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void SRL_Shape::set_has_isusercreated() {
+inline void SrlShape::set_has_isusercreated() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void SRL_Shape::clear_has_isusercreated() {
+inline void SrlShape::clear_has_isusercreated() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void SRL_Shape::clear_isusercreated() {
+inline void SrlShape::clear_isusercreated() {
   isusercreated_ = false;
   clear_has_isusercreated();
 }
-inline bool SRL_Shape::isusercreated() const {
+inline bool SrlShape::isusercreated() const {
   return isusercreated_;
 }
-inline void SRL_Shape::set_isusercreated(bool value) {
+inline void SrlShape::set_isusercreated(bool value) {
   set_has_isusercreated();
   isusercreated_ = value;
 }
 
 // repeated .protobuf.srl.sketch.Interpretation interpretations = 5;
-inline int SRL_Shape::interpretations_size() const {
+inline int SrlShape::interpretations_size() const {
   return interpretations_.size();
 }
-inline void SRL_Shape::clear_interpretations() {
+inline void SrlShape::clear_interpretations() {
   interpretations_.Clear();
 }
-inline const ::protobuf::srl::sketch::Interpretation& SRL_Shape::interpretations(int index) const {
+inline const ::protobuf::srl::sketch::Interpretation& SrlShape::interpretations(int index) const {
   return interpretations_.Get(index);
 }
-inline ::protobuf::srl::sketch::Interpretation* SRL_Shape::mutable_interpretations(int index) {
+inline ::protobuf::srl::sketch::Interpretation* SrlShape::mutable_interpretations(int index) {
   return interpretations_.Mutable(index);
 }
-inline ::protobuf::srl::sketch::Interpretation* SRL_Shape::add_interpretations() {
+inline ::protobuf::srl::sketch::Interpretation* SrlShape::add_interpretations() {
   return interpretations_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation >&
-SRL_Shape::interpretations() const {
+SrlShape::interpretations() const {
   return interpretations_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation >*
-SRL_Shape::mutable_interpretations() {
+SrlShape::mutable_interpretations() {
   return &interpretations_;
 }
 
-// repeated .protobuf.srl.sketch.SRL_Object subComponents = 6;
-inline int SRL_Shape::subcomponents_size() const {
+// repeated .protobuf.srl.sketch.SrlObject subComponents = 6;
+inline int SrlShape::subcomponents_size() const {
   return subcomponents_.size();
 }
-inline void SRL_Shape::clear_subcomponents() {
+inline void SrlShape::clear_subcomponents() {
   subcomponents_.Clear();
 }
-inline const ::protobuf::srl::sketch::SRL_Object& SRL_Shape::subcomponents(int index) const {
+inline const ::protobuf::srl::sketch::SrlObject& SrlShape::subcomponents(int index) const {
   return subcomponents_.Get(index);
 }
-inline ::protobuf::srl::sketch::SRL_Object* SRL_Shape::mutable_subcomponents(int index) {
+inline ::protobuf::srl::sketch::SrlObject* SrlShape::mutable_subcomponents(int index) {
   return subcomponents_.Mutable(index);
 }
-inline ::protobuf::srl::sketch::SRL_Object* SRL_Shape::add_subcomponents() {
+inline ::protobuf::srl::sketch::SrlObject* SrlShape::add_subcomponents() {
   return subcomponents_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >&
-SRL_Shape::subcomponents() const {
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >&
+SrlShape::subcomponents() const {
   return subcomponents_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Object >*
-SRL_Shape::mutable_subcomponents() {
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >*
+SrlShape::mutable_subcomponents() {
   return &subcomponents_;
 }
 
 // -------------------------------------------------------------------
 
-// SRL_Stroke
+// SrlStroke
 
 // required string id = 1;
-inline bool SRL_Stroke::has_id() const {
+inline bool SrlStroke::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SRL_Stroke::set_has_id() {
+inline void SrlStroke::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SRL_Stroke::clear_has_id() {
+inline void SrlStroke::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SRL_Stroke::clear_id() {
+inline void SrlStroke::clear_id() {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     id_->clear();
   }
   clear_has_id();
 }
-inline const ::std::string& SRL_Stroke::id() const {
+inline const ::std::string& SrlStroke::id() const {
   return *id_;
 }
-inline void SRL_Stroke::set_id(const ::std::string& value) {
+inline void SrlStroke::set_id(const ::std::string& value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(value);
 }
-inline void SRL_Stroke::set_id(const char* value) {
+inline void SrlStroke::set_id(const char* value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(value);
 }
-inline void SRL_Stroke::set_id(const char* value, size_t size) {
+inline void SrlStroke::set_id(const char* value, size_t size) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Stroke::mutable_id() {
+inline ::std::string* SrlStroke::mutable_id() {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   return id_;
 }
-inline ::std::string* SRL_Stroke::release_id() {
+inline ::std::string* SrlStroke::release_id() {
   clear_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1423,7 +1423,7 @@ inline ::std::string* SRL_Stroke::release_id() {
     return temp;
   }
 }
-inline void SRL_Stroke::set_allocated_id(::std::string* id) {
+inline void SrlStroke::set_allocated_id(::std::string* id) {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     delete id_;
   }
@@ -1437,75 +1437,75 @@ inline void SRL_Stroke::set_allocated_id(::std::string* id) {
 }
 
 // required uint64 time = 2;
-inline bool SRL_Stroke::has_time() const {
+inline bool SrlStroke::has_time() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SRL_Stroke::set_has_time() {
+inline void SrlStroke::set_has_time() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SRL_Stroke::clear_has_time() {
+inline void SrlStroke::clear_has_time() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SRL_Stroke::clear_time() {
+inline void SrlStroke::clear_time() {
   time_ = GOOGLE_ULONGLONG(0);
   clear_has_time();
 }
-inline ::google::protobuf::uint64 SRL_Stroke::time() const {
+inline ::google::protobuf::uint64 SrlStroke::time() const {
   return time_;
 }
-inline void SRL_Stroke::set_time(::google::protobuf::uint64 value) {
+inline void SrlStroke::set_time(::google::protobuf::uint64 value) {
   set_has_time();
   time_ = value;
 }
 
 // optional string name = 3;
-inline bool SRL_Stroke::has_name() const {
+inline bool SrlStroke::has_name() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SRL_Stroke::set_has_name() {
+inline void SrlStroke::set_has_name() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void SRL_Stroke::clear_has_name() {
+inline void SrlStroke::clear_has_name() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void SRL_Stroke::clear_name() {
+inline void SrlStroke::clear_name() {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
     name_->clear();
   }
   clear_has_name();
 }
-inline const ::std::string& SRL_Stroke::name() const {
+inline const ::std::string& SrlStroke::name() const {
   return *name_;
 }
-inline void SRL_Stroke::set_name(const ::std::string& value) {
+inline void SrlStroke::set_name(const ::std::string& value) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
-inline void SRL_Stroke::set_name(const char* value) {
+inline void SrlStroke::set_name(const char* value) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
-inline void SRL_Stroke::set_name(const char* value, size_t size) {
+inline void SrlStroke::set_name(const char* value, size_t size) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Stroke::mutable_name() {
+inline ::std::string* SrlStroke::mutable_name() {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   return name_;
 }
-inline ::std::string* SRL_Stroke::release_name() {
+inline ::std::string* SrlStroke::release_name() {
   clear_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1515,7 +1515,7 @@ inline ::std::string* SRL_Stroke::release_name() {
     return temp;
   }
 }
-inline void SRL_Stroke::set_allocated_name(::std::string* name) {
+inline void SrlStroke::set_allocated_name(::std::string* name) {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
@@ -1528,83 +1528,83 @@ inline void SRL_Stroke::set_allocated_name(::std::string* name) {
   }
 }
 
-// repeated .protobuf.srl.sketch.SRL_Point points = 4;
-inline int SRL_Stroke::points_size() const {
+// repeated .protobuf.srl.sketch.SrlPoint points = 4;
+inline int SrlStroke::points_size() const {
   return points_.size();
 }
-inline void SRL_Stroke::clear_points() {
+inline void SrlStroke::clear_points() {
   points_.Clear();
 }
-inline const ::protobuf::srl::sketch::SRL_Point& SRL_Stroke::points(int index) const {
+inline const ::protobuf::srl::sketch::SrlPoint& SrlStroke::points(int index) const {
   return points_.Get(index);
 }
-inline ::protobuf::srl::sketch::SRL_Point* SRL_Stroke::mutable_points(int index) {
+inline ::protobuf::srl::sketch::SrlPoint* SrlStroke::mutable_points(int index) {
   return points_.Mutable(index);
 }
-inline ::protobuf::srl::sketch::SRL_Point* SRL_Stroke::add_points() {
+inline ::protobuf::srl::sketch::SrlPoint* SrlStroke::add_points() {
   return points_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Point >&
-SRL_Stroke::points() const {
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint >&
+SrlStroke::points() const {
   return points_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SRL_Point >*
-SRL_Stroke::mutable_points() {
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint >*
+SrlStroke::mutable_points() {
   return &points_;
 }
 
 // -------------------------------------------------------------------
 
-// SRL_Point
+// SrlPoint
 
 // required string id = 1;
-inline bool SRL_Point::has_id() const {
+inline bool SrlPoint::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SRL_Point::set_has_id() {
+inline void SrlPoint::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SRL_Point::clear_has_id() {
+inline void SrlPoint::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SRL_Point::clear_id() {
+inline void SrlPoint::clear_id() {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     id_->clear();
   }
   clear_has_id();
 }
-inline const ::std::string& SRL_Point::id() const {
+inline const ::std::string& SrlPoint::id() const {
   return *id_;
 }
-inline void SRL_Point::set_id(const ::std::string& value) {
+inline void SrlPoint::set_id(const ::std::string& value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(value);
 }
-inline void SRL_Point::set_id(const char* value) {
+inline void SrlPoint::set_id(const char* value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(value);
 }
-inline void SRL_Point::set_id(const char* value, size_t size) {
+inline void SrlPoint::set_id(const char* value, size_t size) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Point::mutable_id() {
+inline ::std::string* SrlPoint::mutable_id() {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   return id_;
 }
-inline ::std::string* SRL_Point::release_id() {
+inline ::std::string* SrlPoint::release_id() {
   clear_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1614,7 +1614,7 @@ inline ::std::string* SRL_Point::release_id() {
     return temp;
   }
 }
-inline void SRL_Point::set_allocated_id(::std::string* id) {
+inline void SrlPoint::set_allocated_id(::std::string* id) {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     delete id_;
   }
@@ -1628,75 +1628,75 @@ inline void SRL_Point::set_allocated_id(::std::string* id) {
 }
 
 // required uint64 time = 2;
-inline bool SRL_Point::has_time() const {
+inline bool SrlPoint::has_time() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SRL_Point::set_has_time() {
+inline void SrlPoint::set_has_time() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SRL_Point::clear_has_time() {
+inline void SrlPoint::clear_has_time() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SRL_Point::clear_time() {
+inline void SrlPoint::clear_time() {
   time_ = GOOGLE_ULONGLONG(0);
   clear_has_time();
 }
-inline ::google::protobuf::uint64 SRL_Point::time() const {
+inline ::google::protobuf::uint64 SrlPoint::time() const {
   return time_;
 }
-inline void SRL_Point::set_time(::google::protobuf::uint64 value) {
+inline void SrlPoint::set_time(::google::protobuf::uint64 value) {
   set_has_time();
   time_ = value;
 }
 
 // optional string name = 3;
-inline bool SRL_Point::has_name() const {
+inline bool SrlPoint::has_name() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SRL_Point::set_has_name() {
+inline void SrlPoint::set_has_name() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void SRL_Point::clear_has_name() {
+inline void SrlPoint::clear_has_name() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void SRL_Point::clear_name() {
+inline void SrlPoint::clear_name() {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
     name_->clear();
   }
   clear_has_name();
 }
-inline const ::std::string& SRL_Point::name() const {
+inline const ::std::string& SrlPoint::name() const {
   return *name_;
 }
-inline void SRL_Point::set_name(const ::std::string& value) {
+inline void SrlPoint::set_name(const ::std::string& value) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
-inline void SRL_Point::set_name(const char* value) {
+inline void SrlPoint::set_name(const char* value) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
-inline void SRL_Point::set_name(const char* value, size_t size) {
+inline void SrlPoint::set_name(const char* value, size_t size) {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Point::mutable_name() {
+inline ::std::string* SrlPoint::mutable_name() {
   set_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     name_ = new ::std::string;
   }
   return name_;
 }
-inline ::std::string* SRL_Point::release_name() {
+inline ::std::string* SrlPoint::release_name() {
   clear_has_name();
   if (name_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1706,7 +1706,7 @@ inline ::std::string* SRL_Point::release_name() {
     return temp;
   }
 }
-inline void SRL_Point::set_allocated_name(::std::string* name) {
+inline void SrlPoint::set_allocated_name(::std::string* name) {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
@@ -1720,111 +1720,111 @@ inline void SRL_Point::set_allocated_name(::std::string* name) {
 }
 
 // required double x = 4;
-inline bool SRL_Point::has_x() const {
+inline bool SrlPoint::has_x() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void SRL_Point::set_has_x() {
+inline void SrlPoint::set_has_x() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void SRL_Point::clear_has_x() {
+inline void SrlPoint::clear_has_x() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void SRL_Point::clear_x() {
+inline void SrlPoint::clear_x() {
   x_ = 0;
   clear_has_x();
 }
-inline double SRL_Point::x() const {
+inline double SrlPoint::x() const {
   return x_;
 }
-inline void SRL_Point::set_x(double value) {
+inline void SrlPoint::set_x(double value) {
   set_has_x();
   x_ = value;
 }
 
 // required double y = 5;
-inline bool SRL_Point::has_y() const {
+inline bool SrlPoint::has_y() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void SRL_Point::set_has_y() {
+inline void SrlPoint::set_has_y() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void SRL_Point::clear_has_y() {
+inline void SrlPoint::clear_has_y() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void SRL_Point::clear_y() {
+inline void SrlPoint::clear_y() {
   y_ = 0;
   clear_has_y();
 }
-inline double SRL_Point::y() const {
+inline double SrlPoint::y() const {
   return y_;
 }
-inline void SRL_Point::set_y(double value) {
+inline void SrlPoint::set_y(double value) {
   set_has_y();
   y_ = value;
 }
 
 // optional double pressure = 6;
-inline bool SRL_Point::has_pressure() const {
+inline bool SrlPoint::has_pressure() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void SRL_Point::set_has_pressure() {
+inline void SrlPoint::set_has_pressure() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void SRL_Point::clear_has_pressure() {
+inline void SrlPoint::clear_has_pressure() {
   _has_bits_[0] &= ~0x00000020u;
 }
-inline void SRL_Point::clear_pressure() {
+inline void SrlPoint::clear_pressure() {
   pressure_ = 0;
   clear_has_pressure();
 }
-inline double SRL_Point::pressure() const {
+inline double SrlPoint::pressure() const {
   return pressure_;
 }
-inline void SRL_Point::set_pressure(double value) {
+inline void SrlPoint::set_pressure(double value) {
   set_has_pressure();
   pressure_ = value;
 }
 
 // optional double size = 7;
-inline bool SRL_Point::has_size() const {
+inline bool SrlPoint::has_size() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void SRL_Point::set_has_size() {
+inline void SrlPoint::set_has_size() {
   _has_bits_[0] |= 0x00000040u;
 }
-inline void SRL_Point::clear_has_size() {
+inline void SrlPoint::clear_has_size() {
   _has_bits_[0] &= ~0x00000040u;
 }
-inline void SRL_Point::clear_size() {
+inline void SrlPoint::clear_size() {
   size_ = 0;
   clear_has_size();
 }
-inline double SRL_Point::size() const {
+inline double SrlPoint::size() const {
   return size_;
 }
-inline void SRL_Point::set_size(double value) {
+inline void SrlPoint::set_size(double value) {
   set_has_size();
   size_ = value;
 }
 
 // optional double speed = 8;
-inline bool SRL_Point::has_speed() const {
+inline bool SrlPoint::has_speed() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
-inline void SRL_Point::set_has_speed() {
+inline void SrlPoint::set_has_speed() {
   _has_bits_[0] |= 0x00000080u;
 }
-inline void SRL_Point::clear_has_speed() {
+inline void SrlPoint::clear_has_speed() {
   _has_bits_[0] &= ~0x00000080u;
 }
-inline void SRL_Point::clear_speed() {
+inline void SrlPoint::clear_speed() {
   speed_ = 0;
   clear_has_speed();
 }
-inline double SRL_Point::speed() const {
+inline double SrlPoint::speed() const {
   return speed_;
 }
-inline void SRL_Point::set_speed(double value) {
+inline void SrlPoint::set_speed(double value) {
   set_has_speed();
   speed_ = value;
 }
@@ -1959,8 +1959,8 @@ namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::sketch::SRL_Object_ObjectType>() {
-  return ::protobuf::srl::sketch::SRL_Object_ObjectType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::sketch::SrlObject_ObjectType>() {
+  return ::protobuf::srl::sketch::SrlObject_ObjectType_descriptor();
 }
 
 }  // namespace google

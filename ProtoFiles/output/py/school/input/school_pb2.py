@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/school.proto',
   package='protobuf.srl.school',
-  serialized_pb='\n\x12input/school.proto\x12\x13protobuf.srl.school\"\xac\x01\n\nSRL_School\x12\x30\n\x07\x63ourses\x18\x01 \x03(\x0b\x32\x1f.protobuf.srl.school.SRL_Course\x12\x38\n\x0b\x61ssignments\x18\x02 \x03(\x0b\x32#.protobuf.srl.school.SRL_Assignment\x12\x32\n\x08problems\x18\x03 \x03(\x0b\x32 .protobuf.srl.school.SRL_Problem\"2\n\nSRL_Course\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\x12\n\ncourseName\x18\x02 \x01(\t\"P\n\x0eSRL_Assignment\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\x04\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\t\x12\x16\n\x0e\x61ssignmentName\x18\x03 \x01(\t\"\xdf\x01\n\x0bSRL_Problem\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\x04\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\x04\x12\x11\n\tproblemId\x18\x03 \x02(\t\x12\x13\n\x0bproblemName\x18\x04 \x01(\t\x12?\n\x0bmainProblem\x18\x05 \x01(\x0b\x32*.protobuf.srl.school.subproblemInformation\x12?\n\x0bsubProblems\x18\x06 \x03(\x0b\x32*.protobuf.srl.school.subproblemInformation\"\xe0\x01\n\x15subproblemInformation\x12\x14\n\x0cquestionText\x18\x01 \x01(\t\x12U\n\x0cquestionType\x18\x02 \x01(\x0e\x32\x37.protobuf.srl.school.subproblemInformation.QuestionType:\x06SKETCH\x12\x0f\n\x07options\x18\x03 \x01(\x0c\"I\n\x0cQuestionType\x12\n\n\x06SKETCH\x10\x01\x12\x0f\n\x0bMULT_CHOICE\x10\x02\x12\r\n\tFREE_RESP\x10\x03\x12\r\n\tCHECK_BOX\x10\x04')
+  serialized_pb='\n\x12input/school.proto\x12\x13protobuf.srl.school\"\xa8\x01\n\tSrlSchool\x12/\n\x07\x63ourses\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.school.SrlCourse\x12\x37\n\x0b\x61ssignments\x18\x02 \x03(\x0b\x32\".protobuf.srl.school.SrlAssignment\x12\x31\n\x08problems\x18\x03 \x03(\x0b\x32\x1f.protobuf.srl.school.SrlProblem\"1\n\tSrlCourse\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\x12\n\ncourseName\x18\x02 \x01(\t\"O\n\rSrlAssignment\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\x04\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\t\x12\x16\n\x0e\x61ssignmentName\x18\x03 \x01(\t\"\xde\x01\n\nSrlProblem\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\x04\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\x04\x12\x11\n\tproblemId\x18\x03 \x02(\t\x12\x13\n\x0bproblemName\x18\x04 \x01(\t\x12?\n\x0bmainProblem\x18\x05 \x01(\x0b\x32*.protobuf.srl.school.subproblemInformation\x12?\n\x0bsubProblems\x18\x06 \x03(\x0b\x32*.protobuf.srl.school.subproblemInformation\"\xe0\x01\n\x15subproblemInformation\x12\x14\n\x0cquestionText\x18\x01 \x01(\t\x12U\n\x0cquestionType\x18\x02 \x01(\x0e\x32\x37.protobuf.srl.school.subproblemInformation.QuestionType:\x06SKETCH\x12\x0f\n\x07options\x18\x03 \x01(\x0c\"I\n\x0cQuestionType\x12\n\n\x06SKETCH\x10\x01\x12\x0f\n\x0bMULT_CHOICE\x10\x02\x12\r\n\tFREE_RESP\x10\x03\x12\r\n\tCHECK_BOX\x10\x04')
 
 
 
@@ -42,34 +42,34 @@ _SUBPROBLEMINFORMATION_QUESTIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=730,
-  serialized_end=803,
+  serialized_start=723,
+  serialized_end=796,
 )
 
 
-_SRL_SCHOOL = _descriptor.Descriptor(
-  name='SRL_School',
-  full_name='protobuf.srl.school.SRL_School',
+_SRLSCHOOL = _descriptor.Descriptor(
+  name='SrlSchool',
+  full_name='protobuf.srl.school.SrlSchool',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='courses', full_name='protobuf.srl.school.SRL_School.courses', index=0,
+      name='courses', full_name='protobuf.srl.school.SrlSchool.courses', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='assignments', full_name='protobuf.srl.school.SRL_School.assignments', index=1,
+      name='assignments', full_name='protobuf.srl.school.SrlSchool.assignments', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='problems', full_name='protobuf.srl.school.SRL_School.problems', index=2,
+      name='problems', full_name='protobuf.srl.school.SrlSchool.problems', index=2,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -85,26 +85,26 @@ _SRL_SCHOOL = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=44,
-  serialized_end=216,
+  serialized_end=212,
 )
 
 
-_SRL_COURSE = _descriptor.Descriptor(
-  name='SRL_Course',
-  full_name='protobuf.srl.school.SRL_Course',
+_SRLCOURSE = _descriptor.Descriptor(
+  name='SrlCourse',
+  full_name='protobuf.srl.school.SrlCourse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='courseId', full_name='protobuf.srl.school.SRL_Course.courseId', index=0,
+      name='courseId', full_name='protobuf.srl.school.SrlCourse.courseId', index=0,
       number=1, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='courseName', full_name='protobuf.srl.school.SRL_Course.courseName', index=1,
+      name='courseName', full_name='protobuf.srl.school.SrlCourse.courseName', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
@@ -119,34 +119,34 @@ _SRL_COURSE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=218,
-  serialized_end=268,
+  serialized_start=214,
+  serialized_end=263,
 )
 
 
-_SRL_ASSIGNMENT = _descriptor.Descriptor(
-  name='SRL_Assignment',
-  full_name='protobuf.srl.school.SRL_Assignment',
+_SRLASSIGNMENT = _descriptor.Descriptor(
+  name='SrlAssignment',
+  full_name='protobuf.srl.school.SrlAssignment',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='courseId', full_name='protobuf.srl.school.SRL_Assignment.courseId', index=0,
+      name='courseId', full_name='protobuf.srl.school.SrlAssignment.courseId', index=0,
       number=1, type=4, cpp_type=4, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='assignmentId', full_name='protobuf.srl.school.SRL_Assignment.assignmentId', index=1,
+      name='assignmentId', full_name='protobuf.srl.school.SrlAssignment.assignmentId', index=1,
       number=2, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='assignmentName', full_name='protobuf.srl.school.SRL_Assignment.assignmentName', index=2,
+      name='assignmentName', full_name='protobuf.srl.school.SrlAssignment.assignmentName', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
@@ -161,55 +161,55 @@ _SRL_ASSIGNMENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=270,
-  serialized_end=350,
+  serialized_start=265,
+  serialized_end=344,
 )
 
 
-_SRL_PROBLEM = _descriptor.Descriptor(
-  name='SRL_Problem',
-  full_name='protobuf.srl.school.SRL_Problem',
+_SRLPROBLEM = _descriptor.Descriptor(
+  name='SrlProblem',
+  full_name='protobuf.srl.school.SrlProblem',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='courseId', full_name='protobuf.srl.school.SRL_Problem.courseId', index=0,
+      name='courseId', full_name='protobuf.srl.school.SrlProblem.courseId', index=0,
       number=1, type=4, cpp_type=4, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='assignmentId', full_name='protobuf.srl.school.SRL_Problem.assignmentId', index=1,
+      name='assignmentId', full_name='protobuf.srl.school.SrlProblem.assignmentId', index=1,
       number=2, type=4, cpp_type=4, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='problemId', full_name='protobuf.srl.school.SRL_Problem.problemId', index=2,
+      name='problemId', full_name='protobuf.srl.school.SrlProblem.problemId', index=2,
       number=3, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='problemName', full_name='protobuf.srl.school.SRL_Problem.problemName', index=3,
+      name='problemName', full_name='protobuf.srl.school.SrlProblem.problemName', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='mainProblem', full_name='protobuf.srl.school.SRL_Problem.mainProblem', index=4,
+      name='mainProblem', full_name='protobuf.srl.school.SrlProblem.mainProblem', index=4,
       number=5, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='subProblems', full_name='protobuf.srl.school.SRL_Problem.subProblems', index=5,
+      name='subProblems', full_name='protobuf.srl.school.SrlProblem.subProblems', index=5,
       number=6, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -224,8 +224,8 @@ _SRL_PROBLEM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=353,
-  serialized_end=576,
+  serialized_start=347,
+  serialized_end=569,
 )
 
 
@@ -267,46 +267,46 @@ _SUBPROBLEMINFORMATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=579,
-  serialized_end=803,
+  serialized_start=572,
+  serialized_end=796,
 )
 
-_SRL_SCHOOL.fields_by_name['courses'].message_type = _SRL_COURSE
-_SRL_SCHOOL.fields_by_name['assignments'].message_type = _SRL_ASSIGNMENT
-_SRL_SCHOOL.fields_by_name['problems'].message_type = _SRL_PROBLEM
-_SRL_PROBLEM.fields_by_name['mainProblem'].message_type = _SUBPROBLEMINFORMATION
-_SRL_PROBLEM.fields_by_name['subProblems'].message_type = _SUBPROBLEMINFORMATION
+_SRLSCHOOL.fields_by_name['courses'].message_type = _SRLCOURSE
+_SRLSCHOOL.fields_by_name['assignments'].message_type = _SRLASSIGNMENT
+_SRLSCHOOL.fields_by_name['problems'].message_type = _SRLPROBLEM
+_SRLPROBLEM.fields_by_name['mainProblem'].message_type = _SUBPROBLEMINFORMATION
+_SRLPROBLEM.fields_by_name['subProblems'].message_type = _SUBPROBLEMINFORMATION
 _SUBPROBLEMINFORMATION.fields_by_name['questionType'].enum_type = _SUBPROBLEMINFORMATION_QUESTIONTYPE
 _SUBPROBLEMINFORMATION_QUESTIONTYPE.containing_type = _SUBPROBLEMINFORMATION;
-DESCRIPTOR.message_types_by_name['SRL_School'] = _SRL_SCHOOL
-DESCRIPTOR.message_types_by_name['SRL_Course'] = _SRL_COURSE
-DESCRIPTOR.message_types_by_name['SRL_Assignment'] = _SRL_ASSIGNMENT
-DESCRIPTOR.message_types_by_name['SRL_Problem'] = _SRL_PROBLEM
+DESCRIPTOR.message_types_by_name['SrlSchool'] = _SRLSCHOOL
+DESCRIPTOR.message_types_by_name['SrlCourse'] = _SRLCOURSE
+DESCRIPTOR.message_types_by_name['SrlAssignment'] = _SRLASSIGNMENT
+DESCRIPTOR.message_types_by_name['SrlProblem'] = _SRLPROBLEM
 DESCRIPTOR.message_types_by_name['subproblemInformation'] = _SUBPROBLEMINFORMATION
 
-class SRL_School(_message.Message):
+class SrlSchool(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _SRL_SCHOOL
+  DESCRIPTOR = _SRLSCHOOL
 
-  # @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_School)
+  # @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlSchool)
 
-class SRL_Course(_message.Message):
+class SrlCourse(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _SRL_COURSE
+  DESCRIPTOR = _SRLCOURSE
 
-  # @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_Course)
+  # @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlCourse)
 
-class SRL_Assignment(_message.Message):
+class SrlAssignment(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _SRL_ASSIGNMENT
+  DESCRIPTOR = _SRLASSIGNMENT
 
-  # @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_Assignment)
+  # @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlAssignment)
 
-class SRL_Problem(_message.Message):
+class SrlProblem(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _SRL_PROBLEM
+  DESCRIPTOR = _SRLPROBLEM
 
-  # @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_Problem)
+  # @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlProblem)
 
 class subproblemInformation(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType

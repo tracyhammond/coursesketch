@@ -8,107 +8,107 @@ public final class School {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface SRL_SchoolOrBuilder
+  public interface SrlSchoolOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // repeated .protobuf.srl.school.SRL_Course courses = 1;
+    // repeated .protobuf.srl.school.SrlCourse courses = 1;
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
-    java.util.List<protobuf.srl.school.School.SRL_Course> 
+    java.util.List<protobuf.srl.school.School.SrlCourse> 
         getCoursesList();
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
-    protobuf.srl.school.School.SRL_Course getCourses(int index);
+    protobuf.srl.school.School.SrlCourse getCourses(int index);
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
     int getCoursesCount();
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
-    java.util.List<? extends protobuf.srl.school.School.SRL_CourseOrBuilder> 
+    java.util.List<? extends protobuf.srl.school.School.SrlCourseOrBuilder> 
         getCoursesOrBuilderList();
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
-    protobuf.srl.school.School.SRL_CourseOrBuilder getCoursesOrBuilder(
+    protobuf.srl.school.School.SrlCourseOrBuilder getCoursesOrBuilder(
         int index);
 
-    // repeated .protobuf.srl.school.SRL_Assignment assignments = 2;
+    // repeated .protobuf.srl.school.SrlAssignment assignments = 2;
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
-    java.util.List<protobuf.srl.school.School.SRL_Assignment> 
+    java.util.List<protobuf.srl.school.School.SrlAssignment> 
         getAssignmentsList();
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
-    protobuf.srl.school.School.SRL_Assignment getAssignments(int index);
+    protobuf.srl.school.School.SrlAssignment getAssignments(int index);
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
     int getAssignmentsCount();
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
-    java.util.List<? extends protobuf.srl.school.School.SRL_AssignmentOrBuilder> 
+    java.util.List<? extends protobuf.srl.school.School.SrlAssignmentOrBuilder> 
         getAssignmentsOrBuilderList();
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
-    protobuf.srl.school.School.SRL_AssignmentOrBuilder getAssignmentsOrBuilder(
+    protobuf.srl.school.School.SrlAssignmentOrBuilder getAssignmentsOrBuilder(
         int index);
 
-    // repeated .protobuf.srl.school.SRL_Problem problems = 3;
+    // repeated .protobuf.srl.school.SrlProblem problems = 3;
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
-    java.util.List<protobuf.srl.school.School.SRL_Problem> 
+    java.util.List<protobuf.srl.school.School.SrlProblem> 
         getProblemsList();
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
-    protobuf.srl.school.School.SRL_Problem getProblems(int index);
+    protobuf.srl.school.School.SrlProblem getProblems(int index);
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
     int getProblemsCount();
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
-    java.util.List<? extends protobuf.srl.school.School.SRL_ProblemOrBuilder> 
+    java.util.List<? extends protobuf.srl.school.School.SrlProblemOrBuilder> 
         getProblemsOrBuilderList();
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
-    protobuf.srl.school.School.SRL_ProblemOrBuilder getProblemsOrBuilder(
+    protobuf.srl.school.School.SrlProblemOrBuilder getProblemsOrBuilder(
         int index);
   }
   /**
-   * Protobuf type {@code protobuf.srl.school.SRL_School}
+   * Protobuf type {@code protobuf.srl.school.SrlSchool}
    *
    * <pre>
    * holds all data that is sent from server. (grades, roster, classes, assignments, problems
    * </pre>
    */
-  public static final class SRL_School extends
+  public static final class SrlSchool extends
       com.google.protobuf.GeneratedMessage
-      implements SRL_SchoolOrBuilder {
-    // Use SRL_School.newBuilder() to construct.
-    private SRL_School(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements SrlSchoolOrBuilder {
+    // Use SrlSchool.newBuilder() to construct.
+    private SrlSchool(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private SRL_School(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private SrlSchool(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final SRL_School defaultInstance;
-    public static SRL_School getDefaultInstance() {
+    private static final SrlSchool defaultInstance;
+    public static SrlSchool getDefaultInstance() {
       return defaultInstance;
     }
 
-    public SRL_School getDefaultInstanceForType() {
+    public SrlSchool getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -118,7 +118,7 @@ public final class School {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private SRL_School(
+    private SrlSchool(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -143,26 +143,26 @@ public final class School {
             }
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                courses_ = new java.util.ArrayList<protobuf.srl.school.School.SRL_Course>();
+                courses_ = new java.util.ArrayList<protobuf.srl.school.School.SrlCourse>();
                 mutable_bitField0_ |= 0x00000001;
               }
-              courses_.add(input.readMessage(protobuf.srl.school.School.SRL_Course.PARSER, extensionRegistry));
+              courses_.add(input.readMessage(protobuf.srl.school.School.SrlCourse.PARSER, extensionRegistry));
               break;
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                assignments_ = new java.util.ArrayList<protobuf.srl.school.School.SRL_Assignment>();
+                assignments_ = new java.util.ArrayList<protobuf.srl.school.School.SrlAssignment>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              assignments_.add(input.readMessage(protobuf.srl.school.School.SRL_Assignment.PARSER, extensionRegistry));
+              assignments_.add(input.readMessage(protobuf.srl.school.School.SrlAssignment.PARSER, extensionRegistry));
               break;
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                problems_ = new java.util.ArrayList<protobuf.srl.school.School.SRL_Problem>();
+                problems_ = new java.util.ArrayList<protobuf.srl.school.School.SrlProblem>();
                 mutable_bitField0_ |= 0x00000004;
               }
-              problems_.add(input.readMessage(protobuf.srl.school.School.SRL_Problem.PARSER, extensionRegistry));
+              problems_.add(input.readMessage(protobuf.srl.school.School.SrlProblem.PARSER, extensionRegistry));
               break;
             }
           }
@@ -188,135 +188,135 @@ public final class School {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_School_descriptor;
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchool_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_School_fieldAccessorTable
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchool_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.school.School.SRL_School.class, protobuf.srl.school.School.SRL_School.Builder.class);
+              protobuf.srl.school.School.SrlSchool.class, protobuf.srl.school.School.SrlSchool.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<SRL_School> PARSER =
-        new com.google.protobuf.AbstractParser<SRL_School>() {
-      public SRL_School parsePartialFrom(
+    public static com.google.protobuf.Parser<SrlSchool> PARSER =
+        new com.google.protobuf.AbstractParser<SrlSchool>() {
+      public SrlSchool parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SRL_School(input, extensionRegistry);
+        return new SrlSchool(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<SRL_School> getParserForType() {
+    public com.google.protobuf.Parser<SrlSchool> getParserForType() {
       return PARSER;
     }
 
-    // repeated .protobuf.srl.school.SRL_Course courses = 1;
+    // repeated .protobuf.srl.school.SrlCourse courses = 1;
     public static final int COURSES_FIELD_NUMBER = 1;
-    private java.util.List<protobuf.srl.school.School.SRL_Course> courses_;
+    private java.util.List<protobuf.srl.school.School.SrlCourse> courses_;
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
-    public java.util.List<protobuf.srl.school.School.SRL_Course> getCoursesList() {
+    public java.util.List<protobuf.srl.school.School.SrlCourse> getCoursesList() {
       return courses_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
-    public java.util.List<? extends protobuf.srl.school.School.SRL_CourseOrBuilder> 
+    public java.util.List<? extends protobuf.srl.school.School.SrlCourseOrBuilder> 
         getCoursesOrBuilderList() {
       return courses_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
     public int getCoursesCount() {
       return courses_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
-    public protobuf.srl.school.School.SRL_Course getCourses(int index) {
+    public protobuf.srl.school.School.SrlCourse getCourses(int index) {
       return courses_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+     * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
      */
-    public protobuf.srl.school.School.SRL_CourseOrBuilder getCoursesOrBuilder(
+    public protobuf.srl.school.School.SrlCourseOrBuilder getCoursesOrBuilder(
         int index) {
       return courses_.get(index);
     }
 
-    // repeated .protobuf.srl.school.SRL_Assignment assignments = 2;
+    // repeated .protobuf.srl.school.SrlAssignment assignments = 2;
     public static final int ASSIGNMENTS_FIELD_NUMBER = 2;
-    private java.util.List<protobuf.srl.school.School.SRL_Assignment> assignments_;
+    private java.util.List<protobuf.srl.school.School.SrlAssignment> assignments_;
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
-    public java.util.List<protobuf.srl.school.School.SRL_Assignment> getAssignmentsList() {
+    public java.util.List<protobuf.srl.school.School.SrlAssignment> getAssignmentsList() {
       return assignments_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
-    public java.util.List<? extends protobuf.srl.school.School.SRL_AssignmentOrBuilder> 
+    public java.util.List<? extends protobuf.srl.school.School.SrlAssignmentOrBuilder> 
         getAssignmentsOrBuilderList() {
       return assignments_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
     public int getAssignmentsCount() {
       return assignments_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
-    public protobuf.srl.school.School.SRL_Assignment getAssignments(int index) {
+    public protobuf.srl.school.School.SrlAssignment getAssignments(int index) {
       return assignments_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+     * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
      */
-    public protobuf.srl.school.School.SRL_AssignmentOrBuilder getAssignmentsOrBuilder(
+    public protobuf.srl.school.School.SrlAssignmentOrBuilder getAssignmentsOrBuilder(
         int index) {
       return assignments_.get(index);
     }
 
-    // repeated .protobuf.srl.school.SRL_Problem problems = 3;
+    // repeated .protobuf.srl.school.SrlProblem problems = 3;
     public static final int PROBLEMS_FIELD_NUMBER = 3;
-    private java.util.List<protobuf.srl.school.School.SRL_Problem> problems_;
+    private java.util.List<protobuf.srl.school.School.SrlProblem> problems_;
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
-    public java.util.List<protobuf.srl.school.School.SRL_Problem> getProblemsList() {
+    public java.util.List<protobuf.srl.school.School.SrlProblem> getProblemsList() {
       return problems_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
-    public java.util.List<? extends protobuf.srl.school.School.SRL_ProblemOrBuilder> 
+    public java.util.List<? extends protobuf.srl.school.School.SrlProblemOrBuilder> 
         getProblemsOrBuilderList() {
       return problems_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
     public int getProblemsCount() {
       return problems_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
-    public protobuf.srl.school.School.SRL_Problem getProblems(int index) {
+    public protobuf.srl.school.School.SrlProblem getProblems(int index) {
       return problems_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+     * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
      */
-    public protobuf.srl.school.School.SRL_ProblemOrBuilder getProblemsOrBuilder(
+    public protobuf.srl.school.School.SrlProblemOrBuilder getProblemsOrBuilder(
         int index) {
       return problems_.get(index);
     }
@@ -398,53 +398,53 @@ public final class School {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.school.School.SRL_School parseFrom(
+    public static protobuf.srl.school.School.SrlSchool parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.SRL_School parseFrom(
+    public static protobuf.srl.school.School.SrlSchool parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_School parseFrom(byte[] data)
+    public static protobuf.srl.school.School.SrlSchool parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.SRL_School parseFrom(
+    public static protobuf.srl.school.School.SrlSchool parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_School parseFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlSchool parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_School parseFrom(
+    public static protobuf.srl.school.School.SrlSchool parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_School parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlSchool parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_School parseDelimitedFrom(
+    public static protobuf.srl.school.School.SrlSchool parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_School parseFrom(
+    public static protobuf.srl.school.School.SrlSchool parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_School parseFrom(
+    public static protobuf.srl.school.School.SrlSchool parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -453,7 +453,7 @@ public final class School {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.school.School.SRL_School prototype) {
+    public static Builder newBuilder(protobuf.srl.school.School.SrlSchool prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -465,7 +465,7 @@ public final class School {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.school.SRL_School}
+     * Protobuf type {@code protobuf.srl.school.SrlSchool}
      *
      * <pre>
      * holds all data that is sent from server. (grades, roster, classes, assignments, problems
@@ -473,20 +473,20 @@ public final class School {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.school.School.SRL_SchoolOrBuilder {
+       implements protobuf.srl.school.School.SrlSchoolOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_School_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchool_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_School_fieldAccessorTable
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchool_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.school.School.SRL_School.class, protobuf.srl.school.School.SRL_School.Builder.class);
+                protobuf.srl.school.School.SrlSchool.class, protobuf.srl.school.School.SrlSchool.Builder.class);
       }
 
-      // Construct using protobuf.srl.school.School.SRL_School.newBuilder()
+      // Construct using protobuf.srl.school.School.SrlSchool.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -536,23 +536,23 @@ public final class School {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_School_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchool_descriptor;
       }
 
-      public protobuf.srl.school.School.SRL_School getDefaultInstanceForType() {
-        return protobuf.srl.school.School.SRL_School.getDefaultInstance();
+      public protobuf.srl.school.School.SrlSchool getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlSchool.getDefaultInstance();
       }
 
-      public protobuf.srl.school.School.SRL_School build() {
-        protobuf.srl.school.School.SRL_School result = buildPartial();
+      public protobuf.srl.school.School.SrlSchool build() {
+        protobuf.srl.school.School.SrlSchool result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.school.School.SRL_School buildPartial() {
-        protobuf.srl.school.School.SRL_School result = new protobuf.srl.school.School.SRL_School(this);
+      public protobuf.srl.school.School.SrlSchool buildPartial() {
+        protobuf.srl.school.School.SrlSchool result = new protobuf.srl.school.School.SrlSchool(this);
         int from_bitField0_ = bitField0_;
         if (coursesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -586,16 +586,16 @@ public final class School {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.school.School.SRL_School) {
-          return mergeFrom((protobuf.srl.school.School.SRL_School)other);
+        if (other instanceof protobuf.srl.school.School.SrlSchool) {
+          return mergeFrom((protobuf.srl.school.School.SrlSchool)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.school.School.SRL_School other) {
-        if (other == protobuf.srl.school.School.SRL_School.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.school.School.SrlSchool other) {
+        if (other == protobuf.srl.school.School.SrlSchool.getDefaultInstance()) return this;
         if (coursesBuilder_ == null) {
           if (!other.courses_.isEmpty()) {
             if (courses_.isEmpty()) {
@@ -704,11 +704,11 @@ public final class School {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.school.School.SRL_School parsedMessage = null;
+        protobuf.srl.school.School.SrlSchool parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.school.School.SRL_School) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.school.School.SrlSchool) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -719,23 +719,23 @@ public final class School {
       }
       private int bitField0_;
 
-      // repeated .protobuf.srl.school.SRL_Course courses = 1;
-      private java.util.List<protobuf.srl.school.School.SRL_Course> courses_ =
+      // repeated .protobuf.srl.school.SrlCourse courses = 1;
+      private java.util.List<protobuf.srl.school.School.SrlCourse> courses_ =
         java.util.Collections.emptyList();
       private void ensureCoursesIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          courses_ = new java.util.ArrayList<protobuf.srl.school.School.SRL_Course>(courses_);
+          courses_ = new java.util.ArrayList<protobuf.srl.school.School.SrlCourse>(courses_);
           bitField0_ |= 0x00000001;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SRL_Course, protobuf.srl.school.School.SRL_Course.Builder, protobuf.srl.school.School.SRL_CourseOrBuilder> coursesBuilder_;
+          protobuf.srl.school.School.SrlCourse, protobuf.srl.school.School.SrlCourse.Builder, protobuf.srl.school.School.SrlCourseOrBuilder> coursesBuilder_;
 
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
-      public java.util.List<protobuf.srl.school.School.SRL_Course> getCoursesList() {
+      public java.util.List<protobuf.srl.school.School.SrlCourse> getCoursesList() {
         if (coursesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(courses_);
         } else {
@@ -743,7 +743,7 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
       public int getCoursesCount() {
         if (coursesBuilder_ == null) {
@@ -753,9 +753,9 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
-      public protobuf.srl.school.School.SRL_Course getCourses(int index) {
+      public protobuf.srl.school.School.SrlCourse getCourses(int index) {
         if (coursesBuilder_ == null) {
           return courses_.get(index);
         } else {
@@ -763,10 +763,10 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
       public Builder setCourses(
-          int index, protobuf.srl.school.School.SRL_Course value) {
+          int index, protobuf.srl.school.School.SrlCourse value) {
         if (coursesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -780,10 +780,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
       public Builder setCourses(
-          int index, protobuf.srl.school.School.SRL_Course.Builder builderForValue) {
+          int index, protobuf.srl.school.School.SrlCourse.Builder builderForValue) {
         if (coursesBuilder_ == null) {
           ensureCoursesIsMutable();
           courses_.set(index, builderForValue.build());
@@ -794,9 +794,9 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
-      public Builder addCourses(protobuf.srl.school.School.SRL_Course value) {
+      public Builder addCourses(protobuf.srl.school.School.SrlCourse value) {
         if (coursesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -810,10 +810,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
       public Builder addCourses(
-          int index, protobuf.srl.school.School.SRL_Course value) {
+          int index, protobuf.srl.school.School.SrlCourse value) {
         if (coursesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -827,10 +827,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
       public Builder addCourses(
-          protobuf.srl.school.School.SRL_Course.Builder builderForValue) {
+          protobuf.srl.school.School.SrlCourse.Builder builderForValue) {
         if (coursesBuilder_ == null) {
           ensureCoursesIsMutable();
           courses_.add(builderForValue.build());
@@ -841,10 +841,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
       public Builder addCourses(
-          int index, protobuf.srl.school.School.SRL_Course.Builder builderForValue) {
+          int index, protobuf.srl.school.School.SrlCourse.Builder builderForValue) {
         if (coursesBuilder_ == null) {
           ensureCoursesIsMutable();
           courses_.add(index, builderForValue.build());
@@ -855,10 +855,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
       public Builder addAllCourses(
-          java.lang.Iterable<? extends protobuf.srl.school.School.SRL_Course> values) {
+          java.lang.Iterable<? extends protobuf.srl.school.School.SrlCourse> values) {
         if (coursesBuilder_ == null) {
           ensureCoursesIsMutable();
           super.addAll(values, courses_);
@@ -869,7 +869,7 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
       public Builder clearCourses() {
         if (coursesBuilder_ == null) {
@@ -882,7 +882,7 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
       public Builder removeCourses(int index) {
         if (coursesBuilder_ == null) {
@@ -895,16 +895,16 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
-      public protobuf.srl.school.School.SRL_Course.Builder getCoursesBuilder(
+      public protobuf.srl.school.School.SrlCourse.Builder getCoursesBuilder(
           int index) {
         return getCoursesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
-      public protobuf.srl.school.School.SRL_CourseOrBuilder getCoursesOrBuilder(
+      public protobuf.srl.school.School.SrlCourseOrBuilder getCoursesOrBuilder(
           int index) {
         if (coursesBuilder_ == null) {
           return courses_.get(index);  } else {
@@ -912,9 +912,9 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
-      public java.util.List<? extends protobuf.srl.school.School.SRL_CourseOrBuilder> 
+      public java.util.List<? extends protobuf.srl.school.School.SrlCourseOrBuilder> 
            getCoursesOrBuilderList() {
         if (coursesBuilder_ != null) {
           return coursesBuilder_.getMessageOrBuilderList();
@@ -923,33 +923,33 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
-      public protobuf.srl.school.School.SRL_Course.Builder addCoursesBuilder() {
+      public protobuf.srl.school.School.SrlCourse.Builder addCoursesBuilder() {
         return getCoursesFieldBuilder().addBuilder(
-            protobuf.srl.school.School.SRL_Course.getDefaultInstance());
+            protobuf.srl.school.School.SrlCourse.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
-      public protobuf.srl.school.School.SRL_Course.Builder addCoursesBuilder(
+      public protobuf.srl.school.School.SrlCourse.Builder addCoursesBuilder(
           int index) {
         return getCoursesFieldBuilder().addBuilder(
-            index, protobuf.srl.school.School.SRL_Course.getDefaultInstance());
+            index, protobuf.srl.school.School.SrlCourse.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Course courses = 1;</code>
+       * <code>repeated .protobuf.srl.school.SrlCourse courses = 1;</code>
        */
-      public java.util.List<protobuf.srl.school.School.SRL_Course.Builder> 
+      public java.util.List<protobuf.srl.school.School.SrlCourse.Builder> 
            getCoursesBuilderList() {
         return getCoursesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SRL_Course, protobuf.srl.school.School.SRL_Course.Builder, protobuf.srl.school.School.SRL_CourseOrBuilder> 
+          protobuf.srl.school.School.SrlCourse, protobuf.srl.school.School.SrlCourse.Builder, protobuf.srl.school.School.SrlCourseOrBuilder> 
           getCoursesFieldBuilder() {
         if (coursesBuilder_ == null) {
           coursesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.school.School.SRL_Course, protobuf.srl.school.School.SRL_Course.Builder, protobuf.srl.school.School.SRL_CourseOrBuilder>(
+              protobuf.srl.school.School.SrlCourse, protobuf.srl.school.School.SrlCourse.Builder, protobuf.srl.school.School.SrlCourseOrBuilder>(
                   courses_,
                   ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
@@ -959,23 +959,23 @@ public final class School {
         return coursesBuilder_;
       }
 
-      // repeated .protobuf.srl.school.SRL_Assignment assignments = 2;
-      private java.util.List<protobuf.srl.school.School.SRL_Assignment> assignments_ =
+      // repeated .protobuf.srl.school.SrlAssignment assignments = 2;
+      private java.util.List<protobuf.srl.school.School.SrlAssignment> assignments_ =
         java.util.Collections.emptyList();
       private void ensureAssignmentsIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          assignments_ = new java.util.ArrayList<protobuf.srl.school.School.SRL_Assignment>(assignments_);
+          assignments_ = new java.util.ArrayList<protobuf.srl.school.School.SrlAssignment>(assignments_);
           bitField0_ |= 0x00000002;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SRL_Assignment, protobuf.srl.school.School.SRL_Assignment.Builder, protobuf.srl.school.School.SRL_AssignmentOrBuilder> assignmentsBuilder_;
+          protobuf.srl.school.School.SrlAssignment, protobuf.srl.school.School.SrlAssignment.Builder, protobuf.srl.school.School.SrlAssignmentOrBuilder> assignmentsBuilder_;
 
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
-      public java.util.List<protobuf.srl.school.School.SRL_Assignment> getAssignmentsList() {
+      public java.util.List<protobuf.srl.school.School.SrlAssignment> getAssignmentsList() {
         if (assignmentsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(assignments_);
         } else {
@@ -983,7 +983,7 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
       public int getAssignmentsCount() {
         if (assignmentsBuilder_ == null) {
@@ -993,9 +993,9 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
-      public protobuf.srl.school.School.SRL_Assignment getAssignments(int index) {
+      public protobuf.srl.school.School.SrlAssignment getAssignments(int index) {
         if (assignmentsBuilder_ == null) {
           return assignments_.get(index);
         } else {
@@ -1003,10 +1003,10 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
       public Builder setAssignments(
-          int index, protobuf.srl.school.School.SRL_Assignment value) {
+          int index, protobuf.srl.school.School.SrlAssignment value) {
         if (assignmentsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1020,10 +1020,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
       public Builder setAssignments(
-          int index, protobuf.srl.school.School.SRL_Assignment.Builder builderForValue) {
+          int index, protobuf.srl.school.School.SrlAssignment.Builder builderForValue) {
         if (assignmentsBuilder_ == null) {
           ensureAssignmentsIsMutable();
           assignments_.set(index, builderForValue.build());
@@ -1034,9 +1034,9 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
-      public Builder addAssignments(protobuf.srl.school.School.SRL_Assignment value) {
+      public Builder addAssignments(protobuf.srl.school.School.SrlAssignment value) {
         if (assignmentsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1050,10 +1050,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
       public Builder addAssignments(
-          int index, protobuf.srl.school.School.SRL_Assignment value) {
+          int index, protobuf.srl.school.School.SrlAssignment value) {
         if (assignmentsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1067,10 +1067,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
       public Builder addAssignments(
-          protobuf.srl.school.School.SRL_Assignment.Builder builderForValue) {
+          protobuf.srl.school.School.SrlAssignment.Builder builderForValue) {
         if (assignmentsBuilder_ == null) {
           ensureAssignmentsIsMutable();
           assignments_.add(builderForValue.build());
@@ -1081,10 +1081,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
       public Builder addAssignments(
-          int index, protobuf.srl.school.School.SRL_Assignment.Builder builderForValue) {
+          int index, protobuf.srl.school.School.SrlAssignment.Builder builderForValue) {
         if (assignmentsBuilder_ == null) {
           ensureAssignmentsIsMutable();
           assignments_.add(index, builderForValue.build());
@@ -1095,10 +1095,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
       public Builder addAllAssignments(
-          java.lang.Iterable<? extends protobuf.srl.school.School.SRL_Assignment> values) {
+          java.lang.Iterable<? extends protobuf.srl.school.School.SrlAssignment> values) {
         if (assignmentsBuilder_ == null) {
           ensureAssignmentsIsMutable();
           super.addAll(values, assignments_);
@@ -1109,7 +1109,7 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
       public Builder clearAssignments() {
         if (assignmentsBuilder_ == null) {
@@ -1122,7 +1122,7 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
       public Builder removeAssignments(int index) {
         if (assignmentsBuilder_ == null) {
@@ -1135,16 +1135,16 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
-      public protobuf.srl.school.School.SRL_Assignment.Builder getAssignmentsBuilder(
+      public protobuf.srl.school.School.SrlAssignment.Builder getAssignmentsBuilder(
           int index) {
         return getAssignmentsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
-      public protobuf.srl.school.School.SRL_AssignmentOrBuilder getAssignmentsOrBuilder(
+      public protobuf.srl.school.School.SrlAssignmentOrBuilder getAssignmentsOrBuilder(
           int index) {
         if (assignmentsBuilder_ == null) {
           return assignments_.get(index);  } else {
@@ -1152,9 +1152,9 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
-      public java.util.List<? extends protobuf.srl.school.School.SRL_AssignmentOrBuilder> 
+      public java.util.List<? extends protobuf.srl.school.School.SrlAssignmentOrBuilder> 
            getAssignmentsOrBuilderList() {
         if (assignmentsBuilder_ != null) {
           return assignmentsBuilder_.getMessageOrBuilderList();
@@ -1163,33 +1163,33 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
-      public protobuf.srl.school.School.SRL_Assignment.Builder addAssignmentsBuilder() {
+      public protobuf.srl.school.School.SrlAssignment.Builder addAssignmentsBuilder() {
         return getAssignmentsFieldBuilder().addBuilder(
-            protobuf.srl.school.School.SRL_Assignment.getDefaultInstance());
+            protobuf.srl.school.School.SrlAssignment.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
-      public protobuf.srl.school.School.SRL_Assignment.Builder addAssignmentsBuilder(
+      public protobuf.srl.school.School.SrlAssignment.Builder addAssignmentsBuilder(
           int index) {
         return getAssignmentsFieldBuilder().addBuilder(
-            index, protobuf.srl.school.School.SRL_Assignment.getDefaultInstance());
+            index, protobuf.srl.school.School.SrlAssignment.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Assignment assignments = 2;</code>
+       * <code>repeated .protobuf.srl.school.SrlAssignment assignments = 2;</code>
        */
-      public java.util.List<protobuf.srl.school.School.SRL_Assignment.Builder> 
+      public java.util.List<protobuf.srl.school.School.SrlAssignment.Builder> 
            getAssignmentsBuilderList() {
         return getAssignmentsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SRL_Assignment, protobuf.srl.school.School.SRL_Assignment.Builder, protobuf.srl.school.School.SRL_AssignmentOrBuilder> 
+          protobuf.srl.school.School.SrlAssignment, protobuf.srl.school.School.SrlAssignment.Builder, protobuf.srl.school.School.SrlAssignmentOrBuilder> 
           getAssignmentsFieldBuilder() {
         if (assignmentsBuilder_ == null) {
           assignmentsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.school.School.SRL_Assignment, protobuf.srl.school.School.SRL_Assignment.Builder, protobuf.srl.school.School.SRL_AssignmentOrBuilder>(
+              protobuf.srl.school.School.SrlAssignment, protobuf.srl.school.School.SrlAssignment.Builder, protobuf.srl.school.School.SrlAssignmentOrBuilder>(
                   assignments_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
@@ -1199,23 +1199,23 @@ public final class School {
         return assignmentsBuilder_;
       }
 
-      // repeated .protobuf.srl.school.SRL_Problem problems = 3;
-      private java.util.List<protobuf.srl.school.School.SRL_Problem> problems_ =
+      // repeated .protobuf.srl.school.SrlProblem problems = 3;
+      private java.util.List<protobuf.srl.school.School.SrlProblem> problems_ =
         java.util.Collections.emptyList();
       private void ensureProblemsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          problems_ = new java.util.ArrayList<protobuf.srl.school.School.SRL_Problem>(problems_);
+          problems_ = new java.util.ArrayList<protobuf.srl.school.School.SrlProblem>(problems_);
           bitField0_ |= 0x00000004;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SRL_Problem, protobuf.srl.school.School.SRL_Problem.Builder, protobuf.srl.school.School.SRL_ProblemOrBuilder> problemsBuilder_;
+          protobuf.srl.school.School.SrlProblem, protobuf.srl.school.School.SrlProblem.Builder, protobuf.srl.school.School.SrlProblemOrBuilder> problemsBuilder_;
 
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
-      public java.util.List<protobuf.srl.school.School.SRL_Problem> getProblemsList() {
+      public java.util.List<protobuf.srl.school.School.SrlProblem> getProblemsList() {
         if (problemsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(problems_);
         } else {
@@ -1223,7 +1223,7 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
       public int getProblemsCount() {
         if (problemsBuilder_ == null) {
@@ -1233,9 +1233,9 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
-      public protobuf.srl.school.School.SRL_Problem getProblems(int index) {
+      public protobuf.srl.school.School.SrlProblem getProblems(int index) {
         if (problemsBuilder_ == null) {
           return problems_.get(index);
         } else {
@@ -1243,10 +1243,10 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
       public Builder setProblems(
-          int index, protobuf.srl.school.School.SRL_Problem value) {
+          int index, protobuf.srl.school.School.SrlProblem value) {
         if (problemsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1260,10 +1260,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
       public Builder setProblems(
-          int index, protobuf.srl.school.School.SRL_Problem.Builder builderForValue) {
+          int index, protobuf.srl.school.School.SrlProblem.Builder builderForValue) {
         if (problemsBuilder_ == null) {
           ensureProblemsIsMutable();
           problems_.set(index, builderForValue.build());
@@ -1274,9 +1274,9 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
-      public Builder addProblems(protobuf.srl.school.School.SRL_Problem value) {
+      public Builder addProblems(protobuf.srl.school.School.SrlProblem value) {
         if (problemsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1290,10 +1290,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
       public Builder addProblems(
-          int index, protobuf.srl.school.School.SRL_Problem value) {
+          int index, protobuf.srl.school.School.SrlProblem value) {
         if (problemsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1307,10 +1307,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
       public Builder addProblems(
-          protobuf.srl.school.School.SRL_Problem.Builder builderForValue) {
+          protobuf.srl.school.School.SrlProblem.Builder builderForValue) {
         if (problemsBuilder_ == null) {
           ensureProblemsIsMutable();
           problems_.add(builderForValue.build());
@@ -1321,10 +1321,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
       public Builder addProblems(
-          int index, protobuf.srl.school.School.SRL_Problem.Builder builderForValue) {
+          int index, protobuf.srl.school.School.SrlProblem.Builder builderForValue) {
         if (problemsBuilder_ == null) {
           ensureProblemsIsMutable();
           problems_.add(index, builderForValue.build());
@@ -1335,10 +1335,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
       public Builder addAllProblems(
-          java.lang.Iterable<? extends protobuf.srl.school.School.SRL_Problem> values) {
+          java.lang.Iterable<? extends protobuf.srl.school.School.SrlProblem> values) {
         if (problemsBuilder_ == null) {
           ensureProblemsIsMutable();
           super.addAll(values, problems_);
@@ -1349,7 +1349,7 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
       public Builder clearProblems() {
         if (problemsBuilder_ == null) {
@@ -1362,7 +1362,7 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
       public Builder removeProblems(int index) {
         if (problemsBuilder_ == null) {
@@ -1375,16 +1375,16 @@ public final class School {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
-      public protobuf.srl.school.School.SRL_Problem.Builder getProblemsBuilder(
+      public protobuf.srl.school.School.SrlProblem.Builder getProblemsBuilder(
           int index) {
         return getProblemsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
-      public protobuf.srl.school.School.SRL_ProblemOrBuilder getProblemsOrBuilder(
+      public protobuf.srl.school.School.SrlProblemOrBuilder getProblemsOrBuilder(
           int index) {
         if (problemsBuilder_ == null) {
           return problems_.get(index);  } else {
@@ -1392,9 +1392,9 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
-      public java.util.List<? extends protobuf.srl.school.School.SRL_ProblemOrBuilder> 
+      public java.util.List<? extends protobuf.srl.school.School.SrlProblemOrBuilder> 
            getProblemsOrBuilderList() {
         if (problemsBuilder_ != null) {
           return problemsBuilder_.getMessageOrBuilderList();
@@ -1403,33 +1403,33 @@ public final class School {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
-      public protobuf.srl.school.School.SRL_Problem.Builder addProblemsBuilder() {
+      public protobuf.srl.school.School.SrlProblem.Builder addProblemsBuilder() {
         return getProblemsFieldBuilder().addBuilder(
-            protobuf.srl.school.School.SRL_Problem.getDefaultInstance());
+            protobuf.srl.school.School.SrlProblem.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
-      public protobuf.srl.school.School.SRL_Problem.Builder addProblemsBuilder(
+      public protobuf.srl.school.School.SrlProblem.Builder addProblemsBuilder(
           int index) {
         return getProblemsFieldBuilder().addBuilder(
-            index, protobuf.srl.school.School.SRL_Problem.getDefaultInstance());
+            index, protobuf.srl.school.School.SrlProblem.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.school.SRL_Problem problems = 3;</code>
+       * <code>repeated .protobuf.srl.school.SrlProblem problems = 3;</code>
        */
-      public java.util.List<protobuf.srl.school.School.SRL_Problem.Builder> 
+      public java.util.List<protobuf.srl.school.School.SrlProblem.Builder> 
            getProblemsBuilderList() {
         return getProblemsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SRL_Problem, protobuf.srl.school.School.SRL_Problem.Builder, protobuf.srl.school.School.SRL_ProblemOrBuilder> 
+          protobuf.srl.school.School.SrlProblem, protobuf.srl.school.School.SrlProblem.Builder, protobuf.srl.school.School.SrlProblemOrBuilder> 
           getProblemsFieldBuilder() {
         if (problemsBuilder_ == null) {
           problemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.school.School.SRL_Problem, protobuf.srl.school.School.SRL_Problem.Builder, protobuf.srl.school.School.SRL_ProblemOrBuilder>(
+              protobuf.srl.school.School.SrlProblem, protobuf.srl.school.School.SrlProblem.Builder, protobuf.srl.school.School.SrlProblemOrBuilder>(
                   problems_,
                   ((bitField0_ & 0x00000004) == 0x00000004),
                   getParentForChildren(),
@@ -1439,18 +1439,18 @@ public final class School {
         return problemsBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SRL_School)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlSchool)
     }
 
     static {
-      defaultInstance = new SRL_School(true);
+      defaultInstance = new SrlSchool(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_School)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlSchool)
   }
 
-  public interface SRL_CourseOrBuilder
+  public interface SrlCourseOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required string courseId = 1;
@@ -1496,24 +1496,24 @@ public final class School {
         getCourseNameBytes();
   }
   /**
-   * Protobuf type {@code protobuf.srl.school.SRL_Course}
+   * Protobuf type {@code protobuf.srl.school.SrlCourse}
    */
-  public static final class SRL_Course extends
+  public static final class SrlCourse extends
       com.google.protobuf.GeneratedMessage
-      implements SRL_CourseOrBuilder {
-    // Use SRL_Course.newBuilder() to construct.
-    private SRL_Course(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements SrlCourseOrBuilder {
+    // Use SrlCourse.newBuilder() to construct.
+    private SrlCourse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private SRL_Course(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private SrlCourse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final SRL_Course defaultInstance;
-    public static SRL_Course getDefaultInstance() {
+    private static final SrlCourse defaultInstance;
+    public static SrlCourse getDefaultInstance() {
       return defaultInstance;
     }
 
-    public SRL_Course getDefaultInstanceForType() {
+    public SrlCourse getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -1523,7 +1523,7 @@ public final class School {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private SRL_Course(
+    private SrlCourse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1570,28 +1570,28 @@ public final class School {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Course_descriptor;
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlCourse_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Course_fieldAccessorTable
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlCourse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.school.School.SRL_Course.class, protobuf.srl.school.School.SRL_Course.Builder.class);
+              protobuf.srl.school.School.SrlCourse.class, protobuf.srl.school.School.SrlCourse.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<SRL_Course> PARSER =
-        new com.google.protobuf.AbstractParser<SRL_Course>() {
-      public SRL_Course parsePartialFrom(
+    public static com.google.protobuf.Parser<SrlCourse> PARSER =
+        new com.google.protobuf.AbstractParser<SrlCourse>() {
+      public SrlCourse parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SRL_Course(input, extensionRegistry);
+        return new SrlCourse(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<SRL_Course> getParserForType() {
+    public com.google.protobuf.Parser<SrlCourse> getParserForType() {
       return PARSER;
     }
 
@@ -1749,53 +1749,53 @@ public final class School {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.school.School.SRL_Course parseFrom(
+    public static protobuf.srl.school.School.SrlCourse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.SRL_Course parseFrom(
+    public static protobuf.srl.school.School.SrlCourse parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Course parseFrom(byte[] data)
+    public static protobuf.srl.school.School.SrlCourse parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.SRL_Course parseFrom(
+    public static protobuf.srl.school.School.SrlCourse parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Course parseFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlCourse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_Course parseFrom(
+    public static protobuf.srl.school.School.SrlCourse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Course parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlCourse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_Course parseDelimitedFrom(
+    public static protobuf.srl.school.School.SrlCourse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Course parseFrom(
+    public static protobuf.srl.school.School.SrlCourse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_Course parseFrom(
+    public static protobuf.srl.school.School.SrlCourse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1804,7 +1804,7 @@ public final class School {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.school.School.SRL_Course prototype) {
+    public static Builder newBuilder(protobuf.srl.school.School.SrlCourse prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -1816,24 +1816,24 @@ public final class School {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.school.SRL_Course}
+     * Protobuf type {@code protobuf.srl.school.SrlCourse}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.school.School.SRL_CourseOrBuilder {
+       implements protobuf.srl.school.School.SrlCourseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Course_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlCourse_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Course_fieldAccessorTable
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlCourse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.school.School.SRL_Course.class, protobuf.srl.school.School.SRL_Course.Builder.class);
+                protobuf.srl.school.School.SrlCourse.class, protobuf.srl.school.School.SrlCourse.Builder.class);
       }
 
-      // Construct using protobuf.srl.school.School.SRL_Course.newBuilder()
+      // Construct using protobuf.srl.school.School.SrlCourse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1866,23 +1866,23 @@ public final class School {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Course_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlCourse_descriptor;
       }
 
-      public protobuf.srl.school.School.SRL_Course getDefaultInstanceForType() {
-        return protobuf.srl.school.School.SRL_Course.getDefaultInstance();
+      public protobuf.srl.school.School.SrlCourse getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlCourse.getDefaultInstance();
       }
 
-      public protobuf.srl.school.School.SRL_Course build() {
-        protobuf.srl.school.School.SRL_Course result = buildPartial();
+      public protobuf.srl.school.School.SrlCourse build() {
+        protobuf.srl.school.School.SrlCourse result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.school.School.SRL_Course buildPartial() {
-        protobuf.srl.school.School.SRL_Course result = new protobuf.srl.school.School.SRL_Course(this);
+      public protobuf.srl.school.School.SrlCourse buildPartial() {
+        protobuf.srl.school.School.SrlCourse result = new protobuf.srl.school.School.SrlCourse(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1899,16 +1899,16 @@ public final class School {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.school.School.SRL_Course) {
-          return mergeFrom((protobuf.srl.school.School.SRL_Course)other);
+        if (other instanceof protobuf.srl.school.School.SrlCourse) {
+          return mergeFrom((protobuf.srl.school.School.SrlCourse)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.school.School.SRL_Course other) {
-        if (other == protobuf.srl.school.School.SRL_Course.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.school.School.SrlCourse other) {
+        if (other == protobuf.srl.school.School.SrlCourse.getDefaultInstance()) return this;
         if (other.hasCourseId()) {
           bitField0_ |= 0x00000001;
           courseId_ = other.courseId_;
@@ -1935,11 +1935,11 @@ public final class School {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.school.School.SRL_Course parsedMessage = null;
+        protobuf.srl.school.School.SrlCourse parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.school.School.SRL_Course) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.school.School.SrlCourse) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -2122,18 +2122,18 @@ public final class School {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SRL_Course)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlCourse)
     }
 
     static {
-      defaultInstance = new SRL_Course(true);
+      defaultInstance = new SrlCourse(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_Course)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlCourse)
   }
 
-  public interface SRL_AssignmentOrBuilder
+  public interface SrlAssignmentOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required uint64 courseId = 1;
@@ -2209,24 +2209,24 @@ public final class School {
         getAssignmentNameBytes();
   }
   /**
-   * Protobuf type {@code protobuf.srl.school.SRL_Assignment}
+   * Protobuf type {@code protobuf.srl.school.SrlAssignment}
    */
-  public static final class SRL_Assignment extends
+  public static final class SrlAssignment extends
       com.google.protobuf.GeneratedMessage
-      implements SRL_AssignmentOrBuilder {
-    // Use SRL_Assignment.newBuilder() to construct.
-    private SRL_Assignment(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements SrlAssignmentOrBuilder {
+    // Use SrlAssignment.newBuilder() to construct.
+    private SrlAssignment(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private SRL_Assignment(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private SrlAssignment(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final SRL_Assignment defaultInstance;
-    public static SRL_Assignment getDefaultInstance() {
+    private static final SrlAssignment defaultInstance;
+    public static SrlAssignment getDefaultInstance() {
       return defaultInstance;
     }
 
-    public SRL_Assignment getDefaultInstanceForType() {
+    public SrlAssignment getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -2236,7 +2236,7 @@ public final class School {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private SRL_Assignment(
+    private SrlAssignment(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -2288,28 +2288,28 @@ public final class School {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Assignment_descriptor;
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Assignment_fieldAccessorTable
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.school.School.SRL_Assignment.class, protobuf.srl.school.School.SRL_Assignment.Builder.class);
+              protobuf.srl.school.School.SrlAssignment.class, protobuf.srl.school.School.SrlAssignment.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<SRL_Assignment> PARSER =
-        new com.google.protobuf.AbstractParser<SRL_Assignment>() {
-      public SRL_Assignment parsePartialFrom(
+    public static com.google.protobuf.Parser<SrlAssignment> PARSER =
+        new com.google.protobuf.AbstractParser<SrlAssignment>() {
+      public SrlAssignment parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SRL_Assignment(input, extensionRegistry);
+        return new SrlAssignment(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<SRL_Assignment> getParserForType() {
+    public com.google.protobuf.Parser<SrlAssignment> getParserForType() {
       return PARSER;
     }
 
@@ -2515,53 +2515,53 @@ public final class School {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.school.School.SRL_Assignment parseFrom(
+    public static protobuf.srl.school.School.SrlAssignment parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.SRL_Assignment parseFrom(
+    public static protobuf.srl.school.School.SrlAssignment parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Assignment parseFrom(byte[] data)
+    public static protobuf.srl.school.School.SrlAssignment parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.SRL_Assignment parseFrom(
+    public static protobuf.srl.school.School.SrlAssignment parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Assignment parseFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlAssignment parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_Assignment parseFrom(
+    public static protobuf.srl.school.School.SrlAssignment parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Assignment parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlAssignment parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_Assignment parseDelimitedFrom(
+    public static protobuf.srl.school.School.SrlAssignment parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Assignment parseFrom(
+    public static protobuf.srl.school.School.SrlAssignment parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_Assignment parseFrom(
+    public static protobuf.srl.school.School.SrlAssignment parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2570,7 +2570,7 @@ public final class School {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.school.School.SRL_Assignment prototype) {
+    public static Builder newBuilder(protobuf.srl.school.School.SrlAssignment prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -2582,24 +2582,24 @@ public final class School {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.school.SRL_Assignment}
+     * Protobuf type {@code protobuf.srl.school.SrlAssignment}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.school.School.SRL_AssignmentOrBuilder {
+       implements protobuf.srl.school.School.SrlAssignmentOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Assignment_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Assignment_fieldAccessorTable
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.school.School.SRL_Assignment.class, protobuf.srl.school.School.SRL_Assignment.Builder.class);
+                protobuf.srl.school.School.SrlAssignment.class, protobuf.srl.school.School.SrlAssignment.Builder.class);
       }
 
-      // Construct using protobuf.srl.school.School.SRL_Assignment.newBuilder()
+      // Construct using protobuf.srl.school.School.SrlAssignment.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2634,23 +2634,23 @@ public final class School {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Assignment_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_descriptor;
       }
 
-      public protobuf.srl.school.School.SRL_Assignment getDefaultInstanceForType() {
-        return protobuf.srl.school.School.SRL_Assignment.getDefaultInstance();
+      public protobuf.srl.school.School.SrlAssignment getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlAssignment.getDefaultInstance();
       }
 
-      public protobuf.srl.school.School.SRL_Assignment build() {
-        protobuf.srl.school.School.SRL_Assignment result = buildPartial();
+      public protobuf.srl.school.School.SrlAssignment build() {
+        protobuf.srl.school.School.SrlAssignment result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.school.School.SRL_Assignment buildPartial() {
-        protobuf.srl.school.School.SRL_Assignment result = new protobuf.srl.school.School.SRL_Assignment(this);
+      public protobuf.srl.school.School.SrlAssignment buildPartial() {
+        protobuf.srl.school.School.SrlAssignment result = new protobuf.srl.school.School.SrlAssignment(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -2671,16 +2671,16 @@ public final class School {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.school.School.SRL_Assignment) {
-          return mergeFrom((protobuf.srl.school.School.SRL_Assignment)other);
+        if (other instanceof protobuf.srl.school.School.SrlAssignment) {
+          return mergeFrom((protobuf.srl.school.School.SrlAssignment)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.school.School.SRL_Assignment other) {
-        if (other == protobuf.srl.school.School.SRL_Assignment.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.school.School.SrlAssignment other) {
+        if (other == protobuf.srl.school.School.SrlAssignment.getDefaultInstance()) return this;
         if (other.hasCourseId()) {
           setCourseId(other.getCourseId());
         }
@@ -2714,11 +2714,11 @@ public final class School {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.school.School.SRL_Assignment parsedMessage = null;
+        protobuf.srl.school.School.SrlAssignment parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.school.School.SRL_Assignment) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.school.School.SrlAssignment) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -2974,18 +2974,18 @@ public final class School {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SRL_Assignment)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlAssignment)
     }
 
     static {
-      defaultInstance = new SRL_Assignment(true);
+      defaultInstance = new SrlAssignment(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_Assignment)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlAssignment)
   }
 
-  public interface SRL_ProblemOrBuilder
+  public interface SrlProblemOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required uint64 courseId = 1;
@@ -3126,24 +3126,24 @@ public final class School {
         int index);
   }
   /**
-   * Protobuf type {@code protobuf.srl.school.SRL_Problem}
+   * Protobuf type {@code protobuf.srl.school.SrlProblem}
    */
-  public static final class SRL_Problem extends
+  public static final class SrlProblem extends
       com.google.protobuf.GeneratedMessage
-      implements SRL_ProblemOrBuilder {
-    // Use SRL_Problem.newBuilder() to construct.
-    private SRL_Problem(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements SrlProblemOrBuilder {
+    // Use SrlProblem.newBuilder() to construct.
+    private SrlProblem(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private SRL_Problem(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private SrlProblem(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final SRL_Problem defaultInstance;
-    public static SRL_Problem getDefaultInstance() {
+    private static final SrlProblem defaultInstance;
+    public static SrlProblem getDefaultInstance() {
       return defaultInstance;
     }
 
-    public SRL_Problem getDefaultInstanceForType() {
+    public SrlProblem getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -3153,7 +3153,7 @@ public final class School {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private SRL_Problem(
+    private SrlProblem(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -3234,28 +3234,28 @@ public final class School {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Problem_descriptor;
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlProblem_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Problem_fieldAccessorTable
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlProblem_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.school.School.SRL_Problem.class, protobuf.srl.school.School.SRL_Problem.Builder.class);
+              protobuf.srl.school.School.SrlProblem.class, protobuf.srl.school.School.SrlProblem.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<SRL_Problem> PARSER =
-        new com.google.protobuf.AbstractParser<SRL_Problem>() {
-      public SRL_Problem parsePartialFrom(
+    public static com.google.protobuf.Parser<SrlProblem> PARSER =
+        new com.google.protobuf.AbstractParser<SrlProblem>() {
+      public SrlProblem parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SRL_Problem(input, extensionRegistry);
+        return new SrlProblem(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<SRL_Problem> getParserForType() {
+    public com.google.protobuf.Parser<SrlProblem> getParserForType() {
       return PARSER;
     }
 
@@ -3579,53 +3579,53 @@ public final class School {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.school.School.SRL_Problem parseFrom(
+    public static protobuf.srl.school.School.SrlProblem parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.SRL_Problem parseFrom(
+    public static protobuf.srl.school.School.SrlProblem parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Problem parseFrom(byte[] data)
+    public static protobuf.srl.school.School.SrlProblem parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.SRL_Problem parseFrom(
+    public static protobuf.srl.school.School.SrlProblem parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Problem parseFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlProblem parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_Problem parseFrom(
+    public static protobuf.srl.school.School.SrlProblem parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Problem parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlProblem parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_Problem parseDelimitedFrom(
+    public static protobuf.srl.school.School.SrlProblem parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.SRL_Problem parseFrom(
+    public static protobuf.srl.school.School.SrlProblem parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.SRL_Problem parseFrom(
+    public static protobuf.srl.school.School.SrlProblem parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3634,7 +3634,7 @@ public final class School {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.school.School.SRL_Problem prototype) {
+    public static Builder newBuilder(protobuf.srl.school.School.SrlProblem prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -3646,24 +3646,24 @@ public final class School {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.school.SRL_Problem}
+     * Protobuf type {@code protobuf.srl.school.SrlProblem}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.school.School.SRL_ProblemOrBuilder {
+       implements protobuf.srl.school.School.SrlProblemOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Problem_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlProblem_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Problem_fieldAccessorTable
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlProblem_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.school.School.SRL_Problem.class, protobuf.srl.school.School.SRL_Problem.Builder.class);
+                protobuf.srl.school.School.SrlProblem.class, protobuf.srl.school.School.SrlProblem.Builder.class);
       }
 
-      // Construct using protobuf.srl.school.School.SRL_Problem.newBuilder()
+      // Construct using protobuf.srl.school.School.SrlProblem.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3714,23 +3714,23 @@ public final class School {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SRL_Problem_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlProblem_descriptor;
       }
 
-      public protobuf.srl.school.School.SRL_Problem getDefaultInstanceForType() {
-        return protobuf.srl.school.School.SRL_Problem.getDefaultInstance();
+      public protobuf.srl.school.School.SrlProblem getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlProblem.getDefaultInstance();
       }
 
-      public protobuf.srl.school.School.SRL_Problem build() {
-        protobuf.srl.school.School.SRL_Problem result = buildPartial();
+      public protobuf.srl.school.School.SrlProblem build() {
+        protobuf.srl.school.School.SrlProblem result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.school.School.SRL_Problem buildPartial() {
-        protobuf.srl.school.School.SRL_Problem result = new protobuf.srl.school.School.SRL_Problem(this);
+      public protobuf.srl.school.School.SrlProblem buildPartial() {
+        protobuf.srl.school.School.SrlProblem result = new protobuf.srl.school.School.SrlProblem(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -3772,16 +3772,16 @@ public final class School {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.school.School.SRL_Problem) {
-          return mergeFrom((protobuf.srl.school.School.SRL_Problem)other);
+        if (other instanceof protobuf.srl.school.School.SrlProblem) {
+          return mergeFrom((protobuf.srl.school.School.SrlProblem)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.school.School.SRL_Problem other) {
-        if (other == protobuf.srl.school.School.SRL_Problem.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.school.School.SrlProblem other) {
+        if (other == protobuf.srl.school.School.SrlProblem.getDefaultInstance()) return this;
         if (other.hasCourseId()) {
           setCourseId(other.getCourseId());
         }
@@ -3851,11 +3851,11 @@ public final class School {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.school.School.SRL_Problem parsedMessage = null;
+        protobuf.srl.school.School.SrlProblem parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.school.School.SRL_Problem) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.school.School.SrlProblem) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4565,15 +4565,15 @@ public final class School {
         return subProblemsBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SRL_Problem)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlProblem)
     }
 
     static {
-      defaultInstance = new SRL_Problem(true);
+      defaultInstance = new SrlProblem(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_Problem)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlProblem)
   }
 
   public interface subproblemInformationOrBuilder
@@ -5322,25 +5322,25 @@ public final class School {
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_school_SRL_School_descriptor;
+    internal_static_protobuf_srl_school_SrlSchool_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_school_SRL_School_fieldAccessorTable;
+      internal_static_protobuf_srl_school_SrlSchool_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_school_SRL_Course_descriptor;
+    internal_static_protobuf_srl_school_SrlCourse_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_school_SRL_Course_fieldAccessorTable;
+      internal_static_protobuf_srl_school_SrlCourse_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_school_SRL_Assignment_descriptor;
+    internal_static_protobuf_srl_school_SrlAssignment_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_school_SRL_Assignment_fieldAccessorTable;
+      internal_static_protobuf_srl_school_SrlAssignment_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_school_SRL_Problem_descriptor;
+    internal_static_protobuf_srl_school_SrlProblem_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_school_SRL_Problem_fieldAccessorTable;
+      internal_static_protobuf_srl_school_SrlProblem_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_school_subproblemInformation_descriptor;
   private static
@@ -5356,55 +5356,54 @@ public final class School {
   static {
     java.lang.String[] descriptorData = {
       "\n\022input/school.proto\022\023protobuf.srl.schoo" +
-      "l\"\254\001\n\nSRL_School\0220\n\007courses\030\001 \003(\0132\037.prot" +
-      "obuf.srl.school.SRL_Course\0228\n\013assignment" +
-      "s\030\002 \003(\0132#.protobuf.srl.school.SRL_Assign" +
-      "ment\0222\n\010problems\030\003 \003(\0132 .protobuf.srl.sc" +
-      "hool.SRL_Problem\"2\n\nSRL_Course\022\020\n\010course" +
-      "Id\030\001 \002(\t\022\022\n\ncourseName\030\002 \001(\t\"P\n\016SRL_Assi" +
-      "gnment\022\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId" +
-      "\030\002 \002(\t\022\026\n\016assignmentName\030\003 \001(\t\"\337\001\n\013SRL_P" +
-      "roblem\022\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId",
-      "\030\002 \002(\004\022\021\n\tproblemId\030\003 \002(\t\022\023\n\013problemName" +
-      "\030\004 \001(\t\022?\n\013mainProblem\030\005 \001(\0132*.protobuf.s" +
-      "rl.school.subproblemInformation\022?\n\013subPr" +
-      "oblems\030\006 \003(\0132*.protobuf.srl.school.subpr" +
-      "oblemInformation\"\340\001\n\025subproblemInformati" +
-      "on\022\024\n\014questionText\030\001 \001(\t\022U\n\014questionType" +
-      "\030\002 \001(\01627.protobuf.srl.school.subproblemI" +
-      "nformation.QuestionType:\006SKETCH\022\017\n\007optio" +
-      "ns\030\003 \001(\014\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013" +
-      "MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BO",
-      "X\020\004"
+      "l\"\250\001\n\tSrlSchool\022/\n\007courses\030\001 \003(\0132\036.proto" +
+      "buf.srl.school.SrlCourse\0227\n\013assignments\030" +
+      "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen" +
+      "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo" +
+      "l.SrlProblem\"1\n\tSrlCourse\022\020\n\010courseId\030\001 " +
+      "\002(\t\022\022\n\ncourseName\030\002 \001(\t\"O\n\rSrlAssignment" +
+      "\022\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId\030\002 \002(\t" +
+      "\022\026\n\016assignmentName\030\003 \001(\t\"\336\001\n\nSrlProblem\022" +
+      "\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId\030\002 \002(\004\022",
+      "\021\n\tproblemId\030\003 \002(\t\022\023\n\013problemName\030\004 \001(\t\022" +
+      "?\n\013mainProblem\030\005 \001(\0132*.protobuf.srl.scho" +
+      "ol.subproblemInformation\022?\n\013subProblems\030" +
+      "\006 \003(\0132*.protobuf.srl.school.subproblemIn" +
+      "formation\"\340\001\n\025subproblemInformation\022\024\n\014q" +
+      "uestionText\030\001 \001(\t\022U\n\014questionType\030\002 \001(\0162" +
+      "7.protobuf.srl.school.subproblemInformat" +
+      "ion.QuestionType:\006SKETCH\022\017\n\007options\030\003 \001(" +
+      "\014\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MULT_CH" +
+      "OICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BOX\020\004"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_protobuf_srl_school_SRL_School_descriptor =
+          internal_static_protobuf_srl_school_SrlSchool_descriptor =
             getDescriptor().getMessageTypes().get(0);
-          internal_static_protobuf_srl_school_SRL_School_fieldAccessorTable = new
+          internal_static_protobuf_srl_school_SrlSchool_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_school_SRL_School_descriptor,
+              internal_static_protobuf_srl_school_SrlSchool_descriptor,
               new java.lang.String[] { "Courses", "Assignments", "Problems", });
-          internal_static_protobuf_srl_school_SRL_Course_descriptor =
+          internal_static_protobuf_srl_school_SrlCourse_descriptor =
             getDescriptor().getMessageTypes().get(1);
-          internal_static_protobuf_srl_school_SRL_Course_fieldAccessorTable = new
+          internal_static_protobuf_srl_school_SrlCourse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_school_SRL_Course_descriptor,
+              internal_static_protobuf_srl_school_SrlCourse_descriptor,
               new java.lang.String[] { "CourseId", "CourseName", });
-          internal_static_protobuf_srl_school_SRL_Assignment_descriptor =
+          internal_static_protobuf_srl_school_SrlAssignment_descriptor =
             getDescriptor().getMessageTypes().get(2);
-          internal_static_protobuf_srl_school_SRL_Assignment_fieldAccessorTable = new
+          internal_static_protobuf_srl_school_SrlAssignment_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_school_SRL_Assignment_descriptor,
+              internal_static_protobuf_srl_school_SrlAssignment_descriptor,
               new java.lang.String[] { "CourseId", "AssignmentId", "AssignmentName", });
-          internal_static_protobuf_srl_school_SRL_Problem_descriptor =
+          internal_static_protobuf_srl_school_SrlProblem_descriptor =
             getDescriptor().getMessageTypes().get(3);
-          internal_static_protobuf_srl_school_SRL_Problem_fieldAccessorTable = new
+          internal_static_protobuf_srl_school_SrlProblem_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_school_SRL_Problem_descriptor,
+              internal_static_protobuf_srl_school_SrlProblem_descriptor,
               new java.lang.String[] { "CourseId", "AssignmentId", "ProblemId", "ProblemName", "MainProblem", "SubProblems", });
           internal_static_protobuf_srl_school_subproblemInformation_descriptor =
             getDescriptor().getMessageTypes().get(4);

@@ -47,7 +47,7 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 		currentStroke.addPoint(currentPoint);
 		sketchContainer.addObject(currentStroke);
 		if (strokeCreationCallback)
-			strokeCreationCallback(); // sends back the sketch to be recognized
+			strokeCreationCallback(currentStroke); // Sends back the current stroke.
 		currentStroke = false;
 		currentPoint = false;
 	});

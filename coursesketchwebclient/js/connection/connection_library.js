@@ -4,7 +4,7 @@
  * With this connection you can send information which is encoded via protobufs.
  */
 function Connection(uri, encrypted) {
-	
+
 	var onOpen;
 	var onClose;
 	var onRequest;
@@ -34,7 +34,7 @@ function Connection(uri, encrypted) {
 			    	onError(evt,err);
 			    }
 				// decode with protobuff and pass object to client
-	
+
 			};
 			websocket.onerror = function(evt) {
 				if (onError)
@@ -43,7 +43,7 @@ function Connection(uri, encrypted) {
 		} catch(error) {
 			onError(null,error);
 		}
-		
+
 	}
 
 	/**
@@ -76,7 +76,7 @@ function Connection(uri, encrypted) {
 	this.setOnErrorListener = function(listener) {
 		onError = listener;
 	};
-	
+
 	/**
 	 * Given a Request object (message defined in proto), send it over the wire.
 	 *
@@ -138,7 +138,7 @@ function Connection(uri, encrypted) {
 				ProtoBuf = dcodeIO.ProtoBuf;
 			}
 			if (!builder) {
-				builder = ProtoBuf.protoFromFile("other/message.proto");
+				builder = ProtoBuf.protoFromFile(protobufDirectory + "message.proto");
 			}
 			if (!Request) {
 				var requestPackage = builder.build("protobuf").srl.request;
@@ -146,35 +146,73 @@ function Connection(uri, encrypted) {
 				LoginInformation = requestPackage.LoginInformation;
 			}
 			buildSchool();
-			buildSketch();
+			//buildSketch();
 			postFunction();
 		}
 
 		function buildSchool() {
-			var schoolBuilder = ProtoBuf.protoFromFile("other/school.proto");
-			if(!SRL_Course)
-				SRL_Course = schoolBuilder.build('SRL_Course');
-			if(!SRL_Assignment)
-				SRL_Assignment = schoolBuilder.build('SRL_Assignment');
-			if(!SRL_Problem)
-				SRL_Problem = schoolBuilder.build('SRL_Problem');
+			var builder = ProtoBuf.protoFromFile(protobufDirectory + "school.proto");
+			var schoolBuilder = builder.build("protobuf").srl.school;
+			if (!SrlCourse)
+				SrlCourse = schoolBuilder.SrlCourse;
+			if (!SrlAssignment)
+				SrlAssignment = schoolBuilder.SrlAssignment;
+			if (!SrlProblem)
+				SrlProblem = schoolBuilder.SrlProblem;
 		}
 
-		function buildSketch() {
-			var schoolBuilder = ProtoBuf.protoFromFile("other/sketch.proto");
-			if(!Proto_SRL_Sketch)
-				Proto_SRL_Sketch = schoolBuilder.build('SRL_Sketch');
-			if(!Proto_SRL_Object)
-				Proto_SRL_Object = schoolBuilder.build('SRL_Object');
-			if(!Proto_SRL_Point)
-				Proto_SRL_Point = schoolBuilder.build('SRL_Point');
-		}
 		load1();
 	}
 
 	if(!(filesLoaded && builder && ProtoBuf && Request)) {
 		new protobufSetup(createWebSocket.bind(this));
 	}
+
+	this.buildSketch = function() {
+		if (!sketchBuilder) {
+			var builder = ProtoBuf.protoFromFile(protobufDirectory + "sketch.proto");
+			sketchBuilder = builder.build("protobuf").srl.sketch;
+		}	
+
+		if (!ProtoSrlSketch)
+			ProtoSrlSketch = sketchBuilder.SrlSketch;
+		if (!ProtoSrlObject)
+			ProtoSrlObject = sketchBuilder.SrlObject;
+		if (!ProtoSrlShape)
+			ProtoSrlShape = sketchBuilder.SrlShape;
+		if (!ProtoSrlStroke)
+			ProtoSrlStroke = sketchBuilder.SrlStroke;
+		if (!ProtoSrlPoint)
+			ProtoSrlPoint = sketchBuilder.SrlPoint;
+	}
+
+	this.buildUpdateList = function() {
+		if (!ProtoUpdateCommand) {
+			var builder = ProtoBuf.protoFromFile(protobufDirectory + "commands.proto");
+			ProtoUpdateCommand = builder.build("protobuf").srl.commands;
+		}
+			
+		if (!ProtoSrlUpdate)
+			ProtoSrlUpdate = ProtoUpdateCommand.Update;
+		if (!ProtoSrlCommand)
+			ProtoSrlCommand = ProtoUpdateCommand.Command;
+		if (!ProtoSRLCommandType)
+			ProtoSRLCommandType = ProtoUpdateCommand.CommandType;
+	}
+
+	/**
+	 * Given a protobuf command object a request is created.
+	 */
+	this.createRequestFromCommand = function(command, requestType) {
+		var request = new Request();
+		request.requestType = requestType;
+		var update = new ProtoSrlUpdate();
+		update.commands = [];
+		update.commands.append(command);
+		
+		return request;
+	}
+
 }
 
 var filesLoaded = false;
@@ -182,26 +220,57 @@ var builder = false;
 var ProtoBuf = false;
 var Request = false;
 var LoginInformation = false;
-var SRL_Course = false;
-var SRL_Assignment = false;
-var SRL_Problem = false;
-var Proto_SRL_Sketch = false;
-var Proto_SRL_Object = false;
-var Proto_SRL_Stroke = false;
-var Proto_SRL_Point = false;
+
+/**
+ * school related protobufs.
+ */
+var SrlCourse = false;
+var SrlAssignment = false;
+var SrlProblem = false;
+
+/**
+ * Sketch related protobufs.
+ *
+ * (capitol P because they classes)
+ */
+var sketchBuilder = false;
+var ProtoSrlSketch = false;
+var ProtoSrlObject = false;
+var ProtoSrlShape = false;
+var ProtoSrlStroke = false;
+var ProtoSrlPoint = false;
+
+/**
+ * Update related protobufs.
+ *
+ * (capitol P because they classes)
+ */
+var ProtoUpdateCommand = false;
+var ProtoSrlUpdate = false;
+var ProtoSrlCommand = false;
+var ProtoSRLCommandType = false;
+
 const CONNECTION_LOST = 1006;
 const INCORRECT_LOGIN = 4002;
 const SERVER_FULL = 4001;
+const protobufDirectory = "other/protobuf/";
+/**
+ * copy global parameters
+ */
 function copyProtosFromParentProtos() {
 	filesLoaded = parent.filesLoaded;
 	builder = parent.builder;
 	ProtoBuf = parent.ProtoBuf;
 	Request = parent.Request;
 	LoginInformation = parent.LoginInformation;
-	SRL_Course = parent.SRL_Course;
-	SRL_Assignment = parent.SRL_Assignment;
-	SRL_Problem = parent.SRL_Problem;
-	Proto_SRL_Sketch = parent.Proto_SRL_Sketch;
-	Proto_SRL_Object = parent.Proto_SRL_Object;
-	Proto_SRL_Point = parent.Proto_SRL_Point;
+
+	SrlCourse = parent.SrlCourse;
+	SrlAssignment = parent.SrlAssignment;
+	SrlProblem = parent.SrlProblem;
+
+	ProtoSrlSketch = parent.ProtoSrlSketch;
+	ProtoSrlObject = parent.ProtoSrlObject;
+	ProtoSrlObject = parent.ProtoSrlShape;
+	ProtoSrlObject = parent.ProtoSrlStroke;
+	ProtoSrlPoint = parent.ProtoSrlPoint;
 }

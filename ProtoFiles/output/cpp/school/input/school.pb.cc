@@ -22,18 +22,18 @@ namespace school {
 
 namespace {
 
-const ::google::protobuf::Descriptor* SRL_School_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* SrlSchool_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  SRL_School_reflection_ = NULL;
-const ::google::protobuf::Descriptor* SRL_Course_descriptor_ = NULL;
+  SrlSchool_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SrlCourse_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  SRL_Course_reflection_ = NULL;
-const ::google::protobuf::Descriptor* SRL_Assignment_descriptor_ = NULL;
+  SrlCourse_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SrlAssignment_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  SRL_Assignment_reflection_ = NULL;
-const ::google::protobuf::Descriptor* SRL_Problem_descriptor_ = NULL;
+  SrlAssignment_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SrlProblem_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  SRL_Problem_reflection_ = NULL;
+  SrlProblem_reflection_ = NULL;
 const ::google::protobuf::Descriptor* subproblemInformation_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   subproblemInformation_reflection_ = NULL;
@@ -48,76 +48,76 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "input/school.proto");
   GOOGLE_CHECK(file != NULL);
-  SRL_School_descriptor_ = file->message_type(0);
-  static const int SRL_School_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_School, courses_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_School, assignments_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_School, problems_),
+  SrlSchool_descriptor_ = file->message_type(0);
+  static const int SrlSchool_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchool, courses_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchool, assignments_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchool, problems_),
   };
-  SRL_School_reflection_ =
+  SrlSchool_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      SRL_School_descriptor_,
-      SRL_School::default_instance_,
-      SRL_School_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_School, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_School, _unknown_fields_),
+      SrlSchool_descriptor_,
+      SrlSchool::default_instance_,
+      SrlSchool_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchool, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchool, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(SRL_School));
-  SRL_Course_descriptor_ = file->message_type(1);
-  static const int SRL_Course_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Course, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Course, coursename_),
+      sizeof(SrlSchool));
+  SrlCourse_descriptor_ = file->message_type(1);
+  static const int SrlCourse_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, courseid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, coursename_),
   };
-  SRL_Course_reflection_ =
+  SrlCourse_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      SRL_Course_descriptor_,
-      SRL_Course::default_instance_,
-      SRL_Course_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Course, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Course, _unknown_fields_),
+      SrlCourse_descriptor_,
+      SrlCourse::default_instance_,
+      SrlCourse_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(SRL_Course));
-  SRL_Assignment_descriptor_ = file->message_type(2);
-  static const int SRL_Assignment_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Assignment, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Assignment, assignmentid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Assignment, assignmentname_),
+      sizeof(SrlCourse));
+  SrlAssignment_descriptor_ = file->message_type(2);
+  static const int SrlAssignment_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, courseid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, assignmentid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, assignmentname_),
   };
-  SRL_Assignment_reflection_ =
+  SrlAssignment_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      SRL_Assignment_descriptor_,
-      SRL_Assignment::default_instance_,
-      SRL_Assignment_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Assignment, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Assignment, _unknown_fields_),
+      SrlAssignment_descriptor_,
+      SrlAssignment::default_instance_,
+      SrlAssignment_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(SRL_Assignment));
-  SRL_Problem_descriptor_ = file->message_type(3);
-  static const int SRL_Problem_offsets_[6] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Problem, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Problem, assignmentid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Problem, problemid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Problem, problemname_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Problem, mainproblem_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Problem, subproblems_),
+      sizeof(SrlAssignment));
+  SrlProblem_descriptor_ = file->message_type(3);
+  static const int SrlProblem_offsets_[6] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, courseid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, assignmentid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, problemid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, problemname_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, mainproblem_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, subproblems_),
   };
-  SRL_Problem_reflection_ =
+  SrlProblem_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      SRL_Problem_descriptor_,
-      SRL_Problem::default_instance_,
-      SRL_Problem_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Problem, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SRL_Problem, _unknown_fields_),
+      SrlProblem_descriptor_,
+      SrlProblem::default_instance_,
+      SrlProblem_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(SRL_Problem));
+      sizeof(SrlProblem));
   subproblemInformation_descriptor_ = file->message_type(4);
   static const int subproblemInformation_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(subproblemInformation, questiontext_),
@@ -149,13 +149,13 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    SRL_School_descriptor_, &SRL_School::default_instance());
+    SrlSchool_descriptor_, &SrlSchool::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    SRL_Course_descriptor_, &SRL_Course::default_instance());
+    SrlCourse_descriptor_, &SrlCourse::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    SRL_Assignment_descriptor_, &SRL_Assignment::default_instance());
+    SrlAssignment_descriptor_, &SrlAssignment::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    SRL_Problem_descriptor_, &SRL_Problem::default_instance());
+    SrlProblem_descriptor_, &SrlProblem::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     subproblemInformation_descriptor_, &subproblemInformation::default_instance());
 }
@@ -163,14 +163,14 @@ void protobuf_RegisterTypes(const ::std::string&) {
 }  // namespace
 
 void protobuf_ShutdownFile_input_2fschool_2eproto() {
-  delete SRL_School::default_instance_;
-  delete SRL_School_reflection_;
-  delete SRL_Course::default_instance_;
-  delete SRL_Course_reflection_;
-  delete SRL_Assignment::default_instance_;
-  delete SRL_Assignment_reflection_;
-  delete SRL_Problem::default_instance_;
-  delete SRL_Problem_reflection_;
+  delete SrlSchool::default_instance_;
+  delete SrlSchool_reflection_;
+  delete SrlCourse::default_instance_;
+  delete SrlCourse_reflection_;
+  delete SrlAssignment::default_instance_;
+  delete SrlAssignment_reflection_;
+  delete SrlProblem::default_instance_;
+  delete SrlProblem_reflection_;
   delete subproblemInformation::default_instance_;
   delete subproblemInformation_reflection_;
 }
@@ -183,37 +183,36 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\022input/school.proto\022\023protobuf.srl.schoo"
-    "l\"\254\001\n\nSRL_School\0220\n\007courses\030\001 \003(\0132\037.prot"
-    "obuf.srl.school.SRL_Course\0228\n\013assignment"
-    "s\030\002 \003(\0132#.protobuf.srl.school.SRL_Assign"
-    "ment\0222\n\010problems\030\003 \003(\0132 .protobuf.srl.sc"
-    "hool.SRL_Problem\"2\n\nSRL_Course\022\020\n\010course"
-    "Id\030\001 \002(\t\022\022\n\ncourseName\030\002 \001(\t\"P\n\016SRL_Assi"
-    "gnment\022\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId"
-    "\030\002 \002(\t\022\026\n\016assignmentName\030\003 \001(\t\"\337\001\n\013SRL_P"
-    "roblem\022\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId"
-    "\030\002 \002(\004\022\021\n\tproblemId\030\003 \002(\t\022\023\n\013problemName"
-    "\030\004 \001(\t\022\?\n\013mainProblem\030\005 \001(\0132*.protobuf.s"
-    "rl.school.subproblemInformation\022\?\n\013subPr"
-    "oblems\030\006 \003(\0132*.protobuf.srl.school.subpr"
-    "oblemInformation\"\340\001\n\025subproblemInformati"
-    "on\022\024\n\014questionText\030\001 \001(\t\022U\n\014questionType"
-    "\030\002 \001(\01627.protobuf.srl.school.subproblemI"
-    "nformation.QuestionType:\006SKETCH\022\017\n\007optio"
-    "ns\030\003 \001(\014\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013"
-    "MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BO"
-    "X\020\004", 803);
+    "l\"\250\001\n\tSrlSchool\022/\n\007courses\030\001 \003(\0132\036.proto"
+    "buf.srl.school.SrlCourse\0227\n\013assignments\030"
+    "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen"
+    "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo"
+    "l.SrlProblem\"1\n\tSrlCourse\022\020\n\010courseId\030\001 "
+    "\002(\t\022\022\n\ncourseName\030\002 \001(\t\"O\n\rSrlAssignment"
+    "\022\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId\030\002 \002(\t"
+    "\022\026\n\016assignmentName\030\003 \001(\t\"\336\001\n\nSrlProblem\022"
+    "\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId\030\002 \002(\004\022"
+    "\021\n\tproblemId\030\003 \002(\t\022\023\n\013problemName\030\004 \001(\t\022"
+    "\?\n\013mainProblem\030\005 \001(\0132*.protobuf.srl.scho"
+    "ol.subproblemInformation\022\?\n\013subProblems\030"
+    "\006 \003(\0132*.protobuf.srl.school.subproblemIn"
+    "formation\"\340\001\n\025subproblemInformation\022\024\n\014q"
+    "uestionText\030\001 \001(\t\022U\n\014questionType\030\002 \001(\0162"
+    "7.protobuf.srl.school.subproblemInformat"
+    "ion.QuestionType:\006SKETCH\022\017\n\007options\030\003 \001("
+    "\014\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MULT_CH"
+    "OICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BOX\020\004", 796);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/school.proto", &protobuf_RegisterTypes);
-  SRL_School::default_instance_ = new SRL_School();
-  SRL_Course::default_instance_ = new SRL_Course();
-  SRL_Assignment::default_instance_ = new SRL_Assignment();
-  SRL_Problem::default_instance_ = new SRL_Problem();
+  SrlSchool::default_instance_ = new SrlSchool();
+  SrlCourse::default_instance_ = new SrlCourse();
+  SrlAssignment::default_instance_ = new SrlAssignment();
+  SrlProblem::default_instance_ = new SrlProblem();
   subproblemInformation::default_instance_ = new subproblemInformation();
-  SRL_School::default_instance_->InitAsDefaultInstance();
-  SRL_Course::default_instance_->InitAsDefaultInstance();
-  SRL_Assignment::default_instance_->InitAsDefaultInstance();
-  SRL_Problem::default_instance_->InitAsDefaultInstance();
+  SrlSchool::default_instance_->InitAsDefaultInstance();
+  SrlCourse::default_instance_->InitAsDefaultInstance();
+  SrlAssignment::default_instance_->InitAsDefaultInstance();
+  SrlProblem::default_instance_->InitAsDefaultInstance();
   subproblemInformation::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_input_2fschool_2eproto);
 }
@@ -228,61 +227,61 @@ struct StaticDescriptorInitializer_input_2fschool_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int SRL_School::kCoursesFieldNumber;
-const int SRL_School::kAssignmentsFieldNumber;
-const int SRL_School::kProblemsFieldNumber;
+const int SrlSchool::kCoursesFieldNumber;
+const int SrlSchool::kAssignmentsFieldNumber;
+const int SrlSchool::kProblemsFieldNumber;
 #endif  // !_MSC_VER
 
-SRL_School::SRL_School()
+SrlSchool::SrlSchool()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void SRL_School::InitAsDefaultInstance() {
+void SrlSchool::InitAsDefaultInstance() {
 }
 
-SRL_School::SRL_School(const SRL_School& from)
+SrlSchool::SrlSchool(const SrlSchool& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void SRL_School::SharedCtor() {
+void SrlSchool::SharedCtor() {
   _cached_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-SRL_School::~SRL_School() {
+SrlSchool::~SrlSchool() {
   SharedDtor();
 }
 
-void SRL_School::SharedDtor() {
+void SrlSchool::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void SRL_School::SetCachedSize(int size) const {
+void SrlSchool::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* SRL_School::descriptor() {
+const ::google::protobuf::Descriptor* SrlSchool::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return SRL_School_descriptor_;
+  return SrlSchool_descriptor_;
 }
 
-const SRL_School& SRL_School::default_instance() {
+const SrlSchool& SrlSchool::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_input_2fschool_2eproto();
   return *default_instance_;
 }
 
-SRL_School* SRL_School::default_instance_ = NULL;
+SrlSchool* SrlSchool::default_instance_ = NULL;
 
-SRL_School* SRL_School::New() const {
-  return new SRL_School;
+SrlSchool* SrlSchool::New() const {
+  return new SrlSchool;
 }
 
-void SRL_School::Clear() {
+void SrlSchool::Clear() {
   courses_.Clear();
   assignments_.Clear();
   problems_.Clear();
@@ -290,13 +289,13 @@ void SRL_School::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool SRL_School::MergePartialFromCodedStream(
+bool SrlSchool::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .protobuf.srl.school.SRL_Course courses = 1;
+      // repeated .protobuf.srl.school.SrlCourse courses = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -311,7 +310,7 @@ bool SRL_School::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .protobuf.srl.school.SRL_Assignment assignments = 2;
+      // repeated .protobuf.srl.school.SrlAssignment assignments = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -326,7 +325,7 @@ bool SRL_School::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .protobuf.srl.school.SRL_Problem problems = 3;
+      // repeated .protobuf.srl.school.SrlProblem problems = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -357,21 +356,21 @@ bool SRL_School::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void SRL_School::SerializeWithCachedSizes(
+void SrlSchool::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .protobuf.srl.school.SRL_Course courses = 1;
+  // repeated .protobuf.srl.school.SrlCourse courses = 1;
   for (int i = 0; i < this->courses_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->courses(i), output);
   }
 
-  // repeated .protobuf.srl.school.SRL_Assignment assignments = 2;
+  // repeated .protobuf.srl.school.SrlAssignment assignments = 2;
   for (int i = 0; i < this->assignments_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->assignments(i), output);
   }
 
-  // repeated .protobuf.srl.school.SRL_Problem problems = 3;
+  // repeated .protobuf.srl.school.SrlProblem problems = 3;
   for (int i = 0; i < this->problems_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->problems(i), output);
@@ -383,23 +382,23 @@ void SRL_School::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* SRL_School::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* SrlSchool::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .protobuf.srl.school.SRL_Course courses = 1;
+  // repeated .protobuf.srl.school.SrlCourse courses = 1;
   for (int i = 0; i < this->courses_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->courses(i), target);
   }
 
-  // repeated .protobuf.srl.school.SRL_Assignment assignments = 2;
+  // repeated .protobuf.srl.school.SrlAssignment assignments = 2;
   for (int i = 0; i < this->assignments_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->assignments(i), target);
   }
 
-  // repeated .protobuf.srl.school.SRL_Problem problems = 3;
+  // repeated .protobuf.srl.school.SrlProblem problems = 3;
   for (int i = 0; i < this->problems_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -413,10 +412,10 @@ void SRL_School::SerializeWithCachedSizes(
   return target;
 }
 
-int SRL_School::ByteSize() const {
+int SrlSchool::ByteSize() const {
   int total_size = 0;
 
-  // repeated .protobuf.srl.school.SRL_Course courses = 1;
+  // repeated .protobuf.srl.school.SrlCourse courses = 1;
   total_size += 1 * this->courses_size();
   for (int i = 0; i < this->courses_size(); i++) {
     total_size +=
@@ -424,7 +423,7 @@ int SRL_School::ByteSize() const {
         this->courses(i));
   }
 
-  // repeated .protobuf.srl.school.SRL_Assignment assignments = 2;
+  // repeated .protobuf.srl.school.SrlAssignment assignments = 2;
   total_size += 1 * this->assignments_size();
   for (int i = 0; i < this->assignments_size(); i++) {
     total_size +=
@@ -432,7 +431,7 @@ int SRL_School::ByteSize() const {
         this->assignments(i));
   }
 
-  // repeated .protobuf.srl.school.SRL_Problem problems = 3;
+  // repeated .protobuf.srl.school.SrlProblem problems = 3;
   total_size += 1 * this->problems_size();
   for (int i = 0; i < this->problems_size(); i++) {
     total_size +=
@@ -451,10 +450,10 @@ int SRL_School::ByteSize() const {
   return total_size;
 }
 
-void SRL_School::MergeFrom(const ::google::protobuf::Message& from) {
+void SrlSchool::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const SRL_School* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SRL_School*>(
+  const SrlSchool* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SrlSchool*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -463,7 +462,7 @@ void SRL_School::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void SRL_School::MergeFrom(const SRL_School& from) {
+void SrlSchool::MergeFrom(const SrlSchool& from) {
   GOOGLE_CHECK_NE(&from, this);
   courses_.MergeFrom(from.courses_);
   assignments_.MergeFrom(from.assignments_);
@@ -471,19 +470,19 @@ void SRL_School::MergeFrom(const SRL_School& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void SRL_School::CopyFrom(const ::google::protobuf::Message& from) {
+void SrlSchool::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void SRL_School::CopyFrom(const SRL_School& from) {
+void SrlSchool::CopyFrom(const SrlSchool& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool SRL_School::IsInitialized() const {
+bool SrlSchool::IsInitialized() const {
 
   for (int i = 0; i < courses_size(); i++) {
     if (!this->courses(i).IsInitialized()) return false;
@@ -497,7 +496,7 @@ bool SRL_School::IsInitialized() const {
   return true;
 }
 
-void SRL_School::Swap(SRL_School* other) {
+void SrlSchool::Swap(SrlSchool* other) {
   if (other != this) {
     courses_.Swap(&other->courses_);
     assignments_.Swap(&other->assignments_);
@@ -508,11 +507,11 @@ void SRL_School::Swap(SRL_School* other) {
   }
 }
 
-::google::protobuf::Metadata SRL_School::GetMetadata() const {
+::google::protobuf::Metadata SrlSchool::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = SRL_School_descriptor_;
-  metadata.reflection = SRL_School_reflection_;
+  metadata.descriptor = SrlSchool_descriptor_;
+  metadata.reflection = SrlSchool_reflection_;
   return metadata;
 }
 
@@ -520,36 +519,36 @@ void SRL_School::Swap(SRL_School* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int SRL_Course::kCourseIdFieldNumber;
-const int SRL_Course::kCourseNameFieldNumber;
+const int SrlCourse::kCourseIdFieldNumber;
+const int SrlCourse::kCourseNameFieldNumber;
 #endif  // !_MSC_VER
 
-SRL_Course::SRL_Course()
+SrlCourse::SrlCourse()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void SRL_Course::InitAsDefaultInstance() {
+void SrlCourse::InitAsDefaultInstance() {
 }
 
-SRL_Course::SRL_Course(const SRL_Course& from)
+SrlCourse::SrlCourse(const SrlCourse& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void SRL_Course::SharedCtor() {
+void SrlCourse::SharedCtor() {
   _cached_size_ = 0;
   courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   coursename_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-SRL_Course::~SRL_Course() {
+SrlCourse::~SrlCourse() {
   SharedDtor();
 }
 
-void SRL_Course::SharedDtor() {
+void SrlCourse::SharedDtor() {
   if (courseid_ != &::google::protobuf::internal::kEmptyString) {
     delete courseid_;
   }
@@ -560,28 +559,28 @@ void SRL_Course::SharedDtor() {
   }
 }
 
-void SRL_Course::SetCachedSize(int size) const {
+void SrlCourse::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* SRL_Course::descriptor() {
+const ::google::protobuf::Descriptor* SrlCourse::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return SRL_Course_descriptor_;
+  return SrlCourse_descriptor_;
 }
 
-const SRL_Course& SRL_Course::default_instance() {
+const SrlCourse& SrlCourse::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_input_2fschool_2eproto();
   return *default_instance_;
 }
 
-SRL_Course* SRL_Course::default_instance_ = NULL;
+SrlCourse* SrlCourse::default_instance_ = NULL;
 
-SRL_Course* SRL_Course::New() const {
-  return new SRL_Course;
+SrlCourse* SrlCourse::New() const {
+  return new SrlCourse;
 }
 
-void SRL_Course::Clear() {
+void SrlCourse::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_courseid()) {
       if (courseid_ != &::google::protobuf::internal::kEmptyString) {
@@ -598,7 +597,7 @@ void SRL_Course::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool SRL_Course::MergePartialFromCodedStream(
+bool SrlCourse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -653,7 +652,7 @@ bool SRL_Course::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void SRL_Course::SerializeWithCachedSizes(
+void SrlCourse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required string courseId = 1;
   if (has_courseid()) {
@@ -679,7 +678,7 @@ void SRL_Course::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* SRL_Course::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* SrlCourse::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required string courseId = 1;
   if (has_courseid()) {
@@ -708,7 +707,7 @@ void SRL_Course::SerializeWithCachedSizes(
   return target;
 }
 
-int SRL_Course::ByteSize() const {
+int SrlCourse::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -738,10 +737,10 @@ int SRL_Course::ByteSize() const {
   return total_size;
 }
 
-void SRL_Course::MergeFrom(const ::google::protobuf::Message& from) {
+void SrlCourse::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const SRL_Course* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SRL_Course*>(
+  const SrlCourse* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SrlCourse*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -750,7 +749,7 @@ void SRL_Course::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void SRL_Course::MergeFrom(const SRL_Course& from) {
+void SrlCourse::MergeFrom(const SrlCourse& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_courseid()) {
@@ -763,25 +762,25 @@ void SRL_Course::MergeFrom(const SRL_Course& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void SRL_Course::CopyFrom(const ::google::protobuf::Message& from) {
+void SrlCourse::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void SRL_Course::CopyFrom(const SRL_Course& from) {
+void SrlCourse::CopyFrom(const SrlCourse& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool SRL_Course::IsInitialized() const {
+bool SrlCourse::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
-void SRL_Course::Swap(SRL_Course* other) {
+void SrlCourse::Swap(SrlCourse* other) {
   if (other != this) {
     std::swap(courseid_, other->courseid_);
     std::swap(coursename_, other->coursename_);
@@ -791,11 +790,11 @@ void SRL_Course::Swap(SRL_Course* other) {
   }
 }
 
-::google::protobuf::Metadata SRL_Course::GetMetadata() const {
+::google::protobuf::Metadata SrlCourse::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = SRL_Course_descriptor_;
-  metadata.reflection = SRL_Course_reflection_;
+  metadata.descriptor = SrlCourse_descriptor_;
+  metadata.reflection = SrlCourse_reflection_;
   return metadata;
 }
 
@@ -803,26 +802,26 @@ void SRL_Course::Swap(SRL_Course* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int SRL_Assignment::kCourseIdFieldNumber;
-const int SRL_Assignment::kAssignmentIdFieldNumber;
-const int SRL_Assignment::kAssignmentNameFieldNumber;
+const int SrlAssignment::kCourseIdFieldNumber;
+const int SrlAssignment::kAssignmentIdFieldNumber;
+const int SrlAssignment::kAssignmentNameFieldNumber;
 #endif  // !_MSC_VER
 
-SRL_Assignment::SRL_Assignment()
+SrlAssignment::SrlAssignment()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void SRL_Assignment::InitAsDefaultInstance() {
+void SrlAssignment::InitAsDefaultInstance() {
 }
 
-SRL_Assignment::SRL_Assignment(const SRL_Assignment& from)
+SrlAssignment::SrlAssignment(const SrlAssignment& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void SRL_Assignment::SharedCtor() {
+void SrlAssignment::SharedCtor() {
   _cached_size_ = 0;
   courseid_ = GOOGLE_ULONGLONG(0);
   assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
@@ -830,11 +829,11 @@ void SRL_Assignment::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-SRL_Assignment::~SRL_Assignment() {
+SrlAssignment::~SrlAssignment() {
   SharedDtor();
 }
 
-void SRL_Assignment::SharedDtor() {
+void SrlAssignment::SharedDtor() {
   if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
     delete assignmentid_;
   }
@@ -845,28 +844,28 @@ void SRL_Assignment::SharedDtor() {
   }
 }
 
-void SRL_Assignment::SetCachedSize(int size) const {
+void SrlAssignment::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* SRL_Assignment::descriptor() {
+const ::google::protobuf::Descriptor* SrlAssignment::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return SRL_Assignment_descriptor_;
+  return SrlAssignment_descriptor_;
 }
 
-const SRL_Assignment& SRL_Assignment::default_instance() {
+const SrlAssignment& SrlAssignment::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_input_2fschool_2eproto();
   return *default_instance_;
 }
 
-SRL_Assignment* SRL_Assignment::default_instance_ = NULL;
+SrlAssignment* SrlAssignment::default_instance_ = NULL;
 
-SRL_Assignment* SRL_Assignment::New() const {
-  return new SRL_Assignment;
+SrlAssignment* SrlAssignment::New() const {
+  return new SrlAssignment;
 }
 
-void SRL_Assignment::Clear() {
+void SrlAssignment::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     courseid_ = GOOGLE_ULONGLONG(0);
     if (has_assignmentid()) {
@@ -884,7 +883,7 @@ void SRL_Assignment::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool SRL_Assignment::MergePartialFromCodedStream(
+bool SrlAssignment::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -955,7 +954,7 @@ bool SRL_Assignment::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void SRL_Assignment::SerializeWithCachedSizes(
+void SrlAssignment::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required uint64 courseId = 1;
   if (has_courseid()) {
@@ -986,7 +985,7 @@ void SRL_Assignment::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* SRL_Assignment::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* SrlAssignment::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required uint64 courseId = 1;
   if (has_courseid()) {
@@ -1020,7 +1019,7 @@ void SRL_Assignment::SerializeWithCachedSizes(
   return target;
 }
 
-int SRL_Assignment::ByteSize() const {
+int SrlAssignment::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -1057,10 +1056,10 @@ int SRL_Assignment::ByteSize() const {
   return total_size;
 }
 
-void SRL_Assignment::MergeFrom(const ::google::protobuf::Message& from) {
+void SrlAssignment::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const SRL_Assignment* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SRL_Assignment*>(
+  const SrlAssignment* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SrlAssignment*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -1069,7 +1068,7 @@ void SRL_Assignment::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void SRL_Assignment::MergeFrom(const SRL_Assignment& from) {
+void SrlAssignment::MergeFrom(const SrlAssignment& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_courseid()) {
@@ -1085,25 +1084,25 @@ void SRL_Assignment::MergeFrom(const SRL_Assignment& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void SRL_Assignment::CopyFrom(const ::google::protobuf::Message& from) {
+void SrlAssignment::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void SRL_Assignment::CopyFrom(const SRL_Assignment& from) {
+void SrlAssignment::CopyFrom(const SrlAssignment& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool SRL_Assignment::IsInitialized() const {
+bool SrlAssignment::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
-void SRL_Assignment::Swap(SRL_Assignment* other) {
+void SrlAssignment::Swap(SrlAssignment* other) {
   if (other != this) {
     std::swap(courseid_, other->courseid_);
     std::swap(assignmentid_, other->assignmentid_);
@@ -1114,11 +1113,11 @@ void SRL_Assignment::Swap(SRL_Assignment* other) {
   }
 }
 
-::google::protobuf::Metadata SRL_Assignment::GetMetadata() const {
+::google::protobuf::Metadata SrlAssignment::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = SRL_Assignment_descriptor_;
-  metadata.reflection = SRL_Assignment_reflection_;
+  metadata.descriptor = SrlAssignment_descriptor_;
+  metadata.reflection = SrlAssignment_reflection_;
   return metadata;
 }
 
@@ -1126,30 +1125,30 @@ void SRL_Assignment::Swap(SRL_Assignment* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int SRL_Problem::kCourseIdFieldNumber;
-const int SRL_Problem::kAssignmentIdFieldNumber;
-const int SRL_Problem::kProblemIdFieldNumber;
-const int SRL_Problem::kProblemNameFieldNumber;
-const int SRL_Problem::kMainProblemFieldNumber;
-const int SRL_Problem::kSubProblemsFieldNumber;
+const int SrlProblem::kCourseIdFieldNumber;
+const int SrlProblem::kAssignmentIdFieldNumber;
+const int SrlProblem::kProblemIdFieldNumber;
+const int SrlProblem::kProblemNameFieldNumber;
+const int SrlProblem::kMainProblemFieldNumber;
+const int SrlProblem::kSubProblemsFieldNumber;
 #endif  // !_MSC_VER
 
-SRL_Problem::SRL_Problem()
+SrlProblem::SrlProblem()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void SRL_Problem::InitAsDefaultInstance() {
+void SrlProblem::InitAsDefaultInstance() {
   mainproblem_ = const_cast< ::protobuf::srl::school::subproblemInformation*>(&::protobuf::srl::school::subproblemInformation::default_instance());
 }
 
-SRL_Problem::SRL_Problem(const SRL_Problem& from)
+SrlProblem::SrlProblem(const SrlProblem& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void SRL_Problem::SharedCtor() {
+void SrlProblem::SharedCtor() {
   _cached_size_ = 0;
   courseid_ = GOOGLE_ULONGLONG(0);
   assignmentid_ = GOOGLE_ULONGLONG(0);
@@ -1159,11 +1158,11 @@ void SRL_Problem::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-SRL_Problem::~SRL_Problem() {
+SrlProblem::~SrlProblem() {
   SharedDtor();
 }
 
-void SRL_Problem::SharedDtor() {
+void SrlProblem::SharedDtor() {
   if (problemid_ != &::google::protobuf::internal::kEmptyString) {
     delete problemid_;
   }
@@ -1175,28 +1174,28 @@ void SRL_Problem::SharedDtor() {
   }
 }
 
-void SRL_Problem::SetCachedSize(int size) const {
+void SrlProblem::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* SRL_Problem::descriptor() {
+const ::google::protobuf::Descriptor* SrlProblem::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return SRL_Problem_descriptor_;
+  return SrlProblem_descriptor_;
 }
 
-const SRL_Problem& SRL_Problem::default_instance() {
+const SrlProblem& SrlProblem::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_input_2fschool_2eproto();
   return *default_instance_;
 }
 
-SRL_Problem* SRL_Problem::default_instance_ = NULL;
+SrlProblem* SrlProblem::default_instance_ = NULL;
 
-SRL_Problem* SRL_Problem::New() const {
-  return new SRL_Problem;
+SrlProblem* SrlProblem::New() const {
+  return new SrlProblem;
 }
 
-void SRL_Problem::Clear() {
+void SrlProblem::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     courseid_ = GOOGLE_ULONGLONG(0);
     assignmentid_ = GOOGLE_ULONGLONG(0);
@@ -1219,7 +1218,7 @@ void SRL_Problem::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool SRL_Problem::MergePartialFromCodedStream(
+bool SrlProblem::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -1335,7 +1334,7 @@ bool SRL_Problem::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void SRL_Problem::SerializeWithCachedSizes(
+void SrlProblem::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required uint64 courseId = 1;
   if (has_courseid()) {
@@ -1383,7 +1382,7 @@ void SRL_Problem::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* SRL_Problem::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* SrlProblem::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required uint64 courseId = 1;
   if (has_courseid()) {
@@ -1436,7 +1435,7 @@ void SRL_Problem::SerializeWithCachedSizes(
   return target;
 }
 
-int SRL_Problem::ByteSize() const {
+int SrlProblem::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -1495,10 +1494,10 @@ int SRL_Problem::ByteSize() const {
   return total_size;
 }
 
-void SRL_Problem::MergeFrom(const ::google::protobuf::Message& from) {
+void SrlProblem::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const SRL_Problem* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SRL_Problem*>(
+  const SrlProblem* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SrlProblem*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -1507,7 +1506,7 @@ void SRL_Problem::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void SRL_Problem::MergeFrom(const SRL_Problem& from) {
+void SrlProblem::MergeFrom(const SrlProblem& from) {
   GOOGLE_CHECK_NE(&from, this);
   subproblems_.MergeFrom(from.subproblems_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -1530,25 +1529,25 @@ void SRL_Problem::MergeFrom(const SRL_Problem& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void SRL_Problem::CopyFrom(const ::google::protobuf::Message& from) {
+void SrlProblem::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void SRL_Problem::CopyFrom(const SRL_Problem& from) {
+void SrlProblem::CopyFrom(const SrlProblem& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool SRL_Problem::IsInitialized() const {
+bool SrlProblem::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
 
   return true;
 }
 
-void SRL_Problem::Swap(SRL_Problem* other) {
+void SrlProblem::Swap(SrlProblem* other) {
   if (other != this) {
     std::swap(courseid_, other->courseid_);
     std::swap(assignmentid_, other->assignmentid_);
@@ -1562,11 +1561,11 @@ void SRL_Problem::Swap(SRL_Problem* other) {
   }
 }
 
-::google::protobuf::Metadata SRL_Problem::GetMetadata() const {
+::google::protobuf::Metadata SrlProblem::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = SRL_Problem_descriptor_;
-  metadata.reflection = SRL_Problem_reflection_;
+  metadata.descriptor = SrlProblem_descriptor_;
+  metadata.reflection = SrlProblem_reflection_;
   return metadata;
 }
 

@@ -53,15 +53,19 @@
 			return addedSlashes;
 		}
 
-		this.addState = function addState() {
-			if (activeState) {
+		/*
+		// TODO: add this functionality for hash changes!
+		this.addState = function appendState(string state) {
+			if (!activeState) {
+				activeState = true;
+				
 				return;
 			}
-			activeState = true;
+			
 			window.location.hash
 		}
 		
-		this.getState = function addState() {
+		this.getState = function() {
 			
 		}
 		
@@ -72,6 +76,7 @@
 		this.replaceState = function addState() {
 			
 		}
+		*/
 	}
 	var redirector = new Redirector(window);
 	window.onload = function() {
