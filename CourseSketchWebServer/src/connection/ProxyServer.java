@@ -78,7 +78,7 @@ public class ProxyServer extends WebSocketServer {
 	 */
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
-		Request req = Decoder.prarseRequest(buffer);
+		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
 		if (req == null) {
 			System.out.println("protobuf error");
