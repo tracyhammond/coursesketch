@@ -9,6 +9,7 @@ import protobuf.srl.action.commands.Commands.PackageShape;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
+
 public class Decoder {
 
 	/**
@@ -48,6 +49,14 @@ public class Decoder {
 				// etc...
 			}
 			return result;
+		} catch (InvalidProtocolBufferException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static SRL_Sketch parseSketch(com.google.protobuf.ByteString buffer) {
+		try {
+			return Sketch.SRL_Sketch.parseFrom(buffer);
 		} catch (InvalidProtocolBufferException e) {
 			e.printStackTrace();
 			return null;

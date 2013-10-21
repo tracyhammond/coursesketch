@@ -15,6 +15,8 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import com.google.protobuf.ByteString;
+
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -24,7 +26,7 @@ import protobuf.srl.request.Message.Request.MessageType;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-public class ProxyServer extends WebSocketServer {
+public class RecognitionServer extends WebSocketServer {
 
 	public static final int MAX_CONNECTIONS = 20;
 	public static final int STATE_SERVER_FULL = 4001;
@@ -38,11 +40,11 @@ public class ProxyServer extends WebSocketServer {
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public ProxyServer( int port ) throws UnknownHostException {
+	public RecognitionServer( int port ) throws UnknownHostException {
 		this( new InetSocketAddress( port ) );
 	}
 
-	public ProxyServer( InetSocketAddress address ) {
+	public RecognitionServer( InetSocketAddress address ) {
 		super( address );
 	}
 
@@ -72,14 +74,32 @@ public class ProxyServer extends WebSocketServer {
 
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
-		Request req = Decoder.prarseRequest(buffer);
+		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
+		
+		
 		if (req == null) {
 			System.out.println("protobuf error");
-			//this.
 			// we need to somehow send an error to the client here
 			return;
 		}
+		
+		if(req.getRequestType() == Request.MessageType.RECOGNITION) {
+			ByteString rawSketchData = req.getOtherData();
+			protobuf.srl.sketch.Sketch.SRL_Sketch savedSketch = Decoder.parseSketch(rawSketchData);
+			//pass to them
+			//use a function that they will give
+			
+			
+			/*String name = req.getLogin().getUsername();
+			String password = req.getLogin().getPassword();
+			System.out.println("USERNAME: " + name +"\nPASSWORD: " + password);
+			if( (name.equalsIgnoreCase("matt") && password.equalsIgnoreCase("japan"))) {
+				return;
+			}*/
+		}
+		return;
+		/*
 		if (!state.isLoggedIn()) {
 			if (LoginChecker.checkLogin(req)) {
 				state.logIn();
@@ -97,10 +117,11 @@ public class ProxyServer extends WebSocketServer {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 				return;
 			}
+			
 			// Parse message.
 			conn.send(buffer);
 			return;
-		}
+		}*/
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {
@@ -122,7 +143,7 @@ public class ProxyServer extends WebSocketServer {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
-		ProxyServer s = new ProxyServer( port );
+		RecognitionServer s = new RecognitionServer( port );
 		s.start();
 		System.out.println( "ChatServer started on port: " + s.getPort() );
 
