@@ -30,13 +30,13 @@ public final class Action {
      */
     ADD_SHAPE(1, 1),
     /**
-     * <code>REPACKAGE_SHAPE = 2;</code>
+     * <code>PACKAGE_SHAPE = 2;</code>
      *
      * <pre>
      * repackages shapes from the surface to inside another shape
      * </pre>
      */
-    REPACKAGE_SHAPE(2, 2),
+    PACKAGE_SHAPE(2, 2),
     /**
      * <code>FORCE_INTERPRETATION = 3;</code>
      */
@@ -60,13 +60,13 @@ public final class Action {
      */
     public static final int ADD_SHAPE_VALUE = 1;
     /**
-     * <code>REPACKAGE_SHAPE = 2;</code>
+     * <code>PACKAGE_SHAPE = 2;</code>
      *
      * <pre>
      * repackages shapes from the surface to inside another shape
      * </pre>
      */
-    public static final int REPACKAGE_SHAPE_VALUE = 2;
+    public static final int PACKAGE_SHAPE_VALUE = 2;
     /**
      * <code>FORCE_INTERPRETATION = 3;</code>
      */
@@ -79,7 +79,7 @@ public final class Action {
       switch (value) {
         case 0: return ADD_STROKE;
         case 1: return ADD_SHAPE;
-        case 2: return REPACKAGE_SHAPE;
+        case 2: return PACKAGE_SHAPE;
         case 3: return FORCE_INTERPRETATION;
         default: return null;
       }
@@ -1682,9 +1682,9 @@ public final class Action {
       "ndType\030\001 \002(\0162 .protobuf.srl.action.Comma" +
       "ndType\022\025\n\risUserCreated\030\002 \002(\010\022\023\n\013command" +
       "Data\030\003 \002(\014\022\014\n\004time\030\004 \001(\003\022\021\n\tcommandId\030\005 " +
-      "\001(\t*[\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\tAD" +
-      "D_SHAPE\020\001\022\023\n\017REPACKAGE_SHAPE\020\002\022\030\n\024FORCE_" +
-      "INTERPRETATION\020\003"
+      "\001(\t*Y\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\tAD" +
+      "D_SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\030\n\024FORCE_IN" +
+      "TERPRETATION\020\003"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

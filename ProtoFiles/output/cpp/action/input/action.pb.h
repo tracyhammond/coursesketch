@@ -42,7 +42,7 @@ class Command;
 enum CommandType {
   ADD_STROKE = 0,
   ADD_SHAPE = 1,
-  REPACKAGE_SHAPE = 2,
+  PACKAGE_SHAPE = 2,
   FORCE_INTERPRETATION = 3
 };
 bool CommandType_IsValid(int value);

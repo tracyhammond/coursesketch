@@ -10,12 +10,19 @@ message PackageShape {
 	repeated string shapesToBeContained = 2; // This is a list of shapes
 }
 
+/**
+ * Stroke information.
+ */
+message AddStroke {
+	required bytes stroke = 1; // until I figure out how to make it import what it really is.
+}
+
 message RemoveShape {
 	required string shapeToRemoveId = 1;
 }
 
 message AddShape {
-	required bytes shape = 1; // contains a SRL_Shape as defined in sketch.proto
+	required bytes shape = 1; // contains a SRL_Object as defined in sketch.proto
 }
 
 /**

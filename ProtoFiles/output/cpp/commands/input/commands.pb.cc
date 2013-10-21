@@ -26,6 +26,9 @@ namespace {
 const ::google::protobuf::Descriptor* PackageShape_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   PackageShape_reflection_ = NULL;
+const ::google::protobuf::Descriptor* AddStroke_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  AddStroke_reflection_ = NULL;
 const ::google::protobuf::Descriptor* RemoveShape_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   RemoveShape_reflection_ = NULL;
@@ -61,7 +64,22 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PackageShape));
-  RemoveShape_descriptor_ = file->message_type(1);
+  AddStroke_descriptor_ = file->message_type(1);
+  static const int AddStroke_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddStroke, stroke_),
+  };
+  AddStroke_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      AddStroke_descriptor_,
+      AddStroke::default_instance_,
+      AddStroke_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddStroke, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddStroke, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(AddStroke));
+  RemoveShape_descriptor_ = file->message_type(2);
   static const int RemoveShape_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RemoveShape, shapetoremoveid_),
   };
@@ -76,7 +94,7 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(RemoveShape));
-  AddShape_descriptor_ = file->message_type(2);
+  AddShape_descriptor_ = file->message_type(3);
   static const int AddShape_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddShape, shape_),
   };
@@ -91,7 +109,7 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AddShape));
-  ForceInterpretation_descriptor_ = file->message_type(3);
+  ForceInterpretation_descriptor_ = file->message_type(4);
   static const int ForceInterpretation_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ForceInterpretation, interpretation_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ForceInterpretation, shapeid_),
@@ -122,6 +140,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     PackageShape_descriptor_, &PackageShape::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    AddStroke_descriptor_, &AddStroke::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     RemoveShape_descriptor_, &RemoveShape::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     AddShape_descriptor_, &AddShape::default_instance());
@@ -134,6 +154,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void protobuf_ShutdownFile_input_2fcommands_2eproto() {
   delete PackageShape::default_instance_;
   delete PackageShape_reflection_;
+  delete AddStroke::default_instance_;
+  delete AddStroke_reflection_;
   delete RemoveShape::default_instance_;
   delete RemoveShape_reflection_;
   delete AddShape::default_instance_;
@@ -152,17 +174,20 @@ void protobuf_AddDesc_input_2fcommands_2eproto() {
     "\n\024input/commands.proto\022\034protobuf.srl.act"
     "ion.commands\"C\n\014PackageShape\022\026\n\016newConta"
     "inerId\030\001 \002(\t\022\033\n\023shapesToBeContained\030\002 \003("
-    "\t\"&\n\013RemoveShape\022\027\n\017shapeToRemoveId\030\001 \002("
-    "\t\"\031\n\010AddShape\022\r\n\005shape\030\001 \002(\014\">\n\023ForceInt"
-    "erpretation\022\026\n\016interpretation\030\001 \002(\014\022\017\n\007s"
-    "hapeId\030\002 \002(\t", 252);
+    "\t\"\033\n\tAddStroke\022\016\n\006stroke\030\001 \002(\014\"&\n\013Remove"
+    "Shape\022\027\n\017shapeToRemoveId\030\001 \002(\t\"\031\n\010AddSha"
+    "pe\022\r\n\005shape\030\001 \002(\014\">\n\023ForceInterpretation"
+    "\022\026\n\016interpretation\030\001 \002(\014\022\017\n\007shapeId\030\002 \002("
+    "\t", 281);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/commands.proto", &protobuf_RegisterTypes);
   PackageShape::default_instance_ = new PackageShape();
+  AddStroke::default_instance_ = new AddStroke();
   RemoveShape::default_instance_ = new RemoveShape();
   AddShape::default_instance_ = new AddShape();
   ForceInterpretation::default_instance_ = new ForceInterpretation();
   PackageShape::default_instance_->InitAsDefaultInstance();
+  AddStroke::default_instance_->InitAsDefaultInstance();
   RemoveShape::default_instance_->InitAsDefaultInstance();
   AddShape::default_instance_->InitAsDefaultInstance();
   ForceInterpretation::default_instance_->InitAsDefaultInstance();
@@ -446,6 +471,223 @@ void PackageShape::Swap(PackageShape* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = PackageShape_descriptor_;
   metadata.reflection = PackageShape_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int AddStroke::kStrokeFieldNumber;
+#endif  // !_MSC_VER
+
+AddStroke::AddStroke()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void AddStroke::InitAsDefaultInstance() {
+}
+
+AddStroke::AddStroke(const AddStroke& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void AddStroke::SharedCtor() {
+  _cached_size_ = 0;
+  stroke_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+AddStroke::~AddStroke() {
+  SharedDtor();
+}
+
+void AddStroke::SharedDtor() {
+  if (stroke_ != &::google::protobuf::internal::kEmptyString) {
+    delete stroke_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void AddStroke::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* AddStroke::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return AddStroke_descriptor_;
+}
+
+const AddStroke& AddStroke::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_input_2fcommands_2eproto();
+  return *default_instance_;
+}
+
+AddStroke* AddStroke::default_instance_ = NULL;
+
+AddStroke* AddStroke::New() const {
+  return new AddStroke;
+}
+
+void AddStroke::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_stroke()) {
+      if (stroke_ != &::google::protobuf::internal::kEmptyString) {
+        stroke_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool AddStroke::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required bytes stroke = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_stroke()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void AddStroke::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required bytes stroke = 1;
+  if (has_stroke()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      1, this->stroke(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* AddStroke::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required bytes stroke = 1;
+  if (has_stroke()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        1, this->stroke(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int AddStroke::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required bytes stroke = 1;
+    if (has_stroke()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->stroke());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void AddStroke::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const AddStroke* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const AddStroke*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void AddStroke::MergeFrom(const AddStroke& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_stroke()) {
+      set_stroke(from.stroke());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void AddStroke::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void AddStroke::CopyFrom(const AddStroke& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool AddStroke::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void AddStroke::Swap(AddStroke* other) {
+  if (other != this) {
+    std::swap(stroke_, other->stroke_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata AddStroke::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = AddStroke_descriptor_;
+  metadata.reflection = AddStroke_reflection_;
   return metadata;
 }
 

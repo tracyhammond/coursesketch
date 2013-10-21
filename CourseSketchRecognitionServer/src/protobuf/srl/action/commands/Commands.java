@@ -754,6 +754,455 @@ public final class Commands {
     // @@protoc_insertion_point(class_scope:protobuf.srl.action.commands.PackageShape)
   }
 
+  public interface AddStrokeOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required bytes stroke = 1;
+    /**
+     * <code>required bytes stroke = 1;</code>
+     *
+     * <pre>
+     * until I figure out how to make it import what it really is.
+     * </pre>
+     */
+    boolean hasStroke();
+    /**
+     * <code>required bytes stroke = 1;</code>
+     *
+     * <pre>
+     * until I figure out how to make it import what it really is.
+     * </pre>
+     */
+    com.google.protobuf.ByteString getStroke();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.action.commands.AddStroke}
+   *
+   * <pre>
+   **
+   * Stroke information.
+   * </pre>
+   */
+  public static final class AddStroke extends
+      com.google.protobuf.GeneratedMessage
+      implements AddStrokeOrBuilder {
+    // Use AddStroke.newBuilder() to construct.
+    private AddStroke(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private AddStroke(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final AddStroke defaultInstance;
+    public static AddStroke getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public AddStroke getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private AddStroke(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              stroke_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.action.commands.Commands.internal_static_protobuf_srl_action_commands_AddStroke_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.action.commands.Commands.internal_static_protobuf_srl_action_commands_AddStroke_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.action.commands.Commands.AddStroke.class, protobuf.srl.action.commands.Commands.AddStroke.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<AddStroke> PARSER =
+        new com.google.protobuf.AbstractParser<AddStroke>() {
+      public AddStroke parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new AddStroke(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AddStroke> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required bytes stroke = 1;
+    public static final int STROKE_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString stroke_;
+    /**
+     * <code>required bytes stroke = 1;</code>
+     *
+     * <pre>
+     * until I figure out how to make it import what it really is.
+     * </pre>
+     */
+    public boolean hasStroke() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required bytes stroke = 1;</code>
+     *
+     * <pre>
+     * until I figure out how to make it import what it really is.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString getStroke() {
+      return stroke_;
+    }
+
+    private void initFields() {
+      stroke_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasStroke()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, stroke_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, stroke_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.action.commands.Commands.AddStroke parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.action.commands.Commands.AddStroke parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.action.commands.Commands.AddStroke parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.action.commands.Commands.AddStroke parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.action.commands.Commands.AddStroke parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.action.commands.Commands.AddStroke parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.action.commands.Commands.AddStroke parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.action.commands.Commands.AddStroke parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.action.commands.Commands.AddStroke parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.action.commands.Commands.AddStroke parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.action.commands.Commands.AddStroke prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.action.commands.AddStroke}
+     *
+     * <pre>
+     **
+     * Stroke information.
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.action.commands.Commands.AddStrokeOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.action.commands.Commands.internal_static_protobuf_srl_action_commands_AddStroke_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.action.commands.Commands.internal_static_protobuf_srl_action_commands_AddStroke_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.action.commands.Commands.AddStroke.class, protobuf.srl.action.commands.Commands.AddStroke.Builder.class);
+      }
+
+      // Construct using protobuf.srl.action.commands.Commands.AddStroke.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        stroke_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.action.commands.Commands.internal_static_protobuf_srl_action_commands_AddStroke_descriptor;
+      }
+
+      public protobuf.srl.action.commands.Commands.AddStroke getDefaultInstanceForType() {
+        return protobuf.srl.action.commands.Commands.AddStroke.getDefaultInstance();
+      }
+
+      public protobuf.srl.action.commands.Commands.AddStroke build() {
+        protobuf.srl.action.commands.Commands.AddStroke result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.action.commands.Commands.AddStroke buildPartial() {
+        protobuf.srl.action.commands.Commands.AddStroke result = new protobuf.srl.action.commands.Commands.AddStroke(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.stroke_ = stroke_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.action.commands.Commands.AddStroke) {
+          return mergeFrom((protobuf.srl.action.commands.Commands.AddStroke)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.action.commands.Commands.AddStroke other) {
+        if (other == protobuf.srl.action.commands.Commands.AddStroke.getDefaultInstance()) return this;
+        if (other.hasStroke()) {
+          setStroke(other.getStroke());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasStroke()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.action.commands.Commands.AddStroke parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.action.commands.Commands.AddStroke) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required bytes stroke = 1;
+      private com.google.protobuf.ByteString stroke_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>required bytes stroke = 1;</code>
+       *
+       * <pre>
+       * until I figure out how to make it import what it really is.
+       * </pre>
+       */
+      public boolean hasStroke() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required bytes stroke = 1;</code>
+       *
+       * <pre>
+       * until I figure out how to make it import what it really is.
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getStroke() {
+        return stroke_;
+      }
+      /**
+       * <code>required bytes stroke = 1;</code>
+       *
+       * <pre>
+       * until I figure out how to make it import what it really is.
+       * </pre>
+       */
+      public Builder setStroke(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        stroke_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bytes stroke = 1;</code>
+       *
+       * <pre>
+       * until I figure out how to make it import what it really is.
+       * </pre>
+       */
+      public Builder clearStroke() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        stroke_ = getDefaultInstance().getStroke();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.action.commands.AddStroke)
+    }
+
+    static {
+      defaultInstance = new AddStroke(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.action.commands.AddStroke)
+  }
+
   public interface RemoveShapeOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
@@ -1241,7 +1690,7 @@ public final class Commands {
      * <code>required bytes shape = 1;</code>
      *
      * <pre>
-     * contains a SRL_Shape as defined in sketch.proto
+     * contains a SRL_Object as defined in sketch.proto
      * </pre>
      */
     boolean hasShape();
@@ -1249,7 +1698,7 @@ public final class Commands {
      * <code>required bytes shape = 1;</code>
      *
      * <pre>
-     * contains a SRL_Shape as defined in sketch.proto
+     * contains a SRL_Object as defined in sketch.proto
      * </pre>
      */
     com.google.protobuf.ByteString getShape();
@@ -1357,7 +1806,7 @@ public final class Commands {
      * <code>required bytes shape = 1;</code>
      *
      * <pre>
-     * contains a SRL_Shape as defined in sketch.proto
+     * contains a SRL_Object as defined in sketch.proto
      * </pre>
      */
     public boolean hasShape() {
@@ -1367,7 +1816,7 @@ public final class Commands {
      * <code>required bytes shape = 1;</code>
      *
      * <pre>
-     * contains a SRL_Shape as defined in sketch.proto
+     * contains a SRL_Object as defined in sketch.proto
      * </pre>
      */
     public com.google.protobuf.ByteString getShape() {
@@ -1615,7 +2064,7 @@ public final class Commands {
        * <code>required bytes shape = 1;</code>
        *
        * <pre>
-       * contains a SRL_Shape as defined in sketch.proto
+       * contains a SRL_Object as defined in sketch.proto
        * </pre>
        */
       public boolean hasShape() {
@@ -1625,7 +2074,7 @@ public final class Commands {
        * <code>required bytes shape = 1;</code>
        *
        * <pre>
-       * contains a SRL_Shape as defined in sketch.proto
+       * contains a SRL_Object as defined in sketch.proto
        * </pre>
        */
       public com.google.protobuf.ByteString getShape() {
@@ -1635,7 +2084,7 @@ public final class Commands {
        * <code>required bytes shape = 1;</code>
        *
        * <pre>
-       * contains a SRL_Shape as defined in sketch.proto
+       * contains a SRL_Object as defined in sketch.proto
        * </pre>
        */
       public Builder setShape(com.google.protobuf.ByteString value) {
@@ -1651,7 +2100,7 @@ public final class Commands {
        * <code>required bytes shape = 1;</code>
        *
        * <pre>
-       * contains a SRL_Shape as defined in sketch.proto
+       * contains a SRL_Object as defined in sketch.proto
        * </pre>
        */
       public Builder clearShape() {
@@ -2259,6 +2708,11 @@ public final class Commands {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_action_commands_PackageShape_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_action_commands_AddStroke_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_action_commands_AddStroke_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_action_commands_RemoveShape_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -2285,10 +2739,11 @@ public final class Commands {
       "\n\024input/commands.proto\022\034protobuf.srl.act" +
       "ion.commands\"C\n\014PackageShape\022\026\n\016newConta" +
       "inerId\030\001 \002(\t\022\033\n\023shapesToBeContained\030\002 \003(" +
-      "\t\"&\n\013RemoveShape\022\027\n\017shapeToRemoveId\030\001 \002(" +
-      "\t\"\031\n\010AddShape\022\r\n\005shape\030\001 \002(\014\">\n\023ForceInt" +
-      "erpretation\022\026\n\016interpretation\030\001 \002(\014\022\017\n\007s" +
-      "hapeId\030\002 \002(\t"
+      "\t\"\033\n\tAddStroke\022\016\n\006stroke\030\001 \002(\014\"&\n\013Remove" +
+      "Shape\022\027\n\017shapeToRemoveId\030\001 \002(\t\"\031\n\010AddSha" +
+      "pe\022\r\n\005shape\030\001 \002(\014\">\n\023ForceInterpretation" +
+      "\022\026\n\016interpretation\030\001 \002(\014\022\017\n\007shapeId\030\002 \002(" +
+      "\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2301,20 +2756,26 @@ public final class Commands {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_action_commands_PackageShape_descriptor,
               new java.lang.String[] { "NewContainerId", "ShapesToBeContained", });
-          internal_static_protobuf_srl_action_commands_RemoveShape_descriptor =
+          internal_static_protobuf_srl_action_commands_AddStroke_descriptor =
             getDescriptor().getMessageTypes().get(1);
+          internal_static_protobuf_srl_action_commands_AddStroke_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_action_commands_AddStroke_descriptor,
+              new java.lang.String[] { "Stroke", });
+          internal_static_protobuf_srl_action_commands_RemoveShape_descriptor =
+            getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_srl_action_commands_RemoveShape_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_action_commands_RemoveShape_descriptor,
               new java.lang.String[] { "ShapeToRemoveId", });
           internal_static_protobuf_srl_action_commands_AddShape_descriptor =
-            getDescriptor().getMessageTypes().get(2);
+            getDescriptor().getMessageTypes().get(3);
           internal_static_protobuf_srl_action_commands_AddShape_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_action_commands_AddShape_descriptor,
               new java.lang.String[] { "Shape", });
           internal_static_protobuf_srl_action_commands_ForceInterpretation_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_protobuf_srl_action_commands_ForceInterpretation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_action_commands_ForceInterpretation_descriptor,

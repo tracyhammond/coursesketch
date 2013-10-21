@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/action.proto',
   package='protobuf.srl.action',
-  serialized_pb='\n\x12input/action.proto\x12\x13protobuf.srl.action\"8\n\x06Update\x12.\n\x08\x63ommands\x18\x01 \x03(\x0b\x32\x1c.protobuf.srl.action.Command\"\x8d\x01\n\x07\x43ommand\x12\x35\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32 .protobuf.srl.action.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x02(\x0c\x12\x0c\n\x04time\x18\x04 \x01(\x03\x12\x11\n\tcommandId\x18\x05 \x01(\t*[\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x13\n\x0fREPACKAGE_SHAPE\x10\x02\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\x03')
+  serialized_pb='\n\x12input/action.proto\x12\x13protobuf.srl.action\"8\n\x06Update\x12.\n\x08\x63ommands\x18\x01 \x03(\x0b\x32\x1c.protobuf.srl.action.Command\"\x8d\x01\n\x07\x43ommand\x12\x35\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32 .protobuf.srl.action.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x02(\x0c\x12\x0c\n\x04time\x18\x04 \x01(\x03\x12\x11\n\tcommandId\x18\x05 \x01(\t*Y\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x11\n\rPACKAGE_SHAPE\x10\x02\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\x03')
 
 _COMMANDTYPE = _descriptor.EnumDescriptor(
   name='CommandType',
@@ -31,7 +31,7 @@ _COMMANDTYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='REPACKAGE_SHAPE', index=2, number=2,
+      name='PACKAGE_SHAPE', index=2, number=2,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
@@ -42,13 +42,13 @@ _COMMANDTYPE = _descriptor.EnumDescriptor(
   containing_type=None,
   options=None,
   serialized_start=245,
-  serialized_end=336,
+  serialized_end=334,
 )
 
 CommandType = enum_type_wrapper.EnumTypeWrapper(_COMMANDTYPE)
 ADD_STROKE = 0
 ADD_SHAPE = 1
-REPACKAGE_SHAPE = 2
+PACKAGE_SHAPE = 2
 FORCE_INTERPRETATION = 3
 
 
