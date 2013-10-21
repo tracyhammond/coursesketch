@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
@@ -146,8 +149,13 @@ public class ProxyServer extends WebSocketServer {
 		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
 		return new ConnectionState(numberOfConnections++);
 	}
+	
+	public static void ConnectToServer() throws URISyntaxException {
+		ExampleClient c = new ExampleClient( new URI( "ws://goldberglinux02.tamu.edu:8880" ) );
+		c.connect();
+	}
 
-	public static void main( String[] args ) throws InterruptedException , IOException {
+	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
 		try {
@@ -157,6 +165,11 @@ public class ProxyServer extends WebSocketServer {
 		ProxyServer s = new ProxyServer( port );
 		s.start();
 		System.out.println( "ChatServer started on port: " + s.getPort() );
+		
+		//attempt to connect to recognition
+		ConnectToServer();
+		//attempt to connect to answer server
+		//attempt to connect to user database
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
