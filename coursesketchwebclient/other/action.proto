@@ -16,6 +16,6 @@ message Command {
 enum CommandType {
 	ADD_STROKE = 0;	// This will only contain a SRL_Stroke in commandData
 	ADD_SHAPE = 1; // contains a shape.
-	REPACKAGE_SHAPE = 2; // repackages shapes from the surface to inside another shape
+	PACKAGE_SHAPE = 2; // repackages shapes from the surface to inside another shape
 	FORCE_INTERPRETATION = 3;
 }

@@ -114,9 +114,9 @@ void protobuf_AddDesc_input_2faction_2eproto() {
     "ndType\030\001 \002(\0162 .protobuf.srl.action.Comma"
     "ndType\022\025\n\risUserCreated\030\002 \002(\010\022\023\n\013command"
     "Data\030\003 \002(\014\022\014\n\004time\030\004 \001(\003\022\021\n\tcommandId\030\005 "
-    "\001(\t*[\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\tAD"
-    "D_SHAPE\020\001\022\023\n\017REPACKAGE_SHAPE\020\002\022\030\n\024FORCE_"
-    "INTERPRETATION\020\003", 336);
+    "\001(\t*Y\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\tAD"
+    "D_SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\030\n\024FORCE_IN"
+    "TERPRETATION\020\003", 334);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/action.proto", &protobuf_RegisterTypes);
   Update::default_instance_ = new Update();

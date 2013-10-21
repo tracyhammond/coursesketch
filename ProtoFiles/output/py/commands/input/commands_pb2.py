@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/commands.proto',
   package='protobuf.srl.action.commands',
-  serialized_pb='\n\x14input/commands.proto\x12\x1cprotobuf.srl.action.commands\"C\n\x0cPackageShape\x12\x16\n\x0enewContainerId\x18\x01 \x02(\t\x12\x1b\n\x13shapesToBeContained\x18\x02 \x03(\t\"&\n\x0bRemoveShape\x12\x17\n\x0fshapeToRemoveId\x18\x01 \x02(\t\"\x19\n\x08\x41\x64\x64Shape\x12\r\n\x05shape\x18\x01 \x02(\x0c\">\n\x13\x46orceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12\x0f\n\x07shapeId\x18\x02 \x02(\t')
+  serialized_pb='\n\x14input/commands.proto\x12\x1cprotobuf.srl.action.commands\"C\n\x0cPackageShape\x12\x16\n\x0enewContainerId\x18\x01 \x02(\t\x12\x1b\n\x13shapesToBeContained\x18\x02 \x03(\t\"\x1b\n\tAddStroke\x12\x0e\n\x06stroke\x18\x01 \x02(\x0c\"&\n\x0bRemoveShape\x12\x17\n\x0fshapeToRemoveId\x18\x01 \x02(\t\"\x19\n\x08\x41\x64\x64Shape\x12\r\n\x05shape\x18\x01 \x02(\x0c\">\n\x13\x46orceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12\x0f\n\x07shapeId\x18\x02 \x02(\t')
 
 
 
@@ -53,6 +53,34 @@ _PACKAGESHAPE = _descriptor.Descriptor(
 )
 
 
+_ADDSTROKE = _descriptor.Descriptor(
+  name='AddStroke',
+  full_name='protobuf.srl.action.commands.AddStroke',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='stroke', full_name='protobuf.srl.action.commands.AddStroke.stroke', index=0,
+      number=1, type=12, cpp_type=9, label=2,
+      has_default_value=False, default_value="",
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=123,
+  serialized_end=150,
+)
+
+
 _REMOVESHAPE = _descriptor.Descriptor(
   name='RemoveShape',
   full_name='protobuf.srl.action.commands.RemoveShape',
@@ -76,8 +104,8 @@ _REMOVESHAPE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=123,
-  serialized_end=161,
+  serialized_start=152,
+  serialized_end=190,
 )
 
 
@@ -104,8 +132,8 @@ _ADDSHAPE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=163,
-  serialized_end=188,
+  serialized_start=192,
+  serialized_end=217,
 )
 
 
@@ -139,11 +167,12 @@ _FORCEINTERPRETATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=190,
-  serialized_end=252,
+  serialized_start=219,
+  serialized_end=281,
 )
 
 DESCRIPTOR.message_types_by_name['PackageShape'] = _PACKAGESHAPE
+DESCRIPTOR.message_types_by_name['AddStroke'] = _ADDSTROKE
 DESCRIPTOR.message_types_by_name['RemoveShape'] = _REMOVESHAPE
 DESCRIPTOR.message_types_by_name['AddShape'] = _ADDSHAPE
 DESCRIPTOR.message_types_by_name['ForceInterpretation'] = _FORCEINTERPRETATION
@@ -153,6 +182,12 @@ class PackageShape(_message.Message):
   DESCRIPTOR = _PACKAGESHAPE
 
   # @@protoc_insertion_point(class_scope:protobuf.srl.action.commands.PackageShape)
+
+class AddStroke(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _ADDSTROKE
+
+  # @@protoc_insertion_point(class_scope:protobuf.srl.action.commands.AddStroke)
 
 class RemoveShape(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType

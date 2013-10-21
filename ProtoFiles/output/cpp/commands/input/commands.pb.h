@@ -37,6 +37,7 @@ void protobuf_AssignDesc_input_2fcommands_2eproto();
 void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
 class PackageShape;
+class AddStroke;
 class RemoveShape;
 class AddShape;
 class ForceInterpretation;
@@ -144,6 +145,93 @@ class PackageShape : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static PackageShape* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class AddStroke : public ::google::protobuf::Message {
+ public:
+  AddStroke();
+  virtual ~AddStroke();
+
+  AddStroke(const AddStroke& from);
+
+  inline AddStroke& operator=(const AddStroke& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const AddStroke& default_instance();
+
+  void Swap(AddStroke* other);
+
+  // implements Message ----------------------------------------------
+
+  AddStroke* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const AddStroke& from);
+  void MergeFrom(const AddStroke& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required bytes stroke = 1;
+  inline bool has_stroke() const;
+  inline void clear_stroke();
+  static const int kStrokeFieldNumber = 1;
+  inline const ::std::string& stroke() const;
+  inline void set_stroke(const ::std::string& value);
+  inline void set_stroke(const char* value);
+  inline void set_stroke(const void* value, size_t size);
+  inline ::std::string* mutable_stroke();
+  inline ::std::string* release_stroke();
+  inline void set_allocated_stroke(::std::string* stroke);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.action.commands.AddStroke)
+ private:
+  inline void set_has_stroke();
+  inline void clear_has_stroke();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* stroke_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fcommands_2eproto();
+  friend void protobuf_AssignDesc_input_2fcommands_2eproto();
+  friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
+
+  void InitAsDefaultInstance();
+  static AddStroke* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -540,6 +628,80 @@ PackageShape::shapestobecontained() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 PackageShape::mutable_shapestobecontained() {
   return &shapestobecontained_;
+}
+
+// -------------------------------------------------------------------
+
+// AddStroke
+
+// required bytes stroke = 1;
+inline bool AddStroke::has_stroke() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void AddStroke::set_has_stroke() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void AddStroke::clear_has_stroke() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void AddStroke::clear_stroke() {
+  if (stroke_ != &::google::protobuf::internal::kEmptyString) {
+    stroke_->clear();
+  }
+  clear_has_stroke();
+}
+inline const ::std::string& AddStroke::stroke() const {
+  return *stroke_;
+}
+inline void AddStroke::set_stroke(const ::std::string& value) {
+  set_has_stroke();
+  if (stroke_ == &::google::protobuf::internal::kEmptyString) {
+    stroke_ = new ::std::string;
+  }
+  stroke_->assign(value);
+}
+inline void AddStroke::set_stroke(const char* value) {
+  set_has_stroke();
+  if (stroke_ == &::google::protobuf::internal::kEmptyString) {
+    stroke_ = new ::std::string;
+  }
+  stroke_->assign(value);
+}
+inline void AddStroke::set_stroke(const void* value, size_t size) {
+  set_has_stroke();
+  if (stroke_ == &::google::protobuf::internal::kEmptyString) {
+    stroke_ = new ::std::string;
+  }
+  stroke_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* AddStroke::mutable_stroke() {
+  set_has_stroke();
+  if (stroke_ == &::google::protobuf::internal::kEmptyString) {
+    stroke_ = new ::std::string;
+  }
+  return stroke_;
+}
+inline ::std::string* AddStroke::release_stroke() {
+  clear_has_stroke();
+  if (stroke_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = stroke_;
+    stroke_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void AddStroke::set_allocated_stroke(::std::string* stroke) {
+  if (stroke_ != &::google::protobuf::internal::kEmptyString) {
+    delete stroke_;
+  }
+  if (stroke) {
+    set_has_stroke();
+    stroke_ = stroke;
+  } else {
+    clear_has_stroke();
+    stroke_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------
