@@ -1,16 +1,16 @@
 package protobuf.srl.sketch;
-message SRL_Sketch {
+message SrlSketch {
 	optional uint64 courseId = 1; // so we know what class it links to
 	optional uint64 assignmentId = 2; // so we know what assignment it links to
 	optional uint64 problemId = 3; // so we know what problem it links to
 	optional string domainId = 4; // used to find the domain for recognition
-	repeated SRL_Object sketch = 5;
+	repeated SrlObject sketch = 5;
 }
 
 /**
  * Wraps all of the sketch objects so we can fake inheritance.
  */
-message SRL_Object {
+message SrlObject {
 	required ObjectType type = 1;
 	enum ObjectType {
 		SHAPE = 0;
@@ -21,25 +21,25 @@ message SRL_Object {
 	required bytes object = 2;
 }
 
-message SRL_Shape {
+message SrlShape {
 	required string id = 1;
 	required uint64 time = 2;
 	optional string name = 3;
 	optional bool isUserCreated = 4;
 	repeated Interpretation interpretations= 5;
-	repeated SRL_Object subComponents = 6;
+	repeated SrlObject subComponents = 6;
 }
 
-message SRL_Stroke {
+message SrlStroke {
 	required string id = 1;
 	required uint64 time = 2;
 	optional string name = 3;
-	repeated SRL_Point points = 4;
+	repeated SrlPoint points = 4;
 }
 
-// If a point is added directly on the sketch surface then it is in a SRL_Stroke
-// in a SRL_Object all with the same id and time and name.
-message SRL_Point {
+// If a point is added directly on the sketch surface then it is in a SrlStroke
+// in a SrlObject all with the same id and time and name.
+message SrlPoint {
 	required string id = 1;
 	required uint64 time = 2;
 	optional string name = 3;

@@ -1,10 +1,12 @@
 package connection;
 
-import protobuf.srl.action.Action.Command;
-import protobuf.srl.action.Action.Update;
-import protobuf.srl.action.commands.Commands.AddShape;
-import protobuf.srl.action.commands.Commands.AddStroke;
-import protobuf.srl.action.commands.Commands.PackageShape;
+import protobuf.srl.commands.Commands.AddShape;
+import protobuf.srl.commands.Commands.AddStroke;
+import protobuf.srl.commands.Commands.Command;
+import protobuf.srl.commands.Commands.PackageShape;
+import protobuf.srl.commands.Commands.Update;
+import protobuf.srl.sketch.Sketch;
+import protobuf.srl.sketch.Sketch.SrlSketch;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
@@ -54,9 +56,9 @@ public class Decoder {
 			return null;
 		}
 	}
-	public static SRL_Sketch parseSketch(com.google.protobuf.ByteString buffer) {
+	public static SrlSketch parseSketch(com.google.protobuf.ByteString buffer) {
 		try {
-			return Sketch.SRL_Sketch.parseFrom(buffer);
+			return Sketch.SrlSketch.parseFrom(buffer);
 		} catch (InvalidProtocolBufferException e) {
 			e.printStackTrace();
 			return null;

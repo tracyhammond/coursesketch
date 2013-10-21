@@ -36,10 +36,10 @@ void  protobuf_AddDesc_input_2fschool_2eproto();
 void protobuf_AssignDesc_input_2fschool_2eproto();
 void protobuf_ShutdownFile_input_2fschool_2eproto();
 
-class SRL_School;
-class SRL_Course;
-class SRL_Assignment;
-class SRL_Problem;
+class SrlSchool;
+class SrlCourse;
+class SrlAssignment;
+class SrlProblem;
 class subproblemInformation;
 
 enum subproblemInformation_QuestionType {
@@ -65,14 +65,14 @@ inline bool subproblemInformation_QuestionType_Parse(
 }
 // ===================================================================
 
-class SRL_School : public ::google::protobuf::Message {
+class SrlSchool : public ::google::protobuf::Message {
  public:
-  SRL_School();
-  virtual ~SRL_School();
+  SrlSchool();
+  virtual ~SrlSchool();
 
-  SRL_School(const SRL_School& from);
+  SrlSchool(const SrlSchool& from);
 
-  inline SRL_School& operator=(const SRL_School& from) {
+  inline SrlSchool& operator=(const SrlSchool& from) {
     CopyFrom(from);
     return *this;
   }
@@ -86,17 +86,17 @@ class SRL_School : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SRL_School& default_instance();
+  static const SrlSchool& default_instance();
 
-  void Swap(SRL_School* other);
+  void Swap(SrlSchool* other);
 
   // implements Message ----------------------------------------------
 
-  SRL_School* New() const;
+  SrlSchool* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SRL_School& from);
-  void MergeFrom(const SRL_School& from);
+  void CopyFrom(const SrlSchool& from);
+  void MergeFrom(const SrlSchool& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -119,50 +119,50 @@ class SRL_School : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .protobuf.srl.school.SRL_Course courses = 1;
+  // repeated .protobuf.srl.school.SrlCourse courses = 1;
   inline int courses_size() const;
   inline void clear_courses();
   static const int kCoursesFieldNumber = 1;
-  inline const ::protobuf::srl::school::SRL_Course& courses(int index) const;
-  inline ::protobuf::srl::school::SRL_Course* mutable_courses(int index);
-  inline ::protobuf::srl::school::SRL_Course* add_courses();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Course >&
+  inline const ::protobuf::srl::school::SrlCourse& courses(int index) const;
+  inline ::protobuf::srl::school::SrlCourse* mutable_courses(int index);
+  inline ::protobuf::srl::school::SrlCourse* add_courses();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlCourse >&
       courses() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Course >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlCourse >*
       mutable_courses();
 
-  // repeated .protobuf.srl.school.SRL_Assignment assignments = 2;
+  // repeated .protobuf.srl.school.SrlAssignment assignments = 2;
   inline int assignments_size() const;
   inline void clear_assignments();
   static const int kAssignmentsFieldNumber = 2;
-  inline const ::protobuf::srl::school::SRL_Assignment& assignments(int index) const;
-  inline ::protobuf::srl::school::SRL_Assignment* mutable_assignments(int index);
-  inline ::protobuf::srl::school::SRL_Assignment* add_assignments();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Assignment >&
+  inline const ::protobuf::srl::school::SrlAssignment& assignments(int index) const;
+  inline ::protobuf::srl::school::SrlAssignment* mutable_assignments(int index);
+  inline ::protobuf::srl::school::SrlAssignment* add_assignments();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlAssignment >&
       assignments() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Assignment >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlAssignment >*
       mutable_assignments();
 
-  // repeated .protobuf.srl.school.SRL_Problem problems = 3;
+  // repeated .protobuf.srl.school.SrlProblem problems = 3;
   inline int problems_size() const;
   inline void clear_problems();
   static const int kProblemsFieldNumber = 3;
-  inline const ::protobuf::srl::school::SRL_Problem& problems(int index) const;
-  inline ::protobuf::srl::school::SRL_Problem* mutable_problems(int index);
-  inline ::protobuf::srl::school::SRL_Problem* add_problems();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Problem >&
+  inline const ::protobuf::srl::school::SrlProblem& problems(int index) const;
+  inline ::protobuf::srl::school::SrlProblem* mutable_problems(int index);
+  inline ::protobuf::srl::school::SrlProblem* add_problems();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlProblem >&
       problems() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Problem >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlProblem >*
       mutable_problems();
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_School)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlSchool)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Course > courses_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Assignment > assignments_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Problem > problems_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlCourse > courses_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlAssignment > assignments_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlProblem > problems_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -172,18 +172,18 @@ class SRL_School : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fschool_2eproto();
 
   void InitAsDefaultInstance();
-  static SRL_School* default_instance_;
+  static SrlSchool* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class SRL_Course : public ::google::protobuf::Message {
+class SrlCourse : public ::google::protobuf::Message {
  public:
-  SRL_Course();
-  virtual ~SRL_Course();
+  SrlCourse();
+  virtual ~SrlCourse();
 
-  SRL_Course(const SRL_Course& from);
+  SrlCourse(const SrlCourse& from);
 
-  inline SRL_Course& operator=(const SRL_Course& from) {
+  inline SrlCourse& operator=(const SrlCourse& from) {
     CopyFrom(from);
     return *this;
   }
@@ -197,17 +197,17 @@ class SRL_Course : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SRL_Course& default_instance();
+  static const SrlCourse& default_instance();
 
-  void Swap(SRL_Course* other);
+  void Swap(SrlCourse* other);
 
   // implements Message ----------------------------------------------
 
-  SRL_Course* New() const;
+  SrlCourse* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SRL_Course& from);
-  void MergeFrom(const SRL_Course& from);
+  void CopyFrom(const SrlCourse& from);
+  void MergeFrom(const SrlCourse& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -254,7 +254,7 @@ class SRL_Course : public ::google::protobuf::Message {
   inline ::std::string* release_coursename();
   inline void set_allocated_coursename(::std::string* coursename);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_Course)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlCourse)
  private:
   inline void set_has_courseid();
   inline void clear_has_courseid();
@@ -274,18 +274,18 @@ class SRL_Course : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fschool_2eproto();
 
   void InitAsDefaultInstance();
-  static SRL_Course* default_instance_;
+  static SrlCourse* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class SRL_Assignment : public ::google::protobuf::Message {
+class SrlAssignment : public ::google::protobuf::Message {
  public:
-  SRL_Assignment();
-  virtual ~SRL_Assignment();
+  SrlAssignment();
+  virtual ~SrlAssignment();
 
-  SRL_Assignment(const SRL_Assignment& from);
+  SrlAssignment(const SrlAssignment& from);
 
-  inline SRL_Assignment& operator=(const SRL_Assignment& from) {
+  inline SrlAssignment& operator=(const SrlAssignment& from) {
     CopyFrom(from);
     return *this;
   }
@@ -299,17 +299,17 @@ class SRL_Assignment : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SRL_Assignment& default_instance();
+  static const SrlAssignment& default_instance();
 
-  void Swap(SRL_Assignment* other);
+  void Swap(SrlAssignment* other);
 
   // implements Message ----------------------------------------------
 
-  SRL_Assignment* New() const;
+  SrlAssignment* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SRL_Assignment& from);
-  void MergeFrom(const SRL_Assignment& from);
+  void CopyFrom(const SrlAssignment& from);
+  void MergeFrom(const SrlAssignment& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -363,7 +363,7 @@ class SRL_Assignment : public ::google::protobuf::Message {
   inline ::std::string* release_assignmentname();
   inline void set_allocated_assignmentname(::std::string* assignmentname);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_Assignment)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlAssignment)
  private:
   inline void set_has_courseid();
   inline void clear_has_courseid();
@@ -386,18 +386,18 @@ class SRL_Assignment : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fschool_2eproto();
 
   void InitAsDefaultInstance();
-  static SRL_Assignment* default_instance_;
+  static SrlAssignment* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class SRL_Problem : public ::google::protobuf::Message {
+class SrlProblem : public ::google::protobuf::Message {
  public:
-  SRL_Problem();
-  virtual ~SRL_Problem();
+  SrlProblem();
+  virtual ~SrlProblem();
 
-  SRL_Problem(const SRL_Problem& from);
+  SrlProblem(const SrlProblem& from);
 
-  inline SRL_Problem& operator=(const SRL_Problem& from) {
+  inline SrlProblem& operator=(const SrlProblem& from) {
     CopyFrom(from);
     return *this;
   }
@@ -411,17 +411,17 @@ class SRL_Problem : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SRL_Problem& default_instance();
+  static const SrlProblem& default_instance();
 
-  void Swap(SRL_Problem* other);
+  void Swap(SrlProblem* other);
 
   // implements Message ----------------------------------------------
 
-  SRL_Problem* New() const;
+  SrlProblem* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SRL_Problem& from);
-  void MergeFrom(const SRL_Problem& from);
+  void CopyFrom(const SrlProblem& from);
+  void MergeFrom(const SrlProblem& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -503,7 +503,7 @@ class SRL_Problem : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation >*
       mutable_subproblems();
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SRL_Problem)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlProblem)
  private:
   inline void set_has_courseid();
   inline void clear_has_courseid();
@@ -533,7 +533,7 @@ class SRL_Problem : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fschool_2eproto();
 
   void InitAsDefaultInstance();
-  static SRL_Problem* default_instance_;
+  static SrlProblem* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -678,135 +678,135 @@ class subproblemInformation : public ::google::protobuf::Message {
 
 // ===================================================================
 
-// SRL_School
+// SrlSchool
 
-// repeated .protobuf.srl.school.SRL_Course courses = 1;
-inline int SRL_School::courses_size() const {
+// repeated .protobuf.srl.school.SrlCourse courses = 1;
+inline int SrlSchool::courses_size() const {
   return courses_.size();
 }
-inline void SRL_School::clear_courses() {
+inline void SrlSchool::clear_courses() {
   courses_.Clear();
 }
-inline const ::protobuf::srl::school::SRL_Course& SRL_School::courses(int index) const {
+inline const ::protobuf::srl::school::SrlCourse& SrlSchool::courses(int index) const {
   return courses_.Get(index);
 }
-inline ::protobuf::srl::school::SRL_Course* SRL_School::mutable_courses(int index) {
+inline ::protobuf::srl::school::SrlCourse* SrlSchool::mutable_courses(int index) {
   return courses_.Mutable(index);
 }
-inline ::protobuf::srl::school::SRL_Course* SRL_School::add_courses() {
+inline ::protobuf::srl::school::SrlCourse* SrlSchool::add_courses() {
   return courses_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Course >&
-SRL_School::courses() const {
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlCourse >&
+SrlSchool::courses() const {
   return courses_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Course >*
-SRL_School::mutable_courses() {
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlCourse >*
+SrlSchool::mutable_courses() {
   return &courses_;
 }
 
-// repeated .protobuf.srl.school.SRL_Assignment assignments = 2;
-inline int SRL_School::assignments_size() const {
+// repeated .protobuf.srl.school.SrlAssignment assignments = 2;
+inline int SrlSchool::assignments_size() const {
   return assignments_.size();
 }
-inline void SRL_School::clear_assignments() {
+inline void SrlSchool::clear_assignments() {
   assignments_.Clear();
 }
-inline const ::protobuf::srl::school::SRL_Assignment& SRL_School::assignments(int index) const {
+inline const ::protobuf::srl::school::SrlAssignment& SrlSchool::assignments(int index) const {
   return assignments_.Get(index);
 }
-inline ::protobuf::srl::school::SRL_Assignment* SRL_School::mutable_assignments(int index) {
+inline ::protobuf::srl::school::SrlAssignment* SrlSchool::mutable_assignments(int index) {
   return assignments_.Mutable(index);
 }
-inline ::protobuf::srl::school::SRL_Assignment* SRL_School::add_assignments() {
+inline ::protobuf::srl::school::SrlAssignment* SrlSchool::add_assignments() {
   return assignments_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Assignment >&
-SRL_School::assignments() const {
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlAssignment >&
+SrlSchool::assignments() const {
   return assignments_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Assignment >*
-SRL_School::mutable_assignments() {
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlAssignment >*
+SrlSchool::mutable_assignments() {
   return &assignments_;
 }
 
-// repeated .protobuf.srl.school.SRL_Problem problems = 3;
-inline int SRL_School::problems_size() const {
+// repeated .protobuf.srl.school.SrlProblem problems = 3;
+inline int SrlSchool::problems_size() const {
   return problems_.size();
 }
-inline void SRL_School::clear_problems() {
+inline void SrlSchool::clear_problems() {
   problems_.Clear();
 }
-inline const ::protobuf::srl::school::SRL_Problem& SRL_School::problems(int index) const {
+inline const ::protobuf::srl::school::SrlProblem& SrlSchool::problems(int index) const {
   return problems_.Get(index);
 }
-inline ::protobuf::srl::school::SRL_Problem* SRL_School::mutable_problems(int index) {
+inline ::protobuf::srl::school::SrlProblem* SrlSchool::mutable_problems(int index) {
   return problems_.Mutable(index);
 }
-inline ::protobuf::srl::school::SRL_Problem* SRL_School::add_problems() {
+inline ::protobuf::srl::school::SrlProblem* SrlSchool::add_problems() {
   return problems_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Problem >&
-SRL_School::problems() const {
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlProblem >&
+SrlSchool::problems() const {
   return problems_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SRL_Problem >*
-SRL_School::mutable_problems() {
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlProblem >*
+SrlSchool::mutable_problems() {
   return &problems_;
 }
 
 // -------------------------------------------------------------------
 
-// SRL_Course
+// SrlCourse
 
 // required string courseId = 1;
-inline bool SRL_Course::has_courseid() const {
+inline bool SrlCourse::has_courseid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SRL_Course::set_has_courseid() {
+inline void SrlCourse::set_has_courseid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SRL_Course::clear_has_courseid() {
+inline void SrlCourse::clear_has_courseid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SRL_Course::clear_courseid() {
+inline void SrlCourse::clear_courseid() {
   if (courseid_ != &::google::protobuf::internal::kEmptyString) {
     courseid_->clear();
   }
   clear_has_courseid();
 }
-inline const ::std::string& SRL_Course::courseid() const {
+inline const ::std::string& SrlCourse::courseid() const {
   return *courseid_;
 }
-inline void SRL_Course::set_courseid(const ::std::string& value) {
+inline void SrlCourse::set_courseid(const ::std::string& value) {
   set_has_courseid();
   if (courseid_ == &::google::protobuf::internal::kEmptyString) {
     courseid_ = new ::std::string;
   }
   courseid_->assign(value);
 }
-inline void SRL_Course::set_courseid(const char* value) {
+inline void SrlCourse::set_courseid(const char* value) {
   set_has_courseid();
   if (courseid_ == &::google::protobuf::internal::kEmptyString) {
     courseid_ = new ::std::string;
   }
   courseid_->assign(value);
 }
-inline void SRL_Course::set_courseid(const char* value, size_t size) {
+inline void SrlCourse::set_courseid(const char* value, size_t size) {
   set_has_courseid();
   if (courseid_ == &::google::protobuf::internal::kEmptyString) {
     courseid_ = new ::std::string;
   }
   courseid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Course::mutable_courseid() {
+inline ::std::string* SrlCourse::mutable_courseid() {
   set_has_courseid();
   if (courseid_ == &::google::protobuf::internal::kEmptyString) {
     courseid_ = new ::std::string;
   }
   return courseid_;
 }
-inline ::std::string* SRL_Course::release_courseid() {
+inline ::std::string* SrlCourse::release_courseid() {
   clear_has_courseid();
   if (courseid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -816,7 +816,7 @@ inline ::std::string* SRL_Course::release_courseid() {
     return temp;
   }
 }
-inline void SRL_Course::set_allocated_courseid(::std::string* courseid) {
+inline void SrlCourse::set_allocated_courseid(::std::string* courseid) {
   if (courseid_ != &::google::protobuf::internal::kEmptyString) {
     delete courseid_;
   }
@@ -830,53 +830,53 @@ inline void SRL_Course::set_allocated_courseid(::std::string* courseid) {
 }
 
 // optional string courseName = 2;
-inline bool SRL_Course::has_coursename() const {
+inline bool SrlCourse::has_coursename() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SRL_Course::set_has_coursename() {
+inline void SrlCourse::set_has_coursename() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SRL_Course::clear_has_coursename() {
+inline void SrlCourse::clear_has_coursename() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SRL_Course::clear_coursename() {
+inline void SrlCourse::clear_coursename() {
   if (coursename_ != &::google::protobuf::internal::kEmptyString) {
     coursename_->clear();
   }
   clear_has_coursename();
 }
-inline const ::std::string& SRL_Course::coursename() const {
+inline const ::std::string& SrlCourse::coursename() const {
   return *coursename_;
 }
-inline void SRL_Course::set_coursename(const ::std::string& value) {
+inline void SrlCourse::set_coursename(const ::std::string& value) {
   set_has_coursename();
   if (coursename_ == &::google::protobuf::internal::kEmptyString) {
     coursename_ = new ::std::string;
   }
   coursename_->assign(value);
 }
-inline void SRL_Course::set_coursename(const char* value) {
+inline void SrlCourse::set_coursename(const char* value) {
   set_has_coursename();
   if (coursename_ == &::google::protobuf::internal::kEmptyString) {
     coursename_ = new ::std::string;
   }
   coursename_->assign(value);
 }
-inline void SRL_Course::set_coursename(const char* value, size_t size) {
+inline void SrlCourse::set_coursename(const char* value, size_t size) {
   set_has_coursename();
   if (coursename_ == &::google::protobuf::internal::kEmptyString) {
     coursename_ = new ::std::string;
   }
   coursename_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Course::mutable_coursename() {
+inline ::std::string* SrlCourse::mutable_coursename() {
   set_has_coursename();
   if (coursename_ == &::google::protobuf::internal::kEmptyString) {
     coursename_ = new ::std::string;
   }
   return coursename_;
 }
-inline ::std::string* SRL_Course::release_coursename() {
+inline ::std::string* SrlCourse::release_coursename() {
   clear_has_coursename();
   if (coursename_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -886,7 +886,7 @@ inline ::std::string* SRL_Course::release_coursename() {
     return temp;
   }
 }
-inline void SRL_Course::set_allocated_coursename(::std::string* coursename) {
+inline void SrlCourse::set_allocated_coursename(::std::string* coursename) {
   if (coursename_ != &::google::protobuf::internal::kEmptyString) {
     delete coursename_;
   }
@@ -901,78 +901,78 @@ inline void SRL_Course::set_allocated_coursename(::std::string* coursename) {
 
 // -------------------------------------------------------------------
 
-// SRL_Assignment
+// SrlAssignment
 
 // required uint64 courseId = 1;
-inline bool SRL_Assignment::has_courseid() const {
+inline bool SrlAssignment::has_courseid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SRL_Assignment::set_has_courseid() {
+inline void SrlAssignment::set_has_courseid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SRL_Assignment::clear_has_courseid() {
+inline void SrlAssignment::clear_has_courseid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SRL_Assignment::clear_courseid() {
+inline void SrlAssignment::clear_courseid() {
   courseid_ = GOOGLE_ULONGLONG(0);
   clear_has_courseid();
 }
-inline ::google::protobuf::uint64 SRL_Assignment::courseid() const {
+inline ::google::protobuf::uint64 SrlAssignment::courseid() const {
   return courseid_;
 }
-inline void SRL_Assignment::set_courseid(::google::protobuf::uint64 value) {
+inline void SrlAssignment::set_courseid(::google::protobuf::uint64 value) {
   set_has_courseid();
   courseid_ = value;
 }
 
 // required string assignmentId = 2;
-inline bool SRL_Assignment::has_assignmentid() const {
+inline bool SrlAssignment::has_assignmentid() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SRL_Assignment::set_has_assignmentid() {
+inline void SrlAssignment::set_has_assignmentid() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SRL_Assignment::clear_has_assignmentid() {
+inline void SrlAssignment::clear_has_assignmentid() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SRL_Assignment::clear_assignmentid() {
+inline void SrlAssignment::clear_assignmentid() {
   if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
     assignmentid_->clear();
   }
   clear_has_assignmentid();
 }
-inline const ::std::string& SRL_Assignment::assignmentid() const {
+inline const ::std::string& SrlAssignment::assignmentid() const {
   return *assignmentid_;
 }
-inline void SRL_Assignment::set_assignmentid(const ::std::string& value) {
+inline void SrlAssignment::set_assignmentid(const ::std::string& value) {
   set_has_assignmentid();
   if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
     assignmentid_ = new ::std::string;
   }
   assignmentid_->assign(value);
 }
-inline void SRL_Assignment::set_assignmentid(const char* value) {
+inline void SrlAssignment::set_assignmentid(const char* value) {
   set_has_assignmentid();
   if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
     assignmentid_ = new ::std::string;
   }
   assignmentid_->assign(value);
 }
-inline void SRL_Assignment::set_assignmentid(const char* value, size_t size) {
+inline void SrlAssignment::set_assignmentid(const char* value, size_t size) {
   set_has_assignmentid();
   if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
     assignmentid_ = new ::std::string;
   }
   assignmentid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Assignment::mutable_assignmentid() {
+inline ::std::string* SrlAssignment::mutable_assignmentid() {
   set_has_assignmentid();
   if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
     assignmentid_ = new ::std::string;
   }
   return assignmentid_;
 }
-inline ::std::string* SRL_Assignment::release_assignmentid() {
+inline ::std::string* SrlAssignment::release_assignmentid() {
   clear_has_assignmentid();
   if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -982,7 +982,7 @@ inline ::std::string* SRL_Assignment::release_assignmentid() {
     return temp;
   }
 }
-inline void SRL_Assignment::set_allocated_assignmentid(::std::string* assignmentid) {
+inline void SrlAssignment::set_allocated_assignmentid(::std::string* assignmentid) {
   if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
     delete assignmentid_;
   }
@@ -996,53 +996,53 @@ inline void SRL_Assignment::set_allocated_assignmentid(::std::string* assignment
 }
 
 // optional string assignmentName = 3;
-inline bool SRL_Assignment::has_assignmentname() const {
+inline bool SrlAssignment::has_assignmentname() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SRL_Assignment::set_has_assignmentname() {
+inline void SrlAssignment::set_has_assignmentname() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void SRL_Assignment::clear_has_assignmentname() {
+inline void SrlAssignment::clear_has_assignmentname() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void SRL_Assignment::clear_assignmentname() {
+inline void SrlAssignment::clear_assignmentname() {
   if (assignmentname_ != &::google::protobuf::internal::kEmptyString) {
     assignmentname_->clear();
   }
   clear_has_assignmentname();
 }
-inline const ::std::string& SRL_Assignment::assignmentname() const {
+inline const ::std::string& SrlAssignment::assignmentname() const {
   return *assignmentname_;
 }
-inline void SRL_Assignment::set_assignmentname(const ::std::string& value) {
+inline void SrlAssignment::set_assignmentname(const ::std::string& value) {
   set_has_assignmentname();
   if (assignmentname_ == &::google::protobuf::internal::kEmptyString) {
     assignmentname_ = new ::std::string;
   }
   assignmentname_->assign(value);
 }
-inline void SRL_Assignment::set_assignmentname(const char* value) {
+inline void SrlAssignment::set_assignmentname(const char* value) {
   set_has_assignmentname();
   if (assignmentname_ == &::google::protobuf::internal::kEmptyString) {
     assignmentname_ = new ::std::string;
   }
   assignmentname_->assign(value);
 }
-inline void SRL_Assignment::set_assignmentname(const char* value, size_t size) {
+inline void SrlAssignment::set_assignmentname(const char* value, size_t size) {
   set_has_assignmentname();
   if (assignmentname_ == &::google::protobuf::internal::kEmptyString) {
     assignmentname_ = new ::std::string;
   }
   assignmentname_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Assignment::mutable_assignmentname() {
+inline ::std::string* SrlAssignment::mutable_assignmentname() {
   set_has_assignmentname();
   if (assignmentname_ == &::google::protobuf::internal::kEmptyString) {
     assignmentname_ = new ::std::string;
   }
   return assignmentname_;
 }
-inline ::std::string* SRL_Assignment::release_assignmentname() {
+inline ::std::string* SrlAssignment::release_assignmentname() {
   clear_has_assignmentname();
   if (assignmentname_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1052,7 +1052,7 @@ inline ::std::string* SRL_Assignment::release_assignmentname() {
     return temp;
   }
 }
-inline void SRL_Assignment::set_allocated_assignmentname(::std::string* assignmentname) {
+inline void SrlAssignment::set_allocated_assignmentname(::std::string* assignmentname) {
   if (assignmentname_ != &::google::protobuf::internal::kEmptyString) {
     delete assignmentname_;
   }
@@ -1067,100 +1067,100 @@ inline void SRL_Assignment::set_allocated_assignmentname(::std::string* assignme
 
 // -------------------------------------------------------------------
 
-// SRL_Problem
+// SrlProblem
 
 // required uint64 courseId = 1;
-inline bool SRL_Problem::has_courseid() const {
+inline bool SrlProblem::has_courseid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SRL_Problem::set_has_courseid() {
+inline void SrlProblem::set_has_courseid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SRL_Problem::clear_has_courseid() {
+inline void SrlProblem::clear_has_courseid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SRL_Problem::clear_courseid() {
+inline void SrlProblem::clear_courseid() {
   courseid_ = GOOGLE_ULONGLONG(0);
   clear_has_courseid();
 }
-inline ::google::protobuf::uint64 SRL_Problem::courseid() const {
+inline ::google::protobuf::uint64 SrlProblem::courseid() const {
   return courseid_;
 }
-inline void SRL_Problem::set_courseid(::google::protobuf::uint64 value) {
+inline void SrlProblem::set_courseid(::google::protobuf::uint64 value) {
   set_has_courseid();
   courseid_ = value;
 }
 
 // required uint64 assignmentId = 2;
-inline bool SRL_Problem::has_assignmentid() const {
+inline bool SrlProblem::has_assignmentid() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SRL_Problem::set_has_assignmentid() {
+inline void SrlProblem::set_has_assignmentid() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SRL_Problem::clear_has_assignmentid() {
+inline void SrlProblem::clear_has_assignmentid() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SRL_Problem::clear_assignmentid() {
+inline void SrlProblem::clear_assignmentid() {
   assignmentid_ = GOOGLE_ULONGLONG(0);
   clear_has_assignmentid();
 }
-inline ::google::protobuf::uint64 SRL_Problem::assignmentid() const {
+inline ::google::protobuf::uint64 SrlProblem::assignmentid() const {
   return assignmentid_;
 }
-inline void SRL_Problem::set_assignmentid(::google::protobuf::uint64 value) {
+inline void SrlProblem::set_assignmentid(::google::protobuf::uint64 value) {
   set_has_assignmentid();
   assignmentid_ = value;
 }
 
 // required string problemId = 3;
-inline bool SRL_Problem::has_problemid() const {
+inline bool SrlProblem::has_problemid() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SRL_Problem::set_has_problemid() {
+inline void SrlProblem::set_has_problemid() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void SRL_Problem::clear_has_problemid() {
+inline void SrlProblem::clear_has_problemid() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void SRL_Problem::clear_problemid() {
+inline void SrlProblem::clear_problemid() {
   if (problemid_ != &::google::protobuf::internal::kEmptyString) {
     problemid_->clear();
   }
   clear_has_problemid();
 }
-inline const ::std::string& SRL_Problem::problemid() const {
+inline const ::std::string& SrlProblem::problemid() const {
   return *problemid_;
 }
-inline void SRL_Problem::set_problemid(const ::std::string& value) {
+inline void SrlProblem::set_problemid(const ::std::string& value) {
   set_has_problemid();
   if (problemid_ == &::google::protobuf::internal::kEmptyString) {
     problemid_ = new ::std::string;
   }
   problemid_->assign(value);
 }
-inline void SRL_Problem::set_problemid(const char* value) {
+inline void SrlProblem::set_problemid(const char* value) {
   set_has_problemid();
   if (problemid_ == &::google::protobuf::internal::kEmptyString) {
     problemid_ = new ::std::string;
   }
   problemid_->assign(value);
 }
-inline void SRL_Problem::set_problemid(const char* value, size_t size) {
+inline void SrlProblem::set_problemid(const char* value, size_t size) {
   set_has_problemid();
   if (problemid_ == &::google::protobuf::internal::kEmptyString) {
     problemid_ = new ::std::string;
   }
   problemid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Problem::mutable_problemid() {
+inline ::std::string* SrlProblem::mutable_problemid() {
   set_has_problemid();
   if (problemid_ == &::google::protobuf::internal::kEmptyString) {
     problemid_ = new ::std::string;
   }
   return problemid_;
 }
-inline ::std::string* SRL_Problem::release_problemid() {
+inline ::std::string* SrlProblem::release_problemid() {
   clear_has_problemid();
   if (problemid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1170,7 +1170,7 @@ inline ::std::string* SRL_Problem::release_problemid() {
     return temp;
   }
 }
-inline void SRL_Problem::set_allocated_problemid(::std::string* problemid) {
+inline void SrlProblem::set_allocated_problemid(::std::string* problemid) {
   if (problemid_ != &::google::protobuf::internal::kEmptyString) {
     delete problemid_;
   }
@@ -1184,53 +1184,53 @@ inline void SRL_Problem::set_allocated_problemid(::std::string* problemid) {
 }
 
 // optional string problemName = 4;
-inline bool SRL_Problem::has_problemname() const {
+inline bool SrlProblem::has_problemname() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void SRL_Problem::set_has_problemname() {
+inline void SrlProblem::set_has_problemname() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void SRL_Problem::clear_has_problemname() {
+inline void SrlProblem::clear_has_problemname() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void SRL_Problem::clear_problemname() {
+inline void SrlProblem::clear_problemname() {
   if (problemname_ != &::google::protobuf::internal::kEmptyString) {
     problemname_->clear();
   }
   clear_has_problemname();
 }
-inline const ::std::string& SRL_Problem::problemname() const {
+inline const ::std::string& SrlProblem::problemname() const {
   return *problemname_;
 }
-inline void SRL_Problem::set_problemname(const ::std::string& value) {
+inline void SrlProblem::set_problemname(const ::std::string& value) {
   set_has_problemname();
   if (problemname_ == &::google::protobuf::internal::kEmptyString) {
     problemname_ = new ::std::string;
   }
   problemname_->assign(value);
 }
-inline void SRL_Problem::set_problemname(const char* value) {
+inline void SrlProblem::set_problemname(const char* value) {
   set_has_problemname();
   if (problemname_ == &::google::protobuf::internal::kEmptyString) {
     problemname_ = new ::std::string;
   }
   problemname_->assign(value);
 }
-inline void SRL_Problem::set_problemname(const char* value, size_t size) {
+inline void SrlProblem::set_problemname(const char* value, size_t size) {
   set_has_problemname();
   if (problemname_ == &::google::protobuf::internal::kEmptyString) {
     problemname_ = new ::std::string;
   }
   problemname_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SRL_Problem::mutable_problemname() {
+inline ::std::string* SrlProblem::mutable_problemname() {
   set_has_problemname();
   if (problemname_ == &::google::protobuf::internal::kEmptyString) {
     problemname_ = new ::std::string;
   }
   return problemname_;
 }
-inline ::std::string* SRL_Problem::release_problemname() {
+inline ::std::string* SrlProblem::release_problemname() {
   clear_has_problemname();
   if (problemname_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1240,7 +1240,7 @@ inline ::std::string* SRL_Problem::release_problemname() {
     return temp;
   }
 }
-inline void SRL_Problem::set_allocated_problemname(::std::string* problemname) {
+inline void SrlProblem::set_allocated_problemname(::std::string* problemname) {
   if (problemname_ != &::google::protobuf::internal::kEmptyString) {
     delete problemname_;
   }
@@ -1254,34 +1254,34 @@ inline void SRL_Problem::set_allocated_problemname(::std::string* problemname) {
 }
 
 // optional .protobuf.srl.school.subproblemInformation mainProblem = 5;
-inline bool SRL_Problem::has_mainproblem() const {
+inline bool SrlProblem::has_mainproblem() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void SRL_Problem::set_has_mainproblem() {
+inline void SrlProblem::set_has_mainproblem() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void SRL_Problem::clear_has_mainproblem() {
+inline void SrlProblem::clear_has_mainproblem() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void SRL_Problem::clear_mainproblem() {
+inline void SrlProblem::clear_mainproblem() {
   if (mainproblem_ != NULL) mainproblem_->::protobuf::srl::school::subproblemInformation::Clear();
   clear_has_mainproblem();
 }
-inline const ::protobuf::srl::school::subproblemInformation& SRL_Problem::mainproblem() const {
+inline const ::protobuf::srl::school::subproblemInformation& SrlProblem::mainproblem() const {
   return mainproblem_ != NULL ? *mainproblem_ : *default_instance_->mainproblem_;
 }
-inline ::protobuf::srl::school::subproblemInformation* SRL_Problem::mutable_mainproblem() {
+inline ::protobuf::srl::school::subproblemInformation* SrlProblem::mutable_mainproblem() {
   set_has_mainproblem();
   if (mainproblem_ == NULL) mainproblem_ = new ::protobuf::srl::school::subproblemInformation;
   return mainproblem_;
 }
-inline ::protobuf::srl::school::subproblemInformation* SRL_Problem::release_mainproblem() {
+inline ::protobuf::srl::school::subproblemInformation* SrlProblem::release_mainproblem() {
   clear_has_mainproblem();
   ::protobuf::srl::school::subproblemInformation* temp = mainproblem_;
   mainproblem_ = NULL;
   return temp;
 }
-inline void SRL_Problem::set_allocated_mainproblem(::protobuf::srl::school::subproblemInformation* mainproblem) {
+inline void SrlProblem::set_allocated_mainproblem(::protobuf::srl::school::subproblemInformation* mainproblem) {
   delete mainproblem_;
   mainproblem_ = mainproblem;
   if (mainproblem) {
@@ -1292,27 +1292,27 @@ inline void SRL_Problem::set_allocated_mainproblem(::protobuf::srl::school::subp
 }
 
 // repeated .protobuf.srl.school.subproblemInformation subProblems = 6;
-inline int SRL_Problem::subproblems_size() const {
+inline int SrlProblem::subproblems_size() const {
   return subproblems_.size();
 }
-inline void SRL_Problem::clear_subproblems() {
+inline void SrlProblem::clear_subproblems() {
   subproblems_.Clear();
 }
-inline const ::protobuf::srl::school::subproblemInformation& SRL_Problem::subproblems(int index) const {
+inline const ::protobuf::srl::school::subproblemInformation& SrlProblem::subproblems(int index) const {
   return subproblems_.Get(index);
 }
-inline ::protobuf::srl::school::subproblemInformation* SRL_Problem::mutable_subproblems(int index) {
+inline ::protobuf::srl::school::subproblemInformation* SrlProblem::mutable_subproblems(int index) {
   return subproblems_.Mutable(index);
 }
-inline ::protobuf::srl::school::subproblemInformation* SRL_Problem::add_subproblems() {
+inline ::protobuf::srl::school::subproblemInformation* SrlProblem::add_subproblems() {
   return subproblems_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation >&
-SRL_Problem::subproblems() const {
+SrlProblem::subproblems() const {
   return subproblems_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation >*
-SRL_Problem::mutable_subproblems() {
+SrlProblem::mutable_subproblems() {
   return &subproblems_;
 }
 

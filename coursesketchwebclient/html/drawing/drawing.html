@@ -8,15 +8,26 @@
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
-    	function init() {
-    		parent.redirector.setRedirect('html/drawing/drawing.html');
-    		initializeInput();
-    		matchParent('drawingCanvas');
-    	}
 		var serverConnection = parent.connection;
 		var drawingCreator = false;
 		var sketch = false;
 		var canvasContext = false;
+    	function init() {
+    		parent.redirector.setRedirect('html/drawing/drawing.html');
+    		initializeProtos();
+    		initializeInput();
+    		matchParent('drawingCanvas');
+    	}
+
+    	/**
+    		Creates the proto files required for drawing if they do not exist.
+    	*/
+    	function initializeProtos() {
+    		alert(parent.connection.setOnOpenListener);
+   			parent.connection.buildSketch();
+   			parent.connection.buildUpdateList();
+    	}
+
 	    function initializeInput() {
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
@@ -27,22 +38,29 @@
 				alert('I AM GETTING A MESSAGE');
 			});
 		}
-	    
-	    function callback() {
-			element = document.getElementById('output');
-			var html = "";
-			var list = sketch.getList();
-			for(var i = 0; i < list.length; i++) {
-				var object = list[i];
-				object.draw(canvasContext);
-			}
-		//	alert(serverConnection.sendRequest);
-			//var Message = parent.Message;
-		//	alert(parent.Request);
-			serverConnection.sendRequest(new parent.Request());
-		//	element.innerHTML = html;
+
+	    function callback(stroke) {
+			stroke.draw(canvasContext);
+			var command = new ProtoSrlCommand();
+			command.time = stroke.time;
+			command.commandType = ProtoSrlCommandType.ADD_STROKE;
+			command.isUserCreated = true;
+			command.commandId = "RANDOM STRING";
+			var addStroke = new ProtoUpdateCommand.AddStroke();
+			// then finish him!
+			var request = serverConnection.createRequestFromCommand(command, parent.Request.MessageType.RECOGNITION);
 		}
-	    
+
+	    function drawEntireSketch() {
+	    	if (sketch) {
+		    	var list = sketch.getList();
+				for(var i = 0; i < list.length; i++) {
+					var object = list[i];
+					object.draw(canvasContext);
+				}
+	    	}
+	    }
+
 	    function setUpProtobufInheritance() {
 	    	parent.SRL_Shape.prototype = new SRL_Shape();
 	    	parent.SRL_Stroke.prototype = new SRL_Stroke();
@@ -68,10 +86,11 @@
 				var height = window.innerHeight - 4;
 				var width = window.innerWidth - 4;
 				var element = document.getElementById('drawingCanvas');
-				element.height = height;
-				element.width = width;
+				element.height = height - element.offsetTop;
+				element.width = width  - element.offsetLeft;
 				element.style.width = element.width;
 				element.style.height = element.height;
+				drawEntireSketch();
 	  		}
 	  		
 	  		
@@ -85,5 +104,6 @@
 	</style>
 </head>
 <body onload="init()">
+<div>Problem statement!</div>
 		<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
 </body>
