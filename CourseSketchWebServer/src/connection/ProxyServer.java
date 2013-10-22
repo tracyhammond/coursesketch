@@ -104,6 +104,7 @@ public class ProxyServer extends WebSocketServer {
 		}
 		if (!state.isLoggedIn()) {
 			Request response = LoginChecker.checkLogin(req, state);
+			System.out.println("Not Logged In!");
 			conn.send(response.toByteArray());
 			if (state.getTries() > MAX_LOGIN_TRIES) {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
