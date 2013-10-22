@@ -13,15 +13,15 @@ message SrlCourse {
 }
 
 message SrlAssignment {
-	required uint64 courseId = 1; // To know who the parent is.
+	required string courseId = 1; // To know who the parent is.
 	required string assignmentId = 2; // This must be unique within a course.
 	optional string assignmentName = 3;
 	// TODO: date information
 }
 
 message SrlProblem {
-	required uint64 courseId = 1; // To know who the grandParent is.
-	required uint64 assignmentId = 2; // To know who the parent is.
+	required string courseId = 1; // To know who the grandParent is.
+	required string assignmentId = 2; // To know who the parent is.
 	required string problemId = 3; // This must be unique within an assignment.
 	optional string problemName = 4;
 	optional subproblemInformation mainProblem = 5;

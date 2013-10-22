@@ -116,17 +116,18 @@ function Connection(uri, encrypted) {
 		var postFunction = postLoadedFunction;
 		function load1() {
 			loader.loadFile("js/connection/libraries/Long.min.js",'js',loadBarrier.bind(this));
-			loader.loadFile("js/connection/libraries/ByteBuffer.min.js",'js',load2.bind(this));
+			loader.loadFile("js/connection/libraries/ByteBuffer.min.js",'js',loadBarrier.bind(this));
 		}
 
 		function load2() {
-			barrierCount++;
-			loader.loadFile("js/connection/libraries/ProtoBuf.min.js",'js',loadBarrier.bind(this));
+			loader.loadFile("js/connection/libraries/ProtoBuf.js",'js',loadBarrier.bind(this));
 		}
 
 		function loadBarrier() {
 			barrierCount++;
-			if(barrierCount == 3) {
+			if (barrierCount == 2) {
+				load2();
+			}else if (barrierCount == 3) {
 				//Next Function.
 				initializeBuf();
 				filesLoaded = true;
@@ -148,6 +149,12 @@ function Connection(uri, encrypted) {
 			buildSchool();
 			//buildSketch();
 			postFunction();
+			buildSketch();
+			buildUpdateList();
+			if (!Long) {
+				Long = dcodeIO.Long;
+			}
+			
 		}
 
 		function buildSchool() {
@@ -161,43 +168,64 @@ function Connection(uri, encrypted) {
 				SrlProblem = schoolBuilder.SrlProblem;
 		}
 
+		function buildSketch() {
+			if (!sketchBuilder) {
+				var builder = ProtoBuf.protoFromFile(protobufDirectory + "sketch.proto");
+				sketchBuilder = builder.build("protobuf").srl.sketch;
+			}	
+
+			if (!ProtoSrlSketch)
+				ProtoSrlSketch = sketchBuilder.SrlSketch;
+			if (!ProtoSrlObject)
+				ProtoSrlObject = sketchBuilder.SrlObject;
+			if (!ProtoSrlShape)
+				ProtoSrlShape = sketchBuilder.SrlShape;
+			if (!ProtoSrlStroke)
+				ProtoSrlStroke = sketchBuilder.SrlStroke;
+			if (!ProtoSrlPoint)
+				ProtoSrlPoint = sketchBuilder.SrlPoint;
+		}
+
+		function buildUpdateList() {
+			if (!ProtoUpdateCommand) {
+				var builder = ProtoBuf.protoFromFile(protobufDirectory + "commands.proto");
+				ProtoUpdateCommand = builder.build("protobuf").srl.commands;
+			}
+
+			if (!ProtoSrlUpdate)
+				ProtoSrlUpdate = ProtoUpdateCommand.Update;
+			if (!ProtoSrlCommand)
+				ProtoSrlCommand = ProtoUpdateCommand.Command;
+			if (!ProtoSrlCommandType)
+				ProtoSrlCommandType = ProtoUpdateCommand.CommandType;
+		}
+		/*
+		function testRepeated() {
+			console.log("WORKING");
+	        var builder = ProtoBuf.protoFromFile(protobufDirectory+"/test.proto");
+	        var root = builder.build("protobuf");
+	        Outer = root.Outer;
+	        Inner = root.Inner;
+	        var inners = new Array();
+
+	        // Array of repeated messages
+	        inners.push(new Inner("a"), new Inner("b"), new Inner("c"));
+	        var outer = new Outer();
+	        outer.setInners(inners);
+
+	        // Array of repeated message objects
+	        inners = new Array();
+	        inners.push({ str: 'a' }, { str: 'b' }, { str: 'c' });
+	        console.log("WORKING");
+	        outer.setInners(inners); // Converts
+	        console.log("FINISHED WORKING");
+		}
+		*/
 		load1();
 	}
 
 	if(!(filesLoaded && builder && ProtoBuf && Request)) {
 		new protobufSetup(createWebSocket.bind(this));
-	}
-
-	this.buildSketch = function() {
-		if (!sketchBuilder) {
-			var builder = ProtoBuf.protoFromFile(protobufDirectory + "sketch.proto");
-			sketchBuilder = builder.build("protobuf").srl.sketch;
-		}	
-
-		if (!ProtoSrlSketch)
-			ProtoSrlSketch = sketchBuilder.SrlSketch;
-		if (!ProtoSrlObject)
-			ProtoSrlObject = sketchBuilder.SrlObject;
-		if (!ProtoSrlShape)
-			ProtoSrlShape = sketchBuilder.SrlShape;
-		if (!ProtoSrlStroke)
-			ProtoSrlStroke = sketchBuilder.SrlStroke;
-		if (!ProtoSrlPoint)
-			ProtoSrlPoint = sketchBuilder.SrlPoint;
-	}
-
-	this.buildUpdateList = function() {
-		if (!ProtoUpdateCommand) {
-			var builder = ProtoBuf.protoFromFile(protobufDirectory + "commands.proto");
-			ProtoUpdateCommand = builder.build("protobuf").srl.commands;
-		}
-			
-		if (!ProtoSrlUpdate)
-			ProtoSrlUpdate = ProtoUpdateCommand.Update;
-		if (!ProtoSrlCommand)
-			ProtoSrlCommand = ProtoUpdateCommand.Command;
-		if (!ProtoSRLCommandType)
-			ProtoSRLCommandType = ProtoUpdateCommand.CommandType;
 	}
 
 	/**
@@ -207,13 +235,16 @@ function Connection(uri, encrypted) {
 		var request = new Request();
 		request.requestType = requestType;
 		var update = new ProtoSrlUpdate();
-		update.commands = [];
-		update.commands.append(command);
-		
+		var array = new Array();
+		array.push(command);
+		update.setCommands(array);
+		var buffer = update.toArrayBuffer();
+		request.setOtherData(buffer);
 		return request;
 	}
 
 }
+var Long = false;
 
 var filesLoaded = false;
 var builder = false;
@@ -248,16 +279,19 @@ var ProtoSrlPoint = false;
 var ProtoUpdateCommand = false;
 var ProtoSrlUpdate = false;
 var ProtoSrlCommand = false;
-var ProtoSRLCommandType = false;
+var ProtoSrlCommandType = false;
 
 const CONNECTION_LOST = 1006;
 const INCORRECT_LOGIN = 4002;
 const SERVER_FULL = 4001;
 const protobufDirectory = "other/protobuf/";
+
 /**
  * copy global parameters
  */
 function copyProtosFromParentProtos() {
+	Long = parent.Long;
+	
 	filesLoaded = parent.filesLoaded;
 	builder = parent.builder;
 	ProtoBuf = parent.ProtoBuf;
@@ -270,7 +304,12 @@ function copyProtosFromParentProtos() {
 
 	ProtoSrlSketch = parent.ProtoSrlSketch;
 	ProtoSrlObject = parent.ProtoSrlObject;
-	ProtoSrlObject = parent.ProtoSrlShape;
-	ProtoSrlObject = parent.ProtoSrlStroke;
+	ProtoSrlShape = parent.ProtoSrlShape;
+	ProtoSrlStroke = parent.ProtoSrlStroke;
 	ProtoSrlPoint = parent.ProtoSrlPoint;
+
+	ProtoUpdateCommand = parent.ProtoUpdateCommand;
+	ProtoSrlUpdate = parent.ProtoSrlUpdate;
+	ProtoSrlCommand = parent.ProtoSrlCommand;
+	ProtoSrlCommandType = parent.ProtoSrlCommandType;
 }

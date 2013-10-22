@@ -11,9 +11,9 @@ public final class Sketch {
   public interface SrlSketchOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional uint64 courseId = 1;
+    // optional string courseId = 1;
     /**
-     * <code>optional uint64 courseId = 1;</code>
+     * <code>optional string courseId = 1;</code>
      *
      * <pre>
      * so we know what class it links to
@@ -21,17 +21,26 @@ public final class Sketch {
      */
     boolean hasCourseId();
     /**
-     * <code>optional uint64 courseId = 1;</code>
+     * <code>optional string courseId = 1;</code>
      *
      * <pre>
      * so we know what class it links to
      * </pre>
      */
-    long getCourseId();
-
-    // optional uint64 assignmentId = 2;
+    java.lang.String getCourseId();
     /**
-     * <code>optional uint64 assignmentId = 2;</code>
+     * <code>optional string courseId = 1;</code>
+     *
+     * <pre>
+     * so we know what class it links to
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getCourseIdBytes();
+
+    // optional string assignmentId = 2;
+    /**
+     * <code>optional string assignmentId = 2;</code>
      *
      * <pre>
      * so we know what assignment it links to
@@ -39,17 +48,26 @@ public final class Sketch {
      */
     boolean hasAssignmentId();
     /**
-     * <code>optional uint64 assignmentId = 2;</code>
+     * <code>optional string assignmentId = 2;</code>
      *
      * <pre>
      * so we know what assignment it links to
      * </pre>
      */
-    long getAssignmentId();
-
-    // optional uint64 problemId = 3;
+    java.lang.String getAssignmentId();
     /**
-     * <code>optional uint64 problemId = 3;</code>
+     * <code>optional string assignmentId = 2;</code>
+     *
+     * <pre>
+     * so we know what assignment it links to
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getAssignmentIdBytes();
+
+    // optional string problemId = 3;
+    /**
+     * <code>optional string problemId = 3;</code>
      *
      * <pre>
      * so we know what problem it links to
@@ -57,13 +75,22 @@ public final class Sketch {
      */
     boolean hasProblemId();
     /**
-     * <code>optional uint64 problemId = 3;</code>
+     * <code>optional string problemId = 3;</code>
      *
      * <pre>
      * so we know what problem it links to
      * </pre>
      */
-    long getProblemId();
+    java.lang.String getProblemId();
+    /**
+     * <code>optional string problemId = 3;</code>
+     *
+     * <pre>
+     * so we know what problem it links to
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getProblemIdBytes();
 
     // optional string domainId = 4;
     /**
@@ -168,19 +195,19 @@ public final class Sketch {
               }
               break;
             }
-            case 8: {
+            case 10: {
               bitField0_ |= 0x00000001;
-              courseId_ = input.readUInt64();
+              courseId_ = input.readBytes();
               break;
             }
-            case 16: {
+            case 18: {
               bitField0_ |= 0x00000002;
-              assignmentId_ = input.readUInt64();
+              assignmentId_ = input.readBytes();
               break;
             }
-            case 24: {
+            case 26: {
               bitField0_ |= 0x00000004;
-              problemId_ = input.readUInt64();
+              problemId_ = input.readBytes();
               break;
             }
             case 34: {
@@ -239,11 +266,11 @@ public final class Sketch {
     }
 
     private int bitField0_;
-    // optional uint64 courseId = 1;
+    // optional string courseId = 1;
     public static final int COURSEID_FIELD_NUMBER = 1;
-    private long courseId_;
+    private java.lang.Object courseId_;
     /**
-     * <code>optional uint64 courseId = 1;</code>
+     * <code>optional string courseId = 1;</code>
      *
      * <pre>
      * so we know what class it links to
@@ -253,21 +280,52 @@ public final class Sketch {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional uint64 courseId = 1;</code>
+     * <code>optional string courseId = 1;</code>
      *
      * <pre>
      * so we know what class it links to
      * </pre>
      */
-    public long getCourseId() {
-      return courseId_;
+    public java.lang.String getCourseId() {
+      java.lang.Object ref = courseId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          courseId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string courseId = 1;</code>
+     *
+     * <pre>
+     * so we know what class it links to
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getCourseIdBytes() {
+      java.lang.Object ref = courseId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        courseId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    // optional uint64 assignmentId = 2;
+    // optional string assignmentId = 2;
     public static final int ASSIGNMENTID_FIELD_NUMBER = 2;
-    private long assignmentId_;
+    private java.lang.Object assignmentId_;
     /**
-     * <code>optional uint64 assignmentId = 2;</code>
+     * <code>optional string assignmentId = 2;</code>
      *
      * <pre>
      * so we know what assignment it links to
@@ -277,21 +335,52 @@ public final class Sketch {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional uint64 assignmentId = 2;</code>
+     * <code>optional string assignmentId = 2;</code>
      *
      * <pre>
      * so we know what assignment it links to
      * </pre>
      */
-    public long getAssignmentId() {
-      return assignmentId_;
+    public java.lang.String getAssignmentId() {
+      java.lang.Object ref = assignmentId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          assignmentId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string assignmentId = 2;</code>
+     *
+     * <pre>
+     * so we know what assignment it links to
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getAssignmentIdBytes() {
+      java.lang.Object ref = assignmentId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        assignmentId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    // optional uint64 problemId = 3;
+    // optional string problemId = 3;
     public static final int PROBLEMID_FIELD_NUMBER = 3;
-    private long problemId_;
+    private java.lang.Object problemId_;
     /**
-     * <code>optional uint64 problemId = 3;</code>
+     * <code>optional string problemId = 3;</code>
      *
      * <pre>
      * so we know what problem it links to
@@ -301,14 +390,45 @@ public final class Sketch {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional uint64 problemId = 3;</code>
+     * <code>optional string problemId = 3;</code>
      *
      * <pre>
      * so we know what problem it links to
      * </pre>
      */
-    public long getProblemId() {
-      return problemId_;
+    public java.lang.String getProblemId() {
+      java.lang.Object ref = problemId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          problemId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string problemId = 3;</code>
+     *
+     * <pre>
+     * so we know what problem it links to
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getProblemIdBytes() {
+      java.lang.Object ref = problemId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        problemId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     // optional string domainId = 4;
@@ -403,9 +523,9 @@ public final class Sketch {
     }
 
     private void initFields() {
-      courseId_ = 0L;
-      assignmentId_ = 0L;
-      problemId_ = 0L;
+      courseId_ = "";
+      assignmentId_ = "";
+      problemId_ = "";
       domainId_ = "";
       sketch_ = java.util.Collections.emptyList();
     }
@@ -428,13 +548,13 @@ public final class Sketch {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeUInt64(1, courseId_);
+        output.writeBytes(1, getCourseIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeUInt64(2, assignmentId_);
+        output.writeBytes(2, getAssignmentIdBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeUInt64(3, problemId_);
+        output.writeBytes(3, getProblemIdBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBytes(4, getDomainIdBytes());
@@ -453,15 +573,15 @@ public final class Sketch {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(1, courseId_);
+          .computeBytesSize(1, getCourseIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(2, assignmentId_);
+          .computeBytesSize(2, getAssignmentIdBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(3, problemId_);
+          .computeBytesSize(3, getProblemIdBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
@@ -588,11 +708,11 @@ public final class Sketch {
 
       public Builder clear() {
         super.clear();
-        courseId_ = 0L;
+        courseId_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        assignmentId_ = 0L;
+        assignmentId_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        problemId_ = 0L;
+        problemId_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
         domainId_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -672,13 +792,19 @@ public final class Sketch {
       public Builder mergeFrom(protobuf.srl.sketch.Sketch.SrlSketch other) {
         if (other == protobuf.srl.sketch.Sketch.SrlSketch.getDefaultInstance()) return this;
         if (other.hasCourseId()) {
-          setCourseId(other.getCourseId());
+          bitField0_ |= 0x00000001;
+          courseId_ = other.courseId_;
+          onChanged();
         }
         if (other.hasAssignmentId()) {
-          setAssignmentId(other.getAssignmentId());
+          bitField0_ |= 0x00000002;
+          assignmentId_ = other.assignmentId_;
+          onChanged();
         }
         if (other.hasProblemId()) {
-          setProblemId(other.getProblemId());
+          bitField0_ |= 0x00000004;
+          problemId_ = other.problemId_;
+          onChanged();
         }
         if (other.hasDomainId()) {
           bitField0_ |= 0x00000008;
@@ -744,10 +870,10 @@ public final class Sketch {
       }
       private int bitField0_;
 
-      // optional uint64 courseId = 1;
-      private long courseId_ ;
+      // optional string courseId = 1;
+      private java.lang.Object courseId_ = "";
       /**
-       * <code>optional uint64 courseId = 1;</code>
+       * <code>optional string courseId = 1;</code>
        *
        * <pre>
        * so we know what class it links to
@@ -757,30 +883,62 @@ public final class Sketch {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional uint64 courseId = 1;</code>
+       * <code>optional string courseId = 1;</code>
        *
        * <pre>
        * so we know what class it links to
        * </pre>
        */
-      public long getCourseId() {
-        return courseId_;
+      public java.lang.String getCourseId() {
+        java.lang.Object ref = courseId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          courseId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional uint64 courseId = 1;</code>
+       * <code>optional string courseId = 1;</code>
        *
        * <pre>
        * so we know what class it links to
        * </pre>
        */
-      public Builder setCourseId(long value) {
-        bitField0_ |= 0x00000001;
+      public com.google.protobuf.ByteString
+          getCourseIdBytes() {
+        java.lang.Object ref = courseId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          courseId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string courseId = 1;</code>
+       *
+       * <pre>
+       * so we know what class it links to
+       * </pre>
+       */
+      public Builder setCourseId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         courseId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional uint64 courseId = 1;</code>
+       * <code>optional string courseId = 1;</code>
        *
        * <pre>
        * so we know what class it links to
@@ -788,15 +946,32 @@ public final class Sketch {
        */
       public Builder clearCourseId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        courseId_ = 0L;
+        courseId_ = getDefaultInstance().getCourseId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string courseId = 1;</code>
+       *
+       * <pre>
+       * so we know what class it links to
+       * </pre>
+       */
+      public Builder setCourseIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        courseId_ = value;
         onChanged();
         return this;
       }
 
-      // optional uint64 assignmentId = 2;
-      private long assignmentId_ ;
+      // optional string assignmentId = 2;
+      private java.lang.Object assignmentId_ = "";
       /**
-       * <code>optional uint64 assignmentId = 2;</code>
+       * <code>optional string assignmentId = 2;</code>
        *
        * <pre>
        * so we know what assignment it links to
@@ -806,30 +981,62 @@ public final class Sketch {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional uint64 assignmentId = 2;</code>
+       * <code>optional string assignmentId = 2;</code>
        *
        * <pre>
        * so we know what assignment it links to
        * </pre>
        */
-      public long getAssignmentId() {
-        return assignmentId_;
+      public java.lang.String getAssignmentId() {
+        java.lang.Object ref = assignmentId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          assignmentId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional uint64 assignmentId = 2;</code>
+       * <code>optional string assignmentId = 2;</code>
        *
        * <pre>
        * so we know what assignment it links to
        * </pre>
        */
-      public Builder setAssignmentId(long value) {
-        bitField0_ |= 0x00000002;
+      public com.google.protobuf.ByteString
+          getAssignmentIdBytes() {
+        java.lang.Object ref = assignmentId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          assignmentId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string assignmentId = 2;</code>
+       *
+       * <pre>
+       * so we know what assignment it links to
+       * </pre>
+       */
+      public Builder setAssignmentId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         assignmentId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional uint64 assignmentId = 2;</code>
+       * <code>optional string assignmentId = 2;</code>
        *
        * <pre>
        * so we know what assignment it links to
@@ -837,15 +1044,32 @@ public final class Sketch {
        */
       public Builder clearAssignmentId() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        assignmentId_ = 0L;
+        assignmentId_ = getDefaultInstance().getAssignmentId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string assignmentId = 2;</code>
+       *
+       * <pre>
+       * so we know what assignment it links to
+       * </pre>
+       */
+      public Builder setAssignmentIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        assignmentId_ = value;
         onChanged();
         return this;
       }
 
-      // optional uint64 problemId = 3;
-      private long problemId_ ;
+      // optional string problemId = 3;
+      private java.lang.Object problemId_ = "";
       /**
-       * <code>optional uint64 problemId = 3;</code>
+       * <code>optional string problemId = 3;</code>
        *
        * <pre>
        * so we know what problem it links to
@@ -855,30 +1079,62 @@ public final class Sketch {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional uint64 problemId = 3;</code>
+       * <code>optional string problemId = 3;</code>
        *
        * <pre>
        * so we know what problem it links to
        * </pre>
        */
-      public long getProblemId() {
-        return problemId_;
+      public java.lang.String getProblemId() {
+        java.lang.Object ref = problemId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          problemId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional uint64 problemId = 3;</code>
+       * <code>optional string problemId = 3;</code>
        *
        * <pre>
        * so we know what problem it links to
        * </pre>
        */
-      public Builder setProblemId(long value) {
-        bitField0_ |= 0x00000004;
+      public com.google.protobuf.ByteString
+          getProblemIdBytes() {
+        java.lang.Object ref = problemId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          problemId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string problemId = 3;</code>
+       *
+       * <pre>
+       * so we know what problem it links to
+       * </pre>
+       */
+      public Builder setProblemId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         problemId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional uint64 problemId = 3;</code>
+       * <code>optional string problemId = 3;</code>
        *
        * <pre>
        * so we know what problem it links to
@@ -886,7 +1142,24 @@ public final class Sketch {
        */
       public Builder clearProblemId() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        problemId_ = 0L;
+        problemId_ = getDefaultInstance().getProblemId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string problemId = 3;</code>
+       *
+       * <pre>
+       * so we know what problem it links to
+       * </pre>
+       */
+      public Builder setProblemIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        problemId_ = value;
         onChanged();
         return this;
       }
@@ -6358,8 +6631,8 @@ public final class Sketch {
   static {
     java.lang.String[] descriptorData = {
       "\n\022input/sketch.proto\022\023protobuf.srl.sketc" +
-      "h\"\210\001\n\tSrlSketch\022\020\n\010courseId\030\001 \001(\004\022\024\n\014ass" +
-      "ignmentId\030\002 \001(\004\022\021\n\tproblemId\030\003 \001(\004\022\020\n\010do" +
+      "h\"\210\001\n\tSrlSketch\022\020\n\010courseId\030\001 \001(\t\022\024\n\014ass" +
+      "ignmentId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\020\n\010do" +
       "mainId\030\004 \001(\t\022.\n\006sketch\030\005 \003(\0132\036.protobuf." +
       "srl.sketch.SrlObject\"\216\001\n\tSrlObject\0227\n\004ty" +
       "pe\030\001 \002(\0162).protobuf.srl.sketch.SrlObject" +
