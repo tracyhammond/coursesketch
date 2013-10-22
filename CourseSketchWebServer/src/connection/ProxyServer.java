@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
+import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -39,6 +40,7 @@ public class ProxyServer extends WebSocketServer {
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
+	ExampleClient recognition = connectProxy();
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) throws UnknownHostException {
@@ -72,6 +74,19 @@ public class ProxyServer extends WebSocketServer {
 	@Override
 	public void onMessage( WebSocket conn, String message ) {
 	}
+	
+	
+	public static ExampleClient connectProxy() {
+		ExampleClient c=null;
+		try {
+			c = new ExampleClient( new URI( "ws://goldberglinux02.tamu.edu:8887" ), new Draft_10() );
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
+		c.connect();
+		return c;
+	}
 
 	/**
 	 * Accepts messages and sends the request to the correct server and holds minimum client state.
@@ -80,6 +95,7 @@ public class ProxyServer extends WebSocketServer {
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
+		
 		if (req == null) {
 			System.out.println("protobuf error");
 			//this.
@@ -98,6 +114,9 @@ public class ProxyServer extends WebSocketServer {
 			if (state.getTries() > MAX_LOGIN_TRIES) {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 				return;
+			}
+		if(req.getRequestType() == MessageType.RECOGNITION){
+			recognition.send(buffer.array());
 			}
 			// Parse message.
 			conn.send(buffer);
