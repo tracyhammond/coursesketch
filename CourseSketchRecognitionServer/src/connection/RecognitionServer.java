@@ -114,6 +114,7 @@ public class RecognitionServer extends WebSocketServer {
 			addBuilder.setStroke(receivedStroke.toByteString());
 			
 			Command.Builder cmdBuilder = Command.newBuilder();
+			cmdBuilder.setIsUserCreated(false);
 			cmdBuilder.setCommandType(CommandType.ADD_STROKE);
 			cmdBuilder.setCommandData(addBuilder.build().toByteString());
 			
