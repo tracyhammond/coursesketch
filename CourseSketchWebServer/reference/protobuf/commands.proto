@@ -1,0 +1,55 @@
+package protobuf.srl.commands;
+
+message Update {
+	repeated Command commands = 1;
+}
+
+// inheritance does not exist so this will replace shape
+message Command {
+	required CommandType commandType = 1;
+	required bool isUserCreated = 2;
+	required bytes commandData = 3;
+	optional int64 time = 4;
+	optional string commandId = 5;
+	
+}
+
+enum CommandType {
+	ADD_STROKE = 0;	// This will only contain a SRL_Stroke in commandData
+	ADD_SHAPE = 1; // contains a shape.
+	PACKAGE_SHAPE = 2; // repackages shapes from the surface to inside another shape
+	FORCE_INTERPRETATION = 3;
+}
+
+/**
+ * This tells us to do 2 things
+ * #1 add all shapes with an id in the list of {@link shapesToBeContained} into shape with an id of {@link newContainerId}
+ * #2 delete all the shapes with the id in the list of from the sketch
+ */
+message PackageShape {
+	required string newContainerId = 1;
+	repeated string shapesToBeContained = 2; // This is a list of shapes
+}
+
+/**
+ * Stroke information.
+ */
+message AddStroke {
+	required bytes stroke = 1; // until I figure out how to make it import what it really is.
+}
+
+message RemoveShape {
+	required string shapeToRemoveId = 1;
+}
+
+message AddShape {
+	required bytes shape = 1; // contains a SRL_Object as defined in sketch.proto
+}
+
+/**
+ * Gives the shape with the current Id a new interpretation
+ */
+message ForceInterpretation {
+	required bytes interpretation = 1;
+	required string shapeId = 2; 
+}
