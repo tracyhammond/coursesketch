@@ -7,6 +7,12 @@ rm -rf ../coursesketchwebclient/other/protobuf/  #deleting
 rm -rf ../coursesketchwebserver/src/protobuf/  #deleting
 rm -rf ../CourseSketchRecognitionServer/src/protobuf/  #deleting
 
+rm -rf ../coursesketchwebserver/reference/protobuf/  #deleting
+rm -rf ../CourseSketchRecognitionServer/reference/protobuf/  #deleting
+
+mkdir -p ../CourseSketchRecognitionServer/reference/protobuf/
+mkdir -p ../coursesketchwebserver/reference/protobuf/
+
 FILES=input/*
 for f in $FILES
 
@@ -31,12 +37,14 @@ do
 
   echo "copying java files to coursesketchwebserver/src/"
   mkdir -p ../coursesketchwebserver/src/protobuf/  #making
-  cp -r -f output/java/$DIR/ ../coursesketchwebserver/src/ #copying
+  cp -r -f output/java/$DIR/ ../coursesketchwebserver/src/ #copying java
+  cp -r -f $f ../coursesketchwebserver/reference/protobuf/  #copying reference
 
   echo "copying java files to CourseSketchRecognitionServer/src/"
 
   mkdir -p ../CourseSketchRecognitionServer/src/protobuf/  #making
-  cp -r -f output/java/$DIR/ ../CourseSketchRecognitionServer/src/
+  cp -r -f output/java/$DIR/ ../CourseSketchRecognitionServer/src/ #copying java
+  cp -r -f $f ../CourseSketchRecognitionServer/reference/protobuf/  #copying reference
 
   #javac -cp "protobuf-2.5.0.jar" -d "output/java/$DIR/" -sourcepath output/java/$DIR/srl/ *.java
   #echo "creating compiled java files"
