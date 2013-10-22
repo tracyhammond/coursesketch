@@ -30,7 +30,6 @@ SRL_Stroke.prototype.sendToProtobuf = function(scope) {
 	for (var i=0; i<points.length; i++) {
 		array.push(points[i].sendToProtobuf(scope));
 	}
-	console.error(array);
 	proto.setPoints(array); // THIS FUNCTION SUCKS!
 	return proto;
 }
