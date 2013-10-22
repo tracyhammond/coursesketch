@@ -37,7 +37,7 @@
 			sketch = new sketchContainer();
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
 			serverConnection.setOnMessageListener(function(evt, message) {
-				alert('I AM GETTING A MESSAGE');
+				//alert('I AM GETTING A MESSAGE');
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
 					//alert("Recieving recognition");
 					var data = message.otherData;
