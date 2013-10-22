@@ -40,7 +40,7 @@ public class ProxyServer extends WebSocketServer {
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
-	ExampleClient recognition = connectProxy();
+	ExampleClient recognition = connectProxy(this, true);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) throws UnknownHostException {
@@ -75,11 +75,12 @@ public class ProxyServer extends WebSocketServer {
 	public void onMessage( WebSocket conn, String message ) {
 	}
 	
-	
-	public static ExampleClient connectProxy() {
+
+	public static ExampleClient connectProxy(ProxyServer serv, boolean local) {
 		ExampleClient c=null;
+		String location = local ? "ws://localhost:8888" : "ws://goldberglinux02.tamu.edu:8888";
 		try {
-			c = new ExampleClient( new URI( "ws://goldberglinux02.tamu.edu:8887" ), new Draft_10() );
+			c = new ExampleClient( new URI( location ), new Draft_10() , serv);
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -118,6 +119,7 @@ public class ProxyServer extends WebSocketServer {
 				return;
 			}
 			if(req.getRequestType() == MessageType.RECOGNITION){
+				recognition.connection = state;
 				System.out.println("REQUEST TYPE = RECOGNITION");
 				recognition.send(buffer.array());
 			}

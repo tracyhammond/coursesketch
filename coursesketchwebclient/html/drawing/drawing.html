@@ -38,6 +38,40 @@
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
 			serverConnection.setOnMessageListener(function(evt, message) {
 				alert('I AM GETTING A MESSAGE');
+				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
+					//alert("Recieving recognition");
+					var data = message.otherData;
+					var update = parent.ProtoSrlUpdate.decode(data);
+					var commandList = update.getCommands();
+					//if(commandList ) // if it is not an array...
+					//alert("CommandList " + commandList);
+					var command = commandList[0];
+					if (command.commandType == parent.ProtoSrlCommandType.ADD_STROKE) {
+						//alert(command.commandType + " userCreated: " + command.isUserCreated);
+						var addStroke = parent.ProtoUpdateCommand.AddStroke.decode(command.commandData);
+						//alert(addStroke);
+						var stroke = parent.ProtoSrlStroke.decode(addStroke.stroke);
+						//alert(stroke);
+						var pointList = stroke.points;
+						// LIST
+						var srlStroke = false;
+						//alert("listsize " + pointList.length);
+						for(var i = 0; i< pointList.length; i++) {
+							var point = pointList[i];
+							console.log("x: " + point.x+ " y: " + point.y);
+							var currentPoint = new SRL_Point(point.x - 50, point.y);
+							if (!srlStroke) {
+								srlStroke = new SRL_Stroke(currentPoint);
+							} else {
+								srlStroke.addPoint(currentPoint);
+							}
+						}
+						//alert(srlStroke);
+						//srlStroke.draw(canvasContext);
+						sketch.addObject(srlStroke);
+						drawEntireSketch();
+					}
+				}
 			});
 		}
 
@@ -50,9 +84,7 @@
 			command.commandId = "RANDOM STRING";
 			// then finish him!
 			var addStroke = new parent.ProtoUpdateCommand.AddStroke();
-			console.log("Made it 1");
 			addStroke.stroke = stroke.sendToProtobuf(parent).toArrayBuffer();
-			console.log("Made it 2");
 			command.commandData = addStroke.toArrayBuffer();
 			var request = serverConnection.createRequestFromCommand(command, parent.Request.MessageType.RECOGNITION);
 			serverConnection.sendRequest(request);

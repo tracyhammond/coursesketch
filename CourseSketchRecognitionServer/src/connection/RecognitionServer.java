@@ -84,30 +84,29 @@ public class RecognitionServer extends WebSocketServer {
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
-		
-		
+
 		if (req == null) {
 			System.out.println("protobuf error");
 			// we need to somehow send an error to the client here
 			return;
 		}
-		
+
 		if(req.getRequestType() == Request.MessageType.RECOGNITION) {
 			ByteString rawUpdateData = req.getOtherData();
 			Update savedUpdate = Decoder.parseNextUpdate(rawUpdateData);
 			//pass to them
 			//use a function that they will give
-			
+
 			//post function they will give (package the information received)
 			SrlStroke receivedStroke = null;
-			
+
 			try {
 				receivedStroke = Response.mirror(savedUpdate);
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			receivedStroke.toByteString();
 			
 			AddStroke.Builder addBuilder = AddStroke.newBuilder();
@@ -176,7 +175,7 @@ public class RecognitionServer extends WebSocketServer {
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		WebSocketImpl.DEBUG = true;
-		int port = 8887; // 843 flash policy port
+		int port = 8888; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {

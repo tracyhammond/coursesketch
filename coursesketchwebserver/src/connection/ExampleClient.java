@@ -2,7 +2,9 @@ package connection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_10;
@@ -12,6 +14,13 @@ import org.java_websocket.handshake.ServerHandshake;
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class ExampleClient extends WebSocketClient {
 
+	public ConnectionState connection = null;
+	ProxyServer parent;
+	public ExampleClient( URI serverUri , Draft draft , ProxyServer parent) {
+		this( serverUri, draft );
+		this.parent = parent;
+	}
+	
 	public ExampleClient( URI serverUri , Draft draft ) {
 		super( serverUri, draft );
 	}
@@ -31,6 +40,15 @@ public class ExampleClient extends WebSocketClient {
 		System.out.println( "received: " + message );
 	}
 
+	/**
+	 * Accepts messages and sends the request to the correct server and holds minimum client state.
+	 */
+	@Override
+	public void onMessage(ByteBuffer buffer) {
+		if (connection!=null) {
+			parent.idToConnection.get(connection).send(buffer);
+		}
+	}
 
 	public void onFragment( Framedata fragment ) {
 		System.out.println( "received fragment: " + new String( fragment.getPayloadData().array() ) );
