@@ -15,6 +15,14 @@ import srl.core.sketch.Point;
 import srl.core.sketch.Stroke;
 
 public class Response {
+	
+	/**
+	 * Simple response function to take in a Protobuf file, convert it into Paleosketch
+	 * and then manipulate it and package it back up to return
+	 * @param protobuf.srl.commands.Commands.Update
+	 * @return protobuf.srl.sketch.Sketch.SrlStroke
+	 * @throws InvalidProtocolBufferException
+	 */
 	public static SrlStroke mirror(Update up) throws InvalidProtocolBufferException{
 		Stroke s = unpackage(up);
 		
@@ -31,6 +39,12 @@ public class Response {
 		return response;
 	}
 	
+	/**
+	 * Converts a Protobuf type update into a Paleosketch type stroke
+	 * @param protobuf.srl.commands.Commands.Update
+	 * @return srl.core.sketch.Stroke
+	 * @throws InvalidProtocolBufferException
+	 */
 	public static Stroke unpackage(Update up) throws InvalidProtocolBufferException{
 		Stroke stroke = new Stroke();
 		SrlStroke s_stroke = SrlStroke.parseFrom(((AddStroke)Decoder.prarseCommand(up.getCommands(0))).getStroke());
@@ -42,6 +56,11 @@ public class Response {
 		return stroke;
 	}
 	
+	/**
+	 * Repackages a Paleosketch type stroke into a Protobuf type SrlStroke
+	 * @param srl.core.sketch.Stroke
+	 * @return protobuf.srl.sketch.Sketch.SrlStroke
+	 */
 	public static SrlStroke repackage(Stroke s){
 		SrlStroke.Builder strokebuilder = SrlStroke.newBuilder();
 		
