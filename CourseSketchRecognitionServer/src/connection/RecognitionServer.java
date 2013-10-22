@@ -124,6 +124,7 @@ public class RecognitionServer extends WebSocketServer {
 			
 			Request.Builder requestBuilder = Request.newBuilder();
 			requestBuilder.setOtherData(updateBuilder.build().toByteString());
+			requestBuilder.setRequestType(MessageType.RECOGNITION);
 			
 			conn.send(requestBuilder.build().toByteArray());
 			
