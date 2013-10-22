@@ -51,7 +51,7 @@ public class Response {
 		stroke.setId(Stroke.nextID());
 		stroke.setName(s_stroke.getName());
 		for (SrlPoint s_point : s_stroke.getPointsList()) {
-			stroke.addPoint(new Point(s_point.getX(), s_point.getY(), s_point.getTime()));
+			stroke.addPoint(new Point(s_point.getX(), s_point.getY(), s_point.getTime(),Point.nextID()));
 		}		
 		return stroke;
 	}
@@ -73,6 +73,7 @@ public class Response {
 			pointbuilder.setX(p.x);
 			pointbuilder.setY(p.y);
 			pointbuilder.setTime(p.time);
+			pointbuilder.setId(p.getId().toString());
 			strokebuilder.addPoints(pointbuilder.build());
 		}
 		
