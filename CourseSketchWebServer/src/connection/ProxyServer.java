@@ -140,6 +140,7 @@ public class ProxyServer extends WebSocketServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
+		System.out.println("Current Version");
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
 		try {
