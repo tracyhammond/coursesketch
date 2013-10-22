@@ -9,6 +9,8 @@ import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
 
+import main.Response;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
@@ -16,6 +18,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import protobuf.srl.commands.Commands.AddStroke;
 import protobuf.srl.commands.Commands.Command;
@@ -96,7 +99,15 @@ public class RecognitionServer extends WebSocketServer {
 			//use a function that they will give
 			
 			//post function they will give (package the information received)
-			SrlStroke receivedStroke;
+			SrlStroke receivedStroke = null;
+			
+			try {
+				receivedStroke = Response.mirror(savedUpdate);
+			} catch (InvalidProtocolBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			receivedStroke.toByteString();
 			
 			AddStroke.Builder addBuilder = AddStroke.newBuilder();
