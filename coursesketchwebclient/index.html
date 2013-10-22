@@ -17,8 +17,8 @@
 	</style>
 	<script>
 	//	var wsUri = "echo.websocket.org/"; // echo server
-	//var wsUri = "goldberglinux.tamu.edu:8887"; // our server
-	var wsUri = "localhost:8887"; // local server
+	var wsUri = "goldberglinux.tamu.edu:8887"; // our server
+	//var wsUri = "localhost:8887"; // local server
 	var connection = new Connection(wsUri,false);
 	connection.setOnCloseListener(function(evt) {
 		if (evt.code == CONNECTION_LOST) {
