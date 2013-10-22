@@ -20,6 +20,7 @@ public class Response {
 		
 		ArrayList<Point> points = (ArrayList<Point>) s.getPoints();
 		for (Point p: points){
+			System.out.println("("+p.x+","+p.y+")");
 			double z = p.x;
 			p.x = p.y;
 			p.y = z;
