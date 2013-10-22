@@ -6,12 +6,14 @@
 	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/connection/drawing_communication.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 		var serverConnection = parent.connection;
 		var drawingCreator = false;
 		var sketch = false;
 		var canvasContext = false;
+		var Long = false;
     	function init() {
     		parent.redirector.setRedirect('html/drawing/drawing.html');
     		initializeProtos();
@@ -23,9 +25,9 @@
     		Creates the proto files required for drawing if they do not exist.
     	*/
     	function initializeProtos() {
-    		alert(parent.connection.setOnOpenListener);
-   			parent.connection.buildSketch();
-   			parent.connection.buildUpdateList();
+    		Long = parent.Long;
+   			// blah
+   			//testProtobuf(parent);
     	}
 
 	    function initializeInput() {
@@ -41,14 +43,19 @@
 
 	    function callback(stroke) {
 			stroke.draw(canvasContext);
-			var command = new ProtoSrlCommand();
+			var command = new parent.ProtoSrlCommand();
 			command.time = stroke.time;
-			command.commandType = ProtoSrlCommandType.ADD_STROKE;
+			command.commandType = parent.ProtoSrlCommandType.ADD_STROKE;
 			command.isUserCreated = true;
 			command.commandId = "RANDOM STRING";
-			var addStroke = new ProtoUpdateCommand.AddStroke();
 			// then finish him!
+			var addStroke = new parent.ProtoUpdateCommand.AddStroke();
+			console.log("Made it 1");
+			addStroke.stroke = stroke.sendToProtobuf(parent).toArrayBuffer();
+			console.log("Made it 2");
+			command.commandData = addStroke.toArrayBuffer();
 			var request = serverConnection.createRequestFromCommand(command, parent.Request.MessageType.RECOGNITION);
+			serverConnection.sendRequest(request);
 		}
 
 	    function drawEntireSketch() {
@@ -60,16 +67,6 @@
 				}
 	    	}
 	    }
-
-	    function setUpProtobufInheritance() {
-	    	parent.SRL_Shape.prototype = new SRL_Shape();
-	    	parent.SRL_Stroke.prototype = new SRL_Stroke();
-	    	parent.SRL_Point.prototype = new SRL_Point();
-	    	SRL_Shape = parent.SRL_Shape;
-	    	SRL_Stroke = parent.SRL_Stroke;
-	    	SRL_Point = parent.SRL_Point;
-	    }
-	    //setUpProtobufInheritance();
 	</script>
 	<script type="text/javascript">
 			parent.addScopedLoadEvent(window, function() {
@@ -78,7 +75,7 @@
 
 			window.onresize = function() {
 					matchParent('drawingCanvas');
-				}
+			}
 
 	  		function matchParent(id) {
 	  			var body = document.body,
@@ -92,8 +89,7 @@
 				element.style.height = element.height;
 				drawEntireSketch();
 	  		}
-	  		
-	  		
+
 	</script>
 	<style>
 	html, body {

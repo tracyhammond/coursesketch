@@ -2136,9 +2136,9 @@ public final class School {
   public interface SrlAssignmentOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required uint64 courseId = 1;
+    // required string courseId = 1;
     /**
-     * <code>required uint64 courseId = 1;</code>
+     * <code>required string courseId = 1;</code>
      *
      * <pre>
      * To know who the parent is.
@@ -2146,13 +2146,22 @@ public final class School {
      */
     boolean hasCourseId();
     /**
-     * <code>required uint64 courseId = 1;</code>
+     * <code>required string courseId = 1;</code>
      *
      * <pre>
      * To know who the parent is.
      * </pre>
      */
-    long getCourseId();
+    java.lang.String getCourseId();
+    /**
+     * <code>required string courseId = 1;</code>
+     *
+     * <pre>
+     * To know who the parent is.
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getCourseIdBytes();
 
     // required string assignmentId = 2;
     /**
@@ -2259,9 +2268,9 @@ public final class School {
               }
               break;
             }
-            case 8: {
+            case 10: {
               bitField0_ |= 0x00000001;
-              courseId_ = input.readUInt64();
+              courseId_ = input.readBytes();
               break;
             }
             case 18: {
@@ -2314,11 +2323,11 @@ public final class School {
     }
 
     private int bitField0_;
-    // required uint64 courseId = 1;
+    // required string courseId = 1;
     public static final int COURSEID_FIELD_NUMBER = 1;
-    private long courseId_;
+    private java.lang.Object courseId_;
     /**
-     * <code>required uint64 courseId = 1;</code>
+     * <code>required string courseId = 1;</code>
      *
      * <pre>
      * To know who the parent is.
@@ -2328,14 +2337,45 @@ public final class School {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required uint64 courseId = 1;</code>
+     * <code>required string courseId = 1;</code>
      *
      * <pre>
      * To know who the parent is.
      * </pre>
      */
-    public long getCourseId() {
-      return courseId_;
+    public java.lang.String getCourseId() {
+      java.lang.Object ref = courseId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          courseId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string courseId = 1;</code>
+     *
+     * <pre>
+     * To know who the parent is.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getCourseIdBytes() {
+      java.lang.Object ref = courseId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        courseId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     // required string assignmentId = 2;
@@ -2449,7 +2489,7 @@ public final class School {
     }
 
     private void initFields() {
-      courseId_ = 0L;
+      courseId_ = "";
       assignmentId_ = "";
       assignmentName_ = "";
     }
@@ -2474,7 +2514,7 @@ public final class School {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeUInt64(1, courseId_);
+        output.writeBytes(1, getCourseIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getAssignmentIdBytes());
@@ -2493,7 +2533,7 @@ public final class School {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(1, courseId_);
+          .computeBytesSize(1, getCourseIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -2619,7 +2659,7 @@ public final class School {
 
       public Builder clear() {
         super.clear();
-        courseId_ = 0L;
+        courseId_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         assignmentId_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -2682,7 +2722,9 @@ public final class School {
       public Builder mergeFrom(protobuf.srl.school.School.SrlAssignment other) {
         if (other == protobuf.srl.school.School.SrlAssignment.getDefaultInstance()) return this;
         if (other.hasCourseId()) {
-          setCourseId(other.getCourseId());
+          bitField0_ |= 0x00000001;
+          courseId_ = other.courseId_;
+          onChanged();
         }
         if (other.hasAssignmentId()) {
           bitField0_ |= 0x00000002;
@@ -2729,10 +2771,10 @@ public final class School {
       }
       private int bitField0_;
 
-      // required uint64 courseId = 1;
-      private long courseId_ ;
+      // required string courseId = 1;
+      private java.lang.Object courseId_ = "";
       /**
-       * <code>required uint64 courseId = 1;</code>
+       * <code>required string courseId = 1;</code>
        *
        * <pre>
        * To know who the parent is.
@@ -2742,30 +2784,62 @@ public final class School {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required uint64 courseId = 1;</code>
+       * <code>required string courseId = 1;</code>
        *
        * <pre>
        * To know who the parent is.
        * </pre>
        */
-      public long getCourseId() {
-        return courseId_;
+      public java.lang.String getCourseId() {
+        java.lang.Object ref = courseId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          courseId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>required uint64 courseId = 1;</code>
+       * <code>required string courseId = 1;</code>
        *
        * <pre>
        * To know who the parent is.
        * </pre>
        */
-      public Builder setCourseId(long value) {
-        bitField0_ |= 0x00000001;
+      public com.google.protobuf.ByteString
+          getCourseIdBytes() {
+        java.lang.Object ref = courseId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          courseId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string courseId = 1;</code>
+       *
+       * <pre>
+       * To know who the parent is.
+       * </pre>
+       */
+      public Builder setCourseId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         courseId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required uint64 courseId = 1;</code>
+       * <code>required string courseId = 1;</code>
        *
        * <pre>
        * To know who the parent is.
@@ -2773,7 +2847,24 @@ public final class School {
        */
       public Builder clearCourseId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        courseId_ = 0L;
+        courseId_ = getDefaultInstance().getCourseId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string courseId = 1;</code>
+       *
+       * <pre>
+       * To know who the parent is.
+       * </pre>
+       */
+      public Builder setCourseIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        courseId_ = value;
         onChanged();
         return this;
       }
@@ -2988,9 +3079,9 @@ public final class School {
   public interface SrlProblemOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required uint64 courseId = 1;
+    // required string courseId = 1;
     /**
-     * <code>required uint64 courseId = 1;</code>
+     * <code>required string courseId = 1;</code>
      *
      * <pre>
      * To know who the grandParent is.
@@ -2998,17 +3089,26 @@ public final class School {
      */
     boolean hasCourseId();
     /**
-     * <code>required uint64 courseId = 1;</code>
+     * <code>required string courseId = 1;</code>
      *
      * <pre>
      * To know who the grandParent is.
      * </pre>
      */
-    long getCourseId();
-
-    // required uint64 assignmentId = 2;
+    java.lang.String getCourseId();
     /**
-     * <code>required uint64 assignmentId = 2;</code>
+     * <code>required string courseId = 1;</code>
+     *
+     * <pre>
+     * To know who the grandParent is.
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getCourseIdBytes();
+
+    // required string assignmentId = 2;
+    /**
+     * <code>required string assignmentId = 2;</code>
      *
      * <pre>
      * To know who the parent is.
@@ -3016,13 +3116,22 @@ public final class School {
      */
     boolean hasAssignmentId();
     /**
-     * <code>required uint64 assignmentId = 2;</code>
+     * <code>required string assignmentId = 2;</code>
      *
      * <pre>
      * To know who the parent is.
      * </pre>
      */
-    long getAssignmentId();
+    java.lang.String getAssignmentId();
+    /**
+     * <code>required string assignmentId = 2;</code>
+     *
+     * <pre>
+     * To know who the parent is.
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getAssignmentIdBytes();
 
     // required string problemId = 3;
     /**
@@ -3176,14 +3285,14 @@ public final class School {
               }
               break;
             }
-            case 8: {
+            case 10: {
               bitField0_ |= 0x00000001;
-              courseId_ = input.readUInt64();
+              courseId_ = input.readBytes();
               break;
             }
-            case 16: {
+            case 18: {
               bitField0_ |= 0x00000002;
-              assignmentId_ = input.readUInt64();
+              assignmentId_ = input.readBytes();
               break;
             }
             case 26: {
@@ -3260,11 +3369,11 @@ public final class School {
     }
 
     private int bitField0_;
-    // required uint64 courseId = 1;
+    // required string courseId = 1;
     public static final int COURSEID_FIELD_NUMBER = 1;
-    private long courseId_;
+    private java.lang.Object courseId_;
     /**
-     * <code>required uint64 courseId = 1;</code>
+     * <code>required string courseId = 1;</code>
      *
      * <pre>
      * To know who the grandParent is.
@@ -3274,21 +3383,52 @@ public final class School {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required uint64 courseId = 1;</code>
+     * <code>required string courseId = 1;</code>
      *
      * <pre>
      * To know who the grandParent is.
      * </pre>
      */
-    public long getCourseId() {
-      return courseId_;
+    public java.lang.String getCourseId() {
+      java.lang.Object ref = courseId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          courseId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string courseId = 1;</code>
+     *
+     * <pre>
+     * To know who the grandParent is.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getCourseIdBytes() {
+      java.lang.Object ref = courseId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        courseId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    // required uint64 assignmentId = 2;
+    // required string assignmentId = 2;
     public static final int ASSIGNMENTID_FIELD_NUMBER = 2;
-    private long assignmentId_;
+    private java.lang.Object assignmentId_;
     /**
-     * <code>required uint64 assignmentId = 2;</code>
+     * <code>required string assignmentId = 2;</code>
      *
      * <pre>
      * To know who the parent is.
@@ -3298,14 +3438,45 @@ public final class School {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required uint64 assignmentId = 2;</code>
+     * <code>required string assignmentId = 2;</code>
      *
      * <pre>
      * To know who the parent is.
      * </pre>
      */
-    public long getAssignmentId() {
-      return assignmentId_;
+    public java.lang.String getAssignmentId() {
+      java.lang.Object ref = assignmentId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          assignmentId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string assignmentId = 2;</code>
+     *
+     * <pre>
+     * To know who the parent is.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getAssignmentIdBytes() {
+      java.lang.Object ref = assignmentId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        assignmentId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     // required string problemId = 3;
@@ -3485,8 +3656,8 @@ public final class School {
     }
 
     private void initFields() {
-      courseId_ = 0L;
-      assignmentId_ = 0L;
+      courseId_ = "";
+      assignmentId_ = "";
       problemId_ = "";
       problemName_ = "";
       mainProblem_ = protobuf.srl.school.School.subproblemInformation.getDefaultInstance();
@@ -3517,10 +3688,10 @@ public final class School {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeUInt64(1, courseId_);
+        output.writeBytes(1, getCourseIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeUInt64(2, assignmentId_);
+        output.writeBytes(2, getAssignmentIdBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, getProblemIdBytes());
@@ -3545,11 +3716,11 @@ public final class School {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(1, courseId_);
+          .computeBytesSize(1, getCourseIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(2, assignmentId_);
+          .computeBytesSize(2, getAssignmentIdBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
@@ -3685,9 +3856,9 @@ public final class School {
 
       public Builder clear() {
         super.clear();
-        courseId_ = 0L;
+        courseId_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        assignmentId_ = 0L;
+        assignmentId_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
         problemId_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -3783,10 +3954,14 @@ public final class School {
       public Builder mergeFrom(protobuf.srl.school.School.SrlProblem other) {
         if (other == protobuf.srl.school.School.SrlProblem.getDefaultInstance()) return this;
         if (other.hasCourseId()) {
-          setCourseId(other.getCourseId());
+          bitField0_ |= 0x00000001;
+          courseId_ = other.courseId_;
+          onChanged();
         }
         if (other.hasAssignmentId()) {
-          setAssignmentId(other.getAssignmentId());
+          bitField0_ |= 0x00000002;
+          assignmentId_ = other.assignmentId_;
+          onChanged();
         }
         if (other.hasProblemId()) {
           bitField0_ |= 0x00000004;
@@ -3866,10 +4041,10 @@ public final class School {
       }
       private int bitField0_;
 
-      // required uint64 courseId = 1;
-      private long courseId_ ;
+      // required string courseId = 1;
+      private java.lang.Object courseId_ = "";
       /**
-       * <code>required uint64 courseId = 1;</code>
+       * <code>required string courseId = 1;</code>
        *
        * <pre>
        * To know who the grandParent is.
@@ -3879,30 +4054,62 @@ public final class School {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required uint64 courseId = 1;</code>
+       * <code>required string courseId = 1;</code>
        *
        * <pre>
        * To know who the grandParent is.
        * </pre>
        */
-      public long getCourseId() {
-        return courseId_;
+      public java.lang.String getCourseId() {
+        java.lang.Object ref = courseId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          courseId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>required uint64 courseId = 1;</code>
+       * <code>required string courseId = 1;</code>
        *
        * <pre>
        * To know who the grandParent is.
        * </pre>
        */
-      public Builder setCourseId(long value) {
-        bitField0_ |= 0x00000001;
+      public com.google.protobuf.ByteString
+          getCourseIdBytes() {
+        java.lang.Object ref = courseId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          courseId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string courseId = 1;</code>
+       *
+       * <pre>
+       * To know who the grandParent is.
+       * </pre>
+       */
+      public Builder setCourseId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         courseId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required uint64 courseId = 1;</code>
+       * <code>required string courseId = 1;</code>
        *
        * <pre>
        * To know who the grandParent is.
@@ -3910,15 +4117,32 @@ public final class School {
        */
       public Builder clearCourseId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        courseId_ = 0L;
+        courseId_ = getDefaultInstance().getCourseId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string courseId = 1;</code>
+       *
+       * <pre>
+       * To know who the grandParent is.
+       * </pre>
+       */
+      public Builder setCourseIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        courseId_ = value;
         onChanged();
         return this;
       }
 
-      // required uint64 assignmentId = 2;
-      private long assignmentId_ ;
+      // required string assignmentId = 2;
+      private java.lang.Object assignmentId_ = "";
       /**
-       * <code>required uint64 assignmentId = 2;</code>
+       * <code>required string assignmentId = 2;</code>
        *
        * <pre>
        * To know who the parent is.
@@ -3928,30 +4152,62 @@ public final class School {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required uint64 assignmentId = 2;</code>
+       * <code>required string assignmentId = 2;</code>
        *
        * <pre>
        * To know who the parent is.
        * </pre>
        */
-      public long getAssignmentId() {
-        return assignmentId_;
+      public java.lang.String getAssignmentId() {
+        java.lang.Object ref = assignmentId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          assignmentId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>required uint64 assignmentId = 2;</code>
+       * <code>required string assignmentId = 2;</code>
        *
        * <pre>
        * To know who the parent is.
        * </pre>
        */
-      public Builder setAssignmentId(long value) {
-        bitField0_ |= 0x00000002;
+      public com.google.protobuf.ByteString
+          getAssignmentIdBytes() {
+        java.lang.Object ref = assignmentId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          assignmentId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string assignmentId = 2;</code>
+       *
+       * <pre>
+       * To know who the parent is.
+       * </pre>
+       */
+      public Builder setAssignmentId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         assignmentId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required uint64 assignmentId = 2;</code>
+       * <code>required string assignmentId = 2;</code>
        *
        * <pre>
        * To know who the parent is.
@@ -3959,7 +4215,24 @@ public final class School {
        */
       public Builder clearAssignmentId() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        assignmentId_ = 0L;
+        assignmentId_ = getDefaultInstance().getAssignmentId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string assignmentId = 2;</code>
+       *
+       * <pre>
+       * To know who the parent is.
+       * </pre>
+       */
+      public Builder setAssignmentIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        assignmentId_ = value;
         onChanged();
         return this;
       }
@@ -5362,9 +5635,9 @@ public final class School {
       "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo" +
       "l.SrlProblem\"1\n\tSrlCourse\022\020\n\010courseId\030\001 " +
       "\002(\t\022\022\n\ncourseName\030\002 \001(\t\"O\n\rSrlAssignment" +
-      "\022\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId\030\002 \002(\t" +
+      "\022\020\n\010courseId\030\001 \002(\t\022\024\n\014assignmentId\030\002 \002(\t" +
       "\022\026\n\016assignmentName\030\003 \001(\t\"\336\001\n\nSrlProblem\022" +
-      "\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId\030\002 \002(\004\022",
+      "\020\n\010courseId\030\001 \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022",
       "\021\n\tproblemId\030\003 \002(\t\022\023\n\013problemName\030\004 \001(\t\022" +
       "?\n\013mainProblem\030\005 \001(\0132*.protobuf.srl.scho" +
       "ol.subproblemInformation\022?\n\013subProblems\030" +

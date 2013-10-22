@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/school.proto',
   package='protobuf.srl.school',
-  serialized_pb='\n\x12input/school.proto\x12\x13protobuf.srl.school\"\xa8\x01\n\tSrlSchool\x12/\n\x07\x63ourses\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.school.SrlCourse\x12\x37\n\x0b\x61ssignments\x18\x02 \x03(\x0b\x32\".protobuf.srl.school.SrlAssignment\x12\x31\n\x08problems\x18\x03 \x03(\x0b\x32\x1f.protobuf.srl.school.SrlProblem\"1\n\tSrlCourse\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\x12\n\ncourseName\x18\x02 \x01(\t\"O\n\rSrlAssignment\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\x04\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\t\x12\x16\n\x0e\x61ssignmentName\x18\x03 \x01(\t\"\xde\x01\n\nSrlProblem\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\x04\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\x04\x12\x11\n\tproblemId\x18\x03 \x02(\t\x12\x13\n\x0bproblemName\x18\x04 \x01(\t\x12?\n\x0bmainProblem\x18\x05 \x01(\x0b\x32*.protobuf.srl.school.subproblemInformation\x12?\n\x0bsubProblems\x18\x06 \x03(\x0b\x32*.protobuf.srl.school.subproblemInformation\"\xe0\x01\n\x15subproblemInformation\x12\x14\n\x0cquestionText\x18\x01 \x01(\t\x12U\n\x0cquestionType\x18\x02 \x01(\x0e\x32\x37.protobuf.srl.school.subproblemInformation.QuestionType:\x06SKETCH\x12\x0f\n\x07options\x18\x03 \x01(\x0c\"I\n\x0cQuestionType\x12\n\n\x06SKETCH\x10\x01\x12\x0f\n\x0bMULT_CHOICE\x10\x02\x12\r\n\tFREE_RESP\x10\x03\x12\r\n\tCHECK_BOX\x10\x04')
+  serialized_pb='\n\x12input/school.proto\x12\x13protobuf.srl.school\"\xa8\x01\n\tSrlSchool\x12/\n\x07\x63ourses\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.school.SrlCourse\x12\x37\n\x0b\x61ssignments\x18\x02 \x03(\x0b\x32\".protobuf.srl.school.SrlAssignment\x12\x31\n\x08problems\x18\x03 \x03(\x0b\x32\x1f.protobuf.srl.school.SrlProblem\"1\n\tSrlCourse\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\x12\n\ncourseName\x18\x02 \x01(\t\"O\n\rSrlAssignment\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\t\x12\x16\n\x0e\x61ssignmentName\x18\x03 \x01(\t\"\xde\x01\n\nSrlProblem\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\t\x12\x11\n\tproblemId\x18\x03 \x02(\t\x12\x13\n\x0bproblemName\x18\x04 \x01(\t\x12?\n\x0bmainProblem\x18\x05 \x01(\x0b\x32*.protobuf.srl.school.subproblemInformation\x12?\n\x0bsubProblems\x18\x06 \x03(\x0b\x32*.protobuf.srl.school.subproblemInformation\"\xe0\x01\n\x15subproblemInformation\x12\x14\n\x0cquestionText\x18\x01 \x01(\t\x12U\n\x0cquestionType\x18\x02 \x01(\x0e\x32\x37.protobuf.srl.school.subproblemInformation.QuestionType:\x06SKETCH\x12\x0f\n\x07options\x18\x03 \x01(\x0c\"I\n\x0cQuestionType\x12\n\n\x06SKETCH\x10\x01\x12\x0f\n\x0bMULT_CHOICE\x10\x02\x12\r\n\tFREE_RESP\x10\x03\x12\r\n\tCHECK_BOX\x10\x04')
 
 
 
@@ -133,8 +133,8 @@ _SRLASSIGNMENT = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='courseId', full_name='protobuf.srl.school.SrlAssignment.courseId', index=0,
-      number=1, type=4, cpp_type=4, label=2,
-      has_default_value=False, default_value=0,
+      number=1, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -175,15 +175,15 @@ _SRLPROBLEM = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='courseId', full_name='protobuf.srl.school.SrlProblem.courseId', index=0,
-      number=1, type=4, cpp_type=4, label=2,
-      has_default_value=False, default_value=0,
+      number=1, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='assignmentId', full_name='protobuf.srl.school.SrlProblem.assignmentId', index=1,
-      number=2, type=4, cpp_type=4, label=2,
-      has_default_value=False, default_value=0,
+      number=2, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),

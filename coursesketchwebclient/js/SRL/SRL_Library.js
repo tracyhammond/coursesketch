@@ -122,6 +122,14 @@ function Overloads() {
 			return(this.distance.SRL_Line.apply( this, arguments ));
 		}
 	}
+
+	this.getSize = function () {
+		if (this.check_type() == "SRL_Point") {
+			return(this.getSize.SRL_Point.apply( this, arguments ));
+		} else if (this.check_type() == "SRL_Shape") {
+			return(this.getSize.SRL_Shape.apply( this, arguments ));
+		}
+	}
 };
 
 /**
@@ -140,15 +148,17 @@ function SRL_Object() {
 	 * Each object has a unique ID associated with it.
 	 */
 	var id; // = guid();
+
 	/**
 	 * The name of the object, such as "triangle1"
 	 */
 	var name = "";
+
 	/**
 	 * The creation time of the object.
 	 */
-
 	var time;
+
 	/**
 	 * An object can be created by a user 
 	 * (like drawing a shape, or speaking a phrase)
@@ -156,10 +166,12 @@ function SRL_Object() {
 	 * (like a recognition of a higher level shape)
 	 */
 	var isUserCreated = false;
+
 	/**
 	 * A list of possible interpretations for an object
 	 */
 	var m_interpretations = new Array();
+
 	/**
 	 * Was this object made up from a collection of subObjects? 
 	 * If so they are in this list.
@@ -168,6 +180,7 @@ function SRL_Object() {
 	 * e.g., an arrow might have three lines inside, and each line might have a stroke.
 	 */
 	var m_subObjects = new Array();
+
 	/**
 	 * Adds a subobject to this object. 
 	 * This usually happens during recognition, when a new object
@@ -179,6 +192,7 @@ function SRL_Object() {
 			m_subObjects.push(subObject);
 		}
 	}
+
 	/**
 	 * Gets the list of subobjects
 	 * @return list of objects that make up this object
@@ -186,6 +200,7 @@ function SRL_Object() {
 	this.getSubObjects = function(){
 		return m_subObjects;
 	}
+
 	/**
 	 * Gets a list of all of the objects that make up this object.
 	 * This is a recursive search through all of the subobjects.
@@ -214,12 +229,14 @@ function SRL_Object() {
 		console.log("Implement SRL_Object.addInterpretation later");
 		console.log("This may not actually be needed");
 	}
+
 	/**
 	 * @return unique UUID for an object
 	 */
 	this.getId = function() {
 		return id;
 	}
+
 	/**
 	 * An object can have a name, such as "triangle1". 
 	 * @return the string name of the object
@@ -227,6 +244,7 @@ function SRL_Object() {
 	this.getName = function() {
 		return name;
 	}
+
 	/**
 	 * An object can have a name, such as "triangle1". 
 	 * @param name object name
@@ -234,6 +252,7 @@ function SRL_Object() {
 	this.setName = function(name) {
 		name = name;
 	}
+
 	/**
 	 * Gets the time associated with the object. 
 	 * The default time is the time it was created
@@ -242,14 +261,20 @@ function SRL_Object() {
 	this.getTime = function() {
 		return time;
 	}
+
 	/**
 	 * Sets the time the object was created. This probably should 
 	 * only be used when loading in pre-existing objects.
 	 * @param time the time the object was created.
 	 */
-	this.setTime = function(time) {
-		time = time;
+	this.setTime = function(inputTime) {
+		if (typeof inputTime === "number") {
+			time = inputTime;
+		} else {
+			time = null;
+		}
 	}
+
 	/**
 	 * An object can be created by a user 
 	 * (like drawing a shape, or speaking a phrase)
@@ -535,6 +560,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return maxy;
 	}
+
 	/**
 	 * Return the cosine of the starting angle of the stroke
 	 * This takes the angle between the initial point and the point specified as the secondPoint
@@ -807,9 +833,6 @@ function SRL_Stroke(startPoint) {
 		return sum;
 	}
 
-
-
-
 	this.temp_print = function() {
 		for (var i=0; i<points.length; i++) {
 			points[i].temp_print();
@@ -863,6 +886,7 @@ function SRL_Point(x, y) {
 	this.getPressure = function() {
 		return pressure;
 	}
+
 	/**
 	 * Points can have pressure depending on the input device
 	 * @param pressure
@@ -874,6 +898,7 @@ function SRL_Point(x, y) {
 			throw "argument of .setPressure must be a 'number'";
 		}
 	}
+
 	/**
 	 * Points can have pressure depending on the input device
 	 * @param pressure
@@ -885,6 +910,11 @@ function SRL_Point(x, y) {
 			throw "argument of .setPressure must be a 'number'";
 		}
 	}
+
+	this.getSize = function() {
+		return size;
+	}
+
 	/**
 	 * Updates the location of the point
 	 * Also add this point to the history of the points 
@@ -938,7 +968,11 @@ function SRL_Point(x, y) {
 			return true;
 		}
 	}
-	
+
+	this.getSpeed = function() {
+		return speed;
+	}
+
 	this.distance.SRL_Point = function(arg1, arg2, arg3, arg4) {
 		/**
 	 	 * Return the distance from point rp to this point.
@@ -1100,6 +1134,7 @@ function SRL_Point(x, y) {
 		this.temp_print();
 
 	}
+
 	this.temp_print = function(){
 		console.log("printing m_xList");
 		console.log(m_xList);

@@ -33,18 +33,19 @@ void  protobuf_AddDesc_input_2ftest_2eproto();
 void protobuf_AssignDesc_input_2ftest_2eproto();
 void protobuf_ShutdownFile_input_2ftest_2eproto();
 
-class Message;
+class Outer;
+class Inner;
 
 // ===================================================================
 
-class Message : public ::google::protobuf::Message {
+class Outer : public ::google::protobuf::Message {
  public:
-  Message();
-  virtual ~Message();
+  Outer();
+  virtual ~Outer();
 
-  Message(const Message& from);
+  Outer(const Outer& from);
 
-  inline Message& operator=(const Message& from) {
+  inline Outer& operator=(const Outer& from) {
     CopyFrom(from);
     return *this;
   }
@@ -58,17 +59,17 @@ class Message : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Message& default_instance();
+  static const Outer& default_instance();
 
-  void Swap(Message* other);
+  void Swap(Outer* other);
 
   // implements Message ----------------------------------------------
 
-  Message* New() const;
+  Outer* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Message& from);
-  void MergeFrom(const Message& from);
+  void CopyFrom(const Outer& from);
+  void MergeFrom(const Outer& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -91,26 +92,24 @@ class Message : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string text = 1;
-  inline bool has_text() const;
-  inline void clear_text();
-  static const int kTextFieldNumber = 1;
-  inline const ::std::string& text() const;
-  inline void set_text(const ::std::string& value);
-  inline void set_text(const char* value);
-  inline void set_text(const char* value, size_t size);
-  inline ::std::string* mutable_text();
-  inline ::std::string* release_text();
-  inline void set_allocated_text(::std::string* text);
+  // repeated .protobuf.Inner inners = 4;
+  inline int inners_size() const;
+  inline void clear_inners();
+  static const int kInnersFieldNumber = 4;
+  inline const ::protobuf::Inner& inners(int index) const;
+  inline ::protobuf::Inner* mutable_inners(int index);
+  inline ::protobuf::Inner* add_inners();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::Inner >&
+      inners() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::Inner >*
+      mutable_inners();
 
-  // @@protoc_insertion_point(class_scope:protobuf.Message)
+  // @@protoc_insertion_point(class_scope:protobuf.Outer)
  private:
-  inline void set_has_text();
-  inline void clear_has_text();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* text_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::Inner > inners_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -120,82 +119,198 @@ class Message : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2ftest_2eproto();
 
   void InitAsDefaultInstance();
-  static Message* default_instance_;
+  static Outer* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Inner : public ::google::protobuf::Message {
+ public:
+  Inner();
+  virtual ~Inner();
+
+  Inner(const Inner& from);
+
+  inline Inner& operator=(const Inner& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Inner& default_instance();
+
+  void Swap(Inner* other);
+
+  // implements Message ----------------------------------------------
+
+  Inner* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Inner& from);
+  void MergeFrom(const Inner& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string str = 1;
+  inline bool has_str() const;
+  inline void clear_str();
+  static const int kStrFieldNumber = 1;
+  inline const ::std::string& str() const;
+  inline void set_str(const ::std::string& value);
+  inline void set_str(const char* value);
+  inline void set_str(const char* value, size_t size);
+  inline ::std::string* mutable_str();
+  inline ::std::string* release_str();
+  inline void set_allocated_str(::std::string* str);
+
+  // @@protoc_insertion_point(class_scope:protobuf.Inner)
+ private:
+  inline void set_has_str();
+  inline void clear_has_str();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* str_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2ftest_2eproto();
+  friend void protobuf_AssignDesc_input_2ftest_2eproto();
+  friend void protobuf_ShutdownFile_input_2ftest_2eproto();
+
+  void InitAsDefaultInstance();
+  static Inner* default_instance_;
 };
 // ===================================================================
 
 
 // ===================================================================
 
-// Message
+// Outer
 
-// required string text = 1;
-inline bool Message::has_text() const {
+// repeated .protobuf.Inner inners = 4;
+inline int Outer::inners_size() const {
+  return inners_.size();
+}
+inline void Outer::clear_inners() {
+  inners_.Clear();
+}
+inline const ::protobuf::Inner& Outer::inners(int index) const {
+  return inners_.Get(index);
+}
+inline ::protobuf::Inner* Outer::mutable_inners(int index) {
+  return inners_.Mutable(index);
+}
+inline ::protobuf::Inner* Outer::add_inners() {
+  return inners_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::Inner >&
+Outer::inners() const {
+  return inners_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::Inner >*
+Outer::mutable_inners() {
+  return &inners_;
+}
+
+// -------------------------------------------------------------------
+
+// Inner
+
+// required string str = 1;
+inline bool Inner::has_str() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Message::set_has_text() {
+inline void Inner::set_has_str() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Message::clear_has_text() {
+inline void Inner::clear_has_str() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Message::clear_text() {
-  if (text_ != &::google::protobuf::internal::kEmptyString) {
-    text_->clear();
+inline void Inner::clear_str() {
+  if (str_ != &::google::protobuf::internal::kEmptyString) {
+    str_->clear();
   }
-  clear_has_text();
+  clear_has_str();
 }
-inline const ::std::string& Message::text() const {
-  return *text_;
+inline const ::std::string& Inner::str() const {
+  return *str_;
 }
-inline void Message::set_text(const ::std::string& value) {
-  set_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
-    text_ = new ::std::string;
+inline void Inner::set_str(const ::std::string& value) {
+  set_has_str();
+  if (str_ == &::google::protobuf::internal::kEmptyString) {
+    str_ = new ::std::string;
   }
-  text_->assign(value);
+  str_->assign(value);
 }
-inline void Message::set_text(const char* value) {
-  set_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
-    text_ = new ::std::string;
+inline void Inner::set_str(const char* value) {
+  set_has_str();
+  if (str_ == &::google::protobuf::internal::kEmptyString) {
+    str_ = new ::std::string;
   }
-  text_->assign(value);
+  str_->assign(value);
 }
-inline void Message::set_text(const char* value, size_t size) {
-  set_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
-    text_ = new ::std::string;
+inline void Inner::set_str(const char* value, size_t size) {
+  set_has_str();
+  if (str_ == &::google::protobuf::internal::kEmptyString) {
+    str_ = new ::std::string;
   }
-  text_->assign(reinterpret_cast<const char*>(value), size);
+  str_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Message::mutable_text() {
-  set_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
-    text_ = new ::std::string;
+inline ::std::string* Inner::mutable_str() {
+  set_has_str();
+  if (str_ == &::google::protobuf::internal::kEmptyString) {
+    str_ = new ::std::string;
   }
-  return text_;
+  return str_;
 }
-inline ::std::string* Message::release_text() {
-  clear_has_text();
-  if (text_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* Inner::release_str() {
+  clear_has_str();
+  if (str_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = text_;
-    text_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = str_;
+    str_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void Message::set_allocated_text(::std::string* text) {
-  if (text_ != &::google::protobuf::internal::kEmptyString) {
-    delete text_;
+inline void Inner::set_allocated_str(::std::string* str) {
+  if (str_ != &::google::protobuf::internal::kEmptyString) {
+    delete str_;
   }
-  if (text) {
-    set_has_text();
-    text_ = text;
+  if (str) {
+    set_has_str();
+    str_ = str;
   } else {
-    clear_has_text();
-    text_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_str();
+    str_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

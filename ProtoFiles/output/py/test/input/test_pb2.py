@@ -13,20 +13,48 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/test.proto',
   package='protobuf',
-  serialized_pb='\n\x10input/test.proto\x12\x08protobuf\"\x17\n\x07Message\x12\x0c\n\x04text\x18\x01 \x02(\t')
+  serialized_pb='\n\x10input/test.proto\x12\x08protobuf\"(\n\x05Outer\x12\x1f\n\x06inners\x18\x04 \x03(\x0b\x32\x0f.protobuf.Inner\"\x14\n\x05Inner\x12\x0b\n\x03str\x18\x01 \x02(\t')
 
 
 
 
-_MESSAGE = _descriptor.Descriptor(
-  name='Message',
-  full_name='protobuf.Message',
+_OUTER = _descriptor.Descriptor(
+  name='Outer',
+  full_name='protobuf.Outer',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='text', full_name='protobuf.Message.text', index=0,
+      name='inners', full_name='protobuf.Outer.inners', index=0,
+      number=4, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=30,
+  serialized_end=70,
+)
+
+
+_INNER = _descriptor.Descriptor(
+  name='Inner',
+  full_name='protobuf.Inner',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='str', full_name='protobuf.Inner.str', index=0,
       number=1, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
@@ -41,17 +69,25 @@ _MESSAGE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=30,
-  serialized_end=53,
+  serialized_start=72,
+  serialized_end=92,
 )
 
-DESCRIPTOR.message_types_by_name['Message'] = _MESSAGE
+_OUTER.fields_by_name['inners'].message_type = _INNER
+DESCRIPTOR.message_types_by_name['Outer'] = _OUTER
+DESCRIPTOR.message_types_by_name['Inner'] = _INNER
 
-class Message(_message.Message):
+class Outer(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _MESSAGE
+  DESCRIPTOR = _OUTER
 
-  # @@protoc_insertion_point(class_scope:protobuf.Message)
+  # @@protoc_insertion_point(class_scope:protobuf.Outer)
+
+class Inner(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _INNER
+
+  # @@protoc_insertion_point(class_scope:protobuf.Inner)
 
 
 # @@protoc_insertion_point(module_scope)

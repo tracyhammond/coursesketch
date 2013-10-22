@@ -45,9 +45,14 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
 		currentPoint.setSpeed(pastPoint);
 		currentStroke.addPoint(currentPoint);
+		currentStroke.setTime(currentPoint.getTime());
 		sketchContainer.addObject(currentStroke);
-		if (strokeCreationCallback)
-			strokeCreationCallback(currentStroke); // Sends back the current stroke.
+		//try {
+			if (strokeCreationCallback)
+				strokeCreationCallback(currentStroke); // Sends back the current stroke.
+		/*} catch(err) {
+			console.error(err.message);
+		}*/
 		currentStroke = false;
 		currentPoint = false;
 	});

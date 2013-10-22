@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/sketch.proto',
   package='protobuf.srl.sketch',
-  serialized_pb='\n\x12input/sketch.proto\x12\x13protobuf.srl.sketch\"\x88\x01\n\tSrlSketch\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\x04\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\x04\x12\x11\n\tproblemId\x18\x03 \x01(\x04\x12\x10\n\x08\x64omainId\x18\x04 \x01(\t\x12.\n\x06sketch\x18\x05 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\"\x8e\x01\n\tSrlObject\x12\x37\n\x04type\x18\x01 \x02(\x0e\x32).protobuf.srl.sketch.SrlObject.ObjectType\x12\x0e\n\x06object\x18\x02 \x02(\x0c\"8\n\nObjectType\x12\t\n\x05SHAPE\x10\x00\x12\n\n\x06STROKE\x10\x01\x12\t\n\x05POINT\x10\x02\x12\x08\n\x04LINE\x10\x03\"\xbe\x01\n\x08SrlShape\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\risUserCreated\x18\x04 \x01(\x08\x12<\n\x0finterpretations\x18\x05 \x03(\x0b\x32#.protobuf.srl.sketch.Interpretation\x12\x35\n\rsubComponents\x18\x06 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\"b\n\tSrlStroke\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12-\n\x06points\x18\x04 \x03(\x0b\x32\x1d.protobuf.srl.sketch.SrlPoint\"w\n\x08SrlPoint\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\t\n\x01x\x18\x04 \x02(\x01\x12\t\n\x01y\x18\x05 \x02(\x01\x12\x10\n\x08pressure\x18\x06 \x01(\x01\x12\x0c\n\x04size\x18\x07 \x01(\x01\x12\r\n\x05speed\x18\x08 \x01(\x01\"F\n\x0eInterpretation\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x12\n\nconfidence\x18\x02 \x02(\x01\x12\x12\n\ncomplexity\x18\x03 \x01(\x01')
+  serialized_pb='\n\x12input/sketch.proto\x12\x13protobuf.srl.sketch\"\x88\x01\n\tSrlSketch\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\t\x12\x11\n\tproblemId\x18\x03 \x01(\t\x12\x10\n\x08\x64omainId\x18\x04 \x01(\t\x12.\n\x06sketch\x18\x05 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\"\x8e\x01\n\tSrlObject\x12\x37\n\x04type\x18\x01 \x02(\x0e\x32).protobuf.srl.sketch.SrlObject.ObjectType\x12\x0e\n\x06object\x18\x02 \x02(\x0c\"8\n\nObjectType\x12\t\n\x05SHAPE\x10\x00\x12\n\n\x06STROKE\x10\x01\x12\t\n\x05POINT\x10\x02\x12\x08\n\x04LINE\x10\x03\"\xbe\x01\n\x08SrlShape\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\risUserCreated\x18\x04 \x01(\x08\x12<\n\x0finterpretations\x18\x05 \x03(\x0b\x32#.protobuf.srl.sketch.Interpretation\x12\x35\n\rsubComponents\x18\x06 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\"b\n\tSrlStroke\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12-\n\x06points\x18\x04 \x03(\x0b\x32\x1d.protobuf.srl.sketch.SrlPoint\"w\n\x08SrlPoint\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\t\n\x01x\x18\x04 \x02(\x01\x12\t\n\x01y\x18\x05 \x02(\x01\x12\x10\n\x08pressure\x18\x06 \x01(\x01\x12\x0c\n\x04size\x18\x07 \x01(\x01\x12\r\n\x05speed\x18\x08 \x01(\x01\"F\n\x0eInterpretation\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x12\n\nconfidence\x18\x02 \x02(\x01\x12\x12\n\ncomplexity\x18\x03 \x01(\x01')
 
 
 
@@ -56,22 +56,22 @@ _SRLSKETCH = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='courseId', full_name='protobuf.srl.sketch.SrlSketch.courseId', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='assignmentId', full_name='protobuf.srl.sketch.SrlSketch.assignmentId', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='problemId', full_name='protobuf.srl.sketch.SrlSketch.problemId', index=2,
-      number=3, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
