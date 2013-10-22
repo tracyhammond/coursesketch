@@ -93,6 +93,7 @@ public class ProxyServer extends WebSocketServer {
 	 */
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
+		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
 		
@@ -116,8 +117,9 @@ public class ProxyServer extends WebSocketServer {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 				return;
 			}
-		if(req.getRequestType() == MessageType.RECOGNITION){
-			recognition.send(buffer.array());
+			if(req.getRequestType() == MessageType.RECOGNITION){
+				System.out.println("REQUEST TYPE = RECOGNITION");
+				recognition.send(buffer.array());
 			}
 			// Parse message.
 			conn.send(buffer);
@@ -136,11 +138,6 @@ public class ProxyServer extends WebSocketServer {
 		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
 		return new ConnectionState(numberOfConnections++);
 	}
-	
-	public static void ConnectToServer() throws URISyntaxException {
-		ExampleClient c = new ExampleClient( new URI( "ws://goldberglinux02.tamu.edu:8880" ) );
-		c.connect();
-	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
 		WebSocketImpl.DEBUG = true;
@@ -154,7 +151,6 @@ public class ProxyServer extends WebSocketServer {
 		System.out.println( "ChatServer started on port: " + s.getPort() );
 		
 		//attempt to connect to recognition
-		ConnectToServer();
 		//attempt to connect to answer server
 		//attempt to connect to user database
 
