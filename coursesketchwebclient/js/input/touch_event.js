@@ -26,13 +26,31 @@ function inputListener() {
 		function(event){this.listenerScope.mouseUp(event);}, false);
 		element.addEventListener ("mouseout",
 		function(event){this.listenerScope.mouseExit(event);}, false);
+		
+		// Touch Specific ones
 		element.addEventListener('touchend', 
-		function(event){this.listenerScope.mouseUp(event);}, false);
+		function(event){
+			console.log("TOUCH IS ENDING!!!!!!");
+			console.log(event);
+			this.listenerScope.mouseUp(event);}, false);
 		element.addEventListener('touchstart', 
 		function(event){this.listenerScope.mouseDown(event);}, false);
 		element.addEventListener('touchmove', 
-		function(event){this.listenerScope.mouseMoved(event);}, false);
+		function(event){this.listenerScope.mouseDragged(event);}, false);
 		element.listenerScope = this;
+		/*
+		element.addEventListener('touchend', 
+		function(event){this.listenerScope.touchUp(event);}, false);
+		element.addEventListener('touchstart', 
+		function(event){this.listenerScope.touchDown(event);}, false);
+		element.addEventListener('touchmove', 
+		function(event){this.listenerScope.touchDragged(event);}, false);
+		element.listenerScope = this;
+		*/
+		
+		document.body.addEventListener('touchmove', function(event) {
+		  event.preventDefault();
+		}, false);
 	}
 
 	/*********************
@@ -47,23 +65,17 @@ function inputListener() {
 	// subtracts the location of the box
 	// subtracts how much the user has scrolled on the page
 	this.getTouchPos = function getTouchPos(event) {
-        if (false) {
-        	/*
-        	 * TODO: delete if browser compatibility is fixed
-        	 */
-     //   	var scrollLeft = (window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
-    //		var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-	  //      canvasBounds = canvas.getBoundingClientRect();
-	        return {
- 	          x: event.pageX - this.canvas.offsetLeft,//canvasBounds.left - scrollLeft,
- 	          y: event.pageY - this.canvas.offsetTop//canvasBounds.top - scrollTop
- 	        };
-        } else {
-        	return {
-   	          x: event.pageX - inputElement.offsetLeft,
-   	          y: event.pageY - inputElement.offsetTop
-   	        };
-        }
+		if (event.targetTouches && event.targetTouches.length == 1) {
+			var touchEvent = event.targetTouches[0];
+			return this.getTouchPos(touchEvent); // recursion.
+		} else if (event.type == "touchend" && event.changedTouches && event.changedTouches.length == 1) {
+			var touchEvent = event.changedTouches[0];
+			return this.getTouchPos(touchEvent); // recursion.
+		}
+    	return {
+          x: event.pageX - inputElement.offsetLeft,
+          y: event.pageY - inputElement.offsetTop
+        };
 	}
 
 	this.getThickness = function getThickness(speed, size, pressure, index, lastStroke, type) {
@@ -99,15 +111,43 @@ function inputListener() {
 	}
 
 	/*******************
+		TOUCH EVENTS
+	*******************/
+	this.getTouchForce = function getTouchForce(touchEvent) {
+		var force = touchEvent.force;
+		if (isNaN(force))
+			return .5;
+		return force;
+	}
+
+	this.getTouchRadius = function getTouchRadius(touchEvent) {
+		var radius = 0;
+		var rY = 0;
+		var rX = 0;
+		if (touchEvent.radiusY) {
+			rY = touchEvent.radiusY;
+		}
+		if (touchEvent.radiusX) {
+			rX = touchEvent.radiusX;
+		}
+		if (rY == 0 || rX == 0)
+			return 0.5;
+		radius = rY + rX / 2;
+		if (isNaN(radius))
+			return .5;
+		return radius;
+	}
+
+	/*******************
 		MOUSE EVENTS
 	*******************/
 
 	this.mouseMoved = function mouseMoved(event) {
-		if(!touchInBounds) {
+		if (!touchInBounds) {
 			this.mouseEnter(event);
 			return;
 		}
-		if(touchDown) {
+		if (touchDown) {
 			this.mouseDragged(event);
 			return;
 		}
@@ -122,7 +162,7 @@ function inputListener() {
 	}
 
 	this.mouseDragged = function mouseDragged(event)  {
-		if(!dragging) {
+		if (!dragging) {
 			this.draggingStart(event);
 			return;
 		}
@@ -149,7 +189,7 @@ function inputListener() {
 	}
 
 	this.mouseExit = function mouseExit(event)  {
-		if(touchDown) {
+		if (touchDown) {
 			this.mouseUp(event);
 		}
 		touchInBounds = false;
@@ -165,7 +205,7 @@ function inputListener() {
 
 	this.mouseDown = function mouseDown(event)  {
 		touchDown = true;
-		if(!touchInBounds) {
+		if (!touchInBounds) {
 			this.mouseEnter(event);
 		}
 		var touchPos = this.getTouchPos(event);
