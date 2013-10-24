@@ -18,7 +18,7 @@ public class Decoder {
 		try {
 			return Request.parseFrom(buffer.array());
 		} catch (InvalidProtocolBufferException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}

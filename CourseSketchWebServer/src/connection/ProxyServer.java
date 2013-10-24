@@ -40,7 +40,7 @@ public class ProxyServer extends WebSocketServer {
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
-	ExampleClient recognition = connectProxy(this, true);
+	ExampleClient recognition = connectProxy(this, false);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) throws UnknownHostException {
@@ -67,7 +67,7 @@ public class ProxyServer extends WebSocketServer {
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
-		System.out.println( conn + " has left the room!");
+		System.out.println( conn + " has disconnected from Proxy");
 		idToConnection.remove(connectionToId.remove(conn));
 	}
 
@@ -130,7 +130,7 @@ public class ProxyServer extends WebSocketServer {
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {
-		System.out.println( "received fragment: " + fragment );
+		//System.out.println( "received fragment: " + fragment );
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class ProxyServer extends WebSocketServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
-		System.out.println("Current Version");
+		System.out.println("Proxy Server: Version 1.0.0");
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
 		try {
@@ -151,7 +151,7 @@ public class ProxyServer extends WebSocketServer {
 		}
 		ProxyServer s = new ProxyServer( port );
 		s.start();
-		System.out.println( "ChatServer started on port: " + s.getPort() );
+		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
 		
 		//attempt to connect to recognition
 		//attempt to connect to answer server

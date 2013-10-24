@@ -26,7 +26,7 @@ public class Decoder {
 		try {
 			return Update.parseFrom(string);
 		} catch (InvalidProtocolBufferException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return null;
 	}
@@ -35,7 +35,7 @@ public class Decoder {
 		try {
 			return Request.parseFrom(buffer.array());
 		} catch (InvalidProtocolBufferException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}

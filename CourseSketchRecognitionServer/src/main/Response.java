@@ -34,7 +34,7 @@ public class Response {
 
 		List<Point> points = s.getPoints();
 		for (Point p: points){
-			System.out.println("("+p.x+","+p.y+")");
+			//System.out.println("("+p.x+","+p.y+")");
 			double z = p.x;
 			p.x = p.y;
 			p.y = z;
