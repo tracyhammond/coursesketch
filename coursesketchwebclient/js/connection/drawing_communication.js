@@ -23,7 +23,8 @@ SRL_Stroke.prototype.sendToProtobuf = function(scope) {
 	var proto = new StrokeProto();
 	proto.id = this.getId();
 	var n = this.getTime();
-	proto.setTime(n);
+	var longVersion = parent.Long.fromString("" + n);
+	proto.setTime(longVersion);
 	proto.name = this.getName();
 	var array = new Array();
 	var points = this.getPoints();

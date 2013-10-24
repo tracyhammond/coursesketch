@@ -21,12 +21,26 @@ table, caption, tbody, tfoot, thead, tr, th, td {
         background: transparent;
 }
 body {
-        background: #DCDDDF;
-        color: #000;
-        font: 14px Arial;
-        margin: 0 auto;
-        padding: 0;
-        position: relative;
+    background: #EDEEEF;
+    color: #000;
+    font: 14px Arial;
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+    /*
+    background-image: linear-gradient(top, #EDEEEF 0%, #DCDDDF 100%);
+	background-image: -o-linear-gradient(top, #EDEEEF 0%, #DCDDDF 100%);
+	background-image: -moz-linear-gradient(top, #EDEEEF 0%, #DCDDDF 100%);
+	background-image: -webkit-linear-gradient(top, #EDEEEF 0%, #DCDDDF 100%);
+	background-image: -ms-linear-gradient(top, #EDEEEF 0%, #DCDDDF 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #EDEEEF),
+		color-stop(1, #DCDDDF)
+	);*/
 }
 h1{ font-size:28px;}
 h2{ font-size:26px;}
