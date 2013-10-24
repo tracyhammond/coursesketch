@@ -40,7 +40,7 @@ public class ProxyServer extends WebSocketServer {
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
-	ExampleClient recognition = connectProxy(this, false);
+	ExampleClient recognition = connectProxy(this, true);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) throws UnknownHostException {

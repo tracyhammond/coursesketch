@@ -140,8 +140,14 @@ public class Response {
 		
 		result.sortNBestList();
 		List<Shape> shapes = result.getNBestList();
+		
 		Interpretation.Builder interpretationbuilder = Interpretation.newBuilder();
 		for (Shape s: shapes){
+			srl.core.sketch.Interpretation i = s.getInterpretation();
+			interpretationbuilder.setName(i.label);
+			interpretationbuilder.setConfidence(i.confidence);
+			
+			shapebuilder.addInterpretations(interpretationbuilder.build());
 		}
 		
 		return shapebuilder.build();
