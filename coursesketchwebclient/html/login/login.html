@@ -4,6 +4,9 @@
         <meta charset="utf-8">
         <base href="../../">
         <title>Course Sketch</title>
+        <script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+		<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+		<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
         <script type="text/javascript" src="js/connection/connection_library.js"></script>
     	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
     	<link rel="stylesheet" href="css/utility/toggleswitch.css">
@@ -52,7 +55,7 @@
 	  					// Redirect to main.html
 	  					connection.isInstructor = message.login.isInstructor;
 	  					//window.location.href = ("/main.html");
-	  					parent.redirector.moveWindow("/main.html");
+	  					parent.redirector.moveWindow("html/main.html");
 	  					console.log("Redirecting to the other window");
 	  				} else {
 	  					alert("not able to login" + message.responseText);
