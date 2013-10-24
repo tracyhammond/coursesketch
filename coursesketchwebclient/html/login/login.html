@@ -13,14 +13,14 @@
             type="image/ico" 
             href="/images/CSpencil.ico" />   
 		<script type='text/javascript'>
-
 			//called when login button is pressed
             function formSubmit() {
 				function sendLogin(arg1, arg2) {
-	  				var request = new Request(Request.MessageType.LOGIN);
+	  				var request = new Request(parent.Request.MessageType.LOGIN);
 	  				var loginInfo = new LoginInformation(arg1, arg2, false, false, "");
 	  				request.login = loginInfo;
 	  				connection.sendRequest(request);
+	  				console.log("Sending login information");
 	  			}
 				sendLogin(document.getElementById("username").value, document.getElementById("password").value);
             }
@@ -29,6 +29,7 @@
             	connection = parent.connection;
             	copyProtosFromParentProtos();
 	  			function onOpen(evt) {
+	  				console.log("Opened here which is incorrect");
 	  			}
 
 	  			function onClose(evt) {
@@ -40,16 +41,21 @@
 	  				} else if(evt.code == INCORRECT_LOGIN) {
 	  					alert(evt.reason);
 	  				}
+	  				alert("Closing");
 	  			}
 
-	  			function onMessage(evt, message) {
+	  			function onLogin(evt, message) {
+	  				console.log(evt);
+	  				console.log(message);
+	  				console.log(message.login);
 	  				if (message.login.isLoggedIn) {
 	  					// Redirect to main.html
 	  					connection.isInstructor = message.login.isInstructor;
-	  					parent.connection = connection;
-	  					window.location.assign("/main.html");
+	  					//window.location.href = ("/main.html");
+	  					parent.redirector.moveWindow("/main.html");
+	  					console.log("Redirecting to the other window");
 	  				} else {
-	  					alert(message.responseText);
+	  					alert("not able to login" + message.responseText);
 	  				}
 	  			}
 
@@ -57,7 +63,8 @@
 	  				// through an uhoh oreo.
 	  				alert('OMG AN ERROR ' + error);
 	  			}
-	  			connection.setListeners(onOpen, onClose, onMessage, onError);
+	  			connection.setListeners(onOpen, onClose, false, onError);
+	  			connection.setLoginListener(onLogin);
 	  		}
 	  		var connection = false;
         </script>
@@ -67,7 +74,7 @@
           <section id="content">
             <!-- Login Form: Username and Password field. Checks with Middle for confirmation -->
             <div id="form" stlye = "position:relative;">
-                <form onsubmit="formSubmit()">
+                <form action="Javascript:formSubmit()">
                     <h1>CourseSketch</h1>
                     <div id="user">
                         <input type="text" name="username" placeholder="Username" required="" id="username" autofocus/>

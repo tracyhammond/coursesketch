@@ -7,8 +7,13 @@ function Connection(uri, encrypted) {
 
 	var onOpen;
 	var onClose;
-	var onRequest;
+	var onRequest = false;
+	var onLogin = false;
+	var onRecognition = false;
+	var onAnswerChecker = false;
+	var onSchoolData = false;
 	var onError;
+
 	var websocket;
 	var wsUri = (encrypted?'wss://' : 'ws://') + uri;
 
@@ -23,25 +28,37 @@ function Connection(uri, encrypted) {
 			websocket.onclose = function(evt) {
 				if (onClose)
 					onClose(evt);
+				else {
+					alert("Connection to server closed");
+				}
 			};
 			websocket.onmessage = function(evt) {
 				try {
 			        // Decode the Request
 			        var msg = Request.decode(evt.data);
-			        if (onRequest)
+			        if (msg.requestType == Request.MessageType.LOGIN && onLogin) {
+			        	onLogin(evt, msg);
+			        } else if (msg.requestType == Request.MessageType.RECOGNITION && onRecognition) {
+			        	onRecognition(evt, msg);
+			        } else if (msg.requestType == Request.MessageType.ANSWER_CHECKING && onAnswerChecker) {
+			        	onAnswerChecker(evt, msg);
+			        } else if (msg.requestType == Request.MessageType.DATA_REQUEST && onSchoolData) {
+			        	onSchoolData(evt, msg);
+			        }else if (onRequest)
 			        	onRequest(evt, msg);
 			    } catch (err) {
 			    	onError(evt,err);
 			    }
 				// decode with protobuff and pass object to client
-
 			};
 			websocket.onerror = function(evt) {
 				if (onError)
-					onError(evt,error);
+					onError(evt,null);
 			};
 		} catch(error) {
-			onError(null,error);
+			if (onError) {
+				onError(null,error);
+			}
 		}
 
 	}
@@ -60,6 +77,22 @@ function Connection(uri, encrypted) {
 		onRequest = message;
 		onError = error;
 	};
+
+	this.setLoginListener = function(listener) {
+		onLogin = listener;
+	};
+
+	this.setRecognitionListener = function(listener) {
+		onRecognition = listener;
+	};
+
+	this.setAnswerCheckingListener = function(listener) {
+		ononAnswerChecker = listener;
+	};
+	
+	this.setSchoolDataListener = function(listener) {
+		onSchoolData = listener;
+	}
 
 	this.setOnOpenListener = function(listener) {
 		onOpen = listener;

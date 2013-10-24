@@ -58,8 +58,7 @@
 						//alert("listsize " + pointList.length);
 						for(var i = 0; i< pointList.length; i++) {
 							var point = pointList[i];
-							console.log("x: " + point.x+ " y: " + point.y);
-							var currentPoint = new SRL_Point(point.x - 50, point.y);
+							var currentPoint = new SRL_Point(point.x, point.y);
 							if (!srlStroke) {
 								srlStroke = new SRL_Stroke(currentPoint);
 							} else {
