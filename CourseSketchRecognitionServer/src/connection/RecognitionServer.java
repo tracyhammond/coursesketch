@@ -27,6 +27,7 @@ import protobuf.srl.commands.Commands.Update;
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 
 /**
@@ -98,36 +99,18 @@ public class RecognitionServer extends WebSocketServer {
 			//use a function that they will give
 
 			//post function they will give (package the information received)
-			SrlStroke receivedStroke = null;
+			Request result = null;
 
 			try {
-				Response.print(savedUpdate);
-				return;
+				SrlShape shape = Response.interpret(savedUpdate);
+				result = Encoder.createRequestFromShape(shape);
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			receivedStroke.toByteString();
-			
-			AddStroke.Builder addBuilder = AddStroke.newBuilder();
-			addBuilder.setStroke(receivedStroke.toByteString());
-			
-			Command.Builder cmdBuilder = Command.newBuilder();
-			cmdBuilder.setIsUserCreated(false);
-			cmdBuilder.setCommandType(CommandType.ADD_STROKE);
-			cmdBuilder.setCommandData(addBuilder.build().toByteString());
-			
-			
-			Update.Builder updateBuilder = Update.newBuilder();
-			updateBuilder.addCommands(cmdBuilder.build());
-			
-			Request.Builder requestBuilder = Request.newBuilder();
-			requestBuilder.setOtherData(updateBuilder.build().toByteString());
-			requestBuilder.setRequestType(MessageType.RECOGNITION);
-			
-			conn.send(requestBuilder.build().toByteArray());
-			
+			conn.send(result.toByteArray());
+
 			// Build and send.
 			/*String name = req.getLogin().getUsername();
 			String password = req.getLogin().getPassword();
