@@ -45,30 +45,37 @@
 					var commandList = update.getCommands();
 					//if(commandList ) // if it is not an array...
 					//alert("CommandList " + commandList);
-					var command = commandList[0];
-					if (command.commandType == parent.ProtoSrlCommandType.ADD_STROKE) {
-						//alert(command.commandType + " userCreated: " + command.isUserCreated);
-						var addStroke = parent.ProtoUpdateCommand.AddStroke.decode(command.commandData);
-						//alert(addStroke);
-						var stroke = parent.ProtoSrlStroke.decode(addStroke.stroke);
-						//alert(stroke);
-						var pointList = stroke.points;
-						// LIST
-						var srlStroke = false;
-						//alert("listsize " + pointList.length);
-						for(var i = 0; i< pointList.length; i++) {
-							var point = pointList[i];
-							var currentPoint = new SRL_Point(point.x, point.y);
-							if (!srlStroke) {
-								srlStroke = new SRL_Stroke(currentPoint);
-							} else {
-								srlStroke.addPoint(currentPoint);
+					for (var i = 0; i <commandList.length; i++) {
+						var command = commandList[i];
+						if (command.commandType == parent.ProtoSrlCommandType.ADD_STROKE) {
+							//alert(command.commandType + " userCreated: " + command.isUserCreated);
+							var addStroke = parent.ProtoUpdateCommand.AddStroke.decode(command.commandData);
+							//alert(addStroke);
+							var stroke = parent.ProtoSrlStroke.decode(addStroke.stroke);
+							//alert(stroke);
+							var pointList = stroke.points;
+							// LIST
+							var srlStroke = false;
+							//alert("listsize " + pointList.length);
+							for(var i = 0; i< pointList.length; i++) {
+								var point = pointList[i];
+								var currentPoint = new SRL_Point(point.x, point.y);
+								if (!srlStroke) {
+									srlStroke = new SRL_Stroke(currentPoint);
+								} else {
+									srlStroke.addPoint(currentPoint);
+								}
 							}
+							//alert(srlStroke);
+							//srlStroke.draw(canvasContext);
+							sketch.addObject(srlStroke);
+							drawEntireSketch();
+						} else if(command.commandType == parent.ProtoSrlCommandType.ADD_SHAPE) {
+							var shape = parent.ProtoSrlShape.decode(command.commandData);
+							var newShape = SRL_Shape.createFromProtobuf(shape);
+							sketch.addObject(newShape);
+							drawEntireSketch();
 						}
-						//alert(srlStroke);
-						//srlStroke.draw(canvasContext);
-						sketch.addObject(srlStroke);
-						drawEntireSketch();
 					}
 				}
 			});

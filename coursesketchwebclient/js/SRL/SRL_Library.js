@@ -225,9 +225,16 @@ function SRL_Object() {
 	 * @param complexity a double representing the complexity
 	 */
 	this.addInterpretation = function(interpretation, confidence, complexity) {
-		//m_interpretations.push(new SRL_Interpretation(interpretation, confidence, complexity));
+		m_interpretations.push(new SRL_Interpretation(interpretation, confidence, complexity));
 		console.log("Implement SRL_Object.addInterpretation later");
 		console.log("This may not actually be needed");
+	}
+
+	/**
+	 * @return the list of interpretations for this shape.
+	 */
+	this.getInterpretations = function() {
+		return m_interpretations;
 	}
 
 	/**
@@ -1144,6 +1151,12 @@ function SRL_Point(x, y) {
 		console.log(m_currentElement);
 	}
 };
+
+function SRL_Interpretation(label, confidence, complexity) {
+	this.label = label;
+	this.confidence = confidence;
+	this.complexity = complexity;
+}
 
 /**
  *******************************
