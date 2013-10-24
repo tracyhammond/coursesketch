@@ -45,6 +45,12 @@ public class Response {
 		return response;
 	}
 	
+	/**
+	 * Void function that merely prints out the recognized details of the
+	 * stroke contained up
+	 * @param Update up
+	 * @throws InvalidProtocolBufferException
+	 */
 	public static void print(Update up) throws InvalidProtocolBufferException{
 		Sketch sketch = new Sketch();
 		sketch.add(unpackage(up));
@@ -67,7 +73,7 @@ public class Response {
 	
 	/**
 	 * Simple response function to take in a Protobuf file, convert it into Paleosketch
-	 * and then manipulate it and package it back up to return
+	 * and then recognize it and package up the results for display
 	 * @param protobuf.srl.commands.Commands.Update
 	 * @return protobuf.srl.sketch.Sketch.SrlStroke
 	 * @throws InvalidProtocolBufferException
@@ -125,7 +131,7 @@ public class Response {
 	}
 	
 	/**
-	 * Repackages a Paleosketch type stroke into a Protobuf type SrlStroke
+	 * Repackages a Paleosketch interpretation into a Protobuf type SrlShape
 	 * @param srl.core.sketch.Stroke
 	 * @return protobuf.srl.sketch.Sketch.SrlStroke
 	 */
