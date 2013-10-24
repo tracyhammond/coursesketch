@@ -19,6 +19,10 @@
 			//called when login button is pressed
             function formSubmit() {
 				function sendLogin(arg1, arg2) {
+					if (!parent.connected) {
+						alert("The server has not yet opened a connection, please be patient");
+						return;
+					}
 	  				var request = new Request(parent.Request.MessageType.LOGIN);
 	  				var loginInfo = new LoginInformation(arg1, arg2, false, false, "");
 	  				request.login = loginInfo;
