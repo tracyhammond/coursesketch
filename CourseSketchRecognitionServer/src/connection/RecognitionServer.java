@@ -101,7 +101,8 @@ public class RecognitionServer extends WebSocketServer {
 			SrlStroke receivedStroke = null;
 
 			try {
-				receivedStroke = Response.mirror(savedUpdate);
+				Response.print(savedUpdate);
+				return;
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

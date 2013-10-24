@@ -141,6 +141,9 @@ public class Response {
 		result.sortNBestList();
 		List<Shape> shapes = result.getNBestList();
 		
+		shapebuilder.setId(shapes.get(0).getId().toString());
+		shapebuilder.setTime(shapes.get(0).getTimeEnd());
+		
 		Interpretation.Builder interpretationbuilder = Interpretation.newBuilder();
 		for (Shape s: shapes){
 			srl.core.sketch.Interpretation i = s.getInterpretation();
