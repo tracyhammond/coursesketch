@@ -102,8 +102,10 @@ public class RecognitionServer extends WebSocketServer {
 			Request result = null;
 
 			try {
-				SrlShape shape = Response.interpret(savedUpdate);
-				result = Encoder.createRequestFromShape(shape);
+				//SrlShape shape = Response.interpret(savedUpdate);
+				//result = Encoder.createRequestFromShape(shape);
+				Response.print(savedUpdate);
+				return;
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -62,7 +62,7 @@ public class Response {
 		List<Shape> shapes = result.getNBestList();
 		System.out.println("Sorted result list of size " + shapes.size());
 		for (Shape s: shapes){
-			System.out.println("Shape "+s.getName());
+			System.out.println("Shape "+s.getName()+", "+s.getShapes().size());
 			List<srl.core.sketch.Interpretation> interpretations = s.getNBestList();
 			for (srl.core.sketch.Interpretation i: interpretations){
 				System.out.println("Interpretation "+i.label+", confidence "+i.confidence);
