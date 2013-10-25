@@ -14,36 +14,52 @@ message Command {
 	
 }
 
+/**
+ * These are attempted to be ordered by the most common occurence
+ */
 enum CommandType {
 	ADD_STROKE = 0;	// This will only contain a SRL_Stroke in commandData
 	ADD_SHAPE = 1; // contains a shape.
 	PACKAGE_SHAPE = 2; // repackages shapes from the surface to inside another shape
 	FORCE_INTERPRETATION = 3;
+	CREATE_SUBSHAPE = 4; // creates a shape inside another shape
+	ASSIGN_ATTRIBUTE = 5;
+}
+
+/**
+ * A sub message that contains a list of Ids.
+ * The first Id will be at the level of the sketch, all further ids are subshapes of that shape.
+ */
+message IdChain {
+	repeated string idChain = 1;
 }
 
 /**
  * This tells us to do 2 things
  * #1 add all shapes with an id in the list of {@link shapesToBeContained} into shape with an id of {@link newContainerId}
  * #2 delete all the shapes with the id in the list of from the sketch
+ *
+ *  If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
  */
 message PackageShape {
-	required string newContainerId = 1;
-	repeated string shapesToBeContained = 2; // This is a list of shapes
+	optional IdChain oldContainerId = 1;
+	optional IdChain newContainerId = 2;
+	repeated string shapesToBeContained = 3; // This is a list of shapes ids
 }
 
 /**
- * Stroke information.
+ * Creates a shape inside of a parent shape.
  */
-message AddStroke {
-	required bytes stroke = 1; // until I figure out how to make it import what it really is.
+message CreateSubshape {
+	required IdChain parentShape = 1;
+	required bytes shape = 2;
 }
 
-message RemoveShape {
-	required string shapeToRemoveId = 1;
-}
-
-message AddShape {
-	required bytes shape = 1; // contains a SRL_Object as defined in sketch.proto
+/**
+ * Tells the sketch to remove an object, (can either be a stroke or a shape)
+ */
+message RemoveObject {
+	required IdChain shapeId = 1;
 }
 
 /**
@@ -51,5 +67,26 @@ message AddShape {
  */
 message ForceInterpretation {
 	required bytes interpretation = 1;
-	required string shapeId = 2; 
+	required IdChain shapeId = 2;
+}
+
+/**
+ * Assigns an attribute to a shape.
+ */
+message AddAttribtue {
+	required IdChain shapeId = 1;
+	required string attributeKey = 2;
+	required bytes attributeValue = 3;
+}
+
+/**
+ * Removes an attribute from a shape.
+ *
+ * the value that is removed is stored here.
+ * A ReplaceAttribute is a combination of a RemoveAttribtue and then an AddAttribtue
+ */
+message RemoveAttribtue {
+	required IdChain shapeId = 1;
+	required string attributeKey = 2;
+	required bytes attributeValue = 3;
 }
