@@ -24,6 +24,7 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 	inputListener.setDraggingStartListener(function(drawingEvent) {
 		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
 		currentStroke = new SRL_Stroke(currentPoint);
+		currentStroke.setId(generateUUID());
 		pastPoint = currentPoint;
 	});
 
@@ -62,6 +63,7 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 	 */
 	this.createPointFromEvent = function (drawingEvent) {
 		var currentPoint = new SRL_Point(drawingEvent.x, drawingEvent.y);
+		currentPoint.setId(generateUUID());
 		currentPoint.setTime(drawingEvent.time);
 		currentPoint.setPressure(drawingEvent.pressure);
 		currentPoint.setSize(drawingEvent.size);
