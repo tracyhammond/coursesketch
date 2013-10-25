@@ -5982,6 +5982,11 @@ public final class Sketch {
   }
   /**
    * Protobuf type {@code protobuf.srl.sketch.Interpretation}
+   *
+   * <pre>
+   * TODO: change to SrlInterpretation
+   * TODO: change name to label
+   * </pre>
    */
   public static final class Interpretation extends
       com.google.protobuf.GeneratedMessage
@@ -6296,6 +6301,11 @@ public final class Sketch {
     }
     /**
      * Protobuf type {@code protobuf.srl.sketch.Interpretation}
+     *
+     * <pre>
+     * TODO: change to SrlInterpretation
+     * TODO: change name to label
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>

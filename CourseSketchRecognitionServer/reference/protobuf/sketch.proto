@@ -50,6 +50,8 @@ message SrlPoint {
 	optional double speed = 8;
 }
 
+// TODO: change to SrlInterpretation
+// TODO: change name to label
 message Interpretation {
 	required string name = 1;
 	required double confidence = 2;
