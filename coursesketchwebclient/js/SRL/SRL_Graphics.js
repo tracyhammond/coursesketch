@@ -14,7 +14,7 @@
   */
 SRL_Object.prototype.draw = function draw(graphics) {
 	if (this.check_type() == "SRL_Shape") {
-		this.draw = drawShape;
+		this.draw = this.drawShape;
 		this.drawShape(graphics);
 	} else if (this.check_type() == "SRL_Stroke") {
 		this.draw = this.drawStroke;

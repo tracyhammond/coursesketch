@@ -81,9 +81,9 @@ SRL_Stroke.createFromProtobuf = function(stroke) {
 SRL_Shape.createFromProtobuf = function(shape) {
 	var interpretations = shape.interpretations;
 	var newShape = new SRL_Shape();
-	for(var i = 0; i < interprestations; i++) {
-		var protoInter = interprestations[i];
-		newShape.addInterpretation(new SRL_Inperpretation(protoInter.name, protoInter.confidence, protoInter.complexity));
+	for(var i = 0; i < interpretations.length; i++) {
+		var protoInter = interpretations[i];
+		newShape.addInterpretation(protoInter.name, protoInter.confidence, protoInter.complexity);
 	}
 	return newShape;
 }
