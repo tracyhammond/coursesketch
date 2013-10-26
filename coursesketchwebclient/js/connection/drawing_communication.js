@@ -76,7 +76,7 @@ SRL_Stroke.createFromProtobuf = function(stroke) {
 }
 
 /**
- * Static function that returns an {@link SRL_Stroke}.
+ * Static function that returns an {@link SRL_Shape}.
  */
 SRL_Shape.createFromProtobuf = function(shape) {
 	var interpretations = shape.interpretations;

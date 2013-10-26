@@ -35,6 +35,7 @@
 			input.initializeCanvas("drawingCanvas");
 			canvasContext = input.canvasContext;
 			sketch = new sketchContainer();
+			sketch.canvasContext = canvasContext;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
 			serverConnection.setOnMessageListener(function(evt, message) {
 				//alert('I AM GETTING A MESSAGE');
@@ -69,12 +70,12 @@
 							//alert(srlStroke);
 							//srlStroke.draw(canvasContext);
 							sketch.addObject(srlStroke);
-							drawEntireSketch();
+							sketch.drawEntireSketch();
 						} else if(command.commandType == parent.ProtoSrlCommandType.ADD_SHAPE) {
 							var shape = parent.ProtoSrlShape.decode(command.commandData);
 							var newShape = SRL_Shape.createFromProtobuf(shape);
 							sketch.addObject(newShape);
-							drawEntireSketch();
+							sketch.drawEntireSketch();
 						}
 					}
 				}
@@ -95,15 +96,8 @@
 			var request = serverConnection.createRequestFromCommand(command, parent.Request.MessageType.RECOGNITION);
 			serverConnection.sendRequest(request);
 		}
-
-	    function drawEntireSketch() {
-	    	if (sketch) {
-		    	var list = sketch.getList();
-				for(var i = 0; i < list.length; i++) {
-					var object = list[i];
-					object.draw(canvasContext);
-				}
-	    	}
+		sketchContainer.prototype.canvasContext = null;
+	    sketchContainer.prototype.drawEntireSketch = 
 	    }
 	</script>
 	<script type="text/javascript">

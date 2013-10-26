@@ -34,9 +34,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* PackageShape_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   PackageShape_reflection_ = NULL;
-const ::google::protobuf::Descriptor* CreateSubshape_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* AddSubshape_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  CreateSubshape_reflection_ = NULL;
+  AddSubshape_reflection_ = NULL;
 const ::google::protobuf::Descriptor* RemoveObject_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   RemoveObject_reflection_ = NULL;
@@ -126,22 +126,22 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PackageShape));
-  CreateSubshape_descriptor_ = file->message_type(4);
-  static const int CreateSubshape_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateSubshape, parentshape_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateSubshape, shape_),
+  AddSubshape_descriptor_ = file->message_type(4);
+  static const int AddSubshape_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddSubshape, parentshape_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddSubshape, shape_),
   };
-  CreateSubshape_reflection_ =
+  AddSubshape_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      CreateSubshape_descriptor_,
-      CreateSubshape::default_instance_,
-      CreateSubshape_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateSubshape, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateSubshape, _unknown_fields_),
+      AddSubshape_descriptor_,
+      AddSubshape::default_instance_,
+      AddSubshape_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddSubshape, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddSubshape, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(CreateSubshape));
+      sizeof(AddSubshape));
   RemoveObject_descriptor_ = file->message_type(5);
   static const int RemoveObject_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RemoveObject, shapeid_),
@@ -229,7 +229,7 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     PackageShape_descriptor_, &PackageShape::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    CreateSubshape_descriptor_, &CreateSubshape::default_instance());
+    AddSubshape_descriptor_, &AddSubshape::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     RemoveObject_descriptor_, &RemoveObject::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
@@ -251,8 +251,8 @@ void protobuf_ShutdownFile_input_2fcommands_2eproto() {
   delete IdChain_reflection_;
   delete PackageShape::default_instance_;
   delete PackageShape_reflection_;
-  delete CreateSubshape::default_instance_;
-  delete CreateSubshape_reflection_;
+  delete AddSubshape::default_instance_;
+  delete AddSubshape_reflection_;
   delete RemoveObject::default_instance_;
   delete RemoveObject_reflection_;
   delete ForceInterpretation::default_instance_;
@@ -280,30 +280,31 @@ void protobuf_AddDesc_input_2fcommands_2eproto() {
     "\233\001\n\014PackageShape\0226\n\016oldContainerId\030\001 \001(\013"
     "2\036.protobuf.srl.commands.IdChain\0226\n\016newC"
     "ontainerId\030\002 \001(\0132\036.protobuf.srl.commands"
-    ".IdChain\022\033\n\023shapesToBeContained\030\003 \003(\t\"T\n"
-    "\016CreateSubshape\0223\n\013parentShape\030\001 \002(\0132\036.p"
-    "rotobuf.srl.commands.IdChain\022\r\n\005shape\030\002 "
-    "\002(\014\"\?\n\014RemoveObject\022/\n\007shapeId\030\001 \002(\0132\036.p"
-    "rotobuf.srl.commands.IdChain\"^\n\023ForceInt"
-    "erpretation\022\026\n\016interpretation\030\001 \002(\014\022/\n\007s"
-    "hapeId\030\002 \002(\0132\036.protobuf.srl.commands.IdC"
-    "hain\"m\n\014AddAttribtue\022/\n\007shapeId\030\001 \002(\0132\036."
-    "protobuf.srl.commands.IdChain\022\024\n\014attribu"
-    "teKey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014\"p\n\017R"
-    "emoveAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.protob"
-    "uf.srl.commands.IdChain\022\024\n\014attributeKey\030"
-    "\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014*\204\001\n\013Comman"
-    "dType\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\r"
-    "PACKAGE_SHAPE\020\002\022\030\n\024FORCE_INTERPRETATION\020"
-    "\003\022\023\n\017CREATE_SUBSHAPE\020\004\022\024\n\020ASSIGN_ATTRIBU"
-    "TE\020\005", 1044);
+    ".IdChain\022\033\n\023shapesToBeContained\030\003 \003(\t\"Q\n"
+    "\013AddSubshape\0223\n\013parentShape\030\001 \002(\0132\036.prot"
+    "obuf.srl.commands.IdChain\022\r\n\005shape\030\002 \002(\014"
+    "\"\?\n\014RemoveObject\022/\n\007shapeId\030\001 \002(\0132\036.prot"
+    "obuf.srl.commands.IdChain\"^\n\023ForceInterp"
+    "retation\022\026\n\016interpretation\030\001 \002(\014\022/\n\007shap"
+    "eId\030\002 \002(\0132\036.protobuf.srl.commands.IdChai"
+    "n\"m\n\014AddAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.pro"
+    "tobuf.srl.commands.IdChain\022\024\n\014attributeK"
+    "ey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014\"p\n\017Remo"
+    "veAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf."
+    "srl.commands.IdChain\022\024\n\014attributeKey\030\002 \002"
+    "(\t\022\026\n\016attributeValue\030\003 \002(\014*\275\001\n\013CommandTy"
+    "pe\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPAC"
+    "KAGE_SHAPE\020\002\022\020\n\014ADD_SUBSHAPE\020\003\022\024\n\020ASSIGN"
+    "_ATTRIBUTE\020\004\022\030\n\024FORCE_INTERPRETATION\020\005\022\010"
+    "\n\004UNDO\020\006\022\010\n\004REDO\020\007\022\013\n\007REWRITE\020\010\022\017\n\013CLEAR"
+    "_STACK\020\t\022\010\n\004SYNC\020\n", 1098);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/commands.proto", &protobuf_RegisterTypes);
   Update::default_instance_ = new Update();
   Command::default_instance_ = new Command();
   IdChain::default_instance_ = new IdChain();
   PackageShape::default_instance_ = new PackageShape();
-  CreateSubshape::default_instance_ = new CreateSubshape();
+  AddSubshape::default_instance_ = new AddSubshape();
   RemoveObject::default_instance_ = new RemoveObject();
   ForceInterpretation::default_instance_ = new ForceInterpretation();
   AddAttribtue::default_instance_ = new AddAttribtue();
@@ -312,7 +313,7 @@ void protobuf_AddDesc_input_2fcommands_2eproto() {
   Command::default_instance_->InitAsDefaultInstance();
   IdChain::default_instance_->InitAsDefaultInstance();
   PackageShape::default_instance_->InitAsDefaultInstance();
-  CreateSubshape::default_instance_->InitAsDefaultInstance();
+  AddSubshape::default_instance_->InitAsDefaultInstance();
   RemoveObject::default_instance_->InitAsDefaultInstance();
   ForceInterpretation::default_instance_->InitAsDefaultInstance();
   AddAttribtue::default_instance_->InitAsDefaultInstance();
@@ -338,6 +339,11 @@ bool CommandType_IsValid(int value) {
     case 3:
     case 4:
     case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
       return true;
     default:
       return false;
@@ -1469,37 +1475,37 @@ void PackageShape::Swap(PackageShape* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int CreateSubshape::kParentShapeFieldNumber;
-const int CreateSubshape::kShapeFieldNumber;
+const int AddSubshape::kParentShapeFieldNumber;
+const int AddSubshape::kShapeFieldNumber;
 #endif  // !_MSC_VER
 
-CreateSubshape::CreateSubshape()
+AddSubshape::AddSubshape()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void CreateSubshape::InitAsDefaultInstance() {
+void AddSubshape::InitAsDefaultInstance() {
   parentshape_ = const_cast< ::protobuf::srl::commands::IdChain*>(&::protobuf::srl::commands::IdChain::default_instance());
 }
 
-CreateSubshape::CreateSubshape(const CreateSubshape& from)
+AddSubshape::AddSubshape(const AddSubshape& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void CreateSubshape::SharedCtor() {
+void AddSubshape::SharedCtor() {
   _cached_size_ = 0;
   parentshape_ = NULL;
   shape_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-CreateSubshape::~CreateSubshape() {
+AddSubshape::~AddSubshape() {
   SharedDtor();
 }
 
-void CreateSubshape::SharedDtor() {
+void AddSubshape::SharedDtor() {
   if (shape_ != &::google::protobuf::internal::kEmptyString) {
     delete shape_;
   }
@@ -1508,28 +1514,28 @@ void CreateSubshape::SharedDtor() {
   }
 }
 
-void CreateSubshape::SetCachedSize(int size) const {
+void AddSubshape::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* CreateSubshape::descriptor() {
+const ::google::protobuf::Descriptor* AddSubshape::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return CreateSubshape_descriptor_;
+  return AddSubshape_descriptor_;
 }
 
-const CreateSubshape& CreateSubshape::default_instance() {
+const AddSubshape& AddSubshape::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_input_2fcommands_2eproto();
   return *default_instance_;
 }
 
-CreateSubshape* CreateSubshape::default_instance_ = NULL;
+AddSubshape* AddSubshape::default_instance_ = NULL;
 
-CreateSubshape* CreateSubshape::New() const {
-  return new CreateSubshape;
+AddSubshape* AddSubshape::New() const {
+  return new AddSubshape;
 }
 
-void CreateSubshape::Clear() {
+void AddSubshape::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_parentshape()) {
       if (parentshape_ != NULL) parentshape_->::protobuf::srl::commands::IdChain::Clear();
@@ -1544,7 +1550,7 @@ void CreateSubshape::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool CreateSubshape::MergePartialFromCodedStream(
+bool AddSubshape::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -1593,7 +1599,7 @@ bool CreateSubshape::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void CreateSubshape::SerializeWithCachedSizes(
+void AddSubshape::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required .protobuf.srl.commands.IdChain parentShape = 1;
   if (has_parentshape()) {
@@ -1613,7 +1619,7 @@ void CreateSubshape::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* CreateSubshape::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* AddSubshape::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required .protobuf.srl.commands.IdChain parentShape = 1;
   if (has_parentshape()) {
@@ -1636,7 +1642,7 @@ void CreateSubshape::SerializeWithCachedSizes(
   return target;
 }
 
-int CreateSubshape::ByteSize() const {
+int AddSubshape::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -1666,10 +1672,10 @@ int CreateSubshape::ByteSize() const {
   return total_size;
 }
 
-void CreateSubshape::MergeFrom(const ::google::protobuf::Message& from) {
+void AddSubshape::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const CreateSubshape* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const CreateSubshape*>(
+  const AddSubshape* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const AddSubshape*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -1678,7 +1684,7 @@ void CreateSubshape::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void CreateSubshape::MergeFrom(const CreateSubshape& from) {
+void AddSubshape::MergeFrom(const AddSubshape& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_parentshape()) {
@@ -1691,25 +1697,25 @@ void CreateSubshape::MergeFrom(const CreateSubshape& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void CreateSubshape::CopyFrom(const ::google::protobuf::Message& from) {
+void AddSubshape::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void CreateSubshape::CopyFrom(const CreateSubshape& from) {
+void AddSubshape::CopyFrom(const AddSubshape& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool CreateSubshape::IsInitialized() const {
+bool AddSubshape::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
-void CreateSubshape::Swap(CreateSubshape* other) {
+void AddSubshape::Swap(AddSubshape* other) {
   if (other != this) {
     std::swap(parentshape_, other->parentshape_);
     std::swap(shape_, other->shape_);
@@ -1719,11 +1725,11 @@ void CreateSubshape::Swap(CreateSubshape* other) {
   }
 }
 
-::google::protobuf::Metadata CreateSubshape::GetMetadata() const {
+::google::protobuf::Metadata AddSubshape::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = CreateSubshape_descriptor_;
-  metadata.reflection = CreateSubshape_reflection_;
+  metadata.descriptor = AddSubshape_descriptor_;
+  metadata.reflection = AddSubshape_reflection_;
   return metadata;
 }
 
