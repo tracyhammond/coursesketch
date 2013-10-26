@@ -236,6 +236,13 @@ function SRL_Object() {
 	}
 
 	/**
+	 * sets unique UUID for an object
+	 */
+	this.setId = function(newId) {
+		id = newId;
+	}
+
+	/**
 	 * @return unique UUID for an object
 	 */
 	this.getId = function() {
