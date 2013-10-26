@@ -14,13 +14,13 @@
 		var sketch = false;
 		var canvasContext = false;
 		var Long = false;
+		
     	function init() {
     		parent.redirector.setRedirect('html/drawing/drawing.html');
     		initializeProtos();
     		initializeInput();
     		matchParent('drawingCanvas');
     	}
-
     	/**
     		Creates the proto files required for drawing if they do not exist.
     	*/
@@ -49,31 +49,11 @@
 					for (var i = 0; i <commandList.length; i++) {
 						var command = commandList[i];
 						if (command.commandType == parent.ProtoSrlCommandType.ADD_STROKE) {
-							//alert(command.commandType + " userCreated: " + command.isUserCreated);
-							var addStroke = parent.ProtoUpdateCommand.AddStroke.decode(command.commandData);
-							//alert(addStroke);
-							var stroke = parent.ProtoSrlStroke.decode(addStroke.stroke);
-							//alert(stroke);
-							var pointList = stroke.points;
-							// LIST
-							var srlStroke = false;
-							//alert("listsize " + pointList.length);
-							for(var i = 0; i< pointList.length; i++) {
-								var point = pointList[i];
-								var currentPoint = new SRL_Point(point.x, point.y);
-								if (!srlStroke) {
-									srlStroke = new SRL_Stroke(currentPoint);
-								} else {
-									srlStroke.addPoint(currentPoint);
-								}
-							}
-							//alert(srlStroke);
-							//srlStroke.draw(canvasContext);
-							sketch.addObject(srlStroke);
+							var newStroke = SRL_Stroke.createFromProtobuf(command.commandData);
+							sketch.addObject(newStroke);
 							sketch.drawEntireSketch();
 						} else if(command.commandType == parent.ProtoSrlCommandType.ADD_SHAPE) {
-							var shape = parent.ProtoSrlShape.decode(command.commandData);
-							var newShape = SRL_Shape.createFromProtobuf(shape);
+							var newShape = SRL_Shape.createFromProtobuf(command.commandData);
 							sketch.addObject(newShape);
 							sketch.drawEntireSketch();
 						}
@@ -88,17 +68,12 @@
 			command.time = stroke.time;
 			command.commandType = parent.ProtoSrlCommandType.ADD_STROKE;
 			command.isUserCreated = true;
-			command.commandId = "RANDOM STRING";
+			command.commandId = generateUUID(); // unique ID
 			// then finish him!
-			var addStroke = new parent.ProtoUpdateCommand.AddStroke();
-			addStroke.stroke = stroke.sendToProtobuf(parent).toArrayBuffer();
-			command.commandData = addStroke.toArrayBuffer();
+			command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
 			var request = serverConnection.createRequestFromCommand(command, parent.Request.MessageType.RECOGNITION);
 			serverConnection.sendRequest(request);
 		}
-		sketchContainer.prototype.canvasContext = null;
-	    sketchContainer.prototype.drawEntireSketch = 
-	    }
 	</script>
 	<script type="text/javascript">
 			parent.addScopedLoadEvent(window, function() {
