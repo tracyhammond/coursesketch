@@ -40,7 +40,7 @@ class Update;
 class Command;
 class IdChain;
 class PackageShape;
-class CreateSubshape;
+class AddSubshape;
 class RemoveObject;
 class ForceInterpretation;
 class AddAttribtue;
@@ -50,13 +50,18 @@ enum CommandType {
   ADD_STROKE = 0,
   ADD_SHAPE = 1,
   PACKAGE_SHAPE = 2,
-  FORCE_INTERPRETATION = 3,
-  CREATE_SUBSHAPE = 4,
-  ASSIGN_ATTRIBUTE = 5
+  ADD_SUBSHAPE = 3,
+  ASSIGN_ATTRIBUTE = 4,
+  FORCE_INTERPRETATION = 5,
+  UNDO = 6,
+  REDO = 7,
+  REWRITE = 8,
+  CLEAR_STACK = 9,
+  SYNC = 10
 };
 bool CommandType_IsValid(int value);
 const CommandType CommandType_MIN = ADD_STROKE;
-const CommandType CommandType_MAX = ASSIGN_ATTRIBUTE;
+const CommandType CommandType_MAX = SYNC;
 const int CommandType_ARRAYSIZE = CommandType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* CommandType_descriptor();
@@ -490,14 +495,14 @@ class PackageShape : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class CreateSubshape : public ::google::protobuf::Message {
+class AddSubshape : public ::google::protobuf::Message {
  public:
-  CreateSubshape();
-  virtual ~CreateSubshape();
+  AddSubshape();
+  virtual ~AddSubshape();
 
-  CreateSubshape(const CreateSubshape& from);
+  AddSubshape(const AddSubshape& from);
 
-  inline CreateSubshape& operator=(const CreateSubshape& from) {
+  inline AddSubshape& operator=(const AddSubshape& from) {
     CopyFrom(from);
     return *this;
   }
@@ -511,17 +516,17 @@ class CreateSubshape : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const CreateSubshape& default_instance();
+  static const AddSubshape& default_instance();
 
-  void Swap(CreateSubshape* other);
+  void Swap(AddSubshape* other);
 
   // implements Message ----------------------------------------------
 
-  CreateSubshape* New() const;
+  AddSubshape* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const CreateSubshape& from);
-  void MergeFrom(const CreateSubshape& from);
+  void CopyFrom(const AddSubshape& from);
+  void MergeFrom(const AddSubshape& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -565,7 +570,7 @@ class CreateSubshape : public ::google::protobuf::Message {
   inline ::std::string* release_shape();
   inline void set_allocated_shape(::std::string* shape);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.CreateSubshape)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddSubshape)
  private:
   inline void set_has_parentshape();
   inline void clear_has_parentshape();
@@ -585,7 +590,7 @@ class CreateSubshape : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
   void InitAsDefaultInstance();
-  static CreateSubshape* default_instance_;
+  static AddSubshape* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1415,37 +1420,37 @@ PackageShape::mutable_shapestobecontained() {
 
 // -------------------------------------------------------------------
 
-// CreateSubshape
+// AddSubshape
 
 // required .protobuf.srl.commands.IdChain parentShape = 1;
-inline bool CreateSubshape::has_parentshape() const {
+inline bool AddSubshape::has_parentshape() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void CreateSubshape::set_has_parentshape() {
+inline void AddSubshape::set_has_parentshape() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void CreateSubshape::clear_has_parentshape() {
+inline void AddSubshape::clear_has_parentshape() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void CreateSubshape::clear_parentshape() {
+inline void AddSubshape::clear_parentshape() {
   if (parentshape_ != NULL) parentshape_->::protobuf::srl::commands::IdChain::Clear();
   clear_has_parentshape();
 }
-inline const ::protobuf::srl::commands::IdChain& CreateSubshape::parentshape() const {
+inline const ::protobuf::srl::commands::IdChain& AddSubshape::parentshape() const {
   return parentshape_ != NULL ? *parentshape_ : *default_instance_->parentshape_;
 }
-inline ::protobuf::srl::commands::IdChain* CreateSubshape::mutable_parentshape() {
+inline ::protobuf::srl::commands::IdChain* AddSubshape::mutable_parentshape() {
   set_has_parentshape();
   if (parentshape_ == NULL) parentshape_ = new ::protobuf::srl::commands::IdChain;
   return parentshape_;
 }
-inline ::protobuf::srl::commands::IdChain* CreateSubshape::release_parentshape() {
+inline ::protobuf::srl::commands::IdChain* AddSubshape::release_parentshape() {
   clear_has_parentshape();
   ::protobuf::srl::commands::IdChain* temp = parentshape_;
   parentshape_ = NULL;
   return temp;
 }
-inline void CreateSubshape::set_allocated_parentshape(::protobuf::srl::commands::IdChain* parentshape) {
+inline void AddSubshape::set_allocated_parentshape(::protobuf::srl::commands::IdChain* parentshape) {
   delete parentshape_;
   parentshape_ = parentshape;
   if (parentshape) {
@@ -1456,53 +1461,53 @@ inline void CreateSubshape::set_allocated_parentshape(::protobuf::srl::commands:
 }
 
 // required bytes shape = 2;
-inline bool CreateSubshape::has_shape() const {
+inline bool AddSubshape::has_shape() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void CreateSubshape::set_has_shape() {
+inline void AddSubshape::set_has_shape() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void CreateSubshape::clear_has_shape() {
+inline void AddSubshape::clear_has_shape() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void CreateSubshape::clear_shape() {
+inline void AddSubshape::clear_shape() {
   if (shape_ != &::google::protobuf::internal::kEmptyString) {
     shape_->clear();
   }
   clear_has_shape();
 }
-inline const ::std::string& CreateSubshape::shape() const {
+inline const ::std::string& AddSubshape::shape() const {
   return *shape_;
 }
-inline void CreateSubshape::set_shape(const ::std::string& value) {
+inline void AddSubshape::set_shape(const ::std::string& value) {
   set_has_shape();
   if (shape_ == &::google::protobuf::internal::kEmptyString) {
     shape_ = new ::std::string;
   }
   shape_->assign(value);
 }
-inline void CreateSubshape::set_shape(const char* value) {
+inline void AddSubshape::set_shape(const char* value) {
   set_has_shape();
   if (shape_ == &::google::protobuf::internal::kEmptyString) {
     shape_ = new ::std::string;
   }
   shape_->assign(value);
 }
-inline void CreateSubshape::set_shape(const void* value, size_t size) {
+inline void AddSubshape::set_shape(const void* value, size_t size) {
   set_has_shape();
   if (shape_ == &::google::protobuf::internal::kEmptyString) {
     shape_ = new ::std::string;
   }
   shape_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* CreateSubshape::mutable_shape() {
+inline ::std::string* AddSubshape::mutable_shape() {
   set_has_shape();
   if (shape_ == &::google::protobuf::internal::kEmptyString) {
     shape_ = new ::std::string;
   }
   return shape_;
 }
-inline ::std::string* CreateSubshape::release_shape() {
+inline ::std::string* AddSubshape::release_shape() {
   clear_has_shape();
   if (shape_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1512,7 +1517,7 @@ inline ::std::string* CreateSubshape::release_shape() {
     return temp;
   }
 }
-inline void CreateSubshape::set_allocated_shape(::std::string* shape) {
+inline void AddSubshape::set_allocated_shape(::std::string* shape) {
   if (shape_ != &::google::protobuf::internal::kEmptyString) {
     delete shape_;
   }

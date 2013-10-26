@@ -74,6 +74,8 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 
 function sketchContainer() {
 	var objectList = [];
+	this.canvasContext = false;
+
 	objectList.remove = function(srl_object) {
 		var i = array.indexOf(srl_object);
 		if(i != -1) {
@@ -86,9 +88,18 @@ function sketchContainer() {
 		objectList.push(srl_object);
 		objectMap[srl_object.get]
 	}
-	
+
 	this.getList = function() {
 		return objectList;
 	}
-	
+
+	this.drawEntireSketch = function() {
+    	var list = this.getList();
+    	if (list && this.canvasContext) {
+			for(var i = 0; i < list.length; i++) {
+				var object = list[i];
+				object.draw(this.canvasContext);
+			}
+		}
+	}
 }

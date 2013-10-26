@@ -14,6 +14,7 @@ public final class Commands {
    * <pre>
    **
    * These are attempted to be ordered by the most common occurence
+   * but are grouped by what make sense
    * </pre>
    */
   public enum CommandType
@@ -30,7 +31,7 @@ public final class Commands {
      * <code>ADD_SHAPE = 1;</code>
      *
      * <pre>
-     * contains a shape.
+     * Contains a shape.
      * </pre>
      */
     ADD_SHAPE(1, 1),
@@ -38,26 +39,66 @@ public final class Commands {
      * <code>PACKAGE_SHAPE = 2;</code>
      *
      * <pre>
-     * repackages shapes from the surface to inside another shape
+     * Repackages shapes from the surface to inside another shape
      * </pre>
      */
     PACKAGE_SHAPE(2, 2),
     /**
-     * <code>FORCE_INTERPRETATION = 3;</code>
-     */
-    FORCE_INTERPRETATION(3, 3),
-    /**
-     * <code>CREATE_SUBSHAPE = 4;</code>
+     * <code>ADD_SUBSHAPE = 3;</code>
      *
      * <pre>
-     * creates a shape inside another shape
+     * Creates a shape inside another shape
      * </pre>
      */
-    CREATE_SUBSHAPE(4, 4),
+    ADD_SUBSHAPE(3, 3),
     /**
-     * <code>ASSIGN_ATTRIBUTE = 5;</code>
+     * <code>ASSIGN_ATTRIBUTE = 4;</code>
      */
-    ASSIGN_ATTRIBUTE(5, 5),
+    ASSIGN_ATTRIBUTE(4, 4),
+    /**
+     * <code>FORCE_INTERPRETATION = 5;</code>
+     */
+    FORCE_INTERPRETATION(5, 5),
+    /**
+     * <code>UNDO = 6;</code>
+     *
+     * <pre>
+     * Stack Commands, They do not have any other data associated with it.
+     * </pre>
+     */
+    UNDO(6, 6),
+    /**
+     * <code>REDO = 7;</code>
+     *
+     * <pre>
+     * Redo one command and Redo its effect.
+     * </pre>
+     */
+    REDO(7, 7),
+    /**
+     * <code>REWRITE = 8;</code>
+     *
+     * <pre>
+     * Forces all commands in the list that are past the current state to be removed.
+     * </pre>
+     */
+    REWRITE(8, 8),
+    /**
+     * <code>CLEAR_STACK = 9;</code>
+     *
+     * <pre>
+     * Clears the stack.
+     * </pre>
+     */
+    CLEAR_STACK(9, 9),
+    /**
+     * <code>SYNC = 10;</code>
+     *
+     * <pre>
+     * Tells this machine to send its list of commands to remote to make sure they are the same.
+     * </pre>
+     */
+    SYNC(10, 10),
     ;
 
     /**
@@ -72,7 +113,7 @@ public final class Commands {
      * <code>ADD_SHAPE = 1;</code>
      *
      * <pre>
-     * contains a shape.
+     * Contains a shape.
      * </pre>
      */
     public static final int ADD_SHAPE_VALUE = 1;
@@ -80,26 +121,66 @@ public final class Commands {
      * <code>PACKAGE_SHAPE = 2;</code>
      *
      * <pre>
-     * repackages shapes from the surface to inside another shape
+     * Repackages shapes from the surface to inside another shape
      * </pre>
      */
     public static final int PACKAGE_SHAPE_VALUE = 2;
     /**
-     * <code>FORCE_INTERPRETATION = 3;</code>
-     */
-    public static final int FORCE_INTERPRETATION_VALUE = 3;
-    /**
-     * <code>CREATE_SUBSHAPE = 4;</code>
+     * <code>ADD_SUBSHAPE = 3;</code>
      *
      * <pre>
-     * creates a shape inside another shape
+     * Creates a shape inside another shape
      * </pre>
      */
-    public static final int CREATE_SUBSHAPE_VALUE = 4;
+    public static final int ADD_SUBSHAPE_VALUE = 3;
     /**
-     * <code>ASSIGN_ATTRIBUTE = 5;</code>
+     * <code>ASSIGN_ATTRIBUTE = 4;</code>
      */
-    public static final int ASSIGN_ATTRIBUTE_VALUE = 5;
+    public static final int ASSIGN_ATTRIBUTE_VALUE = 4;
+    /**
+     * <code>FORCE_INTERPRETATION = 5;</code>
+     */
+    public static final int FORCE_INTERPRETATION_VALUE = 5;
+    /**
+     * <code>UNDO = 6;</code>
+     *
+     * <pre>
+     * Stack Commands, They do not have any other data associated with it.
+     * </pre>
+     */
+    public static final int UNDO_VALUE = 6;
+    /**
+     * <code>REDO = 7;</code>
+     *
+     * <pre>
+     * Redo one command and Redo its effect.
+     * </pre>
+     */
+    public static final int REDO_VALUE = 7;
+    /**
+     * <code>REWRITE = 8;</code>
+     *
+     * <pre>
+     * Forces all commands in the list that are past the current state to be removed.
+     * </pre>
+     */
+    public static final int REWRITE_VALUE = 8;
+    /**
+     * <code>CLEAR_STACK = 9;</code>
+     *
+     * <pre>
+     * Clears the stack.
+     * </pre>
+     */
+    public static final int CLEAR_STACK_VALUE = 9;
+    /**
+     * <code>SYNC = 10;</code>
+     *
+     * <pre>
+     * Tells this machine to send its list of commands to remote to make sure they are the same.
+     * </pre>
+     */
+    public static final int SYNC_VALUE = 10;
 
 
     public final int getNumber() { return value; }
@@ -109,9 +190,14 @@ public final class Commands {
         case 0: return ADD_STROKE;
         case 1: return ADD_SHAPE;
         case 2: return PACKAGE_SHAPE;
-        case 3: return FORCE_INTERPRETATION;
-        case 4: return CREATE_SUBSHAPE;
-        case 5: return ASSIGN_ATTRIBUTE;
+        case 3: return ADD_SUBSHAPE;
+        case 4: return ASSIGN_ATTRIBUTE;
+        case 5: return FORCE_INTERPRETATION;
+        case 6: return UNDO;
+        case 7: return REDO;
+        case 8: return REWRITE;
+        case 9: return CLEAR_STACK;
+        case 10: return SYNC;
         default: return null;
       }
     }
@@ -3167,7 +3253,7 @@ public final class Commands {
     // @@protoc_insertion_point(class_scope:protobuf.srl.commands.PackageShape)
   }
 
-  public interface CreateSubshapeOrBuilder
+  public interface AddSubshapeOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required .protobuf.srl.commands.IdChain parentShape = 1;
@@ -3195,29 +3281,29 @@ public final class Commands {
     com.google.protobuf.ByteString getShape();
   }
   /**
-   * Protobuf type {@code protobuf.srl.commands.CreateSubshape}
+   * Protobuf type {@code protobuf.srl.commands.AddSubshape}
    *
    * <pre>
    **
    * Creates a shape inside of a parent shape.
    * </pre>
    */
-  public static final class CreateSubshape extends
+  public static final class AddSubshape extends
       com.google.protobuf.GeneratedMessage
-      implements CreateSubshapeOrBuilder {
-    // Use CreateSubshape.newBuilder() to construct.
-    private CreateSubshape(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements AddSubshapeOrBuilder {
+    // Use AddSubshape.newBuilder() to construct.
+    private AddSubshape(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private CreateSubshape(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private AddSubshape(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final CreateSubshape defaultInstance;
-    public static CreateSubshape getDefaultInstance() {
+    private static final AddSubshape defaultInstance;
+    public static AddSubshape getDefaultInstance() {
       return defaultInstance;
     }
 
-    public CreateSubshape getDefaultInstanceForType() {
+    public AddSubshape getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -3227,7 +3313,7 @@ public final class Commands {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private CreateSubshape(
+    private AddSubshape(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -3282,28 +3368,28 @@ public final class Commands {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_CreateSubshape_descriptor;
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_CreateSubshape_fieldAccessorTable
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.commands.Commands.CreateSubshape.class, protobuf.srl.commands.Commands.CreateSubshape.Builder.class);
+              protobuf.srl.commands.Commands.AddSubshape.class, protobuf.srl.commands.Commands.AddSubshape.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<CreateSubshape> PARSER =
-        new com.google.protobuf.AbstractParser<CreateSubshape>() {
-      public CreateSubshape parsePartialFrom(
+    public static com.google.protobuf.Parser<AddSubshape> PARSER =
+        new com.google.protobuf.AbstractParser<AddSubshape>() {
+      public AddSubshape parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CreateSubshape(input, extensionRegistry);
+        return new AddSubshape(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<CreateSubshape> getParserForType() {
+    public com.google.protobuf.Parser<AddSubshape> getParserForType() {
       return PARSER;
     }
 
@@ -3405,53 +3491,53 @@ public final class Commands {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.commands.Commands.CreateSubshape parseFrom(
+    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.CreateSubshape parseFrom(
+    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.CreateSubshape parseFrom(byte[] data)
+    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.CreateSubshape parseFrom(
+    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.CreateSubshape parseFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.CreateSubshape parseFrom(
+    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.CreateSubshape parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.AddSubshape parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.commands.Commands.CreateSubshape parseDelimitedFrom(
+    public static protobuf.srl.commands.Commands.AddSubshape parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.CreateSubshape parseFrom(
+    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.CreateSubshape parseFrom(
+    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3460,7 +3546,7 @@ public final class Commands {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.commands.Commands.CreateSubshape prototype) {
+    public static Builder newBuilder(protobuf.srl.commands.Commands.AddSubshape prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -3472,7 +3558,7 @@ public final class Commands {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.commands.CreateSubshape}
+     * Protobuf type {@code protobuf.srl.commands.AddSubshape}
      *
      * <pre>
      **
@@ -3481,20 +3567,20 @@ public final class Commands {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.commands.Commands.CreateSubshapeOrBuilder {
+       implements protobuf.srl.commands.Commands.AddSubshapeOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_CreateSubshape_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_CreateSubshape_fieldAccessorTable
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.commands.Commands.CreateSubshape.class, protobuf.srl.commands.Commands.CreateSubshape.Builder.class);
+                protobuf.srl.commands.Commands.AddSubshape.class, protobuf.srl.commands.Commands.AddSubshape.Builder.class);
       }
 
-      // Construct using protobuf.srl.commands.Commands.CreateSubshape.newBuilder()
+      // Construct using protobuf.srl.commands.Commands.AddSubshape.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3532,23 +3618,23 @@ public final class Commands {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_CreateSubshape_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_descriptor;
       }
 
-      public protobuf.srl.commands.Commands.CreateSubshape getDefaultInstanceForType() {
-        return protobuf.srl.commands.Commands.CreateSubshape.getDefaultInstance();
+      public protobuf.srl.commands.Commands.AddSubshape getDefaultInstanceForType() {
+        return protobuf.srl.commands.Commands.AddSubshape.getDefaultInstance();
       }
 
-      public protobuf.srl.commands.Commands.CreateSubshape build() {
-        protobuf.srl.commands.Commands.CreateSubshape result = buildPartial();
+      public protobuf.srl.commands.Commands.AddSubshape build() {
+        protobuf.srl.commands.Commands.AddSubshape result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.commands.Commands.CreateSubshape buildPartial() {
-        protobuf.srl.commands.Commands.CreateSubshape result = new protobuf.srl.commands.Commands.CreateSubshape(this);
+      public protobuf.srl.commands.Commands.AddSubshape buildPartial() {
+        protobuf.srl.commands.Commands.AddSubshape result = new protobuf.srl.commands.Commands.AddSubshape(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -3569,16 +3655,16 @@ public final class Commands {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.commands.Commands.CreateSubshape) {
-          return mergeFrom((protobuf.srl.commands.Commands.CreateSubshape)other);
+        if (other instanceof protobuf.srl.commands.Commands.AddSubshape) {
+          return mergeFrom((protobuf.srl.commands.Commands.AddSubshape)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.commands.Commands.CreateSubshape other) {
-        if (other == protobuf.srl.commands.Commands.CreateSubshape.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.commands.Commands.AddSubshape other) {
+        if (other == protobuf.srl.commands.Commands.AddSubshape.getDefaultInstance()) return this;
         if (other.hasParentShape()) {
           mergeParentShape(other.getParentShape());
         }
@@ -3605,11 +3691,11 @@ public final class Commands {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.commands.Commands.CreateSubshape parsedMessage = null;
+        protobuf.srl.commands.Commands.AddSubshape parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.commands.Commands.CreateSubshape) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.commands.Commands.AddSubshape) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -3773,15 +3859,15 @@ public final class Commands {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.CreateSubshape)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.AddSubshape)
     }
 
     static {
-      defaultInstance = new CreateSubshape(true);
+      defaultInstance = new AddSubshape(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.CreateSubshape)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddSubshape)
   }
 
   public interface RemoveObjectOrBuilder
@@ -6515,10 +6601,10 @@ public final class Commands {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_commands_PackageShape_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_commands_CreateSubshape_descriptor;
+    internal_static_protobuf_srl_commands_AddSubshape_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_commands_CreateSubshape_fieldAccessorTable;
+      internal_static_protobuf_srl_commands_AddSubshape_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_commands_RemoveObject_descriptor;
   private static
@@ -6558,23 +6644,24 @@ public final class Commands {
       "\233\001\n\014PackageShape\0226\n\016oldContainerId\030\001 \001(\013" +
       "2\036.protobuf.srl.commands.IdChain\0226\n\016newC" +
       "ontainerId\030\002 \001(\0132\036.protobuf.srl.commands",
-      ".IdChain\022\033\n\023shapesToBeContained\030\003 \003(\t\"T\n" +
-      "\016CreateSubshape\0223\n\013parentShape\030\001 \002(\0132\036.p" +
-      "rotobuf.srl.commands.IdChain\022\r\n\005shape\030\002 " +
-      "\002(\014\"?\n\014RemoveObject\022/\n\007shapeId\030\001 \002(\0132\036.p" +
-      "rotobuf.srl.commands.IdChain\"^\n\023ForceInt" +
-      "erpretation\022\026\n\016interpretation\030\001 \002(\014\022/\n\007s" +
-      "hapeId\030\002 \002(\0132\036.protobuf.srl.commands.IdC" +
-      "hain\"m\n\014AddAttribtue\022/\n\007shapeId\030\001 \002(\0132\036." +
-      "protobuf.srl.commands.IdChain\022\024\n\014attribu" +
-      "teKey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014\"p\n\017R",
-      "emoveAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.protob" +
-      "uf.srl.commands.IdChain\022\024\n\014attributeKey\030" +
-      "\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014*\204\001\n\013Comman" +
-      "dType\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\r" +
-      "PACKAGE_SHAPE\020\002\022\030\n\024FORCE_INTERPRETATION\020" +
-      "\003\022\023\n\017CREATE_SUBSHAPE\020\004\022\024\n\020ASSIGN_ATTRIBU" +
-      "TE\020\005"
+      ".IdChain\022\033\n\023shapesToBeContained\030\003 \003(\t\"Q\n" +
+      "\013AddSubshape\0223\n\013parentShape\030\001 \002(\0132\036.prot" +
+      "obuf.srl.commands.IdChain\022\r\n\005shape\030\002 \002(\014" +
+      "\"?\n\014RemoveObject\022/\n\007shapeId\030\001 \002(\0132\036.prot" +
+      "obuf.srl.commands.IdChain\"^\n\023ForceInterp" +
+      "retation\022\026\n\016interpretation\030\001 \002(\014\022/\n\007shap" +
+      "eId\030\002 \002(\0132\036.protobuf.srl.commands.IdChai" +
+      "n\"m\n\014AddAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.pro" +
+      "tobuf.srl.commands.IdChain\022\024\n\014attributeK" +
+      "ey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014\"p\n\017Remo",
+      "veAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf." +
+      "srl.commands.IdChain\022\024\n\014attributeKey\030\002 \002" +
+      "(\t\022\026\n\016attributeValue\030\003 \002(\014*\275\001\n\013CommandTy" +
+      "pe\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPAC" +
+      "KAGE_SHAPE\020\002\022\020\n\014ADD_SUBSHAPE\020\003\022\024\n\020ASSIGN" +
+      "_ATTRIBUTE\020\004\022\030\n\024FORCE_INTERPRETATION\020\005\022\010" +
+      "\n\004UNDO\020\006\022\010\n\004REDO\020\007\022\013\n\007REWRITE\020\010\022\017\n\013CLEAR" +
+      "_STACK\020\t\022\010\n\004SYNC\020\n"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6605,11 +6692,11 @@ public final class Commands {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_PackageShape_descriptor,
               new java.lang.String[] { "OldContainerId", "NewContainerId", "ShapesToBeContained", });
-          internal_static_protobuf_srl_commands_CreateSubshape_descriptor =
+          internal_static_protobuf_srl_commands_AddSubshape_descriptor =
             getDescriptor().getMessageTypes().get(4);
-          internal_static_protobuf_srl_commands_CreateSubshape_fieldAccessorTable = new
+          internal_static_protobuf_srl_commands_AddSubshape_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_commands_CreateSubshape_descriptor,
+              internal_static_protobuf_srl_commands_AddSubshape_descriptor,
               new java.lang.String[] { "ParentShape", "Shape", });
           internal_static_protobuf_srl_commands_RemoveObject_descriptor =
             getDescriptor().getMessageTypes().get(5);
