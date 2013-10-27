@@ -2,7 +2,6 @@ package connection;
 
 import com.google.protobuf.ByteString;
 
-import protobuf.srl.commands.Commands.AddStroke;
 import protobuf.srl.commands.Commands.Command;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.Update;
@@ -13,9 +12,7 @@ import protobuf.srl.sketch.Sketch.SrlStroke;
 
 public class Encoder {
 	public static Request createRequestFromStroke(SrlStroke stroke) {
-		AddStroke.Builder addBuilder = AddStroke.newBuilder();
-		addBuilder.setStroke(stroke.toByteString());
-		Command com = createCommandFromBytes(addBuilder.build().toByteString(), CommandType.ADD_STROKE);
+		Command com = createCommandFromBytes(stroke.toByteString(), CommandType.ADD_STROKE);
 		Update date = createUpdateFromCommand(com);
 		return createRequestFromUpdate(date);
 	}

@@ -130,10 +130,29 @@ class Update : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .protobuf.srl.commands.Command commands = 1;
+  // required string updateId = 1;
+  inline bool has_updateid() const;
+  inline void clear_updateid();
+  static const int kUpdateIdFieldNumber = 1;
+  inline const ::std::string& updateid() const;
+  inline void set_updateid(const ::std::string& value);
+  inline void set_updateid(const char* value);
+  inline void set_updateid(const char* value, size_t size);
+  inline ::std::string* mutable_updateid();
+  inline ::std::string* release_updateid();
+  inline void set_allocated_updateid(::std::string* updateid);
+
+  // optional int64 time = 2;
+  inline bool has_time() const;
+  inline void clear_time();
+  static const int kTimeFieldNumber = 2;
+  inline ::google::protobuf::int64 time() const;
+  inline void set_time(::google::protobuf::int64 value);
+
+  // repeated .protobuf.srl.commands.Command commands = 3;
   inline int commands_size() const;
   inline void clear_commands();
-  static const int kCommandsFieldNumber = 1;
+  static const int kCommandsFieldNumber = 3;
   inline const ::protobuf::srl::commands::Command& commands(int index) const;
   inline ::protobuf::srl::commands::Command* mutable_commands(int index);
   inline ::protobuf::srl::commands::Command* add_commands();
@@ -144,13 +163,19 @@ class Update : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.commands.Update)
  private:
+  inline void set_has_updateid();
+  inline void clear_has_updateid();
+  inline void set_has_time();
+  inline void clear_has_time();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* updateid_;
+  ::google::protobuf::int64 time_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::Command > commands_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fcommands_2eproto();
   friend void protobuf_AssignDesc_input_2fcommands_2eproto();
@@ -241,17 +266,10 @@ class Command : public ::google::protobuf::Message {
   inline ::std::string* release_commanddata();
   inline void set_allocated_commanddata(::std::string* commanddata);
 
-  // optional int64 time = 4;
-  inline bool has_time() const;
-  inline void clear_time();
-  static const int kTimeFieldNumber = 4;
-  inline ::google::protobuf::int64 time() const;
-  inline void set_time(::google::protobuf::int64 value);
-
-  // optional string commandId = 5;
+  // optional string commandId = 4;
   inline bool has_commandid() const;
   inline void clear_commandid();
-  static const int kCommandIdFieldNumber = 5;
+  static const int kCommandIdFieldNumber = 4;
   inline const ::std::string& commandid() const;
   inline void set_commandid(const ::std::string& value);
   inline void set_commandid(const char* value);
@@ -268,8 +286,6 @@ class Command : public ::google::protobuf::Message {
   inline void clear_has_isusercreated();
   inline void set_has_commanddata();
   inline void clear_has_commanddata();
-  inline void set_has_time();
-  inline void clear_has_time();
   inline void set_has_commandid();
   inline void clear_has_commandid();
 
@@ -278,11 +294,10 @@ class Command : public ::google::protobuf::Message {
   int commandtype_;
   bool isusercreated_;
   ::std::string* commanddata_;
-  ::google::protobuf::int64 time_;
   ::std::string* commandid_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fcommands_2eproto();
   friend void protobuf_AssignDesc_input_2fcommands_2eproto();
@@ -1010,7 +1025,99 @@ class RemoveAttribtue : public ::google::protobuf::Message {
 
 // Update
 
-// repeated .protobuf.srl.commands.Command commands = 1;
+// required string updateId = 1;
+inline bool Update::has_updateid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Update::set_has_updateid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Update::clear_has_updateid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Update::clear_updateid() {
+  if (updateid_ != &::google::protobuf::internal::kEmptyString) {
+    updateid_->clear();
+  }
+  clear_has_updateid();
+}
+inline const ::std::string& Update::updateid() const {
+  return *updateid_;
+}
+inline void Update::set_updateid(const ::std::string& value) {
+  set_has_updateid();
+  if (updateid_ == &::google::protobuf::internal::kEmptyString) {
+    updateid_ = new ::std::string;
+  }
+  updateid_->assign(value);
+}
+inline void Update::set_updateid(const char* value) {
+  set_has_updateid();
+  if (updateid_ == &::google::protobuf::internal::kEmptyString) {
+    updateid_ = new ::std::string;
+  }
+  updateid_->assign(value);
+}
+inline void Update::set_updateid(const char* value, size_t size) {
+  set_has_updateid();
+  if (updateid_ == &::google::protobuf::internal::kEmptyString) {
+    updateid_ = new ::std::string;
+  }
+  updateid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Update::mutable_updateid() {
+  set_has_updateid();
+  if (updateid_ == &::google::protobuf::internal::kEmptyString) {
+    updateid_ = new ::std::string;
+  }
+  return updateid_;
+}
+inline ::std::string* Update::release_updateid() {
+  clear_has_updateid();
+  if (updateid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = updateid_;
+    updateid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Update::set_allocated_updateid(::std::string* updateid) {
+  if (updateid_ != &::google::protobuf::internal::kEmptyString) {
+    delete updateid_;
+  }
+  if (updateid) {
+    set_has_updateid();
+    updateid_ = updateid;
+  } else {
+    clear_has_updateid();
+    updateid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int64 time = 2;
+inline bool Update::has_time() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Update::set_has_time() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Update::clear_has_time() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Update::clear_time() {
+  time_ = GOOGLE_LONGLONG(0);
+  clear_has_time();
+}
+inline ::google::protobuf::int64 Update::time() const {
+  return time_;
+}
+inline void Update::set_time(::google::protobuf::int64 value) {
+  set_has_time();
+  time_ = value;
+}
+
+// repeated .protobuf.srl.commands.Command commands = 3;
 inline int Update::commands_size() const {
   return commands_.size();
 }
@@ -1154,37 +1261,15 @@ inline void Command::set_allocated_commanddata(::std::string* commanddata) {
   }
 }
 
-// optional int64 time = 4;
-inline bool Command::has_time() const {
+// optional string commandId = 4;
+inline bool Command::has_commandid() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Command::set_has_time() {
+inline void Command::set_has_commandid() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Command::clear_has_time() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void Command::clear_time() {
-  time_ = GOOGLE_LONGLONG(0);
-  clear_has_time();
-}
-inline ::google::protobuf::int64 Command::time() const {
-  return time_;
-}
-inline void Command::set_time(::google::protobuf::int64 value) {
-  set_has_time();
-  time_ = value;
-}
-
-// optional string commandId = 5;
-inline bool Command::has_commandid() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void Command::set_has_commandid() {
-  _has_bits_[0] |= 0x00000010u;
-}
 inline void Command::clear_has_commandid() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void Command::clear_commandid() {
   if (commandid_ != &::google::protobuf::internal::kEmptyString) {

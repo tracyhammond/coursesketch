@@ -252,27 +252,52 @@ public final class Commands {
   public interface UpdateOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // repeated .protobuf.srl.commands.Command commands = 1;
+    // required string updateId = 1;
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>required string updateId = 1;</code>
+     */
+    boolean hasUpdateId();
+    /**
+     * <code>required string updateId = 1;</code>
+     */
+    java.lang.String getUpdateId();
+    /**
+     * <code>required string updateId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getUpdateIdBytes();
+
+    // optional int64 time = 2;
+    /**
+     * <code>optional int64 time = 2;</code>
+     */
+    boolean hasTime();
+    /**
+     * <code>optional int64 time = 2;</code>
+     */
+    long getTime();
+
+    // repeated .protobuf.srl.commands.Command commands = 3;
+    /**
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     java.util.List<protobuf.srl.commands.Commands.Command> 
         getCommandsList();
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     protobuf.srl.commands.Commands.Command getCommands(int index);
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     int getCommandsCount();
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     java.util.List<? extends protobuf.srl.commands.Commands.CommandOrBuilder> 
         getCommandsOrBuilderList();
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     protobuf.srl.commands.Commands.CommandOrBuilder getCommandsOrBuilder(
         int index);
@@ -329,9 +354,19 @@ public final class Commands {
               break;
             }
             case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+              bitField0_ |= 0x00000001;
+              updateId_ = input.readBytes();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              time_ = input.readInt64();
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
                 commands_ = new java.util.ArrayList<protobuf.srl.commands.Commands.Command>();
-                mutable_bitField0_ |= 0x00000001;
+                mutable_bitField0_ |= 0x00000004;
               }
               commands_.add(input.readMessage(protobuf.srl.commands.Commands.Command.PARSER, extensionRegistry));
               break;
@@ -344,7 +379,7 @@ public final class Commands {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           commands_ = java.util.Collections.unmodifiableList(commands_);
         }
         this.unknownFields = unknownFields.build();
@@ -378,36 +413,96 @@ public final class Commands {
       return PARSER;
     }
 
-    // repeated .protobuf.srl.commands.Command commands = 1;
-    public static final int COMMANDS_FIELD_NUMBER = 1;
+    private int bitField0_;
+    // required string updateId = 1;
+    public static final int UPDATEID_FIELD_NUMBER = 1;
+    private java.lang.Object updateId_;
+    /**
+     * <code>required string updateId = 1;</code>
+     */
+    public boolean hasUpdateId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string updateId = 1;</code>
+     */
+    public java.lang.String getUpdateId() {
+      java.lang.Object ref = updateId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          updateId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string updateId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUpdateIdBytes() {
+      java.lang.Object ref = updateId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        updateId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional int64 time = 2;
+    public static final int TIME_FIELD_NUMBER = 2;
+    private long time_;
+    /**
+     * <code>optional int64 time = 2;</code>
+     */
+    public boolean hasTime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional int64 time = 2;</code>
+     */
+    public long getTime() {
+      return time_;
+    }
+
+    // repeated .protobuf.srl.commands.Command commands = 3;
+    public static final int COMMANDS_FIELD_NUMBER = 3;
     private java.util.List<protobuf.srl.commands.Commands.Command> commands_;
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     public java.util.List<protobuf.srl.commands.Commands.Command> getCommandsList() {
       return commands_;
     }
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     public java.util.List<? extends protobuf.srl.commands.Commands.CommandOrBuilder> 
         getCommandsOrBuilderList() {
       return commands_;
     }
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     public int getCommandsCount() {
       return commands_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     public protobuf.srl.commands.Commands.Command getCommands(int index) {
       return commands_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
      */
     public protobuf.srl.commands.Commands.CommandOrBuilder getCommandsOrBuilder(
         int index) {
@@ -415,6 +510,8 @@ public final class Commands {
     }
 
     private void initFields() {
+      updateId_ = "";
+      time_ = 0L;
       commands_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -422,6 +519,10 @@ public final class Commands {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (!hasUpdateId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       for (int i = 0; i < getCommandsCount(); i++) {
         if (!getCommands(i).isInitialized()) {
           memoizedIsInitialized = 0;
@@ -435,8 +536,14 @@ public final class Commands {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getUpdateIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt64(2, time_);
+      }
       for (int i = 0; i < commands_.size(); i++) {
-        output.writeMessage(1, commands_.get(i));
+        output.writeMessage(3, commands_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -447,9 +554,17 @@ public final class Commands {
       if (size != -1) return size;
 
       size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getUpdateIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, time_);
+      }
       for (int i = 0; i < commands_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, commands_.get(i));
+          .computeMessageSize(3, commands_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -568,9 +683,13 @@ public final class Commands {
 
       public Builder clear() {
         super.clear();
+        updateId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        time_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000002);
         if (commandsBuilder_ == null) {
           commands_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           commandsBuilder_.clear();
         }
@@ -601,15 +720,25 @@ public final class Commands {
       public protobuf.srl.commands.Commands.Update buildPartial() {
         protobuf.srl.commands.Commands.Update result = new protobuf.srl.commands.Commands.Update(this);
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.updateId_ = updateId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.time_ = time_;
         if (commandsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
             commands_ = java.util.Collections.unmodifiableList(commands_);
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.commands_ = commands_;
         } else {
           result.commands_ = commandsBuilder_.build();
         }
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -625,11 +754,19 @@ public final class Commands {
 
       public Builder mergeFrom(protobuf.srl.commands.Commands.Update other) {
         if (other == protobuf.srl.commands.Commands.Update.getDefaultInstance()) return this;
+        if (other.hasUpdateId()) {
+          bitField0_ |= 0x00000001;
+          updateId_ = other.updateId_;
+          onChanged();
+        }
+        if (other.hasTime()) {
+          setTime(other.getTime());
+        }
         if (commandsBuilder_ == null) {
           if (!other.commands_.isEmpty()) {
             if (commands_.isEmpty()) {
               commands_ = other.commands_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureCommandsIsMutable();
               commands_.addAll(other.commands_);
@@ -642,7 +779,7 @@ public final class Commands {
               commandsBuilder_.dispose();
               commandsBuilder_ = null;
               commands_ = other.commands_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000004);
               commandsBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getCommandsFieldBuilder() : null;
@@ -656,6 +793,10 @@ public final class Commands {
       }
 
       public final boolean isInitialized() {
+        if (!hasUpdateId()) {
+          
+          return false;
+        }
         for (int i = 0; i < getCommandsCount(); i++) {
           if (!getCommands(i).isInitialized()) {
             
@@ -684,13 +825,120 @@ public final class Commands {
       }
       private int bitField0_;
 
-      // repeated .protobuf.srl.commands.Command commands = 1;
+      // required string updateId = 1;
+      private java.lang.Object updateId_ = "";
+      /**
+       * <code>required string updateId = 1;</code>
+       */
+      public boolean hasUpdateId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string updateId = 1;</code>
+       */
+      public java.lang.String getUpdateId() {
+        java.lang.Object ref = updateId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          updateId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string updateId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUpdateIdBytes() {
+        java.lang.Object ref = updateId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          updateId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string updateId = 1;</code>
+       */
+      public Builder setUpdateId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        updateId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string updateId = 1;</code>
+       */
+      public Builder clearUpdateId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        updateId_ = getDefaultInstance().getUpdateId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string updateId = 1;</code>
+       */
+      public Builder setUpdateIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        updateId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional int64 time = 2;
+      private long time_ ;
+      /**
+       * <code>optional int64 time = 2;</code>
+       */
+      public boolean hasTime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional int64 time = 2;</code>
+       */
+      public long getTime() {
+        return time_;
+      }
+      /**
+       * <code>optional int64 time = 2;</code>
+       */
+      public Builder setTime(long value) {
+        bitField0_ |= 0x00000002;
+        time_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int64 time = 2;</code>
+       */
+      public Builder clearTime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        time_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // repeated .protobuf.srl.commands.Command commands = 3;
       private java.util.List<protobuf.srl.commands.Commands.Command> commands_ =
         java.util.Collections.emptyList();
       private void ensureCommandsIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
           commands_ = new java.util.ArrayList<protobuf.srl.commands.Commands.Command>(commands_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000004;
          }
       }
 
@@ -698,7 +946,7 @@ public final class Commands {
           protobuf.srl.commands.Commands.Command, protobuf.srl.commands.Commands.Command.Builder, protobuf.srl.commands.Commands.CommandOrBuilder> commandsBuilder_;
 
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public java.util.List<protobuf.srl.commands.Commands.Command> getCommandsList() {
         if (commandsBuilder_ == null) {
@@ -708,7 +956,7 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public int getCommandsCount() {
         if (commandsBuilder_ == null) {
@@ -718,7 +966,7 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public protobuf.srl.commands.Commands.Command getCommands(int index) {
         if (commandsBuilder_ == null) {
@@ -728,7 +976,7 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public Builder setCommands(
           int index, protobuf.srl.commands.Commands.Command value) {
@@ -745,7 +993,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public Builder setCommands(
           int index, protobuf.srl.commands.Commands.Command.Builder builderForValue) {
@@ -759,7 +1007,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public Builder addCommands(protobuf.srl.commands.Commands.Command value) {
         if (commandsBuilder_ == null) {
@@ -775,7 +1023,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public Builder addCommands(
           int index, protobuf.srl.commands.Commands.Command value) {
@@ -792,7 +1040,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public Builder addCommands(
           protobuf.srl.commands.Commands.Command.Builder builderForValue) {
@@ -806,7 +1054,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public Builder addCommands(
           int index, protobuf.srl.commands.Commands.Command.Builder builderForValue) {
@@ -820,7 +1068,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public Builder addAllCommands(
           java.lang.Iterable<? extends protobuf.srl.commands.Commands.Command> values) {
@@ -834,12 +1082,12 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public Builder clearCommands() {
         if (commandsBuilder_ == null) {
           commands_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
           commandsBuilder_.clear();
@@ -847,7 +1095,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public Builder removeCommands(int index) {
         if (commandsBuilder_ == null) {
@@ -860,14 +1108,14 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public protobuf.srl.commands.Commands.Command.Builder getCommandsBuilder(
           int index) {
         return getCommandsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public protobuf.srl.commands.Commands.CommandOrBuilder getCommandsOrBuilder(
           int index) {
@@ -877,7 +1125,7 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public java.util.List<? extends protobuf.srl.commands.Commands.CommandOrBuilder> 
            getCommandsOrBuilderList() {
@@ -888,14 +1136,14 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public protobuf.srl.commands.Commands.Command.Builder addCommandsBuilder() {
         return getCommandsFieldBuilder().addBuilder(
             protobuf.srl.commands.Commands.Command.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public protobuf.srl.commands.Commands.Command.Builder addCommandsBuilder(
           int index) {
@@ -903,7 +1151,7 @@ public final class Commands {
             index, protobuf.srl.commands.Commands.Command.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 1;</code>
+       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
        */
       public java.util.List<protobuf.srl.commands.Commands.Command.Builder> 
            getCommandsBuilderList() {
@@ -916,7 +1164,7 @@ public final class Commands {
           commandsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               protobuf.srl.commands.Commands.Command, protobuf.srl.commands.Commands.Command.Builder, protobuf.srl.commands.Commands.CommandOrBuilder>(
                   commands_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  ((bitField0_ & 0x00000004) == 0x00000004),
                   getParentForChildren(),
                   isClean());
           commands_ = null;
@@ -968,27 +1216,17 @@ public final class Commands {
      */
     com.google.protobuf.ByteString getCommandData();
 
-    // optional int64 time = 4;
+    // optional string commandId = 4;
     /**
-     * <code>optional int64 time = 4;</code>
-     */
-    boolean hasTime();
-    /**
-     * <code>optional int64 time = 4;</code>
-     */
-    long getTime();
-
-    // optional string commandId = 5;
-    /**
-     * <code>optional string commandId = 5;</code>
+     * <code>optional string commandId = 4;</code>
      */
     boolean hasCommandId();
     /**
-     * <code>optional string commandId = 5;</code>
+     * <code>optional string commandId = 4;</code>
      */
     java.lang.String getCommandId();
     /**
-     * <code>optional string commandId = 5;</code>
+     * <code>optional string commandId = 4;</code>
      */
     com.google.protobuf.ByteString
         getCommandIdBytes();
@@ -1069,13 +1307,8 @@ public final class Commands {
               commandData_ = input.readBytes();
               break;
             }
-            case 32: {
+            case 34: {
               bitField0_ |= 0x00000008;
-              time_ = input.readInt64();
-              break;
-            }
-            case 42: {
-              bitField0_ |= 0x00000010;
               commandId_ = input.readBytes();
               break;
             }
@@ -1167,33 +1400,17 @@ public final class Commands {
       return commandData_;
     }
 
-    // optional int64 time = 4;
-    public static final int TIME_FIELD_NUMBER = 4;
-    private long time_;
+    // optional string commandId = 4;
+    public static final int COMMANDID_FIELD_NUMBER = 4;
+    private java.lang.Object commandId_;
     /**
-     * <code>optional int64 time = 4;</code>
+     * <code>optional string commandId = 4;</code>
      */
-    public boolean hasTime() {
+    public boolean hasCommandId() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional int64 time = 4;</code>
-     */
-    public long getTime() {
-      return time_;
-    }
-
-    // optional string commandId = 5;
-    public static final int COMMANDID_FIELD_NUMBER = 5;
-    private java.lang.Object commandId_;
-    /**
-     * <code>optional string commandId = 5;</code>
-     */
-    public boolean hasCommandId() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>optional string commandId = 5;</code>
+     * <code>optional string commandId = 4;</code>
      */
     public java.lang.String getCommandId() {
       java.lang.Object ref = commandId_;
@@ -1210,7 +1427,7 @@ public final class Commands {
       }
     }
     /**
-     * <code>optional string commandId = 5;</code>
+     * <code>optional string commandId = 4;</code>
      */
     public com.google.protobuf.ByteString
         getCommandIdBytes() {
@@ -1230,7 +1447,6 @@ public final class Commands {
       commandType_ = protobuf.srl.commands.Commands.CommandType.ADD_STROKE;
       isUserCreated_ = false;
       commandData_ = com.google.protobuf.ByteString.EMPTY;
-      time_ = 0L;
       commandId_ = "";
     }
     private byte memoizedIsInitialized = -1;
@@ -1267,10 +1483,7 @@ public final class Commands {
         output.writeBytes(3, commandData_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt64(4, time_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeBytes(5, getCommandIdBytes());
+        output.writeBytes(4, getCommandIdBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -1295,11 +1508,7 @@ public final class Commands {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(4, time_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, getCommandIdBytes());
+          .computeBytesSize(4, getCommandIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1427,10 +1636,8 @@ public final class Commands {
         bitField0_ = (bitField0_ & ~0x00000002);
         commandData_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
-        time_ = 0L;
-        bitField0_ = (bitField0_ & ~0x00000008);
         commandId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1474,10 +1681,6 @@ public final class Commands {
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.time_ = time_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
-        }
         result.commandId_ = commandId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -1504,11 +1707,8 @@ public final class Commands {
         if (other.hasCommandData()) {
           setCommandData(other.getCommandData());
         }
-        if (other.hasTime()) {
-          setTime(other.getTime());
-        }
         if (other.hasCommandId()) {
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000008;
           commandId_ = other.commandId_;
           onChanged();
         }
@@ -1656,49 +1856,16 @@ public final class Commands {
         return this;
       }
 
-      // optional int64 time = 4;
-      private long time_ ;
+      // optional string commandId = 4;
+      private java.lang.Object commandId_ = "";
       /**
-       * <code>optional int64 time = 4;</code>
+       * <code>optional string commandId = 4;</code>
        */
-      public boolean hasTime() {
+      public boolean hasCommandId() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional int64 time = 4;</code>
-       */
-      public long getTime() {
-        return time_;
-      }
-      /**
-       * <code>optional int64 time = 4;</code>
-       */
-      public Builder setTime(long value) {
-        bitField0_ |= 0x00000008;
-        time_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int64 time = 4;</code>
-       */
-      public Builder clearTime() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        time_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      // optional string commandId = 5;
-      private java.lang.Object commandId_ = "";
-      /**
-       * <code>optional string commandId = 5;</code>
-       */
-      public boolean hasCommandId() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>optional string commandId = 5;</code>
+       * <code>optional string commandId = 4;</code>
        */
       public java.lang.String getCommandId() {
         java.lang.Object ref = commandId_;
@@ -1712,7 +1879,7 @@ public final class Commands {
         }
       }
       /**
-       * <code>optional string commandId = 5;</code>
+       * <code>optional string commandId = 4;</code>
        */
       public com.google.protobuf.ByteString
           getCommandIdBytes() {
@@ -1728,36 +1895,36 @@ public final class Commands {
         }
       }
       /**
-       * <code>optional string commandId = 5;</code>
+       * <code>optional string commandId = 4;</code>
        */
       public Builder setCommandId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000008;
         commandId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string commandId = 5;</code>
+       * <code>optional string commandId = 4;</code>
        */
       public Builder clearCommandId() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
         commandId_ = getDefaultInstance().getCommandId();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string commandId = 5;</code>
+       * <code>optional string commandId = 4;</code>
        */
       public Builder setCommandIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000008;
         commandId_ = value;
         onChanged();
         return this;
@@ -6635,33 +6802,33 @@ public final class Commands {
   static {
     java.lang.String[] descriptorData = {
       "\n\024input/commands.proto\022\025protobuf.srl.com" +
-      "mands\":\n\006Update\0220\n\010commands\030\001 \003(\0132\036.prot" +
-      "obuf.srl.commands.Command\"\217\001\n\007Command\0227\n" +
-      "\013commandType\030\001 \002(\0162\".protobuf.srl.comman" +
-      "ds.CommandType\022\025\n\risUserCreated\030\002 \002(\010\022\023\n" +
-      "\013commandData\030\003 \002(\014\022\014\n\004time\030\004 \001(\003\022\021\n\tcomm" +
-      "andId\030\005 \001(\t\"\032\n\007IdChain\022\017\n\007idChain\030\001 \003(\t\"" +
-      "\233\001\n\014PackageShape\0226\n\016oldContainerId\030\001 \001(\013" +
-      "2\036.protobuf.srl.commands.IdChain\0226\n\016newC" +
-      "ontainerId\030\002 \001(\0132\036.protobuf.srl.commands",
-      ".IdChain\022\033\n\023shapesToBeContained\030\003 \003(\t\"Q\n" +
-      "\013AddSubshape\0223\n\013parentShape\030\001 \002(\0132\036.prot" +
-      "obuf.srl.commands.IdChain\022\r\n\005shape\030\002 \002(\014" +
-      "\"?\n\014RemoveObject\022/\n\007shapeId\030\001 \002(\0132\036.prot" +
-      "obuf.srl.commands.IdChain\"^\n\023ForceInterp" +
-      "retation\022\026\n\016interpretation\030\001 \002(\014\022/\n\007shap" +
-      "eId\030\002 \002(\0132\036.protobuf.srl.commands.IdChai" +
-      "n\"m\n\014AddAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.pro" +
-      "tobuf.srl.commands.IdChain\022\024\n\014attributeK" +
-      "ey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014\"p\n\017Remo",
-      "veAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf." +
-      "srl.commands.IdChain\022\024\n\014attributeKey\030\002 \002" +
-      "(\t\022\026\n\016attributeValue\030\003 \002(\014*\275\001\n\013CommandTy" +
-      "pe\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPAC" +
-      "KAGE_SHAPE\020\002\022\020\n\014ADD_SUBSHAPE\020\003\022\024\n\020ASSIGN" +
-      "_ATTRIBUTE\020\004\022\030\n\024FORCE_INTERPRETATION\020\005\022\010" +
-      "\n\004UNDO\020\006\022\010\n\004REDO\020\007\022\013\n\007REWRITE\020\010\022\017\n\013CLEAR" +
-      "_STACK\020\t\022\010\n\004SYNC\020\n"
+      "mands\"Z\n\006Update\022\020\n\010updateId\030\001 \002(\t\022\014\n\004tim" +
+      "e\030\002 \001(\003\0220\n\010commands\030\003 \003(\0132\036.protobuf.srl" +
+      ".commands.Command\"\201\001\n\007Command\0227\n\013command" +
+      "Type\030\001 \002(\0162\".protobuf.srl.commands.Comma" +
+      "ndType\022\025\n\risUserCreated\030\002 \002(\010\022\023\n\013command" +
+      "Data\030\003 \002(\014\022\021\n\tcommandId\030\004 \001(\t\"\032\n\007IdChain" +
+      "\022\017\n\007idChain\030\001 \003(\t\"\233\001\n\014PackageShape\0226\n\016ol" +
+      "dContainerId\030\001 \001(\0132\036.protobuf.srl.comman" +
+      "ds.IdChain\0226\n\016newContainerId\030\002 \001(\0132\036.pro",
+      "tobuf.srl.commands.IdChain\022\033\n\023shapesToBe" +
+      "Contained\030\003 \003(\t\"Q\n\013AddSubshape\0223\n\013parent" +
+      "Shape\030\001 \002(\0132\036.protobuf.srl.commands.IdCh" +
+      "ain\022\r\n\005shape\030\002 \002(\014\"?\n\014RemoveObject\022/\n\007sh" +
+      "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh" +
+      "ain\"^\n\023ForceInterpretation\022\026\n\016interpreta" +
+      "tion\030\001 \002(\014\022/\n\007shapeId\030\002 \002(\0132\036.protobuf.s" +
+      "rl.commands.IdChain\"m\n\014AddAttribtue\022/\n\007s" +
+      "hapeId\030\001 \002(\0132\036.protobuf.srl.commands.IdC" +
+      "hain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeV",
+      "alue\030\003 \002(\014\"p\n\017RemoveAttribtue\022/\n\007shapeId" +
+      "\030\001 \002(\0132\036.protobuf.srl.commands.IdChain\022\024" +
+      "\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeValue\030\003" +
+      " \002(\014*\275\001\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\t" +
+      "ADD_SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\020\n\014ADD_SU" +
+      "BSHAPE\020\003\022\024\n\020ASSIGN_ATTRIBUTE\020\004\022\030\n\024FORCE_" +
+      "INTERPRETATION\020\005\022\010\n\004UNDO\020\006\022\010\n\004REDO\020\007\022\013\n\007" +
+      "REWRITE\020\010\022\017\n\013CLEAR_STACK\020\t\022\010\n\004SYNC\020\n"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6673,13 +6840,13 @@ public final class Commands {
           internal_static_protobuf_srl_commands_Update_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_Update_descriptor,
-              new java.lang.String[] { "Commands", });
+              new java.lang.String[] { "UpdateId", "Time", "Commands", });
           internal_static_protobuf_srl_commands_Command_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_commands_Command_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_Command_descriptor,
-              new java.lang.String[] { "CommandType", "IsUserCreated", "CommandData", "Time", "CommandId", });
+              new java.lang.String[] { "CommandType", "IsUserCreated", "CommandData", "CommandId", });
           internal_static_protobuf_srl_commands_IdChain_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_srl_commands_IdChain_fieldAccessorTable = new

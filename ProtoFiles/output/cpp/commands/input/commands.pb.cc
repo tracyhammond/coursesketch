@@ -61,7 +61,9 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       "input/commands.proto");
   GOOGLE_CHECK(file != NULL);
   Update_descriptor_ = file->message_type(0);
-  static const int Update_offsets_[1] = {
+  static const int Update_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Update, updateid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Update, time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Update, commands_),
   };
   Update_reflection_ =
@@ -76,11 +78,10 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Update));
   Command_descriptor_ = file->message_type(1);
-  static const int Command_offsets_[5] = {
+  static const int Command_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Command, commandtype_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Command, isusercreated_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Command, commanddata_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Command, time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Command, commandid_),
   };
   Command_reflection_ =
@@ -271,33 +272,33 @@ void protobuf_AddDesc_input_2fcommands_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\024input/commands.proto\022\025protobuf.srl.com"
-    "mands\":\n\006Update\0220\n\010commands\030\001 \003(\0132\036.prot"
-    "obuf.srl.commands.Command\"\217\001\n\007Command\0227\n"
-    "\013commandType\030\001 \002(\0162\".protobuf.srl.comman"
-    "ds.CommandType\022\025\n\risUserCreated\030\002 \002(\010\022\023\n"
-    "\013commandData\030\003 \002(\014\022\014\n\004time\030\004 \001(\003\022\021\n\tcomm"
-    "andId\030\005 \001(\t\"\032\n\007IdChain\022\017\n\007idChain\030\001 \003(\t\""
-    "\233\001\n\014PackageShape\0226\n\016oldContainerId\030\001 \001(\013"
-    "2\036.protobuf.srl.commands.IdChain\0226\n\016newC"
-    "ontainerId\030\002 \001(\0132\036.protobuf.srl.commands"
-    ".IdChain\022\033\n\023shapesToBeContained\030\003 \003(\t\"Q\n"
-    "\013AddSubshape\0223\n\013parentShape\030\001 \002(\0132\036.prot"
-    "obuf.srl.commands.IdChain\022\r\n\005shape\030\002 \002(\014"
-    "\"\?\n\014RemoveObject\022/\n\007shapeId\030\001 \002(\0132\036.prot"
-    "obuf.srl.commands.IdChain\"^\n\023ForceInterp"
-    "retation\022\026\n\016interpretation\030\001 \002(\014\022/\n\007shap"
-    "eId\030\002 \002(\0132\036.protobuf.srl.commands.IdChai"
-    "n\"m\n\014AddAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.pro"
-    "tobuf.srl.commands.IdChain\022\024\n\014attributeK"
-    "ey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014\"p\n\017Remo"
-    "veAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf."
-    "srl.commands.IdChain\022\024\n\014attributeKey\030\002 \002"
-    "(\t\022\026\n\016attributeValue\030\003 \002(\014*\275\001\n\013CommandTy"
-    "pe\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPAC"
-    "KAGE_SHAPE\020\002\022\020\n\014ADD_SUBSHAPE\020\003\022\024\n\020ASSIGN"
-    "_ATTRIBUTE\020\004\022\030\n\024FORCE_INTERPRETATION\020\005\022\010"
-    "\n\004UNDO\020\006\022\010\n\004REDO\020\007\022\013\n\007REWRITE\020\010\022\017\n\013CLEAR"
-    "_STACK\020\t\022\010\n\004SYNC\020\n", 1098);
+    "mands\"Z\n\006Update\022\020\n\010updateId\030\001 \002(\t\022\014\n\004tim"
+    "e\030\002 \001(\003\0220\n\010commands\030\003 \003(\0132\036.protobuf.srl"
+    ".commands.Command\"\201\001\n\007Command\0227\n\013command"
+    "Type\030\001 \002(\0162\".protobuf.srl.commands.Comma"
+    "ndType\022\025\n\risUserCreated\030\002 \002(\010\022\023\n\013command"
+    "Data\030\003 \002(\014\022\021\n\tcommandId\030\004 \001(\t\"\032\n\007IdChain"
+    "\022\017\n\007idChain\030\001 \003(\t\"\233\001\n\014PackageShape\0226\n\016ol"
+    "dContainerId\030\001 \001(\0132\036.protobuf.srl.comman"
+    "ds.IdChain\0226\n\016newContainerId\030\002 \001(\0132\036.pro"
+    "tobuf.srl.commands.IdChain\022\033\n\023shapesToBe"
+    "Contained\030\003 \003(\t\"Q\n\013AddSubshape\0223\n\013parent"
+    "Shape\030\001 \002(\0132\036.protobuf.srl.commands.IdCh"
+    "ain\022\r\n\005shape\030\002 \002(\014\"\?\n\014RemoveObject\022/\n\007sh"
+    "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh"
+    "ain\"^\n\023ForceInterpretation\022\026\n\016interpreta"
+    "tion\030\001 \002(\014\022/\n\007shapeId\030\002 \002(\0132\036.protobuf.s"
+    "rl.commands.IdChain\"m\n\014AddAttribtue\022/\n\007s"
+    "hapeId\030\001 \002(\0132\036.protobuf.srl.commands.IdC"
+    "hain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeV"
+    "alue\030\003 \002(\014\"p\n\017RemoveAttribtue\022/\n\007shapeId"
+    "\030\001 \002(\0132\036.protobuf.srl.commands.IdChain\022\024"
+    "\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeValue\030\003"
+    " \002(\014*\275\001\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\t"
+    "ADD_SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\020\n\014ADD_SU"
+    "BSHAPE\020\003\022\024\n\020ASSIGN_ATTRIBUTE\020\004\022\030\n\024FORCE_"
+    "INTERPRETATION\020\005\022\010\n\004UNDO\020\006\022\010\n\004REDO\020\007\022\013\n\007"
+    "REWRITE\020\010\022\017\n\013CLEAR_STACK\020\t\022\010\n\004SYNC\020\n", 1116);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/commands.proto", &protobuf_RegisterTypes);
   Update::default_instance_ = new Update();
@@ -354,6 +355,8 @@ bool CommandType_IsValid(int value) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int Update::kUpdateIdFieldNumber;
+const int Update::kTimeFieldNumber;
 const int Update::kCommandsFieldNumber;
 #endif  // !_MSC_VER
 
@@ -373,6 +376,8 @@ Update::Update(const Update& from)
 
 void Update::SharedCtor() {
   _cached_size_ = 0;
+  updateid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  time_ = GOOGLE_LONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -381,6 +386,9 @@ Update::~Update() {
 }
 
 void Update::SharedDtor() {
+  if (updateid_ != &::google::protobuf::internal::kEmptyString) {
+    delete updateid_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -407,6 +415,14 @@ Update* Update::New() const {
 }
 
 void Update::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_updateid()) {
+      if (updateid_ != &::google::protobuf::internal::kEmptyString) {
+        updateid_->clear();
+      }
+    }
+    time_ = GOOGLE_LONGLONG(0);
+  }
   commands_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -418,8 +434,40 @@ bool Update::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .protobuf.srl.commands.Command commands = 1;
+      // required string updateId = 1;
       case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_updateid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->updateid().data(), this->updateid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_time;
+        break;
+      }
+
+      // optional int64 time = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_time:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &time_)));
+          set_has_time();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_commands;
+        break;
+      }
+
+      // repeated .protobuf.srl.commands.Command commands = 3;
+      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_commands:
@@ -428,7 +476,7 @@ bool Update::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(10)) goto parse_commands;
+        if (input->ExpectTag(26)) goto parse_commands;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -451,10 +499,24 @@ bool Update::MergePartialFromCodedStream(
 
 void Update::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .protobuf.srl.commands.Command commands = 1;
+  // required string updateId = 1;
+  if (has_updateid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->updateid().data(), this->updateid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->updateid(), output);
+  }
+
+  // optional int64 time = 2;
+  if (has_time()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->time(), output);
+  }
+
+  // repeated .protobuf.srl.commands.Command commands = 3;
   for (int i = 0; i < this->commands_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->commands(i), output);
+      3, this->commands(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -465,11 +527,26 @@ void Update::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Update::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .protobuf.srl.commands.Command commands = 1;
+  // required string updateId = 1;
+  if (has_updateid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->updateid().data(), this->updateid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->updateid(), target);
+  }
+
+  // optional int64 time = 2;
+  if (has_time()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(2, this->time(), target);
+  }
+
+  // repeated .protobuf.srl.commands.Command commands = 3;
   for (int i = 0; i < this->commands_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->commands(i), target);
+        3, this->commands(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -482,7 +559,23 @@ void Update::SerializeWithCachedSizes(
 int Update::ByteSize() const {
   int total_size = 0;
 
-  // repeated .protobuf.srl.commands.Command commands = 1;
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string updateId = 1;
+    if (has_updateid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->updateid());
+    }
+
+    // optional int64 time = 2;
+    if (has_time()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int64Size(
+          this->time());
+    }
+
+  }
+  // repeated .protobuf.srl.commands.Command commands = 3;
   total_size += 1 * this->commands_size();
   for (int i = 0; i < this->commands_size(); i++) {
     total_size +=
@@ -516,6 +609,14 @@ void Update::MergeFrom(const ::google::protobuf::Message& from) {
 void Update::MergeFrom(const Update& from) {
   GOOGLE_CHECK_NE(&from, this);
   commands_.MergeFrom(from.commands_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_updateid()) {
+      set_updateid(from.updateid());
+    }
+    if (from.has_time()) {
+      set_time(from.time());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -532,6 +633,7 @@ void Update::CopyFrom(const Update& from) {
 }
 
 bool Update::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   for (int i = 0; i < commands_size(); i++) {
     if (!this->commands(i).IsInitialized()) return false;
@@ -541,6 +643,8 @@ bool Update::IsInitialized() const {
 
 void Update::Swap(Update* other) {
   if (other != this) {
+    std::swap(updateid_, other->updateid_);
+    std::swap(time_, other->time_);
     commands_.Swap(&other->commands_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -563,7 +667,6 @@ void Update::Swap(Update* other) {
 const int Command::kCommandTypeFieldNumber;
 const int Command::kIsUserCreatedFieldNumber;
 const int Command::kCommandDataFieldNumber;
-const int Command::kTimeFieldNumber;
 const int Command::kCommandIdFieldNumber;
 #endif  // !_MSC_VER
 
@@ -586,7 +689,6 @@ void Command::SharedCtor() {
   commandtype_ = 0;
   isusercreated_ = false;
   commanddata_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  time_ = GOOGLE_LONGLONG(0);
   commandid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -636,7 +738,6 @@ void Command::Clear() {
         commanddata_->clear();
       }
     }
-    time_ = GOOGLE_LONGLONG(0);
     if (has_commandid()) {
       if (commandid_ != &::google::protobuf::internal::kEmptyString) {
         commandid_->clear();
@@ -699,28 +800,12 @@ bool Command::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(32)) goto parse_time;
+        if (input->ExpectTag(34)) goto parse_commandId;
         break;
       }
 
-      // optional int64 time = 4;
+      // optional string commandId = 4;
       case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_time:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
-                 input, &time_)));
-          set_has_time();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(42)) goto parse_commandId;
-        break;
-      }
-
-      // optional string commandId = 5;
-      case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_commandId:
@@ -771,18 +856,13 @@ void Command::SerializeWithCachedSizes(
       3, this->commanddata(), output);
   }
 
-  // optional int64 time = 4;
-  if (has_time()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(4, this->time(), output);
-  }
-
-  // optional string commandId = 5;
+  // optional string commandId = 4;
   if (has_commandid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->commandid().data(), this->commandid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      5, this->commandid(), output);
+      4, this->commandid(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -811,19 +891,14 @@ void Command::SerializeWithCachedSizes(
         3, this->commanddata(), target);
   }
 
-  // optional int64 time = 4;
-  if (has_time()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(4, this->time(), target);
-  }
-
-  // optional string commandId = 5;
+  // optional string commandId = 4;
   if (has_commandid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->commandid().data(), this->commandid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->commandid(), target);
+        4, this->commandid(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -855,14 +930,7 @@ int Command::ByteSize() const {
           this->commanddata());
     }
 
-    // optional int64 time = 4;
-    if (has_time()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int64Size(
-          this->time());
-    }
-
-    // optional string commandId = 5;
+    // optional string commandId = 4;
     if (has_commandid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -905,9 +973,6 @@ void Command::MergeFrom(const Command& from) {
     if (from.has_commanddata()) {
       set_commanddata(from.commanddata());
     }
-    if (from.has_time()) {
-      set_time(from.time());
-    }
     if (from.has_commandid()) {
       set_commandid(from.commandid());
     }
@@ -938,7 +1003,6 @@ void Command::Swap(Command* other) {
     std::swap(commandtype_, other->commandtype_);
     std::swap(isusercreated_, other->isusercreated_);
     std::swap(commanddata_, other->commanddata_);
-    std::swap(time_, other->time_);
     std::swap(commandid_, other->commandid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

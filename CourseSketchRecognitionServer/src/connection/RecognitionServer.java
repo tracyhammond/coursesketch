@@ -20,7 +20,6 @@ import org.java_websocket.server.WebSocketServer;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import protobuf.srl.commands.Commands.AddStroke;
 import protobuf.srl.commands.Commands.Command;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.Update;

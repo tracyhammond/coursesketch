@@ -6,7 +6,6 @@ import java.util.UUID;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import protobuf.srl.commands.Commands.Update;
-import protobuf.srl.commands.Commands.AddStroke;
 import connection.Decoder;
 import protobuf.srl.sketch.Sketch.Interpretation;
 import protobuf.srl.sketch.Sketch.SrlShape;
@@ -97,7 +96,7 @@ public class Response {
 	 */
 	public static Stroke unpackage(Update up) throws InvalidProtocolBufferException{
 		Stroke stroke = new Stroke();
-		SrlStroke s_stroke = SrlStroke.parseFrom(((AddStroke)Decoder.prarseCommand(up.getCommands(0))).getStroke());
+		SrlStroke s_stroke = SrlStroke.parseFrom(up.getCommands(0).getCommandData());
 		stroke.setId(Stroke.nextID());
 		stroke.setName(s_stroke.getName());
 		for (SrlPoint s_point : s_stroke.getPointsList()) {
