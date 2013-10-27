@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/commands.proto',
   package='protobuf.srl.commands',
-  serialized_pb='\n\x14input/commands.proto\x12\x15protobuf.srl.commands\":\n\x06Update\x12\x30\n\x08\x63ommands\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.commands.Command\"\x8f\x01\n\x07\x43ommand\x12\x37\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32\".protobuf.srl.commands.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x02(\x0c\x12\x0c\n\x04time\x18\x04 \x01(\x03\x12\x11\n\tcommandId\x18\x05 \x01(\t\"\x1a\n\x07IdChain\x12\x0f\n\x07idChain\x18\x01 \x03(\t\"\x9b\x01\n\x0cPackageShape\x12\x36\n\x0eoldContainerId\x18\x01 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x36\n\x0enewContainerId\x18\x02 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x1b\n\x13shapesToBeContained\x18\x03 \x03(\t\"Q\n\x0b\x41\x64\x64Subshape\x12\x33\n\x0bparentShape\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\r\n\x05shape\x18\x02 \x02(\x0c\"?\n\x0cRemoveObject\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"^\n\x13\x46orceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12/\n\x07shapeId\x18\x02 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"m\n\x0c\x41\x64\x64\x41ttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c\"p\n\x0fRemoveAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c*\xbd\x01\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x11\n\rPACKAGE_SHAPE\x10\x02\x12\x10\n\x0c\x41\x44\x44_SUBSHAPE\x10\x03\x12\x14\n\x10\x41SSIGN_ATTRIBUTE\x10\x04\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\x05\x12\x08\n\x04UNDO\x10\x06\x12\x08\n\x04REDO\x10\x07\x12\x0b\n\x07REWRITE\x10\x08\x12\x0f\n\x0b\x43LEAR_STACK\x10\t\x12\x08\n\x04SYNC\x10\n')
+  serialized_pb='\n\x14input/commands.proto\x12\x15protobuf.srl.commands\"Z\n\x06Update\x12\x10\n\x08updateId\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x01(\x03\x12\x30\n\x08\x63ommands\x18\x03 \x03(\x0b\x32\x1e.protobuf.srl.commands.Command\"\x81\x01\n\x07\x43ommand\x12\x37\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32\".protobuf.srl.commands.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x02(\x0c\x12\x11\n\tcommandId\x18\x04 \x01(\t\"\x1a\n\x07IdChain\x12\x0f\n\x07idChain\x18\x01 \x03(\t\"\x9b\x01\n\x0cPackageShape\x12\x36\n\x0eoldContainerId\x18\x01 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x36\n\x0enewContainerId\x18\x02 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x1b\n\x13shapesToBeContained\x18\x03 \x03(\t\"Q\n\x0b\x41\x64\x64Subshape\x12\x33\n\x0bparentShape\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\r\n\x05shape\x18\x02 \x02(\x0c\"?\n\x0cRemoveObject\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"^\n\x13\x46orceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12/\n\x07shapeId\x18\x02 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"m\n\x0c\x41\x64\x64\x41ttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c\"p\n\x0fRemoveAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c*\xbd\x01\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x11\n\rPACKAGE_SHAPE\x10\x02\x12\x10\n\x0c\x41\x44\x44_SUBSHAPE\x10\x03\x12\x14\n\x10\x41SSIGN_ATTRIBUTE\x10\x04\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\x05\x12\x08\n\x04UNDO\x10\x06\x12\x08\n\x04REDO\x10\x07\x12\x0b\n\x07REWRITE\x10\x08\x12\x0f\n\x0b\x43LEAR_STACK\x10\t\x12\x08\n\x04SYNC\x10\n')
 
 _COMMANDTYPE = _descriptor.EnumDescriptor(
   name='CommandType',
@@ -69,8 +69,8 @@ _COMMANDTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=909,
-  serialized_end=1098,
+  serialized_start=927,
+  serialized_end=1116,
 )
 
 CommandType = enum_type_wrapper.EnumTypeWrapper(_COMMANDTYPE)
@@ -96,8 +96,22 @@ _UPDATE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='commands', full_name='protobuf.srl.commands.Update.commands', index=0,
-      number=1, type=11, cpp_type=10, label=3,
+      name='updateId', full_name='protobuf.srl.commands.Update.updateId', index=0,
+      number=1, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='time', full_name='protobuf.srl.commands.Update.time', index=1,
+      number=2, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='commands', full_name='protobuf.srl.commands.Update.commands', index=2,
+      number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -112,7 +126,7 @@ _UPDATE = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=47,
-  serialized_end=105,
+  serialized_end=137,
 )
 
 
@@ -145,15 +159,8 @@ _COMMAND = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='time', full_name='protobuf.srl.commands.Command.time', index=3,
-      number=4, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='commandId', full_name='protobuf.srl.commands.Command.commandId', index=4,
-      number=5, type=9, cpp_type=9, label=1,
+      name='commandId', full_name='protobuf.srl.commands.Command.commandId', index=3,
+      number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -167,8 +174,8 @@ _COMMAND = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=108,
-  serialized_end=251,
+  serialized_start=140,
+  serialized_end=269,
 )
 
 
@@ -195,8 +202,8 @@ _IDCHAIN = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=253,
-  serialized_end=279,
+  serialized_start=271,
+  serialized_end=297,
 )
 
 
@@ -237,8 +244,8 @@ _PACKAGESHAPE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=282,
-  serialized_end=437,
+  serialized_start=300,
+  serialized_end=455,
 )
 
 
@@ -272,8 +279,8 @@ _ADDSUBSHAPE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=439,
-  serialized_end=520,
+  serialized_start=457,
+  serialized_end=538,
 )
 
 
@@ -300,8 +307,8 @@ _REMOVEOBJECT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=522,
-  serialized_end=585,
+  serialized_start=540,
+  serialized_end=603,
 )
 
 
@@ -335,8 +342,8 @@ _FORCEINTERPRETATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=587,
-  serialized_end=681,
+  serialized_start=605,
+  serialized_end=699,
 )
 
 
@@ -377,8 +384,8 @@ _ADDATTRIBTUE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=683,
-  serialized_end=792,
+  serialized_start=701,
+  serialized_end=810,
 )
 
 
@@ -419,8 +426,8 @@ _REMOVEATTRIBTUE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=794,
-  serialized_end=906,
+  serialized_start=812,
+  serialized_end=924,
 )
 
 _UPDATE.fields_by_name['commands'].message_type = _COMMAND

@@ -1,7 +1,9 @@
 package protobuf.srl.commands;
 
 message Update {
-	repeated Command commands = 1;
+	required string updateId = 1;
+	optional int64 time = 2;
+	repeated Command commands = 3;
 }
 
 // inheritance does not exist so this will replace shape
@@ -9,9 +11,7 @@ message Command {
 	required CommandType commandType = 1;
 	required bool isUserCreated = 2;
 	required bytes commandData = 3;
-	optional int64 time = 4;
-	optional string commandId = 5;
-	
+	optional string commandId = 4;
 }
 
 /**
