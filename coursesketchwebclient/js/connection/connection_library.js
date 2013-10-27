@@ -36,6 +36,7 @@ function Connection(uri, encrypted) {
 				try {
 			        // Decode the Request
 			        var msg = Request.decode(evt.data);
+			        console.log("request decoded succesfully");
 			        if (msg.requestType == Request.MessageType.LOGIN && onLogin) {
 			        	onLogin(evt, msg);
 			        } else if (msg.requestType == Request.MessageType.RECOGNITION && onRecognition) {
@@ -47,6 +48,7 @@ function Connection(uri, encrypted) {
 			        }else if (onRequest)
 			        	onRequest(evt, msg);
 			    } catch (err) {
+			    	console.error(err);
 			    	onError(evt,err);
 			    }
 				// decode with protobuff and pass object to client
@@ -56,6 +58,7 @@ function Connection(uri, encrypted) {
 					onError(evt,null);
 			};
 		} catch(error) {
+			console.error(error);
 			if (onError) {
 				onError(null,error);
 			}
@@ -117,7 +120,7 @@ function Connection(uri, encrypted) {
 	 */
 	this.sendRequest = function(message) {
 		try {
-		websocket.send(message.toArrayBuffer());
+			websocket.send(message.toArrayBuffer());
 		} catch(err) {
 			onError(null, err);
 		}
@@ -274,11 +277,13 @@ function Connection(uri, encrypted) {
 		var array = new Array();
 		array.push(command);
 		update.setCommands(array);
+		var longVersion = Long.fromString("" + createTimeStamp());
+		update.setTime(longVersion);
+		update.setUpdateId(generateUUID());
 		var buffer = update.toArrayBuffer();
 		request.setOtherData(buffer);
 		return request;
 	}
-
 }
 var Long = false;
 
@@ -348,4 +353,26 @@ function copyProtosFromParentProtos() {
 	ProtoSrlUpdate = parent.ProtoSrlUpdate;
 	ProtoSrlCommand = parent.ProtoSrlCommand;
 	ProtoSrlCommandType = parent.ProtoSrlCommandType;
+}
+
+ /**
+  * Generates an rfc4122 version 4 compliant solution.
+  *
+  * found at http://stackoverflow.com/a/2117523/2187510
+  * and further improved at
+  * http://stackoverflow.com/a/8809472/2187510
+  */
+function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x7|0x8)).toString(16);
+    });
+    return uuid;
+};
+
+// Creates a time stamp every time this method is called.
+function createTimeStamp() {
+	return new Date().getTime();
 }

@@ -96,6 +96,7 @@ public class Response {
 	 */
 	public static Stroke unpackage(Update up) throws InvalidProtocolBufferException{
 		Stroke stroke = new Stroke();
+		System.out.println("Number of commands " + up.getCommandsCount());
 		SrlStroke s_stroke = SrlStroke.parseFrom(up.getCommands(0).getCommandData());
 		stroke.setId(Stroke.nextID());
 		stroke.setName(s_stroke.getName());

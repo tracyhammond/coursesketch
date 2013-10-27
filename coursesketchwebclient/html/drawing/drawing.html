@@ -14,7 +14,7 @@
 		var sketch = false;
 		var canvasContext = false;
 		var Long = false;
-		
+
     	function init() {
     		parent.redirector.setRedirect('html/drawing/drawing.html');
     		initializeProtos();
@@ -38,16 +38,17 @@
 			sketch.canvasContext = canvasContext;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
 			serverConnection.setOnMessageListener(function(evt, message) {
-				//alert('I AM GETTING A MESSAGE');
+				alert('I AM GETTING A MESSAGE');
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
-					//alert("Recieving recognition");
+					alert("Recieving recognition");
 					var data = message.otherData;
 					var update = parent.ProtoSrlUpdate.decode(data);
-					var commandList = update.getCommands();
+					var commandList = update.getCommands(); // why are you not working??????
 					//if(commandList ) // if it is not an array...
-					//alert("CommandList " + commandList);
-					for (var i = 0; i <commandList.length; i++) {
+					alert("CommandList " + commandList);
+					for (var i = 0; i < commandList.length; i++) {
 						var command = commandList[i];
+						console.log("looking at command " + i);
 						if (command.commandType == parent.ProtoSrlCommandType.ADD_STROKE) {
 							var newStroke = SRL_Stroke.createFromProtobuf(command.commandData);
 							sketch.addObject(newStroke);
