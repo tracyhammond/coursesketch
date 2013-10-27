@@ -96,54 +96,26 @@ public class RecognitionServer extends WebSocketServer {
 			Update savedUpdate = Decoder.parseNextUpdate(rawUpdateData);
 			//pass to them
 			//use a function that they will give
-
-			//post function they will give (package the information received)
 			Request result = null;
 
 			try {
-				//SrlShape shape = Response.interpret(savedUpdate);
-				//result = Encoder.createRequestFromShape(shape);
+				// TODO: move these inside the class itself.
 				Response.print(savedUpdate);
-				return;
+				SrlShape shape = Response.interpret(savedUpdate);
+				SrlStroke stroke = Response.mirror(savedUpdate);
+				//post function they will give (package the information received)
+				Command com1 = Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_STROKE);
+				Command com2 = Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_SHAPE);
+				
+				
+				result = Encoder.createRequestFromCommands(com1, com2);
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 			conn.send(result.toByteArray());
-
-			// Build and send.
-			/*String name = req.getLogin().getUsername();
-			String password = req.getLogin().getPassword();
-			System.out.println("USERNAME: " + name +"\nPASSWORD: " + password);
-			if( (name.equalsIgnoreCase("matt") && password.equalsIgnoreCase("japan"))) {
-				return;
-			}*/
 		}
 		return;
-		/*
-		if (!state.isLoggedIn()) {
-			if (LoginChecker.checkLogin(req)) {
-				state.logIn();
-				// Create the Request to respond.
-				conn.send(LoginChecker.createResponse(req, true).toByteArray());
-			} else {
-				state.addTry();
-				if (state.getTries() > MAX_LOGIN_TRIES) {
-					conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
-				}
-				conn.send(LoginChecker.createResponse(req, false).toByteArray());
-			}
-		} else {
-			if (state.getTries() > MAX_LOGIN_TRIES) {
-				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
-				return;
-			}
-			
-			// Parse message.
-			conn.send(buffer);
-			return;
-		}*/
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {
