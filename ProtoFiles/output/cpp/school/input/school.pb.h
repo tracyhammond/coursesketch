@@ -332,12 +332,17 @@ class SrlAssignment : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required uint64 courseId = 1;
+  // required string courseId = 1;
   inline bool has_courseid() const;
   inline void clear_courseid();
   static const int kCourseIdFieldNumber = 1;
-  inline ::google::protobuf::uint64 courseid() const;
-  inline void set_courseid(::google::protobuf::uint64 value);
+  inline const ::std::string& courseid() const;
+  inline void set_courseid(const ::std::string& value);
+  inline void set_courseid(const char* value);
+  inline void set_courseid(const char* value, size_t size);
+  inline ::std::string* mutable_courseid();
+  inline ::std::string* release_courseid();
+  inline void set_allocated_courseid(::std::string* courseid);
 
   // required string assignmentId = 2;
   inline bool has_assignmentid() const;
@@ -374,7 +379,7 @@ class SrlAssignment : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::uint64 courseid_;
+  ::std::string* courseid_;
   ::std::string* assignmentid_;
   ::std::string* assignmentname_;
 
@@ -444,19 +449,29 @@ class SrlProblem : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required uint64 courseId = 1;
+  // required string courseId = 1;
   inline bool has_courseid() const;
   inline void clear_courseid();
   static const int kCourseIdFieldNumber = 1;
-  inline ::google::protobuf::uint64 courseid() const;
-  inline void set_courseid(::google::protobuf::uint64 value);
+  inline const ::std::string& courseid() const;
+  inline void set_courseid(const ::std::string& value);
+  inline void set_courseid(const char* value);
+  inline void set_courseid(const char* value, size_t size);
+  inline ::std::string* mutable_courseid();
+  inline ::std::string* release_courseid();
+  inline void set_allocated_courseid(::std::string* courseid);
 
-  // required uint64 assignmentId = 2;
+  // required string assignmentId = 2;
   inline bool has_assignmentid() const;
   inline void clear_assignmentid();
   static const int kAssignmentIdFieldNumber = 2;
-  inline ::google::protobuf::uint64 assignmentid() const;
-  inline void set_assignmentid(::google::protobuf::uint64 value);
+  inline const ::std::string& assignmentid() const;
+  inline void set_assignmentid(const ::std::string& value);
+  inline void set_assignmentid(const char* value);
+  inline void set_assignmentid(const char* value, size_t size);
+  inline ::std::string* mutable_assignmentid();
+  inline ::std::string* release_assignmentid();
+  inline void set_allocated_assignmentid(::std::string* assignmentid);
 
   // required string problemId = 3;
   inline bool has_problemid() const;
@@ -518,8 +533,8 @@ class SrlProblem : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::uint64 courseid_;
-  ::google::protobuf::uint64 assignmentid_;
+  ::std::string* courseid_;
+  ::std::string* assignmentid_;
   ::std::string* problemid_;
   ::std::string* problemname_;
   ::protobuf::srl::school::subproblemInformation* mainproblem_;
@@ -903,7 +918,7 @@ inline void SrlCourse::set_allocated_coursename(::std::string* coursename) {
 
 // SrlAssignment
 
-// required uint64 courseId = 1;
+// required string courseId = 1;
 inline bool SrlAssignment::has_courseid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -914,15 +929,63 @@ inline void SrlAssignment::clear_has_courseid() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void SrlAssignment::clear_courseid() {
-  courseid_ = GOOGLE_ULONGLONG(0);
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    courseid_->clear();
+  }
   clear_has_courseid();
 }
-inline ::google::protobuf::uint64 SrlAssignment::courseid() const {
+inline const ::std::string& SrlAssignment::courseid() const {
+  return *courseid_;
+}
+inline void SrlAssignment::set_courseid(const ::std::string& value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
+}
+inline void SrlAssignment::set_courseid(const char* value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
+}
+inline void SrlAssignment::set_courseid(const char* value, size_t size) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlAssignment::mutable_courseid() {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
   return courseid_;
 }
-inline void SrlAssignment::set_courseid(::google::protobuf::uint64 value) {
-  set_has_courseid();
-  courseid_ = value;
+inline ::std::string* SrlAssignment::release_courseid() {
+  clear_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = courseid_;
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlAssignment::set_allocated_courseid(::std::string* courseid) {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    delete courseid_;
+  }
+  if (courseid) {
+    set_has_courseid();
+    courseid_ = courseid;
+  } else {
+    clear_has_courseid();
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // required string assignmentId = 2;
@@ -1069,7 +1132,7 @@ inline void SrlAssignment::set_allocated_assignmentname(::std::string* assignmen
 
 // SrlProblem
 
-// required uint64 courseId = 1;
+// required string courseId = 1;
 inline bool SrlProblem::has_courseid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1080,18 +1143,66 @@ inline void SrlProblem::clear_has_courseid() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void SrlProblem::clear_courseid() {
-  courseid_ = GOOGLE_ULONGLONG(0);
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    courseid_->clear();
+  }
   clear_has_courseid();
 }
-inline ::google::protobuf::uint64 SrlProblem::courseid() const {
+inline const ::std::string& SrlProblem::courseid() const {
+  return *courseid_;
+}
+inline void SrlProblem::set_courseid(const ::std::string& value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
+}
+inline void SrlProblem::set_courseid(const char* value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
+}
+inline void SrlProblem::set_courseid(const char* value, size_t size) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlProblem::mutable_courseid() {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
   return courseid_;
 }
-inline void SrlProblem::set_courseid(::google::protobuf::uint64 value) {
-  set_has_courseid();
-  courseid_ = value;
+inline ::std::string* SrlProblem::release_courseid() {
+  clear_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = courseid_;
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlProblem::set_allocated_courseid(::std::string* courseid) {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    delete courseid_;
+  }
+  if (courseid) {
+    set_has_courseid();
+    courseid_ = courseid;
+  } else {
+    clear_has_courseid();
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
-// required uint64 assignmentId = 2;
+// required string assignmentId = 2;
 inline bool SrlProblem::has_assignmentid() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1102,15 +1213,63 @@ inline void SrlProblem::clear_has_assignmentid() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void SrlProblem::clear_assignmentid() {
-  assignmentid_ = GOOGLE_ULONGLONG(0);
+  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+    assignmentid_->clear();
+  }
   clear_has_assignmentid();
 }
-inline ::google::protobuf::uint64 SrlProblem::assignmentid() const {
+inline const ::std::string& SrlProblem::assignmentid() const {
+  return *assignmentid_;
+}
+inline void SrlProblem::set_assignmentid(const ::std::string& value) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(value);
+}
+inline void SrlProblem::set_assignmentid(const char* value) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(value);
+}
+inline void SrlProblem::set_assignmentid(const char* value, size_t size) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlProblem::mutable_assignmentid() {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
   return assignmentid_;
 }
-inline void SrlProblem::set_assignmentid(::google::protobuf::uint64 value) {
-  set_has_assignmentid();
-  assignmentid_ = value;
+inline ::std::string* SrlProblem::release_assignmentid() {
+  clear_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = assignmentid_;
+    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlProblem::set_allocated_assignmentid(::std::string* assignmentid) {
+  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+    delete assignmentid_;
+  }
+  if (assignmentid) {
+    set_has_assignmentid();
+    assignmentid_ = assignmentid;
+  } else {
+    clear_has_assignmentid();
+    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // required string problemId = 3;

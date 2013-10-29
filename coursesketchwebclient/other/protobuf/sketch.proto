@@ -1,8 +1,8 @@
 package protobuf.srl.sketch;
 message SrlSketch {
-	optional uint64 courseId = 1; // so we know what class it links to
-	optional uint64 assignmentId = 2; // so we know what assignment it links to
-	optional uint64 problemId = 3; // so we know what problem it links to
+	optional string courseId = 1; // so we know what class it links to
+	optional string assignmentId = 2; // so we know what assignment it links to
+	optional string problemId = 3; // so we know what problem it links to
 	optional string domainId = 4; // used to find the domain for recognition
 	repeated SrlObject sketch = 5;
 }
@@ -50,6 +50,8 @@ message SrlPoint {
 	optional double speed = 8;
 }
 
+// TODO: change to SrlInterpretation
+// TODO: change name to label
 message Interpretation {
 	required string name = 1;
 	required double confidence = 2;

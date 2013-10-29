@@ -122,6 +122,14 @@ function Overloads() {
 			return(this.distance.SRL_Line.apply( this, arguments ));
 		}
 	}
+
+	this.getSize = function () {
+		if (this.check_type() == "SRL_Point") {
+			return(this.getSize.SRL_Point.apply( this, arguments ));
+		} else if (this.check_type() == "SRL_Shape") {
+			return(this.getSize.SRL_Shape.apply( this, arguments ));
+		}
+	}
 };
 
 /**
@@ -140,15 +148,17 @@ function SRL_Object() {
 	 * Each object has a unique ID associated with it.
 	 */
 	var id; // = guid();
+
 	/**
 	 * The name of the object, such as "triangle1"
 	 */
 	var name = "";
+
 	/**
 	 * The creation time of the object.
 	 */
-
 	var time;
+
 	/**
 	 * An object can be created by a user 
 	 * (like drawing a shape, or speaking a phrase)
@@ -156,10 +166,12 @@ function SRL_Object() {
 	 * (like a recognition of a higher level shape)
 	 */
 	var isUserCreated = false;
+
 	/**
 	 * A list of possible interpretations for an object
 	 */
 	var m_interpretations = new Array();
+
 	/**
 	 * Was this object made up from a collection of subObjects? 
 	 * If so they are in this list.
@@ -168,6 +180,7 @@ function SRL_Object() {
 	 * e.g., an arrow might have three lines inside, and each line might have a stroke.
 	 */
 	var m_subObjects = new Array();
+
 	/**
 	 * Adds a subobject to this object. 
 	 * This usually happens during recognition, when a new object
@@ -179,6 +192,7 @@ function SRL_Object() {
 			m_subObjects.push(subObject);
 		}
 	}
+
 	/**
 	 * Gets the list of subobjects
 	 * @return list of objects that make up this object
@@ -186,6 +200,7 @@ function SRL_Object() {
 	this.getSubObjects = function(){
 		return m_subObjects;
 	}
+
 	/**
 	 * Gets a list of all of the objects that make up this object.
 	 * This is a recursive search through all of the subobjects.
@@ -210,16 +225,30 @@ function SRL_Object() {
 	 * @param complexity a double representing the complexity
 	 */
 	this.addInterpretation = function(interpretation, confidence, complexity) {
-		//m_interpretations.push(new SRL_Interpretation(interpretation, confidence, complexity));
-		console.log("Implement SRL_Object.addInterpretation later");
-		console.log("This may not actually be needed");
+		m_interpretations.push(new SRL_Interpretation(interpretation, confidence, complexity));
 	}
+
+	/**
+	 * @return the list of interpretations for this shape.
+	 */
+	this.getInterpretations = function() {
+		return m_interpretations;
+	}
+
+	/**
+	 * sets unique UUID for an object
+	 */
+	this.setId = function(newId) {
+		id = newId;
+	}
+
 	/**
 	 * @return unique UUID for an object
 	 */
 	this.getId = function() {
 		return id;
 	}
+
 	/**
 	 * An object can have a name, such as "triangle1". 
 	 * @return the string name of the object
@@ -227,6 +256,7 @@ function SRL_Object() {
 	this.getName = function() {
 		return name;
 	}
+
 	/**
 	 * An object can have a name, such as "triangle1". 
 	 * @param name object name
@@ -234,6 +264,7 @@ function SRL_Object() {
 	this.setName = function(name) {
 		name = name;
 	}
+
 	/**
 	 * Gets the time associated with the object. 
 	 * The default time is the time it was created
@@ -242,14 +273,20 @@ function SRL_Object() {
 	this.getTime = function() {
 		return time;
 	}
+
 	/**
 	 * Sets the time the object was created. This probably should 
 	 * only be used when loading in pre-existing objects.
 	 * @param time the time the object was created.
 	 */
-	this.setTime = function(time) {
-		time = time;
+	this.setTime = function(inputTime) {
+		if (typeof inputTime === "number") {
+			time = inputTime;
+		} else {
+			time = null;
+		}
 	}
+
 	/**
 	 * An object can be created by a user 
 	 * (like drawing a shape, or speaking a phrase)
@@ -535,6 +572,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return maxy;
 	}
+
 	/**
 	 * Return the cosine of the starting angle of the stroke
 	 * This takes the angle between the initial point and the point specified as the secondPoint
@@ -807,9 +845,6 @@ function SRL_Stroke(startPoint) {
 		return sum;
 	}
 
-
-
-
 	this.temp_print = function() {
 		for (var i=0; i<points.length; i++) {
 			points[i].temp_print();
@@ -863,6 +898,7 @@ function SRL_Point(x, y) {
 	this.getPressure = function() {
 		return pressure;
 	}
+
 	/**
 	 * Points can have pressure depending on the input device
 	 * @param pressure
@@ -874,6 +910,7 @@ function SRL_Point(x, y) {
 			throw "argument of .setPressure must be a 'number'";
 		}
 	}
+
 	/**
 	 * Points can have pressure depending on the input device
 	 * @param pressure
@@ -885,6 +922,11 @@ function SRL_Point(x, y) {
 			throw "argument of .setPressure must be a 'number'";
 		}
 	}
+
+	this.getSize = function() {
+		return size;
+	}
+
 	/**
 	 * Updates the location of the point
 	 * Also add this point to the history of the points 
@@ -938,7 +980,11 @@ function SRL_Point(x, y) {
 			return true;
 		}
 	}
-	
+
+	this.getSpeed = function() {
+		return speed;
+	}
+
 	this.distance.SRL_Point = function(arg1, arg2, arg3, arg4) {
 		/**
 	 	 * Return the distance from point rp to this point.
@@ -1100,6 +1146,7 @@ function SRL_Point(x, y) {
 		this.temp_print();
 
 	}
+
 	this.temp_print = function(){
 		console.log("printing m_xList");
 		console.log(m_xList);
@@ -1109,6 +1156,12 @@ function SRL_Point(x, y) {
 		console.log(m_currentElement);
 	}
 };
+
+function SRL_Interpretation(label, confidence, complexity) {
+	this.label = label;
+	this.confidence = confidence;
+	this.complexity = complexity;
+}
 
 /**
  *******************************
@@ -1778,190 +1831,23 @@ SRL_Stroke.prototype = new SRL_Shape();
 SRL_Point.prototype = new SRL_Shape();
 SRL_Line.prototype = new SRL_Shape();
 
-//************************************************************************
-//
-//
-//Test Functions for SRL_Stroke()
-//
-//
-//************************************************************************
-/*
-console.log("****************SRL_Stroke()****************");
-var test_stroke = new SRL_Stroke();
-test_stroke.temp_print();
+/**
+ * UTILITY FUNCTIONS
+ */
 
-console.log("****************SRL_Stroke() Points: add, get, get first, get last****************");
-var test_point = new SRL_Point(-2,-2);
-test_stroke.addPoint(test_point);
-var test_point2 = new SRL_Point(2,2);
-test_stroke.addPoint(test_point2);
-test_stroke.temp_print();
-
-
-test_stroke.getPoints();
-test_stroke.getPoint(0).temp_print();
-console.log(test_stroke.getNumPoints());
-test_stroke.getFirstPoint().temp_print();
-test_stroke.getLastPoint().temp_print();
-
-console.log("****************SRL_Stroke().getMin/MaxX/Y()****************");
-console.log(test_stroke.getMinX());
-console.log(test_stroke.getMinY());
-console.log(test_stroke.getMaxX());
-console.log(test_stroke.getMaxY());
-
-console.log("****************SRL_Stroke()this.getStartAngleCosine/Sine()****************");
-console.log(test_stroke.getStartAngleCosine(1));
-console.log(test_stroke.getStartAngleSine(1));
-
-console.log("****************SRL_Stroke()this.getEndAngleCosine/Sine()****************");
-console.log(test_stroke.getEndAngleCosine());
-console.log(test_stroke.getEndAngleSine());
-
-console.log("****************SRL_Stroke()this.getStrokeLength()****************");
-console.log(test_stroke.getStrokeLength());
-
-console.log("****************SRL_Stroke()this Time functions****************");
-console.log(test_stroke.getTotalTime());
-console.log(test_stroke.getMaximumSpeed());
-
-console.log("****************SRL_Stroke()this Rotation functions****************");
-console.log(test_stroke.getRotationSum());
-console.log(test_stroke.getRotationAbsolute());
-console.log(test_stroke.getRotationSquared());
-
-//************************************************************************
-//
-//
-//Test Functions for SRL_Point()
-//
-//
-//************************************************************************
-
-console.log("****************SRL_Point()****************");
-var test_point = new SRL_Point();
-test_point.test_functions();
-
-console.log("****************SRL_Point(50,50)****************");
-var test_point2 = new SRL_Point(40,50);
-test_point2.test_functions();
-console.log("setting a point");
-test_point2.setP(40,30);
-test_point2.temp_print();
-
-console.log("****************SRL_Point.distance()****************");
-console.log(test_point2.distance(test_point));
-console.log(test_point.distance(test_point2));
-console.log(test_point2.distance(2,5));
-console.log(test_point.distance(40,30));
-console.log(test_point2.distance(2,5,40,30));
-console.log(test_point2.distance(40,30,2,5));
-
-console.log("****************SRL_Point.setOrigP()****************");
-test_point.setOrigP(25,20);
-test_point2.setOrigP(75,70);
-test_point.temp_print();
-test_point2.temp_print();
-
-console.log("****************SRL_Point.undoLastChange()****************");
-console.log("setting a point");
-test_point2.setP(40,30);
-test_point2.temp_print();
-test_point2.undoLastChange();
-test_point2.temp_print();
-
-console.log("****************SRL_Point.goBackToInitial()****************");
-console.log("setting a point");
-test_point2.setP(40,30);
-test_point2.temp_print();
-console.log("go back to initial");
-console.log(test_point2.goBackToInitial().getX());
-console.log(test_point2.goBackToInitial().getY());
-
-console.log("****************SRL_Point.getInitialX & Y()****************");
-test_point.temp_print();
-console.log(test_point.getInitialX());
-console.log(test_point.getInitialY());
-test_point2.temp_print();
-console.log(test_point2.getInitialX());
-console.log(test_point2.getInitialY());
-
-console.log("****************SRL_Point.get min and max****************");
-
-//************************************************************************
-//
-//
-//Test Functions for SRL_Line()
-//
-//
-//************************************************************************
-
-console.log("****************SRL_Line()****************");
-var test_line = new SRL_Line();
-test_line.temp_print();
-
-console.log("****************SRL_Line().setP1 & 2****************");
-var test_point = new SRL_Point(-2,-2);
-test_line.setP1(test_point);
-var test_point2 = new SRL_Point(2,2);
-test_line.setP2(test_point2);
-test_line.temp_print();
-
-var test_point3 = new SRL_Point(0,4);
-var test_point4 = new SRL_Point(4,0);
-
-console.log("****************SRL_Line(p1, p2)****************");
-var test_line2 = new SRL_Line(test_point3, test_point4); // 40,30 -> 2,5
-test_line2.temp_print();
-
-console.log("****************SRL_Line(x1,y1,x2,y2)****************");
-var test_line3 = new SRL_Line(4,-2,0,4);
-test_line3.temp_print();
-
-console.log("****************SRL_Line().getSlope()****************");
-console.log(test_line2.getSlope());
-
-console.log("****************SRL_Line().getSlope(x1, y1, x2, y2)****************");
-console.log(test_line2.getSlope(3,5,70,10));
-
-console.log("****************SRL_Line().getYIntercept()****************");
-console.log(test_line2.getYIntercept());
-
-console.log("****************SRL_Line().getYIntercept(x1,y1,x2,y2)****************");
-console.log(test_line2.getYIntercept(3,5,70,10));
-
-console.log("****************SRL_Line().getABCArray(x1,y1,x2,y2)****************");
-console.log(test_line2.getABCArray(0,4,4,0));
-console.log(test_line2.getABCArray(-2,-2,2,2));
-
-console.log("****************SRL_Line().getIntersection()****************");
-test_line2.getIntersection(test_line).temp_print();
-
-console.log("****************SRL_Line().getLength() & .getArea()****************");
-console.log(test_line2.getLength());
-console.log(test_line2.getArea());
-
-console.log("****************SRL_Line().getFlippedLine & .flip()****************");
-test_line2.getFlippedLine().temp_print();
-test_line2.flip();
-test_line2.temp_print();
-
-console.log("****************SRL_Line().getMins & .getMaxs()****************");
-console.log(test_line2.getMinX());
-console.log(test_line2.getMinY());
-console.log(test_line2.getMaxX());
-console.log(test_line2.getMaxY());
-
-console.log("****************SRL_Line().getPerpendicularLine()****************");
-test_line2.getPerpendicularLine(test_point2).temp_print();
-
-console.log("****************SRL_Line().isParallel()****************");
-test_line2.isParallel(test_line2); // doesn't seem to work; double check with Hammond that the algorithm works
-
-console.log("****************SRL_Line().distance()****************");
-console.log(test_line2.distance(test_point));
-console.log(test_line2.distance(0,0,0,4,4,0));
-console.log(test_line2.distance(test_line));
-console.log(test_line2.distance(-2,-2,2,2,0,4,4,0));
-
-//*/
+ /**
+  * Generates an rfc4122 version 4 compliant solution.
+  *
+  * found at http://stackoverflow.com/a/2117523/2187510
+  * and further improved at
+  * http://stackoverflow.com/a/8809472/2187510
+  */
+function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x7|0x8)).toString(16);
+    });
+    return uuid;
+};

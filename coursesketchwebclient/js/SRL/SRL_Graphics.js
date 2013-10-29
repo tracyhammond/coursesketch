@@ -14,7 +14,7 @@
   */
 SRL_Object.prototype.draw = function draw(graphics) {
 	if (this.check_type() == "SRL_Shape") {
-		this.draw = drawShape;
+		this.draw = this.drawShape;
 		this.drawShape(graphics);
 	} else if (this.check_type() == "SRL_Stroke") {
 		this.draw = this.drawStroke;
@@ -64,6 +64,11 @@ SRL_Stroke.prototype.drawStroke = function drawStroke(graphics) {
  */
 SRL_Shape.prototype.drawShape = function drawShape(graphics) {
 	// Does nothing.
+	var list = this.getInterpretations();
+	for(var i = 0; i< list.length; i++) {
+		var inter = list[i];
+		console.log("label: " + inter.label + " confidence: " + inter.confidence);
+	}
 }
 
 

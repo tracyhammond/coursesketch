@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/commands.proto',
   package='protobuf.srl.commands',
-  serialized_pb='\n\x14input/commands.proto\x12\x15protobuf.srl.commands\":\n\x06Update\x12\x30\n\x08\x63ommands\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.commands.Command\"\x8f\x01\n\x07\x43ommand\x12\x37\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32\".protobuf.srl.commands.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x02(\x0c\x12\x0c\n\x04time\x18\x04 \x01(\x03\x12\x11\n\tcommandId\x18\x05 \x01(\t\"C\n\x0cPackageShape\x12\x16\n\x0enewContainerId\x18\x01 \x02(\t\x12\x1b\n\x13shapesToBeContained\x18\x02 \x03(\t\"\x1b\n\tAddStroke\x12\x0e\n\x06stroke\x18\x01 \x02(\x0c\"&\n\x0bRemoveShape\x12\x17\n\x0fshapeToRemoveId\x18\x01 \x02(\t\"\x19\n\x08\x41\x64\x64Shape\x12\r\n\x05shape\x18\x01 \x02(\x0c\">\n\x13\x46orceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12\x0f\n\x07shapeId\x18\x02 \x02(\t*Y\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x11\n\rPACKAGE_SHAPE\x10\x02\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\x03')
+  serialized_pb='\n\x14input/commands.proto\x12\x15protobuf.srl.commands\"Z\n\x06Update\x12\x10\n\x08updateId\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x01(\x03\x12\x30\n\x08\x63ommands\x18\x03 \x03(\x0b\x32\x1e.protobuf.srl.commands.Command\"\x81\x01\n\x07\x43ommand\x12\x37\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32\".protobuf.srl.commands.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x02(\x0c\x12\x11\n\tcommandId\x18\x04 \x01(\t\"\x1a\n\x07IdChain\x12\x0f\n\x07idChain\x18\x01 \x03(\t\"\x9b\x01\n\x0cPackageShape\x12\x36\n\x0eoldContainerId\x18\x01 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x36\n\x0enewContainerId\x18\x02 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x1b\n\x13shapesToBeContained\x18\x03 \x03(\t\"Q\n\x0b\x41\x64\x64Subshape\x12\x33\n\x0bparentShape\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\r\n\x05shape\x18\x02 \x02(\x0c\"?\n\x0cRemoveObject\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"^\n\x13\x46orceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12/\n\x07shapeId\x18\x02 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"m\n\x0c\x41\x64\x64\x41ttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c\"p\n\x0fRemoveAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c*\xbd\x01\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x11\n\rPACKAGE_SHAPE\x10\x02\x12\x10\n\x0c\x41\x44\x44_SUBSHAPE\x10\x03\x12\x14\n\x10\x41SSIGN_ATTRIBUTE\x10\x04\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\x05\x12\x08\n\x04UNDO\x10\x06\x12\x08\n\x04REDO\x10\x07\x12\x0b\n\x07REWRITE\x10\x08\x12\x0f\n\x0b\x43LEAR_STACK\x10\t\x12\x08\n\x04SYNC\x10\n')
 
 _COMMANDTYPE = _descriptor.EnumDescriptor(
   name='CommandType',
@@ -35,21 +35,56 @@ _COMMANDTYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='FORCE_INTERPRETATION', index=3, number=3,
+      name='ADD_SUBSHAPE', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ASSIGN_ATTRIBUTE', index=4, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FORCE_INTERPRETATION', index=5, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UNDO', index=6, number=6,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDO', index=7, number=7,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REWRITE', index=8, number=8,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='CLEAR_STACK', index=9, number=9,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SYNC', index=10, number=10,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=482,
-  serialized_end=571,
+  serialized_start=927,
+  serialized_end=1116,
 )
 
 CommandType = enum_type_wrapper.EnumTypeWrapper(_COMMANDTYPE)
 ADD_STROKE = 0
 ADD_SHAPE = 1
 PACKAGE_SHAPE = 2
-FORCE_INTERPRETATION = 3
+ADD_SUBSHAPE = 3
+ASSIGN_ATTRIBUTE = 4
+FORCE_INTERPRETATION = 5
+UNDO = 6
+REDO = 7
+REWRITE = 8
+CLEAR_STACK = 9
+SYNC = 10
 
 
 
@@ -61,8 +96,22 @@ _UPDATE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='commands', full_name='protobuf.srl.commands.Update.commands', index=0,
-      number=1, type=11, cpp_type=10, label=3,
+      name='updateId', full_name='protobuf.srl.commands.Update.updateId', index=0,
+      number=1, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='time', full_name='protobuf.srl.commands.Update.time', index=1,
+      number=2, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='commands', full_name='protobuf.srl.commands.Update.commands', index=2,
+      number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -77,7 +126,7 @@ _UPDATE = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=47,
-  serialized_end=105,
+  serialized_end=137,
 )
 
 
@@ -110,15 +159,8 @@ _COMMAND = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='time', full_name='protobuf.srl.commands.Command.time', index=3,
-      number=4, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='commandId', full_name='protobuf.srl.commands.Command.commandId', index=4,
-      number=5, type=9, cpp_type=9, label=1,
+      name='commandId', full_name='protobuf.srl.commands.Command.commandId', index=3,
+      number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -132,28 +174,21 @@ _COMMAND = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=108,
-  serialized_end=251,
+  serialized_start=140,
+  serialized_end=269,
 )
 
 
-_PACKAGESHAPE = _descriptor.Descriptor(
-  name='PackageShape',
-  full_name='protobuf.srl.commands.PackageShape',
+_IDCHAIN = _descriptor.Descriptor(
+  name='IdChain',
+  full_name='protobuf.srl.commands.IdChain',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='newContainerId', full_name='protobuf.srl.commands.PackageShape.newContainerId', index=0,
-      number=1, type=9, cpp_type=9, label=2,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='shapesToBeContained', full_name='protobuf.srl.commands.PackageShape.shapesToBeContained', index=1,
-      number=2, type=9, cpp_type=9, label=3,
+      name='idChain', full_name='protobuf.srl.commands.IdChain.idChain', index=0,
+      number=1, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -167,21 +202,70 @@ _PACKAGESHAPE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=253,
-  serialized_end=320,
+  serialized_start=271,
+  serialized_end=297,
 )
 
 
-_ADDSTROKE = _descriptor.Descriptor(
-  name='AddStroke',
-  full_name='protobuf.srl.commands.AddStroke',
+_PACKAGESHAPE = _descriptor.Descriptor(
+  name='PackageShape',
+  full_name='protobuf.srl.commands.PackageShape',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='stroke', full_name='protobuf.srl.commands.AddStroke.stroke', index=0,
-      number=1, type=12, cpp_type=9, label=2,
+      name='oldContainerId', full_name='protobuf.srl.commands.PackageShape.oldContainerId', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='newContainerId', full_name='protobuf.srl.commands.PackageShape.newContainerId', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='shapesToBeContained', full_name='protobuf.srl.commands.PackageShape.shapesToBeContained', index=2,
+      number=3, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=300,
+  serialized_end=455,
+)
+
+
+_ADDSUBSHAPE = _descriptor.Descriptor(
+  name='AddSubshape',
+  full_name='protobuf.srl.commands.AddSubshape',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='parentShape', full_name='protobuf.srl.commands.AddSubshape.parentShape', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='shape', full_name='protobuf.srl.commands.AddSubshape.shape', index=1,
+      number=2, type=12, cpp_type=9, label=2,
       has_default_value=False, default_value="",
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -195,22 +279,22 @@ _ADDSTROKE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=322,
-  serialized_end=349,
+  serialized_start=457,
+  serialized_end=538,
 )
 
 
-_REMOVESHAPE = _descriptor.Descriptor(
-  name='RemoveShape',
-  full_name='protobuf.srl.commands.RemoveShape',
+_REMOVEOBJECT = _descriptor.Descriptor(
+  name='RemoveObject',
+  full_name='protobuf.srl.commands.RemoveObject',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='shapeToRemoveId', full_name='protobuf.srl.commands.RemoveShape.shapeToRemoveId', index=0,
-      number=1, type=9, cpp_type=9, label=2,
-      has_default_value=False, default_value=unicode("", "utf-8"),
+      name='shapeId', full_name='protobuf.srl.commands.RemoveObject.shapeId', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -223,36 +307,8 @@ _REMOVESHAPE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=351,
-  serialized_end=389,
-)
-
-
-_ADDSHAPE = _descriptor.Descriptor(
-  name='AddShape',
-  full_name='protobuf.srl.commands.AddShape',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='shape', full_name='protobuf.srl.commands.AddShape.shape', index=0,
-      number=1, type=12, cpp_type=9, label=2,
-      has_default_value=False, default_value="",
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=391,
-  serialized_end=416,
+  serialized_start=540,
+  serialized_end=603,
 )
 
 
@@ -272,8 +328,8 @@ _FORCEINTERPRETATION = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='shapeId', full_name='protobuf.srl.commands.ForceInterpretation.shapeId', index=1,
-      number=2, type=9, cpp_type=9, label=2,
-      has_default_value=False, default_value=unicode("", "utf-8"),
+      number=2, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -286,19 +342,112 @@ _FORCEINTERPRETATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=418,
-  serialized_end=480,
+  serialized_start=605,
+  serialized_end=699,
+)
+
+
+_ADDATTRIBTUE = _descriptor.Descriptor(
+  name='AddAttribtue',
+  full_name='protobuf.srl.commands.AddAttribtue',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='shapeId', full_name='protobuf.srl.commands.AddAttribtue.shapeId', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='attributeKey', full_name='protobuf.srl.commands.AddAttribtue.attributeKey', index=1,
+      number=2, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='attributeValue', full_name='protobuf.srl.commands.AddAttribtue.attributeValue', index=2,
+      number=3, type=12, cpp_type=9, label=2,
+      has_default_value=False, default_value="",
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=701,
+  serialized_end=810,
+)
+
+
+_REMOVEATTRIBTUE = _descriptor.Descriptor(
+  name='RemoveAttribtue',
+  full_name='protobuf.srl.commands.RemoveAttribtue',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='shapeId', full_name='protobuf.srl.commands.RemoveAttribtue.shapeId', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='attributeKey', full_name='protobuf.srl.commands.RemoveAttribtue.attributeKey', index=1,
+      number=2, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='attributeValue', full_name='protobuf.srl.commands.RemoveAttribtue.attributeValue', index=2,
+      number=3, type=12, cpp_type=9, label=2,
+      has_default_value=False, default_value="",
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=812,
+  serialized_end=924,
 )
 
 _UPDATE.fields_by_name['commands'].message_type = _COMMAND
 _COMMAND.fields_by_name['commandType'].enum_type = _COMMANDTYPE
+_PACKAGESHAPE.fields_by_name['oldContainerId'].message_type = _IDCHAIN
+_PACKAGESHAPE.fields_by_name['newContainerId'].message_type = _IDCHAIN
+_ADDSUBSHAPE.fields_by_name['parentShape'].message_type = _IDCHAIN
+_REMOVEOBJECT.fields_by_name['shapeId'].message_type = _IDCHAIN
+_FORCEINTERPRETATION.fields_by_name['shapeId'].message_type = _IDCHAIN
+_ADDATTRIBTUE.fields_by_name['shapeId'].message_type = _IDCHAIN
+_REMOVEATTRIBTUE.fields_by_name['shapeId'].message_type = _IDCHAIN
 DESCRIPTOR.message_types_by_name['Update'] = _UPDATE
 DESCRIPTOR.message_types_by_name['Command'] = _COMMAND
+DESCRIPTOR.message_types_by_name['IdChain'] = _IDCHAIN
 DESCRIPTOR.message_types_by_name['PackageShape'] = _PACKAGESHAPE
-DESCRIPTOR.message_types_by_name['AddStroke'] = _ADDSTROKE
-DESCRIPTOR.message_types_by_name['RemoveShape'] = _REMOVESHAPE
-DESCRIPTOR.message_types_by_name['AddShape'] = _ADDSHAPE
+DESCRIPTOR.message_types_by_name['AddSubshape'] = _ADDSUBSHAPE
+DESCRIPTOR.message_types_by_name['RemoveObject'] = _REMOVEOBJECT
 DESCRIPTOR.message_types_by_name['ForceInterpretation'] = _FORCEINTERPRETATION
+DESCRIPTOR.message_types_by_name['AddAttribtue'] = _ADDATTRIBTUE
+DESCRIPTOR.message_types_by_name['RemoveAttribtue'] = _REMOVEATTRIBTUE
 
 class Update(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
@@ -312,35 +461,47 @@ class Command(_message.Message):
 
   # @@protoc_insertion_point(class_scope:protobuf.srl.commands.Command)
 
+class IdChain(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _IDCHAIN
+
+  # @@protoc_insertion_point(class_scope:protobuf.srl.commands.IdChain)
+
 class PackageShape(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _PACKAGESHAPE
 
   # @@protoc_insertion_point(class_scope:protobuf.srl.commands.PackageShape)
 
-class AddStroke(_message.Message):
+class AddSubshape(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _ADDSTROKE
+  DESCRIPTOR = _ADDSUBSHAPE
 
-  # @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddStroke)
+  # @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddSubshape)
 
-class RemoveShape(_message.Message):
+class RemoveObject(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _REMOVESHAPE
+  DESCRIPTOR = _REMOVEOBJECT
 
-  # @@protoc_insertion_point(class_scope:protobuf.srl.commands.RemoveShape)
-
-class AddShape(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _ADDSHAPE
-
-  # @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddShape)
+  # @@protoc_insertion_point(class_scope:protobuf.srl.commands.RemoveObject)
 
 class ForceInterpretation(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _FORCEINTERPRETATION
 
   # @@protoc_insertion_point(class_scope:protobuf.srl.commands.ForceInterpretation)
+
+class AddAttribtue(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _ADDATTRIBTUE
+
+  # @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddAttribtue)
+
+class RemoveAttribtue(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _REMOVEATTRIBTUE
+
+  # @@protoc_insertion_point(class_scope:protobuf.srl.commands.RemoveAttribtue)
 
 
 # @@protoc_insertion_point(module_scope)
