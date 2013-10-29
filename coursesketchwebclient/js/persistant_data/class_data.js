@@ -1,4 +1,4 @@
-var upcomming_assignments =
+var upcomming_assignments = //user_assignments
 	[
 	 	[
 	 	 	'assignment',
@@ -123,6 +123,10 @@ function initialize() {
 	courseAssignments.addObject('Class_Chemistry_ID',upcomming_assignments[4]);
 	courseAssignments.addObject('Class_Class_3_ID',upcomming_assignments[5]);
 	assignmentProblems.addObject('Assignment_Truss_2_ID',questions[0]);
+	
+	
+	// for (int i = 0; i < user_assignments.length; i ++)
+	//	{ courseAssignments.addObject(user_assignments[i].courseId, user_assignments[i]);}
 }
 
 
