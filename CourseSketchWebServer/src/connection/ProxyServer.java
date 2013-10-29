@@ -40,7 +40,7 @@ public class ProxyServer extends WebSocketServer {
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
-	ExampleClient recognition = connectProxy(this, true);
+	ExampleClient recognition = connectProxy(this, false);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) throws UnknownHostException {
@@ -76,7 +76,7 @@ public class ProxyServer extends WebSocketServer {
 	}
 	
 	public void reConnect() {
-		recognition = connectProxy(this, true);
+		recognition = connectProxy(this, false);
 	}
 
 	public static ExampleClient connectProxy(ProxyServer serv, boolean local) {
@@ -145,7 +145,7 @@ public class ProxyServer extends WebSocketServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
-		System.out.println("Proxy Server: Version 1.0.0");
+		System.out.println("Proxy Server: Version 1.0.1");
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
 		try {
