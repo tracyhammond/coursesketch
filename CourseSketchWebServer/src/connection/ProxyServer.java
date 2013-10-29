@@ -75,6 +75,9 @@ public class ProxyServer extends WebSocketServer {
 	public void onMessage( WebSocket conn, String message ) {
 	}
 	
+	public void reConnect() {
+		recognition = connectProxy(this, true);
+	}
 
 	public static ExampleClient connectProxy(ProxyServer serv, boolean local) {
 		ExampleClient c=null;
@@ -168,6 +171,8 @@ public class ProxyServer extends WebSocketServer {
 				s.stop();
 				s.start();
 				break;
+			} else if( in.equals( "reconnect")) {
+				s.reConnect();
 			}
 		}
 	}
