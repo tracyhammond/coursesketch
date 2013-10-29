@@ -67,7 +67,7 @@ SRL_Shape.prototype.drawShape = function drawShape(graphics) {
 	var list = this.getInterpretations();
 	for(var i = 0; i< list.length; i++) {
 		var inter = list[i];
-		console.log("label: " + inter.label + " confidence: " + inter.confidence);
+		//console.log("label: " + inter.label + " confidence: " + inter.confidence);
 	}
 }
 

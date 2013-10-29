@@ -26,9 +26,11 @@ function Connection(uri, encrypted) {
 					onOpen(evt);
 			};
 			websocket.onclose = function(evt) {
-				if (onClose)
+				if (onClose) {
 					onClose(evt);
-				else {
+					websocket.close();
+					websocket = false;
+				} else {
 					alert("Connection to server closed");
 				}
 			};
@@ -48,7 +50,7 @@ function Connection(uri, encrypted) {
 			        }else if (onRequest)
 			        	onRequest(evt, msg);
 			    } catch (err) {
-			    	console.error(err);
+			    	console.error(err.stack);
 			    	onError(evt,err);
 			    }
 				// decode with protobuff and pass object to client
