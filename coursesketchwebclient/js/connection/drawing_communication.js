@@ -58,12 +58,11 @@ SRL_Stroke.prototype.sendToProtobuf = function(scope) {
  * Static function that returns an {@link SRL_Stroke}.
  */
 SRL_Stroke.createFromProtobuf = function(stroke) {
-	//alert(stroke);
-	var pointList = stroke.points;
+	var pointList = stroke.getPoints();
 	// LIST
 	var srlStroke = false;
 	//alert("listsize " + pointList.length);
-	for(var i = 0; i< pointList.length; i++) {
+	for(i in pointList) {
 		var point = pointList[i];
 		var currentPoint = SRL_Point.createFromProtobuf(point);
 		if (!srlStroke) {
@@ -72,6 +71,10 @@ SRL_Stroke.createFromProtobuf = function(stroke) {
 			srlStroke.addPoint(currentPoint);
 		}
 	}
+	if (!srlStroke) {
+		srlStroke = new SRL_Stroke();
+	}
+	srlStroke.setId(stroke.getId());
 	return srlStroke;
 }
 
@@ -81,7 +84,7 @@ SRL_Stroke.createFromProtobuf = function(stroke) {
 SRL_Shape.createFromProtobuf = function(shape) {
 	var interpretations = shape.interpretations;
 	var newShape = new SRL_Shape();
-	for(var i = 0; i < interpretations.length; i++) {
+	for(i in interpretations) {
 		var protoInter = interpretations[i];
 		newShape.addInterpretation(protoInter.name, protoInter.confidence, protoInter.complexity);
 	}

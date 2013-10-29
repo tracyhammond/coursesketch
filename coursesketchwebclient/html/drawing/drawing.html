@@ -7,6 +7,7 @@
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
 	<script type="text/javascript" src="js/connection/drawing_communication.js"></script>
+	<script type="text/javascript" src="js/connection/command_manager.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 		var serverConnection = parent.connection;
@@ -14,6 +15,7 @@
 		var sketch = false;
 		var canvasContext = false;
 		var Long = false;
+		var commandManager = false;
 
     	function init() {
     		parent.redirector.setRedirect('html/drawing/drawing.html');
@@ -34,31 +36,18 @@
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
 			canvasContext = input.canvasContext;
+
 			sketch = new sketchContainer();
 			sketch.canvasContext = canvasContext;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+
+			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
+					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommand);
 			serverConnection.setOnMessageListener(function(evt, message) {
-				alert('I AM GETTING A MESSAGE');
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
-					alert("Recieving recognition");
 					var data = message.otherData;
 					var update = parent.ProtoSrlUpdate.decode(data);
-					var commandList = update.getCommands(); // why are you not working??????
-					//if(commandList ) // if it is not an array...
-					alert("CommandList " + commandList);
-					for (var i = 0; i < commandList.length; i++) {
-						var command = commandList[i];
-						console.log("looking at command " + i);
-						if (command.commandType == parent.ProtoSrlCommandType.ADD_STROKE) {
-							var newStroke = SRL_Stroke.createFromProtobuf(command.commandData);
-							sketch.addObject(newStroke);
-							sketch.drawEntireSketch();
-						} else if(command.commandType == parent.ProtoSrlCommandType.ADD_SHAPE) {
-							var newShape = SRL_Shape.createFromProtobuf(command.commandData);
-							sketch.addObject(newShape);
-							sketch.drawEntireSketch();
-						}
-					}
+					commandManager.addUpdate(update, true);
 				}
 			});
 		}
