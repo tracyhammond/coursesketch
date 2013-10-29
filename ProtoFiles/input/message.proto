@@ -20,6 +20,19 @@ message LoginInformation {
 	required string username = 1;
     optional string password = 2;
     optional bool isLoggedIn = 3;
-    optional bool isInstructor = 4; // to see if the peson is logging in as an instructor.  (TA log in this way too)
-	optional string sessionInfo = 5; // This may be separated out more.
+	optional string sessionInfo = 4; // This may be separated out more.
+}
+
+message User {
+	required string username = 1; //Must be globally unique
+	optional UserType userType = 2 [default=GUEST];
+	optional string email = 3;
+}
+
+enum UserType {
+	ADMIN = 1;
+	INSTRUCTOR = 2;
+	TEACHING_ASSISTANT = 3;
+	STUDENT = 4;
+	GUEST = 5;
 }
