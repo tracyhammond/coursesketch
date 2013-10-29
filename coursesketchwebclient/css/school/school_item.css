@@ -76,6 +76,9 @@
 	background: #C4C4C4;
 }
 
+/**
+	Edit Button Hiding
+*/
 .school_item h3 span {
 		display:none;
 }
@@ -83,12 +86,31 @@
 	display:inline;
 }
 
+.school_item p span {
+		display:none;
+}
+.school_item p:hover span {
+	display:inline;
+}
+
+.school_item a span {
+		display:none;
+}
+.school_item a:hover span {
+	display:inline;
+}
+
 .editButton {
+	cursor: pointer;
     height:100%;
     background-image:url(../../images/schoolItem/pencil_tilted.svg);
 	background-repeat:no-repeat;
 	background-position:right top;
 }
+
+/**
+	States
+*/
 .construction_tape {
     width:35%;
     height:50%;

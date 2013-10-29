@@ -2,8 +2,6 @@ package connection;
 
 import java.nio.ByteBuffer;
 
-import protobuf.srl.commands.Commands.AddShape;
-import protobuf.srl.commands.Commands.AddStroke;
 import protobuf.srl.commands.Commands.Command;
 import protobuf.srl.commands.Commands.PackageShape;
 import protobuf.srl.commands.Commands.Update;
@@ -26,7 +24,7 @@ public class Decoder {
 		try {
 			return Update.parseFrom(string);
 		} catch (InvalidProtocolBufferException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return null;
 	}
@@ -35,7 +33,7 @@ public class Decoder {
 		try {
 			return Request.parseFrom(buffer.array());
 		} catch (InvalidProtocolBufferException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}
@@ -52,11 +50,11 @@ public class Decoder {
 			GeneratedMessage result = null;
 			switch(command.getCommandType()) {
 				case ADD_STROKE:
-					result = AddStroke.parseFrom(command.getCommandData());
-					break;
+					//result = AddStroke.parseFrom(command.getCommandData());
+					//break;
 				case ADD_SHAPE:
-					result = AddShape.parseFrom(command.getCommandData());
-					break;
+					//result = AddShape.parseFrom(command.getCommandData());
+					//break;
 				case PACKAGE_SHAPE:
 					result = PackageShape.parseFrom(command.getCommandData());
 					break;

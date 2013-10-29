@@ -9,6 +9,8 @@ import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
 
+import main.Response;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
@@ -16,14 +18,15 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 
-import protobuf.srl.commands.Commands.AddStroke;
 import protobuf.srl.commands.Commands.Command;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.Update;
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 
 /**
@@ -69,7 +72,7 @@ public class RecognitionServer extends WebSocketServer {
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
-		System.out.println( conn + " has left the room!");
+		System.out.println( conn + " has disconnected from Recognition.");
 		idToConnection.remove(connectionToId.remove(conn));
 	}
 
@@ -81,76 +84,42 @@ public class RecognitionServer extends WebSocketServer {
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
-		
-		
+
 		if (req == null) {
 			System.out.println("protobuf error");
 			// we need to somehow send an error to the client here
 			return;
 		}
-		
+
 		if(req.getRequestType() == Request.MessageType.RECOGNITION) {
 			ByteString rawUpdateData = req.getOtherData();
 			Update savedUpdate = Decoder.parseNextUpdate(rawUpdateData);
 			//pass to them
 			//use a function that they will give
-			
-			//post function they will give (package the information received)
-			SrlStroke receivedStroke;
-			receivedStroke.toByteString();
-			
-			AddStroke.Builder addBuilder = AddStroke.newBuilder();
-			addBuilder.setStroke(receivedStroke.toByteString());
-			
-			Command.Builder cmdBuilder = Command.newBuilder();
-			cmdBuilder.setCommandType(CommandType.ADD_STROKE);
-			cmdBuilder.setCommandData(addBuilder.build().toByteString());
-			
-			
-			Update.Builder updateBuilder = Update.newBuilder();
-			updateBuilder.addCommands(cmdBuilder.build());
-			
-			Request.Builder requestBuilder = Request.newBuilder();
-			requestBuilder.setOtherData(updateBuilder.build().toByteString());
-			
-			conn.send(requestBuilder.build().toByteArray());
-			
-			// Build and send.
-			/*String name = req.getLogin().getUsername();
-			String password = req.getLogin().getPassword();
-			System.out.println("USERNAME: " + name +"\nPASSWORD: " + password);
-			if( (name.equalsIgnoreCase("matt") && password.equalsIgnoreCase("japan"))) {
-				return;
-			}*/
+			Request result = null;
+
+			try {
+				// TODO: move these inside the class itself.
+				Response.print(savedUpdate);
+				SrlShape shape = Response.interpret(savedUpdate);
+				SrlStroke stroke = Response.mirror(savedUpdate);
+				//post function they will give (package the information received)
+				Command com1 = Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_STROKE);
+				Command com2 = Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_SHAPE);
+				
+				
+				result = Encoder.createRequestFromCommands(com1, com2);
+			} catch (InvalidProtocolBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			conn.send(result.toByteArray());
 		}
 		return;
-		/*
-		if (!state.isLoggedIn()) {
-			if (LoginChecker.checkLogin(req)) {
-				state.logIn();
-				// Create the Request to respond.
-				conn.send(LoginChecker.createResponse(req, true).toByteArray());
-			} else {
-				state.addTry();
-				if (state.getTries() > MAX_LOGIN_TRIES) {
-					conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
-				}
-				conn.send(LoginChecker.createResponse(req, false).toByteArray());
-			}
-		} else {
-			if (state.getTries() > MAX_LOGIN_TRIES) {
-				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
-				return;
-			}
-			
-			// Parse message.
-			conn.send(buffer);
-			return;
-		}*/
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {
-		System.out.println( "received fragment: " + fragment );
+		//System.out.println( "received fragment: " + fragment );
 	}
 
 	/**
@@ -162,15 +131,16 @@ public class RecognitionServer extends WebSocketServer {
 	}
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
+		System.out.println("Recognition Server: Version 1.0.0.ant");
 		WebSocketImpl.DEBUG = true;
-		int port = 8887; // 843 flash policy port
+		int port = 8888; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
 		RecognitionServer s = new RecognitionServer( port );
 		s.start();
-		System.out.println( "ChatServer started on port: " + s.getPort() );
+		System.out.println( "Recognition Server started on port: " + s.getPort() );
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {

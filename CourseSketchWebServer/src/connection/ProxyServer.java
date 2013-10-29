@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
+import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -39,6 +40,7 @@ public class ProxyServer extends WebSocketServer {
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
+	ExampleClient recognition = connectProxy(this, true);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) throws UnknownHostException {
@@ -65,12 +67,29 @@ public class ProxyServer extends WebSocketServer {
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
-		System.out.println( conn + " has left the room!");
+		System.out.println( conn + " has disconnected from Proxy");
 		idToConnection.remove(connectionToId.remove(conn));
 	}
 
 	@Override
 	public void onMessage( WebSocket conn, String message ) {
+	}
+	
+	public void reConnect() {
+		recognition = connectProxy(this, true);
+	}
+
+	public static ExampleClient connectProxy(ProxyServer serv, boolean local) {
+		ExampleClient c=null;
+		String location = local ? "ws://localhost:8888" : "ws://goldberglinux02.tamu.edu:8888";
+		try {
+			c = new ExampleClient( new URI( location ), new Draft_10() , serv);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
+		c.connect();
+		return c;
 	}
 
 	/**
@@ -78,8 +97,10 @@ public class ProxyServer extends WebSocketServer {
 	 */
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
+		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
+		
 		if (req == null) {
 			System.out.println("protobuf error");
 			//this.
@@ -88,6 +109,7 @@ public class ProxyServer extends WebSocketServer {
 		}
 		if (!state.isLoggedIn()) {
 			Request response = LoginChecker.checkLogin(req, state);
+			System.out.println("Not Logged In!");
 			conn.send(response.toByteArray());
 			if (state.getTries() > MAX_LOGIN_TRIES) {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
@@ -99,6 +121,11 @@ public class ProxyServer extends WebSocketServer {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 				return;
 			}
+			if(req.getRequestType() == MessageType.RECOGNITION){
+				recognition.connection = state;
+				System.out.println("REQUEST TYPE = RECOGNITION");
+				recognition.send(buffer.array());
+			}
 			// Parse message.
 			conn.send(buffer);
 			return;
@@ -106,7 +133,7 @@ public class ProxyServer extends WebSocketServer {
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {
-		System.out.println( "received fragment: " + fragment );
+		//System.out.println( "received fragment: " + fragment );
 	}
 
 	/**
@@ -116,13 +143,9 @@ public class ProxyServer extends WebSocketServer {
 		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
 		return new ConnectionState(numberOfConnections++);
 	}
-	
-	public static void ConnectToServer() throws URISyntaxException {
-		ExampleClient c = new ExampleClient( new URI( "ws://goldberglinux02.tamu.edu:8880" ) );
-		c.connect();
-	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
+		System.out.println("Proxy Server: Version 1.0.0");
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
 		try {
@@ -131,10 +154,9 @@ public class ProxyServer extends WebSocketServer {
 		}
 		ProxyServer s = new ProxyServer( port );
 		s.start();
-		System.out.println( "ChatServer started on port: " + s.getPort() );
+		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
 		
 		//attempt to connect to recognition
-		ConnectToServer();
 		//attempt to connect to answer server
 		//attempt to connect to user database
 
@@ -149,6 +171,8 @@ public class ProxyServer extends WebSocketServer {
 				s.stop();
 				s.start();
 				break;
+			} else if( in.equals( "reconnect")) {
+				s.reConnect();
 			}
 		}
 	}

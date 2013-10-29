@@ -24,6 +24,7 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 	inputListener.setDraggingStartListener(function(drawingEvent) {
 		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
 		currentStroke = new SRL_Stroke(currentPoint);
+		currentStroke.setId(generateUUID());
 		pastPoint = currentPoint;
 	});
 
@@ -45,9 +46,14 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
 		currentPoint.setSpeed(pastPoint);
 		currentStroke.addPoint(currentPoint);
+		currentStroke.setTime(currentPoint.getTime());
 		sketchContainer.addObject(currentStroke);
-		if (strokeCreationCallback)
-			strokeCreationCallback(currentStroke); // Sends back the current stroke.
+		//try {
+			if (strokeCreationCallback)
+				strokeCreationCallback(currentStroke); // Sends back the current stroke.
+		/*} catch(err) {
+			console.error(err.message);
+		}*/
 		currentStroke = false;
 		currentPoint = false;
 	});
@@ -57,6 +63,7 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 	 */
 	this.createPointFromEvent = function (drawingEvent) {
 		var currentPoint = new SRL_Point(drawingEvent.x, drawingEvent.y);
+		currentPoint.setId(generateUUID());
 		currentPoint.setTime(drawingEvent.time);
 		currentPoint.setPressure(drawingEvent.pressure);
 		currentPoint.setSize(drawingEvent.size);
@@ -67,6 +74,8 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 
 function sketchContainer() {
 	var objectList = [];
+	this.canvasContext = false;
+
 	objectList.remove = function(srl_object) {
 		var i = array.indexOf(srl_object);
 		if(i != -1) {
@@ -79,9 +88,18 @@ function sketchContainer() {
 		objectList.push(srl_object);
 		objectMap[srl_object.get]
 	}
-	
+
 	this.getList = function() {
 		return objectList;
 	}
-	
+
+	this.drawEntireSketch = function() {
+    	var list = this.getList();
+    	if (list && this.canvasContext) {
+			for(var i = 0; i < list.length; i++) {
+				var object = list[i];
+				object.draw(this.canvasContext);
+			}
+		}
+	}
 }

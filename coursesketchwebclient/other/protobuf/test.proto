@@ -1,5 +1,9 @@
 package protobuf;
 
-message Message {
-    required string text = 1;
+message Outer {
+    repeated Inner inners = 4;
+}
+
+message Inner {
+    required string str = 1;
 }

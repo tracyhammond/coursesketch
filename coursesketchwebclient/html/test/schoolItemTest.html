@@ -52,6 +52,9 @@
 						*/
 					}
 				);
+	  		function editSchoolItem(cardId, specificId) {
+	  			alert("edit");
+	  		}
 	</script>
 	<style>
 	/*
@@ -87,10 +90,11 @@
 						<div id="Assignment_Truss_1_ID" class="school_item ">
 							<span class="construction_tape"></span>
 							<div class="text">
-							<h3 class="name">Truss Assignment1<span class="editButton" onclick="alert('editing');">&nbsp;&nbsp;&nbsp;&nbsp;</span></h3>
+							<div id ="title"><h3 class="name">Truss Assignment1<span class="editButton" onclick="editSchoolItem('Assignment_Truss_1_ID', 'title');">&nbsp;&nbsp;&nbsp;&nbsp;</span></h3></div>
 							<h1 class="late">29-8-2013</h1>
 							<h1 class="class"> <a href="PhysicsLink"> Phyics</a></h1>
-							<p class="large">In this assignment we will draw a truss trussty truss. This truss trussty truss will allow us to save sience.</p>
+							<div id = "description" ><p class="large">In this assignment we will draw a truss trussty truss. This truss trussty truss will allow us to save sience.
+							<span class="editButton" onclick="editSchoolItem('Assignment_Truss_1_ID', 'description');">&nbsp;&nbsp;&nbsp;&nbsp;</span></p></div>
 						</div>
 						<a href="Truss_Link1"><img src="images/test/truss_thumb.png" width="128" height="128"></a></div>
 					</li>

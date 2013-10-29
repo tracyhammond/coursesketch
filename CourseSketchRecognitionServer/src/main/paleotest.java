@@ -23,7 +23,7 @@ public class paleotest {
 		 */
 		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
 		IRecognitionResult result = recognizer.recognize(sketch.getFirstStroke());
-
+		
 		if (result.getBestShape().getInterpretation().label.equalsIgnoreCase("line"))
 			System.out.println("Correctly recognized as a line");
 	}

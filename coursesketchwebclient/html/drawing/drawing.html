@@ -6,26 +6,28 @@
 	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/connection/drawing_communication.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 		var serverConnection = parent.connection;
 		var drawingCreator = false;
 		var sketch = false;
 		var canvasContext = false;
+		var Long = false;
+
     	function init() {
     		parent.redirector.setRedirect('html/drawing/drawing.html');
     		initializeProtos();
     		initializeInput();
     		matchParent('drawingCanvas');
     	}
-
     	/**
     		Creates the proto files required for drawing if they do not exist.
     	*/
     	function initializeProtos() {
-    		alert(parent.connection.setOnOpenListener);
-   			parent.connection.buildSketch();
-   			parent.connection.buildUpdateList();
+    		Long = parent.Long;
+   			// blah
+   			//testProtobuf(parent);
     	}
 
 	    function initializeInput() {
@@ -33,43 +35,46 @@
 			input.initializeCanvas("drawingCanvas");
 			canvasContext = input.canvasContext;
 			sketch = new sketchContainer();
+			sketch.canvasContext = canvasContext;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
 			serverConnection.setOnMessageListener(function(evt, message) {
 				alert('I AM GETTING A MESSAGE');
+				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
+					alert("Recieving recognition");
+					var data = message.otherData;
+					var update = parent.ProtoSrlUpdate.decode(data);
+					var commandList = update.getCommands(); // why are you not working??????
+					//if(commandList ) // if it is not an array...
+					alert("CommandList " + commandList);
+					for (var i = 0; i < commandList.length; i++) {
+						var command = commandList[i];
+						console.log("looking at command " + i);
+						if (command.commandType == parent.ProtoSrlCommandType.ADD_STROKE) {
+							var newStroke = SRL_Stroke.createFromProtobuf(command.commandData);
+							sketch.addObject(newStroke);
+							sketch.drawEntireSketch();
+						} else if(command.commandType == parent.ProtoSrlCommandType.ADD_SHAPE) {
+							var newShape = SRL_Shape.createFromProtobuf(command.commandData);
+							sketch.addObject(newShape);
+							sketch.drawEntireSketch();
+						}
+					}
+				}
 			});
 		}
 
 	    function callback(stroke) {
 			stroke.draw(canvasContext);
-			var command = new ProtoSrlCommand();
+			var command = new parent.ProtoSrlCommand();
 			command.time = stroke.time;
-			command.commandType = ProtoSrlCommandType.ADD_STROKE;
+			command.commandType = parent.ProtoSrlCommandType.ADD_STROKE;
 			command.isUserCreated = true;
-			command.commandId = "RANDOM STRING";
-			var addStroke = new ProtoUpdateCommand.AddStroke();
+			command.commandId = generateUUID(); // unique ID
 			// then finish him!
+			command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
 			var request = serverConnection.createRequestFromCommand(command, parent.Request.MessageType.RECOGNITION);
+			serverConnection.sendRequest(request);
 		}
-
-	    function drawEntireSketch() {
-	    	if (sketch) {
-		    	var list = sketch.getList();
-				for(var i = 0; i < list.length; i++) {
-					var object = list[i];
-					object.draw(canvasContext);
-				}
-	    	}
-	    }
-
-	    function setUpProtobufInheritance() {
-	    	parent.SRL_Shape.prototype = new SRL_Shape();
-	    	parent.SRL_Stroke.prototype = new SRL_Stroke();
-	    	parent.SRL_Point.prototype = new SRL_Point();
-	    	SRL_Shape = parent.SRL_Shape;
-	    	SRL_Stroke = parent.SRL_Stroke;
-	    	SRL_Point = parent.SRL_Point;
-	    }
-	    //setUpProtobufInheritance();
 	</script>
 	<script type="text/javascript">
 			parent.addScopedLoadEvent(window, function() {
@@ -78,7 +83,7 @@
 
 			window.onresize = function() {
 					matchParent('drawingCanvas');
-				}
+			}
 
 	  		function matchParent(id) {
 	  			var body = document.body,
@@ -90,10 +95,9 @@
 				element.width = width  - element.offsetLeft;
 				element.style.width = element.width;
 				element.style.height = element.height;
-				drawEntireSketch();
+				sketch.drawEntireSketch();
 	  		}
-	  		
-	  		
+
 	</script>
 	<style>
 	html, body {

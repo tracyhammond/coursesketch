@@ -189,9 +189,9 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo"
     "l.SrlProblem\"1\n\tSrlCourse\022\020\n\010courseId\030\001 "
     "\002(\t\022\022\n\ncourseName\030\002 \001(\t\"O\n\rSrlAssignment"
-    "\022\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId\030\002 \002(\t"
+    "\022\020\n\010courseId\030\001 \002(\t\022\024\n\014assignmentId\030\002 \002(\t"
     "\022\026\n\016assignmentName\030\003 \001(\t\"\336\001\n\nSrlProblem\022"
-    "\020\n\010courseId\030\001 \002(\004\022\024\n\014assignmentId\030\002 \002(\004\022"
+    "\020\n\010courseId\030\001 \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022"
     "\021\n\tproblemId\030\003 \002(\t\022\023\n\013problemName\030\004 \001(\t\022"
     "\?\n\013mainProblem\030\005 \001(\0132*.protobuf.srl.scho"
     "ol.subproblemInformation\022\?\n\013subProblems\030"
@@ -823,7 +823,7 @@ SrlAssignment::SrlAssignment(const SrlAssignment& from)
 
 void SrlAssignment::SharedCtor() {
   _cached_size_ = 0;
-  courseid_ = GOOGLE_ULONGLONG(0);
+  courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   assignmentname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -834,6 +834,9 @@ SrlAssignment::~SrlAssignment() {
 }
 
 void SrlAssignment::SharedDtor() {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    delete courseid_;
+  }
   if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
     delete assignmentid_;
   }
@@ -867,7 +870,11 @@ SrlAssignment* SrlAssignment::New() const {
 
 void SrlAssignment::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    courseid_ = GOOGLE_ULONGLONG(0);
+    if (has_courseid()) {
+      if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+        courseid_->clear();
+      }
+    }
     if (has_assignmentid()) {
       if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
         assignmentid_->clear();
@@ -889,14 +896,15 @@ bool SrlAssignment::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required uint64 courseId = 1;
+      // required string courseId = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &courseid_)));
-          set_has_courseid();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_courseid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->courseid().data(), this->courseid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -956,9 +964,13 @@ bool SrlAssignment::MergePartialFromCodedStream(
 
 void SrlAssignment::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required uint64 courseId = 1;
+  // required string courseId = 1;
   if (has_courseid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->courseid(), output);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->courseid().data(), this->courseid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->courseid(), output);
   }
 
   // required string assignmentId = 2;
@@ -987,9 +999,14 @@ void SrlAssignment::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SrlAssignment::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required uint64 courseId = 1;
+  // required string courseId = 1;
   if (has_courseid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->courseid(), target);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->courseid().data(), this->courseid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->courseid(), target);
   }
 
   // required string assignmentId = 2;
@@ -1023,10 +1040,10 @@ int SrlAssignment::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required uint64 courseId = 1;
+    // required string courseId = 1;
     if (has_courseid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        ::google::protobuf::internal::WireFormatLite::StringSize(
           this->courseid());
     }
 
@@ -1150,8 +1167,8 @@ SrlProblem::SrlProblem(const SrlProblem& from)
 
 void SrlProblem::SharedCtor() {
   _cached_size_ = 0;
-  courseid_ = GOOGLE_ULONGLONG(0);
-  assignmentid_ = GOOGLE_ULONGLONG(0);
+  courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   problemname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   mainproblem_ = NULL;
@@ -1163,6 +1180,12 @@ SrlProblem::~SrlProblem() {
 }
 
 void SrlProblem::SharedDtor() {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    delete courseid_;
+  }
+  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+    delete assignmentid_;
+  }
   if (problemid_ != &::google::protobuf::internal::kEmptyString) {
     delete problemid_;
   }
@@ -1197,8 +1220,16 @@ SrlProblem* SrlProblem::New() const {
 
 void SrlProblem::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    courseid_ = GOOGLE_ULONGLONG(0);
-    assignmentid_ = GOOGLE_ULONGLONG(0);
+    if (has_courseid()) {
+      if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+        courseid_->clear();
+      }
+    }
+    if (has_assignmentid()) {
+      if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+        assignmentid_->clear();
+      }
+    }
     if (has_problemid()) {
       if (problemid_ != &::google::protobuf::internal::kEmptyString) {
         problemid_->clear();
@@ -1224,30 +1255,32 @@ bool SrlProblem::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required uint64 courseId = 1;
+      // required string courseId = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &courseid_)));
-          set_has_courseid();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_courseid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->courseid().data(), this->courseid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(16)) goto parse_assignmentId;
+        if (input->ExpectTag(18)) goto parse_assignmentId;
         break;
       }
 
-      // required uint64 assignmentId = 2;
+      // required string assignmentId = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_assignmentId:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &assignmentid_)));
-          set_has_assignmentid();
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_assignmentid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->assignmentid().data(), this->assignmentid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -1336,14 +1369,22 @@ bool SrlProblem::MergePartialFromCodedStream(
 
 void SrlProblem::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required uint64 courseId = 1;
+  // required string courseId = 1;
   if (has_courseid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->courseid(), output);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->courseid().data(), this->courseid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->courseid(), output);
   }
 
-  // required uint64 assignmentId = 2;
+  // required string assignmentId = 2;
   if (has_assignmentid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->assignmentid(), output);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->assignmentid().data(), this->assignmentid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->assignmentid(), output);
   }
 
   // required string problemId = 3;
@@ -1384,14 +1425,24 @@ void SrlProblem::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SrlProblem::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required uint64 courseId = 1;
+  // required string courseId = 1;
   if (has_courseid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->courseid(), target);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->courseid().data(), this->courseid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->courseid(), target);
   }
 
-  // required uint64 assignmentId = 2;
+  // required string assignmentId = 2;
   if (has_assignmentid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->assignmentid(), target);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->assignmentid().data(), this->assignmentid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->assignmentid(), target);
   }
 
   // required string problemId = 3;
@@ -1439,17 +1490,17 @@ int SrlProblem::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required uint64 courseId = 1;
+    // required string courseId = 1;
     if (has_courseid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        ::google::protobuf::internal::WireFormatLite::StringSize(
           this->courseid());
     }
 
-    // required uint64 assignmentId = 2;
+    // required string assignmentId = 2;
     if (has_assignmentid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        ::google::protobuf::internal::WireFormatLite::StringSize(
           this->assignmentid());
     }
 
