@@ -23,20 +23,22 @@ function getMenu(isInstructor) {
 			'	<ul id="menuList">' +
 			'		<li><a href="' + home + '" target ="wrapper" data-ajax="false"' +
 			'			class="contentLink">Home</a></li>' +
-			((!isInstructor) ?
+			((!isInstructor) ? // first part is student
 			'		<li class="header"><h3>Classes I\'m In</h3></li>' +
 			'		<li><a href="html/student/classSearch.html" data-ajax="false" class="contentLink">Add New Class</a></li>' +
 			'		<li><a href="html/student/grades.html" data-ajax="false" class="contentLink">My Grades</a></li>' +
-			'		<li><a href="html/student/classOptions.html" data-ajax="false" class="contentLink">Remove Class</a></li>'
-			:
+			'		<li><a href="html/student/classOptions.html" data-ajax="false" class="contentLink">Remove Class</a></li>' +
+			'		<li><a href="html/student/roster.html" data-ajax="false" class="contentLink">Roster</a></li>'
+			: // below is instructor
 			'		<li class="header"><h3>Classes I\'m Teaching</h3></li>' +
 			'		<li><a href="html/instructor/gradebook.html" data-ajax="false" class="contentLink">Grades</a></li>' +
 			'		<li><a href="html/instructor/course_management.html" target ="wrapper" data-ajax="false" class="contentLink">Course Management</a></li>' +
-			'		<li><a href="viewClassKeys.php" data-ajax="false" class="contentLink">View Class Keys</a></li>'
-			) +
+			'		<li><a href="viewClassKeys.php" data-ajax="false" class="contentLink">View Class Keys</a></li>' +
+			'		<li><a href="html/instructor/roster.html" data-ajax="false" class="contentLink">Roster</a></li>'
+			) + // this is for both
 			'		<li class="header"><h3>Account</h3></li>' +
 			'		<li><a href="changePassword.php" data-ajax="false" class="contentLink">Change Password</a></li>' +
-			'		<li><a href="javascript:void(0)" data-ajax="false" class="contentLink">Sign Out</a></li>' +
+			'		<li><a href="index.html" data-ajax="false" class="contentLink">Sign Out</a></li>' + //returns to login screen, but does not prevent user from re-accessing pages through the back button.
 			'	</ul>' +
 			'</div>';
 }
