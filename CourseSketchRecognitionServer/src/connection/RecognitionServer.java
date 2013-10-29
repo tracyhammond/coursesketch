@@ -104,8 +104,8 @@ public class RecognitionServer extends WebSocketServer {
 				SrlShape shape = Response.interpret(savedUpdate);
 				SrlStroke stroke = Response.mirror(savedUpdate);
 				//post function they will give (package the information received)
-				Command com1 = Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_STROKE);
-				Command com2 = Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_SHAPE);
+				Command com1 = Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_STROKE);
+				Command com2 = Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_SHAPE);
 				
 				
 				result = Encoder.createRequestFromCommands(com1, com2);
