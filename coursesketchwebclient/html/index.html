@@ -23,24 +23,31 @@
 	}
 	</style>
 	<script>
-	//	var wsUri = "echo.websocket.org/"; // echo server
-	//var wsUri = "goldberglinux.tamu.edu:8887"; // our server
-	var wsUri = "localhost:8887"; // local server
-	var connection = new Connection(wsUri,false);
+	var connection = false;
 	var connected = false;
-	connection.setOnCloseListener(function(evt) {
-		if (evt.code == CONNECTION_LOST) {
-			alert('can not connect to the server');
-		} else if(evt.code == SERVER_FULL) {
-			alert(evt.reason); // Here we can try to connect to other servers.
-		}
-		alert("SERVER CLOSED CONNECTION");
-	});
-	connection.setOnOpenListener(function(evt) {
-		// do something on opening?
-		alert("You are now able to log in");
-		connected = true;
-	});
+	function createWebSocket() {
+		//	var wsUri = "echo.websocket.org/"; // echo server
+		var wsUri = "goldberglinux.tamu.edu:8887"; // our server
+		//var wsUri = "localhost:8887"; // local server
+		connection = new Connection(wsUri,false);
+		
+		connection.setOnCloseListener(function(evt) {
+			var reconnect = false;
+			if (evt.code == CONNECTION_LOST) {
+				alert('can not connect to the server');
+				reconnect = true;
+			} else if(evt.code == SERVER_FULL) {
+				alert(evt.reason); // Here we can try to connect to other servers.
+			}
+			alert("SERVER CLOSED CONNECTION");
+			reconnect = true;
+		});
+		connection.setOnOpenListener(function(evt) {
+			// do something on opening?
+			alert("You are now able to log in");
+			connected = true;
+		});
+	}
 	function Redirector(scope) {
 		var scope = scope;
 		var activeState = false;
@@ -95,7 +102,7 @@
 			document.getElementById('iframeContent').src = url;
 		}
 	}
-
+	createWebSocket();
 	var redirector = new Redirector(window);
 	window.onload = function() {
 		//redirector.setRedirect('html/login/login.html');
