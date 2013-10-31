@@ -59,6 +59,33 @@ public final class Message {
      */
     com.google.protobuf.ByteString
         getResponseTextBytes();
+
+    // optional string sessionInfo = 5;
+    /**
+     * <code>optional string sessionInfo = 5;</code>
+     *
+     * <pre>
+     * This may be separated out more.
+     * </pre>
+     */
+    boolean hasSessionInfo();
+    /**
+     * <code>optional string sessionInfo = 5;</code>
+     *
+     * <pre>
+     * This may be separated out more.
+     * </pre>
+     */
+    java.lang.String getSessionInfo();
+    /**
+     * <code>optional string sessionInfo = 5;</code>
+     *
+     * <pre>
+     * This may be separated out more.
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getSessionInfoBytes();
   }
   /**
    * Protobuf type {@code protobuf.srl.request.Request}
@@ -147,6 +174,11 @@ public final class Message {
             case 34: {
               bitField0_ |= 0x00000008;
               responseText_ = input.readBytes();
+              break;
+            }
+            case 42: {
+              bitField0_ |= 0x00000010;
+              sessionInfo_ = input.readBytes();
               break;
             }
           }
@@ -395,11 +427,67 @@ public final class Message {
       }
     }
 
+    // optional string sessionInfo = 5;
+    public static final int SESSIONINFO_FIELD_NUMBER = 5;
+    private java.lang.Object sessionInfo_;
+    /**
+     * <code>optional string sessionInfo = 5;</code>
+     *
+     * <pre>
+     * This may be separated out more.
+     * </pre>
+     */
+    public boolean hasSessionInfo() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional string sessionInfo = 5;</code>
+     *
+     * <pre>
+     * This may be separated out more.
+     * </pre>
+     */
+    public java.lang.String getSessionInfo() {
+      java.lang.Object ref = sessionInfo_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          sessionInfo_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string sessionInfo = 5;</code>
+     *
+     * <pre>
+     * This may be separated out more.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getSessionInfoBytes() {
+      java.lang.Object ref = sessionInfo_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        sessionInfo_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
       login_ = protobuf.srl.request.Message.LoginInformation.getDefaultInstance();
       otherData_ = com.google.protobuf.ByteString.EMPTY;
       responseText_ = "";
+      sessionInfo_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -435,6 +523,9 @@ public final class Message {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBytes(4, getResponseTextBytes());
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(5, getSessionInfoBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -459,6 +550,10 @@ public final class Message {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, getResponseTextBytes());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, getSessionInfoBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -593,6 +688,8 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000004);
         responseText_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
+        sessionInfo_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -641,6 +738,10 @@ public final class Message {
           to_bitField0_ |= 0x00000008;
         }
         result.responseText_ = responseText_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.sessionInfo_ = sessionInfo_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -669,6 +770,11 @@ public final class Message {
         if (other.hasResponseText()) {
           bitField0_ |= 0x00000008;
           responseText_ = other.responseText_;
+          onChanged();
+        }
+        if (other.hasSessionInfo()) {
+          bitField0_ |= 0x00000010;
+          sessionInfo_ = other.sessionInfo_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -971,6 +1077,104 @@ public final class Message {
         return this;
       }
 
+      // optional string sessionInfo = 5;
+      private java.lang.Object sessionInfo_ = "";
+      /**
+       * <code>optional string sessionInfo = 5;</code>
+       *
+       * <pre>
+       * This may be separated out more.
+       * </pre>
+       */
+      public boolean hasSessionInfo() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string sessionInfo = 5;</code>
+       *
+       * <pre>
+       * This may be separated out more.
+       * </pre>
+       */
+      public java.lang.String getSessionInfo() {
+        java.lang.Object ref = sessionInfo_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          sessionInfo_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string sessionInfo = 5;</code>
+       *
+       * <pre>
+       * This may be separated out more.
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getSessionInfoBytes() {
+        java.lang.Object ref = sessionInfo_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          sessionInfo_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string sessionInfo = 5;</code>
+       *
+       * <pre>
+       * This may be separated out more.
+       * </pre>
+       */
+      public Builder setSessionInfo(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        sessionInfo_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string sessionInfo = 5;</code>
+       *
+       * <pre>
+       * This may be separated out more.
+       * </pre>
+       */
+      public Builder clearSessionInfo() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        sessionInfo_ = getDefaultInstance().getSessionInfo();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string sessionInfo = 5;</code>
+       *
+       * <pre>
+       * This may be separated out more.
+       * </pre>
+       */
+      public Builder setSessionInfoBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        sessionInfo_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:protobuf.srl.request.Request)
     }
 
@@ -1025,9 +1229,19 @@ public final class Message {
      */
     boolean getIsLoggedIn();
 
-    // optional string sessionInfo = 4;
+    // optional bool isInstructor = 4;
     /**
-     * <code>optional string sessionInfo = 4;</code>
+     * <code>optional bool isInstructor = 4;</code>
+     */
+    boolean hasIsInstructor();
+    /**
+     * <code>optional bool isInstructor = 4;</code>
+     */
+    boolean getIsInstructor();
+
+    // optional string sessionInfo = 5;
+    /**
+     * <code>optional string sessionInfo = 5;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -1035,7 +1249,7 @@ public final class Message {
      */
     boolean hasSessionInfo();
     /**
-     * <code>optional string sessionInfo = 4;</code>
+     * <code>optional string sessionInfo = 5;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -1043,7 +1257,7 @@ public final class Message {
      */
     java.lang.String getSessionInfo();
     /**
-     * <code>optional string sessionInfo = 4;</code>
+     * <code>optional string sessionInfo = 5;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -1118,8 +1332,13 @@ public final class Message {
               isLoggedIn_ = input.readBool();
               break;
             }
-            case 34: {
+            case 32: {
               bitField0_ |= 0x00000008;
+              isInstructor_ = input.readBool();
+              break;
+            }
+            case 42: {
+              bitField0_ |= 0x00000010;
               sessionInfo_ = input.readBytes();
               break;
             }
@@ -1265,21 +1484,37 @@ public final class Message {
       return isLoggedIn_;
     }
 
-    // optional string sessionInfo = 4;
-    public static final int SESSIONINFO_FIELD_NUMBER = 4;
+    // optional bool isInstructor = 4;
+    public static final int ISINSTRUCTOR_FIELD_NUMBER = 4;
+    private boolean isInstructor_;
+    /**
+     * <code>optional bool isInstructor = 4;</code>
+     */
+    public boolean hasIsInstructor() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional bool isInstructor = 4;</code>
+     */
+    public boolean getIsInstructor() {
+      return isInstructor_;
+    }
+
+    // optional string sessionInfo = 5;
+    public static final int SESSIONINFO_FIELD_NUMBER = 5;
     private java.lang.Object sessionInfo_;
     /**
-     * <code>optional string sessionInfo = 4;</code>
+     * <code>optional string sessionInfo = 5;</code>
      *
      * <pre>
      * This may be separated out more.
      * </pre>
      */
     public boolean hasSessionInfo() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional string sessionInfo = 4;</code>
+     * <code>optional string sessionInfo = 5;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -1300,7 +1535,7 @@ public final class Message {
       }
     }
     /**
-     * <code>optional string sessionInfo = 4;</code>
+     * <code>optional string sessionInfo = 5;</code>
      *
      * <pre>
      * This may be separated out more.
@@ -1324,6 +1559,7 @@ public final class Message {
       username_ = "";
       password_ = "";
       isLoggedIn_ = false;
+      isInstructor_ = false;
       sessionInfo_ = "";
     }
     private byte memoizedIsInitialized = -1;
@@ -1352,7 +1588,10 @@ public final class Message {
         output.writeBool(3, isLoggedIn_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(4, getSessionInfoBytes());
+        output.writeBool(4, isInstructor_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(5, getSessionInfoBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -1377,7 +1616,11 @@ public final class Message {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, getSessionInfoBytes());
+          .computeBoolSize(4, isInstructor_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, getSessionInfoBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1501,8 +1744,10 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000002);
         isLoggedIn_ = false;
         bitField0_ = (bitField0_ & ~0x00000004);
-        sessionInfo_ = "";
+        isInstructor_ = false;
         bitField0_ = (bitField0_ & ~0x00000008);
+        sessionInfo_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -1546,6 +1791,10 @@ public final class Message {
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
+        result.isInstructor_ = isInstructor_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
         result.sessionInfo_ = sessionInfo_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -1576,8 +1825,11 @@ public final class Message {
         if (other.hasIsLoggedIn()) {
           setIsLoggedIn(other.getIsLoggedIn());
         }
+        if (other.hasIsInstructor()) {
+          setIsInstructor(other.getIsInstructor());
+        }
         if (other.hasSessionInfo()) {
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000010;
           sessionInfo_ = other.sessionInfo_;
           onChanged();
         }
@@ -1793,20 +2045,53 @@ public final class Message {
         return this;
       }
 
-      // optional string sessionInfo = 4;
+      // optional bool isInstructor = 4;
+      private boolean isInstructor_ ;
+      /**
+       * <code>optional bool isInstructor = 4;</code>
+       */
+      public boolean hasIsInstructor() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional bool isInstructor = 4;</code>
+       */
+      public boolean getIsInstructor() {
+        return isInstructor_;
+      }
+      /**
+       * <code>optional bool isInstructor = 4;</code>
+       */
+      public Builder setIsInstructor(boolean value) {
+        bitField0_ |= 0x00000008;
+        isInstructor_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool isInstructor = 4;</code>
+       */
+      public Builder clearIsInstructor() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        isInstructor_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional string sessionInfo = 5;
       private java.lang.Object sessionInfo_ = "";
       /**
-       * <code>optional string sessionInfo = 4;</code>
+       * <code>optional string sessionInfo = 5;</code>
        *
        * <pre>
        * This may be separated out more.
        * </pre>
        */
       public boolean hasSessionInfo() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional string sessionInfo = 4;</code>
+       * <code>optional string sessionInfo = 5;</code>
        *
        * <pre>
        * This may be separated out more.
@@ -1824,7 +2109,7 @@ public final class Message {
         }
       }
       /**
-       * <code>optional string sessionInfo = 4;</code>
+       * <code>optional string sessionInfo = 5;</code>
        *
        * <pre>
        * This may be separated out more.
@@ -1844,7 +2129,7 @@ public final class Message {
         }
       }
       /**
-       * <code>optional string sessionInfo = 4;</code>
+       * <code>optional string sessionInfo = 5;</code>
        *
        * <pre>
        * This may be separated out more.
@@ -1855,26 +2140,26 @@ public final class Message {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000008;
+  bitField0_ |= 0x00000010;
         sessionInfo_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string sessionInfo = 4;</code>
+       * <code>optional string sessionInfo = 5;</code>
        *
        * <pre>
        * This may be separated out more.
        * </pre>
        */
       public Builder clearSessionInfo() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         sessionInfo_ = getDefaultInstance().getSessionInfo();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string sessionInfo = 4;</code>
+       * <code>optional string sessionInfo = 5;</code>
        *
        * <pre>
        * This may be separated out more.
@@ -1885,7 +2170,7 @@ public final class Message {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000008;
+  bitField0_ |= 0x00000010;
         sessionInfo_ = value;
         onChanged();
         return this;
@@ -1922,16 +2207,17 @@ public final class Message {
   static {
     java.lang.String[] descriptorData = {
       "\n\023input/message.proto\022\024protobuf.srl.requ" +
-      "est\"\224\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
+      "est\"\251\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
       "rotobuf.srl.request.Request.MessageType:" +
       "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req" +
       "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014" +
-      "\022\024\n\014responseText\030\004 \001(\t\"b\n\013MessageType\022\t\n" +
-      "\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SENDI" +
-      "NG\020\002\022\017\n\013RECOGNITION\020\003\022\023\n\017ANSWER_CHECKING" +
-      "\020\004\"_\n\020LoginInformation\022\020\n\010username\030\001 \002(\t" +
-      "\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\023",
-      "\n\013sessionInfo\030\004 \001(\t"
+      "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 " +
+      "\001(\t\"b\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_RE" +
+      "QUEST\020\001\022\020\n\014DATA_SENDING\020\002\022\017\n\013RECOGNITION" +
+      "\020\003\022\023\n\017ANSWER_CHECKING\020\004\"u\n\020LoginInformat" +
+      "ion\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\022",
+      "\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030\004 \001(" +
+      "\010\022\023\n\013sessionInfo\030\005 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1943,13 +2229,13 @@ public final class Message {
           internal_static_protobuf_srl_request_Request_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_request_Request_descriptor,
-              new java.lang.String[] { "RequestType", "Login", "OtherData", "ResponseText", });
+              new java.lang.String[] { "RequestType", "Login", "OtherData", "ResponseText", "SessionInfo", });
           internal_static_protobuf_srl_request_LoginInformation_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_request_LoginInformation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_request_LoginInformation_descriptor,
-              new java.lang.String[] { "Username", "Password", "IsLoggedIn", "SessionInfo", });
+              new java.lang.String[] { "Username", "Password", "IsLoggedIn", "IsInstructor", "SessionInfo", });
           return null;
         }
       };

@@ -12,7 +12,7 @@
 function Overloads() {
 	/**
 	 * This function returns a string with the value of the original object's type
-	 * (e.g. SRL_Object, SRL_Shape, SRL_Point, etc.)
+	 * (e.g. {@link SRL_Object}, {@link SRL_Shape}, {@link SRL_Point}, {@link SRL_Stroke}, {@link SRL_Line})
 	 @return a string class_type
 	 */
 	this.check_type = function(){
@@ -42,9 +42,10 @@ function Overloads() {
 		}
 		return class_type;
 	}
-	/*
+	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
-	 * See SRL_Shape.getArea() and SRL_Line.getArea() for more details
+	 * See SRL_Shape.getArea() and SRL_Line.getArea() for more details.
+	 *
 	 * @return the return value of the function it calls
 	 */
 	this.getArea = function () {
@@ -54,9 +55,10 @@ function Overloads() {
 			return(this.getArea.SRL_Line.apply( this, arguments ));
 		}
 	}
-	/*
+	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
-	 * See SRL_Stroke.getMinX(), SRL_Line.getMinX() SRL_Point.getMinX() for more details
+	 * See SRL_Stroke.getMinX(), SRL_Line.getMinX() SRL_Point.getMinX() for more details.
+	 *
 	 * @return the return value of the function it calls
 	 */
 	this.getMinX = function () {
@@ -68,9 +70,11 @@ function Overloads() {
 			return(this.getMinX.SRL_Line.apply( this, arguments ));
 		}
 	}
-	/*
+
+	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
-	 * See SRL_Stroke.getMinY(), SRL_Line.getMinY() SRL_Point.getMinY() for more details
+	 * See SRL_Stroke.getMinY(), SRL_Line.getMinY() SRL_Point.getMinY() for more details.
+	 *
 	 * @return the return value of the function it calls
 	 */
 	this.getMinY = function () {
@@ -82,9 +86,11 @@ function Overloads() {
 			return(this.getMinY.SRL_Line.apply( this, arguments ));
 		}
 	}
-	/*
+
+	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
-	 * See SRL_Stroke.getMaxX(), SRL_Line.getMaxX() SRL_Point.getMinX() for more details
+	 * See SRL_Stroke.getMaxX(), SRL_Line.getMaxX() SRL_Point.getMinX() for more details.
+	 *
 	 * @return the return value of the function it calls
 	 */
 	this.getMaxX = function () {
@@ -96,9 +102,11 @@ function Overloads() {
 			return(this.getMaxX.SRL_Line.apply( this, arguments ));
 		}
 	}
-	/*
+
+	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
-	 * See SRL_Stroke.getMaxY(), SRL_Line.getMaxY() SRL_Point.getMaxY() for more details
+	 * See SRL_Stroke.getMaxY(), SRL_Line.getMaxY() SRL_Point.getMaxY() for more details.
+	 *
 	 * @return the return value of the function it calls
 	 */
 	this.getMaxY = function () {
@@ -110,9 +118,11 @@ function Overloads() {
 			return(this.getMaxY.SRL_Line.apply( this, arguments ));
 		}
 	}
-	/*
+
+	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
-	 * See SRL_Point.distance() SRL_Line.distance() for more details
+	 * See SRL_Point.distance() SRL_Line.distance() for more details.
+	 *
 	 * @return the return value of the function it calls
 	 */
 	this.distance = function () {
@@ -123,12 +133,58 @@ function Overloads() {
 		}
 	}
 
+	/**
+	 * Takes the original object's type and returns the overloaded function associated with that object
+	 * See SRL_Point.size() SRL_Shape.size() for more details.
+	 *
+	 * @return the return value of the function it calls
+	 */
 	this.getSize = function () {
 		if (this.check_type() == "SRL_Point") {
 			return(this.getSize.SRL_Point.apply( this, arguments ));
 		} else if (this.check_type() == "SRL_Shape") {
 			return(this.getSize.SRL_Shape.apply( this, arguments ));
 		}
+	}
+
+	/**
+	 * Takes the original object's type and returns the overloaded function associated with that object
+	 * See SRL_Object.getObjectById(), SRL_Shape.getObjectById(), SRL_Stroke.getObjectById(),
+	 * and SRL_Point.getObjectById() for more details.
+	 *
+	 * @return the return value of the function it calls
+	 */
+	this.getSubObjectById = function () {
+		if (this.check_type() == "SRL_Stroke") {
+			return(this.getSubObjectById.SRL_Stroke.apply( this, arguments ));
+		} else if (this.check_type() == "SRL_Point") {
+			throw 'No such method error: SRL_Point does not have method "getSubObjectById"';
+		}  else if (this.check_type() == "SRL_Line") {
+			throw 'No such method error: SRL_Line does not have method "getSubObjectById"';
+		}
+		return(this.getSubObjectById.SRL_Object.apply( this, arguments ));
+	}
+
+	this.removeSubObjectById = function () {
+		if (this.check_type() == "SRL_Stroke") {
+			return(this.removeSubObjectById.SRL_Stroke.apply( this, arguments ));
+		} else if (this.check_type() == "SRL_Point") {
+			throw 'No such method error: SRL_Point does not have method "removeSubObjectById"';
+		} else if (this.check_type() == "SRL_Line") {
+			throw 'No such method error: SRL_Line does not have method "removeSubObjectById"';
+		}
+		return(this.removeSubObjectById.SRL_Object.apply( this, arguments ));
+	}
+
+	this.removeSubObject = function () {
+		if (this.check_type() == "SRL_Stroke") {
+			return(this.removeSubObject.SRL_Stroke.apply( this, arguments ));
+		} else if (this.check_type() == "SRL_Point") {
+			throw 'No such method error: SRL_Point does not have method "removeSubObject"';
+		} else if (this.check_type() == "SRL_Line") {
+			throw 'No such method error: SRL_Line does not have method "removeSubObject"';
+		}
+		return(this.removeSubObject.SRL_Object.apply( this, arguments ));
 	}
 };
 
@@ -187,10 +243,45 @@ function SRL_Object() {
 	 * is made up from one or more objects
 	 * @param subObject
 	 */
-	this.addSubObject = function(subObject){
-		if (subObject instanceof SRL_Object){
+	this.addSubObject = function(subObject) {
+		if (subObject instanceof SRL_Object) {
 			m_subObjects.push(subObject);
 		}
+	}
+
+	/**
+	 * Goes through every object in this list of objects. (Brute force).
+	 *
+	 * @return the object if it exist, returns false otherwise.
+	 */
+	this.getSubObjectById = function(objectId) {
+		for (object in m_subObjects) {
+			if (object.getId == objectId) {
+				return object;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Goes through every object in this list of objects. (Brute force).
+	 *
+	 * @return the object if it exist, returns false otherwise.
+	 */
+	this.removeSubObjectById = function(objectId) {
+		for (var i = 0; i < m_subObjects.length; i++) {
+			var object = m_subObjects[i];
+			if (object.getId() == objectId) {
+				return m_subObjects.removeObjectAtIndex(i);
+			}
+		}
+	}
+
+	/**
+	 * Given an object, remove this instance of the object.
+	 */
+	this.removeSubObject = function(srlObject) {
+		return m_subObjects.removeObject(srlObject);
 	}
 
 	/**
@@ -443,14 +534,9 @@ function SRL_Stroke(startPoint) {
 	 */
 	if (startPoint instanceof SRL_Point) {
 		points.push(startPoint);
-		//addInterpretation("Stroke", 1, 1);
-
-	/**
-	 * Constructor creating an empty stroke
-	 */
 	} else {
-		//addInterpretation("Stroke", 1, 1);
 	}
+
 	/**
 	 * Adding another point to the stroke
 	 * @param point
@@ -460,6 +546,7 @@ function SRL_Stroke(startPoint) {
 			points.push(point);
 		}
 	}
+
 	/**
 	 * Gets the complete list of points in the stroke
 	 * @return list of points in the stroke
@@ -467,6 +554,7 @@ function SRL_Stroke(startPoint) {
 	this.getPoints = function(){
 		return points;
 	}
+
 	/**
 	 * Get the i'th point in the stroke 
 	 * The first point has index i = 0
@@ -481,6 +569,50 @@ function SRL_Stroke(startPoint) {
 			return points[i];
 		}
 	}
+
+	/**
+	 * Goes through every object in this list of objects. (Brute force).
+	 *
+	 * @return the object if it exist, returns false otherwise.
+	 */
+	this.getSubObjectById = function(objectId) {
+		for (object in points) {
+			if (object.getId == objectId) {
+				return object;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Goes through every object in this list of objects. (Brute force).
+	 *
+	 * @return the object if it exist, returns false otherwise.
+	 */
+	this.removeSubObjectById = function(objectId) {
+		for (var i = 0; i < points.length; i++) {
+			var object = points[i];
+			if (object.getId() == objectId) {
+				return points.removeObjectAtIndex(i);
+			}
+		}
+	}
+
+	/**
+	 * Given an object, remove this instance of the object.
+	 */
+	this.removeSubObject = function(srlObject) {
+		return points.removeObject(srlObject);
+	}
+
+	/**
+	 * Gets the list of subobjects
+	 * @return list of objects that make up this object
+	 */
+	this.getSubObjects = function(){
+		return points;
+	}
+
 	/**
 	 * Gets the number of points in the stroke
 	 * @return number of points in the stroke
@@ -488,6 +620,7 @@ function SRL_Stroke(startPoint) {
 	this.getNumPoints = function(){
 		return points.length;
 	}
+
 	/**
 	 * Returns the first point in the stroke.
 	 * if the stroke has no points, it returns null.
@@ -499,6 +632,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return points[0];
 	}
+
 	/**
 	 * Returns the last point in the stroke
 	 * If the stroke has no points, it returns null.
@@ -510,20 +644,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return points[points.length-1];
 	}
-	/**
-	 * Returns a Graphics2Ddrawable awt object
-	 * return a GeneralPath objects that contains the list of points.
-	 */
-	this.getAWT = function(){
-		console.log("IGNORE AWT");
-		/*
-		GeneralPath path = new GeneralPath();
-		for(SRL_Point p : points){
-			path.lineTo(p.getX(), p.getY());
-		}
-		return path;
-		//*/
-	}
+
 	/** returns the minimum x value in a stroke
 	 * return minimum x value in a stroke
 	 */
@@ -536,6 +657,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return minx;
 	}
+
 	/** returns the minimum y value in a stroke
 	 * return minimum y value in a stroke
 	 */
@@ -548,6 +670,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return miny;
 	}
+
 	/** returns the maximum x value in a stroke
 	 * return maximum x value in a stroke
 	 */
@@ -560,6 +683,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return maxx;
 	}
+
 	/** returns the maximum x value in a stroke
 	 * return maximum x value in a stroke
 	 */
@@ -588,17 +712,17 @@ function SRL_Stroke(startPoint) {
 			if(this.getNumPoints() <= secondPoint){
 				secondPoint = this.getNumPoints() - 1;
 			}
-			
+
 			var xStart, xEnd, yStart, yEnd;		
 			xStart = this.getPoint(0).getX();
 			yStart = this.getPoint(0).getY();
 			xEnd = this.getPoint(secondPoint).getX();
 			yEnd = this.getPoint(secondPoint).getY();
-			
+
 			if(xStart == xEnd && yStart == yEnd){
 				return Number.NaN;
 			}
-				
+
 			var sectionWidth = xEnd - xStart;
 			var sectionHeight = yEnd - yStart;
 			var hypotenuse = Math.sqrt(sectionWidth * sectionWidth + sectionHeight * sectionHeight);
@@ -607,6 +731,7 @@ function SRL_Stroke(startPoint) {
 			throw ".getStartAngleCosine needs an int argument";
 		}
 	}
+
 	/**
 	 * Return the sine of the starting angle of the stroke
 	 * This takes the angle between the initial point and the point specified as the secondPoint
@@ -622,23 +747,24 @@ function SRL_Stroke(startPoint) {
 			if(this.getNumPoints() <= secondPoint){
 				secondPoint = this.getNumPoints() - 1;
 			}
-			
+
 			var xStart, xEnd, yStart, yEnd;		
 			xStart = this.getPoint(0).getX();
 			yStart = this.getPoint(0).getY();
 			xEnd = this.getPoint(secondPoint).getX();
 			yEnd = this.getPoint(secondPoint).getY();
-			
+
 			if(xStart == xEnd && yStart == yEnd){
 				return Number.NaN;
 			}
-				
+
 			var sectionWidth = xEnd - xStart;
 			var sectionHeight = yEnd - yStart;
 			var hypotenuse = Math.sqrt(sectionWidth * sectionWidth + sectionHeight * sectionHeight);
 			return sectionHeight / hypotenuse;
 		}
 	}
+
 	/**
 	 * Return the Euclidean distance from the starting point 
 	 * to the ending point of the stroke
@@ -654,6 +780,7 @@ function SRL_Stroke(startPoint) {
 		yn = this.getLastPoint().getY();
 		return Math.sqrt(Math.pow(xn-x0,2)+Math.pow(yn-y0,2));
 	}
+
 	/**
 	 * Return the cosine of the angle between the start and end point
 	 * @return cosine of the ending angle
@@ -665,6 +792,7 @@ function SRL_Stroke(startPoint) {
 		var xDistance = this.getLastPoint().getX() - this.getFirstPoint().getX();
 		return xDistance/this.getEuclideanDistance();
 	}
+
 	/**
 	 * Return the cosine of the angle between the start and end point
 	 * @return cosine of the ending angle
@@ -676,6 +804,7 @@ function SRL_Stroke(startPoint) {
 		var yDistance = this.getLastPoint().getY() - this.getFirstPoint().getY();
 		return yDistance/this.getEuclideanDistance();
 	}
+
 	/**
 	 * Returns the length of the stroke, 
 	 * complete with all of its turns
@@ -691,6 +820,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return sum;
 	}
+
 	/**
 	 * Return the total stroke time
 	 * @return total time of the stroke
@@ -701,6 +831,7 @@ function SRL_Stroke(startPoint) {
 			return Number.NaN;
 		//return this.getLastPoint().getTime()-this.getFirstPoint().getTime();
 	}
+
 	/**
 	 * Auxiliary method used to return a list containing all points
 	 * but with duplicated (based on time) removed
@@ -708,6 +839,7 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.removeTimeDuplicates = function() {
 		console.log("TODO - need to implement a .getTime()");
+		throw 'unspoorted function call: "removeTimeDuplicates"';
 		var points = new Array();
 		for(var i=0; i<points.length; i++){
 			if(points.length > 0){
@@ -721,6 +853,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return points;
 	}
+
 	/**
 	 * Auxiliary method used to return a list containing all points
 	 * but with duplicated (based on X,Y coordinates) removed
@@ -740,6 +873,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return p;
 	}
+
 	/**
 	 * Return the maximum stroke speed reached
 	 * @return maximum stroke speed reached
@@ -762,6 +896,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return max;
 	}
+
 	/**
 	 * Calculates the rotation from point startP to two points further.
 	 * Calculates the line between startP and the next point,
@@ -771,16 +906,19 @@ function SRL_Stroke(startPoint) {
 	 * @param startP
 	 * @return
 	 */
-	this.rotationAtAPoint = function(points, startP){
+	this.rotationAtAPoint = function(startP){
 		if (points[0] instanceof SRL_Point && typeof startP === "number") {
 			if(points.length < startP+2){
 				return Number.NaN;
 			}
-			var mx = points.get[startP+1].getX()-points.get[startP].getX();
-			var my = points.get[startP+1].getY()-points.get[startP].getY();
+			var mx = points.get[startP+1].getX() - points.get[startP].getX();
+			var my = points.get[startP+1].getY() - points.get[startP].getY();
 		    return Math.atan2(my, mx);
+		} else {
+			throw 'and error occured! (probably because the argument was not a number)';
 		}
 	}
+
 	/**
 	 * Return the total rotation of the stroke from start to end points
 	 * @return total rotation of the stroke
@@ -802,6 +940,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return sum;
 	}
+
 	/**
 	 * Return the absolute rotation of the stroke from start to end points
 	 * @return total absolute rotation of the stroke
@@ -823,6 +962,7 @@ function SRL_Stroke(startPoint) {
 		}
 		return sum;
 	}
+
 	/**
 	 * Return the squared rotation of the stroke from start to end points
 	 * @return total squared rotation of the stroke
@@ -1835,13 +1975,38 @@ SRL_Line.prototype = new SRL_Shape();
  * UTILITY FUNCTIONS
  */
 
- /**
-  * Generates an rfc4122 version 4 compliant solution.
-  *
-  * found at http://stackoverflow.com/a/2117523/2187510
-  * and further improved at
-  * http://stackoverflow.com/a/8809472/2187510
-  */
+/**
+ * removes the object from an array.
+ *
+ * @return the object that was removed if it exist, false otherwise.
+ */
+Array.prototype.removeObject = function(object) {
+	var i = this.indexOf(object);
+	if (i != -1) {
+		return this.splice(i, 1);
+	}
+	throw "attempt to remove invalid object";
+};
+
+/**
+ * removes the object from an array.
+ *
+ * @return the object that was removed if it exist, false otherwise.
+ */
+Array.prototype.removeObjectByIndex = function(index) {
+	if (index != -1) {
+		return this.splice(index, 1);
+	}
+	throw "attempt to remove at invalid index";
+};
+
+/**
+ * Generates an rfc4122 version 4 compliant solution.
+ *
+ * found at http://stackoverflow.com/a/2117523/2187510
+ * and further improved at
+ * http://stackoverflow.com/a/8809472/2187510
+ */ 
 function generateUUID() {
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
