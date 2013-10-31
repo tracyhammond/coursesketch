@@ -10,6 +10,132 @@ message SrlSchool {
 message SrlCourse {
 	required string courseId = 1; // This must be globally unique.
 	optional string courseName = 2;
+	repeated User courseUsers = 3; //Course Roster, includes all user types
+	optional Accessibility access = 4 [default=PROTECTED];
+	optional string description = 5;
+	optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer) 
+	optional string imageUrl = 7;
+	optional int32 grade = 8; //Calculated grade for all Assignments in this course
+	optional DateTime accessDate = 9; //Date course can be accessed
+	optional DateTime closeDate = 10; //Date course can no longer be accessed
+	optional State state = 11;
+	
+	enum Accessibility {
+		PUBLIC = 1; //Any student can access course without approval
+		PROTECTED = 2; //Any student can request access for course, requires instructor approval
+		PRIVATE = 3; //No students can see course without instructor invitation
+	}
+}
+
+message SrlAssignment {
+	required string courseId = 1; // To know who the parent is.
+	required string assignmentId = 2; // This must be unique within a course.
+	optional string assignmentName = 3;
+	optional AssignmentType type = 4;
+	optional string other = 5; //Name of an Instructor-defined assignment type
+	optional string description = 6;
+	repeated string links = 7; //external links/resources. Field needs improvement.
+	optional LatePolicy latePolicy = 8; 
+	optional int32 gradeWeight = 9; //Percentage of Assignment Category's total grade
+	optional int32 grade = 10; //Calculated grade for whole Assignment
+	optional DateTime accessDate = 11; //Date that a student can access/view/begin an assignment
+	optional DateTime dueDate = 12; //Date that the late policy goes into affect
+	optional DateTime closeDate = 13; //Date that the assignment closes and can no longer be accessed
+	optional State state = 14;
+	
+	
+	enum AssignmentType {
+		HOMEWORK = 1;
+		QUIZ = 2;
+		LAB = 3;
+		EXAM = 4;
+		SURVEY = 5;
+		OTHER = 6; //Allows instructors to create unique assignment types
+	}
+	
+	enum LatePolicy { //Needs to be improved
+		POLICY1 = 1;
+		POLICY2 = 2;
+		POLICY3 = 3;
+	}
+}
+
+message SrlProblem {
+	required string courseId = 1; // To know who the grandParent is.
+	required string assignmentId = 2; // To know who the parent is.
+	required string problemId = 3; // This must be unique within an assignment.
+	optional string problemName = 4;
+	optional string description = 5;
+	repeated subproblemInformation subProblems = 6;
+	repeated DomainInformation info = 7;
+	optional int32 gradeWeight = 8; //Percentage of assignment grade
+	optional int32 grade = 9; //Calculated grade of all subproblems for this problem
+}
+
+message subproblemInformation {
+	optional string questionText = 1;
+	optional QuestionType questionType = 2 [default=SKETCH];
+	optional bytes options = 3;
+	optional int32 gradeWeight = 4; //Percentage of total problem grade
+	optional int32 grade = 5; //Calculated grade for this subproblem
+	
+	enum QuestionType {
+		SKETCH = 1;	
+		MULT_CHOICE = 2;
+		FREE_RESP = 3;
+		CHECK_BOX = 4;	
+	}
+}
+
+message DateTime { //Needs to be implemented with enums. Probably already exists elsewhere.
+	optional uint64 millisecond = 1; //To ensure capabilities to communicate with systems with diverse date-time handling methods
+	optional int32 second = 2;
+	optional int32 minute = 3;
+	optional int32 hour = 4;
+	optional int32 day = 5;
+	optional int32 month = 6;
+	optional int32 year = 7;
+}
+
+message DomainInformation { //Needs to be defined in its entirety
+	optional string stuff = 1;
+}
+
+message State {
+	optional bool published = 1;
+	optional bool accessible = 2;
+	optional bool late = 3;
+	optional bool started = 4;
+	optional bool completed = 5;
+}
+
+message User {
+	required string username = 1; //Must be globally unique
+	optional UserType userType = 2 [default=GUEST];
+	optional string email = 3;
+}
+
+enum UserType {
+	ADMIN = 1;
+	INSTRUCTOR = 2;
+	TEACHING_ASSISTANT = 3;
+	STUDENT = 4;
+	GUEST = 5;
+}
+
+/*----------------- Original
+package protobuf.srl.school;
+
+// holds all data that is sent from server. (grades, roster, classes, assignments, problems
+message SrlSchool {
+	repeated SrlCourse courses = 1;
+	repeated SrlAssignment assignments = 2;
+	repeated SrlProblem problems = 3;
+}
+
+message SrlCourse {
+	required string courseId = 1; // This must be globally unique.
+	optional string courseName = 2;
 }
 
 message SrlAssignment {
@@ -39,3 +165,4 @@ message subproblemInformation {
 		CHECK_BOX = 4;	
 	}
 }
+---------------------------*/

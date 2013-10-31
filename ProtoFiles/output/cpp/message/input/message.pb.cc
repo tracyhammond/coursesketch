@@ -59,11 +59,10 @@ void protobuf_AssignDesc_input_2fmessage_2eproto() {
       sizeof(Request));
   Request_MessageType_descriptor_ = Request_descriptor_->enum_type(0);
   LoginInformation_descriptor_ = file->message_type(1);
-  static const int LoginInformation_offsets_[5] = {
+  static const int LoginInformation_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, username_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, password_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, isloggedin_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, isinstructor_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, sessioninfo_),
   };
   LoginInformation_reflection_ =
@@ -119,10 +118,9 @@ void protobuf_AddDesc_input_2fmessage_2eproto() {
     "\022\024\n\014responseText\030\004 \001(\t\"b\n\013MessageType\022\t\n"
     "\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SENDI"
     "NG\020\002\022\017\n\013RECOGNITION\020\003\022\023\n\017ANSWER_CHECKING"
-    "\020\004\"u\n\020LoginInformation\022\020\n\010username\030\001 \002(\t"
-    "\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\024"
-    "\n\014isInstructor\030\004 \001(\010\022\023\n\013sessionInfo\030\005 \001("
-    "\t", 441);
+    "\020\004\"_\n\020LoginInformation\022\020\n\010username\030\001 \002(\t"
+    "\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\023"
+    "\n\013sessionInfo\030\004 \001(\t", 419);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/message.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -540,7 +538,6 @@ void Request::Swap(Request* other) {
 const int LoginInformation::kUsernameFieldNumber;
 const int LoginInformation::kPasswordFieldNumber;
 const int LoginInformation::kIsLoggedInFieldNumber;
-const int LoginInformation::kIsInstructorFieldNumber;
 const int LoginInformation::kSessionInfoFieldNumber;
 #endif  // !_MSC_VER
 
@@ -563,7 +560,6 @@ void LoginInformation::SharedCtor() {
   username_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   password_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   isloggedin_ = false;
-  isinstructor_ = false;
   sessioninfo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -620,7 +616,6 @@ void LoginInformation::Clear() {
       }
     }
     isloggedin_ = false;
-    isinstructor_ = false;
     if (has_sessioninfo()) {
       if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {
         sessioninfo_->clear();
@@ -682,28 +677,12 @@ bool LoginInformation::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(32)) goto parse_isInstructor;
+        if (input->ExpectTag(34)) goto parse_sessionInfo;
         break;
       }
 
-      // optional bool isInstructor = 4;
+      // optional string sessionInfo = 4;
       case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_isInstructor:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &isinstructor_)));
-          set_has_isinstructor();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(42)) goto parse_sessionInfo;
-        break;
-      }
-
-      // optional string sessionInfo = 5;
-      case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_sessionInfo:
@@ -760,18 +739,13 @@ void LoginInformation::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->isloggedin(), output);
   }
 
-  // optional bool isInstructor = 4;
-  if (has_isinstructor()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->isinstructor(), output);
-  }
-
-  // optional string sessionInfo = 5;
+  // optional string sessionInfo = 4;
   if (has_sessioninfo()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->sessioninfo().data(), this->sessioninfo().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      5, this->sessioninfo(), output);
+      4, this->sessioninfo(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -807,19 +781,14 @@ void LoginInformation::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->isloggedin(), target);
   }
 
-  // optional bool isInstructor = 4;
-  if (has_isinstructor()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->isinstructor(), target);
-  }
-
-  // optional string sessionInfo = 5;
+  // optional string sessionInfo = 4;
   if (has_sessioninfo()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->sessioninfo().data(), this->sessioninfo().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->sessioninfo(), target);
+        4, this->sessioninfo(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -852,12 +821,7 @@ int LoginInformation::ByteSize() const {
       total_size += 1 + 1;
     }
 
-    // optional bool isInstructor = 4;
-    if (has_isinstructor()) {
-      total_size += 1 + 1;
-    }
-
-    // optional string sessionInfo = 5;
+    // optional string sessionInfo = 4;
     if (has_sessioninfo()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -900,9 +864,6 @@ void LoginInformation::MergeFrom(const LoginInformation& from) {
     if (from.has_isloggedin()) {
       set_isloggedin(from.isloggedin());
     }
-    if (from.has_isinstructor()) {
-      set_isinstructor(from.isinstructor());
-    }
     if (from.has_sessioninfo()) {
       set_sessioninfo(from.sessioninfo());
     }
@@ -933,7 +894,6 @@ void LoginInformation::Swap(LoginInformation* other) {
     std::swap(username_, other->username_);
     std::swap(password_, other->password_);
     std::swap(isloggedin_, other->isloggedin_);
-    std::swap(isinstructor_, other->isinstructor_);
     std::swap(sessioninfo_, other->sessioninfo_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
