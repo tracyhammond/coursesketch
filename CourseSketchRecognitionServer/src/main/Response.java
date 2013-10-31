@@ -20,6 +20,23 @@ import srl.recognition.paleo.PaleoConfig;
 import srl.recognition.paleo.PaleoSketchRecognizer;
 
 public class Response {
+	private static PaleoSketchRecognizer recognizer;
+	
+	/**
+	 * Default constructor that initializes PaleoSketch with all primitives on
+	 */
+	public Response(){
+		if(recognizer == null)
+			recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
+	}
+	
+	/**
+	 * optional constructor to specify what primitives you want on
+	 * @param PaleoSketch configuration of which primitives you would like
+	 */
+	public Response(PaleoConfig config){
+		recognizer = new PaleoSketchRecognizer(config);
+	}
 	
 	/**
 	 * Simple response function to take in a Protobuf file, convert it into Paleosketch
@@ -28,7 +45,7 @@ public class Response {
 	 * @return protobuf.srl.sketch.Sketch.SrlStroke
 	 * @throws InvalidProtocolBufferException
 	 */
-	public static SrlStroke mirror(Update up) throws InvalidProtocolBufferException{
+	public SrlStroke mirror(Update up) throws InvalidProtocolBufferException{
 		Stroke s = unpackage(up);
 
 		List<Point> points = s.getPoints();
@@ -50,11 +67,10 @@ public class Response {
 	 * @param Update up
 	 * @throws InvalidProtocolBufferException
 	 */
-	public static void print(Update up) throws InvalidProtocolBufferException{
+	public void print(Update up) throws InvalidProtocolBufferException{
 		Sketch sketch = new Sketch();
 		sketch.add(unpackage(up));
 		
-		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
 		IRecognitionResult result = recognizer.recognize(sketch.getFirstStroke());
 		
 		result.sortNBestList();
@@ -77,11 +93,10 @@ public class Response {
 	 * @return protobuf.srl.sketch.Sketch.SrlStroke
 	 * @throws InvalidProtocolBufferException
 	 */
-	public static SrlShape interpret(Update up) throws InvalidProtocolBufferException{
+	public SrlShape interpret(Update up) throws InvalidProtocolBufferException{
 		Sketch sketch = new Sketch();
 		sketch.add(unpackage(up));
 		
-		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
 		IRecognitionResult result = recognizer.recognize(sketch.getFirstStroke());
 		
 		SrlShape response = repackage(result);
@@ -94,7 +109,7 @@ public class Response {
 	 * @return srl.core.sketch.Stroke
 	 * @throws InvalidProtocolBufferException
 	 */
-	public static Stroke unpackage(Update up) throws InvalidProtocolBufferException{
+	private static Stroke unpackage(Update up) throws InvalidProtocolBufferException{
 		Stroke stroke = new Stroke();
 		System.out.println("Number of commands " + up.getCommandsCount());
 		SrlStroke s_stroke = SrlStroke.parseFrom(up.getCommands(0).getCommandData());
@@ -111,7 +126,7 @@ public class Response {
 	 * @param srl.core.sketch.Stroke
 	 * @return protobuf.srl.sketch.Sketch.SrlStroke
 	 */
-	public static SrlStroke repackage(Stroke s){
+	private SrlStroke repackage(Stroke s){
 		SrlStroke.Builder strokebuilder = SrlStroke.newBuilder();
 		
 		strokebuilder.setId(s.getId().toString());
@@ -135,7 +150,7 @@ public class Response {
 	 * @param srl.core.sketch.Stroke
 	 * @return protobuf.srl.sketch.Sketch.SrlStroke
 	 */
-	public static SrlShape repackage(IRecognitionResult result){
+	private SrlShape repackage(IRecognitionResult result){
 		SrlShape.Builder shapebuilder = SrlShape.newBuilder();
 		
 		result.sortNBestList();
