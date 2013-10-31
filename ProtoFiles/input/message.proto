@@ -22,17 +22,3 @@ message LoginInformation {
     optional bool isLoggedIn = 3;
 	optional string sessionInfo = 4; // This may be separated out more.
 }
-
-message User {
-	required string username = 1; //Must be globally unique
-	optional UserType userType = 2 [default=GUEST];
-	optional string email = 3;
-}
-
-enum UserType {
-	ADMIN = 1;
-	INSTRUCTOR = 2;
-	TEACHING_ASSISTANT = 3;
-	STUDENT = 4;
-	GUEST = 5;
-}

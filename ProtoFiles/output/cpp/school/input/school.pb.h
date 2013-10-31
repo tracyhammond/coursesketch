@@ -41,7 +41,74 @@ class SrlCourse;
 class SrlAssignment;
 class SrlProblem;
 class subproblemInformation;
+class DateTime;
+class DomainInformation;
+class State;
+class User;
 
+enum SrlCourse_Accessibility {
+  SrlCourse_Accessibility_PUBLIC = 1,
+  SrlCourse_Accessibility_PROTECTED = 2,
+  SrlCourse_Accessibility_PRIVATE = 3
+};
+bool SrlCourse_Accessibility_IsValid(int value);
+const SrlCourse_Accessibility SrlCourse_Accessibility_Accessibility_MIN = SrlCourse_Accessibility_PUBLIC;
+const SrlCourse_Accessibility SrlCourse_Accessibility_Accessibility_MAX = SrlCourse_Accessibility_PRIVATE;
+const int SrlCourse_Accessibility_Accessibility_ARRAYSIZE = SrlCourse_Accessibility_Accessibility_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* SrlCourse_Accessibility_descriptor();
+inline const ::std::string& SrlCourse_Accessibility_Name(SrlCourse_Accessibility value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    SrlCourse_Accessibility_descriptor(), value);
+}
+inline bool SrlCourse_Accessibility_Parse(
+    const ::std::string& name, SrlCourse_Accessibility* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SrlCourse_Accessibility>(
+    SrlCourse_Accessibility_descriptor(), name, value);
+}
+enum SrlAssignment_AssignmentType {
+  SrlAssignment_AssignmentType_HOMEWORK = 1,
+  SrlAssignment_AssignmentType_QUIZ = 2,
+  SrlAssignment_AssignmentType_LAB = 3,
+  SrlAssignment_AssignmentType_EXAM = 4,
+  SrlAssignment_AssignmentType_SURVEY = 5,
+  SrlAssignment_AssignmentType_OTHER = 6
+};
+bool SrlAssignment_AssignmentType_IsValid(int value);
+const SrlAssignment_AssignmentType SrlAssignment_AssignmentType_AssignmentType_MIN = SrlAssignment_AssignmentType_HOMEWORK;
+const SrlAssignment_AssignmentType SrlAssignment_AssignmentType_AssignmentType_MAX = SrlAssignment_AssignmentType_OTHER;
+const int SrlAssignment_AssignmentType_AssignmentType_ARRAYSIZE = SrlAssignment_AssignmentType_AssignmentType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* SrlAssignment_AssignmentType_descriptor();
+inline const ::std::string& SrlAssignment_AssignmentType_Name(SrlAssignment_AssignmentType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    SrlAssignment_AssignmentType_descriptor(), value);
+}
+inline bool SrlAssignment_AssignmentType_Parse(
+    const ::std::string& name, SrlAssignment_AssignmentType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SrlAssignment_AssignmentType>(
+    SrlAssignment_AssignmentType_descriptor(), name, value);
+}
+enum SrlAssignment_LatePolicy {
+  SrlAssignment_LatePolicy_POLICY1 = 1,
+  SrlAssignment_LatePolicy_POLICY2 = 2,
+  SrlAssignment_LatePolicy_POLICY3 = 3
+};
+bool SrlAssignment_LatePolicy_IsValid(int value);
+const SrlAssignment_LatePolicy SrlAssignment_LatePolicy_LatePolicy_MIN = SrlAssignment_LatePolicy_POLICY1;
+const SrlAssignment_LatePolicy SrlAssignment_LatePolicy_LatePolicy_MAX = SrlAssignment_LatePolicy_POLICY3;
+const int SrlAssignment_LatePolicy_LatePolicy_ARRAYSIZE = SrlAssignment_LatePolicy_LatePolicy_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* SrlAssignment_LatePolicy_descriptor();
+inline const ::std::string& SrlAssignment_LatePolicy_Name(SrlAssignment_LatePolicy value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    SrlAssignment_LatePolicy_descriptor(), value);
+}
+inline bool SrlAssignment_LatePolicy_Parse(
+    const ::std::string& name, SrlAssignment_LatePolicy* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SrlAssignment_LatePolicy>(
+    SrlAssignment_LatePolicy_descriptor(), name, value);
+}
 enum subproblemInformation_QuestionType {
   subproblemInformation_QuestionType_SKETCH = 1,
   subproblemInformation_QuestionType_MULT_CHOICE = 2,
@@ -62,6 +129,28 @@ inline bool subproblemInformation_QuestionType_Parse(
     const ::std::string& name, subproblemInformation_QuestionType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<subproblemInformation_QuestionType>(
     subproblemInformation_QuestionType_descriptor(), name, value);
+}
+enum UserType {
+  ADMIN = 1,
+  INSTRUCTOR = 2,
+  TEACHING_ASSISTANT = 3,
+  STUDENT = 4,
+  GUEST = 5
+};
+bool UserType_IsValid(int value);
+const UserType UserType_MIN = ADMIN;
+const UserType UserType_MAX = GUEST;
+const int UserType_ARRAYSIZE = UserType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* UserType_descriptor();
+inline const ::std::string& UserType_Name(UserType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    UserType_descriptor(), value);
+}
+inline bool UserType_Parse(
+    const ::std::string& name, UserType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<UserType>(
+    UserType_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -228,6 +317,31 @@ class SrlCourse : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef SrlCourse_Accessibility Accessibility;
+  static const Accessibility PUBLIC = SrlCourse_Accessibility_PUBLIC;
+  static const Accessibility PROTECTED = SrlCourse_Accessibility_PROTECTED;
+  static const Accessibility PRIVATE = SrlCourse_Accessibility_PRIVATE;
+  static inline bool Accessibility_IsValid(int value) {
+    return SrlCourse_Accessibility_IsValid(value);
+  }
+  static const Accessibility Accessibility_MIN =
+    SrlCourse_Accessibility_Accessibility_MIN;
+  static const Accessibility Accessibility_MAX =
+    SrlCourse_Accessibility_Accessibility_MAX;
+  static const int Accessibility_ARRAYSIZE =
+    SrlCourse_Accessibility_Accessibility_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Accessibility_descriptor() {
+    return SrlCourse_Accessibility_descriptor();
+  }
+  static inline const ::std::string& Accessibility_Name(Accessibility value) {
+    return SrlCourse_Accessibility_Name(value);
+  }
+  static inline bool Accessibility_Parse(const ::std::string& name,
+      Accessibility* value) {
+    return SrlCourse_Accessibility_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
   // required string courseId = 1;
@@ -254,20 +368,134 @@ class SrlCourse : public ::google::protobuf::Message {
   inline ::std::string* release_coursename();
   inline void set_allocated_coursename(::std::string* coursename);
 
+  // repeated .protobuf.srl.school.User courseUsers = 3;
+  inline int courseusers_size() const;
+  inline void clear_courseusers();
+  static const int kCourseUsersFieldNumber = 3;
+  inline const ::protobuf::srl::school::User& courseusers(int index) const;
+  inline ::protobuf::srl::school::User* mutable_courseusers(int index);
+  inline ::protobuf::srl::school::User* add_courseusers();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User >&
+      courseusers() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User >*
+      mutable_courseusers();
+
+  // optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];
+  inline bool has_access() const;
+  inline void clear_access();
+  static const int kAccessFieldNumber = 4;
+  inline ::protobuf::srl::school::SrlCourse_Accessibility access() const;
+  inline void set_access(::protobuf::srl::school::SrlCourse_Accessibility value);
+
+  // optional string description = 5;
+  inline bool has_description() const;
+  inline void clear_description();
+  static const int kDescriptionFieldNumber = 5;
+  inline const ::std::string& description() const;
+  inline void set_description(const ::std::string& value);
+  inline void set_description(const char* value);
+  inline void set_description(const char* value, size_t size);
+  inline ::std::string* mutable_description();
+  inline ::std::string* release_description();
+  inline void set_allocated_description(::std::string* description);
+
+  // optional string semester = 6;
+  inline bool has_semester() const;
+  inline void clear_semester();
+  static const int kSemesterFieldNumber = 6;
+  inline const ::std::string& semester() const;
+  inline void set_semester(const ::std::string& value);
+  inline void set_semester(const char* value);
+  inline void set_semester(const char* value, size_t size);
+  inline ::std::string* mutable_semester();
+  inline ::std::string* release_semester();
+  inline void set_allocated_semester(::std::string* semester);
+
+  // optional string imageUrl = 7;
+  inline bool has_imageurl() const;
+  inline void clear_imageurl();
+  static const int kImageUrlFieldNumber = 7;
+  inline const ::std::string& imageurl() const;
+  inline void set_imageurl(const ::std::string& value);
+  inline void set_imageurl(const char* value);
+  inline void set_imageurl(const char* value, size_t size);
+  inline ::std::string* mutable_imageurl();
+  inline ::std::string* release_imageurl();
+  inline void set_allocated_imageurl(::std::string* imageurl);
+
+  // optional int32 grade = 8;
+  inline bool has_grade() const;
+  inline void clear_grade();
+  static const int kGradeFieldNumber = 8;
+  inline ::google::protobuf::int32 grade() const;
+  inline void set_grade(::google::protobuf::int32 value);
+
+  // optional .protobuf.srl.school.DateTime accessDate = 9;
+  inline bool has_accessdate() const;
+  inline void clear_accessdate();
+  static const int kAccessDateFieldNumber = 9;
+  inline const ::protobuf::srl::school::DateTime& accessdate() const;
+  inline ::protobuf::srl::school::DateTime* mutable_accessdate();
+  inline ::protobuf::srl::school::DateTime* release_accessdate();
+  inline void set_allocated_accessdate(::protobuf::srl::school::DateTime* accessdate);
+
+  // optional .protobuf.srl.school.DateTime closeDate = 10;
+  inline bool has_closedate() const;
+  inline void clear_closedate();
+  static const int kCloseDateFieldNumber = 10;
+  inline const ::protobuf::srl::school::DateTime& closedate() const;
+  inline ::protobuf::srl::school::DateTime* mutable_closedate();
+  inline ::protobuf::srl::school::DateTime* release_closedate();
+  inline void set_allocated_closedate(::protobuf::srl::school::DateTime* closedate);
+
+  // optional .protobuf.srl.school.State state = 11;
+  inline bool has_state() const;
+  inline void clear_state();
+  static const int kStateFieldNumber = 11;
+  inline const ::protobuf::srl::school::State& state() const;
+  inline ::protobuf::srl::school::State* mutable_state();
+  inline ::protobuf::srl::school::State* release_state();
+  inline void set_allocated_state(::protobuf::srl::school::State* state);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlCourse)
  private:
   inline void set_has_courseid();
   inline void clear_has_courseid();
   inline void set_has_coursename();
   inline void clear_has_coursename();
+  inline void set_has_access();
+  inline void clear_has_access();
+  inline void set_has_description();
+  inline void clear_has_description();
+  inline void set_has_semester();
+  inline void clear_has_semester();
+  inline void set_has_imageurl();
+  inline void clear_has_imageurl();
+  inline void set_has_grade();
+  inline void clear_has_grade();
+  inline void set_has_accessdate();
+  inline void clear_has_accessdate();
+  inline void set_has_closedate();
+  inline void clear_has_closedate();
+  inline void set_has_state();
+  inline void clear_has_state();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* courseid_;
   ::std::string* coursename_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User > courseusers_;
+  ::std::string* description_;
+  ::std::string* semester_;
+  int access_;
+  ::google::protobuf::int32 grade_;
+  ::std::string* imageurl_;
+  ::protobuf::srl::school::DateTime* accessdate_;
+  ::protobuf::srl::school::DateTime* closedate_;
+  ::protobuf::srl::school::State* state_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -330,6 +558,59 @@ class SrlAssignment : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef SrlAssignment_AssignmentType AssignmentType;
+  static const AssignmentType HOMEWORK = SrlAssignment_AssignmentType_HOMEWORK;
+  static const AssignmentType QUIZ = SrlAssignment_AssignmentType_QUIZ;
+  static const AssignmentType LAB = SrlAssignment_AssignmentType_LAB;
+  static const AssignmentType EXAM = SrlAssignment_AssignmentType_EXAM;
+  static const AssignmentType SURVEY = SrlAssignment_AssignmentType_SURVEY;
+  static const AssignmentType OTHER = SrlAssignment_AssignmentType_OTHER;
+  static inline bool AssignmentType_IsValid(int value) {
+    return SrlAssignment_AssignmentType_IsValid(value);
+  }
+  static const AssignmentType AssignmentType_MIN =
+    SrlAssignment_AssignmentType_AssignmentType_MIN;
+  static const AssignmentType AssignmentType_MAX =
+    SrlAssignment_AssignmentType_AssignmentType_MAX;
+  static const int AssignmentType_ARRAYSIZE =
+    SrlAssignment_AssignmentType_AssignmentType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  AssignmentType_descriptor() {
+    return SrlAssignment_AssignmentType_descriptor();
+  }
+  static inline const ::std::string& AssignmentType_Name(AssignmentType value) {
+    return SrlAssignment_AssignmentType_Name(value);
+  }
+  static inline bool AssignmentType_Parse(const ::std::string& name,
+      AssignmentType* value) {
+    return SrlAssignment_AssignmentType_Parse(name, value);
+  }
+
+  typedef SrlAssignment_LatePolicy LatePolicy;
+  static const LatePolicy POLICY1 = SrlAssignment_LatePolicy_POLICY1;
+  static const LatePolicy POLICY2 = SrlAssignment_LatePolicy_POLICY2;
+  static const LatePolicy POLICY3 = SrlAssignment_LatePolicy_POLICY3;
+  static inline bool LatePolicy_IsValid(int value) {
+    return SrlAssignment_LatePolicy_IsValid(value);
+  }
+  static const LatePolicy LatePolicy_MIN =
+    SrlAssignment_LatePolicy_LatePolicy_MIN;
+  static const LatePolicy LatePolicy_MAX =
+    SrlAssignment_LatePolicy_LatePolicy_MAX;
+  static const int LatePolicy_ARRAYSIZE =
+    SrlAssignment_LatePolicy_LatePolicy_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  LatePolicy_descriptor() {
+    return SrlAssignment_LatePolicy_descriptor();
+  }
+  static inline const ::std::string& LatePolicy_Name(LatePolicy value) {
+    return SrlAssignment_LatePolicy_Name(value);
+  }
+  static inline bool LatePolicy_Parse(const ::std::string& name,
+      LatePolicy* value) {
+    return SrlAssignment_LatePolicy_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
   // required string courseId = 1;
@@ -368,6 +649,110 @@ class SrlAssignment : public ::google::protobuf::Message {
   inline ::std::string* release_assignmentname();
   inline void set_allocated_assignmentname(::std::string* assignmentname);
 
+  // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 4;
+  inline ::protobuf::srl::school::SrlAssignment_AssignmentType type() const;
+  inline void set_type(::protobuf::srl::school::SrlAssignment_AssignmentType value);
+
+  // optional string other = 5;
+  inline bool has_other() const;
+  inline void clear_other();
+  static const int kOtherFieldNumber = 5;
+  inline const ::std::string& other() const;
+  inline void set_other(const ::std::string& value);
+  inline void set_other(const char* value);
+  inline void set_other(const char* value, size_t size);
+  inline ::std::string* mutable_other();
+  inline ::std::string* release_other();
+  inline void set_allocated_other(::std::string* other);
+
+  // optional string description = 6;
+  inline bool has_description() const;
+  inline void clear_description();
+  static const int kDescriptionFieldNumber = 6;
+  inline const ::std::string& description() const;
+  inline void set_description(const ::std::string& value);
+  inline void set_description(const char* value);
+  inline void set_description(const char* value, size_t size);
+  inline ::std::string* mutable_description();
+  inline ::std::string* release_description();
+  inline void set_allocated_description(::std::string* description);
+
+  // repeated string links = 7;
+  inline int links_size() const;
+  inline void clear_links();
+  static const int kLinksFieldNumber = 7;
+  inline const ::std::string& links(int index) const;
+  inline ::std::string* mutable_links(int index);
+  inline void set_links(int index, const ::std::string& value);
+  inline void set_links(int index, const char* value);
+  inline void set_links(int index, const char* value, size_t size);
+  inline ::std::string* add_links();
+  inline void add_links(const ::std::string& value);
+  inline void add_links(const char* value);
+  inline void add_links(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& links() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_links();
+
+  // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+  inline bool has_latepolicy() const;
+  inline void clear_latepolicy();
+  static const int kLatePolicyFieldNumber = 8;
+  inline ::protobuf::srl::school::SrlAssignment_LatePolicy latepolicy() const;
+  inline void set_latepolicy(::protobuf::srl::school::SrlAssignment_LatePolicy value);
+
+  // optional int32 gradeWeight = 9;
+  inline bool has_gradeweight() const;
+  inline void clear_gradeweight();
+  static const int kGradeWeightFieldNumber = 9;
+  inline ::google::protobuf::int32 gradeweight() const;
+  inline void set_gradeweight(::google::protobuf::int32 value);
+
+  // optional int32 grade = 10;
+  inline bool has_grade() const;
+  inline void clear_grade();
+  static const int kGradeFieldNumber = 10;
+  inline ::google::protobuf::int32 grade() const;
+  inline void set_grade(::google::protobuf::int32 value);
+
+  // optional .protobuf.srl.school.DateTime accessDate = 11;
+  inline bool has_accessdate() const;
+  inline void clear_accessdate();
+  static const int kAccessDateFieldNumber = 11;
+  inline const ::protobuf::srl::school::DateTime& accessdate() const;
+  inline ::protobuf::srl::school::DateTime* mutable_accessdate();
+  inline ::protobuf::srl::school::DateTime* release_accessdate();
+  inline void set_allocated_accessdate(::protobuf::srl::school::DateTime* accessdate);
+
+  // optional .protobuf.srl.school.DateTime dueDate = 12;
+  inline bool has_duedate() const;
+  inline void clear_duedate();
+  static const int kDueDateFieldNumber = 12;
+  inline const ::protobuf::srl::school::DateTime& duedate() const;
+  inline ::protobuf::srl::school::DateTime* mutable_duedate();
+  inline ::protobuf::srl::school::DateTime* release_duedate();
+  inline void set_allocated_duedate(::protobuf::srl::school::DateTime* duedate);
+
+  // optional .protobuf.srl.school.DateTime closeDate = 13;
+  inline bool has_closedate() const;
+  inline void clear_closedate();
+  static const int kCloseDateFieldNumber = 13;
+  inline const ::protobuf::srl::school::DateTime& closedate() const;
+  inline ::protobuf::srl::school::DateTime* mutable_closedate();
+  inline ::protobuf::srl::school::DateTime* release_closedate();
+  inline void set_allocated_closedate(::protobuf::srl::school::DateTime* closedate);
+
+  // optional .protobuf.srl.school.State state = 14;
+  inline bool has_state() const;
+  inline void clear_state();
+  static const int kStateFieldNumber = 14;
+  inline const ::protobuf::srl::school::State& state() const;
+  inline ::protobuf::srl::school::State* mutable_state();
+  inline ::protobuf::srl::school::State* release_state();
+  inline void set_allocated_state(::protobuf::srl::school::State* state);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlAssignment)
  private:
   inline void set_has_courseid();
@@ -376,15 +761,46 @@ class SrlAssignment : public ::google::protobuf::Message {
   inline void clear_has_assignmentid();
   inline void set_has_assignmentname();
   inline void clear_has_assignmentname();
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_other();
+  inline void clear_has_other();
+  inline void set_has_description();
+  inline void clear_has_description();
+  inline void set_has_latepolicy();
+  inline void clear_has_latepolicy();
+  inline void set_has_gradeweight();
+  inline void clear_has_gradeweight();
+  inline void set_has_grade();
+  inline void clear_has_grade();
+  inline void set_has_accessdate();
+  inline void clear_has_accessdate();
+  inline void set_has_duedate();
+  inline void clear_has_duedate();
+  inline void set_has_closedate();
+  inline void clear_has_closedate();
+  inline void set_has_state();
+  inline void clear_has_state();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* courseid_;
   ::std::string* assignmentid_;
   ::std::string* assignmentname_;
+  ::std::string* other_;
+  ::std::string* description_;
+  int type_;
+  int latepolicy_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> links_;
+  ::google::protobuf::int32 gradeweight_;
+  ::google::protobuf::int32 grade_;
+  ::protobuf::srl::school::DateTime* accessdate_;
+  ::protobuf::srl::school::DateTime* duedate_;
+  ::protobuf::srl::school::DateTime* closedate_;
+  ::protobuf::srl::school::State* state_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -497,14 +913,17 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::std::string* release_problemname();
   inline void set_allocated_problemname(::std::string* problemname);
 
-  // optional .protobuf.srl.school.subproblemInformation mainProblem = 5;
-  inline bool has_mainproblem() const;
-  inline void clear_mainproblem();
-  static const int kMainProblemFieldNumber = 5;
-  inline const ::protobuf::srl::school::subproblemInformation& mainproblem() const;
-  inline ::protobuf::srl::school::subproblemInformation* mutable_mainproblem();
-  inline ::protobuf::srl::school::subproblemInformation* release_mainproblem();
-  inline void set_allocated_mainproblem(::protobuf::srl::school::subproblemInformation* mainproblem);
+  // optional string description = 5;
+  inline bool has_description() const;
+  inline void clear_description();
+  static const int kDescriptionFieldNumber = 5;
+  inline const ::std::string& description() const;
+  inline void set_description(const ::std::string& value);
+  inline void set_description(const char* value);
+  inline void set_description(const char* value, size_t size);
+  inline ::std::string* mutable_description();
+  inline ::std::string* release_description();
+  inline void set_allocated_description(::std::string* description);
 
   // repeated .protobuf.srl.school.subproblemInformation subProblems = 6;
   inline int subproblems_size() const;
@@ -518,6 +937,32 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation >*
       mutable_subproblems();
 
+  // repeated .protobuf.srl.school.DomainInformation info = 7;
+  inline int info_size() const;
+  inline void clear_info();
+  static const int kInfoFieldNumber = 7;
+  inline const ::protobuf::srl::school::DomainInformation& info(int index) const;
+  inline ::protobuf::srl::school::DomainInformation* mutable_info(int index);
+  inline ::protobuf::srl::school::DomainInformation* add_info();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >&
+      info() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >*
+      mutable_info();
+
+  // optional int32 gradeWeight = 8;
+  inline bool has_gradeweight() const;
+  inline void clear_gradeweight();
+  static const int kGradeWeightFieldNumber = 8;
+  inline ::google::protobuf::int32 gradeweight() const;
+  inline void set_gradeweight(::google::protobuf::int32 value);
+
+  // optional int32 grade = 9;
+  inline bool has_grade() const;
+  inline void clear_grade();
+  static const int kGradeFieldNumber = 9;
+  inline ::google::protobuf::int32 grade() const;
+  inline void set_grade(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlProblem)
  private:
   inline void set_has_courseid();
@@ -528,8 +973,12 @@ class SrlProblem : public ::google::protobuf::Message {
   inline void clear_has_problemid();
   inline void set_has_problemname();
   inline void clear_has_problemname();
-  inline void set_has_mainproblem();
-  inline void clear_has_mainproblem();
+  inline void set_has_description();
+  inline void clear_has_description();
+  inline void set_has_gradeweight();
+  inline void clear_has_gradeweight();
+  inline void set_has_grade();
+  inline void clear_has_grade();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -537,11 +986,14 @@ class SrlProblem : public ::google::protobuf::Message {
   ::std::string* assignmentid_;
   ::std::string* problemid_;
   ::std::string* problemname_;
-  ::protobuf::srl::school::subproblemInformation* mainproblem_;
+  ::std::string* description_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation > subproblems_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation > info_;
+  ::google::protobuf::int32 gradeweight_;
+  ::google::protobuf::int32 grade_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -663,6 +1115,20 @@ class subproblemInformation : public ::google::protobuf::Message {
   inline ::std::string* release_options();
   inline void set_allocated_options(::std::string* options);
 
+  // optional int32 gradeWeight = 4;
+  inline bool has_gradeweight() const;
+  inline void clear_gradeweight();
+  static const int kGradeWeightFieldNumber = 4;
+  inline ::google::protobuf::int32 gradeweight() const;
+  inline void set_gradeweight(::google::protobuf::int32 value);
+
+  // optional int32 grade = 5;
+  inline bool has_grade() const;
+  inline void clear_grade();
+  static const int kGradeFieldNumber = 5;
+  inline ::google::protobuf::int32 grade() const;
+  inline void set_grade(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.subproblemInformation)
  private:
   inline void set_has_questiontext();
@@ -671,12 +1137,481 @@ class subproblemInformation : public ::google::protobuf::Message {
   inline void clear_has_questiontype();
   inline void set_has_options();
   inline void clear_has_options();
+  inline void set_has_gradeweight();
+  inline void clear_has_gradeweight();
+  inline void set_has_grade();
+  inline void clear_has_grade();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* questiontext_;
   ::std::string* options_;
   int questiontype_;
+  ::google::protobuf::int32 gradeweight_;
+  ::google::protobuf::int32 grade_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fschool_2eproto();
+  friend void protobuf_AssignDesc_input_2fschool_2eproto();
+  friend void protobuf_ShutdownFile_input_2fschool_2eproto();
+
+  void InitAsDefaultInstance();
+  static subproblemInformation* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DateTime : public ::google::protobuf::Message {
+ public:
+  DateTime();
+  virtual ~DateTime();
+
+  DateTime(const DateTime& from);
+
+  inline DateTime& operator=(const DateTime& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DateTime& default_instance();
+
+  void Swap(DateTime* other);
+
+  // implements Message ----------------------------------------------
+
+  DateTime* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DateTime& from);
+  void MergeFrom(const DateTime& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 millisecond = 1;
+  inline bool has_millisecond() const;
+  inline void clear_millisecond();
+  static const int kMillisecondFieldNumber = 1;
+  inline ::google::protobuf::uint64 millisecond() const;
+  inline void set_millisecond(::google::protobuf::uint64 value);
+
+  // optional int32 second = 2;
+  inline bool has_second() const;
+  inline void clear_second();
+  static const int kSecondFieldNumber = 2;
+  inline ::google::protobuf::int32 second() const;
+  inline void set_second(::google::protobuf::int32 value);
+
+  // optional int32 minute = 3;
+  inline bool has_minute() const;
+  inline void clear_minute();
+  static const int kMinuteFieldNumber = 3;
+  inline ::google::protobuf::int32 minute() const;
+  inline void set_minute(::google::protobuf::int32 value);
+
+  // optional int32 hour = 4;
+  inline bool has_hour() const;
+  inline void clear_hour();
+  static const int kHourFieldNumber = 4;
+  inline ::google::protobuf::int32 hour() const;
+  inline void set_hour(::google::protobuf::int32 value);
+
+  // optional int32 day = 5;
+  inline bool has_day() const;
+  inline void clear_day();
+  static const int kDayFieldNumber = 5;
+  inline ::google::protobuf::int32 day() const;
+  inline void set_day(::google::protobuf::int32 value);
+
+  // optional int32 month = 6;
+  inline bool has_month() const;
+  inline void clear_month();
+  static const int kMonthFieldNumber = 6;
+  inline ::google::protobuf::int32 month() const;
+  inline void set_month(::google::protobuf::int32 value);
+
+  // optional int32 year = 7;
+  inline bool has_year() const;
+  inline void clear_year();
+  static const int kYearFieldNumber = 7;
+  inline ::google::protobuf::int32 year() const;
+  inline void set_year(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.DateTime)
+ private:
+  inline void set_has_millisecond();
+  inline void clear_has_millisecond();
+  inline void set_has_second();
+  inline void clear_has_second();
+  inline void set_has_minute();
+  inline void clear_has_minute();
+  inline void set_has_hour();
+  inline void clear_has_hour();
+  inline void set_has_day();
+  inline void clear_has_day();
+  inline void set_has_month();
+  inline void clear_has_month();
+  inline void set_has_year();
+  inline void clear_has_year();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint64 millisecond_;
+  ::google::protobuf::int32 second_;
+  ::google::protobuf::int32 minute_;
+  ::google::protobuf::int32 hour_;
+  ::google::protobuf::int32 day_;
+  ::google::protobuf::int32 month_;
+  ::google::protobuf::int32 year_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fschool_2eproto();
+  friend void protobuf_AssignDesc_input_2fschool_2eproto();
+  friend void protobuf_ShutdownFile_input_2fschool_2eproto();
+
+  void InitAsDefaultInstance();
+  static DateTime* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DomainInformation : public ::google::protobuf::Message {
+ public:
+  DomainInformation();
+  virtual ~DomainInformation();
+
+  DomainInformation(const DomainInformation& from);
+
+  inline DomainInformation& operator=(const DomainInformation& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DomainInformation& default_instance();
+
+  void Swap(DomainInformation* other);
+
+  // implements Message ----------------------------------------------
+
+  DomainInformation* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DomainInformation& from);
+  void MergeFrom(const DomainInformation& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string stuff = 1;
+  inline bool has_stuff() const;
+  inline void clear_stuff();
+  static const int kStuffFieldNumber = 1;
+  inline const ::std::string& stuff() const;
+  inline void set_stuff(const ::std::string& value);
+  inline void set_stuff(const char* value);
+  inline void set_stuff(const char* value, size_t size);
+  inline ::std::string* mutable_stuff();
+  inline ::std::string* release_stuff();
+  inline void set_allocated_stuff(::std::string* stuff);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.DomainInformation)
+ private:
+  inline void set_has_stuff();
+  inline void clear_has_stuff();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* stuff_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fschool_2eproto();
+  friend void protobuf_AssignDesc_input_2fschool_2eproto();
+  friend void protobuf_ShutdownFile_input_2fschool_2eproto();
+
+  void InitAsDefaultInstance();
+  static DomainInformation* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class State : public ::google::protobuf::Message {
+ public:
+  State();
+  virtual ~State();
+
+  State(const State& from);
+
+  inline State& operator=(const State& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const State& default_instance();
+
+  void Swap(State* other);
+
+  // implements Message ----------------------------------------------
+
+  State* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const State& from);
+  void MergeFrom(const State& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool published = 1;
+  inline bool has_published() const;
+  inline void clear_published();
+  static const int kPublishedFieldNumber = 1;
+  inline bool published() const;
+  inline void set_published(bool value);
+
+  // optional bool accessible = 2;
+  inline bool has_accessible() const;
+  inline void clear_accessible();
+  static const int kAccessibleFieldNumber = 2;
+  inline bool accessible() const;
+  inline void set_accessible(bool value);
+
+  // optional bool late = 3;
+  inline bool has_late() const;
+  inline void clear_late();
+  static const int kLateFieldNumber = 3;
+  inline bool late() const;
+  inline void set_late(bool value);
+
+  // optional bool started = 4;
+  inline bool has_started() const;
+  inline void clear_started();
+  static const int kStartedFieldNumber = 4;
+  inline bool started() const;
+  inline void set_started(bool value);
+
+  // optional bool completed = 5;
+  inline bool has_completed() const;
+  inline void clear_completed();
+  static const int kCompletedFieldNumber = 5;
+  inline bool completed() const;
+  inline void set_completed(bool value);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.State)
+ private:
+  inline void set_has_published();
+  inline void clear_has_published();
+  inline void set_has_accessible();
+  inline void clear_has_accessible();
+  inline void set_has_late();
+  inline void clear_has_late();
+  inline void set_has_started();
+  inline void clear_has_started();
+  inline void set_has_completed();
+  inline void clear_has_completed();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  bool published_;
+  bool accessible_;
+  bool late_;
+  bool started_;
+  bool completed_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fschool_2eproto();
+  friend void protobuf_AssignDesc_input_2fschool_2eproto();
+  friend void protobuf_ShutdownFile_input_2fschool_2eproto();
+
+  void InitAsDefaultInstance();
+  static State* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class User : public ::google::protobuf::Message {
+ public:
+  User();
+  virtual ~User();
+
+  User(const User& from);
+
+  inline User& operator=(const User& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const User& default_instance();
+
+  void Swap(User* other);
+
+  // implements Message ----------------------------------------------
+
+  User* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const User& from);
+  void MergeFrom(const User& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string username = 1;
+  inline bool has_username() const;
+  inline void clear_username();
+  static const int kUsernameFieldNumber = 1;
+  inline const ::std::string& username() const;
+  inline void set_username(const ::std::string& value);
+  inline void set_username(const char* value);
+  inline void set_username(const char* value, size_t size);
+  inline ::std::string* mutable_username();
+  inline ::std::string* release_username();
+  inline void set_allocated_username(::std::string* username);
+
+  // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
+  inline bool has_usertype() const;
+  inline void clear_usertype();
+  static const int kUserTypeFieldNumber = 2;
+  inline ::protobuf::srl::school::UserType usertype() const;
+  inline void set_usertype(::protobuf::srl::school::UserType value);
+
+  // optional string email = 3;
+  inline bool has_email() const;
+  inline void clear_email();
+  static const int kEmailFieldNumber = 3;
+  inline const ::std::string& email() const;
+  inline void set_email(const ::std::string& value);
+  inline void set_email(const char* value);
+  inline void set_email(const char* value, size_t size);
+  inline ::std::string* mutable_email();
+  inline ::std::string* release_email();
+  inline void set_allocated_email(::std::string* email);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.User)
+ private:
+  inline void set_has_username();
+  inline void clear_has_username();
+  inline void set_has_usertype();
+  inline void clear_has_usertype();
+  inline void set_has_email();
+  inline void clear_has_email();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* username_;
+  ::std::string* email_;
+  int usertype_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -686,7 +1621,7 @@ class subproblemInformation : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fschool_2eproto();
 
   void InitAsDefaultInstance();
-  static subproblemInformation* default_instance_;
+  static User* default_instance_;
 };
 // ===================================================================
 
@@ -914,6 +1849,400 @@ inline void SrlCourse::set_allocated_coursename(::std::string* coursename) {
   }
 }
 
+// repeated .protobuf.srl.school.User courseUsers = 3;
+inline int SrlCourse::courseusers_size() const {
+  return courseusers_.size();
+}
+inline void SrlCourse::clear_courseusers() {
+  courseusers_.Clear();
+}
+inline const ::protobuf::srl::school::User& SrlCourse::courseusers(int index) const {
+  return courseusers_.Get(index);
+}
+inline ::protobuf::srl::school::User* SrlCourse::mutable_courseusers(int index) {
+  return courseusers_.Mutable(index);
+}
+inline ::protobuf::srl::school::User* SrlCourse::add_courseusers() {
+  return courseusers_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User >&
+SrlCourse::courseusers() const {
+  return courseusers_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User >*
+SrlCourse::mutable_courseusers() {
+  return &courseusers_;
+}
+
+// optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];
+inline bool SrlCourse::has_access() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SrlCourse::set_has_access() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SrlCourse::clear_has_access() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SrlCourse::clear_access() {
+  access_ = 2;
+  clear_has_access();
+}
+inline ::protobuf::srl::school::SrlCourse_Accessibility SrlCourse::access() const {
+  return static_cast< ::protobuf::srl::school::SrlCourse_Accessibility >(access_);
+}
+inline void SrlCourse::set_access(::protobuf::srl::school::SrlCourse_Accessibility value) {
+  assert(::protobuf::srl::school::SrlCourse_Accessibility_IsValid(value));
+  set_has_access();
+  access_ = value;
+}
+
+// optional string description = 5;
+inline bool SrlCourse::has_description() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SrlCourse::set_has_description() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SrlCourse::clear_has_description() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SrlCourse::clear_description() {
+  if (description_ != &::google::protobuf::internal::kEmptyString) {
+    description_->clear();
+  }
+  clear_has_description();
+}
+inline const ::std::string& SrlCourse::description() const {
+  return *description_;
+}
+inline void SrlCourse::set_description(const ::std::string& value) {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  description_->assign(value);
+}
+inline void SrlCourse::set_description(const char* value) {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  description_->assign(value);
+}
+inline void SrlCourse::set_description(const char* value, size_t size) {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  description_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlCourse::mutable_description() {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  return description_;
+}
+inline ::std::string* SrlCourse::release_description() {
+  clear_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = description_;
+    description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlCourse::set_allocated_description(::std::string* description) {
+  if (description_ != &::google::protobuf::internal::kEmptyString) {
+    delete description_;
+  }
+  if (description) {
+    set_has_description();
+    description_ = description;
+  } else {
+    clear_has_description();
+    description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string semester = 6;
+inline bool SrlCourse::has_semester() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void SrlCourse::set_has_semester() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void SrlCourse::clear_has_semester() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void SrlCourse::clear_semester() {
+  if (semester_ != &::google::protobuf::internal::kEmptyString) {
+    semester_->clear();
+  }
+  clear_has_semester();
+}
+inline const ::std::string& SrlCourse::semester() const {
+  return *semester_;
+}
+inline void SrlCourse::set_semester(const ::std::string& value) {
+  set_has_semester();
+  if (semester_ == &::google::protobuf::internal::kEmptyString) {
+    semester_ = new ::std::string;
+  }
+  semester_->assign(value);
+}
+inline void SrlCourse::set_semester(const char* value) {
+  set_has_semester();
+  if (semester_ == &::google::protobuf::internal::kEmptyString) {
+    semester_ = new ::std::string;
+  }
+  semester_->assign(value);
+}
+inline void SrlCourse::set_semester(const char* value, size_t size) {
+  set_has_semester();
+  if (semester_ == &::google::protobuf::internal::kEmptyString) {
+    semester_ = new ::std::string;
+  }
+  semester_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlCourse::mutable_semester() {
+  set_has_semester();
+  if (semester_ == &::google::protobuf::internal::kEmptyString) {
+    semester_ = new ::std::string;
+  }
+  return semester_;
+}
+inline ::std::string* SrlCourse::release_semester() {
+  clear_has_semester();
+  if (semester_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = semester_;
+    semester_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlCourse::set_allocated_semester(::std::string* semester) {
+  if (semester_ != &::google::protobuf::internal::kEmptyString) {
+    delete semester_;
+  }
+  if (semester) {
+    set_has_semester();
+    semester_ = semester;
+  } else {
+    clear_has_semester();
+    semester_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string imageUrl = 7;
+inline bool SrlCourse::has_imageurl() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void SrlCourse::set_has_imageurl() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void SrlCourse::clear_has_imageurl() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void SrlCourse::clear_imageurl() {
+  if (imageurl_ != &::google::protobuf::internal::kEmptyString) {
+    imageurl_->clear();
+  }
+  clear_has_imageurl();
+}
+inline const ::std::string& SrlCourse::imageurl() const {
+  return *imageurl_;
+}
+inline void SrlCourse::set_imageurl(const ::std::string& value) {
+  set_has_imageurl();
+  if (imageurl_ == &::google::protobuf::internal::kEmptyString) {
+    imageurl_ = new ::std::string;
+  }
+  imageurl_->assign(value);
+}
+inline void SrlCourse::set_imageurl(const char* value) {
+  set_has_imageurl();
+  if (imageurl_ == &::google::protobuf::internal::kEmptyString) {
+    imageurl_ = new ::std::string;
+  }
+  imageurl_->assign(value);
+}
+inline void SrlCourse::set_imageurl(const char* value, size_t size) {
+  set_has_imageurl();
+  if (imageurl_ == &::google::protobuf::internal::kEmptyString) {
+    imageurl_ = new ::std::string;
+  }
+  imageurl_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlCourse::mutable_imageurl() {
+  set_has_imageurl();
+  if (imageurl_ == &::google::protobuf::internal::kEmptyString) {
+    imageurl_ = new ::std::string;
+  }
+  return imageurl_;
+}
+inline ::std::string* SrlCourse::release_imageurl() {
+  clear_has_imageurl();
+  if (imageurl_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = imageurl_;
+    imageurl_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlCourse::set_allocated_imageurl(::std::string* imageurl) {
+  if (imageurl_ != &::google::protobuf::internal::kEmptyString) {
+    delete imageurl_;
+  }
+  if (imageurl) {
+    set_has_imageurl();
+    imageurl_ = imageurl;
+  } else {
+    clear_has_imageurl();
+    imageurl_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 grade = 8;
+inline bool SrlCourse::has_grade() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void SrlCourse::set_has_grade() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void SrlCourse::clear_has_grade() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void SrlCourse::clear_grade() {
+  grade_ = 0;
+  clear_has_grade();
+}
+inline ::google::protobuf::int32 SrlCourse::grade() const {
+  return grade_;
+}
+inline void SrlCourse::set_grade(::google::protobuf::int32 value) {
+  set_has_grade();
+  grade_ = value;
+}
+
+// optional .protobuf.srl.school.DateTime accessDate = 9;
+inline bool SrlCourse::has_accessdate() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void SrlCourse::set_has_accessdate() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void SrlCourse::clear_has_accessdate() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void SrlCourse::clear_accessdate() {
+  if (accessdate_ != NULL) accessdate_->::protobuf::srl::school::DateTime::Clear();
+  clear_has_accessdate();
+}
+inline const ::protobuf::srl::school::DateTime& SrlCourse::accessdate() const {
+  return accessdate_ != NULL ? *accessdate_ : *default_instance_->accessdate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlCourse::mutable_accessdate() {
+  set_has_accessdate();
+  if (accessdate_ == NULL) accessdate_ = new ::protobuf::srl::school::DateTime;
+  return accessdate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlCourse::release_accessdate() {
+  clear_has_accessdate();
+  ::protobuf::srl::school::DateTime* temp = accessdate_;
+  accessdate_ = NULL;
+  return temp;
+}
+inline void SrlCourse::set_allocated_accessdate(::protobuf::srl::school::DateTime* accessdate) {
+  delete accessdate_;
+  accessdate_ = accessdate;
+  if (accessdate) {
+    set_has_accessdate();
+  } else {
+    clear_has_accessdate();
+  }
+}
+
+// optional .protobuf.srl.school.DateTime closeDate = 10;
+inline bool SrlCourse::has_closedate() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void SrlCourse::set_has_closedate() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void SrlCourse::clear_has_closedate() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void SrlCourse::clear_closedate() {
+  if (closedate_ != NULL) closedate_->::protobuf::srl::school::DateTime::Clear();
+  clear_has_closedate();
+}
+inline const ::protobuf::srl::school::DateTime& SrlCourse::closedate() const {
+  return closedate_ != NULL ? *closedate_ : *default_instance_->closedate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlCourse::mutable_closedate() {
+  set_has_closedate();
+  if (closedate_ == NULL) closedate_ = new ::protobuf::srl::school::DateTime;
+  return closedate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlCourse::release_closedate() {
+  clear_has_closedate();
+  ::protobuf::srl::school::DateTime* temp = closedate_;
+  closedate_ = NULL;
+  return temp;
+}
+inline void SrlCourse::set_allocated_closedate(::protobuf::srl::school::DateTime* closedate) {
+  delete closedate_;
+  closedate_ = closedate;
+  if (closedate) {
+    set_has_closedate();
+  } else {
+    clear_has_closedate();
+  }
+}
+
+// optional .protobuf.srl.school.State state = 11;
+inline bool SrlCourse::has_state() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void SrlCourse::set_has_state() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void SrlCourse::clear_has_state() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void SrlCourse::clear_state() {
+  if (state_ != NULL) state_->::protobuf::srl::school::State::Clear();
+  clear_has_state();
+}
+inline const ::protobuf::srl::school::State& SrlCourse::state() const {
+  return state_ != NULL ? *state_ : *default_instance_->state_;
+}
+inline ::protobuf::srl::school::State* SrlCourse::mutable_state() {
+  set_has_state();
+  if (state_ == NULL) state_ = new ::protobuf::srl::school::State;
+  return state_;
+}
+inline ::protobuf::srl::school::State* SrlCourse::release_state() {
+  clear_has_state();
+  ::protobuf::srl::school::State* temp = state_;
+  state_ = NULL;
+  return temp;
+}
+inline void SrlCourse::set_allocated_state(::protobuf::srl::school::State* state) {
+  delete state_;
+  state_ = state;
+  if (state) {
+    set_has_state();
+  } else {
+    clear_has_state();
+  }
+}
+
 // -------------------------------------------------------------------
 
 // SrlAssignment
@@ -1125,6 +2454,432 @@ inline void SrlAssignment::set_allocated_assignmentname(::std::string* assignmen
   } else {
     clear_has_assignmentname();
     assignmentname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;
+inline bool SrlAssignment::has_type() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SrlAssignment::set_has_type() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SrlAssignment::clear_has_type() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SrlAssignment::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::protobuf::srl::school::SrlAssignment_AssignmentType SrlAssignment::type() const {
+  return static_cast< ::protobuf::srl::school::SrlAssignment_AssignmentType >(type_);
+}
+inline void SrlAssignment::set_type(::protobuf::srl::school::SrlAssignment_AssignmentType value) {
+  assert(::protobuf::srl::school::SrlAssignment_AssignmentType_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional string other = 5;
+inline bool SrlAssignment::has_other() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SrlAssignment::set_has_other() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SrlAssignment::clear_has_other() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SrlAssignment::clear_other() {
+  if (other_ != &::google::protobuf::internal::kEmptyString) {
+    other_->clear();
+  }
+  clear_has_other();
+}
+inline const ::std::string& SrlAssignment::other() const {
+  return *other_;
+}
+inline void SrlAssignment::set_other(const ::std::string& value) {
+  set_has_other();
+  if (other_ == &::google::protobuf::internal::kEmptyString) {
+    other_ = new ::std::string;
+  }
+  other_->assign(value);
+}
+inline void SrlAssignment::set_other(const char* value) {
+  set_has_other();
+  if (other_ == &::google::protobuf::internal::kEmptyString) {
+    other_ = new ::std::string;
+  }
+  other_->assign(value);
+}
+inline void SrlAssignment::set_other(const char* value, size_t size) {
+  set_has_other();
+  if (other_ == &::google::protobuf::internal::kEmptyString) {
+    other_ = new ::std::string;
+  }
+  other_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlAssignment::mutable_other() {
+  set_has_other();
+  if (other_ == &::google::protobuf::internal::kEmptyString) {
+    other_ = new ::std::string;
+  }
+  return other_;
+}
+inline ::std::string* SrlAssignment::release_other() {
+  clear_has_other();
+  if (other_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = other_;
+    other_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlAssignment::set_allocated_other(::std::string* other) {
+  if (other_ != &::google::protobuf::internal::kEmptyString) {
+    delete other_;
+  }
+  if (other) {
+    set_has_other();
+    other_ = other;
+  } else {
+    clear_has_other();
+    other_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string description = 6;
+inline bool SrlAssignment::has_description() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void SrlAssignment::set_has_description() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void SrlAssignment::clear_has_description() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void SrlAssignment::clear_description() {
+  if (description_ != &::google::protobuf::internal::kEmptyString) {
+    description_->clear();
+  }
+  clear_has_description();
+}
+inline const ::std::string& SrlAssignment::description() const {
+  return *description_;
+}
+inline void SrlAssignment::set_description(const ::std::string& value) {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  description_->assign(value);
+}
+inline void SrlAssignment::set_description(const char* value) {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  description_->assign(value);
+}
+inline void SrlAssignment::set_description(const char* value, size_t size) {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  description_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlAssignment::mutable_description() {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  return description_;
+}
+inline ::std::string* SrlAssignment::release_description() {
+  clear_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = description_;
+    description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlAssignment::set_allocated_description(::std::string* description) {
+  if (description_ != &::google::protobuf::internal::kEmptyString) {
+    delete description_;
+  }
+  if (description) {
+    set_has_description();
+    description_ = description;
+  } else {
+    clear_has_description();
+    description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated string links = 7;
+inline int SrlAssignment::links_size() const {
+  return links_.size();
+}
+inline void SrlAssignment::clear_links() {
+  links_.Clear();
+}
+inline const ::std::string& SrlAssignment::links(int index) const {
+  return links_.Get(index);
+}
+inline ::std::string* SrlAssignment::mutable_links(int index) {
+  return links_.Mutable(index);
+}
+inline void SrlAssignment::set_links(int index, const ::std::string& value) {
+  links_.Mutable(index)->assign(value);
+}
+inline void SrlAssignment::set_links(int index, const char* value) {
+  links_.Mutable(index)->assign(value);
+}
+inline void SrlAssignment::set_links(int index, const char* value, size_t size) {
+  links_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlAssignment::add_links() {
+  return links_.Add();
+}
+inline void SrlAssignment::add_links(const ::std::string& value) {
+  links_.Add()->assign(value);
+}
+inline void SrlAssignment::add_links(const char* value) {
+  links_.Add()->assign(value);
+}
+inline void SrlAssignment::add_links(const char* value, size_t size) {
+  links_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SrlAssignment::links() const {
+  return links_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SrlAssignment::mutable_links() {
+  return &links_;
+}
+
+// optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+inline bool SrlAssignment::has_latepolicy() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void SrlAssignment::set_has_latepolicy() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void SrlAssignment::clear_has_latepolicy() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void SrlAssignment::clear_latepolicy() {
+  latepolicy_ = 1;
+  clear_has_latepolicy();
+}
+inline ::protobuf::srl::school::SrlAssignment_LatePolicy SrlAssignment::latepolicy() const {
+  return static_cast< ::protobuf::srl::school::SrlAssignment_LatePolicy >(latepolicy_);
+}
+inline void SrlAssignment::set_latepolicy(::protobuf::srl::school::SrlAssignment_LatePolicy value) {
+  assert(::protobuf::srl::school::SrlAssignment_LatePolicy_IsValid(value));
+  set_has_latepolicy();
+  latepolicy_ = value;
+}
+
+// optional int32 gradeWeight = 9;
+inline bool SrlAssignment::has_gradeweight() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void SrlAssignment::set_has_gradeweight() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void SrlAssignment::clear_has_gradeweight() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void SrlAssignment::clear_gradeweight() {
+  gradeweight_ = 0;
+  clear_has_gradeweight();
+}
+inline ::google::protobuf::int32 SrlAssignment::gradeweight() const {
+  return gradeweight_;
+}
+inline void SrlAssignment::set_gradeweight(::google::protobuf::int32 value) {
+  set_has_gradeweight();
+  gradeweight_ = value;
+}
+
+// optional int32 grade = 10;
+inline bool SrlAssignment::has_grade() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void SrlAssignment::set_has_grade() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void SrlAssignment::clear_has_grade() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void SrlAssignment::clear_grade() {
+  grade_ = 0;
+  clear_has_grade();
+}
+inline ::google::protobuf::int32 SrlAssignment::grade() const {
+  return grade_;
+}
+inline void SrlAssignment::set_grade(::google::protobuf::int32 value) {
+  set_has_grade();
+  grade_ = value;
+}
+
+// optional .protobuf.srl.school.DateTime accessDate = 11;
+inline bool SrlAssignment::has_accessdate() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void SrlAssignment::set_has_accessdate() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void SrlAssignment::clear_has_accessdate() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void SrlAssignment::clear_accessdate() {
+  if (accessdate_ != NULL) accessdate_->::protobuf::srl::school::DateTime::Clear();
+  clear_has_accessdate();
+}
+inline const ::protobuf::srl::school::DateTime& SrlAssignment::accessdate() const {
+  return accessdate_ != NULL ? *accessdate_ : *default_instance_->accessdate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlAssignment::mutable_accessdate() {
+  set_has_accessdate();
+  if (accessdate_ == NULL) accessdate_ = new ::protobuf::srl::school::DateTime;
+  return accessdate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlAssignment::release_accessdate() {
+  clear_has_accessdate();
+  ::protobuf::srl::school::DateTime* temp = accessdate_;
+  accessdate_ = NULL;
+  return temp;
+}
+inline void SrlAssignment::set_allocated_accessdate(::protobuf::srl::school::DateTime* accessdate) {
+  delete accessdate_;
+  accessdate_ = accessdate;
+  if (accessdate) {
+    set_has_accessdate();
+  } else {
+    clear_has_accessdate();
+  }
+}
+
+// optional .protobuf.srl.school.DateTime dueDate = 12;
+inline bool SrlAssignment::has_duedate() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void SrlAssignment::set_has_duedate() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void SrlAssignment::clear_has_duedate() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void SrlAssignment::clear_duedate() {
+  if (duedate_ != NULL) duedate_->::protobuf::srl::school::DateTime::Clear();
+  clear_has_duedate();
+}
+inline const ::protobuf::srl::school::DateTime& SrlAssignment::duedate() const {
+  return duedate_ != NULL ? *duedate_ : *default_instance_->duedate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlAssignment::mutable_duedate() {
+  set_has_duedate();
+  if (duedate_ == NULL) duedate_ = new ::protobuf::srl::school::DateTime;
+  return duedate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlAssignment::release_duedate() {
+  clear_has_duedate();
+  ::protobuf::srl::school::DateTime* temp = duedate_;
+  duedate_ = NULL;
+  return temp;
+}
+inline void SrlAssignment::set_allocated_duedate(::protobuf::srl::school::DateTime* duedate) {
+  delete duedate_;
+  duedate_ = duedate;
+  if (duedate) {
+    set_has_duedate();
+  } else {
+    clear_has_duedate();
+  }
+}
+
+// optional .protobuf.srl.school.DateTime closeDate = 13;
+inline bool SrlAssignment::has_closedate() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void SrlAssignment::set_has_closedate() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void SrlAssignment::clear_has_closedate() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void SrlAssignment::clear_closedate() {
+  if (closedate_ != NULL) closedate_->::protobuf::srl::school::DateTime::Clear();
+  clear_has_closedate();
+}
+inline const ::protobuf::srl::school::DateTime& SrlAssignment::closedate() const {
+  return closedate_ != NULL ? *closedate_ : *default_instance_->closedate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlAssignment::mutable_closedate() {
+  set_has_closedate();
+  if (closedate_ == NULL) closedate_ = new ::protobuf::srl::school::DateTime;
+  return closedate_;
+}
+inline ::protobuf::srl::school::DateTime* SrlAssignment::release_closedate() {
+  clear_has_closedate();
+  ::protobuf::srl::school::DateTime* temp = closedate_;
+  closedate_ = NULL;
+  return temp;
+}
+inline void SrlAssignment::set_allocated_closedate(::protobuf::srl::school::DateTime* closedate) {
+  delete closedate_;
+  closedate_ = closedate;
+  if (closedate) {
+    set_has_closedate();
+  } else {
+    clear_has_closedate();
+  }
+}
+
+// optional .protobuf.srl.school.State state = 14;
+inline bool SrlAssignment::has_state() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void SrlAssignment::set_has_state() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void SrlAssignment::clear_has_state() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void SrlAssignment::clear_state() {
+  if (state_ != NULL) state_->::protobuf::srl::school::State::Clear();
+  clear_has_state();
+}
+inline const ::protobuf::srl::school::State& SrlAssignment::state() const {
+  return state_ != NULL ? *state_ : *default_instance_->state_;
+}
+inline ::protobuf::srl::school::State* SrlAssignment::mutable_state() {
+  set_has_state();
+  if (state_ == NULL) state_ = new ::protobuf::srl::school::State;
+  return state_;
+}
+inline ::protobuf::srl::school::State* SrlAssignment::release_state() {
+  clear_has_state();
+  ::protobuf::srl::school::State* temp = state_;
+  state_ = NULL;
+  return temp;
+}
+inline void SrlAssignment::set_allocated_state(::protobuf::srl::school::State* state) {
+  delete state_;
+  state_ = state;
+  if (state) {
+    set_has_state();
+  } else {
+    clear_has_state();
   }
 }
 
@@ -1412,41 +3167,73 @@ inline void SrlProblem::set_allocated_problemname(::std::string* problemname) {
   }
 }
 
-// optional .protobuf.srl.school.subproblemInformation mainProblem = 5;
-inline bool SrlProblem::has_mainproblem() const {
+// optional string description = 5;
+inline bool SrlProblem::has_description() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void SrlProblem::set_has_mainproblem() {
+inline void SrlProblem::set_has_description() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void SrlProblem::clear_has_mainproblem() {
+inline void SrlProblem::clear_has_description() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void SrlProblem::clear_mainproblem() {
-  if (mainproblem_ != NULL) mainproblem_->::protobuf::srl::school::subproblemInformation::Clear();
-  clear_has_mainproblem();
+inline void SrlProblem::clear_description() {
+  if (description_ != &::google::protobuf::internal::kEmptyString) {
+    description_->clear();
+  }
+  clear_has_description();
 }
-inline const ::protobuf::srl::school::subproblemInformation& SrlProblem::mainproblem() const {
-  return mainproblem_ != NULL ? *mainproblem_ : *default_instance_->mainproblem_;
+inline const ::std::string& SrlProblem::description() const {
+  return *description_;
 }
-inline ::protobuf::srl::school::subproblemInformation* SrlProblem::mutable_mainproblem() {
-  set_has_mainproblem();
-  if (mainproblem_ == NULL) mainproblem_ = new ::protobuf::srl::school::subproblemInformation;
-  return mainproblem_;
+inline void SrlProblem::set_description(const ::std::string& value) {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  description_->assign(value);
 }
-inline ::protobuf::srl::school::subproblemInformation* SrlProblem::release_mainproblem() {
-  clear_has_mainproblem();
-  ::protobuf::srl::school::subproblemInformation* temp = mainproblem_;
-  mainproblem_ = NULL;
-  return temp;
+inline void SrlProblem::set_description(const char* value) {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  description_->assign(value);
 }
-inline void SrlProblem::set_allocated_mainproblem(::protobuf::srl::school::subproblemInformation* mainproblem) {
-  delete mainproblem_;
-  mainproblem_ = mainproblem;
-  if (mainproblem) {
-    set_has_mainproblem();
+inline void SrlProblem::set_description(const char* value, size_t size) {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  description_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlProblem::mutable_description() {
+  set_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    description_ = new ::std::string;
+  }
+  return description_;
+}
+inline ::std::string* SrlProblem::release_description() {
+  clear_has_description();
+  if (description_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
   } else {
-    clear_has_mainproblem();
+    ::std::string* temp = description_;
+    description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlProblem::set_allocated_description(::std::string* description) {
+  if (description_ != &::google::protobuf::internal::kEmptyString) {
+    delete description_;
+  }
+  if (description) {
+    set_has_description();
+    description_ = description;
+  } else {
+    clear_has_description();
+    description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -1473,6 +3260,75 @@ SrlProblem::subproblems() const {
 inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation >*
 SrlProblem::mutable_subproblems() {
   return &subproblems_;
+}
+
+// repeated .protobuf.srl.school.DomainInformation info = 7;
+inline int SrlProblem::info_size() const {
+  return info_.size();
+}
+inline void SrlProblem::clear_info() {
+  info_.Clear();
+}
+inline const ::protobuf::srl::school::DomainInformation& SrlProblem::info(int index) const {
+  return info_.Get(index);
+}
+inline ::protobuf::srl::school::DomainInformation* SrlProblem::mutable_info(int index) {
+  return info_.Mutable(index);
+}
+inline ::protobuf::srl::school::DomainInformation* SrlProblem::add_info() {
+  return info_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >&
+SrlProblem::info() const {
+  return info_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >*
+SrlProblem::mutable_info() {
+  return &info_;
+}
+
+// optional int32 gradeWeight = 8;
+inline bool SrlProblem::has_gradeweight() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void SrlProblem::set_has_gradeweight() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void SrlProblem::clear_has_gradeweight() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void SrlProblem::clear_gradeweight() {
+  gradeweight_ = 0;
+  clear_has_gradeweight();
+}
+inline ::google::protobuf::int32 SrlProblem::gradeweight() const {
+  return gradeweight_;
+}
+inline void SrlProblem::set_gradeweight(::google::protobuf::int32 value) {
+  set_has_gradeweight();
+  gradeweight_ = value;
+}
+
+// optional int32 grade = 9;
+inline bool SrlProblem::has_grade() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void SrlProblem::set_has_grade() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void SrlProblem::clear_has_grade() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void SrlProblem::clear_grade() {
+  grade_ = 0;
+  clear_has_grade();
+}
+inline ::google::protobuf::int32 SrlProblem::grade() const {
+  return grade_;
+}
+inline void SrlProblem::set_grade(::google::protobuf::int32 value) {
+  set_has_grade();
+  grade_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1642,6 +3498,563 @@ inline void subproblemInformation::set_allocated_options(::std::string* options)
   }
 }
 
+// optional int32 gradeWeight = 4;
+inline bool subproblemInformation::has_gradeweight() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void subproblemInformation::set_has_gradeweight() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void subproblemInformation::clear_has_gradeweight() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void subproblemInformation::clear_gradeweight() {
+  gradeweight_ = 0;
+  clear_has_gradeweight();
+}
+inline ::google::protobuf::int32 subproblemInformation::gradeweight() const {
+  return gradeweight_;
+}
+inline void subproblemInformation::set_gradeweight(::google::protobuf::int32 value) {
+  set_has_gradeweight();
+  gradeweight_ = value;
+}
+
+// optional int32 grade = 5;
+inline bool subproblemInformation::has_grade() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void subproblemInformation::set_has_grade() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void subproblemInformation::clear_has_grade() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void subproblemInformation::clear_grade() {
+  grade_ = 0;
+  clear_has_grade();
+}
+inline ::google::protobuf::int32 subproblemInformation::grade() const {
+  return grade_;
+}
+inline void subproblemInformation::set_grade(::google::protobuf::int32 value) {
+  set_has_grade();
+  grade_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// DateTime
+
+// optional uint64 millisecond = 1;
+inline bool DateTime::has_millisecond() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DateTime::set_has_millisecond() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DateTime::clear_has_millisecond() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DateTime::clear_millisecond() {
+  millisecond_ = GOOGLE_ULONGLONG(0);
+  clear_has_millisecond();
+}
+inline ::google::protobuf::uint64 DateTime::millisecond() const {
+  return millisecond_;
+}
+inline void DateTime::set_millisecond(::google::protobuf::uint64 value) {
+  set_has_millisecond();
+  millisecond_ = value;
+}
+
+// optional int32 second = 2;
+inline bool DateTime::has_second() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DateTime::set_has_second() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DateTime::clear_has_second() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DateTime::clear_second() {
+  second_ = 0;
+  clear_has_second();
+}
+inline ::google::protobuf::int32 DateTime::second() const {
+  return second_;
+}
+inline void DateTime::set_second(::google::protobuf::int32 value) {
+  set_has_second();
+  second_ = value;
+}
+
+// optional int32 minute = 3;
+inline bool DateTime::has_minute() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void DateTime::set_has_minute() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void DateTime::clear_has_minute() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void DateTime::clear_minute() {
+  minute_ = 0;
+  clear_has_minute();
+}
+inline ::google::protobuf::int32 DateTime::minute() const {
+  return minute_;
+}
+inline void DateTime::set_minute(::google::protobuf::int32 value) {
+  set_has_minute();
+  minute_ = value;
+}
+
+// optional int32 hour = 4;
+inline bool DateTime::has_hour() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void DateTime::set_has_hour() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void DateTime::clear_has_hour() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void DateTime::clear_hour() {
+  hour_ = 0;
+  clear_has_hour();
+}
+inline ::google::protobuf::int32 DateTime::hour() const {
+  return hour_;
+}
+inline void DateTime::set_hour(::google::protobuf::int32 value) {
+  set_has_hour();
+  hour_ = value;
+}
+
+// optional int32 day = 5;
+inline bool DateTime::has_day() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void DateTime::set_has_day() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void DateTime::clear_has_day() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void DateTime::clear_day() {
+  day_ = 0;
+  clear_has_day();
+}
+inline ::google::protobuf::int32 DateTime::day() const {
+  return day_;
+}
+inline void DateTime::set_day(::google::protobuf::int32 value) {
+  set_has_day();
+  day_ = value;
+}
+
+// optional int32 month = 6;
+inline bool DateTime::has_month() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void DateTime::set_has_month() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void DateTime::clear_has_month() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void DateTime::clear_month() {
+  month_ = 0;
+  clear_has_month();
+}
+inline ::google::protobuf::int32 DateTime::month() const {
+  return month_;
+}
+inline void DateTime::set_month(::google::protobuf::int32 value) {
+  set_has_month();
+  month_ = value;
+}
+
+// optional int32 year = 7;
+inline bool DateTime::has_year() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void DateTime::set_has_year() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void DateTime::clear_has_year() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void DateTime::clear_year() {
+  year_ = 0;
+  clear_has_year();
+}
+inline ::google::protobuf::int32 DateTime::year() const {
+  return year_;
+}
+inline void DateTime::set_year(::google::protobuf::int32 value) {
+  set_has_year();
+  year_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// DomainInformation
+
+// optional string stuff = 1;
+inline bool DomainInformation::has_stuff() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DomainInformation::set_has_stuff() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DomainInformation::clear_has_stuff() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DomainInformation::clear_stuff() {
+  if (stuff_ != &::google::protobuf::internal::kEmptyString) {
+    stuff_->clear();
+  }
+  clear_has_stuff();
+}
+inline const ::std::string& DomainInformation::stuff() const {
+  return *stuff_;
+}
+inline void DomainInformation::set_stuff(const ::std::string& value) {
+  set_has_stuff();
+  if (stuff_ == &::google::protobuf::internal::kEmptyString) {
+    stuff_ = new ::std::string;
+  }
+  stuff_->assign(value);
+}
+inline void DomainInformation::set_stuff(const char* value) {
+  set_has_stuff();
+  if (stuff_ == &::google::protobuf::internal::kEmptyString) {
+    stuff_ = new ::std::string;
+  }
+  stuff_->assign(value);
+}
+inline void DomainInformation::set_stuff(const char* value, size_t size) {
+  set_has_stuff();
+  if (stuff_ == &::google::protobuf::internal::kEmptyString) {
+    stuff_ = new ::std::string;
+  }
+  stuff_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DomainInformation::mutable_stuff() {
+  set_has_stuff();
+  if (stuff_ == &::google::protobuf::internal::kEmptyString) {
+    stuff_ = new ::std::string;
+  }
+  return stuff_;
+}
+inline ::std::string* DomainInformation::release_stuff() {
+  clear_has_stuff();
+  if (stuff_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = stuff_;
+    stuff_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DomainInformation::set_allocated_stuff(::std::string* stuff) {
+  if (stuff_ != &::google::protobuf::internal::kEmptyString) {
+    delete stuff_;
+  }
+  if (stuff) {
+    set_has_stuff();
+    stuff_ = stuff;
+  } else {
+    clear_has_stuff();
+    stuff_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// State
+
+// optional bool published = 1;
+inline bool State::has_published() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void State::set_has_published() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void State::clear_has_published() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void State::clear_published() {
+  published_ = false;
+  clear_has_published();
+}
+inline bool State::published() const {
+  return published_;
+}
+inline void State::set_published(bool value) {
+  set_has_published();
+  published_ = value;
+}
+
+// optional bool accessible = 2;
+inline bool State::has_accessible() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void State::set_has_accessible() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void State::clear_has_accessible() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void State::clear_accessible() {
+  accessible_ = false;
+  clear_has_accessible();
+}
+inline bool State::accessible() const {
+  return accessible_;
+}
+inline void State::set_accessible(bool value) {
+  set_has_accessible();
+  accessible_ = value;
+}
+
+// optional bool late = 3;
+inline bool State::has_late() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void State::set_has_late() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void State::clear_has_late() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void State::clear_late() {
+  late_ = false;
+  clear_has_late();
+}
+inline bool State::late() const {
+  return late_;
+}
+inline void State::set_late(bool value) {
+  set_has_late();
+  late_ = value;
+}
+
+// optional bool started = 4;
+inline bool State::has_started() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void State::set_has_started() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void State::clear_has_started() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void State::clear_started() {
+  started_ = false;
+  clear_has_started();
+}
+inline bool State::started() const {
+  return started_;
+}
+inline void State::set_started(bool value) {
+  set_has_started();
+  started_ = value;
+}
+
+// optional bool completed = 5;
+inline bool State::has_completed() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void State::set_has_completed() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void State::clear_has_completed() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void State::clear_completed() {
+  completed_ = false;
+  clear_has_completed();
+}
+inline bool State::completed() const {
+  return completed_;
+}
+inline void State::set_completed(bool value) {
+  set_has_completed();
+  completed_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// User
+
+// required string username = 1;
+inline bool User::has_username() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void User::set_has_username() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void User::clear_has_username() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void User::clear_username() {
+  if (username_ != &::google::protobuf::internal::kEmptyString) {
+    username_->clear();
+  }
+  clear_has_username();
+}
+inline const ::std::string& User::username() const {
+  return *username_;
+}
+inline void User::set_username(const ::std::string& value) {
+  set_has_username();
+  if (username_ == &::google::protobuf::internal::kEmptyString) {
+    username_ = new ::std::string;
+  }
+  username_->assign(value);
+}
+inline void User::set_username(const char* value) {
+  set_has_username();
+  if (username_ == &::google::protobuf::internal::kEmptyString) {
+    username_ = new ::std::string;
+  }
+  username_->assign(value);
+}
+inline void User::set_username(const char* value, size_t size) {
+  set_has_username();
+  if (username_ == &::google::protobuf::internal::kEmptyString) {
+    username_ = new ::std::string;
+  }
+  username_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* User::mutable_username() {
+  set_has_username();
+  if (username_ == &::google::protobuf::internal::kEmptyString) {
+    username_ = new ::std::string;
+  }
+  return username_;
+}
+inline ::std::string* User::release_username() {
+  clear_has_username();
+  if (username_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = username_;
+    username_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void User::set_allocated_username(::std::string* username) {
+  if (username_ != &::google::protobuf::internal::kEmptyString) {
+    delete username_;
+  }
+  if (username) {
+    set_has_username();
+    username_ = username;
+  } else {
+    clear_has_username();
+    username_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
+inline bool User::has_usertype() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void User::set_has_usertype() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void User::clear_has_usertype() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void User::clear_usertype() {
+  usertype_ = 5;
+  clear_has_usertype();
+}
+inline ::protobuf::srl::school::UserType User::usertype() const {
+  return static_cast< ::protobuf::srl::school::UserType >(usertype_);
+}
+inline void User::set_usertype(::protobuf::srl::school::UserType value) {
+  assert(::protobuf::srl::school::UserType_IsValid(value));
+  set_has_usertype();
+  usertype_ = value;
+}
+
+// optional string email = 3;
+inline bool User::has_email() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void User::set_has_email() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void User::clear_has_email() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void User::clear_email() {
+  if (email_ != &::google::protobuf::internal::kEmptyString) {
+    email_->clear();
+  }
+  clear_has_email();
+}
+inline const ::std::string& User::email() const {
+  return *email_;
+}
+inline void User::set_email(const ::std::string& value) {
+  set_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    email_ = new ::std::string;
+  }
+  email_->assign(value);
+}
+inline void User::set_email(const char* value) {
+  set_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    email_ = new ::std::string;
+  }
+  email_->assign(value);
+}
+inline void User::set_email(const char* value, size_t size) {
+  set_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    email_ = new ::std::string;
+  }
+  email_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* User::mutable_email() {
+  set_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    email_ = new ::std::string;
+  }
+  return email_;
+}
+inline ::std::string* User::release_email() {
+  clear_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = email_;
+    email_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void User::set_allocated_email(::std::string* email) {
+  if (email_ != &::google::protobuf::internal::kEmptyString) {
+    delete email_;
+  }
+  if (email) {
+    set_has_email();
+    email_ = email;
+  } else {
+    clear_has_email();
+    email_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -1654,8 +4067,24 @@ namespace google {
 namespace protobuf {
 
 template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlCourse_Accessibility>() {
+  return ::protobuf::srl::school::SrlCourse_Accessibility_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlAssignment_AssignmentType>() {
+  return ::protobuf::srl::school::SrlAssignment_AssignmentType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlAssignment_LatePolicy>() {
+  return ::protobuf::srl::school::SrlAssignment_LatePolicy_descriptor();
+}
+template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::subproblemInformation_QuestionType>() {
   return ::protobuf::srl::school::subproblemInformation_QuestionType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::UserType>() {
+  return ::protobuf::srl::school::UserType_descriptor();
 }
 
 }  // namespace google
