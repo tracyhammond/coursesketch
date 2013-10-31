@@ -74,19 +74,32 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 
 function sketchContainer() {
 	var objectList = [];
+	var objectIdMap = [];
 	this.canvasContext = false;
 
-	objectList.remove = function(srl_object) {
-		var i = array.indexOf(srl_object);
-		if(i != -1) {
-			this.splice(i, 1);
-		}
-	};
-
 	var objectMap = {};
-	this.addObject = function(srl_object) {
-		objectList.push(srl_object);
-		objectMap[srl_object.get]
+	this.addObject = function(srlObject) {
+		objectList.push(srlObject);
+		objectIdMap[srlObject.getId()] = srlObject;
+	}
+
+	/**
+	 * Given an object, remove this instance of the object.
+	 */
+	this.removeObject = function(srlObject) {
+		var result = objectList.removeObject(srlObject);
+		if (result) {
+			delete objectMap[result.getId()];
+		}
+		return result;
+	}
+
+	/**
+	 * Given an objectId, remove the object. (Slower than if you already have an instance of the object)
+	 */
+	this.removeObjectById = function(objectId) {
+		var object = this.getObjectById(objectId);
+		this.removeObject(srlObject);
 	}
 
 	this.getList = function() {
@@ -102,4 +115,24 @@ function sketchContainer() {
 			}
 		}
 	}
+
+	/**
+	 * Returns the object based off of its id.
+	 */
+	this.getObjectById = function(objectId) {
+		return objectIdMap[objectId];
+	}
+
+	/**
+	 * TODO: fill out this method.
+	 */
+	this.getObjectByIdChain = function(idList) {
+	}
+
+	/**
+	 * These make it compatible with the SRL_Graphics methods for dynamic calling.
+	 */
+	this.removeSubObject = this.removeObject;
+	this.getSubObjectById = this.getObjectById;
+	this.removeSubObjectById = this.removeObjectById;
 }

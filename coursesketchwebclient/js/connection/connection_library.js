@@ -270,18 +270,33 @@ function Connection(uri, encrypted) {
 	}
 
 	/**
-	 * Given a protobuf command object a request is created.
+	 * Given a protobuf Command object a Request is created.
 	 */
-	this.createRequestFromCommand = function(command, requestType) {
-		var request = new Request();
-		request.requestType = requestType;
+	this.createRequestFromCommands = function(commands, requestType) {
+		return createRequestFromUpdate(createUpdateFromCommands(commands), requestType);
+	}
+
+	/**
+	 * Given a protobuf Command array an Update is created.
+	 */
+	this.createUpdateFromCommands = function(commands) {
+		if (commands instanceof Array) {
+			throw 'Invalid Type Error: Input is not an Array';
+		}
 		var update = new ProtoSrlUpdate();
-		var array = new Array();
-		array.push(command);
-		update.setCommands(array);
+		update.setCommands(commands);
 		var longVersion = Long.fromString("" + createTimeStamp());
 		update.setTime(longVersion);
 		update.setUpdateId(generateUUID());
+		return update;
+	}
+
+	/**
+	 * Given an Update a Request is created.
+	 */
+	this.createRequestFromUpdate = function(update, requestType) {
+		var request = new Request();
+		request.requestType = requestType;
 		var buffer = update.toArrayBuffer();
 		request.setOtherData(buffer);
 		return request;
