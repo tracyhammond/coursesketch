@@ -61,8 +61,13 @@
 			command.commandId = generateUUID(); // unique ID
 			// then finish him!
 			command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
-			var request = serverConnection.createRequestFromCommand(command, parent.Request.MessageType.RECOGNITION);
+			command.decodedData = stroke;
+			var array = new Array();
+			array.push(command);
+			var update = serverConnection.createUpdateFromCommands(array);
+			var request = serverConnection.createRequestFromUpdate(update, parent.Request.MessageType.RECOGNITION);
 			serverConnection.sendRequest(request);
+			commandManager.addUpdate(command, false);
 		}
 	</script>
 	<script type="text/javascript">

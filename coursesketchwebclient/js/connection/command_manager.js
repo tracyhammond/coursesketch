@@ -14,22 +14,24 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	 * Holds the entire list of updates
 	 */
 	var updateList = [];
+	var Action = Action;
 
 	/**
 	 * Adds an update to the updateList
 	 *
 	 * If the currentUpdateIndex less than the list size then we need to remove all the other updates from the list
-	 * and add the newest one on
+	 * and add the newest one on.
+	 * These commands are only executed if the command is fromRemote or execute is true.
 	 */
-	this.addUpdate = function(update, fromRemote) {
+	this.addUpdate = function(update, fromRemote, execute) {
 		if (currentUpdateIndex < updateList.length) {
 			// TODO: pop all others
 		}
-		currentUpdateIndex +1;
+		currentUpdateIndex++;
 		updateList.push(update);
 		if (!fromRemote) {
 			queuedUpdates.push(fromRemote);
-		} else {
+		} else if (fromRemote || execute) {
 			setTimeout(function() {
 				var redraw = update.redo();
 				if (redraw && sketch.drawEntireSketch) {
@@ -106,7 +108,52 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 				sketch.addObject(this.decodedData);
 				redraw = true;
 			break;
+				case this.CommandType.PACKAGE_SHAPE:
+				if (!this.decodedData) {
+					//console.log("Executing " + this.CommandType.ADD_SHAPE);
+					this.decodedData = Action.PackageShape.decode(this.commandData);
+				}
+				decodedData.redo();
+			break;
 		}
 		return redraw;
+	}
+	
+	/*********
+	 * Specific commands and their actions.
+	 *******/
+	
+	/**
+	 * Moves the shapes from the old container to the new container.
+	 */
+	Action.PackageShape.redo = function() {
+		var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getObjectByIdChain(this.oldContainerId.getIdChain());
+		var newContainingObject = !(this.newContainerId) ? sketch : sketch.getObjectByIdChain(this.newContainerId.getIdChain());
+		for (shapeId in this.shapesToBeContained) {
+			var object = oldContainingObject.removeObjectById(shapeId);
+			if (newContainerId) {
+				newContainingObject.addSubObject(object);
+			} else {
+				newContainingObject.addObject(object);
+			}
+		}
+	}
+
+	/**
+	 * Moves the shapes from the new container to the old container.
+	 *
+	 * This is a reverse of the process used in redo.
+	 */
+	Action.PackageShape.undo = function() {
+		var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getObjectByIdChain(this.newContainerId.getIdChain());
+		var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getObjectByIdChain(this.oldContainerId.getIdChain());
+		for (shapeId in this.shapesToBeContained) {
+			var object = oldContainingObject.removeObjectById(shapeId);
+			if (newContainerId) {
+				newContainingObject.addSubObject(object);
+			} else {
+				newContainingObject.addObject(object);
+			}
+		}
 	}
 }
