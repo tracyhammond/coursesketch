@@ -23,23 +23,45 @@ SRL_Object.prototype.draw = function draw(graphics) {
 }
 
 /**
+ * Must be a valid hex string.
+ */
+SRL_Object.prototype.setColorHex = function(hex) {
+	if (hex[0] != '#') {
+		hex = '#' + hex;
+	}
+	this.color = hex;
+}
+
+/**
+ * A color is given to a stroke as a HEX string
+ */
+SRL_Object.prototype.color = false;
+
+/**
  * Draws the {@link SRL_Stroke}.
  *
  * Sets the width and color if they are set.
  * This is the basic drawing of the stroke and does not do anything fancy.
  */
 SRL_Stroke.prototype.drawStroke = function drawStroke(graphics) {
+	if (this.color) {
+		graphics.strokeStyle = this.color;
+	} else {
+		graphics.strokeStyle = 'black';
+	}
+	
 	if (this.strokeWidth) {
 		graphics.lineWidth = strokeWidth;
 	} else {
 		graphics.lineWidth = 5;
 	}
-
+	/*
 	if (this.strokeColor) {
 		graphics.strokeStyle = strokeColor;
 	} else {
 		graphics.strokeStyle = 'black';
 	}
+	*/
 
 	var length = this.getNumPoints();
 	if (!length) {
@@ -67,7 +89,7 @@ SRL_Shape.prototype.drawShape = function drawShape(graphics) {
 	var list = this.getInterpretations();
 	for(var i = 0; i< list.length; i++) {
 		var inter = list[i];
-		//console.log("label: " + inter.label + " confidence: " + inter.confidence);
+		console.log("label: " + inter.label + " confidence: " + inter.confidence);
 	}
 }
 
@@ -83,3 +105,31 @@ SRL_Shape.prototype.drawShape = function drawShape(graphics) {
 
 new SRL_Object().draw(false);
 new SRL_Stroke().draw(false);
+
+/*******************************
+ *
+ * UTILITY METHODS
+ *
+ * @author gigemjt
+ *
+ *******************************
+ */
+
+function convertRGBtoHex(a, r, g, b) {
+	return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}

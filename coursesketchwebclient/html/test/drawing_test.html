@@ -32,6 +32,7 @@
 			var list = sketch.getList();
 			for(var i = 0; i < list.length; i++) {
 				var object = list[i];
+				object.setColorHex(convertRGBtoHex(0,255,0,255));
 				object.draw(canvasContext);
 			}
 		//	element.innerHTML = html;
