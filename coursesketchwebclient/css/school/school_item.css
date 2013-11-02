@@ -111,11 +111,10 @@
 /**
 	States
 */
-.construction_tape {
-    width:35%;
-    height:50%;
+.school_item_state {
+    width:30%;
+    height:40%;
     position:absolute;
-    background-image:url(../../images/schoolItem/constructionTapeCorner2.svg);
 	background-repeat:no-repeat;
 	background-position:right top;
 	top:0px;
@@ -123,14 +122,20 @@
     z-index:-1;
 }
 
-.closed_sign {
-    width:35%;
+.construction_tape {
+	width:35%;
     height:50%;
-    position:absolute;
+    background-image:url(../../images/schoolItem/constructionTapeCorner2.svg);
+}
+
+.closed_sign {
     background-image:url(../../images/schoolItem/closed_sign.svg);
-	background-repeat:no-repeat;
-	background-position:right top;
-	top:0px;
-    right:0px;
-    z-index:-1;
+}
+
+.checkered_flag {
+    background-image:url(../../images/schoolItem/fancy_checkered_flag.svg);
+}
+
+.not_enter {
+    background-image:url(../../images/schoolItem/cannot_enter.svg);
 }
