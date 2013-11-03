@@ -53,7 +53,55 @@
 					}
 				);
 	  		function editSchoolItem(cardId, specificId) {
-	  			alert("edit");
+	  			var specifiedElement = document.getElementById(cardId).getElementsByClassName(specificId)[0];
+	  			var input = false;
+	  			var oldElement = false;
+	  			if (specificId == "title") {
+	  				oldElement = specifiedElement.getElementsByTagName("h3")[0];
+	  				input = document.createElement("input");
+	  				input.type = "text";
+	  			} else if (specificId == "description") {
+	  				oldElement = specifiedElement.getElementsByTagName("p")[0];
+	  				input = document.createElement("textarea");
+	  			}
+	  			oldElement.style.display = "none";
+  				input.className = "school_item_input";
+  				input.onkeydown = function(){checkEnter(this)};
+  				var value = cut(oldElement.innerHTML,'<span');
+  				input.value = value[0];
+  				input.onblur = function(){endEditSchoolItem(cardId, specificId, value[1]);};
+  				specifiedElement.appendChild(input);
+  				input.focus();
+	  		}
+
+	  		function endEditSchoolItem(cardId, specificId, extraHtml) {
+	  			var specifiedElement = document.getElementById(cardId).getElementsByClassName(specificId)[0];
+	  			var newElement;
+	  			var oldElement;
+	  			if (specificId == "title") {
+	  				newElement = specifiedElement.getElementsByTagName("h3")[0];
+	  				oldElement = specifiedElement.getElementsByTagName("input")[0];
+	  			} if (specificId == "description") {
+	  				newElement = specifiedElement.getElementsByTagName("p")[0];
+	  				oldElement = specifiedElement.getElementsByTagName("textarea")[0];
+	  			}
+	  			specifiedElement.removeChild(oldElement);
+  				newElement.innerHTML = oldElement.value + extraHtml;
+  				newElement.style.display = "block";
+	  		}
+
+	  		function cut(input, cutoff) {
+	  			var index = input.indexOf(cutoff);
+	  			result = [];
+	  			result[0] = input.substring(0,index).trim();
+	  			result[1] = input.substring(index).trim();
+	  			return result;
+	  		}
+
+	  		function checkEnter(element) {
+	  			if(event.which == 13 || event.keyCode == 13) {
+	  				element.blur();
+	  			}
 	  		}
 	</script>
 	<style>
@@ -77,8 +125,7 @@
 <body>
 
 <!-- Menu Bar -->
-
-	<div data-role="page" class="pages ui-page ui-body-c ui-page-active" id="Div1" data-url="Div1" tabindex="0" style="margin-left: 0px; min-height: 739px;">
+	<div id="text"></div>
     <!-- Center Section -->
     <div id="home">
     <div class="centre">
@@ -88,15 +135,20 @@
 					<ul class="school_list">
 					<li>
 						<div id="Assignment_Truss_1_ID" class="school_item ">
-							<span class="construction_tape"></span>
+							<span class="school_item_state construction_tape"></span>
 							<div class="text">
-							<div id ="title"><h3 class="name">Truss Assignment1<span class="editButton" onclick="editSchoolItem('Assignment_Truss_1_ID', 'title');">&nbsp;&nbsp;&nbsp;&nbsp;</span></h3></div>
-							<h1 class="late">29-8-2013</h1>
-							<h1 class="class"> <a href="PhysicsLink"> Phyics</a></h1>
-							<div id = "description" ><p class="large">In this assignment we will draw a truss trussty truss. This truss trussty truss will allow us to save sience.
+								<div class="title">
+									<h3 class="name">Truss Assignment1
+									<span class="editButton" onclick="editSchoolItem('Assignment_Truss_1_ID', 'title');">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+									</h3>
+								</div>
+								<h1 class="late">29-8-2013</h1>
+								<h1 class="class"> <a href="PhysicsLink"> Phyics</a></h1>
+								<div class = "description" ><p class="large">In this assignment we will draw a truss trussty truss. This truss trussty truss will allow us to save sience.
 							<span class="editButton" onclick="editSchoolItem('Assignment_Truss_1_ID', 'description');">&nbsp;&nbsp;&nbsp;&nbsp;</span></p></div>
+							</div>
+							<a href="Truss_Link1"><img src="images/test/truss_thumb.png" width="128" height="128"></a>
 						</div>
-						<a href="Truss_Link1"><img src="images/test/truss_thumb.png" width="128" height="128"></a></div>
 					</li>
 					
 

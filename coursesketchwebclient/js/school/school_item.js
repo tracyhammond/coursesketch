@@ -8,7 +8,7 @@
  * Date [4] either due date or some other type of date
  */
 function schoolItemBuilder() {
-	
+
 	this.resetValues = function resetValues() {
 		this.dataList = 0;
 		this.isSimpleList = false;
@@ -23,7 +23,7 @@ function schoolItemBuilder() {
 		this.showDescription = true;
 		this.showDate = true;
 		this.showCompletionStatus = false;
-		
+
 		// functions
 		this.imageClicked = false;
 		this.titleClicked = false;
@@ -186,7 +186,7 @@ function schoolItemBuilder() {
 
 		if (type == 'assignment' && this.showDate) {
 			var dueDate = list[5];
-			html+='		<h1 class="' + getDateType() + '">' + get_formatted_date(currentDate, dueDate) + '</h1>\n';
+			html+='		<h1>' + getFormattedDate(currentDate, dueDate) + '</h1>\n';
 		}
 		if (type == 'assignment' && this.showItemSubTitle) {
 			html += '		<h1 class="class">';
@@ -297,12 +297,7 @@ function clickSelectionManager() {
 	}
 }
 
-
-function getDateType() {
-		return 'late';
-}
-
-function get_formatted_date(currentDate, dueDate) {
+function getFormattedDate(currentDate, dueDate) {
 		var curr_date = dueDate.getDate();
 		var curr_month = dueDate.getMonth() + 1; //Months are zero based
 		var curr_year = dueDate.getFullYear();
