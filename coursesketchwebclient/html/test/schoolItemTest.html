@@ -3,7 +3,6 @@
 	<base href="../../">
     <title>Welcome!</title>
     <link rel="stylesheet" href="css/jquery/jquery.mobile-1.0rc2.min.css">
-    <link rel="stylesheet" href="css/home.css">
    	<link rel="stylesheet" href="css/school/school_item.css">
   	<link rel="stylesheet" href="css/utility/columns.css">
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
@@ -13,43 +12,7 @@
 	  		addLoadEvent(
 					function()
 					{
-						if(!is_touch) {
-							disable_menu_swiping();
-						}
-						//placeMenu();
-
-						/* show all - default width */
-						var builder = new schoolItemBuilder();
-						builder.setList(upcomming_assignments);
-						builder.setTitle('SHOW ALL');
-						builder.setWidth('large');
-						//builder.build('class_list_1');
-						
-						var builder = new schoolItemBuilder();
-						builder.setList(upcomming_assignments);
-						builder.setTitle('SHOW ALL');
-						builder.setWidth('large');
-					//	builder.build('due_assignments_1');
-						
-						builder.setList(upcomming_assignments);
-						builder.setTitle('SHOW ALL');
-						builder.setWidth('medium');
-					//	builder.build('class_list_2');
-
-						/*
-						builder.setList(upcomming_assignments);
-						builder.build('due_assignments_1');
-
-						builder.setTitle('SIMPLE LIST');
-						builder.setList(user_classes);
-						builder.showAsSimpleList(true);
-						builder.build('class_list_2');
-						
-						builder.setTitle('SIMPLE LIST');
-						builder.setList(upcomming_assignments);
-						builder.showAsSimpleList(true);
-						builder.build('due_assignments_2');
-						*/
+						// builders go here!
 					}
 				);
 	  		function editSchoolItem(cardId, specificId) {
@@ -63,6 +26,14 @@
 	  			} else if (specificId == "description") {
 	  				oldElement = specifiedElement.getElementsByTagName("p")[0];
 	  				input = document.createElement("textarea");
+	  				input.cols = "45"; // needs to change based on size of object.
+	  			} else if (specificId == "image") {
+	  				input = document.createElement("input");
+	  				input.type = "image";
+	  				input.onblur = function(){endEditSchoolItem(cardId, specificId);};
+	  				specifiedElement.appendChild(input);
+	  				// special image dialog!
+	  				return;
 	  			}
 	  			oldElement.style.display = "none";
   				input.className = "school_item_input";
@@ -81,9 +52,13 @@
 	  			if (specificId == "title") {
 	  				newElement = specifiedElement.getElementsByTagName("h3")[0];
 	  				oldElement = specifiedElement.getElementsByTagName("input")[0];
-	  			} if (specificId == "description") {
+	  			} else if (specificId == "description") {
 	  				newElement = specifiedElement.getElementsByTagName("p")[0];
 	  				oldElement = specifiedElement.getElementsByTagName("textarea")[0];
+	  			} else if (specificId == "image") {
+	  				specifiedElement.removeChild(oldElement);
+	  				newElement.src = oldElement.value;
+	  				return;
 	  			}
 	  			specifiedElement.removeChild(oldElement);
   				newElement.innerHTML = oldElement.value + extraHtml;
@@ -147,7 +122,7 @@
 								<div class = "description" ><p class="large">In this assignment we will draw a truss trussty truss. This truss trussty truss will allow us to save sience.
 							<span class="editButton" onclick="editSchoolItem('Assignment_Truss_1_ID', 'description');">&nbsp;&nbsp;&nbsp;&nbsp;</span></p></div>
 							</div>
-							<a href="Truss_Link1"><img src="images/test/truss_thumb.png" width="128" height="128"></a>
+							<img class = "editable image" src="images/test/truss_thumb.png" width="128" height="128" onclick = "editSchoolItem('Assignment_Truss_1_ID', 'image');">
 						</div>
 					</li>
 					
