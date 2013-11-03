@@ -16,7 +16,9 @@
 .school_item img {
 	margin-right: 5px;
 }
-
+.school_item img.editable {
+	cursor:url(../../images/schoolItem/pencil_tilted_top_left_micro.png), pointer;
+}
 .school_list li {
 	list-style-type: none;
 }
@@ -36,7 +38,12 @@
 	-webkit-padding-start: 0px;
 }
 
-.school_item h3.large,  {
+.school_item h3 {
+	color: #333;
+	text-shadow: 0px -1px 1px #666;
+}
+
+.school_item h3.large {
 	width: 375px;
 }
 
