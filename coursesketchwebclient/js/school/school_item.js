@@ -220,14 +220,14 @@ function schoolItemBuilder() {
 		var html = '';
 		var completionStatus = list[index];
 		if (completionStatus == 'completed') {
-			html = '<span class="school_item_state checkered_flag"></span>';
+			html = '<span class="school_item_state completed"></span>';
 		} else if (completionStatus == 'started') {
-			html = '<span class="school_item_state construction_tape"></span>';
+			html = '<span class="school_item_state in_progress"></span>';
 		} else if (completionStatus == 'unaccessible') {
-			html = '<span class="school_item_state not_enter"></span>';
+			html = '<span class="school_item_state not_open"></span>';
 			// the assignment is not able to be worked on!
 		} else if (completionStatus == 'closed') {
-			html = '<span class="school_item_state closed_sign"></span>';
+			html = '<span class="school_item_state assignment_closed"></span>';
 		}
 		return html;
 	}
