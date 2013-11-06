@@ -20,7 +20,6 @@
 					function()
 					{
 						connection = parent.connection;
-						copyProtosFromParentProtos();
 						parent.connection = false;
 						var body = document.body,
 					    html = document.documentElement;
@@ -40,6 +39,9 @@
 						placeMenu(connection.isInstructor);
 					}
 				);
+	  		parent.copyParentUtilityFunctions(this);
+	  		parent.copyParentProtos(this);
+
 	  		/**
 	  		Resizes the iframe inside the window
 	  		*/

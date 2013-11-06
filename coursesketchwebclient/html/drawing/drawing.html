@@ -2,6 +2,7 @@
 <html>
 <base href="../../">
   	<link rel="stylesheet" href="css/utility/columns.css">
+  	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
 	<script type="text/javascript" src="js/input/drawing.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
@@ -10,6 +11,9 @@
 	<script type="text/javascript" src="js/connection/command_manager.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
+    	parent.copyParentUtilityFunctions(this);
+    	parent.copyParentProtos(this);
+
 		var serverConnection = parent.connection;
 		var drawingCreator = false;
 		var sketch = false;
@@ -19,17 +23,8 @@
 
     	function init() {
     		parent.redirector.setRedirect('html/drawing/drawing.html');
-    		initializeProtos();
     		initializeInput();
     		matchParent('drawingCanvas');
-    	}
-    	/**
-    		Creates the proto files required for drawing if they do not exist.
-    	*/
-    	function initializeProtos() {
-    		Long = parent.Long;
-   			// blah
-   			//testProtobuf(parent);
     	}
 
 	    function initializeInput() {
@@ -40,7 +35,6 @@
 			sketch = new sketchContainer();
 			sketch.canvasContext = canvasContext;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
-
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
 					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommand);
 			serverConnection.setOnMessageListener(function(evt, message) {
@@ -65,9 +59,9 @@
 			var array = new Array();
 			array.push(command);
 			var update = serverConnection.createUpdateFromCommands(array);
-			var request = serverConnection.createRequestFromUpdate(update, parent.Request.MessageType.RECOGNITION);
-			serverConnection.sendRequest(request);
-			commandManager.addUpdate(command, false);
+		//	var request = serverConnection.createRequestFromUpdate(update, parent.Request.MessageType.RECOGNITION);
+		//	serverConnection.sendRequest(request);
+			commandManager.addUpdate(update, false);
 		}
 	</script>
 	<script type="text/javascript">

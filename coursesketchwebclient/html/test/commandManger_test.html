@@ -3,20 +3,26 @@
 <base href="../../">
     <title>Drawing!</title>
   	<link rel="stylesheet" href="css/utility/columns.css">
+	<link rel="stylesheet" href="css/SRL/SRL_SketchViewer.css">
+
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+    <script type="text/javascript" src="js/connection/connection_library.js"></script>
+	<script type="text/javascript" src="js/connection/command_manager.js"></script>
 
 	<script type="text/javascript" src="js/input/drawing.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+
 	<script type="text/javascript" src="js/SRL/SRL_SketchViewer.js"></script>
-	<link rel="stylesheet" href="css/SRL/SRL_SketchViewer.css">
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 		var drawingCreator = false;
 		var sketch = false;
 		var canvasContext = false;
+		var commandManger = false;
+		var connection = false;
 	    addLoadEvent(function () {
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
@@ -24,6 +30,7 @@
 			sketch = new sketchContainer();
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
 			createStuff();
+			initializeServer();
 		});
 
 	    function callback() {

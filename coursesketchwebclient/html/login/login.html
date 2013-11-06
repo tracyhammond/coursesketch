@@ -17,6 +17,7 @@
             href="/images/CSpencil.ico" />   
 		<script type='text/javascript'>
 			//called when login button is pressed
+			parent.copyParentUtilityFunctions(this);
             function formSubmit() {
 				function sendLogin(arg1, arg2) {
 					if (!parent.connected) {
@@ -34,7 +35,7 @@
 
             function setup() {
             	connection = parent.connection;
-            	copyProtosFromParentProtos();
+            	parent.copyParentProtos(this);
 	  			function onOpen(evt) {
 	  				console.log("Opened here which is incorrect");
 	  			}

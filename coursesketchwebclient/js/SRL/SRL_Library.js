@@ -1,4 +1,5 @@
- /*******************************
+	
+/*******************************
  *
  *
  * Overload data class
@@ -1343,73 +1344,7 @@ function SRL_Interpretation(label, confidence, complexity) {
  **************************************************************
  */
 
-// Set up the object inheritance:
-Function.prototype.Inherits = function(parent) {
-	this.prototype =
-		new parent();
-	this.prototype.constructor = this;
-}
-
-Object.prototype.Inherits = function(parent) {
-	if( arguments.length > 1 ) {
-		parent.apply( this, Array.prototype.slice.call( arguments, 1 ) );
-	}
-	else {
-		parent.call( this );
-	}
-}
-
 SRL_Object.Inherits(Overloads);
 SRL_Shape.Inherits(SRL_Object);
 SRL_Stroke.Inherits(SRL_Shape);
 SRL_Point.Inherits(SRL_Shape);
-
-/**
- * UTILITY FUNCTIONS
- */
-
-/**
- * removes the object from an array.
- *
- * @return the object that was removed if it exist.
- */
-Array.prototype.removeObject = function(object) {
-	var i = this.indexOf(object);
-	if (i != -1) {
-		var result = this[i];
-		this.splice(i, 1);
-		return result;
-	}
-	throw "attempt to remove invalid object";
-};
-
-/**
- * removes the object from an array.
- *
- * @return the object that was removed if it exist.
- */
-Array.prototype.removeObjectByIndex = function(index) {
-	if (index != -1) {
-		var result = this[i];
-		this.splice(index, 1);
-		return result;
-	}
-	throw "attempt to remove at invalid index";
-};
-
-/**
- * Generates an rfc4122 version 4 compliant solution.
- *
- * found at http://stackoverflow.com/a/2117523/2187510
- * and further improved at
- * http://stackoverflow.com/a/8809472/2187510
- */ 
-function generateUUID() {
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (d + Math.random()*16)%16 | 0;
-        d = Math.floor(d/16);
-        return (c=='x' ? r : (r&0x7|0x8)).toString(16);
-    });
-    return uuid;
-};

@@ -347,49 +347,31 @@ const protobufDirectory = "other/protobuf/";
 /**
  * copy global parameters
  */
-function copyProtosFromParentProtos() {
-	Long = parent.Long;
-	
-	filesLoaded = parent.filesLoaded;
-	builder = parent.builder;
-	ProtoBuf = parent.ProtoBuf;
-	Request = parent.Request;
-	LoginInformation = parent.LoginInformation;
+function copyParentProtos(scope) {
+	copyParentValues(scope,'Long');
+	//scope.Long = Long;
 
-	SrlCourse = parent.SrlCourse;
-	SrlAssignment = parent.SrlAssignment;
-	SrlProblem = parent.SrlProblem;
+	copyParentValues(scope,'filesLoaded');
+	copyParentValues(scope,'builder');
+	copyParentValues(scope,'ProtoBuf');
+	copyParentValues(scope,'Request');
+	copyParentValues(scope,'LoginInformation');
 
-	ProtoSrlSketch = parent.ProtoSrlSketch;
-	ProtoSrlObject = parent.ProtoSrlObject;
-	ProtoSrlShape = parent.ProtoSrlShape;
-	ProtoSrlStroke = parent.ProtoSrlStroke;
-	ProtoSrlPoint = parent.ProtoSrlPoint;
+	copyParentValues(scope,'SrlCourse');
+	copyParentValues(scope,'SrlAssignment');
+	copyParentValues(scope,'SrlProblem');
 
-	ProtoUpdateCommand = parent.ProtoUpdateCommand;
-	ProtoSrlUpdate = parent.ProtoSrlUpdate;
-	ProtoSrlCommand = parent.ProtoSrlCommand;
-	ProtoSrlCommandType = parent.ProtoSrlCommandType;
-}
+	copyParentValues(scope,'ProtoSrlSketch');
+	copyParentValues(scope,'ProtoSrlObject');
+	copyParentValues(scope,'ProtoSrlShape');
+	copyParentValues(scope,'ProtoSrlStroke');
+	copyParentValues(scope,'ProtoSrlPoint');
 
- /**
-  * Generates an rfc4122 version 4 compliant solution.
-  *
-  * found at http://stackoverflow.com/a/2117523/2187510
-  * and further improved at
-  * http://stackoverflow.com/a/8809472/2187510
-  */
-function generateUUID() {
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (d + Math.random()*16)%16 | 0;
-        d = Math.floor(d/16);
-        return (c=='x' ? r : (r&0x7|0x8)).toString(16);
-    });
-    return uuid;
-};
+	copyParentValues(scope,'ProtoUpdateCommand');
+	copyParentValues(scope,'ProtoSrlUpdate');
+	copyParentValues(scope,'ProtoSrlCommand');
+	copyParentValues(scope,'ProtoSrlCommandType');
 
-// Creates a time stamp every time this method is called.
-function createTimeStamp() {
-	return new Date().getTime();
+	// so this can happen forever!
+	copyParentValues(scope,'copyParentProtos');
 }

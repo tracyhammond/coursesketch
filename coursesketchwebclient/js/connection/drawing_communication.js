@@ -5,7 +5,9 @@ SRL_Point.prototype.sendToProtobuf = function(scope) {
 	var PointProto = scope ? scope.ProtoSrlPoint : ProtoSrlPoint;
 	var proto = new PointProto();
 	proto.id = this.getId();
-	proto.setTime(Long.fromString('' + this.getTime()));
+	var n = this.getTime();
+	var longVersion = parent.Long.fromString("" + n);
+	proto.setTime(longVersion);
 	proto.name = this.getName();
 	proto.x = this.getX();
 	proto.y = this.getY();
