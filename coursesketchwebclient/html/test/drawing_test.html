@@ -4,14 +4,14 @@
     <title>Drawing!</title>
   	<link rel="stylesheet" href="css/utility/columns.css">
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery-1.6.4.min.js"></script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>
 	<script type="text/javascript" src="js/school/school_item.js"></script>
 	<script type="text/javascript" src="js/input/drawing.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_SketchViewer.js"></script>
+	<link rel="stylesheet" href="css/SRL/SRL_SketchViewer.css">
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 
@@ -24,12 +24,16 @@
 			canvasContext = input.canvasContext;
 			sketch = new sketchContainer();
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+			createStuff();
 		});
-	    
+
 	    function callback() {
-			element = document.getElementById('output');
+		//	element = document.getElementById('output');
 			var html = "";
 			var list = sketch.getList();
+
+			createSketchViewer(list, 'output');
+
 			for(var i = 0; i < list.length; i++) {
 				var object = list[i];
 				object.setColorHex(convertRGBtoHex(0,255,0,255));
@@ -37,18 +41,35 @@
 			}
 		//	element.innerHTML = html;
 		}
+	    
+	    function createStuff() {
+	    	//goes 5 times
+	    	for(var i = 1; i <= 2; i++) {
+	    		sketch.addObject(getShape(i));
+	    	}
+	    	console.log(sketch.getList());
+	    	var list = sketch.getList();
+	    	createSketchViewer(list, 'output');
+	    }
+	    
+	    function getShape(i) {
+	    	this.shape = new SRL_Shape();
+    		// goes 1 to 5 times
+    		for(var j = 0; j < i; j++) {
+    			console.log('j: '+ j);
+    			var stroke = new SRL_Stroke();
+    			this.shape.addSubObject(stroke);
+    		}
+    		return shape;
+	    }
 	</script>
 </head>
 <body>
 	version 5
     <!-- Center Section -->
-    <div id="home">
-    	<div class = "centre">
-    			<div id = "output"></div>
-   				<canvas id="drawingCanvas" width="300" height="300" style="top:0px; left:0px; width: 300; height: 300; background:#FFFFFF;"></canvas>
-    	</div>
-    </div>
+   	<div class = "centre">
+   			<button onclick = "createStuff();">addShape</button>
+   			<div id = "output" style = "height:100px;position:relative;"></div>
+  			<canvas id="drawingCanvas" width="300" height="300" style="top:0px; left:0px; width: 300; height: 300; background:#FFFFFF;"></canvas>
+   	</div>
 </div>
-
-
-<div class="ui-loader ui-body-a ui-corner-all" style="top: 391.5px;"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div></body></html>
