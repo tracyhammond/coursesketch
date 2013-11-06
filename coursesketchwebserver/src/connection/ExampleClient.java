@@ -46,8 +46,8 @@ public class ExampleClient extends WebSocketClient {
 	@Override
 	public void onMessage(ByteBuffer buffer) {
 		if (connection!=null) {
-			ConnectionState state= parent.idToState.get(Decoder.parseRequest(buffer).getSessionInfo());
-			System.out.println(Decoder.parseRequest(buffer).getSessionInfo());
+			ConnectionState state = parent.idToState.get(Decoder.parseRequest(buffer).getSessionInfo());
+			System.out.println("SESSION INFO: " + Decoder.parseRequest(buffer).getSessionInfo());
 			parent.idToConnection.get(state).send(buffer);
 		}
 	}
