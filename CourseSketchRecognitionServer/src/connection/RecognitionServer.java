@@ -8,6 +8,8 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import main.Response;
 
@@ -38,14 +40,10 @@ public class RecognitionServer extends WebSocketServer {
 
 	public static final int MAX_CONNECTIONS = 20;
 	public static final int STATE_SERVER_FULL = 4001;
-	public static final int STATE_INVALID_LOGIN = 4002;
-	public static final int MAX_LOGIN_TRIES = 5;
-	public static final String FULL_SERVER_MESSAGE = "Sorry the server is full";
-	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
+	static final String FULL_SERVER_MESSAGE = "Sorry, the RECOGNITION server is full";
 	
-	// Id Maps
-	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
-	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
+	List<WebSocket> connections = new LinkedList<WebSocket>();
+	HashMap<String, Response> idToResponse = new HashMap<String, Response>();	
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public RecognitionServer( int port ) throws UnknownHostException {
@@ -58,22 +56,21 @@ public class RecognitionServer extends WebSocketServer {
 
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		if (connectionToId.size() >= MAX_CONNECTIONS) {
+		if (connections.size() >= MAX_CONNECTIONS) {
 			// Return negatative state.
 			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
 			System.out.println("FULL SERVER"); // send message to someone?
 			return;
 		}
 		ConnectionState id = getUniqueId();
-		connectionToId.put(conn, id);
-		idToConnection.put(id, conn);
+		connections.add(conn);
 		System.out.println("ID ASSIGNED");
 	}
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
 		System.out.println( conn + " has disconnected from Recognition.");
-		idToConnection.remove(connectionToId.remove(conn));
+		connections.remove(conn);
 	}
 
 	@Override
@@ -83,32 +80,40 @@ public class RecognitionServer extends WebSocketServer {
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		Request req = Decoder.parseRequest(buffer);
-		ConnectionState state = connectionToId.get(conn);
-
 		if (req == null) {
 			System.out.println("protobuf error");
 			// we need to somehow send an error to the client here
 			return;
 		}
-
 		if(req.getRequestType() == Request.MessageType.RECOGNITION) {
 			ByteString rawUpdateData = req.getOtherData();
 			Update savedUpdate = Decoder.parseNextUpdate(rawUpdateData);
+			req.getSessionInfo();
+			Response r = null;
+			//if it does not exist, add it to map
+			if(!idToResponse.containsValue(req.getSessionInfo())){
+				r = new Response();
+				idToResponse.put(req.getSessionInfo(), r);
+			}
+			else{
+				r=idToResponse.get(req.getSessionInfo());
+			}
+			//r.interpret(savedUpdate);
 			//pass to them
 			//use a function that they will give
 			Request result = null;
 
 			try {
 				// TODO: move these inside the class itself.
-				Response.print(savedUpdate);
-				SrlShape shape = Response.interpret(savedUpdate);
-				SrlStroke stroke = Response.mirror(savedUpdate);
+				r.print(savedUpdate);
+				SrlShape shape = r.interpret(savedUpdate);
+				SrlStroke stroke = r.mirror(savedUpdate);
 				//post function they will give (package the information received)
 				Command com1 = Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_STROKE);
 				Command com2 = Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_SHAPE);
 				
 				
-				result = Encoder.createRequestFromCommands(com1, com2);
+				result = Encoder.createRequestFromCommands(req.getSessionInfo(), com1, com2);
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -131,7 +136,7 @@ public class RecognitionServer extends WebSocketServer {
 	}
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Recognition Server: Version 1.0.1");
+		System.out.println("Recognition Server: Version 1.0.1.ant");
 		WebSocketImpl.DEBUG = true;
 		int port = 8888; // 843 flash policy port
 		try {

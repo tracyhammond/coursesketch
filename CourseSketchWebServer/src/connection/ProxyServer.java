@@ -41,8 +41,9 @@ public class ProxyServer extends WebSocketServer {
 	
 	// Id Maps
 	private boolean connectionType = CONNECT_REMOTE;
-	private HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
-	private HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
+	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
+	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
+	HashMap<String, ConnectionState> idToState = new HashMap<String, ConnectionState>();
 	private ExampleClient recognition = connectProxy(this, connectionType);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
@@ -65,7 +66,9 @@ public class ProxyServer extends WebSocketServer {
 		ConnectionState id = getUniqueId();
 		connectionToId.put(conn, id);
 		idToConnection.put(id, conn);
+		idToState.put(id.getKey(), id);
 		System.out.println("ID ASSIGNED");
+		
 	}
 
 	@Override
@@ -129,7 +132,9 @@ public class ProxyServer extends WebSocketServer {
 			if(req.getRequestType() == MessageType.RECOGNITION){
 				recognition.connection = state;
 				System.out.println("REQUEST TYPE = RECOGNITION");
-				recognition.send(buffer.array());
+				String userID = Integer.toString(state.hashCode());
+				Request packagedRequest = Encoder.requestIDBuilder(req, userID);
+				recognition.send(packagedRequest.toByteArray());
 			}
 			// Parse message.
 			conn.send(buffer);
@@ -146,7 +151,7 @@ public class ProxyServer extends WebSocketServer {
 	 */
 	public ConnectionState getUniqueId() {
 		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
-		return new ConnectionState(numberOfConnections++);
+		return new ConnectionState(""+numberOfConnections++);
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
