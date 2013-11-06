@@ -49,7 +49,7 @@ public class Encoder {
 	/**
 	 * Given a list of commands create a request.
 	 */
-	public static Request createRequestFromCommands(Command ... coms) {
+	public static Request createRequestFromCommands(String sessionInfo, Command ... coms) {
 		Update up = createUpdateFromCommands(coms);
 		return createRequestFromUpdate(up);
 	}
