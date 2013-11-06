@@ -30,7 +30,8 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 		currentUpdateIndex++;
 		updateList.push(update);
 		if (!fromRemote) {
-			queuedUpdates.push(fromRemote);
+			queuedUpdates.push(update);
+			this.emptyQueue();
 		} else if (fromRemote || execute) {
 			setTimeout(function() {
 				var redraw = update.redo();
@@ -39,6 +40,20 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 				}
 			}.bind(this),10); // Assumes local update are executed before they are created.
 		}
+	}
+
+	this.emptyQueue = function() {
+		setTimeout(function() {
+			if (queuedUpdates.length > 0) {
+				var update = queuedUpdates.removeObjectByIndex(0);
+				alert(update);
+				var request = serverConnection.createRequestFromUpdate(update, parent.Request.MessageType.RECOGNITION);
+				serverConnection.sendRequest(request);
+				if (queuedUpdates.length > 0) {
+					this.emptyQueue(); // recursion!
+				}
+			}
+		}.bind(this),10);
 	}
 
 	/**

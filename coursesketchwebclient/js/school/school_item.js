@@ -303,7 +303,3 @@ function getFormattedDate(currentDate, dueDate) {
 		var curr_year = dueDate.getFullYear();
 		return (curr_date + "-" + curr_month + "-" + curr_year);
 }
-
-function replaceAll(find, replace, str) {
-  return str.replace(new RegExp(find, 'g'), replace);
-}

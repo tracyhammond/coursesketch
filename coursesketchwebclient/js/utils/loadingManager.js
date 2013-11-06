@@ -114,6 +114,3 @@ addLoadEvent(function() {
    more code to run on page load
 });
 */
-
-// Used to detirmine if the browser is touch capable
-var is_touch = 'ontouchstart' in document.documentElement;
