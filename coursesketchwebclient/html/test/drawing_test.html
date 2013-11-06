@@ -62,6 +62,21 @@
     		}
     		return shape;
 	    }
+
+	    function packageShapes() {
+	    	var shape = new SRL_Shape();
+	    	var list = sketch.getList();
+	    	for(var i = 0; i < list.length; i ++) {
+	    		shape.addSubObject(sketch.getObjectAtIndex(i));
+	    	}
+	    	sketch.addObject(shape);
+	    	createSketchViewer(sketch.getList(), 'output');
+	    }
+
+	    function removeFirst() {
+	    	sketch.removeObjectAtIndex(0);
+	    	createSketchViewer(sketch.getList(), 'output');
+	    }
 	</script>
 </head>
 <body>
@@ -69,6 +84,8 @@
     <!-- Center Section -->
    	<div class = "centre">
    			<button onclick = "createStuff();">addShape</button>
+   			<button onclick = "packageShapes();">packageSketch</button>
+   			<button onclick = "removeFirst();">removeFirst</button>
    			<div id = "output" style = "height:100px;position:relative;"></div>
   			<canvas id="drawingCanvas" width="300" height="300" style="top:0px; left:0px; width: 300; height: 300; background:#FFFFFF;"></canvas>
    	</div>

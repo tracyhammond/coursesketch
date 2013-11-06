@@ -8,7 +8,10 @@ function createView(sketchObject, level) {
 	var tempWidth = myWidth;
 	var html = '<div class = "sketchObject level'+level+'">';
 	var objectType = sketchObject.check_type();
-	html += '<p>' +'type:<br>' + objectType + '</p>';
+	html += '<p style="max-width:'+myWidth+'px;">' +'type: ' + objectType;
+	html += ' <br>Id:<br>' + (sketchObject.getId().substring(0,12));
+	html+= '</p>';
+	
 	if (objectType == "SRL_Shape") {
 		var list = sketchObject.getInterpretations();
 		if (list.length > 0) {
@@ -22,14 +25,15 @@ function createView(sketchObject, level) {
 		}
 		var list = sketchObject.getSubObjects();
 		if (list.length > 0) {
+			html += '# of subshapes: ' + list.length;
 			var values =  parseList(list, level);
-			html += '' + (tempWidth + 5)  +':' + level+'<br>';
+			//html += '' + (tempWidth + 5)  +':' + level+'<br>';
 			html += values[0];
 			//size
 			tempWidth = values[1];
 		}
-	} else {
-		html += '' + (tempWidth + 5)  +':' + level+'<br>';
+	} else if (objectType == "SRL_Stroke") {
+		html += '# of points: ' + sketchObject.getNumPoints();
 	}
 
 	html += '</div>';

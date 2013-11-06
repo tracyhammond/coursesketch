@@ -209,7 +209,7 @@ function SRL_Object() {
 	/**
 	 * Each object has a unique ID associated with it.
 	 */
-	var id; // = guid();
+	var id = generateUUID(); // = guid();
 
 	/**
 	 * The name of the object, such as "triangle1"
@@ -1371,12 +1371,14 @@ SRL_Point.Inherits(SRL_Shape);
 /**
  * removes the object from an array.
  *
- * @return the object that was removed if it exist, false otherwise.
+ * @return the object that was removed if it exist.
  */
 Array.prototype.removeObject = function(object) {
 	var i = this.indexOf(object);
 	if (i != -1) {
-		return this.splice(i, 1);
+		var result = this[i];
+		this.splice(i, 1);
+		return result;
 	}
 	throw "attempt to remove invalid object";
 };
@@ -1384,11 +1386,13 @@ Array.prototype.removeObject = function(object) {
 /**
  * removes the object from an array.
  *
- * @return the object that was removed if it exist, false otherwise.
+ * @return the object that was removed if it exist.
  */
 Array.prototype.removeObjectByIndex = function(index) {
 	if (index != -1) {
-		return this.splice(index, 1);
+		var result = this[i];
+		this.splice(index, 1);
+		return result;
 	}
 	throw "attempt to remove at invalid index";
 };
