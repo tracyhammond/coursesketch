@@ -123,6 +123,14 @@ function sketchContainer() {
 		return objectIdMap[objectId];
 	}
 
+	this.getObjectAtIndex = function(index) {
+		return objectList[index];
+	}
+
+	this.removeObjectAtIndex = function(index) {
+		this.removeObject(objectList[index]);
+	}
+
 	/**
 	 * TODO: fill out this method.
 	 */
