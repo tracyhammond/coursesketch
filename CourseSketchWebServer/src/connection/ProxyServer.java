@@ -40,6 +40,8 @@ public class ProxyServer extends WebSocketServer {
 	// Id Maps
 	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
 	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
+	HashMap<String, ConnectionState> idToState = new HashMap<String, ConnectionState>();
+	
 	ExampleClient recognition = connectProxy(this, false);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
@@ -62,7 +64,9 @@ public class ProxyServer extends WebSocketServer {
 		ConnectionState id = getUniqueId();
 		connectionToId.put(conn, id);
 		idToConnection.put(id, conn);
+		idToState.put(id.getKey(), id);
 		System.out.println("ID ASSIGNED");
+		
 	}
 
 	@Override
@@ -100,7 +104,6 @@ public class ProxyServer extends WebSocketServer {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
-		
 		if (req == null) {
 			System.out.println("protobuf error");
 			//this.
@@ -124,7 +127,9 @@ public class ProxyServer extends WebSocketServer {
 			if(req.getRequestType() == MessageType.RECOGNITION){
 				recognition.connection = state;
 				System.out.println("REQUEST TYPE = RECOGNITION");
-				recognition.send(buffer.array());
+				String userID = Integer.toString(state.hashCode());
+				Request packagedRequest = Encoder.requestIDBuilder(req, userID);
+				recognition.send(packagedRequest.toByteArray());
 			}
 			// Parse message.
 			conn.send(buffer);
@@ -141,11 +146,11 @@ public class ProxyServer extends WebSocketServer {
 	 */
 	public ConnectionState getUniqueId() {
 		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
-		return new ConnectionState(numberOfConnections++);
+		return new ConnectionState(""+numberOfConnections++);
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
-		System.out.println("Proxy Server: Version 1.0.1");
+		System.out.println("Proxy Server: Version 1.0.1.ant");
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
 		try {

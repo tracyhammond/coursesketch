@@ -2,14 +2,14 @@ package connection;
 
 public class ConnectionState {
 
-	private int key;
+	private String key;
 	private boolean isLoggedIn = false;
 	private boolean isInstructor = false; // flagged true if correct login and is instructor
 	private Permission permissionLevel; // flagged true if correct login and is instructor
 	private int previousMessageType = 0;
 	private int loginTries = 0;
 	
-	public ConnectionState(int key) {
+	public ConnectionState(String key) {
 		this.key = key;
 	}
 	
@@ -21,6 +21,10 @@ public class ConnectionState {
 	}
 	
 	public int hashCode() {
+		return key.hashCode();
+	}
+	
+	public String getKey() {
 		return key;
 	}
 	
