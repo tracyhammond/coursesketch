@@ -86,6 +86,7 @@ SRL_Stroke.prototype.drawStroke = function drawStroke(graphics) {
  */
 SRL_Shape.prototype.drawShape = function drawShape(graphics) {
 	// Does nothing.
+	console.log("drawing shape!");
 	var list = this.getInterpretations();
 	for(var i = 0; i< list.length; i++) {
 		var inter = list[i];
