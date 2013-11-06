@@ -36,11 +36,14 @@ public class ProxyServer extends WebSocketServer {
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String FULL_SERVER_MESSAGE = "Sorry the server is full";
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
+	public static final boolean CONNECT_LOCALLY = true;
+	public static final boolean CONNECT_REMOTE = false;
 	
 	// Id Maps
-	HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
-	HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
-	ExampleClient recognition = connectProxy(this, false);
+	private boolean connectionType = CONNECT_REMOTE;
+	private HashMap<WebSocket, ConnectionState> connectionToId = new HashMap<WebSocket, ConnectionState>();
+	private HashMap<ConnectionState, WebSocket> idToConnection = new HashMap<ConnectionState, WebSocket>();
+	private ExampleClient recognition = connectProxy(this, connectionType);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) throws UnknownHostException {
@@ -74,9 +77,9 @@ public class ProxyServer extends WebSocketServer {
 	@Override
 	public void onMessage( WebSocket conn, String message ) {
 	}
-	
+
 	public void reConnect() {
-		recognition = connectProxy(this, false);
+		recognition = connectProxy(this, connectionType);
 	}
 
 	public static ExampleClient connectProxy(ProxyServer serv, boolean local) {
@@ -88,7 +91,9 @@ public class ProxyServer extends WebSocketServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
-		c.connect();
+		if (c != null) {
+			c.connect();
+		}
 		return c;
 	}
 
@@ -100,7 +105,7 @@ public class ProxyServer extends WebSocketServer {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
 		ConnectionState state = connectionToId.get(conn);
-		
+
 		if (req == null) {
 			System.out.println("protobuf error");
 			//this.
@@ -145,7 +150,7 @@ public class ProxyServer extends WebSocketServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
-		System.out.println("Proxy Server: Version 1.0.1");
+		System.out.println("Proxy Server: Version 1.0.1.ant");
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
 		try {
@@ -155,7 +160,7 @@ public class ProxyServer extends WebSocketServer {
 		ProxyServer s = new ProxyServer( port );
 		s.start();
 		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
-		
+
 		//attempt to connect to recognition
 		//attempt to connect to answer server
 		//attempt to connect to user database
