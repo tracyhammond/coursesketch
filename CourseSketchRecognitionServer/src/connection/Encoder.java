@@ -51,13 +51,14 @@ public class Encoder {
 	 */
 	public static Request createRequestFromCommands(String sessionInfo, Command ... coms) {
 		Update up = createUpdateFromCommands(coms);
-		return createRequestFromUpdate(up);
+		return createRequestFromUpdate(sessionInfo, up);
 	}
 
-	public static Request createRequestFromUpdate(Update up) {
+	public static Request createRequestFromUpdate(String sessionInfo, Update up) {
 		Request.Builder requestBuilder = Request.newBuilder();
 		requestBuilder.setOtherData(up.toByteString());
 		requestBuilder.setRequestType(MessageType.RECOGNITION);
+		requestBuilder.setSessionInfo(sessionInfo);
 		return requestBuilder.build();
 	}
 

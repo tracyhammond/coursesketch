@@ -85,7 +85,7 @@ public class RecognitionServer extends WebSocketServer {
 			// we need to somehow send an error to the client here
 			return;
 		}
-		if(req.getRequestType() == Request.MessageType.RECOGNITION) {
+		if (req.getRequestType() == Request.MessageType.RECOGNITION) {
 			ByteString rawUpdateData = req.getOtherData();
 			Update savedUpdate = Decoder.parseNextUpdate(rawUpdateData);
 			req.getSessionInfo();
@@ -136,7 +136,7 @@ public class RecognitionServer extends WebSocketServer {
 	}
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Recognition Server: Version 1.0.1.ant");
+		System.out.println("Recognition Server: Version 1.0.1.baboon");
 		WebSocketImpl.DEBUG = true;
 		int port = 8888; // 843 flash policy port
 		try {
