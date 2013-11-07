@@ -47,7 +47,8 @@ public class ExampleClient extends WebSocketClient {
 	public void onMessage(ByteBuffer buffer) {
 		if (connection!=null) {
 			ConnectionState state = parent.idToState.get(Decoder.parseRequest(buffer).getSessionInfo());
-			System.out.println("SESSION INFO: " + Decoder.parseRequest(buffer).getSessionInfo());
+			System.out.println("SESSION KEY: " + Decoder.parseRequest(buffer).getSessionInfo());
+			System.out.println("STATE KEY: " + state.getKey());
 			parent.idToConnection.get(state).send(buffer);
 		}
 	}
