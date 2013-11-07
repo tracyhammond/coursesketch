@@ -4,13 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
@@ -65,9 +65,9 @@ public class ProxyServer extends WebSocketServer {
 		ConnectionState id = getUniqueId();
 		connectionToId.put(conn, id);
 		idToConnection.put(id, conn);
+		System.out.println("Session Key " + id.getKey());
 		idToState.put(id.getKey(), id);
 		System.out.println("ID ASSIGNED");
-		
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class ProxyServer extends WebSocketServer {
 			if(req.getRequestType() == MessageType.RECOGNITION){
 				recognition.connection = state;
 				System.out.println("REQUEST TYPE = RECOGNITION");
-				String userID = Integer.toString(state.hashCode());
+				String userID = state.getKey();
 				Request packagedRequest = Encoder.requestIDBuilder(req, userID);
 				recognition.send(packagedRequest.toByteArray());
 			}
@@ -149,12 +149,11 @@ public class ProxyServer extends WebSocketServer {
 	 * Returns a number that should be unique.
 	 */
 	public ConnectionState getUniqueId() {
-		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
-		return new ConnectionState(""+numberOfConnections++);
+		return new ConnectionState(Encoder.nextID().toString());
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
-		System.out.println("Proxy Server: Version 1.0.1.cedar");
+		System.out.println("Proxy Server: Version 1.0.1.dog");
 		WebSocketImpl.DEBUG = true;
 		int port = 8887; // 843 flash policy port
 		try {
