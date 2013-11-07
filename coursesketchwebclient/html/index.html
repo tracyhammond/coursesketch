@@ -27,37 +27,32 @@
 	<script>
 	var connection = false;
 	var connected = false;
-	var intervalVariable = false;
 	function createWebSocket() {
 		console.log("connecting");
 		//	var wsUri = "echo.websocket.org/"; // echo server
 		var wsUri = "goldberglinux.tamu.edu:8887"; // our server
 		//var wsUri = "localhost:8887"; // local server
-		connection = new Connection(wsUri,false);
+		connection = new Connection(wsUri, false, true);
 
-		connection.setOnCloseListener(function(evt) {
-			var reconnect = false;
+		connection.setOnCloseListener(function(evt, attemptingToReconnect) {
 			if (evt.code == CONNECTION_LOST) {
-				alert('can not connect to the server');
-				reconnect = true;
+				if (!attemptingToReconnect) {
+					alert('can not connect to the server');
+				}
 			} else if(evt.code == SERVER_FULL) {
-				alert(evt.reason); // Here we can try to connect to other servers.
+				if (!attemptingToReconnect) {
+					alert(evt.reason); // Here we can try to connect to other servers.
+				}
 			} else {
-				alert("SERVER CLOSED CONNECTION");
-				reconnect = true;
-			}
-			if (reconnect) {
-				console.log("attempting to reconnet");
-				intervalVariable = setInterval(function() {console.log("RECONNECTING!");createWebSocket();}, 3000); 
+				if (!attemptingToReconnect) {
+					alert("SERVER CLOSED CONNECTION");
+				}
 			}
 		});
 		connection.setOnOpenListener(function(evt) {
 			// do something on opening?
 			alert("You are now able to log in");
 			connected = true;
-			if (intervalVariable) {
-				clearInterval(intervalVariable);
-			}
 		});
 	}
 	function Redirector(scope) {

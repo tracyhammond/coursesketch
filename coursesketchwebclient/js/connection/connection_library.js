@@ -3,7 +3,7 @@
  *
  * With this connection you can send information which is encoded via protobufs.
  */
-function Connection(uri, encrypted) {
+function Connection(uri, encrypted, attemptReconnect) {
 
 	var onOpen;
 	var onClose;
@@ -16,6 +16,8 @@ function Connection(uri, encrypted) {
 
 	var websocket;
 	var wsUri = (encrypted?'wss://' : 'ws://') + uri;
+	var timeoutVariable = false;
+	var self = this;
 
 	function createWebSocket() {
 		try {
@@ -24,16 +26,25 @@ function Connection(uri, encrypted) {
 			websocket.onopen = function(evt) {
 				if (onOpen)
 					onOpen(evt);
+				if (timeoutVariable) {
+					clearTimeout(timeoutVariable);
+					timeoutVariable = false;
+				}
 			};
+
 			websocket.onclose = function(evt) {
+				websocket.close();
 				if (onClose) {
-					onClose(evt);
-					websocket.close();
-					websocket = false;
+					onClose(evt, attemptReconnect);
 				} else {
 					alert("Connection to server closed");
 				}
+				if (attemptReconnect) {
+					console.log("going to attempt to reconnect in 3s");
+					timeoutVariable = setTimeout(function() {console.log("attempting to reconnect now!");self.reconnect();}, 3000); 
+				}
 			};
+
 			websocket.onmessage = function(evt) {
 				try {
 			        // Decode the Request
@@ -72,6 +83,13 @@ function Connection(uri, encrypted) {
 
 	}
 
+	this.reconnect = function() {
+		console.log(websocket);
+		websocket.close();
+
+		createWebSocket();
+	}
+	
 	/**
 	 * Sets the listeners for the different functions:
 	 * 
@@ -229,6 +247,8 @@ function Connection(uri, encrypted) {
 				ProtoSrlStroke = sketchBuilder.SrlStroke;
 			if (!ProtoSrlPoint)
 				ProtoSrlPoint = sketchBuilder.SrlPoint;
+			if (!ProtoSrlInterpretation)
+				ProtoSrlInterpretation = sketchBuilder.Interpretation;
 		}
 
 		function buildUpdateList() {
@@ -243,6 +263,8 @@ function Connection(uri, encrypted) {
 				ProtoSrlCommand = ProtoUpdateCommand.Command;
 			if (!ProtoSrlCommandType)
 				ProtoSrlCommandType = ProtoUpdateCommand.CommandType;
+			if (!ProtoSrlCommandType)
+				IdChain = ProtoUpdateCommand.IdChain;
 		}
 		/*
 		function testRepeated() {
@@ -344,6 +366,7 @@ var ProtoSrlObject = false;
 var ProtoSrlShape = false;
 var ProtoSrlStroke = false;
 var ProtoSrlPoint = false;
+var ProtoSrlInterpretation = false;
 
 /**
  * Update related protobufs.
@@ -354,6 +377,7 @@ var ProtoUpdateCommand = false;
 var ProtoSrlUpdate = false;
 var ProtoSrlCommand = false;
 var ProtoSrlCommandType = false;
+var IdChain = false;
 
 const CONNECTION_LOST = 1006;
 const INCORRECT_LOGIN = 4002;
@@ -365,7 +389,6 @@ const protobufDirectory = "other/protobuf/";
  */
 function copyParentProtos(scope) {
 	copyParentValues(scope,'Long');
-	//scope.Long = Long;
 
 	copyParentValues(scope,'filesLoaded');
 	copyParentValues(scope,'builder');
@@ -382,11 +405,13 @@ function copyParentProtos(scope) {
 	copyParentValues(scope,'ProtoSrlShape');
 	copyParentValues(scope,'ProtoSrlStroke');
 	copyParentValues(scope,'ProtoSrlPoint');
+	copyParentValues(scope,'ProtoSrlInterpretation');
 
 	copyParentValues(scope,'ProtoUpdateCommand');
 	copyParentValues(scope,'ProtoSrlUpdate');
 	copyParentValues(scope,'ProtoSrlCommand');
 	copyParentValues(scope,'ProtoSrlCommandType');
+	copyParentValues(scope,'IdChain');
 
 	// so this can happen forever!
 	copyParentValues(scope,'copyParentProtos');

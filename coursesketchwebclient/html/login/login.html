@@ -37,19 +37,27 @@
             	connection = parent.connection;
             	parent.copyParentProtos(this);
 	  			function onOpen(evt) {
-	  				console.log("Opened here which is incorrect");
+	  				console.log("Opened here which means something bad happened");
+	  				parent.connected = true;
 	  			}
 
-	  			function onClose(evt) {
+	  			function onClose(evt, attemptingToReconnect) {
 	  				// logout.
 	  				if (evt.code == CONNECTION_LOST) {
-	  					alert('can not connect to the server');
-	  				} else if(evt.code == SERVER_FULL) {
+	  					if (!attemptingToReconnect) {
+	  						alert('can not connect to the server');
+	  					}
+	  				} else if (evt.code == SERVER_FULL) {
+	  					if (!attemptingToReconnect) {
+	  						alert(evt.reason);
+	  					}
+	  				} else if (evt.code == INCORRECT_LOGIN) {
 	  					alert(evt.reason);
-	  				} else if(evt.code == INCORRECT_LOGIN) {
-	  					alert(evt.reason);
+	  					return false;
 	  				}
-	  				alert("Closing");
+	  				if (!attemptingToReconnect) {
+	  					alert("Closing");
+	  				}
 	  			}
 
 	  			function onLogin(evt, message) {
@@ -69,7 +77,7 @@
 
 	  			function onError(evt, error) {
 	  				// through an uhoh oreo.
-	  				alert('OMG AN ERROR ' + error);
+	  				//alert('OMG AN ERROR ' + error);
 	  			}
 	  			connection.setListeners(onOpen, onClose, false, onError);
 	  			connection.setLoginListener(onLogin);

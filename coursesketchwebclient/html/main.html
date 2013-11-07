@@ -11,6 +11,7 @@
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
+	<script type="text/javascript" src="js/menu/header.js"></script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
     <!-- <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>  -->
     <script type="text/javascript" src="js/menu/add_menu.js"></script>
@@ -65,13 +66,14 @@
 	  		var connection = false;
 	  		var redirector = parent.redirector;
 	  		var contentHeight = 0;
+	  		var headerManager = new HeaderHandler();
 
 	  		function redirectContent(url, title) {
 	  			document.getElementById('iframeContent').src = url;
 	  			redirector.setRedirect(url);
 
 	  			if (title) {
-	  				document.getElementById("nameBlock").textContent = title;
+	  				headerManager.changeText(title);
 	  			}
 	  		}
 	  		redirectContent = redirectContent.bind(this);
