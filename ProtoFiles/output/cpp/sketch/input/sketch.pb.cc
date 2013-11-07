@@ -149,7 +149,7 @@ void protobuf_AssignDesc_input_2fsketch_2eproto() {
       sizeof(SrlPoint));
   Interpretation_descriptor_ = file->message_type(5);
   static const int Interpretation_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, label_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, confidence_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, complexity_),
   };
@@ -232,9 +232,9 @@ void protobuf_AddDesc_input_2fsketch_2eproto() {
     "rl.sketch.SrlPoint\"w\n\010SrlPoint\022\n\n\002id\030\001 \002"
     "(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\t\n\001x\030\004 \002("
     "\001\022\t\n\001y\030\005 \002(\001\022\020\n\010pressure\030\006 \001(\001\022\014\n\004size\030\007"
-    " \001(\001\022\r\n\005speed\030\010 \001(\001\"F\n\016Interpretation\022\014\n"
-    "\004name\030\001 \002(\t\022\022\n\nconfidence\030\002 \002(\001\022\022\n\ncompl"
-    "exity\030\003 \001(\001", 811);
+    " \001(\001\022\r\n\005speed\030\010 \001(\001\"G\n\016Interpretation\022\r\n"
+    "\005label\030\001 \002(\t\022\022\n\nconfidence\030\002 \002(\001\022\022\n\ncomp"
+    "lexity\030\003 \001(\001", 812);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/sketch.proto", &protobuf_RegisterTypes);
   SrlSketch::default_instance_ = new SrlSketch();
@@ -2315,7 +2315,7 @@ void SrlPoint::Swap(SrlPoint* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Interpretation::kNameFieldNumber;
+const int Interpretation::kLabelFieldNumber;
 const int Interpretation::kConfidenceFieldNumber;
 const int Interpretation::kComplexityFieldNumber;
 #endif  // !_MSC_VER
@@ -2336,7 +2336,7 @@ Interpretation::Interpretation(const Interpretation& from)
 
 void Interpretation::SharedCtor() {
   _cached_size_ = 0;
-  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  label_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   confidence_ = 0;
   complexity_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2347,8 +2347,8 @@ Interpretation::~Interpretation() {
 }
 
 void Interpretation::SharedDtor() {
-  if (name_ != &::google::protobuf::internal::kEmptyString) {
-    delete name_;
+  if (label_ != &::google::protobuf::internal::kEmptyString) {
+    delete label_;
   }
   if (this != default_instance_) {
   }
@@ -2377,9 +2377,9 @@ Interpretation* Interpretation::New() const {
 
 void Interpretation::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_name()) {
-      if (name_ != &::google::protobuf::internal::kEmptyString) {
-        name_->clear();
+    if (has_label()) {
+      if (label_ != &::google::protobuf::internal::kEmptyString) {
+        label_->clear();
       }
     }
     confidence_ = 0;
@@ -2395,14 +2395,14 @@ bool Interpretation::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string name = 1;
+      // required string label = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_name()));
+                input, this->mutable_label()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->name().data(), this->name().length(),
+            this->label().data(), this->label().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -2461,13 +2461,13 @@ bool Interpretation::MergePartialFromCodedStream(
 
 void Interpretation::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string name = 1;
-  if (has_name()) {
+  // required string label = 1;
+  if (has_label()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->name().data(), this->name().length(),
+      this->label().data(), this->label().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->name(), output);
+      1, this->label(), output);
   }
 
   // required double confidence = 2;
@@ -2488,14 +2488,14 @@ void Interpretation::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Interpretation::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string name = 1;
-  if (has_name()) {
+  // required string label = 1;
+  if (has_label()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->name().data(), this->name().length(),
+      this->label().data(), this->label().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->name(), target);
+        1, this->label(), target);
   }
 
   // required double confidence = 2;
@@ -2519,11 +2519,11 @@ int Interpretation::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string name = 1;
-    if (has_name()) {
+    // required string label = 1;
+    if (has_label()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->name());
+          this->label());
     }
 
     // required double confidence = 2;
@@ -2563,8 +2563,8 @@ void Interpretation::MergeFrom(const ::google::protobuf::Message& from) {
 void Interpretation::MergeFrom(const Interpretation& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_name()) {
-      set_name(from.name());
+    if (from.has_label()) {
+      set_label(from.label());
     }
     if (from.has_confidence()) {
       set_confidence(from.confidence());
@@ -2596,7 +2596,7 @@ bool Interpretation::IsInitialized() const {
 
 void Interpretation::Swap(Interpretation* other) {
   if (other != this) {
-    std::swap(name_, other->name_);
+    std::swap(label_, other->label_);
     std::swap(confidence_, other->confidence_);
     std::swap(complexity_, other->complexity_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
