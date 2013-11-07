@@ -29,6 +29,7 @@
 		var commandManger = false;
 		var serverConnection = false;
 		var clearCanvas = false;
+		var createBaseCommand = false;
 	    addLoadEvent(function () {
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
@@ -75,7 +76,7 @@
 					intervalVariable = setInterval(function() {console.log("RECONNECTING!");createWebSocket();}, 3000); 
 				}
 			});
-			
+
 	    	serverConnection.setOnOpenListener(function(evt) {
 			});
 			commandManager = new UpdateManager(sketch, serverConnection, ProtoSrlUpdate,
@@ -85,25 +86,20 @@
 					var data = message.otherData;
 					var update = parent.ProtoSrlUpdate.decode(data);
 					commandManager.addUpdate(update, true);
-					createSketchViewer(list, 'output');
+					setTimeout(function() {createSketchViewer(sketch.getList(), 'output');},50);
 				}
 			});
+			createBaseCommand = serverConnection.createBaseCommand;
 	    }
 
 	    function addUpdateFromStroke(stroke) {
-	    	var command = new ProtoSrlCommand();
-			command.time = stroke.time;
-			command.commandType = ProtoSrlCommandType.ADD_STROKE;
-			command.isUserCreated = true;
-			command.commandId = generateUUID(); // unique ID
+	    	var command = createBaseCommand(ProtoSrlCommandType.ADD_STROKE, true);
 			// then finish him!
 			command.commandData = stroke.sendToProtobuf(this).toArrayBuffer();
 			command.decodedData = stroke;
 			var array = new Array();
 			array.push(command);
 			var update = serverConnection.createUpdateFromCommands(array);
-		//	var request = serverConnection.createRequestFromUpdate(update, parent.Request.MessageType.RECOGNITION);
-		//	serverConnection.sendRequest(request);
 			commandManager.addUpdate(update, false);
 	    }
 
@@ -130,6 +126,9 @@
 
 	    function packageShapes() {
 	    	var shape = new SRL_Shape();
+	    	var firstCommand = createBaseCommand(ProtoSrlCommandType.ADD_SHAPE, false);
+	    	command.commandData = shape.sendToProtobuf(this).toArrayBuffer();
+			command.decodedData = shape;
 	    	var list = sketch.getList();
 	    	for(var i = 0; i < list.length; i ++) {
 	    		shape.addSubObject(sketch.getObjectAtIndex(i));

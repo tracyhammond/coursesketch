@@ -95,6 +95,18 @@ if (isUndefined(Array.prototype.removeObjectByIndex)) {
 }
 
 /**
+ * Checks to see if an item is an instance of an array.
+ *
+ * returns true if it is an array, (hopefully).
+ */
+if (isUndefined(isArray)) {
+	function isArray(object) {
+		return object instanceof Array ||
+		(Array.isArray && Array.isArray(object));
+	};
+}	
+
+/**
  **************************************************************
  * Sketch Function
  * @author gigemjt
@@ -177,7 +189,6 @@ if (isUndefined(copyParentValues)) {
 		var object = this[propertyName];
 		// 
 		if (isFunction(object) && bindFunction) {
-			console.log(object);
 			scope[propertyName] = object.bind(scope);
 		} else {
 			scope[propertyName] = this[propertyName];
@@ -191,15 +202,16 @@ if (isUndefined(copyParentValues)) {
 if (isUndefined(copyParentUtilityFunctions)) {
 	function copyParentUtilityFunctions(scope) {
 		// needed values to continue this process!
-		copyParentValues(scope,'isUndefined');
-		copyParentValues(scope,'isFunction');
-		copyParentValues(scope,'copyParentValues', true);
-		copyParentValues(scope,'copyParentUtilityFunctions', true);
+		copyParentValues(scope, 'isUndefined');
+		copyParentValues(scope, 'isFunction');
+		copyParentValues(scope, 'copyParentValues', true);
+		copyParentValues(scope, 'copyParentUtilityFunctions', true);
 
-		copyParentValues(scope,'replaceAll');
-		copyParentValues(scope,'createTimeStamp');
-		copyParentValues(scope,'generateUUID');
-		copyParentValues(scope,'is_touch');
+		copyParentValues(scope, 'replaceAll');
+		copyParentValues(scope, 'createTimeStamp');
+		copyParentValues(scope, 'generateUUID');
+		copyParentValues(scope, 'isArray');
+		copyParentValues(scope, 'is_touch');
 		
 	}
 }

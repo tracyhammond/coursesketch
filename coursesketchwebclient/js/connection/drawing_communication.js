@@ -81,6 +81,22 @@ SRL_Stroke.createFromProtobuf = function(stroke) {
 }
 
 /**
+ * Creates an SRL protobuf version of a shape.
+ *
+ * TODO: finish this method
+ */
+SRL_Shape.prototype.sendToProtobuf = function(scope) {
+	var StrokeProto = scope ? scope.ProtoSrlShape : ProtoSrlShape;
+	var interpretations = shape.getInterpretations();
+	var newShape = new SRL_Shape();
+	for(i in interpretations) {
+		var protoInter = interpretations[i];
+		newShape.addInterpretation(protoInter.name, protoInter.confidence, protoInter.complexity);
+	}
+	return newShape;
+}
+
+/**
  * Static function that returns an {@link SRL_Shape}.
  */
 SRL_Shape.createFromProtobuf = function(shape) {

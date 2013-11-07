@@ -284,7 +284,8 @@ function Connection(uri, encrypted) {
 	 * Given a protobuf Command array an Update is created.
 	 */
 	this.createUpdateFromCommands = function(commands) {
-		if (!(commands instanceof Array)) {
+		if (!isArray(commands)) {
+			console.error(commands);
 			throw 'Invalid Type Error: Input is not an Array';
 		}
 		var update = new ProtoSrlUpdate();
@@ -305,6 +306,17 @@ function Connection(uri, encrypted) {
 		request.setOtherData(buffer);
 		return request;
 	}
+
+	this.createBaseCommand = function(commandType, userCreated) {
+    	var command = new ProtoSrlCommand();
+    	var n = createTimeStamp();
+    	var longVersion = Long.fromString("" + n);
+		command.time = longVersion;
+		command.commandType = commandType;
+		command.isUserCreated = userCreated;
+		command.commandId = generateUUID(); // unique ID
+		return command;
+    }
 }
 var Long = false;
 

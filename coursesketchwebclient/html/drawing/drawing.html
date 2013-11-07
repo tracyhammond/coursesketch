@@ -54,20 +54,17 @@
 			addUpdateFromStroke(stroke);
 		}
 
+	    /**
+	    Creates an update that is added to the update manager, given a stroke.
+	    */
 	    function addUpdateFromStroke(stroke) {
-	    	var command = new parent.ProtoSrlCommand();
-			command.time = stroke.time;
-			command.commandType = parent.ProtoSrlCommandType.ADD_STROKE;
-			command.isUserCreated = true;
-			command.commandId = generateUUID(); // unique ID
+	    	var command = serverConnection.createBaseCommand(ProtoSrlCommandType.ADD_STROKE, true);
 			// then finish him!
-			command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
+			command.commandData = stroke.sendToProtobuf(this).toArrayBuffer();
 			command.decodedData = stroke;
 			var array = new Array();
 			array.push(command);
 			var update = serverConnection.createUpdateFromCommands(array);
-		//	var request = serverConnection.createRequestFromUpdate(update, parent.Request.MessageType.RECOGNITION);
-		//	serverConnection.sendRequest(request);
 			commandManager.addUpdate(update, false);
 	    }
 	</script>
