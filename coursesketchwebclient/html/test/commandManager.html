@@ -35,7 +35,7 @@
 			input.initializeCanvas("drawingCanvas");
 			clearCanvas = input.clearCanvas;
 			canvasContext = input.canvasContext;
-			sketch = new sketchContainer();
+			sketch = new SRL_Sketch();
 			sketch.canvasContext = canvasContext;
 			sketch.clearCanvas = clearCanvas;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
@@ -127,13 +127,25 @@
 	    function packageShapes() {
 	    	var shape = new SRL_Shape();
 	    	var firstCommand = createBaseCommand(ProtoSrlCommandType.ADD_SHAPE, false);
-	    	command.commandData = shape.sendToProtobuf(this).toArrayBuffer();
-			command.decodedData = shape;
+	    	firstCommand.commandData = shape.sendToProtobuf(this).toArrayBuffer();
+	    	firstCommand.decodedData = shape;
+	    	var secondCommand = createBaseCommand(ProtoSrlCommandType.PACKAGE_SHAPE, false);
+	    	var packageShape = new ProtoUpdateCommand.PackageShape();
 	    	var list = sketch.getList();
+	    	var idList = [];
 	    	for(var i = 0; i < list.length; i ++) {
-	    		shape.addSubObject(sketch.getObjectAtIndex(i));
+	    		idList.push(sketch.getSubObjectAtIndex(i));
 	    	}
-	    	sketch.addObject(shape);
+	    	packageShape.setShapesToBeContained(idList);
+	    	secondCommand.commandData = packageShape.toArrayBuffer();
+	    	secondCommand.decodedData = packageShape;
+	    	alert(secondCommand.decodedData);
+	    	var array = new Array();
+			array.push(firstCommand);
+			array.push(secondCommand);
+			var update = serverConnection.createUpdateFromCommands(array);
+			alert("about to add update");
+			commandManager.addUpdate(update, false, true);
 	    	createSketchViewer(sketch.getList(), 'output');
 	    }
 

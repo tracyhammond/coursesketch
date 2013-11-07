@@ -32,7 +32,9 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 		if (!fromRemote) {
 			queuedUpdates.push(update);
 			this.emptyQueue();
-		} else if (fromRemote || execute) {
+		}
+		if (fromRemote || execute) {
+			console.log("executing! update");
 			setTimeout(function() {
 				var redraw = update.redo();
 				if (redraw && sketch.drawEntireSketch) {
@@ -122,12 +124,12 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 				sketch.addObject(this.decodedData);
 				redraw = true;
 			break;
-				case this.CommandType.PACKAGE_SHAPE:
-				if (!this.decodedData) {
-					//console.log("Executing " + this.CommandType.ADD_SHAPE);
+			case this.CommandType.PACKAGE_SHAPE:
+				console.log("Executing PACKAGE_SHAPE");
+				if (isUndefined(this.decodedData) || (!this.decodedData)) {
 					this.decodedData = Action.PackageShape.decode(this.commandData);
 				}
-				decodedData.redo();
+				this.decodedData.redo();
 			break;
 		}
 		return redraw;
@@ -140,16 +142,12 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	/**
 	 * Moves the shapes from the old container to the new container.
 	 */
-	Action.PackageShape.redo = function() {
+	Action.PackageShape.prototype.redo = function() {
 		var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getObjectByIdChain(this.oldContainerId.getIdChain());
 		var newContainingObject = !(this.newContainerId) ? sketch : sketch.getObjectByIdChain(this.newContainerId.getIdChain());
 		for (shapeId in this.shapesToBeContained) {
-			var object = oldContainingObject.removeObjectById(shapeId);
-			if (newContainerId) {
-				newContainingObject.addSubObject(object);
-			} else {
-				newContainingObject.addObject(object);
-			}
+			var object = oldContainingObject.removeSubObjectById(shapeId);
+			newContainingObject.addSubObject(object);
 		}
 	}
 

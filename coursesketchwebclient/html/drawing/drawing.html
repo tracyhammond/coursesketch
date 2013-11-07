@@ -34,13 +34,12 @@
 			input.initializeCanvas("drawingCanvas");
 			canvasContext = input.canvasContext;
 
-			sketch = new sketchContainer();
+			sketch = new SRL_Sketch();
 			sketch.canvasContext = canvasContext;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
 					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommand);
 			serverConnection.setRecognitionListener(function(evt, message) {
-				alert('GETTING RECOGNITION REQUEST!');
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
 					var data = message.otherData;
 					var update = parent.ProtoSrlUpdate.decode(data);
@@ -60,7 +59,7 @@
 	    function addUpdateFromStroke(stroke) {
 	    	var command = serverConnection.createBaseCommand(ProtoSrlCommandType.ADD_STROKE, true);
 			// then finish him!
-			command.commandData = stroke.sendToProtobuf(this).toArrayBuffer();
+			command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
 			command.decodedData = stroke;
 			var array = new Array();
 			array.push(command);
