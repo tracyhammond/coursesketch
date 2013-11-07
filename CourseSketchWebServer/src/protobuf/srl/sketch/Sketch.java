@@ -5945,20 +5945,20 @@ public final class Sketch {
   public interface InterpretationOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required string name = 1;
+    // required string label = 1;
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string label = 1;</code>
      */
-    boolean hasName();
+    boolean hasLabel();
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string label = 1;</code>
      */
-    java.lang.String getName();
+    java.lang.String getLabel();
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string label = 1;</code>
      */
     com.google.protobuf.ByteString
-        getNameBytes();
+        getLabelBytes();
 
     // required double confidence = 2;
     /**
@@ -6038,7 +6038,7 @@ public final class Sketch {
             }
             case 10: {
               bitField0_ |= 0x00000001;
-              name_ = input.readBytes();
+              label_ = input.readBytes();
               break;
             }
             case 17: {
@@ -6091,20 +6091,20 @@ public final class Sketch {
     }
 
     private int bitField0_;
-    // required string name = 1;
-    public static final int NAME_FIELD_NUMBER = 1;
-    private java.lang.Object name_;
+    // required string label = 1;
+    public static final int LABEL_FIELD_NUMBER = 1;
+    private java.lang.Object label_;
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string label = 1;</code>
      */
-    public boolean hasName() {
+    public boolean hasLabel() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string label = 1;</code>
      */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
+    public java.lang.String getLabel() {
+      java.lang.Object ref = label_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -6112,22 +6112,22 @@ public final class Sketch {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          name_ = s;
+          label_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string label = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
+        getLabelBytes() {
+      java.lang.Object ref = label_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        name_ = b;
+        label_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -6167,7 +6167,7 @@ public final class Sketch {
     }
 
     private void initFields() {
-      name_ = "";
+      label_ = "";
       confidence_ = 0D;
       complexity_ = 0D;
     }
@@ -6176,7 +6176,7 @@ public final class Sketch {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasName()) {
+      if (!hasLabel()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -6192,7 +6192,7 @@ public final class Sketch {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getNameBytes());
+        output.writeBytes(1, getLabelBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeDouble(2, confidence_);
@@ -6211,7 +6211,7 @@ public final class Sketch {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getNameBytes());
+          .computeBytesSize(1, getLabelBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -6342,7 +6342,7 @@ public final class Sketch {
 
       public Builder clear() {
         super.clear();
-        name_ = "";
+        label_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         confidence_ = 0D;
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -6379,7 +6379,7 @@ public final class Sketch {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.name_ = name_;
+        result.label_ = label_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
@@ -6404,9 +6404,9 @@ public final class Sketch {
 
       public Builder mergeFrom(protobuf.srl.sketch.Sketch.Interpretation other) {
         if (other == protobuf.srl.sketch.Sketch.Interpretation.getDefaultInstance()) return this;
-        if (other.hasName()) {
+        if (other.hasLabel()) {
           bitField0_ |= 0x00000001;
-          name_ = other.name_;
+          label_ = other.label_;
           onChanged();
         }
         if (other.hasConfidence()) {
@@ -6420,7 +6420,7 @@ public final class Sketch {
       }
 
       public final boolean isInitialized() {
-        if (!hasName()) {
+        if (!hasLabel()) {
           
           return false;
         }
@@ -6450,76 +6450,76 @@ public final class Sketch {
       }
       private int bitField0_;
 
-      // required string name = 1;
-      private java.lang.Object name_ = "";
+      // required string label = 1;
+      private java.lang.Object label_ = "";
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string label = 1;</code>
        */
-      public boolean hasName() {
+      public boolean hasLabel() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string label = 1;</code>
        */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
+      public java.lang.String getLabel() {
+        java.lang.Object ref = label_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          name_ = s;
+          label_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string label = 1;</code>
        */
       public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
+          getLabelBytes() {
+        java.lang.Object ref = label_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          name_ = b;
+          label_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string label = 1;</code>
        */
-      public Builder setName(
+      public Builder setLabel(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        name_ = value;
+        label_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string label = 1;</code>
        */
-      public Builder clearName() {
+      public Builder clearLabel() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        name_ = getDefaultInstance().getName();
+        label_ = getDefaultInstance().getLabel();
         onChanged();
         return this;
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string label = 1;</code>
        */
-      public Builder setNameBytes(
+      public Builder setLabelBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        name_ = value;
+        label_ = value;
         onChanged();
         return this;
       }
@@ -6658,9 +6658,9 @@ public final class Sketch {
       "rl.sketch.SrlPoint\"w\n\010SrlPoint\022\n\n\002id\030\001 \002" +
       "(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\t\n\001x\030\004 \002(" +
       "\001\022\t\n\001y\030\005 \002(\001\022\020\n\010pressure\030\006 \001(\001\022\014\n\004size\030\007" +
-      " \001(\001\022\r\n\005speed\030\010 \001(\001\"F\n\016Interpretation\022\014\n" +
-      "\004name\030\001 \002(\t\022\022\n\nconfidence\030\002 \002(\001\022\022\n\ncompl",
-      "exity\030\003 \001(\001"
+      " \001(\001\022\r\n\005speed\030\010 \001(\001\"G\n\016Interpretation\022\r\n" +
+      "\005label\030\001 \002(\t\022\022\n\nconfidence\030\002 \002(\001\022\022\n\ncomp",
+      "lexity\030\003 \001(\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6702,7 +6702,7 @@ public final class Sketch {
           internal_static_protobuf_srl_sketch_Interpretation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_Interpretation_descriptor,
-              new java.lang.String[] { "Name", "Confidence", "Complexity", });
+              new java.lang.String[] { "Label", "Confidence", "Complexity", });
           return null;
         }
       };

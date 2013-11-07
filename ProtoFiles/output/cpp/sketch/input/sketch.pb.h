@@ -823,17 +823,17 @@ class Interpretation : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string name = 1;
-  inline bool has_name() const;
-  inline void clear_name();
-  static const int kNameFieldNumber = 1;
-  inline const ::std::string& name() const;
-  inline void set_name(const ::std::string& value);
-  inline void set_name(const char* value);
-  inline void set_name(const char* value, size_t size);
-  inline ::std::string* mutable_name();
-  inline ::std::string* release_name();
-  inline void set_allocated_name(::std::string* name);
+  // required string label = 1;
+  inline bool has_label() const;
+  inline void clear_label();
+  static const int kLabelFieldNumber = 1;
+  inline const ::std::string& label() const;
+  inline void set_label(const ::std::string& value);
+  inline void set_label(const char* value);
+  inline void set_label(const char* value, size_t size);
+  inline ::std::string* mutable_label();
+  inline ::std::string* release_label();
+  inline void set_allocated_label(::std::string* label);
 
   // required double confidence = 2;
   inline bool has_confidence() const;
@@ -851,8 +851,8 @@ class Interpretation : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.Interpretation)
  private:
-  inline void set_has_name();
-  inline void clear_has_name();
+  inline void set_has_label();
+  inline void clear_has_label();
   inline void set_has_confidence();
   inline void clear_has_confidence();
   inline void set_has_complexity();
@@ -860,7 +860,7 @@ class Interpretation : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* name_;
+  ::std::string* label_;
   double confidence_;
   double complexity_;
 
@@ -1992,73 +1992,73 @@ inline void SrlPoint::set_speed(double value) {
 
 // Interpretation
 
-// required string name = 1;
-inline bool Interpretation::has_name() const {
+// required string label = 1;
+inline bool Interpretation::has_label() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Interpretation::set_has_name() {
+inline void Interpretation::set_has_label() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Interpretation::clear_has_name() {
+inline void Interpretation::clear_has_label() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Interpretation::clear_name() {
-  if (name_ != &::google::protobuf::internal::kEmptyString) {
-    name_->clear();
+inline void Interpretation::clear_label() {
+  if (label_ != &::google::protobuf::internal::kEmptyString) {
+    label_->clear();
   }
-  clear_has_name();
+  clear_has_label();
 }
-inline const ::std::string& Interpretation::name() const {
-  return *name_;
+inline const ::std::string& Interpretation::label() const {
+  return *label_;
 }
-inline void Interpretation::set_name(const ::std::string& value) {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
-    name_ = new ::std::string;
+inline void Interpretation::set_label(const ::std::string& value) {
+  set_has_label();
+  if (label_ == &::google::protobuf::internal::kEmptyString) {
+    label_ = new ::std::string;
   }
-  name_->assign(value);
+  label_->assign(value);
 }
-inline void Interpretation::set_name(const char* value) {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
-    name_ = new ::std::string;
+inline void Interpretation::set_label(const char* value) {
+  set_has_label();
+  if (label_ == &::google::protobuf::internal::kEmptyString) {
+    label_ = new ::std::string;
   }
-  name_->assign(value);
+  label_->assign(value);
 }
-inline void Interpretation::set_name(const char* value, size_t size) {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
-    name_ = new ::std::string;
+inline void Interpretation::set_label(const char* value, size_t size) {
+  set_has_label();
+  if (label_ == &::google::protobuf::internal::kEmptyString) {
+    label_ = new ::std::string;
   }
-  name_->assign(reinterpret_cast<const char*>(value), size);
+  label_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Interpretation::mutable_name() {
-  set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
-    name_ = new ::std::string;
+inline ::std::string* Interpretation::mutable_label() {
+  set_has_label();
+  if (label_ == &::google::protobuf::internal::kEmptyString) {
+    label_ = new ::std::string;
   }
-  return name_;
+  return label_;
 }
-inline ::std::string* Interpretation::release_name() {
-  clear_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* Interpretation::release_label() {
+  clear_has_label();
+  if (label_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = name_;
-    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = label_;
+    label_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void Interpretation::set_allocated_name(::std::string* name) {
-  if (name_ != &::google::protobuf::internal::kEmptyString) {
-    delete name_;
+inline void Interpretation::set_allocated_label(::std::string* label) {
+  if (label_ != &::google::protobuf::internal::kEmptyString) {
+    delete label_;
   }
-  if (name) {
-    set_has_name();
-    name_ = name;
+  if (label) {
+    set_has_label();
+    label_ = label;
   } else {
-    clear_has_name();
-    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_label();
+    label_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

@@ -53,7 +53,7 @@ message SrlPoint {
 // TODO: change to SrlInterpretation
 // TODO: change name to label
 message Interpretation {
-	required string name = 1;
+	required string label = 1;
 	required double confidence = 2;
 	optional double complexity = 3;
 }
