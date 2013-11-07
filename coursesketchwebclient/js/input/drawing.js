@@ -107,6 +107,10 @@ function sketchContainer() {
 	}
 
 	this.drawEntireSketch = function() {
+		if (this.clearCanvas) {
+			this.clearCanvas(this.canvasContext);
+		}
+
     	var list = this.getList();
     	if (list && this.canvasContext) {
 			for(var i = 0; i < list.length; i++) {

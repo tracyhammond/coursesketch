@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="../../">
+    <title>Drawing!</title>
+  	<link rel="stylesheet" href="css/utility/columns.css">
+	<link rel="stylesheet" href="css/SRL/SRL_SketchViewer.css">
+
+	<script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
+
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+
+	<script type="text/javascript" src="js/input/drawing.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/input/touch_event.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_SketchViewer.js"></script>
+
+	<script type="text/javascript" src="js/connection/connection_library.js"></script>
+	<script type="text/javascript" src="js/connection/drawing_communication.js"></script>
+	<script type="text/javascript" src="js/connection/command_manager.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+		var drawingCreator = false;
+		var sketch = false;
+		var canvasContext = false;
+		var commandManger = false;
+		var serverConnection = false;
+		var clearCanvas = false;
+	    addLoadEvent(function () {
+			var input = new inputListener();
+			input.initializeCanvas("drawingCanvas");
+			clearCanvas = input.clearCanvas;
+			canvasContext = input.canvasContext;
+			sketch = new sketchContainer();
+			sketch.canvasContext = canvasContext;
+			sketch.clearCanvas = clearCanvas;
+			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+			createStuff();
+			initializeServer();
+		});
+
+	    function callback(stroke) {
+	    	stroke.setColorHex(convertRGBtoHex(0,255,0,255));
+		//	element = document.getElementById('output');
+			var html = "";
+			var list = sketch.getList();
+
+			createSketchViewer(list, 'output');
+
+			sketch.drawEntireSketch();
+
+			addUpdateFromStroke(stroke);
+		//	element.innerHTML = html;
+		}
+
+	    function initializeServer() {
+	    	var wsUri = "goldberglinux02.tamu.edu:8888"; // our serve
+	    	serverConnection = new Connection(wsUri,false);
+	    	serverConnection.setOnCloseListener(function(evt) {
+				var reconnect = false;
+				if (evt.code == CONNECTION_LOST) {
+					alert('can not connect to the server');
+					reconnect = true;
+				} else if(evt.code == SERVER_FULL) {
+					alert(evt.reason); // Here we can try to connect to other servers.
+				} else {
+					alert("SERVER CLOSED CONNECTION");
+					reconnect = true;
+				}
+				if (reconnect) {
+					console.log("attempting to reconnet");
+					intervalVariable = setInterval(function() {console.log("RECONNECTING!");createWebSocket();}, 3000); 
+				}
+			});
+			
+	    	serverConnection.setOnOpenListener(function(evt) {
+			});
+			commandManager = new UpdateManager(sketch, serverConnection, ProtoSrlUpdate,
+					ProtoSrlCommand, ProtoSrlCommandType, ProtoUpdateCommand);
+			serverConnection.setRecognitionListener(function(evt, message) {
+				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
+					var data = message.otherData;
+					var update = parent.ProtoSrlUpdate.decode(data);
+					commandManager.addUpdate(update, true);
+					createSketchViewer(list, 'output');
+				}
+			});
+	    }
+
+	    function addUpdateFromStroke(stroke) {
+	    	var command = new ProtoSrlCommand();
+			command.time = stroke.time;
+			command.commandType = ProtoSrlCommandType.ADD_STROKE;
+			command.isUserCreated = true;
+			command.commandId = generateUUID(); // unique ID
+			// then finish him!
+			command.commandData = stroke.sendToProtobuf(this).toArrayBuffer();
+			command.decodedData = stroke;
+			var array = new Array();
+			array.push(command);
+			var update = serverConnection.createUpdateFromCommands(array);
+		//	var request = serverConnection.createRequestFromUpdate(update, parent.Request.MessageType.RECOGNITION);
+		//	serverConnection.sendRequest(request);
+			commandManager.addUpdate(update, false);
+	    }
+
+	    function createStuff() {
+	    	//goes 5 times
+	    	for(var i = 1; i <= 2; i++) {
+	    		sketch.addObject(getShape(i));
+	    	}
+	    	console.log(sketch.getList());
+	    	var list = sketch.getList();
+	    	createSketchViewer(list, 'output');
+	    }
+
+	    function getShape(i) {
+	    	this.shape = new SRL_Shape();
+    		// goes 1 to 5 times
+    		for(var j = 0; j < i; j++) {
+    			console.log('j: '+ j);
+    			var stroke = new SRL_Stroke();
+    			this.shape.addSubObject(stroke);
+    		}
+    		return shape;
+	    }
+
+	    function packageShapes() {
+	    	var shape = new SRL_Shape();
+	    	var list = sketch.getList();
+	    	for(var i = 0; i < list.length; i ++) {
+	    		shape.addSubObject(sketch.getObjectAtIndex(i));
+	    	}
+	    	sketch.addObject(shape);
+	    	createSketchViewer(sketch.getList(), 'output');
+	    }
+
+	    function removeFirst() {
+	    	sketch.removeObjectAtIndex(0);
+	    	createSketchViewer(sketch.getList(), 'output');
+	    	sketch.drawEntireSketch();
+	    }
+	</script>
+</head>
+<body>
+	version 5
+    <!-- Center Section -->
+   	<div class = "centre">
+   			<button onclick = "createStuff();">addShape</button>
+   			<button onclick = "packageShapes();">packageSketch</button>
+   			<button onclick = "removeFirst();">removeFirst</button>
+   			<div id = "output" style = "height:400px;position:relative; overflow:scroll;"></div>
+  			<canvas id="drawingCanvas" width="300" height="300" style="top:0px; left:0px; width: 300; height: 300; background:#FFFFFF;"></canvas>
+   	</div>
+</div>

@@ -3,10 +3,12 @@
 <base href="../../">
   	<link rel="stylesheet" href="css/utility/columns.css">
   	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+ 
 	<script type="text/javascript" src="js/input/drawing.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+
 	<script type="text/javascript" src="js/connection/drawing_communication.js"></script>
 	<script type="text/javascript" src="js/connection/command_manager.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
@@ -37,7 +39,8 @@
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
 					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommand);
-			serverConnection.setOnMessageListener(function(evt, message) {
+			serverConnection.setRecognitionListener(function(evt, message) {
+				alert('GETTING RECOGNITION REQUEST!');
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
 					var data = message.otherData;
 					var update = parent.ProtoSrlUpdate.decode(data);
@@ -48,7 +51,11 @@
 
 	    function callback(stroke) {
 			stroke.draw(canvasContext);
-			var command = new parent.ProtoSrlCommand();
+			addUpdateFromStroke(stroke);
+		}
+
+	    function addUpdateFromStroke(stroke) {
+	    	var command = new parent.ProtoSrlCommand();
 			command.time = stroke.time;
 			command.commandType = parent.ProtoSrlCommandType.ADD_STROKE;
 			command.isUserCreated = true;
@@ -62,7 +69,7 @@
 		//	var request = serverConnection.createRequestFromUpdate(update, parent.Request.MessageType.RECOGNITION);
 		//	serverConnection.sendRequest(request);
 			commandManager.addUpdate(update, false);
-		}
+	    }
 	</script>
 	<script type="text/javascript">
 			parent.addScopedLoadEvent(window, function() {

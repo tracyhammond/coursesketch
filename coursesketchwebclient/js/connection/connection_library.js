@@ -38,16 +38,20 @@ function Connection(uri, encrypted) {
 				try {
 			        // Decode the Request
 			        var msg = Request.decode(evt.data);
-			        console.log("request decoded succesfully");
+			        console.log("request decoded succesfully ");
 			        if (msg.requestType == Request.MessageType.LOGIN && onLogin) {
+			        	console.log("getting from login");
 			        	onLogin(evt, msg);
 			        } else if (msg.requestType == Request.MessageType.RECOGNITION && onRecognition) {
+			        	console.log("getting from recognition");
 			        	onRecognition(evt, msg);
 			        } else if (msg.requestType == Request.MessageType.ANSWER_CHECKING && onAnswerChecker) {
+			        	console.log("getting from answer checker");
 			        	onAnswerChecker(evt, msg);
 			        } else if (msg.requestType == Request.MessageType.DATA_REQUEST && onSchoolData) {
+			        	console.log("getting from school data");
 			        	onSchoolData(evt, msg);
-			        }else if (onRequest)
+			        } else if (onRequest)
 			        	onRequest(evt, msg);
 			    } catch (err) {
 			    	console.error(err.stack);
@@ -273,14 +277,14 @@ function Connection(uri, encrypted) {
 	 * Given a protobuf Command object a Request is created.
 	 */
 	this.createRequestFromCommands = function(commands, requestType) {
-		return createRequestFromUpdate(createUpdateFromCommands(commands), requestType);
+		return this.createRequestFromUpdate(this.createUpdateFromCommands(commands), requestType);
 	}
 
 	/**
 	 * Given a protobuf Command array an Update is created.
 	 */
 	this.createUpdateFromCommands = function(commands) {
-		if (commands instanceof Array) {
+		if (!(commands instanceof Array)) {
 			throw 'Invalid Type Error: Input is not an Array';
 		}
 		var update = new ProtoSrlUpdate();

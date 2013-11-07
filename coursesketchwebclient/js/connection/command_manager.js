@@ -46,7 +46,6 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 		setTimeout(function() {
 			if (queuedUpdates.length > 0) {
 				var update = queuedUpdates.removeObjectByIndex(0);
-				alert(update);
 				var request = serverConnection.createRequestFromUpdate(update, parent.Request.MessageType.RECOGNITION);
 				serverConnection.sendRequest(request);
 				if (queuedUpdates.length > 0) {

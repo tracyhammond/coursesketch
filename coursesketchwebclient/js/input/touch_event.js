@@ -9,6 +9,9 @@ function inputListener() {
 		canvasBounds = canvas.getBoundingClientRect();
 		this.canvasContext = canvas.getContext('2d');
 		this.initializeElement(canvasId);
+		this.clearCanvas = function(canvasContext) {
+			canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+		}
 	}
 
 	this.initializeElement = function initializeElement(elementId) {

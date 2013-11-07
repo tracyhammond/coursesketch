@@ -92,6 +92,10 @@ SRL_Shape.prototype.drawShape = function drawShape(graphics) {
 		var inter = list[i];
 		console.log("label: " + inter.label + " confidence: " + inter.confidence);
 	}
+	var subShapes = this.getSubObjects();
+	for (var i = 0; i <subShapes.length; i++) {
+		subShapes[i].draw(graphics);
+	}
 }
 
 
