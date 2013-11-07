@@ -1,12 +1,12 @@
 package main;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import protobuf.srl.commands.Commands.Command;
+import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.Update;
-import connection.Decoder;
 import protobuf.srl.sketch.Sketch.Interpretation;
 import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
@@ -20,14 +20,15 @@ import srl.recognition.paleo.PaleoConfig;
 import srl.recognition.paleo.PaleoSketchRecognizer;
 
 public class Response {
-	private static PaleoSketchRecognizer recognizer;
+	private static PaleoSketchRecognizer m_recognizer;
+	private UpdateList m_SyncList; 
 	
 	/**
 	 * Default constructor that initializes PaleoSketch with all primitives on
 	 */
 	public Response(){
-		if(recognizer == null)
-			recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
+		if(m_recognizer == null)
+			m_recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
 	}
 	
 	/**
@@ -35,7 +36,7 @@ public class Response {
 	 * @param PaleoSketch configuration of which primitives you would like
 	 */
 	public Response(PaleoConfig config){
-		recognizer = new PaleoSketchRecognizer(config);
+		m_recognizer = new PaleoSketchRecognizer(config);
 	}
 	
 	/**
@@ -50,7 +51,6 @@ public class Response {
 
 		List<Point> points = s.getPoints();
 		for (Point p: points){
-			//System.out.println("("+p.x+","+p.y+")");
 			double z = p.x;
 			p.x = p.y;
 			p.y = z;
@@ -71,7 +71,7 @@ public class Response {
 		Sketch sketch = new Sketch();
 		sketch.add(unpackage(up));
 		
-		IRecognitionResult result = recognizer.recognize(sketch.getFirstStroke());
+		IRecognitionResult result = m_recognizer.recognize(sketch.getFirstStroke());
 		
 		result.sortNBestList();
 		List<Shape> shapes = result.getNBestList();
@@ -97,7 +97,7 @@ public class Response {
 		Sketch sketch = new Sketch();
 		sketch.add(unpackage(up));
 		
-		IRecognitionResult result = recognizer.recognize(sketch.getFirstStroke());
+		IRecognitionResult result = m_recognizer.recognize(sketch.getFirstStroke());
 		
 		SrlShape response = repackage(result);
 		return response;
@@ -110,14 +110,25 @@ public class Response {
 	 * @throws InvalidProtocolBufferException
 	 */
 	private static Stroke unpackage(Update up) throws InvalidProtocolBufferException{
-		Stroke stroke = new Stroke();
 		System.out.println("Number of commands " + up.getCommandsCount());
-		SrlStroke s_stroke = SrlStroke.parseFrom(up.getCommands(0).getCommandData());
-		stroke.setId(Stroke.nextID());
-		stroke.setName(s_stroke.getName());
-		for (SrlPoint s_point : s_stroke.getPointsList()) {
-			stroke.addPoint(new Point(s_point.getX(), s_point.getY(), s_point.getTime(),Point.nextID()));
-		}		
+		for(int i=0;i<up.getCommandsCount();i++){
+			Command c = up.getCommands(i);
+			switch(c.getCommandType()){
+			case ADD_STROKE:
+				Stroke stroke = new Stroke();
+				SrlStroke s_stroke = SrlStroke.parseFrom(c.getCommandData());
+				stroke.setId(Stroke.nextID());
+				stroke.setName(s_stroke.getName());
+				for (SrlPoint s_point : s_stroke.getPointsList()) {
+					stroke.addPoint(new Point(s_point.getX(), s_point.getY(), s_point.getTime(),Point.nextID()));
+				}
+				break;
+			case ADD_SHAPE:
+				break;
+			case PACKAGE_SHAPE:
+				break;
+			}
+		}
 		return stroke;
 	}
 	
@@ -162,7 +173,7 @@ public class Response {
 		Interpretation.Builder interpretationbuilder = Interpretation.newBuilder();
 		for (Shape s: shapes){
 			srl.core.sketch.Interpretation i = s.getInterpretation();
-			interpretationbuilder.setName(i.label);
+			interpretationbuilder.setLabel(i.label);
 			interpretationbuilder.setConfidence(i.confidence);
 			
 			shapebuilder.addInterpretations(interpretationbuilder.build());

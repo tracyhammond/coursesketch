@@ -4,6 +4,7 @@ import srl.core.sketch.*;
 import srl.recognition.*;
 import srl.recognition.paleo.PaleoConfig;
 import srl.recognition.paleo.PaleoSketchRecognizer;
+import srl.recognition.paleo.paleoNN.PaleoNNRecognizer;
 
 public class paleotest {
 	public static void main(String[] args) {
@@ -21,8 +22,9 @@ public class paleotest {
 		 * one we just created) This should result in a best shape label of
 		 * "Line"
 		 */
-		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
-		IRecognitionResult result = recognizer.recognize(sketch.getFirstStroke());
+		PaleoNNRecognizer recognizer = new PaleoNNRecognizer(PaleoConfig.allOn());
+		recognizer.submitForRecognition(sketch.getFirstStroke());
+		IRecognitionResult result = recognizer.recognize();
 		
 		if (result.getBestShape().getInterpretation().label.equalsIgnoreCase("line"))
 			System.out.println("Correctly recognized as a line");
