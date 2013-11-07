@@ -2,7 +2,7 @@ function createSketchViewer(list, idToPutViewIn) {
 	var list = parseList(list, 0);
 	document.getElementById(idToPutViewIn).innerHTML = list[0];
 }
-var myWidth = 100; // single threaded = okay
+var myWidth = 150; // single threaded = okay
 
 function createView(sketchObject, level) {
 	var tempWidth = myWidth;
@@ -16,12 +16,13 @@ function createView(sketchObject, level) {
 		var list = sketchObject.getInterpretations();
 		if (list.length > 0) {
 			console.log('open interpretations');
-			html += '<div class = "interpretations">';
+			html += '<div class = "interpretations style="max-width:'+myWidth+'px;"">';
+			html += '<p style="max-width:'+myWidth+'px;">';
 			for (var i = 0; i < list.length; i++) {
 				var inter = list[i];
-				html += '<h3>' + "label: " + inter.label + " confidence: " + inter.confidence + '</h3>';
+				html += "label: " + inter.label + " confidence: " + inter.confidence + '<br>';
 			}
-			html += '</div>';
+			html += '</p></div>';
 		}
 		var list = sketchObject.getSubObjects();
 		if (list.length > 0) {
