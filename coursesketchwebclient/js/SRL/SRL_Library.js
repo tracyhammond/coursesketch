@@ -1,4 +1,3 @@
-	
 /*******************************
  *
  *
@@ -42,6 +41,9 @@ function Overloads() {
 			} else if (this instanceof SRL_Object) {
 				class_type = "SRL_Object";
 				//console.log("I am SRL_Object");
+			}  else if (this instanceof SRL_Sketch) {
+				class_type = "SRL_Sketch";
+				//console.log("I am SRL_Sketch");
 			}
 			classType = class_type;
 		}
@@ -162,6 +164,8 @@ function Overloads() {
 	this.getSubObjectById = function () {
 		if (this.check_type() == "SRL_Stroke") {
 			return(this.getSubObjectById.SRL_Stroke.apply( this, arguments ));
+		} else if (this.check_type() == "SRL_Sketch") {
+			return(this.getSubObjectById.SRL_Sketch.apply( this, arguments ));
 		} else if (this.check_type() == "SRL_Point") {
 			throw 'No such method error: SRL_Point does not have method "getSubObjectById"';
 		}  else if (this.check_type() == "SRL_Line") {
@@ -173,6 +177,8 @@ function Overloads() {
 	this.removeSubObjectById = function () {
 		if (this.check_type() == "SRL_Stroke") {
 			return(this.removeSubObjectById.SRL_Stroke.apply( this, arguments ));
+		} else if (this.check_type() == "SRL_Sketch") {
+			return(this.removeSubObjectById.SRL_Sketch.apply( this, arguments ));
 		} else if (this.check_type() == "SRL_Point") {
 			throw 'No such method error: SRL_Point does not have method "removeSubObjectById"';
 		} else if (this.check_type() == "SRL_Line") {
@@ -184,15 +190,116 @@ function Overloads() {
 	this.removeSubObject = function () {
 		if (this.check_type() == "SRL_Stroke") {
 			return(this.removeSubObject.SRL_Stroke.apply( this, arguments ));
-		} else if (this.check_type() == "SRL_Point") {
+		} else if (this.check_type() == "SRL_Sketch") {
+			return(this.removeSubObject.SRL_Sketch.apply( this, arguments ));
+		}  else if (this.check_type() == "SRL_Point") {
 			throw 'No such method error: SRL_Point does not have method "removeSubObject"';
 		} else if (this.check_type() == "SRL_Line") {
 			throw 'No such method error: SRL_Line does not have method "removeSubObject"';
 		}
 		return(this.removeSubObject.SRL_Object.apply( this, arguments ));
 	}
+
+	this.getSubObjectAtIndex = function() {
+		if (this.check_type() == "SRL_Stroke") {
+			return(this.getSubObjectAtIndex.SRL_Stroke.apply( this, arguments ));
+		} else if (this.check_type() == "SRL_Sketch") {
+			return(this.getSubObjectAtIndex.SRL_Sketch.apply( this, arguments ));
+		}  else if (this.check_type() == "SRL_Point") {
+			throw 'No such method error: SRL_Point does not have method "removeSubObject"';
+		} else if (this.check_type() == "SRL_Line") {
+			throw 'No such method error: SRL_Line does not have method "removeSubObject"';
+		}
+		return (this.getSubObjectAtIndex.SRL_Object.apply( this, arguments ));
+	}
+
+	this.removeSubObjectAtIndex = function(index) {
+		if (this.check_type() == "SRL_Stroke") {
+			return(this.removeSubObjectAtIndex.SRL_Stroke.apply( this, arguments ));
+		} else if (this.check_type() == "SRL_Sketch") {
+			return(this.removeSubObjectAtIndex.SRL_Sketch.apply( this, arguments ));
+		}  else if (this.check_type() == "SRL_Point") {
+			throw 'No such method error: SRL_Point does not have method "removeSubObject"';
+		} else if (this.check_type() == "SRL_Line") {
+			throw 'No such method error: SRL_Line does not have method "removeSubObject"';
+		}
+		return(this.removeSubObjectAtIndex.SRL_Object.apply( this, arguments ));
+	}
 };
 
+/*******************************
+ *
+ *
+ * SRL_Sketch data class
+ * @author gigemjt
+ *
+ *
+ *
+ *******************************
+ */
+
+function SRL_Sketch() {
+
+	this.Inherits(Overloads);
+	var objectList = [];
+	var objectIdMap = [];
+	this.canvasContext = false;
+
+	var objectMap = {};
+	this.addObject = function(srlObject) {
+		objectList.push(srlObject);
+		objectIdMap[srlObject.getId()] = srlObject;
+	}
+
+	this.addSubObject = this.addObject; // backwards comaptiablity
+
+	/**
+	 * Given an object, remove this instance of the object.
+	 */
+	this.removeSubObject = function(srlObject) {
+		var result = objectList.removeObject(srlObject);
+		if (result) {
+			delete objectMap[result.getId()];
+		}
+		return result;
+	}
+
+	/**
+	 * Given an objectId, remove the object. (Slower than if you already have an instance of the object)
+	 */
+	this.removeSubObjectById = function(objectId) {
+		var object = this.getSubObjectById(objectId);
+		this.removeSubObject(object);
+	}
+
+	this.getList = function() {
+		return objectList;
+	}
+
+	/**
+	 * Returns the object based off of its id.
+	 */
+	this.getSubObjectById = function(objectId) {
+		return objectIdMap[objectId];
+	}
+
+	this.getSubObjectAtIndex = function(index) {
+		return objectList[index];
+	}
+
+	this.removeSubObjectAtIndex = function(index) {
+		this.removeObject(objectList[index]);
+	}
+
+	/**
+	 * TODO: fill out this method.
+	 */
+	this.getSubObjectByIdChain = function(idList) {
+	}
+}
+
+
+	
 /**
  *******************************
  *
@@ -295,7 +402,7 @@ function SRL_Object() {
 	 * Gets the list of subobjects
 	 * @return list of objects that make up this object
 	 */
-	this.getSubObjects = function(){
+	this.getSubObjects = function() {
 		return m_subObjects;
 	}
 
@@ -1344,6 +1451,7 @@ function SRL_Interpretation(label, confidence, complexity) {
  **************************************************************
  */
 
+SRL_Sketch.Inherits(Overloads);
 SRL_Object.Inherits(Overloads);
 SRL_Shape.Inherits(SRL_Object);
 SRL_Stroke.Inherits(SRL_Shape);

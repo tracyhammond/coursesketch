@@ -98,6 +98,19 @@ SRL_Shape.prototype.drawShape = function drawShape(graphics) {
 	}
 }
 
+SRL_Sketch.prototype.drawEntireSketch = function() {
+	if (this.clearCanvas) {
+		this.clearCanvas(this.canvasContext);
+	}
+
+	var list = this.getList();
+	if (list && this.canvasContext) {
+		for(var i = 0; i < list.length; i++) {
+			var object = list[i];
+			object.draw(this.canvasContext);
+		}
+	}
+}
 
  /*******************************
  *
@@ -110,31 +123,3 @@ SRL_Shape.prototype.drawShape = function drawShape(graphics) {
 
 new SRL_Object().draw(false);
 new SRL_Stroke().draw(false);
-
-/*******************************
- *
- * UTILITY METHODS
- *
- * @author gigemjt
- *
- *******************************
- */
-
-function convertRGBtoHex(a, r, g, b) {
-	return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
-
-function hexToRgb(hex) {
-    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-        return r + r + g + g + b + b;
-    });
-
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}

@@ -6,7 +6,7 @@ SRL_Point.prototype.sendToProtobuf = function(scope) {
 	var proto = new PointProto();
 	proto.id = this.getId();
 	var n = this.getTime();
-	var longVersion = parent.Long.fromString("" + n);
+	var longVersion = scope.Long.fromString("" + n);
 	proto.setTime(longVersion);
 	proto.name = this.getName();
 	proto.x = this.getX();
@@ -44,7 +44,7 @@ SRL_Stroke.prototype.sendToProtobuf = function(scope) {
 	var proto = new StrokeProto();
 	proto.id = this.getId();
 	var n = this.getTime();
-	var longVersion = parent.Long.fromString("" + n);
+	var longVersion = scope.Long.fromString("" + n);
 	proto.setTime(longVersion);
 	proto.name = this.getName();
 	var array = new Array();
@@ -86,14 +86,21 @@ SRL_Stroke.createFromProtobuf = function(stroke) {
  * TODO: finish this method
  */
 SRL_Shape.prototype.sendToProtobuf = function(scope) {
-	var StrokeProto = scope ? scope.ProtoSrlShape : ProtoSrlShape;
-	var interpretations = shape.getInterpretations();
-	var newShape = new SRL_Shape();
-	for(i in interpretations) {
+	var ShapeProto = scope ? scope.ProtoSrlShape : ProtoSrlShape;
+	var interpretations = this.getInterpretations();
+	var protoInterp = new Array();
+	for(var i = 0; i < interpretations.length; i ++) {
 		var protoInter = interpretations[i];
-		newShape.addInterpretation(protoInter.name, protoInter.confidence, protoInter.complexity);
+		protoInterp = i.sendToProtobuf(scope);
 	}
-	return newShape;
+	var proto = new ShapeProto();
+	proto.setInterpretations(protoInterp);
+	proto.id = this.getId();
+	var n = this.getTime();
+	var longVersion = scope.Long.fromString("" + n);
+	proto.setTime(longVersion);
+	proto.name = this.getName();
+	return proto;
 }
 
 /**
@@ -102,13 +109,24 @@ SRL_Shape.prototype.sendToProtobuf = function(scope) {
 SRL_Shape.createFromProtobuf = function(shape) {
 	var interpretations = shape.interpretations;
 	var newShape = new SRL_Shape();
-	for(i in interpretations) {
+	for(var i = 0; i < interpretations.length; i ++) {
 		var protoInter = interpretations[i];
-		newShape.addInterpretation(protoInter.name, protoInter.confidence, protoInter.complexity);
+		newShape.addInterpretation(protoInter.label, protoInter.confidence, protoInter.complexity);
 	}
 	return newShape;
 }
 
+/**
+ * Creates an SRL protobuf version of an Interpretation.
+ */
+SRL_Interpretation.prototype.sendToProtobuf = function(scope) {
+	var Interpretation = scope ? scope.ProtoSrlInterpretation : ProtoSrlInterpretation;
+	var proto = new Interpretation();
+	proto.label = this.label;
+	proto.confidence = this.confidence;
+	proto.complexity = this.complexity;
+	return proto;
+}
 /*
 var testProtobuf = function(scope) {
 	var OuterProto = scope ? scope.Outer : Outer;
