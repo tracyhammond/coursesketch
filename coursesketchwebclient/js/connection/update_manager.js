@@ -16,6 +16,10 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	var updateList = [];
 	var Action = Action;
 
+	this.getUpdates = function() {
+		return updateList;
+	}
+
 	/**
 	 * Adds an update to the updateList
 	 *
@@ -91,6 +95,43 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 		return redraw;
 	}
 
+	/**
+	 * returns the human readable name of the given command type
+	 */
+	ProtoSrlCommand.prototype.getCommandTypeName = function() {
+		switch(this.getCommandType()) {
+			case this.CommandType.ADD_STROKE:
+				return 'ADD_STROKE';
+			case this.CommandType.ADD_SHAPE:
+				return 'ADD_SHAPE';
+			case this.CommandType.PACKAGE_SHAPE:
+				return 'PACKAGE_SHAPE';
+			case this.CommandType.ADD_SUBSHAPE:
+				return 'ADD_SUBSHAPE';
+			case this.CommandType.REMOVE_OBJECT:
+				return 'REMOVE_OBJECT';
+			case this.CommandType.ADD_SUBSHAPE:
+				return 'ADD_SUBSHAPE';
+			case this.CommandType.ASSIGN_ATTRIBUTE:
+				return 'ASSIGN_ATTRIBUTE';
+			case this.CommandType.REMOVE_ATTRIBUTE:
+				return 'REMOVE_ATTRIBUTE';
+			case this.CommandType.FORCE_INTERPRETATION:
+				return 'FORCE_INTERPRETATION';
+			case this.CommandType.UNDO:
+				return 'UNDO';
+			case this.CommandType.REDO:
+				return 'REDO';
+			case this.CommandType.REWRITE:
+				return 'REWRITE';
+			case this.CommandType.CLEAR_STACK:
+				return 'CLEAR_STACK';
+			case this.CommandType.SYNC:
+				return 'SYNC';
+		}
+		return "NO_NAME # is: " +this.getCommandType();
+	}	
+	
 	ProtoSrlCommand.prototype.CommandType = ProtoSrlCommandType; // TODO: figure out how to get static properties from instance.
 	ProtoSrlCommand.prototype.decodedData = false;
 	/**
@@ -124,6 +165,15 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 				sketch.addObject(this.decodedData);
 				redraw = true;
 			break;
+			case this.CommandType.REMOVE_OBJECT:
+				if (!this.decodedData) {
+					//console.log("Executing " + this.CommandType.ADD_SHAPE);
+					var IdChain = parent.IdChain.decode(this.commandData);
+					this.decodedData = SRL_Shape.createFromProtobuf(shape);
+				}
+				sketch.addObject(this.decodedData);
+				redraw = true;
+			break;
 			case this.CommandType.PACKAGE_SHAPE:
 				console.log("Executing PACKAGE_SHAPE");
 				if (isUndefined(this.decodedData) || (!this.decodedData)) {
@@ -143,10 +193,14 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	 * Moves the shapes from the old container to the new container.
 	 */
 	Action.PackageShape.prototype.redo = function() {
-		var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getObjectByIdChain(this.oldContainerId.getIdChain());
-		var newContainingObject = !(this.newContainerId) ? sketch : sketch.getObjectByIdChain(this.newContainerId.getIdChain());
-		for (shapeId in this.shapesToBeContained) {
+		var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
+		var newContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
+		for (var shapeIndex = 0; shapeIndex < this.shapesToBeContained.length; shapeIndex++) {
+			var shapeId = this.shapesToBeContained[shapeIndex];
+			console.log('id ' + shapeId);
 			var object = oldContainingObject.removeSubObjectById(shapeId);
+			console.log('result');
+			console.log(object);
 			newContainingObject.addSubObject(object);
 		}
 	}
@@ -157,8 +211,8 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	 * This is a reverse of the process used in redo.
 	 */
 	Action.PackageShape.undo = function() {
-		var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getObjectByIdChain(this.newContainerId.getIdChain());
-		var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getObjectByIdChain(this.oldContainerId.getIdChain());
+		var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
+		var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 		for (shapeId in this.shapesToBeContained) {
 			var object = oldContainingObject.removeObjectById(shapeId);
 			if (newContainerId) {

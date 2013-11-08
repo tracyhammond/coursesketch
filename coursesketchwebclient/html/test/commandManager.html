@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <base href="../../">
     <title>Drawing!</title>
   	<link rel="stylesheet" href="css/utility/columns.css">
@@ -12,24 +12,28 @@
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
 
-	<script type="text/javascript" src="js/input/drawing.js"></script>
+	<script type="text/javascript" src="js/input/sketching.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
-	<script type="text/javascript" src="js/SRL/SRL_SketchViewer.js"></script>
+	<script type="text/javascript" src="js/test/SRL_SketchViewer.js"></script>
 
 	<script type="text/javascript" src="js/connection/connection_library.js"></script>
 	<script type="text/javascript" src="js/connection/drawing_communication.js"></script>
-	<script type="text/javascript" src="js/connection/command_manager.js"></script>
+	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+	<script type="text/javascript" src="js/test/Command_Viewer.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 		var drawingCreator = false;
 		var sketch = false;
 		var canvasContext = false;
-		var commandManger = false;
+		var commandManager = false;
 		var serverConnection = false;
 		var clearCanvas = false;
 		var createBaseCommand = false;
+		
+		var sketchOutput = 'sketch_output';
+		var updateOutput = 'update_output';
 	    addLoadEvent(function () {
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
@@ -45,16 +49,13 @@
 
 	    function callback(stroke) {
 	    	stroke.setColorHex(convertRGBtoHex(0,255,0,255));
-		//	element = document.getElementById('output');
-			var html = "";
-			var list = sketch.getList();
-
-			createSketchViewer(list, 'output');
 
 			sketch.drawEntireSketch();
 
 			addUpdateFromStroke(stroke);
-		//	element.innerHTML = html;
+
+			// debugging!
+			createViewer();
 		}
 
 	    function initializeServer() {
@@ -86,7 +87,7 @@
 					var data = message.otherData;
 					var update = parent.ProtoSrlUpdate.decode(data);
 					commandManager.addUpdate(update, true);
-					setTimeout(function() {createSketchViewer(sketch.getList(), 'output');},50);
+					setTimeout(function() {createViewer();},50);
 				}
 			});
 			createBaseCommand = serverConnection.createBaseCommand;
@@ -110,7 +111,7 @@
 	    	}
 	    	console.log(sketch.getList());
 	    	var list = sketch.getList();
-	    	createSketchViewer(list, 'output');
+	    	createViewer();
 	    }
 
 	    function getShape(i) {
@@ -133,37 +134,46 @@
 	    	var packageShape = new ProtoUpdateCommand.PackageShape();
 	    	var list = sketch.getList();
 	    	var idList = [];
-	    	for(var i = 0; i < list.length; i ++) {
-	    		idList.push(sketch.getSubObjectAtIndex(i));
+	    	for (var i = 0; i < list.length; i ++) {
+	    		idList.push(sketch.getSubObjectAtIndex(i).getId());
 	    	}
 	    	packageShape.setShapesToBeContained(idList);
+	    	var chain = new IdChain();
+	    	var chChain = new Array();
+	    	chChain.push(shape.getId());
+	    	chain.setIdChain(chChain);
+	    	packageShape.setNewContainerId(chain);
 	    	secondCommand.commandData = packageShape.toArrayBuffer();
 	    	secondCommand.decodedData = packageShape;
-	    	alert(secondCommand.decodedData);
 	    	var array = new Array();
 			array.push(firstCommand);
 			array.push(secondCommand);
 			var update = serverConnection.createUpdateFromCommands(array);
-			alert("about to add update");
 			commandManager.addUpdate(update, false, true);
-	    	createSketchViewer(sketch.getList(), 'output');
+			setTimeout(function() {createViewer();},50);
 	    }
 
 	    function removeFirst() {
-	    	sketch.removeObjectAtIndex(0);
-	    	createSketchViewer(sketch.getList(), 'output');
+	    	sketch.removeSubObjectAtIndex(0);
+	    	createViewer();
 	    	sketch.drawEntireSketch();
+	    }
+	    
+	    function createViewer() {
+	    	createSketchViewer(sketch.getList(), sketchOutput);
+	    	if (commandManager) {
+		    	createCommandViewer(commandManager.getUpdates(), updateOutput);
+	    	}
 	    }
 	</script>
 </head>
 <body>
 	version 5
     <!-- Center Section -->
-   	<div class = "centre">
-   			<button onclick = "createStuff();">addShape</button>
-   			<button onclick = "packageShapes();">packageSketch</button>
-   			<button onclick = "removeFirst();">removeFirst</button>
-   			<div id = "output" style = "height:400px;position:relative; overflow:scroll;"></div>
-  			<canvas id="drawingCanvas" width="300" height="300" style="top:0px; left:0px; width: 300; height: 300; background:#FFFFFF;"></canvas>
-   	</div>
-</div>
+	<button onclick = "createStuff();">addShape</button>
+	<button onclick = "packageShapes();">packageSketch</button>
+	<button onclick = "removeFirst();">removeFirst</button>
+	<div id = "sketch_output" style = "height:400px;position:relative; overflow:scroll;border:1px;border-style:solid;"></div>
+	<canvas id="drawingCanvas" width="300" height="300" style="top:0px; left:0px; width: 300; height: 300; background:#FFFFFF;float:left;"></canvas>
+	<div id = "update_output" style = "width:600px; height:600px;position:relative; overflow:scroll;border:1px;border-style:solid;"></div>
+</body>

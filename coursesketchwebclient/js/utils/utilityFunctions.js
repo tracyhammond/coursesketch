@@ -164,6 +164,23 @@ if (isUndefined(replaceAll)) {
 	};
 }
 
+/**
+ **************************************************************
+ * Debug Functions
+ * @author gigemjt
+ **************************************************************
+ */
+
+/**
+ * prints all of the properties of a given object
+ */
+if (isUndefined(printProperties)) {
+	 function printProperties(object) {
+		for(obj in object) {
+			console.log(obj + ' : ' + object[obj]);
+		} 
+	};
+}
 
 /*******************************
  *
@@ -246,5 +263,7 @@ if (isUndefined(copyParentUtilityFunctions)) {
 
 		copyParentValues(scope, 'convertHexToRgb');
 		copyParentValues(scope, 'convertRGBtoHex');
+
+		copyParentValues(scope, 'printProperties');
 	}
 }
