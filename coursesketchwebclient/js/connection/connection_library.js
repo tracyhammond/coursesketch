@@ -66,13 +66,16 @@ function Connection(uri, encrypted, attemptReconnect) {
 			        	onRequest(evt, msg);
 			    } catch (err) {
 			    	console.error(err.stack);
-			    	onError(evt,err);
+			    	if (onError) {
+			    		onError(evt,err);
+			    	}
 			    }
 				// decode with protobuff and pass object to client
 			};
 			websocket.onerror = function(evt) {
-				if (onError)
+				if (onError) {
 					onError(evt,null);
+				}
 			};
 		} catch(error) {
 			console.error(error);
@@ -146,7 +149,9 @@ function Connection(uri, encrypted, attemptReconnect) {
 		try {
 			websocket.send(message.toArrayBuffer());
 		} catch(err) {
-			onError(null, err);
+			if (onError) {
+				onError(null, err);
+			}
 		}
 	};
 
@@ -263,7 +268,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 				ProtoSrlCommand = ProtoUpdateCommand.Command;
 			if (!ProtoSrlCommandType)
 				ProtoSrlCommandType = ProtoUpdateCommand.CommandType;
-			if (!ProtoSrlCommandType)
+			if (!IdChain)
 				IdChain = ProtoUpdateCommand.IdChain;
 		}
 		/*

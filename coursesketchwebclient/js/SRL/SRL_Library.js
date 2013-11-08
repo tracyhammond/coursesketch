@@ -270,6 +270,7 @@ function SRL_Sketch() {
 	this.removeSubObjectById = function(objectId) {
 		var object = this.getSubObjectById(objectId);
 		this.removeSubObject(object);
+		return object;
 	}
 
 	this.getList = function() {
@@ -288,13 +289,21 @@ function SRL_Sketch() {
 	}
 
 	this.removeSubObjectAtIndex = function(index) {
-		this.removeObject(objectList[index]);
+		this.removeSubObject(objectList[index]);
 	}
 
 	/**
 	 * TODO: fill out this method.
 	 */
 	this.getSubObjectByIdChain = function(idList) {
+		if (idList.length <= 0) {
+			throw "input list is empty";
+		}
+		var returnShape = this.getSubObjectById(idList[0]);
+		for (var i = 1; i < idList.length; i++) {
+			returnShape = returnShape.getSubObjectById(idList[i]);
+		}
+		return returnShape;
 	}
 }
 

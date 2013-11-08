@@ -29,6 +29,16 @@ Specifically for a 2 group column
 }
 
 /**
+Specifically for a tiny 2 group column
+*/
+.tiny-col-group2 {
+}
+.tiny-col-group2 > div {
+  float: left;
+  width: 49%;
+}
+
+/**
 Specifically for a 3 group column
 */
 @media screen and (min-width: 44em) {
