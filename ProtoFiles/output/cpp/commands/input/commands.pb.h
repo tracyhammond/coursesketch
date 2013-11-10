@@ -41,7 +41,6 @@ class Command;
 class IdChain;
 class PackageShape;
 class AddSubshape;
-class RemoveObject;
 class ForceInterpretation;
 class AddAttribtue;
 class RemoveAttribtue;
@@ -51,13 +50,15 @@ enum CommandType {
   ADD_SHAPE = 1,
   PACKAGE_SHAPE = 2,
   ADD_SUBSHAPE = 3,
-  ASSIGN_ATTRIBUTE = 4,
-  FORCE_INTERPRETATION = 5,
-  UNDO = 6,
-  REDO = 7,
-  REWRITE = 8,
-  CLEAR_STACK = 9,
-  SYNC = 10
+  REMOVE_OBJECT = 4,
+  ASSIGN_ATTRIBUTE = 5,
+  REMOVE_ATTRIBUTE = 6,
+  FORCE_INTERPRETATION = 10,
+  UNDO = 11,
+  REDO = 12,
+  REWRITE = 13,
+  CLEAR_STACK = 14,
+  SYNC = 15
 };
 bool CommandType_IsValid(int value);
 const CommandType CommandType_MIN = ADD_STROKE;
@@ -606,90 +607,6 @@ class AddSubshape : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static AddSubshape* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class RemoveObject : public ::google::protobuf::Message {
- public:
-  RemoveObject();
-  virtual ~RemoveObject();
-
-  RemoveObject(const RemoveObject& from);
-
-  inline RemoveObject& operator=(const RemoveObject& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const RemoveObject& default_instance();
-
-  void Swap(RemoveObject* other);
-
-  // implements Message ----------------------------------------------
-
-  RemoveObject* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const RemoveObject& from);
-  void MergeFrom(const RemoveObject& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required .protobuf.srl.commands.IdChain shapeId = 1;
-  inline bool has_shapeid() const;
-  inline void clear_shapeid();
-  static const int kShapeIdFieldNumber = 1;
-  inline const ::protobuf::srl::commands::IdChain& shapeid() const;
-  inline ::protobuf::srl::commands::IdChain* mutable_shapeid();
-  inline ::protobuf::srl::commands::IdChain* release_shapeid();
-  inline void set_allocated_shapeid(::protobuf::srl::commands::IdChain* shapeid);
-
-  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.RemoveObject)
- private:
-  inline void set_has_shapeid();
-  inline void clear_has_shapeid();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::protobuf::srl::commands::IdChain* shapeid_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
-
-  friend void  protobuf_AddDesc_input_2fcommands_2eproto();
-  friend void protobuf_AssignDesc_input_2fcommands_2eproto();
-  friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
-
-  void InitAsDefaultInstance();
-  static RemoveObject* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1612,48 +1529,6 @@ inline void AddSubshape::set_allocated_shape(::std::string* shape) {
   } else {
     clear_has_shape();
     shape_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// -------------------------------------------------------------------
-
-// RemoveObject
-
-// required .protobuf.srl.commands.IdChain shapeId = 1;
-inline bool RemoveObject::has_shapeid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void RemoveObject::set_has_shapeid() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void RemoveObject::clear_has_shapeid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void RemoveObject::clear_shapeid() {
-  if (shapeid_ != NULL) shapeid_->::protobuf::srl::commands::IdChain::Clear();
-  clear_has_shapeid();
-}
-inline const ::protobuf::srl::commands::IdChain& RemoveObject::shapeid() const {
-  return shapeid_ != NULL ? *shapeid_ : *default_instance_->shapeid_;
-}
-inline ::protobuf::srl::commands::IdChain* RemoveObject::mutable_shapeid() {
-  set_has_shapeid();
-  if (shapeid_ == NULL) shapeid_ = new ::protobuf::srl::commands::IdChain;
-  return shapeid_;
-}
-inline ::protobuf::srl::commands::IdChain* RemoveObject::release_shapeid() {
-  clear_has_shapeid();
-  ::protobuf::srl::commands::IdChain* temp = shapeid_;
-  shapeid_ = NULL;
-  return temp;
-}
-inline void RemoveObject::set_allocated_shapeid(::protobuf::srl::commands::IdChain* shapeid) {
-  delete shapeid_;
-  shapeid_ = shapeid;
-  if (shapeid) {
-    set_has_shapeid();
-  } else {
-    clear_has_shapeid();
   }
 }
 

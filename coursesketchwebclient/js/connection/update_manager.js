@@ -134,6 +134,7 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	
 	ProtoSrlCommand.prototype.CommandType = ProtoSrlCommandType; // TODO: figure out how to get static properties from instance.
 	ProtoSrlCommand.prototype.decodedData = false;
+
 	/**
 	 * Executes a command.
 	 *
@@ -146,6 +147,7 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 		if (typeof command !== 'number') {
 	        throw new Error('You must pass a number to setPlaceType!');
 	    }
+
 		switch(command) {
 			case this.CommandType.ADD_STROKE:
 				if (!this.decodedData) {
@@ -163,15 +165,17 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 					this.decodedData = SRL_Shape.createFromProtobuf(shape);
 				}
 				sketch.addObject(this.decodedData);
-				redraw = true;
 			break;
 			case this.CommandType.REMOVE_OBJECT:
-				if (!this.decodedData) {
+				if (!this.decodedData || !isArray(this.decodedData)) {
+					this.decodedData = new Array();
 					//console.log("Executing " + this.CommandType.ADD_SHAPE);
-					var IdChain = parent.IdChain.decode(this.commandData);
-					this.decodedData = SRL_Shape.createFromProtobuf(shape);
+					var idChain = parent.IdChain.decode(this.commandData);
+
+					this.decodedData[0] = idChain;
 				}
-				sketch.addObject(this.decodedData);
+				// holds the decoded data in the second part of the list.
+				this.decodedData[1] = sketch.removeSubObjectByIdChain(this.decodedData[0].idChain);
 				redraw = true;
 			break;
 			case this.CommandType.PACKAGE_SHAPE:

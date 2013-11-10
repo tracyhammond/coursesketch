@@ -26,6 +26,7 @@ message SrlShape {
 	required uint64 time = 2;
 	optional string name = 3;
 	optional bool isUserCreated = 4;
+	optional BoundingBox = 5;
 	repeated Interpretation interpretations= 5;
 	repeated SrlObject subComponents = 6;
 }
@@ -56,4 +57,11 @@ message Interpretation {
 	required string label = 1;
 	required double confidence = 2;
 	optional double complexity = 3;
+}
+
+message BoundingBox {
+	required double x = 1;
+	required double y = 2;
+	required double width = 3;
+	required double height = 4;
 }

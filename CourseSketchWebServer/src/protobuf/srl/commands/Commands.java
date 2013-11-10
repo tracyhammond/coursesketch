@@ -23,7 +23,7 @@ public final class Commands {
      * <code>ADD_STROKE = 0;</code>
      *
      * <pre>
-     * This will only contain a SRL_Stroke in commandData
+     * Adds a Stroke:		This will only contain an SRL_Stroke in commandData
      * </pre>
      */
     ADD_STROKE(0, 0),
@@ -31,7 +31,7 @@ public final class Commands {
      * <code>ADD_SHAPE = 1;</code>
      *
      * <pre>
-     * Contains a shape.
+     * Adds a shape:		This will only contain an SRL_Shape in commandData
      * </pre>
      */
     ADD_SHAPE(1, 1),
@@ -52,60 +52,72 @@ public final class Commands {
      */
     ADD_SUBSHAPE(3, 3),
     /**
-     * <code>ASSIGN_ATTRIBUTE = 4;</code>
+     * <code>REMOVE_OBJECT = 4;</code>
+     *
+     * <pre>
+     * Removes an object:	This will only contain an IdChain in commandData.
+     * </pre>
      */
-    ASSIGN_ATTRIBUTE(4, 4),
+    REMOVE_OBJECT(4, 4),
     /**
-     * <code>FORCE_INTERPRETATION = 5;</code>
+     * <code>ASSIGN_ATTRIBUTE = 5;</code>
      */
-    FORCE_INTERPRETATION(5, 5),
+    ASSIGN_ATTRIBUTE(5, 5),
     /**
-     * <code>UNDO = 6;</code>
+     * <code>REMOVE_ATTRIBUTE = 6;</code>
+     */
+    REMOVE_ATTRIBUTE(6, 6),
+    /**
+     * <code>FORCE_INTERPRETATION = 10;</code>
+     */
+    FORCE_INTERPRETATION(7, 10),
+    /**
+     * <code>UNDO = 11;</code>
      *
      * <pre>
      * Stack Commands, They do not have any other data associated with it.
      * </pre>
      */
-    UNDO(6, 6),
+    UNDO(8, 11),
     /**
-     * <code>REDO = 7;</code>
+     * <code>REDO = 12;</code>
      *
      * <pre>
      * Redo one command and Redo its effect.
      * </pre>
      */
-    REDO(7, 7),
+    REDO(9, 12),
     /**
-     * <code>REWRITE = 8;</code>
+     * <code>REWRITE = 13;</code>
      *
      * <pre>
      * Forces all commands in the list that are past the current state to be removed.
      * </pre>
      */
-    REWRITE(8, 8),
+    REWRITE(10, 13),
     /**
-     * <code>CLEAR_STACK = 9;</code>
+     * <code>CLEAR_STACK = 14;</code>
      *
      * <pre>
      * Clears the stack.
      * </pre>
      */
-    CLEAR_STACK(9, 9),
+    CLEAR_STACK(11, 14),
     /**
-     * <code>SYNC = 10;</code>
+     * <code>SYNC = 15;</code>
      *
      * <pre>
      * Tells this machine to send its list of commands to remote to make sure they are the same.
      * </pre>
      */
-    SYNC(10, 10),
+    SYNC(12, 15),
     ;
 
     /**
      * <code>ADD_STROKE = 0;</code>
      *
      * <pre>
-     * This will only contain a SRL_Stroke in commandData
+     * Adds a Stroke:		This will only contain an SRL_Stroke in commandData
      * </pre>
      */
     public static final int ADD_STROKE_VALUE = 0;
@@ -113,7 +125,7 @@ public final class Commands {
      * <code>ADD_SHAPE = 1;</code>
      *
      * <pre>
-     * Contains a shape.
+     * Adds a shape:		This will only contain an SRL_Shape in commandData
      * </pre>
      */
     public static final int ADD_SHAPE_VALUE = 1;
@@ -134,53 +146,65 @@ public final class Commands {
      */
     public static final int ADD_SUBSHAPE_VALUE = 3;
     /**
-     * <code>ASSIGN_ATTRIBUTE = 4;</code>
+     * <code>REMOVE_OBJECT = 4;</code>
+     *
+     * <pre>
+     * Removes an object:	This will only contain an IdChain in commandData.
+     * </pre>
      */
-    public static final int ASSIGN_ATTRIBUTE_VALUE = 4;
+    public static final int REMOVE_OBJECT_VALUE = 4;
     /**
-     * <code>FORCE_INTERPRETATION = 5;</code>
+     * <code>ASSIGN_ATTRIBUTE = 5;</code>
      */
-    public static final int FORCE_INTERPRETATION_VALUE = 5;
+    public static final int ASSIGN_ATTRIBUTE_VALUE = 5;
     /**
-     * <code>UNDO = 6;</code>
+     * <code>REMOVE_ATTRIBUTE = 6;</code>
+     */
+    public static final int REMOVE_ATTRIBUTE_VALUE = 6;
+    /**
+     * <code>FORCE_INTERPRETATION = 10;</code>
+     */
+    public static final int FORCE_INTERPRETATION_VALUE = 10;
+    /**
+     * <code>UNDO = 11;</code>
      *
      * <pre>
      * Stack Commands, They do not have any other data associated with it.
      * </pre>
      */
-    public static final int UNDO_VALUE = 6;
+    public static final int UNDO_VALUE = 11;
     /**
-     * <code>REDO = 7;</code>
+     * <code>REDO = 12;</code>
      *
      * <pre>
      * Redo one command and Redo its effect.
      * </pre>
      */
-    public static final int REDO_VALUE = 7;
+    public static final int REDO_VALUE = 12;
     /**
-     * <code>REWRITE = 8;</code>
+     * <code>REWRITE = 13;</code>
      *
      * <pre>
      * Forces all commands in the list that are past the current state to be removed.
      * </pre>
      */
-    public static final int REWRITE_VALUE = 8;
+    public static final int REWRITE_VALUE = 13;
     /**
-     * <code>CLEAR_STACK = 9;</code>
+     * <code>CLEAR_STACK = 14;</code>
      *
      * <pre>
      * Clears the stack.
      * </pre>
      */
-    public static final int CLEAR_STACK_VALUE = 9;
+    public static final int CLEAR_STACK_VALUE = 14;
     /**
-     * <code>SYNC = 10;</code>
+     * <code>SYNC = 15;</code>
      *
      * <pre>
      * Tells this machine to send its list of commands to remote to make sure they are the same.
      * </pre>
      */
-    public static final int SYNC_VALUE = 10;
+    public static final int SYNC_VALUE = 15;
 
 
     public final int getNumber() { return value; }
@@ -191,13 +215,15 @@ public final class Commands {
         case 1: return ADD_SHAPE;
         case 2: return PACKAGE_SHAPE;
         case 3: return ADD_SUBSHAPE;
-        case 4: return ASSIGN_ATTRIBUTE;
-        case 5: return FORCE_INTERPRETATION;
-        case 6: return UNDO;
-        case 7: return REDO;
-        case 8: return REWRITE;
-        case 9: return CLEAR_STACK;
-        case 10: return SYNC;
+        case 4: return REMOVE_OBJECT;
+        case 5: return ASSIGN_ATTRIBUTE;
+        case 6: return REMOVE_ATTRIBUTE;
+        case 10: return FORCE_INTERPRETATION;
+        case 11: return UNDO;
+        case 12: return REDO;
+        case 13: return REWRITE;
+        case 14: return CLEAR_STACK;
+        case 15: return SYNC;
         default: return null;
       }
     }
@@ -4037,531 +4063,6 @@ public final class Commands {
     // @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddSubshape)
   }
 
-  public interface RemoveObjectOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // required .protobuf.srl.commands.IdChain shapeId = 1;
-    /**
-     * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-     */
-    boolean hasShapeId();
-    /**
-     * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-     */
-    protobuf.srl.commands.Commands.IdChain getShapeId();
-    /**
-     * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-     */
-    protobuf.srl.commands.Commands.IdChainOrBuilder getShapeIdOrBuilder();
-  }
-  /**
-   * Protobuf type {@code protobuf.srl.commands.RemoveObject}
-   *
-   * <pre>
-   **
-   * Tells the sketch to remove an object, (can either be a stroke or a shape)
-   * </pre>
-   */
-  public static final class RemoveObject extends
-      com.google.protobuf.GeneratedMessage
-      implements RemoveObjectOrBuilder {
-    // Use RemoveObject.newBuilder() to construct.
-    private RemoveObject(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private RemoveObject(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final RemoveObject defaultInstance;
-    public static RemoveObject getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public RemoveObject getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private RemoveObject(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              protobuf.srl.commands.Commands.IdChain.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                subBuilder = shapeId_.toBuilder();
-              }
-              shapeId_ = input.readMessage(protobuf.srl.commands.Commands.IdChain.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(shapeId_);
-                shapeId_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000001;
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveObject_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveObject_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              protobuf.srl.commands.Commands.RemoveObject.class, protobuf.srl.commands.Commands.RemoveObject.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<RemoveObject> PARSER =
-        new com.google.protobuf.AbstractParser<RemoveObject>() {
-      public RemoveObject parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new RemoveObject(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<RemoveObject> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // required .protobuf.srl.commands.IdChain shapeId = 1;
-    public static final int SHAPEID_FIELD_NUMBER = 1;
-    private protobuf.srl.commands.Commands.IdChain shapeId_;
-    /**
-     * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-     */
-    public boolean hasShapeId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-     */
-    public protobuf.srl.commands.Commands.IdChain getShapeId() {
-      return shapeId_;
-    }
-    /**
-     * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-     */
-    public protobuf.srl.commands.Commands.IdChainOrBuilder getShapeIdOrBuilder() {
-      return shapeId_;
-    }
-
-    private void initFields() {
-      shapeId_ = protobuf.srl.commands.Commands.IdChain.getDefaultInstance();
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      if (!hasShapeId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, shapeId_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, shapeId_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static protobuf.srl.commands.Commands.RemoveObject parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.commands.Commands.RemoveObject parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.commands.Commands.RemoveObject parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.commands.Commands.RemoveObject parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.commands.Commands.RemoveObject parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.commands.Commands.RemoveObject parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.commands.Commands.RemoveObject parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static protobuf.srl.commands.Commands.RemoveObject parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.commands.Commands.RemoveObject parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.commands.Commands.RemoveObject parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.commands.Commands.RemoveObject prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protobuf.srl.commands.RemoveObject}
-     *
-     * <pre>
-     **
-     * Tells the sketch to remove an object, (can either be a stroke or a shape)
-     * </pre>
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.commands.Commands.RemoveObjectOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveObject_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveObject_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                protobuf.srl.commands.Commands.RemoveObject.class, protobuf.srl.commands.Commands.RemoveObject.Builder.class);
-      }
-
-      // Construct using protobuf.srl.commands.Commands.RemoveObject.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getShapeIdFieldBuilder();
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        if (shapeIdBuilder_ == null) {
-          shapeId_ = protobuf.srl.commands.Commands.IdChain.getDefaultInstance();
-        } else {
-          shapeIdBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveObject_descriptor;
-      }
-
-      public protobuf.srl.commands.Commands.RemoveObject getDefaultInstanceForType() {
-        return protobuf.srl.commands.Commands.RemoveObject.getDefaultInstance();
-      }
-
-      public protobuf.srl.commands.Commands.RemoveObject build() {
-        protobuf.srl.commands.Commands.RemoveObject result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public protobuf.srl.commands.Commands.RemoveObject buildPartial() {
-        protobuf.srl.commands.Commands.RemoveObject result = new protobuf.srl.commands.Commands.RemoveObject(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        if (shapeIdBuilder_ == null) {
-          result.shapeId_ = shapeId_;
-        } else {
-          result.shapeId_ = shapeIdBuilder_.build();
-        }
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.commands.Commands.RemoveObject) {
-          return mergeFrom((protobuf.srl.commands.Commands.RemoveObject)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(protobuf.srl.commands.Commands.RemoveObject other) {
-        if (other == protobuf.srl.commands.Commands.RemoveObject.getDefaultInstance()) return this;
-        if (other.hasShapeId()) {
-          mergeShapeId(other.getShapeId());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        if (!hasShapeId()) {
-          
-          return false;
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        protobuf.srl.commands.Commands.RemoveObject parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.commands.Commands.RemoveObject) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // required .protobuf.srl.commands.IdChain shapeId = 1;
-      private protobuf.srl.commands.Commands.IdChain shapeId_ = protobuf.srl.commands.Commands.IdChain.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.commands.Commands.IdChain, protobuf.srl.commands.Commands.IdChain.Builder, protobuf.srl.commands.Commands.IdChainOrBuilder> shapeIdBuilder_;
-      /**
-       * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-       */
-      public boolean hasShapeId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-       */
-      public protobuf.srl.commands.Commands.IdChain getShapeId() {
-        if (shapeIdBuilder_ == null) {
-          return shapeId_;
-        } else {
-          return shapeIdBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-       */
-      public Builder setShapeId(protobuf.srl.commands.Commands.IdChain value) {
-        if (shapeIdBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          shapeId_ = value;
-          onChanged();
-        } else {
-          shapeIdBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-       */
-      public Builder setShapeId(
-          protobuf.srl.commands.Commands.IdChain.Builder builderForValue) {
-        if (shapeIdBuilder_ == null) {
-          shapeId_ = builderForValue.build();
-          onChanged();
-        } else {
-          shapeIdBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-       */
-      public Builder mergeShapeId(protobuf.srl.commands.Commands.IdChain value) {
-        if (shapeIdBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              shapeId_ != protobuf.srl.commands.Commands.IdChain.getDefaultInstance()) {
-            shapeId_ =
-              protobuf.srl.commands.Commands.IdChain.newBuilder(shapeId_).mergeFrom(value).buildPartial();
-          } else {
-            shapeId_ = value;
-          }
-          onChanged();
-        } else {
-          shapeIdBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-       */
-      public Builder clearShapeId() {
-        if (shapeIdBuilder_ == null) {
-          shapeId_ = protobuf.srl.commands.Commands.IdChain.getDefaultInstance();
-          onChanged();
-        } else {
-          shapeIdBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-       */
-      public protobuf.srl.commands.Commands.IdChain.Builder getShapeIdBuilder() {
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return getShapeIdFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-       */
-      public protobuf.srl.commands.Commands.IdChainOrBuilder getShapeIdOrBuilder() {
-        if (shapeIdBuilder_ != null) {
-          return shapeIdBuilder_.getMessageOrBuilder();
-        } else {
-          return shapeId_;
-        }
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain shapeId = 1;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.commands.Commands.IdChain, protobuf.srl.commands.Commands.IdChain.Builder, protobuf.srl.commands.Commands.IdChainOrBuilder> 
-          getShapeIdFieldBuilder() {
-        if (shapeIdBuilder_ == null) {
-          shapeIdBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              protobuf.srl.commands.Commands.IdChain, protobuf.srl.commands.Commands.IdChain.Builder, protobuf.srl.commands.Commands.IdChainOrBuilder>(
-                  shapeId_,
-                  getParentForChildren(),
-                  isClean());
-          shapeId_ = null;
-        }
-        return shapeIdBuilder_;
-      }
-
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.RemoveObject)
-    }
-
-    static {
-      defaultInstance = new RemoveObject(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.RemoveObject)
-  }
-
   public interface ForceInterpretationOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
@@ -6773,11 +6274,6 @@ public final class Commands {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_commands_AddSubshape_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_commands_RemoveObject_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_commands_RemoveObject_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_commands_ForceInterpretation_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -6814,21 +6310,21 @@ public final class Commands {
       "tobuf.srl.commands.IdChain\022\033\n\023shapesToBe" +
       "Contained\030\003 \003(\t\"Q\n\013AddSubshape\0223\n\013parent" +
       "Shape\030\001 \002(\0132\036.protobuf.srl.commands.IdCh" +
-      "ain\022\r\n\005shape\030\002 \002(\014\"?\n\014RemoveObject\022/\n\007sh" +
-      "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh" +
-      "ain\"^\n\023ForceInterpretation\022\026\n\016interpreta" +
-      "tion\030\001 \002(\014\022/\n\007shapeId\030\002 \002(\0132\036.protobuf.s" +
-      "rl.commands.IdChain\"m\n\014AddAttribtue\022/\n\007s" +
-      "hapeId\030\001 \002(\0132\036.protobuf.srl.commands.IdC" +
-      "hain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeV",
-      "alue\030\003 \002(\014\"p\n\017RemoveAttribtue\022/\n\007shapeId" +
-      "\030\001 \002(\0132\036.protobuf.srl.commands.IdChain\022\024" +
-      "\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeValue\030\003" +
-      " \002(\014*\275\001\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\t" +
-      "ADD_SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\020\n\014ADD_SU" +
-      "BSHAPE\020\003\022\024\n\020ASSIGN_ATTRIBUTE\020\004\022\030\n\024FORCE_" +
-      "INTERPRETATION\020\005\022\010\n\004UNDO\020\006\022\010\n\004REDO\020\007\022\013\n\007" +
-      "REWRITE\020\010\022\017\n\013CLEAR_STACK\020\t\022\010\n\004SYNC\020\n"
+      "ain\022\r\n\005shape\030\002 \002(\014\"^\n\023ForceInterpretatio" +
+      "n\022\026\n\016interpretation\030\001 \002(\014\022/\n\007shapeId\030\002 \002" +
+      "(\0132\036.protobuf.srl.commands.IdChain\"m\n\014Ad" +
+      "dAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.s" +
+      "rl.commands.IdChain\022\024\n\014attributeKey\030\002 \002(" +
+      "\t\022\026\n\016attributeValue\030\003 \002(\014\"p\n\017RemoveAttri" +
+      "btue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.srl.com",
+      "mands.IdChain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016a" +
+      "ttributeValue\030\003 \002(\014*\346\001\n\013CommandType\022\016\n\nA" +
+      "DD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPACKAGE_SH" +
+      "APE\020\002\022\020\n\014ADD_SUBSHAPE\020\003\022\021\n\rREMOVE_OBJECT" +
+      "\020\004\022\024\n\020ASSIGN_ATTRIBUTE\020\005\022\024\n\020REMOVE_ATTRI" +
+      "BUTE\020\006\022\030\n\024FORCE_INTERPRETATION\020\n\022\010\n\004UNDO" +
+      "\020\013\022\010\n\004REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n\013CLEAR_STACK" +
+      "\020\016\022\010\n\004SYNC\020\017"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6865,26 +6361,20 @@ public final class Commands {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_AddSubshape_descriptor,
               new java.lang.String[] { "ParentShape", "Shape", });
-          internal_static_protobuf_srl_commands_RemoveObject_descriptor =
-            getDescriptor().getMessageTypes().get(5);
-          internal_static_protobuf_srl_commands_RemoveObject_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_commands_RemoveObject_descriptor,
-              new java.lang.String[] { "ShapeId", });
           internal_static_protobuf_srl_commands_ForceInterpretation_descriptor =
-            getDescriptor().getMessageTypes().get(6);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_protobuf_srl_commands_ForceInterpretation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_ForceInterpretation_descriptor,
               new java.lang.String[] { "Interpretation", "ShapeId", });
           internal_static_protobuf_srl_commands_AddAttribtue_descriptor =
-            getDescriptor().getMessageTypes().get(7);
+            getDescriptor().getMessageTypes().get(6);
           internal_static_protobuf_srl_commands_AddAttribtue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_AddAttribtue_descriptor,
               new java.lang.String[] { "ShapeId", "AttributeKey", "AttributeValue", });
           internal_static_protobuf_srl_commands_RemoveAttribtue_descriptor =
-            getDescriptor().getMessageTypes().get(8);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_protobuf_srl_commands_RemoveAttribtue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_RemoveAttribtue_descriptor,
