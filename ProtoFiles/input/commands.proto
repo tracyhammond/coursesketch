@@ -19,19 +19,22 @@ message Command {
  * but are grouped by what make sense
  */
 enum CommandType {
-	ADD_STROKE = 0;	// This will only contain a SRL_Stroke in commandData
-	ADD_SHAPE = 1; // Contains a shape.
-	PACKAGE_SHAPE = 2; // Repackages shapes from the surface to inside another shape
-	ADD_SUBSHAPE = 3; // Creates a shape inside another shape
-	ASSIGN_ATTRIBUTE = 4;
-	FORCE_INTERPRETATION = 5;
+	ADD_STROKE = 0;		// Adds a Stroke:		This will only contain an SRL_Stroke in commandData
+	ADD_SHAPE = 1;		// Adds a shape:		This will only contain an SRL_Shape in commandData
+	PACKAGE_SHAPE = 2;	// Repackages shapes from the surface to inside another shape
+	ADD_SUBSHAPE = 3;	// Creates a shape inside another shape
+	REMOVE_OBJECT = 4;	// Removes an object:	This will only contain an IdChain in commandData.
+	ASSIGN_ATTRIBUTE = 5;
+	REMOVE_ATTRIBUTE = 6;
+
+	FORCE_INTERPRETATION = 10;
 
 	// Stack Commands, They do not have any other data associated with it.
-	UNDO = 6; // "pop" one command and Undo its effect.
-	REDO = 7; // Redo one command and Redo its effect.
-	REWRITE = 8; // Forces all commands in the list that are past the current state to be removed.
-	CLEAR_STACK = 9; // Clears the stack.
-	SYNC = 10; // Tells this machine to send its list of commands to remote to make sure they are the same.
+	UNDO = 11; // "pop" one command and Undo its effect.
+	REDO = 12; // Redo one command and Redo its effect.
+	REWRITE = 13; // Forces all commands in the list that are past the current state to be removed.
+	CLEAR_STACK = 14; // Clears the stack.
+	SYNC = 15; // Tells this machine to send its list of commands to remote to make sure they are the same.
 }
 
 /**
@@ -61,13 +64,6 @@ message PackageShape {
 message AddSubshape {
 	required IdChain parentShape = 1;
 	required bytes shape = 2;
-}
-
-/**
- * Tells the sketch to remove an object, (can either be a stroke or a shape)
- */
-message RemoveObject {
-	required IdChain shapeId = 1;
 }
 
 /**

@@ -37,9 +37,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* AddSubshape_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   AddSubshape_reflection_ = NULL;
-const ::google::protobuf::Descriptor* RemoveObject_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  RemoveObject_reflection_ = NULL;
 const ::google::protobuf::Descriptor* ForceInterpretation_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ForceInterpretation_reflection_ = NULL;
@@ -143,22 +140,7 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AddSubshape));
-  RemoveObject_descriptor_ = file->message_type(5);
-  static const int RemoveObject_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RemoveObject, shapeid_),
-  };
-  RemoveObject_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      RemoveObject_descriptor_,
-      RemoveObject::default_instance_,
-      RemoveObject_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RemoveObject, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RemoveObject, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(RemoveObject));
-  ForceInterpretation_descriptor_ = file->message_type(6);
+  ForceInterpretation_descriptor_ = file->message_type(5);
   static const int ForceInterpretation_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ForceInterpretation, interpretation_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ForceInterpretation, shapeid_),
@@ -174,7 +156,7 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ForceInterpretation));
-  AddAttribtue_descriptor_ = file->message_type(7);
+  AddAttribtue_descriptor_ = file->message_type(6);
   static const int AddAttribtue_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddAttribtue, shapeid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddAttribtue, attributekey_),
@@ -191,7 +173,7 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AddAttribtue));
-  RemoveAttribtue_descriptor_ = file->message_type(8);
+  RemoveAttribtue_descriptor_ = file->message_type(7);
   static const int RemoveAttribtue_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RemoveAttribtue, shapeid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RemoveAttribtue, attributekey_),
@@ -232,8 +214,6 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     AddSubshape_descriptor_, &AddSubshape::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    RemoveObject_descriptor_, &RemoveObject::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ForceInterpretation_descriptor_, &ForceInterpretation::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     AddAttribtue_descriptor_, &AddAttribtue::default_instance());
@@ -254,8 +234,6 @@ void protobuf_ShutdownFile_input_2fcommands_2eproto() {
   delete PackageShape_reflection_;
   delete AddSubshape::default_instance_;
   delete AddSubshape_reflection_;
-  delete RemoveObject::default_instance_;
-  delete RemoveObject_reflection_;
   delete ForceInterpretation::default_instance_;
   delete ForceInterpretation_reflection_;
   delete AddAttribtue::default_instance_;
@@ -284,21 +262,21 @@ void protobuf_AddDesc_input_2fcommands_2eproto() {
     "tobuf.srl.commands.IdChain\022\033\n\023shapesToBe"
     "Contained\030\003 \003(\t\"Q\n\013AddSubshape\0223\n\013parent"
     "Shape\030\001 \002(\0132\036.protobuf.srl.commands.IdCh"
-    "ain\022\r\n\005shape\030\002 \002(\014\"\?\n\014RemoveObject\022/\n\007sh"
-    "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh"
-    "ain\"^\n\023ForceInterpretation\022\026\n\016interpreta"
-    "tion\030\001 \002(\014\022/\n\007shapeId\030\002 \002(\0132\036.protobuf.s"
-    "rl.commands.IdChain\"m\n\014AddAttribtue\022/\n\007s"
-    "hapeId\030\001 \002(\0132\036.protobuf.srl.commands.IdC"
-    "hain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeV"
-    "alue\030\003 \002(\014\"p\n\017RemoveAttribtue\022/\n\007shapeId"
-    "\030\001 \002(\0132\036.protobuf.srl.commands.IdChain\022\024"
-    "\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeValue\030\003"
-    " \002(\014*\275\001\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\t"
-    "ADD_SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\020\n\014ADD_SU"
-    "BSHAPE\020\003\022\024\n\020ASSIGN_ATTRIBUTE\020\004\022\030\n\024FORCE_"
-    "INTERPRETATION\020\005\022\010\n\004UNDO\020\006\022\010\n\004REDO\020\007\022\013\n\007"
-    "REWRITE\020\010\022\017\n\013CLEAR_STACK\020\t\022\010\n\004SYNC\020\n", 1116);
+    "ain\022\r\n\005shape\030\002 \002(\014\"^\n\023ForceInterpretatio"
+    "n\022\026\n\016interpretation\030\001 \002(\014\022/\n\007shapeId\030\002 \002"
+    "(\0132\036.protobuf.srl.commands.IdChain\"m\n\014Ad"
+    "dAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.s"
+    "rl.commands.IdChain\022\024\n\014attributeKey\030\002 \002("
+    "\t\022\026\n\016attributeValue\030\003 \002(\014\"p\n\017RemoveAttri"
+    "btue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.srl.com"
+    "mands.IdChain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016a"
+    "ttributeValue\030\003 \002(\014*\346\001\n\013CommandType\022\016\n\nA"
+    "DD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPACKAGE_SH"
+    "APE\020\002\022\020\n\014ADD_SUBSHAPE\020\003\022\021\n\rREMOVE_OBJECT"
+    "\020\004\022\024\n\020ASSIGN_ATTRIBUTE\020\005\022\024\n\020REMOVE_ATTRI"
+    "BUTE\020\006\022\030\n\024FORCE_INTERPRETATION\020\n\022\010\n\004UNDO"
+    "\020\013\022\010\n\004REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n\013CLEAR_STACK"
+    "\020\016\022\010\n\004SYNC\020\017", 1092);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/commands.proto", &protobuf_RegisterTypes);
   Update::default_instance_ = new Update();
@@ -306,7 +284,6 @@ void protobuf_AddDesc_input_2fcommands_2eproto() {
   IdChain::default_instance_ = new IdChain();
   PackageShape::default_instance_ = new PackageShape();
   AddSubshape::default_instance_ = new AddSubshape();
-  RemoveObject::default_instance_ = new RemoveObject();
   ForceInterpretation::default_instance_ = new ForceInterpretation();
   AddAttribtue::default_instance_ = new AddAttribtue();
   RemoveAttribtue::default_instance_ = new RemoveAttribtue();
@@ -315,7 +292,6 @@ void protobuf_AddDesc_input_2fcommands_2eproto() {
   IdChain::default_instance_->InitAsDefaultInstance();
   PackageShape::default_instance_->InitAsDefaultInstance();
   AddSubshape::default_instance_->InitAsDefaultInstance();
-  RemoveObject::default_instance_->InitAsDefaultInstance();
   ForceInterpretation::default_instance_->InitAsDefaultInstance();
   AddAttribtue::default_instance_->InitAsDefaultInstance();
   RemoveAttribtue::default_instance_->InitAsDefaultInstance();
@@ -341,10 +317,12 @@ bool CommandType_IsValid(int value) {
     case 4:
     case 5:
     case 6:
-    case 7:
-    case 8:
-    case 9:
     case 10:
+    case 11:
+    case 12:
+    case 13:
+    case 14:
+    case 15:
       return true;
     default:
       return false;
@@ -1794,220 +1772,6 @@ void AddSubshape::Swap(AddSubshape* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = AddSubshape_descriptor_;
   metadata.reflection = AddSubshape_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int RemoveObject::kShapeIdFieldNumber;
-#endif  // !_MSC_VER
-
-RemoveObject::RemoveObject()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void RemoveObject::InitAsDefaultInstance() {
-  shapeid_ = const_cast< ::protobuf::srl::commands::IdChain*>(&::protobuf::srl::commands::IdChain::default_instance());
-}
-
-RemoveObject::RemoveObject(const RemoveObject& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void RemoveObject::SharedCtor() {
-  _cached_size_ = 0;
-  shapeid_ = NULL;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-RemoveObject::~RemoveObject() {
-  SharedDtor();
-}
-
-void RemoveObject::SharedDtor() {
-  if (this != default_instance_) {
-    delete shapeid_;
-  }
-}
-
-void RemoveObject::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* RemoveObject::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return RemoveObject_descriptor_;
-}
-
-const RemoveObject& RemoveObject::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_input_2fcommands_2eproto();
-  return *default_instance_;
-}
-
-RemoveObject* RemoveObject::default_instance_ = NULL;
-
-RemoveObject* RemoveObject::New() const {
-  return new RemoveObject;
-}
-
-void RemoveObject::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_shapeid()) {
-      if (shapeid_ != NULL) shapeid_->::protobuf::srl::commands::IdChain::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool RemoveObject::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .protobuf.srl.commands.IdChain shapeId = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_shapeid()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void RemoveObject::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // required .protobuf.srl.commands.IdChain shapeId = 1;
-  if (has_shapeid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->shapeid(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* RemoveObject::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // required .protobuf.srl.commands.IdChain shapeId = 1;
-  if (has_shapeid()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->shapeid(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int RemoveObject::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .protobuf.srl.commands.IdChain shapeId = 1;
-    if (has_shapeid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->shapeid());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void RemoveObject::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const RemoveObject* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const RemoveObject*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void RemoveObject::MergeFrom(const RemoveObject& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_shapeid()) {
-      mutable_shapeid()->::protobuf::srl::commands::IdChain::MergeFrom(from.shapeid());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void RemoveObject::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void RemoveObject::CopyFrom(const RemoveObject& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RemoveObject::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
-
-  return true;
-}
-
-void RemoveObject::Swap(RemoveObject* other) {
-  if (other != this) {
-    std::swap(shapeid_, other->shapeid_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata RemoveObject::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = RemoveObject_descriptor_;
-  metadata.reflection = RemoveObject_reflection_;
   return metadata;
 }
 

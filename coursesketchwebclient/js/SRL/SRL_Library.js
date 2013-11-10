@@ -184,7 +184,7 @@ function Overloads() {
 		} else if (this.check_type() == "SRL_Line") {
 			throw 'No such method error: SRL_Line does not have method "removeSubObjectById"';
 		}
-		return(this.removeSubObjectById.SRL_Object.apply( this, arguments ));
+		return (this.removeSubObjectById.SRL_Object.apply( this, arguments ));
 	}
 
 	this.removeSubObject = function () {
@@ -239,8 +239,8 @@ function Overloads() {
  */
 
 function SRL_Sketch() {
+	this.Inherits(Overloads); // super call
 
-	this.Inherits(Overloads);
 	var objectList = [];
 	var objectIdMap = [];
 	this.canvasContext = false;
@@ -293,7 +293,7 @@ function SRL_Sketch() {
 	}
 
 	/**
-	 * TODO: fill out this method.
+	 * Returns the object that is a result of the given IdChain
 	 */
 	this.getSubObjectByIdChain = function(idList) {
 		if (idList.length <= 0) {
@@ -303,6 +303,36 @@ function SRL_Sketch() {
 		for (var i = 1; i < idList.length; i++) {
 			returnShape = returnShape.getSubObjectById(idList[i]);
 		}
+		return returnShape;
+	}
+
+	/**
+	 * Removes an object by the given IdChain.
+	 *
+	 * The last id in the chain is the object that is removed.
+	 * The second to last id in the chain is where it is removed from.
+	 *
+	 * If there is only one item in the list then the item is removed from the sketch.
+	 * In all cases except exceptions the item that is removed is returned from this method.
+	 */
+	this.removeSubObjectByIdChain = function(idList) {
+		if (!isArray(idList)) {
+			throw "input list is not an array: ";
+		}
+
+		if (idList.length <= 0) {
+			throw "input list is empty";
+		}
+		// there is only 1 item in the list so remove from top level
+		if (idList.length == 1) {
+			return this.removeSubObjectById(idList[0]);
+		}
+
+		var parentShape = this.getSubObjectById(idList[0]);
+		for (var i = 1; i < idList.length - 1; i++) {
+			parentShape = parentShape.getSubObjectById(idList[i]);
+		}
+		var returnShape = parentShape.removeSubObjectById(idList[idList.length - 1]);
 		return returnShape;
 	}
 }

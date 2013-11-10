@@ -31,7 +31,7 @@
 		var serverConnection = false;
 		var clearCanvas = false;
 		var createBaseCommand = false;
-		
+
 		var sketchOutput = 'sketch_output';
 		var updateOutput = 'update_output';
 	    addLoadEvent(function () {
@@ -154,9 +154,22 @@
 	    }
 
 	    function removeFirst() {
-	    	sketch.removeSubObjectAtIndex(0);
-	    	createViewer();
-	    	sketch.drawEntireSketch();
+	    	var shape = sketch.getSubObjectAtIndex(0);
+
+	    	var chain = new IdChain();
+	    	var chChain = new Array();
+	    	chChain.push(shape.getId());
+	    	chain.setIdChain(chChain);
+
+	    	var command = createBaseCommand(ProtoSrlCommandType.REMOVE_OBJECT, true);
+	    	command.commandData = chain.toArrayBuffer();
+	    	command.decodedData = chain;
+	    	var array = new Array();
+			array.push(command);
+
+			var update = serverConnection.createUpdateFromCommands(array);
+			commandManager.addUpdate(update, false, true);
+			setTimeout(function() {createViewer();},50);
 	    }
 	    
 	    function createViewer() {
