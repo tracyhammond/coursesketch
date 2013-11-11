@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/sketch.proto',
   package='protobuf.srl.sketch',
-  serialized_pb='\n\x12input/sketch.proto\x12\x13protobuf.srl.sketch\"\x88\x01\n\tSrlSketch\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\t\x12\x11\n\tproblemId\x18\x03 \x01(\t\x12\x10\n\x08\x64omainId\x18\x04 \x01(\t\x12.\n\x06sketch\x18\x05 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\"\x8e\x01\n\tSrlObject\x12\x37\n\x04type\x18\x01 \x02(\x0e\x32).protobuf.srl.sketch.SrlObject.ObjectType\x12\x0e\n\x06object\x18\x02 \x02(\x0c\"8\n\nObjectType\x12\t\n\x05SHAPE\x10\x00\x12\n\n\x06STROKE\x10\x01\x12\t\n\x05POINT\x10\x02\x12\x08\n\x04LINE\x10\x03\"\xbe\x01\n\x08SrlShape\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\risUserCreated\x18\x04 \x01(\x08\x12<\n\x0finterpretations\x18\x05 \x03(\x0b\x32#.protobuf.srl.sketch.Interpretation\x12\x35\n\rsubComponents\x18\x06 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\"b\n\tSrlStroke\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12-\n\x06points\x18\x04 \x03(\x0b\x32\x1d.protobuf.srl.sketch.SrlPoint\"w\n\x08SrlPoint\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\t\n\x01x\x18\x04 \x02(\x01\x12\t\n\x01y\x18\x05 \x02(\x01\x12\x10\n\x08pressure\x18\x06 \x01(\x01\x12\x0c\n\x04size\x18\x07 \x01(\x01\x12\r\n\x05speed\x18\x08 \x01(\x01\"G\n\x0eInterpretation\x12\r\n\x05label\x18\x01 \x02(\t\x12\x12\n\nconfidence\x18\x02 \x02(\x01\x12\x12\n\ncomplexity\x18\x03 \x01(\x01')
+  serialized_pb='\n\x12input/sketch.proto\x12\x13protobuf.srl.sketch\"\x88\x01\n\tSrlSketch\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\t\x12\x11\n\tproblemId\x18\x03 \x01(\t\x12\x10\n\x08\x64omainId\x18\x04 \x01(\t\x12.\n\x06sketch\x18\x05 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\"\x8e\x01\n\tSrlObject\x12\x37\n\x04type\x18\x01 \x02(\x0e\x32).protobuf.srl.sketch.SrlObject.ObjectType\x12\x0e\n\x06object\x18\x02 \x02(\x0c\"8\n\nObjectType\x12\t\n\x05SHAPE\x10\x00\x12\n\n\x06STROKE\x10\x01\x12\t\n\x05POINT\x10\x02\x12\x08\n\x04LINE\x10\x03\"\xf5\x01\n\x08SrlShape\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\risUserCreated\x18\x04 \x01(\x08\x12<\n\x0finterpretations\x18\x05 \x03(\x0b\x32#.protobuf.srl.sketch.Interpretation\x12\x35\n\rsubComponents\x18\x06 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\x12\x35\n\x0b\x62oundingbox\x18\x07 \x01(\x0b\x32 .protobuf.srl.sketch.BoundingBox\"\x99\x01\n\tSrlStroke\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12-\n\x06points\x18\x04 \x03(\x0b\x32\x1d.protobuf.srl.sketch.SrlPoint\x12\x35\n\x0b\x62oundingbox\x18\x05 \x01(\x0b\x32 .protobuf.srl.sketch.BoundingBox\"w\n\x08SrlPoint\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\t\n\x01x\x18\x04 \x02(\x01\x12\t\n\x01y\x18\x05 \x02(\x01\x12\x10\n\x08pressure\x18\x06 \x01(\x01\x12\x0c\n\x04size\x18\x07 \x01(\x01\x12\r\n\x05speed\x18\x08 \x01(\x01\"G\n\x0eInterpretation\x12\r\n\x05label\x18\x01 \x02(\t\x12\x12\n\nconfidence\x18\x02 \x02(\x01\x12\x12\n\ncomplexity\x18\x03 \x01(\x01\"B\n\x0b\x42oundingBox\x12\t\n\x01x\x18\x01 \x02(\x01\x12\t\n\x01y\x18\x02 \x02(\x01\x12\r\n\x05width\x18\x03 \x02(\x01\x12\x0e\n\x06height\x18\x04 \x02(\x01')
 
 
 
@@ -188,6 +188,13 @@ _SRLSHAPE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='boundingbox', full_name='protobuf.srl.sketch.SrlShape.boundingbox', index=6,
+      number=7, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -198,7 +205,7 @@ _SRLSHAPE = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=328,
-  serialized_end=518,
+  serialized_end=573,
 )
 
 
@@ -237,6 +244,13 @@ _SRLSTROKE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='boundingbox', full_name='protobuf.srl.sketch.SrlStroke.boundingbox', index=4,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -246,8 +260,8 @@ _SRLSTROKE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=520,
-  serialized_end=618,
+  serialized_start=576,
+  serialized_end=729,
 )
 
 
@@ -323,8 +337,8 @@ _SRLPOINT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=620,
-  serialized_end=739,
+  serialized_start=731,
+  serialized_end=850,
 )
 
 
@@ -365,8 +379,57 @@ _INTERPRETATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=741,
-  serialized_end=812,
+  serialized_start=852,
+  serialized_end=923,
+)
+
+
+_BOUNDINGBOX = _descriptor.Descriptor(
+  name='BoundingBox',
+  full_name='protobuf.srl.sketch.BoundingBox',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='x', full_name='protobuf.srl.sketch.BoundingBox.x', index=0,
+      number=1, type=1, cpp_type=5, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='y', full_name='protobuf.srl.sketch.BoundingBox.y', index=1,
+      number=2, type=1, cpp_type=5, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='width', full_name='protobuf.srl.sketch.BoundingBox.width', index=2,
+      number=3, type=1, cpp_type=5, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='height', full_name='protobuf.srl.sketch.BoundingBox.height', index=3,
+      number=4, type=1, cpp_type=5, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=925,
+  serialized_end=991,
 )
 
 _SRLSKETCH.fields_by_name['sketch'].message_type = _SRLOBJECT
@@ -374,13 +437,16 @@ _SRLOBJECT.fields_by_name['type'].enum_type = _SRLOBJECT_OBJECTTYPE
 _SRLOBJECT_OBJECTTYPE.containing_type = _SRLOBJECT;
 _SRLSHAPE.fields_by_name['interpretations'].message_type = _INTERPRETATION
 _SRLSHAPE.fields_by_name['subComponents'].message_type = _SRLOBJECT
+_SRLSHAPE.fields_by_name['boundingbox'].message_type = _BOUNDINGBOX
 _SRLSTROKE.fields_by_name['points'].message_type = _SRLPOINT
+_SRLSTROKE.fields_by_name['boundingbox'].message_type = _BOUNDINGBOX
 DESCRIPTOR.message_types_by_name['SrlSketch'] = _SRLSKETCH
 DESCRIPTOR.message_types_by_name['SrlObject'] = _SRLOBJECT
 DESCRIPTOR.message_types_by_name['SrlShape'] = _SRLSHAPE
 DESCRIPTOR.message_types_by_name['SrlStroke'] = _SRLSTROKE
 DESCRIPTOR.message_types_by_name['SrlPoint'] = _SRLPOINT
 DESCRIPTOR.message_types_by_name['Interpretation'] = _INTERPRETATION
+DESCRIPTOR.message_types_by_name['BoundingBox'] = _BOUNDINGBOX
 
 class SrlSketch(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
@@ -417,6 +483,12 @@ class Interpretation(_message.Message):
   DESCRIPTOR = _INTERPRETATION
 
   # @@protoc_insertion_point(class_scope:protobuf.srl.sketch.Interpretation)
+
+class BoundingBox(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _BOUNDINGBOX
+
+  # @@protoc_insertion_point(class_scope:protobuf.srl.sketch.BoundingBox)
 
 
 # @@protoc_insertion_point(module_scope)
