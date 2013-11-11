@@ -240,7 +240,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 			if (!sketchBuilder) {
 				var builder = ProtoBuf.protoFromFile(protobufDirectory + "sketch.proto");
 				sketchBuilder = builder.build("protobuf").srl.sketch;
-			}	
+			}
 
 			if (!ProtoSrlSketch)
 				ProtoSrlSketch = sketchBuilder.SrlSketch;
