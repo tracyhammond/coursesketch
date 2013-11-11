@@ -22,28 +22,28 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 	 * Creates a new stroke and point and adds the point to the stroke.
 	 */
 	inputListener.setDraggingStartListener(function(drawingEvent) {
-		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
+		currentPoint = this.createPointFromEvent(drawingEvent);
 		currentStroke = new SRL_Stroke(currentPoint);
 		currentStroke.setId(generateUUID());
 		pastPoint = currentPoint;
-	});
+	}.bind(this));
 
 	/**
 	 * Sets the drag function that creates a new stroke and adds a point to the stroke.
 	 */
 	inputListener.setInputDraggedListener(function(drawingEvent) {
-		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
+		currentPoint = this.createPointFromEvent(drawingEvent);
 		currentPoint.setSpeed(pastPoint);
 		currentStroke.addPoint(currentPoint);
 		pastPoint = currentPoint;
 		currentStroke.drawStroke(graphics);
-	});
+	}.bind(this));
 
 	/**
 	 * Adds the point to the stroke, adds the stroke to the sketch container.
 	 */
 	inputListener.setDraggingEndListener(function(drawingEvent) {
-		currentPoint = this.listenerScope.createPointFromEvent(drawingEvent);
+		currentPoint = this.createPointFromEvent(drawingEvent);
 		currentPoint.setSpeed(pastPoint);
 		currentStroke.addPoint(currentPoint);
 		currentStroke.setTime(currentPoint.getTime());
@@ -56,7 +56,7 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 		}*/
 		currentStroke = false;
 		currentPoint = false;
-	});
+	}.bind(this));
 
 	/**
 	 * Creates an {@link SRL_Point} from a drawing event.
