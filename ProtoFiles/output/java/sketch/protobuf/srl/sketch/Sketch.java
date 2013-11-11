@@ -2238,6 +2238,20 @@ public final class Sketch {
      */
     protobuf.srl.sketch.Sketch.SrlObjectOrBuilder getSubComponentsOrBuilder(
         int index);
+
+    // optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+     */
+    boolean hasBoundingbox();
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+     */
+    protobuf.srl.sketch.Sketch.BoundingBox getBoundingbox();
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+     */
+    protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder getBoundingboxOrBuilder();
   }
   /**
    * Protobuf type {@code protobuf.srl.sketch.SrlShape}
@@ -2324,6 +2338,19 @@ public final class Sketch {
                 mutable_bitField0_ |= 0x00000020;
               }
               subComponents_.add(input.readMessage(protobuf.srl.sketch.Sketch.SrlObject.PARSER, extensionRegistry));
+              break;
+            }
+            case 58: {
+              protobuf.srl.sketch.Sketch.BoundingBox.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                subBuilder = boundingbox_.toBuilder();
+              }
+              boundingbox_ = input.readMessage(protobuf.srl.sketch.Sketch.BoundingBox.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(boundingbox_);
+                boundingbox_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000010;
               break;
             }
           }
@@ -2562,6 +2589,28 @@ public final class Sketch {
       return subComponents_.get(index);
     }
 
+    // optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+    public static final int BOUNDINGBOX_FIELD_NUMBER = 7;
+    private protobuf.srl.sketch.Sketch.BoundingBox boundingbox_;
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+     */
+    public boolean hasBoundingbox() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+     */
+    public protobuf.srl.sketch.Sketch.BoundingBox getBoundingbox() {
+      return boundingbox_;
+    }
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+     */
+    public protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder getBoundingboxOrBuilder() {
+      return boundingbox_;
+    }
+
     private void initFields() {
       id_ = "";
       time_ = 0L;
@@ -2569,6 +2618,7 @@ public final class Sketch {
       isUserCreated_ = false;
       interpretations_ = java.util.Collections.emptyList();
       subComponents_ = java.util.Collections.emptyList();
+      boundingbox_ = protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2591,6 +2641,12 @@ public final class Sketch {
       }
       for (int i = 0; i < getSubComponentsCount(); i++) {
         if (!getSubComponents(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasBoundingbox()) {
+        if (!getBoundingbox().isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -2619,6 +2675,9 @@ public final class Sketch {
       }
       for (int i = 0; i < subComponents_.size(); i++) {
         output.writeMessage(6, subComponents_.get(i));
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeMessage(7, boundingbox_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -2652,6 +2711,10 @@ public final class Sketch {
       for (int i = 0; i < subComponents_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(6, subComponents_.get(i));
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, boundingbox_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2763,6 +2826,7 @@ public final class Sketch {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getInterpretationsFieldBuilder();
           getSubComponentsFieldBuilder();
+          getBoundingboxFieldBuilder();
         }
       }
       private static Builder create() {
@@ -2791,6 +2855,12 @@ public final class Sketch {
         } else {
           subComponentsBuilder_.clear();
         }
+        if (boundingboxBuilder_ == null) {
+          boundingbox_ = protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance();
+        } else {
+          boundingboxBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -2852,6 +2922,14 @@ public final class Sketch {
           result.subComponents_ = subComponents_;
         } else {
           result.subComponents_ = subComponentsBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        if (boundingboxBuilder_ == null) {
+          result.boundingbox_ = boundingbox_;
+        } else {
+          result.boundingbox_ = boundingboxBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -2937,6 +3015,9 @@ public final class Sketch {
             }
           }
         }
+        if (other.hasBoundingbox()) {
+          mergeBoundingbox(other.getBoundingbox());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -2958,6 +3039,12 @@ public final class Sketch {
         }
         for (int i = 0; i < getSubComponentsCount(); i++) {
           if (!getSubComponents(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasBoundingbox()) {
+          if (!getBoundingbox().isInitialized()) {
             
             return false;
           }
@@ -3678,6 +3765,123 @@ public final class Sketch {
         return subComponentsBuilder_;
       }
 
+      // optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+      private protobuf.srl.sketch.Sketch.BoundingBox boundingbox_ = protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.sketch.Sketch.BoundingBox, protobuf.srl.sketch.Sketch.BoundingBox.Builder, protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder> boundingboxBuilder_;
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+       */
+      public boolean hasBoundingbox() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+       */
+      public protobuf.srl.sketch.Sketch.BoundingBox getBoundingbox() {
+        if (boundingboxBuilder_ == null) {
+          return boundingbox_;
+        } else {
+          return boundingboxBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+       */
+      public Builder setBoundingbox(protobuf.srl.sketch.Sketch.BoundingBox value) {
+        if (boundingboxBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          boundingbox_ = value;
+          onChanged();
+        } else {
+          boundingboxBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000040;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+       */
+      public Builder setBoundingbox(
+          protobuf.srl.sketch.Sketch.BoundingBox.Builder builderForValue) {
+        if (boundingboxBuilder_ == null) {
+          boundingbox_ = builderForValue.build();
+          onChanged();
+        } else {
+          boundingboxBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000040;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+       */
+      public Builder mergeBoundingbox(protobuf.srl.sketch.Sketch.BoundingBox value) {
+        if (boundingboxBuilder_ == null) {
+          if (((bitField0_ & 0x00000040) == 0x00000040) &&
+              boundingbox_ != protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance()) {
+            boundingbox_ =
+              protobuf.srl.sketch.Sketch.BoundingBox.newBuilder(boundingbox_).mergeFrom(value).buildPartial();
+          } else {
+            boundingbox_ = value;
+          }
+          onChanged();
+        } else {
+          boundingboxBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000040;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+       */
+      public Builder clearBoundingbox() {
+        if (boundingboxBuilder_ == null) {
+          boundingbox_ = protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance();
+          onChanged();
+        } else {
+          boundingboxBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000040);
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+       */
+      public protobuf.srl.sketch.Sketch.BoundingBox.Builder getBoundingboxBuilder() {
+        bitField0_ |= 0x00000040;
+        onChanged();
+        return getBoundingboxFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+       */
+      public protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder getBoundingboxOrBuilder() {
+        if (boundingboxBuilder_ != null) {
+          return boundingboxBuilder_.getMessageOrBuilder();
+        } else {
+          return boundingbox_;
+        }
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.sketch.Sketch.BoundingBox, protobuf.srl.sketch.Sketch.BoundingBox.Builder, protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder> 
+          getBoundingboxFieldBuilder() {
+        if (boundingboxBuilder_ == null) {
+          boundingboxBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protobuf.srl.sketch.Sketch.BoundingBox, protobuf.srl.sketch.Sketch.BoundingBox.Builder, protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder>(
+                  boundingbox_,
+                  getParentForChildren(),
+                  isClean());
+          boundingbox_ = null;
+        }
+        return boundingboxBuilder_;
+      }
+
       // @@protoc_insertion_point(builder_scope:protobuf.srl.sketch.SrlShape)
     }
 
@@ -3756,6 +3960,20 @@ public final class Sketch {
      */
     protobuf.srl.sketch.Sketch.SrlPointOrBuilder getPointsOrBuilder(
         int index);
+
+    // optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+     */
+    boolean hasBoundingbox();
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+     */
+    protobuf.srl.sketch.Sketch.BoundingBox getBoundingbox();
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+     */
+    protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder getBoundingboxOrBuilder();
   }
   /**
    * Protobuf type {@code protobuf.srl.sketch.SrlStroke}
@@ -3829,6 +4047,19 @@ public final class Sketch {
                 mutable_bitField0_ |= 0x00000008;
               }
               points_.add(input.readMessage(protobuf.srl.sketch.Sketch.SrlPoint.PARSER, extensionRegistry));
+              break;
+            }
+            case 42: {
+              protobuf.srl.sketch.Sketch.BoundingBox.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                subBuilder = boundingbox_.toBuilder();
+              }
+              boundingbox_ = input.readMessage(protobuf.srl.sketch.Sketch.BoundingBox.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(boundingbox_);
+                boundingbox_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000008;
               break;
             }
           }
@@ -4012,11 +4243,34 @@ public final class Sketch {
       return points_.get(index);
     }
 
+    // optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+    public static final int BOUNDINGBOX_FIELD_NUMBER = 5;
+    private protobuf.srl.sketch.Sketch.BoundingBox boundingbox_;
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+     */
+    public boolean hasBoundingbox() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+     */
+    public protobuf.srl.sketch.Sketch.BoundingBox getBoundingbox() {
+      return boundingbox_;
+    }
+    /**
+     * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+     */
+    public protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder getBoundingboxOrBuilder() {
+      return boundingbox_;
+    }
+
     private void initFields() {
       id_ = "";
       time_ = 0L;
       name_ = "";
       points_ = java.util.Collections.emptyList();
+      boundingbox_ = protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -4033,6 +4287,12 @@ public final class Sketch {
       }
       for (int i = 0; i < getPointsCount(); i++) {
         if (!getPoints(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasBoundingbox()) {
+        if (!getBoundingbox().isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -4055,6 +4315,9 @@ public final class Sketch {
       }
       for (int i = 0; i < points_.size(); i++) {
         output.writeMessage(4, points_.get(i));
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeMessage(5, boundingbox_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -4080,6 +4343,10 @@ public final class Sketch {
       for (int i = 0; i < points_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, points_.get(i));
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, boundingbox_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4190,6 +4457,7 @@ public final class Sketch {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getPointsFieldBuilder();
+          getBoundingboxFieldBuilder();
         }
       }
       private static Builder create() {
@@ -4210,6 +4478,12 @@ public final class Sketch {
         } else {
           pointsBuilder_.clear();
         }
+        if (boundingboxBuilder_ == null) {
+          boundingbox_ = protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance();
+        } else {
+          boundingboxBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -4258,6 +4532,14 @@ public final class Sketch {
           result.points_ = points_;
         } else {
           result.points_ = pointsBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        if (boundingboxBuilder_ == null) {
+          result.boundingbox_ = boundingbox_;
+        } else {
+          result.boundingbox_ = boundingboxBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -4314,6 +4596,9 @@ public final class Sketch {
             }
           }
         }
+        if (other.hasBoundingbox()) {
+          mergeBoundingbox(other.getBoundingbox());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -4329,6 +4614,12 @@ public final class Sketch {
         }
         for (int i = 0; i < getPointsCount(); i++) {
           if (!getPoints(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasBoundingbox()) {
+          if (!getBoundingbox().isInitialized()) {
             
             return false;
           }
@@ -4774,6 +5065,123 @@ public final class Sketch {
           points_ = null;
         }
         return pointsBuilder_;
+      }
+
+      // optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+      private protobuf.srl.sketch.Sketch.BoundingBox boundingbox_ = protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.sketch.Sketch.BoundingBox, protobuf.srl.sketch.Sketch.BoundingBox.Builder, protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder> boundingboxBuilder_;
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+       */
+      public boolean hasBoundingbox() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+       */
+      public protobuf.srl.sketch.Sketch.BoundingBox getBoundingbox() {
+        if (boundingboxBuilder_ == null) {
+          return boundingbox_;
+        } else {
+          return boundingboxBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+       */
+      public Builder setBoundingbox(protobuf.srl.sketch.Sketch.BoundingBox value) {
+        if (boundingboxBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          boundingbox_ = value;
+          onChanged();
+        } else {
+          boundingboxBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+       */
+      public Builder setBoundingbox(
+          protobuf.srl.sketch.Sketch.BoundingBox.Builder builderForValue) {
+        if (boundingboxBuilder_ == null) {
+          boundingbox_ = builderForValue.build();
+          onChanged();
+        } else {
+          boundingboxBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+       */
+      public Builder mergeBoundingbox(protobuf.srl.sketch.Sketch.BoundingBox value) {
+        if (boundingboxBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+              boundingbox_ != protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance()) {
+            boundingbox_ =
+              protobuf.srl.sketch.Sketch.BoundingBox.newBuilder(boundingbox_).mergeFrom(value).buildPartial();
+          } else {
+            boundingbox_ = value;
+          }
+          onChanged();
+        } else {
+          boundingboxBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+       */
+      public Builder clearBoundingbox() {
+        if (boundingboxBuilder_ == null) {
+          boundingbox_ = protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance();
+          onChanged();
+        } else {
+          boundingboxBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+       */
+      public protobuf.srl.sketch.Sketch.BoundingBox.Builder getBoundingboxBuilder() {
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return getBoundingboxFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+       */
+      public protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder getBoundingboxOrBuilder() {
+        if (boundingboxBuilder_ != null) {
+          return boundingboxBuilder_.getMessageOrBuilder();
+        } else {
+          return boundingbox_;
+        }
+      }
+      /**
+       * <code>optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.sketch.Sketch.BoundingBox, protobuf.srl.sketch.Sketch.BoundingBox.Builder, protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder> 
+          getBoundingboxFieldBuilder() {
+        if (boundingboxBuilder_ == null) {
+          boundingboxBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protobuf.srl.sketch.Sketch.BoundingBox, protobuf.srl.sketch.Sketch.BoundingBox.Builder, protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder>(
+                  boundingbox_,
+                  getParentForChildren(),
+                  isClean());
+          boundingbox_ = null;
+        }
+        return boundingboxBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:protobuf.srl.sketch.SrlStroke)
@@ -6601,6 +7009,677 @@ public final class Sketch {
     // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.Interpretation)
   }
 
+  public interface BoundingBoxOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required double x = 1;
+    /**
+     * <code>required double x = 1;</code>
+     */
+    boolean hasX();
+    /**
+     * <code>required double x = 1;</code>
+     */
+    double getX();
+
+    // required double y = 2;
+    /**
+     * <code>required double y = 2;</code>
+     */
+    boolean hasY();
+    /**
+     * <code>required double y = 2;</code>
+     */
+    double getY();
+
+    // required double width = 3;
+    /**
+     * <code>required double width = 3;</code>
+     */
+    boolean hasWidth();
+    /**
+     * <code>required double width = 3;</code>
+     */
+    double getWidth();
+
+    // required double height = 4;
+    /**
+     * <code>required double height = 4;</code>
+     */
+    boolean hasHeight();
+    /**
+     * <code>required double height = 4;</code>
+     */
+    double getHeight();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.sketch.BoundingBox}
+   */
+  public static final class BoundingBox extends
+      com.google.protobuf.GeneratedMessage
+      implements BoundingBoxOrBuilder {
+    // Use BoundingBox.newBuilder() to construct.
+    private BoundingBox(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private BoundingBox(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final BoundingBox defaultInstance;
+    public static BoundingBox getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public BoundingBox getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private BoundingBox(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 9: {
+              bitField0_ |= 0x00000001;
+              x_ = input.readDouble();
+              break;
+            }
+            case 17: {
+              bitField0_ |= 0x00000002;
+              y_ = input.readDouble();
+              break;
+            }
+            case 25: {
+              bitField0_ |= 0x00000004;
+              width_ = input.readDouble();
+              break;
+            }
+            case 33: {
+              bitField0_ |= 0x00000008;
+              height_ = input.readDouble();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_BoundingBox_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_BoundingBox_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.sketch.Sketch.BoundingBox.class, protobuf.srl.sketch.Sketch.BoundingBox.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<BoundingBox> PARSER =
+        new com.google.protobuf.AbstractParser<BoundingBox>() {
+      public BoundingBox parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BoundingBox(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BoundingBox> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required double x = 1;
+    public static final int X_FIELD_NUMBER = 1;
+    private double x_;
+    /**
+     * <code>required double x = 1;</code>
+     */
+    public boolean hasX() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required double x = 1;</code>
+     */
+    public double getX() {
+      return x_;
+    }
+
+    // required double y = 2;
+    public static final int Y_FIELD_NUMBER = 2;
+    private double y_;
+    /**
+     * <code>required double y = 2;</code>
+     */
+    public boolean hasY() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required double y = 2;</code>
+     */
+    public double getY() {
+      return y_;
+    }
+
+    // required double width = 3;
+    public static final int WIDTH_FIELD_NUMBER = 3;
+    private double width_;
+    /**
+     * <code>required double width = 3;</code>
+     */
+    public boolean hasWidth() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required double width = 3;</code>
+     */
+    public double getWidth() {
+      return width_;
+    }
+
+    // required double height = 4;
+    public static final int HEIGHT_FIELD_NUMBER = 4;
+    private double height_;
+    /**
+     * <code>required double height = 4;</code>
+     */
+    public boolean hasHeight() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>required double height = 4;</code>
+     */
+    public double getHeight() {
+      return height_;
+    }
+
+    private void initFields() {
+      x_ = 0D;
+      y_ = 0D;
+      width_ = 0D;
+      height_ = 0D;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasX()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasY()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasWidth()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasHeight()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeDouble(1, x_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeDouble(2, y_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeDouble(3, width_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeDouble(4, height_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(1, x_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(2, y_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(3, width_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(4, height_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.sketch.Sketch.BoundingBox parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.sketch.Sketch.BoundingBox prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.sketch.BoundingBox}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.sketch.Sketch.BoundingBoxOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_BoundingBox_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_BoundingBox_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.sketch.Sketch.BoundingBox.class, protobuf.srl.sketch.Sketch.BoundingBox.Builder.class);
+      }
+
+      // Construct using protobuf.srl.sketch.Sketch.BoundingBox.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        x_ = 0D;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        y_ = 0D;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        width_ = 0D;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        height_ = 0D;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_BoundingBox_descriptor;
+      }
+
+      public protobuf.srl.sketch.Sketch.BoundingBox getDefaultInstanceForType() {
+        return protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance();
+      }
+
+      public protobuf.srl.sketch.Sketch.BoundingBox build() {
+        protobuf.srl.sketch.Sketch.BoundingBox result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.sketch.Sketch.BoundingBox buildPartial() {
+        protobuf.srl.sketch.Sketch.BoundingBox result = new protobuf.srl.sketch.Sketch.BoundingBox(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.x_ = x_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.y_ = y_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.width_ = width_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.height_ = height_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.sketch.Sketch.BoundingBox) {
+          return mergeFrom((protobuf.srl.sketch.Sketch.BoundingBox)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.sketch.Sketch.BoundingBox other) {
+        if (other == protobuf.srl.sketch.Sketch.BoundingBox.getDefaultInstance()) return this;
+        if (other.hasX()) {
+          setX(other.getX());
+        }
+        if (other.hasY()) {
+          setY(other.getY());
+        }
+        if (other.hasWidth()) {
+          setWidth(other.getWidth());
+        }
+        if (other.hasHeight()) {
+          setHeight(other.getHeight());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasX()) {
+          
+          return false;
+        }
+        if (!hasY()) {
+          
+          return false;
+        }
+        if (!hasWidth()) {
+          
+          return false;
+        }
+        if (!hasHeight()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.sketch.Sketch.BoundingBox parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.sketch.Sketch.BoundingBox) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required double x = 1;
+      private double x_ ;
+      /**
+       * <code>required double x = 1;</code>
+       */
+      public boolean hasX() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required double x = 1;</code>
+       */
+      public double getX() {
+        return x_;
+      }
+      /**
+       * <code>required double x = 1;</code>
+       */
+      public Builder setX(double value) {
+        bitField0_ |= 0x00000001;
+        x_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required double x = 1;</code>
+       */
+      public Builder clearX() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        x_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      // required double y = 2;
+      private double y_ ;
+      /**
+       * <code>required double y = 2;</code>
+       */
+      public boolean hasY() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required double y = 2;</code>
+       */
+      public double getY() {
+        return y_;
+      }
+      /**
+       * <code>required double y = 2;</code>
+       */
+      public Builder setY(double value) {
+        bitField0_ |= 0x00000002;
+        y_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required double y = 2;</code>
+       */
+      public Builder clearY() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        y_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      // required double width = 3;
+      private double width_ ;
+      /**
+       * <code>required double width = 3;</code>
+       */
+      public boolean hasWidth() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required double width = 3;</code>
+       */
+      public double getWidth() {
+        return width_;
+      }
+      /**
+       * <code>required double width = 3;</code>
+       */
+      public Builder setWidth(double value) {
+        bitField0_ |= 0x00000004;
+        width_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required double width = 3;</code>
+       */
+      public Builder clearWidth() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        width_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      // required double height = 4;
+      private double height_ ;
+      /**
+       * <code>required double height = 4;</code>
+       */
+      public boolean hasHeight() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>required double height = 4;</code>
+       */
+      public double getHeight() {
+        return height_;
+      }
+      /**
+       * <code>required double height = 4;</code>
+       */
+      public Builder setHeight(double value) {
+        bitField0_ |= 0x00000008;
+        height_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required double height = 4;</code>
+       */
+      public Builder clearHeight() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        height_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.sketch.BoundingBox)
+    }
+
+    static {
+      defaultInstance = new BoundingBox(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.BoundingBox)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_sketch_SrlSketch_descriptor;
   private static
@@ -6631,6 +7710,11 @@ public final class Sketch {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_sketch_Interpretation_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_sketch_BoundingBox_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_sketch_BoundingBox_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -6648,19 +7732,23 @@ public final class Sketch {
       "pe\030\001 \002(\0162).protobuf.srl.sketch.SrlObject" +
       ".ObjectType\022\016\n\006object\030\002 \002(\014\"8\n\nObjectTyp" +
       "e\022\t\n\005SHAPE\020\000\022\n\n\006STROKE\020\001\022\t\n\005POINT\020\002\022\010\n\004L" +
-      "INE\020\003\"\276\001\n\010SrlShape\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002" +
+      "INE\020\003\"\365\001\n\010SrlShape\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002" +
       " \002(\004\022\014\n\004name\030\003 \001(\t\022\025\n\risUserCreated\030\004 \001(",
       "\010\022<\n\017interpretations\030\005 \003(\0132#.protobuf.sr" +
       "l.sketch.Interpretation\0225\n\rsubComponents" +
-      "\030\006 \003(\0132\036.protobuf.srl.sketch.SrlObject\"b" +
-      "\n\tSrlStroke\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n" +
-      "\004name\030\003 \001(\t\022-\n\006points\030\004 \003(\0132\035.protobuf.s" +
-      "rl.sketch.SrlPoint\"w\n\010SrlPoint\022\n\n\002id\030\001 \002" +
-      "(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\t\n\001x\030\004 \002(" +
-      "\001\022\t\n\001y\030\005 \002(\001\022\020\n\010pressure\030\006 \001(\001\022\014\n\004size\030\007" +
-      " \001(\001\022\r\n\005speed\030\010 \001(\001\"G\n\016Interpretation\022\r\n" +
-      "\005label\030\001 \002(\t\022\022\n\nconfidence\030\002 \002(\001\022\022\n\ncomp",
-      "lexity\030\003 \001(\001"
+      "\030\006 \003(\0132\036.protobuf.srl.sketch.SrlObject\0225" +
+      "\n\013boundingbox\030\007 \001(\0132 .protobuf.srl.sketc" +
+      "h.BoundingBox\"\231\001\n\tSrlStroke\022\n\n\002id\030\001 \002(\t\022" +
+      "\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022-\n\006points\030\004 " +
+      "\003(\0132\035.protobuf.srl.sketch.SrlPoint\0225\n\013bo" +
+      "undingbox\030\005 \001(\0132 .protobuf.srl.sketch.Bo" +
+      "undingBox\"w\n\010SrlPoint\022\n\n\002id\030\001 \002(\t\022\014\n\004tim" +
+      "e\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\t\n\001x\030\004 \002(\001\022\t\n\001y\030\005 ",
+      "\002(\001\022\020\n\010pressure\030\006 \001(\001\022\014\n\004size\030\007 \001(\001\022\r\n\005s" +
+      "peed\030\010 \001(\001\"G\n\016Interpretation\022\r\n\005label\030\001 " +
+      "\002(\t\022\022\n\nconfidence\030\002 \002(\001\022\022\n\ncomplexity\030\003 " +
+      "\001(\001\"B\n\013BoundingBox\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001" +
+      "\022\r\n\005width\030\003 \002(\001\022\016\n\006height\030\004 \002(\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6684,13 +7772,13 @@ public final class Sketch {
           internal_static_protobuf_srl_sketch_SrlShape_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_SrlShape_descriptor,
-              new java.lang.String[] { "Id", "Time", "Name", "IsUserCreated", "Interpretations", "SubComponents", });
+              new java.lang.String[] { "Id", "Time", "Name", "IsUserCreated", "Interpretations", "SubComponents", "Boundingbox", });
           internal_static_protobuf_srl_sketch_SrlStroke_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_protobuf_srl_sketch_SrlStroke_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_SrlStroke_descriptor,
-              new java.lang.String[] { "Id", "Time", "Name", "Points", });
+              new java.lang.String[] { "Id", "Time", "Name", "Points", "Boundingbox", });
           internal_static_protobuf_srl_sketch_SrlPoint_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_protobuf_srl_sketch_SrlPoint_fieldAccessorTable = new
@@ -6703,6 +7791,12 @@ public final class Sketch {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_Interpretation_descriptor,
               new java.lang.String[] { "Label", "Confidence", "Complexity", });
+          internal_static_protobuf_srl_sketch_BoundingBox_descriptor =
+            getDescriptor().getMessageTypes().get(6);
+          internal_static_protobuf_srl_sketch_BoundingBox_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_sketch_BoundingBox_descriptor,
+              new java.lang.String[] { "X", "Y", "Width", "Height", });
           return null;
         }
       };

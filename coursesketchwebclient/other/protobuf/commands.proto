@@ -1,13 +1,13 @@
 package protobuf.srl.commands;
 
-message Update {
+message SrlUpdate {
 	required string updateId = 1;
 	optional int64 time = 2;
-	repeated Command commands = 3;
+	repeated SrlCommand commands = 3;
 }
 
 // inheritance does not exist so this will replace shape
-message Command {
+message SrlCommand {
 	required CommandType commandType = 1;
 	required bool isUserCreated = 2;
 	required bytes commandData = 3;
@@ -22,10 +22,9 @@ enum CommandType {
 	ADD_STROKE = 0;		// Adds a Stroke:		This will only contain an SRL_Stroke in commandData
 	ADD_SHAPE = 1;		// Adds a shape:		This will only contain an SRL_Shape in commandData
 	PACKAGE_SHAPE = 2;	// Repackages shapes from the surface to inside another shape
-	ADD_SUBSHAPE = 3;	// Creates a shape inside another shape
-	REMOVE_OBJECT = 4;	// Removes an object:	This will only contain an IdChain in commandData.
-	ASSIGN_ATTRIBUTE = 5;
-	REMOVE_ATTRIBUTE = 6;
+	REMOVE_OBJECT = 3;	// Removes an object:	This will only contain an IdChain in commandData.
+	ASSIGN_ATTRIBUTE = 4;
+	REMOVE_ATTRIBUTE = 5;
 
 	FORCE_INTERPRETATION = 10;
 
@@ -50,26 +49,18 @@ message IdChain {
  * #1 add all shapes with an id in the list of {@link shapesToBeContained} into shape with an id of {@link newContainerId}
  * #2 delete all the shapes with the id in the list of from the sketch
  *
- *  If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
+ * If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
  */
-message PackageShape {
+message ActionPackageShape {
 	optional IdChain oldContainerId = 1;
 	optional IdChain newContainerId = 2;
 	repeated string shapesToBeContained = 3; // This is a list of shapes ids
 }
 
 /**
- * Creates a shape inside of a parent shape.
- */
-message AddSubshape {
-	required IdChain parentShape = 1;
-	required bytes shape = 2;
-}
-
-/**
  * Gives the shape with the current Id a new interpretation
  */
-message ForceInterpretation {
+message ActionForceInterpretation {
 	required bytes interpretation = 1;
 	required IdChain shapeId = 2;
 }
@@ -77,7 +68,7 @@ message ForceInterpretation {
 /**
  * Assigns an attribute to a shape.
  */
-message AddAttribtue {
+message ActionAddAttribtue {
 	required IdChain shapeId = 1;
 	required string attributeKey = 2;
 	required bytes attributeValue = 3;
@@ -89,7 +80,7 @@ message AddAttribtue {
  * the value that is removed is stored here.
  * A ReplaceAttribute is a combination of a RemoveAttribtue and then an AddAttribtue
  */
-message RemoveAttribtue {
+message ActionRemoveAttribtue {
 	required IdChain shapeId = 1;
 	required string attributeKey = 2;
 	required bytes attributeValue = 3;

@@ -42,6 +42,7 @@ class SrlShape;
 class SrlStroke;
 class SrlPoint;
 class Interpretation;
+class BoundingBox;
 
 enum SrlObject_ObjectType {
   SrlObject_ObjectType_SHAPE = 0,
@@ -450,6 +451,15 @@ class SrlShape : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >*
       mutable_subcomponents();
 
+  // optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+  inline bool has_boundingbox() const;
+  inline void clear_boundingbox();
+  static const int kBoundingboxFieldNumber = 7;
+  inline const ::protobuf::srl::sketch::BoundingBox& boundingbox() const;
+  inline ::protobuf::srl::sketch::BoundingBox* mutable_boundingbox();
+  inline ::protobuf::srl::sketch::BoundingBox* release_boundingbox();
+  inline void set_allocated_boundingbox(::protobuf::srl::sketch::BoundingBox* boundingbox);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlShape)
  private:
   inline void set_has_id();
@@ -460,6 +470,8 @@ class SrlShape : public ::google::protobuf::Message {
   inline void clear_has_name();
   inline void set_has_isusercreated();
   inline void clear_has_isusercreated();
+  inline void set_has_boundingbox();
+  inline void clear_has_boundingbox();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -468,10 +480,11 @@ class SrlShape : public ::google::protobuf::Message {
   ::std::string* name_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation > interpretations_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject > subcomponents_;
+  ::protobuf::srl::sketch::BoundingBox* boundingbox_;
   bool isusercreated_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fsketch_2eproto();
   friend void protobuf_AssignDesc_input_2fsketch_2eproto();
@@ -579,6 +592,15 @@ class SrlStroke : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint >*
       mutable_points();
 
+  // optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+  inline bool has_boundingbox() const;
+  inline void clear_boundingbox();
+  static const int kBoundingboxFieldNumber = 5;
+  inline const ::protobuf::srl::sketch::BoundingBox& boundingbox() const;
+  inline ::protobuf::srl::sketch::BoundingBox* mutable_boundingbox();
+  inline ::protobuf::srl::sketch::BoundingBox* release_boundingbox();
+  inline void set_allocated_boundingbox(::protobuf::srl::sketch::BoundingBox* boundingbox);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlStroke)
  private:
   inline void set_has_id();
@@ -587,6 +609,8 @@ class SrlStroke : public ::google::protobuf::Message {
   inline void clear_has_time();
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_boundingbox();
+  inline void clear_has_boundingbox();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -594,9 +618,10 @@ class SrlStroke : public ::google::protobuf::Message {
   ::google::protobuf::uint64 time_;
   ::std::string* name_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint > points_;
+  ::protobuf::srl::sketch::BoundingBox* boundingbox_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fsketch_2eproto();
   friend void protobuf_AssignDesc_input_2fsketch_2eproto();
@@ -873,6 +898,118 @@ class Interpretation : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Interpretation* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class BoundingBox : public ::google::protobuf::Message {
+ public:
+  BoundingBox();
+  virtual ~BoundingBox();
+
+  BoundingBox(const BoundingBox& from);
+
+  inline BoundingBox& operator=(const BoundingBox& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const BoundingBox& default_instance();
+
+  void Swap(BoundingBox* other);
+
+  // implements Message ----------------------------------------------
+
+  BoundingBox* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const BoundingBox& from);
+  void MergeFrom(const BoundingBox& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required double x = 1;
+  inline bool has_x() const;
+  inline void clear_x();
+  static const int kXFieldNumber = 1;
+  inline double x() const;
+  inline void set_x(double value);
+
+  // required double y = 2;
+  inline bool has_y() const;
+  inline void clear_y();
+  static const int kYFieldNumber = 2;
+  inline double y() const;
+  inline void set_y(double value);
+
+  // required double width = 3;
+  inline bool has_width() const;
+  inline void clear_width();
+  static const int kWidthFieldNumber = 3;
+  inline double width() const;
+  inline void set_width(double value);
+
+  // required double height = 4;
+  inline bool has_height() const;
+  inline void clear_height();
+  static const int kHeightFieldNumber = 4;
+  inline double height() const;
+  inline void set_height(double value);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.BoundingBox)
+ private:
+  inline void set_has_x();
+  inline void clear_has_x();
+  inline void set_has_y();
+  inline void clear_has_y();
+  inline void set_has_width();
+  inline void clear_has_width();
+  inline void set_has_height();
+  inline void clear_has_height();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  double x_;
+  double y_;
+  double width_;
+  double height_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fsketch_2eproto();
+  friend void protobuf_AssignDesc_input_2fsketch_2eproto();
+  friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
+
+  void InitAsDefaultInstance();
+  static BoundingBox* default_instance_;
 };
 // ===================================================================
 
@@ -1521,6 +1658,44 @@ SrlShape::mutable_subcomponents() {
   return &subcomponents_;
 }
 
+// optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+inline bool SrlShape::has_boundingbox() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void SrlShape::set_has_boundingbox() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void SrlShape::clear_has_boundingbox() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void SrlShape::clear_boundingbox() {
+  if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::BoundingBox::Clear();
+  clear_has_boundingbox();
+}
+inline const ::protobuf::srl::sketch::BoundingBox& SrlShape::boundingbox() const {
+  return boundingbox_ != NULL ? *boundingbox_ : *default_instance_->boundingbox_;
+}
+inline ::protobuf::srl::sketch::BoundingBox* SrlShape::mutable_boundingbox() {
+  set_has_boundingbox();
+  if (boundingbox_ == NULL) boundingbox_ = new ::protobuf::srl::sketch::BoundingBox;
+  return boundingbox_;
+}
+inline ::protobuf::srl::sketch::BoundingBox* SrlShape::release_boundingbox() {
+  clear_has_boundingbox();
+  ::protobuf::srl::sketch::BoundingBox* temp = boundingbox_;
+  boundingbox_ = NULL;
+  return temp;
+}
+inline void SrlShape::set_allocated_boundingbox(::protobuf::srl::sketch::BoundingBox* boundingbox) {
+  delete boundingbox_;
+  boundingbox_ = boundingbox;
+  if (boundingbox) {
+    set_has_boundingbox();
+  } else {
+    clear_has_boundingbox();
+  }
+}
+
 // -------------------------------------------------------------------
 
 // SrlStroke
@@ -1710,6 +1885,44 @@ SrlStroke::points() const {
 inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint >*
 SrlStroke::mutable_points() {
   return &points_;
+}
+
+// optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+inline bool SrlStroke::has_boundingbox() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SrlStroke::set_has_boundingbox() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SrlStroke::clear_has_boundingbox() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SrlStroke::clear_boundingbox() {
+  if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::BoundingBox::Clear();
+  clear_has_boundingbox();
+}
+inline const ::protobuf::srl::sketch::BoundingBox& SrlStroke::boundingbox() const {
+  return boundingbox_ != NULL ? *boundingbox_ : *default_instance_->boundingbox_;
+}
+inline ::protobuf::srl::sketch::BoundingBox* SrlStroke::mutable_boundingbox() {
+  set_has_boundingbox();
+  if (boundingbox_ == NULL) boundingbox_ = new ::protobuf::srl::sketch::BoundingBox;
+  return boundingbox_;
+}
+inline ::protobuf::srl::sketch::BoundingBox* SrlStroke::release_boundingbox() {
+  clear_has_boundingbox();
+  ::protobuf::srl::sketch::BoundingBox* temp = boundingbox_;
+  boundingbox_ = NULL;
+  return temp;
+}
+inline void SrlStroke::set_allocated_boundingbox(::protobuf::srl::sketch::BoundingBox* boundingbox) {
+  delete boundingbox_;
+  boundingbox_ = boundingbox;
+  if (boundingbox) {
+    set_has_boundingbox();
+  } else {
+    clear_has_boundingbox();
+  }
 }
 
 // -------------------------------------------------------------------
@@ -2104,6 +2317,98 @@ inline double Interpretation::complexity() const {
 inline void Interpretation::set_complexity(double value) {
   set_has_complexity();
   complexity_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// BoundingBox
+
+// required double x = 1;
+inline bool BoundingBox::has_x() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void BoundingBox::set_has_x() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void BoundingBox::clear_has_x() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void BoundingBox::clear_x() {
+  x_ = 0;
+  clear_has_x();
+}
+inline double BoundingBox::x() const {
+  return x_;
+}
+inline void BoundingBox::set_x(double value) {
+  set_has_x();
+  x_ = value;
+}
+
+// required double y = 2;
+inline bool BoundingBox::has_y() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void BoundingBox::set_has_y() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void BoundingBox::clear_has_y() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void BoundingBox::clear_y() {
+  y_ = 0;
+  clear_has_y();
+}
+inline double BoundingBox::y() const {
+  return y_;
+}
+inline void BoundingBox::set_y(double value) {
+  set_has_y();
+  y_ = value;
+}
+
+// required double width = 3;
+inline bool BoundingBox::has_width() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void BoundingBox::set_has_width() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void BoundingBox::clear_has_width() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void BoundingBox::clear_width() {
+  width_ = 0;
+  clear_has_width();
+}
+inline double BoundingBox::width() const {
+  return width_;
+}
+inline void BoundingBox::set_width(double value) {
+  set_has_width();
+  width_ = value;
+}
+
+// required double height = 4;
+inline bool BoundingBox::has_height() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void BoundingBox::set_has_height() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void BoundingBox::clear_has_height() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void BoundingBox::clear_height() {
+  height_ = 0;
+  clear_has_height();
+}
+inline double BoundingBox::height() const {
+  return height_;
+}
+inline void BoundingBox::set_height(double value) {
+  set_has_height();
+  height_ = value;
 }
 
 

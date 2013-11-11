@@ -44,33 +44,25 @@ public final class Commands {
      */
     PACKAGE_SHAPE(2, 2),
     /**
-     * <code>ADD_SUBSHAPE = 3;</code>
-     *
-     * <pre>
-     * Creates a shape inside another shape
-     * </pre>
-     */
-    ADD_SUBSHAPE(3, 3),
-    /**
-     * <code>REMOVE_OBJECT = 4;</code>
+     * <code>REMOVE_OBJECT = 3;</code>
      *
      * <pre>
      * Removes an object:	This will only contain an IdChain in commandData.
      * </pre>
      */
-    REMOVE_OBJECT(4, 4),
+    REMOVE_OBJECT(3, 3),
     /**
-     * <code>ASSIGN_ATTRIBUTE = 5;</code>
+     * <code>ASSIGN_ATTRIBUTE = 4;</code>
      */
-    ASSIGN_ATTRIBUTE(5, 5),
+    ASSIGN_ATTRIBUTE(4, 4),
     /**
-     * <code>REMOVE_ATTRIBUTE = 6;</code>
+     * <code>REMOVE_ATTRIBUTE = 5;</code>
      */
-    REMOVE_ATTRIBUTE(6, 6),
+    REMOVE_ATTRIBUTE(5, 5),
     /**
      * <code>FORCE_INTERPRETATION = 10;</code>
      */
-    FORCE_INTERPRETATION(7, 10),
+    FORCE_INTERPRETATION(6, 10),
     /**
      * <code>UNDO = 11;</code>
      *
@@ -78,7 +70,7 @@ public final class Commands {
      * Stack Commands, They do not have any other data associated with it.
      * </pre>
      */
-    UNDO(8, 11),
+    UNDO(7, 11),
     /**
      * <code>REDO = 12;</code>
      *
@@ -86,7 +78,7 @@ public final class Commands {
      * Redo one command and Redo its effect.
      * </pre>
      */
-    REDO(9, 12),
+    REDO(8, 12),
     /**
      * <code>REWRITE = 13;</code>
      *
@@ -94,7 +86,7 @@ public final class Commands {
      * Forces all commands in the list that are past the current state to be removed.
      * </pre>
      */
-    REWRITE(10, 13),
+    REWRITE(9, 13),
     /**
      * <code>CLEAR_STACK = 14;</code>
      *
@@ -102,7 +94,7 @@ public final class Commands {
      * Clears the stack.
      * </pre>
      */
-    CLEAR_STACK(11, 14),
+    CLEAR_STACK(10, 14),
     /**
      * <code>SYNC = 15;</code>
      *
@@ -110,7 +102,7 @@ public final class Commands {
      * Tells this machine to send its list of commands to remote to make sure they are the same.
      * </pre>
      */
-    SYNC(12, 15),
+    SYNC(11, 15),
     ;
 
     /**
@@ -138,29 +130,21 @@ public final class Commands {
      */
     public static final int PACKAGE_SHAPE_VALUE = 2;
     /**
-     * <code>ADD_SUBSHAPE = 3;</code>
-     *
-     * <pre>
-     * Creates a shape inside another shape
-     * </pre>
-     */
-    public static final int ADD_SUBSHAPE_VALUE = 3;
-    /**
-     * <code>REMOVE_OBJECT = 4;</code>
+     * <code>REMOVE_OBJECT = 3;</code>
      *
      * <pre>
      * Removes an object:	This will only contain an IdChain in commandData.
      * </pre>
      */
-    public static final int REMOVE_OBJECT_VALUE = 4;
+    public static final int REMOVE_OBJECT_VALUE = 3;
     /**
-     * <code>ASSIGN_ATTRIBUTE = 5;</code>
+     * <code>ASSIGN_ATTRIBUTE = 4;</code>
      */
-    public static final int ASSIGN_ATTRIBUTE_VALUE = 5;
+    public static final int ASSIGN_ATTRIBUTE_VALUE = 4;
     /**
-     * <code>REMOVE_ATTRIBUTE = 6;</code>
+     * <code>REMOVE_ATTRIBUTE = 5;</code>
      */
-    public static final int REMOVE_ATTRIBUTE_VALUE = 6;
+    public static final int REMOVE_ATTRIBUTE_VALUE = 5;
     /**
      * <code>FORCE_INTERPRETATION = 10;</code>
      */
@@ -214,10 +198,9 @@ public final class Commands {
         case 0: return ADD_STROKE;
         case 1: return ADD_SHAPE;
         case 2: return PACKAGE_SHAPE;
-        case 3: return ADD_SUBSHAPE;
-        case 4: return REMOVE_OBJECT;
-        case 5: return ASSIGN_ATTRIBUTE;
-        case 6: return REMOVE_ATTRIBUTE;
+        case 3: return REMOVE_OBJECT;
+        case 4: return ASSIGN_ATTRIBUTE;
+        case 5: return REMOVE_ATTRIBUTE;
         case 10: return FORCE_INTERPRETATION;
         case 11: return UNDO;
         case 12: return REDO;
@@ -275,7 +258,7 @@ public final class Commands {
     // @@protoc_insertion_point(enum_scope:protobuf.srl.commands.CommandType)
   }
 
-  public interface UpdateOrBuilder
+  public interface SrlUpdateOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required string updateId = 1;
@@ -303,50 +286,50 @@ public final class Commands {
      */
     long getTime();
 
-    // repeated .protobuf.srl.commands.Command commands = 3;
+    // repeated .protobuf.srl.commands.SrlCommand commands = 3;
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
-    java.util.List<protobuf.srl.commands.Commands.Command> 
+    java.util.List<protobuf.srl.commands.Commands.SrlCommand> 
         getCommandsList();
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
-    protobuf.srl.commands.Commands.Command getCommands(int index);
+    protobuf.srl.commands.Commands.SrlCommand getCommands(int index);
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
     int getCommandsCount();
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
-    java.util.List<? extends protobuf.srl.commands.Commands.CommandOrBuilder> 
+    java.util.List<? extends protobuf.srl.commands.Commands.SrlCommandOrBuilder> 
         getCommandsOrBuilderList();
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
-    protobuf.srl.commands.Commands.CommandOrBuilder getCommandsOrBuilder(
+    protobuf.srl.commands.Commands.SrlCommandOrBuilder getCommandsOrBuilder(
         int index);
   }
   /**
-   * Protobuf type {@code protobuf.srl.commands.Update}
+   * Protobuf type {@code protobuf.srl.commands.SrlUpdate}
    */
-  public static final class Update extends
+  public static final class SrlUpdate extends
       com.google.protobuf.GeneratedMessage
-      implements UpdateOrBuilder {
-    // Use Update.newBuilder() to construct.
-    private Update(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements SrlUpdateOrBuilder {
+    // Use SrlUpdate.newBuilder() to construct.
+    private SrlUpdate(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private Update(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private SrlUpdate(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final Update defaultInstance;
-    public static Update getDefaultInstance() {
+    private static final SrlUpdate defaultInstance;
+    public static SrlUpdate getDefaultInstance() {
       return defaultInstance;
     }
 
-    public Update getDefaultInstanceForType() {
+    public SrlUpdate getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -356,7 +339,7 @@ public final class Commands {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private Update(
+    private SrlUpdate(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -391,10 +374,10 @@ public final class Commands {
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                commands_ = new java.util.ArrayList<protobuf.srl.commands.Commands.Command>();
+                commands_ = new java.util.ArrayList<protobuf.srl.commands.Commands.SrlCommand>();
                 mutable_bitField0_ |= 0x00000004;
               }
-              commands_.add(input.readMessage(protobuf.srl.commands.Commands.Command.PARSER, extensionRegistry));
+              commands_.add(input.readMessage(protobuf.srl.commands.Commands.SrlCommand.PARSER, extensionRegistry));
               break;
             }
           }
@@ -414,28 +397,28 @@ public final class Commands {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Update_descriptor;
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlUpdate_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Update_fieldAccessorTable
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlUpdate_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.commands.Commands.Update.class, protobuf.srl.commands.Commands.Update.Builder.class);
+              protobuf.srl.commands.Commands.SrlUpdate.class, protobuf.srl.commands.Commands.SrlUpdate.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<Update> PARSER =
-        new com.google.protobuf.AbstractParser<Update>() {
-      public Update parsePartialFrom(
+    public static com.google.protobuf.Parser<SrlUpdate> PARSER =
+        new com.google.protobuf.AbstractParser<SrlUpdate>() {
+      public SrlUpdate parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Update(input, extensionRegistry);
+        return new SrlUpdate(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Update> getParserForType() {
+    public com.google.protobuf.Parser<SrlUpdate> getParserForType() {
       return PARSER;
     }
 
@@ -499,38 +482,38 @@ public final class Commands {
       return time_;
     }
 
-    // repeated .protobuf.srl.commands.Command commands = 3;
+    // repeated .protobuf.srl.commands.SrlCommand commands = 3;
     public static final int COMMANDS_FIELD_NUMBER = 3;
-    private java.util.List<protobuf.srl.commands.Commands.Command> commands_;
+    private java.util.List<protobuf.srl.commands.Commands.SrlCommand> commands_;
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
-    public java.util.List<protobuf.srl.commands.Commands.Command> getCommandsList() {
+    public java.util.List<protobuf.srl.commands.Commands.SrlCommand> getCommandsList() {
       return commands_;
     }
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
-    public java.util.List<? extends protobuf.srl.commands.Commands.CommandOrBuilder> 
+    public java.util.List<? extends protobuf.srl.commands.Commands.SrlCommandOrBuilder> 
         getCommandsOrBuilderList() {
       return commands_;
     }
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
     public int getCommandsCount() {
       return commands_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
-    public protobuf.srl.commands.Commands.Command getCommands(int index) {
+    public protobuf.srl.commands.Commands.SrlCommand getCommands(int index) {
       return commands_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+     * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
      */
-    public protobuf.srl.commands.Commands.CommandOrBuilder getCommandsOrBuilder(
+    public protobuf.srl.commands.Commands.SrlCommandOrBuilder getCommandsOrBuilder(
         int index) {
       return commands_.get(index);
     }
@@ -604,53 +587,53 @@ public final class Commands {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.commands.Commands.Update parseFrom(
+    public static protobuf.srl.commands.Commands.SrlUpdate parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.Update parseFrom(
+    public static protobuf.srl.commands.Commands.SrlUpdate parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.Update parseFrom(byte[] data)
+    public static protobuf.srl.commands.Commands.SrlUpdate parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.Update parseFrom(
+    public static protobuf.srl.commands.Commands.SrlUpdate parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.Update parseFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.SrlUpdate parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.Update parseFrom(
+    public static protobuf.srl.commands.Commands.SrlUpdate parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.Update parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.SrlUpdate parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.commands.Commands.Update parseDelimitedFrom(
+    public static protobuf.srl.commands.Commands.SrlUpdate parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.Update parseFrom(
+    public static protobuf.srl.commands.Commands.SrlUpdate parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.Update parseFrom(
+    public static protobuf.srl.commands.Commands.SrlUpdate parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -659,7 +642,7 @@ public final class Commands {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.commands.Commands.Update prototype) {
+    public static Builder newBuilder(protobuf.srl.commands.Commands.SrlUpdate prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -671,24 +654,24 @@ public final class Commands {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.commands.Update}
+     * Protobuf type {@code protobuf.srl.commands.SrlUpdate}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.commands.Commands.UpdateOrBuilder {
+       implements protobuf.srl.commands.Commands.SrlUpdateOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Update_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlUpdate_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Update_fieldAccessorTable
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlUpdate_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.commands.Commands.Update.class, protobuf.srl.commands.Commands.Update.Builder.class);
+                protobuf.srl.commands.Commands.SrlUpdate.class, protobuf.srl.commands.Commands.SrlUpdate.Builder.class);
       }
 
-      // Construct using protobuf.srl.commands.Commands.Update.newBuilder()
+      // Construct using protobuf.srl.commands.Commands.SrlUpdate.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -728,23 +711,23 @@ public final class Commands {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Update_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlUpdate_descriptor;
       }
 
-      public protobuf.srl.commands.Commands.Update getDefaultInstanceForType() {
-        return protobuf.srl.commands.Commands.Update.getDefaultInstance();
+      public protobuf.srl.commands.Commands.SrlUpdate getDefaultInstanceForType() {
+        return protobuf.srl.commands.Commands.SrlUpdate.getDefaultInstance();
       }
 
-      public protobuf.srl.commands.Commands.Update build() {
-        protobuf.srl.commands.Commands.Update result = buildPartial();
+      public protobuf.srl.commands.Commands.SrlUpdate build() {
+        protobuf.srl.commands.Commands.SrlUpdate result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.commands.Commands.Update buildPartial() {
-        protobuf.srl.commands.Commands.Update result = new protobuf.srl.commands.Commands.Update(this);
+      public protobuf.srl.commands.Commands.SrlUpdate buildPartial() {
+        protobuf.srl.commands.Commands.SrlUpdate result = new protobuf.srl.commands.Commands.SrlUpdate(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -770,16 +753,16 @@ public final class Commands {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.commands.Commands.Update) {
-          return mergeFrom((protobuf.srl.commands.Commands.Update)other);
+        if (other instanceof protobuf.srl.commands.Commands.SrlUpdate) {
+          return mergeFrom((protobuf.srl.commands.Commands.SrlUpdate)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.commands.Commands.Update other) {
-        if (other == protobuf.srl.commands.Commands.Update.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.commands.Commands.SrlUpdate other) {
+        if (other == protobuf.srl.commands.Commands.SrlUpdate.getDefaultInstance()) return this;
         if (other.hasUpdateId()) {
           bitField0_ |= 0x00000001;
           updateId_ = other.updateId_;
@@ -836,11 +819,11 @@ public final class Commands {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.commands.Commands.Update parsedMessage = null;
+        protobuf.srl.commands.Commands.SrlUpdate parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.commands.Commands.Update) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.commands.Commands.SrlUpdate) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -958,23 +941,23 @@ public final class Commands {
         return this;
       }
 
-      // repeated .protobuf.srl.commands.Command commands = 3;
-      private java.util.List<protobuf.srl.commands.Commands.Command> commands_ =
+      // repeated .protobuf.srl.commands.SrlCommand commands = 3;
+      private java.util.List<protobuf.srl.commands.Commands.SrlCommand> commands_ =
         java.util.Collections.emptyList();
       private void ensureCommandsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          commands_ = new java.util.ArrayList<protobuf.srl.commands.Commands.Command>(commands_);
+          commands_ = new java.util.ArrayList<protobuf.srl.commands.Commands.SrlCommand>(commands_);
           bitField0_ |= 0x00000004;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.commands.Commands.Command, protobuf.srl.commands.Commands.Command.Builder, protobuf.srl.commands.Commands.CommandOrBuilder> commandsBuilder_;
+          protobuf.srl.commands.Commands.SrlCommand, protobuf.srl.commands.Commands.SrlCommand.Builder, protobuf.srl.commands.Commands.SrlCommandOrBuilder> commandsBuilder_;
 
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
-      public java.util.List<protobuf.srl.commands.Commands.Command> getCommandsList() {
+      public java.util.List<protobuf.srl.commands.Commands.SrlCommand> getCommandsList() {
         if (commandsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(commands_);
         } else {
@@ -982,7 +965,7 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
       public int getCommandsCount() {
         if (commandsBuilder_ == null) {
@@ -992,9 +975,9 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
-      public protobuf.srl.commands.Commands.Command getCommands(int index) {
+      public protobuf.srl.commands.Commands.SrlCommand getCommands(int index) {
         if (commandsBuilder_ == null) {
           return commands_.get(index);
         } else {
@@ -1002,10 +985,10 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
       public Builder setCommands(
-          int index, protobuf.srl.commands.Commands.Command value) {
+          int index, protobuf.srl.commands.Commands.SrlCommand value) {
         if (commandsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1019,10 +1002,10 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
       public Builder setCommands(
-          int index, protobuf.srl.commands.Commands.Command.Builder builderForValue) {
+          int index, protobuf.srl.commands.Commands.SrlCommand.Builder builderForValue) {
         if (commandsBuilder_ == null) {
           ensureCommandsIsMutable();
           commands_.set(index, builderForValue.build());
@@ -1033,9 +1016,9 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
-      public Builder addCommands(protobuf.srl.commands.Commands.Command value) {
+      public Builder addCommands(protobuf.srl.commands.Commands.SrlCommand value) {
         if (commandsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1049,10 +1032,10 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
       public Builder addCommands(
-          int index, protobuf.srl.commands.Commands.Command value) {
+          int index, protobuf.srl.commands.Commands.SrlCommand value) {
         if (commandsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1066,10 +1049,10 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
       public Builder addCommands(
-          protobuf.srl.commands.Commands.Command.Builder builderForValue) {
+          protobuf.srl.commands.Commands.SrlCommand.Builder builderForValue) {
         if (commandsBuilder_ == null) {
           ensureCommandsIsMutable();
           commands_.add(builderForValue.build());
@@ -1080,10 +1063,10 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
       public Builder addCommands(
-          int index, protobuf.srl.commands.Commands.Command.Builder builderForValue) {
+          int index, protobuf.srl.commands.Commands.SrlCommand.Builder builderForValue) {
         if (commandsBuilder_ == null) {
           ensureCommandsIsMutable();
           commands_.add(index, builderForValue.build());
@@ -1094,10 +1077,10 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
       public Builder addAllCommands(
-          java.lang.Iterable<? extends protobuf.srl.commands.Commands.Command> values) {
+          java.lang.Iterable<? extends protobuf.srl.commands.Commands.SrlCommand> values) {
         if (commandsBuilder_ == null) {
           ensureCommandsIsMutable();
           super.addAll(values, commands_);
@@ -1108,7 +1091,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
       public Builder clearCommands() {
         if (commandsBuilder_ == null) {
@@ -1121,7 +1104,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
       public Builder removeCommands(int index) {
         if (commandsBuilder_ == null) {
@@ -1134,16 +1117,16 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
-      public protobuf.srl.commands.Commands.Command.Builder getCommandsBuilder(
+      public protobuf.srl.commands.Commands.SrlCommand.Builder getCommandsBuilder(
           int index) {
         return getCommandsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
-      public protobuf.srl.commands.Commands.CommandOrBuilder getCommandsOrBuilder(
+      public protobuf.srl.commands.Commands.SrlCommandOrBuilder getCommandsOrBuilder(
           int index) {
         if (commandsBuilder_ == null) {
           return commands_.get(index);  } else {
@@ -1151,9 +1134,9 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
-      public java.util.List<? extends protobuf.srl.commands.Commands.CommandOrBuilder> 
+      public java.util.List<? extends protobuf.srl.commands.Commands.SrlCommandOrBuilder> 
            getCommandsOrBuilderList() {
         if (commandsBuilder_ != null) {
           return commandsBuilder_.getMessageOrBuilderList();
@@ -1162,33 +1145,33 @@ public final class Commands {
         }
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
-      public protobuf.srl.commands.Commands.Command.Builder addCommandsBuilder() {
+      public protobuf.srl.commands.Commands.SrlCommand.Builder addCommandsBuilder() {
         return getCommandsFieldBuilder().addBuilder(
-            protobuf.srl.commands.Commands.Command.getDefaultInstance());
+            protobuf.srl.commands.Commands.SrlCommand.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
-      public protobuf.srl.commands.Commands.Command.Builder addCommandsBuilder(
+      public protobuf.srl.commands.Commands.SrlCommand.Builder addCommandsBuilder(
           int index) {
         return getCommandsFieldBuilder().addBuilder(
-            index, protobuf.srl.commands.Commands.Command.getDefaultInstance());
+            index, protobuf.srl.commands.Commands.SrlCommand.getDefaultInstance());
       }
       /**
-       * <code>repeated .protobuf.srl.commands.Command commands = 3;</code>
+       * <code>repeated .protobuf.srl.commands.SrlCommand commands = 3;</code>
        */
-      public java.util.List<protobuf.srl.commands.Commands.Command.Builder> 
+      public java.util.List<protobuf.srl.commands.Commands.SrlCommand.Builder> 
            getCommandsBuilderList() {
         return getCommandsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.commands.Commands.Command, protobuf.srl.commands.Commands.Command.Builder, protobuf.srl.commands.Commands.CommandOrBuilder> 
+          protobuf.srl.commands.Commands.SrlCommand, protobuf.srl.commands.Commands.SrlCommand.Builder, protobuf.srl.commands.Commands.SrlCommandOrBuilder> 
           getCommandsFieldBuilder() {
         if (commandsBuilder_ == null) {
           commandsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.commands.Commands.Command, protobuf.srl.commands.Commands.Command.Builder, protobuf.srl.commands.Commands.CommandOrBuilder>(
+              protobuf.srl.commands.Commands.SrlCommand, protobuf.srl.commands.Commands.SrlCommand.Builder, protobuf.srl.commands.Commands.SrlCommandOrBuilder>(
                   commands_,
                   ((bitField0_ & 0x00000004) == 0x00000004),
                   getParentForChildren(),
@@ -1198,18 +1181,18 @@ public final class Commands {
         return commandsBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.Update)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.SrlUpdate)
     }
 
     static {
-      defaultInstance = new Update(true);
+      defaultInstance = new SrlUpdate(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.Update)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.SrlUpdate)
   }
 
-  public interface CommandOrBuilder
+  public interface SrlCommandOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required .protobuf.srl.commands.CommandType commandType = 1;
@@ -1258,28 +1241,28 @@ public final class Commands {
         getCommandIdBytes();
   }
   /**
-   * Protobuf type {@code protobuf.srl.commands.Command}
+   * Protobuf type {@code protobuf.srl.commands.SrlCommand}
    *
    * <pre>
    * inheritance does not exist so this will replace shape
    * </pre>
    */
-  public static final class Command extends
+  public static final class SrlCommand extends
       com.google.protobuf.GeneratedMessage
-      implements CommandOrBuilder {
-    // Use Command.newBuilder() to construct.
-    private Command(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements SrlCommandOrBuilder {
+    // Use SrlCommand.newBuilder() to construct.
+    private SrlCommand(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private Command(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private SrlCommand(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final Command defaultInstance;
-    public static Command getDefaultInstance() {
+    private static final SrlCommand defaultInstance;
+    public static SrlCommand getDefaultInstance() {
       return defaultInstance;
     }
 
-    public Command getDefaultInstanceForType() {
+    public SrlCommand getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -1289,7 +1272,7 @@ public final class Commands {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private Command(
+    private SrlCommand(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1352,28 +1335,28 @@ public final class Commands {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Command_descriptor;
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlCommand_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Command_fieldAccessorTable
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlCommand_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.commands.Commands.Command.class, protobuf.srl.commands.Commands.Command.Builder.class);
+              protobuf.srl.commands.Commands.SrlCommand.class, protobuf.srl.commands.Commands.SrlCommand.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<Command> PARSER =
-        new com.google.protobuf.AbstractParser<Command>() {
-      public Command parsePartialFrom(
+    public static com.google.protobuf.Parser<SrlCommand> PARSER =
+        new com.google.protobuf.AbstractParser<SrlCommand>() {
+      public SrlCommand parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Command(input, extensionRegistry);
+        return new SrlCommand(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Command> getParserForType() {
+    public com.google.protobuf.Parser<SrlCommand> getParserForType() {
       return PARSER;
     }
 
@@ -1548,53 +1531,53 @@ public final class Commands {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.commands.Commands.Command parseFrom(
+    public static protobuf.srl.commands.Commands.SrlCommand parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.Command parseFrom(
+    public static protobuf.srl.commands.Commands.SrlCommand parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.Command parseFrom(byte[] data)
+    public static protobuf.srl.commands.Commands.SrlCommand parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.Command parseFrom(
+    public static protobuf.srl.commands.Commands.SrlCommand parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.Command parseFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.SrlCommand parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.Command parseFrom(
+    public static protobuf.srl.commands.Commands.SrlCommand parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.Command parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.SrlCommand parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.commands.Commands.Command parseDelimitedFrom(
+    public static protobuf.srl.commands.Commands.SrlCommand parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.Command parseFrom(
+    public static protobuf.srl.commands.Commands.SrlCommand parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.Command parseFrom(
+    public static protobuf.srl.commands.Commands.SrlCommand parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1603,7 +1586,7 @@ public final class Commands {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.commands.Commands.Command prototype) {
+    public static Builder newBuilder(protobuf.srl.commands.Commands.SrlCommand prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -1615,7 +1598,7 @@ public final class Commands {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.commands.Command}
+     * Protobuf type {@code protobuf.srl.commands.SrlCommand}
      *
      * <pre>
      * inheritance does not exist so this will replace shape
@@ -1623,20 +1606,20 @@ public final class Commands {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.commands.Commands.CommandOrBuilder {
+       implements protobuf.srl.commands.Commands.SrlCommandOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Command_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlCommand_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Command_fieldAccessorTable
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlCommand_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.commands.Commands.Command.class, protobuf.srl.commands.Commands.Command.Builder.class);
+                protobuf.srl.commands.Commands.SrlCommand.class, protobuf.srl.commands.Commands.SrlCommand.Builder.class);
       }
 
-      // Construct using protobuf.srl.commands.Commands.Command.newBuilder()
+      // Construct using protobuf.srl.commands.Commands.SrlCommand.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1673,23 +1656,23 @@ public final class Commands {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_Command_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_SrlCommand_descriptor;
       }
 
-      public protobuf.srl.commands.Commands.Command getDefaultInstanceForType() {
-        return protobuf.srl.commands.Commands.Command.getDefaultInstance();
+      public protobuf.srl.commands.Commands.SrlCommand getDefaultInstanceForType() {
+        return protobuf.srl.commands.Commands.SrlCommand.getDefaultInstance();
       }
 
-      public protobuf.srl.commands.Commands.Command build() {
-        protobuf.srl.commands.Commands.Command result = buildPartial();
+      public protobuf.srl.commands.Commands.SrlCommand build() {
+        protobuf.srl.commands.Commands.SrlCommand result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.commands.Commands.Command buildPartial() {
-        protobuf.srl.commands.Commands.Command result = new protobuf.srl.commands.Commands.Command(this);
+      public protobuf.srl.commands.Commands.SrlCommand buildPartial() {
+        protobuf.srl.commands.Commands.SrlCommand result = new protobuf.srl.commands.Commands.SrlCommand(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1714,16 +1697,16 @@ public final class Commands {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.commands.Commands.Command) {
-          return mergeFrom((protobuf.srl.commands.Commands.Command)other);
+        if (other instanceof protobuf.srl.commands.Commands.SrlCommand) {
+          return mergeFrom((protobuf.srl.commands.Commands.SrlCommand)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.commands.Commands.Command other) {
-        if (other == protobuf.srl.commands.Commands.Command.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.commands.Commands.SrlCommand other) {
+        if (other == protobuf.srl.commands.Commands.SrlCommand.getDefaultInstance()) return this;
         if (other.hasCommandType()) {
           setCommandType(other.getCommandType());
         }
@@ -1762,11 +1745,11 @@ public final class Commands {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.commands.Commands.Command parsedMessage = null;
+        protobuf.srl.commands.Commands.SrlCommand parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.commands.Commands.Command) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.commands.Commands.SrlCommand) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -1956,15 +1939,15 @@ public final class Commands {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.Command)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.SrlCommand)
     }
 
     static {
-      defaultInstance = new Command(true);
+      defaultInstance = new SrlCommand(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.Command)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.SrlCommand)
   }
 
   public interface IdChainOrBuilder
@@ -2476,7 +2459,7 @@ public final class Commands {
     // @@protoc_insertion_point(class_scope:protobuf.srl.commands.IdChain)
   }
 
-  public interface PackageShapeOrBuilder
+  public interface ActionPackageShapeOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // optional .protobuf.srl.commands.IdChain oldContainerId = 1;
@@ -2544,7 +2527,7 @@ public final class Commands {
         getShapesToBeContainedBytes(int index);
   }
   /**
-   * Protobuf type {@code protobuf.srl.commands.PackageShape}
+   * Protobuf type {@code protobuf.srl.commands.ActionPackageShape}
    *
    * <pre>
    **
@@ -2552,25 +2535,25 @@ public final class Commands {
    * #1 add all shapes with an id in the list of {&#64;link shapesToBeContained} into shape with an id of {&#64;link newContainerId}
    * #2 delete all the shapes with the id in the list of from the sketch
    *
-   *  If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
+   * If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
    * </pre>
    */
-  public static final class PackageShape extends
+  public static final class ActionPackageShape extends
       com.google.protobuf.GeneratedMessage
-      implements PackageShapeOrBuilder {
-    // Use PackageShape.newBuilder() to construct.
-    private PackageShape(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements ActionPackageShapeOrBuilder {
+    // Use ActionPackageShape.newBuilder() to construct.
+    private ActionPackageShape(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private PackageShape(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private ActionPackageShape(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final PackageShape defaultInstance;
-    public static PackageShape getDefaultInstance() {
+    private static final ActionPackageShape defaultInstance;
+    public static ActionPackageShape getDefaultInstance() {
       return defaultInstance;
     }
 
-    public PackageShape getDefaultInstanceForType() {
+    public ActionPackageShape getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -2580,7 +2563,7 @@ public final class Commands {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private PackageShape(
+    private ActionPackageShape(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -2654,28 +2637,28 @@ public final class Commands {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_PackageShape_descriptor;
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionPackageShape_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_PackageShape_fieldAccessorTable
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionPackageShape_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.commands.Commands.PackageShape.class, protobuf.srl.commands.Commands.PackageShape.Builder.class);
+              protobuf.srl.commands.Commands.ActionPackageShape.class, protobuf.srl.commands.Commands.ActionPackageShape.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<PackageShape> PARSER =
-        new com.google.protobuf.AbstractParser<PackageShape>() {
-      public PackageShape parsePartialFrom(
+    public static com.google.protobuf.Parser<ActionPackageShape> PARSER =
+        new com.google.protobuf.AbstractParser<ActionPackageShape>() {
+      public ActionPackageShape parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new PackageShape(input, extensionRegistry);
+        return new ActionPackageShape(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<PackageShape> getParserForType() {
+    public com.google.protobuf.Parser<ActionPackageShape> getParserForType() {
       return PARSER;
     }
 
@@ -2834,53 +2817,53 @@ public final class Commands {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.commands.Commands.PackageShape parseFrom(
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.PackageShape parseFrom(
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.PackageShape parseFrom(byte[] data)
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.PackageShape parseFrom(
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.PackageShape parseFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.PackageShape parseFrom(
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.PackageShape parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.commands.Commands.PackageShape parseDelimitedFrom(
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.PackageShape parseFrom(
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.PackageShape parseFrom(
+    public static protobuf.srl.commands.Commands.ActionPackageShape parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2889,7 +2872,7 @@ public final class Commands {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.commands.Commands.PackageShape prototype) {
+    public static Builder newBuilder(protobuf.srl.commands.Commands.ActionPackageShape prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -2901,7 +2884,7 @@ public final class Commands {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.commands.PackageShape}
+     * Protobuf type {@code protobuf.srl.commands.ActionPackageShape}
      *
      * <pre>
      **
@@ -2909,25 +2892,25 @@ public final class Commands {
      * #1 add all shapes with an id in the list of {&#64;link shapesToBeContained} into shape with an id of {&#64;link newContainerId}
      * #2 delete all the shapes with the id in the list of from the sketch
      *
-     *  If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
+     * If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.commands.Commands.PackageShapeOrBuilder {
+       implements protobuf.srl.commands.Commands.ActionPackageShapeOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_PackageShape_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionPackageShape_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_PackageShape_fieldAccessorTable
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionPackageShape_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.commands.Commands.PackageShape.class, protobuf.srl.commands.Commands.PackageShape.Builder.class);
+                protobuf.srl.commands.Commands.ActionPackageShape.class, protobuf.srl.commands.Commands.ActionPackageShape.Builder.class);
       }
 
-      // Construct using protobuf.srl.commands.Commands.PackageShape.newBuilder()
+      // Construct using protobuf.srl.commands.Commands.ActionPackageShape.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2972,23 +2955,23 @@ public final class Commands {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_PackageShape_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionPackageShape_descriptor;
       }
 
-      public protobuf.srl.commands.Commands.PackageShape getDefaultInstanceForType() {
-        return protobuf.srl.commands.Commands.PackageShape.getDefaultInstance();
+      public protobuf.srl.commands.Commands.ActionPackageShape getDefaultInstanceForType() {
+        return protobuf.srl.commands.Commands.ActionPackageShape.getDefaultInstance();
       }
 
-      public protobuf.srl.commands.Commands.PackageShape build() {
-        protobuf.srl.commands.Commands.PackageShape result = buildPartial();
+      public protobuf.srl.commands.Commands.ActionPackageShape build() {
+        protobuf.srl.commands.Commands.ActionPackageShape result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.commands.Commands.PackageShape buildPartial() {
-        protobuf.srl.commands.Commands.PackageShape result = new protobuf.srl.commands.Commands.PackageShape(this);
+      public protobuf.srl.commands.Commands.ActionPackageShape buildPartial() {
+        protobuf.srl.commands.Commands.ActionPackageShape result = new protobuf.srl.commands.Commands.ActionPackageShape(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -3019,16 +3002,16 @@ public final class Commands {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.commands.Commands.PackageShape) {
-          return mergeFrom((protobuf.srl.commands.Commands.PackageShape)other);
+        if (other instanceof protobuf.srl.commands.Commands.ActionPackageShape) {
+          return mergeFrom((protobuf.srl.commands.Commands.ActionPackageShape)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.commands.Commands.PackageShape other) {
-        if (other == protobuf.srl.commands.Commands.PackageShape.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.commands.Commands.ActionPackageShape other) {
+        if (other == protobuf.srl.commands.Commands.ActionPackageShape.getDefaultInstance()) return this;
         if (other.hasOldContainerId()) {
           mergeOldContainerId(other.getOldContainerId());
         }
@@ -3057,11 +3040,11 @@ public final class Commands {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.commands.Commands.PackageShape parsedMessage = null;
+        protobuf.srl.commands.Commands.ActionPackageShape parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.commands.Commands.PackageShape) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.commands.Commands.ActionPackageShape) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -3435,635 +3418,18 @@ public final class Commands {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.PackageShape)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.ActionPackageShape)
     }
 
     static {
-      defaultInstance = new PackageShape(true);
+      defaultInstance = new ActionPackageShape(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.PackageShape)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ActionPackageShape)
   }
 
-  public interface AddSubshapeOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // required .protobuf.srl.commands.IdChain parentShape = 1;
-    /**
-     * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-     */
-    boolean hasParentShape();
-    /**
-     * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-     */
-    protobuf.srl.commands.Commands.IdChain getParentShape();
-    /**
-     * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-     */
-    protobuf.srl.commands.Commands.IdChainOrBuilder getParentShapeOrBuilder();
-
-    // required bytes shape = 2;
-    /**
-     * <code>required bytes shape = 2;</code>
-     */
-    boolean hasShape();
-    /**
-     * <code>required bytes shape = 2;</code>
-     */
-    com.google.protobuf.ByteString getShape();
-  }
-  /**
-   * Protobuf type {@code protobuf.srl.commands.AddSubshape}
-   *
-   * <pre>
-   **
-   * Creates a shape inside of a parent shape.
-   * </pre>
-   */
-  public static final class AddSubshape extends
-      com.google.protobuf.GeneratedMessage
-      implements AddSubshapeOrBuilder {
-    // Use AddSubshape.newBuilder() to construct.
-    private AddSubshape(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private AddSubshape(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final AddSubshape defaultInstance;
-    public static AddSubshape getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public AddSubshape getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private AddSubshape(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              protobuf.srl.commands.Commands.IdChain.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                subBuilder = parentShape_.toBuilder();
-              }
-              parentShape_ = input.readMessage(protobuf.srl.commands.Commands.IdChain.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(parentShape_);
-                parentShape_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000001;
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              shape_ = input.readBytes();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              protobuf.srl.commands.Commands.AddSubshape.class, protobuf.srl.commands.Commands.AddSubshape.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<AddSubshape> PARSER =
-        new com.google.protobuf.AbstractParser<AddSubshape>() {
-      public AddSubshape parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new AddSubshape(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<AddSubshape> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // required .protobuf.srl.commands.IdChain parentShape = 1;
-    public static final int PARENTSHAPE_FIELD_NUMBER = 1;
-    private protobuf.srl.commands.Commands.IdChain parentShape_;
-    /**
-     * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-     */
-    public boolean hasParentShape() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-     */
-    public protobuf.srl.commands.Commands.IdChain getParentShape() {
-      return parentShape_;
-    }
-    /**
-     * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-     */
-    public protobuf.srl.commands.Commands.IdChainOrBuilder getParentShapeOrBuilder() {
-      return parentShape_;
-    }
-
-    // required bytes shape = 2;
-    public static final int SHAPE_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString shape_;
-    /**
-     * <code>required bytes shape = 2;</code>
-     */
-    public boolean hasShape() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required bytes shape = 2;</code>
-     */
-    public com.google.protobuf.ByteString getShape() {
-      return shape_;
-    }
-
-    private void initFields() {
-      parentShape_ = protobuf.srl.commands.Commands.IdChain.getDefaultInstance();
-      shape_ = com.google.protobuf.ByteString.EMPTY;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      if (!hasParentShape()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasShape()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, parentShape_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, shape_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, parentShape_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, shape_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.commands.Commands.AddSubshape parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static protobuf.srl.commands.Commands.AddSubshape parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.commands.Commands.AddSubshape parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.commands.Commands.AddSubshape prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protobuf.srl.commands.AddSubshape}
-     *
-     * <pre>
-     **
-     * Creates a shape inside of a parent shape.
-     * </pre>
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.commands.Commands.AddSubshapeOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                protobuf.srl.commands.Commands.AddSubshape.class, protobuf.srl.commands.Commands.AddSubshape.Builder.class);
-      }
-
-      // Construct using protobuf.srl.commands.Commands.AddSubshape.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getParentShapeFieldBuilder();
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        if (parentShapeBuilder_ == null) {
-          parentShape_ = protobuf.srl.commands.Commands.IdChain.getDefaultInstance();
-        } else {
-          parentShapeBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        shape_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddSubshape_descriptor;
-      }
-
-      public protobuf.srl.commands.Commands.AddSubshape getDefaultInstanceForType() {
-        return protobuf.srl.commands.Commands.AddSubshape.getDefaultInstance();
-      }
-
-      public protobuf.srl.commands.Commands.AddSubshape build() {
-        protobuf.srl.commands.Commands.AddSubshape result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public protobuf.srl.commands.Commands.AddSubshape buildPartial() {
-        protobuf.srl.commands.Commands.AddSubshape result = new protobuf.srl.commands.Commands.AddSubshape(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        if (parentShapeBuilder_ == null) {
-          result.parentShape_ = parentShape_;
-        } else {
-          result.parentShape_ = parentShapeBuilder_.build();
-        }
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.shape_ = shape_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.commands.Commands.AddSubshape) {
-          return mergeFrom((protobuf.srl.commands.Commands.AddSubshape)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(protobuf.srl.commands.Commands.AddSubshape other) {
-        if (other == protobuf.srl.commands.Commands.AddSubshape.getDefaultInstance()) return this;
-        if (other.hasParentShape()) {
-          mergeParentShape(other.getParentShape());
-        }
-        if (other.hasShape()) {
-          setShape(other.getShape());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        if (!hasParentShape()) {
-          
-          return false;
-        }
-        if (!hasShape()) {
-          
-          return false;
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        protobuf.srl.commands.Commands.AddSubshape parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.commands.Commands.AddSubshape) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // required .protobuf.srl.commands.IdChain parentShape = 1;
-      private protobuf.srl.commands.Commands.IdChain parentShape_ = protobuf.srl.commands.Commands.IdChain.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.commands.Commands.IdChain, protobuf.srl.commands.Commands.IdChain.Builder, protobuf.srl.commands.Commands.IdChainOrBuilder> parentShapeBuilder_;
-      /**
-       * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-       */
-      public boolean hasParentShape() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-       */
-      public protobuf.srl.commands.Commands.IdChain getParentShape() {
-        if (parentShapeBuilder_ == null) {
-          return parentShape_;
-        } else {
-          return parentShapeBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-       */
-      public Builder setParentShape(protobuf.srl.commands.Commands.IdChain value) {
-        if (parentShapeBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          parentShape_ = value;
-          onChanged();
-        } else {
-          parentShapeBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-       */
-      public Builder setParentShape(
-          protobuf.srl.commands.Commands.IdChain.Builder builderForValue) {
-        if (parentShapeBuilder_ == null) {
-          parentShape_ = builderForValue.build();
-          onChanged();
-        } else {
-          parentShapeBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-       */
-      public Builder mergeParentShape(protobuf.srl.commands.Commands.IdChain value) {
-        if (parentShapeBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              parentShape_ != protobuf.srl.commands.Commands.IdChain.getDefaultInstance()) {
-            parentShape_ =
-              protobuf.srl.commands.Commands.IdChain.newBuilder(parentShape_).mergeFrom(value).buildPartial();
-          } else {
-            parentShape_ = value;
-          }
-          onChanged();
-        } else {
-          parentShapeBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-       */
-      public Builder clearParentShape() {
-        if (parentShapeBuilder_ == null) {
-          parentShape_ = protobuf.srl.commands.Commands.IdChain.getDefaultInstance();
-          onChanged();
-        } else {
-          parentShapeBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-       */
-      public protobuf.srl.commands.Commands.IdChain.Builder getParentShapeBuilder() {
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return getParentShapeFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-       */
-      public protobuf.srl.commands.Commands.IdChainOrBuilder getParentShapeOrBuilder() {
-        if (parentShapeBuilder_ != null) {
-          return parentShapeBuilder_.getMessageOrBuilder();
-        } else {
-          return parentShape_;
-        }
-      }
-      /**
-       * <code>required .protobuf.srl.commands.IdChain parentShape = 1;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.commands.Commands.IdChain, protobuf.srl.commands.Commands.IdChain.Builder, protobuf.srl.commands.Commands.IdChainOrBuilder> 
-          getParentShapeFieldBuilder() {
-        if (parentShapeBuilder_ == null) {
-          parentShapeBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              protobuf.srl.commands.Commands.IdChain, protobuf.srl.commands.Commands.IdChain.Builder, protobuf.srl.commands.Commands.IdChainOrBuilder>(
-                  parentShape_,
-                  getParentForChildren(),
-                  isClean());
-          parentShape_ = null;
-        }
-        return parentShapeBuilder_;
-      }
-
-      // required bytes shape = 2;
-      private com.google.protobuf.ByteString shape_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>required bytes shape = 2;</code>
-       */
-      public boolean hasShape() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>required bytes shape = 2;</code>
-       */
-      public com.google.protobuf.ByteString getShape() {
-        return shape_;
-      }
-      /**
-       * <code>required bytes shape = 2;</code>
-       */
-      public Builder setShape(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        shape_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required bytes shape = 2;</code>
-       */
-      public Builder clearShape() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        shape_ = getDefaultInstance().getShape();
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.AddSubshape)
-    }
-
-    static {
-      defaultInstance = new AddSubshape(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddSubshape)
-  }
-
-  public interface ForceInterpretationOrBuilder
+  public interface ActionForceInterpretationOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required bytes interpretation = 1;
@@ -4091,29 +3457,29 @@ public final class Commands {
     protobuf.srl.commands.Commands.IdChainOrBuilder getShapeIdOrBuilder();
   }
   /**
-   * Protobuf type {@code protobuf.srl.commands.ForceInterpretation}
+   * Protobuf type {@code protobuf.srl.commands.ActionForceInterpretation}
    *
    * <pre>
    **
    * Gives the shape with the current Id a new interpretation
    * </pre>
    */
-  public static final class ForceInterpretation extends
+  public static final class ActionForceInterpretation extends
       com.google.protobuf.GeneratedMessage
-      implements ForceInterpretationOrBuilder {
-    // Use ForceInterpretation.newBuilder() to construct.
-    private ForceInterpretation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements ActionForceInterpretationOrBuilder {
+    // Use ActionForceInterpretation.newBuilder() to construct.
+    private ActionForceInterpretation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private ForceInterpretation(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private ActionForceInterpretation(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final ForceInterpretation defaultInstance;
-    public static ForceInterpretation getDefaultInstance() {
+    private static final ActionForceInterpretation defaultInstance;
+    public static ActionForceInterpretation getDefaultInstance() {
       return defaultInstance;
     }
 
-    public ForceInterpretation getDefaultInstanceForType() {
+    public ActionForceInterpretation getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -4123,7 +3489,7 @@ public final class Commands {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private ForceInterpretation(
+    private ActionForceInterpretation(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -4178,28 +3544,28 @@ public final class Commands {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ForceInterpretation_descriptor;
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionForceInterpretation_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ForceInterpretation_fieldAccessorTable
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionForceInterpretation_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.commands.Commands.ForceInterpretation.class, protobuf.srl.commands.Commands.ForceInterpretation.Builder.class);
+              protobuf.srl.commands.Commands.ActionForceInterpretation.class, protobuf.srl.commands.Commands.ActionForceInterpretation.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<ForceInterpretation> PARSER =
-        new com.google.protobuf.AbstractParser<ForceInterpretation>() {
-      public ForceInterpretation parsePartialFrom(
+    public static com.google.protobuf.Parser<ActionForceInterpretation> PARSER =
+        new com.google.protobuf.AbstractParser<ActionForceInterpretation>() {
+      public ActionForceInterpretation parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ForceInterpretation(input, extensionRegistry);
+        return new ActionForceInterpretation(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ForceInterpretation> getParserForType() {
+    public com.google.protobuf.Parser<ActionForceInterpretation> getParserForType() {
       return PARSER;
     }
 
@@ -4301,53 +3667,53 @@ public final class Commands {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseFrom(
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseFrom(
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseFrom(byte[] data)
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseFrom(
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseFrom(
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseDelimitedFrom(
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseFrom(
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.ForceInterpretation parseFrom(
+    public static protobuf.srl.commands.Commands.ActionForceInterpretation parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4356,7 +3722,7 @@ public final class Commands {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.commands.Commands.ForceInterpretation prototype) {
+    public static Builder newBuilder(protobuf.srl.commands.Commands.ActionForceInterpretation prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -4368,7 +3734,7 @@ public final class Commands {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.commands.ForceInterpretation}
+     * Protobuf type {@code protobuf.srl.commands.ActionForceInterpretation}
      *
      * <pre>
      **
@@ -4377,20 +3743,20 @@ public final class Commands {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.commands.Commands.ForceInterpretationOrBuilder {
+       implements protobuf.srl.commands.Commands.ActionForceInterpretationOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ForceInterpretation_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionForceInterpretation_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ForceInterpretation_fieldAccessorTable
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionForceInterpretation_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.commands.Commands.ForceInterpretation.class, protobuf.srl.commands.Commands.ForceInterpretation.Builder.class);
+                protobuf.srl.commands.Commands.ActionForceInterpretation.class, protobuf.srl.commands.Commands.ActionForceInterpretation.Builder.class);
       }
 
-      // Construct using protobuf.srl.commands.Commands.ForceInterpretation.newBuilder()
+      // Construct using protobuf.srl.commands.Commands.ActionForceInterpretation.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4428,23 +3794,23 @@ public final class Commands {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ForceInterpretation_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionForceInterpretation_descriptor;
       }
 
-      public protobuf.srl.commands.Commands.ForceInterpretation getDefaultInstanceForType() {
-        return protobuf.srl.commands.Commands.ForceInterpretation.getDefaultInstance();
+      public protobuf.srl.commands.Commands.ActionForceInterpretation getDefaultInstanceForType() {
+        return protobuf.srl.commands.Commands.ActionForceInterpretation.getDefaultInstance();
       }
 
-      public protobuf.srl.commands.Commands.ForceInterpretation build() {
-        protobuf.srl.commands.Commands.ForceInterpretation result = buildPartial();
+      public protobuf.srl.commands.Commands.ActionForceInterpretation build() {
+        protobuf.srl.commands.Commands.ActionForceInterpretation result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.commands.Commands.ForceInterpretation buildPartial() {
-        protobuf.srl.commands.Commands.ForceInterpretation result = new protobuf.srl.commands.Commands.ForceInterpretation(this);
+      public protobuf.srl.commands.Commands.ActionForceInterpretation buildPartial() {
+        protobuf.srl.commands.Commands.ActionForceInterpretation result = new protobuf.srl.commands.Commands.ActionForceInterpretation(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -4465,16 +3831,16 @@ public final class Commands {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.commands.Commands.ForceInterpretation) {
-          return mergeFrom((protobuf.srl.commands.Commands.ForceInterpretation)other);
+        if (other instanceof protobuf.srl.commands.Commands.ActionForceInterpretation) {
+          return mergeFrom((protobuf.srl.commands.Commands.ActionForceInterpretation)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.commands.Commands.ForceInterpretation other) {
-        if (other == protobuf.srl.commands.Commands.ForceInterpretation.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.commands.Commands.ActionForceInterpretation other) {
+        if (other == protobuf.srl.commands.Commands.ActionForceInterpretation.getDefaultInstance()) return this;
         if (other.hasInterpretation()) {
           setInterpretation(other.getInterpretation());
         }
@@ -4501,11 +3867,11 @@ public final class Commands {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.commands.Commands.ForceInterpretation parsedMessage = null;
+        protobuf.srl.commands.Commands.ActionForceInterpretation parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.commands.Commands.ForceInterpretation) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.commands.Commands.ActionForceInterpretation) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4669,18 +4035,18 @@ public final class Commands {
         return shapeIdBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.ForceInterpretation)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.ActionForceInterpretation)
     }
 
     static {
-      defaultInstance = new ForceInterpretation(true);
+      defaultInstance = new ActionForceInterpretation(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ForceInterpretation)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ActionForceInterpretation)
   }
 
-  public interface AddAttribtueOrBuilder
+  public interface ActionAddAttribtueOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required .protobuf.srl.commands.IdChain shapeId = 1;
@@ -4723,29 +4089,29 @@ public final class Commands {
     com.google.protobuf.ByteString getAttributeValue();
   }
   /**
-   * Protobuf type {@code protobuf.srl.commands.AddAttribtue}
+   * Protobuf type {@code protobuf.srl.commands.ActionAddAttribtue}
    *
    * <pre>
    **
    * Assigns an attribute to a shape.
    * </pre>
    */
-  public static final class AddAttribtue extends
+  public static final class ActionAddAttribtue extends
       com.google.protobuf.GeneratedMessage
-      implements AddAttribtueOrBuilder {
-    // Use AddAttribtue.newBuilder() to construct.
-    private AddAttribtue(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements ActionAddAttribtueOrBuilder {
+    // Use ActionAddAttribtue.newBuilder() to construct.
+    private ActionAddAttribtue(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private AddAttribtue(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private ActionAddAttribtue(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final AddAttribtue defaultInstance;
-    public static AddAttribtue getDefaultInstance() {
+    private static final ActionAddAttribtue defaultInstance;
+    public static ActionAddAttribtue getDefaultInstance() {
       return defaultInstance;
     }
 
-    public AddAttribtue getDefaultInstanceForType() {
+    public ActionAddAttribtue getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -4755,7 +4121,7 @@ public final class Commands {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private AddAttribtue(
+    private ActionAddAttribtue(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -4815,28 +4181,28 @@ public final class Commands {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddAttribtue_descriptor;
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionAddAttribtue_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddAttribtue_fieldAccessorTable
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionAddAttribtue_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.commands.Commands.AddAttribtue.class, protobuf.srl.commands.Commands.AddAttribtue.Builder.class);
+              protobuf.srl.commands.Commands.ActionAddAttribtue.class, protobuf.srl.commands.Commands.ActionAddAttribtue.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<AddAttribtue> PARSER =
-        new com.google.protobuf.AbstractParser<AddAttribtue>() {
-      public AddAttribtue parsePartialFrom(
+    public static com.google.protobuf.Parser<ActionAddAttribtue> PARSER =
+        new com.google.protobuf.AbstractParser<ActionAddAttribtue>() {
+      public ActionAddAttribtue parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new AddAttribtue(input, extensionRegistry);
+        return new ActionAddAttribtue(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<AddAttribtue> getParserForType() {
+    public com.google.protobuf.Parser<ActionAddAttribtue> getParserForType() {
       return PARSER;
     }
 
@@ -4993,53 +4359,53 @@ public final class Commands {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.commands.Commands.AddAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.AddAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.AddAttribtue parseFrom(byte[] data)
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.AddAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.AddAttribtue parseFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.AddAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.AddAttribtue parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.commands.Commands.AddAttribtue parseDelimitedFrom(
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.AddAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.AddAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionAddAttribtue parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -5048,7 +4414,7 @@ public final class Commands {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.commands.Commands.AddAttribtue prototype) {
+    public static Builder newBuilder(protobuf.srl.commands.Commands.ActionAddAttribtue prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -5060,7 +4426,7 @@ public final class Commands {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.commands.AddAttribtue}
+     * Protobuf type {@code protobuf.srl.commands.ActionAddAttribtue}
      *
      * <pre>
      **
@@ -5069,20 +4435,20 @@ public final class Commands {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.commands.Commands.AddAttribtueOrBuilder {
+       implements protobuf.srl.commands.Commands.ActionAddAttribtueOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddAttribtue_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionAddAttribtue_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddAttribtue_fieldAccessorTable
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionAddAttribtue_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.commands.Commands.AddAttribtue.class, protobuf.srl.commands.Commands.AddAttribtue.Builder.class);
+                protobuf.srl.commands.Commands.ActionAddAttribtue.class, protobuf.srl.commands.Commands.ActionAddAttribtue.Builder.class);
       }
 
-      // Construct using protobuf.srl.commands.Commands.AddAttribtue.newBuilder()
+      // Construct using protobuf.srl.commands.Commands.ActionAddAttribtue.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5122,23 +4488,23 @@ public final class Commands {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_AddAttribtue_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionAddAttribtue_descriptor;
       }
 
-      public protobuf.srl.commands.Commands.AddAttribtue getDefaultInstanceForType() {
-        return protobuf.srl.commands.Commands.AddAttribtue.getDefaultInstance();
+      public protobuf.srl.commands.Commands.ActionAddAttribtue getDefaultInstanceForType() {
+        return protobuf.srl.commands.Commands.ActionAddAttribtue.getDefaultInstance();
       }
 
-      public protobuf.srl.commands.Commands.AddAttribtue build() {
-        protobuf.srl.commands.Commands.AddAttribtue result = buildPartial();
+      public protobuf.srl.commands.Commands.ActionAddAttribtue build() {
+        protobuf.srl.commands.Commands.ActionAddAttribtue result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.commands.Commands.AddAttribtue buildPartial() {
-        protobuf.srl.commands.Commands.AddAttribtue result = new protobuf.srl.commands.Commands.AddAttribtue(this);
+      public protobuf.srl.commands.Commands.ActionAddAttribtue buildPartial() {
+        protobuf.srl.commands.Commands.ActionAddAttribtue result = new protobuf.srl.commands.Commands.ActionAddAttribtue(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -5163,16 +4529,16 @@ public final class Commands {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.commands.Commands.AddAttribtue) {
-          return mergeFrom((protobuf.srl.commands.Commands.AddAttribtue)other);
+        if (other instanceof protobuf.srl.commands.Commands.ActionAddAttribtue) {
+          return mergeFrom((protobuf.srl.commands.Commands.ActionAddAttribtue)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.commands.Commands.AddAttribtue other) {
-        if (other == protobuf.srl.commands.Commands.AddAttribtue.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.commands.Commands.ActionAddAttribtue other) {
+        if (other == protobuf.srl.commands.Commands.ActionAddAttribtue.getDefaultInstance()) return this;
         if (other.hasShapeId()) {
           mergeShapeId(other.getShapeId());
         }
@@ -5208,11 +4574,11 @@ public final class Commands {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.commands.Commands.AddAttribtue parsedMessage = null;
+        protobuf.srl.commands.Commands.ActionAddAttribtue parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.commands.Commands.AddAttribtue) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.commands.Commands.ActionAddAttribtue) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -5450,18 +4816,18 @@ public final class Commands {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.AddAttribtue)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.ActionAddAttribtue)
     }
 
     static {
-      defaultInstance = new AddAttribtue(true);
+      defaultInstance = new ActionAddAttribtue(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddAttribtue)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ActionAddAttribtue)
   }
 
-  public interface RemoveAttribtueOrBuilder
+  public interface ActionRemoveAttribtueOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required .protobuf.srl.commands.IdChain shapeId = 1;
@@ -5504,7 +4870,7 @@ public final class Commands {
     com.google.protobuf.ByteString getAttributeValue();
   }
   /**
-   * Protobuf type {@code protobuf.srl.commands.RemoveAttribtue}
+   * Protobuf type {@code protobuf.srl.commands.ActionRemoveAttribtue}
    *
    * <pre>
    **
@@ -5514,22 +4880,22 @@ public final class Commands {
    * A ReplaceAttribute is a combination of a RemoveAttribtue and then an AddAttribtue
    * </pre>
    */
-  public static final class RemoveAttribtue extends
+  public static final class ActionRemoveAttribtue extends
       com.google.protobuf.GeneratedMessage
-      implements RemoveAttribtueOrBuilder {
-    // Use RemoveAttribtue.newBuilder() to construct.
-    private RemoveAttribtue(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements ActionRemoveAttribtueOrBuilder {
+    // Use ActionRemoveAttribtue.newBuilder() to construct.
+    private ActionRemoveAttribtue(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private RemoveAttribtue(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private ActionRemoveAttribtue(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final RemoveAttribtue defaultInstance;
-    public static RemoveAttribtue getDefaultInstance() {
+    private static final ActionRemoveAttribtue defaultInstance;
+    public static ActionRemoveAttribtue getDefaultInstance() {
       return defaultInstance;
     }
 
-    public RemoveAttribtue getDefaultInstanceForType() {
+    public ActionRemoveAttribtue getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -5539,7 +4905,7 @@ public final class Commands {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private RemoveAttribtue(
+    private ActionRemoveAttribtue(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -5599,28 +4965,28 @@ public final class Commands {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveAttribtue_descriptor;
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionRemoveAttribtue_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveAttribtue_fieldAccessorTable
+      return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionRemoveAttribtue_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.commands.Commands.RemoveAttribtue.class, protobuf.srl.commands.Commands.RemoveAttribtue.Builder.class);
+              protobuf.srl.commands.Commands.ActionRemoveAttribtue.class, protobuf.srl.commands.Commands.ActionRemoveAttribtue.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<RemoveAttribtue> PARSER =
-        new com.google.protobuf.AbstractParser<RemoveAttribtue>() {
-      public RemoveAttribtue parsePartialFrom(
+    public static com.google.protobuf.Parser<ActionRemoveAttribtue> PARSER =
+        new com.google.protobuf.AbstractParser<ActionRemoveAttribtue>() {
+      public ActionRemoveAttribtue parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new RemoveAttribtue(input, extensionRegistry);
+        return new ActionRemoveAttribtue(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<RemoveAttribtue> getParserForType() {
+    public com.google.protobuf.Parser<ActionRemoveAttribtue> getParserForType() {
       return PARSER;
     }
 
@@ -5777,53 +5143,53 @@ public final class Commands {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseFrom(byte[] data)
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseDelimitedFrom(
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.commands.Commands.RemoveAttribtue parseFrom(
+    public static protobuf.srl.commands.Commands.ActionRemoveAttribtue parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -5832,7 +5198,7 @@ public final class Commands {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.commands.Commands.RemoveAttribtue prototype) {
+    public static Builder newBuilder(protobuf.srl.commands.Commands.ActionRemoveAttribtue prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -5844,7 +5210,7 @@ public final class Commands {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.commands.RemoveAttribtue}
+     * Protobuf type {@code protobuf.srl.commands.ActionRemoveAttribtue}
      *
      * <pre>
      **
@@ -5856,20 +5222,20 @@ public final class Commands {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.commands.Commands.RemoveAttribtueOrBuilder {
+       implements protobuf.srl.commands.Commands.ActionRemoveAttribtueOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveAttribtue_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionRemoveAttribtue_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveAttribtue_fieldAccessorTable
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionRemoveAttribtue_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.commands.Commands.RemoveAttribtue.class, protobuf.srl.commands.Commands.RemoveAttribtue.Builder.class);
+                protobuf.srl.commands.Commands.ActionRemoveAttribtue.class, protobuf.srl.commands.Commands.ActionRemoveAttribtue.Builder.class);
       }
 
-      // Construct using protobuf.srl.commands.Commands.RemoveAttribtue.newBuilder()
+      // Construct using protobuf.srl.commands.Commands.ActionRemoveAttribtue.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5909,23 +5275,23 @@ public final class Commands {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_RemoveAttribtue_descriptor;
+        return protobuf.srl.commands.Commands.internal_static_protobuf_srl_commands_ActionRemoveAttribtue_descriptor;
       }
 
-      public protobuf.srl.commands.Commands.RemoveAttribtue getDefaultInstanceForType() {
-        return protobuf.srl.commands.Commands.RemoveAttribtue.getDefaultInstance();
+      public protobuf.srl.commands.Commands.ActionRemoveAttribtue getDefaultInstanceForType() {
+        return protobuf.srl.commands.Commands.ActionRemoveAttribtue.getDefaultInstance();
       }
 
-      public protobuf.srl.commands.Commands.RemoveAttribtue build() {
-        protobuf.srl.commands.Commands.RemoveAttribtue result = buildPartial();
+      public protobuf.srl.commands.Commands.ActionRemoveAttribtue build() {
+        protobuf.srl.commands.Commands.ActionRemoveAttribtue result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.commands.Commands.RemoveAttribtue buildPartial() {
-        protobuf.srl.commands.Commands.RemoveAttribtue result = new protobuf.srl.commands.Commands.RemoveAttribtue(this);
+      public protobuf.srl.commands.Commands.ActionRemoveAttribtue buildPartial() {
+        protobuf.srl.commands.Commands.ActionRemoveAttribtue result = new protobuf.srl.commands.Commands.ActionRemoveAttribtue(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -5950,16 +5316,16 @@ public final class Commands {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.commands.Commands.RemoveAttribtue) {
-          return mergeFrom((protobuf.srl.commands.Commands.RemoveAttribtue)other);
+        if (other instanceof protobuf.srl.commands.Commands.ActionRemoveAttribtue) {
+          return mergeFrom((protobuf.srl.commands.Commands.ActionRemoveAttribtue)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.commands.Commands.RemoveAttribtue other) {
-        if (other == protobuf.srl.commands.Commands.RemoveAttribtue.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.commands.Commands.ActionRemoveAttribtue other) {
+        if (other == protobuf.srl.commands.Commands.ActionRemoveAttribtue.getDefaultInstance()) return this;
         if (other.hasShapeId()) {
           mergeShapeId(other.getShapeId());
         }
@@ -5995,11 +5361,11 @@ public final class Commands {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.commands.Commands.RemoveAttribtue parsedMessage = null;
+        protobuf.srl.commands.Commands.ActionRemoveAttribtue parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.commands.Commands.RemoveAttribtue) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.commands.Commands.ActionRemoveAttribtue) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -6237,57 +5603,52 @@ public final class Commands {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.RemoveAttribtue)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.ActionRemoveAttribtue)
     }
 
     static {
-      defaultInstance = new RemoveAttribtue(true);
+      defaultInstance = new ActionRemoveAttribtue(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.RemoveAttribtue)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ActionRemoveAttribtue)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_commands_Update_descriptor;
+    internal_static_protobuf_srl_commands_SrlUpdate_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_commands_Update_fieldAccessorTable;
+      internal_static_protobuf_srl_commands_SrlUpdate_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_commands_Command_descriptor;
+    internal_static_protobuf_srl_commands_SrlCommand_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_commands_Command_fieldAccessorTable;
+      internal_static_protobuf_srl_commands_SrlCommand_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_commands_IdChain_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_commands_IdChain_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_commands_PackageShape_descriptor;
+    internal_static_protobuf_srl_commands_ActionPackageShape_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_commands_PackageShape_fieldAccessorTable;
+      internal_static_protobuf_srl_commands_ActionPackageShape_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_commands_AddSubshape_descriptor;
+    internal_static_protobuf_srl_commands_ActionForceInterpretation_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_commands_AddSubshape_fieldAccessorTable;
+      internal_static_protobuf_srl_commands_ActionForceInterpretation_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_commands_ForceInterpretation_descriptor;
+    internal_static_protobuf_srl_commands_ActionAddAttribtue_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_commands_ForceInterpretation_fieldAccessorTable;
+      internal_static_protobuf_srl_commands_ActionAddAttribtue_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_commands_AddAttribtue_descriptor;
+    internal_static_protobuf_srl_commands_ActionRemoveAttribtue_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_commands_AddAttribtue_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_commands_RemoveAttribtue_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_commands_RemoveAttribtue_fieldAccessorTable;
+      internal_static_protobuf_srl_commands_ActionRemoveAttribtue_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -6298,50 +5659,48 @@ public final class Commands {
   static {
     java.lang.String[] descriptorData = {
       "\n\024input/commands.proto\022\025protobuf.srl.com" +
-      "mands\"Z\n\006Update\022\020\n\010updateId\030\001 \002(\t\022\014\n\004tim" +
-      "e\030\002 \001(\003\0220\n\010commands\030\003 \003(\0132\036.protobuf.srl" +
-      ".commands.Command\"\201\001\n\007Command\0227\n\013command" +
-      "Type\030\001 \002(\0162\".protobuf.srl.commands.Comma" +
-      "ndType\022\025\n\risUserCreated\030\002 \002(\010\022\023\n\013command" +
-      "Data\030\003 \002(\014\022\021\n\tcommandId\030\004 \001(\t\"\032\n\007IdChain" +
-      "\022\017\n\007idChain\030\001 \003(\t\"\233\001\n\014PackageShape\0226\n\016ol" +
-      "dContainerId\030\001 \001(\0132\036.protobuf.srl.comman" +
-      "ds.IdChain\0226\n\016newContainerId\030\002 \001(\0132\036.pro",
-      "tobuf.srl.commands.IdChain\022\033\n\023shapesToBe" +
-      "Contained\030\003 \003(\t\"Q\n\013AddSubshape\0223\n\013parent" +
-      "Shape\030\001 \002(\0132\036.protobuf.srl.commands.IdCh" +
-      "ain\022\r\n\005shape\030\002 \002(\014\"^\n\023ForceInterpretatio" +
-      "n\022\026\n\016interpretation\030\001 \002(\014\022/\n\007shapeId\030\002 \002" +
-      "(\0132\036.protobuf.srl.commands.IdChain\"m\n\014Ad" +
-      "dAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.s" +
-      "rl.commands.IdChain\022\024\n\014attributeKey\030\002 \002(" +
-      "\t\022\026\n\016attributeValue\030\003 \002(\014\"p\n\017RemoveAttri" +
-      "btue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.srl.com",
-      "mands.IdChain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016a" +
-      "ttributeValue\030\003 \002(\014*\346\001\n\013CommandType\022\016\n\nA" +
-      "DD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPACKAGE_SH" +
-      "APE\020\002\022\020\n\014ADD_SUBSHAPE\020\003\022\021\n\rREMOVE_OBJECT" +
-      "\020\004\022\024\n\020ASSIGN_ATTRIBUTE\020\005\022\024\n\020REMOVE_ATTRI" +
-      "BUTE\020\006\022\030\n\024FORCE_INTERPRETATION\020\n\022\010\n\004UNDO" +
-      "\020\013\022\010\n\004REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n\013CLEAR_STACK" +
-      "\020\016\022\010\n\004SYNC\020\017"
+      "mands\"`\n\tSrlUpdate\022\020\n\010updateId\030\001 \002(\t\022\014\n\004" +
+      "time\030\002 \001(\003\0223\n\010commands\030\003 \003(\0132!.protobuf." +
+      "srl.commands.SrlCommand\"\204\001\n\nSrlCommand\0227" +
+      "\n\013commandType\030\001 \002(\0162\".protobuf.srl.comma" +
+      "nds.CommandType\022\025\n\risUserCreated\030\002 \002(\010\022\023" +
+      "\n\013commandData\030\003 \002(\014\022\021\n\tcommandId\030\004 \001(\t\"\032" +
+      "\n\007IdChain\022\017\n\007idChain\030\001 \003(\t\"\241\001\n\022ActionPac" +
+      "kageShape\0226\n\016oldContainerId\030\001 \001(\0132\036.prot" +
+      "obuf.srl.commands.IdChain\0226\n\016newContaine",
+      "rId\030\002 \001(\0132\036.protobuf.srl.commands.IdChai" +
+      "n\022\033\n\023shapesToBeContained\030\003 \003(\t\"d\n\031Action" +
+      "ForceInterpretation\022\026\n\016interpretation\030\001 " +
+      "\002(\014\022/\n\007shapeId\030\002 \002(\0132\036.protobuf.srl.comm" +
+      "ands.IdChain\"s\n\022ActionAddAttribtue\022/\n\007sh" +
+      "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh" +
+      "ain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeVa" +
+      "lue\030\003 \002(\014\"v\n\025ActionRemoveAttribtue\022/\n\007sh" +
+      "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh" +
+      "ain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeVa",
+      "lue\030\003 \002(\014*\324\001\n\013CommandType\022\016\n\nADD_STROKE\020" +
+      "\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\021\n\rR" +
+      "EMOVE_OBJECT\020\003\022\024\n\020ASSIGN_ATTRIBUTE\020\004\022\024\n\020" +
+      "REMOVE_ATTRIBUTE\020\005\022\030\n\024FORCE_INTERPRETATI" +
+      "ON\020\n\022\010\n\004UNDO\020\013\022\010\n\004REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n" +
+      "\013CLEAR_STACK\020\016\022\010\n\004SYNC\020\017"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_protobuf_srl_commands_Update_descriptor =
+          internal_static_protobuf_srl_commands_SrlUpdate_descriptor =
             getDescriptor().getMessageTypes().get(0);
-          internal_static_protobuf_srl_commands_Update_fieldAccessorTable = new
+          internal_static_protobuf_srl_commands_SrlUpdate_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_commands_Update_descriptor,
+              internal_static_protobuf_srl_commands_SrlUpdate_descriptor,
               new java.lang.String[] { "UpdateId", "Time", "Commands", });
-          internal_static_protobuf_srl_commands_Command_descriptor =
+          internal_static_protobuf_srl_commands_SrlCommand_descriptor =
             getDescriptor().getMessageTypes().get(1);
-          internal_static_protobuf_srl_commands_Command_fieldAccessorTable = new
+          internal_static_protobuf_srl_commands_SrlCommand_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_commands_Command_descriptor,
+              internal_static_protobuf_srl_commands_SrlCommand_descriptor,
               new java.lang.String[] { "CommandType", "IsUserCreated", "CommandData", "CommandId", });
           internal_static_protobuf_srl_commands_IdChain_descriptor =
             getDescriptor().getMessageTypes().get(2);
@@ -6349,35 +5708,29 @@ public final class Commands {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_IdChain_descriptor,
               new java.lang.String[] { "IdChain", });
-          internal_static_protobuf_srl_commands_PackageShape_descriptor =
+          internal_static_protobuf_srl_commands_ActionPackageShape_descriptor =
             getDescriptor().getMessageTypes().get(3);
-          internal_static_protobuf_srl_commands_PackageShape_fieldAccessorTable = new
+          internal_static_protobuf_srl_commands_ActionPackageShape_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_commands_PackageShape_descriptor,
+              internal_static_protobuf_srl_commands_ActionPackageShape_descriptor,
               new java.lang.String[] { "OldContainerId", "NewContainerId", "ShapesToBeContained", });
-          internal_static_protobuf_srl_commands_AddSubshape_descriptor =
+          internal_static_protobuf_srl_commands_ActionForceInterpretation_descriptor =
             getDescriptor().getMessageTypes().get(4);
-          internal_static_protobuf_srl_commands_AddSubshape_fieldAccessorTable = new
+          internal_static_protobuf_srl_commands_ActionForceInterpretation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_commands_AddSubshape_descriptor,
-              new java.lang.String[] { "ParentShape", "Shape", });
-          internal_static_protobuf_srl_commands_ForceInterpretation_descriptor =
-            getDescriptor().getMessageTypes().get(5);
-          internal_static_protobuf_srl_commands_ForceInterpretation_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_commands_ForceInterpretation_descriptor,
+              internal_static_protobuf_srl_commands_ActionForceInterpretation_descriptor,
               new java.lang.String[] { "Interpretation", "ShapeId", });
-          internal_static_protobuf_srl_commands_AddAttribtue_descriptor =
-            getDescriptor().getMessageTypes().get(6);
-          internal_static_protobuf_srl_commands_AddAttribtue_fieldAccessorTable = new
+          internal_static_protobuf_srl_commands_ActionAddAttribtue_descriptor =
+            getDescriptor().getMessageTypes().get(5);
+          internal_static_protobuf_srl_commands_ActionAddAttribtue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_commands_AddAttribtue_descriptor,
+              internal_static_protobuf_srl_commands_ActionAddAttribtue_descriptor,
               new java.lang.String[] { "ShapeId", "AttributeKey", "AttributeValue", });
-          internal_static_protobuf_srl_commands_RemoveAttribtue_descriptor =
-            getDescriptor().getMessageTypes().get(7);
-          internal_static_protobuf_srl_commands_RemoveAttribtue_fieldAccessorTable = new
+          internal_static_protobuf_srl_commands_ActionRemoveAttribtue_descriptor =
+            getDescriptor().getMessageTypes().get(6);
+          internal_static_protobuf_srl_commands_ActionRemoveAttribtue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_commands_RemoveAttribtue_descriptor,
+              internal_static_protobuf_srl_commands_ActionRemoveAttribtue_descriptor,
               new java.lang.String[] { "ShapeId", "AttributeKey", "AttributeValue", });
           return null;
         }

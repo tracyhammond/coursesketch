@@ -36,23 +36,21 @@ void  protobuf_AddDesc_input_2fcommands_2eproto();
 void protobuf_AssignDesc_input_2fcommands_2eproto();
 void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
-class Update;
-class Command;
+class SrlUpdate;
+class SrlCommand;
 class IdChain;
-class PackageShape;
-class AddSubshape;
-class ForceInterpretation;
-class AddAttribtue;
-class RemoveAttribtue;
+class ActionPackageShape;
+class ActionForceInterpretation;
+class ActionAddAttribtue;
+class ActionRemoveAttribtue;
 
 enum CommandType {
   ADD_STROKE = 0,
   ADD_SHAPE = 1,
   PACKAGE_SHAPE = 2,
-  ADD_SUBSHAPE = 3,
-  REMOVE_OBJECT = 4,
-  ASSIGN_ATTRIBUTE = 5,
-  REMOVE_ATTRIBUTE = 6,
+  REMOVE_OBJECT = 3,
+  ASSIGN_ATTRIBUTE = 4,
+  REMOVE_ATTRIBUTE = 5,
   FORCE_INTERPRETATION = 10,
   UNDO = 11,
   REDO = 12,
@@ -77,14 +75,14 @@ inline bool CommandType_Parse(
 }
 // ===================================================================
 
-class Update : public ::google::protobuf::Message {
+class SrlUpdate : public ::google::protobuf::Message {
  public:
-  Update();
-  virtual ~Update();
+  SrlUpdate();
+  virtual ~SrlUpdate();
 
-  Update(const Update& from);
+  SrlUpdate(const SrlUpdate& from);
 
-  inline Update& operator=(const Update& from) {
+  inline SrlUpdate& operator=(const SrlUpdate& from) {
     CopyFrom(from);
     return *this;
   }
@@ -98,17 +96,17 @@ class Update : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Update& default_instance();
+  static const SrlUpdate& default_instance();
 
-  void Swap(Update* other);
+  void Swap(SrlUpdate* other);
 
   // implements Message ----------------------------------------------
 
-  Update* New() const;
+  SrlUpdate* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Update& from);
-  void MergeFrom(const Update& from);
+  void CopyFrom(const SrlUpdate& from);
+  void MergeFrom(const SrlUpdate& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -150,19 +148,19 @@ class Update : public ::google::protobuf::Message {
   inline ::google::protobuf::int64 time() const;
   inline void set_time(::google::protobuf::int64 value);
 
-  // repeated .protobuf.srl.commands.Command commands = 3;
+  // repeated .protobuf.srl.commands.SrlCommand commands = 3;
   inline int commands_size() const;
   inline void clear_commands();
   static const int kCommandsFieldNumber = 3;
-  inline const ::protobuf::srl::commands::Command& commands(int index) const;
-  inline ::protobuf::srl::commands::Command* mutable_commands(int index);
-  inline ::protobuf::srl::commands::Command* add_commands();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::Command >&
+  inline const ::protobuf::srl::commands::SrlCommand& commands(int index) const;
+  inline ::protobuf::srl::commands::SrlCommand* mutable_commands(int index);
+  inline ::protobuf::srl::commands::SrlCommand* add_commands();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlCommand >&
       commands() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::Command >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlCommand >*
       mutable_commands();
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.Update)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.SrlUpdate)
  private:
   inline void set_has_updateid();
   inline void clear_has_updateid();
@@ -173,7 +171,7 @@ class Update : public ::google::protobuf::Message {
 
   ::std::string* updateid_;
   ::google::protobuf::int64 time_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::Command > commands_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlCommand > commands_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -183,18 +181,18 @@ class Update : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
   void InitAsDefaultInstance();
-  static Update* default_instance_;
+  static SrlUpdate* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class Command : public ::google::protobuf::Message {
+class SrlCommand : public ::google::protobuf::Message {
  public:
-  Command();
-  virtual ~Command();
+  SrlCommand();
+  virtual ~SrlCommand();
 
-  Command(const Command& from);
+  SrlCommand(const SrlCommand& from);
 
-  inline Command& operator=(const Command& from) {
+  inline SrlCommand& operator=(const SrlCommand& from) {
     CopyFrom(from);
     return *this;
   }
@@ -208,17 +206,17 @@ class Command : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Command& default_instance();
+  static const SrlCommand& default_instance();
 
-  void Swap(Command* other);
+  void Swap(SrlCommand* other);
 
   // implements Message ----------------------------------------------
 
-  Command* New() const;
+  SrlCommand* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Command& from);
-  void MergeFrom(const Command& from);
+  void CopyFrom(const SrlCommand& from);
+  void MergeFrom(const SrlCommand& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -279,7 +277,7 @@ class Command : public ::google::protobuf::Message {
   inline ::std::string* release_commandid();
   inline void set_allocated_commandid(::std::string* commandid);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.Command)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.SrlCommand)
  private:
   inline void set_has_commandtype();
   inline void clear_has_commandtype();
@@ -305,7 +303,7 @@ class Command : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
   void InitAsDefaultInstance();
-  static Command* default_instance_;
+  static SrlCommand* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -398,14 +396,14 @@ class IdChain : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class PackageShape : public ::google::protobuf::Message {
+class ActionPackageShape : public ::google::protobuf::Message {
  public:
-  PackageShape();
-  virtual ~PackageShape();
+  ActionPackageShape();
+  virtual ~ActionPackageShape();
 
-  PackageShape(const PackageShape& from);
+  ActionPackageShape(const ActionPackageShape& from);
 
-  inline PackageShape& operator=(const PackageShape& from) {
+  inline ActionPackageShape& operator=(const ActionPackageShape& from) {
     CopyFrom(from);
     return *this;
   }
@@ -419,17 +417,17 @@ class PackageShape : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const PackageShape& default_instance();
+  static const ActionPackageShape& default_instance();
 
-  void Swap(PackageShape* other);
+  void Swap(ActionPackageShape* other);
 
   // implements Message ----------------------------------------------
 
-  PackageShape* New() const;
+  ActionPackageShape* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const PackageShape& from);
-  void MergeFrom(const PackageShape& from);
+  void CopyFrom(const ActionPackageShape& from);
+  void MergeFrom(const ActionPackageShape& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -486,7 +484,7 @@ class PackageShape : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& shapestobecontained() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_shapestobecontained();
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.PackageShape)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ActionPackageShape)
  private:
   inline void set_has_oldcontainerid();
   inline void clear_has_oldcontainerid();
@@ -507,18 +505,18 @@ class PackageShape : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
   void InitAsDefaultInstance();
-  static PackageShape* default_instance_;
+  static ActionPackageShape* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class AddSubshape : public ::google::protobuf::Message {
+class ActionForceInterpretation : public ::google::protobuf::Message {
  public:
-  AddSubshape();
-  virtual ~AddSubshape();
+  ActionForceInterpretation();
+  virtual ~ActionForceInterpretation();
 
-  AddSubshape(const AddSubshape& from);
+  ActionForceInterpretation(const ActionForceInterpretation& from);
 
-  inline AddSubshape& operator=(const AddSubshape& from) {
+  inline ActionForceInterpretation& operator=(const ActionForceInterpretation& from) {
     CopyFrom(from);
     return *this;
   }
@@ -532,116 +530,17 @@ class AddSubshape : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const AddSubshape& default_instance();
+  static const ActionForceInterpretation& default_instance();
 
-  void Swap(AddSubshape* other);
-
-  // implements Message ----------------------------------------------
-
-  AddSubshape* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const AddSubshape& from);
-  void MergeFrom(const AddSubshape& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required .protobuf.srl.commands.IdChain parentShape = 1;
-  inline bool has_parentshape() const;
-  inline void clear_parentshape();
-  static const int kParentShapeFieldNumber = 1;
-  inline const ::protobuf::srl::commands::IdChain& parentshape() const;
-  inline ::protobuf::srl::commands::IdChain* mutable_parentshape();
-  inline ::protobuf::srl::commands::IdChain* release_parentshape();
-  inline void set_allocated_parentshape(::protobuf::srl::commands::IdChain* parentshape);
-
-  // required bytes shape = 2;
-  inline bool has_shape() const;
-  inline void clear_shape();
-  static const int kShapeFieldNumber = 2;
-  inline const ::std::string& shape() const;
-  inline void set_shape(const ::std::string& value);
-  inline void set_shape(const char* value);
-  inline void set_shape(const void* value, size_t size);
-  inline ::std::string* mutable_shape();
-  inline ::std::string* release_shape();
-  inline void set_allocated_shape(::std::string* shape);
-
-  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddSubshape)
- private:
-  inline void set_has_parentshape();
-  inline void clear_has_parentshape();
-  inline void set_has_shape();
-  inline void clear_has_shape();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::protobuf::srl::commands::IdChain* parentshape_;
-  ::std::string* shape_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_input_2fcommands_2eproto();
-  friend void protobuf_AssignDesc_input_2fcommands_2eproto();
-  friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
-
-  void InitAsDefaultInstance();
-  static AddSubshape* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class ForceInterpretation : public ::google::protobuf::Message {
- public:
-  ForceInterpretation();
-  virtual ~ForceInterpretation();
-
-  ForceInterpretation(const ForceInterpretation& from);
-
-  inline ForceInterpretation& operator=(const ForceInterpretation& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const ForceInterpretation& default_instance();
-
-  void Swap(ForceInterpretation* other);
+  void Swap(ActionForceInterpretation* other);
 
   // implements Message ----------------------------------------------
 
-  ForceInterpretation* New() const;
+  ActionForceInterpretation* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ForceInterpretation& from);
-  void MergeFrom(const ForceInterpretation& from);
+  void CopyFrom(const ActionForceInterpretation& from);
+  void MergeFrom(const ActionForceInterpretation& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -685,7 +584,7 @@ class ForceInterpretation : public ::google::protobuf::Message {
   inline ::protobuf::srl::commands::IdChain* release_shapeid();
   inline void set_allocated_shapeid(::protobuf::srl::commands::IdChain* shapeid);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ForceInterpretation)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ActionForceInterpretation)
  private:
   inline void set_has_interpretation();
   inline void clear_has_interpretation();
@@ -705,18 +604,18 @@ class ForceInterpretation : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
   void InitAsDefaultInstance();
-  static ForceInterpretation* default_instance_;
+  static ActionForceInterpretation* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class AddAttribtue : public ::google::protobuf::Message {
+class ActionAddAttribtue : public ::google::protobuf::Message {
  public:
-  AddAttribtue();
-  virtual ~AddAttribtue();
+  ActionAddAttribtue();
+  virtual ~ActionAddAttribtue();
 
-  AddAttribtue(const AddAttribtue& from);
+  ActionAddAttribtue(const ActionAddAttribtue& from);
 
-  inline AddAttribtue& operator=(const AddAttribtue& from) {
+  inline ActionAddAttribtue& operator=(const ActionAddAttribtue& from) {
     CopyFrom(from);
     return *this;
   }
@@ -730,17 +629,17 @@ class AddAttribtue : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const AddAttribtue& default_instance();
+  static const ActionAddAttribtue& default_instance();
 
-  void Swap(AddAttribtue* other);
+  void Swap(ActionAddAttribtue* other);
 
   // implements Message ----------------------------------------------
 
-  AddAttribtue* New() const;
+  ActionAddAttribtue* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const AddAttribtue& from);
-  void MergeFrom(const AddAttribtue& from);
+  void CopyFrom(const ActionAddAttribtue& from);
+  void MergeFrom(const ActionAddAttribtue& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -796,7 +695,7 @@ class AddAttribtue : public ::google::protobuf::Message {
   inline ::std::string* release_attributevalue();
   inline void set_allocated_attributevalue(::std::string* attributevalue);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.AddAttribtue)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ActionAddAttribtue)
  private:
   inline void set_has_shapeid();
   inline void clear_has_shapeid();
@@ -819,18 +718,18 @@ class AddAttribtue : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
   void InitAsDefaultInstance();
-  static AddAttribtue* default_instance_;
+  static ActionAddAttribtue* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class RemoveAttribtue : public ::google::protobuf::Message {
+class ActionRemoveAttribtue : public ::google::protobuf::Message {
  public:
-  RemoveAttribtue();
-  virtual ~RemoveAttribtue();
+  ActionRemoveAttribtue();
+  virtual ~ActionRemoveAttribtue();
 
-  RemoveAttribtue(const RemoveAttribtue& from);
+  ActionRemoveAttribtue(const ActionRemoveAttribtue& from);
 
-  inline RemoveAttribtue& operator=(const RemoveAttribtue& from) {
+  inline ActionRemoveAttribtue& operator=(const ActionRemoveAttribtue& from) {
     CopyFrom(from);
     return *this;
   }
@@ -844,17 +743,17 @@ class RemoveAttribtue : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const RemoveAttribtue& default_instance();
+  static const ActionRemoveAttribtue& default_instance();
 
-  void Swap(RemoveAttribtue* other);
+  void Swap(ActionRemoveAttribtue* other);
 
   // implements Message ----------------------------------------------
 
-  RemoveAttribtue* New() const;
+  ActionRemoveAttribtue* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const RemoveAttribtue& from);
-  void MergeFrom(const RemoveAttribtue& from);
+  void CopyFrom(const ActionRemoveAttribtue& from);
+  void MergeFrom(const ActionRemoveAttribtue& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -910,7 +809,7 @@ class RemoveAttribtue : public ::google::protobuf::Message {
   inline ::std::string* release_attributevalue();
   inline void set_allocated_attributevalue(::std::string* attributevalue);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.RemoveAttribtue)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.ActionRemoveAttribtue)
  private:
   inline void set_has_shapeid();
   inline void clear_has_shapeid();
@@ -933,63 +832,63 @@ class RemoveAttribtue : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
   void InitAsDefaultInstance();
-  static RemoveAttribtue* default_instance_;
+  static ActionRemoveAttribtue* default_instance_;
 };
 // ===================================================================
 
 
 // ===================================================================
 
-// Update
+// SrlUpdate
 
 // required string updateId = 1;
-inline bool Update::has_updateid() const {
+inline bool SrlUpdate::has_updateid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Update::set_has_updateid() {
+inline void SrlUpdate::set_has_updateid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Update::clear_has_updateid() {
+inline void SrlUpdate::clear_has_updateid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Update::clear_updateid() {
+inline void SrlUpdate::clear_updateid() {
   if (updateid_ != &::google::protobuf::internal::kEmptyString) {
     updateid_->clear();
   }
   clear_has_updateid();
 }
-inline const ::std::string& Update::updateid() const {
+inline const ::std::string& SrlUpdate::updateid() const {
   return *updateid_;
 }
-inline void Update::set_updateid(const ::std::string& value) {
+inline void SrlUpdate::set_updateid(const ::std::string& value) {
   set_has_updateid();
   if (updateid_ == &::google::protobuf::internal::kEmptyString) {
     updateid_ = new ::std::string;
   }
   updateid_->assign(value);
 }
-inline void Update::set_updateid(const char* value) {
+inline void SrlUpdate::set_updateid(const char* value) {
   set_has_updateid();
   if (updateid_ == &::google::protobuf::internal::kEmptyString) {
     updateid_ = new ::std::string;
   }
   updateid_->assign(value);
 }
-inline void Update::set_updateid(const char* value, size_t size) {
+inline void SrlUpdate::set_updateid(const char* value, size_t size) {
   set_has_updateid();
   if (updateid_ == &::google::protobuf::internal::kEmptyString) {
     updateid_ = new ::std::string;
   }
   updateid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Update::mutable_updateid() {
+inline ::std::string* SrlUpdate::mutable_updateid() {
   set_has_updateid();
   if (updateid_ == &::google::protobuf::internal::kEmptyString) {
     updateid_ = new ::std::string;
   }
   return updateid_;
 }
-inline ::std::string* Update::release_updateid() {
+inline ::std::string* SrlUpdate::release_updateid() {
   clear_has_updateid();
   if (updateid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -999,7 +898,7 @@ inline ::std::string* Update::release_updateid() {
     return temp;
   }
 }
-inline void Update::set_allocated_updateid(::std::string* updateid) {
+inline void SrlUpdate::set_allocated_updateid(::std::string* updateid) {
   if (updateid_ != &::google::protobuf::internal::kEmptyString) {
     delete updateid_;
   }
@@ -1013,149 +912,149 @@ inline void Update::set_allocated_updateid(::std::string* updateid) {
 }
 
 // optional int64 time = 2;
-inline bool Update::has_time() const {
+inline bool SrlUpdate::has_time() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Update::set_has_time() {
+inline void SrlUpdate::set_has_time() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Update::clear_has_time() {
+inline void SrlUpdate::clear_has_time() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void Update::clear_time() {
+inline void SrlUpdate::clear_time() {
   time_ = GOOGLE_LONGLONG(0);
   clear_has_time();
 }
-inline ::google::protobuf::int64 Update::time() const {
+inline ::google::protobuf::int64 SrlUpdate::time() const {
   return time_;
 }
-inline void Update::set_time(::google::protobuf::int64 value) {
+inline void SrlUpdate::set_time(::google::protobuf::int64 value) {
   set_has_time();
   time_ = value;
 }
 
-// repeated .protobuf.srl.commands.Command commands = 3;
-inline int Update::commands_size() const {
+// repeated .protobuf.srl.commands.SrlCommand commands = 3;
+inline int SrlUpdate::commands_size() const {
   return commands_.size();
 }
-inline void Update::clear_commands() {
+inline void SrlUpdate::clear_commands() {
   commands_.Clear();
 }
-inline const ::protobuf::srl::commands::Command& Update::commands(int index) const {
+inline const ::protobuf::srl::commands::SrlCommand& SrlUpdate::commands(int index) const {
   return commands_.Get(index);
 }
-inline ::protobuf::srl::commands::Command* Update::mutable_commands(int index) {
+inline ::protobuf::srl::commands::SrlCommand* SrlUpdate::mutable_commands(int index) {
   return commands_.Mutable(index);
 }
-inline ::protobuf::srl::commands::Command* Update::add_commands() {
+inline ::protobuf::srl::commands::SrlCommand* SrlUpdate::add_commands() {
   return commands_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::Command >&
-Update::commands() const {
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlCommand >&
+SrlUpdate::commands() const {
   return commands_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::Command >*
-Update::mutable_commands() {
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlCommand >*
+SrlUpdate::mutable_commands() {
   return &commands_;
 }
 
 // -------------------------------------------------------------------
 
-// Command
+// SrlCommand
 
 // required .protobuf.srl.commands.CommandType commandType = 1;
-inline bool Command::has_commandtype() const {
+inline bool SrlCommand::has_commandtype() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Command::set_has_commandtype() {
+inline void SrlCommand::set_has_commandtype() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Command::clear_has_commandtype() {
+inline void SrlCommand::clear_has_commandtype() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Command::clear_commandtype() {
+inline void SrlCommand::clear_commandtype() {
   commandtype_ = 0;
   clear_has_commandtype();
 }
-inline ::protobuf::srl::commands::CommandType Command::commandtype() const {
+inline ::protobuf::srl::commands::CommandType SrlCommand::commandtype() const {
   return static_cast< ::protobuf::srl::commands::CommandType >(commandtype_);
 }
-inline void Command::set_commandtype(::protobuf::srl::commands::CommandType value) {
+inline void SrlCommand::set_commandtype(::protobuf::srl::commands::CommandType value) {
   assert(::protobuf::srl::commands::CommandType_IsValid(value));
   set_has_commandtype();
   commandtype_ = value;
 }
 
 // required bool isUserCreated = 2;
-inline bool Command::has_isusercreated() const {
+inline bool SrlCommand::has_isusercreated() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Command::set_has_isusercreated() {
+inline void SrlCommand::set_has_isusercreated() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Command::clear_has_isusercreated() {
+inline void SrlCommand::clear_has_isusercreated() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void Command::clear_isusercreated() {
+inline void SrlCommand::clear_isusercreated() {
   isusercreated_ = false;
   clear_has_isusercreated();
 }
-inline bool Command::isusercreated() const {
+inline bool SrlCommand::isusercreated() const {
   return isusercreated_;
 }
-inline void Command::set_isusercreated(bool value) {
+inline void SrlCommand::set_isusercreated(bool value) {
   set_has_isusercreated();
   isusercreated_ = value;
 }
 
 // required bytes commandData = 3;
-inline bool Command::has_commanddata() const {
+inline bool SrlCommand::has_commanddata() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void Command::set_has_commanddata() {
+inline void SrlCommand::set_has_commanddata() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void Command::clear_has_commanddata() {
+inline void SrlCommand::clear_has_commanddata() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void Command::clear_commanddata() {
+inline void SrlCommand::clear_commanddata() {
   if (commanddata_ != &::google::protobuf::internal::kEmptyString) {
     commanddata_->clear();
   }
   clear_has_commanddata();
 }
-inline const ::std::string& Command::commanddata() const {
+inline const ::std::string& SrlCommand::commanddata() const {
   return *commanddata_;
 }
-inline void Command::set_commanddata(const ::std::string& value) {
+inline void SrlCommand::set_commanddata(const ::std::string& value) {
   set_has_commanddata();
   if (commanddata_ == &::google::protobuf::internal::kEmptyString) {
     commanddata_ = new ::std::string;
   }
   commanddata_->assign(value);
 }
-inline void Command::set_commanddata(const char* value) {
+inline void SrlCommand::set_commanddata(const char* value) {
   set_has_commanddata();
   if (commanddata_ == &::google::protobuf::internal::kEmptyString) {
     commanddata_ = new ::std::string;
   }
   commanddata_->assign(value);
 }
-inline void Command::set_commanddata(const void* value, size_t size) {
+inline void SrlCommand::set_commanddata(const void* value, size_t size) {
   set_has_commanddata();
   if (commanddata_ == &::google::protobuf::internal::kEmptyString) {
     commanddata_ = new ::std::string;
   }
   commanddata_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Command::mutable_commanddata() {
+inline ::std::string* SrlCommand::mutable_commanddata() {
   set_has_commanddata();
   if (commanddata_ == &::google::protobuf::internal::kEmptyString) {
     commanddata_ = new ::std::string;
   }
   return commanddata_;
 }
-inline ::std::string* Command::release_commanddata() {
+inline ::std::string* SrlCommand::release_commanddata() {
   clear_has_commanddata();
   if (commanddata_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1165,7 +1064,7 @@ inline ::std::string* Command::release_commanddata() {
     return temp;
   }
 }
-inline void Command::set_allocated_commanddata(::std::string* commanddata) {
+inline void SrlCommand::set_allocated_commanddata(::std::string* commanddata) {
   if (commanddata_ != &::google::protobuf::internal::kEmptyString) {
     delete commanddata_;
   }
@@ -1179,53 +1078,53 @@ inline void Command::set_allocated_commanddata(::std::string* commanddata) {
 }
 
 // optional string commandId = 4;
-inline bool Command::has_commandid() const {
+inline bool SrlCommand::has_commandid() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Command::set_has_commandid() {
+inline void SrlCommand::set_has_commandid() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Command::clear_has_commandid() {
+inline void SrlCommand::clear_has_commandid() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void Command::clear_commandid() {
+inline void SrlCommand::clear_commandid() {
   if (commandid_ != &::google::protobuf::internal::kEmptyString) {
     commandid_->clear();
   }
   clear_has_commandid();
 }
-inline const ::std::string& Command::commandid() const {
+inline const ::std::string& SrlCommand::commandid() const {
   return *commandid_;
 }
-inline void Command::set_commandid(const ::std::string& value) {
+inline void SrlCommand::set_commandid(const ::std::string& value) {
   set_has_commandid();
   if (commandid_ == &::google::protobuf::internal::kEmptyString) {
     commandid_ = new ::std::string;
   }
   commandid_->assign(value);
 }
-inline void Command::set_commandid(const char* value) {
+inline void SrlCommand::set_commandid(const char* value) {
   set_has_commandid();
   if (commandid_ == &::google::protobuf::internal::kEmptyString) {
     commandid_ = new ::std::string;
   }
   commandid_->assign(value);
 }
-inline void Command::set_commandid(const char* value, size_t size) {
+inline void SrlCommand::set_commandid(const char* value, size_t size) {
   set_has_commandid();
   if (commandid_ == &::google::protobuf::internal::kEmptyString) {
     commandid_ = new ::std::string;
   }
   commandid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Command::mutable_commandid() {
+inline ::std::string* SrlCommand::mutable_commandid() {
   set_has_commandid();
   if (commandid_ == &::google::protobuf::internal::kEmptyString) {
     commandid_ = new ::std::string;
   }
   return commandid_;
 }
-inline ::std::string* Command::release_commandid() {
+inline ::std::string* SrlCommand::release_commandid() {
   clear_has_commandid();
   if (commandid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1235,7 +1134,7 @@ inline ::std::string* Command::release_commandid() {
     return temp;
   }
 }
-inline void Command::set_allocated_commandid(::std::string* commandid) {
+inline void SrlCommand::set_allocated_commandid(::std::string* commandid) {
   if (commandid_ != &::google::protobuf::internal::kEmptyString) {
     delete commandid_;
   }
@@ -1298,37 +1197,37 @@ IdChain::mutable_idchain() {
 
 // -------------------------------------------------------------------
 
-// PackageShape
+// ActionPackageShape
 
 // optional .protobuf.srl.commands.IdChain oldContainerId = 1;
-inline bool PackageShape::has_oldcontainerid() const {
+inline bool ActionPackageShape::has_oldcontainerid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void PackageShape::set_has_oldcontainerid() {
+inline void ActionPackageShape::set_has_oldcontainerid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void PackageShape::clear_has_oldcontainerid() {
+inline void ActionPackageShape::clear_has_oldcontainerid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void PackageShape::clear_oldcontainerid() {
+inline void ActionPackageShape::clear_oldcontainerid() {
   if (oldcontainerid_ != NULL) oldcontainerid_->::protobuf::srl::commands::IdChain::Clear();
   clear_has_oldcontainerid();
 }
-inline const ::protobuf::srl::commands::IdChain& PackageShape::oldcontainerid() const {
+inline const ::protobuf::srl::commands::IdChain& ActionPackageShape::oldcontainerid() const {
   return oldcontainerid_ != NULL ? *oldcontainerid_ : *default_instance_->oldcontainerid_;
 }
-inline ::protobuf::srl::commands::IdChain* PackageShape::mutable_oldcontainerid() {
+inline ::protobuf::srl::commands::IdChain* ActionPackageShape::mutable_oldcontainerid() {
   set_has_oldcontainerid();
   if (oldcontainerid_ == NULL) oldcontainerid_ = new ::protobuf::srl::commands::IdChain;
   return oldcontainerid_;
 }
-inline ::protobuf::srl::commands::IdChain* PackageShape::release_oldcontainerid() {
+inline ::protobuf::srl::commands::IdChain* ActionPackageShape::release_oldcontainerid() {
   clear_has_oldcontainerid();
   ::protobuf::srl::commands::IdChain* temp = oldcontainerid_;
   oldcontainerid_ = NULL;
   return temp;
 }
-inline void PackageShape::set_allocated_oldcontainerid(::protobuf::srl::commands::IdChain* oldcontainerid) {
+inline void ActionPackageShape::set_allocated_oldcontainerid(::protobuf::srl::commands::IdChain* oldcontainerid) {
   delete oldcontainerid_;
   oldcontainerid_ = oldcontainerid;
   if (oldcontainerid) {
@@ -1339,34 +1238,34 @@ inline void PackageShape::set_allocated_oldcontainerid(::protobuf::srl::commands
 }
 
 // optional .protobuf.srl.commands.IdChain newContainerId = 2;
-inline bool PackageShape::has_newcontainerid() const {
+inline bool ActionPackageShape::has_newcontainerid() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void PackageShape::set_has_newcontainerid() {
+inline void ActionPackageShape::set_has_newcontainerid() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void PackageShape::clear_has_newcontainerid() {
+inline void ActionPackageShape::clear_has_newcontainerid() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void PackageShape::clear_newcontainerid() {
+inline void ActionPackageShape::clear_newcontainerid() {
   if (newcontainerid_ != NULL) newcontainerid_->::protobuf::srl::commands::IdChain::Clear();
   clear_has_newcontainerid();
 }
-inline const ::protobuf::srl::commands::IdChain& PackageShape::newcontainerid() const {
+inline const ::protobuf::srl::commands::IdChain& ActionPackageShape::newcontainerid() const {
   return newcontainerid_ != NULL ? *newcontainerid_ : *default_instance_->newcontainerid_;
 }
-inline ::protobuf::srl::commands::IdChain* PackageShape::mutable_newcontainerid() {
+inline ::protobuf::srl::commands::IdChain* ActionPackageShape::mutable_newcontainerid() {
   set_has_newcontainerid();
   if (newcontainerid_ == NULL) newcontainerid_ = new ::protobuf::srl::commands::IdChain;
   return newcontainerid_;
 }
-inline ::protobuf::srl::commands::IdChain* PackageShape::release_newcontainerid() {
+inline ::protobuf::srl::commands::IdChain* ActionPackageShape::release_newcontainerid() {
   clear_has_newcontainerid();
   ::protobuf::srl::commands::IdChain* temp = newcontainerid_;
   newcontainerid_ = NULL;
   return temp;
 }
-inline void PackageShape::set_allocated_newcontainerid(::protobuf::srl::commands::IdChain* newcontainerid) {
+inline void ActionPackageShape::set_allocated_newcontainerid(::protobuf::srl::commands::IdChain* newcontainerid) {
   delete newcontainerid_;
   newcontainerid_ = newcontainerid;
   if (newcontainerid) {
@@ -1377,213 +1276,101 @@ inline void PackageShape::set_allocated_newcontainerid(::protobuf::srl::commands
 }
 
 // repeated string shapesToBeContained = 3;
-inline int PackageShape::shapestobecontained_size() const {
+inline int ActionPackageShape::shapestobecontained_size() const {
   return shapestobecontained_.size();
 }
-inline void PackageShape::clear_shapestobecontained() {
+inline void ActionPackageShape::clear_shapestobecontained() {
   shapestobecontained_.Clear();
 }
-inline const ::std::string& PackageShape::shapestobecontained(int index) const {
+inline const ::std::string& ActionPackageShape::shapestobecontained(int index) const {
   return shapestobecontained_.Get(index);
 }
-inline ::std::string* PackageShape::mutable_shapestobecontained(int index) {
+inline ::std::string* ActionPackageShape::mutable_shapestobecontained(int index) {
   return shapestobecontained_.Mutable(index);
 }
-inline void PackageShape::set_shapestobecontained(int index, const ::std::string& value) {
+inline void ActionPackageShape::set_shapestobecontained(int index, const ::std::string& value) {
   shapestobecontained_.Mutable(index)->assign(value);
 }
-inline void PackageShape::set_shapestobecontained(int index, const char* value) {
+inline void ActionPackageShape::set_shapestobecontained(int index, const char* value) {
   shapestobecontained_.Mutable(index)->assign(value);
 }
-inline void PackageShape::set_shapestobecontained(int index, const char* value, size_t size) {
+inline void ActionPackageShape::set_shapestobecontained(int index, const char* value, size_t size) {
   shapestobecontained_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* PackageShape::add_shapestobecontained() {
+inline ::std::string* ActionPackageShape::add_shapestobecontained() {
   return shapestobecontained_.Add();
 }
-inline void PackageShape::add_shapestobecontained(const ::std::string& value) {
+inline void ActionPackageShape::add_shapestobecontained(const ::std::string& value) {
   shapestobecontained_.Add()->assign(value);
 }
-inline void PackageShape::add_shapestobecontained(const char* value) {
+inline void ActionPackageShape::add_shapestobecontained(const char* value) {
   shapestobecontained_.Add()->assign(value);
 }
-inline void PackageShape::add_shapestobecontained(const char* value, size_t size) {
+inline void ActionPackageShape::add_shapestobecontained(const char* value, size_t size) {
   shapestobecontained_.Add()->assign(reinterpret_cast<const char*>(value), size);
 }
 inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-PackageShape::shapestobecontained() const {
+ActionPackageShape::shapestobecontained() const {
   return shapestobecontained_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-PackageShape::mutable_shapestobecontained() {
+ActionPackageShape::mutable_shapestobecontained() {
   return &shapestobecontained_;
 }
 
 // -------------------------------------------------------------------
 
-// AddSubshape
-
-// required .protobuf.srl.commands.IdChain parentShape = 1;
-inline bool AddSubshape::has_parentshape() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void AddSubshape::set_has_parentshape() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void AddSubshape::clear_has_parentshape() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void AddSubshape::clear_parentshape() {
-  if (parentshape_ != NULL) parentshape_->::protobuf::srl::commands::IdChain::Clear();
-  clear_has_parentshape();
-}
-inline const ::protobuf::srl::commands::IdChain& AddSubshape::parentshape() const {
-  return parentshape_ != NULL ? *parentshape_ : *default_instance_->parentshape_;
-}
-inline ::protobuf::srl::commands::IdChain* AddSubshape::mutable_parentshape() {
-  set_has_parentshape();
-  if (parentshape_ == NULL) parentshape_ = new ::protobuf::srl::commands::IdChain;
-  return parentshape_;
-}
-inline ::protobuf::srl::commands::IdChain* AddSubshape::release_parentshape() {
-  clear_has_parentshape();
-  ::protobuf::srl::commands::IdChain* temp = parentshape_;
-  parentshape_ = NULL;
-  return temp;
-}
-inline void AddSubshape::set_allocated_parentshape(::protobuf::srl::commands::IdChain* parentshape) {
-  delete parentshape_;
-  parentshape_ = parentshape;
-  if (parentshape) {
-    set_has_parentshape();
-  } else {
-    clear_has_parentshape();
-  }
-}
-
-// required bytes shape = 2;
-inline bool AddSubshape::has_shape() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void AddSubshape::set_has_shape() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void AddSubshape::clear_has_shape() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void AddSubshape::clear_shape() {
-  if (shape_ != &::google::protobuf::internal::kEmptyString) {
-    shape_->clear();
-  }
-  clear_has_shape();
-}
-inline const ::std::string& AddSubshape::shape() const {
-  return *shape_;
-}
-inline void AddSubshape::set_shape(const ::std::string& value) {
-  set_has_shape();
-  if (shape_ == &::google::protobuf::internal::kEmptyString) {
-    shape_ = new ::std::string;
-  }
-  shape_->assign(value);
-}
-inline void AddSubshape::set_shape(const char* value) {
-  set_has_shape();
-  if (shape_ == &::google::protobuf::internal::kEmptyString) {
-    shape_ = new ::std::string;
-  }
-  shape_->assign(value);
-}
-inline void AddSubshape::set_shape(const void* value, size_t size) {
-  set_has_shape();
-  if (shape_ == &::google::protobuf::internal::kEmptyString) {
-    shape_ = new ::std::string;
-  }
-  shape_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* AddSubshape::mutable_shape() {
-  set_has_shape();
-  if (shape_ == &::google::protobuf::internal::kEmptyString) {
-    shape_ = new ::std::string;
-  }
-  return shape_;
-}
-inline ::std::string* AddSubshape::release_shape() {
-  clear_has_shape();
-  if (shape_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = shape_;
-    shape_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void AddSubshape::set_allocated_shape(::std::string* shape) {
-  if (shape_ != &::google::protobuf::internal::kEmptyString) {
-    delete shape_;
-  }
-  if (shape) {
-    set_has_shape();
-    shape_ = shape;
-  } else {
-    clear_has_shape();
-    shape_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// -------------------------------------------------------------------
-
-// ForceInterpretation
+// ActionForceInterpretation
 
 // required bytes interpretation = 1;
-inline bool ForceInterpretation::has_interpretation() const {
+inline bool ActionForceInterpretation::has_interpretation() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ForceInterpretation::set_has_interpretation() {
+inline void ActionForceInterpretation::set_has_interpretation() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ForceInterpretation::clear_has_interpretation() {
+inline void ActionForceInterpretation::clear_has_interpretation() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ForceInterpretation::clear_interpretation() {
+inline void ActionForceInterpretation::clear_interpretation() {
   if (interpretation_ != &::google::protobuf::internal::kEmptyString) {
     interpretation_->clear();
   }
   clear_has_interpretation();
 }
-inline const ::std::string& ForceInterpretation::interpretation() const {
+inline const ::std::string& ActionForceInterpretation::interpretation() const {
   return *interpretation_;
 }
-inline void ForceInterpretation::set_interpretation(const ::std::string& value) {
+inline void ActionForceInterpretation::set_interpretation(const ::std::string& value) {
   set_has_interpretation();
   if (interpretation_ == &::google::protobuf::internal::kEmptyString) {
     interpretation_ = new ::std::string;
   }
   interpretation_->assign(value);
 }
-inline void ForceInterpretation::set_interpretation(const char* value) {
+inline void ActionForceInterpretation::set_interpretation(const char* value) {
   set_has_interpretation();
   if (interpretation_ == &::google::protobuf::internal::kEmptyString) {
     interpretation_ = new ::std::string;
   }
   interpretation_->assign(value);
 }
-inline void ForceInterpretation::set_interpretation(const void* value, size_t size) {
+inline void ActionForceInterpretation::set_interpretation(const void* value, size_t size) {
   set_has_interpretation();
   if (interpretation_ == &::google::protobuf::internal::kEmptyString) {
     interpretation_ = new ::std::string;
   }
   interpretation_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* ForceInterpretation::mutable_interpretation() {
+inline ::std::string* ActionForceInterpretation::mutable_interpretation() {
   set_has_interpretation();
   if (interpretation_ == &::google::protobuf::internal::kEmptyString) {
     interpretation_ = new ::std::string;
   }
   return interpretation_;
 }
-inline ::std::string* ForceInterpretation::release_interpretation() {
+inline ::std::string* ActionForceInterpretation::release_interpretation() {
   clear_has_interpretation();
   if (interpretation_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1593,7 +1380,7 @@ inline ::std::string* ForceInterpretation::release_interpretation() {
     return temp;
   }
 }
-inline void ForceInterpretation::set_allocated_interpretation(::std::string* interpretation) {
+inline void ActionForceInterpretation::set_allocated_interpretation(::std::string* interpretation) {
   if (interpretation_ != &::google::protobuf::internal::kEmptyString) {
     delete interpretation_;
   }
@@ -1607,34 +1394,34 @@ inline void ForceInterpretation::set_allocated_interpretation(::std::string* int
 }
 
 // required .protobuf.srl.commands.IdChain shapeId = 2;
-inline bool ForceInterpretation::has_shapeid() const {
+inline bool ActionForceInterpretation::has_shapeid() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ForceInterpretation::set_has_shapeid() {
+inline void ActionForceInterpretation::set_has_shapeid() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ForceInterpretation::clear_has_shapeid() {
+inline void ActionForceInterpretation::clear_has_shapeid() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void ForceInterpretation::clear_shapeid() {
+inline void ActionForceInterpretation::clear_shapeid() {
   if (shapeid_ != NULL) shapeid_->::protobuf::srl::commands::IdChain::Clear();
   clear_has_shapeid();
 }
-inline const ::protobuf::srl::commands::IdChain& ForceInterpretation::shapeid() const {
+inline const ::protobuf::srl::commands::IdChain& ActionForceInterpretation::shapeid() const {
   return shapeid_ != NULL ? *shapeid_ : *default_instance_->shapeid_;
 }
-inline ::protobuf::srl::commands::IdChain* ForceInterpretation::mutable_shapeid() {
+inline ::protobuf::srl::commands::IdChain* ActionForceInterpretation::mutable_shapeid() {
   set_has_shapeid();
   if (shapeid_ == NULL) shapeid_ = new ::protobuf::srl::commands::IdChain;
   return shapeid_;
 }
-inline ::protobuf::srl::commands::IdChain* ForceInterpretation::release_shapeid() {
+inline ::protobuf::srl::commands::IdChain* ActionForceInterpretation::release_shapeid() {
   clear_has_shapeid();
   ::protobuf::srl::commands::IdChain* temp = shapeid_;
   shapeid_ = NULL;
   return temp;
 }
-inline void ForceInterpretation::set_allocated_shapeid(::protobuf::srl::commands::IdChain* shapeid) {
+inline void ActionForceInterpretation::set_allocated_shapeid(::protobuf::srl::commands::IdChain* shapeid) {
   delete shapeid_;
   shapeid_ = shapeid;
   if (shapeid) {
@@ -1646,37 +1433,37 @@ inline void ForceInterpretation::set_allocated_shapeid(::protobuf::srl::commands
 
 // -------------------------------------------------------------------
 
-// AddAttribtue
+// ActionAddAttribtue
 
 // required .protobuf.srl.commands.IdChain shapeId = 1;
-inline bool AddAttribtue::has_shapeid() const {
+inline bool ActionAddAttribtue::has_shapeid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void AddAttribtue::set_has_shapeid() {
+inline void ActionAddAttribtue::set_has_shapeid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void AddAttribtue::clear_has_shapeid() {
+inline void ActionAddAttribtue::clear_has_shapeid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void AddAttribtue::clear_shapeid() {
+inline void ActionAddAttribtue::clear_shapeid() {
   if (shapeid_ != NULL) shapeid_->::protobuf::srl::commands::IdChain::Clear();
   clear_has_shapeid();
 }
-inline const ::protobuf::srl::commands::IdChain& AddAttribtue::shapeid() const {
+inline const ::protobuf::srl::commands::IdChain& ActionAddAttribtue::shapeid() const {
   return shapeid_ != NULL ? *shapeid_ : *default_instance_->shapeid_;
 }
-inline ::protobuf::srl::commands::IdChain* AddAttribtue::mutable_shapeid() {
+inline ::protobuf::srl::commands::IdChain* ActionAddAttribtue::mutable_shapeid() {
   set_has_shapeid();
   if (shapeid_ == NULL) shapeid_ = new ::protobuf::srl::commands::IdChain;
   return shapeid_;
 }
-inline ::protobuf::srl::commands::IdChain* AddAttribtue::release_shapeid() {
+inline ::protobuf::srl::commands::IdChain* ActionAddAttribtue::release_shapeid() {
   clear_has_shapeid();
   ::protobuf::srl::commands::IdChain* temp = shapeid_;
   shapeid_ = NULL;
   return temp;
 }
-inline void AddAttribtue::set_allocated_shapeid(::protobuf::srl::commands::IdChain* shapeid) {
+inline void ActionAddAttribtue::set_allocated_shapeid(::protobuf::srl::commands::IdChain* shapeid) {
   delete shapeid_;
   shapeid_ = shapeid;
   if (shapeid) {
@@ -1687,53 +1474,53 @@ inline void AddAttribtue::set_allocated_shapeid(::protobuf::srl::commands::IdCha
 }
 
 // required string attributeKey = 2;
-inline bool AddAttribtue::has_attributekey() const {
+inline bool ActionAddAttribtue::has_attributekey() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void AddAttribtue::set_has_attributekey() {
+inline void ActionAddAttribtue::set_has_attributekey() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void AddAttribtue::clear_has_attributekey() {
+inline void ActionAddAttribtue::clear_has_attributekey() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void AddAttribtue::clear_attributekey() {
+inline void ActionAddAttribtue::clear_attributekey() {
   if (attributekey_ != &::google::protobuf::internal::kEmptyString) {
     attributekey_->clear();
   }
   clear_has_attributekey();
 }
-inline const ::std::string& AddAttribtue::attributekey() const {
+inline const ::std::string& ActionAddAttribtue::attributekey() const {
   return *attributekey_;
 }
-inline void AddAttribtue::set_attributekey(const ::std::string& value) {
+inline void ActionAddAttribtue::set_attributekey(const ::std::string& value) {
   set_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     attributekey_ = new ::std::string;
   }
   attributekey_->assign(value);
 }
-inline void AddAttribtue::set_attributekey(const char* value) {
+inline void ActionAddAttribtue::set_attributekey(const char* value) {
   set_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     attributekey_ = new ::std::string;
   }
   attributekey_->assign(value);
 }
-inline void AddAttribtue::set_attributekey(const char* value, size_t size) {
+inline void ActionAddAttribtue::set_attributekey(const char* value, size_t size) {
   set_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     attributekey_ = new ::std::string;
   }
   attributekey_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* AddAttribtue::mutable_attributekey() {
+inline ::std::string* ActionAddAttribtue::mutable_attributekey() {
   set_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     attributekey_ = new ::std::string;
   }
   return attributekey_;
 }
-inline ::std::string* AddAttribtue::release_attributekey() {
+inline ::std::string* ActionAddAttribtue::release_attributekey() {
   clear_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1743,7 +1530,7 @@ inline ::std::string* AddAttribtue::release_attributekey() {
     return temp;
   }
 }
-inline void AddAttribtue::set_allocated_attributekey(::std::string* attributekey) {
+inline void ActionAddAttribtue::set_allocated_attributekey(::std::string* attributekey) {
   if (attributekey_ != &::google::protobuf::internal::kEmptyString) {
     delete attributekey_;
   }
@@ -1757,53 +1544,53 @@ inline void AddAttribtue::set_allocated_attributekey(::std::string* attributekey
 }
 
 // required bytes attributeValue = 3;
-inline bool AddAttribtue::has_attributevalue() const {
+inline bool ActionAddAttribtue::has_attributevalue() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void AddAttribtue::set_has_attributevalue() {
+inline void ActionAddAttribtue::set_has_attributevalue() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void AddAttribtue::clear_has_attributevalue() {
+inline void ActionAddAttribtue::clear_has_attributevalue() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void AddAttribtue::clear_attributevalue() {
+inline void ActionAddAttribtue::clear_attributevalue() {
   if (attributevalue_ != &::google::protobuf::internal::kEmptyString) {
     attributevalue_->clear();
   }
   clear_has_attributevalue();
 }
-inline const ::std::string& AddAttribtue::attributevalue() const {
+inline const ::std::string& ActionAddAttribtue::attributevalue() const {
   return *attributevalue_;
 }
-inline void AddAttribtue::set_attributevalue(const ::std::string& value) {
+inline void ActionAddAttribtue::set_attributevalue(const ::std::string& value) {
   set_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     attributevalue_ = new ::std::string;
   }
   attributevalue_->assign(value);
 }
-inline void AddAttribtue::set_attributevalue(const char* value) {
+inline void ActionAddAttribtue::set_attributevalue(const char* value) {
   set_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     attributevalue_ = new ::std::string;
   }
   attributevalue_->assign(value);
 }
-inline void AddAttribtue::set_attributevalue(const void* value, size_t size) {
+inline void ActionAddAttribtue::set_attributevalue(const void* value, size_t size) {
   set_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     attributevalue_ = new ::std::string;
   }
   attributevalue_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* AddAttribtue::mutable_attributevalue() {
+inline ::std::string* ActionAddAttribtue::mutable_attributevalue() {
   set_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     attributevalue_ = new ::std::string;
   }
   return attributevalue_;
 }
-inline ::std::string* AddAttribtue::release_attributevalue() {
+inline ::std::string* ActionAddAttribtue::release_attributevalue() {
   clear_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1813,7 +1600,7 @@ inline ::std::string* AddAttribtue::release_attributevalue() {
     return temp;
   }
 }
-inline void AddAttribtue::set_allocated_attributevalue(::std::string* attributevalue) {
+inline void ActionAddAttribtue::set_allocated_attributevalue(::std::string* attributevalue) {
   if (attributevalue_ != &::google::protobuf::internal::kEmptyString) {
     delete attributevalue_;
   }
@@ -1828,37 +1615,37 @@ inline void AddAttribtue::set_allocated_attributevalue(::std::string* attributev
 
 // -------------------------------------------------------------------
 
-// RemoveAttribtue
+// ActionRemoveAttribtue
 
 // required .protobuf.srl.commands.IdChain shapeId = 1;
-inline bool RemoveAttribtue::has_shapeid() const {
+inline bool ActionRemoveAttribtue::has_shapeid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void RemoveAttribtue::set_has_shapeid() {
+inline void ActionRemoveAttribtue::set_has_shapeid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void RemoveAttribtue::clear_has_shapeid() {
+inline void ActionRemoveAttribtue::clear_has_shapeid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void RemoveAttribtue::clear_shapeid() {
+inline void ActionRemoveAttribtue::clear_shapeid() {
   if (shapeid_ != NULL) shapeid_->::protobuf::srl::commands::IdChain::Clear();
   clear_has_shapeid();
 }
-inline const ::protobuf::srl::commands::IdChain& RemoveAttribtue::shapeid() const {
+inline const ::protobuf::srl::commands::IdChain& ActionRemoveAttribtue::shapeid() const {
   return shapeid_ != NULL ? *shapeid_ : *default_instance_->shapeid_;
 }
-inline ::protobuf::srl::commands::IdChain* RemoveAttribtue::mutable_shapeid() {
+inline ::protobuf::srl::commands::IdChain* ActionRemoveAttribtue::mutable_shapeid() {
   set_has_shapeid();
   if (shapeid_ == NULL) shapeid_ = new ::protobuf::srl::commands::IdChain;
   return shapeid_;
 }
-inline ::protobuf::srl::commands::IdChain* RemoveAttribtue::release_shapeid() {
+inline ::protobuf::srl::commands::IdChain* ActionRemoveAttribtue::release_shapeid() {
   clear_has_shapeid();
   ::protobuf::srl::commands::IdChain* temp = shapeid_;
   shapeid_ = NULL;
   return temp;
 }
-inline void RemoveAttribtue::set_allocated_shapeid(::protobuf::srl::commands::IdChain* shapeid) {
+inline void ActionRemoveAttribtue::set_allocated_shapeid(::protobuf::srl::commands::IdChain* shapeid) {
   delete shapeid_;
   shapeid_ = shapeid;
   if (shapeid) {
@@ -1869,53 +1656,53 @@ inline void RemoveAttribtue::set_allocated_shapeid(::protobuf::srl::commands::Id
 }
 
 // required string attributeKey = 2;
-inline bool RemoveAttribtue::has_attributekey() const {
+inline bool ActionRemoveAttribtue::has_attributekey() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void RemoveAttribtue::set_has_attributekey() {
+inline void ActionRemoveAttribtue::set_has_attributekey() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void RemoveAttribtue::clear_has_attributekey() {
+inline void ActionRemoveAttribtue::clear_has_attributekey() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void RemoveAttribtue::clear_attributekey() {
+inline void ActionRemoveAttribtue::clear_attributekey() {
   if (attributekey_ != &::google::protobuf::internal::kEmptyString) {
     attributekey_->clear();
   }
   clear_has_attributekey();
 }
-inline const ::std::string& RemoveAttribtue::attributekey() const {
+inline const ::std::string& ActionRemoveAttribtue::attributekey() const {
   return *attributekey_;
 }
-inline void RemoveAttribtue::set_attributekey(const ::std::string& value) {
+inline void ActionRemoveAttribtue::set_attributekey(const ::std::string& value) {
   set_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     attributekey_ = new ::std::string;
   }
   attributekey_->assign(value);
 }
-inline void RemoveAttribtue::set_attributekey(const char* value) {
+inline void ActionRemoveAttribtue::set_attributekey(const char* value) {
   set_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     attributekey_ = new ::std::string;
   }
   attributekey_->assign(value);
 }
-inline void RemoveAttribtue::set_attributekey(const char* value, size_t size) {
+inline void ActionRemoveAttribtue::set_attributekey(const char* value, size_t size) {
   set_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     attributekey_ = new ::std::string;
   }
   attributekey_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* RemoveAttribtue::mutable_attributekey() {
+inline ::std::string* ActionRemoveAttribtue::mutable_attributekey() {
   set_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     attributekey_ = new ::std::string;
   }
   return attributekey_;
 }
-inline ::std::string* RemoveAttribtue::release_attributekey() {
+inline ::std::string* ActionRemoveAttribtue::release_attributekey() {
   clear_has_attributekey();
   if (attributekey_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1925,7 +1712,7 @@ inline ::std::string* RemoveAttribtue::release_attributekey() {
     return temp;
   }
 }
-inline void RemoveAttribtue::set_allocated_attributekey(::std::string* attributekey) {
+inline void ActionRemoveAttribtue::set_allocated_attributekey(::std::string* attributekey) {
   if (attributekey_ != &::google::protobuf::internal::kEmptyString) {
     delete attributekey_;
   }
@@ -1939,53 +1726,53 @@ inline void RemoveAttribtue::set_allocated_attributekey(::std::string* attribute
 }
 
 // required bytes attributeValue = 3;
-inline bool RemoveAttribtue::has_attributevalue() const {
+inline bool ActionRemoveAttribtue::has_attributevalue() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void RemoveAttribtue::set_has_attributevalue() {
+inline void ActionRemoveAttribtue::set_has_attributevalue() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void RemoveAttribtue::clear_has_attributevalue() {
+inline void ActionRemoveAttribtue::clear_has_attributevalue() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void RemoveAttribtue::clear_attributevalue() {
+inline void ActionRemoveAttribtue::clear_attributevalue() {
   if (attributevalue_ != &::google::protobuf::internal::kEmptyString) {
     attributevalue_->clear();
   }
   clear_has_attributevalue();
 }
-inline const ::std::string& RemoveAttribtue::attributevalue() const {
+inline const ::std::string& ActionRemoveAttribtue::attributevalue() const {
   return *attributevalue_;
 }
-inline void RemoveAttribtue::set_attributevalue(const ::std::string& value) {
+inline void ActionRemoveAttribtue::set_attributevalue(const ::std::string& value) {
   set_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     attributevalue_ = new ::std::string;
   }
   attributevalue_->assign(value);
 }
-inline void RemoveAttribtue::set_attributevalue(const char* value) {
+inline void ActionRemoveAttribtue::set_attributevalue(const char* value) {
   set_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     attributevalue_ = new ::std::string;
   }
   attributevalue_->assign(value);
 }
-inline void RemoveAttribtue::set_attributevalue(const void* value, size_t size) {
+inline void ActionRemoveAttribtue::set_attributevalue(const void* value, size_t size) {
   set_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     attributevalue_ = new ::std::string;
   }
   attributevalue_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* RemoveAttribtue::mutable_attributevalue() {
+inline ::std::string* ActionRemoveAttribtue::mutable_attributevalue() {
   set_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     attributevalue_ = new ::std::string;
   }
   return attributevalue_;
 }
-inline ::std::string* RemoveAttribtue::release_attributevalue() {
+inline ::std::string* ActionRemoveAttribtue::release_attributevalue() {
   clear_has_attributevalue();
   if (attributevalue_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -1995,7 +1782,7 @@ inline ::std::string* RemoveAttribtue::release_attributevalue() {
     return temp;
   }
 }
-inline void RemoveAttribtue::set_allocated_attributevalue(::std::string* attributevalue) {
+inline void ActionRemoveAttribtue::set_allocated_attributevalue(::std::string* attributevalue) {
   if (attributevalue_ != &::google::protobuf::internal::kEmptyString) {
     delete attributevalue_;
   }
