@@ -63,7 +63,7 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 	 */
 	this.createPointFromEvent = function (drawingEvent) {
 		var currentPoint = new SRL_Point(drawingEvent.x, drawingEvent.y);
-		currentPoint.setId(generateUUID());
+		//currentPoint.setId(generateUUID());
 		currentPoint.setTime(drawingEvent.time);
 		currentPoint.setPressure(drawingEvent.pressure);
 		currentPoint.setSize(drawingEvent.size);
