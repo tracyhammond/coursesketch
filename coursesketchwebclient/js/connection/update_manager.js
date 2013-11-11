@@ -192,13 +192,16 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	/*********
 	 * Specific commands and their actions.
 	 *******/
-	
+
 	/**
 	 * Moves the shapes from the old container to the new container.
 	 */
 	Action.ActionPackageShape.prototype.redo = function() {
 		var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 		var newContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
+
+		if (oldContainingObject == newContainingObject)
+			return; // done moving to same place.
 		for (var shapeIndex = 0; shapeIndex < this.shapesToBeContained.length; shapeIndex++) {
 			var shapeId = this.shapesToBeContained[shapeIndex];
 			console.log('id ' + shapeId);
@@ -217,6 +220,10 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	Action.ActionPackageShape.undo = function() {
 		var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 		var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
+
+		if (oldContainingObject == newContainingObject)
+			return; // done moving to same place.
+
 		for (shapeId in this.shapesToBeContained) {
 			var object = oldContainingObject.removeObjectById(shapeId);
 			if (newContainerId) {

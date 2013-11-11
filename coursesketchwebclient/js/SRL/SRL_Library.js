@@ -9,6 +9,12 @@
  *******************************
  */
 
+const SRL_ObjectType = "SRL_Object";
+const SRL_SketchType = "SRL_Sketch";
+const SRL_ShapeType = "SRL_Shape";
+const SRL_StrokeType = "SRL_Stroke"; 
+const SRL_PointType = "SRL_Point";
+
 function Overloads() {
 	/**
 	 * This function returns a string with the value of the original object's type
