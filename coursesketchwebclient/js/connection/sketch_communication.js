@@ -95,7 +95,7 @@
 		proto.setInterpretations(protoInterp);
 		
 		var protoSubShapes = new Array();
-		var subShapeList = this.getSubShapes();
+		var subShapeList = this.getSubObjects();
 		for (var i = 0; i < subShapeList.length; i++) {
 			protoSubShapes.push(encodeSrlObject(scope,subShapeList[i]));
 		}

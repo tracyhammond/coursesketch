@@ -79,6 +79,12 @@ SRL_Stroke.prototype.drawStroke = function drawStroke(graphics) {
 	graphics.stroke();
 }
 
+SRL_BoundingBox.prototype.drawBounds = function drawBounds(graphics) {
+	var rectangle = this.getRectangle();
+	graphics.rect(rectangle.x,rectangle.y,rectangle.width,rectangle.height);
+	graphics.stroke();
+}
+
 /**
  * Draws the {@link SRL_Shape}.
  *
@@ -96,6 +102,7 @@ SRL_Shape.prototype.drawShape = function drawShape(graphics) {
 	for (var i = 0; i <subShapes.length; i++) {
 		subShapes[i].draw(graphics);
 	}
+	//var rectangle = this.getBoundingBox().drawBounds(graphics);
 }
 
 SRL_Sketch.prototype.drawEntireSketch = function() {
@@ -111,6 +118,7 @@ SRL_Sketch.prototype.drawEntireSketch = function() {
 		}
 	}
 }
+SRL_Sketch.prototype.canvasContext = false;
 
  /*******************************
  *

@@ -38,7 +38,6 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 			this.emptyQueue();
 		}
 		if (fromRemote || execute) {
-			console.log("executing! update");
 			setTimeout(function() {
 				var redraw = update.redo();
 				if (redraw && sketch.drawEntireSketch) {
@@ -143,12 +142,8 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	ProtoSrlCommand.prototype.redo = function() {
 		var redraw = false;
 		var command = this.getCommandType();
-		console.log(typeof command)
-		if (typeof command !== 'number') {
-	        throw new Error('You must pass a number to setPlaceType!');
-	    }
 
-		switch(command) {
+		switch (command) {
 			case this.CommandType.ADD_STROKE:
 				if (!this.decodedData) {
 					//console.log("Executing " + this.CommandType.ADD_STROKE);
@@ -204,10 +199,7 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 			return; // done moving to same place.
 		for (var shapeIndex = 0; shapeIndex < this.shapesToBeContained.length; shapeIndex++) {
 			var shapeId = this.shapesToBeContained[shapeIndex];
-			console.log('id ' + shapeId);
 			var object = oldContainingObject.removeSubObjectById(shapeId);
-			console.log('result');
-			console.log(object);
 			newContainingObject.addSubObject(object);
 		}
 	}

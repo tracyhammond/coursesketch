@@ -12,16 +12,19 @@
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
 
-	<script type="text/javascript" src="js/input/sketching.js"></script>
-	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/input/sketching.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<!-- DEBUG -->
 	<script type="text/javascript" src="js/test/SRL_SketchViewer.js"></script>
 
 	<script type="text/javascript" src="js/connection/connection_library.js"></script>
 	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
 	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+	<!-- DEBUG -->
 	<script type="text/javascript" src="js/test/Command_Viewer.js"></script>
+
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 		var drawingCreator = false;
@@ -131,7 +134,7 @@
 	    	firstCommand.commandData = shape.sendToProtobuf(this).toArrayBuffer();
 	    	firstCommand.decodedData = shape;
 	    	var secondCommand = createBaseCommand(ProtoSrlCommandType.PACKAGE_SHAPE, false);
-	    	var packageShape = new ProtoUpdateCommand.PackageShape();
+	    	var packageShape = new ProtoUpdateCommand.ActionPackageShape();
 	    	var list = sketch.getList();
 	    	var idList = [];
 	    	for (var i = 0; i < list.length; i ++) {

@@ -249,7 +249,7 @@ function SRL_Sketch() {
 
 	var objectList = [];
 	var objectIdMap = [];
-	this.canvasContext = false;
+	var boundingBox = new SRL_BoundingBox();
 
 	var objectMap = {};
 	this.addObject = function(srlObject) {
@@ -397,6 +397,12 @@ function SRL_Object() {
 	var m_subObjects = new Array();
 
 	/**
+	 * Contains the bounds of this shape.
+	 *
+	 * The bounding box is the farthest left, right, top and bottom points in this shape;
+	 */
+	var boundingBox = new SRL_BoundingBox();
+	/**
 	 * Adds a subobject to this object. 
 	 * This usually happens during recognition, when a new object
 	 * is made up from one or more objects
@@ -404,6 +410,7 @@ function SRL_Object() {
 	 */
 	this.addSubObject = function(subObject) {
 		if (subObject instanceof SRL_Object) {
+			boundingBox.addSubObject(subObject);
 			m_subObjects.push(subObject);
 		}
 	}
@@ -558,6 +565,42 @@ function SRL_Object() {
 	this.setUserCreated = function(isUserCreated) {
 		isUserCreated = isUserCreated;
 	}
+	
+	/**
+	 * Gets the bounding box of the object.
+	 * @return the bounding box of the object
+	 */
+	this.getBoundingBox = function() {
+		return boundingBox;
+	}
+
+	/**
+	 * returns the minimum x value in an object
+	 */
+	this.getMinX = function() {
+		return boundingBox.getLeft();//minx;
+	}
+
+	/**
+	 * return minimum y value in an object
+	 */
+	this.getMinY = function() {
+		return boundingBox.getTop();//miny;
+	}
+
+	/**
+	 * return maximum x value in an object
+	 */
+	this.getMaxX = function() {
+		return boundingBox.getRight();//maxx;
+	}
+
+	/**
+	 * return maximum x value in an object
+	 */
+	this.getMaxY = function() {
+		return boundingBox.getBottom();
+	}
 };
 
 /**
@@ -575,16 +618,16 @@ function SRL_Object() {
 function SRL_Shape() {
 
 	this.Inherits(SRL_Object);
-
 	/**
 	 * Gets a list of all of the strokes that make up this object.
 	 * It searches recursively to get all of the strokes of this object.
 	 * If it does not have any strokes, the list will be empty.
 	 * @return
 	 */
-	this.getStrokes = function() {
+	this.getRecursiveStrokes = function() {
 		var completeList = new Array();
 		console.log("TODO - need to implement a .getRecursiveSubObjectList()");
+		throw 'Function not supported: getRecursiveStrokes';
 		/*
 		for(SRL_Object o : getRecursiveSubObjectList()){
 			try {
@@ -613,30 +656,20 @@ function SRL_Shape() {
 	this.getCenterY = function(){
 		return (this.getMinY() + this.getMaxY())/2.0;
 	}
-	/**
-	 * Get the bounding box of the stroke
-	 * This returns an awt shape. 
-	 * Use getBoundingSRLRectangle to get the SRL shape
-	 * @return the bounding box of the stroke
-	 */
-	this.getBoundingBox = function() {
-		//var r = new Rectangle();
-		//r.setRect(getMinX(), getMinY(), getWidth(), getHeight());
-		//return r;
-	}
+
 	/**
 	 * Returns the width of the object
 	 * @return the width of the object
 	 */
 	this.getWidth = function(){
-		return getMaxX() - getMinX();
+		return this.getBoundingBox().getWidth();//getMaxX() - getMinX();
 	}
 	/**
 	 * Returns the height of the object
 	 * @return the height of the object
 	 */
 	this.getHeight = function(){
-		return getMaxY() - getMinY();
+		return this.bondingBox().getHeight();//getMaxY() - getMinY();
 	}
 	
 	/**
@@ -687,21 +720,11 @@ function SRL_Shape() {
  */
 
 function SRL_Stroke(startPoint) {
-
 	this.Inherits(SRL_Shape);
-
 	/**
 	 * List of points in the stroke
 	 */
 	var points = new Array();
-	/**
-	 * Constructor setting the initial point in the stroke
-	 * @param startPoint
-	 */
-	if (startPoint instanceof SRL_Point) {
-		points.push(startPoint);
-	} else {
-	}
 
 	/**
 	 * Adding another point to the stroke
@@ -710,7 +733,17 @@ function SRL_Stroke(startPoint) {
 	this.addPoint = function(point){
 		if (point instanceof SRL_Point) {
 			points.push(point);
+			this.getBoundingBox().addPoint(point);
 		}
+	}
+
+	/**
+	 * Constructor setting the initial point in the stroke
+	 * @param startPoint
+	 */
+	if (startPoint instanceof SRL_Point) {
+		this.addPoint(startPoint);
+	} else {
 	}
 
 	/**
@@ -815,52 +848,61 @@ function SRL_Stroke(startPoint) {
 	 * return minimum x value in a stroke
 	 */
 	this.getMinX.SRL_Stroke = function() {
+		/*
 		var minx = this.getFirstPoint().getX();
 		for(var i=0; i<points.length; i++){
 			if(points[i].getX() < minx){
 				minx = points[i].getX();
 			}
 		}
-		return minx;
+		*/
+		return boundingBox.getLeft();//minx;
 	}
 
 	/** returns the minimum y value in a stroke
 	 * return minimum y value in a stroke
 	 */
 	this.getMinY.SRL_Stroke = function() {
+		/*
 		var miny = this.getFirstPoint().getY();
 		for(var i=0; i<points.length; i++){
 			if(points[i].getY() < miny){
 				miny = points[i].getY();
 			}
 		}
-		return miny;
+		*/
+		return boundingBox.getTop();//miny;
 	}
 
 	/** returns the maximum x value in a stroke
 	 * return maximum x value in a stroke
 	 */
 	this.getMaxX.SRL_Stroke = function() {
+		/*
+	
 		var maxx = this.getFirstPoint().getX();
 		for(var i=0; i<points.length; i++){
 			if(points[i].getX() > maxx){
 				maxx = points[i].getX();
 			}
 		}
-		return maxx;
+		*/
+		return boundingBox.getRight();//maxx;
 	}
 
 	/** returns the maximum x value in a stroke
 	 * return maximum x value in a stroke
 	 */
 	this.getMaxY.SRL_Stroke = function() {
+		/*
 		var maxy = this.getFirstPoint().getY();
 		for(var i=0; i<points.length; i++){
 			if(points[i].getY() > maxy){
 				maxy = points[i].getY();
 			}
 		}
-		return maxy;
+		*/
+		return boundingBox.getBottom();//maxy;
 	}
 
 	/**
@@ -993,6 +1035,7 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getTotalTime = function() {
 		console.log("TODO - need to implement a .getTime()");
+		throw 'unspoorted function call: "getTotalTime"';
 		if (this.getPoints().length == 0)
 			return Number.NaN;
 		//return this.getLastPoint().getTime()-this.getFirstPoint().getTime();
@@ -1046,6 +1089,7 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getMaximumSpeed = function() {
 		console.log("TODO - need to implement a .getTime()");
+		throw 'unspoorted function call: "getMaximumSpeed"';
 		if (this.getPoints().length == 0)
 			return Number.NaN;
 		var max = 0;
@@ -1402,15 +1446,6 @@ function SRL_Point(x, y) {
 	}
 
 	/**
-	 * Return an object drawable by AWT
-	 * return awt point
-	 */
-	this.getAWT = function(){
-		console.log("IGNORE AWT");
-		//return new Point((int)getX(),(int)getY());
-	}
-
-	/**
 	 * Just returns the x value with is obviously the same as the min
 	 * return x value
 	 */
@@ -1482,6 +1517,119 @@ function SRL_Interpretation(label, confidence, complexity) {
 	this.label = label;
 	this.confidence = confidence;
 	this.complexity = complexity;
+}
+
+function SRL_BoundingBox() {
+	var internalLeft, internalRight, internalTop, internalBottom;
+	var internalX, internalY, internalWidth, internalHeight;
+
+	var firstCoordinate = true;
+
+	/**
+	 * @see SRL_BoundingBox#addCoordinate(x,y)
+	 */
+	this.addPoint = function(point) {
+		this.addCoordinate(point.getX(), point.getY());
+	}
+
+	/**
+	 * expands the box if the given coordinate is outside of the current bounds;
+	 */
+	this.addCoordinate = function(newX, newY) {
+		if (firstCoordinate) {
+			internalLeft = internalRight = newX;
+			internalTop = internalBottom = newY;
+			firstCoordinate = false;
+		}
+
+		internalLeft = Math.min(newX, internalLeft);
+		internalRight = Math.max(newX, internalRight);
+		internalTop = Math.min(newY,	internalTop);
+		internalBottom = Math.max(newY, internalBottom);
+		sync();
+	}
+
+	/**
+	 * @see SRL_BoundingBox#containsCoordinate(x,y)
+	 */
+	this.containsPoint = function(point) {
+		return this.containsCoordinate(point.getX(), point.getY());
+	}
+
+	/**
+	 * Returns true if the bounding box contains the given point, false otherwise.
+	 *
+	 * containment is detirmined by being in or on the border of the bounding box.
+	 */
+	this.containsCoordinate = function(checkX, checkY) {
+		return internalLeft <= checkX && checkX <= internalRight &&
+				internalTop <= checkY && checkY <= internalBottom;
+	}
+
+	this.union = function(other) {
+		var extremes = other.getExtremeValues();
+		if (firstCoordinate) {
+			internalLeft = internalRight = extremes.left;
+			internalTop = internalBottom = extremes.top;
+			firstCoordinate = false;
+		}
+
+		internalLeft = Math.min(extremes.left, internalLeft);
+		internalRight = Math.max(extremes.right, internalRight);
+		internalTop = Math.min(extremes.top, internalTop);
+		internalBottom = Math.max(extremes.bottom, internalBottom);
+		sync();
+	}
+
+	/**
+	 * Makes the rectangle coordinates the same as the extreme coordinates.
+	 */
+	function sync() {
+		internalX = internalLeft;
+		internalY = internalTop;
+		internalWidth = internalRight - internalLeft;
+		internalHeight = internalBottom - internalTop;
+	}
+
+	this.addSubObject = function(subObject) {
+		console.log('combing ');
+		console.log(subObject);
+		this.union(subObject.getBoundingBox());
+	}
+	
+	/**
+	 * Returns the extreme values that make up this {@code SRL_BoundingBox}.
+	 *
+	 * returns left, right, top, and bottom from this instance.
+	 */
+	this.getExtremeValues = function() {
+		return {
+			left : internalLeft,
+			right : internalRight,
+			top : internalTop,
+			bottom : internalBottom
+		}
+
+	}
+
+	/**
+	 * Returns the extreme values that make up this {@code SRL_BoundingBox}.
+	 *
+	 * returns left, right, top, and bottom from this instance.
+	 */
+	this.getRectangle = function() {
+		return {
+			x : internalX,
+			y : internalY,
+			width : internalWidth,
+			height : internalHeight
+		}
+	}
+
+	this.toString = function() {
+		return "SRL_BoundingBox: (" + internalX + ', ' + internalY + ') Width: ' + internalWidth + ' Height: ' + internalHeight; 
+	}
+	
 }
 
 /**
