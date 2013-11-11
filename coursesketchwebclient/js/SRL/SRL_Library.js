@@ -722,10 +722,11 @@ function SRL_Shape() {
 function SRL_Stroke(startPoint) {
 	this.Inherits(SRL_Shape);
 	/**
-	 * List of points in the stroke
+	 * List of points in the stroke.
 	 */
 	var points = new Array();
 
+	var intersector = new SRL_IntersectionHandler(this);
 	/**
 	 * Adding another point to the stroke
 	 * @param point
@@ -734,6 +735,7 @@ function SRL_Stroke(startPoint) {
 		if (point instanceof SRL_Point) {
 			points.push(point);
 			this.getBoundingBox().addPoint(point);
+			intersector.addPoint(point, points.length-1);
 		}
 	}
 
@@ -844,6 +846,10 @@ function SRL_Stroke(startPoint) {
 		return points[points.length-1];
 	}
 
+	this.getStrokeIntersector = function() {
+		return intersector;
+	}
+	
 	/** returns the minimum x value in a stroke
 	 * return minimum x value in a stroke
 	 */
@@ -1513,18 +1519,41 @@ function SRL_Point(x, y) {
 	}
 };
 
+/**
+ **************************************************************
+ *
+ *
+ * SRL_Interpretation SRL_Library
+ * @author Daniel Tan
+ * 
+ *
+ *
+ **************************************************************
+ */
+
 function SRL_Interpretation(label, confidence, complexity) {
 	this.label = label;
 	this.confidence = confidence;
 	this.complexity = complexity;
 }
 
+/**
+ **************************************************************
+ *
+ *
+ * SRL_BoundingBox SRL_Library
+ * @author Daniel Tan
+ * 
+ *
+ *
+ **************************************************************
+ */
 function SRL_BoundingBox() {
 	var internalLeft, internalRight, internalTop, internalBottom;
 	var internalX, internalY, internalWidth, internalHeight;
 
 	var firstCoordinate = true;
-
+	var firstIndex, lastIndex;
 	/**
 	 * @see SRL_BoundingBox#addCoordinate(x,y)
 	 */
@@ -1549,6 +1578,11 @@ function SRL_BoundingBox() {
 		sync();
 	}
 
+	this.setIndexes = function(firstI, lastI) {
+		firstIndex = firstI;
+		lastIndex = lastI;
+	}
+	
 	/**
 	 * @see SRL_BoundingBox#containsCoordinate(x,y)
 	 */
@@ -1609,7 +1643,6 @@ function SRL_BoundingBox() {
 			top : internalTop,
 			bottom : internalBottom
 		}
-
 	}
 
 	/**
@@ -1626,10 +1659,93 @@ function SRL_BoundingBox() {
 		}
 	}
 
+	this.getArea = function() {
+		return internalWidth * internalHeight;
+	}
+
 	this.toString = function() {
 		return "SRL_BoundingBox: (" + internalX + ', ' + internalY + ') Width: ' + internalWidth + ' Height: ' + internalHeight; 
 	}
 	
+}
+
+/**
+ **************************************************************
+ *
+ *
+ * SRL_IntersectionHandler SRL_Library
+ * @author Daniel Tan
+ * 
+ *
+ *
+ **************************************************************
+ */
+
+/**
+ * Handles the intersection of a stroke or a shape.
+ */
+function SRL_IntersectionHandler(parentObject) {
+
+	/**
+	 * Holds sub bounding boxes for the stroke.
+	 *
+	 * They are confined to a certain area to maintain to the size of the stroke and a maximum number of points.
+	 * They can also be used to guess certain features to the stroke at that point.
+	 *
+	 * For example a box with equal width and height means that the line is appromately a square.
+	 * An area smaller than the maximum area means the points are very dense.
+	 * A small number of points means the density is very low.
+	 */
+	var subBounds = new Array();
+	var currentBounds = new SRL_BoundingBox();
+	var currentBoundsBackup = new SRL_BoundingBox();
+	var minIndex = 0;
+	const MAX_POINTS = 50;
+	const MAX_AREA = 100;
+	var parentObject = parentObject;
+
+	/**
+	 * Adds the point and makes sure that every bounding box maintains a certain size and number of points.
+	 *
+	 * There will be no bounding boxes that are larger than MAX_AREA or has more points than MAX_POINTS
+	 */
+	this.addPoint = function addPoint(point, index) {
+		currentBoundsBackup.addPoint(point);
+		if (currentBoundsBackup.getArea() > MAX_AREA || index - minIndex > MAX_POINTS) {	
+			currentBounds.setIndexes(minIndex, index - 1);
+			subBounds.push(currentBounds);
+			currentBounds = new SRL_BoundingBox();
+			currentBoundsBackup = new SRL_BoundingBox();
+			minIndex = index;
+			currentBoundsBackup.addPoint(point);
+		}
+		currentBounds.addPoint(point);
+	}
+
+	this.addSubObject = function addSubObject(object, index) {
+		subBounds.add(object.getBoundingBox());
+		object.getBoundingBox().setIndexes(index, index);
+	}
+
+	this.isIntersecting = function(x,y) {
+		if (!parentObject.getBoundingBox().containsCoordinate(x,y)) 
+			return false;
+		for(var i = 0; i < subBounds.length; i++) {
+			var box = subBounds[i];
+			if (box.containsCoordinate(x,y)) {
+				return true; // fixme: add a queue so that all of the items are checked in the queue at once.
+			}
+		}
+	}
+
+	function isIntersectingStroke(x,y) {
+	}
+	
+	function isIntersectingShape(x,y) {
+	}
+
+	//checking!
+	//check every boudning box.  have a queue for every intersection.  If an intersection is closer than X choose than one instead.
 }
 
 /**
