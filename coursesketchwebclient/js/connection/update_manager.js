@@ -181,7 +181,7 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 			case this.CommandType.PACKAGE_SHAPE:
 				console.log("Executing PACKAGE_SHAPE");
 				if (isUndefined(this.decodedData) || (!this.decodedData)) {
-					this.decodedData = Action.PackageShape.decode(this.commandData);
+					this.decodedData = Action.ActionPackageShape.decode(this.commandData);
 				}
 				this.decodedData.redo();
 			break;
@@ -196,7 +196,7 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	/**
 	 * Moves the shapes from the old container to the new container.
 	 */
-	Action.PackageShape.prototype.redo = function() {
+	Action.ActionPackageShape.prototype.redo = function() {
 		var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 		var newContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 		for (var shapeIndex = 0; shapeIndex < this.shapesToBeContained.length; shapeIndex++) {
@@ -214,7 +214,7 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	 *
 	 * This is a reverse of the process used in redo.
 	 */
-	Action.PackageShape.undo = function() {
+	Action.ActionPackageShape.undo = function() {
 		var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 		var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 		for (shapeId in this.shapesToBeContained) {

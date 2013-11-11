@@ -263,9 +263,9 @@ function Connection(uri, encrypted, attemptReconnect) {
 			}
 
 			if (!ProtoSrlUpdate)
-				ProtoSrlUpdate = ProtoUpdateCommand.Update;
+				ProtoSrlUpdate = ProtoUpdateCommand.SrlUpdate;
 			if (!ProtoSrlCommand)
-				ProtoSrlCommand = ProtoUpdateCommand.Command;
+				ProtoSrlCommand = ProtoUpdateCommand.SrlCommand;
 			if (!ProtoSrlCommandType)
 				ProtoSrlCommandType = ProtoUpdateCommand.CommandType;
 			if (!IdChain)
