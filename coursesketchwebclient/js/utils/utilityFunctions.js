@@ -107,6 +107,21 @@ if (isUndefined(isArray)) {
 }	
 
 /**
+ * Makes a map out of the list.
+ *
+ * @param map
+ * @returns {Array}
+ */
+if (isUndefined(getMapAsList)) {
+	function getMapAsList(map) {
+		var list = new Array();
+		for(key in map) {
+			list.push(map[key]);
+		}
+		return list;
+	}
+}
+/**
  **************************************************************
  * Sketch Function
  * @author gigemjt
@@ -256,9 +271,12 @@ if (isUndefined(copyParentUtilityFunctions)) {
 		copyParentValues(scope, 'copyParentUtilityFunctions', true);
 
 		copyParentValues(scope, 'replaceAll');
+
+		copyParentValues(scope, 'isArray');
+		copyParentValues(scope, 'getMapAsList');
+
 		copyParentValues(scope, 'createTimeStamp');
 		copyParentValues(scope, 'generateUUID');
-		copyParentValues(scope, 'isArray');
 		copyParentValues(scope, 'is_touch');
 
 		copyParentValues(scope, 'convertHexToRgb');
