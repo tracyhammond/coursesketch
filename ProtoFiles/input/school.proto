@@ -90,13 +90,13 @@ message subproblemInformation {
 }
 
 message DateTime { //Needs to be implemented with enums. Probably already exists elsewhere.
-	optional uint64 millisecond = 7; //To ensure capabilities to communicate with systems with diverse date-time handling methods
-	optional int32 second = 6;
-	optional int32 minute = 5;
-	optional int32 hour = 4;
-	optional int32 day = 3;
+	optional int32 year = 1;	
 	optional int32 month = 2;
-	optional int32 year = 1;
+	optional int32 day = 3;
+	optional int32 hour = 4;
+	optional int32 minute = 5;
+	optional int32 second = 6;
+	optional uint64 millisecond = 7; //To ensure capabilities to communicate with systems with diverse date-time handling methods
 }
 
 message DomainInformation { //Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.

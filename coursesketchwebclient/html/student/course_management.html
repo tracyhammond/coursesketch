@@ -5,16 +5,19 @@
    	<link rel="stylesheet" href="css/school/school_item.css">
   	<link rel="stylesheet" href="css/utility/columns.css">
 	<link rel="stylesheet" href="css/courseSketch2.css">
+	<script>
+		parent.copyParentUtilityFunctions(this);
+		parent.copyParentProtos(this);
+	</script>
 	<script type="text/javascript" src="js/school/school_item.js"></script>
 	<script type="text/javascript" src="js/school/course_manager.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
-    	parent.copyParentUtilityFunctions(this);
   		parent.addScopedLoadEvent(window,
 				function()
 				{
-					var builder = new schoolItemBuilder();
-					builder.setList(parent.user_courses).setWidth('medium').centerItem(true);
+					var builder = new SchoolItemBuilder();
+					builder.setList(getMapAsList(parent.user_courses)).setWidth('medium').centerItem(true);
 					builder.showImage = false;
 					builder.setOnBoxClick('courseClickerFunction');
 					builder.build('class_list_column');

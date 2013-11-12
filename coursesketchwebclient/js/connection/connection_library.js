@@ -227,13 +227,13 @@ function Connection(uri, encrypted, attemptReconnect) {
 
 		function buildSchool() {
 			var builder = ProtoBuf.protoFromFile(protobufDirectory + "school.proto");
-			var schoolBuilder = builder.build("protobuf").srl.school;
+			SchoolBuilder = builder.build("protobuf").srl.school;
 			if (!SrlCourse)
-				SrlCourse = schoolBuilder.SrlCourse;
+				SrlCourse = SchoolBuilder.SrlCourse;
 			if (!SrlAssignment)
-				SrlAssignment = schoolBuilder.SrlAssignment;
+				SrlAssignment = SchoolBuilder.SrlAssignment;
 			if (!SrlProblem)
-				SrlProblem = schoolBuilder.SrlProblem;
+				SrlProblem = SchoolBuilder.SrlProblem;
 		}
 
 		function buildSketch() {
@@ -359,6 +359,7 @@ var LoginInformation = false;
 var SrlCourse = false;
 var SrlAssignment = false;
 var SrlProblem = false;
+var SchoolBuilder = false;
 
 /**
  * Sketch related protobufs.
@@ -404,6 +405,7 @@ function copyParentProtos(scope) {
 	copyParentValues(scope,'SrlCourse');
 	copyParentValues(scope,'SrlAssignment');
 	copyParentValues(scope,'SrlProblem');
+	copyParentValues(scope,'SchoolBuilder');
 
 	copyParentValues(scope,'ProtoSrlSketch');
 	copyParentValues(scope,'ProtoSrlObject');
