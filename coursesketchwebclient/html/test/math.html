@@ -1,267 +1,30 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html>
 <head>
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<title>MathJax   | TeX Samples</title>
-<link rel="profile" href="http://gmpg.org/xfn/11" />
-<link rel="shortcut icon" href="http://www.mathjax.org/wp-content/themes/mathjax/images/favicon.ico">
-<!--
-Probably don't need a reset
-<link rel="stylesheet" type="text/css" media="all" href="http://www.mathjax.org/wp-content/themes/mathjax/reset.css" />
--->
-<link rel="stylesheet" type="text/css" media="all" href="http://www.mathjax.org/wp-content/themes/mathjax/style.css" />
-<link rel="pingback" href="http://www.mathjax.org/xmlrpc.php" />
-<link rel="alternate" type="application/rss+xml" title="MathJax &raquo; Feed" href="http://www.mathjax.org/feed/" />
-<link rel="alternate" type="application/rss+xml" title="MathJax &raquo; Comments Feed" href="http://www.mathjax.org/comments/feed/" />
-<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.mathjax.org/xmlrpc.php?rsd" />
-<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.mathjax.org/wp-includes/wlwmanifest.xml" /> 
-<link rel='prev' title='MathML Samples' href='http://www.mathjax.org/demos/mathml-samples/' />
-<link rel='next' title='About MathJax' href='http://www.mathjax.org/about/' />
-<meta name="generator" content="WordPress 3.7.1" />
-<link rel='canonical' href='http://www.mathjax.org/demos/tex-samples/' />
-<link rel='shortlink' href='http://www.mathjax.org/?p=612' />
-<script type='text/javascript' src='http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shCore.js'></script>
-<script type='text/javascript' src='http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shAutoloader.js'></script>
-<link type='text/css' rel='stylesheet' href='http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/styles/shCore.css'/>
-<link type='text/css' rel='stylesheet' href='http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/styles/shThemeDefault.css'/>
-<style type="text/css" id="custom-background-css">
-body.custom-background { background-color: #d2d3d3; }
-</style>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] }
-  });
+<title>MATHTEST</title>
+
+<script type="text/javascript"
+  src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+function makeEquation()
+{
+document.getElementById("demo").innerHTML=document.temp.meq.value;
+}
 </script>
-<script type='text/javascript' src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 </head>
+<body>
 
-<body class="page page-id-612 page-child parent-pageid-13 page-template-default custom-background">
-<div id="wrapper" class="hfeed">
-	<div id="header">
-		<div id="masthead">
-			<div id="branding" role="banner">
-								<div id="site-title">
-					<span>
-						<a href="http://www.mathjax.org/" title="MathJax" rel="home">
-						    <img src="http://www.mathjax.org/wp-content/themes/mathjax/images/logo.gif" alt="MathJax">
-						</a>
-					</span>
-				</div>
-				<div id="site-description">Beautiful math in all browsers</div>
-                
-                
-                <div id="header-box-right">
-                    <ul class="icon-list">
-                        <li>
-                            <a href="http://www.twitter.com/mathjax">
-                                <img src="http://www.mathjax.org/wp-content/themes/mathjax/images/social-icons/16px/twitter.png" alt="Twitter" title="Twitter" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.facebook.com/pages/MathJax/351834882701">
-                                <img src="http://www.mathjax.org/wp-content/themes/mathjax/images/social-icons/16px/facebook.png" alt="Facebook Page" title="Facebook Page" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.mathjax.org/feed/">
-                                <img src="http://www.mathjax.org/wp-content/themes/mathjax/images/social-icons/16px/rss.png" alt="RSS Feed" title="RSS Feed" />
-                            </a>
-                        </li>
-                    </ul>
-                    <div id="search" class="widget-container widget_search">
-				        
-<form action="/" method="get" accept-charset="utf-8">
-  <fieldset>
-    <label class="screen-reader-text" for="s">Search for:</label>
-    <input type="text" name="s" id="s" value="" />
-    <input class="search-button" type="image" alt="Search" src="http://www.mathjax.org/wp-content/themes/mathjax/images/search.png" />
-  </fieldset>
-</form>
-			        </div>
-		        </div>
-	        </div><!-- #branding -->
-			
-			<div class="clear"></div>
-			
-			<div id="access" role="navigation">
-			    				<div class="skip-link screen-reader-text"><a href="#content" title="Skip to content">Skip to content</a></div>
-								<div class="menu-header"><ul id="menu-navigation" class="menu"><li id="menu-item-868" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-868"><a href="http://www.mathjax.org/news/">News</a></li>
-<li id="menu-item-846" class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-menu-ancestor current-menu-parent current-page-parent current_page_parent current_page_ancestor menu-item-has-children menu-item-846"><a href="http://www.mathjax.org/demos/">Demos</a>
-<ul class="sub-menu">
-	<li id="menu-item-859" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-612 current_page_item menu-item-859"><a href="http://www.mathjax.org/demos/tex-samples/">TeX Samples</a></li>
-	<li id="menu-item-858" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-858"><a href="http://www.mathjax.org/demos/mathml-samples/">MathML Samples</a></li>
-	<li id="menu-item-1078" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1078"><a href="http://www.mathjax.org/demos/scaling-math/">Scaling Math</a></li>
-	<li id="menu-item-1097" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1097"><a href="http://www.mathjax.org/demos/copy-and-paste/">Copy and Paste Math</a></li>
-</ul>
-</li>
-<li id="menu-item-848" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-848"><a href="http://www.mathjax.org/resources/">Resources</a>
-<ul class="sub-menu">
-	<li id="menu-item-1262" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1262"><a href="http://www.mathjax.org/download/">Get MathJax</a></li>
-	<li id="menu-item-1151" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1151"><a href="http://www.mathjax.org/resources/docsindex/">Documentation</a></li>
-	<li id="menu-item-1577" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1577"><a href="http://groups.google.com/group/mathjax-users/">MathJax User Group</a></li>
-	<li id="menu-item-3485" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3485"><a href="http://www.mathjax.org/resources/epub-readers/">EPUB readers</a></li>
-	<li id="menu-item-860" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-860"><a href="http://www.mathjax.org/resources/browser-compatibility/">Browser Compatibility</a></li>
-	<li id="menu-item-1145" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1145"><a href="http://www.mathjax.org/community/mathjax-in-use/">MathJax in Use</a></li>
-	<li id="menu-item-1257" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1257"><a href="http://www.mathjax.org/resources/articles-and-presentations/">Articles, Presentations, and Tutorials</a></li>
-	<li id="menu-item-856" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-856"><a href="http://www.mathjax.org/resources/faqs/">FAQs</a></li>
-	<li id="menu-item-1347" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1347"><a href="http://www.mathjax.org/community/mathjax-badge/">MathJax Badge and Logo</a></li>
-</ul>
-</li>
-<li id="menu-item-853" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-853"><a href="http://www.mathjax.org/sponsors/">Sponsorship</a></li>
-<li id="menu-item-4649" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4649"><a href="http://www.mathjax.org/about/">About</a></li>
-<li id="menu-item-854" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-854"><a href="http://www.mathjax.org/contact/">Contact</a></li>
-<li id="menu-item-1167" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1167"><a href="http://www.mathjax.org/download/">Get MathJax</a></li>
-</ul></div>			</div><!-- #access -->
-
-					</div><!-- #masthead -->
-	</div><!-- #header -->
-
-	<div id="main">
-		<div id="container">
-			<div id="content" role="main">
+<FORM ACTION="#" NAME=temp>
+Enter Equation
+<INPUT TYPE=TEXT NAME="meq" SIZE=512>
+<BR><BR>
+<INPUT TYPE=BUTTON VALUE="Display" 
+ONCLICK=makeEquation()
+<BR><BR>
+<p id="demo"> </p>
+</FORM>
 
 
-				<div id="post-612" class="post-612 page type-page status-publish hentry">
-											<h1 class="entry-title">TeX Samples</h1>
-					
-					<div class="entry-content">
-						
-<p>The following equations are represented in the HTML source code as LaTeX expressions.</p>
-
-<div class="math-header">The Lorenz Equations</div>
-
-\[\begin{aligned}
-\dot{x} &amp; = \sigma(y-x) \\
-\dot{y} &amp; = \rho x - y - xz \\
-\dot{z} &amp; = -\beta z + xy
-\end{aligned} \]
-
-<div class="math-header">The Cauchy-Schwarz Inequality</div>
-
-\[ \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right) \]
-
-<div class="math-header">A Cross Product Formula</div>
-
-\[\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix}
-\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\
-\frac{\partial X}{\partial u} &amp;  \frac{\partial Y}{\partial u} &amp; 0 \\
-\frac{\partial X}{\partial v} &amp;  \frac{\partial Y}{\partial v} &amp; 0
-\end{vmatrix}  \]
-
-<div class="math-header">The probability of getting \(k\) heads when flipping \(n\) coins is</div>
-
-\[P(E)   = {n \choose k} p^k (1-p)^{ n-k} \]
-
-<div class="math-header">An Identity of Ramanujan</div>
-
-\[ \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} =
-1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}}
-{1+\frac{e^{-8\pi}} {1+\ldots} } } } \]
-
-<div class="math-header">A Rogers-Ramanujan Identity</div>
-
-\[  1 +  \frac{q^2}{(1-q)}+\frac{q^6}{(1-q)(1-q^2)}+\cdots =
-\prod_{j=0}^{\infty}\frac{1}{(1-q^{5j+2})(1-q^{5j+3})},
-\quad\quad \text{for $|q|&lt;1$}. \]
-
-<div class="math-header">Maxwell&#8217;s Equations</div>
-
-\[  \begin{aligned}
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &amp; = \frac{4\pi}{c}\vec{\mathbf{j}} \\   \nabla \cdot \vec{\mathbf{E}} &amp; = 4 \pi \rho \\
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} &amp; = \vec{\mathbf{0}} \\
-\nabla \cdot \vec{\mathbf{B}} &amp; = 0 \end{aligned}
-\]
-
-<p>Finally, while display equations look good for a page of samples, the ability to mix math and text in a paragraph is also important. This expression \(\sqrt{3x-1}+(1+x)^2\) is an example of an inline equation.  As you see, MathJax equations can be used this way as well, without unduly disturbing the spacing between lines.</p>																	</div><!-- .entry-content -->
-				</div><!-- #post-## -->
-
-				
-			<div id="comments">
-
-
-
-		
-</div><!-- #comments -->
-
-
-			</div><!-- #content -->
-		</div><!-- #container -->
-
-    <style>#content { margin: 0 0 36px 0; }</style>
-
-	</div><!-- #main -->
-
-	<div id="footer" role="contentinfo">
-		<div id="colophon">
-
-
-
-			<div id="footer-widget-area" role="complementary">
-
-
-
-
-				<div id="fourth" class="widget-area">
-					<ul class="xoxo">
-						<li id="text-4" class="widget-container widget_text"><h3 class="widget-title">Follow us</h3>			<div class="textwidget"><p>                            <a href="http://www.twitter.com/mathjax">
-                                <img src="http://www.mathjax.org/wp-content/themes/mathjax/images/social-icons/16px/twitter.png" alt="Twitter" title="Twitter" />
-                            </a>
-                            <a href="http://www.facebook.com/pages/MathJax/351834882701">
-                                <img src="http://www.mathjax.org/wp-content/themes/mathjax/images/social-icons/16px/facebook.png" alt="Facebook Page" title="Facebook Page" />
-                            </a>
-                            <a href="/feed/">
-                                <img src="http://www.mathjax.org/wp-content/themes/mathjax/images/social-icons/16px/rss.png" alt="RSS Feed" title="RSS Feed" />
-                            </a></p></div>
-		</li>					</ul>
-				</div><!-- #fourth .widget-area -->
-
-			</div><!-- #footer-widget-area -->
-
-			<div id="site-info">
-				<a href="http://www.mathjax.org">MathJax &#169; 2011</a>
-			</div><!-- #site-info -->
-
-			<div id="site-generator">
-								<a href="http://wordpress.org/" title="Semantic Personal Publishing Platform" rel="generator">Proudly powered by WordPress.</a>
-			</div><!-- #site-generator -->
-
-		</div><!-- #colophon -->
-	</div><!-- #footer -->
-
-</div><!-- #wrapper -->
-
-<script type='text/javascript'>
-  SyntaxHighlighter.autoloader(
-      'applescript            http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushAppleScript.js',
-      'actionscript3 as3      http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushAS3.js',
-      'bash shell             http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushBash.js',
-      'coldfusion cf          http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushColdFusion.js',
-      'cpp c                  http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushCpp.js',
-      'c# c-sharp csharp      http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushCSharp.js',
-      'css                    http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushCss.js',
-      'delphi pascal          http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushDelphi.js',
-      'diff patch pas         http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushDiff.js',
-      'erl erlang             http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushErlang.js',
-      'groovy                 http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushGroovy.js',
-      'hive                   http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushHive.js',
-      'java                   http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushJava.js',
-      'jfx javafx             http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushJavaFX.js',
-      'js jscript javascript  http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushJScript.js',
-      'objc obj-c             http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushObjectiveC.js',
-      'perl pl                http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushPerl.js',
-      'php                    http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushPhp.js',
-      'pig                    http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushPig.js',
-      'text plain             http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushPlain.js',
-      'py python              http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushPython.js',
-      'ruby rails ror rb      http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushRuby.js',
-      'sass scss              http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushSass.js',
-      'scala                  http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushScala.js',
-      'sql                    http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushSql.js',
-      'vb vbnet               http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushVb.js',
-      'xml xhtml xslt html    http://www.mathjax.org/wp-content/plugins/syntax-highlighter-mt/scripts/shBrushXml.js'
-       );
-	SyntaxHighlighter.all();
-</script>
 </body>
-</html>
+</html> 
