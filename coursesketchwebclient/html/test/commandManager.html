@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/sketching.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/input/highlighter.js"></script>
 	<!-- DEBUG -->
 	<script type="text/javascript" src="js/test/SRL_SketchViewer.js"></script>
 
@@ -46,6 +47,7 @@
 			sketch.canvasContext = canvasContext;
 			sketch.clearCanvas = clearCanvas;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+			highlighter = new Highlighter(input,sketch,callback,canvasContext);
 			createStuff();
 			initializeServer();
 		});
@@ -190,6 +192,6 @@
 	<button onclick = "packageShapes();">packageSketch</button>
 	<button onclick = "removeFirst();">removeFirst</button>
 	<div id = "sketch_output" style = "height:400px;position:relative; overflow:scroll;border:1px;border-style:solid;"></div>
-	<canvas id="drawingCanvas" width="300" height="300" style="top:0px; left:0px; width: 300; height: 300; background:#FFFFFF;float:left;"></canvas>
+	<canvas id="drawingCanvas" width="700" height="600" style="top:0px; left:0px; width: 700; height: 600; background:#FFFFFF;float:left;"></canvas>
 	<div id = "update_output" style = "width:600px; height:600px;position:relative; overflow:scroll;border:1px;border-style:solid;"></div>
 </body>
