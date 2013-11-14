@@ -47,6 +47,7 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 		currentPoint.setSpeed(pastPoint);
 		currentStroke.addPoint(currentPoint);
 		currentStroke.setTime(currentPoint.getTime());
+		currentStroke.finish();
 		sketchContainer.addObject(currentStroke);
 		//try {
 			if (strokeCreationCallback)

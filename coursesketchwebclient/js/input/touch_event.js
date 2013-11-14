@@ -321,7 +321,7 @@ function inputListener() {
 	this.canvasContext = false;
 	var inputElement = false; // The element that needs touch input.
 	var dragging = false;
-	
+
 	var unifiedInputListener = false;
 	var inputMovedListener = false;
 	var inputDraggedListener = false;
