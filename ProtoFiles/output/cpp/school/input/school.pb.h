@@ -1243,40 +1243,12 @@ class DateTime : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional uint64 millisecond = 7;
-  inline bool has_millisecond() const;
-  inline void clear_millisecond();
-  static const int kMillisecondFieldNumber = 7;
-  inline ::google::protobuf::uint64 millisecond() const;
-  inline void set_millisecond(::google::protobuf::uint64 value);
-
-  // optional int32 second = 6;
-  inline bool has_second() const;
-  inline void clear_second();
-  static const int kSecondFieldNumber = 6;
-  inline ::google::protobuf::int32 second() const;
-  inline void set_second(::google::protobuf::int32 value);
-
-  // optional int32 minute = 5;
-  inline bool has_minute() const;
-  inline void clear_minute();
-  static const int kMinuteFieldNumber = 5;
-  inline ::google::protobuf::int32 minute() const;
-  inline void set_minute(::google::protobuf::int32 value);
-
-  // optional int32 hour = 4;
-  inline bool has_hour() const;
-  inline void clear_hour();
-  static const int kHourFieldNumber = 4;
-  inline ::google::protobuf::int32 hour() const;
-  inline void set_hour(::google::protobuf::int32 value);
-
-  // optional int32 day = 3;
-  inline bool has_day() const;
-  inline void clear_day();
-  static const int kDayFieldNumber = 3;
-  inline ::google::protobuf::int32 day() const;
-  inline void set_day(::google::protobuf::int32 value);
+  // optional int32 year = 1;
+  inline bool has_year() const;
+  inline void clear_year();
+  static const int kYearFieldNumber = 1;
+  inline ::google::protobuf::int32 year() const;
+  inline void set_year(::google::protobuf::int32 value);
 
   // optional int32 month = 2;
   inline bool has_month() const;
@@ -1285,39 +1257,67 @@ class DateTime : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 month() const;
   inline void set_month(::google::protobuf::int32 value);
 
-  // optional int32 year = 1;
-  inline bool has_year() const;
-  inline void clear_year();
-  static const int kYearFieldNumber = 1;
-  inline ::google::protobuf::int32 year() const;
-  inline void set_year(::google::protobuf::int32 value);
+  // optional int32 day = 3;
+  inline bool has_day() const;
+  inline void clear_day();
+  static const int kDayFieldNumber = 3;
+  inline ::google::protobuf::int32 day() const;
+  inline void set_day(::google::protobuf::int32 value);
+
+  // optional int32 hour = 4;
+  inline bool has_hour() const;
+  inline void clear_hour();
+  static const int kHourFieldNumber = 4;
+  inline ::google::protobuf::int32 hour() const;
+  inline void set_hour(::google::protobuf::int32 value);
+
+  // optional int32 minute = 5;
+  inline bool has_minute() const;
+  inline void clear_minute();
+  static const int kMinuteFieldNumber = 5;
+  inline ::google::protobuf::int32 minute() const;
+  inline void set_minute(::google::protobuf::int32 value);
+
+  // optional int32 second = 6;
+  inline bool has_second() const;
+  inline void clear_second();
+  static const int kSecondFieldNumber = 6;
+  inline ::google::protobuf::int32 second() const;
+  inline void set_second(::google::protobuf::int32 value);
+
+  // optional uint64 millisecond = 7;
+  inline bool has_millisecond() const;
+  inline void clear_millisecond();
+  static const int kMillisecondFieldNumber = 7;
+  inline ::google::protobuf::uint64 millisecond() const;
+  inline void set_millisecond(::google::protobuf::uint64 value);
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.DateTime)
  private:
-  inline void set_has_millisecond();
-  inline void clear_has_millisecond();
-  inline void set_has_second();
-  inline void clear_has_second();
-  inline void set_has_minute();
-  inline void clear_has_minute();
-  inline void set_has_hour();
-  inline void clear_has_hour();
-  inline void set_has_day();
-  inline void clear_has_day();
-  inline void set_has_month();
-  inline void clear_has_month();
   inline void set_has_year();
   inline void clear_has_year();
+  inline void set_has_month();
+  inline void clear_has_month();
+  inline void set_has_day();
+  inline void clear_has_day();
+  inline void set_has_hour();
+  inline void clear_has_hour();
+  inline void set_has_minute();
+  inline void clear_has_minute();
+  inline void set_has_second();
+  inline void clear_has_second();
+  inline void set_has_millisecond();
+  inline void clear_has_millisecond();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::uint64 millisecond_;
-  ::google::protobuf::int32 second_;
-  ::google::protobuf::int32 minute_;
-  ::google::protobuf::int32 hour_;
-  ::google::protobuf::int32 day_;
-  ::google::protobuf::int32 month_;
   ::google::protobuf::int32 year_;
+  ::google::protobuf::int32 month_;
+  ::google::protobuf::int32 day_;
+  ::google::protobuf::int32 hour_;
+  ::google::protobuf::int32 minute_;
+  ::google::protobuf::int32 second_;
+  ::google::protobuf::uint64 millisecond_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
@@ -3681,70 +3681,70 @@ inline void subproblemInformation::set_grade(::google::protobuf::int32 value) {
 
 // DateTime
 
-// optional uint64 millisecond = 7;
-inline bool DateTime::has_millisecond() const {
+// optional int32 year = 1;
+inline bool DateTime::has_year() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void DateTime::set_has_millisecond() {
+inline void DateTime::set_has_year() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void DateTime::clear_has_millisecond() {
+inline void DateTime::clear_has_year() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void DateTime::clear_millisecond() {
-  millisecond_ = GOOGLE_ULONGLONG(0);
-  clear_has_millisecond();
+inline void DateTime::clear_year() {
+  year_ = 0;
+  clear_has_year();
 }
-inline ::google::protobuf::uint64 DateTime::millisecond() const {
-  return millisecond_;
+inline ::google::protobuf::int32 DateTime::year() const {
+  return year_;
 }
-inline void DateTime::set_millisecond(::google::protobuf::uint64 value) {
-  set_has_millisecond();
-  millisecond_ = value;
+inline void DateTime::set_year(::google::protobuf::int32 value) {
+  set_has_year();
+  year_ = value;
 }
 
-// optional int32 second = 6;
-inline bool DateTime::has_second() const {
+// optional int32 month = 2;
+inline bool DateTime::has_month() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void DateTime::set_has_second() {
+inline void DateTime::set_has_month() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void DateTime::clear_has_second() {
+inline void DateTime::clear_has_month() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void DateTime::clear_second() {
-  second_ = 0;
-  clear_has_second();
+inline void DateTime::clear_month() {
+  month_ = 0;
+  clear_has_month();
 }
-inline ::google::protobuf::int32 DateTime::second() const {
-  return second_;
+inline ::google::protobuf::int32 DateTime::month() const {
+  return month_;
 }
-inline void DateTime::set_second(::google::protobuf::int32 value) {
-  set_has_second();
-  second_ = value;
+inline void DateTime::set_month(::google::protobuf::int32 value) {
+  set_has_month();
+  month_ = value;
 }
 
-// optional int32 minute = 5;
-inline bool DateTime::has_minute() const {
+// optional int32 day = 3;
+inline bool DateTime::has_day() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void DateTime::set_has_minute() {
+inline void DateTime::set_has_day() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void DateTime::clear_has_minute() {
+inline void DateTime::clear_has_day() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void DateTime::clear_minute() {
-  minute_ = 0;
-  clear_has_minute();
+inline void DateTime::clear_day() {
+  day_ = 0;
+  clear_has_day();
 }
-inline ::google::protobuf::int32 DateTime::minute() const {
-  return minute_;
+inline ::google::protobuf::int32 DateTime::day() const {
+  return day_;
 }
-inline void DateTime::set_minute(::google::protobuf::int32 value) {
-  set_has_minute();
-  minute_ = value;
+inline void DateTime::set_day(::google::protobuf::int32 value) {
+  set_has_day();
+  day_ = value;
 }
 
 // optional int32 hour = 4;
@@ -3769,70 +3769,70 @@ inline void DateTime::set_hour(::google::protobuf::int32 value) {
   hour_ = value;
 }
 
-// optional int32 day = 3;
-inline bool DateTime::has_day() const {
+// optional int32 minute = 5;
+inline bool DateTime::has_minute() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void DateTime::set_has_day() {
+inline void DateTime::set_has_minute() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void DateTime::clear_has_day() {
+inline void DateTime::clear_has_minute() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void DateTime::clear_day() {
-  day_ = 0;
-  clear_has_day();
+inline void DateTime::clear_minute() {
+  minute_ = 0;
+  clear_has_minute();
 }
-inline ::google::protobuf::int32 DateTime::day() const {
-  return day_;
+inline ::google::protobuf::int32 DateTime::minute() const {
+  return minute_;
 }
-inline void DateTime::set_day(::google::protobuf::int32 value) {
-  set_has_day();
-  day_ = value;
+inline void DateTime::set_minute(::google::protobuf::int32 value) {
+  set_has_minute();
+  minute_ = value;
 }
 
-// optional int32 month = 2;
-inline bool DateTime::has_month() const {
+// optional int32 second = 6;
+inline bool DateTime::has_second() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void DateTime::set_has_month() {
+inline void DateTime::set_has_second() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void DateTime::clear_has_month() {
+inline void DateTime::clear_has_second() {
   _has_bits_[0] &= ~0x00000020u;
 }
-inline void DateTime::clear_month() {
-  month_ = 0;
-  clear_has_month();
+inline void DateTime::clear_second() {
+  second_ = 0;
+  clear_has_second();
 }
-inline ::google::protobuf::int32 DateTime::month() const {
-  return month_;
+inline ::google::protobuf::int32 DateTime::second() const {
+  return second_;
 }
-inline void DateTime::set_month(::google::protobuf::int32 value) {
-  set_has_month();
-  month_ = value;
+inline void DateTime::set_second(::google::protobuf::int32 value) {
+  set_has_second();
+  second_ = value;
 }
 
-// optional int32 year = 1;
-inline bool DateTime::has_year() const {
+// optional uint64 millisecond = 7;
+inline bool DateTime::has_millisecond() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void DateTime::set_has_year() {
+inline void DateTime::set_has_millisecond() {
   _has_bits_[0] |= 0x00000040u;
 }
-inline void DateTime::clear_has_year() {
+inline void DateTime::clear_has_millisecond() {
   _has_bits_[0] &= ~0x00000040u;
 }
-inline void DateTime::clear_year() {
-  year_ = 0;
-  clear_has_year();
+inline void DateTime::clear_millisecond() {
+  millisecond_ = GOOGLE_ULONGLONG(0);
+  clear_has_millisecond();
 }
-inline ::google::protobuf::int32 DateTime::year() const {
-  return year_;
+inline ::google::protobuf::uint64 DateTime::millisecond() const {
+  return millisecond_;
 }
-inline void DateTime::set_year(::google::protobuf::int32 value) {
-  set_has_year();
-  year_ = value;
+inline void DateTime::set_millisecond(::google::protobuf::uint64 value) {
+  set_has_millisecond();
+  millisecond_ = value;
 }
 
 // -------------------------------------------------------------------

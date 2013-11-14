@@ -184,13 +184,13 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
   subproblemInformation_QuestionType_descriptor_ = subproblemInformation_descriptor_->enum_type(0);
   DateTime_descriptor_ = file->message_type(5);
   static const int DateTime_offsets_[7] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, millisecond_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, second_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, minute_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, hour_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, day_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, month_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, year_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, month_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, day_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, hour_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, minute_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, second_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, millisecond_),
   };
   DateTime_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -363,10 +363,10 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     ":\006SKETCH\022\017\n\007options\030\003 \001(\014\022\023\n\013gradeWeight"
     "\030\004 \001(\005\022\r\n\005grade\030\005 \001(\005\"I\n\014QuestionType\022\n\n"
     "\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020"
-    "\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\023\n\013millisec"
-    "ond\030\007 \001(\004\022\016\n\006second\030\006 \001(\005\022\016\n\006minute\030\005 \001("
-    "\005\022\014\n\004hour\030\004 \001(\005\022\013\n\003day\030\003 \001(\005\022\r\n\005month\030\002 "
-    "\001(\005\022\014\n\004year\030\001 \001(\005\"\"\n\021DomainInformation\022\r"
+    "\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001"
+    "(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004"
+    " \001(\005\022\016\n\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013"
+    "millisecond\030\007 \001(\004\"\"\n\021DomainInformation\022\r"
     "\n\005stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 \001("
     "\010\022\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017"
     "\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"_\n\004Us"
@@ -3522,13 +3522,13 @@ void subproblemInformation::Swap(subproblemInformation* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DateTime::kMillisecondFieldNumber;
-const int DateTime::kSecondFieldNumber;
-const int DateTime::kMinuteFieldNumber;
-const int DateTime::kHourFieldNumber;
-const int DateTime::kDayFieldNumber;
-const int DateTime::kMonthFieldNumber;
 const int DateTime::kYearFieldNumber;
+const int DateTime::kMonthFieldNumber;
+const int DateTime::kDayFieldNumber;
+const int DateTime::kHourFieldNumber;
+const int DateTime::kMinuteFieldNumber;
+const int DateTime::kSecondFieldNumber;
+const int DateTime::kMillisecondFieldNumber;
 #endif  // !_MSC_VER
 
 DateTime::DateTime()
@@ -3547,13 +3547,13 @@ DateTime::DateTime(const DateTime& from)
 
 void DateTime::SharedCtor() {
   _cached_size_ = 0;
-  millisecond_ = GOOGLE_ULONGLONG(0);
-  second_ = 0;
-  minute_ = 0;
-  hour_ = 0;
-  day_ = 0;
-  month_ = 0;
   year_ = 0;
+  month_ = 0;
+  day_ = 0;
+  hour_ = 0;
+  minute_ = 0;
+  second_ = 0;
+  millisecond_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3589,13 +3589,13 @@ DateTime* DateTime::New() const {
 
 void DateTime::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    millisecond_ = GOOGLE_ULONGLONG(0);
-    second_ = 0;
-    minute_ = 0;
-    hour_ = 0;
-    day_ = 0;
-    month_ = 0;
     year_ = 0;
+    month_ = 0;
+    day_ = 0;
+    hour_ = 0;
+    minute_ = 0;
+    second_ = 0;
+    millisecond_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -3825,39 +3825,11 @@ int DateTime::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional uint64 millisecond = 7;
-    if (has_millisecond()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->millisecond());
-    }
-
-    // optional int32 second = 6;
-    if (has_second()) {
+    // optional int32 year = 1;
+    if (has_year()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->second());
-    }
-
-    // optional int32 minute = 5;
-    if (has_minute()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->minute());
-    }
-
-    // optional int32 hour = 4;
-    if (has_hour()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->hour());
-    }
-
-    // optional int32 day = 3;
-    if (has_day()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->day());
+          this->year());
     }
 
     // optional int32 month = 2;
@@ -3867,11 +3839,39 @@ int DateTime::ByteSize() const {
           this->month());
     }
 
-    // optional int32 year = 1;
-    if (has_year()) {
+    // optional int32 day = 3;
+    if (has_day()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->year());
+          this->day());
+    }
+
+    // optional int32 hour = 4;
+    if (has_hour()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->hour());
+    }
+
+    // optional int32 minute = 5;
+    if (has_minute()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->minute());
+    }
+
+    // optional int32 second = 6;
+    if (has_second()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->second());
+    }
+
+    // optional uint64 millisecond = 7;
+    if (has_millisecond()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->millisecond());
     }
 
   }
@@ -3901,26 +3901,26 @@ void DateTime::MergeFrom(const ::google::protobuf::Message& from) {
 void DateTime::MergeFrom(const DateTime& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_millisecond()) {
-      set_millisecond(from.millisecond());
-    }
-    if (from.has_second()) {
-      set_second(from.second());
-    }
-    if (from.has_minute()) {
-      set_minute(from.minute());
-    }
-    if (from.has_hour()) {
-      set_hour(from.hour());
-    }
-    if (from.has_day()) {
-      set_day(from.day());
+    if (from.has_year()) {
+      set_year(from.year());
     }
     if (from.has_month()) {
       set_month(from.month());
     }
-    if (from.has_year()) {
-      set_year(from.year());
+    if (from.has_day()) {
+      set_day(from.day());
+    }
+    if (from.has_hour()) {
+      set_hour(from.hour());
+    }
+    if (from.has_minute()) {
+      set_minute(from.minute());
+    }
+    if (from.has_second()) {
+      set_second(from.second());
+    }
+    if (from.has_millisecond()) {
+      set_millisecond(from.millisecond());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -3945,13 +3945,13 @@ bool DateTime::IsInitialized() const {
 
 void DateTime::Swap(DateTime* other) {
   if (other != this) {
-    std::swap(millisecond_, other->millisecond_);
-    std::swap(second_, other->second_);
-    std::swap(minute_, other->minute_);
-    std::swap(hour_, other->hour_);
-    std::swap(day_, other->day_);
-    std::swap(month_, other->month_);
     std::swap(year_, other->year_);
+    std::swap(month_, other->month_);
+    std::swap(day_, other->day_);
+    std::swap(hour_, other->hour_);
+    std::swap(minute_, other->minute_);
+    std::swap(second_, other->second_);
+    std::swap(millisecond_, other->millisecond_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
