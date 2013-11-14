@@ -26,9 +26,9 @@ message SrlShape {
 	required uint64 time = 2;
 	optional string name = 3;
 	optional bool isUserCreated = 4;
-	repeated Interpretation interpretations= 5;
+	repeated SrlInterpretation interpretations= 5;
 	repeated SrlObject subComponents = 6;
-	optional BoundingBox boundingbox= 7;
+	optional SrlBoundingBox boundingbox= 7;
 }
 
 message SrlStroke {
@@ -36,7 +36,7 @@ message SrlStroke {
 	required uint64 time = 2;
 	optional string name = 3;
 	repeated SrlPoint points = 4;
-	optional BoundingBox boundingbox = 5;
+	optional SrlBoundingBox boundingbox = 5;
 }
 
 // If a point is added directly on the sketch surface then it is in a SrlStroke
@@ -54,13 +54,13 @@ message SrlPoint {
 
 // TODO: change to SrlInterpretation
 // TODO: change name to label
-message Interpretation {
+message SrlInterpretation {
 	required string label = 1;
 	required double confidence = 2;
 	optional double complexity = 3;
 }
 
-message BoundingBox {
+message SrlBoundingBox {
 	required double x = 1;
 	required double y = 2;
 	required double width = 3;
