@@ -9,11 +9,16 @@ public class Update {
 	private LinkedList<Command> data;
 	private long time;
 	
+	public Update(){
+		data = new LinkedList<Command>();
+		time = System.currentTimeMillis();
+	}
+
 	public Update(long input){
 		data = new LinkedList<Command>();
 		time = input;
 	}
-	
+
 	public void add(Command c){
 		data.add(c);
 	}
