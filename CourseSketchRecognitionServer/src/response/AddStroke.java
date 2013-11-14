@@ -6,6 +6,7 @@ import srl.core.sketch.Point;
 import srl.core.sketch.Sketch;
 import srl.core.sketch.Stroke;
 
+import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 import protobuf.srl.sketch.Sketch.SrlPoint;
 
@@ -13,6 +14,8 @@ public class AddStroke extends Command {
 	private Stroke data;
 	
 	public AddStroke(SrlStroke input){
+		type = CommandType.ADD_STROKE;
+		
 		data = new Stroke();
 		data.setId(UUID.fromString(input.getId()));
 		

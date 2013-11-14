@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import protobuf.srl.commands.Commands.ActionPackageShape;
+import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.IdChain;
 import srl.core.sketch.SContainer;
 import srl.core.sketch.Sketch;
@@ -14,6 +15,8 @@ public class PackageShape extends Command {
 	private List<String> contained;
 
 	public PackageShape(ActionPackageShape input){
+		type = CommandType.PACKAGE_SHAPE;
+		
 		OldContainer = input.getOldContainerId();
 		NewContainer = input.getNewContainerId();
 		contained = input.getShapesToBeContainedList();
