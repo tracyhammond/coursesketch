@@ -41,8 +41,8 @@ class SrlObject;
 class SrlShape;
 class SrlStroke;
 class SrlPoint;
-class Interpretation;
-class BoundingBox;
+class SrlInterpretation;
+class SrlBoundingBox;
 
 enum SrlObject_ObjectType {
   SrlObject_ObjectType_SHAPE = 0,
@@ -427,16 +427,16 @@ class SrlShape : public ::google::protobuf::Message {
   inline bool isusercreated() const;
   inline void set_isusercreated(bool value);
 
-  // repeated .protobuf.srl.sketch.Interpretation interpretations = 5;
+  // repeated .protobuf.srl.sketch.SrlInterpretation interpretations = 5;
   inline int interpretations_size() const;
   inline void clear_interpretations();
   static const int kInterpretationsFieldNumber = 5;
-  inline const ::protobuf::srl::sketch::Interpretation& interpretations(int index) const;
-  inline ::protobuf::srl::sketch::Interpretation* mutable_interpretations(int index);
-  inline ::protobuf::srl::sketch::Interpretation* add_interpretations();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation >&
+  inline const ::protobuf::srl::sketch::SrlInterpretation& interpretations(int index) const;
+  inline ::protobuf::srl::sketch::SrlInterpretation* mutable_interpretations(int index);
+  inline ::protobuf::srl::sketch::SrlInterpretation* add_interpretations();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlInterpretation >&
       interpretations() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlInterpretation >*
       mutable_interpretations();
 
   // repeated .protobuf.srl.sketch.SrlObject subComponents = 6;
@@ -451,14 +451,14 @@ class SrlShape : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject >*
       mutable_subcomponents();
 
-  // optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+  // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 7;
   inline bool has_boundingbox() const;
   inline void clear_boundingbox();
   static const int kBoundingboxFieldNumber = 7;
-  inline const ::protobuf::srl::sketch::BoundingBox& boundingbox() const;
-  inline ::protobuf::srl::sketch::BoundingBox* mutable_boundingbox();
-  inline ::protobuf::srl::sketch::BoundingBox* release_boundingbox();
-  inline void set_allocated_boundingbox(::protobuf::srl::sketch::BoundingBox* boundingbox);
+  inline const ::protobuf::srl::sketch::SrlBoundingBox& boundingbox() const;
+  inline ::protobuf::srl::sketch::SrlBoundingBox* mutable_boundingbox();
+  inline ::protobuf::srl::sketch::SrlBoundingBox* release_boundingbox();
+  inline void set_allocated_boundingbox(::protobuf::srl::sketch::SrlBoundingBox* boundingbox);
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlShape)
  private:
@@ -478,9 +478,9 @@ class SrlShape : public ::google::protobuf::Message {
   ::std::string* id_;
   ::google::protobuf::uint64 time_;
   ::std::string* name_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation > interpretations_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlInterpretation > interpretations_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject > subcomponents_;
-  ::protobuf::srl::sketch::BoundingBox* boundingbox_;
+  ::protobuf::srl::sketch::SrlBoundingBox* boundingbox_;
   bool isusercreated_;
 
   mutable int _cached_size_;
@@ -592,14 +592,14 @@ class SrlStroke : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint >*
       mutable_points();
 
-  // optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+  // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 5;
   inline bool has_boundingbox() const;
   inline void clear_boundingbox();
   static const int kBoundingboxFieldNumber = 5;
-  inline const ::protobuf::srl::sketch::BoundingBox& boundingbox() const;
-  inline ::protobuf::srl::sketch::BoundingBox* mutable_boundingbox();
-  inline ::protobuf::srl::sketch::BoundingBox* release_boundingbox();
-  inline void set_allocated_boundingbox(::protobuf::srl::sketch::BoundingBox* boundingbox);
+  inline const ::protobuf::srl::sketch::SrlBoundingBox& boundingbox() const;
+  inline ::protobuf::srl::sketch::SrlBoundingBox* mutable_boundingbox();
+  inline ::protobuf::srl::sketch::SrlBoundingBox* release_boundingbox();
+  inline void set_allocated_boundingbox(::protobuf::srl::sketch::SrlBoundingBox* boundingbox);
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlStroke)
  private:
@@ -618,7 +618,7 @@ class SrlStroke : public ::google::protobuf::Message {
   ::google::protobuf::uint64 time_;
   ::std::string* name_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlPoint > points_;
-  ::protobuf::srl::sketch::BoundingBox* boundingbox_;
+  ::protobuf::srl::sketch::SrlBoundingBox* boundingbox_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
@@ -794,14 +794,14 @@ class SrlPoint : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class Interpretation : public ::google::protobuf::Message {
+class SrlInterpretation : public ::google::protobuf::Message {
  public:
-  Interpretation();
-  virtual ~Interpretation();
+  SrlInterpretation();
+  virtual ~SrlInterpretation();
 
-  Interpretation(const Interpretation& from);
+  SrlInterpretation(const SrlInterpretation& from);
 
-  inline Interpretation& operator=(const Interpretation& from) {
+  inline SrlInterpretation& operator=(const SrlInterpretation& from) {
     CopyFrom(from);
     return *this;
   }
@@ -815,17 +815,17 @@ class Interpretation : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Interpretation& default_instance();
+  static const SrlInterpretation& default_instance();
 
-  void Swap(Interpretation* other);
+  void Swap(SrlInterpretation* other);
 
   // implements Message ----------------------------------------------
 
-  Interpretation* New() const;
+  SrlInterpretation* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Interpretation& from);
-  void MergeFrom(const Interpretation& from);
+  void CopyFrom(const SrlInterpretation& from);
+  void MergeFrom(const SrlInterpretation& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -874,7 +874,7 @@ class Interpretation : public ::google::protobuf::Message {
   inline double complexity() const;
   inline void set_complexity(double value);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.Interpretation)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlInterpretation)
  private:
   inline void set_has_label();
   inline void clear_has_label();
@@ -897,18 +897,18 @@ class Interpretation : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
 
   void InitAsDefaultInstance();
-  static Interpretation* default_instance_;
+  static SrlInterpretation* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class BoundingBox : public ::google::protobuf::Message {
+class SrlBoundingBox : public ::google::protobuf::Message {
  public:
-  BoundingBox();
-  virtual ~BoundingBox();
+  SrlBoundingBox();
+  virtual ~SrlBoundingBox();
 
-  BoundingBox(const BoundingBox& from);
+  SrlBoundingBox(const SrlBoundingBox& from);
 
-  inline BoundingBox& operator=(const BoundingBox& from) {
+  inline SrlBoundingBox& operator=(const SrlBoundingBox& from) {
     CopyFrom(from);
     return *this;
   }
@@ -922,17 +922,17 @@ class BoundingBox : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const BoundingBox& default_instance();
+  static const SrlBoundingBox& default_instance();
 
-  void Swap(BoundingBox* other);
+  void Swap(SrlBoundingBox* other);
 
   // implements Message ----------------------------------------------
 
-  BoundingBox* New() const;
+  SrlBoundingBox* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const BoundingBox& from);
-  void MergeFrom(const BoundingBox& from);
+  void CopyFrom(const SrlBoundingBox& from);
+  void MergeFrom(const SrlBoundingBox& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -983,7 +983,7 @@ class BoundingBox : public ::google::protobuf::Message {
   inline double height() const;
   inline void set_height(double value);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.BoundingBox)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlBoundingBox)
  private:
   inline void set_has_x();
   inline void clear_has_x();
@@ -1009,7 +1009,7 @@ class BoundingBox : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
 
   void InitAsDefaultInstance();
-  static BoundingBox* default_instance_;
+  static SrlBoundingBox* default_instance_;
 };
 // ===================================================================
 
@@ -1608,27 +1608,27 @@ inline void SrlShape::set_isusercreated(bool value) {
   isusercreated_ = value;
 }
 
-// repeated .protobuf.srl.sketch.Interpretation interpretations = 5;
+// repeated .protobuf.srl.sketch.SrlInterpretation interpretations = 5;
 inline int SrlShape::interpretations_size() const {
   return interpretations_.size();
 }
 inline void SrlShape::clear_interpretations() {
   interpretations_.Clear();
 }
-inline const ::protobuf::srl::sketch::Interpretation& SrlShape::interpretations(int index) const {
+inline const ::protobuf::srl::sketch::SrlInterpretation& SrlShape::interpretations(int index) const {
   return interpretations_.Get(index);
 }
-inline ::protobuf::srl::sketch::Interpretation* SrlShape::mutable_interpretations(int index) {
+inline ::protobuf::srl::sketch::SrlInterpretation* SrlShape::mutable_interpretations(int index) {
   return interpretations_.Mutable(index);
 }
-inline ::protobuf::srl::sketch::Interpretation* SrlShape::add_interpretations() {
+inline ::protobuf::srl::sketch::SrlInterpretation* SrlShape::add_interpretations() {
   return interpretations_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation >&
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlInterpretation >&
 SrlShape::interpretations() const {
   return interpretations_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::Interpretation >*
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlInterpretation >*
 SrlShape::mutable_interpretations() {
   return &interpretations_;
 }
@@ -1658,7 +1658,7 @@ SrlShape::mutable_subcomponents() {
   return &subcomponents_;
 }
 
-// optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+// optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 7;
 inline bool SrlShape::has_boundingbox() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
@@ -1669,24 +1669,24 @@ inline void SrlShape::clear_has_boundingbox() {
   _has_bits_[0] &= ~0x00000040u;
 }
 inline void SrlShape::clear_boundingbox() {
-  if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::BoundingBox::Clear();
+  if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::SrlBoundingBox::Clear();
   clear_has_boundingbox();
 }
-inline const ::protobuf::srl::sketch::BoundingBox& SrlShape::boundingbox() const {
+inline const ::protobuf::srl::sketch::SrlBoundingBox& SrlShape::boundingbox() const {
   return boundingbox_ != NULL ? *boundingbox_ : *default_instance_->boundingbox_;
 }
-inline ::protobuf::srl::sketch::BoundingBox* SrlShape::mutable_boundingbox() {
+inline ::protobuf::srl::sketch::SrlBoundingBox* SrlShape::mutable_boundingbox() {
   set_has_boundingbox();
-  if (boundingbox_ == NULL) boundingbox_ = new ::protobuf::srl::sketch::BoundingBox;
+  if (boundingbox_ == NULL) boundingbox_ = new ::protobuf::srl::sketch::SrlBoundingBox;
   return boundingbox_;
 }
-inline ::protobuf::srl::sketch::BoundingBox* SrlShape::release_boundingbox() {
+inline ::protobuf::srl::sketch::SrlBoundingBox* SrlShape::release_boundingbox() {
   clear_has_boundingbox();
-  ::protobuf::srl::sketch::BoundingBox* temp = boundingbox_;
+  ::protobuf::srl::sketch::SrlBoundingBox* temp = boundingbox_;
   boundingbox_ = NULL;
   return temp;
 }
-inline void SrlShape::set_allocated_boundingbox(::protobuf::srl::sketch::BoundingBox* boundingbox) {
+inline void SrlShape::set_allocated_boundingbox(::protobuf::srl::sketch::SrlBoundingBox* boundingbox) {
   delete boundingbox_;
   boundingbox_ = boundingbox;
   if (boundingbox) {
@@ -1887,7 +1887,7 @@ SrlStroke::mutable_points() {
   return &points_;
 }
 
-// optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+// optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 5;
 inline bool SrlStroke::has_boundingbox() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -1898,24 +1898,24 @@ inline void SrlStroke::clear_has_boundingbox() {
   _has_bits_[0] &= ~0x00000010u;
 }
 inline void SrlStroke::clear_boundingbox() {
-  if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::BoundingBox::Clear();
+  if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::SrlBoundingBox::Clear();
   clear_has_boundingbox();
 }
-inline const ::protobuf::srl::sketch::BoundingBox& SrlStroke::boundingbox() const {
+inline const ::protobuf::srl::sketch::SrlBoundingBox& SrlStroke::boundingbox() const {
   return boundingbox_ != NULL ? *boundingbox_ : *default_instance_->boundingbox_;
 }
-inline ::protobuf::srl::sketch::BoundingBox* SrlStroke::mutable_boundingbox() {
+inline ::protobuf::srl::sketch::SrlBoundingBox* SrlStroke::mutable_boundingbox() {
   set_has_boundingbox();
-  if (boundingbox_ == NULL) boundingbox_ = new ::protobuf::srl::sketch::BoundingBox;
+  if (boundingbox_ == NULL) boundingbox_ = new ::protobuf::srl::sketch::SrlBoundingBox;
   return boundingbox_;
 }
-inline ::protobuf::srl::sketch::BoundingBox* SrlStroke::release_boundingbox() {
+inline ::protobuf::srl::sketch::SrlBoundingBox* SrlStroke::release_boundingbox() {
   clear_has_boundingbox();
-  ::protobuf::srl::sketch::BoundingBox* temp = boundingbox_;
+  ::protobuf::srl::sketch::SrlBoundingBox* temp = boundingbox_;
   boundingbox_ = NULL;
   return temp;
 }
-inline void SrlStroke::set_allocated_boundingbox(::protobuf::srl::sketch::BoundingBox* boundingbox) {
+inline void SrlStroke::set_allocated_boundingbox(::protobuf::srl::sketch::SrlBoundingBox* boundingbox) {
   delete boundingbox_;
   boundingbox_ = boundingbox;
   if (boundingbox) {
@@ -2203,56 +2203,56 @@ inline void SrlPoint::set_speed(double value) {
 
 // -------------------------------------------------------------------
 
-// Interpretation
+// SrlInterpretation
 
 // required string label = 1;
-inline bool Interpretation::has_label() const {
+inline bool SrlInterpretation::has_label() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Interpretation::set_has_label() {
+inline void SrlInterpretation::set_has_label() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Interpretation::clear_has_label() {
+inline void SrlInterpretation::clear_has_label() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Interpretation::clear_label() {
+inline void SrlInterpretation::clear_label() {
   if (label_ != &::google::protobuf::internal::kEmptyString) {
     label_->clear();
   }
   clear_has_label();
 }
-inline const ::std::string& Interpretation::label() const {
+inline const ::std::string& SrlInterpretation::label() const {
   return *label_;
 }
-inline void Interpretation::set_label(const ::std::string& value) {
+inline void SrlInterpretation::set_label(const ::std::string& value) {
   set_has_label();
   if (label_ == &::google::protobuf::internal::kEmptyString) {
     label_ = new ::std::string;
   }
   label_->assign(value);
 }
-inline void Interpretation::set_label(const char* value) {
+inline void SrlInterpretation::set_label(const char* value) {
   set_has_label();
   if (label_ == &::google::protobuf::internal::kEmptyString) {
     label_ = new ::std::string;
   }
   label_->assign(value);
 }
-inline void Interpretation::set_label(const char* value, size_t size) {
+inline void SrlInterpretation::set_label(const char* value, size_t size) {
   set_has_label();
   if (label_ == &::google::protobuf::internal::kEmptyString) {
     label_ = new ::std::string;
   }
   label_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Interpretation::mutable_label() {
+inline ::std::string* SrlInterpretation::mutable_label() {
   set_has_label();
   if (label_ == &::google::protobuf::internal::kEmptyString) {
     label_ = new ::std::string;
   }
   return label_;
 }
-inline ::std::string* Interpretation::release_label() {
+inline ::std::string* SrlInterpretation::release_label() {
   clear_has_label();
   if (label_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -2262,7 +2262,7 @@ inline ::std::string* Interpretation::release_label() {
     return temp;
   }
 }
-inline void Interpretation::set_allocated_label(::std::string* label) {
+inline void SrlInterpretation::set_allocated_label(::std::string* label) {
   if (label_ != &::google::protobuf::internal::kEmptyString) {
     delete label_;
   }
@@ -2276,137 +2276,137 @@ inline void Interpretation::set_allocated_label(::std::string* label) {
 }
 
 // required double confidence = 2;
-inline bool Interpretation::has_confidence() const {
+inline bool SrlInterpretation::has_confidence() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Interpretation::set_has_confidence() {
+inline void SrlInterpretation::set_has_confidence() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Interpretation::clear_has_confidence() {
+inline void SrlInterpretation::clear_has_confidence() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void Interpretation::clear_confidence() {
+inline void SrlInterpretation::clear_confidence() {
   confidence_ = 0;
   clear_has_confidence();
 }
-inline double Interpretation::confidence() const {
+inline double SrlInterpretation::confidence() const {
   return confidence_;
 }
-inline void Interpretation::set_confidence(double value) {
+inline void SrlInterpretation::set_confidence(double value) {
   set_has_confidence();
   confidence_ = value;
 }
 
 // optional double complexity = 3;
-inline bool Interpretation::has_complexity() const {
+inline bool SrlInterpretation::has_complexity() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void Interpretation::set_has_complexity() {
+inline void SrlInterpretation::set_has_complexity() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void Interpretation::clear_has_complexity() {
+inline void SrlInterpretation::clear_has_complexity() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void Interpretation::clear_complexity() {
+inline void SrlInterpretation::clear_complexity() {
   complexity_ = 0;
   clear_has_complexity();
 }
-inline double Interpretation::complexity() const {
+inline double SrlInterpretation::complexity() const {
   return complexity_;
 }
-inline void Interpretation::set_complexity(double value) {
+inline void SrlInterpretation::set_complexity(double value) {
   set_has_complexity();
   complexity_ = value;
 }
 
 // -------------------------------------------------------------------
 
-// BoundingBox
+// SrlBoundingBox
 
 // required double x = 1;
-inline bool BoundingBox::has_x() const {
+inline bool SrlBoundingBox::has_x() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void BoundingBox::set_has_x() {
+inline void SrlBoundingBox::set_has_x() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void BoundingBox::clear_has_x() {
+inline void SrlBoundingBox::clear_has_x() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void BoundingBox::clear_x() {
+inline void SrlBoundingBox::clear_x() {
   x_ = 0;
   clear_has_x();
 }
-inline double BoundingBox::x() const {
+inline double SrlBoundingBox::x() const {
   return x_;
 }
-inline void BoundingBox::set_x(double value) {
+inline void SrlBoundingBox::set_x(double value) {
   set_has_x();
   x_ = value;
 }
 
 // required double y = 2;
-inline bool BoundingBox::has_y() const {
+inline bool SrlBoundingBox::has_y() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void BoundingBox::set_has_y() {
+inline void SrlBoundingBox::set_has_y() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void BoundingBox::clear_has_y() {
+inline void SrlBoundingBox::clear_has_y() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void BoundingBox::clear_y() {
+inline void SrlBoundingBox::clear_y() {
   y_ = 0;
   clear_has_y();
 }
-inline double BoundingBox::y() const {
+inline double SrlBoundingBox::y() const {
   return y_;
 }
-inline void BoundingBox::set_y(double value) {
+inline void SrlBoundingBox::set_y(double value) {
   set_has_y();
   y_ = value;
 }
 
 // required double width = 3;
-inline bool BoundingBox::has_width() const {
+inline bool SrlBoundingBox::has_width() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void BoundingBox::set_has_width() {
+inline void SrlBoundingBox::set_has_width() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void BoundingBox::clear_has_width() {
+inline void SrlBoundingBox::clear_has_width() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void BoundingBox::clear_width() {
+inline void SrlBoundingBox::clear_width() {
   width_ = 0;
   clear_has_width();
 }
-inline double BoundingBox::width() const {
+inline double SrlBoundingBox::width() const {
   return width_;
 }
-inline void BoundingBox::set_width(double value) {
+inline void SrlBoundingBox::set_width(double value) {
   set_has_width();
   width_ = value;
 }
 
 // required double height = 4;
-inline bool BoundingBox::has_height() const {
+inline bool SrlBoundingBox::has_height() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void BoundingBox::set_has_height() {
+inline void SrlBoundingBox::set_has_height() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void BoundingBox::clear_has_height() {
+inline void SrlBoundingBox::clear_has_height() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void BoundingBox::clear_height() {
+inline void SrlBoundingBox::clear_height() {
   height_ = 0;
   clear_has_height();
 }
-inline double BoundingBox::height() const {
+inline double SrlBoundingBox::height() const {
   return height_;
 }
-inline void BoundingBox::set_height(double value) {
+inline void SrlBoundingBox::set_height(double value) {
   set_has_height();
   height_ = value;
 }
