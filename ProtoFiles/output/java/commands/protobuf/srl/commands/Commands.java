@@ -96,13 +96,21 @@ public final class Commands {
      */
     CLEAR_STACK(10, 14),
     /**
-     * <code>SYNC = 15;</code>
+     * <code>OPEN_SYNC = 15;</code>
      *
      * <pre>
-     * Tells this machine to send its list of commands to remote to make sure they are the same.
+     * Tells this machine that it will recieve a list of Updates and to execute them and compare order
      * </pre>
      */
-    SYNC(11, 15),
+    OPEN_SYNC(11, 15),
+    /**
+     * <code>CLOSE_SYNC = 16;</code>
+     *
+     * <pre>
+     * Tells the machine that it is going back to normal mode.
+     * </pre>
+     */
+    CLOSE_SYNC(12, 16),
     ;
 
     /**
@@ -182,13 +190,21 @@ public final class Commands {
      */
     public static final int CLEAR_STACK_VALUE = 14;
     /**
-     * <code>SYNC = 15;</code>
+     * <code>OPEN_SYNC = 15;</code>
      *
      * <pre>
-     * Tells this machine to send its list of commands to remote to make sure they are the same.
+     * Tells this machine that it will recieve a list of Updates and to execute them and compare order
      * </pre>
      */
-    public static final int SYNC_VALUE = 15;
+    public static final int OPEN_SYNC_VALUE = 15;
+    /**
+     * <code>CLOSE_SYNC = 16;</code>
+     *
+     * <pre>
+     * Tells the machine that it is going back to normal mode.
+     * </pre>
+     */
+    public static final int CLOSE_SYNC_VALUE = 16;
 
 
     public final int getNumber() { return value; }
@@ -206,7 +222,8 @@ public final class Commands {
         case 12: return REDO;
         case 13: return REWRITE;
         case 14: return CLEAR_STACK;
-        case 15: return SYNC;
+        case 15: return OPEN_SYNC;
+        case 16: return CLOSE_SYNC;
         default: return null;
       }
     }
@@ -310,6 +327,24 @@ public final class Commands {
      */
     protobuf.srl.commands.Commands.SrlCommandOrBuilder getCommandsOrBuilder(
         int index);
+
+    // optional int32 commandNumber = 4;
+    /**
+     * <code>optional int32 commandNumber = 4;</code>
+     *
+     * <pre>
+     * this is only mainly used in a SYNC Command
+     * </pre>
+     */
+    boolean hasCommandNumber();
+    /**
+     * <code>optional int32 commandNumber = 4;</code>
+     *
+     * <pre>
+     * this is only mainly used in a SYNC Command
+     * </pre>
+     */
+    int getCommandNumber();
   }
   /**
    * Protobuf type {@code protobuf.srl.commands.SrlUpdate}
@@ -378,6 +413,11 @@ public final class Commands {
                 mutable_bitField0_ |= 0x00000004;
               }
               commands_.add(input.readMessage(protobuf.srl.commands.Commands.SrlCommand.PARSER, extensionRegistry));
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000004;
+              commandNumber_ = input.readInt32();
               break;
             }
           }
@@ -518,10 +558,35 @@ public final class Commands {
       return commands_.get(index);
     }
 
+    // optional int32 commandNumber = 4;
+    public static final int COMMANDNUMBER_FIELD_NUMBER = 4;
+    private int commandNumber_;
+    /**
+     * <code>optional int32 commandNumber = 4;</code>
+     *
+     * <pre>
+     * this is only mainly used in a SYNC Command
+     * </pre>
+     */
+    public boolean hasCommandNumber() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional int32 commandNumber = 4;</code>
+     *
+     * <pre>
+     * this is only mainly used in a SYNC Command
+     * </pre>
+     */
+    public int getCommandNumber() {
+      return commandNumber_;
+    }
+
     private void initFields() {
       updateId_ = "";
       time_ = 0L;
       commands_ = java.util.Collections.emptyList();
+      commandNumber_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -554,6 +619,9 @@ public final class Commands {
       for (int i = 0; i < commands_.size(); i++) {
         output.writeMessage(3, commands_.get(i));
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(4, commandNumber_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -574,6 +642,10 @@ public final class Commands {
       for (int i = 0; i < commands_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, commands_.get(i));
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, commandNumber_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -702,6 +774,8 @@ public final class Commands {
         } else {
           commandsBuilder_.clear();
         }
+        commandNumber_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -747,6 +821,10 @@ public final class Commands {
         } else {
           result.commands_ = commandsBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.commandNumber_ = commandNumber_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -796,6 +874,9 @@ public final class Commands {
               commandsBuilder_.addAllMessages(other.commands_);
             }
           }
+        }
+        if (other.hasCommandNumber()) {
+          setCommandNumber(other.getCommandNumber());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1181,6 +1262,55 @@ public final class Commands {
         return commandsBuilder_;
       }
 
+      // optional int32 commandNumber = 4;
+      private int commandNumber_ ;
+      /**
+       * <code>optional int32 commandNumber = 4;</code>
+       *
+       * <pre>
+       * this is only mainly used in a SYNC Command
+       * </pre>
+       */
+      public boolean hasCommandNumber() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional int32 commandNumber = 4;</code>
+       *
+       * <pre>
+       * this is only mainly used in a SYNC Command
+       * </pre>
+       */
+      public int getCommandNumber() {
+        return commandNumber_;
+      }
+      /**
+       * <code>optional int32 commandNumber = 4;</code>
+       *
+       * <pre>
+       * this is only mainly used in a SYNC Command
+       * </pre>
+       */
+      public Builder setCommandNumber(int value) {
+        bitField0_ |= 0x00000008;
+        commandNumber_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 commandNumber = 4;</code>
+       *
+       * <pre>
+       * this is only mainly used in a SYNC Command
+       * </pre>
+       */
+      public Builder clearCommandNumber() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        commandNumber_ = 0;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:protobuf.srl.commands.SrlUpdate)
     }
 
@@ -1215,13 +1345,13 @@ public final class Commands {
      */
     boolean getIsUserCreated();
 
-    // required bytes commandData = 3;
+    // optional bytes commandData = 3;
     /**
-     * <code>required bytes commandData = 3;</code>
+     * <code>optional bytes commandData = 3;</code>
      */
     boolean hasCommandData();
     /**
-     * <code>required bytes commandData = 3;</code>
+     * <code>optional bytes commandData = 3;</code>
      */
     com.google.protobuf.ByteString getCommandData();
 
@@ -1393,17 +1523,17 @@ public final class Commands {
       return isUserCreated_;
     }
 
-    // required bytes commandData = 3;
+    // optional bytes commandData = 3;
     public static final int COMMANDDATA_FIELD_NUMBER = 3;
     private com.google.protobuf.ByteString commandData_;
     /**
-     * <code>required bytes commandData = 3;</code>
+     * <code>optional bytes commandData = 3;</code>
      */
     public boolean hasCommandData() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required bytes commandData = 3;</code>
+     * <code>optional bytes commandData = 3;</code>
      */
     public com.google.protobuf.ByteString getCommandData() {
       return commandData_;
@@ -1468,10 +1598,6 @@ public final class Commands {
         return false;
       }
       if (!hasIsUserCreated()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasCommandData()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -1734,10 +1860,6 @@ public final class Commands {
           
           return false;
         }
-        if (!hasCommandData()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -1829,22 +1951,22 @@ public final class Commands {
         return this;
       }
 
-      // required bytes commandData = 3;
+      // optional bytes commandData = 3;
       private com.google.protobuf.ByteString commandData_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>required bytes commandData = 3;</code>
+       * <code>optional bytes commandData = 3;</code>
        */
       public boolean hasCommandData() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required bytes commandData = 3;</code>
+       * <code>optional bytes commandData = 3;</code>
        */
       public com.google.protobuf.ByteString getCommandData() {
         return commandData_;
       }
       /**
-       * <code>required bytes commandData = 3;</code>
+       * <code>optional bytes commandData = 3;</code>
        */
       public Builder setCommandData(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -1856,7 +1978,7 @@ public final class Commands {
         return this;
       }
       /**
-       * <code>required bytes commandData = 3;</code>
+       * <code>optional bytes commandData = 3;</code>
        */
       public Builder clearCommandData() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -5659,31 +5781,32 @@ public final class Commands {
   static {
     java.lang.String[] descriptorData = {
       "\n\024input/commands.proto\022\025protobuf.srl.com" +
-      "mands\"`\n\tSrlUpdate\022\020\n\010updateId\030\001 \002(\t\022\014\n\004" +
+      "mands\"w\n\tSrlUpdate\022\020\n\010updateId\030\001 \002(\t\022\014\n\004" +
       "time\030\002 \001(\003\0223\n\010commands\030\003 \003(\0132!.protobuf." +
-      "srl.commands.SrlCommand\"\204\001\n\nSrlCommand\0227" +
-      "\n\013commandType\030\001 \002(\0162\".protobuf.srl.comma" +
-      "nds.CommandType\022\025\n\risUserCreated\030\002 \002(\010\022\023" +
-      "\n\013commandData\030\003 \002(\014\022\021\n\tcommandId\030\004 \001(\t\"\032" +
-      "\n\007IdChain\022\017\n\007idChain\030\001 \003(\t\"\241\001\n\022ActionPac" +
-      "kageShape\0226\n\016oldContainerId\030\001 \001(\0132\036.prot" +
-      "obuf.srl.commands.IdChain\0226\n\016newContaine",
-      "rId\030\002 \001(\0132\036.protobuf.srl.commands.IdChai" +
-      "n\022\033\n\023shapesToBeContained\030\003 \003(\t\"d\n\031Action" +
-      "ForceInterpretation\022\026\n\016interpretation\030\001 " +
-      "\002(\014\022/\n\007shapeId\030\002 \002(\0132\036.protobuf.srl.comm" +
-      "ands.IdChain\"s\n\022ActionAddAttribtue\022/\n\007sh" +
-      "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh" +
-      "ain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeVa" +
-      "lue\030\003 \002(\014\"v\n\025ActionRemoveAttribtue\022/\n\007sh" +
-      "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh" +
-      "ain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeVa",
-      "lue\030\003 \002(\014*\324\001\n\013CommandType\022\016\n\nADD_STROKE\020" +
-      "\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\021\n\rR" +
-      "EMOVE_OBJECT\020\003\022\024\n\020ASSIGN_ATTRIBUTE\020\004\022\024\n\020" +
-      "REMOVE_ATTRIBUTE\020\005\022\030\n\024FORCE_INTERPRETATI" +
-      "ON\020\n\022\010\n\004UNDO\020\013\022\010\n\004REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n" +
-      "\013CLEAR_STACK\020\016\022\010\n\004SYNC\020\017"
+      "srl.commands.SrlCommand\022\025\n\rcommandNumber" +
+      "\030\004 \001(\005\"\204\001\n\nSrlCommand\0227\n\013commandType\030\001 \002" +
+      "(\0162\".protobuf.srl.commands.CommandType\022\025" +
+      "\n\risUserCreated\030\002 \002(\010\022\023\n\013commandData\030\003 \001" +
+      "(\014\022\021\n\tcommandId\030\004 \001(\t\"\032\n\007IdChain\022\017\n\007idCh" +
+      "ain\030\001 \003(\t\"\241\001\n\022ActionPackageShape\0226\n\016oldC" +
+      "ontainerId\030\001 \001(\0132\036.protobuf.srl.commands",
+      ".IdChain\0226\n\016newContainerId\030\002 \001(\0132\036.proto" +
+      "buf.srl.commands.IdChain\022\033\n\023shapesToBeCo" +
+      "ntained\030\003 \003(\t\"d\n\031ActionForceInterpretati" +
+      "on\022\026\n\016interpretation\030\001 \002(\014\022/\n\007shapeId\030\002 " +
+      "\002(\0132\036.protobuf.srl.commands.IdChain\"s\n\022A" +
+      "ctionAddAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.pro" +
+      "tobuf.srl.commands.IdChain\022\024\n\014attributeK" +
+      "ey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014\"v\n\025Acti" +
+      "onRemoveAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.pro" +
+      "tobuf.srl.commands.IdChain\022\024\n\014attributeK",
+      "ey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014*\351\001\n\013Com" +
+      "mandType\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022" +
+      "\021\n\rPACKAGE_SHAPE\020\002\022\021\n\rREMOVE_OBJECT\020\003\022\024\n" +
+      "\020ASSIGN_ATTRIBUTE\020\004\022\024\n\020REMOVE_ATTRIBUTE\020" +
+      "\005\022\030\n\024FORCE_INTERPRETATION\020\n\022\010\n\004UNDO\020\013\022\010\n" +
+      "\004REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n\013CLEAR_STACK\020\016\022\r\n" +
+      "\tOPEN_SYNC\020\017\022\016\n\nCLOSE_SYNC\020\020"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5695,7 +5818,7 @@ public final class Commands {
           internal_static_protobuf_srl_commands_SrlUpdate_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_SrlUpdate_descriptor,
-              new java.lang.String[] { "UpdateId", "Time", "Commands", });
+              new java.lang.String[] { "UpdateId", "Time", "Commands", "CommandNumber", });
           internal_static_protobuf_srl_commands_SrlCommand_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_commands_SrlCommand_fieldAccessorTable = new

@@ -4,13 +4,14 @@ message SrlUpdate {
 	required string updateId = 1;
 	optional int64 time = 2;
 	repeated SrlCommand commands = 3;
+	optional int32 commandNumber = 4; // this is only mainly used in a SYNC Command
 }
 
 // inheritance does not exist so this will replace shape
 message SrlCommand {
 	required CommandType commandType = 1;
 	required bool isUserCreated = 2;
-	required bytes commandData = 3;
+	optional bytes commandData = 3;
 	optional string commandId = 4;
 }
 
@@ -33,7 +34,8 @@ enum CommandType {
 	REDO = 12; // Redo one command and Redo its effect.
 	REWRITE = 13; // Forces all commands in the list that are past the current state to be removed.
 	CLEAR_STACK = 14; // Clears the stack.
-	SYNC = 15; // Tells this machine to send its list of commands to remote to make sure they are the same.
+	OPEN_SYNC = 15; // Tells this machine that it will recieve a list of Updates and to execute them and compare order
+	CLOSE_SYNC = 16; // Tells the machine that it is going back to normal mode.
 }
 
 /**

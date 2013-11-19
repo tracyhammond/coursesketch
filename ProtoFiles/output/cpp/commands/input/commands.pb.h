@@ -56,11 +56,12 @@ enum CommandType {
   REDO = 12,
   REWRITE = 13,
   CLEAR_STACK = 14,
-  SYNC = 15
+  OPEN_SYNC = 15,
+  CLOSE_SYNC = 16
 };
 bool CommandType_IsValid(int value);
 const CommandType CommandType_MIN = ADD_STROKE;
-const CommandType CommandType_MAX = SYNC;
+const CommandType CommandType_MAX = CLOSE_SYNC;
 const int CommandType_ARRAYSIZE = CommandType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* CommandType_descriptor();
@@ -160,21 +161,31 @@ class SrlUpdate : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlCommand >*
       mutable_commands();
 
+  // optional int32 commandNumber = 4;
+  inline bool has_commandnumber() const;
+  inline void clear_commandnumber();
+  static const int kCommandNumberFieldNumber = 4;
+  inline ::google::protobuf::int32 commandnumber() const;
+  inline void set_commandnumber(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.commands.SrlUpdate)
  private:
   inline void set_has_updateid();
   inline void clear_has_updateid();
   inline void set_has_time();
   inline void clear_has_time();
+  inline void set_has_commandnumber();
+  inline void clear_has_commandnumber();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* updateid_;
   ::google::protobuf::int64 time_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlCommand > commands_;
+  ::google::protobuf::int32 commandnumber_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fcommands_2eproto();
   friend void protobuf_AssignDesc_input_2fcommands_2eproto();
@@ -253,7 +264,7 @@ class SrlCommand : public ::google::protobuf::Message {
   inline bool isusercreated() const;
   inline void set_isusercreated(bool value);
 
-  // required bytes commandData = 3;
+  // optional bytes commandData = 3;
   inline bool has_commanddata() const;
   inline void clear_commanddata();
   static const int kCommandDataFieldNumber = 3;
@@ -958,6 +969,28 @@ SrlUpdate::mutable_commands() {
   return &commands_;
 }
 
+// optional int32 commandNumber = 4;
+inline bool SrlUpdate::has_commandnumber() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SrlUpdate::set_has_commandnumber() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SrlUpdate::clear_has_commandnumber() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SrlUpdate::clear_commandnumber() {
+  commandnumber_ = 0;
+  clear_has_commandnumber();
+}
+inline ::google::protobuf::int32 SrlUpdate::commandnumber() const {
+  return commandnumber_;
+}
+inline void SrlUpdate::set_commandnumber(::google::protobuf::int32 value) {
+  set_has_commandnumber();
+  commandnumber_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // SrlCommand
@@ -1007,7 +1040,7 @@ inline void SrlCommand::set_isusercreated(bool value) {
   isusercreated_ = value;
 }
 
-// required bytes commandData = 3;
+// optional bytes commandData = 3;
 inline bool SrlCommand::has_commanddata() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
