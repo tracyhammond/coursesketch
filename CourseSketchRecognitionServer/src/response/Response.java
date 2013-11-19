@@ -3,11 +3,9 @@ package response;
 import java.util.LinkedList;
 
 import protobuf.srl.commands.Commands.ActionPackageShape;
-import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.IdChain;
 import protobuf.srl.commands.Commands.SrlCommand;
 import protobuf.srl.commands.Commands.SrlUpdate;
-import protobuf.srl.commands.Commands.SrlUpdate.Builder;
 import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 
