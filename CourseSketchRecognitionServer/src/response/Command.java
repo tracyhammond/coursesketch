@@ -1,5 +1,7 @@
 package response;
 
+import com.google.protobuf.ByteString;
+
 import protobuf.srl.commands.Commands.CommandType;
 import srl.core.sketch.Sketch;
 
@@ -24,6 +26,12 @@ public abstract class Command {
 	public CommandType getType(){
 		return type;
 	}
+	
+	/**
+	 * for use in packaging up commands
+	 * @return ByteString
+	 */
+	public abstract ByteString toByteString();
 	
 	/**
 	 * execute singular command, intended to be called in sequence for every Update

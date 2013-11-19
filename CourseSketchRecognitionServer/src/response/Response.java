@@ -3,9 +3,11 @@ package response;
 import java.util.LinkedList;
 
 import protobuf.srl.commands.Commands.ActionPackageShape;
+import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.IdChain;
 import protobuf.srl.commands.Commands.SrlCommand;
 import protobuf.srl.commands.Commands.SrlUpdate;
+import protobuf.srl.commands.Commands.SrlUpdate.Builder;
 import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 
@@ -88,28 +90,21 @@ public class Response {
 	 * @throws Exception Unsupported Command
 	 */
 	private SrlUpdate repackage(Update u) throws Exception{
-		SrlUpdate.Builder build = SrlUpdate.newBuilder();
+		SrlUpdate.Builder updateBuilder = SrlUpdate.newBuilder();
 		
-		build.setTime(u.getTime());
+		updateBuilder.setTime(u.getTime());
+		
 		LinkedList<SrlCommand> container = new LinkedList<SrlCommand>();
 		for(Command c: u.getCommandList()){
 			SrlCommand.Builder com = SrlCommand.newBuilder();
-			switch(c.getType()){
-			case ADD_STROKE:
-				break;
-			case ADD_SHAPE:
-				break;
-			case PACKAGE_SHAPE:
-				break;
-			case REMOVE_OBJECT:
-				break;
-			default:
-				throw new Exception("Unsupported command: "+c.getType());
-			}
+			
+			com.setCommandType(c.getType());
+			com.setCommandData(c.toByteString());
+			
 			container.add(com.build());
 		}
-		build.addAllCommands(container);
+		updateBuilder.addAllCommands(container);
 		
-		return build.build();
+		return updateBuilder.build();
 	}
 }

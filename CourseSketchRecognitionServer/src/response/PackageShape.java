@@ -3,6 +3,8 @@ package response;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.protobuf.ByteString;
+
 import protobuf.srl.commands.Commands.ActionPackageShape;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.IdChain;
@@ -10,18 +12,29 @@ import srl.core.sketch.SContainer;
 import srl.core.sketch.Sketch;
 
 public class PackageShape extends Command {
-	private IdChain OldContainer;
-	private IdChain NewContainer;
+	private IdChain oldContainer;
+	private IdChain newContainer;
 	private List<String> contained;
 
 	public PackageShape(ActionPackageShape input){
 		type = CommandType.PACKAGE_SHAPE;
 		
-		OldContainer = input.getOldContainerId();
-		NewContainer = input.getNewContainerId();
+		oldContainer = input.getOldContainerId();
+		newContainer = input.getNewContainerId();
 		contained = input.getShapesToBeContainedList();
 	}
 
+	@Override
+	public ByteString toByteString() {
+		ActionPackageShape.Builder build = ActionPackageShape.newBuilder();
+		
+		build.setOldContainerId(oldContainer);
+		build.setNewContainerId(newContainer);
+		build.addAllShapesToBeContained(contained);
+		
+		return build.build().toByteString();
+	}
+	
 	@Override
 	/**
 	 * This one takes all the items with IDs contained in [contained]
@@ -30,16 +43,16 @@ public class PackageShape extends Command {
 	public void execute(Sketch s) {
 		// TODO these casts feel risky. Lets make sure they work!
 		SContainer from;
-		if(OldContainer == null)
+		if(oldContainer == null)
 			from = s;
 		else
-			from = (SContainer) s.get(UUID.fromString(OldContainer.getIdChain(OldContainer.getIdChainCount()-1)));
+			from = (SContainer) s.get(UUID.fromString(oldContainer.getIdChain(oldContainer.getIdChainCount()-1)));
 		
 		SContainer to;
-		if(NewContainer == null)
+		if(newContainer == null)
 			to = s;
 		else
-			to = (SContainer) s.get(UUID.fromString(NewContainer.getIdChain(NewContainer.getIdChainCount()-1)));
+			to = (SContainer) s.get(UUID.fromString(newContainer.getIdChain(newContainer.getIdChainCount()-1)));
 		
 		if(from == to)
 			return;
