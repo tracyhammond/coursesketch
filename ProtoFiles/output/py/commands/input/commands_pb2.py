@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/commands.proto',
   package='protobuf.srl.commands',
-  serialized_pb='\n\x14input/commands.proto\x12\x15protobuf.srl.commands\"`\n\tSrlUpdate\x12\x10\n\x08updateId\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x01(\x03\x12\x33\n\x08\x63ommands\x18\x03 \x03(\x0b\x32!.protobuf.srl.commands.SrlCommand\"\x84\x01\n\nSrlCommand\x12\x37\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32\".protobuf.srl.commands.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x02(\x0c\x12\x11\n\tcommandId\x18\x04 \x01(\t\"\x1a\n\x07IdChain\x12\x0f\n\x07idChain\x18\x01 \x03(\t\"\xa1\x01\n\x12\x41\x63tionPackageShape\x12\x36\n\x0eoldContainerId\x18\x01 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x36\n\x0enewContainerId\x18\x02 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x1b\n\x13shapesToBeContained\x18\x03 \x03(\t\"d\n\x19\x41\x63tionForceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12/\n\x07shapeId\x18\x02 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"s\n\x12\x41\x63tionAddAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c\"v\n\x15\x41\x63tionRemoveAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c*\xd4\x01\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x11\n\rPACKAGE_SHAPE\x10\x02\x12\x11\n\rREMOVE_OBJECT\x10\x03\x12\x14\n\x10\x41SSIGN_ATTRIBUTE\x10\x04\x12\x14\n\x10REMOVE_ATTRIBUTE\x10\x05\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\n\x12\x08\n\x04UNDO\x10\x0b\x12\x08\n\x04REDO\x10\x0c\x12\x0b\n\x07REWRITE\x10\r\x12\x0f\n\x0b\x43LEAR_STACK\x10\x0e\x12\x08\n\x04SYNC\x10\x0f')
+  serialized_pb='\n\x14input/commands.proto\x12\x15protobuf.srl.commands\"w\n\tSrlUpdate\x12\x10\n\x08updateId\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x01(\x03\x12\x33\n\x08\x63ommands\x18\x03 \x03(\x0b\x32!.protobuf.srl.commands.SrlCommand\x12\x15\n\rcommandNumber\x18\x04 \x01(\x05\"\x84\x01\n\nSrlCommand\x12\x37\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32\".protobuf.srl.commands.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x01(\x0c\x12\x11\n\tcommandId\x18\x04 \x01(\t\"\x1a\n\x07IdChain\x12\x0f\n\x07idChain\x18\x01 \x03(\t\"\xa1\x01\n\x12\x41\x63tionPackageShape\x12\x36\n\x0eoldContainerId\x18\x01 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x36\n\x0enewContainerId\x18\x02 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x1b\n\x13shapesToBeContained\x18\x03 \x03(\t\"d\n\x19\x41\x63tionForceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12/\n\x07shapeId\x18\x02 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"s\n\x12\x41\x63tionAddAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c\"v\n\x15\x41\x63tionRemoveAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c*\xe9\x01\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x11\n\rPACKAGE_SHAPE\x10\x02\x12\x11\n\rREMOVE_OBJECT\x10\x03\x12\x14\n\x10\x41SSIGN_ATTRIBUTE\x10\x04\x12\x14\n\x10REMOVE_ATTRIBUTE\x10\x05\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\n\x12\x08\n\x04UNDO\x10\x0b\x12\x08\n\x04REDO\x10\x0c\x12\x0b\n\x07REWRITE\x10\r\x12\x0f\n\x0b\x43LEAR_STACK\x10\x0e\x12\r\n\tOPEN_SYNC\x10\x0f\x12\x0e\n\nCLOSE_SYNC\x10\x10')
 
 _COMMANDTYPE = _descriptor.EnumDescriptor(
   name='CommandType',
@@ -67,14 +67,18 @@ _COMMANDTYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='SYNC', index=11, number=15,
+      name='OPEN_SYNC', index=11, number=15,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='CLOSE_SYNC', index=12, number=16,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=812,
-  serialized_end=1024,
+  serialized_start=835,
+  serialized_end=1068,
 )
 
 CommandType = enum_type_wrapper.EnumTypeWrapper(_COMMANDTYPE)
@@ -89,7 +93,8 @@ UNDO = 11
 REDO = 12
 REWRITE = 13
 CLEAR_STACK = 14
-SYNC = 15
+OPEN_SYNC = 15
+CLOSE_SYNC = 16
 
 
 
@@ -121,6 +126,13 @@ _SRLUPDATE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='commandNumber', full_name='protobuf.srl.commands.SrlUpdate.commandNumber', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -131,7 +143,7 @@ _SRLUPDATE = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=47,
-  serialized_end=143,
+  serialized_end=166,
 )
 
 
@@ -158,7 +170,7 @@ _SRLCOMMAND = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='commandData', full_name='protobuf.srl.commands.SrlCommand.commandData', index=2,
-      number=3, type=12, cpp_type=9, label=2,
+      number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value="",
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -179,8 +191,8 @@ _SRLCOMMAND = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=146,
-  serialized_end=278,
+  serialized_start=169,
+  serialized_end=301,
 )
 
 
@@ -207,8 +219,8 @@ _IDCHAIN = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=280,
-  serialized_end=306,
+  serialized_start=303,
+  serialized_end=329,
 )
 
 
@@ -249,8 +261,8 @@ _ACTIONPACKAGESHAPE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=309,
-  serialized_end=470,
+  serialized_start=332,
+  serialized_end=493,
 )
 
 
@@ -284,8 +296,8 @@ _ACTIONFORCEINTERPRETATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=472,
-  serialized_end=572,
+  serialized_start=495,
+  serialized_end=595,
 )
 
 
@@ -326,8 +338,8 @@ _ACTIONADDATTRIBTUE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=574,
-  serialized_end=689,
+  serialized_start=597,
+  serialized_end=712,
 )
 
 
@@ -368,8 +380,8 @@ _ACTIONREMOVEATTRIBTUE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=691,
-  serialized_end=809,
+  serialized_start=714,
+  serialized_end=832,
 )
 
 _SRLUPDATE.fields_by_name['commands'].message_type = _SRLCOMMAND

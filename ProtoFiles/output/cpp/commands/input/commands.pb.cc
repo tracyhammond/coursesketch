@@ -55,10 +55,11 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       "input/commands.proto");
   GOOGLE_CHECK(file != NULL);
   SrlUpdate_descriptor_ = file->message_type(0);
-  static const int SrlUpdate_offsets_[3] = {
+  static const int SrlUpdate_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUpdate, updateid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUpdate, time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUpdate, commands_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUpdate, commandnumber_),
   };
   SrlUpdate_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -227,31 +228,32 @@ void protobuf_AddDesc_input_2fcommands_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\024input/commands.proto\022\025protobuf.srl.com"
-    "mands\"`\n\tSrlUpdate\022\020\n\010updateId\030\001 \002(\t\022\014\n\004"
+    "mands\"w\n\tSrlUpdate\022\020\n\010updateId\030\001 \002(\t\022\014\n\004"
     "time\030\002 \001(\003\0223\n\010commands\030\003 \003(\0132!.protobuf."
-    "srl.commands.SrlCommand\"\204\001\n\nSrlCommand\0227"
-    "\n\013commandType\030\001 \002(\0162\".protobuf.srl.comma"
-    "nds.CommandType\022\025\n\risUserCreated\030\002 \002(\010\022\023"
-    "\n\013commandData\030\003 \002(\014\022\021\n\tcommandId\030\004 \001(\t\"\032"
-    "\n\007IdChain\022\017\n\007idChain\030\001 \003(\t\"\241\001\n\022ActionPac"
-    "kageShape\0226\n\016oldContainerId\030\001 \001(\0132\036.prot"
-    "obuf.srl.commands.IdChain\0226\n\016newContaine"
-    "rId\030\002 \001(\0132\036.protobuf.srl.commands.IdChai"
-    "n\022\033\n\023shapesToBeContained\030\003 \003(\t\"d\n\031Action"
-    "ForceInterpretation\022\026\n\016interpretation\030\001 "
-    "\002(\014\022/\n\007shapeId\030\002 \002(\0132\036.protobuf.srl.comm"
-    "ands.IdChain\"s\n\022ActionAddAttribtue\022/\n\007sh"
-    "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh"
-    "ain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeVa"
-    "lue\030\003 \002(\014\"v\n\025ActionRemoveAttribtue\022/\n\007sh"
-    "apeId\030\001 \002(\0132\036.protobuf.srl.commands.IdCh"
-    "ain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016attributeVa"
-    "lue\030\003 \002(\014*\324\001\n\013CommandType\022\016\n\nADD_STROKE\020"
-    "\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\021\n\rR"
-    "EMOVE_OBJECT\020\003\022\024\n\020ASSIGN_ATTRIBUTE\020\004\022\024\n\020"
-    "REMOVE_ATTRIBUTE\020\005\022\030\n\024FORCE_INTERPRETATI"
-    "ON\020\n\022\010\n\004UNDO\020\013\022\010\n\004REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n"
-    "\013CLEAR_STACK\020\016\022\010\n\004SYNC\020\017", 1024);
+    "srl.commands.SrlCommand\022\025\n\rcommandNumber"
+    "\030\004 \001(\005\"\204\001\n\nSrlCommand\0227\n\013commandType\030\001 \002"
+    "(\0162\".protobuf.srl.commands.CommandType\022\025"
+    "\n\risUserCreated\030\002 \002(\010\022\023\n\013commandData\030\003 \001"
+    "(\014\022\021\n\tcommandId\030\004 \001(\t\"\032\n\007IdChain\022\017\n\007idCh"
+    "ain\030\001 \003(\t\"\241\001\n\022ActionPackageShape\0226\n\016oldC"
+    "ontainerId\030\001 \001(\0132\036.protobuf.srl.commands"
+    ".IdChain\0226\n\016newContainerId\030\002 \001(\0132\036.proto"
+    "buf.srl.commands.IdChain\022\033\n\023shapesToBeCo"
+    "ntained\030\003 \003(\t\"d\n\031ActionForceInterpretati"
+    "on\022\026\n\016interpretation\030\001 \002(\014\022/\n\007shapeId\030\002 "
+    "\002(\0132\036.protobuf.srl.commands.IdChain\"s\n\022A"
+    "ctionAddAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.pro"
+    "tobuf.srl.commands.IdChain\022\024\n\014attributeK"
+    "ey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014\"v\n\025Acti"
+    "onRemoveAttribtue\022/\n\007shapeId\030\001 \002(\0132\036.pro"
+    "tobuf.srl.commands.IdChain\022\024\n\014attributeK"
+    "ey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014*\351\001\n\013Com"
+    "mandType\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022"
+    "\021\n\rPACKAGE_SHAPE\020\002\022\021\n\rREMOVE_OBJECT\020\003\022\024\n"
+    "\020ASSIGN_ATTRIBUTE\020\004\022\024\n\020REMOVE_ATTRIBUTE\020"
+    "\005\022\030\n\024FORCE_INTERPRETATION\020\n\022\010\n\004UNDO\020\013\022\010\n"
+    "\004REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n\013CLEAR_STACK\020\016\022\r\n"
+    "\tOPEN_SYNC\020\017\022\016\n\nCLOSE_SYNC\020\020", 1068);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/commands.proto", &protobuf_RegisterTypes);
   SrlUpdate::default_instance_ = new SrlUpdate();
@@ -295,6 +297,7 @@ bool CommandType_IsValid(int value) {
     case 13:
     case 14:
     case 15:
+    case 16:
       return true;
     default:
       return false;
@@ -308,6 +311,7 @@ bool CommandType_IsValid(int value) {
 const int SrlUpdate::kUpdateIdFieldNumber;
 const int SrlUpdate::kTimeFieldNumber;
 const int SrlUpdate::kCommandsFieldNumber;
+const int SrlUpdate::kCommandNumberFieldNumber;
 #endif  // !_MSC_VER
 
 SrlUpdate::SrlUpdate()
@@ -328,6 +332,7 @@ void SrlUpdate::SharedCtor() {
   _cached_size_ = 0;
   updateid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   time_ = GOOGLE_LONGLONG(0);
+  commandnumber_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -372,6 +377,7 @@ void SrlUpdate::Clear() {
       }
     }
     time_ = GOOGLE_LONGLONG(0);
+    commandnumber_ = 0;
   }
   commands_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -427,6 +433,22 @@ bool SrlUpdate::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(26)) goto parse_commands;
+        if (input->ExpectTag(32)) goto parse_commandNumber;
+        break;
+      }
+
+      // optional int32 commandNumber = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_commandNumber:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &commandnumber_)));
+          set_has_commandnumber();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -469,6 +491,11 @@ void SrlUpdate::SerializeWithCachedSizes(
       3, this->commands(i), output);
   }
 
+  // optional int32 commandNumber = 4;
+  if (has_commandnumber()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->commandnumber(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -499,6 +526,11 @@ void SrlUpdate::SerializeWithCachedSizes(
         3, this->commands(i), target);
   }
 
+  // optional int32 commandNumber = 4;
+  if (has_commandnumber()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->commandnumber(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -522,6 +554,13 @@ int SrlUpdate::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int64Size(
           this->time());
+    }
+
+    // optional int32 commandNumber = 4;
+    if (has_commandnumber()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->commandnumber());
     }
 
   }
@@ -566,6 +605,9 @@ void SrlUpdate::MergeFrom(const SrlUpdate& from) {
     if (from.has_time()) {
       set_time(from.time());
     }
+    if (from.has_commandnumber()) {
+      set_commandnumber(from.commandnumber());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -596,6 +638,7 @@ void SrlUpdate::Swap(SrlUpdate* other) {
     std::swap(updateid_, other->updateid_);
     std::swap(time_, other->time_);
     commands_.Swap(&other->commands_);
+    std::swap(commandnumber_, other->commandnumber_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -740,7 +783,7 @@ bool SrlCommand::MergePartialFromCodedStream(
         break;
       }
 
-      // required bytes commandData = 3;
+      // optional bytes commandData = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -800,7 +843,7 @@ void SrlCommand::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->isusercreated(), output);
   }
 
-  // required bytes commandData = 3;
+  // optional bytes commandData = 3;
   if (has_commanddata()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
       3, this->commanddata(), output);
@@ -834,7 +877,7 @@ void SrlCommand::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->isusercreated(), target);
   }
 
-  // required bytes commandData = 3;
+  // optional bytes commandData = 3;
   if (has_commanddata()) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
@@ -873,7 +916,7 @@ int SrlCommand::ByteSize() const {
       total_size += 1 + 1;
     }
 
-    // required bytes commandData = 3;
+    // optional bytes commandData = 3;
     if (has_commanddata()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -943,7 +986,7 @@ void SrlCommand::CopyFrom(const SrlCommand& from) {
 }
 
 bool SrlCommand::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
