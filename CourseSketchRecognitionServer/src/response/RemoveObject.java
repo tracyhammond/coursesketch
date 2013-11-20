@@ -2,6 +2,8 @@ package response;
 
 import java.util.UUID;
 
+import com.google.protobuf.ByteString;
+
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.IdChain;
 
@@ -16,6 +18,11 @@ public class RemoveObject extends Command {
 		data = input;
 	}
 
+	@Override
+	public ByteString toByteString() {
+		return data.toByteString();
+	}
+	
 	@Override
 	/**
 	 * Removes a single object and all its subcomponents

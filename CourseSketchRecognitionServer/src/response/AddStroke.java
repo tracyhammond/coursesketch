@@ -2,6 +2,8 @@ package response;
 
 import java.util.UUID;
 
+import com.google.protobuf.ByteString;
+
 import srl.core.sketch.Point;
 import srl.core.sketch.Sketch;
 import srl.core.sketch.Stroke;
@@ -25,6 +27,26 @@ public class AddStroke extends Command {
 		}
 	}
 
+	@Override
+	public ByteString toByteString() {
+		SrlStroke.Builder strokebuilder = SrlStroke.newBuilder();
+		
+		strokebuilder.setId(data.getId().toString());
+		strokebuilder.setTime(data.getTimeEnd());
+		strokebuilder.setName(data.getName());
+		
+		for (Point p: data.getPoints()){
+			SrlPoint.Builder pointbuilder = SrlPoint.newBuilder();
+			pointbuilder.setX(p.x);
+			pointbuilder.setY(p.y);
+			pointbuilder.setTime(p.time);
+			pointbuilder.setId(p.getId().toString());
+			strokebuilder.addPoints(pointbuilder.build());
+		}
+		
+		return strokebuilder.build().toByteString();
+	}
+	
 	@Override
 	/**
 	 * adds a single stroke to the sketch for recognition
