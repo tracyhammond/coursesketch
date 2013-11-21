@@ -27,7 +27,8 @@ public class DatabaseServer extends WebSocketServer {
 	public static final int STATE_SERVER_FULL = 4001;
 	static final String FULL_SERVER_MESSAGE = "Sorry, the RECOGNITION server is full";
 	
-	List<WebSocket> connections = new LinkedList<WebSocket>();	
+	List<WebSocket> connections = new LinkedList<WebSocket>();
+	Database database = new Database();
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public DatabaseServer( int port ) throws UnknownHostException {
