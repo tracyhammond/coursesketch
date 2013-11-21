@@ -6,12 +6,20 @@ rm -rf output/  #deleting to replace it
 rm -rf ../coursesketchwebclient/other/protobuf/  #deleting
 rm -rf ../coursesketchwebserver/src/protobuf/  #deleting
 rm -rf ../CourseSketchRecognitionServer/src/protobuf/  #deleting
+rm -rf ../CourseSketchDatabaseServer/src/protobuf/  #deleting
 
 rm -rf ../coursesketchwebserver/reference/protobuf/  #deleting
 rm -rf ../CourseSketchRecognitionServer/reference/protobuf/  #deleting
+rm -rf ../CourseSketchDatabaseServer/reference/protobuf/  #deleting
+
+mkdir -p ../coursesketchwebclient/other/protobuf/  #making
+mkdir -p ../CourseSketchRecognitionServer/src/protobuf/  #making
+mkdir -p ../coursesketchwebserver/src/protobuf/  #making
+mkdir -p ../CourseSketchDatabaseServer/src/protobuf/  #making
 
 mkdir -p ../CourseSketchRecognitionServer/reference/protobuf/
 mkdir -p ../coursesketchwebserver/reference/protobuf/
+mkdir -p ../CourseSketchDatabaseServer/reference/protobuf/
 
 FILES=input/*
 for f in $FILES
@@ -31,20 +39,19 @@ do
   protoc --cpp_out=output/cpp/$DIR/ --java_out=output/java/$DIR/ --python_out=output/py/$DIR/ $f
 
   echo "copying files to coursesketchwebclient/other/"
-
-  mkdir -p ../coursesketchwebclient/other/protobuf/  #making
   cp -f $f ../coursesketchwebclient/other/protobuf/  #copying
 
   echo "copying java files to coursesketchwebserver/src/"
-  mkdir -p ../coursesketchwebserver/src/protobuf/  #making
   cp -r -f output/java/$DIR/ ../coursesketchwebserver/src/ #copying java
   cp -r -f $f ../coursesketchwebserver/reference/protobuf/  #copying reference
 
   echo "copying java files to CourseSketchRecognitionServer/src/"
-
-  mkdir -p ../CourseSketchRecognitionServer/src/protobuf/  #making
   cp -r -f output/java/$DIR/ ../CourseSketchRecognitionServer/src/ #copying java
   cp -r -f $f ../CourseSketchRecognitionServer/reference/protobuf/  #copying reference
+
+  echo "copying java files to CourseSketchDatabaseServer/src/"
+  cp -r -f output/java/$DIR/ ../CourseSketchDatabaseServer/src/ #copying java
+  cp -r -f $f ../CourseSketchDatabaseServer/reference/protobuf/  #copying reference
 
   #javac -cp "protobuf-2.5.0.jar" -d "output/java/$DIR/" -sourcepath output/java/$DIR/srl/ *.java
   #echo "creating compiled java files"
