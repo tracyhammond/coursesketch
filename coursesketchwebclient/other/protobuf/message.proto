@@ -14,7 +14,8 @@ message Request {
         DATA_SENDING = 2;
         RECOGNITION = 3;
         ANSWER_CHECKING = 4;
-		LOADING = 6; // this is for when the client is loading.
+		LOADING = 5; // this is for when the client is loading.
+		PENDING = 6;
     }
 }
 
