@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/message.proto',
   package='protobuf.srl.request',
-  serialized_pb='\n\x13input/message.proto\x12\x14protobuf.srl.request\"\xb6\x02\n\x07Request\x12\x45\n\x0brequestType\x18\x01 \x02(\x0e\x32).protobuf.srl.request.Request.MessageType:\x05LOGIN\x12\x35\n\x05login\x18\x02 \x01(\x0b\x32&.protobuf.srl.request.LoginInformation\x12\x11\n\totherData\x18\x03 \x01(\x0c\x12\x14\n\x0cresponseText\x18\x04 \x01(\t\x12\x13\n\x0bsessionInfo\x18\x05 \x01(\t\"o\n\x0bMessageType\x12\t\n\x05LOGIN\x10\x00\x12\x10\n\x0c\x44\x41TA_REQUEST\x10\x01\x12\x10\n\x0c\x44\x41TA_SENDING\x10\x02\x12\x0f\n\x0bRECOGNITION\x10\x03\x12\x13\n\x0f\x41NSWER_CHECKING\x10\x04\x12\x0b\n\x07LOADING\x10\x06\"u\n\x10LoginInformation\x12\x10\n\x08username\x18\x01 \x02(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x12\n\nisLoggedIn\x18\x03 \x01(\x08\x12\x14\n\x0cisInstructor\x18\x04 \x01(\x08\x12\x13\n\x0bsessionInfo\x18\x05 \x01(\t')
+  serialized_pb='\n\x13input/message.proto\x12\x14protobuf.srl.request\"\xc3\x02\n\x07Request\x12\x45\n\x0brequestType\x18\x01 \x02(\x0e\x32).protobuf.srl.request.Request.MessageType:\x05LOGIN\x12\x35\n\x05login\x18\x02 \x01(\x0b\x32&.protobuf.srl.request.LoginInformation\x12\x11\n\totherData\x18\x03 \x01(\x0c\x12\x14\n\x0cresponseText\x18\x04 \x01(\t\x12\x13\n\x0bsessionInfo\x18\x05 \x01(\t\"|\n\x0bMessageType\x12\t\n\x05LOGIN\x10\x00\x12\x10\n\x0c\x44\x41TA_REQUEST\x10\x01\x12\x10\n\x0c\x44\x41TA_SENDING\x10\x02\x12\x0f\n\x0bRECOGNITION\x10\x03\x12\x13\n\x0f\x41NSWER_CHECKING\x10\x04\x12\x0b\n\x07LOADING\x10\x05\x12\x0b\n\x07PENDING\x10\x06\"u\n\x10LoginInformation\x12\x10\n\x08username\x18\x01 \x02(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x12\n\nisLoggedIn\x18\x03 \x01(\x08\x12\x14\n\x0cisInstructor\x18\x04 \x01(\x08\x12\x13\n\x0bsessionInfo\x18\x05 \x01(\t')
 
 
 
@@ -44,14 +44,18 @@ _REQUEST_MESSAGETYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='LOADING', index=5, number=6,
+      name='LOADING', index=5, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PENDING', index=6, number=6,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=245,
-  serialized_end=356,
+  serialized_end=369,
 )
 
 
@@ -108,7 +112,7 @@ _REQUEST = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=46,
-  serialized_end=356,
+  serialized_end=369,
 )
 
 
@@ -163,8 +167,8 @@ _LOGININFORMATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=358,
-  serialized_end=475,
+  serialized_start=371,
+  serialized_end=488,
 )
 
 _REQUEST.fields_by_name['requestType'].enum_type = _REQUEST_MESSAGETYPE

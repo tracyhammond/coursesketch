@@ -113,17 +113,18 @@ void protobuf_AddDesc_input_2fmessage_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023input/message.proto\022\024protobuf.srl.requ"
-    "est\"\266\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
+    "est\"\303\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
     "rotobuf.srl.request.Request.MessageType:"
     "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req"
     "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014"
     "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 "
-    "\001(\t\"o\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_RE"
+    "\001(\t\"|\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_RE"
     "QUEST\020\001\022\020\n\014DATA_SENDING\020\002\022\017\n\013RECOGNITION"
-    "\020\003\022\023\n\017ANSWER_CHECKING\020\004\022\013\n\007LOADING\020\006\"u\n\020"
-    "LoginInformation\022\020\n\010username\030\001 \002(\t\022\020\n\010pa"
-    "ssword\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isIn"
-    "structor\030\004 \001(\010\022\023\n\013sessionInfo\030\005 \001(\t", 475);
+    "\020\003\022\023\n\017ANSWER_CHECKING\020\004\022\013\n\007LOADING\020\005\022\013\n\007"
+    "PENDING\020\006\"u\n\020LoginInformation\022\020\n\010usernam"
+    "e\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030"
+    "\003 \001(\010\022\024\n\014isInstructor\030\004 \001(\010\022\023\n\013sessionIn"
+    "fo\030\005 \001(\t", 488);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/message.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -153,6 +154,7 @@ bool Request_MessageType_IsValid(int value) {
     case 2:
     case 3:
     case 4:
+    case 5:
     case 6:
       return true;
     default:
@@ -167,6 +169,7 @@ const Request_MessageType Request::DATA_SENDING;
 const Request_MessageType Request::RECOGNITION;
 const Request_MessageType Request::ANSWER_CHECKING;
 const Request_MessageType Request::LOADING;
+const Request_MessageType Request::PENDING;
 const Request_MessageType Request::MessageType_MIN;
 const Request_MessageType Request::MessageType_MAX;
 const int Request::MessageType_ARRAYSIZE;

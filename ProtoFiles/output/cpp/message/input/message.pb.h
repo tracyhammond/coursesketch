@@ -45,11 +45,12 @@ enum Request_MessageType {
   Request_MessageType_DATA_SENDING = 2,
   Request_MessageType_RECOGNITION = 3,
   Request_MessageType_ANSWER_CHECKING = 4,
-  Request_MessageType_LOADING = 6
+  Request_MessageType_LOADING = 5,
+  Request_MessageType_PENDING = 6
 };
 bool Request_MessageType_IsValid(int value);
 const Request_MessageType Request_MessageType_MessageType_MIN = Request_MessageType_LOGIN;
-const Request_MessageType Request_MessageType_MessageType_MAX = Request_MessageType_LOADING;
+const Request_MessageType Request_MessageType_MessageType_MAX = Request_MessageType_PENDING;
 const int Request_MessageType_MessageType_ARRAYSIZE = Request_MessageType_MessageType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* Request_MessageType_descriptor();
@@ -123,6 +124,7 @@ class Request : public ::google::protobuf::Message {
   static const MessageType RECOGNITION = Request_MessageType_RECOGNITION;
   static const MessageType ANSWER_CHECKING = Request_MessageType_ANSWER_CHECKING;
   static const MessageType LOADING = Request_MessageType_LOADING;
+  static const MessageType PENDING = Request_MessageType_PENDING;
   static inline bool MessageType_IsValid(int value) {
     return Request_MessageType_IsValid(value);
   }
