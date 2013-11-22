@@ -12,27 +12,27 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-import mongodb_client.PasswordHash;
-
 public class Database {
 	public Database() {
-		public static void main(String[] args) throws Exception {
+		
+	}
+	public static void main(String[] args) throws Exception {
 
-			MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
-			DB db = mongoClient.getDB("login");
-			boolean auth = db.authenticate("headlogin","login".toCharArray());
-			System.out.println(auth);
-			
-			//MongoAddUser("CourseSketchUsers",db,"manoj","student","manojisawesome@gmail.com");
-			
-			if(auth)
-			{
-				System.out.println(MongoIdentify("CourseSketchUsers",db,"manoj","student"));
-				/*
-				BasicDBObject document = new BasicDBObject();
-				document.put("name", "sa");
-				table.insert(document);
-				*/
-			}
+		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
+		DB db = mongoClient.getDB("login");
+		boolean auth = db.authenticate("headlogin","login".toCharArray());
+		System.out.println(auth);
+		
+		//MongoAddUser("CourseSketchUsers",db,"manoj","student","manojisawesome@gmail.com");
+		
+		if(auth)
+		{
+		//	System.out.println(MongoIdentify("CourseSketchUsers",db,"manoj","student"));
+			/*
+			BasicDBObject document = new BasicDBObject();
+			document.put("name", "sa");
+			table.insert(document);
+			*/
+		}
 	}
 }
