@@ -121,42 +121,6 @@ class SrlSketch : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string courseId = 1;
-  inline bool has_courseid() const;
-  inline void clear_courseid();
-  static const int kCourseIdFieldNumber = 1;
-  inline const ::std::string& courseid() const;
-  inline void set_courseid(const ::std::string& value);
-  inline void set_courseid(const char* value);
-  inline void set_courseid(const char* value, size_t size);
-  inline ::std::string* mutable_courseid();
-  inline ::std::string* release_courseid();
-  inline void set_allocated_courseid(::std::string* courseid);
-
-  // optional string assignmentId = 2;
-  inline bool has_assignmentid() const;
-  inline void clear_assignmentid();
-  static const int kAssignmentIdFieldNumber = 2;
-  inline const ::std::string& assignmentid() const;
-  inline void set_assignmentid(const ::std::string& value);
-  inline void set_assignmentid(const char* value);
-  inline void set_assignmentid(const char* value, size_t size);
-  inline ::std::string* mutable_assignmentid();
-  inline ::std::string* release_assignmentid();
-  inline void set_allocated_assignmentid(::std::string* assignmentid);
-
-  // optional string problemId = 3;
-  inline bool has_problemid() const;
-  inline void clear_problemid();
-  static const int kProblemIdFieldNumber = 3;
-  inline const ::std::string& problemid() const;
-  inline void set_problemid(const ::std::string& value);
-  inline void set_problemid(const char* value);
-  inline void set_problemid(const char* value, size_t size);
-  inline ::std::string* mutable_problemid();
-  inline ::std::string* release_problemid();
-  inline void set_allocated_problemid(::std::string* problemid);
-
   // optional string domainId = 4;
   inline bool has_domainid() const;
   inline void clear_domainid();
@@ -183,25 +147,16 @@ class SrlSketch : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlSketch)
  private:
-  inline void set_has_courseid();
-  inline void clear_has_courseid();
-  inline void set_has_assignmentid();
-  inline void clear_has_assignmentid();
-  inline void set_has_problemid();
-  inline void clear_has_problemid();
   inline void set_has_domainid();
   inline void clear_has_domainid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* courseid_;
-  ::std::string* assignmentid_;
-  ::std::string* problemid_;
   ::std::string* domainid_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::sketch::SrlObject > sketch_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fsketch_2eproto();
   friend void protobuf_AssignDesc_input_2fsketch_2eproto();
@@ -1018,225 +973,15 @@ class SrlBoundingBox : public ::google::protobuf::Message {
 
 // SrlSketch
 
-// optional string courseId = 1;
-inline bool SrlSketch::has_courseid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void SrlSketch::set_has_courseid() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void SrlSketch::clear_has_courseid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void SrlSketch::clear_courseid() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    courseid_->clear();
-  }
-  clear_has_courseid();
-}
-inline const ::std::string& SrlSketch::courseid() const {
-  return *courseid_;
-}
-inline void SrlSketch::set_courseid(const ::std::string& value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
-}
-inline void SrlSketch::set_courseid(const char* value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
-}
-inline void SrlSketch::set_courseid(const char* value, size_t size) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SrlSketch::mutable_courseid() {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  return courseid_;
-}
-inline ::std::string* SrlSketch::release_courseid() {
-  clear_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = courseid_;
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SrlSketch::set_allocated_courseid(::std::string* courseid) {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (courseid) {
-    set_has_courseid();
-    courseid_ = courseid;
-  } else {
-    clear_has_courseid();
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional string assignmentId = 2;
-inline bool SrlSketch::has_assignmentid() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void SrlSketch::set_has_assignmentid() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void SrlSketch::clear_has_assignmentid() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void SrlSketch::clear_assignmentid() {
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    assignmentid_->clear();
-  }
-  clear_has_assignmentid();
-}
-inline const ::std::string& SrlSketch::assignmentid() const {
-  return *assignmentid_;
-}
-inline void SrlSketch::set_assignmentid(const ::std::string& value) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(value);
-}
-inline void SrlSketch::set_assignmentid(const char* value) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(value);
-}
-inline void SrlSketch::set_assignmentid(const char* value, size_t size) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SrlSketch::mutable_assignmentid() {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  return assignmentid_;
-}
-inline ::std::string* SrlSketch::release_assignmentid() {
-  clear_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = assignmentid_;
-    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SrlSketch::set_allocated_assignmentid(::std::string* assignmentid) {
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentid_;
-  }
-  if (assignmentid) {
-    set_has_assignmentid();
-    assignmentid_ = assignmentid;
-  } else {
-    clear_has_assignmentid();
-    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional string problemId = 3;
-inline bool SrlSketch::has_problemid() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SrlSketch::set_has_problemid() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void SrlSketch::clear_has_problemid() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void SrlSketch::clear_problemid() {
-  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-    problemid_->clear();
-  }
-  clear_has_problemid();
-}
-inline const ::std::string& SrlSketch::problemid() const {
-  return *problemid_;
-}
-inline void SrlSketch::set_problemid(const ::std::string& value) {
-  set_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    problemid_ = new ::std::string;
-  }
-  problemid_->assign(value);
-}
-inline void SrlSketch::set_problemid(const char* value) {
-  set_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    problemid_ = new ::std::string;
-  }
-  problemid_->assign(value);
-}
-inline void SrlSketch::set_problemid(const char* value, size_t size) {
-  set_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    problemid_ = new ::std::string;
-  }
-  problemid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SrlSketch::mutable_problemid() {
-  set_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    problemid_ = new ::std::string;
-  }
-  return problemid_;
-}
-inline ::std::string* SrlSketch::release_problemid() {
-  clear_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = problemid_;
-    problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SrlSketch::set_allocated_problemid(::std::string* problemid) {
-  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-    delete problemid_;
-  }
-  if (problemid) {
-    set_has_problemid();
-    problemid_ = problemid;
-  } else {
-    clear_has_problemid();
-    problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
 // optional string domainId = 4;
 inline bool SrlSketch::has_domainid() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 inline void SrlSketch::set_has_domainid() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000001u;
 }
 inline void SrlSketch::clear_has_domainid() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void SrlSketch::clear_domainid() {
   if (domainid_ != &::google::protobuf::internal::kEmptyString) {

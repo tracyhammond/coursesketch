@@ -13,8 +13,8 @@ message Request {
         DATA_REQUEST = 1;
         DATA_SENDING = 2;
         RECOGNITION = 3;
-        ANSWER_CHECKING = 4;
-		LOADING = 5; // this is for when the client is loading.
+		LOADING = 4; // this is for when the client is loading.
+		SUBMISSION = 5; // sent to both servers at the same time. (Answer checking and database)
 		PENDING = 6;
     }
 }

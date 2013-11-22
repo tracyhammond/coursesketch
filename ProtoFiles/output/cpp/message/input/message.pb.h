@@ -44,8 +44,8 @@ enum Request_MessageType {
   Request_MessageType_DATA_REQUEST = 1,
   Request_MessageType_DATA_SENDING = 2,
   Request_MessageType_RECOGNITION = 3,
-  Request_MessageType_ANSWER_CHECKING = 4,
-  Request_MessageType_LOADING = 5,
+  Request_MessageType_LOADING = 4,
+  Request_MessageType_SUBMISSION = 5,
   Request_MessageType_PENDING = 6
 };
 bool Request_MessageType_IsValid(int value);
@@ -122,8 +122,8 @@ class Request : public ::google::protobuf::Message {
   static const MessageType DATA_REQUEST = Request_MessageType_DATA_REQUEST;
   static const MessageType DATA_SENDING = Request_MessageType_DATA_SENDING;
   static const MessageType RECOGNITION = Request_MessageType_RECOGNITION;
-  static const MessageType ANSWER_CHECKING = Request_MessageType_ANSWER_CHECKING;
   static const MessageType LOADING = Request_MessageType_LOADING;
+  static const MessageType SUBMISSION = Request_MessageType_SUBMISSION;
   static const MessageType PENDING = Request_MessageType_PENDING;
   static inline bool MessageType_IsValid(int value) {
     return Request_MessageType_IsValid(value);
