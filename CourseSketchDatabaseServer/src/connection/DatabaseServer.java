@@ -16,6 +16,8 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import protobuf.srl.request.Message.Request;
+
 /**
  * A simple WebSocketServer implementation.
  *
@@ -26,6 +28,7 @@ public class DatabaseServer extends WebSocketServer {
 	public static final int MAX_CONNECTIONS = 20;
 	public static final int STATE_SERVER_FULL = 4001;
 	static final String FULL_SERVER_MESSAGE = "Sorry, the RECOGNITION server is full";
+	UpdateHandler updateHandler = new UpdateHandler();
 	
 	List<WebSocket> connections = new LinkedList<WebSocket>();
 	Database database = new Database();
@@ -63,7 +66,18 @@ public class DatabaseServer extends WebSocketServer {
 
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
+		System.out.println("Receiving message...");
+		Request req = Decoder.parseRequest(buffer);
 
+		if (req == null) {
+			System.out.println("protobuf error");
+			//this.
+			// we need to somehow send an error to the client here
+			return;
+		}
+		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
+			updateHandler.addRequest(req);
+		}
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {
