@@ -70,7 +70,8 @@ function submitUpdateList(connection, updateList, CommandType, RequestType, star
 	}
 	
 	openSync();
-	submitList();
+	// wait for server to send back ready!
+	setTimeout(submitList(),200); // so that the server has time to capture them all correctly!
 }
 localScope.submitUpdateList = submitUpdateList;
 })(this);

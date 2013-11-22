@@ -55,10 +55,7 @@ void protobuf_AssignDesc_input_2fsketch_2eproto() {
       "input/sketch.proto");
   GOOGLE_CHECK(file != NULL);
   SrlSketch_descriptor_ = file->message_type(0);
-  static const int SrlSketch_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, assignmentid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, problemid_),
+  static const int SrlSketch_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, domainid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, sketch_),
   };
@@ -242,31 +239,29 @@ void protobuf_AddDesc_input_2fsketch_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\022input/sketch.proto\022\023protobuf.srl.sketc"
-    "h\"\210\001\n\tSrlSketch\022\020\n\010courseId\030\001 \001(\t\022\024\n\014ass"
-    "ignmentId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\020\n\010do"
-    "mainId\030\004 \001(\t\022.\n\006sketch\030\005 \003(\0132\036.protobuf."
-    "srl.sketch.SrlObject\"\216\001\n\tSrlObject\0227\n\004ty"
-    "pe\030\001 \002(\0162).protobuf.srl.sketch.SrlObject"
-    ".ObjectType\022\016\n\006object\030\002 \002(\014\"8\n\nObjectTyp"
-    "e\022\t\n\005SHAPE\020\000\022\n\n\006STROKE\020\001\022\t\n\005POINT\020\002\022\010\n\004L"
-    "INE\020\003\"\373\001\n\010SrlShape\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002"
-    " \002(\004\022\014\n\004name\030\003 \001(\t\022\025\n\risUserCreated\030\004 \001("
-    "\010\022\?\n\017interpretations\030\005 \003(\0132&.protobuf.sr"
-    "l.sketch.SrlInterpretation\0225\n\rsubCompone"
-    "nts\030\006 \003(\0132\036.protobuf.srl.sketch.SrlObjec"
-    "t\0228\n\013boundingbox\030\007 \001(\0132#.protobuf.srl.sk"
-    "etch.SrlBoundingBox\"\234\001\n\tSrlStroke\022\n\n\002id\030"
-    "\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022-\n\006poi"
-    "nts\030\004 \003(\0132\035.protobuf.srl.sketch.SrlPoint"
-    "\0228\n\013boundingbox\030\005 \001(\0132#.protobuf.srl.ske"
-    "tch.SrlBoundingBox\"w\n\010SrlPoint\022\n\n\002id\030\001 \002"
-    "(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\t\n\001x\030\004 \002("
-    "\001\022\t\n\001y\030\005 \002(\001\022\020\n\010pressure\030\006 \001(\001\022\014\n\004size\030\007"
-    " \001(\001\022\r\n\005speed\030\010 \001(\001\"J\n\021SrlInterpretation"
-    "\022\r\n\005label\030\001 \002(\t\022\022\n\nconfidence\030\002 \002(\001\022\022\n\nc"
-    "omplexity\030\003 \001(\001\"E\n\016SrlBoundingBox\022\t\n\001x\030\001"
-    " \002(\001\022\t\n\001y\030\002 \002(\001\022\r\n\005width\030\003 \002(\001\022\016\n\006height"
-    "\030\004 \002(\001", 1006);
+    "h\"M\n\tSrlSketch\022\020\n\010domainId\030\004 \001(\t\022.\n\006sket"
+    "ch\030\005 \003(\0132\036.protobuf.srl.sketch.SrlObject"
+    "\"\216\001\n\tSrlObject\0227\n\004type\030\001 \002(\0162).protobuf."
+    "srl.sketch.SrlObject.ObjectType\022\016\n\006objec"
+    "t\030\002 \002(\014\"8\n\nObjectType\022\t\n\005SHAPE\020\000\022\n\n\006STRO"
+    "KE\020\001\022\t\n\005POINT\020\002\022\010\n\004LINE\020\003\"\373\001\n\010SrlShape\022\n"
+    "\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\025"
+    "\n\risUserCreated\030\004 \001(\010\022\?\n\017interpretations"
+    "\030\005 \003(\0132&.protobuf.srl.sketch.SrlInterpre"
+    "tation\0225\n\rsubComponents\030\006 \003(\0132\036.protobuf"
+    ".srl.sketch.SrlObject\0228\n\013boundingbox\030\007 \001"
+    "(\0132#.protobuf.srl.sketch.SrlBoundingBox\""
+    "\234\001\n\tSrlStroke\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022"
+    "\014\n\004name\030\003 \001(\t\022-\n\006points\030\004 \003(\0132\035.protobuf"
+    ".srl.sketch.SrlPoint\0228\n\013boundingbox\030\005 \001("
+    "\0132#.protobuf.srl.sketch.SrlBoundingBox\"w"
+    "\n\010SrlPoint\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004"
+    "name\030\003 \001(\t\022\t\n\001x\030\004 \002(\001\022\t\n\001y\030\005 \002(\001\022\020\n\010pres"
+    "sure\030\006 \001(\001\022\014\n\004size\030\007 \001(\001\022\r\n\005speed\030\010 \001(\001\""
+    "J\n\021SrlInterpretation\022\r\n\005label\030\001 \002(\t\022\022\n\nc"
+    "onfidence\030\002 \002(\001\022\022\n\ncomplexity\030\003 \001(\001\"E\n\016S"
+    "rlBoundingBox\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\r\n\005w"
+    "idth\030\003 \002(\001\022\016\n\006height\030\004 \002(\001", 946);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/sketch.proto", &protobuf_RegisterTypes);
   SrlSketch::default_instance_ = new SrlSketch();
@@ -296,9 +291,6 @@ struct StaticDescriptorInitializer_input_2fsketch_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int SrlSketch::kCourseIdFieldNumber;
-const int SrlSketch::kAssignmentIdFieldNumber;
-const int SrlSketch::kProblemIdFieldNumber;
 const int SrlSketch::kDomainIdFieldNumber;
 const int SrlSketch::kSketchFieldNumber;
 #endif  // !_MSC_VER
@@ -319,9 +311,6 @@ SrlSketch::SrlSketch(const SrlSketch& from)
 
 void SrlSketch::SharedCtor() {
   _cached_size_ = 0;
-  courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   domainid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -331,15 +320,6 @@ SrlSketch::~SrlSketch() {
 }
 
 void SrlSketch::SharedDtor() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentid_;
-  }
-  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-    delete problemid_;
-  }
   if (domainid_ != &::google::protobuf::internal::kEmptyString) {
     delete domainid_;
   }
@@ -370,21 +350,6 @@ SrlSketch* SrlSketch::New() const {
 
 void SrlSketch::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_courseid()) {
-      if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-        courseid_->clear();
-      }
-    }
-    if (has_assignmentid()) {
-      if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-        assignmentid_->clear();
-      }
-    }
-    if (has_problemid()) {
-      if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-        problemid_->clear();
-      }
-    }
     if (has_domainid()) {
       if (domainid_ != &::google::protobuf::internal::kEmptyString) {
         domainid_->clear();
@@ -402,61 +367,10 @@ bool SrlSketch::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string courseId = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_courseid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->courseid().data(), this->courseid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_assignmentId;
-        break;
-      }
-
-      // optional string assignmentId = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_assignmentId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_assignmentid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->assignmentid().data(), this->assignmentid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_problemId;
-        break;
-      }
-
-      // optional string problemId = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_problemId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_problemid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->problemid().data(), this->problemid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(34)) goto parse_domainId;
-        break;
-      }
-
       // optional string domainId = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_domainId:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_domainid()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -502,33 +416,6 @@ bool SrlSketch::MergePartialFromCodedStream(
 
 void SrlSketch::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->courseid(), output);
-  }
-
-  // optional string assignmentId = 2;
-  if (has_assignmentid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->assignmentid(), output);
-  }
-
-  // optional string problemId = 3;
-  if (has_problemid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemid().data(), this->problemid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->problemid(), output);
-  }
-
   // optional string domainId = 4;
   if (has_domainid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -552,36 +439,6 @@ void SrlSketch::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SrlSketch::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->courseid(), target);
-  }
-
-  // optional string assignmentId = 2;
-  if (has_assignmentid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->assignmentid(), target);
-  }
-
-  // optional string problemId = 3;
-  if (has_problemid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemid().data(), this->problemid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->problemid(), target);
-  }
-
   // optional string domainId = 4;
   if (has_domainid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -610,27 +467,6 @@ int SrlSketch::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string courseId = 1;
-    if (has_courseid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->courseid());
-    }
-
-    // optional string assignmentId = 2;
-    if (has_assignmentid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->assignmentid());
-    }
-
-    // optional string problemId = 3;
-    if (has_problemid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->problemid());
-    }
-
     // optional string domainId = 4;
     if (has_domainid()) {
       total_size += 1 +
@@ -674,15 +510,6 @@ void SrlSketch::MergeFrom(const SrlSketch& from) {
   GOOGLE_CHECK_NE(&from, this);
   sketch_.MergeFrom(from.sketch_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_courseid()) {
-      set_courseid(from.courseid());
-    }
-    if (from.has_assignmentid()) {
-      set_assignmentid(from.assignmentid());
-    }
-    if (from.has_problemid()) {
-      set_problemid(from.problemid());
-    }
     if (from.has_domainid()) {
       set_domainid(from.domainid());
     }
@@ -712,9 +539,6 @@ bool SrlSketch::IsInitialized() const {
 
 void SrlSketch::Swap(SrlSketch* other) {
   if (other != this) {
-    std::swap(courseid_, other->courseid_);
-    std::swap(assignmentid_, other->assignmentid_);
-    std::swap(problemid_, other->problemid_);
     std::swap(domainid_, other->domainid_);
     sketch_.Swap(&other->sketch_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);

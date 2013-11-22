@@ -1,5 +1,9 @@
 package protobuf.srl.commands;
 
+message SrlUpdateList {
+	repeated SrlUpdate list = 1;
+}
+
 message SrlUpdate {
 	required string updateId = 1;
 	optional int64 time = 2;
@@ -26,7 +30,7 @@ enum CommandType {
 	REMOVE_OBJECT = 3;	// Removes an object:	This will only contain an IdChain in commandData.
 	ASSIGN_ATTRIBUTE = 4;
 	REMOVE_ATTRIBUTE = 5;
-
+	MARKER = 6; //marker has a number and a MARKERTYPE
 	FORCE_INTERPRETATION = 10;
 
 	// Stack Commands, They do not have any other data associated with it.
@@ -46,6 +50,21 @@ message IdChain {
 	repeated string idChain = 1;
 }
 
+/**
+ * Contains an id and a MarkerType.
+ *
+ * Marks can have special purposes.  For example quick look through for the progress of the sketch (like when reviewing)
+ */
+message Marker {
+	required string id = 1;
+	required MarkerType type = 2;
+	enum MarkerType {
+		SUBMISSION = 0;
+		FEEDBACK = 1;
+		SAVE = 2;
+		LOAD = 3;
+	}
+}
 /**
  * This tells us to do 2 things
  * #1 add all shapes with an id in the list of {@link shapesToBeContained} into shape with an id of {@link newContainerId}

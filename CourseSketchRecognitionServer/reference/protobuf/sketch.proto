@@ -1,8 +1,6 @@
 package protobuf.srl.sketch;
+
 message SrlSketch {
-	optional string courseId = 1; // so we know what class it links to
-	optional string assignmentId = 2; // so we know what assignment it links to
-	optional string problemId = 3; // so we know what problem it links to
 	optional string domainId = 4; // used to find the domain for recognition
 	repeated SrlObject sketch = 5;
 }
