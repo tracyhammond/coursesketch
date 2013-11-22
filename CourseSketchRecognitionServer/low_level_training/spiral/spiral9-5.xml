@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sketch id="ddbd047d-1c13-406e-befa-0666ae4b5128" type="SRL">
+    <point id="96b093ab-ec84-4da3-ad8a-48b96cd3df71"
+        time="1177634155352" x="378.0" y="103.0"/>
+    <point id="f0f21232-24d8-49b5-8e03-5c61e78549a4"
+        time="1177634155367" x="377.0" y="101.0"/>
+    <point id="268cf430-630f-43c3-a625-6af820101f38"
+        time="1177634155367" x="378.0" y="102.0"/>
+    <point id="34286910-6642-4a90-845b-37b86b069f44"
+        time="1177634155383" x="377.0" y="100.0"/>
+    <point id="56c2750e-7bae-44a9-8ff9-2b7e5d699711"
+        time="1177634155399" x="376.0" y="99.0"/>
+    <point id="e21e62b1-5b8f-4a6f-9f58-08f970142d94"
+        time="1177634155399" x="377.0" y="99.0"/>
+    <point id="42bf89cd-8bef-42c8-bcff-ff9b88ad666a"
+        time="1177634155414" x="376.0" y="98.0"/>
+    <point id="940d6e77-c526-45b0-88b6-5128d92dbe70"
+        time="1177634155430" x="374.0" y="97.0"/>
+    <point id="dc9c242b-9cd5-4144-8db9-a7590720f167"
+        time="1177634155430" x="375.0" y="97.0"/>
+    <point id="e1ad3d4e-8b30-4d66-9907-bd3e6c25eedd"
+        time="1177634155445" x="371.0" y="96.0"/>
+    <point id="b42cbcbe-d8b9-40d7-93ef-647edacc2dec"
+        time="1177634155445" x="373.0" y="96.0"/>
+    <point id="6f823bdb-faa6-45b6-ab84-8575ac75ad5e"
+        time="1177634155461" x="369.0" y="96.0"/>
+    <point id="2ff62059-6ec1-410e-b3b6-0973c628e9d9"
+        time="1177634155477" x="362.0" y="97.0"/>
+    <point id="4e0270d6-4948-4875-87a2-fbbb4b740e42"
+        time="1177634155477" x="366.0" y="96.0"/>
+    <point id="63762dd9-ea19-42eb-aec5-f6b5af49c8b9"
+        time="1177634155492" x="353.0" y="100.0"/>
+    <point id="4baf5743-ed87-4f85-b8a7-63c3f63d02f5"
+        time="1177634155492" x="358.0" y="98.0"/>
+    <point id="fbb7f0d5-5937-4551-b93a-2d6bb7149eb0"
+        time="1177634155508" x="343.0" y="103.0"/>
+    <point id="aefe2dd3-ae47-4ffa-b67e-1fbf922ada3b"
+        time="1177634155508" x="348.0" y="101.0"/>
+    <point id="daea7c4d-0500-414f-854f-94b170b8d792"
+        time="1177634155524" x="330.0" y="109.0"/>
+    <point id="852048b4-eab5-48e0-8b59-f8ad28793873"
+        time="1177634155524" x="337.0" y="106.0"/>
+    <point id="89068413-87ef-4c4c-a19c-881380de2f3f"
+        time="1177634155539" x="323.0" y="113.0"/>
+    <point id="61ab0ed4-a749-40f0-a798-bdc2f7c89ab0"
+        time="1177634155555" x="309.0" y="124.0"/>
+    <point id="e8ee79a3-f527-4078-93dd-0e1b1d00fdb7"
+        time="1177634155555" x="316.0" y="118.0"/>
+    <point id="7200f7f0-ae37-497b-b5f2-322ed16b84d6"
+        time="1177634155570" x="294.0" y="138.0"/>
+    <point id="bed447d2-3f9f-4845-9838-0b6719807909"
+        time="1177634155570" x="301.0" y="131.0"/>
+    <point id="53b4cc51-0c12-4a15-a35f-db5d3f9db7cd"
+        time="1177634155586" x="280.0" y="153.0"/>
+    <point id="c15ced20-3807-4cd9-a14d-edaad1eb6598"
+        time="1177634155586" x="287.0" y="145.0"/>
+    <point id="9f3c4d82-a35e-412c-a861-24e4aca8ed44"
+        time="1177634155602" x="267.0" y="172.0"/>
+    <point id="2a50e553-4821-4937-a55a-d3154232842f"
+        time="1177634155602" x="274.0" y="162.0"/>
+    <point id="8d3066ed-9ba1-4a58-8b0c-ebf39fa42254"
+        time="1177634155617" x="262.0" y="183.0"/>
+    <point id="3892280f-8abd-48b2-a5d9-ce5697fe7441"
+        time="1177634155633" x="252.0" y="207.0"/>
+    <point id="4116eccf-37ec-4d65-80ed-66b2baaef2a2"
+        time="1177634155633" x="256.0" y="195.0"/>
+    <point id="99136248-1b1b-4b7f-8a66-2440593e0841"
+        time="1177634155649" x="248.0" y="220.0"/>
+    <point id="07b5cd7c-c589-4c8e-8930-542d607b5720"
+        time="1177634155664" x="244.0" y="242.0"/>
+    <point id="223fb4f4-618d-441b-9ac6-2f7d40925774"
+        time="1177634155664" x="246.0" y="231.0"/>
+    <point id="57b1ce89-f795-44c0-9afe-9f427f50bd7d"
+        time="1177634155680" x="243.0" y="251.0"/>
+    <point id="31b5d181-7e6b-4248-95c8-ba041704bc8a"
+        time="1177634155680" x="244.0" y="260.0"/>
+    <point id="b06443c1-e960-4b67-892a-af98c1d6fffb"
+        time="1177634155695" x="245.0" y="268.0"/>
+    <point id="8eecef2f-f5c3-4cab-a99d-db98b4b06711"
+        time="1177634155695" x="247.0" y="275.0"/>
+    <point id="77948456-eb9f-49bd-8d0f-b6f013614eeb"
+        time="1177634155711" x="250.0" y="282.0"/>
+    <point id="5634f401-94a3-4526-8a41-4d841bd2aac7"
+        time="1177634155711" x="253.0" y="289.0"/>
+    <point id="40ce3ff5-ad4b-4b5f-ba01-57b25c84983b"
+        time="1177634155727" x="258.0" y="295.0"/>
+    <point id="5da79870-bbe3-46c2-9ad3-b147bc95c746"
+        time="1177634155742" x="263.0" y="301.0"/>
+    <point id="347eea07-f14f-46ed-86d5-2c2f8fcd2d00"
+        time="1177634155742" x="268.0" y="306.0"/>
+    <point id="725ad805-f0a5-4d24-b63e-81183a398261"
+        time="1177634155758" x="275.0" y="310.0"/>
+    <point id="30ccaf20-cdba-4fde-bcd2-c393a9dc59fc"
+        time="1177634155758" x="281.0" y="314.0"/>
+    <point id="1fe2be28-e9d7-4545-808a-b89917a52b11"
+        time="1177634155774" x="288.0" y="317.0"/>
+    <point id="1e821bf2-9c3f-443b-922c-f5fa65bbfe80"
+        time="1177634155774" x="295.0" y="319.0"/>
+    <point id="91ff8599-d530-4d64-b9d0-629cd9d17d26"
+        time="1177634155789" x="302.0" y="321.0"/>
+    <point id="1a0d9b88-beac-40f6-a3bd-87946a09660a"
+        time="1177634155789" x="310.0" y="322.0"/>
+    <point id="0b39c014-498e-431d-8823-2194aa290dc9"
+        time="1177634155805" x="318.0" y="323.0"/>
+    <point id="c7d71659-37bb-4bd3-a011-bcd9a5e0b5a3"
+        time="1177634155820" x="326.0" y="323.0"/>
+    <point id="2bcc0edf-81b1-4842-9019-14ce45bf1c3e"
+        time="1177634155820" x="334.0" y="323.0"/>
+    <point id="628747bf-b05a-47a6-ad1f-7b97ffa092b7"
+        time="1177634155836" x="342.0" y="323.0"/>
+    <point id="7c172746-866f-4d7b-9be2-bcbf03ed3103"
+        time="1177634155836" x="350.0" y="322.0"/>
+    <point id="a97068b1-3538-45ab-b466-71205ca16796"
+        time="1177634155852" x="357.0" y="321.0"/>
+    <point id="4d681462-aa5b-4cd4-89a8-a89bad9a3a02"
+        time="1177634155867" x="365.0" y="319.0"/>
+    <point id="dee19a4c-db42-4900-b3a9-5e671eae9d31"
+        time="1177634155867" x="373.0" y="317.0"/>
+    <point id="0621a65b-d76e-4657-8dcd-589da72eea47"
+        time="1177634155883" x="381.0" y="313.0"/>
+    <point id="501c04fc-b119-456a-b15f-d6bb60b3fb8b"
+        time="1177634155883" x="388.0" y="310.0"/>
+    <point id="a7a47160-8136-4f43-a14f-8cf55d285ceb"
+        time="1177634155899" x="396.0" y="305.0"/>
+    <point id="3494c9af-0932-4d9c-9a19-d2326663762b"
+        time="1177634155899" x="403.0" y="300.0"/>
+    <point id="8570bab0-99dc-42c8-87b9-8c5ebf8e8366"
+        time="1177634155914" x="410.0" y="295.0"/>
+    <point id="e4d9bc6a-8ecd-4c43-a4da-c26f597b9838"
+        time="1177634155914" x="417.0" y="289.0"/>
+    <point id="d3c9eb58-5a7b-43c3-a4b5-0000d62eb985"
+        time="1177634155930" x="423.0" y="283.0"/>
+    <point id="72c555c2-ea4b-4f6c-bb18-42902998bf65"
+        time="1177634155945" x="429.0" y="277.0"/>
+    <point id="f9224bf1-4250-49ff-87e5-0d1dddd71a38"
+        time="1177634155945" x="435.0" y="271.0"/>
+    <point id="c7bede47-4a54-4570-a0a0-f8b6d9b48532"
+        time="1177634155961" x="440.0" y="265.0"/>
+    <point id="b36a6ede-f516-4e5e-88cf-9f7488f8fe87"
+        time="1177634155961" x="444.0" y="259.0"/>
+    <point id="fb512f29-b5f9-47b8-bf17-7a391b049cc4"
+        time="1177634155977" x="448.0" y="252.0"/>
+    <point id="7b7b9bc5-3ef1-40f8-b2e4-5a582b7f5983"
+        time="1177634155992" x="451.0" y="245.0"/>
+    <point id="b825cd98-dac7-41b3-8ea0-0733e6da951b"
+        time="1177634155992" x="454.0" y="239.0"/>
+    <point id="2af879cc-1865-4701-97c0-d4ae8d1ec249"
+        time="1177634156008" x="456.0" y="232.0"/>
+    <point id="cf83901b-4666-4bcb-9d25-1371d4354056"
+        time="1177634156008" x="458.0" y="225.0"/>
+    <point id="4375128f-8803-481a-9fce-10735c7bcbe6"
+        time="1177634156024" x="459.0" y="218.0"/>
+    <point id="75466a06-a79f-4d5e-91f4-636dcc40b14e"
+        time="1177634156024" x="460.0" y="212.0"/>
+    <point id="78d70e6e-1f57-4b20-98d3-45106b3d4d52"
+        time="1177634156039" x="460.0" y="206.0"/>
+    <point id="c96975cf-79d6-492d-a87b-931722e97873"
+        time="1177634156055" x="459.0" y="194.0"/>
+    <point id="de27e3e9-a980-4713-9daf-841a78e5c492"
+        time="1177634156055" x="460.0" y="200.0"/>
+    <point id="e73b163f-4867-4bea-a32e-faafbddd7dac"
+        time="1177634156070" x="455.0" y="184.0"/>
+    <point id="cd2179ee-dec1-4572-a464-fdadf22c2799"
+        time="1177634156070" x="457.0" y="189.0"/>
+    <point id="2f072029-546d-4f4a-9fd5-b799be6606bb"
+        time="1177634156086" x="447.0" y="175.0"/>
+    <point id="88e8fa8f-8ced-45e9-aefa-ab50de076415"
+        time="1177634156086" x="451.0" y="179.0"/>
+    <point id="afc15ff2-c560-4efd-869f-d145321bcd47"
+        time="1177634156102" x="438.0" y="168.0"/>
+    <point id="c14ba010-288b-4b27-9eaf-f8b46c4915c7"
+        time="1177634156102" x="443.0" y="171.0"/>
+    <point id="f739374d-9800-47cf-8c47-2ba484356c34"
+        time="1177634156117" x="432.0" y="165.0"/>
+    <point id="0f14b5f1-8ad6-4fb7-a72b-5c7947bcfdff"
+        time="1177634156133" x="419.0" y="160.0"/>
+    <point id="dc41270c-32ca-4c18-8bd0-3e77ef5d924f"
+        time="1177634156133" x="426.0" y="163.0"/>
+    <point id="d7782b32-e7ae-44f5-8294-6879ac1fa599"
+        time="1177634156149" x="406.0" y="157.0"/>
+    <point id="496bf472-ee6e-461c-8002-fad8eff514cc"
+        time="1177634156149" x="412.0" y="159.0"/>
+    <point id="ca00e754-6649-47c1-8d00-eb641f68da77"
+        time="1177634156164" x="399.0" y="156.0"/>
+    <point id="1e0d9b6d-7584-4eee-bc58-b5deee2727f0"
+        time="1177634156180" x="386.0" y="155.0"/>
+    <point id="faacbd02-082f-4925-b9c2-49f5add4b633"
+        time="1177634156180" x="392.0" y="156.0"/>
+    <point id="f61e224a-0b36-47fe-b3da-73537833913e"
+        time="1177634156195" x="373.0" y="156.0"/>
+    <point id="363accf4-f9ba-4763-a965-8ed50043daee"
+        time="1177634156195" x="379.0" y="155.0"/>
+    <point id="8dea7c27-2f36-40e1-99ce-d983364b26f3"
+        time="1177634156211" x="361.0" y="158.0"/>
+    <point id="aeb8fdb8-0c15-4374-9a20-e9c2ab89d827"
+        time="1177634156211" x="367.0" y="157.0"/>
+    <point id="1f47a329-73c5-4e5a-86d9-0ce9862c4b1b"
+        time="1177634156227" x="350.0" y="162.0"/>
+    <point id="d8da727d-16c7-4df8-b598-5866e6d1cec2"
+        time="1177634156227" x="355.0" y="160.0"/>
+    <point id="e45cd2cb-ce97-41a7-931b-00606c5bc74a"
+        time="1177634156242" x="345.0" y="165.0"/>
+    <point id="ab96f015-ec05-425c-b660-98112324bcce"
+        time="1177634156258" x="335.0" y="173.0"/>
+    <point id="82e51ca3-6ccb-4e57-8c74-4e587c747ba7"
+        time="1177634156258" x="340.0" y="169.0"/>
+    <point id="7b487de5-a54a-4896-8007-2cf566609069"
+        time="1177634156274" x="324.0" y="182.0"/>
+    <point id="0f99fae0-d666-41f2-997b-69dd2444ef96"
+        time="1177634156274" x="329.0" y="177.0"/>
+    <point id="7ba47701-d4e3-46e0-a33e-54bc42f63a62"
+        time="1177634156289" x="315.0" y="194.0"/>
+    <point id="677f231b-4a92-4ba2-a0c6-3a7ea7fc0ec7"
+        time="1177634156289" x="320.0" y="188.0"/>
+    <point id="dd474931-844a-4346-9da6-f76e9c69d579"
+        time="1177634156305" x="310.0" y="200.0"/>
+    <point id="68024fc8-df31-4d4e-af35-de4cc7e741d3"
+        time="1177634156320" x="303.0" y="213.0"/>
+    <point id="991f53cc-97e4-48fe-ac37-26e449703380"
+        time="1177634156320" x="306.0" y="207.0"/>
+    <point id="668cd922-bdae-4876-98b7-3d498eacf878"
+        time="1177634156336" x="298.0" y="227.0"/>
+    <point id="1ab48e3b-9804-4478-92c5-6ec6fce8f5a0"
+        time="1177634156336" x="300.0" y="220.0"/>
+    <point id="437449ac-474e-44d7-b876-17e695804c47"
+        time="1177634156352" x="296.0" y="234.0"/>
+    <point id="11425e69-9543-48b9-a493-e776783cfc53"
+        time="1177634156367" x="296.0" y="241.0"/>
+    <point id="fb741086-0c4c-4e08-a0ef-7a11136c5823"
+        time="1177634156367" x="296.0" y="247.0"/>
+    <point id="0b5f8c69-18a5-4eb1-bc19-d2a35ac47c58"
+        time="1177634156383" x="297.0" y="253.0"/>
+    <point id="ae073bf7-8cc4-458b-9082-d239ebd20c2c"
+        time="1177634156383" x="298.0" y="258.0"/>
+    <point id="cf4e657f-bdd8-421e-8d8e-0090eaa2d84a"
+        time="1177634156399" x="300.0" y="263.0"/>
+    <point id="dff7f103-6579-4e4e-b53e-42da0e75499d"
+        time="1177634156399" x="302.0" y="268.0"/>
+    <point id="853186aa-091c-4607-8b9a-f5bd57160362"
+        time="1177634156414" x="305.0" y="272.0"/>
+    <point id="d26bdba1-d113-4abc-98dd-52c4dd15f348"
+        time="1177634156414" x="308.0" y="275.0"/>
+    <point id="e2880ff5-d7d2-4c98-8670-1820f6b48b01"
+        time="1177634156430" x="312.0" y="278.0"/>
+    <point id="3a137def-1960-40f9-bfd2-c1dbf5177e57"
+        time="1177634156445" x="316.0" y="281.0"/>
+    <point id="2f1d2ab3-88f3-4ca2-aff7-61bb5984bc57"
+        time="1177634156445" x="320.0" y="283.0"/>
+    <point id="b9b963ec-16ab-47ea-9210-a48c4f0430ef"
+        time="1177634156461" x="326.0" y="284.0"/>
+    <point id="3198c449-577e-41fa-9fd8-ff6b67bc351c"
+        time="1177634156461" x="332.0" y="285.0"/>
+    <point id="568c8aea-903f-4f9b-812f-d424d13fe95e"
+        time="1177634156477" x="338.0" y="285.0"/>
+    <point id="17c35d86-17f4-40ca-95fa-caff6ac32d13"
+        time="1177634156492" x="344.0" y="284.0"/>
+    <point id="a311b91c-d777-4a7e-a3df-952a3a865dcd"
+        time="1177634156492" x="350.0" y="283.0"/>
+    <point id="326187dc-b5b7-42fd-b185-734328eb6be8"
+        time="1177634156508" x="357.0" y="281.0"/>
+    <point id="8b492f89-9ada-43d3-8e1d-ae5e73354170"
+        time="1177634156508" x="363.0" y="279.0"/>
+    <point id="8eac0cc6-d5bd-43f3-b9f7-c45eba4b305b"
+        time="1177634156524" x="369.0" y="276.0"/>
+    <point id="911d6737-ca60-44dd-aac0-839009ee07df"
+        time="1177634156524" x="375.0" y="274.0"/>
+    <point id="c8d06bc4-849e-4291-a414-fe30c7eb867f"
+        time="1177634156539" x="381.0" y="271.0"/>
+    <point id="50215f1d-0733-4458-9232-964f5b51787f"
+        time="1177634156539" x="387.0" y="267.0"/>
+    <point id="b8aa6fe3-e699-4806-b7a1-15d38756fdee"
+        time="1177634156555" x="393.0" y="264.0"/>
+    <point id="e263f377-a0b8-4450-9993-3e86ef8f44cd"
+        time="1177634156570" x="399.0" y="260.0"/>
+    <point id="96041bdb-9cb0-4d8f-ab47-b8e0455b511a"
+        time="1177634156570" x="404.0" y="256.0"/>
+    <point id="9eec2c09-f908-406b-915b-ef4f45b34896"
+        time="1177634156586" x="409.0" y="251.0"/>
+    <point id="f5d66874-4489-48c2-baf4-795be256d82b"
+        time="1177634156586" x="413.0" y="247.0"/>
+    <point id="dd304799-d1ca-4ae7-b5ef-f56c47142c39"
+        time="1177634156602" x="417.0" y="242.0"/>
+    <point id="2c833091-8fb0-45db-9732-b603fedfcab8"
+        time="1177634156602" x="420.0" y="236.0"/>
+    <point id="9842ebdb-3051-44c0-a81e-f0f1df1eb0a4"
+        time="1177634156617" x="424.0" y="230.0"/>
+    <point id="c4a7e62e-662b-4b15-8fe3-3c2640efcfe6"
+        time="1177634156633" x="426.0" y="223.0"/>
+    <point id="a9090440-9e49-47bb-afa7-0408cac84124"
+        time="1177634156633" x="428.0" y="217.0"/>
+    <point id="d9588855-0f01-43eb-a06d-d09b06592f48"
+        time="1177634156649" x="429.0" y="204.0"/>
+    <point id="2a1dddb7-77df-45fb-ad63-ba47d57dc89e"
+        time="1177634156649" x="429.0" y="210.0"/>
+    <point id="e17623ae-5687-43f4-aa8e-b0fd64b69a47"
+        time="1177634156664" x="427.0" y="199.0"/>
+    <point id="5d8c9df2-0b9c-4178-95af-d5c1b97756db"
+        time="1177634156680" x="420.0" y="192.0"/>
+    <point id="c50ce74e-78d5-46ea-9b95-8d557703d9f4"
+        time="1177634156680" x="424.0" y="195.0"/>
+    <point id="88f05220-f40a-4a83-8efd-e71e05bf8627"
+        time="1177634156695" x="409.0" y="190.0"/>
+    <point id="0bdf425c-fc36-42f7-aa0a-e1adb7bd2553"
+        time="1177634156695" x="415.0" y="190.0"/>
+    <point id="7bf4c431-3379-463f-89f6-bc10948d34ea"
+        time="1177634156711" x="394.0" y="191.0"/>
+    <point id="bc2e2ba7-d295-4bc5-a6b9-143f3d026cf5"
+        time="1177634156711" x="402.0" y="190.0"/>
+    <point id="e68e30d8-d2a8-4815-8dae-92cf09e5e429"
+        time="1177634156727" x="380.0" y="193.0"/>
+    <point id="c3a391f7-74fd-4016-bdc2-2cd4aea2965d"
+        time="1177634156727" x="387.0" y="192.0"/>
+    <point id="adaea4cb-96d3-4bb8-9425-7522cb5bc554"
+        time="1177634156742" x="374.0" y="194.0"/>
+    <point id="47b4aef1-045b-4b7a-86d7-140108c5b0a0"
+        time="1177634156758" x="364.0" y="197.0"/>
+    <point id="66ebf60c-850b-4a30-bb25-0d6808fbd0de"
+        time="1177634156758" x="369.0" y="195.0"/>
+    <point id="c08b0b7f-6e34-4af2-a77a-c5dc43ab780c"
+        time="1177634156774" x="354.0" y="200.0"/>
+    <point id="1e717ad9-573e-4b05-a23a-c269c65f7d2e"
+        time="1177634156774" x="359.0" y="198.0"/>
+    <point id="3fd8d497-0cf8-4caa-82fd-b180c7c688ae"
+        time="1177634156789" x="346.0" y="206.0"/>
+    <point id="856526ec-de75-4cd2-90bb-948e8aa15aa2"
+        time="1177634156789" x="350.0" y="203.0"/>
+    <point id="854601a6-ee36-49cf-a034-c6761b7f5bcb"
+        time="1177634156805" x="342.0" y="210.0"/>
+    <point id="a318bbc5-4c50-4b19-b0aa-cb014a859eed"
+        time="1177634156820" x="334.0" y="218.0"/>
+    <point id="a6248023-bdf8-43d1-99a9-34124734a006"
+        time="1177634156820" x="338.0" y="214.0"/>
+    <point id="af2e39ad-b487-4998-bb62-5f8f8bfc7a14"
+        time="1177634156836" x="328.0" y="227.0"/>
+    <point id="73c22588-f752-4572-8493-27d40ef8d224"
+        time="1177634156836" x="330.0" y="222.0"/>
+    <point id="e6e1d1c3-5f65-4e14-abc4-0700eb181ec1"
+        time="1177634156852" x="325.0" y="231.0"/>
+    <point id="edf012af-4887-4e01-967f-391aec363360"
+        time="1177634156867" x="323.0" y="240.0"/>
+    <point id="11edf5b7-86e9-4514-b033-ffeaedf95016"
+        time="1177634156867" x="324.0" y="236.0"/>
+    <point id="58abeca5-b218-4788-86d9-33dbbab745ba"
+        time="1177634156883" x="324.0" y="245.0"/>
+    <point id="b4d30a38-a8c0-46ea-b1ea-1e4c9fa595d2"
+        time="1177634156883" x="324.0" y="250.0"/>
+    <point id="07506812-c90d-455c-af3b-463cf6f4b950"
+        time="1177634156899" x="326.0" y="254.0"/>
+    <point id="cbfae553-29be-48f9-b1d1-c343b016d6f9"
+        time="1177634156899" x="328.0" y="257.0"/>
+    <point id="35972924-c9a1-4de3-b0a4-de13863d9152"
+        time="1177634156914" x="331.0" y="260.0"/>
+    <point id="11c2bb86-4671-4419-8902-3ea2667273dd"
+        time="1177634156914" x="334.0" y="263.0"/>
+    <point id="c1bb92d9-d39f-4166-9b12-5f83db8003f6"
+        time="1177634156930" x="338.0" y="265.0"/>
+    <point id="49673ba3-4936-468c-8fcc-f6106b35ff2d"
+        time="1177634156945" x="342.0" y="267.0"/>
+    <point id="c7c26dfc-6bd8-4000-ab35-75d0244802f9"
+        time="1177634156945" x="347.0" y="268.0"/>
+    <point id="2ea7d157-a158-4673-b907-9cd94c8aa322"
+        time="1177634156961" x="352.0" y="267.0"/>
+    <point id="fdaeb29f-8345-420c-aa28-f99fd294d493"
+        time="1177634156961" x="357.0" y="266.0"/>
+    <point id="df49d31d-ae6e-4a63-aeb9-cf831b83ba3a"
+        time="1177634156977" x="362.0" y="264.0"/>
+    <point id="3beb876e-d44f-4f82-95ba-536833edc47c"
+        time="1177634156992" x="368.0" y="261.0"/>
+    <point id="a3f14a64-6873-4a66-ae2c-fa2a346b9775"
+        time="1177634156992" x="373.0" y="258.0"/>
+    <point id="bc798195-575f-4f33-aa51-5e957e69a196"
+        time="1177634157008" x="377.0" y="255.0"/>
+    <point id="f546371b-7c15-481f-9d5f-3e67d2db48ac"
+        time="1177634157008" x="382.0" y="252.0"/>
+    <point id="7ab8cf11-8289-4f71-bb35-d6d4dfe7b554"
+        time="1177634157024" x="386.0" y="248.0"/>
+    <point id="ba03b67d-51c8-449a-9c50-916f314f68ce"
+        time="1177634157024" x="389.0" y="245.0"/>
+    <point id="bbb3eb73-f465-4c37-a0a9-223785ffd26e"
+        time="1177634157039" x="393.0" y="242.0"/>
+    <point id="23251285-8e9e-4330-b7e1-9df4a35fa620"
+        time="1177634157039" x="395.0" y="239.0"/>
+    <point id="24f89f36-d939-405d-ab29-fae27e5646fe"
+        time="1177634157055" x="398.0" y="236.0"/>
+    <point id="4802e8e0-d5b3-4da7-83e3-337ec25ebf36"
+        time="1177634157070" x="399.0" y="233.0"/>
+    <point id="62a80f52-9914-4c7a-8770-79eea83613b1"
+        time="1177634157070" x="401.0" y="230.0"/>
+    <point id="17416f36-366d-4dff-9528-35686dd02e13"
+        time="1177634157086" x="401.0" y="227.0"/>
+    <point id="59eaff29-0e88-4978-ac24-56fc2f6d5a59"
+        time="1177634157086" x="402.0" y="223.0"/>
+    <point id="55226e69-e52b-43c4-9030-0d52aed856b3"
+        time="1177634157102" x="401.0" y="215.0"/>
+    <point id="45e0e9d0-52ce-47cf-b08f-54bb673d4d47"
+        time="1177634157102" x="402.0" y="219.0"/>
+    <point id="320ade05-5feb-40be-b15b-203a8a56596c"
+        time="1177634157117" x="397.0" y="210.0"/>
+    <point id="c4252b92-2631-4451-bec9-ee23c19e36af"
+        time="1177634157117" x="399.0" y="212.0"/>
+    <point id="6642214c-269b-43a5-9e5c-390abbe830dc"
+        time="1177634157133" x="394.0" y="208.0"/>
+    <point id="7423761a-7231-4f0c-9248-0e1d5e282742"
+        time="1177634157149" x="386.0" y="209.0"/>
+    <point id="b5af947f-ba5a-4e7a-b16b-381564ce8a45"
+        time="1177634157149" x="390.0" y="208.0"/>
+    <point id="fc1853b7-e1c7-4fb3-b2f0-83d6e43c68da"
+        time="1177634157164" x="382.0" y="210.0"/>
+    <point id="27b222d2-b926-4f2f-af26-91fe3dfa6710"
+        time="1177634157180" x="373.0" y="215.0"/>
+    <point id="f8b67732-5d0c-458d-876e-7930cdd1ef48"
+        time="1177634157180" x="377.0" y="212.0"/>
+    <point id="c558e0eb-d9c6-4358-b83d-ae77596f92b3"
+        time="1177634157195" x="366.0" y="219.0"/>
+    <point id="18fa42b0-ad5b-46bc-8af7-43c2a0f2efc6"
+        time="1177634157195" x="370.0" y="217.0"/>
+    <point id="ffdf3572-ad2b-40ff-b73b-6ab7b2a08b6c"
+        time="1177634157211" x="362.0" y="223.0"/>
+    <point id="d9f908f4-c528-4ed3-9032-5cc75efb5f53"
+        time="1177634157211" x="364.0" y="221.0"/>
+    <point id="b95dd09f-e66b-49f6-9c3e-6619ca743ba9"
+        time="1177634157227" x="361.0" y="224.0"/>
+    <point id="0ed35c71-f630-4305-83ff-dd2c6ecf38d8"
+        time="1177634157227" x="361.0" y="226.0"/>
+    <point id="c97dba6e-f948-4468-afa0-220d9eef761c"
+        time="1177634157242" x="362.0" y="227.0"/>
+    <point id="763c6b30-af28-489f-96eb-693938c935d5"
+        time="1177634157242" x="363.0" y="229.0"/>
+    <stroke id="ac056223-e59c-4e32-9a1f-e82a3ca7b131" label="Spiral" visible="true">
+        <arg type="point">96b093ab-ec84-4da3-ad8a-48b96cd3df71</arg>
+        <arg type="point">268cf430-630f-43c3-a625-6af820101f38</arg>
+        <arg type="point">f0f21232-24d8-49b5-8e03-5c61e78549a4</arg>
+        <arg type="point">34286910-6642-4a90-845b-37b86b069f44</arg>
+        <arg type="point">e21e62b1-5b8f-4a6f-9f58-08f970142d94</arg>
+        <arg type="point">56c2750e-7bae-44a9-8ff9-2b7e5d699711</arg>
+        <arg type="point">42bf89cd-8bef-42c8-bcff-ff9b88ad666a</arg>
+        <arg type="point">dc9c242b-9cd5-4144-8db9-a7590720f167</arg>
+        <arg type="point">940d6e77-c526-45b0-88b6-5128d92dbe70</arg>
+        <arg type="point">b42cbcbe-d8b9-40d7-93ef-647edacc2dec</arg>
+        <arg type="point">e1ad3d4e-8b30-4d66-9907-bd3e6c25eedd</arg>
+        <arg type="point">6f823bdb-faa6-45b6-ab84-8575ac75ad5e</arg>
+        <arg type="point">4e0270d6-4948-4875-87a2-fbbb4b740e42</arg>
+        <arg type="point">2ff62059-6ec1-410e-b3b6-0973c628e9d9</arg>
+        <arg type="point">4baf5743-ed87-4f85-b8a7-63c3f63d02f5</arg>
+        <arg type="point">63762dd9-ea19-42eb-aec5-f6b5af49c8b9</arg>
+        <arg type="point">aefe2dd3-ae47-4ffa-b67e-1fbf922ada3b</arg>
+        <arg type="point">fbb7f0d5-5937-4551-b93a-2d6bb7149eb0</arg>
+        <arg type="point">852048b4-eab5-48e0-8b59-f8ad28793873</arg>
+        <arg type="point">daea7c4d-0500-414f-854f-94b170b8d792</arg>
+        <arg type="point">89068413-87ef-4c4c-a19c-881380de2f3f</arg>
+        <arg type="point">e8ee79a3-f527-4078-93dd-0e1b1d00fdb7</arg>
+        <arg type="point">61ab0ed4-a749-40f0-a798-bdc2f7c89ab0</arg>
+        <arg type="point">bed447d2-3f9f-4845-9838-0b6719807909</arg>
+        <arg type="point">7200f7f0-ae37-497b-b5f2-322ed16b84d6</arg>
+        <arg type="point">c15ced20-3807-4cd9-a14d-edaad1eb6598</arg>
+        <arg type="point">53b4cc51-0c12-4a15-a35f-db5d3f9db7cd</arg>
+        <arg type="point">2a50e553-4821-4937-a55a-d3154232842f</arg>
+        <arg type="point">9f3c4d82-a35e-412c-a861-24e4aca8ed44</arg>
+        <arg type="point">8d3066ed-9ba1-4a58-8b0c-ebf39fa42254</arg>
+        <arg type="point">4116eccf-37ec-4d65-80ed-66b2baaef2a2</arg>
+        <arg type="point">3892280f-8abd-48b2-a5d9-ce5697fe7441</arg>
+        <arg type="point">99136248-1b1b-4b7f-8a66-2440593e0841</arg>
+        <arg type="point">223fb4f4-618d-441b-9ac6-2f7d40925774</arg>
+        <arg type="point">07b5cd7c-c589-4c8e-8930-542d607b5720</arg>
+        <arg type="point">57b1ce89-f795-44c0-9afe-9f427f50bd7d</arg>
+        <arg type="point">31b5d181-7e6b-4248-95c8-ba041704bc8a</arg>
+        <arg type="point">b06443c1-e960-4b67-892a-af98c1d6fffb</arg>
+        <arg type="point">8eecef2f-f5c3-4cab-a99d-db98b4b06711</arg>
+        <arg type="point">77948456-eb9f-49bd-8d0f-b6f013614eeb</arg>
+        <arg type="point">5634f401-94a3-4526-8a41-4d841bd2aac7</arg>
+        <arg type="point">40ce3ff5-ad4b-4b5f-ba01-57b25c84983b</arg>
+        <arg type="point">5da79870-bbe3-46c2-9ad3-b147bc95c746</arg>
+        <arg type="point">347eea07-f14f-46ed-86d5-2c2f8fcd2d00</arg>
+        <arg type="point">725ad805-f0a5-4d24-b63e-81183a398261</arg>
+        <arg type="point">30ccaf20-cdba-4fde-bcd2-c393a9dc59fc</arg>
+        <arg type="point">1fe2be28-e9d7-4545-808a-b89917a52b11</arg>
+        <arg type="point">1e821bf2-9c3f-443b-922c-f5fa65bbfe80</arg>
+        <arg type="point">91ff8599-d530-4d64-b9d0-629cd9d17d26</arg>
+        <arg type="point">1a0d9b88-beac-40f6-a3bd-87946a09660a</arg>
+        <arg type="point">0b39c014-498e-431d-8823-2194aa290dc9</arg>
+        <arg type="point">c7d71659-37bb-4bd3-a011-bcd9a5e0b5a3</arg>
+        <arg type="point">2bcc0edf-81b1-4842-9019-14ce45bf1c3e</arg>
+        <arg type="point">628747bf-b05a-47a6-ad1f-7b97ffa092b7</arg>
+        <arg type="point">7c172746-866f-4d7b-9be2-bcbf03ed3103</arg>
+        <arg type="point">a97068b1-3538-45ab-b466-71205ca16796</arg>
+        <arg type="point">4d681462-aa5b-4cd4-89a8-a89bad9a3a02</arg>
+        <arg type="point">dee19a4c-db42-4900-b3a9-5e671eae9d31</arg>
+        <arg type="point">0621a65b-d76e-4657-8dcd-589da72eea47</arg>
+        <arg type="point">501c04fc-b119-456a-b15f-d6bb60b3fb8b</arg>
+        <arg type="point">a7a47160-8136-4f43-a14f-8cf55d285ceb</arg>
+        <arg type="point">3494c9af-0932-4d9c-9a19-d2326663762b</arg>
+        <arg type="point">8570bab0-99dc-42c8-87b9-8c5ebf8e8366</arg>
+        <arg type="point">e4d9bc6a-8ecd-4c43-a4da-c26f597b9838</arg>
+        <arg type="point">d3c9eb58-5a7b-43c3-a4b5-0000d62eb985</arg>
+        <arg type="point">72c555c2-ea4b-4f6c-bb18-42902998bf65</arg>
+        <arg type="point">f9224bf1-4250-49ff-87e5-0d1dddd71a38</arg>
+        <arg type="point">c7bede47-4a54-4570-a0a0-f8b6d9b48532</arg>
+        <arg type="point">b36a6ede-f516-4e5e-88cf-9f7488f8fe87</arg>
+        <arg type="point">fb512f29-b5f9-47b8-bf17-7a391b049cc4</arg>
+        <arg type="point">7b7b9bc5-3ef1-40f8-b2e4-5a582b7f5983</arg>
+        <arg type="point">b825cd98-dac7-41b3-8ea0-0733e6da951b</arg>
+        <arg type="point">2af879cc-1865-4701-97c0-d4ae8d1ec249</arg>
+        <arg type="point">cf83901b-4666-4bcb-9d25-1371d4354056</arg>
+        <arg type="point">4375128f-8803-481a-9fce-10735c7bcbe6</arg>
+        <arg type="point">75466a06-a79f-4d5e-91f4-636dcc40b14e</arg>
+        <arg type="point">78d70e6e-1f57-4b20-98d3-45106b3d4d52</arg>
+        <arg type="point">de27e3e9-a980-4713-9daf-841a78e5c492</arg>
+        <arg type="point">c96975cf-79d6-492d-a87b-931722e97873</arg>
+        <arg type="point">cd2179ee-dec1-4572-a464-fdadf22c2799</arg>
+        <arg type="point">e73b163f-4867-4bea-a32e-faafbddd7dac</arg>
+        <arg type="point">88e8fa8f-8ced-45e9-aefa-ab50de076415</arg>
+        <arg type="point">2f072029-546d-4f4a-9fd5-b799be6606bb</arg>
+        <arg type="point">c14ba010-288b-4b27-9eaf-f8b46c4915c7</arg>
+        <arg type="point">afc15ff2-c560-4efd-869f-d145321bcd47</arg>
+        <arg type="point">f739374d-9800-47cf-8c47-2ba484356c34</arg>
+        <arg type="point">dc41270c-32ca-4c18-8bd0-3e77ef5d924f</arg>
+        <arg type="point">0f14b5f1-8ad6-4fb7-a72b-5c7947bcfdff</arg>
+        <arg type="point">496bf472-ee6e-461c-8002-fad8eff514cc</arg>
+        <arg type="point">d7782b32-e7ae-44f5-8294-6879ac1fa599</arg>
+        <arg type="point">ca00e754-6649-47c1-8d00-eb641f68da77</arg>
+        <arg type="point">faacbd02-082f-4925-b9c2-49f5add4b633</arg>
+        <arg type="point">1e0d9b6d-7584-4eee-bc58-b5deee2727f0</arg>
+        <arg type="point">363accf4-f9ba-4763-a965-8ed50043daee</arg>
+        <arg type="point">f61e224a-0b36-47fe-b3da-73537833913e</arg>
+        <arg type="point">aeb8fdb8-0c15-4374-9a20-e9c2ab89d827</arg>
+        <arg type="point">8dea7c27-2f36-40e1-99ce-d983364b26f3</arg>
+        <arg type="point">d8da727d-16c7-4df8-b598-5866e6d1cec2</arg>
+        <arg type="point">1f47a329-73c5-4e5a-86d9-0ce9862c4b1b</arg>
+        <arg type="point">e45cd2cb-ce97-41a7-931b-00606c5bc74a</arg>
+        <arg type="point">82e51ca3-6ccb-4e57-8c74-4e587c747ba7</arg>
+        <arg type="point">ab96f015-ec05-425c-b660-98112324bcce</arg>
+        <arg type="point">0f99fae0-d666-41f2-997b-69dd2444ef96</arg>
+        <arg type="point">7b487de5-a54a-4896-8007-2cf566609069</arg>
+        <arg type="point">677f231b-4a92-4ba2-a0c6-3a7ea7fc0ec7</arg>
+        <arg type="point">7ba47701-d4e3-46e0-a33e-54bc42f63a62</arg>
+        <arg type="point">dd474931-844a-4346-9da6-f76e9c69d579</arg>
+        <arg type="point">991f53cc-97e4-48fe-ac37-26e449703380</arg>
+        <arg type="point">68024fc8-df31-4d4e-af35-de4cc7e741d3</arg>
+        <arg type="point">1ab48e3b-9804-4478-92c5-6ec6fce8f5a0</arg>
+        <arg type="point">668cd922-bdae-4876-98b7-3d498eacf878</arg>
+        <arg type="point">437449ac-474e-44d7-b876-17e695804c47</arg>
+        <arg type="point">11425e69-9543-48b9-a493-e776783cfc53</arg>
+        <arg type="point">fb741086-0c4c-4e08-a0ef-7a11136c5823</arg>
+        <arg type="point">0b5f8c69-18a5-4eb1-bc19-d2a35ac47c58</arg>
+        <arg type="point">ae073bf7-8cc4-458b-9082-d239ebd20c2c</arg>
+        <arg type="point">cf4e657f-bdd8-421e-8d8e-0090eaa2d84a</arg>
+        <arg type="point">dff7f103-6579-4e4e-b53e-42da0e75499d</arg>
+        <arg type="point">853186aa-091c-4607-8b9a-f5bd57160362</arg>
+        <arg type="point">d26bdba1-d113-4abc-98dd-52c4dd15f348</arg>
+        <arg type="point">e2880ff5-d7d2-4c98-8670-1820f6b48b01</arg>
+        <arg type="point">3a137def-1960-40f9-bfd2-c1dbf5177e57</arg>
+        <arg type="point">2f1d2ab3-88f3-4ca2-aff7-61bb5984bc57</arg>
+        <arg type="point">b9b963ec-16ab-47ea-9210-a48c4f0430ef</arg>
+        <arg type="point">3198c449-577e-41fa-9fd8-ff6b67bc351c</arg>
+        <arg type="point">568c8aea-903f-4f9b-812f-d424d13fe95e</arg>
+        <arg type="point">17c35d86-17f4-40ca-95fa-caff6ac32d13</arg>
+        <arg type="point">a311b91c-d777-4a7e-a3df-952a3a865dcd</arg>
+        <arg type="point">326187dc-b5b7-42fd-b185-734328eb6be8</arg>
+        <arg type="point">8b492f89-9ada-43d3-8e1d-ae5e73354170</arg>
+        <arg type="point">8eac0cc6-d5bd-43f3-b9f7-c45eba4b305b</arg>
+        <arg type="point">911d6737-ca60-44dd-aac0-839009ee07df</arg>
+        <arg type="point">c8d06bc4-849e-4291-a414-fe30c7eb867f</arg>
+        <arg type="point">50215f1d-0733-4458-9232-964f5b51787f</arg>
+        <arg type="point">b8aa6fe3-e699-4806-b7a1-15d38756fdee</arg>
+        <arg type="point">e263f377-a0b8-4450-9993-3e86ef8f44cd</arg>
+        <arg type="point">96041bdb-9cb0-4d8f-ab47-b8e0455b511a</arg>
+        <arg type="point">9eec2c09-f908-406b-915b-ef4f45b34896</arg>
+        <arg type="point">f5d66874-4489-48c2-baf4-795be256d82b</arg>
+        <arg type="point">dd304799-d1ca-4ae7-b5ef-f56c47142c39</arg>
+        <arg type="point">2c833091-8fb0-45db-9732-b603fedfcab8</arg>
+        <arg type="point">9842ebdb-3051-44c0-a81e-f0f1df1eb0a4</arg>
+        <arg type="point">c4a7e62e-662b-4b15-8fe3-3c2640efcfe6</arg>
+        <arg type="point">a9090440-9e49-47bb-afa7-0408cac84124</arg>
+        <arg type="point">2a1dddb7-77df-45fb-ad63-ba47d57dc89e</arg>
+        <arg type="point">d9588855-0f01-43eb-a06d-d09b06592f48</arg>
+        <arg type="point">e17623ae-5687-43f4-aa8e-b0fd64b69a47</arg>
+        <arg type="point">c50ce74e-78d5-46ea-9b95-8d557703d9f4</arg>
+        <arg type="point">5d8c9df2-0b9c-4178-95af-d5c1b97756db</arg>
+        <arg type="point">0bdf425c-fc36-42f7-aa0a-e1adb7bd2553</arg>
+        <arg type="point">88f05220-f40a-4a83-8efd-e71e05bf8627</arg>
+        <arg type="point">bc2e2ba7-d295-4bc5-a6b9-143f3d026cf5</arg>
+        <arg type="point">7bf4c431-3379-463f-89f6-bc10948d34ea</arg>
+        <arg type="point">c3a391f7-74fd-4016-bdc2-2cd4aea2965d</arg>
+        <arg type="point">e68e30d8-d2a8-4815-8dae-92cf09e5e429</arg>
+        <arg type="point">adaea4cb-96d3-4bb8-9425-7522cb5bc554</arg>
+        <arg type="point">66ebf60c-850b-4a30-bb25-0d6808fbd0de</arg>
+        <arg type="point">47b4aef1-045b-4b7a-86d7-140108c5b0a0</arg>
+        <arg type="point">1e717ad9-573e-4b05-a23a-c269c65f7d2e</arg>
+        <arg type="point">c08b0b7f-6e34-4af2-a77a-c5dc43ab780c</arg>
+        <arg type="point">856526ec-de75-4cd2-90bb-948e8aa15aa2</arg>
+        <arg type="point">3fd8d497-0cf8-4caa-82fd-b180c7c688ae</arg>
+        <arg type="point">854601a6-ee36-49cf-a034-c6761b7f5bcb</arg>
+        <arg type="point">a6248023-bdf8-43d1-99a9-34124734a006</arg>
+        <arg type="point">a318bbc5-4c50-4b19-b0aa-cb014a859eed</arg>
+        <arg type="point">73c22588-f752-4572-8493-27d40ef8d224</arg>
+        <arg type="point">af2e39ad-b487-4998-bb62-5f8f8bfc7a14</arg>
+        <arg type="point">e6e1d1c3-5f65-4e14-abc4-0700eb181ec1</arg>
+        <arg type="point">11edf5b7-86e9-4514-b033-ffeaedf95016</arg>
+        <arg type="point">edf012af-4887-4e01-967f-391aec363360</arg>
+        <arg type="point">58abeca5-b218-4788-86d9-33dbbab745ba</arg>
+        <arg type="point">b4d30a38-a8c0-46ea-b1ea-1e4c9fa595d2</arg>
+        <arg type="point">07506812-c90d-455c-af3b-463cf6f4b950</arg>
+        <arg type="point">cbfae553-29be-48f9-b1d1-c343b016d6f9</arg>
+        <arg type="point">35972924-c9a1-4de3-b0a4-de13863d9152</arg>
+        <arg type="point">11c2bb86-4671-4419-8902-3ea2667273dd</arg>
+        <arg type="point">c1bb92d9-d39f-4166-9b12-5f83db8003f6</arg>
+        <arg type="point">49673ba3-4936-468c-8fcc-f6106b35ff2d</arg>
+        <arg type="point">c7c26dfc-6bd8-4000-ab35-75d0244802f9</arg>
+        <arg type="point">2ea7d157-a158-4673-b907-9cd94c8aa322</arg>
+        <arg type="point">fdaeb29f-8345-420c-aa28-f99fd294d493</arg>
+        <arg type="point">df49d31d-ae6e-4a63-aeb9-cf831b83ba3a</arg>
+        <arg type="point">3beb876e-d44f-4f82-95ba-536833edc47c</arg>
+        <arg type="point">a3f14a64-6873-4a66-ae2c-fa2a346b9775</arg>
+        <arg type="point">bc798195-575f-4f33-aa51-5e957e69a196</arg>
+        <arg type="point">f546371b-7c15-481f-9d5f-3e67d2db48ac</arg>
+        <arg type="point">7ab8cf11-8289-4f71-bb35-d6d4dfe7b554</arg>
+        <arg type="point">ba03b67d-51c8-449a-9c50-916f314f68ce</arg>
+        <arg type="point">bbb3eb73-f465-4c37-a0a9-223785ffd26e</arg>
+        <arg type="point">23251285-8e9e-4330-b7e1-9df4a35fa620</arg>
+        <arg type="point">24f89f36-d939-405d-ab29-fae27e5646fe</arg>
+        <arg type="point">4802e8e0-d5b3-4da7-83e3-337ec25ebf36</arg>
+        <arg type="point">62a80f52-9914-4c7a-8770-79eea83613b1</arg>
+        <arg type="point">17416f36-366d-4dff-9528-35686dd02e13</arg>
+        <arg type="point">59eaff29-0e88-4978-ac24-56fc2f6d5a59</arg>
+        <arg type="point">45e0e9d0-52ce-47cf-b08f-54bb673d4d47</arg>
+        <arg type="point">55226e69-e52b-43c4-9030-0d52aed856b3</arg>
+        <arg type="point">c4252b92-2631-4451-bec9-ee23c19e36af</arg>
+        <arg type="point">320ade05-5feb-40be-b15b-203a8a56596c</arg>
+        <arg type="point">6642214c-269b-43a5-9e5c-390abbe830dc</arg>
+        <arg type="point">b5af947f-ba5a-4e7a-b16b-381564ce8a45</arg>
+        <arg type="point">7423761a-7231-4f0c-9248-0e1d5e282742</arg>
+        <arg type="point">fc1853b7-e1c7-4fb3-b2f0-83d6e43c68da</arg>
+        <arg type="point">f8b67732-5d0c-458d-876e-7930cdd1ef48</arg>
+        <arg type="point">27b222d2-b926-4f2f-af26-91fe3dfa6710</arg>
+        <arg type="point">18fa42b0-ad5b-46bc-8af7-43c2a0f2efc6</arg>
+        <arg type="point">c558e0eb-d9c6-4358-b83d-ae77596f92b3</arg>
+        <arg type="point">d9f908f4-c528-4ed3-9032-5cc75efb5f53</arg>
+        <arg type="point">ffdf3572-ad2b-40ff-b73b-6ab7b2a08b6c</arg>
+        <arg type="point">b95dd09f-e66b-49f6-9c3e-6619ca743ba9</arg>
+        <arg type="point">0ed35c71-f630-4305-83ff-dd2c6ecf38d8</arg>
+        <arg type="point">c97dba6e-f948-4468-afa0-220d9eef761c</arg>
+        <arg type="point">763c6b30-af28-489f-96eb-693938c935d5</arg>
+    </stroke>
+</sketch>
