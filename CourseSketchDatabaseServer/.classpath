@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/java_websocket.jar"/>
-	<classpathentry kind="lib" path="libs/mongo-java-driver-2.9.3.jar"/>
 	<classpathentry kind="lib" path="libs/websocketsource.jar"/>
 	<classpathentry kind="lib" path="libs/protobuf-2.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/mongo-java-driver-2.11.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
