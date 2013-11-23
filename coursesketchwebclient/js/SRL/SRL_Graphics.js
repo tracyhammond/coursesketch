@@ -97,8 +97,8 @@ SRL_Stroke.prototype.drawStroke = function drawStroke(graphics, forcedColor) {
 		oldPoint = point;
 	}
 	graphics.stroke();
-	this.getBoundingBox().drawBounds(graphics);
-	this.getStrokeIntersector().drawBounds(graphics);
+	//this.getBoundingBox().drawBounds(graphics);
+	//this.getStrokeIntersector().drawBounds(graphics);
 }
 
 SRL_BoundingBox.prototype.drawBounds = function drawBounds(graphics) {

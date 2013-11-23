@@ -26,7 +26,8 @@
 						return;
 					}
 	  				var request = new Request(parent.Request.MessageType.LOGIN);
-	  				var loginInfo = new LoginInformation(arg1, CryptoJS.SHA3(arg2), false, false, "");
+                    //CryptoJS.SHA3(arg2)
+	  				var loginInfo = new LoginInformation(arg1, arg2, false, false, "");
 	  				request.login = loginInfo;
 	  				connection.sendRequest(request);
 	  				console.log("Sending login information");
