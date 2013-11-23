@@ -43,6 +43,26 @@
 	text-shadow: 0px -1px 1px #666;
 }
 
+.school_item h1 {
+	color: #376C9F;
+	text-shadow: 1px 1px 1px #699DCF;
+}
+
+.school_item .good {
+	color: #4FCB3C;/*#AAFAA6;*/
+	text-shadow: 1px 1px 1px #98E58C;/*#3BA236;*/
+}
+
+.school_item .warning {
+	color: #FFE600;/*#FFFDAA;*/
+	text-shadow: 1px 1px 1px 1px /*#B8B056;*/#E7BE06;
+}
+
+.school_item .bad {
+	color: #EF4652;/*#FFA9AC;*/
+	text-shadow: 1px 1px 1px #F7979E;/*#A6373A;*/
+}
+
 .school_item h3.large {
 	width: 375px;
 }

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.Response;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
@@ -30,9 +29,7 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
-import proxyServer.ConnectionState;
-import proxyServer.Decoder;
-import proxyServer.Encoder;
+import response.Response;
 
 /**
  * A simple WebSocketServer implementation.

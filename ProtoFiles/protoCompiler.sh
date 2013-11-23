@@ -1,22 +1,28 @@
 #!/bin/bash
 
 #clear old paths
+echo "creating list of directories"
+declare -a SERVERLIST
+SERVERLIST[0]="CourseSketchDatabaseServer"
+SERVERLIST[1]="coursesketchwebserver"
+SERVERLIST[2]="CourseSketchRecognitionServer"
+SERVERLIST[3]="BlankServer"
+
 echo "clearing old directories"
 rm -rf output/  #deleting to replace it
 rm -rf ../coursesketchwebclient/other/protobuf/  #deleting
-rm -rf ../coursesketchwebserver/src/protobuf/  #deleting
-rm -rf ../CourseSketchRecognitionServer/src/protobuf/  #deleting
+mkdir -p ../coursesketchwebclient/other/protobuf/  #making
+for server in "${SERVERLIST[@]}"; do
+    echo "cleaning $server"
+	rm -rf ../$server/src/protobuf/  #deleting
+	rm -rf ../$server/reference/protobuf/  #deleting
 
-rm -rf ../coursesketchwebserver/reference/protobuf/  #deleting
-rm -rf ../CourseSketchRecognitionServer/reference/protobuf/  #deleting
-
-mkdir -p ../CourseSketchRecognitionServer/reference/protobuf/
-mkdir -p ../coursesketchwebserver/reference/protobuf/
+	mkdir -p ../$server/src/protobuf/  #making
+	mkdir -p ../$server/reference/protobuf/ #making
+done
 
 FILES=input/*
-for f in $FILES
-
-do
+for f in $FILES; do
   # take action on each file. $f store current file name
   echo "Processing $f file..."
   FILENAME="$f"
@@ -31,20 +37,15 @@ do
   protoc --cpp_out=output/cpp/$DIR/ --java_out=output/java/$DIR/ --python_out=output/py/$DIR/ $f
 
   echo "copying files to coursesketchwebclient/other/"
-
-  mkdir -p ../coursesketchwebclient/other/protobuf/  #making
   cp -f $f ../coursesketchwebclient/other/protobuf/  #copying
 
-  echo "copying java files to coursesketchwebserver/src/"
-  mkdir -p ../coursesketchwebserver/src/protobuf/  #making
-  cp -r -f output/java/$DIR/ ../coursesketchwebserver/src/ #copying java
-  cp -r -f $f ../coursesketchwebserver/reference/protobuf/  #copying reference
-
-  echo "copying java files to CourseSketchRecognitionServer/src/"
-
-  mkdir -p ../CourseSketchRecognitionServer/src/protobuf/  #making
-  cp -r -f output/java/$DIR/ ../CourseSketchRecognitionServer/src/ #copying java
-  cp -r -f $f ../CourseSketchRecognitionServer/reference/protobuf/  #copying reference
+  #copy all of the server protos
+  for server in "${SERVERLIST[@]}";
+  do
+    echo "copying java files to $server/src/"
+    cp -r -f output/java/$DIR/ ../$server/src/ #copying java
+    cp -r -f $f ../$server/reference/protobuf/  #copying reference
+  done
 
   #javac -cp "protobuf-2.5.0.jar" -d "output/java/$DIR/" -sourcepath output/java/$DIR/srl/ *.java
   #echo "creating compiled java files"

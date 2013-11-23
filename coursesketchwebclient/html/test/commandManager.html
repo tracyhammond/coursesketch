@@ -16,10 +16,12 @@
 	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
 	<script type="text/javascript" src="js/input/sketching.js"></script>
 	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/input/highlighter.js"></script>
 	<!-- DEBUG -->
 	<script type="text/javascript" src="js/test/SRL_SketchViewer.js"></script>
 
 	<script type="text/javascript" src="js/connection/connection_library.js"></script>
+	<script type="text/javascript" src="js/connection/submission.js"></script>
 	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
 	<script type="text/javascript" src="js/connection/update_manager.js"></script>
 	<!-- DEBUG -->
@@ -46,6 +48,7 @@
 			sketch.canvasContext = canvasContext;
 			sketch.clearCanvas = clearCanvas;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+			highlighter = new Highlighter(input,sketch,callback,canvasContext);
 			createStuff();
 			initializeServer();
 		});
@@ -174,12 +177,27 @@
 			commandManager.addUpdate(update, false, true);
 			setTimeout(function() {createViewer();},50);
 	    }
-	    
+
 	    function createViewer() {
 	    	createSketchViewer(sketch.getList(), sketchOutput);
 	    	if (commandManager) {
 		    	createCommandViewer(commandManager.getUpdates(), updateOutput);
 	    	}
+	    }
+
+	    function submitAction() {
+	    	submitUpdateList(serverConnection, commandManager.getUpdates(), ProtoSrlCommandType, Request.MessageType.RECOGNITION,displayBar,updateBar,finishBar);
+	    }
+	    
+	    function displayBar() {
+	    	document.getElementById("PercentBar").style = "display:block;position:absolute;left:20px;top:20px;"
+	    }
+	    function updateBar(index, total) {
+	    	document.getElementById("PercentBar").innerHTML = "" + (index/total) * 100 + "% total: "+total;
+ 	    }
+	    function finishBar() {
+	    	alert("done submitting");
+	    	document.getElementById("PercentBar").style.display = none;
 	    }
 	</script>
 </head>
@@ -189,7 +207,9 @@
 	<button onclick = "createStuff();">addShape</button>
 	<button onclick = "packageShapes();">packageSketch</button>
 	<button onclick = "removeFirst();">removeFirst</button>
+	<button onclick = "submitAction();">submit</button>
+	<div id = "PercentBar">0%</div>
 	<div id = "sketch_output" style = "height:400px;position:relative; overflow:scroll;border:1px;border-style:solid;"></div>
-	<canvas id="drawingCanvas" width="300" height="300" style="top:0px; left:0px; width: 300; height: 300; background:#FFFFFF;float:left;"></canvas>
+	<canvas id="drawingCanvas" width="700" height="600" style="top:0px; left:0px; width: 700; height: 600; background:#FFFFFF;float:left;"></canvas>
 	<div id = "update_output" style = "width:600px; height:600px;position:relative; overflow:scroll;border:1px;border-style:solid;"></div>
 </body>

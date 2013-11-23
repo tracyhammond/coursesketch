@@ -25,10 +25,11 @@ function getMenu(isInstructor) {
 			'			class="contentLink">Home</a></li>' +
 			((!isInstructor) ? // first part is student
 			'		<li class="header"><h3>Classes I\'m In</h3></li>' +
+			'		<li><a href="' + home + '" target ="wrapper" data-ajax="false">My Courses</a></li>' + 
 			'		<li><a href="html/student/classSearch.html" data-ajax="false" class="contentLink">Add New Class</a></li>' +
-			'		<li><a href="html/student/grades.html" data-ajax="false" class="contentLink">My Grades</a></li>' +
 			'		<li><a href="html/student/classOptions.html" data-ajax="false" class="contentLink">Remove Class</a></li>' +
-			'		<li><a href="html/student/roster.html" data-ajax="false" class="contentLink">Roster</a></li>'
+			'		<li><a href="html/student/grades.html" data-ajax="false" class="contentLink">My Grades</a></li>' +
+			'		<li><a href="html/student/roster.html" data-ajax="false" class="contentLink">Rosters</a></li>'  
 			: // below is instructor
 			'		<li class="header"><h3>Classes I\'m Teaching</h3></li>' +
 			'		<li><a href="html/instructor/gradebook.html" data-ajax="false" class="contentLink">Grades</a></li>' +

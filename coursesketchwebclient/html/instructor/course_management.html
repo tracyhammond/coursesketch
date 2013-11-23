@@ -13,8 +13,8 @@
   		parent.addScopedLoadEvent(window,
 				function()
 				{
-					var builder = new schoolItemBuilder();
-					builder.setList(parent.user_courses).setWidth('medium').centerItem(true);
+					var builder = new SchoolItemBuilder();
+					builder.setList(getMapAsList(parent.user_courses)).setWidth('medium').centerItem(true);
 					builder.showImage = false;
 					builder.setOnBoxClick('courseClickerFunction');
 					builder.build('class_list_column');

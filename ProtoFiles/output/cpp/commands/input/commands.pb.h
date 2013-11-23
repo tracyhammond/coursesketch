@@ -36,14 +36,37 @@ void  protobuf_AddDesc_input_2fcommands_2eproto();
 void protobuf_AssignDesc_input_2fcommands_2eproto();
 void protobuf_ShutdownFile_input_2fcommands_2eproto();
 
+class SrlUpdateList;
 class SrlUpdate;
 class SrlCommand;
 class IdChain;
+class Marker;
 class ActionPackageShape;
 class ActionForceInterpretation;
 class ActionAddAttribtue;
 class ActionRemoveAttribtue;
 
+enum Marker_MarkerType {
+  Marker_MarkerType_SUBMISSION = 0,
+  Marker_MarkerType_FEEDBACK = 1,
+  Marker_MarkerType_SAVE = 2,
+  Marker_MarkerType_LOAD = 3
+};
+bool Marker_MarkerType_IsValid(int value);
+const Marker_MarkerType Marker_MarkerType_MarkerType_MIN = Marker_MarkerType_SUBMISSION;
+const Marker_MarkerType Marker_MarkerType_MarkerType_MAX = Marker_MarkerType_LOAD;
+const int Marker_MarkerType_MarkerType_ARRAYSIZE = Marker_MarkerType_MarkerType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* Marker_MarkerType_descriptor();
+inline const ::std::string& Marker_MarkerType_Name(Marker_MarkerType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    Marker_MarkerType_descriptor(), value);
+}
+inline bool Marker_MarkerType_Parse(
+    const ::std::string& name, Marker_MarkerType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Marker_MarkerType>(
+    Marker_MarkerType_descriptor(), name, value);
+}
 enum CommandType {
   ADD_STROKE = 0,
   ADD_SHAPE = 1,
@@ -51,16 +74,18 @@ enum CommandType {
   REMOVE_OBJECT = 3,
   ASSIGN_ATTRIBUTE = 4,
   REMOVE_ATTRIBUTE = 5,
+  MARKER = 6,
   FORCE_INTERPRETATION = 10,
   UNDO = 11,
   REDO = 12,
   REWRITE = 13,
   CLEAR_STACK = 14,
-  SYNC = 15
+  OPEN_SYNC = 15,
+  CLOSE_SYNC = 16
 };
 bool CommandType_IsValid(int value);
 const CommandType CommandType_MIN = ADD_STROKE;
-const CommandType CommandType_MAX = SYNC;
+const CommandType CommandType_MAX = CLOSE_SYNC;
 const int CommandType_ARRAYSIZE = CommandType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* CommandType_descriptor();
@@ -74,6 +99,91 @@ inline bool CommandType_Parse(
     CommandType_descriptor(), name, value);
 }
 // ===================================================================
+
+class SrlUpdateList : public ::google::protobuf::Message {
+ public:
+  SrlUpdateList();
+  virtual ~SrlUpdateList();
+
+  SrlUpdateList(const SrlUpdateList& from);
+
+  inline SrlUpdateList& operator=(const SrlUpdateList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlUpdateList& default_instance();
+
+  void Swap(SrlUpdateList* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlUpdateList* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlUpdateList& from);
+  void MergeFrom(const SrlUpdateList& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .protobuf.srl.commands.SrlUpdate list = 1;
+  inline int list_size() const;
+  inline void clear_list();
+  static const int kListFieldNumber = 1;
+  inline const ::protobuf::srl::commands::SrlUpdate& list(int index) const;
+  inline ::protobuf::srl::commands::SrlUpdate* mutable_list(int index);
+  inline ::protobuf::srl::commands::SrlUpdate* add_list();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlUpdate >&
+      list() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlUpdate >*
+      mutable_list();
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.SrlUpdateList)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlUpdate > list_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fcommands_2eproto();
+  friend void protobuf_AssignDesc_input_2fcommands_2eproto();
+  friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlUpdateList* default_instance_;
+};
+// -------------------------------------------------------------------
 
 class SrlUpdate : public ::google::protobuf::Message {
  public:
@@ -160,21 +270,31 @@ class SrlUpdate : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlCommand >*
       mutable_commands();
 
+  // optional int32 commandNumber = 4;
+  inline bool has_commandnumber() const;
+  inline void clear_commandnumber();
+  static const int kCommandNumberFieldNumber = 4;
+  inline ::google::protobuf::int32 commandnumber() const;
+  inline void set_commandnumber(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.commands.SrlUpdate)
  private:
   inline void set_has_updateid();
   inline void clear_has_updateid();
   inline void set_has_time();
   inline void clear_has_time();
+  inline void set_has_commandnumber();
+  inline void clear_has_commandnumber();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* updateid_;
   ::google::protobuf::int64 time_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlCommand > commands_;
+  ::google::protobuf::int32 commandnumber_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fcommands_2eproto();
   friend void protobuf_AssignDesc_input_2fcommands_2eproto();
@@ -253,7 +373,7 @@ class SrlCommand : public ::google::protobuf::Message {
   inline bool isusercreated() const;
   inline void set_isusercreated(bool value);
 
-  // required bytes commandData = 3;
+  // optional bytes commandData = 3;
   inline bool has_commanddata() const;
   inline void clear_commanddata();
   static const int kCommandDataFieldNumber = 3;
@@ -393,6 +513,129 @@ class IdChain : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static IdChain* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Marker : public ::google::protobuf::Message {
+ public:
+  Marker();
+  virtual ~Marker();
+
+  Marker(const Marker& from);
+
+  inline Marker& operator=(const Marker& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Marker& default_instance();
+
+  void Swap(Marker* other);
+
+  // implements Message ----------------------------------------------
+
+  Marker* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Marker& from);
+  void MergeFrom(const Marker& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef Marker_MarkerType MarkerType;
+  static const MarkerType SUBMISSION = Marker_MarkerType_SUBMISSION;
+  static const MarkerType FEEDBACK = Marker_MarkerType_FEEDBACK;
+  static const MarkerType SAVE = Marker_MarkerType_SAVE;
+  static const MarkerType LOAD = Marker_MarkerType_LOAD;
+  static inline bool MarkerType_IsValid(int value) {
+    return Marker_MarkerType_IsValid(value);
+  }
+  static const MarkerType MarkerType_MIN =
+    Marker_MarkerType_MarkerType_MIN;
+  static const MarkerType MarkerType_MAX =
+    Marker_MarkerType_MarkerType_MAX;
+  static const int MarkerType_ARRAYSIZE =
+    Marker_MarkerType_MarkerType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  MarkerType_descriptor() {
+    return Marker_MarkerType_descriptor();
+  }
+  static inline const ::std::string& MarkerType_Name(MarkerType value) {
+    return Marker_MarkerType_Name(value);
+  }
+  static inline bool MarkerType_Parse(const ::std::string& name,
+      MarkerType* value) {
+    return Marker_MarkerType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // required string id = 1;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 1;
+  inline const ::std::string& id() const;
+  inline void set_id(const ::std::string& value);
+  inline void set_id(const char* value);
+  inline void set_id(const char* value, size_t size);
+  inline ::std::string* mutable_id();
+  inline ::std::string* release_id();
+  inline void set_allocated_id(::std::string* id);
+
+  // required .protobuf.srl.commands.Marker.MarkerType type = 2;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 2;
+  inline ::protobuf::srl::commands::Marker_MarkerType type() const;
+  inline void set_type(::protobuf::srl::commands::Marker_MarkerType value);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.commands.Marker)
+ private:
+  inline void set_has_id();
+  inline void clear_has_id();
+  inline void set_has_type();
+  inline void clear_has_type();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* id_;
+  int type_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fcommands_2eproto();
+  friend void protobuf_AssignDesc_input_2fcommands_2eproto();
+  friend void protobuf_ShutdownFile_input_2fcommands_2eproto();
+
+  void InitAsDefaultInstance();
+  static Marker* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -839,6 +1082,35 @@ class ActionRemoveAttribtue : public ::google::protobuf::Message {
 
 // ===================================================================
 
+// SrlUpdateList
+
+// repeated .protobuf.srl.commands.SrlUpdate list = 1;
+inline int SrlUpdateList::list_size() const {
+  return list_.size();
+}
+inline void SrlUpdateList::clear_list() {
+  list_.Clear();
+}
+inline const ::protobuf::srl::commands::SrlUpdate& SrlUpdateList::list(int index) const {
+  return list_.Get(index);
+}
+inline ::protobuf::srl::commands::SrlUpdate* SrlUpdateList::mutable_list(int index) {
+  return list_.Mutable(index);
+}
+inline ::protobuf::srl::commands::SrlUpdate* SrlUpdateList::add_list() {
+  return list_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlUpdate >&
+SrlUpdateList::list() const {
+  return list_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::commands::SrlUpdate >*
+SrlUpdateList::mutable_list() {
+  return &list_;
+}
+
+// -------------------------------------------------------------------
+
 // SrlUpdate
 
 // required string updateId = 1;
@@ -958,6 +1230,28 @@ SrlUpdate::mutable_commands() {
   return &commands_;
 }
 
+// optional int32 commandNumber = 4;
+inline bool SrlUpdate::has_commandnumber() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SrlUpdate::set_has_commandnumber() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SrlUpdate::clear_has_commandnumber() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SrlUpdate::clear_commandnumber() {
+  commandnumber_ = 0;
+  clear_has_commandnumber();
+}
+inline ::google::protobuf::int32 SrlUpdate::commandnumber() const {
+  return commandnumber_;
+}
+inline void SrlUpdate::set_commandnumber(::google::protobuf::int32 value) {
+  set_has_commandnumber();
+  commandnumber_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // SrlCommand
@@ -1007,7 +1301,7 @@ inline void SrlCommand::set_isusercreated(bool value) {
   isusercreated_ = value;
 }
 
-// required bytes commandData = 3;
+// optional bytes commandData = 3;
 inline bool SrlCommand::has_commanddata() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1193,6 +1487,103 @@ IdChain::idchain() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 IdChain::mutable_idchain() {
   return &idchain_;
+}
+
+// -------------------------------------------------------------------
+
+// Marker
+
+// required string id = 1;
+inline bool Marker::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Marker::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Marker::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Marker::clear_id() {
+  if (id_ != &::google::protobuf::internal::kEmptyString) {
+    id_->clear();
+  }
+  clear_has_id();
+}
+inline const ::std::string& Marker::id() const {
+  return *id_;
+}
+inline void Marker::set_id(const ::std::string& value) {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    id_ = new ::std::string;
+  }
+  id_->assign(value);
+}
+inline void Marker::set_id(const char* value) {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    id_ = new ::std::string;
+  }
+  id_->assign(value);
+}
+inline void Marker::set_id(const char* value, size_t size) {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    id_ = new ::std::string;
+  }
+  id_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Marker::mutable_id() {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    id_ = new ::std::string;
+  }
+  return id_;
+}
+inline ::std::string* Marker::release_id() {
+  clear_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = id_;
+    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Marker::set_allocated_id(::std::string* id) {
+  if (id_ != &::google::protobuf::internal::kEmptyString) {
+    delete id_;
+  }
+  if (id) {
+    set_has_id();
+    id_ = id;
+  } else {
+    clear_has_id();
+    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// required .protobuf.srl.commands.Marker.MarkerType type = 2;
+inline bool Marker::has_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Marker::set_has_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Marker::clear_has_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Marker::clear_type() {
+  type_ = 0;
+  clear_has_type();
+}
+inline ::protobuf::srl::commands::Marker_MarkerType Marker::type() const {
+  return static_cast< ::protobuf::srl::commands::Marker_MarkerType >(type_);
+}
+inline void Marker::set_type(::protobuf::srl::commands::Marker_MarkerType value) {
+  assert(::protobuf::srl::commands::Marker_MarkerType_IsValid(value));
+  set_has_type();
+  type_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1806,6 +2197,10 @@ inline void ActionRemoveAttribtue::set_allocated_attributevalue(::std::string* a
 namespace google {
 namespace protobuf {
 
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::commands::Marker_MarkerType>() {
+  return ::protobuf::srl::commands::Marker_MarkerType_descriptor();
+}
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::commands::CommandType>() {
   return ::protobuf::srl::commands::CommandType_descriptor();

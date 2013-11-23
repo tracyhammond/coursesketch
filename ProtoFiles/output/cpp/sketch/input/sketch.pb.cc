@@ -38,12 +38,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SrlPoint_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SrlPoint_reflection_ = NULL;
-const ::google::protobuf::Descriptor* Interpretation_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* SrlInterpretation_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  Interpretation_reflection_ = NULL;
-const ::google::protobuf::Descriptor* BoundingBox_descriptor_ = NULL;
+  SrlInterpretation_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SrlBoundingBox_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  BoundingBox_reflection_ = NULL;
+  SrlBoundingBox_reflection_ = NULL;
 
 }  // namespace
 
@@ -55,10 +55,7 @@ void protobuf_AssignDesc_input_2fsketch_2eproto() {
       "input/sketch.proto");
   GOOGLE_CHECK(file != NULL);
   SrlSketch_descriptor_ = file->message_type(0);
-  static const int SrlSketch_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, assignmentid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, problemid_),
+  static const int SrlSketch_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, domainid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSketch, sketch_),
   };
@@ -152,41 +149,41 @@ void protobuf_AssignDesc_input_2fsketch_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SrlPoint));
-  Interpretation_descriptor_ = file->message_type(5);
-  static const int Interpretation_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, label_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, confidence_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, complexity_),
+  SrlInterpretation_descriptor_ = file->message_type(5);
+  static const int SrlInterpretation_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlInterpretation, label_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlInterpretation, confidence_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlInterpretation, complexity_),
   };
-  Interpretation_reflection_ =
+  SrlInterpretation_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      Interpretation_descriptor_,
-      Interpretation::default_instance_,
-      Interpretation_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interpretation, _unknown_fields_),
+      SrlInterpretation_descriptor_,
+      SrlInterpretation::default_instance_,
+      SrlInterpretation_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlInterpretation, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlInterpretation, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(Interpretation));
-  BoundingBox_descriptor_ = file->message_type(6);
-  static const int BoundingBox_offsets_[4] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BoundingBox, x_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BoundingBox, y_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BoundingBox, width_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BoundingBox, height_),
+      sizeof(SrlInterpretation));
+  SrlBoundingBox_descriptor_ = file->message_type(6);
+  static const int SrlBoundingBox_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlBoundingBox, x_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlBoundingBox, y_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlBoundingBox, width_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlBoundingBox, height_),
   };
-  BoundingBox_reflection_ =
+  SrlBoundingBox_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      BoundingBox_descriptor_,
-      BoundingBox::default_instance_,
-      BoundingBox_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BoundingBox, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BoundingBox, _unknown_fields_),
+      SrlBoundingBox_descriptor_,
+      SrlBoundingBox::default_instance_,
+      SrlBoundingBox_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlBoundingBox, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlBoundingBox, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(BoundingBox));
+      sizeof(SrlBoundingBox));
 }
 
 namespace {
@@ -210,9 +207,9 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SrlPoint_descriptor_, &SrlPoint::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    Interpretation_descriptor_, &Interpretation::default_instance());
+    SrlInterpretation_descriptor_, &SrlInterpretation::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    BoundingBox_descriptor_, &BoundingBox::default_instance());
+    SrlBoundingBox_descriptor_, &SrlBoundingBox::default_instance());
 }
 
 }  // namespace
@@ -228,10 +225,10 @@ void protobuf_ShutdownFile_input_2fsketch_2eproto() {
   delete SrlStroke_reflection_;
   delete SrlPoint::default_instance_;
   delete SrlPoint_reflection_;
-  delete Interpretation::default_instance_;
-  delete Interpretation_reflection_;
-  delete BoundingBox::default_instance_;
-  delete BoundingBox_reflection_;
+  delete SrlInterpretation::default_instance_;
+  delete SrlInterpretation_reflection_;
+  delete SrlBoundingBox::default_instance_;
+  delete SrlBoundingBox_reflection_;
 }
 
 void protobuf_AddDesc_input_2fsketch_2eproto() {
@@ -242,30 +239,29 @@ void protobuf_AddDesc_input_2fsketch_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\022input/sketch.proto\022\023protobuf.srl.sketc"
-    "h\"\210\001\n\tSrlSketch\022\020\n\010courseId\030\001 \001(\t\022\024\n\014ass"
-    "ignmentId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\020\n\010do"
-    "mainId\030\004 \001(\t\022.\n\006sketch\030\005 \003(\0132\036.protobuf."
-    "srl.sketch.SrlObject\"\216\001\n\tSrlObject\0227\n\004ty"
-    "pe\030\001 \002(\0162).protobuf.srl.sketch.SrlObject"
-    ".ObjectType\022\016\n\006object\030\002 \002(\014\"8\n\nObjectTyp"
-    "e\022\t\n\005SHAPE\020\000\022\n\n\006STROKE\020\001\022\t\n\005POINT\020\002\022\010\n\004L"
-    "INE\020\003\"\365\001\n\010SrlShape\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002"
-    " \002(\004\022\014\n\004name\030\003 \001(\t\022\025\n\risUserCreated\030\004 \001("
-    "\010\022<\n\017interpretations\030\005 \003(\0132#.protobuf.sr"
-    "l.sketch.Interpretation\0225\n\rsubComponents"
-    "\030\006 \003(\0132\036.protobuf.srl.sketch.SrlObject\0225"
-    "\n\013boundingbox\030\007 \001(\0132 .protobuf.srl.sketc"
-    "h.BoundingBox\"\231\001\n\tSrlStroke\022\n\n\002id\030\001 \002(\t\022"
-    "\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022-\n\006points\030\004 "
-    "\003(\0132\035.protobuf.srl.sketch.SrlPoint\0225\n\013bo"
-    "undingbox\030\005 \001(\0132 .protobuf.srl.sketch.Bo"
-    "undingBox\"w\n\010SrlPoint\022\n\n\002id\030\001 \002(\t\022\014\n\004tim"
-    "e\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\t\n\001x\030\004 \002(\001\022\t\n\001y\030\005 "
-    "\002(\001\022\020\n\010pressure\030\006 \001(\001\022\014\n\004size\030\007 \001(\001\022\r\n\005s"
-    "peed\030\010 \001(\001\"G\n\016Interpretation\022\r\n\005label\030\001 "
-    "\002(\t\022\022\n\nconfidence\030\002 \002(\001\022\022\n\ncomplexity\030\003 "
-    "\001(\001\"B\n\013BoundingBox\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001"
-    "\022\r\n\005width\030\003 \002(\001\022\016\n\006height\030\004 \002(\001", 991);
+    "h\"M\n\tSrlSketch\022\020\n\010domainId\030\004 \001(\t\022.\n\006sket"
+    "ch\030\005 \003(\0132\036.protobuf.srl.sketch.SrlObject"
+    "\"\216\001\n\tSrlObject\0227\n\004type\030\001 \002(\0162).protobuf."
+    "srl.sketch.SrlObject.ObjectType\022\016\n\006objec"
+    "t\030\002 \002(\014\"8\n\nObjectType\022\t\n\005SHAPE\020\000\022\n\n\006STRO"
+    "KE\020\001\022\t\n\005POINT\020\002\022\010\n\004LINE\020\003\"\373\001\n\010SrlShape\022\n"
+    "\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004name\030\003 \001(\t\022\025"
+    "\n\risUserCreated\030\004 \001(\010\022\?\n\017interpretations"
+    "\030\005 \003(\0132&.protobuf.srl.sketch.SrlInterpre"
+    "tation\0225\n\rsubComponents\030\006 \003(\0132\036.protobuf"
+    ".srl.sketch.SrlObject\0228\n\013boundingbox\030\007 \001"
+    "(\0132#.protobuf.srl.sketch.SrlBoundingBox\""
+    "\234\001\n\tSrlStroke\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022"
+    "\014\n\004name\030\003 \001(\t\022-\n\006points\030\004 \003(\0132\035.protobuf"
+    ".srl.sketch.SrlPoint\0228\n\013boundingbox\030\005 \001("
+    "\0132#.protobuf.srl.sketch.SrlBoundingBox\"w"
+    "\n\010SrlPoint\022\n\n\002id\030\001 \002(\t\022\014\n\004time\030\002 \002(\004\022\014\n\004"
+    "name\030\003 \001(\t\022\t\n\001x\030\004 \002(\001\022\t\n\001y\030\005 \002(\001\022\020\n\010pres"
+    "sure\030\006 \001(\001\022\014\n\004size\030\007 \001(\001\022\r\n\005speed\030\010 \001(\001\""
+    "J\n\021SrlInterpretation\022\r\n\005label\030\001 \002(\t\022\022\n\nc"
+    "onfidence\030\002 \002(\001\022\022\n\ncomplexity\030\003 \001(\001\"E\n\016S"
+    "rlBoundingBox\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\r\n\005w"
+    "idth\030\003 \002(\001\022\016\n\006height\030\004 \002(\001", 946);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/sketch.proto", &protobuf_RegisterTypes);
   SrlSketch::default_instance_ = new SrlSketch();
@@ -273,15 +269,15 @@ void protobuf_AddDesc_input_2fsketch_2eproto() {
   SrlShape::default_instance_ = new SrlShape();
   SrlStroke::default_instance_ = new SrlStroke();
   SrlPoint::default_instance_ = new SrlPoint();
-  Interpretation::default_instance_ = new Interpretation();
-  BoundingBox::default_instance_ = new BoundingBox();
+  SrlInterpretation::default_instance_ = new SrlInterpretation();
+  SrlBoundingBox::default_instance_ = new SrlBoundingBox();
   SrlSketch::default_instance_->InitAsDefaultInstance();
   SrlObject::default_instance_->InitAsDefaultInstance();
   SrlShape::default_instance_->InitAsDefaultInstance();
   SrlStroke::default_instance_->InitAsDefaultInstance();
   SrlPoint::default_instance_->InitAsDefaultInstance();
-  Interpretation::default_instance_->InitAsDefaultInstance();
-  BoundingBox::default_instance_->InitAsDefaultInstance();
+  SrlInterpretation::default_instance_->InitAsDefaultInstance();
+  SrlBoundingBox::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_input_2fsketch_2eproto);
 }
 
@@ -295,9 +291,6 @@ struct StaticDescriptorInitializer_input_2fsketch_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int SrlSketch::kCourseIdFieldNumber;
-const int SrlSketch::kAssignmentIdFieldNumber;
-const int SrlSketch::kProblemIdFieldNumber;
 const int SrlSketch::kDomainIdFieldNumber;
 const int SrlSketch::kSketchFieldNumber;
 #endif  // !_MSC_VER
@@ -318,9 +311,6 @@ SrlSketch::SrlSketch(const SrlSketch& from)
 
 void SrlSketch::SharedCtor() {
   _cached_size_ = 0;
-  courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   domainid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -330,15 +320,6 @@ SrlSketch::~SrlSketch() {
 }
 
 void SrlSketch::SharedDtor() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentid_;
-  }
-  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-    delete problemid_;
-  }
   if (domainid_ != &::google::protobuf::internal::kEmptyString) {
     delete domainid_;
   }
@@ -369,21 +350,6 @@ SrlSketch* SrlSketch::New() const {
 
 void SrlSketch::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_courseid()) {
-      if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-        courseid_->clear();
-      }
-    }
-    if (has_assignmentid()) {
-      if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-        assignmentid_->clear();
-      }
-    }
-    if (has_problemid()) {
-      if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-        problemid_->clear();
-      }
-    }
     if (has_domainid()) {
       if (domainid_ != &::google::protobuf::internal::kEmptyString) {
         domainid_->clear();
@@ -401,61 +367,10 @@ bool SrlSketch::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string courseId = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_courseid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->courseid().data(), this->courseid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_assignmentId;
-        break;
-      }
-
-      // optional string assignmentId = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_assignmentId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_assignmentid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->assignmentid().data(), this->assignmentid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_problemId;
-        break;
-      }
-
-      // optional string problemId = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_problemId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_problemid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->problemid().data(), this->problemid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(34)) goto parse_domainId;
-        break;
-      }
-
       // optional string domainId = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_domainId:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_domainid()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -501,33 +416,6 @@ bool SrlSketch::MergePartialFromCodedStream(
 
 void SrlSketch::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->courseid(), output);
-  }
-
-  // optional string assignmentId = 2;
-  if (has_assignmentid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->assignmentid(), output);
-  }
-
-  // optional string problemId = 3;
-  if (has_problemid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemid().data(), this->problemid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->problemid(), output);
-  }
-
   // optional string domainId = 4;
   if (has_domainid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -551,36 +439,6 @@ void SrlSketch::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SrlSketch::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->courseid(), target);
-  }
-
-  // optional string assignmentId = 2;
-  if (has_assignmentid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->assignmentid(), target);
-  }
-
-  // optional string problemId = 3;
-  if (has_problemid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemid().data(), this->problemid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->problemid(), target);
-  }
-
   // optional string domainId = 4;
   if (has_domainid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -609,27 +467,6 @@ int SrlSketch::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string courseId = 1;
-    if (has_courseid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->courseid());
-    }
-
-    // optional string assignmentId = 2;
-    if (has_assignmentid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->assignmentid());
-    }
-
-    // optional string problemId = 3;
-    if (has_problemid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->problemid());
-    }
-
     // optional string domainId = 4;
     if (has_domainid()) {
       total_size += 1 +
@@ -673,15 +510,6 @@ void SrlSketch::MergeFrom(const SrlSketch& from) {
   GOOGLE_CHECK_NE(&from, this);
   sketch_.MergeFrom(from.sketch_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_courseid()) {
-      set_courseid(from.courseid());
-    }
-    if (from.has_assignmentid()) {
-      set_assignmentid(from.assignmentid());
-    }
-    if (from.has_problemid()) {
-      set_problemid(from.problemid());
-    }
     if (from.has_domainid()) {
       set_domainid(from.domainid());
     }
@@ -711,9 +539,6 @@ bool SrlSketch::IsInitialized() const {
 
 void SrlSketch::Swap(SrlSketch* other) {
   if (other != this) {
-    std::swap(courseid_, other->courseid_);
-    std::swap(assignmentid_, other->assignmentid_);
-    std::swap(problemid_, other->problemid_);
     std::swap(domainid_, other->domainid_);
     sketch_.Swap(&other->sketch_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -1037,7 +862,7 @@ SrlShape::SrlShape()
 }
 
 void SrlShape::InitAsDefaultInstance() {
-  boundingbox_ = const_cast< ::protobuf::srl::sketch::BoundingBox*>(&::protobuf::srl::sketch::BoundingBox::default_instance());
+  boundingbox_ = const_cast< ::protobuf::srl::sketch::SrlBoundingBox*>(&::protobuf::srl::sketch::SrlBoundingBox::default_instance());
 }
 
 SrlShape::SrlShape(const SrlShape& from)
@@ -1108,7 +933,7 @@ void SrlShape::Clear() {
     }
     isusercreated_ = false;
     if (has_boundingbox()) {
-      if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::BoundingBox::Clear();
+      if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::SrlBoundingBox::Clear();
     }
   }
   interpretations_.Clear();
@@ -1188,7 +1013,7 @@ bool SrlShape::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .protobuf.srl.sketch.Interpretation interpretations = 5;
+      // repeated .protobuf.srl.sketch.SrlInterpretation interpretations = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1218,7 +1043,7 @@ bool SrlShape::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+      // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 7;
       case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1278,7 +1103,7 @@ void SrlShape::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->isusercreated(), output);
   }
 
-  // repeated .protobuf.srl.sketch.Interpretation interpretations = 5;
+  // repeated .protobuf.srl.sketch.SrlInterpretation interpretations = 5;
   for (int i = 0; i < this->interpretations_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->interpretations(i), output);
@@ -1290,7 +1115,7 @@ void SrlShape::SerializeWithCachedSizes(
       6, this->subcomponents(i), output);
   }
 
-  // optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+  // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 7;
   if (has_boundingbox()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       7, this->boundingbox(), output);
@@ -1334,7 +1159,7 @@ void SrlShape::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->isusercreated(), target);
   }
 
-  // repeated .protobuf.srl.sketch.Interpretation interpretations = 5;
+  // repeated .protobuf.srl.sketch.SrlInterpretation interpretations = 5;
   for (int i = 0; i < this->interpretations_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1348,7 +1173,7 @@ void SrlShape::SerializeWithCachedSizes(
         6, this->subcomponents(i), target);
   }
 
-  // optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+  // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 7;
   if (has_boundingbox()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1392,7 +1217,7 @@ int SrlShape::ByteSize() const {
       total_size += 1 + 1;
     }
 
-    // optional .protobuf.srl.sketch.BoundingBox boundingbox = 7;
+    // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 7;
     if (has_boundingbox()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1400,7 +1225,7 @@ int SrlShape::ByteSize() const {
     }
 
   }
-  // repeated .protobuf.srl.sketch.Interpretation interpretations = 5;
+  // repeated .protobuf.srl.sketch.SrlInterpretation interpretations = 5;
   total_size += 1 * this->interpretations_size();
   for (int i = 0; i < this->interpretations_size(); i++) {
     total_size +=
@@ -1457,7 +1282,7 @@ void SrlShape::MergeFrom(const SrlShape& from) {
       set_isusercreated(from.isusercreated());
     }
     if (from.has_boundingbox()) {
-      mutable_boundingbox()->::protobuf::srl::sketch::BoundingBox::MergeFrom(from.boundingbox());
+      mutable_boundingbox()->::protobuf::srl::sketch::SrlBoundingBox::MergeFrom(from.boundingbox());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1530,7 +1355,7 @@ SrlStroke::SrlStroke()
 }
 
 void SrlStroke::InitAsDefaultInstance() {
-  boundingbox_ = const_cast< ::protobuf::srl::sketch::BoundingBox*>(&::protobuf::srl::sketch::BoundingBox::default_instance());
+  boundingbox_ = const_cast< ::protobuf::srl::sketch::SrlBoundingBox*>(&::protobuf::srl::sketch::SrlBoundingBox::default_instance());
 }
 
 SrlStroke::SrlStroke(const SrlStroke& from)
@@ -1599,7 +1424,7 @@ void SrlStroke::Clear() {
       }
     }
     if (has_boundingbox()) {
-      if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::BoundingBox::Clear();
+      if (boundingbox_ != NULL) boundingbox_->::protobuf::srl::sketch::SrlBoundingBox::Clear();
     }
   }
   points_.Clear();
@@ -1677,7 +1502,7 @@ bool SrlStroke::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+      // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1738,7 +1563,7 @@ void SrlStroke::SerializeWithCachedSizes(
       4, this->points(i), output);
   }
 
-  // optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+  // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 5;
   if (has_boundingbox()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->boundingbox(), output);
@@ -1784,7 +1609,7 @@ void SrlStroke::SerializeWithCachedSizes(
         4, this->points(i), target);
   }
 
-  // optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+  // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 5;
   if (has_boundingbox()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1823,7 +1648,7 @@ int SrlStroke::ByteSize() const {
           this->name());
     }
 
-    // optional .protobuf.srl.sketch.BoundingBox boundingbox = 5;
+    // optional .protobuf.srl.sketch.SrlBoundingBox boundingbox = 5;
     if (has_boundingbox()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1876,7 +1701,7 @@ void SrlStroke::MergeFrom(const SrlStroke& from) {
       set_name(from.name());
     }
     if (from.has_boundingbox()) {
-      mutable_boundingbox()->::protobuf::srl::sketch::BoundingBox::MergeFrom(from.boundingbox());
+      mutable_boundingbox()->::protobuf::srl::sketch::SrlBoundingBox::MergeFrom(from.boundingbox());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2444,26 +2269,26 @@ void SrlPoint::Swap(SrlPoint* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Interpretation::kLabelFieldNumber;
-const int Interpretation::kConfidenceFieldNumber;
-const int Interpretation::kComplexityFieldNumber;
+const int SrlInterpretation::kLabelFieldNumber;
+const int SrlInterpretation::kConfidenceFieldNumber;
+const int SrlInterpretation::kComplexityFieldNumber;
 #endif  // !_MSC_VER
 
-Interpretation::Interpretation()
+SrlInterpretation::SrlInterpretation()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void Interpretation::InitAsDefaultInstance() {
+void SrlInterpretation::InitAsDefaultInstance() {
 }
 
-Interpretation::Interpretation(const Interpretation& from)
+SrlInterpretation::SrlInterpretation(const SrlInterpretation& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void Interpretation::SharedCtor() {
+void SrlInterpretation::SharedCtor() {
   _cached_size_ = 0;
   label_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   confidence_ = 0;
@@ -2471,11 +2296,11 @@ void Interpretation::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-Interpretation::~Interpretation() {
+SrlInterpretation::~SrlInterpretation() {
   SharedDtor();
 }
 
-void Interpretation::SharedDtor() {
+void SrlInterpretation::SharedDtor() {
   if (label_ != &::google::protobuf::internal::kEmptyString) {
     delete label_;
   }
@@ -2483,28 +2308,28 @@ void Interpretation::SharedDtor() {
   }
 }
 
-void Interpretation::SetCachedSize(int size) const {
+void SrlInterpretation::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* Interpretation::descriptor() {
+const ::google::protobuf::Descriptor* SrlInterpretation::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return Interpretation_descriptor_;
+  return SrlInterpretation_descriptor_;
 }
 
-const Interpretation& Interpretation::default_instance() {
+const SrlInterpretation& SrlInterpretation::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_input_2fsketch_2eproto();
   return *default_instance_;
 }
 
-Interpretation* Interpretation::default_instance_ = NULL;
+SrlInterpretation* SrlInterpretation::default_instance_ = NULL;
 
-Interpretation* Interpretation::New() const {
-  return new Interpretation;
+SrlInterpretation* SrlInterpretation::New() const {
+  return new SrlInterpretation;
 }
 
-void Interpretation::Clear() {
+void SrlInterpretation::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_label()) {
       if (label_ != &::google::protobuf::internal::kEmptyString) {
@@ -2518,7 +2343,7 @@ void Interpretation::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool Interpretation::MergePartialFromCodedStream(
+bool SrlInterpretation::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -2588,7 +2413,7 @@ bool Interpretation::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void Interpretation::SerializeWithCachedSizes(
+void SrlInterpretation::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required string label = 1;
   if (has_label()) {
@@ -2615,7 +2440,7 @@ void Interpretation::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* Interpretation::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* SrlInterpretation::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required string label = 1;
   if (has_label()) {
@@ -2644,7 +2469,7 @@ void Interpretation::SerializeWithCachedSizes(
   return target;
 }
 
-int Interpretation::ByteSize() const {
+int SrlInterpretation::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -2677,10 +2502,10 @@ int Interpretation::ByteSize() const {
   return total_size;
 }
 
-void Interpretation::MergeFrom(const ::google::protobuf::Message& from) {
+void SrlInterpretation::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const Interpretation* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Interpretation*>(
+  const SrlInterpretation* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SrlInterpretation*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -2689,7 +2514,7 @@ void Interpretation::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void Interpretation::MergeFrom(const Interpretation& from) {
+void SrlInterpretation::MergeFrom(const SrlInterpretation& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_label()) {
@@ -2705,25 +2530,25 @@ void Interpretation::MergeFrom(const Interpretation& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void Interpretation::CopyFrom(const ::google::protobuf::Message& from) {
+void SrlInterpretation::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Interpretation::CopyFrom(const Interpretation& from) {
+void SrlInterpretation::CopyFrom(const SrlInterpretation& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Interpretation::IsInitialized() const {
+bool SrlInterpretation::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
-void Interpretation::Swap(Interpretation* other) {
+void SrlInterpretation::Swap(SrlInterpretation* other) {
   if (other != this) {
     std::swap(label_, other->label_);
     std::swap(confidence_, other->confidence_);
@@ -2734,11 +2559,11 @@ void Interpretation::Swap(Interpretation* other) {
   }
 }
 
-::google::protobuf::Metadata Interpretation::GetMetadata() const {
+::google::protobuf::Metadata SrlInterpretation::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Interpretation_descriptor_;
-  metadata.reflection = Interpretation_reflection_;
+  metadata.descriptor = SrlInterpretation_descriptor_;
+  metadata.reflection = SrlInterpretation_reflection_;
   return metadata;
 }
 
@@ -2746,27 +2571,27 @@ void Interpretation::Swap(Interpretation* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int BoundingBox::kXFieldNumber;
-const int BoundingBox::kYFieldNumber;
-const int BoundingBox::kWidthFieldNumber;
-const int BoundingBox::kHeightFieldNumber;
+const int SrlBoundingBox::kXFieldNumber;
+const int SrlBoundingBox::kYFieldNumber;
+const int SrlBoundingBox::kWidthFieldNumber;
+const int SrlBoundingBox::kHeightFieldNumber;
 #endif  // !_MSC_VER
 
-BoundingBox::BoundingBox()
+SrlBoundingBox::SrlBoundingBox()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void BoundingBox::InitAsDefaultInstance() {
+void SrlBoundingBox::InitAsDefaultInstance() {
 }
 
-BoundingBox::BoundingBox(const BoundingBox& from)
+SrlBoundingBox::SrlBoundingBox(const SrlBoundingBox& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void BoundingBox::SharedCtor() {
+void SrlBoundingBox::SharedCtor() {
   _cached_size_ = 0;
   x_ = 0;
   y_ = 0;
@@ -2775,37 +2600,37 @@ void BoundingBox::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-BoundingBox::~BoundingBox() {
+SrlBoundingBox::~SrlBoundingBox() {
   SharedDtor();
 }
 
-void BoundingBox::SharedDtor() {
+void SrlBoundingBox::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void BoundingBox::SetCachedSize(int size) const {
+void SrlBoundingBox::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* BoundingBox::descriptor() {
+const ::google::protobuf::Descriptor* SrlBoundingBox::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return BoundingBox_descriptor_;
+  return SrlBoundingBox_descriptor_;
 }
 
-const BoundingBox& BoundingBox::default_instance() {
+const SrlBoundingBox& SrlBoundingBox::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_input_2fsketch_2eproto();
   return *default_instance_;
 }
 
-BoundingBox* BoundingBox::default_instance_ = NULL;
+SrlBoundingBox* SrlBoundingBox::default_instance_ = NULL;
 
-BoundingBox* BoundingBox::New() const {
-  return new BoundingBox;
+SrlBoundingBox* SrlBoundingBox::New() const {
+  return new SrlBoundingBox;
 }
 
-void BoundingBox::Clear() {
+void SrlBoundingBox::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     x_ = 0;
     y_ = 0;
@@ -2816,7 +2641,7 @@ void BoundingBox::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool BoundingBox::MergePartialFromCodedStream(
+bool SrlBoundingBox::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -2901,7 +2726,7 @@ bool BoundingBox::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void BoundingBox::SerializeWithCachedSizes(
+void SrlBoundingBox::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // required double x = 1;
   if (has_x()) {
@@ -2929,7 +2754,7 @@ void BoundingBox::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* BoundingBox::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* SrlBoundingBox::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // required double x = 1;
   if (has_x()) {
@@ -2958,7 +2783,7 @@ void BoundingBox::SerializeWithCachedSizes(
   return target;
 }
 
-int BoundingBox::ByteSize() const {
+int SrlBoundingBox::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -2994,10 +2819,10 @@ int BoundingBox::ByteSize() const {
   return total_size;
 }
 
-void BoundingBox::MergeFrom(const ::google::protobuf::Message& from) {
+void SrlBoundingBox::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const BoundingBox* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const BoundingBox*>(
+  const SrlBoundingBox* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SrlBoundingBox*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -3006,7 +2831,7 @@ void BoundingBox::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void BoundingBox::MergeFrom(const BoundingBox& from) {
+void SrlBoundingBox::MergeFrom(const SrlBoundingBox& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_x()) {
@@ -3025,25 +2850,25 @@ void BoundingBox::MergeFrom(const BoundingBox& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void BoundingBox::CopyFrom(const ::google::protobuf::Message& from) {
+void SrlBoundingBox::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void BoundingBox::CopyFrom(const BoundingBox& from) {
+void SrlBoundingBox::CopyFrom(const SrlBoundingBox& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool BoundingBox::IsInitialized() const {
+bool SrlBoundingBox::IsInitialized() const {
   if ((_has_bits_[0] & 0x0000000f) != 0x0000000f) return false;
 
   return true;
 }
 
-void BoundingBox::Swap(BoundingBox* other) {
+void SrlBoundingBox::Swap(SrlBoundingBox* other) {
   if (other != this) {
     std::swap(x_, other->x_);
     std::swap(y_, other->y_);
@@ -3055,11 +2880,11 @@ void BoundingBox::Swap(BoundingBox* other) {
   }
 }
 
-::google::protobuf::Metadata BoundingBox::GetMetadata() const {
+::google::protobuf::Metadata SrlBoundingBox::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = BoundingBox_descriptor_;
-  metadata.reflection = BoundingBox_reflection_;
+  metadata.descriptor = SrlBoundingBox_descriptor_;
+  metadata.reflection = SrlBoundingBox_reflection_;
   return metadata;
 }
 

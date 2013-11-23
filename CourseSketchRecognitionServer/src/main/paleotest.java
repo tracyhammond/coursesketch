@@ -22,9 +22,19 @@ public class paleotest {
 		 * one we just created) This should result in a best shape label of
 		 * "Line"
 		 */
-		PaleoNNRecognizer recognizer = new PaleoNNRecognizer(PaleoConfig.allOn());
-		recognizer.submitForRecognition(sketch.getFirstStroke());
-		IRecognitionResult result = recognizer.recognize();
+		
+		IRecognitionResult result = null ;
+
+		// Paleo Original
+		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn()) ;
+		result = recognizer.recognize(sketch.getFirstStroke());
+		
+		// Paleo Neural Network
+		PaleoNNRecognizer paleonn = new PaleoNNRecognizer(PaleoConfig.allOn());
+		paleonn.submitForRecognition(sketch.getFirstStroke());
+		result = paleonn.recognize();
+		
+		System.out.println(result.getBestShape().getInterpretation().label.toString());
 		
 		if (result.getBestShape().getInterpretation().label.equalsIgnoreCase("line"))
 			System.out.println("Correctly recognized as a line");

@@ -752,8 +752,12 @@ function SRL_Stroke(startPoint) {
 	 * Gets the complete list of points in the stroke
 	 * @return list of points in the stroke
 	 */
-	this.getPoints = function(){
+	this.getPoints = function() {
 		return points;
+	}
+
+	this.finish = function() {
+		intersector.finish();
 	}
 
 	/**
@@ -1236,6 +1240,12 @@ function SRL_Point(x, y) {
 	 */
 	var speed = 0;
 	/**
+	 * Computes the thickness for the stroke based off of a number of factors.
+	 *
+	 * Used to create more natural lines that vary in thickness.
+	 */
+	var thickness = 0;
+	/**
 	 * Holds an history list of the x points 
 	 * Purpose is so that we can redo and undo and go back to the original points
 	 */
@@ -1249,6 +1259,7 @@ function SRL_Point(x, y) {
 	 * A counter that keeps track of where you are in the history of points
 	 */
 	var m_currentElement = -1;
+
 	/**
 	 * Points can have pressure depending on the input device
 	 * @return the pressure of the point
@@ -1582,7 +1593,7 @@ function SRL_BoundingBox() {
 		firstIndex = firstI;
 		lastIndex = lastI;
 	}
-	
+
 	/**
 	 * @see SRL_BoundingBox#containsCoordinate(x,y)
 	 */
@@ -1616,6 +1627,17 @@ function SRL_BoundingBox() {
 	}
 
 	/**
+	 * Moves every egdge of the bounding box away from the center by this many pixels.
+	 */
+	this.scale = function(pixels) {
+		internalLeft -= pixels;
+		internalRight += pixels;
+		internalTop -= pixels;
+		internalBottom += pixels;
+		sync();
+	}
+	
+	/**
 	 * Makes the rectangle coordinates the same as the extreme coordinates.
 	 */
 	function sync() {
@@ -1630,7 +1652,7 @@ function SRL_BoundingBox() {
 		console.log(subObject);
 		this.union(subObject.getBoundingBox());
 	}
-	
+
 	/**
 	 * Returns the extreme values that make up this {@code SRL_BoundingBox}.
 	 *
@@ -1666,7 +1688,7 @@ function SRL_BoundingBox() {
 	this.toString = function() {
 		return "SRL_BoundingBox: (" + internalX + ', ' + internalY + ') Width: ' + internalWidth + ' Height: ' + internalHeight; 
 	}
-	
+
 }
 
 /**
@@ -1685,6 +1707,7 @@ function SRL_BoundingBox() {
  * Handles the intersection of a stroke or a shape.
  */
 function SRL_IntersectionHandler(parentObject) {
+// FIXME: change this to a layered level so that there are no more than 10 boxes to be checked at a time.  (yay)
 
 	/**
 	 * Holds sub bounding boxes for the stroke.
@@ -1702,6 +1725,7 @@ function SRL_IntersectionHandler(parentObject) {
 	var minIndex = 0;
 	const MAX_POINTS = 50;
 	const MAX_AREA = 100;
+	const EXPANDING_CONSTANT = 3;
 	var parentObject = parentObject;
 
 	/**
@@ -1712,7 +1736,9 @@ function SRL_IntersectionHandler(parentObject) {
 	this.addPoint = function addPoint(point, index) {
 		currentBoundsBackup.addPoint(point);
 		if (currentBoundsBackup.getArea() > MAX_AREA || index - minIndex > MAX_POINTS) {	
-			currentBounds.setIndexes(minIndex, index - 1);
+			currentBounds.setIndexes(minIndex, index);
+			currentBounds.addPoint(point);
+			currentBounds.scale(EXPANDING_CONSTANT);
 			subBounds.push(currentBounds);
 			currentBounds = new SRL_BoundingBox();
 			currentBoundsBackup = new SRL_BoundingBox();
@@ -1722,14 +1748,26 @@ function SRL_IntersectionHandler(parentObject) {
 		currentBounds.addPoint(point);
 	}
 
+	/**
+	 * Tells the handler that we are no longer adding any more items and to finish off the list.
+	 */
+	this.finish = function() {
+		if (currentBounds) {
+			currentBounds.scale(EXPANDING_CONSTANT);
+			subBounds.push(currentBounds);
+		}
+	}
+	
 	this.addSubObject = function addSubObject(object, index) {
 		subBounds.add(object.getBoundingBox());
 		object.getBoundingBox().setIndexes(index, index);
 	}
 
 	this.isIntersecting = function(x,y) {
-		if (!parentObject.getBoundingBox().containsCoordinate(x,y)) 
+		if (!parentObject.getBoundingBox().containsCoordinate(x,y)) {
 			return false;
+		}
+
 		for(var i = 0; i < subBounds.length; i++) {
 			var box = subBounds[i];
 			if (box.containsCoordinate(x,y)) {
@@ -1740,10 +1778,14 @@ function SRL_IntersectionHandler(parentObject) {
 
 	function isIntersectingStroke(x,y) {
 	}
-	
+
 	function isIntersectingShape(x,y) {
 	}
 
+	this.getSubBounds = function() {
+		return subBounds;
+	}
+	
 	//checking!
 	//check every boudning box.  have a queue for every intersection.  If an intersection is closer than X choose than one instead.
 }
