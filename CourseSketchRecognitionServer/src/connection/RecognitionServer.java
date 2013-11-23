@@ -63,7 +63,6 @@ public class RecognitionServer extends WebSocketServer {
 			System.out.println("FULL SERVER"); // send message to someone?
 			return;
 		}
-		ConnectionState id = getUniqueId();
 		connections.add(conn);
 		System.out.println("ID ASSIGNED");
 	}
@@ -106,16 +105,17 @@ public class RecognitionServer extends WebSocketServer {
 
 			try {
 				// TODO: move these inside the class itself.
-				r.print(savedUpdate);
-				SrlShape shape = r.interpret(savedUpdate);
-				SrlStroke stroke = r.mirror(savedUpdate);
+				//r.print(savedUpdate);
+				//r.interpret(call)
+				//SrlShape shape = r.interpret(savedUpdate);
+				//SrlStroke stroke = r.mirror(savedUpdate);
 				//post function they will give (package the information received)
-				SrlCommand com1 = connection.Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_STROKE);
-				SrlCommand com2 = connection.Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_SHAPE);
+				//SrlCommand com1 = connection.Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_STROKE);
+				//SrlCommand com2 = connection.Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_SHAPE);
 				
 				
-				result = connection.Encoder.createRequestFromCommands(req.getSessionInfo(), com1, com2);
-			} catch (InvalidProtocolBufferException e) {
+				result = connection.Encoder.createRequestFromCommands(req.getSessionInfo(), null, null);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -126,14 +126,6 @@ public class RecognitionServer extends WebSocketServer {
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {
 		//System.out.println( "received fragment: " + fragment );
-	}
-
-	/**
-	 * Returns a number that should be unique.
-	 */
-	public ConnectionState getUniqueId() {
-		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
-		return new ConnectionState(Encoder.nextID().toString());
 	}
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
