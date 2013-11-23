@@ -1,0 +1,19 @@
+package protobuf.srl.submission;
+
+/**
+ * Contains extra metadata for an UpdateList
+ */
+message SrlSubmission {
+	optional string courseId = 1; // so we know what class it links to
+	optional string assignmentId = 2; // so we know what assignment it links to
+	optional string problemId = 3; // so we know what problem it links to
+	optional string userId = 4; // if it links to a user we know that too.
+	optional bytes updateList = 5; // if this is a collection of updates
+	optional bytes sketch = 6; // if this is a sketch.
+	optional SubmissionType submissionType = 7;
+	enum SubmissionType {
+		SOLUTION = 0; // if this is a solution to a problem.
+		SUBMISSION = 1;  // if this is a submission to a problem that can be graded.
+		LECTURE = 2; // if this is a lecture (and should be played back)
+	}
+}
