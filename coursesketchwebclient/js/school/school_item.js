@@ -7,7 +7,7 @@
  * SubTitle[3] (has two values, a label, and a link)
  * Date [4] either due date or some other type of date
  */
-function schoolItemBuilder() {
+function SchoolItemBuilder() {
 
 	this.resetValues = function resetValues() {
 		this.dataList = 0;
@@ -22,7 +22,7 @@ function schoolItemBuilder() {
 		this.showBox = true;
 		this.showDescription = true;
 		this.showDate = true;
-		this.showCompletionStatus = false;
+		this.showState = false; //changed from this.showCompletionStatus
 
 		// functions
 		this.imageClicked = false;
@@ -105,31 +105,47 @@ function schoolItemBuilder() {
 	//*********
 
 	/**
+	 * Returns a string of the object's type (SrlCourse, SrlAssignment, or SrlProblem
+	 */
+	function findType(object) {
+		console.log(object);
+		return object.id.split("_")[0];
+	}
+	
+//	function getSchoolItem(id){
+//		return
+//	}
+	
+	/**
 	 * Creates a list of school items with the parameters set by the builder.
 	 */
 	this.createSchoolList = function createSchoolList() {
 		var html = "";
-		if(!this.dataList) {
-			if(this.noItemMessage) {
+		if (!this.dataList) {
+			if (this.noItemMessage) {
 				return '<h1>'+this.noItemMessage+'</h1>\n';
 			} else {
 				return '<h1>There are no items in this list!</h1>\n';
 			}
 		}
 
-		if(this.listTitle) {
+		if (this.listTitle) {
 			html += '<h1>' + this.listTitle + '</h1>\n';
 		}
 		html += '<ul class = "school_list">';
 		var currentDate = new Date();
-		for(var i = 0; i< this.dataList.length; i++) {
-			var list = this.dataList[i];
-			var type = list[0]; // We establish the type that it is.
+		for (var i = 0; i< this.dataList.length; i++) {
+			var srlSchoolItem = this.dataList[i];
+			var type = findType(srlSchoolItem); // We establish the type that it is.
+			//option 1
+			//srlSchoolItem instanceof SrlCourse
+			//option2
+			// type = srlSchoolItem.id.split("_")[0];// course , assignment, problem
 			html+='<li ' + (this.centerInDiv?'class = "child_center"':'') + '>';
 			if (this.isSimpleList) {
-				html += this.createSimpleSchoolItem(list);
+				html += this.createSimpleSchoolItem(srlSchoolItem);
 			} else {
-				html += this.createFancySchoolItem(list, currentDate, type);
+				html += this.createFancySchoolItem(srlSchoolItem, currentDate, type);
 			}
 			html+='</li>';
 		}
@@ -141,11 +157,12 @@ function schoolItemBuilder() {
 	 * Returns the HTML for a very basic school item.
 	 * This only consist of the title
 	 */
-	this.createSimpleSchoolItem = function createSimpleSchoolItem(list) {
+	this.createSimpleSchoolItem = function createSimpleSchoolItem(srlSchoolItem) {
 		var html = '';
-		html+='<div class="text" id = "'+list[1][2]+'">';
-		html += this.replaceLink(this.titleClicked, list, list[1][1]);
-		html += list[1][0] + '</a>';
+		// name
+		html+='<div class="text" id = "'+srlSchoolItem.id+'">';
+//		html += this.replaceLink(this.titleClicked, srlSchoolItem, srlSchoolItem[1][1]);
+		html += srlSchoolItem.name; //+ '</a>';
 		html+='</div>';
 		return html;
 	};
@@ -153,22 +170,26 @@ function schoolItemBuilder() {
 	/**
 	 * Returns the HTML for a school_item based off of the specified school builder
 	 */
-	this.createFancySchoolItem = function createFancySchoolItem(list, currentDate, type) {
+	this.createFancySchoolItem = function createFancySchoolItem(srlSchoolItem, currentDate, type) {
 		// Required Items
 		var html = '';
 		
 		//<div class = "school_item hoverbox";
-		html+='	<div id = "' + list[1][2] + '"' + this.createBoxClass(this.showBox,this.entireBoxClicked);
-		html+= this.addClickFunction(this.entireBoxClicked, list) + '>\n';
+							//objctId
+		html+='	<div id = "' + srlSchoolItem.id + '"' + this.createBoxClass(this.showBox,this.entireBoxClicked);
+															// objectid
+		html+= this.addClickFunction(this.entireBoxClicked, srlSchoolItem.id) + '>\n';
 		
-		html+= this.createCompletionStatus(list,type);
+		html+= this.createCompletionStatus(srlSchoolItem,type);
 
 		html+='		<div class="text">\n';
-		html+=			this.writeTextData(list, currentDate, type);
+		html+=			this.writeTextData(srlSchoolItem, currentDate, type);
 		html+='	</div>\n';
-		if (this.showImage) {
-			html+= this.replaceLink(this.imageClicked, list, list[1][1]);
-			html+='<img src="images/' + list[3] + '" width="128" height="128"></a>\n';
+		if (this.showImage && srlSchoolItem.imageUrl) {
+															// remove link
+			html+= this.replaceLink(this.imageClicked, srlSchoolItem);
+									// image link
+			html+='<img src="images/' + srlSchoolItem.imageUrl + '" width="128" height="128"></a>\n';
 		}
 		html+='</div>\n';
 		return html;
@@ -178,23 +199,30 @@ function schoolItemBuilder() {
 	 * Writes out the data that composes the text portion of the box.
 	 * (Title,subTitle, date, description)
 	 */
-	this.writeTextData = function writeTextData(list, currentDate, type) {
+	this.writeTextData = function writeTextData(srlSchoolItem, currentDate, type) {
 		var html = '';
 		html+= '		<h3 class="name">';
-		html += this.replaceLink(this.titleClicked, list, list[1][1]);
-		html += list[1][0] + '</a></h3>\n';
+														// remove link
+		//html += this.replaceLink(this.titleClicked, list, list[1][1]);
+		html += srlSchoolItem.name; // + '</a></h3>\n';
+		html += '</h3>\n';
 
-		if (type == 'assignment' && this.showDate) {
-			var dueDate = list[5];
-			html+='		<h1>' + getFormattedDate(currentDate, dueDate) + '</h1>\n';
+		if (type == 'Assignment' && this.showDate) {
+			var dueDate = srlSchoolItem.dueDate;
+			if (dueDate) {
+				html+='		<h1>' + getFormattedDateTime(dueDate) + '</h1>\n';
+			}
 		}
-		if (type == 'assignment' && this.showItemSubTitle) {
+/*		if (type == 'Assignment' && this.showItemSubTitle) {
 			html += '		<h1 class="class">';
-			html += this.replaceLink(this.subClicked, list, list[4][1]);
-			html += list[4][0] + '</a></h1>\n';
+			//html += this.replaceLink(this.subClicked, list, list[4][1]);
+			html += list[4][0];// + '</a>
+			//html += srlSchoolItem.getSchoolItem(srlSchoolItem.courseId).name;
+			//??? ^ Need to create a 'getSchoolItem' function that returns the object with the specified ID
+			html += '</h1>\n';
 		}
-
-		html+='		<p class="' + this.width + '" ' + this.addClickFunction(this.descriptionClicked, list) + '>' + list[2] + '</p>\n';
+*/
+		html+='		<p class="' + this.width + '" ' + this.addClickFunction(this.descriptionClicked, srlSchoolItem) + '>' + srlSchoolItem.description + '</p>\n';
 		return html;
 	};
 
@@ -212,22 +240,28 @@ function schoolItemBuilder() {
 		return html + '"';
 	};
 
-	this.createCompletionStatus = function(list, type) {
-		var index = type == 'class'?
+	this.createCompletionStatus = function(srlSchoolItem, type) {
+		/*var index = type == 'class'?
 				4 : type == 'assignment'?
 						6 : type == 'problem'?
 								4 : list.length -1
+		*/
 		var html = '';
-		var completionStatus = list[index];
-		if (completionStatus == 'completed') {
-			html = '<span class="school_item_state completed"></span>';
-		} else if (completionStatus == 'started') {
-			html = '<span class="school_item_state in_progress"></span>';
-		} else if (completionStatus == 'unaccessible') {
-			html = '<span class="school_item_state not_open"></span>';
-			// the assignment is not able to be worked on!
-		} else if (completionStatus == 'closed') {
-			html = '<span class="school_item_state assignment_closed"></span>';
+		//var completionStatus = list[index];
+		var completionStatus = srlSchoolItem.state;
+		if (completionStatus != null) {
+			console.log(completionStatus);
+			 if (!completionStatus.accessible && completionStatus.pastDue) {
+				html = '<span class="school_item_state assignment_closed"></span>';
+				//The assignment was accessible, but is now closed
+			} else if (completionStatus.completed) {
+				html = '<span class="school_item_state completed"></span>';
+			} else if (completionStatus.started) {
+				html = '<span class="school_item_state in_progress"></span>';
+			} else if (!completionStatus.accessible) {
+				html = '<span class="school_item_state not_open"></span>';
+				// the assignment is not able to be worked on!
+			}
 		}
 		return html;
 	}
@@ -235,12 +269,12 @@ function schoolItemBuilder() {
 	/**
 	 * Returns: <a href="link or function">
 	 */
-	this.replaceLink = function replaceLink(replacingFunction, list, link) {
+	this.replaceLink = function replaceLink(replacingFunction, srlSchoolItem, link) {
 		var html = ' <a href="';
 		if (replacingFunction) {
 			// <a href="javascript:void(0)" onclick = "FUNCTIONNAME(listdata)"
 			html+= 'javascript:void(0)"';
-			html+= addClickFunction(replacingFunction, list);
+			html+= addClickFunction(replacingFunction, srlSchoolItem);
 		} else {
 			// <a href="LINKLOCATION"
 			html+= link + '"';
@@ -254,9 +288,12 @@ function schoolItemBuilder() {
 	 *
 	 * If the function does not exist then empty string is returned.
 	 */
-	this.addClickFunction = function addClickFunction(functionToAdd, list) {
+	this.addClickFunction = function addClickFunction(functionToAdd, id) {
 		if (functionToAdd) {
-			return ' onclick = "' + functionToAdd + '(' + replaceAll('"', '\'', JSON.stringify(list)) + ')"';
+			//replaceAll('"', '\'', JSON.stringify(list))
+			var escapedString = '\'' + id + '\'';
+			return ' onclick = "' + functionToAdd + '(' + escapedString + ')"'; 
+			//??? Josh: Unsure how to convert from [array] to .protobuf format
 		} else {
 			return '';
 		}
@@ -296,10 +333,15 @@ function clickSelectionManager() {
 		this.selectedItems = [];
 	}
 }
-
+/*
 function getFormattedDate(currentDate, dueDate) {
 		var curr_date = dueDate.getDate();
 		var curr_month = dueDate.getMonth() + 1; //Months are zero based
 		var curr_year = dueDate.getFullYear();
 		return (curr_date + "-" + curr_month + "-" + curr_year);
+}
+*/
+
+function getFormattedDateTime(dateTime) {
+	return (dateTime.month + "/" + dateTime.day + "/" + dateTime.year);
 }

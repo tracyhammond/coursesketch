@@ -62,19 +62,16 @@
 	 */
 	SRL_Stroke.createFromProtobuf = function(stroke) {
 		var pointList = stroke.getPoints();
-		var srlStroke = false;
+		var srlStroke = new SRL_Stroke();
 		for(i in pointList) {
 			var point = pointList[i];
 			var currentPoint = SRL_Point.createFromProtobuf(point);
-			if (!srlStroke) {
-				srlStroke = new SRL_Stroke(currentPoint);
-			} else {
-				srlStroke.addPoint(currentPoint);
-			}
+			srlStroke.addPoint(currentPoint);
 		}
 		if (!srlStroke) {
 			srlStroke = new SRL_Stroke();
 		}
+		srlStroke.finish();
 		srlStroke.setId(stroke.getId());
 		return srlStroke;
 	}

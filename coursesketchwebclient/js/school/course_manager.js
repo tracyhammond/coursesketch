@@ -1,11 +1,13 @@
-function courseClickerFunction(list) {
+function courseClickerFunction(id) {
+	console.log(id);
 	clearLists(2);
-	changeSelection(list, courseSelectionManager);
+	changeSelection(id, courseSelectionManager);
 	assignmentSelectionManager.clearAllSelectedItems();
 	problemSelectionManager.clearAllSelectedItems();
 	//we get the list from the id.
-	var assignmentList = parent.courseAssignments.getList(list[1][2]);
-	var builder = new schoolItemBuilder();
+	var assignmentList = parent.courseAssignments.getList(id);
+	console.log(assignmentList);
+	var builder = new SchoolItemBuilder();
 	builder.setList(assignmentList).setWidth('medium').centerItem(true);
 	builder.showImage = false;
 	builder.setEmptyListMessage('There are no assignments for this course!');
@@ -15,14 +17,14 @@ function courseClickerFunction(list) {
 	showButton('assignment_button');
 }
 
-function assignmentClickerFunction(list) {
+function assignmentClickerFunction(id) {
 	// clears the problems
-	changeSelection(list, assignmentSelectionManager);
+	changeSelection(id, assignmentSelectionManager);
 	problemSelectionManager.clearAllSelectedItems();
 	clearLists(1);
-	new schoolItemBuilder().build('problem_list_column');
-	var problemList = parent.assignmentProblems.getList(list[1][2]);
-	var builder = new schoolItemBuilder();
+	new SchoolItemBuilder().build('problem_list_column');
+	var problemList = parent.assignmentProblems.getList(id);
+	var builder = new SchoolItemBuilder();
 	builder.setList(problemList).setWidth('medium').centerItem(true);
 	builder.showImage = false;
 	builder.setEmptyListMessage('There are no problems for this assignment!');
@@ -32,8 +34,8 @@ function assignmentClickerFunction(list) {
 	showButton('problem_button');
 }
 
-function problemClickerFunction(list) {
-	changeSelection(list, problemSelectionManager);
+function problemClickerFunction(id) {
+	changeSelection(id, problemSelectionManager);
 	replaceIframe('html/instructor/course_managment_frames/edit_problem.html');
 }
 
@@ -52,7 +54,7 @@ function hideButton(id) {
 }
 
 function clearLists(number) {
-	var builder = new schoolItemBuilder();
+	var builder = new SchoolItemBuilder();
 	
 	if(number>0) {
 		hideButton('problem_button');
@@ -66,9 +68,9 @@ function clearLists(number) {
 	}
 }
 
-function changeSelection(list, selectionManager) {
+function changeSelection(id, selectionManager) {
 	selectionManager.clearAllSelectedItems();
-	selectionManager.addSelectedItem(list[1][2]);
+	selectionManager.addSelectedItem(id);
 }
 
 

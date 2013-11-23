@@ -1562,47 +1562,47 @@ public final class School {
   public interface SrlCourseOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required string courseId = 1;
+    // required string id = 1;
     /**
-     * <code>required string courseId = 1;</code>
+     * <code>required string id = 1;</code>
      *
      * <pre>
      * This must be globally unique.
      * </pre>
      */
-    boolean hasCourseId();
+    boolean hasId();
     /**
-     * <code>required string courseId = 1;</code>
+     * <code>required string id = 1;</code>
      *
      * <pre>
      * This must be globally unique.
      * </pre>
      */
-    java.lang.String getCourseId();
+    java.lang.String getId();
     /**
-     * <code>required string courseId = 1;</code>
+     * <code>required string id = 1;</code>
      *
      * <pre>
      * This must be globally unique.
      * </pre>
      */
     com.google.protobuf.ByteString
-        getCourseIdBytes();
+        getIdBytes();
 
-    // optional string courseName = 2;
+    // optional string name = 2;
     /**
-     * <code>optional string courseName = 2;</code>
+     * <code>optional string name = 2;</code>
      */
-    boolean hasCourseName();
+    boolean hasName();
     /**
-     * <code>optional string courseName = 2;</code>
+     * <code>optional string name = 2;</code>
      */
-    java.lang.String getCourseName();
+    java.lang.String getName();
     /**
-     * <code>optional string courseName = 2;</code>
+     * <code>optional string name = 2;</code>
      */
     com.google.protobuf.ByteString
-        getCourseNameBytes();
+        getNameBytes();
 
     // repeated .protobuf.srl.school.User courseUsers = 3;
     /**
@@ -1853,12 +1853,12 @@ public final class School {
             }
             case 10: {
               bitField0_ |= 0x00000001;
-              courseId_ = input.readBytes();
+              id_ = input.readBytes();
               break;
             }
             case 18: {
               bitField0_ |= 0x00000002;
-              courseName_ = input.readBytes();
+              name_ = input.readBytes();
               break;
             }
             case 26: {
@@ -2097,28 +2097,28 @@ public final class School {
     }
 
     private int bitField0_;
-    // required string courseId = 1;
-    public static final int COURSEID_FIELD_NUMBER = 1;
-    private java.lang.Object courseId_;
+    // required string id = 1;
+    public static final int ID_FIELD_NUMBER = 1;
+    private java.lang.Object id_;
     /**
-     * <code>required string courseId = 1;</code>
+     * <code>required string id = 1;</code>
      *
      * <pre>
      * This must be globally unique.
      * </pre>
      */
-    public boolean hasCourseId() {
+    public boolean hasId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string courseId = 1;</code>
+     * <code>required string id = 1;</code>
      *
      * <pre>
      * This must be globally unique.
      * </pre>
      */
-    public java.lang.String getCourseId() {
-      java.lang.Object ref = courseId_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -2126,46 +2126,46 @@ public final class School {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          courseId_ = s;
+          id_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string courseId = 1;</code>
+     * <code>required string id = 1;</code>
      *
      * <pre>
      * This must be globally unique.
      * </pre>
      */
     public com.google.protobuf.ByteString
-        getCourseIdBytes() {
-      java.lang.Object ref = courseId_;
+        getIdBytes() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        courseId_ = b;
+        id_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    // optional string courseName = 2;
-    public static final int COURSENAME_FIELD_NUMBER = 2;
-    private java.lang.Object courseName_;
+    // optional string name = 2;
+    public static final int NAME_FIELD_NUMBER = 2;
+    private java.lang.Object name_;
     /**
-     * <code>optional string courseName = 2;</code>
+     * <code>optional string name = 2;</code>
      */
-    public boolean hasCourseName() {
+    public boolean hasName() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional string courseName = 2;</code>
+     * <code>optional string name = 2;</code>
      */
-    public java.lang.String getCourseName() {
-      java.lang.Object ref = courseName_;
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -2173,22 +2173,22 @@ public final class School {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          courseName_ = s;
+          name_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>optional string courseName = 2;</code>
+     * <code>optional string name = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getCourseNameBytes() {
-      java.lang.Object ref = courseName_;
+        getNameBytes() {
+      java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        courseName_ = b;
+        name_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -2523,8 +2523,8 @@ public final class School {
     }
 
     private void initFields() {
-      courseId_ = "";
-      courseName_ = "";
+      id_ = "";
+      name_ = "";
       courseUsers_ = java.util.Collections.emptyList();
       access_ = protobuf.srl.school.School.SrlCourse.Accessibility.PROTECTED;
       description_ = "";
@@ -2540,7 +2540,7 @@ public final class School {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasCourseId()) {
+      if (!hasId()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -2558,10 +2558,10 @@ public final class School {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getCourseIdBytes());
+        output.writeBytes(1, getIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getCourseNameBytes());
+        output.writeBytes(2, getNameBytes());
       }
       for (int i = 0; i < courseUsers_.size(); i++) {
         output.writeMessage(3, courseUsers_.get(i));
@@ -2601,11 +2601,11 @@ public final class School {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getCourseIdBytes());
+          .computeBytesSize(1, getIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getCourseNameBytes());
+          .computeBytesSize(2, getNameBytes());
       }
       for (int i = 0; i < courseUsers_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -2763,9 +2763,9 @@ public final class School {
 
       public Builder clear() {
         super.clear();
-        courseId_ = "";
+        id_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        courseName_ = "";
+        name_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
         if (courseUsersBuilder_ == null) {
           courseUsers_ = java.util.Collections.emptyList();
@@ -2832,11 +2832,11 @@ public final class School {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.courseId_ = courseId_;
+        result.id_ = id_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.courseName_ = courseName_;
+        result.name_ = name_;
         if (courseUsersBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004)) {
             courseUsers_ = java.util.Collections.unmodifiableList(courseUsers_);
@@ -2906,14 +2906,14 @@ public final class School {
 
       public Builder mergeFrom(protobuf.srl.school.School.SrlCourse other) {
         if (other == protobuf.srl.school.School.SrlCourse.getDefaultInstance()) return this;
-        if (other.hasCourseId()) {
+        if (other.hasId()) {
           bitField0_ |= 0x00000001;
-          courseId_ = other.courseId_;
+          id_ = other.id_;
           onChanged();
         }
-        if (other.hasCourseName()) {
+        if (other.hasName()) {
           bitField0_ |= 0x00000002;
-          courseName_ = other.courseName_;
+          name_ = other.name_;
           onChanged();
         }
         if (courseUsersBuilder_ == null) {
@@ -2977,7 +2977,7 @@ public final class School {
       }
 
       public final boolean isInitialized() {
-        if (!hasCourseId()) {
+        if (!hasId()) {
           
           return false;
         }
@@ -3009,174 +3009,174 @@ public final class School {
       }
       private int bitField0_;
 
-      // required string courseId = 1;
-      private java.lang.Object courseId_ = "";
+      // required string id = 1;
+      private java.lang.Object id_ = "";
       /**
-       * <code>required string courseId = 1;</code>
+       * <code>required string id = 1;</code>
        *
        * <pre>
        * This must be globally unique.
        * </pre>
        */
-      public boolean hasCourseId() {
+      public boolean hasId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string courseId = 1;</code>
+       * <code>required string id = 1;</code>
        *
        * <pre>
        * This must be globally unique.
        * </pre>
        */
-      public java.lang.String getCourseId() {
-        java.lang.Object ref = courseId_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          courseId_ = s;
+          id_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>required string courseId = 1;</code>
+       * <code>required string id = 1;</code>
        *
        * <pre>
        * This must be globally unique.
        * </pre>
        */
       public com.google.protobuf.ByteString
-          getCourseIdBytes() {
-        java.lang.Object ref = courseId_;
+          getIdBytes() {
+        java.lang.Object ref = id_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          courseId_ = b;
+          id_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>required string courseId = 1;</code>
+       * <code>required string id = 1;</code>
        *
        * <pre>
        * This must be globally unique.
        * </pre>
        */
-      public Builder setCourseId(
+      public Builder setId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        courseId_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required string courseId = 1;</code>
+       * <code>required string id = 1;</code>
        *
        * <pre>
        * This must be globally unique.
        * </pre>
        */
-      public Builder clearCourseId() {
+      public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        courseId_ = getDefaultInstance().getCourseId();
+        id_ = getDefaultInstance().getId();
         onChanged();
         return this;
       }
       /**
-       * <code>required string courseId = 1;</code>
+       * <code>required string id = 1;</code>
        *
        * <pre>
        * This must be globally unique.
        * </pre>
        */
-      public Builder setCourseIdBytes(
+      public Builder setIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        courseId_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
 
-      // optional string courseName = 2;
-      private java.lang.Object courseName_ = "";
+      // optional string name = 2;
+      private java.lang.Object name_ = "";
       /**
-       * <code>optional string courseName = 2;</code>
+       * <code>optional string name = 2;</code>
        */
-      public boolean hasCourseName() {
+      public boolean hasName() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional string courseName = 2;</code>
+       * <code>optional string name = 2;</code>
        */
-      public java.lang.String getCourseName() {
-        java.lang.Object ref = courseName_;
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          courseName_ = s;
+          name_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>optional string courseName = 2;</code>
+       * <code>optional string name = 2;</code>
        */
       public com.google.protobuf.ByteString
-          getCourseNameBytes() {
-        java.lang.Object ref = courseName_;
+          getNameBytes() {
+        java.lang.Object ref = name_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          courseName_ = b;
+          name_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>optional string courseName = 2;</code>
+       * <code>optional string name = 2;</code>
        */
-      public Builder setCourseName(
+      public Builder setName(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000002;
-        courseName_ = value;
+        name_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string courseName = 2;</code>
+       * <code>optional string name = 2;</code>
        */
-      public Builder clearCourseName() {
+      public Builder clearName() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        courseName_ = getDefaultInstance().getCourseName();
+        name_ = getDefaultInstance().getName();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string courseName = 2;</code>
+       * <code>optional string name = 2;</code>
        */
-      public Builder setCourseNameBytes(
+      public Builder setNameBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000002;
-        courseName_ = value;
+        name_ = value;
         onChanged();
         return this;
       }
@@ -4288,55 +4288,55 @@ public final class School {
     com.google.protobuf.ByteString
         getCourseIdBytes();
 
-    // required string assignmentId = 2;
+    // required string id = 2;
     /**
-     * <code>required string assignmentId = 2;</code>
+     * <code>required string id = 2;</code>
      *
      * <pre>
-     * This must be unique within a course.
+     * This must be unique within a course. We will strive for global uniqueness.
      * </pre>
      */
-    boolean hasAssignmentId();
+    boolean hasId();
     /**
-     * <code>required string assignmentId = 2;</code>
+     * <code>required string id = 2;</code>
      *
      * <pre>
-     * This must be unique within a course.
+     * This must be unique within a course. We will strive for global uniqueness.
      * </pre>
      */
-    java.lang.String getAssignmentId();
+    java.lang.String getId();
     /**
-     * <code>required string assignmentId = 2;</code>
+     * <code>required string id = 2;</code>
      *
      * <pre>
-     * This must be unique within a course.
+     * This must be unique within a course. We will strive for global uniqueness.
      * </pre>
      */
     com.google.protobuf.ByteString
-        getAssignmentIdBytes();
+        getIdBytes();
 
-    // optional string assignmentName = 3;
+    // optional string name = 3;
     /**
-     * <code>optional string assignmentName = 3;</code>
+     * <code>optional string name = 3;</code>
      */
-    boolean hasAssignmentName();
+    boolean hasName();
     /**
-     * <code>optional string assignmentName = 3;</code>
+     * <code>optional string name = 3;</code>
      */
-    java.lang.String getAssignmentName();
+    java.lang.String getName();
     /**
-     * <code>optional string assignmentName = 3;</code>
+     * <code>optional string name = 3;</code>
      */
     com.google.protobuf.ByteString
-        getAssignmentNameBytes();
+        getNameBytes();
 
-    // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;
+    // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];</code>
      */
     boolean hasType();
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];</code>
      */
     protobuf.srl.school.School.SrlAssignment.AssignmentType getType();
 
@@ -4418,13 +4418,13 @@ public final class School {
     com.google.protobuf.ByteString
         getLinksBytes(int index);
 
-    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
      */
     boolean hasLatePolicy();
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
      */
     protobuf.srl.school.School.SrlAssignment.LatePolicy getLatePolicy();
 
@@ -4555,6 +4555,21 @@ public final class School {
      * <code>optional .protobuf.srl.school.State state = 14;</code>
      */
     protobuf.srl.school.School.StateOrBuilder getStateOrBuilder();
+
+    // optional string imageUrl = 15;
+    /**
+     * <code>optional string imageUrl = 15;</code>
+     */
+    boolean hasImageUrl();
+    /**
+     * <code>optional string imageUrl = 15;</code>
+     */
+    java.lang.String getImageUrl();
+    /**
+     * <code>optional string imageUrl = 15;</code>
+     */
+    com.google.protobuf.ByteString
+        getImageUrlBytes();
   }
   /**
    * Protobuf type {@code protobuf.srl.school.SrlAssignment}
@@ -4614,12 +4629,12 @@ public final class School {
             }
             case 18: {
               bitField0_ |= 0x00000002;
-              assignmentId_ = input.readBytes();
+              id_ = input.readBytes();
               break;
             }
             case 26: {
               bitField0_ |= 0x00000004;
-              assignmentName_ = input.readBytes();
+              name_ = input.readBytes();
               break;
             }
             case 32: {
@@ -4722,6 +4737,11 @@ public final class School {
                 state_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00001000;
+              break;
+            }
+            case 122: {
+              bitField0_ |= 0x00002000;
+              imageUrl_ = input.readBytes();
               break;
             }
           }
@@ -5043,28 +5063,28 @@ public final class School {
       }
     }
 
-    // required string assignmentId = 2;
-    public static final int ASSIGNMENTID_FIELD_NUMBER = 2;
-    private java.lang.Object assignmentId_;
+    // required string id = 2;
+    public static final int ID_FIELD_NUMBER = 2;
+    private java.lang.Object id_;
     /**
-     * <code>required string assignmentId = 2;</code>
+     * <code>required string id = 2;</code>
      *
      * <pre>
-     * This must be unique within a course.
+     * This must be unique within a course. We will strive for global uniqueness.
      * </pre>
      */
-    public boolean hasAssignmentId() {
+    public boolean hasId() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required string assignmentId = 2;</code>
+     * <code>required string id = 2;</code>
      *
      * <pre>
-     * This must be unique within a course.
+     * This must be unique within a course. We will strive for global uniqueness.
      * </pre>
      */
-    public java.lang.String getAssignmentId() {
-      java.lang.Object ref = assignmentId_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -5072,46 +5092,46 @@ public final class School {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          assignmentId_ = s;
+          id_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string assignmentId = 2;</code>
+     * <code>required string id = 2;</code>
      *
      * <pre>
-     * This must be unique within a course.
+     * This must be unique within a course. We will strive for global uniqueness.
      * </pre>
      */
     public com.google.protobuf.ByteString
-        getAssignmentIdBytes() {
-      java.lang.Object ref = assignmentId_;
+        getIdBytes() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        assignmentId_ = b;
+        id_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    // optional string assignmentName = 3;
-    public static final int ASSIGNMENTNAME_FIELD_NUMBER = 3;
-    private java.lang.Object assignmentName_;
+    // optional string name = 3;
+    public static final int NAME_FIELD_NUMBER = 3;
+    private java.lang.Object name_;
     /**
-     * <code>optional string assignmentName = 3;</code>
+     * <code>optional string name = 3;</code>
      */
-    public boolean hasAssignmentName() {
+    public boolean hasName() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional string assignmentName = 3;</code>
+     * <code>optional string name = 3;</code>
      */
-    public java.lang.String getAssignmentName() {
-      java.lang.Object ref = assignmentName_;
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -5119,39 +5139,39 @@ public final class School {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          assignmentName_ = s;
+          name_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>optional string assignmentName = 3;</code>
+     * <code>optional string name = 3;</code>
      */
     public com.google.protobuf.ByteString
-        getAssignmentNameBytes() {
-      java.lang.Object ref = assignmentName_;
+        getNameBytes() {
+      java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        assignmentName_ = b;
+        name_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;
+    // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];
     public static final int TYPE_FIELD_NUMBER = 4;
     private protobuf.srl.school.School.SrlAssignment.AssignmentType type_;
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];</code>
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];</code>
      */
     public protobuf.srl.school.School.SrlAssignment.AssignmentType getType() {
       return type_;
@@ -5301,17 +5321,17 @@ public final class School {
       return links_.getByteString(index);
     }
 
-    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
     public static final int LATEPOLICY_FIELD_NUMBER = 8;
     private protobuf.srl.school.School.SrlAssignment.LatePolicy latePolicy_;
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
      */
     public boolean hasLatePolicy() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
      */
     public protobuf.srl.school.School.SrlAssignment.LatePolicy getLatePolicy() {
       return latePolicy_;
@@ -5489,10 +5509,53 @@ public final class School {
       return state_;
     }
 
+    // optional string imageUrl = 15;
+    public static final int IMAGEURL_FIELD_NUMBER = 15;
+    private java.lang.Object imageUrl_;
+    /**
+     * <code>optional string imageUrl = 15;</code>
+     */
+    public boolean hasImageUrl() {
+      return ((bitField0_ & 0x00002000) == 0x00002000);
+    }
+    /**
+     * <code>optional string imageUrl = 15;</code>
+     */
+    public java.lang.String getImageUrl() {
+      java.lang.Object ref = imageUrl_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          imageUrl_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string imageUrl = 15;</code>
+     */
+    public com.google.protobuf.ByteString
+        getImageUrlBytes() {
+      java.lang.Object ref = imageUrl_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        imageUrl_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       courseId_ = "";
-      assignmentId_ = "";
-      assignmentName_ = "";
+      id_ = "";
+      name_ = "";
       type_ = protobuf.srl.school.School.SrlAssignment.AssignmentType.HOMEWORK;
       other_ = "";
       description_ = "";
@@ -5504,6 +5567,7 @@ public final class School {
       dueDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
       closeDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
       state_ = protobuf.srl.school.School.State.getDefaultInstance();
+      imageUrl_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -5514,7 +5578,7 @@ public final class School {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasAssignmentId()) {
+      if (!hasId()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -5529,10 +5593,10 @@ public final class School {
         output.writeBytes(1, getCourseIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getAssignmentIdBytes());
+        output.writeBytes(2, getIdBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getAssignmentNameBytes());
+        output.writeBytes(3, getNameBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeEnum(4, type_.getNumber());
@@ -5567,6 +5631,9 @@ public final class School {
       if (((bitField0_ & 0x00001000) == 0x00001000)) {
         output.writeMessage(14, state_);
       }
+      if (((bitField0_ & 0x00002000) == 0x00002000)) {
+        output.writeBytes(15, getImageUrlBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -5582,11 +5649,11 @@ public final class School {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getAssignmentIdBytes());
+          .computeBytesSize(2, getIdBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getAssignmentNameBytes());
+          .computeBytesSize(3, getNameBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
@@ -5636,6 +5703,10 @@ public final class School {
       if (((bitField0_ & 0x00001000) == 0x00001000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(14, state_);
+      }
+      if (((bitField0_ & 0x00002000) == 0x00002000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(15, getImageUrlBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5759,9 +5830,9 @@ public final class School {
         super.clear();
         courseId_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        assignmentId_ = "";
+        id_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        assignmentName_ = "";
+        name_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
         type_ = protobuf.srl.school.School.SrlAssignment.AssignmentType.HOMEWORK;
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -5801,6 +5872,8 @@ public final class School {
           stateBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00002000);
+        imageUrl_ = "";
+        bitField0_ = (bitField0_ & ~0x00004000);
         return this;
       }
 
@@ -5836,11 +5909,11 @@ public final class School {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.assignmentId_ = assignmentId_;
+        result.id_ = id_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.assignmentName_ = assignmentName_;
+        result.name_ = name_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
@@ -5903,6 +5976,10 @@ public final class School {
         } else {
           result.state_ = stateBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
+          to_bitField0_ |= 0x00002000;
+        }
+        result.imageUrl_ = imageUrl_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5924,14 +6001,14 @@ public final class School {
           courseId_ = other.courseId_;
           onChanged();
         }
-        if (other.hasAssignmentId()) {
+        if (other.hasId()) {
           bitField0_ |= 0x00000002;
-          assignmentId_ = other.assignmentId_;
+          id_ = other.id_;
           onChanged();
         }
-        if (other.hasAssignmentName()) {
+        if (other.hasName()) {
           bitField0_ |= 0x00000004;
-          assignmentName_ = other.assignmentName_;
+          name_ = other.name_;
           onChanged();
         }
         if (other.hasType()) {
@@ -5978,6 +6055,11 @@ public final class School {
         if (other.hasState()) {
           mergeState(other.getState());
         }
+        if (other.hasImageUrl()) {
+          bitField0_ |= 0x00004000;
+          imageUrl_ = other.imageUrl_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -5987,7 +6069,7 @@ public final class School {
           
           return false;
         }
-        if (!hasAssignmentId()) {
+        if (!hasId()) {
           
           return false;
         }
@@ -6111,194 +6193,194 @@ public final class School {
         return this;
       }
 
-      // required string assignmentId = 2;
-      private java.lang.Object assignmentId_ = "";
+      // required string id = 2;
+      private java.lang.Object id_ = "";
       /**
-       * <code>required string assignmentId = 2;</code>
+       * <code>required string id = 2;</code>
        *
        * <pre>
-       * This must be unique within a course.
+       * This must be unique within a course. We will strive for global uniqueness.
        * </pre>
        */
-      public boolean hasAssignmentId() {
+      public boolean hasId() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required string assignmentId = 2;</code>
+       * <code>required string id = 2;</code>
        *
        * <pre>
-       * This must be unique within a course.
+       * This must be unique within a course. We will strive for global uniqueness.
        * </pre>
        */
-      public java.lang.String getAssignmentId() {
-        java.lang.Object ref = assignmentId_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          assignmentId_ = s;
+          id_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>required string assignmentId = 2;</code>
+       * <code>required string id = 2;</code>
        *
        * <pre>
-       * This must be unique within a course.
+       * This must be unique within a course. We will strive for global uniqueness.
        * </pre>
        */
       public com.google.protobuf.ByteString
-          getAssignmentIdBytes() {
-        java.lang.Object ref = assignmentId_;
+          getIdBytes() {
+        java.lang.Object ref = id_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          assignmentId_ = b;
+          id_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>required string assignmentId = 2;</code>
+       * <code>required string id = 2;</code>
        *
        * <pre>
-       * This must be unique within a course.
+       * This must be unique within a course. We will strive for global uniqueness.
        * </pre>
        */
-      public Builder setAssignmentId(
+      public Builder setId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000002;
-        assignmentId_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required string assignmentId = 2;</code>
+       * <code>required string id = 2;</code>
        *
        * <pre>
-       * This must be unique within a course.
+       * This must be unique within a course. We will strive for global uniqueness.
        * </pre>
        */
-      public Builder clearAssignmentId() {
+      public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        assignmentId_ = getDefaultInstance().getAssignmentId();
+        id_ = getDefaultInstance().getId();
         onChanged();
         return this;
       }
       /**
-       * <code>required string assignmentId = 2;</code>
+       * <code>required string id = 2;</code>
        *
        * <pre>
-       * This must be unique within a course.
+       * This must be unique within a course. We will strive for global uniqueness.
        * </pre>
        */
-      public Builder setAssignmentIdBytes(
+      public Builder setIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000002;
-        assignmentId_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
 
-      // optional string assignmentName = 3;
-      private java.lang.Object assignmentName_ = "";
+      // optional string name = 3;
+      private java.lang.Object name_ = "";
       /**
-       * <code>optional string assignmentName = 3;</code>
+       * <code>optional string name = 3;</code>
        */
-      public boolean hasAssignmentName() {
+      public boolean hasName() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional string assignmentName = 3;</code>
+       * <code>optional string name = 3;</code>
        */
-      public java.lang.String getAssignmentName() {
-        java.lang.Object ref = assignmentName_;
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          assignmentName_ = s;
+          name_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>optional string assignmentName = 3;</code>
+       * <code>optional string name = 3;</code>
        */
       public com.google.protobuf.ByteString
-          getAssignmentNameBytes() {
-        java.lang.Object ref = assignmentName_;
+          getNameBytes() {
+        java.lang.Object ref = name_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          assignmentName_ = b;
+          name_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>optional string assignmentName = 3;</code>
+       * <code>optional string name = 3;</code>
        */
-      public Builder setAssignmentName(
+      public Builder setName(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000004;
-        assignmentName_ = value;
+        name_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string assignmentName = 3;</code>
+       * <code>optional string name = 3;</code>
        */
-      public Builder clearAssignmentName() {
+      public Builder clearName() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        assignmentName_ = getDefaultInstance().getAssignmentName();
+        name_ = getDefaultInstance().getName();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string assignmentName = 3;</code>
+       * <code>optional string name = 3;</code>
        */
-      public Builder setAssignmentNameBytes(
+      public Builder setNameBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000004;
-        assignmentName_ = value;
+        name_ = value;
         onChanged();
         return this;
       }
 
-      // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;
+      // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];
       private protobuf.srl.school.School.SrlAssignment.AssignmentType type_ = protobuf.srl.school.School.SrlAssignment.AssignmentType.HOMEWORK;
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];</code>
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];</code>
        */
       public protobuf.srl.school.School.SrlAssignment.AssignmentType getType() {
         return type_;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];</code>
        */
       public Builder setType(protobuf.srl.school.School.SrlAssignment.AssignmentType value) {
         if (value == null) {
@@ -6310,7 +6392,7 @@ public final class School {
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];</code>
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -6620,22 +6702,22 @@ public final class School {
         return this;
       }
 
-      // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+      // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
       private protobuf.srl.school.School.SrlAssignment.LatePolicy latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.POLICY1;
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
        */
       public boolean hasLatePolicy() {
         return ((bitField0_ & 0x00000080) == 0x00000080);
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
        */
       public protobuf.srl.school.School.SrlAssignment.LatePolicy getLatePolicy() {
         return latePolicy_;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
        */
       public Builder setLatePolicy(protobuf.srl.school.School.SrlAssignment.LatePolicy value) {
         if (value == null) {
@@ -6647,7 +6729,7 @@ public final class School {
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
        */
       public Builder clearLatePolicy() {
         bitField0_ = (bitField0_ & ~0x00000080);
@@ -7330,6 +7412,80 @@ public final class School {
         return stateBuilder_;
       }
 
+      // optional string imageUrl = 15;
+      private java.lang.Object imageUrl_ = "";
+      /**
+       * <code>optional string imageUrl = 15;</code>
+       */
+      public boolean hasImageUrl() {
+        return ((bitField0_ & 0x00004000) == 0x00004000);
+      }
+      /**
+       * <code>optional string imageUrl = 15;</code>
+       */
+      public java.lang.String getImageUrl() {
+        java.lang.Object ref = imageUrl_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          imageUrl_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string imageUrl = 15;</code>
+       */
+      public com.google.protobuf.ByteString
+          getImageUrlBytes() {
+        java.lang.Object ref = imageUrl_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          imageUrl_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string imageUrl = 15;</code>
+       */
+      public Builder setImageUrl(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00004000;
+        imageUrl_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string imageUrl = 15;</code>
+       */
+      public Builder clearImageUrl() {
+        bitField0_ = (bitField0_ & ~0x00004000);
+        imageUrl_ = getDefaultInstance().getImageUrl();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string imageUrl = 15;</code>
+       */
+      public Builder setImageUrlBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00004000;
+        imageUrl_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlAssignment)
     }
 
@@ -7398,47 +7554,47 @@ public final class School {
     com.google.protobuf.ByteString
         getAssignmentIdBytes();
 
-    // required string problemId = 3;
+    // required string id = 3;
     /**
-     * <code>required string problemId = 3;</code>
+     * <code>required string id = 3;</code>
      *
      * <pre>
      * This must be unique within an assignment.
      * </pre>
      */
-    boolean hasProblemId();
+    boolean hasId();
     /**
-     * <code>required string problemId = 3;</code>
+     * <code>required string id = 3;</code>
      *
      * <pre>
      * This must be unique within an assignment.
      * </pre>
      */
-    java.lang.String getProblemId();
+    java.lang.String getId();
     /**
-     * <code>required string problemId = 3;</code>
+     * <code>required string id = 3;</code>
      *
      * <pre>
      * This must be unique within an assignment.
      * </pre>
      */
     com.google.protobuf.ByteString
-        getProblemIdBytes();
+        getIdBytes();
 
-    // optional string problemName = 4;
+    // optional string name = 4;
     /**
-     * <code>optional string problemName = 4;</code>
+     * <code>optional string name = 4;</code>
      */
-    boolean hasProblemName();
+    boolean hasName();
     /**
-     * <code>optional string problemName = 4;</code>
+     * <code>optional string name = 4;</code>
      */
-    java.lang.String getProblemName();
+    java.lang.String getName();
     /**
-     * <code>optional string problemName = 4;</code>
+     * <code>optional string name = 4;</code>
      */
     com.google.protobuf.ByteString
-        getProblemNameBytes();
+        getNameBytes();
 
     // optional string description = 5;
     /**
@@ -7540,6 +7696,20 @@ public final class School {
      * </pre>
      */
     int getGrade();
+
+    // optional .protobuf.srl.school.State state = 10;
+    /**
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
+     */
+    boolean hasState();
+    /**
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
+     */
+    protobuf.srl.school.School.State getState();
+    /**
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
+     */
+    protobuf.srl.school.School.StateOrBuilder getStateOrBuilder();
   }
   /**
    * Protobuf type {@code protobuf.srl.school.SrlProblem}
@@ -7604,12 +7774,12 @@ public final class School {
             }
             case 26: {
               bitField0_ |= 0x00000004;
-              problemId_ = input.readBytes();
+              id_ = input.readBytes();
               break;
             }
             case 34: {
               bitField0_ |= 0x00000008;
-              problemName_ = input.readBytes();
+              name_ = input.readBytes();
               break;
             }
             case 42: {
@@ -7641,6 +7811,19 @@ public final class School {
             case 72: {
               bitField0_ |= 0x00000040;
               grade_ = input.readInt32();
+              break;
+            }
+            case 82: {
+              protobuf.srl.school.School.State.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                subBuilder = state_.toBuilder();
+              }
+              state_ = input.readMessage(protobuf.srl.school.School.State.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(state_);
+                state_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000080;
               break;
             }
           }
@@ -7799,28 +7982,28 @@ public final class School {
       }
     }
 
-    // required string problemId = 3;
-    public static final int PROBLEMID_FIELD_NUMBER = 3;
-    private java.lang.Object problemId_;
+    // required string id = 3;
+    public static final int ID_FIELD_NUMBER = 3;
+    private java.lang.Object id_;
     /**
-     * <code>required string problemId = 3;</code>
+     * <code>required string id = 3;</code>
      *
      * <pre>
      * This must be unique within an assignment.
      * </pre>
      */
-    public boolean hasProblemId() {
+    public boolean hasId() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required string problemId = 3;</code>
+     * <code>required string id = 3;</code>
      *
      * <pre>
      * This must be unique within an assignment.
      * </pre>
      */
-    public java.lang.String getProblemId() {
-      java.lang.Object ref = problemId_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -7828,46 +8011,46 @@ public final class School {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          problemId_ = s;
+          id_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string problemId = 3;</code>
+     * <code>required string id = 3;</code>
      *
      * <pre>
      * This must be unique within an assignment.
      * </pre>
      */
     public com.google.protobuf.ByteString
-        getProblemIdBytes() {
-      java.lang.Object ref = problemId_;
+        getIdBytes() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        problemId_ = b;
+        id_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    // optional string problemName = 4;
-    public static final int PROBLEMNAME_FIELD_NUMBER = 4;
-    private java.lang.Object problemName_;
+    // optional string name = 4;
+    public static final int NAME_FIELD_NUMBER = 4;
+    private java.lang.Object name_;
     /**
-     * <code>optional string problemName = 4;</code>
+     * <code>optional string name = 4;</code>
      */
-    public boolean hasProblemName() {
+    public boolean hasName() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional string problemName = 4;</code>
+     * <code>optional string name = 4;</code>
      */
-    public java.lang.String getProblemName() {
-      java.lang.Object ref = problemName_;
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -7875,22 +8058,22 @@ public final class School {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          problemName_ = s;
+          name_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>optional string problemName = 4;</code>
+     * <code>optional string name = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getProblemNameBytes() {
-      java.lang.Object ref = problemName_;
+        getNameBytes() {
+      java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        problemName_ = b;
+        name_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -8060,16 +8243,39 @@ public final class School {
       return grade_;
     }
 
+    // optional .protobuf.srl.school.State state = 10;
+    public static final int STATE_FIELD_NUMBER = 10;
+    private protobuf.srl.school.School.State state_;
+    /**
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
+     */
+    public boolean hasState() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
+     */
+    public protobuf.srl.school.School.State getState() {
+      return state_;
+    }
+    /**
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
+     */
+    public protobuf.srl.school.School.StateOrBuilder getStateOrBuilder() {
+      return state_;
+    }
+
     private void initFields() {
       courseId_ = "";
       assignmentId_ = "";
-      problemId_ = "";
-      problemName_ = "";
+      id_ = "";
+      name_ = "";
       description_ = "";
       subProblems_ = java.util.Collections.emptyList();
       info_ = java.util.Collections.emptyList();
       gradeWeight_ = 0;
       grade_ = 0;
+      state_ = protobuf.srl.school.School.State.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -8084,7 +8290,7 @@ public final class School {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasProblemId()) {
+      if (!hasId()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -8102,10 +8308,10 @@ public final class School {
         output.writeBytes(2, getAssignmentIdBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getProblemIdBytes());
+        output.writeBytes(3, getIdBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(4, getProblemNameBytes());
+        output.writeBytes(4, getNameBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(5, getDescriptionBytes());
@@ -8121,6 +8327,9 @@ public final class School {
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         output.writeInt32(9, grade_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeMessage(10, state_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -8141,11 +8350,11 @@ public final class School {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getProblemIdBytes());
+          .computeBytesSize(3, getIdBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, getProblemNameBytes());
+          .computeBytesSize(4, getNameBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
@@ -8166,6 +8375,10 @@ public final class School {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(9, grade_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(10, state_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8277,6 +8490,7 @@ public final class School {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getSubProblemsFieldBuilder();
           getInfoFieldBuilder();
+          getStateFieldBuilder();
         }
       }
       private static Builder create() {
@@ -8289,9 +8503,9 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000001);
         assignmentId_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        problemId_ = "";
+        id_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
-        problemName_ = "";
+        name_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
         description_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -8311,6 +8525,12 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000080);
         grade_ = 0;
         bitField0_ = (bitField0_ & ~0x00000100);
+        if (stateBuilder_ == null) {
+          state_ = protobuf.srl.school.School.State.getDefaultInstance();
+        } else {
+          stateBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
@@ -8350,11 +8570,11 @@ public final class School {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.problemId_ = problemId_;
+        result.id_ = id_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.problemName_ = problemName_;
+        result.name_ = name_;
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
@@ -8385,6 +8605,14 @@ public final class School {
           to_bitField0_ |= 0x00000040;
         }
         result.grade_ = grade_;
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        if (stateBuilder_ == null) {
+          result.state_ = state_;
+        } else {
+          result.state_ = stateBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -8411,14 +8639,14 @@ public final class School {
           assignmentId_ = other.assignmentId_;
           onChanged();
         }
-        if (other.hasProblemId()) {
+        if (other.hasId()) {
           bitField0_ |= 0x00000004;
-          problemId_ = other.problemId_;
+          id_ = other.id_;
           onChanged();
         }
-        if (other.hasProblemName()) {
+        if (other.hasName()) {
           bitField0_ |= 0x00000008;
-          problemName_ = other.problemName_;
+          name_ = other.name_;
           onChanged();
         }
         if (other.hasDescription()) {
@@ -8484,6 +8712,9 @@ public final class School {
         if (other.hasGrade()) {
           setGrade(other.getGrade());
         }
+        if (other.hasState()) {
+          mergeState(other.getState());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -8497,7 +8728,7 @@ public final class School {
           
           return false;
         }
-        if (!hasProblemId()) {
+        if (!hasId()) {
           
           return false;
         }
@@ -8719,174 +8950,174 @@ public final class School {
         return this;
       }
 
-      // required string problemId = 3;
-      private java.lang.Object problemId_ = "";
+      // required string id = 3;
+      private java.lang.Object id_ = "";
       /**
-       * <code>required string problemId = 3;</code>
+       * <code>required string id = 3;</code>
        *
        * <pre>
        * This must be unique within an assignment.
        * </pre>
        */
-      public boolean hasProblemId() {
+      public boolean hasId() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required string problemId = 3;</code>
+       * <code>required string id = 3;</code>
        *
        * <pre>
        * This must be unique within an assignment.
        * </pre>
        */
-      public java.lang.String getProblemId() {
-        java.lang.Object ref = problemId_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          problemId_ = s;
+          id_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>required string problemId = 3;</code>
+       * <code>required string id = 3;</code>
        *
        * <pre>
        * This must be unique within an assignment.
        * </pre>
        */
       public com.google.protobuf.ByteString
-          getProblemIdBytes() {
-        java.lang.Object ref = problemId_;
+          getIdBytes() {
+        java.lang.Object ref = id_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          problemId_ = b;
+          id_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>required string problemId = 3;</code>
+       * <code>required string id = 3;</code>
        *
        * <pre>
        * This must be unique within an assignment.
        * </pre>
        */
-      public Builder setProblemId(
+      public Builder setId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000004;
-        problemId_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required string problemId = 3;</code>
+       * <code>required string id = 3;</code>
        *
        * <pre>
        * This must be unique within an assignment.
        * </pre>
        */
-      public Builder clearProblemId() {
+      public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        problemId_ = getDefaultInstance().getProblemId();
+        id_ = getDefaultInstance().getId();
         onChanged();
         return this;
       }
       /**
-       * <code>required string problemId = 3;</code>
+       * <code>required string id = 3;</code>
        *
        * <pre>
        * This must be unique within an assignment.
        * </pre>
        */
-      public Builder setProblemIdBytes(
+      public Builder setIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000004;
-        problemId_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
 
-      // optional string problemName = 4;
-      private java.lang.Object problemName_ = "";
+      // optional string name = 4;
+      private java.lang.Object name_ = "";
       /**
-       * <code>optional string problemName = 4;</code>
+       * <code>optional string name = 4;</code>
        */
-      public boolean hasProblemName() {
+      public boolean hasName() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional string problemName = 4;</code>
+       * <code>optional string name = 4;</code>
        */
-      public java.lang.String getProblemName() {
-        java.lang.Object ref = problemName_;
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          problemName_ = s;
+          name_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>optional string problemName = 4;</code>
+       * <code>optional string name = 4;</code>
        */
       public com.google.protobuf.ByteString
-          getProblemNameBytes() {
-        java.lang.Object ref = problemName_;
+          getNameBytes() {
+        java.lang.Object ref = name_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          problemName_ = b;
+          name_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>optional string problemName = 4;</code>
+       * <code>optional string name = 4;</code>
        */
-      public Builder setProblemName(
+      public Builder setName(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000008;
-        problemName_ = value;
+        name_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string problemName = 4;</code>
+       * <code>optional string name = 4;</code>
        */
-      public Builder clearProblemName() {
+      public Builder clearName() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        problemName_ = getDefaultInstance().getProblemName();
+        name_ = getDefaultInstance().getName();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string problemName = 4;</code>
+       * <code>optional string name = 4;</code>
        */
-      public Builder setProblemNameBytes(
+      public Builder setNameBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000008;
-        problemName_ = value;
+        name_ = value;
         onChanged();
         return this;
       }
@@ -9541,6 +9772,123 @@ public final class School {
         grade_ = 0;
         onChanged();
         return this;
+      }
+
+      // optional .protobuf.srl.school.State state = 10;
+      private protobuf.srl.school.School.State state_ = protobuf.srl.school.School.State.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.school.School.State, protobuf.srl.school.School.State.Builder, protobuf.srl.school.School.StateOrBuilder> stateBuilder_;
+      /**
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
+       */
+      public boolean hasState() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      /**
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
+       */
+      public protobuf.srl.school.School.State getState() {
+        if (stateBuilder_ == null) {
+          return state_;
+        } else {
+          return stateBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
+       */
+      public Builder setState(protobuf.srl.school.School.State value) {
+        if (stateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          state_ = value;
+          onChanged();
+        } else {
+          stateBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000200;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
+       */
+      public Builder setState(
+          protobuf.srl.school.School.State.Builder builderForValue) {
+        if (stateBuilder_ == null) {
+          state_ = builderForValue.build();
+          onChanged();
+        } else {
+          stateBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000200;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
+       */
+      public Builder mergeState(protobuf.srl.school.School.State value) {
+        if (stateBuilder_ == null) {
+          if (((bitField0_ & 0x00000200) == 0x00000200) &&
+              state_ != protobuf.srl.school.School.State.getDefaultInstance()) {
+            state_ =
+              protobuf.srl.school.School.State.newBuilder(state_).mergeFrom(value).buildPartial();
+          } else {
+            state_ = value;
+          }
+          onChanged();
+        } else {
+          stateBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000200;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
+       */
+      public Builder clearState() {
+        if (stateBuilder_ == null) {
+          state_ = protobuf.srl.school.School.State.getDefaultInstance();
+          onChanged();
+        } else {
+          stateBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000200);
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
+       */
+      public protobuf.srl.school.School.State.Builder getStateBuilder() {
+        bitField0_ |= 0x00000200;
+        onChanged();
+        return getStateFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
+       */
+      public protobuf.srl.school.School.StateOrBuilder getStateOrBuilder() {
+        if (stateBuilder_ != null) {
+          return stateBuilder_.getMessageOrBuilder();
+        } else {
+          return state_;
+        }
+      }
+      /**
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.school.School.State, protobuf.srl.school.School.State.Builder, protobuf.srl.school.School.StateOrBuilder> 
+          getStateFieldBuilder() {
+        if (stateBuilder_ == null) {
+          stateBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protobuf.srl.school.School.State, protobuf.srl.school.School.State.Builder, protobuf.srl.school.School.StateOrBuilder>(
+                  state_,
+                  getParentForChildren(),
+                  isClean());
+          state_ = null;
+        }
+        return stateBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlProblem)
@@ -10528,43 +10876,35 @@ public final class School {
   public interface DateTimeOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional uint64 millisecond = 1;
+    // optional int32 year = 1;
     /**
-     * <code>optional uint64 millisecond = 1;</code>
-     *
-     * <pre>
-     *To ensure capabilities to communicate with systems with diverse date-time handling methods
-     * </pre>
+     * <code>optional int32 year = 1;</code>
      */
-    boolean hasMillisecond();
+    boolean hasYear();
     /**
-     * <code>optional uint64 millisecond = 1;</code>
-     *
-     * <pre>
-     *To ensure capabilities to communicate with systems with diverse date-time handling methods
-     * </pre>
+     * <code>optional int32 year = 1;</code>
      */
-    long getMillisecond();
+    int getYear();
 
-    // optional int32 second = 2;
+    // optional int32 month = 2;
     /**
-     * <code>optional int32 second = 2;</code>
+     * <code>optional int32 month = 2;</code>
      */
-    boolean hasSecond();
+    boolean hasMonth();
     /**
-     * <code>optional int32 second = 2;</code>
+     * <code>optional int32 month = 2;</code>
      */
-    int getSecond();
+    int getMonth();
 
-    // optional int32 minute = 3;
+    // optional int32 day = 3;
     /**
-     * <code>optional int32 minute = 3;</code>
+     * <code>optional int32 day = 3;</code>
      */
-    boolean hasMinute();
+    boolean hasDay();
     /**
-     * <code>optional int32 minute = 3;</code>
+     * <code>optional int32 day = 3;</code>
      */
-    int getMinute();
+    int getDay();
 
     // optional int32 hour = 4;
     /**
@@ -10576,35 +10916,43 @@ public final class School {
      */
     int getHour();
 
-    // optional int32 day = 5;
+    // optional int32 minute = 5;
     /**
-     * <code>optional int32 day = 5;</code>
+     * <code>optional int32 minute = 5;</code>
      */
-    boolean hasDay();
+    boolean hasMinute();
     /**
-     * <code>optional int32 day = 5;</code>
+     * <code>optional int32 minute = 5;</code>
      */
-    int getDay();
+    int getMinute();
 
-    // optional int32 month = 6;
+    // optional int32 second = 6;
     /**
-     * <code>optional int32 month = 6;</code>
+     * <code>optional int32 second = 6;</code>
      */
-    boolean hasMonth();
+    boolean hasSecond();
     /**
-     * <code>optional int32 month = 6;</code>
+     * <code>optional int32 second = 6;</code>
      */
-    int getMonth();
+    int getSecond();
 
-    // optional int32 year = 7;
+    // optional uint64 millisecond = 7;
     /**
-     * <code>optional int32 year = 7;</code>
+     * <code>optional uint64 millisecond = 7;</code>
+     *
+     * <pre>
+     *To ensure capabilities to communicate with systems with diverse date-time handling methods
+     * </pre>
      */
-    boolean hasYear();
+    boolean hasMillisecond();
     /**
-     * <code>optional int32 year = 7;</code>
+     * <code>optional uint64 millisecond = 7;</code>
+     *
+     * <pre>
+     *To ensure capabilities to communicate with systems with diverse date-time handling methods
+     * </pre>
      */
-    int getYear();
+    long getMillisecond();
   }
   /**
    * Protobuf type {@code protobuf.srl.school.DateTime}
@@ -10663,17 +11011,17 @@ public final class School {
             }
             case 8: {
               bitField0_ |= 0x00000001;
-              millisecond_ = input.readUInt64();
+              year_ = input.readInt32();
               break;
             }
             case 16: {
               bitField0_ |= 0x00000002;
-              second_ = input.readInt32();
+              month_ = input.readInt32();
               break;
             }
             case 24: {
               bitField0_ |= 0x00000004;
-              minute_ = input.readInt32();
+              day_ = input.readInt32();
               break;
             }
             case 32: {
@@ -10683,17 +11031,17 @@ public final class School {
             }
             case 40: {
               bitField0_ |= 0x00000010;
-              day_ = input.readInt32();
+              minute_ = input.readInt32();
               break;
             }
             case 48: {
               bitField0_ |= 0x00000020;
-              month_ = input.readInt32();
+              second_ = input.readInt32();
               break;
             }
             case 56: {
               bitField0_ |= 0x00000040;
-              year_ = input.readInt32();
+              millisecond_ = input.readUInt64();
               break;
             }
           }
@@ -10736,60 +11084,52 @@ public final class School {
     }
 
     private int bitField0_;
-    // optional uint64 millisecond = 1;
-    public static final int MILLISECOND_FIELD_NUMBER = 1;
-    private long millisecond_;
+    // optional int32 year = 1;
+    public static final int YEAR_FIELD_NUMBER = 1;
+    private int year_;
     /**
-     * <code>optional uint64 millisecond = 1;</code>
-     *
-     * <pre>
-     *To ensure capabilities to communicate with systems with diverse date-time handling methods
-     * </pre>
+     * <code>optional int32 year = 1;</code>
      */
-    public boolean hasMillisecond() {
+    public boolean hasYear() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional uint64 millisecond = 1;</code>
-     *
-     * <pre>
-     *To ensure capabilities to communicate with systems with diverse date-time handling methods
-     * </pre>
+     * <code>optional int32 year = 1;</code>
      */
-    public long getMillisecond() {
-      return millisecond_;
+    public int getYear() {
+      return year_;
     }
 
-    // optional int32 second = 2;
-    public static final int SECOND_FIELD_NUMBER = 2;
-    private int second_;
+    // optional int32 month = 2;
+    public static final int MONTH_FIELD_NUMBER = 2;
+    private int month_;
     /**
-     * <code>optional int32 second = 2;</code>
+     * <code>optional int32 month = 2;</code>
      */
-    public boolean hasSecond() {
+    public boolean hasMonth() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional int32 second = 2;</code>
+     * <code>optional int32 month = 2;</code>
      */
-    public int getSecond() {
-      return second_;
+    public int getMonth() {
+      return month_;
     }
 
-    // optional int32 minute = 3;
-    public static final int MINUTE_FIELD_NUMBER = 3;
-    private int minute_;
+    // optional int32 day = 3;
+    public static final int DAY_FIELD_NUMBER = 3;
+    private int day_;
     /**
-     * <code>optional int32 minute = 3;</code>
+     * <code>optional int32 day = 3;</code>
      */
-    public boolean hasMinute() {
+    public boolean hasDay() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional int32 minute = 3;</code>
+     * <code>optional int32 day = 3;</code>
      */
-    public int getMinute() {
-      return minute_;
+    public int getDay() {
+      return day_;
     }
 
     // optional int32 hour = 4;
@@ -10808,62 +11148,70 @@ public final class School {
       return hour_;
     }
 
-    // optional int32 day = 5;
-    public static final int DAY_FIELD_NUMBER = 5;
-    private int day_;
+    // optional int32 minute = 5;
+    public static final int MINUTE_FIELD_NUMBER = 5;
+    private int minute_;
     /**
-     * <code>optional int32 day = 5;</code>
+     * <code>optional int32 minute = 5;</code>
      */
-    public boolean hasDay() {
+    public boolean hasMinute() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional int32 day = 5;</code>
+     * <code>optional int32 minute = 5;</code>
      */
-    public int getDay() {
-      return day_;
+    public int getMinute() {
+      return minute_;
     }
 
-    // optional int32 month = 6;
-    public static final int MONTH_FIELD_NUMBER = 6;
-    private int month_;
+    // optional int32 second = 6;
+    public static final int SECOND_FIELD_NUMBER = 6;
+    private int second_;
     /**
-     * <code>optional int32 month = 6;</code>
+     * <code>optional int32 second = 6;</code>
      */
-    public boolean hasMonth() {
+    public boolean hasSecond() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
-     * <code>optional int32 month = 6;</code>
+     * <code>optional int32 second = 6;</code>
      */
-    public int getMonth() {
-      return month_;
+    public int getSecond() {
+      return second_;
     }
 
-    // optional int32 year = 7;
-    public static final int YEAR_FIELD_NUMBER = 7;
-    private int year_;
+    // optional uint64 millisecond = 7;
+    public static final int MILLISECOND_FIELD_NUMBER = 7;
+    private long millisecond_;
     /**
-     * <code>optional int32 year = 7;</code>
+     * <code>optional uint64 millisecond = 7;</code>
+     *
+     * <pre>
+     *To ensure capabilities to communicate with systems with diverse date-time handling methods
+     * </pre>
      */
-    public boolean hasYear() {
+    public boolean hasMillisecond() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
-     * <code>optional int32 year = 7;</code>
+     * <code>optional uint64 millisecond = 7;</code>
+     *
+     * <pre>
+     *To ensure capabilities to communicate with systems with diverse date-time handling methods
+     * </pre>
      */
-    public int getYear() {
-      return year_;
+    public long getMillisecond() {
+      return millisecond_;
     }
 
     private void initFields() {
-      millisecond_ = 0L;
-      second_ = 0;
-      minute_ = 0;
-      hour_ = 0;
-      day_ = 0;
-      month_ = 0;
       year_ = 0;
+      month_ = 0;
+      day_ = 0;
+      hour_ = 0;
+      minute_ = 0;
+      second_ = 0;
+      millisecond_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -10878,25 +11226,25 @@ public final class School {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeUInt64(1, millisecond_);
+        output.writeInt32(1, year_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeInt32(2, second_);
+        output.writeInt32(2, month_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeInt32(3, minute_);
+        output.writeInt32(3, day_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt32(4, hour_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeInt32(5, day_);
+        output.writeInt32(5, minute_);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeInt32(6, month_);
+        output.writeInt32(6, second_);
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeInt32(7, year_);
+        output.writeUInt64(7, millisecond_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -10909,15 +11257,15 @@ public final class School {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(1, millisecond_);
+          .computeInt32Size(1, year_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, second_);
+          .computeInt32Size(2, month_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, minute_);
+          .computeInt32Size(3, day_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
@@ -10925,15 +11273,15 @@ public final class School {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, day_);
+          .computeInt32Size(5, minute_);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(6, month_);
+          .computeInt32Size(6, second_);
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(7, year_);
+          .computeUInt64Size(7, millisecond_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -11055,19 +11403,19 @@ public final class School {
 
       public Builder clear() {
         super.clear();
-        millisecond_ = 0L;
+        year_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        second_ = 0;
+        month_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        minute_ = 0;
+        day_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
         hour_ = 0;
         bitField0_ = (bitField0_ & ~0x00000008);
-        day_ = 0;
+        minute_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
-        month_ = 0;
+        second_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
-        year_ = 0;
+        millisecond_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
@@ -11100,15 +11448,15 @@ public final class School {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.millisecond_ = millisecond_;
+        result.year_ = year_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.second_ = second_;
+        result.month_ = month_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.minute_ = minute_;
+        result.day_ = day_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
@@ -11116,15 +11464,15 @@ public final class School {
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
-        result.day_ = day_;
+        result.minute_ = minute_;
         if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
           to_bitField0_ |= 0x00000020;
         }
-        result.month_ = month_;
+        result.second_ = second_;
         if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
           to_bitField0_ |= 0x00000040;
         }
-        result.year_ = year_;
+        result.millisecond_ = millisecond_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -11141,26 +11489,26 @@ public final class School {
 
       public Builder mergeFrom(protobuf.srl.school.School.DateTime other) {
         if (other == protobuf.srl.school.School.DateTime.getDefaultInstance()) return this;
-        if (other.hasMillisecond()) {
-          setMillisecond(other.getMillisecond());
-        }
-        if (other.hasSecond()) {
-          setSecond(other.getSecond());
-        }
-        if (other.hasMinute()) {
-          setMinute(other.getMinute());
-        }
-        if (other.hasHour()) {
-          setHour(other.getHour());
-        }
-        if (other.hasDay()) {
-          setDay(other.getDay());
+        if (other.hasYear()) {
+          setYear(other.getYear());
         }
         if (other.hasMonth()) {
           setMonth(other.getMonth());
         }
-        if (other.hasYear()) {
-          setYear(other.getYear());
+        if (other.hasDay()) {
+          setDay(other.getDay());
+        }
+        if (other.hasHour()) {
+          setHour(other.getHour());
+        }
+        if (other.hasMinute()) {
+          setMinute(other.getMinute());
+        }
+        if (other.hasSecond()) {
+          setSecond(other.getSecond());
+        }
+        if (other.hasMillisecond()) {
+          setMillisecond(other.getMillisecond());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -11189,117 +11537,101 @@ public final class School {
       }
       private int bitField0_;
 
-      // optional uint64 millisecond = 1;
-      private long millisecond_ ;
+      // optional int32 year = 1;
+      private int year_ ;
       /**
-       * <code>optional uint64 millisecond = 1;</code>
-       *
-       * <pre>
-       *To ensure capabilities to communicate with systems with diverse date-time handling methods
-       * </pre>
+       * <code>optional int32 year = 1;</code>
        */
-      public boolean hasMillisecond() {
+      public boolean hasYear() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional uint64 millisecond = 1;</code>
-       *
-       * <pre>
-       *To ensure capabilities to communicate with systems with diverse date-time handling methods
-       * </pre>
+       * <code>optional int32 year = 1;</code>
        */
-      public long getMillisecond() {
-        return millisecond_;
+      public int getYear() {
+        return year_;
       }
       /**
-       * <code>optional uint64 millisecond = 1;</code>
-       *
-       * <pre>
-       *To ensure capabilities to communicate with systems with diverse date-time handling methods
-       * </pre>
+       * <code>optional int32 year = 1;</code>
        */
-      public Builder setMillisecond(long value) {
+      public Builder setYear(int value) {
         bitField0_ |= 0x00000001;
-        millisecond_ = value;
+        year_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional uint64 millisecond = 1;</code>
-       *
-       * <pre>
-       *To ensure capabilities to communicate with systems with diverse date-time handling methods
-       * </pre>
+       * <code>optional int32 year = 1;</code>
        */
-      public Builder clearMillisecond() {
+      public Builder clearYear() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        millisecond_ = 0L;
+        year_ = 0;
         onChanged();
         return this;
       }
 
-      // optional int32 second = 2;
-      private int second_ ;
+      // optional int32 month = 2;
+      private int month_ ;
       /**
-       * <code>optional int32 second = 2;</code>
+       * <code>optional int32 month = 2;</code>
        */
-      public boolean hasSecond() {
+      public boolean hasMonth() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional int32 second = 2;</code>
+       * <code>optional int32 month = 2;</code>
        */
-      public int getSecond() {
-        return second_;
+      public int getMonth() {
+        return month_;
       }
       /**
-       * <code>optional int32 second = 2;</code>
+       * <code>optional int32 month = 2;</code>
        */
-      public Builder setSecond(int value) {
+      public Builder setMonth(int value) {
         bitField0_ |= 0x00000002;
-        second_ = value;
+        month_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 second = 2;</code>
+       * <code>optional int32 month = 2;</code>
        */
-      public Builder clearSecond() {
+      public Builder clearMonth() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        second_ = 0;
+        month_ = 0;
         onChanged();
         return this;
       }
 
-      // optional int32 minute = 3;
-      private int minute_ ;
+      // optional int32 day = 3;
+      private int day_ ;
       /**
-       * <code>optional int32 minute = 3;</code>
+       * <code>optional int32 day = 3;</code>
        */
-      public boolean hasMinute() {
+      public boolean hasDay() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional int32 minute = 3;</code>
+       * <code>optional int32 day = 3;</code>
        */
-      public int getMinute() {
-        return minute_;
+      public int getDay() {
+        return day_;
       }
       /**
-       * <code>optional int32 minute = 3;</code>
+       * <code>optional int32 day = 3;</code>
        */
-      public Builder setMinute(int value) {
+      public Builder setDay(int value) {
         bitField0_ |= 0x00000004;
-        minute_ = value;
+        day_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 minute = 3;</code>
+       * <code>optional int32 day = 3;</code>
        */
-      public Builder clearMinute() {
+      public Builder clearDay() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        minute_ = 0;
+        day_ = 0;
         onChanged();
         return this;
       }
@@ -11337,101 +11669,117 @@ public final class School {
         return this;
       }
 
-      // optional int32 day = 5;
-      private int day_ ;
+      // optional int32 minute = 5;
+      private int minute_ ;
       /**
-       * <code>optional int32 day = 5;</code>
+       * <code>optional int32 minute = 5;</code>
        */
-      public boolean hasDay() {
+      public boolean hasMinute() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional int32 day = 5;</code>
+       * <code>optional int32 minute = 5;</code>
        */
-      public int getDay() {
-        return day_;
+      public int getMinute() {
+        return minute_;
       }
       /**
-       * <code>optional int32 day = 5;</code>
+       * <code>optional int32 minute = 5;</code>
        */
-      public Builder setDay(int value) {
+      public Builder setMinute(int value) {
         bitField0_ |= 0x00000010;
-        day_ = value;
+        minute_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 day = 5;</code>
+       * <code>optional int32 minute = 5;</code>
        */
-      public Builder clearDay() {
+      public Builder clearMinute() {
         bitField0_ = (bitField0_ & ~0x00000010);
-        day_ = 0;
+        minute_ = 0;
         onChanged();
         return this;
       }
 
-      // optional int32 month = 6;
-      private int month_ ;
+      // optional int32 second = 6;
+      private int second_ ;
       /**
-       * <code>optional int32 month = 6;</code>
+       * <code>optional int32 second = 6;</code>
        */
-      public boolean hasMonth() {
+      public boolean hasSecond() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       /**
-       * <code>optional int32 month = 6;</code>
+       * <code>optional int32 second = 6;</code>
        */
-      public int getMonth() {
-        return month_;
+      public int getSecond() {
+        return second_;
       }
       /**
-       * <code>optional int32 month = 6;</code>
+       * <code>optional int32 second = 6;</code>
        */
-      public Builder setMonth(int value) {
+      public Builder setSecond(int value) {
         bitField0_ |= 0x00000020;
-        month_ = value;
+        second_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 month = 6;</code>
+       * <code>optional int32 second = 6;</code>
        */
-      public Builder clearMonth() {
+      public Builder clearSecond() {
         bitField0_ = (bitField0_ & ~0x00000020);
-        month_ = 0;
+        second_ = 0;
         onChanged();
         return this;
       }
 
-      // optional int32 year = 7;
-      private int year_ ;
+      // optional uint64 millisecond = 7;
+      private long millisecond_ ;
       /**
-       * <code>optional int32 year = 7;</code>
+       * <code>optional uint64 millisecond = 7;</code>
+       *
+       * <pre>
+       *To ensure capabilities to communicate with systems with diverse date-time handling methods
+       * </pre>
        */
-      public boolean hasYear() {
+      public boolean hasMillisecond() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
       }
       /**
-       * <code>optional int32 year = 7;</code>
+       * <code>optional uint64 millisecond = 7;</code>
+       *
+       * <pre>
+       *To ensure capabilities to communicate with systems with diverse date-time handling methods
+       * </pre>
        */
-      public int getYear() {
-        return year_;
+      public long getMillisecond() {
+        return millisecond_;
       }
       /**
-       * <code>optional int32 year = 7;</code>
+       * <code>optional uint64 millisecond = 7;</code>
+       *
+       * <pre>
+       *To ensure capabilities to communicate with systems with diverse date-time handling methods
+       * </pre>
        */
-      public Builder setYear(int value) {
+      public Builder setMillisecond(long value) {
         bitField0_ |= 0x00000040;
-        year_ = value;
+        millisecond_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 year = 7;</code>
+       * <code>optional uint64 millisecond = 7;</code>
+       *
+       * <pre>
+       *To ensure capabilities to communicate with systems with diverse date-time handling methods
+       * </pre>
        */
-      public Builder clearYear() {
+      public Builder clearMillisecond() {
         bitField0_ = (bitField0_ & ~0x00000040);
-        year_ = 0;
+        millisecond_ = 0L;
         onChanged();
         return this;
       }
@@ -11469,7 +11817,7 @@ public final class School {
    * Protobuf type {@code protobuf.srl.school.DomainInformation}
    *
    * <pre>
-   *Needs to be defined in its entirety
+   *Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
    * </pre>
    */
   public static final class DomainInformation extends
@@ -11721,7 +12069,7 @@ public final class School {
      * Protobuf type {@code protobuf.srl.school.DomainInformation}
      *
      * <pre>
-     *Needs to be defined in its entirety
+     *Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
      * </pre>
      */
     public static final class Builder extends
@@ -11932,50 +12280,90 @@ public final class School {
     // optional bool published = 1;
     /**
      * <code>optional bool published = 1;</code>
+     *
+     * <pre>
+     *Instructor has finished construction of school item
+     * </pre>
      */
     boolean hasPublished();
     /**
      * <code>optional bool published = 1;</code>
+     *
+     * <pre>
+     *Instructor has finished construction of school item
+     * </pre>
      */
     boolean getPublished();
 
     // optional bool accessible = 2;
     /**
      * <code>optional bool accessible = 2;</code>
+     *
+     * <pre>
+     *Has been made the school item available to be viewed and worked on
+     * </pre>
      */
     boolean hasAccessible();
     /**
      * <code>optional bool accessible = 2;</code>
+     *
+     * <pre>
+     *Has been made the school item available to be viewed and worked on
+     * </pre>
      */
     boolean getAccessible();
 
-    // optional bool late = 3;
+    // optional bool pastDue = 3;
     /**
-     * <code>optional bool late = 3;</code>
+     * <code>optional bool pastDue = 3;</code>
+     *
+     * <pre>
+     *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+     * </pre>
      */
-    boolean hasLate();
+    boolean hasPastDue();
     /**
-     * <code>optional bool late = 3;</code>
+     * <code>optional bool pastDue = 3;</code>
+     *
+     * <pre>
+     *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+     * </pre>
      */
-    boolean getLate();
+    boolean getPastDue();
 
     // optional bool started = 4;
     /**
      * <code>optional bool started = 4;</code>
+     *
+     * <pre>
+     *Student has viewed or begun the school item
+     * </pre>
      */
     boolean hasStarted();
     /**
      * <code>optional bool started = 4;</code>
+     *
+     * <pre>
+     *Student has viewed or begun the school item
+     * </pre>
      */
     boolean getStarted();
 
     // optional bool completed = 5;
     /**
      * <code>optional bool completed = 5;</code>
+     *
+     * <pre>
+     *Student has saved/submitted work on all parts of school item
+     * </pre>
      */
     boolean hasCompleted();
     /**
      * <code>optional bool completed = 5;</code>
+     *
+     * <pre>
+     *Student has saved/submitted work on all parts of school item
+     * </pre>
      */
     boolean getCompleted();
   }
@@ -12042,7 +12430,7 @@ public final class School {
             }
             case 24: {
               bitField0_ |= 0x00000004;
-              late_ = input.readBool();
+              pastDue_ = input.readBool();
               break;
             }
             case 32: {
@@ -12100,12 +12488,20 @@ public final class School {
     private boolean published_;
     /**
      * <code>optional bool published = 1;</code>
+     *
+     * <pre>
+     *Instructor has finished construction of school item
+     * </pre>
      */
     public boolean hasPublished() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
      * <code>optional bool published = 1;</code>
+     *
+     * <pre>
+     *Instructor has finished construction of school item
+     * </pre>
      */
     public boolean getPublished() {
       return published_;
@@ -12116,31 +12512,47 @@ public final class School {
     private boolean accessible_;
     /**
      * <code>optional bool accessible = 2;</code>
+     *
+     * <pre>
+     *Has been made the school item available to be viewed and worked on
+     * </pre>
      */
     public boolean hasAccessible() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>optional bool accessible = 2;</code>
+     *
+     * <pre>
+     *Has been made the school item available to be viewed and worked on
+     * </pre>
      */
     public boolean getAccessible() {
       return accessible_;
     }
 
-    // optional bool late = 3;
-    public static final int LATE_FIELD_NUMBER = 3;
-    private boolean late_;
+    // optional bool pastDue = 3;
+    public static final int PASTDUE_FIELD_NUMBER = 3;
+    private boolean pastDue_;
     /**
-     * <code>optional bool late = 3;</code>
+     * <code>optional bool pastDue = 3;</code>
+     *
+     * <pre>
+     *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+     * </pre>
      */
-    public boolean hasLate() {
+    public boolean hasPastDue() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional bool late = 3;</code>
+     * <code>optional bool pastDue = 3;</code>
+     *
+     * <pre>
+     *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+     * </pre>
      */
-    public boolean getLate() {
-      return late_;
+    public boolean getPastDue() {
+      return pastDue_;
     }
 
     // optional bool started = 4;
@@ -12148,12 +12560,20 @@ public final class School {
     private boolean started_;
     /**
      * <code>optional bool started = 4;</code>
+     *
+     * <pre>
+     *Student has viewed or begun the school item
+     * </pre>
      */
     public boolean hasStarted() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
      * <code>optional bool started = 4;</code>
+     *
+     * <pre>
+     *Student has viewed or begun the school item
+     * </pre>
      */
     public boolean getStarted() {
       return started_;
@@ -12164,12 +12584,20 @@ public final class School {
     private boolean completed_;
     /**
      * <code>optional bool completed = 5;</code>
+     *
+     * <pre>
+     *Student has saved/submitted work on all parts of school item
+     * </pre>
      */
     public boolean hasCompleted() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
      * <code>optional bool completed = 5;</code>
+     *
+     * <pre>
+     *Student has saved/submitted work on all parts of school item
+     * </pre>
      */
     public boolean getCompleted() {
       return completed_;
@@ -12178,7 +12606,7 @@ public final class School {
     private void initFields() {
       published_ = false;
       accessible_ = false;
-      late_ = false;
+      pastDue_ = false;
       started_ = false;
       completed_ = false;
     }
@@ -12201,7 +12629,7 @@ public final class School {
         output.writeBool(2, accessible_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBool(3, late_);
+        output.writeBool(3, pastDue_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBool(4, started_);
@@ -12228,7 +12656,7 @@ public final class School {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, late_);
+          .computeBoolSize(3, pastDue_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
@@ -12358,7 +12786,7 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000001);
         accessible_ = false;
         bitField0_ = (bitField0_ & ~0x00000002);
-        late_ = false;
+        pastDue_ = false;
         bitField0_ = (bitField0_ & ~0x00000004);
         started_ = false;
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -12403,7 +12831,7 @@ public final class School {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.late_ = late_;
+        result.pastDue_ = pastDue_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
@@ -12434,8 +12862,8 @@ public final class School {
         if (other.hasAccessible()) {
           setAccessible(other.getAccessible());
         }
-        if (other.hasLate()) {
-          setLate(other.getLate());
+        if (other.hasPastDue()) {
+          setPastDue(other.getPastDue());
         }
         if (other.hasStarted()) {
           setStarted(other.getStarted());
@@ -12474,18 +12902,30 @@ public final class School {
       private boolean published_ ;
       /**
        * <code>optional bool published = 1;</code>
+       *
+       * <pre>
+       *Instructor has finished construction of school item
+       * </pre>
        */
       public boolean hasPublished() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>optional bool published = 1;</code>
+       *
+       * <pre>
+       *Instructor has finished construction of school item
+       * </pre>
        */
       public boolean getPublished() {
         return published_;
       }
       /**
        * <code>optional bool published = 1;</code>
+       *
+       * <pre>
+       *Instructor has finished construction of school item
+       * </pre>
        */
       public Builder setPublished(boolean value) {
         bitField0_ |= 0x00000001;
@@ -12495,6 +12935,10 @@ public final class School {
       }
       /**
        * <code>optional bool published = 1;</code>
+       *
+       * <pre>
+       *Instructor has finished construction of school item
+       * </pre>
        */
       public Builder clearPublished() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -12507,18 +12951,30 @@ public final class School {
       private boolean accessible_ ;
       /**
        * <code>optional bool accessible = 2;</code>
+       *
+       * <pre>
+       *Has been made the school item available to be viewed and worked on
+       * </pre>
        */
       public boolean hasAccessible() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>optional bool accessible = 2;</code>
+       *
+       * <pre>
+       *Has been made the school item available to be viewed and worked on
+       * </pre>
        */
       public boolean getAccessible() {
         return accessible_;
       }
       /**
        * <code>optional bool accessible = 2;</code>
+       *
+       * <pre>
+       *Has been made the school item available to be viewed and worked on
+       * </pre>
        */
       public Builder setAccessible(boolean value) {
         bitField0_ |= 0x00000002;
@@ -12528,6 +12984,10 @@ public final class School {
       }
       /**
        * <code>optional bool accessible = 2;</code>
+       *
+       * <pre>
+       *Has been made the school item available to be viewed and worked on
+       * </pre>
        */
       public Builder clearAccessible() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -12536,35 +12996,51 @@ public final class School {
         return this;
       }
 
-      // optional bool late = 3;
-      private boolean late_ ;
+      // optional bool pastDue = 3;
+      private boolean pastDue_ ;
       /**
-       * <code>optional bool late = 3;</code>
+       * <code>optional bool pastDue = 3;</code>
+       *
+       * <pre>
+       *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+       * </pre>
        */
-      public boolean hasLate() {
+      public boolean hasPastDue() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional bool late = 3;</code>
+       * <code>optional bool pastDue = 3;</code>
+       *
+       * <pre>
+       *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+       * </pre>
        */
-      public boolean getLate() {
-        return late_;
+      public boolean getPastDue() {
+        return pastDue_;
       }
       /**
-       * <code>optional bool late = 3;</code>
+       * <code>optional bool pastDue = 3;</code>
+       *
+       * <pre>
+       *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+       * </pre>
        */
-      public Builder setLate(boolean value) {
+      public Builder setPastDue(boolean value) {
         bitField0_ |= 0x00000004;
-        late_ = value;
+        pastDue_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bool late = 3;</code>
+       * <code>optional bool pastDue = 3;</code>
+       *
+       * <pre>
+       *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+       * </pre>
        */
-      public Builder clearLate() {
+      public Builder clearPastDue() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        late_ = false;
+        pastDue_ = false;
         onChanged();
         return this;
       }
@@ -12573,18 +13049,30 @@ public final class School {
       private boolean started_ ;
       /**
        * <code>optional bool started = 4;</code>
+       *
+       * <pre>
+       *Student has viewed or begun the school item
+       * </pre>
        */
       public boolean hasStarted() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
        * <code>optional bool started = 4;</code>
+       *
+       * <pre>
+       *Student has viewed or begun the school item
+       * </pre>
        */
       public boolean getStarted() {
         return started_;
       }
       /**
        * <code>optional bool started = 4;</code>
+       *
+       * <pre>
+       *Student has viewed or begun the school item
+       * </pre>
        */
       public Builder setStarted(boolean value) {
         bitField0_ |= 0x00000008;
@@ -12594,6 +13082,10 @@ public final class School {
       }
       /**
        * <code>optional bool started = 4;</code>
+       *
+       * <pre>
+       *Student has viewed or begun the school item
+       * </pre>
        */
       public Builder clearStarted() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -12606,18 +13098,30 @@ public final class School {
       private boolean completed_ ;
       /**
        * <code>optional bool completed = 5;</code>
+       *
+       * <pre>
+       *Student has saved/submitted work on all parts of school item
+       * </pre>
        */
       public boolean hasCompleted() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
        * <code>optional bool completed = 5;</code>
+       *
+       * <pre>
+       *Student has saved/submitted work on all parts of school item
+       * </pre>
        */
       public boolean getCompleted() {
         return completed_;
       }
       /**
        * <code>optional bool completed = 5;</code>
+       *
+       * <pre>
+       *Student has saved/submitted work on all parts of school item
+       * </pre>
        */
       public Builder setCompleted(boolean value) {
         bitField0_ |= 0x00000010;
@@ -12627,6 +13131,10 @@ public final class School {
       }
       /**
        * <code>optional bool completed = 5;</code>
+       *
+       * <pre>
+       *Student has saved/submitted work on all parts of school item
+       * </pre>
        */
       public Builder clearCompleted() {
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -13478,58 +13986,59 @@ public final class School {
       "buf.srl.school.SrlCourse\0227\n\013assignments\030" +
       "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen" +
       "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo" +
-      "l.SrlProblem\"\273\003\n\tSrlCourse\022\020\n\010courseId\030\001" +
-      " \002(\t\022\022\n\ncourseName\030\002 \001(\t\022.\n\013courseUsers\030" +
-      "\003 \003(\0132\031.protobuf.srl.school.User\022G\n\006acce" +
-      "ss\030\004 \001(\0162,.protobuf.srl.school.SrlCourse" +
-      ".Accessibility:\tPROTECTED\022\023\n\013description",
-      "\030\005 \001(\t\022\020\n\010semester\030\006 \001(\t\022\020\n\010imageUrl\030\007 \001" +
-      "(\t\022\r\n\005grade\030\010 \001(\005\0221\n\naccessDate\030\t \001(\0132\035." +
-      "protobuf.srl.school.DateTime\0220\n\tcloseDat" +
-      "e\030\n \001(\0132\035.protobuf.srl.school.DateTime\022)" +
-      "\n\005state\030\013 \001(\0132\032.protobuf.srl.school.Stat" +
-      "e\"7\n\rAccessibility\022\n\n\006PUBLIC\020\001\022\r\n\tPROTEC" +
-      "TED\020\002\022\013\n\007PRIVATE\020\003\"\363\004\n\rSrlAssignment\022\020\n\010" +
-      "courseId\030\001 \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\026\n\016" +
-      "assignmentName\030\003 \001(\t\022?\n\004type\030\004 \001(\01621.pro" +
-      "tobuf.srl.school.SrlAssignment.Assignmen",
-      "tType\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001(" +
-      "\t\022\r\n\005links\030\007 \003(\t\022A\n\nlatePolicy\030\010 \001(\0162-.p" +
-      "rotobuf.srl.school.SrlAssignment.LatePol" +
-      "icy\022\023\n\013gradeWeight\030\t \001(\005\022\r\n\005grade\030\n \001(\005\022" +
-      "1\n\naccessDate\030\013 \001(\0132\035.protobuf.srl.schoo" +
-      "l.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.protobuf.s" +
-      "rl.school.DateTime\0220\n\tcloseDate\030\r \001(\0132\035." +
-      "protobuf.srl.school.DateTime\022)\n\005state\030\016 " +
-      "\001(\0132\032.protobuf.srl.school.State\"R\n\016Assig" +
-      "nmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003LAB",
-      "\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3\n\nL" +
-      "atePolicy\022\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007P" +
-      "OLICY3\020\003\"\214\002\n\nSrlProblem\022\020\n\010courseId\030\001 \002(" +
-      "\t\022\024\n\014assignmentId\030\002 \002(\t\022\021\n\tproblemId\030\003 \002" +
-      "(\t\022\023\n\013problemName\030\004 \001(\t\022\023\n\013description\030\005" +
-      " \001(\t\022?\n\013subProblems\030\006 \003(\0132*.protobuf.srl" +
-      ".school.subproblemInformation\0224\n\004info\030\007 " +
-      "\003(\0132&.protobuf.srl.school.DomainInformat" +
-      "ion\022\023\n\013gradeWeight\030\010 \001(\005\022\r\n\005grade\030\t \001(\005\"" +
-      "\204\002\n\025subproblemInformation\022\024\n\014questionTex",
-      "t\030\001 \001(\t\022U\n\014questionType\030\002 \001(\01627.protobuf" +
-      ".srl.school.subproblemInformation.Questi" +
-      "onType:\006SKETCH\022\017\n\007options\030\003 \001(\014\022\023\n\013grade" +
-      "Weight\030\004 \001(\005\022\r\n\005grade\030\005 \001(\005\"I\n\014QuestionT" +
-      "ype\022\n\n\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE" +
-      "_RESP\020\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\023\n\013mi" +
-      "llisecond\030\001 \001(\004\022\016\n\006second\030\002 \001(\005\022\016\n\006minut" +
-      "e\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\013\n\003day\030\005 \001(\005\022\r\n\005mo" +
-      "nth\030\006 \001(\005\022\014\n\004year\030\007 \001(\005\"\"\n\021DomainInforma" +
-      "tion\022\r\n\005stuff\030\001 \001(\t\"`\n\005State\022\021\n\tpublishe",
-      "d\030\001 \001(\010\022\022\n\naccessible\030\002 \001(\010\022\014\n\004late\030\003 \001(" +
-      "\010\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"_\n" +
-      "\004User\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 \001(" +
-      "\0162\035.protobuf.srl.school.UserType:\005GUEST\022" +
-      "\r\n\005email\030\003 \001(\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n" +
-      "\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n" +
-      "\007STUDENT\020\004\022\t\n\005GUEST\020\005"
+      "l.SrlProblem\"\257\003\n\tSrlCourse\022\n\n\002id\030\001 \002(\t\022\014" +
+      "\n\004name\030\002 \001(\t\022.\n\013courseUsers\030\003 \003(\0132\031.prot" +
+      "obuf.srl.school.User\022G\n\006access\030\004 \001(\0162,.p" +
+      "rotobuf.srl.school.SrlCourse.Accessibili" +
+      "ty:\tPROTECTED\022\023\n\013description\030\005 \001(\t\022\020\n\010se",
+      "mester\030\006 \001(\t\022\020\n\010imageUrl\030\007 \001(\t\022\r\n\005grade\030" +
+      "\010 \001(\005\0221\n\naccessDate\030\t \001(\0132\035.protobuf.srl" +
+      ".school.DateTime\0220\n\tcloseDate\030\n \001(\0132\035.pr" +
+      "otobuf.srl.school.DateTime\022)\n\005state\030\013 \001(" +
+      "\0132\032.protobuf.srl.school.State\"7\n\rAccessi" +
+      "bility\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\013\n\007PRI" +
+      "VATE\020\003\"\204\005\n\rSrlAssignment\022\020\n\010courseId\030\001 \002" +
+      "(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004name\030\003 \001(\t\022I\n\004type\030\004 \001" +
+      "(\01621.protobuf.srl.school.SrlAssignment.A" +
+      "ssignmentType:\010HOMEWORK\022\r\n\005other\030\005 \001(\t\022\023",
+      "\n\013description\030\006 \001(\t\022\r\n\005links\030\007 \003(\t\022J\n\nla" +
+      "tePolicy\030\010 \001(\0162-.protobuf.srl.school.Srl" +
+      "Assignment.LatePolicy:\007POLICY1\022\023\n\013gradeW" +
+      "eight\030\t \001(\005\022\r\n\005grade\030\n \001(\005\0221\n\naccessDate" +
+      "\030\013 \001(\0132\035.protobuf.srl.school.DateTime\022.\n" +
+      "\007dueDate\030\014 \001(\0132\035.protobuf.srl.school.Dat" +
+      "eTime\0220\n\tcloseDate\030\r \001(\0132\035.protobuf.srl." +
+      "school.DateTime\022)\n\005state\030\016 \001(\0132\032.protobu" +
+      "f.srl.school.State\022\020\n\010imageUrl\030\017 \001(\t\"R\n\016" +
+      "AssignmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007",
+      "\n\003LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006" +
+      "\"3\n\nLatePolicy\022\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002" +
+      "\022\013\n\007POLICY3\020\003\"\251\002\n\nSrlProblem\022\020\n\010courseId" +
+      "\030\001 \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\n\n\002id\030\003 \002(\t" +
+      "\022\014\n\004name\030\004 \001(\t\022\023\n\013description\030\005 \001(\t\022?\n\013s" +
+      "ubProblems\030\006 \003(\0132*.protobuf.srl.school.s" +
+      "ubproblemInformation\0224\n\004info\030\007 \003(\0132&.pro" +
+      "tobuf.srl.school.DomainInformation\022\023\n\013gr" +
+      "adeWeight\030\010 \001(\005\022\r\n\005grade\030\t \001(\005\022)\n\005state\030" +
+      "\n \001(\0132\032.protobuf.srl.school.State\"\204\002\n\025su",
+      "bproblemInformation\022\024\n\014questionText\030\001 \001(" +
+      "\t\022U\n\014questionType\030\002 \001(\01627.protobuf.srl.s" +
+      "chool.subproblemInformation.QuestionType" +
+      ":\006SKETCH\022\017\n\007options\030\003 \001(\014\022\023\n\013gradeWeight" +
+      "\030\004 \001(\005\022\r\n\005grade\030\005 \001(\005\"I\n\014QuestionType\022\n\n" +
+      "\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020" +
+      "\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001" +
+      "(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004" +
+      " \001(\005\022\016\n\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013" +
+      "millisecond\030\007 \001(\004\"\"\n\021DomainInformation\022\r",
+      "\n\005stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 \001(" +
+      "\010\022\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017" +
+      "\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"_\n\004Us" +
+      "er\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 \001(\0162\035" +
+      ".protobuf.srl.school.UserType:\005GUEST\022\r\n\005" +
+      "email\030\003 \001(\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nIN" +
+      "STRUCTOR\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007ST" +
+      "UDENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -13547,19 +14056,19 @@ public final class School {
           internal_static_protobuf_srl_school_SrlCourse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlCourse_descriptor,
-              new java.lang.String[] { "CourseId", "CourseName", "CourseUsers", "Access", "Description", "Semester", "ImageUrl", "Grade", "AccessDate", "CloseDate", "State", });
+              new java.lang.String[] { "Id", "Name", "CourseUsers", "Access", "Description", "Semester", "ImageUrl", "Grade", "AccessDate", "CloseDate", "State", });
           internal_static_protobuf_srl_school_SrlAssignment_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_srl_school_SrlAssignment_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlAssignment_descriptor,
-              new java.lang.String[] { "CourseId", "AssignmentId", "AssignmentName", "Type", "Other", "Description", "Links", "LatePolicy", "GradeWeight", "Grade", "AccessDate", "DueDate", "CloseDate", "State", });
+              new java.lang.String[] { "CourseId", "Id", "Name", "Type", "Other", "Description", "Links", "LatePolicy", "GradeWeight", "Grade", "AccessDate", "DueDate", "CloseDate", "State", "ImageUrl", });
           internal_static_protobuf_srl_school_SrlProblem_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_protobuf_srl_school_SrlProblem_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlProblem_descriptor,
-              new java.lang.String[] { "CourseId", "AssignmentId", "ProblemId", "ProblemName", "Description", "SubProblems", "Info", "GradeWeight", "Grade", });
+              new java.lang.String[] { "CourseId", "AssignmentId", "Id", "Name", "Description", "SubProblems", "Info", "GradeWeight", "Grade", "State", });
           internal_static_protobuf_srl_school_subproblemInformation_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_protobuf_srl_school_subproblemInformation_fieldAccessorTable = new
@@ -13571,7 +14080,7 @@ public final class School {
           internal_static_protobuf_srl_school_DateTime_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_DateTime_descriptor,
-              new java.lang.String[] { "Millisecond", "Second", "Minute", "Hour", "Day", "Month", "Year", });
+              new java.lang.String[] { "Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond", });
           internal_static_protobuf_srl_school_DomainInformation_descriptor =
             getDescriptor().getMessageTypes().get(6);
           internal_static_protobuf_srl_school_DomainInformation_fieldAccessorTable = new
@@ -13583,7 +14092,7 @@ public final class School {
           internal_static_protobuf_srl_school_State_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_State_descriptor,
-              new java.lang.String[] { "Published", "Accessible", "Late", "Started", "Completed", });
+              new java.lang.String[] { "Published", "Accessible", "PastDue", "Started", "Completed", });
           internal_static_protobuf_srl_school_User_descriptor =
             getDescriptor().getMessageTypes().get(8);
           internal_static_protobuf_srl_school_User_fieldAccessorTable = new

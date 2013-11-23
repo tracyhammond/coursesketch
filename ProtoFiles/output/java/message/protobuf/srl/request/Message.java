@@ -242,9 +242,25 @@ public final class Message {
        */
       RECOGNITION(3, 3),
       /**
-       * <code>ANSWER_CHECKING = 4;</code>
+       * <code>LOADING = 4;</code>
+       *
+       * <pre>
+       * this is for when the client is loading.
+       * </pre>
        */
-      ANSWER_CHECKING(4, 4),
+      LOADING(4, 4),
+      /**
+       * <code>SUBMISSION = 5;</code>
+       *
+       * <pre>
+       * sent to both servers at the same time. (Answer checking and database)
+       * </pre>
+       */
+      SUBMISSION(5, 5),
+      /**
+       * <code>PENDING = 6;</code>
+       */
+      PENDING(6, 6),
       ;
 
       /**
@@ -264,9 +280,25 @@ public final class Message {
        */
       public static final int RECOGNITION_VALUE = 3;
       /**
-       * <code>ANSWER_CHECKING = 4;</code>
+       * <code>LOADING = 4;</code>
+       *
+       * <pre>
+       * this is for when the client is loading.
+       * </pre>
        */
-      public static final int ANSWER_CHECKING_VALUE = 4;
+      public static final int LOADING_VALUE = 4;
+      /**
+       * <code>SUBMISSION = 5;</code>
+       *
+       * <pre>
+       * sent to both servers at the same time. (Answer checking and database)
+       * </pre>
+       */
+      public static final int SUBMISSION_VALUE = 5;
+      /**
+       * <code>PENDING = 6;</code>
+       */
+      public static final int PENDING_VALUE = 6;
 
 
       public final int getNumber() { return value; }
@@ -277,7 +309,9 @@ public final class Message {
           case 1: return DATA_REQUEST;
           case 2: return DATA_SENDING;
           case 3: return RECOGNITION;
-          case 4: return ANSWER_CHECKING;
+          case 4: return LOADING;
+          case 5: return SUBMISSION;
+          case 6: return PENDING;
           default: return null;
         }
       }
@@ -2207,17 +2241,18 @@ public final class Message {
   static {
     java.lang.String[] descriptorData = {
       "\n\023input/message.proto\022\024protobuf.srl.requ" +
-      "est\"\251\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
+      "est\"\276\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
       "rotobuf.srl.request.Request.MessageType:" +
       "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req" +
       "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014" +
       "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 " +
-      "\001(\t\"b\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_RE" +
+      "\001(\t\"w\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_RE" +
       "QUEST\020\001\022\020\n\014DATA_SENDING\020\002\022\017\n\013RECOGNITION" +
-      "\020\003\022\023\n\017ANSWER_CHECKING\020\004\"u\n\020LoginInformat" +
-      "ion\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\022",
-      "\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030\004 \001(" +
-      "\010\022\023\n\013sessionInfo\030\005 \001(\t"
+      "\020\003\022\013\n\007LOADING\020\004\022\016\n\nSUBMISSION\020\005\022\013\n\007PENDI" +
+      "NG\020\006\"u\n\020LoginInformation\022\020\n\010username\030\001 \002",
+      "(\t\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010" +
+      "\022\024\n\014isInstructor\030\004 \001(\010\022\023\n\013sessionInfo\030\005 " +
+      "\001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

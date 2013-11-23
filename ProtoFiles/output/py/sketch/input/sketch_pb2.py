@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/sketch.proto',
   package='protobuf.srl.sketch',
-  serialized_pb='\n\x12input/sketch.proto\x12\x13protobuf.srl.sketch\"\x88\x01\n\tSrlSketch\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\t\x12\x11\n\tproblemId\x18\x03 \x01(\t\x12\x10\n\x08\x64omainId\x18\x04 \x01(\t\x12.\n\x06sketch\x18\x05 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\"\x8e\x01\n\tSrlObject\x12\x37\n\x04type\x18\x01 \x02(\x0e\x32).protobuf.srl.sketch.SrlObject.ObjectType\x12\x0e\n\x06object\x18\x02 \x02(\x0c\"8\n\nObjectType\x12\t\n\x05SHAPE\x10\x00\x12\n\n\x06STROKE\x10\x01\x12\t\n\x05POINT\x10\x02\x12\x08\n\x04LINE\x10\x03\"\xf5\x01\n\x08SrlShape\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\risUserCreated\x18\x04 \x01(\x08\x12<\n\x0finterpretations\x18\x05 \x03(\x0b\x32#.protobuf.srl.sketch.Interpretation\x12\x35\n\rsubComponents\x18\x06 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\x12\x35\n\x0b\x62oundingbox\x18\x07 \x01(\x0b\x32 .protobuf.srl.sketch.BoundingBox\"\x99\x01\n\tSrlStroke\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12-\n\x06points\x18\x04 \x03(\x0b\x32\x1d.protobuf.srl.sketch.SrlPoint\x12\x35\n\x0b\x62oundingbox\x18\x05 \x01(\x0b\x32 .protobuf.srl.sketch.BoundingBox\"w\n\x08SrlPoint\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\t\n\x01x\x18\x04 \x02(\x01\x12\t\n\x01y\x18\x05 \x02(\x01\x12\x10\n\x08pressure\x18\x06 \x01(\x01\x12\x0c\n\x04size\x18\x07 \x01(\x01\x12\r\n\x05speed\x18\x08 \x01(\x01\"G\n\x0eInterpretation\x12\r\n\x05label\x18\x01 \x02(\t\x12\x12\n\nconfidence\x18\x02 \x02(\x01\x12\x12\n\ncomplexity\x18\x03 \x01(\x01\"B\n\x0b\x42oundingBox\x12\t\n\x01x\x18\x01 \x02(\x01\x12\t\n\x01y\x18\x02 \x02(\x01\x12\r\n\x05width\x18\x03 \x02(\x01\x12\x0e\n\x06height\x18\x04 \x02(\x01')
+  serialized_pb='\n\x12input/sketch.proto\x12\x13protobuf.srl.sketch\"M\n\tSrlSketch\x12\x10\n\x08\x64omainId\x18\x04 \x01(\t\x12.\n\x06sketch\x18\x05 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\"\x8e\x01\n\tSrlObject\x12\x37\n\x04type\x18\x01 \x02(\x0e\x32).protobuf.srl.sketch.SrlObject.ObjectType\x12\x0e\n\x06object\x18\x02 \x02(\x0c\"8\n\nObjectType\x12\t\n\x05SHAPE\x10\x00\x12\n\n\x06STROKE\x10\x01\x12\t\n\x05POINT\x10\x02\x12\x08\n\x04LINE\x10\x03\"\xfb\x01\n\x08SrlShape\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\risUserCreated\x18\x04 \x01(\x08\x12?\n\x0finterpretations\x18\x05 \x03(\x0b\x32&.protobuf.srl.sketch.SrlInterpretation\x12\x35\n\rsubComponents\x18\x06 \x03(\x0b\x32\x1e.protobuf.srl.sketch.SrlObject\x12\x38\n\x0b\x62oundingbox\x18\x07 \x01(\x0b\x32#.protobuf.srl.sketch.SrlBoundingBox\"\x9c\x01\n\tSrlStroke\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12-\n\x06points\x18\x04 \x03(\x0b\x32\x1d.protobuf.srl.sketch.SrlPoint\x12\x38\n\x0b\x62oundingbox\x18\x05 \x01(\x0b\x32#.protobuf.srl.sketch.SrlBoundingBox\"w\n\x08SrlPoint\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x02(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\t\n\x01x\x18\x04 \x02(\x01\x12\t\n\x01y\x18\x05 \x02(\x01\x12\x10\n\x08pressure\x18\x06 \x01(\x01\x12\x0c\n\x04size\x18\x07 \x01(\x01\x12\r\n\x05speed\x18\x08 \x01(\x01\"J\n\x11SrlInterpretation\x12\r\n\x05label\x18\x01 \x02(\t\x12\x12\n\nconfidence\x18\x02 \x02(\x01\x12\x12\n\ncomplexity\x18\x03 \x01(\x01\"E\n\x0eSrlBoundingBox\x12\t\n\x01x\x18\x01 \x02(\x01\x12\t\n\x01y\x18\x02 \x02(\x01\x12\r\n\x05width\x18\x03 \x02(\x01\x12\x0e\n\x06height\x18\x04 \x02(\x01')
 
 
 
@@ -42,8 +42,8 @@ _SRLOBJECT_OBJECTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=269,
-  serialized_end=325,
+  serialized_start=209,
+  serialized_end=265,
 )
 
 
@@ -55,35 +55,14 @@ _SRLSKETCH = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='courseId', full_name='protobuf.srl.sketch.SrlSketch.courseId', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='assignmentId', full_name='protobuf.srl.sketch.SrlSketch.assignmentId', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='problemId', full_name='protobuf.srl.sketch.SrlSketch.problemId', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='domainId', full_name='protobuf.srl.sketch.SrlSketch.domainId', index=3,
+      name='domainId', full_name='protobuf.srl.sketch.SrlSketch.domainId', index=0,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sketch', full_name='protobuf.srl.sketch.SrlSketch.sketch', index=4,
+      name='sketch', full_name='protobuf.srl.sketch.SrlSketch.sketch', index=1,
       number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -98,8 +77,8 @@ _SRLSKETCH = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=44,
-  serialized_end=180,
+  serialized_start=43,
+  serialized_end=120,
 )
 
 
@@ -134,8 +113,8 @@ _SRLOBJECT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=183,
-  serialized_end=325,
+  serialized_start=123,
+  serialized_end=265,
 )
 
 
@@ -204,8 +183,8 @@ _SRLSHAPE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=328,
-  serialized_end=573,
+  serialized_start=268,
+  serialized_end=519,
 )
 
 
@@ -260,8 +239,8 @@ _SRLSTROKE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=576,
-  serialized_end=729,
+  serialized_start=522,
+  serialized_end=678,
 )
 
 
@@ -337,34 +316,34 @@ _SRLPOINT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=731,
-  serialized_end=850,
+  serialized_start=680,
+  serialized_end=799,
 )
 
 
-_INTERPRETATION = _descriptor.Descriptor(
-  name='Interpretation',
-  full_name='protobuf.srl.sketch.Interpretation',
+_SRLINTERPRETATION = _descriptor.Descriptor(
+  name='SrlInterpretation',
+  full_name='protobuf.srl.sketch.SrlInterpretation',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='label', full_name='protobuf.srl.sketch.Interpretation.label', index=0,
+      name='label', full_name='protobuf.srl.sketch.SrlInterpretation.label', index=0,
       number=1, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='confidence', full_name='protobuf.srl.sketch.Interpretation.confidence', index=1,
+      name='confidence', full_name='protobuf.srl.sketch.SrlInterpretation.confidence', index=1,
       number=2, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='complexity', full_name='protobuf.srl.sketch.Interpretation.complexity', index=2,
+      name='complexity', full_name='protobuf.srl.sketch.SrlInterpretation.complexity', index=2,
       number=3, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -379,41 +358,41 @@ _INTERPRETATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=852,
-  serialized_end=923,
+  serialized_start=801,
+  serialized_end=875,
 )
 
 
-_BOUNDINGBOX = _descriptor.Descriptor(
-  name='BoundingBox',
-  full_name='protobuf.srl.sketch.BoundingBox',
+_SRLBOUNDINGBOX = _descriptor.Descriptor(
+  name='SrlBoundingBox',
+  full_name='protobuf.srl.sketch.SrlBoundingBox',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='x', full_name='protobuf.srl.sketch.BoundingBox.x', index=0,
+      name='x', full_name='protobuf.srl.sketch.SrlBoundingBox.x', index=0,
       number=1, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='y', full_name='protobuf.srl.sketch.BoundingBox.y', index=1,
+      name='y', full_name='protobuf.srl.sketch.SrlBoundingBox.y', index=1,
       number=2, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='width', full_name='protobuf.srl.sketch.BoundingBox.width', index=2,
+      name='width', full_name='protobuf.srl.sketch.SrlBoundingBox.width', index=2,
       number=3, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='height', full_name='protobuf.srl.sketch.BoundingBox.height', index=3,
+      name='height', full_name='protobuf.srl.sketch.SrlBoundingBox.height', index=3,
       number=4, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -428,25 +407,25 @@ _BOUNDINGBOX = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=925,
-  serialized_end=991,
+  serialized_start=877,
+  serialized_end=946,
 )
 
 _SRLSKETCH.fields_by_name['sketch'].message_type = _SRLOBJECT
 _SRLOBJECT.fields_by_name['type'].enum_type = _SRLOBJECT_OBJECTTYPE
 _SRLOBJECT_OBJECTTYPE.containing_type = _SRLOBJECT;
-_SRLSHAPE.fields_by_name['interpretations'].message_type = _INTERPRETATION
+_SRLSHAPE.fields_by_name['interpretations'].message_type = _SRLINTERPRETATION
 _SRLSHAPE.fields_by_name['subComponents'].message_type = _SRLOBJECT
-_SRLSHAPE.fields_by_name['boundingbox'].message_type = _BOUNDINGBOX
+_SRLSHAPE.fields_by_name['boundingbox'].message_type = _SRLBOUNDINGBOX
 _SRLSTROKE.fields_by_name['points'].message_type = _SRLPOINT
-_SRLSTROKE.fields_by_name['boundingbox'].message_type = _BOUNDINGBOX
+_SRLSTROKE.fields_by_name['boundingbox'].message_type = _SRLBOUNDINGBOX
 DESCRIPTOR.message_types_by_name['SrlSketch'] = _SRLSKETCH
 DESCRIPTOR.message_types_by_name['SrlObject'] = _SRLOBJECT
 DESCRIPTOR.message_types_by_name['SrlShape'] = _SRLSHAPE
 DESCRIPTOR.message_types_by_name['SrlStroke'] = _SRLSTROKE
 DESCRIPTOR.message_types_by_name['SrlPoint'] = _SRLPOINT
-DESCRIPTOR.message_types_by_name['Interpretation'] = _INTERPRETATION
-DESCRIPTOR.message_types_by_name['BoundingBox'] = _BOUNDINGBOX
+DESCRIPTOR.message_types_by_name['SrlInterpretation'] = _SRLINTERPRETATION
+DESCRIPTOR.message_types_by_name['SrlBoundingBox'] = _SRLBOUNDINGBOX
 
 class SrlSketch(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
@@ -478,17 +457,17 @@ class SrlPoint(_message.Message):
 
   # @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlPoint)
 
-class Interpretation(_message.Message):
+class SrlInterpretation(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _INTERPRETATION
+  DESCRIPTOR = _SRLINTERPRETATION
 
-  # @@protoc_insertion_point(class_scope:protobuf.srl.sketch.Interpretation)
+  # @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlInterpretation)
 
-class BoundingBox(_message.Message):
+class SrlBoundingBox(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _BOUNDINGBOX
+  DESCRIPTOR = _SRLBOUNDINGBOX
 
-  # @@protoc_insertion_point(class_scope:protobuf.srl.sketch.BoundingBox)
+  # @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlBoundingBox)
 
 
 # @@protoc_insertion_point(module_scope)

@@ -83,8 +83,8 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
       sizeof(SrlSchool));
   SrlCourse_descriptor_ = file->message_type(1);
   static const int SrlCourse_offsets_[11] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, coursename_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, courseusers_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, access_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlCourse, description_),
@@ -108,10 +108,10 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
       sizeof(SrlCourse));
   SrlCourse_Accessibility_descriptor_ = SrlCourse_descriptor_->enum_type(0);
   SrlAssignment_descriptor_ = file->message_type(2);
-  static const int SrlAssignment_offsets_[14] = {
+  static const int SrlAssignment_offsets_[15] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, assignmentid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, assignmentname_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, other_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, description_),
@@ -123,6 +123,7 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, duedate_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, closedate_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, state_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAssignment, imageurl_),
   };
   SrlAssignment_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -138,16 +139,17 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
   SrlAssignment_AssignmentType_descriptor_ = SrlAssignment_descriptor_->enum_type(0);
   SrlAssignment_LatePolicy_descriptor_ = SrlAssignment_descriptor_->enum_type(1);
   SrlProblem_descriptor_ = file->message_type(3);
-  static const int SrlProblem_offsets_[9] = {
+  static const int SrlProblem_offsets_[10] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, courseid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, assignmentid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, problemid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, problemname_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, description_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, subproblems_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, info_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, gradeweight_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, grade_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, state_),
   };
   SrlProblem_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -182,13 +184,13 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
   subproblemInformation_QuestionType_descriptor_ = subproblemInformation_descriptor_->enum_type(0);
   DateTime_descriptor_ = file->message_type(5);
   static const int DateTime_offsets_[7] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, millisecond_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, second_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, minute_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, hour_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, day_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, month_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, year_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, month_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, day_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, hour_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, minute_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, second_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DateTime, millisecond_),
   };
   DateTime_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -220,7 +222,7 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
   static const int State_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, published_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, accessible_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, late_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, pastdue_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, started_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, completed_),
   };
@@ -320,58 +322,59 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "buf.srl.school.SrlCourse\0227\n\013assignments\030"
     "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen"
     "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo"
-    "l.SrlProblem\"\273\003\n\tSrlCourse\022\020\n\010courseId\030\001"
-    " \002(\t\022\022\n\ncourseName\030\002 \001(\t\022.\n\013courseUsers\030"
-    "\003 \003(\0132\031.protobuf.srl.school.User\022G\n\006acce"
-    "ss\030\004 \001(\0162,.protobuf.srl.school.SrlCourse"
-    ".Accessibility:\tPROTECTED\022\023\n\013description"
-    "\030\005 \001(\t\022\020\n\010semester\030\006 \001(\t\022\020\n\010imageUrl\030\007 \001"
-    "(\t\022\r\n\005grade\030\010 \001(\005\0221\n\naccessDate\030\t \001(\0132\035."
-    "protobuf.srl.school.DateTime\0220\n\tcloseDat"
-    "e\030\n \001(\0132\035.protobuf.srl.school.DateTime\022)"
-    "\n\005state\030\013 \001(\0132\032.protobuf.srl.school.Stat"
-    "e\"7\n\rAccessibility\022\n\n\006PUBLIC\020\001\022\r\n\tPROTEC"
-    "TED\020\002\022\013\n\007PRIVATE\020\003\"\363\004\n\rSrlAssignment\022\020\n\010"
-    "courseId\030\001 \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\026\n\016"
-    "assignmentName\030\003 \001(\t\022\?\n\004type\030\004 \001(\01621.pro"
-    "tobuf.srl.school.SrlAssignment.Assignmen"
-    "tType\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001("
-    "\t\022\r\n\005links\030\007 \003(\t\022A\n\nlatePolicy\030\010 \001(\0162-.p"
-    "rotobuf.srl.school.SrlAssignment.LatePol"
-    "icy\022\023\n\013gradeWeight\030\t \001(\005\022\r\n\005grade\030\n \001(\005\022"
-    "1\n\naccessDate\030\013 \001(\0132\035.protobuf.srl.schoo"
-    "l.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.protobuf.s"
-    "rl.school.DateTime\0220\n\tcloseDate\030\r \001(\0132\035."
-    "protobuf.srl.school.DateTime\022)\n\005state\030\016 "
-    "\001(\0132\032.protobuf.srl.school.State\"R\n\016Assig"
-    "nmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003LAB"
-    "\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3\n\nL"
-    "atePolicy\022\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007P"
-    "OLICY3\020\003\"\214\002\n\nSrlProblem\022\020\n\010courseId\030\001 \002("
-    "\t\022\024\n\014assignmentId\030\002 \002(\t\022\021\n\tproblemId\030\003 \002"
-    "(\t\022\023\n\013problemName\030\004 \001(\t\022\023\n\013description\030\005"
-    " \001(\t\022\?\n\013subProblems\030\006 \003(\0132*.protobuf.srl"
-    ".school.subproblemInformation\0224\n\004info\030\007 "
-    "\003(\0132&.protobuf.srl.school.DomainInformat"
-    "ion\022\023\n\013gradeWeight\030\010 \001(\005\022\r\n\005grade\030\t \001(\005\""
-    "\204\002\n\025subproblemInformation\022\024\n\014questionTex"
-    "t\030\001 \001(\t\022U\n\014questionType\030\002 \001(\01627.protobuf"
-    ".srl.school.subproblemInformation.Questi"
-    "onType:\006SKETCH\022\017\n\007options\030\003 \001(\014\022\023\n\013grade"
-    "Weight\030\004 \001(\005\022\r\n\005grade\030\005 \001(\005\"I\n\014QuestionT"
-    "ype\022\n\n\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE"
-    "_RESP\020\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\023\n\013mi"
-    "llisecond\030\001 \001(\004\022\016\n\006second\030\002 \001(\005\022\016\n\006minut"
-    "e\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\013\n\003day\030\005 \001(\005\022\r\n\005mo"
-    "nth\030\006 \001(\005\022\014\n\004year\030\007 \001(\005\"\"\n\021DomainInforma"
-    "tion\022\r\n\005stuff\030\001 \001(\t\"`\n\005State\022\021\n\tpublishe"
-    "d\030\001 \001(\010\022\022\n\naccessible\030\002 \001(\010\022\014\n\004late\030\003 \001("
-    "\010\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"_\n"
-    "\004User\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 \001("
-    "\0162\035.protobuf.srl.school.UserType:\005GUEST\022"
-    "\r\n\005email\030\003 \001(\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n"
-    "\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n"
-    "\007STUDENT\020\004\022\t\n\005GUEST\020\005", 2261);
+    "l.SrlProblem\"\257\003\n\tSrlCourse\022\n\n\002id\030\001 \002(\t\022\014"
+    "\n\004name\030\002 \001(\t\022.\n\013courseUsers\030\003 \003(\0132\031.prot"
+    "obuf.srl.school.User\022G\n\006access\030\004 \001(\0162,.p"
+    "rotobuf.srl.school.SrlCourse.Accessibili"
+    "ty:\tPROTECTED\022\023\n\013description\030\005 \001(\t\022\020\n\010se"
+    "mester\030\006 \001(\t\022\020\n\010imageUrl\030\007 \001(\t\022\r\n\005grade\030"
+    "\010 \001(\005\0221\n\naccessDate\030\t \001(\0132\035.protobuf.srl"
+    ".school.DateTime\0220\n\tcloseDate\030\n \001(\0132\035.pr"
+    "otobuf.srl.school.DateTime\022)\n\005state\030\013 \001("
+    "\0132\032.protobuf.srl.school.State\"7\n\rAccessi"
+    "bility\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\013\n\007PRI"
+    "VATE\020\003\"\204\005\n\rSrlAssignment\022\020\n\010courseId\030\001 \002"
+    "(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004name\030\003 \001(\t\022I\n\004type\030\004 \001"
+    "(\01621.protobuf.srl.school.SrlAssignment.A"
+    "ssignmentType:\010HOMEWORK\022\r\n\005other\030\005 \001(\t\022\023"
+    "\n\013description\030\006 \001(\t\022\r\n\005links\030\007 \003(\t\022J\n\nla"
+    "tePolicy\030\010 \001(\0162-.protobuf.srl.school.Srl"
+    "Assignment.LatePolicy:\007POLICY1\022\023\n\013gradeW"
+    "eight\030\t \001(\005\022\r\n\005grade\030\n \001(\005\0221\n\naccessDate"
+    "\030\013 \001(\0132\035.protobuf.srl.school.DateTime\022.\n"
+    "\007dueDate\030\014 \001(\0132\035.protobuf.srl.school.Dat"
+    "eTime\0220\n\tcloseDate\030\r \001(\0132\035.protobuf.srl."
+    "school.DateTime\022)\n\005state\030\016 \001(\0132\032.protobu"
+    "f.srl.school.State\022\020\n\010imageUrl\030\017 \001(\t\"R\n\016"
+    "AssignmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007"
+    "\n\003LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006"
+    "\"3\n\nLatePolicy\022\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002"
+    "\022\013\n\007POLICY3\020\003\"\251\002\n\nSrlProblem\022\020\n\010courseId"
+    "\030\001 \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\n\n\002id\030\003 \002(\t"
+    "\022\014\n\004name\030\004 \001(\t\022\023\n\013description\030\005 \001(\t\022\?\n\013s"
+    "ubProblems\030\006 \003(\0132*.protobuf.srl.school.s"
+    "ubproblemInformation\0224\n\004info\030\007 \003(\0132&.pro"
+    "tobuf.srl.school.DomainInformation\022\023\n\013gr"
+    "adeWeight\030\010 \001(\005\022\r\n\005grade\030\t \001(\005\022)\n\005state\030"
+    "\n \001(\0132\032.protobuf.srl.school.State\"\204\002\n\025su"
+    "bproblemInformation\022\024\n\014questionText\030\001 \001("
+    "\t\022U\n\014questionType\030\002 \001(\01627.protobuf.srl.s"
+    "chool.subproblemInformation.QuestionType"
+    ":\006SKETCH\022\017\n\007options\030\003 \001(\014\022\023\n\013gradeWeight"
+    "\030\004 \001(\005\022\r\n\005grade\030\005 \001(\005\"I\n\014QuestionType\022\n\n"
+    "\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020"
+    "\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001"
+    "(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004"
+    " \001(\005\022\016\n\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013"
+    "millisecond\030\007 \001(\004\"\"\n\021DomainInformation\022\r"
+    "\n\005stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 \001("
+    "\010\022\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017"
+    "\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"_\n\004Us"
+    "er\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 \001(\0162\035"
+    ".protobuf.srl.school.UserType:\005GUEST\022\r\n\005"
+    "email\030\003 \001(\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nIN"
+    "STRUCTOR\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007ST"
+    "UDENT\020\004\022\t\n\005GUEST\020\005", 2298);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/school.proto", &protobuf_RegisterTypes);
   SrlSchool::default_instance_ = new SrlSchool();
@@ -737,8 +740,8 @@ const SrlCourse_Accessibility SrlCourse::Accessibility_MAX;
 const int SrlCourse::Accessibility_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
-const int SrlCourse::kCourseIdFieldNumber;
-const int SrlCourse::kCourseNameFieldNumber;
+const int SrlCourse::kIdFieldNumber;
+const int SrlCourse::kNameFieldNumber;
 const int SrlCourse::kCourseUsersFieldNumber;
 const int SrlCourse::kAccessFieldNumber;
 const int SrlCourse::kDescriptionFieldNumber;
@@ -769,8 +772,8 @@ SrlCourse::SrlCourse(const SrlCourse& from)
 
 void SrlCourse::SharedCtor() {
   _cached_size_ = 0;
-  courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  coursename_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   access_ = 2;
   description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   semester_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
@@ -787,11 +790,11 @@ SrlCourse::~SrlCourse() {
 }
 
 void SrlCourse::SharedDtor() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
+  if (id_ != &::google::protobuf::internal::kEmptyString) {
+    delete id_;
   }
-  if (coursename_ != &::google::protobuf::internal::kEmptyString) {
-    delete coursename_;
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
   }
   if (description_ != &::google::protobuf::internal::kEmptyString) {
     delete description_;
@@ -832,14 +835,14 @@ SrlCourse* SrlCourse::New() const {
 
 void SrlCourse::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_courseid()) {
-      if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-        courseid_->clear();
+    if (has_id()) {
+      if (id_ != &::google::protobuf::internal::kEmptyString) {
+        id_->clear();
       }
     }
-    if (has_coursename()) {
-      if (coursename_ != &::google::protobuf::internal::kEmptyString) {
-        coursename_->clear();
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
+        name_->clear();
       }
     }
     access_ = 2;
@@ -882,31 +885,31 @@ bool SrlCourse::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string courseId = 1;
+      // required string id = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_courseid()));
+                input, this->mutable_id()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->courseid().data(), this->courseid().length(),
+            this->id().data(), this->id().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_courseName;
+        if (input->ExpectTag(18)) goto parse_name;
         break;
       }
 
-      // optional string courseName = 2;
+      // optional string name = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_courseName:
+         parse_name:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_coursename()));
+                input, this->mutable_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->coursename().data(), this->coursename().length(),
+            this->name().data(), this->name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -1078,22 +1081,22 @@ bool SrlCourse::MergePartialFromCodedStream(
 
 void SrlCourse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string courseId = 1;
-  if (has_courseid()) {
+  // required string id = 1;
+  if (has_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
+      this->id().data(), this->id().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->courseid(), output);
+      1, this->id(), output);
   }
 
-  // optional string courseName = 2;
-  if (has_coursename()) {
+  // optional string name = 2;
+  if (has_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->coursename().data(), this->coursename().length(),
+      this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->coursename(), output);
+      2, this->name(), output);
   }
 
   // repeated .protobuf.srl.school.User courseUsers = 3;
@@ -1166,24 +1169,24 @@ void SrlCourse::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SrlCourse::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string courseId = 1;
-  if (has_courseid()) {
+  // required string id = 1;
+  if (has_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
+      this->id().data(), this->id().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->courseid(), target);
+        1, this->id(), target);
   }
 
-  // optional string courseName = 2;
-  if (has_coursename()) {
+  // optional string name = 2;
+  if (has_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->coursename().data(), this->coursename().length(),
+      this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->coursename(), target);
+        2, this->name(), target);
   }
 
   // repeated .protobuf.srl.school.User courseUsers = 3;
@@ -1266,18 +1269,18 @@ int SrlCourse::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string courseId = 1;
-    if (has_courseid()) {
+    // required string id = 1;
+    if (has_id()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->courseid());
+          this->id());
     }
 
-    // optional string courseName = 2;
-    if (has_coursename()) {
+    // optional string name = 2;
+    if (has_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->coursename());
+          this->name());
     }
 
     // optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];
@@ -1373,11 +1376,11 @@ void SrlCourse::MergeFrom(const SrlCourse& from) {
   GOOGLE_CHECK_NE(&from, this);
   courseusers_.MergeFrom(from.courseusers_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_courseid()) {
-      set_courseid(from.courseid());
+    if (from.has_id()) {
+      set_id(from.id());
     }
-    if (from.has_coursename()) {
-      set_coursename(from.coursename());
+    if (from.has_name()) {
+      set_name(from.name());
     }
     if (from.has_access()) {
       set_access(from.access());
@@ -1432,8 +1435,8 @@ bool SrlCourse::IsInitialized() const {
 
 void SrlCourse::Swap(SrlCourse* other) {
   if (other != this) {
-    std::swap(courseid_, other->courseid_);
-    std::swap(coursename_, other->coursename_);
+    std::swap(id_, other->id_);
+    std::swap(name_, other->name_);
     courseusers_.Swap(&other->courseusers_);
     std::swap(access_, other->access_);
     std::swap(description_, other->description_);
@@ -1514,8 +1517,8 @@ const int SrlAssignment::LatePolicy_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
 const int SrlAssignment::kCourseIdFieldNumber;
-const int SrlAssignment::kAssignmentIdFieldNumber;
-const int SrlAssignment::kAssignmentNameFieldNumber;
+const int SrlAssignment::kIdFieldNumber;
+const int SrlAssignment::kNameFieldNumber;
 const int SrlAssignment::kTypeFieldNumber;
 const int SrlAssignment::kOtherFieldNumber;
 const int SrlAssignment::kDescriptionFieldNumber;
@@ -1527,6 +1530,7 @@ const int SrlAssignment::kAccessDateFieldNumber;
 const int SrlAssignment::kDueDateFieldNumber;
 const int SrlAssignment::kCloseDateFieldNumber;
 const int SrlAssignment::kStateFieldNumber;
+const int SrlAssignment::kImageUrlFieldNumber;
 #endif  // !_MSC_VER
 
 SrlAssignment::SrlAssignment()
@@ -1550,8 +1554,8 @@ SrlAssignment::SrlAssignment(const SrlAssignment& from)
 void SrlAssignment::SharedCtor() {
   _cached_size_ = 0;
   courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  assignmentname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   type_ = 1;
   other_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
@@ -1562,6 +1566,7 @@ void SrlAssignment::SharedCtor() {
   duedate_ = NULL;
   closedate_ = NULL;
   state_ = NULL;
+  imageurl_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1573,17 +1578,20 @@ void SrlAssignment::SharedDtor() {
   if (courseid_ != &::google::protobuf::internal::kEmptyString) {
     delete courseid_;
   }
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentid_;
+  if (id_ != &::google::protobuf::internal::kEmptyString) {
+    delete id_;
   }
-  if (assignmentname_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentname_;
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
   }
   if (other_ != &::google::protobuf::internal::kEmptyString) {
     delete other_;
   }
   if (description_ != &::google::protobuf::internal::kEmptyString) {
     delete description_;
+  }
+  if (imageurl_ != &::google::protobuf::internal::kEmptyString) {
+    delete imageurl_;
   }
   if (this != default_instance_) {
     delete accessdate_;
@@ -1621,14 +1629,14 @@ void SrlAssignment::Clear() {
         courseid_->clear();
       }
     }
-    if (has_assignmentid()) {
-      if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-        assignmentid_->clear();
+    if (has_id()) {
+      if (id_ != &::google::protobuf::internal::kEmptyString) {
+        id_->clear();
       }
     }
-    if (has_assignmentname()) {
-      if (assignmentname_ != &::google::protobuf::internal::kEmptyString) {
-        assignmentname_->clear();
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
+        name_->clear();
       }
     }
     type_ = 1;
@@ -1659,6 +1667,11 @@ void SrlAssignment::Clear() {
     if (has_state()) {
       if (state_ != NULL) state_->::protobuf::srl::school::State::Clear();
     }
+    if (has_imageurl()) {
+      if (imageurl_ != &::google::protobuf::internal::kEmptyString) {
+        imageurl_->clear();
+      }
+    }
   }
   links_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1683,36 +1696,36 @@ bool SrlAssignment::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_assignmentId;
+        if (input->ExpectTag(18)) goto parse_id;
         break;
       }
 
-      // required string assignmentId = 2;
+      // required string id = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_assignmentId:
+         parse_id:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_assignmentid()));
+                input, this->mutable_id()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->assignmentid().data(), this->assignmentid().length(),
+            this->id().data(), this->id().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(26)) goto parse_assignmentName;
+        if (input->ExpectTag(26)) goto parse_name;
         break;
       }
 
-      // optional string assignmentName = 3;
+      // optional string name = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_assignmentName:
+         parse_name:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_assignmentname()));
+                input, this->mutable_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->assignmentname().data(), this->assignmentname().length(),
+            this->name().data(), this->name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -1721,7 +1734,7 @@ bool SrlAssignment::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;
+      // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1795,7 +1808,7 @@ bool SrlAssignment::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+      // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
       case 8: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1900,6 +1913,23 @@ bool SrlAssignment::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(122)) goto parse_imageUrl;
+        break;
+      }
+
+      // optional string imageUrl = 15;
+      case 15: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_imageUrl:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_imageurl()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->imageurl().data(), this->imageurl().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1931,25 +1961,25 @@ void SrlAssignment::SerializeWithCachedSizes(
       1, this->courseid(), output);
   }
 
-  // required string assignmentId = 2;
-  if (has_assignmentid()) {
+  // required string id = 2;
+  if (has_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
+      this->id().data(), this->id().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->assignmentid(), output);
+      2, this->id(), output);
   }
 
-  // optional string assignmentName = 3;
-  if (has_assignmentname()) {
+  // optional string name = 3;
+  if (has_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentname().data(), this->assignmentname().length(),
+      this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->assignmentname(), output);
+      3, this->name(), output);
   }
 
-  // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;
+  // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];
   if (has_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       4, this->type(), output);
@@ -1982,7 +2012,7 @@ void SrlAssignment::SerializeWithCachedSizes(
       7, this->links(i), output);
   }
 
-  // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+  // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
   if (has_latepolicy()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       8, this->latepolicy(), output);
@@ -2022,6 +2052,15 @@ void SrlAssignment::SerializeWithCachedSizes(
       14, this->state(), output);
   }
 
+  // optional string imageUrl = 15;
+  if (has_imageurl()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->imageurl().data(), this->imageurl().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      15, this->imageurl(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2040,27 +2079,27 @@ void SrlAssignment::SerializeWithCachedSizes(
         1, this->courseid(), target);
   }
 
-  // required string assignmentId = 2;
-  if (has_assignmentid()) {
+  // required string id = 2;
+  if (has_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
+      this->id().data(), this->id().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->assignmentid(), target);
+        2, this->id(), target);
   }
 
-  // optional string assignmentName = 3;
-  if (has_assignmentname()) {
+  // optional string name = 3;
+  if (has_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentname().data(), this->assignmentname().length(),
+      this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->assignmentname(), target);
+        3, this->name(), target);
   }
 
-  // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;
+  // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       4, this->type(), target);
@@ -2095,7 +2134,7 @@ void SrlAssignment::SerializeWithCachedSizes(
       WriteStringToArray(7, this->links(i), target);
   }
 
-  // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+  // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
   if (has_latepolicy()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       8, this->latepolicy(), target);
@@ -2139,6 +2178,16 @@ void SrlAssignment::SerializeWithCachedSizes(
         14, this->state(), target);
   }
 
+  // optional string imageUrl = 15;
+  if (has_imageurl()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->imageurl().data(), this->imageurl().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        15, this->imageurl(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2157,21 +2206,21 @@ int SrlAssignment::ByteSize() const {
           this->courseid());
     }
 
-    // required string assignmentId = 2;
-    if (has_assignmentid()) {
+    // required string id = 2;
+    if (has_id()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->assignmentid());
+          this->id());
     }
 
-    // optional string assignmentName = 3;
-    if (has_assignmentname()) {
+    // optional string name = 3;
+    if (has_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->assignmentname());
+          this->name());
     }
 
-    // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4;
+    // optional .protobuf.srl.school.SrlAssignment.AssignmentType type = 4 [default = HOMEWORK];
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
@@ -2191,7 +2240,7 @@ int SrlAssignment::ByteSize() const {
           this->description());
     }
 
-    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
     if (has_latepolicy()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->latepolicy());
@@ -2241,6 +2290,13 @@ int SrlAssignment::ByteSize() const {
           this->state());
     }
 
+    // optional string imageUrl = 15;
+    if (has_imageurl()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->imageurl());
+    }
+
   }
   // repeated string links = 7;
   total_size += 1 * this->links_size();
@@ -2279,11 +2335,11 @@ void SrlAssignment::MergeFrom(const SrlAssignment& from) {
     if (from.has_courseid()) {
       set_courseid(from.courseid());
     }
-    if (from.has_assignmentid()) {
-      set_assignmentid(from.assignmentid());
+    if (from.has_id()) {
+      set_id(from.id());
     }
-    if (from.has_assignmentname()) {
-      set_assignmentname(from.assignmentname());
+    if (from.has_name()) {
+      set_name(from.name());
     }
     if (from.has_type()) {
       set_type(from.type());
@@ -2317,6 +2373,9 @@ void SrlAssignment::MergeFrom(const SrlAssignment& from) {
     if (from.has_state()) {
       mutable_state()->::protobuf::srl::school::State::MergeFrom(from.state());
     }
+    if (from.has_imageurl()) {
+      set_imageurl(from.imageurl());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2342,8 +2401,8 @@ bool SrlAssignment::IsInitialized() const {
 void SrlAssignment::Swap(SrlAssignment* other) {
   if (other != this) {
     std::swap(courseid_, other->courseid_);
-    std::swap(assignmentid_, other->assignmentid_);
-    std::swap(assignmentname_, other->assignmentname_);
+    std::swap(id_, other->id_);
+    std::swap(name_, other->name_);
     std::swap(type_, other->type_);
     std::swap(other_, other->other_);
     std::swap(description_, other->description_);
@@ -2355,6 +2414,7 @@ void SrlAssignment::Swap(SrlAssignment* other) {
     std::swap(duedate_, other->duedate_);
     std::swap(closedate_, other->closedate_);
     std::swap(state_, other->state_);
+    std::swap(imageurl_, other->imageurl_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -2375,13 +2435,14 @@ void SrlAssignment::Swap(SrlAssignment* other) {
 #ifndef _MSC_VER
 const int SrlProblem::kCourseIdFieldNumber;
 const int SrlProblem::kAssignmentIdFieldNumber;
-const int SrlProblem::kProblemIdFieldNumber;
-const int SrlProblem::kProblemNameFieldNumber;
+const int SrlProblem::kIdFieldNumber;
+const int SrlProblem::kNameFieldNumber;
 const int SrlProblem::kDescriptionFieldNumber;
 const int SrlProblem::kSubProblemsFieldNumber;
 const int SrlProblem::kInfoFieldNumber;
 const int SrlProblem::kGradeWeightFieldNumber;
 const int SrlProblem::kGradeFieldNumber;
+const int SrlProblem::kStateFieldNumber;
 #endif  // !_MSC_VER
 
 SrlProblem::SrlProblem()
@@ -2390,6 +2451,7 @@ SrlProblem::SrlProblem()
 }
 
 void SrlProblem::InitAsDefaultInstance() {
+  state_ = const_cast< ::protobuf::srl::school::State*>(&::protobuf::srl::school::State::default_instance());
 }
 
 SrlProblem::SrlProblem(const SrlProblem& from)
@@ -2402,11 +2464,12 @@ void SrlProblem::SharedCtor() {
   _cached_size_ = 0;
   courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  problemname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   gradeweight_ = 0;
   grade_ = 0;
+  state_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2421,16 +2484,17 @@ void SrlProblem::SharedDtor() {
   if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
     delete assignmentid_;
   }
-  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-    delete problemid_;
+  if (id_ != &::google::protobuf::internal::kEmptyString) {
+    delete id_;
   }
-  if (problemname_ != &::google::protobuf::internal::kEmptyString) {
-    delete problemname_;
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
   }
   if (description_ != &::google::protobuf::internal::kEmptyString) {
     delete description_;
   }
   if (this != default_instance_) {
+    delete state_;
   }
 }
 
@@ -2467,14 +2531,14 @@ void SrlProblem::Clear() {
         assignmentid_->clear();
       }
     }
-    if (has_problemid()) {
-      if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-        problemid_->clear();
+    if (has_id()) {
+      if (id_ != &::google::protobuf::internal::kEmptyString) {
+        id_->clear();
       }
     }
-    if (has_problemname()) {
-      if (problemname_ != &::google::protobuf::internal::kEmptyString) {
-        problemname_->clear();
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
+        name_->clear();
       }
     }
     if (has_description()) {
@@ -2486,6 +2550,9 @@ void SrlProblem::Clear() {
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     grade_ = 0;
+    if (has_state()) {
+      if (state_ != NULL) state_->::protobuf::srl::school::State::Clear();
+    }
   }
   subproblems_.Clear();
   info_.Clear();
@@ -2528,36 +2595,36 @@ bool SrlProblem::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(26)) goto parse_problemId;
+        if (input->ExpectTag(26)) goto parse_id;
         break;
       }
 
-      // required string problemId = 3;
+      // required string id = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_problemId:
+         parse_id:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_problemid()));
+                input, this->mutable_id()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->problemid().data(), this->problemid().length(),
+            this->id().data(), this->id().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(34)) goto parse_problemName;
+        if (input->ExpectTag(34)) goto parse_name;
         break;
       }
 
-      // optional string problemName = 4;
+      // optional string name = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_problemName:
+         parse_name:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_problemname()));
+                input, this->mutable_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->problemname().data(), this->problemname().length(),
+            this->name().data(), this->name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -2641,6 +2708,20 @@ bool SrlProblem::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(82)) goto parse_state;
+        break;
+      }
+
+      // optional .protobuf.srl.school.State state = 10;
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_state:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_state()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2681,22 +2762,22 @@ void SrlProblem::SerializeWithCachedSizes(
       2, this->assignmentid(), output);
   }
 
-  // required string problemId = 3;
-  if (has_problemid()) {
+  // required string id = 3;
+  if (has_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemid().data(), this->problemid().length(),
+      this->id().data(), this->id().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->problemid(), output);
+      3, this->id(), output);
   }
 
-  // optional string problemName = 4;
-  if (has_problemname()) {
+  // optional string name = 4;
+  if (has_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemname().data(), this->problemname().length(),
+      this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      4, this->problemname(), output);
+      4, this->name(), output);
   }
 
   // optional string description = 5;
@@ -2730,6 +2811,12 @@ void SrlProblem::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->grade(), output);
   }
 
+  // optional .protobuf.srl.school.State state = 10;
+  if (has_state()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      10, this->state(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2758,24 +2845,24 @@ void SrlProblem::SerializeWithCachedSizes(
         2, this->assignmentid(), target);
   }
 
-  // required string problemId = 3;
-  if (has_problemid()) {
+  // required string id = 3;
+  if (has_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemid().data(), this->problemid().length(),
+      this->id().data(), this->id().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->problemid(), target);
+        3, this->id(), target);
   }
 
-  // optional string problemName = 4;
-  if (has_problemname()) {
+  // optional string name = 4;
+  if (has_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemname().data(), this->problemname().length(),
+      this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        4, this->problemname(), target);
+        4, this->name(), target);
   }
 
   // optional string description = 5;
@@ -2812,6 +2899,13 @@ void SrlProblem::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->grade(), target);
   }
 
+  // optional .protobuf.srl.school.State state = 10;
+  if (has_state()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        10, this->state(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2837,18 +2931,18 @@ int SrlProblem::ByteSize() const {
           this->assignmentid());
     }
 
-    // required string problemId = 3;
-    if (has_problemid()) {
+    // required string id = 3;
+    if (has_id()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->problemid());
+          this->id());
     }
 
-    // optional string problemName = 4;
-    if (has_problemname()) {
+    // optional string name = 4;
+    if (has_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->problemname());
+          this->name());
     }
 
     // optional string description = 5;
@@ -2872,6 +2966,13 @@ int SrlProblem::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->grade());
+    }
+
+    // optional .protobuf.srl.school.State state = 10;
+    if (has_state()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->state());
     }
 
   }
@@ -2925,11 +3026,11 @@ void SrlProblem::MergeFrom(const SrlProblem& from) {
     if (from.has_assignmentid()) {
       set_assignmentid(from.assignmentid());
     }
-    if (from.has_problemid()) {
-      set_problemid(from.problemid());
+    if (from.has_id()) {
+      set_id(from.id());
     }
-    if (from.has_problemname()) {
-      set_problemname(from.problemname());
+    if (from.has_name()) {
+      set_name(from.name());
     }
     if (from.has_description()) {
       set_description(from.description());
@@ -2941,6 +3042,9 @@ void SrlProblem::MergeFrom(const SrlProblem& from) {
   if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_grade()) {
       set_grade(from.grade());
+    }
+    if (from.has_state()) {
+      mutable_state()->::protobuf::srl::school::State::MergeFrom(from.state());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2968,13 +3072,14 @@ void SrlProblem::Swap(SrlProblem* other) {
   if (other != this) {
     std::swap(courseid_, other->courseid_);
     std::swap(assignmentid_, other->assignmentid_);
-    std::swap(problemid_, other->problemid_);
-    std::swap(problemname_, other->problemname_);
+    std::swap(id_, other->id_);
+    std::swap(name_, other->name_);
     std::swap(description_, other->description_);
     subproblems_.Swap(&other->subproblems_);
     info_.Swap(&other->info_);
     std::swap(gradeweight_, other->gradeweight_);
     std::swap(grade_, other->grade_);
+    std::swap(state_, other->state_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -3417,13 +3522,13 @@ void subproblemInformation::Swap(subproblemInformation* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DateTime::kMillisecondFieldNumber;
-const int DateTime::kSecondFieldNumber;
-const int DateTime::kMinuteFieldNumber;
-const int DateTime::kHourFieldNumber;
-const int DateTime::kDayFieldNumber;
-const int DateTime::kMonthFieldNumber;
 const int DateTime::kYearFieldNumber;
+const int DateTime::kMonthFieldNumber;
+const int DateTime::kDayFieldNumber;
+const int DateTime::kHourFieldNumber;
+const int DateTime::kMinuteFieldNumber;
+const int DateTime::kSecondFieldNumber;
+const int DateTime::kMillisecondFieldNumber;
 #endif  // !_MSC_VER
 
 DateTime::DateTime()
@@ -3442,13 +3547,13 @@ DateTime::DateTime(const DateTime& from)
 
 void DateTime::SharedCtor() {
   _cached_size_ = 0;
-  millisecond_ = GOOGLE_ULONGLONG(0);
-  second_ = 0;
-  minute_ = 0;
-  hour_ = 0;
-  day_ = 0;
-  month_ = 0;
   year_ = 0;
+  month_ = 0;
+  day_ = 0;
+  hour_ = 0;
+  minute_ = 0;
+  second_ = 0;
+  millisecond_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3484,13 +3589,13 @@ DateTime* DateTime::New() const {
 
 void DateTime::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    millisecond_ = GOOGLE_ULONGLONG(0);
-    second_ = 0;
-    minute_ = 0;
-    hour_ = 0;
-    day_ = 0;
-    month_ = 0;
     year_ = 0;
+    month_ = 0;
+    day_ = 0;
+    hour_ = 0;
+    minute_ = 0;
+    second_ = 0;
+    millisecond_ = GOOGLE_ULONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -3502,46 +3607,46 @@ bool DateTime::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint64 millisecond = 1;
+      // optional int32 year = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &millisecond_)));
-          set_has_millisecond();
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &year_)));
+          set_has_year();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(16)) goto parse_second;
+        if (input->ExpectTag(16)) goto parse_month;
         break;
       }
 
-      // optional int32 second = 2;
+      // optional int32 month = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_second:
+         parse_month:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &second_)));
-          set_has_second();
+                 input, &month_)));
+          set_has_month();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(24)) goto parse_minute;
+        if (input->ExpectTag(24)) goto parse_day;
         break;
       }
 
-      // optional int32 minute = 3;
+      // optional int32 day = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_minute:
+         parse_day:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &minute_)));
-          set_has_minute();
+                 input, &day_)));
+          set_has_day();
         } else {
           goto handle_uninterpreted;
         }
@@ -3561,51 +3666,51 @@ bool DateTime::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(40)) goto parse_day;
+        if (input->ExpectTag(40)) goto parse_minute;
         break;
       }
 
-      // optional int32 day = 5;
+      // optional int32 minute = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_day:
+         parse_minute:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &day_)));
-          set_has_day();
+                 input, &minute_)));
+          set_has_minute();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(48)) goto parse_month;
+        if (input->ExpectTag(48)) goto parse_second;
         break;
       }
 
-      // optional int32 month = 6;
+      // optional int32 second = 6;
       case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_month:
+         parse_second:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &month_)));
-          set_has_month();
+                 input, &second_)));
+          set_has_second();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(56)) goto parse_year;
+        if (input->ExpectTag(56)) goto parse_millisecond;
         break;
       }
 
-      // optional int32 year = 7;
+      // optional uint64 millisecond = 7;
       case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_year:
+         parse_millisecond:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &year_)));
-          set_has_year();
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &millisecond_)));
+          set_has_millisecond();
         } else {
           goto handle_uninterpreted;
         }
@@ -3631,19 +3736,19 @@ bool DateTime::MergePartialFromCodedStream(
 
 void DateTime::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional uint64 millisecond = 1;
-  if (has_millisecond()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->millisecond(), output);
+  // optional int32 year = 1;
+  if (has_year()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->year(), output);
   }
 
-  // optional int32 second = 2;
-  if (has_second()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->second(), output);
+  // optional int32 month = 2;
+  if (has_month()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->month(), output);
   }
 
-  // optional int32 minute = 3;
-  if (has_minute()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->minute(), output);
+  // optional int32 day = 3;
+  if (has_day()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->day(), output);
   }
 
   // optional int32 hour = 4;
@@ -3651,19 +3756,19 @@ void DateTime::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->hour(), output);
   }
 
-  // optional int32 day = 5;
-  if (has_day()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->day(), output);
+  // optional int32 minute = 5;
+  if (has_minute()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->minute(), output);
   }
 
-  // optional int32 month = 6;
-  if (has_month()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->month(), output);
+  // optional int32 second = 6;
+  if (has_second()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->second(), output);
   }
 
-  // optional int32 year = 7;
-  if (has_year()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->year(), output);
+  // optional uint64 millisecond = 7;
+  if (has_millisecond()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(7, this->millisecond(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3674,19 +3779,19 @@ void DateTime::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DateTime::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional uint64 millisecond = 1;
-  if (has_millisecond()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->millisecond(), target);
+  // optional int32 year = 1;
+  if (has_year()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->year(), target);
   }
 
-  // optional int32 second = 2;
-  if (has_second()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->second(), target);
+  // optional int32 month = 2;
+  if (has_month()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->month(), target);
   }
 
-  // optional int32 minute = 3;
-  if (has_minute()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->minute(), target);
+  // optional int32 day = 3;
+  if (has_day()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->day(), target);
   }
 
   // optional int32 hour = 4;
@@ -3694,19 +3799,19 @@ void DateTime::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->hour(), target);
   }
 
-  // optional int32 day = 5;
-  if (has_day()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->day(), target);
+  // optional int32 minute = 5;
+  if (has_minute()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->minute(), target);
   }
 
-  // optional int32 month = 6;
-  if (has_month()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->month(), target);
+  // optional int32 second = 6;
+  if (has_second()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->second(), target);
   }
 
-  // optional int32 year = 7;
-  if (has_year()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->year(), target);
+  // optional uint64 millisecond = 7;
+  if (has_millisecond()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(7, this->millisecond(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3720,25 +3825,25 @@ int DateTime::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional uint64 millisecond = 1;
-    if (has_millisecond()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->millisecond());
-    }
-
-    // optional int32 second = 2;
-    if (has_second()) {
+    // optional int32 year = 1;
+    if (has_year()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->second());
+          this->year());
     }
 
-    // optional int32 minute = 3;
-    if (has_minute()) {
+    // optional int32 month = 2;
+    if (has_month()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->minute());
+          this->month());
+    }
+
+    // optional int32 day = 3;
+    if (has_day()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->day());
     }
 
     // optional int32 hour = 4;
@@ -3748,25 +3853,25 @@ int DateTime::ByteSize() const {
           this->hour());
     }
 
-    // optional int32 day = 5;
-    if (has_day()) {
+    // optional int32 minute = 5;
+    if (has_minute()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->day());
+          this->minute());
     }
 
-    // optional int32 month = 6;
-    if (has_month()) {
+    // optional int32 second = 6;
+    if (has_second()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->month());
+          this->second());
     }
 
-    // optional int32 year = 7;
-    if (has_year()) {
+    // optional uint64 millisecond = 7;
+    if (has_millisecond()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->year());
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->millisecond());
     }
 
   }
@@ -3796,26 +3901,26 @@ void DateTime::MergeFrom(const ::google::protobuf::Message& from) {
 void DateTime::MergeFrom(const DateTime& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_millisecond()) {
-      set_millisecond(from.millisecond());
-    }
-    if (from.has_second()) {
-      set_second(from.second());
-    }
-    if (from.has_minute()) {
-      set_minute(from.minute());
-    }
-    if (from.has_hour()) {
-      set_hour(from.hour());
-    }
-    if (from.has_day()) {
-      set_day(from.day());
+    if (from.has_year()) {
+      set_year(from.year());
     }
     if (from.has_month()) {
       set_month(from.month());
     }
-    if (from.has_year()) {
-      set_year(from.year());
+    if (from.has_day()) {
+      set_day(from.day());
+    }
+    if (from.has_hour()) {
+      set_hour(from.hour());
+    }
+    if (from.has_minute()) {
+      set_minute(from.minute());
+    }
+    if (from.has_second()) {
+      set_second(from.second());
+    }
+    if (from.has_millisecond()) {
+      set_millisecond(from.millisecond());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -3840,13 +3945,13 @@ bool DateTime::IsInitialized() const {
 
 void DateTime::Swap(DateTime* other) {
   if (other != this) {
-    std::swap(millisecond_, other->millisecond_);
-    std::swap(second_, other->second_);
-    std::swap(minute_, other->minute_);
-    std::swap(hour_, other->hour_);
-    std::swap(day_, other->day_);
-    std::swap(month_, other->month_);
     std::swap(year_, other->year_);
+    std::swap(month_, other->month_);
+    std::swap(day_, other->day_);
+    std::swap(hour_, other->hour_);
+    std::swap(minute_, other->minute_);
+    std::swap(second_, other->second_);
+    std::swap(millisecond_, other->millisecond_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -4092,7 +4197,7 @@ void DomainInformation::Swap(DomainInformation* other) {
 #ifndef _MSC_VER
 const int State::kPublishedFieldNumber;
 const int State::kAccessibleFieldNumber;
-const int State::kLateFieldNumber;
+const int State::kPastDueFieldNumber;
 const int State::kStartedFieldNumber;
 const int State::kCompletedFieldNumber;
 #endif  // !_MSC_VER
@@ -4115,7 +4220,7 @@ void State::SharedCtor() {
   _cached_size_ = 0;
   published_ = false;
   accessible_ = false;
-  late_ = false;
+  pastdue_ = false;
   started_ = false;
   completed_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -4155,7 +4260,7 @@ void State::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     published_ = false;
     accessible_ = false;
-    late_ = false;
+    pastdue_ = false;
     started_ = false;
     completed_ = false;
   }
@@ -4196,19 +4301,19 @@ bool State::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(24)) goto parse_late;
+        if (input->ExpectTag(24)) goto parse_pastDue;
         break;
       }
 
-      // optional bool late = 3;
+      // optional bool pastDue = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_late:
+         parse_pastDue:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &late_)));
-          set_has_late();
+                 input, &pastdue_)));
+          set_has_pastdue();
         } else {
           goto handle_uninterpreted;
         }
@@ -4276,9 +4381,9 @@ void State::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->accessible(), output);
   }
 
-  // optional bool late = 3;
-  if (has_late()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->late(), output);
+  // optional bool pastDue = 3;
+  if (has_pastdue()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->pastdue(), output);
   }
 
   // optional bool started = 4;
@@ -4309,9 +4414,9 @@ void State::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->accessible(), target);
   }
 
-  // optional bool late = 3;
-  if (has_late()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->late(), target);
+  // optional bool pastDue = 3;
+  if (has_pastdue()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->pastdue(), target);
   }
 
   // optional bool started = 4;
@@ -4345,8 +4450,8 @@ int State::ByteSize() const {
       total_size += 1 + 1;
     }
 
-    // optional bool late = 3;
-    if (has_late()) {
+    // optional bool pastDue = 3;
+    if (has_pastdue()) {
       total_size += 1 + 1;
     }
 
@@ -4393,8 +4498,8 @@ void State::MergeFrom(const State& from) {
     if (from.has_accessible()) {
       set_accessible(from.accessible());
     }
-    if (from.has_late()) {
-      set_late(from.late());
+    if (from.has_pastdue()) {
+      set_pastdue(from.pastdue());
     }
     if (from.has_started()) {
       set_started(from.started());
@@ -4427,7 +4532,7 @@ void State::Swap(State* other) {
   if (other != this) {
     std::swap(published_, other->published_);
     std::swap(accessible_, other->accessible_);
-    std::swap(late_, other->late_);
+    std::swap(pastdue_, other->pastdue_);
     std::swap(started_, other->started_);
     std::swap(completed_, other->completed_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
