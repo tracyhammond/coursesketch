@@ -1,0 +1,100 @@
+package protobuf.srl.commands;
+
+message Update {
+	required string updateId = 1;
+	optional int64 time = 2;
+	repeated Command commands = 3;
+}
+
+// inheritance does not exist so this will replace shape
+message Command {
+	required CommandType commandType = 1;
+	required bool isUserCreated = 2;
+	required bytes commandData = 3;
+	optional string commandId = 4;
+}
+
+/**
+ * These are attempted to be ordered by the most common occurence
+ * but are grouped by what make sense
+ */
+enum CommandType {
+	ADD_STROKE = 0;	// This will only contain a SRL_Stroke in commandData
+	ADD_SHAPE = 1; // Contains a shape.
+	PACKAGE_SHAPE = 2; // Repackages shapes from the surface to inside another shape
+	ADD_SUBSHAPE = 3; // Creates a shape inside another shape
+	ASSIGN_ATTRIBUTE = 4;
+	FORCE_INTERPRETATION = 5;
+
+	// Stack Commands, They do not have any other data associated with it.
+	UNDO = 6; // "pop" one command and Undo its effect.
+	REDO = 7; // Redo one command and Redo its effect.
+	REWRITE = 8; // Forces all commands in the list that are past the current state to be removed.
+	CLEAR_STACK = 9; // Clears the stack.
+	SYNC = 10; // Tells this machine to send its list of commands to remote to make sure they are the same.
+}
+
+/**
+ * A sub message that contains a list of Ids.
+ * The first Id will be at the level of the sketch, all further ids are subshapes of that shape.
+ */
+message IdChain {
+	repeated string idChain = 1;
+}
+
+/**
+ * This tells us to do 2 things
+ * #1 add all shapes with an id in the list of {@link shapesToBeContained} into shape with an id of {@link newContainerId}
+ * #2 delete all the shapes with the id in the list of from the sketch
+ *
+ *  If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
+ */
+message PackageShape {
+	optional IdChain oldContainerId = 1;
+	optional IdChain newContainerId = 2;
+	repeated string shapesToBeContained = 3; // This is a list of shapes ids
+}
+
+/**
+ * Creates a shape inside of a parent shape.
+ */
+message AddSubshape {
+	required IdChain parentShape = 1;
+	required bytes shape = 2;
+}
+
+/**
+ * Tells the sketch to remove an object, (can either be a stroke or a shape)
+ */
+message RemoveObject {
+	required IdChain shapeId = 1;
+}
+
+/**
+ * Gives the shape with the current Id a new interpretation
+ */
+message ForceInterpretation {
+	required bytes interpretation = 1;
+	required IdChain shapeId = 2;
+}
+
+/**
+ * Assigns an attribute to a shape.
+ */
+message AddAttribtue {
+	required IdChain shapeId = 1;
+	required string attributeKey = 2;
+	required bytes attributeValue = 3;
+}
+
+/**
+ * Removes an attribute from a shape.
+ *
+ * the value that is removed is stored here.
+ * A ReplaceAttribute is a combination of a RemoveAttribtue and then an AddAttribtue
+ */
+message RemoveAttribtue {
+	required IdChain shapeId = 1;
+	required string attributeKey = 2;
+	required bytes attributeValue = 3;
+}
