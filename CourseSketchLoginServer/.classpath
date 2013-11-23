@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="main/example/" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/protobuf-2.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/websocketsource.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator.Raniero-Laptop/Documents/GitHub/coursesketch/CourseSketchLoginServer/libs/jackson-all-1.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator.Raniero-Laptop/Documents/GitHub/coursesketch/CourseSketchLoginServer/libs/Jama-1.0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator.Raniero-Laptop/Documents/GitHub/coursesketch/CourseSketchLoginServer/libs/java_websocket.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator.Raniero-Laptop/Documents/GitHub/coursesketch/CourseSketchLoginServer/libs/openawt.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator.Raniero-Laptop/Documents/GitHub/coursesketch/CourseSketchLoginServer/libs/simple-xml-2.6.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator.Raniero-Laptop/Documents/GitHub/coursesketch/CourseSketchLoginServer/libs/slf4j-api-1.6.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator.Raniero-Laptop/Documents/GitHub/coursesketch/CourseSketchLoginServer/libs/slf4j-simple-1.6.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator.Raniero-Laptop/Documents/GitHub/coursesketch/CourseSketchLoginServer/libs/sr-core01.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Administrator.Raniero-Laptop/Documents/GitHub/coursesketch/CourseSketchLoginServer/libs/sr-recognition01.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

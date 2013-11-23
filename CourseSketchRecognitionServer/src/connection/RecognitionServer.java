@@ -22,14 +22,17 @@ import org.java_websocket.server.WebSocketServer;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import protobuf.srl.commands.Commands.Command;
+import protobuf.srl.commands.Commands.SrlCommand;
 import protobuf.srl.commands.Commands.CommandType;
-import protobuf.srl.commands.Commands.Update;
+import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
+import proxyServer.ConnectionState;
+import proxyServer.Decoder;
+import proxyServer.Encoder;
 
 /**
  * A simple WebSocketServer implementation.
@@ -56,6 +59,7 @@ public class RecognitionServer extends WebSocketServer {
 
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
+		System.out.println("Open Recognition Connection");
 		if (connections.size() >= MAX_CONNECTIONS) {
 			// Return negatative state.
 			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
@@ -87,7 +91,7 @@ public class RecognitionServer extends WebSocketServer {
 		}
 		if (req.getRequestType() == Request.MessageType.RECOGNITION) {
 			ByteString rawUpdateData = req.getOtherData();
-			Update savedUpdate = Decoder.parseNextUpdate(rawUpdateData);
+			SrlUpdate savedUpdate = connection.Decoder.parseNextUpdate(rawUpdateData);
 			req.getSessionInfo();
 			Response r = null;
 			//if it does not exist, add it to map
@@ -109,11 +113,11 @@ public class RecognitionServer extends WebSocketServer {
 				SrlShape shape = r.interpret(savedUpdate);
 				SrlStroke stroke = r.mirror(savedUpdate);
 				//post function they will give (package the information received)
-				Command com1 = Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_STROKE);
-				Command com2 = Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_SHAPE);
+				SrlCommand com1 = connection.Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_STROKE);
+				SrlCommand com2 = connection.Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_SHAPE);
 				
 				
-				result = Encoder.createRequestFromCommands(req.getSessionInfo(), com1, com2);
+				result = connection.Encoder.createRequestFromCommands(req.getSessionInfo(), com1, com2);
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -132,13 +136,13 @@ public class RecognitionServer extends WebSocketServer {
 	 */
 	public ConnectionState getUniqueId() {
 		// TODO: Assign ID using a linked list so they can be used multiple times.  O(1) when used as a Queue
-		return new ConnectionState(numberOfConnections++);
+		return new ConnectionState(Encoder.nextID().toString());
 	}
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Recognition Server: Version 1.0.2");
+		System.out.println("Recognition Server: Version 1.0.2.ant");
 		WebSocketImpl.DEBUG = true;
-		int port = 8888; // 843 flash policy port
+		int port = 8887; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
