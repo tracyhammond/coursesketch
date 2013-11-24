@@ -33,10 +33,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
  * This is a backend server that is only connected by other servers
  */
 public class AnswerCheckerServer extends MultiInternalConnectionServer {
-
-	public static final int MAX_CONNECTIONS = 20;
-	public static final int STATE_SERVER_FULL = 4001;
-	static final String FULL_SERVER_MESSAGE = "Sorry, the BLANK server is full";
 	
 	List<WebSocket> connections = new LinkedList<WebSocket>();
 	AnswerConnectionManager internalConnections = new AnswerConnectionManager(this);
@@ -49,7 +45,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 
 	public AnswerCheckerServer( InetSocketAddress address ) {
 		super( address );
-		internalConnections.addConnection(internalConnections.createConnection(this, false, 9000, SolutionConnection.class));
+		internalConnections.createAndAddConnection(this, false, 9000, SolutionConnection.class);
 	}
 
 	/**
@@ -76,7 +72,8 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 				SrlExperiment student = SrlExperiment.parseFrom(req.getOtherData());
 				MultiConnectionState state = connectionToId.get(conn);
 				((AnswerConnectionState) state).addPendingExperiment(req.getSessionInfo(),student);
-				internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), 0);
+				// ask for a specific solution
+				internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class);
 				return;
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
@@ -85,7 +82,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 			try {
 				SrlSolution instructor = SrlSolution.parseFrom(req.getOtherData());
 				// I know it is a solution...
-				internalConnections.send(req, req.getSessionInfo(), 0);
+				internalConnections.send(req, req.getSessionInfo(), SolutionConnection.class);
 				return;
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
