@@ -18,7 +18,7 @@ public class Response {
 	private PaleoSketchRecognizer m_recognizer;
 	private UpdateList m_syncList;
 	private Sketch m_drawspace;
-
+	
 	/**
 	 * Default constructor that initializes the recognizer with all primitives on
 	 */
@@ -26,23 +26,16 @@ public class Response {
 		m_syncList = new UpdateList();
 		m_recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
 	}
-
+	
 	/**
 	 * optional constructor to specify recognition domain
 	 * @param domain
 	 */
-<<<<<<< HEAD
-	/*
-	public Response(PaleoConfig config){
-		//Instantiate All sketch recognition objects
-=======
 	public Response(PaleoConfig domain){
 		m_syncList = new UpdateList();
 		m_recognizer = new PaleoSketchRecognizer(domain);
->>>>>>> b44024cbdb6f2dcac140cb42b422e30e092bbc9f
 	}
-	*/
-
+	
 	/**
 	 * Point of communication, takes an update and runs the recognizer
 	 * and returns the results
@@ -53,18 +46,6 @@ public class Response {
 	public SrlUpdate recognize(SrlUpdate call) throws Exception{
 		m_syncList.add(parseUpdate(call));
 		m_syncList.executeLast(m_drawspace);
-<<<<<<< HEAD
-
-		Update result = new Update();
-
-		//perform recognition
-
-		result.setTime(System.currentTimeMillis());
-		m_syncList.add(result);
-		m_syncList.executeLast(m_drawspace);
-
-		return repackage(result);
-=======
 		
 		if(m_syncList.back().getStroke() == null)
 			return null;
@@ -78,9 +59,8 @@ public class Response {
 		m_syncList.executeLast(m_drawspace);
 		
 		return repackage(actions);
->>>>>>> b44024cbdb6f2dcac140cb42b422e30e092bbc9f
 	}
-
+	
 	/**
 	 * Parses a Protobuf type update into a usable commands
 	 * @param protobuf.srl.commands.Commands.Update
