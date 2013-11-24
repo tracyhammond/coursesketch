@@ -17,6 +17,11 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.submission.Submission.SrlSolution;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+
+import database.Database;
 
 /**
  * A simple WebSocketServer implementation.
@@ -29,6 +34,7 @@ public class SolutionServer extends WebSocketServer {
 	public static final int STATE_SERVER_FULL = 4001;
 	static final String FULL_SERVER_MESSAGE = "Sorry, the BLANK server is full";
 
+	Database storage = new Database();
 	List<WebSocket> connections = new LinkedList<WebSocket>();
 
 	static int numberOfConnections = Integer.MIN_VALUE;
@@ -72,6 +78,21 @@ public class SolutionServer extends WebSocketServer {
 			//this.
 			// we need to somehow send an error to the client here
 			return;
+		}
+		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
+			try {
+				SrlSolution solution = SrlSolution.parseFrom(req.getOtherData());
+				storage.saveSolution(solution);
+			} catch (InvalidProtocolBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
+			SrlSolution solution = storage.getSolution();// something we send in.
+			Request.Builder build = Request.newBuilder(req);
+			build.setOtherData(solution.toByteString());
+			conn.send(build.build().toByteArray());
 		}
 		// CODE GOES HERE
 	}

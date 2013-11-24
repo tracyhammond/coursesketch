@@ -1,13 +1,13 @@
 package database;
 
-import protobuf.srl.commands.Commands.SrlUpdateList;
+import protobuf.srl.submission.Submission.SrlSolution;
 
 public class Database {
-	public void saveSolution(SrlUpdateList list /*, other data*/) {
+	public void saveSolution(SrlSolution list /*, other data*/) {
 		
 	}
 
-	public SrlUpdateList getSolution(/*, other data*/) {
+	public SrlSolution getSolution(/*, other data*/) {
 		return null;
 	}
 }
