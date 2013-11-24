@@ -47,11 +47,12 @@ public class Response {
 		m_syncList.add(parseUpdate(call));
 		m_syncList.executeLast(m_drawspace);
 		
-		Update actions = new Update();
+		if(m_syncList.back().getStroke() == null)
+			return null;
 		
 		//perform recognition
-		if(m_syncList.back().getStroke() != null)
-			m_recognizer.recognize(m_syncList.back().getStroke());
+		Update actions = new Update();
+		IRecognitionResult result = m_recognizer.recognize(m_syncList.back().getStroke());
 		
 		actions.setTime(System.currentTimeMillis());
 		m_syncList.add(actions);
