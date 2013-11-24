@@ -4,7 +4,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import protobuf.srl.commands.Commands.CommandType;
+
 import srl.core.sketch.Sketch;
+import srl.core.sketch.Stroke;
 
 /**
  * Collection of commands that encapsulates one complete transmission between
@@ -16,6 +19,7 @@ import srl.core.sketch.Sketch;
 public class Update implements Iterable<Command>{
 	private LinkedList<Command> data;
 	private long time;
+	private AddStroke stroke;
 	
 	/**
 	 * Default constructor
@@ -40,8 +44,16 @@ public class Update implements Iterable<Command>{
 	 */
 	public void add(Command c){
 		data.add(c);
+		if(c.getType() == CommandType.ADD_STROKE)
+			stroke = (AddStroke)c;
 	}
 	
+	/**
+	 * @return Stroke of any AddStroke command in this update
+	 */
+	public Stroke getStroke(){
+		return stroke.data;
+	}
 	
 	/**
 	 * @return Time of Update

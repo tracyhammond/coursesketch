@@ -1,23 +1,25 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+<<<<<<< HEAD
 import protobuf.srl.commands.Commands.SrlCommand;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.sketch.Sketch.Interpretation;
 import protobuf.srl.sketch.Sketch.SrlShape;
+=======
+import protobuf.srl.commands.Commands.Update;
+import protobuf.srl.commands.Commands.AddStroke;
+import connection.Decoder;
+>>>>>>> parent of 3592875... added print and the workings for real recognition
 import protobuf.srl.sketch.Sketch.SrlStroke;
 import protobuf.srl.sketch.Sketch.SrlPoint;
 import srl.core.sketch.Point;
-import srl.core.sketch.Shape;
-import srl.core.sketch.Sketch;
 import srl.core.sketch.Stroke;
-import srl.recognition.IRecognitionResult;
-import srl.recognition.paleo.PaleoConfig;
-import srl.recognition.paleo.PaleoSketchRecognizer;
 
 public class Response {
 	private static PaleoSketchRecognizer m_recognizer;
@@ -48,14 +50,15 @@ public class Response {
 	 */
 	public SrlStroke mirror(SrlUpdate up) throws InvalidProtocolBufferException{
 		Stroke s = unpackage(up);
-
-		List<Point> points = s.getPoints();
+		
+		ArrayList<Point> points = (ArrayList<Point>) s.getPoints();
 		for (Point p: points){
 			double z = p.x;
 			p.x = p.y;
 			p.y = z;
 		}
 		s.setPoints(points);
+<<<<<<< HEAD
 
 		SrlStroke response = repackage(s);
 		return response;
@@ -100,6 +103,10 @@ public class Response {
 		IRecognitionResult result = m_recognizer.recognize(sketch.getFirstStroke());
 		
 		SrlShape response = repackage(result);
+=======
+		
+		SrlStroke response = repackage(s);
+>>>>>>> parent of 3592875... added print and the workings for real recognition
 		return response;
 	}
 	
@@ -156,6 +163,7 @@ public class Response {
 		
 		return strokebuilder.build();
 	}
+<<<<<<< HEAD
 	
 	/**
 	 * Repackages a Paleosketch interpretation into a Protobuf type SrlShape
@@ -182,4 +190,6 @@ public class Response {
 		
 		return shapebuilder.build();
 	}
+=======
+>>>>>>> parent of 3592875... added print and the workings for real recognition
 }

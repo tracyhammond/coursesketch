@@ -19,7 +19,7 @@ import protobuf.srl.sketch.Sketch.SrlPoint;
  *
  */
 public class AddStroke extends Command {
-	private Stroke data;
+	protected Stroke data;
 	
 	public AddStroke(SrlStroke input){
 		type = CommandType.ADD_STROKE;

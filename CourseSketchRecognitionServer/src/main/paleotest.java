@@ -22,6 +22,7 @@ public class paleotest {
 		 * one we just created) This should result in a best shape label of
 		 * "Line"
 		 */
+<<<<<<< HEAD
 		
 		IRecognitionResult result = null ;
 
@@ -36,6 +37,11 @@ public class paleotest {
 		
 		System.out.println(result.getBestShape().getInterpretation().label.toString());
 		
+=======
+		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
+		IRecognitionResult result = recognizer.recognize(sketch.getFirstStroke());
+
+>>>>>>> parent of 3592875... added print and the workings for real recognition
 		if (result.getBestShape().getInterpretation().label.equalsIgnoreCase("line"))
 			System.out.println("Correctly recognized as a line");
 	}

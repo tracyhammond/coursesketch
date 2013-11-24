@@ -30,6 +30,10 @@ public class AddShape extends Command {
 		data.setName(input.getName());
 		//FIXME set the time to match client load time
 	}
+	
+	public AddShape(Shape input){
+		data = input;
+	}
 
 	@Override
 	public ByteString toByteString() {
