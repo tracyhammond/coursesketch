@@ -1604,50 +1604,19 @@ public final class School {
     com.google.protobuf.ByteString
         getNameBytes();
 
-    // repeated .protobuf.srl.school.User courseUsers = 3;
+    // optional .protobuf.srl.school.SrlPermission accessPermission = 3;
     /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
      */
-    java.util.List<protobuf.srl.school.School.User> 
-        getCourseUsersList();
+    boolean hasAccessPermission();
     /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
      */
-    protobuf.srl.school.School.User getCourseUsers(int index);
+    protobuf.srl.school.School.SrlPermission getAccessPermission();
     /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
      */
-    int getCourseUsersCount();
-    /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
-     */
-    java.util.List<? extends protobuf.srl.school.School.UserOrBuilder> 
-        getCourseUsersOrBuilderList();
-    /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
-     */
-    protobuf.srl.school.School.UserOrBuilder getCourseUsersOrBuilder(
-        int index);
+    protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionOrBuilder();
 
     // optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];
     /**
@@ -1862,11 +1831,16 @@ public final class School {
               break;
             }
             case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                courseUsers_ = new java.util.ArrayList<protobuf.srl.school.School.User>();
-                mutable_bitField0_ |= 0x00000004;
+              protobuf.srl.school.School.SrlPermission.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = accessPermission_.toBuilder();
               }
-              courseUsers_.add(input.readMessage(protobuf.srl.school.School.User.PARSER, extensionRegistry));
+              accessPermission_ = input.readMessage(protobuf.srl.school.School.SrlPermission.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(accessPermission_);
+                accessPermission_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000004;
               break;
             }
             case 32: {
@@ -1875,34 +1849,34 @@ public final class School {
               if (value == null) {
                 unknownFields.mergeVarintField(4, rawValue);
               } else {
-                bitField0_ |= 0x00000004;
+                bitField0_ |= 0x00000008;
                 access_ = value;
               }
               break;
             }
             case 42: {
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000010;
               description_ = input.readBytes();
               break;
             }
             case 50: {
-              bitField0_ |= 0x00000010;
+              bitField0_ |= 0x00000020;
               semester_ = input.readBytes();
               break;
             }
             case 58: {
-              bitField0_ |= 0x00000020;
+              bitField0_ |= 0x00000040;
               imageUrl_ = input.readBytes();
               break;
             }
             case 64: {
-              bitField0_ |= 0x00000040;
+              bitField0_ |= 0x00000080;
               grade_ = input.readInt32();
               break;
             }
             case 74: {
               protobuf.srl.school.School.DateTime.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000080) == 0x00000080)) {
+              if (((bitField0_ & 0x00000100) == 0x00000100)) {
                 subBuilder = accessDate_.toBuilder();
               }
               accessDate_ = input.readMessage(protobuf.srl.school.School.DateTime.PARSER, extensionRegistry);
@@ -1910,12 +1884,12 @@ public final class School {
                 subBuilder.mergeFrom(accessDate_);
                 accessDate_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000080;
+              bitField0_ |= 0x00000100;
               break;
             }
             case 82: {
               protobuf.srl.school.School.DateTime.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000100) == 0x00000100)) {
+              if (((bitField0_ & 0x00000200) == 0x00000200)) {
                 subBuilder = closeDate_.toBuilder();
               }
               closeDate_ = input.readMessage(protobuf.srl.school.School.DateTime.PARSER, extensionRegistry);
@@ -1923,12 +1897,12 @@ public final class School {
                 subBuilder.mergeFrom(closeDate_);
                 closeDate_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000100;
+              bitField0_ |= 0x00000200;
               break;
             }
             case 90: {
               protobuf.srl.school.School.State.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000200) == 0x00000200)) {
+              if (((bitField0_ & 0x00000400) == 0x00000400)) {
                 subBuilder = state_.toBuilder();
               }
               state_ = input.readMessage(protobuf.srl.school.School.State.PARSER, extensionRegistry);
@@ -1936,7 +1910,7 @@ public final class School {
                 subBuilder.mergeFrom(state_);
                 state_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000200;
+              bitField0_ |= 0x00000400;
               break;
             }
           }
@@ -1947,9 +1921,6 @@ public final class School {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          courseUsers_ = java.util.Collections.unmodifiableList(courseUsers_);
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -1990,7 +1961,7 @@ public final class School {
        * <code>PUBLIC = 1;</code>
        *
        * <pre>
-       *Any student can access course without approval
+       *Any student can access course without approval.
        * </pre>
        */
       PUBLIC(0, 1),
@@ -1998,25 +1969,33 @@ public final class School {
        * <code>PROTECTED = 2;</code>
        *
        * <pre>
-       *Any student can request access for course, requires instructor approval
+       *Any student can request access for course and public information it is searchable, requires instructor approval
        * </pre>
        */
       PROTECTED(1, 2),
       /**
-       * <code>PRIVATE = 3;</code>
+       * <code>PROTECTED_NOSEARCH = 3;</code>
+       *
+       * <pre>
+       *No students can see course without a special link, it is not searchable, requires instructor approval
+       * </pre>
+       */
+      PROTECTED_NOSEARCH(2, 3),
+      /**
+       * <code>PRIVATE = 4;</code>
        *
        * <pre>
        *No students can see course without instructor invitation
        * </pre>
        */
-      PRIVATE(2, 3),
+      PRIVATE(3, 4),
       ;
 
       /**
        * <code>PUBLIC = 1;</code>
        *
        * <pre>
-       *Any student can access course without approval
+       *Any student can access course without approval.
        * </pre>
        */
       public static final int PUBLIC_VALUE = 1;
@@ -2024,18 +2003,26 @@ public final class School {
        * <code>PROTECTED = 2;</code>
        *
        * <pre>
-       *Any student can request access for course, requires instructor approval
+       *Any student can request access for course and public information it is searchable, requires instructor approval
        * </pre>
        */
       public static final int PROTECTED_VALUE = 2;
       /**
-       * <code>PRIVATE = 3;</code>
+       * <code>PROTECTED_NOSEARCH = 3;</code>
+       *
+       * <pre>
+       *No students can see course without a special link, it is not searchable, requires instructor approval
+       * </pre>
+       */
+      public static final int PROTECTED_NOSEARCH_VALUE = 3;
+      /**
+       * <code>PRIVATE = 4;</code>
        *
        * <pre>
        *No students can see course without instructor invitation
        * </pre>
        */
-      public static final int PRIVATE_VALUE = 3;
+      public static final int PRIVATE_VALUE = 4;
 
 
       public final int getNumber() { return value; }
@@ -2044,7 +2031,8 @@ public final class School {
         switch (value) {
           case 1: return PUBLIC;
           case 2: return PROTECTED;
-          case 3: return PRIVATE;
+          case 3: return PROTECTED_NOSEARCH;
+          case 4: return PRIVATE;
           default: return null;
         }
       }
@@ -2195,60 +2183,26 @@ public final class School {
       }
     }
 
-    // repeated .protobuf.srl.school.User courseUsers = 3;
-    public static final int COURSEUSERS_FIELD_NUMBER = 3;
-    private java.util.List<protobuf.srl.school.School.User> courseUsers_;
+    // optional .protobuf.srl.school.SrlPermission accessPermission = 3;
+    public static final int ACCESSPERMISSION_FIELD_NUMBER = 3;
+    private protobuf.srl.school.School.SrlPermission accessPermission_;
     /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
      */
-    public java.util.List<protobuf.srl.school.School.User> getCourseUsersList() {
-      return courseUsers_;
+    public boolean hasAccessPermission() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
      */
-    public java.util.List<? extends protobuf.srl.school.School.UserOrBuilder> 
-        getCourseUsersOrBuilderList() {
-      return courseUsers_;
+    public protobuf.srl.school.School.SrlPermission getAccessPermission() {
+      return accessPermission_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
      */
-    public int getCourseUsersCount() {
-      return courseUsers_.size();
-    }
-    /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
-     */
-    public protobuf.srl.school.School.User getCourseUsers(int index) {
-      return courseUsers_.get(index);
-    }
-    /**
-     * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-     *
-     * <pre>
-     *Course Roster, includes all user types
-     * </pre>
-     */
-    public protobuf.srl.school.School.UserOrBuilder getCourseUsersOrBuilder(
-        int index) {
-      return courseUsers_.get(index);
+    public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionOrBuilder() {
+      return accessPermission_;
     }
 
     // optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];
@@ -2258,7 +2212,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];</code>
      */
     public boolean hasAccess() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
      * <code>optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];</code>
@@ -2274,7 +2228,7 @@ public final class School {
      * <code>optional string description = 5;</code>
      */
     public boolean hasDescription() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
      * <code>optional string description = 5;</code>
@@ -2321,7 +2275,7 @@ public final class School {
      * </pre>
      */
     public boolean hasSemester() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
      * <code>optional string semester = 6;</code>
@@ -2372,7 +2326,7 @@ public final class School {
      * <code>optional string imageUrl = 7;</code>
      */
     public boolean hasImageUrl() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
+      return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
      * <code>optional string imageUrl = 7;</code>
@@ -2419,7 +2373,7 @@ public final class School {
      * </pre>
      */
     public boolean hasGrade() {
-      return ((bitField0_ & 0x00000040) == 0x00000040);
+      return ((bitField0_ & 0x00000080) == 0x00000080);
     }
     /**
      * <code>optional int32 grade = 8;</code>
@@ -2443,7 +2397,7 @@ public final class School {
      * </pre>
      */
     public boolean hasAccessDate() {
-      return ((bitField0_ & 0x00000080) == 0x00000080);
+      return ((bitField0_ & 0x00000100) == 0x00000100);
     }
     /**
      * <code>optional .protobuf.srl.school.DateTime accessDate = 9;</code>
@@ -2477,7 +2431,7 @@ public final class School {
      * </pre>
      */
     public boolean hasCloseDate() {
-      return ((bitField0_ & 0x00000100) == 0x00000100);
+      return ((bitField0_ & 0x00000200) == 0x00000200);
     }
     /**
      * <code>optional .protobuf.srl.school.DateTime closeDate = 10;</code>
@@ -2507,7 +2461,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.State state = 11;</code>
      */
     public boolean hasState() {
-      return ((bitField0_ & 0x00000200) == 0x00000200);
+      return ((bitField0_ & 0x00000400) == 0x00000400);
     }
     /**
      * <code>optional .protobuf.srl.school.State state = 11;</code>
@@ -2525,7 +2479,7 @@ public final class School {
     private void initFields() {
       id_ = "";
       name_ = "";
-      courseUsers_ = java.util.Collections.emptyList();
+      accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
       access_ = protobuf.srl.school.School.SrlCourse.Accessibility.PROTECTED;
       description_ = "";
       semester_ = "";
@@ -2544,8 +2498,8 @@ public final class School {
         memoizedIsInitialized = 0;
         return false;
       }
-      for (int i = 0; i < getCourseUsersCount(); i++) {
-        if (!getCourseUsers(i).isInitialized()) {
+      if (hasAccessPermission()) {
+        if (!getAccessPermission().isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -2563,31 +2517,31 @@ public final class School {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getNameBytes());
       }
-      for (int i = 0; i < courseUsers_.size(); i++) {
-        output.writeMessage(3, courseUsers_.get(i));
-      }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeEnum(4, access_.getNumber());
+        output.writeMessage(3, accessPermission_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(5, getDescriptionBytes());
+        output.writeEnum(4, access_.getNumber());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeBytes(6, getSemesterBytes());
+        output.writeBytes(5, getDescriptionBytes());
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeBytes(7, getImageUrlBytes());
+        output.writeBytes(6, getSemesterBytes());
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeInt32(8, grade_);
+        output.writeBytes(7, getImageUrlBytes());
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        output.writeMessage(9, accessDate_);
+        output.writeInt32(8, grade_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        output.writeMessage(10, closeDate_);
+        output.writeMessage(9, accessDate_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        output.writeMessage(10, closeDate_);
+      }
+      if (((bitField0_ & 0x00000400) == 0x00000400)) {
         output.writeMessage(11, state_);
       }
       getUnknownFields().writeTo(output);
@@ -2607,39 +2561,39 @@ public final class School {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, getNameBytes());
       }
-      for (int i = 0; i < courseUsers_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, courseUsers_.get(i));
-      }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(4, access_.getNumber());
+          .computeMessageSize(3, accessPermission_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, getDescriptionBytes());
+          .computeEnumSize(4, access_.getNumber());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(6, getSemesterBytes());
+          .computeBytesSize(5, getDescriptionBytes());
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(7, getImageUrlBytes());
+          .computeBytesSize(6, getSemesterBytes());
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(8, grade_);
+          .computeBytesSize(7, getImageUrlBytes());
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(9, accessDate_);
+          .computeInt32Size(8, grade_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(10, closeDate_);
+          .computeMessageSize(9, accessDate_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(10, closeDate_);
+      }
+      if (((bitField0_ & 0x00000400) == 0x00000400)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(11, state_);
       }
@@ -2751,7 +2705,7 @@ public final class School {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getCourseUsersFieldBuilder();
+          getAccessPermissionFieldBuilder();
           getAccessDateFieldBuilder();
           getCloseDateFieldBuilder();
           getStateFieldBuilder();
@@ -2767,12 +2721,12 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000001);
         name_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        if (courseUsersBuilder_ == null) {
-          courseUsers_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+        if (accessPermissionBuilder_ == null) {
+          accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
         } else {
-          courseUsersBuilder_.clear();
+          accessPermissionBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000004);
         access_ = protobuf.srl.school.School.SrlCourse.Accessibility.PROTECTED;
         bitField0_ = (bitField0_ & ~0x00000008);
         description_ = "";
@@ -2837,37 +2791,36 @@ public final class School {
           to_bitField0_ |= 0x00000002;
         }
         result.name_ = name_;
-        if (courseUsersBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
-            courseUsers_ = java.util.Collections.unmodifiableList(courseUsers_);
-            bitField0_ = (bitField0_ & ~0x00000004);
-          }
-          result.courseUsers_ = courseUsers_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        if (accessPermissionBuilder_ == null) {
+          result.accessPermission_ = accessPermission_;
         } else {
-          result.courseUsers_ = courseUsersBuilder_.build();
+          result.accessPermission_ = accessPermissionBuilder_.build();
         }
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000004;
+          to_bitField0_ |= 0x00000008;
         }
         result.access_ = access_;
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000008;
+          to_bitField0_ |= 0x00000010;
         }
         result.description_ = description_;
         if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-          to_bitField0_ |= 0x00000010;
+          to_bitField0_ |= 0x00000020;
         }
         result.semester_ = semester_;
         if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
-          to_bitField0_ |= 0x00000020;
+          to_bitField0_ |= 0x00000040;
         }
         result.imageUrl_ = imageUrl_;
         if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
-          to_bitField0_ |= 0x00000040;
+          to_bitField0_ |= 0x00000080;
         }
         result.grade_ = grade_;
         if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
-          to_bitField0_ |= 0x00000080;
+          to_bitField0_ |= 0x00000100;
         }
         if (accessDateBuilder_ == null) {
           result.accessDate_ = accessDate_;
@@ -2875,7 +2828,7 @@ public final class School {
           result.accessDate_ = accessDateBuilder_.build();
         }
         if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
-          to_bitField0_ |= 0x00000100;
+          to_bitField0_ |= 0x00000200;
         }
         if (closeDateBuilder_ == null) {
           result.closeDate_ = closeDate_;
@@ -2883,7 +2836,7 @@ public final class School {
           result.closeDate_ = closeDateBuilder_.build();
         }
         if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
-          to_bitField0_ |= 0x00000200;
+          to_bitField0_ |= 0x00000400;
         }
         if (stateBuilder_ == null) {
           result.state_ = state_;
@@ -2916,31 +2869,8 @@ public final class School {
           name_ = other.name_;
           onChanged();
         }
-        if (courseUsersBuilder_ == null) {
-          if (!other.courseUsers_.isEmpty()) {
-            if (courseUsers_.isEmpty()) {
-              courseUsers_ = other.courseUsers_;
-              bitField0_ = (bitField0_ & ~0x00000004);
-            } else {
-              ensureCourseUsersIsMutable();
-              courseUsers_.addAll(other.courseUsers_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.courseUsers_.isEmpty()) {
-            if (courseUsersBuilder_.isEmpty()) {
-              courseUsersBuilder_.dispose();
-              courseUsersBuilder_ = null;
-              courseUsers_ = other.courseUsers_;
-              bitField0_ = (bitField0_ & ~0x00000004);
-              courseUsersBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getCourseUsersFieldBuilder() : null;
-            } else {
-              courseUsersBuilder_.addAllMessages(other.courseUsers_);
-            }
-          }
+        if (other.hasAccessPermission()) {
+          mergeAccessPermission(other.getAccessPermission());
         }
         if (other.hasAccess()) {
           setAccess(other.getAccess());
@@ -2981,8 +2911,8 @@ public final class School {
           
           return false;
         }
-        for (int i = 0; i < getCourseUsersCount(); i++) {
-          if (!getCourseUsers(i).isInitialized()) {
+        if (hasAccessPermission()) {
+          if (!getAccessPermission().isInitialized()) {
             
             return false;
           }
@@ -3181,316 +3111,121 @@ public final class School {
         return this;
       }
 
-      // repeated .protobuf.srl.school.User courseUsers = 3;
-      private java.util.List<protobuf.srl.school.School.User> courseUsers_ =
-        java.util.Collections.emptyList();
-      private void ensureCourseUsersIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          courseUsers_ = new java.util.ArrayList<protobuf.srl.school.School.User>(courseUsers_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.User, protobuf.srl.school.School.User.Builder, protobuf.srl.school.School.UserOrBuilder> courseUsersBuilder_;
-
+      // optional .protobuf.srl.school.SrlPermission accessPermission = 3;
+      private protobuf.srl.school.School.SrlPermission accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> accessPermissionBuilder_;
       /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
        */
-      public java.util.List<protobuf.srl.school.School.User> getCourseUsersList() {
-        if (courseUsersBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(courseUsers_);
+      public boolean hasAccessPermission() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
+       */
+      public protobuf.srl.school.School.SrlPermission getAccessPermission() {
+        if (accessPermissionBuilder_ == null) {
+          return accessPermission_;
         } else {
-          return courseUsersBuilder_.getMessageList();
+          return accessPermissionBuilder_.getMessage();
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
        */
-      public int getCourseUsersCount() {
-        if (courseUsersBuilder_ == null) {
-          return courseUsers_.size();
-        } else {
-          return courseUsersBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public protobuf.srl.school.School.User getCourseUsers(int index) {
-        if (courseUsersBuilder_ == null) {
-          return courseUsers_.get(index);
-        } else {
-          return courseUsersBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public Builder setCourseUsers(
-          int index, protobuf.srl.school.School.User value) {
-        if (courseUsersBuilder_ == null) {
+      public Builder setAccessPermission(protobuf.srl.school.School.SrlPermission value) {
+        if (accessPermissionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureCourseUsersIsMutable();
-          courseUsers_.set(index, value);
+          accessPermission_ = value;
           onChanged();
         } else {
-          courseUsersBuilder_.setMessage(index, value);
+          accessPermissionBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
        */
-      public Builder setCourseUsers(
-          int index, protobuf.srl.school.School.User.Builder builderForValue) {
-        if (courseUsersBuilder_ == null) {
-          ensureCourseUsersIsMutable();
-          courseUsers_.set(index, builderForValue.build());
+      public Builder setAccessPermission(
+          protobuf.srl.school.School.SrlPermission.Builder builderForValue) {
+        if (accessPermissionBuilder_ == null) {
+          accessPermission_ = builderForValue.build();
           onChanged();
         } else {
-          courseUsersBuilder_.setMessage(index, builderForValue.build());
+          accessPermissionBuilder_.setMessage(builderForValue.build());
         }
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
        */
-      public Builder addCourseUsers(protobuf.srl.school.School.User value) {
-        if (courseUsersBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
+      public Builder mergeAccessPermission(protobuf.srl.school.School.SrlPermission value) {
+        if (accessPermissionBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              accessPermission_ != protobuf.srl.school.School.SrlPermission.getDefaultInstance()) {
+            accessPermission_ =
+              protobuf.srl.school.School.SrlPermission.newBuilder(accessPermission_).mergeFrom(value).buildPartial();
+          } else {
+            accessPermission_ = value;
           }
-          ensureCourseUsersIsMutable();
-          courseUsers_.add(value);
           onChanged();
         } else {
-          courseUsersBuilder_.addMessage(value);
+          accessPermissionBuilder_.mergeFrom(value);
         }
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
        */
-      public Builder addCourseUsers(
-          int index, protobuf.srl.school.School.User value) {
-        if (courseUsersBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureCourseUsersIsMutable();
-          courseUsers_.add(index, value);
+      public Builder clearAccessPermission() {
+        if (accessPermissionBuilder_ == null) {
+          accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
           onChanged();
         } else {
-          courseUsersBuilder_.addMessage(index, value);
+          accessPermissionBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
        */
-      public Builder addCourseUsers(
-          protobuf.srl.school.School.User.Builder builderForValue) {
-        if (courseUsersBuilder_ == null) {
-          ensureCourseUsersIsMutable();
-          courseUsers_.add(builderForValue.build());
-          onChanged();
+      public protobuf.srl.school.School.SrlPermission.Builder getAccessPermissionBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getAccessPermissionFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
+       */
+      public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionOrBuilder() {
+        if (accessPermissionBuilder_ != null) {
+          return accessPermissionBuilder_.getMessageOrBuilder();
         } else {
-          courseUsersBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public Builder addCourseUsers(
-          int index, protobuf.srl.school.School.User.Builder builderForValue) {
-        if (courseUsersBuilder_ == null) {
-          ensureCourseUsersIsMutable();
-          courseUsers_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          courseUsersBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public Builder addAllCourseUsers(
-          java.lang.Iterable<? extends protobuf.srl.school.School.User> values) {
-        if (courseUsersBuilder_ == null) {
-          ensureCourseUsersIsMutable();
-          super.addAll(values, courseUsers_);
-          onChanged();
-        } else {
-          courseUsersBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public Builder clearCourseUsers() {
-        if (courseUsersBuilder_ == null) {
-          courseUsers_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
-          onChanged();
-        } else {
-          courseUsersBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public Builder removeCourseUsers(int index) {
-        if (courseUsersBuilder_ == null) {
-          ensureCourseUsersIsMutable();
-          courseUsers_.remove(index);
-          onChanged();
-        } else {
-          courseUsersBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public protobuf.srl.school.School.User.Builder getCourseUsersBuilder(
-          int index) {
-        return getCourseUsersFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public protobuf.srl.school.School.UserOrBuilder getCourseUsersOrBuilder(
-          int index) {
-        if (courseUsersBuilder_ == null) {
-          return courseUsers_.get(index);  } else {
-          return courseUsersBuilder_.getMessageOrBuilder(index);
+          return accessPermission_;
         }
       }
       /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 3;</code>
        */
-      public java.util.List<? extends protobuf.srl.school.School.UserOrBuilder> 
-           getCourseUsersOrBuilderList() {
-        if (courseUsersBuilder_ != null) {
-          return courseUsersBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(courseUsers_);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public protobuf.srl.school.School.User.Builder addCourseUsersBuilder() {
-        return getCourseUsersFieldBuilder().addBuilder(
-            protobuf.srl.school.School.User.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public protobuf.srl.school.School.User.Builder addCourseUsersBuilder(
-          int index) {
-        return getCourseUsersFieldBuilder().addBuilder(
-            index, protobuf.srl.school.School.User.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.User courseUsers = 3;</code>
-       *
-       * <pre>
-       *Course Roster, includes all user types
-       * </pre>
-       */
-      public java.util.List<protobuf.srl.school.School.User.Builder> 
-           getCourseUsersBuilderList() {
-        return getCourseUsersFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.User, protobuf.srl.school.School.User.Builder, protobuf.srl.school.School.UserOrBuilder> 
-          getCourseUsersFieldBuilder() {
-        if (courseUsersBuilder_ == null) {
-          courseUsersBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.school.School.User, protobuf.srl.school.School.User.Builder, protobuf.srl.school.School.UserOrBuilder>(
-                  courseUsers_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> 
+          getAccessPermissionFieldBuilder() {
+        if (accessPermissionBuilder_ == null) {
+          accessPermissionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder>(
+                  accessPermission_,
                   getParentForChildren(),
                   isClean());
-          courseUsers_ = null;
+          accessPermission_ = null;
         }
-        return courseUsersBuilder_;
+        return accessPermissionBuilder_;
       }
 
       // optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];
@@ -13154,7 +12889,7 @@ public final class School {
     // @@protoc_insertion_point(class_scope:protobuf.srl.school.State)
   }
 
-  public interface UserOrBuilder
+  public interface SrlUserOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required string username = 1;
@@ -13210,24 +12945,24 @@ public final class School {
         getEmailBytes();
   }
   /**
-   * Protobuf type {@code protobuf.srl.school.User}
+   * Protobuf type {@code protobuf.srl.school.SrlUser}
    */
-  public static final class User extends
+  public static final class SrlUser extends
       com.google.protobuf.GeneratedMessage
-      implements UserOrBuilder {
-    // Use User.newBuilder() to construct.
-    private User(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements SrlUserOrBuilder {
+    // Use SrlUser.newBuilder() to construct.
+    private SrlUser(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private User(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private SrlUser(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final User defaultInstance;
-    public static User getDefaultInstance() {
+    private static final SrlUser defaultInstance;
+    public static SrlUser getDefaultInstance() {
       return defaultInstance;
     }
 
-    public User getDefaultInstanceForType() {
+    public SrlUser getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -13237,7 +12972,7 @@ public final class School {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private User(
+    private SrlUser(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -13295,28 +13030,28 @@ public final class School {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_User_descriptor;
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlUser_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_User_fieldAccessorTable
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlUser_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.school.School.User.class, protobuf.srl.school.School.User.Builder.class);
+              protobuf.srl.school.School.SrlUser.class, protobuf.srl.school.School.SrlUser.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<User> PARSER =
-        new com.google.protobuf.AbstractParser<User>() {
-      public User parsePartialFrom(
+    public static com.google.protobuf.Parser<SrlUser> PARSER =
+        new com.google.protobuf.AbstractParser<SrlUser>() {
+      public SrlUser parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new User(input, extensionRegistry);
+        return new SrlUser(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<User> getParserForType() {
+    public com.google.protobuf.Parser<SrlUser> getParserForType() {
       return PARSER;
     }
 
@@ -13498,53 +13233,53 @@ public final class School {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.school.School.User parseFrom(
+    public static protobuf.srl.school.School.SrlUser parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.User parseFrom(
+    public static protobuf.srl.school.School.SrlUser parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.User parseFrom(byte[] data)
+    public static protobuf.srl.school.School.SrlUser parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.User parseFrom(
+    public static protobuf.srl.school.School.SrlUser parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.User parseFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlUser parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.User parseFrom(
+    public static protobuf.srl.school.School.SrlUser parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.User parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlUser parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.school.School.User parseDelimitedFrom(
+    public static protobuf.srl.school.School.SrlUser parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.User parseFrom(
+    public static protobuf.srl.school.School.SrlUser parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.User parseFrom(
+    public static protobuf.srl.school.School.SrlUser parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -13553,7 +13288,7 @@ public final class School {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.school.School.User prototype) {
+    public static Builder newBuilder(protobuf.srl.school.School.SrlUser prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -13565,24 +13300,24 @@ public final class School {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.school.User}
+     * Protobuf type {@code protobuf.srl.school.SrlUser}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.school.School.UserOrBuilder {
+       implements protobuf.srl.school.School.SrlUserOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_User_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlUser_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_User_fieldAccessorTable
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlUser_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.school.School.User.class, protobuf.srl.school.School.User.Builder.class);
+                protobuf.srl.school.School.SrlUser.class, protobuf.srl.school.School.SrlUser.Builder.class);
       }
 
-      // Construct using protobuf.srl.school.School.User.newBuilder()
+      // Construct using protobuf.srl.school.School.SrlUser.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -13617,23 +13352,23 @@ public final class School {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_User_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlUser_descriptor;
       }
 
-      public protobuf.srl.school.School.User getDefaultInstanceForType() {
-        return protobuf.srl.school.School.User.getDefaultInstance();
+      public protobuf.srl.school.School.SrlUser getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlUser.getDefaultInstance();
       }
 
-      public protobuf.srl.school.School.User build() {
-        protobuf.srl.school.School.User result = buildPartial();
+      public protobuf.srl.school.School.SrlUser build() {
+        protobuf.srl.school.School.SrlUser result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.school.School.User buildPartial() {
-        protobuf.srl.school.School.User result = new protobuf.srl.school.School.User(this);
+      public protobuf.srl.school.School.SrlUser buildPartial() {
+        protobuf.srl.school.School.SrlUser result = new protobuf.srl.school.School.SrlUser(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -13654,16 +13389,16 @@ public final class School {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.school.School.User) {
-          return mergeFrom((protobuf.srl.school.School.User)other);
+        if (other instanceof protobuf.srl.school.School.SrlUser) {
+          return mergeFrom((protobuf.srl.school.School.SrlUser)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.school.School.User other) {
-        if (other == protobuf.srl.school.School.User.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.school.School.SrlUser other) {
+        if (other == protobuf.srl.school.School.SrlUser.getDefaultInstance()) return this;
         if (other.hasUsername()) {
           bitField0_ |= 0x00000001;
           username_ = other.username_;
@@ -13693,11 +13428,11 @@ public final class School {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.school.School.User parsedMessage = null;
+        protobuf.srl.school.School.SrlUser parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.school.School.User) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.school.School.SrlUser) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -13916,15 +13651,3062 @@ public final class School {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.User)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlUser)
     }
 
     static {
-      defaultInstance = new User(true);
+      defaultInstance = new SrlUser(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.school.User)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlUser)
+  }
+
+  public interface SrlGroupOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // repeated string userId = 1;
+    /**
+     * <code>repeated string userId = 1;</code>
+     */
+    java.util.List<java.lang.String>
+    getUserIdList();
+    /**
+     * <code>repeated string userId = 1;</code>
+     */
+    int getUserIdCount();
+    /**
+     * <code>repeated string userId = 1;</code>
+     */
+    java.lang.String getUserId(int index);
+    /**
+     * <code>repeated string userId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes(int index);
+
+    // required string groupId = 2;
+    /**
+     * <code>required string groupId = 2;</code>
+     */
+    boolean hasGroupId();
+    /**
+     * <code>required string groupId = 2;</code>
+     */
+    java.lang.String getGroupId();
+    /**
+     * <code>required string groupId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getGroupIdBytes();
+
+    // optional string groupName = 3;
+    /**
+     * <code>optional string groupName = 3;</code>
+     */
+    boolean hasGroupName();
+    /**
+     * <code>optional string groupName = 3;</code>
+     */
+    java.lang.String getGroupName();
+    /**
+     * <code>optional string groupName = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getGroupNameBytes();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.school.SrlGroup}
+   */
+  public static final class SrlGroup extends
+      com.google.protobuf.GeneratedMessage
+      implements SrlGroupOrBuilder {
+    // Use SrlGroup.newBuilder() to construct.
+    private SrlGroup(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SrlGroup(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SrlGroup defaultInstance;
+    public static SrlGroup getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SrlGroup getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SrlGroup(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                userId_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              userId_.add(input.readBytes());
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000001;
+              groupId_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000002;
+              groupName_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          userId_ = new com.google.protobuf.UnmodifiableLazyStringList(userId_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGroup_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGroup_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.school.School.SrlGroup.class, protobuf.srl.school.School.SrlGroup.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SrlGroup> PARSER =
+        new com.google.protobuf.AbstractParser<SrlGroup>() {
+      public SrlGroup parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SrlGroup(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SrlGroup> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // repeated string userId = 1;
+    public static final int USERID_FIELD_NUMBER = 1;
+    private com.google.protobuf.LazyStringList userId_;
+    /**
+     * <code>repeated string userId = 1;</code>
+     */
+    public java.util.List<java.lang.String>
+        getUserIdList() {
+      return userId_;
+    }
+    /**
+     * <code>repeated string userId = 1;</code>
+     */
+    public int getUserIdCount() {
+      return userId_.size();
+    }
+    /**
+     * <code>repeated string userId = 1;</code>
+     */
+    public java.lang.String getUserId(int index) {
+      return userId_.get(index);
+    }
+    /**
+     * <code>repeated string userId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes(int index) {
+      return userId_.getByteString(index);
+    }
+
+    // required string groupId = 2;
+    public static final int GROUPID_FIELD_NUMBER = 2;
+    private java.lang.Object groupId_;
+    /**
+     * <code>required string groupId = 2;</code>
+     */
+    public boolean hasGroupId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string groupId = 2;</code>
+     */
+    public java.lang.String getGroupId() {
+      java.lang.Object ref = groupId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          groupId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string groupId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getGroupIdBytes() {
+      java.lang.Object ref = groupId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        groupId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string groupName = 3;
+    public static final int GROUPNAME_FIELD_NUMBER = 3;
+    private java.lang.Object groupName_;
+    /**
+     * <code>optional string groupName = 3;</code>
+     */
+    public boolean hasGroupName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string groupName = 3;</code>
+     */
+    public java.lang.String getGroupName() {
+      java.lang.Object ref = groupName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          groupName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string groupName = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getGroupNameBytes() {
+      java.lang.Object ref = groupName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        groupName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private void initFields() {
+      userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      groupId_ = "";
+      groupName_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasGroupId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < userId_.size(); i++) {
+        output.writeBytes(1, userId_.getByteString(i));
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(2, getGroupIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(3, getGroupNameBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < userId_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(userId_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getUserIdList().size();
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getGroupIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getGroupNameBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.school.School.SrlGroup parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.school.School.SrlGroup parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlGroup parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.school.School.SrlGroup parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlGroup parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlGroup parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlGroup parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlGroup parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlGroup parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlGroup parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.school.School.SrlGroup prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.school.SrlGroup}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.school.School.SrlGroupOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGroup_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGroup_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.school.School.SrlGroup.class, protobuf.srl.school.School.SrlGroup.Builder.class);
+      }
+
+      // Construct using protobuf.srl.school.School.SrlGroup.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        groupId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        groupName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGroup_descriptor;
+      }
+
+      public protobuf.srl.school.School.SrlGroup getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlGroup.getDefaultInstance();
+      }
+
+      public protobuf.srl.school.School.SrlGroup build() {
+        protobuf.srl.school.School.SrlGroup result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.school.School.SrlGroup buildPartial() {
+        protobuf.srl.school.School.SrlGroup result = new protobuf.srl.school.School.SrlGroup(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          userId_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              userId_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.userId_ = userId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.groupId_ = groupId_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.groupName_ = groupName_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.school.School.SrlGroup) {
+          return mergeFrom((protobuf.srl.school.School.SrlGroup)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.school.School.SrlGroup other) {
+        if (other == protobuf.srl.school.School.SrlGroup.getDefaultInstance()) return this;
+        if (!other.userId_.isEmpty()) {
+          if (userId_.isEmpty()) {
+            userId_ = other.userId_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureUserIdIsMutable();
+            userId_.addAll(other.userId_);
+          }
+          onChanged();
+        }
+        if (other.hasGroupId()) {
+          bitField0_ |= 0x00000002;
+          groupId_ = other.groupId_;
+          onChanged();
+        }
+        if (other.hasGroupName()) {
+          bitField0_ |= 0x00000004;
+          groupName_ = other.groupName_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasGroupId()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.school.School.SrlGroup parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.school.School.SrlGroup) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // repeated string userId = 1;
+      private com.google.protobuf.LazyStringList userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureUserIdIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          userId_ = new com.google.protobuf.LazyStringArrayList(userId_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated string userId = 1;</code>
+       */
+      public java.util.List<java.lang.String>
+          getUserIdList() {
+        return java.util.Collections.unmodifiableList(userId_);
+      }
+      /**
+       * <code>repeated string userId = 1;</code>
+       */
+      public int getUserIdCount() {
+        return userId_.size();
+      }
+      /**
+       * <code>repeated string userId = 1;</code>
+       */
+      public java.lang.String getUserId(int index) {
+        return userId_.get(index);
+      }
+      /**
+       * <code>repeated string userId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes(int index) {
+        return userId_.getByteString(index);
+      }
+      /**
+       * <code>repeated string userId = 1;</code>
+       */
+      public Builder setUserId(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUserIdIsMutable();
+        userId_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string userId = 1;</code>
+       */
+      public Builder addUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUserIdIsMutable();
+        userId_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string userId = 1;</code>
+       */
+      public Builder addAllUserId(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureUserIdIsMutable();
+        super.addAll(values, userId_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string userId = 1;</code>
+       */
+      public Builder clearUserId() {
+        userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string userId = 1;</code>
+       */
+      public Builder addUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUserIdIsMutable();
+        userId_.add(value);
+        onChanged();
+        return this;
+      }
+
+      // required string groupId = 2;
+      private java.lang.Object groupId_ = "";
+      /**
+       * <code>required string groupId = 2;</code>
+       */
+      public boolean hasGroupId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string groupId = 2;</code>
+       */
+      public java.lang.String getGroupId() {
+        java.lang.Object ref = groupId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          groupId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string groupId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getGroupIdBytes() {
+        java.lang.Object ref = groupId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          groupId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string groupId = 2;</code>
+       */
+      public Builder setGroupId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        groupId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string groupId = 2;</code>
+       */
+      public Builder clearGroupId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        groupId_ = getDefaultInstance().getGroupId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string groupId = 2;</code>
+       */
+      public Builder setGroupIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        groupId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string groupName = 3;
+      private java.lang.Object groupName_ = "";
+      /**
+       * <code>optional string groupName = 3;</code>
+       */
+      public boolean hasGroupName() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional string groupName = 3;</code>
+       */
+      public java.lang.String getGroupName() {
+        java.lang.Object ref = groupName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          groupName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string groupName = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getGroupNameBytes() {
+        java.lang.Object ref = groupName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          groupName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string groupName = 3;</code>
+       */
+      public Builder setGroupName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        groupName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string groupName = 3;</code>
+       */
+      public Builder clearGroupName() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        groupName_ = getDefaultInstance().getGroupName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string groupName = 3;</code>
+       */
+      public Builder setGroupNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        groupName_ = value;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlGroup)
+    }
+
+    static {
+      defaultInstance = new SrlGroup(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlGroup)
+  }
+
+  public interface SrlSchoolIdOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional string courseId = 1;
+    /**
+     * <code>optional string courseId = 1;</code>
+     */
+    boolean hasCourseId();
+    /**
+     * <code>optional string courseId = 1;</code>
+     */
+    java.lang.String getCourseId();
+    /**
+     * <code>optional string courseId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getCourseIdBytes();
+
+    // optional string assignmentId = 2;
+    /**
+     * <code>optional string assignmentId = 2;</code>
+     */
+    boolean hasAssignmentId();
+    /**
+     * <code>optional string assignmentId = 2;</code>
+     */
+    java.lang.String getAssignmentId();
+    /**
+     * <code>optional string assignmentId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAssignmentIdBytes();
+
+    // optional string problemId = 3;
+    /**
+     * <code>optional string problemId = 3;</code>
+     */
+    boolean hasProblemId();
+    /**
+     * <code>optional string problemId = 3;</code>
+     */
+    java.lang.String getProblemId();
+    /**
+     * <code>optional string problemId = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getProblemIdBytes();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.school.SrlSchoolId}
+   */
+  public static final class SrlSchoolId extends
+      com.google.protobuf.GeneratedMessage
+      implements SrlSchoolIdOrBuilder {
+    // Use SrlSchoolId.newBuilder() to construct.
+    private SrlSchoolId(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SrlSchoolId(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SrlSchoolId defaultInstance;
+    public static SrlSchoolId getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SrlSchoolId getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SrlSchoolId(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              courseId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              assignmentId_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              problemId_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchoolId_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchoolId_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.school.School.SrlSchoolId.class, protobuf.srl.school.School.SrlSchoolId.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SrlSchoolId> PARSER =
+        new com.google.protobuf.AbstractParser<SrlSchoolId>() {
+      public SrlSchoolId parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SrlSchoolId(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SrlSchoolId> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional string courseId = 1;
+    public static final int COURSEID_FIELD_NUMBER = 1;
+    private java.lang.Object courseId_;
+    /**
+     * <code>optional string courseId = 1;</code>
+     */
+    public boolean hasCourseId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional string courseId = 1;</code>
+     */
+    public java.lang.String getCourseId() {
+      java.lang.Object ref = courseId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          courseId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string courseId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCourseIdBytes() {
+      java.lang.Object ref = courseId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        courseId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string assignmentId = 2;
+    public static final int ASSIGNMENTID_FIELD_NUMBER = 2;
+    private java.lang.Object assignmentId_;
+    /**
+     * <code>optional string assignmentId = 2;</code>
+     */
+    public boolean hasAssignmentId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string assignmentId = 2;</code>
+     */
+    public java.lang.String getAssignmentId() {
+      java.lang.Object ref = assignmentId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          assignmentId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string assignmentId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAssignmentIdBytes() {
+      java.lang.Object ref = assignmentId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        assignmentId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string problemId = 3;
+    public static final int PROBLEMID_FIELD_NUMBER = 3;
+    private java.lang.Object problemId_;
+    /**
+     * <code>optional string problemId = 3;</code>
+     */
+    public boolean hasProblemId() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string problemId = 3;</code>
+     */
+    public java.lang.String getProblemId() {
+      java.lang.Object ref = problemId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          problemId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string problemId = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getProblemIdBytes() {
+      java.lang.Object ref = problemId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        problemId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private void initFields() {
+      courseId_ = "";
+      assignmentId_ = "";
+      problemId_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getCourseIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getAssignmentIdBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, getProblemIdBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getCourseIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getAssignmentIdBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getProblemIdBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.school.School.SrlSchoolId parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.school.School.SrlSchoolId parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlSchoolId parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.school.School.SrlSchoolId parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlSchoolId parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlSchoolId parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlSchoolId parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlSchoolId parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlSchoolId parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlSchoolId parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.school.School.SrlSchoolId prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.school.SrlSchoolId}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.school.School.SrlSchoolIdOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchoolId_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchoolId_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.school.School.SrlSchoolId.class, protobuf.srl.school.School.SrlSchoolId.Builder.class);
+      }
+
+      // Construct using protobuf.srl.school.School.SrlSchoolId.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        courseId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        assignmentId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        problemId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlSchoolId_descriptor;
+      }
+
+      public protobuf.srl.school.School.SrlSchoolId getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlSchoolId.getDefaultInstance();
+      }
+
+      public protobuf.srl.school.School.SrlSchoolId build() {
+        protobuf.srl.school.School.SrlSchoolId result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.school.School.SrlSchoolId buildPartial() {
+        protobuf.srl.school.School.SrlSchoolId result = new protobuf.srl.school.School.SrlSchoolId(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.courseId_ = courseId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.assignmentId_ = assignmentId_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.problemId_ = problemId_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.school.School.SrlSchoolId) {
+          return mergeFrom((protobuf.srl.school.School.SrlSchoolId)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.school.School.SrlSchoolId other) {
+        if (other == protobuf.srl.school.School.SrlSchoolId.getDefaultInstance()) return this;
+        if (other.hasCourseId()) {
+          bitField0_ |= 0x00000001;
+          courseId_ = other.courseId_;
+          onChanged();
+        }
+        if (other.hasAssignmentId()) {
+          bitField0_ |= 0x00000002;
+          assignmentId_ = other.assignmentId_;
+          onChanged();
+        }
+        if (other.hasProblemId()) {
+          bitField0_ |= 0x00000004;
+          problemId_ = other.problemId_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.school.School.SrlSchoolId parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.school.School.SrlSchoolId) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional string courseId = 1;
+      private java.lang.Object courseId_ = "";
+      /**
+       * <code>optional string courseId = 1;</code>
+       */
+      public boolean hasCourseId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional string courseId = 1;</code>
+       */
+      public java.lang.String getCourseId() {
+        java.lang.Object ref = courseId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          courseId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string courseId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCourseIdBytes() {
+        java.lang.Object ref = courseId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          courseId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string courseId = 1;</code>
+       */
+      public Builder setCourseId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        courseId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string courseId = 1;</code>
+       */
+      public Builder clearCourseId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        courseId_ = getDefaultInstance().getCourseId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string courseId = 1;</code>
+       */
+      public Builder setCourseIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        courseId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string assignmentId = 2;
+      private java.lang.Object assignmentId_ = "";
+      /**
+       * <code>optional string assignmentId = 2;</code>
+       */
+      public boolean hasAssignmentId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string assignmentId = 2;</code>
+       */
+      public java.lang.String getAssignmentId() {
+        java.lang.Object ref = assignmentId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          assignmentId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string assignmentId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAssignmentIdBytes() {
+        java.lang.Object ref = assignmentId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          assignmentId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string assignmentId = 2;</code>
+       */
+      public Builder setAssignmentId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        assignmentId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string assignmentId = 2;</code>
+       */
+      public Builder clearAssignmentId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        assignmentId_ = getDefaultInstance().getAssignmentId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string assignmentId = 2;</code>
+       */
+      public Builder setAssignmentIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        assignmentId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string problemId = 3;
+      private java.lang.Object problemId_ = "";
+      /**
+       * <code>optional string problemId = 3;</code>
+       */
+      public boolean hasProblemId() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional string problemId = 3;</code>
+       */
+      public java.lang.String getProblemId() {
+        java.lang.Object ref = problemId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          problemId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string problemId = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getProblemIdBytes() {
+        java.lang.Object ref = problemId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          problemId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string problemId = 3;</code>
+       */
+      public Builder setProblemId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        problemId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string problemId = 3;</code>
+       */
+      public Builder clearProblemId() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        problemId_ = getDefaultInstance().getProblemId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string problemId = 3;</code>
+       */
+      public Builder setProblemIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        problemId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlSchoolId)
+    }
+
+    static {
+      defaultInstance = new SrlSchoolId(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlSchoolId)
+  }
+
+  public interface SrlPermissionOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    java.util.List<protobuf.srl.school.School.SrlGroup> 
+        getAdminPermissionList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    protobuf.srl.school.School.SrlGroup getAdminPermission(int index);
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    int getAdminPermissionCount();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
+        getAdminPermissionOrBuilderList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    protobuf.srl.school.School.SrlGroupOrBuilder getAdminPermissionOrBuilder(
+        int index);
+
+    // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    java.util.List<protobuf.srl.school.School.SrlGroup> 
+        getModeratorPermissionList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    protobuf.srl.school.School.SrlGroup getModeratorPermission(int index);
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    int getModeratorPermissionCount();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
+        getModeratorPermissionOrBuilderList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    protobuf.srl.school.School.SrlGroupOrBuilder getModeratorPermissionOrBuilder(
+        int index);
+
+    // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    java.util.List<protobuf.srl.school.School.SrlGroup> 
+        getUserPermissionList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    protobuf.srl.school.School.SrlGroup getUserPermission(int index);
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    int getUserPermissionCount();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
+        getUserPermissionOrBuilderList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    protobuf.srl.school.School.SrlGroupOrBuilder getUserPermissionOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.school.SrlPermission}
+   *
+   * <pre>
+   **
+   * Also can be called SrlUserGroup
+   * </pre>
+   */
+  public static final class SrlPermission extends
+      com.google.protobuf.GeneratedMessage
+      implements SrlPermissionOrBuilder {
+    // Use SrlPermission.newBuilder() to construct.
+    private SrlPermission(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SrlPermission(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SrlPermission defaultInstance;
+    public static SrlPermission getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SrlPermission getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SrlPermission(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                adminPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              adminPermission_.add(input.readMessage(protobuf.srl.school.School.SrlGroup.PARSER, extensionRegistry));
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                moderatorPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              moderatorPermission_.add(input.readMessage(protobuf.srl.school.School.SrlGroup.PARSER, extensionRegistry));
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                userPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              userPermission_.add(input.readMessage(protobuf.srl.school.School.SrlGroup.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          adminPermission_ = java.util.Collections.unmodifiableList(adminPermission_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          moderatorPermission_ = java.util.Collections.unmodifiableList(moderatorPermission_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          userPermission_ = java.util.Collections.unmodifiableList(userPermission_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlPermission_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlPermission_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.school.School.SrlPermission.class, protobuf.srl.school.School.SrlPermission.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SrlPermission> PARSER =
+        new com.google.protobuf.AbstractParser<SrlPermission>() {
+      public SrlPermission parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SrlPermission(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SrlPermission> getParserForType() {
+      return PARSER;
+    }
+
+    // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+    public static final int ADMINPERMISSION_FIELD_NUMBER = 1;
+    private java.util.List<protobuf.srl.school.School.SrlGroup> adminPermission_;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    public java.util.List<protobuf.srl.school.School.SrlGroup> getAdminPermissionList() {
+      return adminPermission_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
+        getAdminPermissionOrBuilderList() {
+      return adminPermission_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    public int getAdminPermissionCount() {
+      return adminPermission_.size();
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    public protobuf.srl.school.School.SrlGroup getAdminPermission(int index) {
+      return adminPermission_.get(index);
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     */
+    public protobuf.srl.school.School.SrlGroupOrBuilder getAdminPermissionOrBuilder(
+        int index) {
+      return adminPermission_.get(index);
+    }
+
+    // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+    public static final int MODERATORPERMISSION_FIELD_NUMBER = 2;
+    private java.util.List<protobuf.srl.school.School.SrlGroup> moderatorPermission_;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    public java.util.List<protobuf.srl.school.School.SrlGroup> getModeratorPermissionList() {
+      return moderatorPermission_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
+        getModeratorPermissionOrBuilderList() {
+      return moderatorPermission_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    public int getModeratorPermissionCount() {
+      return moderatorPermission_.size();
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    public protobuf.srl.school.School.SrlGroup getModeratorPermission(int index) {
+      return moderatorPermission_.get(index);
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     */
+    public protobuf.srl.school.School.SrlGroupOrBuilder getModeratorPermissionOrBuilder(
+        int index) {
+      return moderatorPermission_.get(index);
+    }
+
+    // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+    public static final int USERPERMISSION_FIELD_NUMBER = 3;
+    private java.util.List<protobuf.srl.school.School.SrlGroup> userPermission_;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    public java.util.List<protobuf.srl.school.School.SrlGroup> getUserPermissionList() {
+      return userPermission_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
+        getUserPermissionOrBuilderList() {
+      return userPermission_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    public int getUserPermissionCount() {
+      return userPermission_.size();
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    public protobuf.srl.school.School.SrlGroup getUserPermission(int index) {
+      return userPermission_.get(index);
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     */
+    public protobuf.srl.school.School.SrlGroupOrBuilder getUserPermissionOrBuilder(
+        int index) {
+      return userPermission_.get(index);
+    }
+
+    private void initFields() {
+      adminPermission_ = java.util.Collections.emptyList();
+      moderatorPermission_ = java.util.Collections.emptyList();
+      userPermission_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      for (int i = 0; i < getAdminPermissionCount(); i++) {
+        if (!getAdminPermission(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      for (int i = 0; i < getModeratorPermissionCount(); i++) {
+        if (!getModeratorPermission(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      for (int i = 0; i < getUserPermissionCount(); i++) {
+        if (!getUserPermission(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < adminPermission_.size(); i++) {
+        output.writeMessage(1, adminPermission_.get(i));
+      }
+      for (int i = 0; i < moderatorPermission_.size(); i++) {
+        output.writeMessage(2, moderatorPermission_.get(i));
+      }
+      for (int i = 0; i < userPermission_.size(); i++) {
+        output.writeMessage(3, userPermission_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < adminPermission_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, adminPermission_.get(i));
+      }
+      for (int i = 0; i < moderatorPermission_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, moderatorPermission_.get(i));
+      }
+      for (int i = 0; i < userPermission_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, userPermission_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.school.School.SrlPermission parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.school.School.SrlPermission parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlPermission parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.school.School.SrlPermission parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlPermission parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlPermission parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlPermission parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlPermission parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlPermission parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlPermission parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.school.School.SrlPermission prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.school.SrlPermission}
+     *
+     * <pre>
+     **
+     * Also can be called SrlUserGroup
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.school.School.SrlPermissionOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlPermission_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlPermission_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.school.School.SrlPermission.class, protobuf.srl.school.School.SrlPermission.Builder.class);
+      }
+
+      // Construct using protobuf.srl.school.School.SrlPermission.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getAdminPermissionFieldBuilder();
+          getModeratorPermissionFieldBuilder();
+          getUserPermissionFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (adminPermissionBuilder_ == null) {
+          adminPermission_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          adminPermissionBuilder_.clear();
+        }
+        if (moderatorPermissionBuilder_ == null) {
+          moderatorPermission_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          moderatorPermissionBuilder_.clear();
+        }
+        if (userPermissionBuilder_ == null) {
+          userPermission_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          userPermissionBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlPermission_descriptor;
+      }
+
+      public protobuf.srl.school.School.SrlPermission getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlPermission.getDefaultInstance();
+      }
+
+      public protobuf.srl.school.School.SrlPermission build() {
+        protobuf.srl.school.School.SrlPermission result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.school.School.SrlPermission buildPartial() {
+        protobuf.srl.school.School.SrlPermission result = new protobuf.srl.school.School.SrlPermission(this);
+        int from_bitField0_ = bitField0_;
+        if (adminPermissionBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            adminPermission_ = java.util.Collections.unmodifiableList(adminPermission_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.adminPermission_ = adminPermission_;
+        } else {
+          result.adminPermission_ = adminPermissionBuilder_.build();
+        }
+        if (moderatorPermissionBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            moderatorPermission_ = java.util.Collections.unmodifiableList(moderatorPermission_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.moderatorPermission_ = moderatorPermission_;
+        } else {
+          result.moderatorPermission_ = moderatorPermissionBuilder_.build();
+        }
+        if (userPermissionBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            userPermission_ = java.util.Collections.unmodifiableList(userPermission_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.userPermission_ = userPermission_;
+        } else {
+          result.userPermission_ = userPermissionBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.school.School.SrlPermission) {
+          return mergeFrom((protobuf.srl.school.School.SrlPermission)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.school.School.SrlPermission other) {
+        if (other == protobuf.srl.school.School.SrlPermission.getDefaultInstance()) return this;
+        if (adminPermissionBuilder_ == null) {
+          if (!other.adminPermission_.isEmpty()) {
+            if (adminPermission_.isEmpty()) {
+              adminPermission_ = other.adminPermission_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureAdminPermissionIsMutable();
+              adminPermission_.addAll(other.adminPermission_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.adminPermission_.isEmpty()) {
+            if (adminPermissionBuilder_.isEmpty()) {
+              adminPermissionBuilder_.dispose();
+              adminPermissionBuilder_ = null;
+              adminPermission_ = other.adminPermission_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              adminPermissionBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getAdminPermissionFieldBuilder() : null;
+            } else {
+              adminPermissionBuilder_.addAllMessages(other.adminPermission_);
+            }
+          }
+        }
+        if (moderatorPermissionBuilder_ == null) {
+          if (!other.moderatorPermission_.isEmpty()) {
+            if (moderatorPermission_.isEmpty()) {
+              moderatorPermission_ = other.moderatorPermission_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureModeratorPermissionIsMutable();
+              moderatorPermission_.addAll(other.moderatorPermission_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.moderatorPermission_.isEmpty()) {
+            if (moderatorPermissionBuilder_.isEmpty()) {
+              moderatorPermissionBuilder_.dispose();
+              moderatorPermissionBuilder_ = null;
+              moderatorPermission_ = other.moderatorPermission_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              moderatorPermissionBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getModeratorPermissionFieldBuilder() : null;
+            } else {
+              moderatorPermissionBuilder_.addAllMessages(other.moderatorPermission_);
+            }
+          }
+        }
+        if (userPermissionBuilder_ == null) {
+          if (!other.userPermission_.isEmpty()) {
+            if (userPermission_.isEmpty()) {
+              userPermission_ = other.userPermission_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureUserPermissionIsMutable();
+              userPermission_.addAll(other.userPermission_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.userPermission_.isEmpty()) {
+            if (userPermissionBuilder_.isEmpty()) {
+              userPermissionBuilder_.dispose();
+              userPermissionBuilder_ = null;
+              userPermission_ = other.userPermission_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              userPermissionBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getUserPermissionFieldBuilder() : null;
+            } else {
+              userPermissionBuilder_.addAllMessages(other.userPermission_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        for (int i = 0; i < getAdminPermissionCount(); i++) {
+          if (!getAdminPermission(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getModeratorPermissionCount(); i++) {
+          if (!getModeratorPermission(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getUserPermissionCount(); i++) {
+          if (!getUserPermission(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.school.School.SrlPermission parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.school.School.SrlPermission) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+      private java.util.List<protobuf.srl.school.School.SrlGroup> adminPermission_ =
+        java.util.Collections.emptyList();
+      private void ensureAdminPermissionIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          adminPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>(adminPermission_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> adminPermissionBuilder_;
+
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlGroup> getAdminPermissionList() {
+        if (adminPermissionBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(adminPermission_);
+        } else {
+          return adminPermissionBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public int getAdminPermissionCount() {
+        if (adminPermissionBuilder_ == null) {
+          return adminPermission_.size();
+        } else {
+          return adminPermissionBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup getAdminPermission(int index) {
+        if (adminPermissionBuilder_ == null) {
+          return adminPermission_.get(index);
+        } else {
+          return adminPermissionBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public Builder setAdminPermission(
+          int index, protobuf.srl.school.School.SrlGroup value) {
+        if (adminPermissionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAdminPermissionIsMutable();
+          adminPermission_.set(index, value);
+          onChanged();
+        } else {
+          adminPermissionBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public Builder setAdminPermission(
+          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
+        if (adminPermissionBuilder_ == null) {
+          ensureAdminPermissionIsMutable();
+          adminPermission_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          adminPermissionBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public Builder addAdminPermission(protobuf.srl.school.School.SrlGroup value) {
+        if (adminPermissionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAdminPermissionIsMutable();
+          adminPermission_.add(value);
+          onChanged();
+        } else {
+          adminPermissionBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public Builder addAdminPermission(
+          int index, protobuf.srl.school.School.SrlGroup value) {
+        if (adminPermissionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAdminPermissionIsMutable();
+          adminPermission_.add(index, value);
+          onChanged();
+        } else {
+          adminPermissionBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public Builder addAdminPermission(
+          protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
+        if (adminPermissionBuilder_ == null) {
+          ensureAdminPermissionIsMutable();
+          adminPermission_.add(builderForValue.build());
+          onChanged();
+        } else {
+          adminPermissionBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public Builder addAdminPermission(
+          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
+        if (adminPermissionBuilder_ == null) {
+          ensureAdminPermissionIsMutable();
+          adminPermission_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          adminPermissionBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public Builder addAllAdminPermission(
+          java.lang.Iterable<? extends protobuf.srl.school.School.SrlGroup> values) {
+        if (adminPermissionBuilder_ == null) {
+          ensureAdminPermissionIsMutable();
+          super.addAll(values, adminPermission_);
+          onChanged();
+        } else {
+          adminPermissionBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public Builder clearAdminPermission() {
+        if (adminPermissionBuilder_ == null) {
+          adminPermission_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          adminPermissionBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public Builder removeAdminPermission(int index) {
+        if (adminPermissionBuilder_ == null) {
+          ensureAdminPermissionIsMutable();
+          adminPermission_.remove(index);
+          onChanged();
+        } else {
+          adminPermissionBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup.Builder getAdminPermissionBuilder(
+          int index) {
+        return getAdminPermissionFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public protobuf.srl.school.School.SrlGroupOrBuilder getAdminPermissionOrBuilder(
+          int index) {
+        if (adminPermissionBuilder_ == null) {
+          return adminPermission_.get(index);  } else {
+          return adminPermissionBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
+           getAdminPermissionOrBuilderList() {
+        if (adminPermissionBuilder_ != null) {
+          return adminPermissionBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(adminPermission_);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup.Builder addAdminPermissionBuilder() {
+        return getAdminPermissionFieldBuilder().addBuilder(
+            protobuf.srl.school.School.SrlGroup.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup.Builder addAdminPermissionBuilder(
+          int index) {
+        return getAdminPermissionFieldBuilder().addBuilder(
+            index, protobuf.srl.school.School.SrlGroup.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlGroup.Builder> 
+           getAdminPermissionBuilderList() {
+        return getAdminPermissionFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> 
+          getAdminPermissionFieldBuilder() {
+        if (adminPermissionBuilder_ == null) {
+          adminPermissionBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder>(
+                  adminPermission_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          adminPermission_ = null;
+        }
+        return adminPermissionBuilder_;
+      }
+
+      // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+      private java.util.List<protobuf.srl.school.School.SrlGroup> moderatorPermission_ =
+        java.util.Collections.emptyList();
+      private void ensureModeratorPermissionIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          moderatorPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>(moderatorPermission_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> moderatorPermissionBuilder_;
+
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlGroup> getModeratorPermissionList() {
+        if (moderatorPermissionBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(moderatorPermission_);
+        } else {
+          return moderatorPermissionBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public int getModeratorPermissionCount() {
+        if (moderatorPermissionBuilder_ == null) {
+          return moderatorPermission_.size();
+        } else {
+          return moderatorPermissionBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup getModeratorPermission(int index) {
+        if (moderatorPermissionBuilder_ == null) {
+          return moderatorPermission_.get(index);
+        } else {
+          return moderatorPermissionBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public Builder setModeratorPermission(
+          int index, protobuf.srl.school.School.SrlGroup value) {
+        if (moderatorPermissionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureModeratorPermissionIsMutable();
+          moderatorPermission_.set(index, value);
+          onChanged();
+        } else {
+          moderatorPermissionBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public Builder setModeratorPermission(
+          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
+        if (moderatorPermissionBuilder_ == null) {
+          ensureModeratorPermissionIsMutable();
+          moderatorPermission_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          moderatorPermissionBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public Builder addModeratorPermission(protobuf.srl.school.School.SrlGroup value) {
+        if (moderatorPermissionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureModeratorPermissionIsMutable();
+          moderatorPermission_.add(value);
+          onChanged();
+        } else {
+          moderatorPermissionBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public Builder addModeratorPermission(
+          int index, protobuf.srl.school.School.SrlGroup value) {
+        if (moderatorPermissionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureModeratorPermissionIsMutable();
+          moderatorPermission_.add(index, value);
+          onChanged();
+        } else {
+          moderatorPermissionBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public Builder addModeratorPermission(
+          protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
+        if (moderatorPermissionBuilder_ == null) {
+          ensureModeratorPermissionIsMutable();
+          moderatorPermission_.add(builderForValue.build());
+          onChanged();
+        } else {
+          moderatorPermissionBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public Builder addModeratorPermission(
+          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
+        if (moderatorPermissionBuilder_ == null) {
+          ensureModeratorPermissionIsMutable();
+          moderatorPermission_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          moderatorPermissionBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public Builder addAllModeratorPermission(
+          java.lang.Iterable<? extends protobuf.srl.school.School.SrlGroup> values) {
+        if (moderatorPermissionBuilder_ == null) {
+          ensureModeratorPermissionIsMutable();
+          super.addAll(values, moderatorPermission_);
+          onChanged();
+        } else {
+          moderatorPermissionBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public Builder clearModeratorPermission() {
+        if (moderatorPermissionBuilder_ == null) {
+          moderatorPermission_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          moderatorPermissionBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public Builder removeModeratorPermission(int index) {
+        if (moderatorPermissionBuilder_ == null) {
+          ensureModeratorPermissionIsMutable();
+          moderatorPermission_.remove(index);
+          onChanged();
+        } else {
+          moderatorPermissionBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup.Builder getModeratorPermissionBuilder(
+          int index) {
+        return getModeratorPermissionFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public protobuf.srl.school.School.SrlGroupOrBuilder getModeratorPermissionOrBuilder(
+          int index) {
+        if (moderatorPermissionBuilder_ == null) {
+          return moderatorPermission_.get(index);  } else {
+          return moderatorPermissionBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
+           getModeratorPermissionOrBuilderList() {
+        if (moderatorPermissionBuilder_ != null) {
+          return moderatorPermissionBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(moderatorPermission_);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup.Builder addModeratorPermissionBuilder() {
+        return getModeratorPermissionFieldBuilder().addBuilder(
+            protobuf.srl.school.School.SrlGroup.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup.Builder addModeratorPermissionBuilder(
+          int index) {
+        return getModeratorPermissionFieldBuilder().addBuilder(
+            index, protobuf.srl.school.School.SrlGroup.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlGroup.Builder> 
+           getModeratorPermissionBuilderList() {
+        return getModeratorPermissionFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> 
+          getModeratorPermissionFieldBuilder() {
+        if (moderatorPermissionBuilder_ == null) {
+          moderatorPermissionBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder>(
+                  moderatorPermission_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          moderatorPermission_ = null;
+        }
+        return moderatorPermissionBuilder_;
+      }
+
+      // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+      private java.util.List<protobuf.srl.school.School.SrlGroup> userPermission_ =
+        java.util.Collections.emptyList();
+      private void ensureUserPermissionIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          userPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>(userPermission_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> userPermissionBuilder_;
+
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlGroup> getUserPermissionList() {
+        if (userPermissionBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(userPermission_);
+        } else {
+          return userPermissionBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public int getUserPermissionCount() {
+        if (userPermissionBuilder_ == null) {
+          return userPermission_.size();
+        } else {
+          return userPermissionBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup getUserPermission(int index) {
+        if (userPermissionBuilder_ == null) {
+          return userPermission_.get(index);
+        } else {
+          return userPermissionBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public Builder setUserPermission(
+          int index, protobuf.srl.school.School.SrlGroup value) {
+        if (userPermissionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUserPermissionIsMutable();
+          userPermission_.set(index, value);
+          onChanged();
+        } else {
+          userPermissionBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public Builder setUserPermission(
+          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
+        if (userPermissionBuilder_ == null) {
+          ensureUserPermissionIsMutable();
+          userPermission_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          userPermissionBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public Builder addUserPermission(protobuf.srl.school.School.SrlGroup value) {
+        if (userPermissionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUserPermissionIsMutable();
+          userPermission_.add(value);
+          onChanged();
+        } else {
+          userPermissionBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public Builder addUserPermission(
+          int index, protobuf.srl.school.School.SrlGroup value) {
+        if (userPermissionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureUserPermissionIsMutable();
+          userPermission_.add(index, value);
+          onChanged();
+        } else {
+          userPermissionBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public Builder addUserPermission(
+          protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
+        if (userPermissionBuilder_ == null) {
+          ensureUserPermissionIsMutable();
+          userPermission_.add(builderForValue.build());
+          onChanged();
+        } else {
+          userPermissionBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public Builder addUserPermission(
+          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
+        if (userPermissionBuilder_ == null) {
+          ensureUserPermissionIsMutable();
+          userPermission_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          userPermissionBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public Builder addAllUserPermission(
+          java.lang.Iterable<? extends protobuf.srl.school.School.SrlGroup> values) {
+        if (userPermissionBuilder_ == null) {
+          ensureUserPermissionIsMutable();
+          super.addAll(values, userPermission_);
+          onChanged();
+        } else {
+          userPermissionBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public Builder clearUserPermission() {
+        if (userPermissionBuilder_ == null) {
+          userPermission_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          userPermissionBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public Builder removeUserPermission(int index) {
+        if (userPermissionBuilder_ == null) {
+          ensureUserPermissionIsMutable();
+          userPermission_.remove(index);
+          onChanged();
+        } else {
+          userPermissionBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup.Builder getUserPermissionBuilder(
+          int index) {
+        return getUserPermissionFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public protobuf.srl.school.School.SrlGroupOrBuilder getUserPermissionOrBuilder(
+          int index) {
+        if (userPermissionBuilder_ == null) {
+          return userPermission_.get(index);  } else {
+          return userPermissionBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
+           getUserPermissionOrBuilderList() {
+        if (userPermissionBuilder_ != null) {
+          return userPermissionBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(userPermission_);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup.Builder addUserPermissionBuilder() {
+        return getUserPermissionFieldBuilder().addBuilder(
+            protobuf.srl.school.School.SrlGroup.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public protobuf.srl.school.School.SrlGroup.Builder addUserPermissionBuilder(
+          int index) {
+        return getUserPermissionFieldBuilder().addBuilder(
+            index, protobuf.srl.school.School.SrlGroup.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlGroup.Builder> 
+           getUserPermissionBuilderList() {
+        return getUserPermissionFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> 
+          getUserPermissionFieldBuilder() {
+        if (userPermissionBuilder_ == null) {
+          userPermissionBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder>(
+                  userPermission_,
+                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  getParentForChildren(),
+                  isClean());
+          userPermission_ = null;
+        }
+        return userPermissionBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlPermission)
+    }
+
+    static {
+      defaultInstance = new SrlPermission(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlPermission)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
@@ -13968,10 +16750,25 @@ public final class School {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_school_State_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_school_User_descriptor;
+    internal_static_protobuf_srl_school_SrlUser_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_school_User_fieldAccessorTable;
+      internal_static_protobuf_srl_school_SrlUser_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_school_SrlGroup_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_school_SrlGroup_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_school_SrlSchoolId_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_school_SrlSchoolId_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_school_SrlPermission_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_school_SrlPermission_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -13986,59 +16783,68 @@ public final class School {
       "buf.srl.school.SrlCourse\0227\n\013assignments\030" +
       "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen" +
       "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo" +
-      "l.SrlProblem\"\257\003\n\tSrlCourse\022\n\n\002id\030\001 \002(\t\022\014" +
-      "\n\004name\030\002 \001(\t\022.\n\013courseUsers\030\003 \003(\0132\031.prot" +
-      "obuf.srl.school.User\022G\n\006access\030\004 \001(\0162,.p" +
-      "rotobuf.srl.school.SrlCourse.Accessibili" +
-      "ty:\tPROTECTED\022\023\n\013description\030\005 \001(\t\022\020\n\010se",
-      "mester\030\006 \001(\t\022\020\n\010imageUrl\030\007 \001(\t\022\r\n\005grade\030" +
-      "\010 \001(\005\0221\n\naccessDate\030\t \001(\0132\035.protobuf.srl" +
-      ".school.DateTime\0220\n\tcloseDate\030\n \001(\0132\035.pr" +
-      "otobuf.srl.school.DateTime\022)\n\005state\030\013 \001(" +
-      "\0132\032.protobuf.srl.school.State\"7\n\rAccessi" +
-      "bility\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\013\n\007PRI" +
-      "VATE\020\003\"\204\005\n\rSrlAssignment\022\020\n\010courseId\030\001 \002" +
-      "(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004name\030\003 \001(\t\022I\n\004type\030\004 \001" +
-      "(\01621.protobuf.srl.school.SrlAssignment.A" +
-      "ssignmentType:\010HOMEWORK\022\r\n\005other\030\005 \001(\t\022\023",
-      "\n\013description\030\006 \001(\t\022\r\n\005links\030\007 \003(\t\022J\n\nla" +
-      "tePolicy\030\010 \001(\0162-.protobuf.srl.school.Srl" +
-      "Assignment.LatePolicy:\007POLICY1\022\023\n\013gradeW" +
-      "eight\030\t \001(\005\022\r\n\005grade\030\n \001(\005\0221\n\naccessDate" +
-      "\030\013 \001(\0132\035.protobuf.srl.school.DateTime\022.\n" +
-      "\007dueDate\030\014 \001(\0132\035.protobuf.srl.school.Dat" +
-      "eTime\0220\n\tcloseDate\030\r \001(\0132\035.protobuf.srl." +
-      "school.DateTime\022)\n\005state\030\016 \001(\0132\032.protobu" +
-      "f.srl.school.State\022\020\n\010imageUrl\030\017 \001(\t\"R\n\016" +
-      "AssignmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007",
-      "\n\003LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006" +
-      "\"3\n\nLatePolicy\022\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002" +
-      "\022\013\n\007POLICY3\020\003\"\251\002\n\nSrlProblem\022\020\n\010courseId" +
-      "\030\001 \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\n\n\002id\030\003 \002(\t" +
-      "\022\014\n\004name\030\004 \001(\t\022\023\n\013description\030\005 \001(\t\022?\n\013s" +
-      "ubProblems\030\006 \003(\0132*.protobuf.srl.school.s" +
-      "ubproblemInformation\0224\n\004info\030\007 \003(\0132&.pro" +
-      "tobuf.srl.school.DomainInformation\022\023\n\013gr" +
-      "adeWeight\030\010 \001(\005\022\r\n\005grade\030\t \001(\005\022)\n\005state\030" +
-      "\n \001(\0132\032.protobuf.srl.school.State\"\204\002\n\025su",
-      "bproblemInformation\022\024\n\014questionText\030\001 \001(" +
-      "\t\022U\n\014questionType\030\002 \001(\01627.protobuf.srl.s" +
-      "chool.subproblemInformation.QuestionType" +
-      ":\006SKETCH\022\017\n\007options\030\003 \001(\014\022\023\n\013gradeWeight" +
-      "\030\004 \001(\005\022\r\n\005grade\030\005 \001(\005\"I\n\014QuestionType\022\n\n" +
-      "\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020" +
-      "\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001" +
-      "(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004" +
-      " \001(\005\022\016\n\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013" +
-      "millisecond\030\007 \001(\004\"\"\n\021DomainInformation\022\r",
-      "\n\005stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 \001(" +
-      "\010\022\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017" +
-      "\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"_\n\004Us" +
-      "er\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 \001(\0162\035" +
-      ".protobuf.srl.school.UserType:\005GUEST\022\r\n\005" +
-      "email\030\003 \001(\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nIN" +
-      "STRUCTOR\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007ST" +
-      "UDENT\020\004\022\t\n\005GUEST\020\005"
+      "l.SrlProblem\"\325\003\n\tSrlCourse\022\n\n\002id\030\001 \002(\t\022\014" +
+      "\n\004name\030\002 \001(\t\022<\n\020accessPermission\030\003 \001(\0132\"" +
+      ".protobuf.srl.school.SrlPermission\022G\n\006ac" +
+      "cess\030\004 \001(\0162,.protobuf.srl.school.SrlCour" +
+      "se.Accessibility:\tPROTECTED\022\023\n\013descripti",
+      "on\030\005 \001(\t\022\020\n\010semester\030\006 \001(\t\022\020\n\010imageUrl\030\007" +
+      " \001(\t\022\r\n\005grade\030\010 \001(\005\0221\n\naccessDate\030\t \001(\0132" +
+      "\035.protobuf.srl.school.DateTime\0220\n\tcloseD" +
+      "ate\030\n \001(\0132\035.protobuf.srl.school.DateTime" +
+      "\022)\n\005state\030\013 \001(\0132\032.protobuf.srl.school.St" +
+      "ate\"O\n\rAccessibility\022\n\n\006PUBLIC\020\001\022\r\n\tPROT" +
+      "ECTED\020\002\022\026\n\022PROTECTED_NOSEARCH\020\003\022\013\n\007PRIVA" +
+      "TE\020\004\"\204\005\n\rSrlAssignment\022\020\n\010courseId\030\001 \002(\t" +
+      "\022\n\n\002id\030\002 \002(\t\022\014\n\004name\030\003 \001(\t\022I\n\004type\030\004 \001(\016" +
+      "21.protobuf.srl.school.SrlAssignment.Ass",
+      "ignmentType:\010HOMEWORK\022\r\n\005other\030\005 \001(\t\022\023\n\013" +
+      "description\030\006 \001(\t\022\r\n\005links\030\007 \003(\t\022J\n\nlate" +
+      "Policy\030\010 \001(\0162-.protobuf.srl.school.SrlAs" +
+      "signment.LatePolicy:\007POLICY1\022\023\n\013gradeWei" +
+      "ght\030\t \001(\005\022\r\n\005grade\030\n \001(\005\0221\n\naccessDate\030\013" +
+      " \001(\0132\035.protobuf.srl.school.DateTime\022.\n\007d" +
+      "ueDate\030\014 \001(\0132\035.protobuf.srl.school.DateT" +
+      "ime\0220\n\tcloseDate\030\r \001(\0132\035.protobuf.srl.sc" +
+      "hool.DateTime\022)\n\005state\030\016 \001(\0132\032.protobuf." +
+      "srl.school.State\022\020\n\010imageUrl\030\017 \001(\t\"R\n\016As",
+      "signmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003" +
+      "LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3" +
+      "\n\nLatePolicy\022\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013" +
+      "\n\007POLICY3\020\003\"\251\002\n\nSrlProblem\022\020\n\010courseId\030\001" +
+      " \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\n\n\002id\030\003 \002(\t\022\014" +
+      "\n\004name\030\004 \001(\t\022\023\n\013description\030\005 \001(\t\022?\n\013sub" +
+      "Problems\030\006 \003(\0132*.protobuf.srl.school.sub" +
+      "problemInformation\0224\n\004info\030\007 \003(\0132&.proto" +
+      "buf.srl.school.DomainInformation\022\023\n\013grad" +
+      "eWeight\030\010 \001(\005\022\r\n\005grade\030\t \001(\005\022)\n\005state\030\n ",
+      "\001(\0132\032.protobuf.srl.school.State\"\204\002\n\025subp" +
+      "roblemInformation\022\024\n\014questionText\030\001 \001(\t\022" +
+      "U\n\014questionType\030\002 \001(\01627.protobuf.srl.sch" +
+      "ool.subproblemInformation.QuestionType:\006" +
+      "SKETCH\022\017\n\007options\030\003 \001(\014\022\023\n\013gradeWeight\030\004" +
+      " \001(\005\022\r\n\005grade\030\005 \001(\005\"I\n\014QuestionType\022\n\n\006S" +
+      "KETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022" +
+      "\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005" +
+      "\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001" +
+      "(\005\022\016\n\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013mi",
+      "llisecond\030\007 \001(\004\"\"\n\021DomainInformation\022\r\n\005" +
+      "stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 \001(\010\022" +
+      "\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007" +
+      "started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"b\n\007SrlU" +
+      "ser\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 \001(\0162" +
+      "\035.protobuf.srl.school.UserType:\005GUEST\022\r\n" +
+      "\005email\030\003 \001(\t\">\n\010SrlGroup\022\016\n\006userId\030\001 \003(\t" +
+      "\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t\"H\n\013" +
+      "SrlSchoolId\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignm" +
+      "entId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\"\272\001\n\rSrlPe",
+      "rmission\0226\n\017adminPermission\030\001 \003(\0132\035.prot" +
+      "obuf.srl.school.SrlGroup\022:\n\023moderatorPer" +
+      "mission\030\002 \003(\0132\035.protobuf.srl.school.SrlG" +
+      "roup\0225\n\016userPermission\030\003 \003(\0132\035.protobuf." +
+      "srl.school.SrlGroup*U\n\010UserType\022\t\n\005ADMIN" +
+      "\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSISTANT" +
+      "\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -14056,7 +16862,7 @@ public final class School {
           internal_static_protobuf_srl_school_SrlCourse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlCourse_descriptor,
-              new java.lang.String[] { "Id", "Name", "CourseUsers", "Access", "Description", "Semester", "ImageUrl", "Grade", "AccessDate", "CloseDate", "State", });
+              new java.lang.String[] { "Id", "Name", "AccessPermission", "Access", "Description", "Semester", "ImageUrl", "Grade", "AccessDate", "CloseDate", "State", });
           internal_static_protobuf_srl_school_SrlAssignment_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_srl_school_SrlAssignment_fieldAccessorTable = new
@@ -14093,12 +16899,30 @@ public final class School {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_State_descriptor,
               new java.lang.String[] { "Published", "Accessible", "PastDue", "Started", "Completed", });
-          internal_static_protobuf_srl_school_User_descriptor =
+          internal_static_protobuf_srl_school_SrlUser_descriptor =
             getDescriptor().getMessageTypes().get(8);
-          internal_static_protobuf_srl_school_User_fieldAccessorTable = new
+          internal_static_protobuf_srl_school_SrlUser_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_school_User_descriptor,
+              internal_static_protobuf_srl_school_SrlUser_descriptor,
               new java.lang.String[] { "Username", "UserType", "Email", });
+          internal_static_protobuf_srl_school_SrlGroup_descriptor =
+            getDescriptor().getMessageTypes().get(9);
+          internal_static_protobuf_srl_school_SrlGroup_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_school_SrlGroup_descriptor,
+              new java.lang.String[] { "UserId", "GroupId", "GroupName", });
+          internal_static_protobuf_srl_school_SrlSchoolId_descriptor =
+            getDescriptor().getMessageTypes().get(10);
+          internal_static_protobuf_srl_school_SrlSchoolId_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_school_SrlSchoolId_descriptor,
+              new java.lang.String[] { "CourseId", "AssignmentId", "ProblemId", });
+          internal_static_protobuf_srl_school_SrlPermission_descriptor =
+            getDescriptor().getMessageTypes().get(11);
+          internal_static_protobuf_srl_school_SrlPermission_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_school_SrlPermission_descriptor,
+              new java.lang.String[] { "AdminPermission", "ModeratorPermission", "UserPermission", });
           return null;
         }
       };

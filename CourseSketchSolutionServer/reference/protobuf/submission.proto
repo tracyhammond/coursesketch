@@ -1,19 +1,28 @@
 package protobuf.srl.submission;
 
+import "input/school.proto";
+import "input/sketch.proto";
+import "input/commands.proto";
 /**
  * Contains extra metadata for an UpdateList
  */
 message SrlSubmission {
-	optional string courseId = 1; // so we know what class it links to
-	optional string assignmentId = 2; // so we know what assignment it links to
-	optional string problemId = 3; // so we know what problem it links to
-	optional string userId = 4; // if it links to a user we know that too.
-	optional bytes updateList = 5; // if this is a collection of updates
-	optional bytes sketch = 6; // if this is a sketch.
-	optional SubmissionType submissionType = 7;
-	enum SubmissionType {
-		SOLUTION = 0; // if this is a solution to a problem.
-		SUBMISSION = 1;  // if this is a submission to a problem that can be graded.
-		LECTURE = 2; // if this is a lecture (and should be played back)
-	}
+	optional protobuf.srl.school.SrlSchoolId schoolId = 1;
+	optional protobuf.srl.commands.SrlUpdateList updateList = 2; // if this is a collection of updates
+	optional protobuf.srl.sketch.SrlSketch sketch = 3; // if this is a sketch.
+	optional bytes extraData = 4;
+	optional protobuf.srl.school.SrlPermission viewPermissions = 5;
 }
+
+message SrlSolution {
+	optional string userId = 4; // if it links to a user we know that too.
+	optional bool allowedInProblemBank = 1;
+	optional bool practiceProblem = 3;
+	optional protobuf.srl.school.SrlPermission adminPermissions = 2;
+}
+
+message SrlExperiment {
+	optional string userId = 1; // student Id
+
+}
+// Students submit experiments!

@@ -23,8 +23,10 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
-#include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
+#include "input/school.pb.h"
+#include "input/sketch.pb.h"
+#include "input/commands.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace protobuf {
@@ -37,27 +39,9 @@ void protobuf_AssignDesc_input_2fsubmission_2eproto();
 void protobuf_ShutdownFile_input_2fsubmission_2eproto();
 
 class SrlSubmission;
+class SrlSolution;
+class SrlExperiment;
 
-enum SrlSubmission_SubmissionType {
-  SrlSubmission_SubmissionType_SOLUTION = 0,
-  SrlSubmission_SubmissionType_SUBMISSION = 1,
-  SrlSubmission_SubmissionType_LECTURE = 2
-};
-bool SrlSubmission_SubmissionType_IsValid(int value);
-const SrlSubmission_SubmissionType SrlSubmission_SubmissionType_SubmissionType_MIN = SrlSubmission_SubmissionType_SOLUTION;
-const SrlSubmission_SubmissionType SrlSubmission_SubmissionType_SubmissionType_MAX = SrlSubmission_SubmissionType_LECTURE;
-const int SrlSubmission_SubmissionType_SubmissionType_ARRAYSIZE = SrlSubmission_SubmissionType_SubmissionType_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* SrlSubmission_SubmissionType_descriptor();
-inline const ::std::string& SrlSubmission_SubmissionType_Name(SrlSubmission_SubmissionType value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    SrlSubmission_SubmissionType_descriptor(), value);
-}
-inline bool SrlSubmission_SubmissionType_Parse(
-    const ::std::string& name, SrlSubmission_SubmissionType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<SrlSubmission_SubmissionType>(
-    SrlSubmission_SubmissionType_descriptor(), name, value);
-}
 // ===================================================================
 
 class SrlSubmission : public ::google::protobuf::Message {
@@ -112,68 +96,142 @@ class SrlSubmission : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef SrlSubmission_SubmissionType SubmissionType;
-  static const SubmissionType SOLUTION = SrlSubmission_SubmissionType_SOLUTION;
-  static const SubmissionType SUBMISSION = SrlSubmission_SubmissionType_SUBMISSION;
-  static const SubmissionType LECTURE = SrlSubmission_SubmissionType_LECTURE;
-  static inline bool SubmissionType_IsValid(int value) {
-    return SrlSubmission_SubmissionType_IsValid(value);
-  }
-  static const SubmissionType SubmissionType_MIN =
-    SrlSubmission_SubmissionType_SubmissionType_MIN;
-  static const SubmissionType SubmissionType_MAX =
-    SrlSubmission_SubmissionType_SubmissionType_MAX;
-  static const int SubmissionType_ARRAYSIZE =
-    SrlSubmission_SubmissionType_SubmissionType_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  SubmissionType_descriptor() {
-    return SrlSubmission_SubmissionType_descriptor();
-  }
-  static inline const ::std::string& SubmissionType_Name(SubmissionType value) {
-    return SrlSubmission_SubmissionType_Name(value);
-  }
-  static inline bool SubmissionType_Parse(const ::std::string& name,
-      SubmissionType* value) {
-    return SrlSubmission_SubmissionType_Parse(name, value);
-  }
-
   // accessors -------------------------------------------------------
 
-  // optional string courseId = 1;
-  inline bool has_courseid() const;
-  inline void clear_courseid();
-  static const int kCourseIdFieldNumber = 1;
-  inline const ::std::string& courseid() const;
-  inline void set_courseid(const ::std::string& value);
-  inline void set_courseid(const char* value);
-  inline void set_courseid(const char* value, size_t size);
-  inline ::std::string* mutable_courseid();
-  inline ::std::string* release_courseid();
-  inline void set_allocated_courseid(::std::string* courseid);
+  // optional .protobuf.srl.school.SrlSchoolId schoolId = 1;
+  inline bool has_schoolid() const;
+  inline void clear_schoolid();
+  static const int kSchoolIdFieldNumber = 1;
+  inline const ::protobuf::srl::school::SrlSchoolId& schoolid() const;
+  inline ::protobuf::srl::school::SrlSchoolId* mutable_schoolid();
+  inline ::protobuf::srl::school::SrlSchoolId* release_schoolid();
+  inline void set_allocated_schoolid(::protobuf::srl::school::SrlSchoolId* schoolid);
 
-  // optional string assignmentId = 2;
-  inline bool has_assignmentid() const;
-  inline void clear_assignmentid();
-  static const int kAssignmentIdFieldNumber = 2;
-  inline const ::std::string& assignmentid() const;
-  inline void set_assignmentid(const ::std::string& value);
-  inline void set_assignmentid(const char* value);
-  inline void set_assignmentid(const char* value, size_t size);
-  inline ::std::string* mutable_assignmentid();
-  inline ::std::string* release_assignmentid();
-  inline void set_allocated_assignmentid(::std::string* assignmentid);
+  // optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+  inline bool has_updatelist() const;
+  inline void clear_updatelist();
+  static const int kUpdateListFieldNumber = 2;
+  inline const ::protobuf::srl::commands::SrlUpdateList& updatelist() const;
+  inline ::protobuf::srl::commands::SrlUpdateList* mutable_updatelist();
+  inline ::protobuf::srl::commands::SrlUpdateList* release_updatelist();
+  inline void set_allocated_updatelist(::protobuf::srl::commands::SrlUpdateList* updatelist);
 
-  // optional string problemId = 3;
-  inline bool has_problemid() const;
-  inline void clear_problemid();
-  static const int kProblemIdFieldNumber = 3;
-  inline const ::std::string& problemid() const;
-  inline void set_problemid(const ::std::string& value);
-  inline void set_problemid(const char* value);
-  inline void set_problemid(const char* value, size_t size);
-  inline ::std::string* mutable_problemid();
-  inline ::std::string* release_problemid();
-  inline void set_allocated_problemid(::std::string* problemid);
+  // optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+  inline bool has_sketch() const;
+  inline void clear_sketch();
+  static const int kSketchFieldNumber = 3;
+  inline const ::protobuf::srl::sketch::SrlSketch& sketch() const;
+  inline ::protobuf::srl::sketch::SrlSketch* mutable_sketch();
+  inline ::protobuf::srl::sketch::SrlSketch* release_sketch();
+  inline void set_allocated_sketch(::protobuf::srl::sketch::SrlSketch* sketch);
+
+  // optional bytes extraData = 4;
+  inline bool has_extradata() const;
+  inline void clear_extradata();
+  static const int kExtraDataFieldNumber = 4;
+  inline const ::std::string& extradata() const;
+  inline void set_extradata(const ::std::string& value);
+  inline void set_extradata(const char* value);
+  inline void set_extradata(const void* value, size_t size);
+  inline ::std::string* mutable_extradata();
+  inline ::std::string* release_extradata();
+  inline void set_allocated_extradata(::std::string* extradata);
+
+  // optional .protobuf.srl.school.SrlPermission viewPermissions = 5;
+  inline bool has_viewpermissions() const;
+  inline void clear_viewpermissions();
+  static const int kViewPermissionsFieldNumber = 5;
+  inline const ::protobuf::srl::school::SrlPermission& viewpermissions() const;
+  inline ::protobuf::srl::school::SrlPermission* mutable_viewpermissions();
+  inline ::protobuf::srl::school::SrlPermission* release_viewpermissions();
+  inline void set_allocated_viewpermissions(::protobuf::srl::school::SrlPermission* viewpermissions);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlSubmission)
+ private:
+  inline void set_has_schoolid();
+  inline void clear_has_schoolid();
+  inline void set_has_updatelist();
+  inline void clear_has_updatelist();
+  inline void set_has_sketch();
+  inline void clear_has_sketch();
+  inline void set_has_extradata();
+  inline void clear_has_extradata();
+  inline void set_has_viewpermissions();
+  inline void clear_has_viewpermissions();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::protobuf::srl::school::SrlSchoolId* schoolid_;
+  ::protobuf::srl::commands::SrlUpdateList* updatelist_;
+  ::protobuf::srl::sketch::SrlSketch* sketch_;
+  ::std::string* extradata_;
+  ::protobuf::srl::school::SrlPermission* viewpermissions_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fsubmission_2eproto();
+  friend void protobuf_AssignDesc_input_2fsubmission_2eproto();
+  friend void protobuf_ShutdownFile_input_2fsubmission_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlSubmission* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SrlSolution : public ::google::protobuf::Message {
+ public:
+  SrlSolution();
+  virtual ~SrlSolution();
+
+  SrlSolution(const SrlSolution& from);
+
+  inline SrlSolution& operator=(const SrlSolution& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlSolution& default_instance();
+
+  void Swap(SrlSolution* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlSolution* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlSolution& from);
+  void MergeFrom(const SrlSolution& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
 
   // optional string userId = 4;
   inline bool has_userid() const;
@@ -187,73 +245,143 @@ class SrlSubmission : public ::google::protobuf::Message {
   inline ::std::string* release_userid();
   inline void set_allocated_userid(::std::string* userid);
 
-  // optional bytes updateList = 5;
-  inline bool has_updatelist() const;
-  inline void clear_updatelist();
-  static const int kUpdateListFieldNumber = 5;
-  inline const ::std::string& updatelist() const;
-  inline void set_updatelist(const ::std::string& value);
-  inline void set_updatelist(const char* value);
-  inline void set_updatelist(const void* value, size_t size);
-  inline ::std::string* mutable_updatelist();
-  inline ::std::string* release_updatelist();
-  inline void set_allocated_updatelist(::std::string* updatelist);
+  // optional bool allowedInProblemBank = 1;
+  inline bool has_allowedinproblembank() const;
+  inline void clear_allowedinproblembank();
+  static const int kAllowedInProblemBankFieldNumber = 1;
+  inline bool allowedinproblembank() const;
+  inline void set_allowedinproblembank(bool value);
 
-  // optional bytes sketch = 6;
-  inline bool has_sketch() const;
-  inline void clear_sketch();
-  static const int kSketchFieldNumber = 6;
-  inline const ::std::string& sketch() const;
-  inline void set_sketch(const ::std::string& value);
-  inline void set_sketch(const char* value);
-  inline void set_sketch(const void* value, size_t size);
-  inline ::std::string* mutable_sketch();
-  inline ::std::string* release_sketch();
-  inline void set_allocated_sketch(::std::string* sketch);
+  // optional bool practiceProblem = 3;
+  inline bool has_practiceproblem() const;
+  inline void clear_practiceproblem();
+  static const int kPracticeProblemFieldNumber = 3;
+  inline bool practiceproblem() const;
+  inline void set_practiceproblem(bool value);
 
-  // optional .protobuf.srl.submission.SrlSubmission.SubmissionType submissionType = 7;
-  inline bool has_submissiontype() const;
-  inline void clear_submissiontype();
-  static const int kSubmissionTypeFieldNumber = 7;
-  inline ::protobuf::srl::submission::SrlSubmission_SubmissionType submissiontype() const;
-  inline void set_submissiontype(::protobuf::srl::submission::SrlSubmission_SubmissionType value);
+  // optional .protobuf.srl.school.SrlPermission adminPermissions = 2;
+  inline bool has_adminpermissions() const;
+  inline void clear_adminpermissions();
+  static const int kAdminPermissionsFieldNumber = 2;
+  inline const ::protobuf::srl::school::SrlPermission& adminpermissions() const;
+  inline ::protobuf::srl::school::SrlPermission* mutable_adminpermissions();
+  inline ::protobuf::srl::school::SrlPermission* release_adminpermissions();
+  inline void set_allocated_adminpermissions(::protobuf::srl::school::SrlPermission* adminpermissions);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlSubmission)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlSolution)
  private:
-  inline void set_has_courseid();
-  inline void clear_has_courseid();
-  inline void set_has_assignmentid();
-  inline void clear_has_assignmentid();
-  inline void set_has_problemid();
-  inline void clear_has_problemid();
   inline void set_has_userid();
   inline void clear_has_userid();
-  inline void set_has_updatelist();
-  inline void clear_has_updatelist();
-  inline void set_has_sketch();
-  inline void clear_has_sketch();
-  inline void set_has_submissiontype();
-  inline void clear_has_submissiontype();
+  inline void set_has_allowedinproblembank();
+  inline void clear_has_allowedinproblembank();
+  inline void set_has_practiceproblem();
+  inline void clear_has_practiceproblem();
+  inline void set_has_adminpermissions();
+  inline void clear_has_adminpermissions();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* courseid_;
-  ::std::string* assignmentid_;
-  ::std::string* problemid_;
   ::std::string* userid_;
-  ::std::string* updatelist_;
-  ::std::string* sketch_;
-  int submissiontype_;
+  ::protobuf::srl::school::SrlPermission* adminpermissions_;
+  bool allowedinproblembank_;
+  bool practiceproblem_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fsubmission_2eproto();
   friend void protobuf_AssignDesc_input_2fsubmission_2eproto();
   friend void protobuf_ShutdownFile_input_2fsubmission_2eproto();
 
   void InitAsDefaultInstance();
-  static SrlSubmission* default_instance_;
+  static SrlSolution* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SrlExperiment : public ::google::protobuf::Message {
+ public:
+  SrlExperiment();
+  virtual ~SrlExperiment();
+
+  SrlExperiment(const SrlExperiment& from);
+
+  inline SrlExperiment& operator=(const SrlExperiment& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlExperiment& default_instance();
+
+  void Swap(SrlExperiment* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlExperiment* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlExperiment& from);
+  void MergeFrom(const SrlExperiment& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string userId = 1;
+  inline bool has_userid() const;
+  inline void clear_userid();
+  static const int kUserIdFieldNumber = 1;
+  inline const ::std::string& userid() const;
+  inline void set_userid(const ::std::string& value);
+  inline void set_userid(const char* value);
+  inline void set_userid(const char* value, size_t size);
+  inline ::std::string* mutable_userid();
+  inline ::std::string* release_userid();
+  inline void set_allocated_userid(::std::string* userid);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlExperiment)
+ private:
+  inline void set_has_userid();
+  inline void clear_has_userid();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* userid_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fsubmission_2eproto();
+  friend void protobuf_AssignDesc_input_2fsubmission_2eproto();
+  friend void protobuf_ShutdownFile_input_2fsubmission_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlExperiment* default_instance_;
 };
 // ===================================================================
 
@@ -262,264 +390,280 @@ class SrlSubmission : public ::google::protobuf::Message {
 
 // SrlSubmission
 
-// optional string courseId = 1;
-inline bool SrlSubmission::has_courseid() const {
+// optional .protobuf.srl.school.SrlSchoolId schoolId = 1;
+inline bool SrlSubmission::has_schoolid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SrlSubmission::set_has_courseid() {
+inline void SrlSubmission::set_has_schoolid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SrlSubmission::clear_has_courseid() {
+inline void SrlSubmission::clear_has_schoolid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SrlSubmission::clear_courseid() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    courseid_->clear();
-  }
-  clear_has_courseid();
+inline void SrlSubmission::clear_schoolid() {
+  if (schoolid_ != NULL) schoolid_->::protobuf::srl::school::SrlSchoolId::Clear();
+  clear_has_schoolid();
 }
-inline const ::std::string& SrlSubmission::courseid() const {
-  return *courseid_;
+inline const ::protobuf::srl::school::SrlSchoolId& SrlSubmission::schoolid() const {
+  return schoolid_ != NULL ? *schoolid_ : *default_instance_->schoolid_;
 }
-inline void SrlSubmission::set_courseid(const ::std::string& value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
+inline ::protobuf::srl::school::SrlSchoolId* SrlSubmission::mutable_schoolid() {
+  set_has_schoolid();
+  if (schoolid_ == NULL) schoolid_ = new ::protobuf::srl::school::SrlSchoolId;
+  return schoolid_;
 }
-inline void SrlSubmission::set_courseid(const char* value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
+inline ::protobuf::srl::school::SrlSchoolId* SrlSubmission::release_schoolid() {
+  clear_has_schoolid();
+  ::protobuf::srl::school::SrlSchoolId* temp = schoolid_;
+  schoolid_ = NULL;
+  return temp;
 }
-inline void SrlSubmission::set_courseid(const char* value, size_t size) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SrlSubmission::mutable_courseid() {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  return courseid_;
-}
-inline ::std::string* SrlSubmission::release_courseid() {
-  clear_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
+inline void SrlSubmission::set_allocated_schoolid(::protobuf::srl::school::SrlSchoolId* schoolid) {
+  delete schoolid_;
+  schoolid_ = schoolid;
+  if (schoolid) {
+    set_has_schoolid();
   } else {
-    ::std::string* temp = courseid_;
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SrlSubmission::set_allocated_courseid(::std::string* courseid) {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (courseid) {
-    set_has_courseid();
-    courseid_ = courseid;
-  } else {
-    clear_has_courseid();
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_schoolid();
   }
 }
 
-// optional string assignmentId = 2;
-inline bool SrlSubmission::has_assignmentid() const {
+// optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+inline bool SrlSubmission::has_updatelist() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SrlSubmission::set_has_assignmentid() {
+inline void SrlSubmission::set_has_updatelist() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SrlSubmission::clear_has_assignmentid() {
+inline void SrlSubmission::clear_has_updatelist() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SrlSubmission::clear_assignmentid() {
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    assignmentid_->clear();
-  }
-  clear_has_assignmentid();
+inline void SrlSubmission::clear_updatelist() {
+  if (updatelist_ != NULL) updatelist_->::protobuf::srl::commands::SrlUpdateList::Clear();
+  clear_has_updatelist();
 }
-inline const ::std::string& SrlSubmission::assignmentid() const {
-  return *assignmentid_;
+inline const ::protobuf::srl::commands::SrlUpdateList& SrlSubmission::updatelist() const {
+  return updatelist_ != NULL ? *updatelist_ : *default_instance_->updatelist_;
 }
-inline void SrlSubmission::set_assignmentid(const ::std::string& value) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(value);
+inline ::protobuf::srl::commands::SrlUpdateList* SrlSubmission::mutable_updatelist() {
+  set_has_updatelist();
+  if (updatelist_ == NULL) updatelist_ = new ::protobuf::srl::commands::SrlUpdateList;
+  return updatelist_;
 }
-inline void SrlSubmission::set_assignmentid(const char* value) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(value);
+inline ::protobuf::srl::commands::SrlUpdateList* SrlSubmission::release_updatelist() {
+  clear_has_updatelist();
+  ::protobuf::srl::commands::SrlUpdateList* temp = updatelist_;
+  updatelist_ = NULL;
+  return temp;
 }
-inline void SrlSubmission::set_assignmentid(const char* value, size_t size) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SrlSubmission::mutable_assignmentid() {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  return assignmentid_;
-}
-inline ::std::string* SrlSubmission::release_assignmentid() {
-  clear_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
+inline void SrlSubmission::set_allocated_updatelist(::protobuf::srl::commands::SrlUpdateList* updatelist) {
+  delete updatelist_;
+  updatelist_ = updatelist;
+  if (updatelist) {
+    set_has_updatelist();
   } else {
-    ::std::string* temp = assignmentid_;
-    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SrlSubmission::set_allocated_assignmentid(::std::string* assignmentid) {
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentid_;
-  }
-  if (assignmentid) {
-    set_has_assignmentid();
-    assignmentid_ = assignmentid;
-  } else {
-    clear_has_assignmentid();
-    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_updatelist();
   }
 }
 
-// optional string problemId = 3;
-inline bool SrlSubmission::has_problemid() const {
+// optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+inline bool SrlSubmission::has_sketch() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SrlSubmission::set_has_problemid() {
+inline void SrlSubmission::set_has_sketch() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void SrlSubmission::clear_has_problemid() {
+inline void SrlSubmission::clear_has_sketch() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void SrlSubmission::clear_problemid() {
-  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-    problemid_->clear();
-  }
-  clear_has_problemid();
+inline void SrlSubmission::clear_sketch() {
+  if (sketch_ != NULL) sketch_->::protobuf::srl::sketch::SrlSketch::Clear();
+  clear_has_sketch();
 }
-inline const ::std::string& SrlSubmission::problemid() const {
-  return *problemid_;
+inline const ::protobuf::srl::sketch::SrlSketch& SrlSubmission::sketch() const {
+  return sketch_ != NULL ? *sketch_ : *default_instance_->sketch_;
 }
-inline void SrlSubmission::set_problemid(const ::std::string& value) {
-  set_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    problemid_ = new ::std::string;
-  }
-  problemid_->assign(value);
+inline ::protobuf::srl::sketch::SrlSketch* SrlSubmission::mutable_sketch() {
+  set_has_sketch();
+  if (sketch_ == NULL) sketch_ = new ::protobuf::srl::sketch::SrlSketch;
+  return sketch_;
 }
-inline void SrlSubmission::set_problemid(const char* value) {
-  set_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    problemid_ = new ::std::string;
-  }
-  problemid_->assign(value);
+inline ::protobuf::srl::sketch::SrlSketch* SrlSubmission::release_sketch() {
+  clear_has_sketch();
+  ::protobuf::srl::sketch::SrlSketch* temp = sketch_;
+  sketch_ = NULL;
+  return temp;
 }
-inline void SrlSubmission::set_problemid(const char* value, size_t size) {
-  set_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    problemid_ = new ::std::string;
-  }
-  problemid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SrlSubmission::mutable_problemid() {
-  set_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    problemid_ = new ::std::string;
-  }
-  return problemid_;
-}
-inline ::std::string* SrlSubmission::release_problemid() {
-  clear_has_problemid();
-  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
+inline void SrlSubmission::set_allocated_sketch(::protobuf::srl::sketch::SrlSketch* sketch) {
+  delete sketch_;
+  sketch_ = sketch;
+  if (sketch) {
+    set_has_sketch();
   } else {
-    ::std::string* temp = problemid_;
-    problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SrlSubmission::set_allocated_problemid(::std::string* problemid) {
-  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-    delete problemid_;
-  }
-  if (problemid) {
-    set_has_problemid();
-    problemid_ = problemid;
-  } else {
-    clear_has_problemid();
-    problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_sketch();
   }
 }
 
-// optional string userId = 4;
-inline bool SrlSubmission::has_userid() const {
+// optional bytes extraData = 4;
+inline bool SrlSubmission::has_extradata() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void SrlSubmission::set_has_userid() {
+inline void SrlSubmission::set_has_extradata() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void SrlSubmission::clear_has_userid() {
+inline void SrlSubmission::clear_has_extradata() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void SrlSubmission::clear_userid() {
+inline void SrlSubmission::clear_extradata() {
+  if (extradata_ != &::google::protobuf::internal::kEmptyString) {
+    extradata_->clear();
+  }
+  clear_has_extradata();
+}
+inline const ::std::string& SrlSubmission::extradata() const {
+  return *extradata_;
+}
+inline void SrlSubmission::set_extradata(const ::std::string& value) {
+  set_has_extradata();
+  if (extradata_ == &::google::protobuf::internal::kEmptyString) {
+    extradata_ = new ::std::string;
+  }
+  extradata_->assign(value);
+}
+inline void SrlSubmission::set_extradata(const char* value) {
+  set_has_extradata();
+  if (extradata_ == &::google::protobuf::internal::kEmptyString) {
+    extradata_ = new ::std::string;
+  }
+  extradata_->assign(value);
+}
+inline void SrlSubmission::set_extradata(const void* value, size_t size) {
+  set_has_extradata();
+  if (extradata_ == &::google::protobuf::internal::kEmptyString) {
+    extradata_ = new ::std::string;
+  }
+  extradata_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlSubmission::mutable_extradata() {
+  set_has_extradata();
+  if (extradata_ == &::google::protobuf::internal::kEmptyString) {
+    extradata_ = new ::std::string;
+  }
+  return extradata_;
+}
+inline ::std::string* SrlSubmission::release_extradata() {
+  clear_has_extradata();
+  if (extradata_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = extradata_;
+    extradata_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlSubmission::set_allocated_extradata(::std::string* extradata) {
+  if (extradata_ != &::google::protobuf::internal::kEmptyString) {
+    delete extradata_;
+  }
+  if (extradata) {
+    set_has_extradata();
+    extradata_ = extradata;
+  } else {
+    clear_has_extradata();
+    extradata_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .protobuf.srl.school.SrlPermission viewPermissions = 5;
+inline bool SrlSubmission::has_viewpermissions() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SrlSubmission::set_has_viewpermissions() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SrlSubmission::clear_has_viewpermissions() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SrlSubmission::clear_viewpermissions() {
+  if (viewpermissions_ != NULL) viewpermissions_->::protobuf::srl::school::SrlPermission::Clear();
+  clear_has_viewpermissions();
+}
+inline const ::protobuf::srl::school::SrlPermission& SrlSubmission::viewpermissions() const {
+  return viewpermissions_ != NULL ? *viewpermissions_ : *default_instance_->viewpermissions_;
+}
+inline ::protobuf::srl::school::SrlPermission* SrlSubmission::mutable_viewpermissions() {
+  set_has_viewpermissions();
+  if (viewpermissions_ == NULL) viewpermissions_ = new ::protobuf::srl::school::SrlPermission;
+  return viewpermissions_;
+}
+inline ::protobuf::srl::school::SrlPermission* SrlSubmission::release_viewpermissions() {
+  clear_has_viewpermissions();
+  ::protobuf::srl::school::SrlPermission* temp = viewpermissions_;
+  viewpermissions_ = NULL;
+  return temp;
+}
+inline void SrlSubmission::set_allocated_viewpermissions(::protobuf::srl::school::SrlPermission* viewpermissions) {
+  delete viewpermissions_;
+  viewpermissions_ = viewpermissions;
+  if (viewpermissions) {
+    set_has_viewpermissions();
+  } else {
+    clear_has_viewpermissions();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SrlSolution
+
+// optional string userId = 4;
+inline bool SrlSolution::has_userid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SrlSolution::set_has_userid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SrlSolution::clear_has_userid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SrlSolution::clear_userid() {
   if (userid_ != &::google::protobuf::internal::kEmptyString) {
     userid_->clear();
   }
   clear_has_userid();
 }
-inline const ::std::string& SrlSubmission::userid() const {
+inline const ::std::string& SrlSolution::userid() const {
   return *userid_;
 }
-inline void SrlSubmission::set_userid(const ::std::string& value) {
+inline void SrlSolution::set_userid(const ::std::string& value) {
   set_has_userid();
   if (userid_ == &::google::protobuf::internal::kEmptyString) {
     userid_ = new ::std::string;
   }
   userid_->assign(value);
 }
-inline void SrlSubmission::set_userid(const char* value) {
+inline void SrlSolution::set_userid(const char* value) {
   set_has_userid();
   if (userid_ == &::google::protobuf::internal::kEmptyString) {
     userid_ = new ::std::string;
   }
   userid_->assign(value);
 }
-inline void SrlSubmission::set_userid(const char* value, size_t size) {
+inline void SrlSolution::set_userid(const char* value, size_t size) {
   set_has_userid();
   if (userid_ == &::google::protobuf::internal::kEmptyString) {
     userid_ = new ::std::string;
   }
   userid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SrlSubmission::mutable_userid() {
+inline ::std::string* SrlSolution::mutable_userid() {
   set_has_userid();
   if (userid_ == &::google::protobuf::internal::kEmptyString) {
     userid_ = new ::std::string;
   }
   return userid_;
 }
-inline ::std::string* SrlSubmission::release_userid() {
+inline ::std::string* SrlSolution::release_userid() {
   clear_has_userid();
   if (userid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -529,7 +673,7 @@ inline ::std::string* SrlSubmission::release_userid() {
     return temp;
   }
 }
-inline void SrlSubmission::set_allocated_userid(::std::string* userid) {
+inline void SrlSolution::set_allocated_userid(::std::string* userid) {
   if (userid_ != &::google::protobuf::internal::kEmptyString) {
     delete userid_;
   }
@@ -542,167 +686,160 @@ inline void SrlSubmission::set_allocated_userid(::std::string* userid) {
   }
 }
 
-// optional bytes updateList = 5;
-inline bool SrlSubmission::has_updatelist() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+// optional bool allowedInProblemBank = 1;
+inline bool SrlSolution::has_allowedinproblembank() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SrlSubmission::set_has_updatelist() {
-  _has_bits_[0] |= 0x00000010u;
+inline void SrlSolution::set_has_allowedinproblembank() {
+  _has_bits_[0] |= 0x00000002u;
 }
-inline void SrlSubmission::clear_has_updatelist() {
-  _has_bits_[0] &= ~0x00000010u;
+inline void SrlSolution::clear_has_allowedinproblembank() {
+  _has_bits_[0] &= ~0x00000002u;
 }
-inline void SrlSubmission::clear_updatelist() {
-  if (updatelist_ != &::google::protobuf::internal::kEmptyString) {
-    updatelist_->clear();
-  }
-  clear_has_updatelist();
+inline void SrlSolution::clear_allowedinproblembank() {
+  allowedinproblembank_ = false;
+  clear_has_allowedinproblembank();
 }
-inline const ::std::string& SrlSubmission::updatelist() const {
-  return *updatelist_;
+inline bool SrlSolution::allowedinproblembank() const {
+  return allowedinproblembank_;
 }
-inline void SrlSubmission::set_updatelist(const ::std::string& value) {
-  set_has_updatelist();
-  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
-    updatelist_ = new ::std::string;
-  }
-  updatelist_->assign(value);
+inline void SrlSolution::set_allowedinproblembank(bool value) {
+  set_has_allowedinproblembank();
+  allowedinproblembank_ = value;
 }
-inline void SrlSubmission::set_updatelist(const char* value) {
-  set_has_updatelist();
-  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
-    updatelist_ = new ::std::string;
-  }
-  updatelist_->assign(value);
+
+// optional bool practiceProblem = 3;
+inline bool SrlSolution::has_practiceproblem() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SrlSubmission::set_updatelist(const void* value, size_t size) {
-  set_has_updatelist();
-  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
-    updatelist_ = new ::std::string;
-  }
-  updatelist_->assign(reinterpret_cast<const char*>(value), size);
+inline void SrlSolution::set_has_practiceproblem() {
+  _has_bits_[0] |= 0x00000004u;
 }
-inline ::std::string* SrlSubmission::mutable_updatelist() {
-  set_has_updatelist();
-  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
-    updatelist_ = new ::std::string;
-  }
-  return updatelist_;
+inline void SrlSolution::clear_has_practiceproblem() {
+  _has_bits_[0] &= ~0x00000004u;
 }
-inline ::std::string* SrlSubmission::release_updatelist() {
-  clear_has_updatelist();
-  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
+inline void SrlSolution::clear_practiceproblem() {
+  practiceproblem_ = false;
+  clear_has_practiceproblem();
+}
+inline bool SrlSolution::practiceproblem() const {
+  return practiceproblem_;
+}
+inline void SrlSolution::set_practiceproblem(bool value) {
+  set_has_practiceproblem();
+  practiceproblem_ = value;
+}
+
+// optional .protobuf.srl.school.SrlPermission adminPermissions = 2;
+inline bool SrlSolution::has_adminpermissions() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SrlSolution::set_has_adminpermissions() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SrlSolution::clear_has_adminpermissions() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SrlSolution::clear_adminpermissions() {
+  if (adminpermissions_ != NULL) adminpermissions_->::protobuf::srl::school::SrlPermission::Clear();
+  clear_has_adminpermissions();
+}
+inline const ::protobuf::srl::school::SrlPermission& SrlSolution::adminpermissions() const {
+  return adminpermissions_ != NULL ? *adminpermissions_ : *default_instance_->adminpermissions_;
+}
+inline ::protobuf::srl::school::SrlPermission* SrlSolution::mutable_adminpermissions() {
+  set_has_adminpermissions();
+  if (adminpermissions_ == NULL) adminpermissions_ = new ::protobuf::srl::school::SrlPermission;
+  return adminpermissions_;
+}
+inline ::protobuf::srl::school::SrlPermission* SrlSolution::release_adminpermissions() {
+  clear_has_adminpermissions();
+  ::protobuf::srl::school::SrlPermission* temp = adminpermissions_;
+  adminpermissions_ = NULL;
+  return temp;
+}
+inline void SrlSolution::set_allocated_adminpermissions(::protobuf::srl::school::SrlPermission* adminpermissions) {
+  delete adminpermissions_;
+  adminpermissions_ = adminpermissions;
+  if (adminpermissions) {
+    set_has_adminpermissions();
   } else {
-    ::std::string* temp = updatelist_;
-    updatelist_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SrlSubmission::set_allocated_updatelist(::std::string* updatelist) {
-  if (updatelist_ != &::google::protobuf::internal::kEmptyString) {
-    delete updatelist_;
-  }
-  if (updatelist) {
-    set_has_updatelist();
-    updatelist_ = updatelist;
-  } else {
-    clear_has_updatelist();
-    updatelist_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_adminpermissions();
   }
 }
 
-// optional bytes sketch = 6;
-inline bool SrlSubmission::has_sketch() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+// -------------------------------------------------------------------
+
+// SrlExperiment
+
+// optional string userId = 1;
+inline bool SrlExperiment::has_userid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SrlSubmission::set_has_sketch() {
-  _has_bits_[0] |= 0x00000020u;
+inline void SrlExperiment::set_has_userid() {
+  _has_bits_[0] |= 0x00000001u;
 }
-inline void SrlSubmission::clear_has_sketch() {
-  _has_bits_[0] &= ~0x00000020u;
+inline void SrlExperiment::clear_has_userid() {
+  _has_bits_[0] &= ~0x00000001u;
 }
-inline void SrlSubmission::clear_sketch() {
-  if (sketch_ != &::google::protobuf::internal::kEmptyString) {
-    sketch_->clear();
+inline void SrlExperiment::clear_userid() {
+  if (userid_ != &::google::protobuf::internal::kEmptyString) {
+    userid_->clear();
   }
-  clear_has_sketch();
+  clear_has_userid();
 }
-inline const ::std::string& SrlSubmission::sketch() const {
-  return *sketch_;
+inline const ::std::string& SrlExperiment::userid() const {
+  return *userid_;
 }
-inline void SrlSubmission::set_sketch(const ::std::string& value) {
-  set_has_sketch();
-  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
-    sketch_ = new ::std::string;
+inline void SrlExperiment::set_userid(const ::std::string& value) {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
   }
-  sketch_->assign(value);
+  userid_->assign(value);
 }
-inline void SrlSubmission::set_sketch(const char* value) {
-  set_has_sketch();
-  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
-    sketch_ = new ::std::string;
+inline void SrlExperiment::set_userid(const char* value) {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
   }
-  sketch_->assign(value);
+  userid_->assign(value);
 }
-inline void SrlSubmission::set_sketch(const void* value, size_t size) {
-  set_has_sketch();
-  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
-    sketch_ = new ::std::string;
+inline void SrlExperiment::set_userid(const char* value, size_t size) {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
   }
-  sketch_->assign(reinterpret_cast<const char*>(value), size);
+  userid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SrlSubmission::mutable_sketch() {
-  set_has_sketch();
-  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
-    sketch_ = new ::std::string;
+inline ::std::string* SrlExperiment::mutable_userid() {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
   }
-  return sketch_;
+  return userid_;
 }
-inline ::std::string* SrlSubmission::release_sketch() {
-  clear_has_sketch();
-  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* SrlExperiment::release_userid() {
+  clear_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = sketch_;
-    sketch_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = userid_;
+    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void SrlSubmission::set_allocated_sketch(::std::string* sketch) {
-  if (sketch_ != &::google::protobuf::internal::kEmptyString) {
-    delete sketch_;
+inline void SrlExperiment::set_allocated_userid(::std::string* userid) {
+  if (userid_ != &::google::protobuf::internal::kEmptyString) {
+    delete userid_;
   }
-  if (sketch) {
-    set_has_sketch();
-    sketch_ = sketch;
+  if (userid) {
+    set_has_userid();
+    userid_ = userid;
   } else {
-    clear_has_sketch();
-    sketch_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_userid();
+    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
-}
-
-// optional .protobuf.srl.submission.SrlSubmission.SubmissionType submissionType = 7;
-inline bool SrlSubmission::has_submissiontype() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
-}
-inline void SrlSubmission::set_has_submissiontype() {
-  _has_bits_[0] |= 0x00000040u;
-}
-inline void SrlSubmission::clear_has_submissiontype() {
-  _has_bits_[0] &= ~0x00000040u;
-}
-inline void SrlSubmission::clear_submissiontype() {
-  submissiontype_ = 0;
-  clear_has_submissiontype();
-}
-inline ::protobuf::srl::submission::SrlSubmission_SubmissionType SrlSubmission::submissiontype() const {
-  return static_cast< ::protobuf::srl::submission::SrlSubmission_SubmissionType >(submissiontype_);
-}
-inline void SrlSubmission::set_submissiontype(::protobuf::srl::submission::SrlSubmission_SubmissionType value) {
-  assert(::protobuf::srl::submission::SrlSubmission_SubmissionType_IsValid(value));
-  set_has_submissiontype();
-  submissiontype_ = value;
 }
 
 
@@ -716,10 +853,6 @@ inline void SrlSubmission::set_submissiontype(::protobuf::srl::submission::SrlSu
 namespace google {
 namespace protobuf {
 
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::submission::SrlSubmission_SubmissionType>() {
-  return ::protobuf::srl::submission::SrlSubmission_SubmissionType_descriptor();
-}
 
 }  // namespace google
 }  // namespace protobuf
