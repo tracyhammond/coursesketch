@@ -7,8 +7,12 @@ import srl.core.sketch.Sketch;
 
 /**
  * Placeholder class so that all the separate commands can be treated the same
+ * - ADD_SHAPE
+ * - ADD_STROKE
+ * - PACKAGE_SHAPE
+ * - REMOVE_OBJECT
  * 
- * @author matt
+ * @author Matthew Dillard
  *
  */
 

@@ -9,6 +9,12 @@ import protobuf.srl.commands.Commands.IdChain;
 
 import srl.core.sketch.Sketch;
 
+/**
+ * Command to remove a single object from the overall sketch.
+ * 
+ * @author Matthew Dillard
+ *
+ */
 public class RemoveObject extends Command {
 	private IdChain data;
 	

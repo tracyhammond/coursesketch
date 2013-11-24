@@ -10,44 +10,47 @@ import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 
 import srl.core.sketch.Sketch;
-//import srl.recognition.IRecognitionResult;
+import srl.recognition.IRecognitionResult;
 import srl.recognition.paleo.PaleoConfig;
-//import srl.recognition.paleo.PaleoSketchRecognizer;
+import srl.recognition.paleo.PaleoSketchRecognizer;
 
 public class Response {
-	//private PaleoSketchRecognizer m_recognizer;
+	private PaleoSketchRecognizer m_recognizer;
 	private UpdateList m_syncList;
 	private Sketch m_drawspace;
 	
 	/**
-	 * Default constructor that initializes PaleoSketch with all primitives on
+	 * Default constructor that initializes the recognizer with all primitives on
 	 */
 	public Response(){
-		//Instantiate All sketch recognition objects/recognizers
+		m_syncList = new UpdateList();
+		m_recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
 	}
 	
 	/**
-	 * optional constructor to specify what primitives you want on
-	 * @param PaleoSketch configuration of which primitives you would like
+	 * optional constructor to specify recognition domain
+	 * @param domain
 	 */
-	public Response(PaleoConfig config){
-		//Instantiate All sketch recognition objects
+	public Response(PaleoConfig domain){
+		m_syncList = new UpdateList();
+		m_recognizer = new PaleoSketchRecognizer(domain);
 	}
 	
 	/**
-	 * Advanced function that takes an update as a list of commands and
-	 * interprets multiple things at once, including
+	 * Point of communication, takes an update and runs the recognizer
+	 * and returns the results
 	 * @param protobuf.srl.commands.Commands.Update
 	 * @return protobuf.srl.sketch.Sketch.SrlStroke
-	 * @throws Exception
+	 * @throws Exception Unsupported Command
 	 */
-	public SrlUpdate interpret(SrlUpdate call) throws Exception{
+	public SrlUpdate recognize(SrlUpdate call) throws Exception{
 		m_syncList.add(parseUpdate(call));
 		m_syncList.executeLast(m_drawspace);
 		
 		Update result = new Update();
 		
 		//perform recognition
+		
 		
 		result.setTime(System.currentTimeMillis());
 		m_syncList.add(result);

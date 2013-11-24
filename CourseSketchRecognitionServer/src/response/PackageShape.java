@@ -11,6 +11,13 @@ import protobuf.srl.commands.Commands.IdChain;
 import srl.core.sketch.SContainer;
 import srl.core.sketch.Sketch;
 
+/**
+ * Command to take a group of shapes from one container and
+ * put them in a new one.
+ * 
+ * @author Matthew Dillard
+ *
+ */
 public class PackageShape extends Command {
 	private IdChain oldContainer;
 	private IdChain newContainer;
