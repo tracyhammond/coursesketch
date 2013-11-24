@@ -12,6 +12,13 @@ import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.sketch.Sketch.SrlInterpretation;
 import protobuf.srl.sketch.Sketch.SrlShape;
 
+/**
+ * This Command object creates an empty container at first to have recognition
+ * be performed on, will return all interpretations in its bytestring.
+ * 
+ * @author Matthew Dillard
+ *
+ */
 public class AddShape extends Command {
 	private Shape data;
 	
@@ -22,6 +29,10 @@ public class AddShape extends Command {
 		data.setId(UUID.fromString(input.getId()));
 		data.setName(input.getName());
 		//FIXME set the time to match client load time
+	}
+	
+	public AddShape(Shape input){
+		data = input;
 	}
 
 	@Override
@@ -43,10 +54,6 @@ public class AddShape extends Command {
 	}
 	
 	@Override
-	/**
-	 * adds a single empty shape to the sketch with which
-	 * to package other things into
-	 */
 	public void execute(Sketch s) {
 		s.add(data);
 	}

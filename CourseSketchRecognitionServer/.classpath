@@ -14,5 +14,6 @@
 	<classpathentry kind="src" path="/coursesketchwebserver"/>
 	<classpathentry kind="lib" path="libs/weka.jar"/>
 	<classpathentry kind="lib" path="libs/PaleoNNTrainer.jar"/>
+	<classpathentry kind="lib" path="/SketchShapes/lib/sr-recognition01.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

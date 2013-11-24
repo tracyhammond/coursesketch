@@ -12,8 +12,14 @@ import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 import protobuf.srl.sketch.Sketch.SrlPoint;
 
+/**
+ * Simple command to add a user-drawn stroke.
+ * 
+ * @author Matthew Dillard
+ *
+ */
 public class AddStroke extends Command {
-	private Stroke data;
+	protected Stroke data;
 	
 	public AddStroke(SrlStroke input){
 		type = CommandType.ADD_STROKE;
