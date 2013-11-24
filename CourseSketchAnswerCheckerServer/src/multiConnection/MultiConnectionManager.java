@@ -35,9 +35,12 @@ public class MultiConnectionManager {
 	 * @param connectionType the class that will be made (should be a subclass of WrapperConnection)
 	 * @return
 	 */
-	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean local, int port, Class<? extends WrapperConnection> connectionType) {
+	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean local, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) {
 		WrapperConnection c=null;
-		String location = local ? "ws://localhost:" + port : "ws://goldberglinux02.tamu.edu:" + port;
+		if (remoteAdress == null) {
+			remoteAdress = "goldberglinux02.tamu.edu";
+		}
+		String location = local ? "ws://localhost:" + port : "ws://" + remoteAdress + port;
 		try {
 			Constructor construct = connectionType.getConstructor(URI.class, Draft.class, MultiInternalConnectionServer.class);
 			c = (WrapperConnection) construct.newInstance( new URI( location ), new Draft_10() , serv);
@@ -62,8 +65,8 @@ public class MultiConnectionManager {
 		getBestConnection(connectionType).send(packagedRequest.toByteArray());
 	}
 
-	public void createAndAddConnection(MultiInternalConnectionServer serv, boolean local, int port, Class<? extends WrapperConnection> connectionType) {
-		addConnection(createConnection(serv,local,port,connectionType),connectionType);
+	public void createAndAddConnection(MultiInternalConnectionServer serv, boolean local, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) {
+		addConnection(createConnection(serv, local, remoteAdress, port, connectionType), connectionType);
 	}
 
 	public void addConnection(WrapperConnection connection, Class<? extends WrapperConnection> connectionType) {
