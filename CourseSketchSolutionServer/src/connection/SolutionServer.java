@@ -79,6 +79,7 @@ public class SolutionServer extends WebSocketServer {
 			// we need to somehow send an error to the client here
 			return;
 		}
+
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			try {
 				SrlSolution solution = SrlSolution.parseFrom(req.getOtherData());
@@ -88,6 +89,7 @@ public class SolutionServer extends WebSocketServer {
 				e.printStackTrace();
 			}
 		}
+
 		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
 			SrlSolution solution = storage.getSolution();// something we send in.
 			Request.Builder build = Request.newBuilder(req);
