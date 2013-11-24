@@ -10,12 +10,12 @@ import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 
 import srl.core.sketch.Sketch;
-import srl.recognition.IRecognitionResult;
+//import srl.recognition.IRecognitionResult;
 import srl.recognition.paleo.PaleoConfig;
-import srl.recognition.paleo.PaleoSketchRecognizer;
+//import srl.recognition.paleo.PaleoSketchRecognizer;
 
 public class Response {
-	private PaleoSketchRecognizer m_recognizer;
+	//private PaleoSketchRecognizer m_recognizer;
 	private UpdateList m_syncList;
 	private Sketch m_drawspace;
 	
@@ -23,7 +23,7 @@ public class Response {
 	 * Default constructor that initializes PaleoSketch with all primitives on
 	 */
 	public Response(){
-		m_recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
+		//Instantiate All sketch recognition objects/recognizers
 	}
 	
 	/**
@@ -31,7 +31,7 @@ public class Response {
 	 * @param PaleoSketch configuration of which primitives you would like
 	 */
 	public Response(PaleoConfig config){
-		m_recognizer = new PaleoSketchRecognizer(config);
+		//Instantiate All sketch recognition objects
 	}
 	
 	/**
@@ -41,12 +41,19 @@ public class Response {
 	 * @return protobuf.srl.sketch.Sketch.SrlStroke
 	 * @throws Exception
 	 */
-	public void interpret(SrlUpdate call) throws Exception{
-		parseUpdate(call);
+	public SrlUpdate interpret(SrlUpdate call) throws Exception{
+		m_syncList.add(parseUpdate(call));
 		m_syncList.executeLast(m_drawspace);
 		
-		IRecognitionResult result = m_recognizer.recognize(m_drawspace.getLastStroke());
+		Update result = new Update();
 		
+		//perform recognition
+		
+		result.setTime(System.currentTimeMillis());
+		m_syncList.add(result);
+		m_syncList.executeLast(m_drawspace);
+		
+		return repackage(result);
 	}
 	
 	/**
@@ -54,7 +61,7 @@ public class Response {
 	 * @param protobuf.srl.commands.Commands.Update
 	 * @throws Exception Unsupported Command
 	 */
-	private void parseUpdate(SrlUpdate call) throws Exception{
+	private Update parseUpdate(SrlUpdate call) throws Exception{
 		System.out.println("Number of commands " + call.getCommandsCount());
 		Update up = new Update(call.getTime());
 		
@@ -78,7 +85,7 @@ public class Response {
 			}
 			up.add(com);
 		}
-		m_syncList.add(up);
+		return up;
 	}
 	
 	/**

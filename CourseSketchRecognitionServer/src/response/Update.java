@@ -27,6 +27,10 @@ public class Update {
 		return time;
 	}
 	
+	public void setTime(long t){
+		time = t;
+	}
+	
 	public Command getCommand(int index){
 		return data.get(index);
 	}
