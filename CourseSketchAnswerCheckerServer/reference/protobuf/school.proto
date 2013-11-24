@@ -10,7 +10,7 @@ message SrlSchool {
 message SrlCourse {
 	required string id = 1; // This must be globally unique.
 	optional string name = 2;
-	repeated User courseUsers = 3; //Course Roster, includes all user types
+	optional SrlPermission accessPermission= 3;
 	optional Accessibility access = 4 [default=PROTECTED];
 	optional string description = 5;
 	optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer) 
@@ -21,9 +21,10 @@ message SrlCourse {
 	optional State state = 11;
 	
 	enum Accessibility {
-		PUBLIC = 1; //Any student can access course without approval
-		PROTECTED = 2; //Any student can request access for course, requires instructor approval
-		PRIVATE = 3; //No students can see course without instructor invitation
+		PUBLIC = 1; //Any student can access course without approval.
+		PROTECTED = 2; //Any student can request access for course and public information it is searchable, requires instructor approval
+		PROTECTED_NOSEARCH = 3; //No students can see course without a special link, it is not searchable, requires instructor approval
+		PRIVATE = 4; //No students can see course without instructor invitation
 	}
 }
 
@@ -43,8 +44,7 @@ message SrlAssignment {
 	optional DateTime closeDate = 13; //Date that the assignment closes and can no longer be accessed
 	optional State state = 14;
 	optional string imageUrl = 15;
-	
-	
+
 	enum AssignmentType {
 		HOMEWORK = 1;
 		QUIZ = 2;
@@ -53,7 +53,7 @@ message SrlAssignment {
 		SURVEY = 5;
 		OTHER = 6; //Allows instructors to create unique assignment types
 	}
-	
+
 	enum LatePolicy { //Needs to be improved
 		POLICY1 = 1;
 		POLICY2 = 2;
@@ -111,7 +111,7 @@ message State {
 	optional bool completed = 5; //Student has saved/submitted work on all parts of school item
 }
 
-message User {
+message SrlUser {
 	required string username = 1; //Must be globally unique
 	optional UserType userType = 2 [default=GUEST];
 	optional string email = 3;
@@ -125,8 +125,26 @@ enum UserType {
 	GUEST = 5;
 }
 
+message SrlGroup {
+	repeated string userId = 1;
+	required string groupId = 2;
+	optional string groupName = 3;
+}
 
+message SrlSchoolId {
+	optional string courseId = 1;
+	optional string assignmentId = 2;
+	optional string problemId = 3;
+}
 
+/**
+ * Also can be called SrlUserGroup
+ */
+message SrlPermission {
+	repeated SrlGroup adminPermission = 1;
+	repeated SrlGroup moderatorPermission = 2;
+	repeated SrlGroup userPermission = 3;
+}
 /*----------------- Original
 package protobuf.srl.school;
 

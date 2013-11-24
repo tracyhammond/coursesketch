@@ -9,7 +9,7 @@ SERVERLIST[2]="CourseSketchRecognitionServer"
 SERVERLIST[3]="BlankServer"
 SERVERLIST[4]="CourseSketchSolutionServer"
 SERVERLIST[5]="CourseSketchAnswerCheckerServer"
-SERVERLIST[5]="CourseSketchLoginServer"
+SERVERLIST[6]="CourseSketchLoginServer"
 
 echo "clearing old directories"
 rm -rf output/  #deleting to replace it

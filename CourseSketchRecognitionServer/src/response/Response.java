@@ -18,22 +18,24 @@ public class Response {
 	//private PaleoSketchRecognizer m_recognizer;
 	private UpdateList m_syncList;
 	private Sketch m_drawspace;
-	
+
 	/**
 	 * Default constructor that initializes PaleoSketch with all primitives on
 	 */
 	public Response(){
 		//Instantiate All sketch recognition objects/recognizers
 	}
-	
+
 	/**
 	 * optional constructor to specify what primitives you want on
 	 * @param PaleoSketch configuration of which primitives you would like
 	 */
+	/*
 	public Response(PaleoConfig config){
 		//Instantiate All sketch recognition objects
 	}
-	
+	*/
+
 	/**
 	 * Advanced function that takes an update as a list of commands and
 	 * interprets multiple things at once, including
@@ -44,18 +46,18 @@ public class Response {
 	public SrlUpdate interpret(SrlUpdate call) throws Exception{
 		m_syncList.add(parseUpdate(call));
 		m_syncList.executeLast(m_drawspace);
-		
+
 		Update result = new Update();
-		
+
 		//perform recognition
-		
+
 		result.setTime(System.currentTimeMillis());
 		m_syncList.add(result);
 		m_syncList.executeLast(m_drawspace);
-		
+
 		return repackage(result);
 	}
-	
+
 	/**
 	 * Parses a Protobuf type update into a usable commands
 	 * @param protobuf.srl.commands.Commands.Update

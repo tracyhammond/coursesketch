@@ -44,12 +44,16 @@ class subproblemInformation;
 class DateTime;
 class DomainInformation;
 class State;
-class User;
+class SrlUser;
+class SrlGroup;
+class SrlSchoolId;
+class SrlPermission;
 
 enum SrlCourse_Accessibility {
   SrlCourse_Accessibility_PUBLIC = 1,
   SrlCourse_Accessibility_PROTECTED = 2,
-  SrlCourse_Accessibility_PRIVATE = 3
+  SrlCourse_Accessibility_PROTECTED_NOSEARCH = 3,
+  SrlCourse_Accessibility_PRIVATE = 4
 };
 bool SrlCourse_Accessibility_IsValid(int value);
 const SrlCourse_Accessibility SrlCourse_Accessibility_Accessibility_MIN = SrlCourse_Accessibility_PUBLIC;
@@ -320,6 +324,7 @@ class SrlCourse : public ::google::protobuf::Message {
   typedef SrlCourse_Accessibility Accessibility;
   static const Accessibility PUBLIC = SrlCourse_Accessibility_PUBLIC;
   static const Accessibility PROTECTED = SrlCourse_Accessibility_PROTECTED;
+  static const Accessibility PROTECTED_NOSEARCH = SrlCourse_Accessibility_PROTECTED_NOSEARCH;
   static const Accessibility PRIVATE = SrlCourse_Accessibility_PRIVATE;
   static inline bool Accessibility_IsValid(int value) {
     return SrlCourse_Accessibility_IsValid(value);
@@ -368,17 +373,14 @@ class SrlCourse : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
-  // repeated .protobuf.srl.school.User courseUsers = 3;
-  inline int courseusers_size() const;
-  inline void clear_courseusers();
-  static const int kCourseUsersFieldNumber = 3;
-  inline const ::protobuf::srl::school::User& courseusers(int index) const;
-  inline ::protobuf::srl::school::User* mutable_courseusers(int index);
-  inline ::protobuf::srl::school::User* add_courseusers();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User >&
-      courseusers() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User >*
-      mutable_courseusers();
+  // optional .protobuf.srl.school.SrlPermission accessPermission = 3;
+  inline bool has_accesspermission() const;
+  inline void clear_accesspermission();
+  static const int kAccessPermissionFieldNumber = 3;
+  inline const ::protobuf::srl::school::SrlPermission& accesspermission() const;
+  inline ::protobuf::srl::school::SrlPermission* mutable_accesspermission();
+  inline ::protobuf::srl::school::SrlPermission* release_accesspermission();
+  inline void set_allocated_accesspermission(::protobuf::srl::school::SrlPermission* accesspermission);
 
   // optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];
   inline bool has_access() const;
@@ -463,6 +465,8 @@ class SrlCourse : public ::google::protobuf::Message {
   inline void clear_has_id();
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_accesspermission();
+  inline void clear_has_accesspermission();
   inline void set_has_access();
   inline void clear_has_access();
   inline void set_has_description();
@@ -484,7 +488,7 @@ class SrlCourse : public ::google::protobuf::Message {
 
   ::std::string* id_;
   ::std::string* name_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User > courseusers_;
+  ::protobuf::srl::school::SrlPermission* accesspermission_;
   ::std::string* description_;
   ::std::string* semester_;
   int access_;
@@ -1540,14 +1544,14 @@ class State : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class User : public ::google::protobuf::Message {
+class SrlUser : public ::google::protobuf::Message {
  public:
-  User();
-  virtual ~User();
+  SrlUser();
+  virtual ~SrlUser();
 
-  User(const User& from);
+  SrlUser(const SrlUser& from);
 
-  inline User& operator=(const User& from) {
+  inline SrlUser& operator=(const SrlUser& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1561,17 +1565,17 @@ class User : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const User& default_instance();
+  static const SrlUser& default_instance();
 
-  void Swap(User* other);
+  void Swap(SrlUser* other);
 
   // implements Message ----------------------------------------------
 
-  User* New() const;
+  SrlUser* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const User& from);
-  void MergeFrom(const User& from);
+  void CopyFrom(const SrlUser& from);
+  void MergeFrom(const SrlUser& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1625,7 +1629,7 @@ class User : public ::google::protobuf::Message {
   inline ::std::string* release_email();
   inline void set_allocated_email(::std::string* email);
 
-  // @@protoc_insertion_point(class_scope:protobuf.srl.school.User)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlUser)
  private:
   inline void set_has_username();
   inline void clear_has_username();
@@ -1648,7 +1652,354 @@ class User : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fschool_2eproto();
 
   void InitAsDefaultInstance();
-  static User* default_instance_;
+  static SrlUser* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SrlGroup : public ::google::protobuf::Message {
+ public:
+  SrlGroup();
+  virtual ~SrlGroup();
+
+  SrlGroup(const SrlGroup& from);
+
+  inline SrlGroup& operator=(const SrlGroup& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlGroup& default_instance();
+
+  void Swap(SrlGroup* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlGroup* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlGroup& from);
+  void MergeFrom(const SrlGroup& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated string userId = 1;
+  inline int userid_size() const;
+  inline void clear_userid();
+  static const int kUserIdFieldNumber = 1;
+  inline const ::std::string& userid(int index) const;
+  inline ::std::string* mutable_userid(int index);
+  inline void set_userid(int index, const ::std::string& value);
+  inline void set_userid(int index, const char* value);
+  inline void set_userid(int index, const char* value, size_t size);
+  inline ::std::string* add_userid();
+  inline void add_userid(const ::std::string& value);
+  inline void add_userid(const char* value);
+  inline void add_userid(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& userid() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_userid();
+
+  // required string groupId = 2;
+  inline bool has_groupid() const;
+  inline void clear_groupid();
+  static const int kGroupIdFieldNumber = 2;
+  inline const ::std::string& groupid() const;
+  inline void set_groupid(const ::std::string& value);
+  inline void set_groupid(const char* value);
+  inline void set_groupid(const char* value, size_t size);
+  inline ::std::string* mutable_groupid();
+  inline ::std::string* release_groupid();
+  inline void set_allocated_groupid(::std::string* groupid);
+
+  // optional string groupName = 3;
+  inline bool has_groupname() const;
+  inline void clear_groupname();
+  static const int kGroupNameFieldNumber = 3;
+  inline const ::std::string& groupname() const;
+  inline void set_groupname(const ::std::string& value);
+  inline void set_groupname(const char* value);
+  inline void set_groupname(const char* value, size_t size);
+  inline ::std::string* mutable_groupname();
+  inline ::std::string* release_groupname();
+  inline void set_allocated_groupname(::std::string* groupname);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlGroup)
+ private:
+  inline void set_has_groupid();
+  inline void clear_has_groupid();
+  inline void set_has_groupname();
+  inline void clear_has_groupname();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::std::string> userid_;
+  ::std::string* groupid_;
+  ::std::string* groupname_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fschool_2eproto();
+  friend void protobuf_AssignDesc_input_2fschool_2eproto();
+  friend void protobuf_ShutdownFile_input_2fschool_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlGroup* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SrlSchoolId : public ::google::protobuf::Message {
+ public:
+  SrlSchoolId();
+  virtual ~SrlSchoolId();
+
+  SrlSchoolId(const SrlSchoolId& from);
+
+  inline SrlSchoolId& operator=(const SrlSchoolId& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlSchoolId& default_instance();
+
+  void Swap(SrlSchoolId* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlSchoolId* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlSchoolId& from);
+  void MergeFrom(const SrlSchoolId& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string courseId = 1;
+  inline bool has_courseid() const;
+  inline void clear_courseid();
+  static const int kCourseIdFieldNumber = 1;
+  inline const ::std::string& courseid() const;
+  inline void set_courseid(const ::std::string& value);
+  inline void set_courseid(const char* value);
+  inline void set_courseid(const char* value, size_t size);
+  inline ::std::string* mutable_courseid();
+  inline ::std::string* release_courseid();
+  inline void set_allocated_courseid(::std::string* courseid);
+
+  // optional string assignmentId = 2;
+  inline bool has_assignmentid() const;
+  inline void clear_assignmentid();
+  static const int kAssignmentIdFieldNumber = 2;
+  inline const ::std::string& assignmentid() const;
+  inline void set_assignmentid(const ::std::string& value);
+  inline void set_assignmentid(const char* value);
+  inline void set_assignmentid(const char* value, size_t size);
+  inline ::std::string* mutable_assignmentid();
+  inline ::std::string* release_assignmentid();
+  inline void set_allocated_assignmentid(::std::string* assignmentid);
+
+  // optional string problemId = 3;
+  inline bool has_problemid() const;
+  inline void clear_problemid();
+  static const int kProblemIdFieldNumber = 3;
+  inline const ::std::string& problemid() const;
+  inline void set_problemid(const ::std::string& value);
+  inline void set_problemid(const char* value);
+  inline void set_problemid(const char* value, size_t size);
+  inline ::std::string* mutable_problemid();
+  inline ::std::string* release_problemid();
+  inline void set_allocated_problemid(::std::string* problemid);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlSchoolId)
+ private:
+  inline void set_has_courseid();
+  inline void clear_has_courseid();
+  inline void set_has_assignmentid();
+  inline void clear_has_assignmentid();
+  inline void set_has_problemid();
+  inline void clear_has_problemid();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* courseid_;
+  ::std::string* assignmentid_;
+  ::std::string* problemid_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fschool_2eproto();
+  friend void protobuf_AssignDesc_input_2fschool_2eproto();
+  friend void protobuf_ShutdownFile_input_2fschool_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlSchoolId* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SrlPermission : public ::google::protobuf::Message {
+ public:
+  SrlPermission();
+  virtual ~SrlPermission();
+
+  SrlPermission(const SrlPermission& from);
+
+  inline SrlPermission& operator=(const SrlPermission& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlPermission& default_instance();
+
+  void Swap(SrlPermission* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlPermission* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlPermission& from);
+  void MergeFrom(const SrlPermission& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+  inline int adminpermission_size() const;
+  inline void clear_adminpermission();
+  static const int kAdminPermissionFieldNumber = 1;
+  inline const ::protobuf::srl::school::SrlGroup& adminpermission(int index) const;
+  inline ::protobuf::srl::school::SrlGroup* mutable_adminpermission(int index);
+  inline ::protobuf::srl::school::SrlGroup* add_adminpermission();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
+      adminpermission() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
+      mutable_adminpermission();
+
+  // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+  inline int moderatorpermission_size() const;
+  inline void clear_moderatorpermission();
+  static const int kModeratorPermissionFieldNumber = 2;
+  inline const ::protobuf::srl::school::SrlGroup& moderatorpermission(int index) const;
+  inline ::protobuf::srl::school::SrlGroup* mutable_moderatorpermission(int index);
+  inline ::protobuf::srl::school::SrlGroup* add_moderatorpermission();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
+      moderatorpermission() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
+      mutable_moderatorpermission();
+
+  // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+  inline int userpermission_size() const;
+  inline void clear_userpermission();
+  static const int kUserPermissionFieldNumber = 3;
+  inline const ::protobuf::srl::school::SrlGroup& userpermission(int index) const;
+  inline ::protobuf::srl::school::SrlGroup* mutable_userpermission(int index);
+  inline ::protobuf::srl::school::SrlGroup* add_userpermission();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
+      userpermission() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
+      mutable_userpermission();
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlPermission)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup > adminpermission_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup > moderatorpermission_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup > userpermission_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fschool_2eproto();
+  friend void protobuf_AssignDesc_input_2fschool_2eproto();
+  friend void protobuf_ShutdownFile_input_2fschool_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlPermission* default_instance_;
 };
 // ===================================================================
 
@@ -1876,29 +2227,42 @@ inline void SrlCourse::set_allocated_name(::std::string* name) {
   }
 }
 
-// repeated .protobuf.srl.school.User courseUsers = 3;
-inline int SrlCourse::courseusers_size() const {
-  return courseusers_.size();
+// optional .protobuf.srl.school.SrlPermission accessPermission = 3;
+inline bool SrlCourse::has_accesspermission() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SrlCourse::clear_courseusers() {
-  courseusers_.Clear();
+inline void SrlCourse::set_has_accesspermission() {
+  _has_bits_[0] |= 0x00000004u;
 }
-inline const ::protobuf::srl::school::User& SrlCourse::courseusers(int index) const {
-  return courseusers_.Get(index);
+inline void SrlCourse::clear_has_accesspermission() {
+  _has_bits_[0] &= ~0x00000004u;
 }
-inline ::protobuf::srl::school::User* SrlCourse::mutable_courseusers(int index) {
-  return courseusers_.Mutable(index);
+inline void SrlCourse::clear_accesspermission() {
+  if (accesspermission_ != NULL) accesspermission_->::protobuf::srl::school::SrlPermission::Clear();
+  clear_has_accesspermission();
 }
-inline ::protobuf::srl::school::User* SrlCourse::add_courseusers() {
-  return courseusers_.Add();
+inline const ::protobuf::srl::school::SrlPermission& SrlCourse::accesspermission() const {
+  return accesspermission_ != NULL ? *accesspermission_ : *default_instance_->accesspermission_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User >&
-SrlCourse::courseusers() const {
-  return courseusers_;
+inline ::protobuf::srl::school::SrlPermission* SrlCourse::mutable_accesspermission() {
+  set_has_accesspermission();
+  if (accesspermission_ == NULL) accesspermission_ = new ::protobuf::srl::school::SrlPermission;
+  return accesspermission_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::User >*
-SrlCourse::mutable_courseusers() {
-  return &courseusers_;
+inline ::protobuf::srl::school::SrlPermission* SrlCourse::release_accesspermission() {
+  clear_has_accesspermission();
+  ::protobuf::srl::school::SrlPermission* temp = accesspermission_;
+  accesspermission_ = NULL;
+  return temp;
+}
+inline void SrlCourse::set_allocated_accesspermission(::protobuf::srl::school::SrlPermission* accesspermission) {
+  delete accesspermission_;
+  accesspermission_ = accesspermission;
+  if (accesspermission) {
+    set_has_accesspermission();
+  } else {
+    clear_has_accesspermission();
+  }
 }
 
 // optional .protobuf.srl.school.SrlCourse.Accessibility access = 4 [default = PROTECTED];
@@ -4025,56 +4389,56 @@ inline void State::set_completed(bool value) {
 
 // -------------------------------------------------------------------
 
-// User
+// SrlUser
 
 // required string username = 1;
-inline bool User::has_username() const {
+inline bool SrlUser::has_username() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void User::set_has_username() {
+inline void SrlUser::set_has_username() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void User::clear_has_username() {
+inline void SrlUser::clear_has_username() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void User::clear_username() {
+inline void SrlUser::clear_username() {
   if (username_ != &::google::protobuf::internal::kEmptyString) {
     username_->clear();
   }
   clear_has_username();
 }
-inline const ::std::string& User::username() const {
+inline const ::std::string& SrlUser::username() const {
   return *username_;
 }
-inline void User::set_username(const ::std::string& value) {
+inline void SrlUser::set_username(const ::std::string& value) {
   set_has_username();
   if (username_ == &::google::protobuf::internal::kEmptyString) {
     username_ = new ::std::string;
   }
   username_->assign(value);
 }
-inline void User::set_username(const char* value) {
+inline void SrlUser::set_username(const char* value) {
   set_has_username();
   if (username_ == &::google::protobuf::internal::kEmptyString) {
     username_ = new ::std::string;
   }
   username_->assign(value);
 }
-inline void User::set_username(const char* value, size_t size) {
+inline void SrlUser::set_username(const char* value, size_t size) {
   set_has_username();
   if (username_ == &::google::protobuf::internal::kEmptyString) {
     username_ = new ::std::string;
   }
   username_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* User::mutable_username() {
+inline ::std::string* SrlUser::mutable_username() {
   set_has_username();
   if (username_ == &::google::protobuf::internal::kEmptyString) {
     username_ = new ::std::string;
   }
   return username_;
 }
-inline ::std::string* User::release_username() {
+inline ::std::string* SrlUser::release_username() {
   clear_has_username();
   if (username_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -4084,7 +4448,7 @@ inline ::std::string* User::release_username() {
     return temp;
   }
 }
-inline void User::set_allocated_username(::std::string* username) {
+inline void SrlUser::set_allocated_username(::std::string* username) {
   if (username_ != &::google::protobuf::internal::kEmptyString) {
     delete username_;
   }
@@ -4098,76 +4462,76 @@ inline void User::set_allocated_username(::std::string* username) {
 }
 
 // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
-inline bool User::has_usertype() const {
+inline bool SrlUser::has_usertype() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void User::set_has_usertype() {
+inline void SrlUser::set_has_usertype() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void User::clear_has_usertype() {
+inline void SrlUser::clear_has_usertype() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void User::clear_usertype() {
+inline void SrlUser::clear_usertype() {
   usertype_ = 5;
   clear_has_usertype();
 }
-inline ::protobuf::srl::school::UserType User::usertype() const {
+inline ::protobuf::srl::school::UserType SrlUser::usertype() const {
   return static_cast< ::protobuf::srl::school::UserType >(usertype_);
 }
-inline void User::set_usertype(::protobuf::srl::school::UserType value) {
+inline void SrlUser::set_usertype(::protobuf::srl::school::UserType value) {
   assert(::protobuf::srl::school::UserType_IsValid(value));
   set_has_usertype();
   usertype_ = value;
 }
 
 // optional string email = 3;
-inline bool User::has_email() const {
+inline bool SrlUser::has_email() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void User::set_has_email() {
+inline void SrlUser::set_has_email() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void User::clear_has_email() {
+inline void SrlUser::clear_has_email() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void User::clear_email() {
+inline void SrlUser::clear_email() {
   if (email_ != &::google::protobuf::internal::kEmptyString) {
     email_->clear();
   }
   clear_has_email();
 }
-inline const ::std::string& User::email() const {
+inline const ::std::string& SrlUser::email() const {
   return *email_;
 }
-inline void User::set_email(const ::std::string& value) {
+inline void SrlUser::set_email(const ::std::string& value) {
   set_has_email();
   if (email_ == &::google::protobuf::internal::kEmptyString) {
     email_ = new ::std::string;
   }
   email_->assign(value);
 }
-inline void User::set_email(const char* value) {
+inline void SrlUser::set_email(const char* value) {
   set_has_email();
   if (email_ == &::google::protobuf::internal::kEmptyString) {
     email_ = new ::std::string;
   }
   email_->assign(value);
 }
-inline void User::set_email(const char* value, size_t size) {
+inline void SrlUser::set_email(const char* value, size_t size) {
   set_has_email();
   if (email_ == &::google::protobuf::internal::kEmptyString) {
     email_ = new ::std::string;
   }
   email_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* User::mutable_email() {
+inline ::std::string* SrlUser::mutable_email() {
   set_has_email();
   if (email_ == &::google::protobuf::internal::kEmptyString) {
     email_ = new ::std::string;
   }
   return email_;
 }
-inline ::std::string* User::release_email() {
+inline ::std::string* SrlUser::release_email() {
   clear_has_email();
   if (email_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -4177,7 +4541,7 @@ inline ::std::string* User::release_email() {
     return temp;
   }
 }
-inline void User::set_allocated_email(::std::string* email) {
+inline void SrlUser::set_allocated_email(::std::string* email) {
   if (email_ != &::google::protobuf::internal::kEmptyString) {
     delete email_;
   }
@@ -4188,6 +4552,487 @@ inline void User::set_allocated_email(::std::string* email) {
     clear_has_email();
     email_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// -------------------------------------------------------------------
+
+// SrlGroup
+
+// repeated string userId = 1;
+inline int SrlGroup::userid_size() const {
+  return userid_.size();
+}
+inline void SrlGroup::clear_userid() {
+  userid_.Clear();
+}
+inline const ::std::string& SrlGroup::userid(int index) const {
+  return userid_.Get(index);
+}
+inline ::std::string* SrlGroup::mutable_userid(int index) {
+  return userid_.Mutable(index);
+}
+inline void SrlGroup::set_userid(int index, const ::std::string& value) {
+  userid_.Mutable(index)->assign(value);
+}
+inline void SrlGroup::set_userid(int index, const char* value) {
+  userid_.Mutable(index)->assign(value);
+}
+inline void SrlGroup::set_userid(int index, const char* value, size_t size) {
+  userid_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlGroup::add_userid() {
+  return userid_.Add();
+}
+inline void SrlGroup::add_userid(const ::std::string& value) {
+  userid_.Add()->assign(value);
+}
+inline void SrlGroup::add_userid(const char* value) {
+  userid_.Add()->assign(value);
+}
+inline void SrlGroup::add_userid(const char* value, size_t size) {
+  userid_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SrlGroup::userid() const {
+  return userid_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SrlGroup::mutable_userid() {
+  return &userid_;
+}
+
+// required string groupId = 2;
+inline bool SrlGroup::has_groupid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SrlGroup::set_has_groupid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SrlGroup::clear_has_groupid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SrlGroup::clear_groupid() {
+  if (groupid_ != &::google::protobuf::internal::kEmptyString) {
+    groupid_->clear();
+  }
+  clear_has_groupid();
+}
+inline const ::std::string& SrlGroup::groupid() const {
+  return *groupid_;
+}
+inline void SrlGroup::set_groupid(const ::std::string& value) {
+  set_has_groupid();
+  if (groupid_ == &::google::protobuf::internal::kEmptyString) {
+    groupid_ = new ::std::string;
+  }
+  groupid_->assign(value);
+}
+inline void SrlGroup::set_groupid(const char* value) {
+  set_has_groupid();
+  if (groupid_ == &::google::protobuf::internal::kEmptyString) {
+    groupid_ = new ::std::string;
+  }
+  groupid_->assign(value);
+}
+inline void SrlGroup::set_groupid(const char* value, size_t size) {
+  set_has_groupid();
+  if (groupid_ == &::google::protobuf::internal::kEmptyString) {
+    groupid_ = new ::std::string;
+  }
+  groupid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlGroup::mutable_groupid() {
+  set_has_groupid();
+  if (groupid_ == &::google::protobuf::internal::kEmptyString) {
+    groupid_ = new ::std::string;
+  }
+  return groupid_;
+}
+inline ::std::string* SrlGroup::release_groupid() {
+  clear_has_groupid();
+  if (groupid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = groupid_;
+    groupid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlGroup::set_allocated_groupid(::std::string* groupid) {
+  if (groupid_ != &::google::protobuf::internal::kEmptyString) {
+    delete groupid_;
+  }
+  if (groupid) {
+    set_has_groupid();
+    groupid_ = groupid;
+  } else {
+    clear_has_groupid();
+    groupid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string groupName = 3;
+inline bool SrlGroup::has_groupname() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SrlGroup::set_has_groupname() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SrlGroup::clear_has_groupname() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SrlGroup::clear_groupname() {
+  if (groupname_ != &::google::protobuf::internal::kEmptyString) {
+    groupname_->clear();
+  }
+  clear_has_groupname();
+}
+inline const ::std::string& SrlGroup::groupname() const {
+  return *groupname_;
+}
+inline void SrlGroup::set_groupname(const ::std::string& value) {
+  set_has_groupname();
+  if (groupname_ == &::google::protobuf::internal::kEmptyString) {
+    groupname_ = new ::std::string;
+  }
+  groupname_->assign(value);
+}
+inline void SrlGroup::set_groupname(const char* value) {
+  set_has_groupname();
+  if (groupname_ == &::google::protobuf::internal::kEmptyString) {
+    groupname_ = new ::std::string;
+  }
+  groupname_->assign(value);
+}
+inline void SrlGroup::set_groupname(const char* value, size_t size) {
+  set_has_groupname();
+  if (groupname_ == &::google::protobuf::internal::kEmptyString) {
+    groupname_ = new ::std::string;
+  }
+  groupname_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlGroup::mutable_groupname() {
+  set_has_groupname();
+  if (groupname_ == &::google::protobuf::internal::kEmptyString) {
+    groupname_ = new ::std::string;
+  }
+  return groupname_;
+}
+inline ::std::string* SrlGroup::release_groupname() {
+  clear_has_groupname();
+  if (groupname_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = groupname_;
+    groupname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlGroup::set_allocated_groupname(::std::string* groupname) {
+  if (groupname_ != &::google::protobuf::internal::kEmptyString) {
+    delete groupname_;
+  }
+  if (groupname) {
+    set_has_groupname();
+    groupname_ = groupname;
+  } else {
+    clear_has_groupname();
+    groupname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SrlSchoolId
+
+// optional string courseId = 1;
+inline bool SrlSchoolId::has_courseid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SrlSchoolId::set_has_courseid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SrlSchoolId::clear_has_courseid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SrlSchoolId::clear_courseid() {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    courseid_->clear();
+  }
+  clear_has_courseid();
+}
+inline const ::std::string& SrlSchoolId::courseid() const {
+  return *courseid_;
+}
+inline void SrlSchoolId::set_courseid(const ::std::string& value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
+}
+inline void SrlSchoolId::set_courseid(const char* value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
+}
+inline void SrlSchoolId::set_courseid(const char* value, size_t size) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlSchoolId::mutable_courseid() {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  return courseid_;
+}
+inline ::std::string* SrlSchoolId::release_courseid() {
+  clear_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = courseid_;
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlSchoolId::set_allocated_courseid(::std::string* courseid) {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    delete courseid_;
+  }
+  if (courseid) {
+    set_has_courseid();
+    courseid_ = courseid;
+  } else {
+    clear_has_courseid();
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string assignmentId = 2;
+inline bool SrlSchoolId::has_assignmentid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SrlSchoolId::set_has_assignmentid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SrlSchoolId::clear_has_assignmentid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SrlSchoolId::clear_assignmentid() {
+  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+    assignmentid_->clear();
+  }
+  clear_has_assignmentid();
+}
+inline const ::std::string& SrlSchoolId::assignmentid() const {
+  return *assignmentid_;
+}
+inline void SrlSchoolId::set_assignmentid(const ::std::string& value) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(value);
+}
+inline void SrlSchoolId::set_assignmentid(const char* value) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(value);
+}
+inline void SrlSchoolId::set_assignmentid(const char* value, size_t size) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlSchoolId::mutable_assignmentid() {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  return assignmentid_;
+}
+inline ::std::string* SrlSchoolId::release_assignmentid() {
+  clear_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = assignmentid_;
+    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlSchoolId::set_allocated_assignmentid(::std::string* assignmentid) {
+  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+    delete assignmentid_;
+  }
+  if (assignmentid) {
+    set_has_assignmentid();
+    assignmentid_ = assignmentid;
+  } else {
+    clear_has_assignmentid();
+    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string problemId = 3;
+inline bool SrlSchoolId::has_problemid() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SrlSchoolId::set_has_problemid() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SrlSchoolId::clear_has_problemid() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SrlSchoolId::clear_problemid() {
+  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
+    problemid_->clear();
+  }
+  clear_has_problemid();
+}
+inline const ::std::string& SrlSchoolId::problemid() const {
+  return *problemid_;
+}
+inline void SrlSchoolId::set_problemid(const ::std::string& value) {
+  set_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    problemid_ = new ::std::string;
+  }
+  problemid_->assign(value);
+}
+inline void SrlSchoolId::set_problemid(const char* value) {
+  set_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    problemid_ = new ::std::string;
+  }
+  problemid_->assign(value);
+}
+inline void SrlSchoolId::set_problemid(const char* value, size_t size) {
+  set_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    problemid_ = new ::std::string;
+  }
+  problemid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlSchoolId::mutable_problemid() {
+  set_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    problemid_ = new ::std::string;
+  }
+  return problemid_;
+}
+inline ::std::string* SrlSchoolId::release_problemid() {
+  clear_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = problemid_;
+    problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlSchoolId::set_allocated_problemid(::std::string* problemid) {
+  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
+    delete problemid_;
+  }
+  if (problemid) {
+    set_has_problemid();
+    problemid_ = problemid;
+  } else {
+    clear_has_problemid();
+    problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SrlPermission
+
+// repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+inline int SrlPermission::adminpermission_size() const {
+  return adminpermission_.size();
+}
+inline void SrlPermission::clear_adminpermission() {
+  adminpermission_.Clear();
+}
+inline const ::protobuf::srl::school::SrlGroup& SrlPermission::adminpermission(int index) const {
+  return adminpermission_.Get(index);
+}
+inline ::protobuf::srl::school::SrlGroup* SrlPermission::mutable_adminpermission(int index) {
+  return adminpermission_.Mutable(index);
+}
+inline ::protobuf::srl::school::SrlGroup* SrlPermission::add_adminpermission() {
+  return adminpermission_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
+SrlPermission::adminpermission() const {
+  return adminpermission_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
+SrlPermission::mutable_adminpermission() {
+  return &adminpermission_;
+}
+
+// repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+inline int SrlPermission::moderatorpermission_size() const {
+  return moderatorpermission_.size();
+}
+inline void SrlPermission::clear_moderatorpermission() {
+  moderatorpermission_.Clear();
+}
+inline const ::protobuf::srl::school::SrlGroup& SrlPermission::moderatorpermission(int index) const {
+  return moderatorpermission_.Get(index);
+}
+inline ::protobuf::srl::school::SrlGroup* SrlPermission::mutable_moderatorpermission(int index) {
+  return moderatorpermission_.Mutable(index);
+}
+inline ::protobuf::srl::school::SrlGroup* SrlPermission::add_moderatorpermission() {
+  return moderatorpermission_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
+SrlPermission::moderatorpermission() const {
+  return moderatorpermission_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
+SrlPermission::mutable_moderatorpermission() {
+  return &moderatorpermission_;
+}
+
+// repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+inline int SrlPermission::userpermission_size() const {
+  return userpermission_.size();
+}
+inline void SrlPermission::clear_userpermission() {
+  userpermission_.Clear();
+}
+inline const ::protobuf::srl::school::SrlGroup& SrlPermission::userpermission(int index) const {
+  return userpermission_.Get(index);
+}
+inline ::protobuf::srl::school::SrlGroup* SrlPermission::mutable_userpermission(int index) {
+  return userpermission_.Mutable(index);
+}
+inline ::protobuf::srl::school::SrlGroup* SrlPermission::add_userpermission() {
+  return userpermission_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
+SrlPermission::userpermission() const {
+  return userpermission_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
+SrlPermission::mutable_userpermission() {
+  return &userpermission_;
 }
 
 
