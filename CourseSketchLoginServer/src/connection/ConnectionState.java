@@ -5,7 +5,6 @@ public class ConnectionState {
 	private String key;
 	private boolean isLoggedIn = false;
 	private boolean isInstructor = false; // flagged true if correct login and is instructor
-	private Permission permissionLevel; // flagged true if correct login and is instructor
 	private int previousMessageType = 0;
 	private int loginTries = 0;
 	
@@ -30,16 +29,6 @@ public class ConnectionState {
 	
 	public boolean isLoggedIn() {
 		return isLoggedIn;
-	}
-	
-	/* package-private */ void logIn(boolean instructorFlag, Permission permissionLevel) {
-		isLoggedIn = true;
-		isInstructor = instructorFlag;
-		if (instructorFlag) {
-			this.permissionLevel = permissionLevel;
-		} else {
-			this.permissionLevel = Permission.NO_PERMISSION;
-		}
 	}
 
 	public void addTry() {
