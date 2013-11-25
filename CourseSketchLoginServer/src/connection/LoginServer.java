@@ -63,7 +63,7 @@ public class LoginServer extends WebSocketServer {
 
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		System.out.println("Open Login Connection");
+		System.out.println("Open Login Connection now...");
 		if (connections.size() >= MAX_CONNECTIONS) {
 			// Return negatative state.
 			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
@@ -93,7 +93,7 @@ public class LoginServer extends WebSocketServer {
 		try{
 			//This is assuming user is logged in
 			//conn.send(createLoginResponse(req, true));
-			boolean userLoggedIn = CheckUserLogin();
+			boolean userLoggedIn = CheckUserLogin(req.getLogin().getUsername(), req.getLogin().getPassword());
 			if (userLoggedIn) {
 			 	//return if database is an instructor
 				conn.send(createLoginResponse(req, true, CORRECT_LOGIN_MESSAGE, userLoggedIn).toByteArray());
@@ -170,7 +170,7 @@ public class LoginServer extends WebSocketServer {
 		}
 	}
 	
-	private boolean CheckUserLogin(){
+	private boolean CheckUserLogin(String user, String password){
 		return true;
 	}
 	
