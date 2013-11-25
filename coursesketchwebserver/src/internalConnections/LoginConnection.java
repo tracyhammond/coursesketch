@@ -1,29 +1,43 @@
 package internalConnections;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.client.WebSocketClient;
+import multiConnection.MultiInternalConnectionServer;
+import multiConnection.WrapperConnection;
 import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_10;
-import org.java_websocket.framing.Framedata;
-import org.java_websocket.handshake.ServerHandshake;
 
-import proxyServer.ConnectionState;
-import proxyServer.Decoder;
-import proxyServer.ProxyServer;
+import protobuf.srl.request.Message.Request;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class LoginConnection extends WrapperConnection {
-
-	public ConnectionState connection = null;
-	ProxyServer parent;
-	public LoginConnection( URI serverUri , Draft draft , ProxyServer parent) {
+	
+		
+	
+	public LoginConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent, Request req, LoginConnectionState state) {
+		
 		this( serverUri, draft );
-		this.parent = parent;
+		// get connection state
+		// if log success = state -> login
+		// if log fail state -> addTry
+		// state -> stopPending
+		// send result
+		//boolean instructor = false;
+	
+		//return createLoginResponse(req, false, "An Error Occured While Logging in: Wrong Message Type.", false);
+	}
+	
+	public void onMessage(ByteBuffer buffer) {
+		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
+		LoginConnectionState state = (LoginConnectionState) getStateFromId(r.getSessionInfo());
+		if(r.getLogin().getIsLoggedIn()){
+			state.logIn(r.getLogin().getIsInstructor());
+		}
+			if(r.getLogin().getIsInstructor()){
+		}
+		
+		getConnectionFromState(state).send(buffer);
 	}
 	
 	public LoginConnection( URI serverUri , Draft draft ) {
@@ -33,43 +47,4 @@ public class LoginConnection extends WrapperConnection {
 	public LoginConnection( URI serverURI ) {
 		super( serverURI );
 	}
-	/*
-	@Override
-	public void onOpen( ServerHandshake handshakedata ) {
-		System.out.println( "Open Recognition connection" );
-		// if you plan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
-	}
-
-	
-	@Override
-	public void onMessage( String message ) {
-		System.out.println( "received: " + message );
-	}
-	 //Accepts messages and sends the request to the correct server and holds minimum client state.
-	@Override
-	public void onMessage(ByteBuffer buffer) {
-		if (connection!=null) {
-			ConnectionState state = parent.getIdToState().get(Decoder.parseRequest(buffer).getSessionInfo());
-			System.out.println("SESSION KEY: " + Decoder.parseRequest(buffer).getSessionInfo());
-			System.out.println("STATE KEY: " + state.getKey());
-			parent.getIdToConnection().get(state).send(buffer);
-		}
-	}
-
-	public void onFragment( Framedata fragment ) {
-		System.out.println( "received fragment: " + new String( fragment.getPayloadData().array() ) );
-	}
-
-	@Override
-	public void onClose( int code, String reason, boolean remote ) {
-		// The codecodes are documented in class org.java_websocket.framing.CloseFrame
-		System.out.println( "Connection closed by " + ( remote ? "remote peer" : "us" ) );
-	}
-
-	@Override
-	public void onError( Exception ex ) {
-		ex.printStackTrace();
-		// if the error is fatal then onClose will be called additionally
-	}*/
-
 }

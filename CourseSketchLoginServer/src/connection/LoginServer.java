@@ -1,5 +1,7 @@
 package connection;
 
+//import internalConnections.LoginConnectionState;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import main.Response;
+//import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
@@ -78,51 +81,21 @@ public class LoginServer extends WebSocketServer {
 	public void onMessage( WebSocket conn, String message ) {
 	}
 
-	@Override
+	/*@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		Request req = Decoder.parseRequest(buffer);
-		if (req == null) {
-			System.out.println("protobuf error");
-			// we need to somehow send an error to the client here
-			return;
+		try{
+			if (//database says that user is logged in) {
+				return createLoginResponse(req, true, message, //if database says you're an instructor);
+			} else {
+				//state.addTry();
+				return createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false);
+			}
 		}
-		if (req.getRequestType() == Request.MessageType.RECOGNITION) {
-			ByteString rawUpdateData = req.getOtherData();
-			SrlUpdate savedUpdate = Decoder.parseNextUpdate(rawUpdateData);
-			req.getSessionInfo();
-			Response r = null;
-			//if it does not exist, add it to map
-			if(!idToResponse.containsValue(req.getSessionInfo())){
-				r = new Response();
-				idToResponse.put(req.getSessionInfo(), r);
-			}
-			else{
-				r=idToResponse.get(req.getSessionInfo());
-			}
-			//r.interpret(savedUpdate);
-			//pass to them
-			//use a function that they will give
-			Request result = null;
-
-			try {
-				// TODO: move these inside the class itself.
-				r.print(savedUpdate);
-				SrlShape shape = r.interpret(savedUpdate);
-				SrlStroke stroke = r.mirror(savedUpdate);
-				//post function they will give (package the information received)
-				SrlCommand com1 = Encoder.createCommandFromBytes(stroke.toByteString(), CommandType.ADD_STROKE);
-				SrlCommand com2 = Encoder.createCommandFromBytes(shape.toByteString(), CommandType.ADD_SHAPE);
-				
-				result = Encoder.createRequestFromCommands(req.getSessionInfo(), com1, com2);
-			} catch (InvalidProtocolBufferException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			conn.send(result.toByteArray());
+	catch
+		return createLoginResponse(req, false, "An Error Occured While Logging in: Wrong Message Type.", false);
 		}
-		return;
-	}
-
+*/
 	public void onFragment( WebSocket conn, Framedata fragment ) {
 		//System.out.println( "received fragment: " + fragment );
 	}

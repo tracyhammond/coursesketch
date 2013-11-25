@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import multiConnection.MultiInternalConnectionServer;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
@@ -23,14 +25,10 @@ import protobuf.srl.request.Message.Request;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-public class DatabaseServer extends WebSocketServer {
+public class DatabaseServer extends MultiInternalConnectionServer {
 
 	public static final int MAX_CONNECTIONS = 20;
-	public static final int STATE_SERVER_FULL = 4001;
-	static final String FULL_SERVER_MESSAGE = "Sorry, the RECOGNITION server is full";
 	UpdateHandler updateHandler = new UpdateHandler();
-	
-	List<WebSocket> connections = new LinkedList<WebSocket>();
 	Database database = new Database();
 
 	static int numberOfConnections = Integer.MIN_VALUE;
@@ -40,28 +38,6 @@ public class DatabaseServer extends WebSocketServer {
 
 	public DatabaseServer( InetSocketAddress address ) {
 		super( address );
-	}
-
-	@Override
-	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		if (connections.size() >= MAX_CONNECTIONS) {
-			// Return negatative state.
-			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
-			System.out.println("FULL SERVER"); // send message to someone?
-			return;
-		}
-		connections.add(conn);
-		System.out.println("Added connection");
-	}
-
-	@Override
-	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
-		System.out.println( conn + " has disconnected from Recognition.");
-		connections.remove(conn);
-	}
-
-	@Override
-	public void onMessage( WebSocket conn, String message ) {
 	}
 
 	@Override
@@ -87,7 +63,7 @@ public class DatabaseServer extends WebSocketServer {
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Recognition Server: Version 1.0.2");
 		WebSocketImpl.DEBUG = true;
-		int port = 8888; // 843 flash policy port
+		int port = 8885; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
@@ -99,7 +75,6 @@ public class DatabaseServer extends WebSocketServer {
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();
-			s.sendToAll( in );
 			if( in.equals( "exit" ) ) {
 				s.stop();
 				break;
@@ -115,23 +90,6 @@ public class DatabaseServer extends WebSocketServer {
 		ex.printStackTrace();
 		if( conn != null ) {
 			// some errors like port binding failed may not be assignable to a specific websocket
-		}
-	}
-
-	/**
-	 * Sends <var>text</var> to all currently connected WebSocket clients.
-	 * 
-	 * @param text
-	 *            The String to send across the network.
-	 * @throws InterruptedException
-	 *             When socket related I/O errors occur.
-	 */
-	public void sendToAll( String text ) {
-		Collection<WebSocket> con = connections();
-		synchronized ( con ) {
-			for( WebSocket c : con ) {
-				c.send( text );
-			}
 		}
 	}
 }

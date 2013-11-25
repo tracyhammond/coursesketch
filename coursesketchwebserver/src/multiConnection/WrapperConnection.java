@@ -1,30 +1,23 @@
-package internalConnections;
+package multiConnection;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
-
-import proxyServer.ConnectionState;
-import proxyServer.Decoder;
-import proxyServer.ProxyServer;
-
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class WrapperConnection extends WebSocketClient {
 
-	ProxyServer parent;
-	public WrapperConnection( URI serverUri , Draft draft , ProxyServer parent) {
+	protected MultiInternalConnectionServer parent;
+	public WrapperConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
 		this( serverUri, draft );
 		this.parent = parent;
 	}
-	
+
 	public WrapperConnection( URI serverUri , Draft draft ) {
 		super( serverUri, draft );
 	}
@@ -49,10 +42,8 @@ public class WrapperConnection extends WebSocketClient {
 	 */
 	@Override
 	public void onMessage(ByteBuffer buffer) {
-		ConnectionState state = parent.getIdToState().get(Decoder.parseRequest(buffer).getSessionInfo());
-		System.out.println("SESSION KEY: " + Decoder.parseRequest(buffer).getSessionInfo());
-		System.out.println("STATE KEY: " + state.getKey());
-		parent.getIdToConnection().get(state).send(buffer);
+		MultiConnectionState state = getStateFromId(MultiInternalConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
+		getConnectionFromState(state).send(buffer);
 	}
 
 	public void onFragment( Framedata fragment ) {
@@ -71,4 +62,11 @@ public class WrapperConnection extends WebSocketClient {
 		// if the error is fatal then onClose will be called additionally
 	}
 
+	protected MultiConnectionState getStateFromId(String key) {
+		return parent.getIdToState().get(key);
+	}
+	
+	protected WebSocket getConnectionFromState(MultiConnectionState state) {
+		return parent.getIdToConnection().get(state);
+	}
 }

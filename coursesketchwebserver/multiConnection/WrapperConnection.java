@@ -1,37 +1,34 @@
-package proxyServer;
+package multiConnection;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
-public class DataClient extends WebSocketClient {
+public class WrapperConnection extends WebSocketClient {
 
-	public ConnectionState connection = null;
-	ProxyServer parent;
-	public DataClient( URI serverUri , Draft draft , ProxyServer parent) {
+	protected MultiInternalConnectionServer parent;
+	public WrapperConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
 		this( serverUri, draft );
 		this.parent = parent;
 	}
-	
-	public DataClient( URI serverUri , Draft draft ) {
+
+	public WrapperConnection( URI serverUri , Draft draft ) {
 		super( serverUri, draft );
 	}
 
-	public DataClient( URI serverURI ) {
+	public WrapperConnection( URI serverURI ) {
 		super( serverURI );
 	}
 
 	@Override
 	public void onOpen( ServerHandshake handshakedata ) {
-		System.out.println( "Open Data connection" );
+		System.out.println( "Open Recognition connection" );
 		// if you plan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
 	}
 
@@ -45,12 +42,8 @@ public class DataClient extends WebSocketClient {
 	 */
 	@Override
 	public void onMessage(ByteBuffer buffer) {
-		if (connection!=null) {
-			ConnectionState state = parent.getIdToState().get(Decoder.parseRequest(buffer).getSessionInfo());
-			System.out.println("SESSION KEY: " + Decoder.parseRequest(buffer).getSessionInfo());
-			System.out.println("STATE KEY: " + state.getKey());
-			parent.getIdToConnection().get(state).send(buffer);
-		}
+		MultiConnectionState state = getStateFromId(MultiInternalConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
+		getConnectionFromState(state).send(buffer);
 	}
 
 	public void onFragment( Framedata fragment ) {
@@ -69,9 +62,11 @@ public class DataClient extends WebSocketClient {
 		// if the error is fatal then onClose will be called additionally
 	}
 
-	public static void main( String[] args ) throws URISyntaxException {
-		DataClient c = new DataClient( new URI( "ws://localhost:8887" ), new Draft_10() ); // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
-		c.connect();
+	protected MultiConnectionState getStateFromId(String key) {
+		return parent.getIdToState().get(key);
 	}
-
+	
+	protected WebSocket getConnectionFromState(MultiConnectionState state) {
+		return parent.getIdToConnection().get(state);
+	}
 }
