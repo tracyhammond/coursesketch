@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="libs/websocketsource.jar"/>
 	<classpathentry kind="lib" path="libs/protobuf-2.5.0.jar"/>
 	<classpathentry kind="lib" path="libs/mongo-java-driver-2.11.3.jar"/>
+	<classpathentry kind="lib" path="libs/multiConnection.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
