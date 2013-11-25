@@ -11,9 +11,8 @@ public class LoginChecker {
 
 	public static final int STUDENT_LOGIN = 0;
 	public static final int INSTRUCTOR_LOGIN = 1;
-	public static final int ERROR = -1;
-	
-	/* package-private */ static Request checkLogin(Request req, ConnectionState state) {
+	public static final int ERROR = -1;	
+	/* package-private  static Request checkLogin(Request req, ConnectionState state) {
 		// Check log in information
 		// return failed log in information on failure
 		if (req.getRequestType() == Request.MessageType.LOGIN && req.hasLogin()) {
@@ -43,19 +42,7 @@ public class LoginChecker {
 					break;
 
 					default:
-				}
-
-				if (success) {
-					state.logIn(instructor, permission);
-				}
-				return createLoginResponse(req, success, message, instructor);
-			} else {
-				state.addTry();
-				return createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false);
-			}
-		}
-		return createLoginResponse(req, false, "An Error Occured While Logging in: Wrong Message Type.", false);
-	}
+	}*/
 
 	/**
 	 * Checks the login information to see if it is valid.
@@ -111,37 +98,5 @@ public class LoginChecker {
 		}
 		return ERROR;
 	}
-
-	/**
-	 * Returns the permission that is allowed by this user.
-	 *
-	 * Returns {@link Permission#ERROR_PERMISSON} if there is an error at any point.
-	 * This method will not throw any exception.
-	 */
-	public static Permission assignPermission(ConnectionState state, Request req) {
-		// TODO Auto-generated method stub
-		System.out.println("Applying instructor permission");
-		return Permission.INSTRUCTOR;
-	}
-
-	/**
-	 * Creates a {@link Request} to return on login request.
-	 */
-	/* package-private */private static Request createLoginResponse(Request req, boolean success, String message, boolean instructorIntent) {
-		Request.Builder requestBuilder = Request.newBuilder();
-		requestBuilder.setRequestType(MessageType.LOGIN);
-		requestBuilder.setResponseText(message);
-		
-		// Create the Login Response.
-		LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
-		loginBuilder.setUsername(req.getLogin().getUsername());
-		loginBuilder.setIsLoggedIn(success);
-		loginBuilder.setIsInstructor(instructorIntent);
-		loginBuilder.setSessionInfo("SESSION_KEY");
-
-		// Add login info.
-		requestBuilder.setLogin(loginBuilder.build());
-		// Build and send.
-		return requestBuilder.build();
-	}
+	
 }
