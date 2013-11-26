@@ -1,5 +1,6 @@
 package connection;
 
+import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -12,29 +13,29 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-import mongodb_client.PasswordHash;
+import connection.PasswordHash;
 
 
 public class mongo_client {
 
 	public static void main(String[] args) throws Exception {
 
-		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
-		DB db = mongoClient.getDB("login");
-		boolean auth = db.authenticate("headlogin","login".toCharArray());
-		System.out.println(auth);
+
+		//db = mongoClient.getDB("login");
+		//boolean auth = db.authenticate("headlogin","login".toCharArray());
+		///System.out.println(auth);
 		
 		//MongoAddUser("CourseSketchUsers",db,"manoj","student","manojisawesome@gmail.com");
 		
-		if(auth)
-		{
-			System.out.println(MongoIdentify("CourseSketchUsers",db,"manoj","student"));
+		//if(auth)
+		//{
+			//System.out.println(MongoIdentify("CourseSketchUsers",db,"manoj","student"));
 			/*
 			BasicDBObject document = new BasicDBObject();
 			document.put("name", "sa");
 			table.insert(document);
 			*/
-		}
+		//}
 		
 		
 //		for (String s : mongoClient.getDatabaseNames()) {
@@ -46,12 +47,13 @@ public class mongo_client {
 //            System.out.println(s);
 //        }
 		
-		mongoClient.close();
-		
 	}
 	
-	private static boolean MongoIdentify(String u, String p) throws NoSuchAlgorithmException, InvalidKeySpecException
+	static boolean MongoIdentify(String u, String p) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
 	{
+		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
+		DB db = mongoClient.getDB("login");
+		boolean auth = db.authenticate("headlogin","login".toCharArray());
 		DBCollection table = db.getCollection("CourseSketchUsers");
 		BasicDBObject query = new BasicDBObject("UserName",u);
 		
