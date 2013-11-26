@@ -170,8 +170,11 @@ public class LoginServer extends WebSocketServer {
 		}
 	}
 	
-	private boolean CheckUserLogin(String user, String password){
-		return true;
+	private boolean CheckUserLogin(String user, String password)
+	{
+		if(mongo_client.MongoIdentify(user,password))
+			return true;
+		return false;
 	}
 	
 	public List<WebSocket> getConnections(){
