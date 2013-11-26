@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -170,7 +172,7 @@ public class LoginServer extends WebSocketServer {
 		}
 	}
 	
-	private boolean CheckUserLogin(String user, String password)
+	private boolean CheckUserLogin(String user, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
 	{
 		if(mongo_client.MongoIdentify(user,password))
 			return true;

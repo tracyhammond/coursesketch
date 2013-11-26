@@ -1,4 +1,4 @@
-package mongodb_client;
+package connection;
 
 /* 
  * Password Hashing With PBKDF2 (http://crackstation.net/hashing-security.htm).
