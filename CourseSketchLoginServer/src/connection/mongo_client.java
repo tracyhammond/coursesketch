@@ -50,9 +50,9 @@ public class mongo_client {
 		
 	}
 	
-	private static boolean MongoIdentify(String CollectionName, DB dbs, String u, String p) throws NoSuchAlgorithmException, InvalidKeySpecException
+	private static boolean MongoIdentify(String u, String p) throws NoSuchAlgorithmException, InvalidKeySpecException
 	{
-		DBCollection table = dbs.getCollection(CollectionName);
+		DBCollection table = db.getCollection("CourseSketchUsers");
 		BasicDBObject query = new BasicDBObject("UserName",u);
 		
 		DBObject corsor = table.findOne(query);
