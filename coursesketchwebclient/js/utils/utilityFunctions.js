@@ -226,6 +226,59 @@ if (isUndefined(convertHexToRgb)) {
 	    } : null;
 	}
 }
+
+/**
+ **************************************************************
+ * Placement utility Functions
+ * @author gigemjt
+ **************************************************************
+ */
+
+/**
+ * Takes the height and width of this element and expands it to fill the size of the screen.
+ */
+if (isUndefined(fillScreen)) {
+	function fillScreen(id) {
+		var body = document.body,
+	    html = document.documentElement;
+		var height = window.innerHeight - 4;
+		var width = window.innerWidth - 4;
+		var element = document.getElementById(id);
+		element.height = height - element.offsetTop;
+		element.width = width  - element.offsetLeft;
+		element.style.width = element.width;
+		element.style.height = element.height;
+	}
+}
+
+/**
+ * Takes the height of this element and expands it to fill the size of the screen.
+ */
+if (isUndefined(fillHeight)) {
+	function fillHeight(id) {
+		var body = document.body,
+	    html = document.documentElement;
+		var height = window.innerHeight - 4;
+		var element = document.getElementById(id);
+		element.height = height - element.offsetTop;
+		element.style.height = element.height;
+	}
+}
+
+/**
+ * Takes the width of this element and expands it to fill the size of the screen.
+ */
+if (isUndefined(fillWidth)) {
+	function fillWidth(id) {
+		var body = document.body,
+	    html = document.documentElement;
+		var width = window.innerWidth - 4;
+		var element = document.getElementById(id);
+		element.width = width  - element.offsetLeft;
+		element.style.width = element.width;
+	}
+}
+
 /**
  **************************************************************
  * Utility utility Functions
