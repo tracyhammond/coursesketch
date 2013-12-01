@@ -1,0 +1,70 @@
+<html>
+<head>
+	<base href="../../">
+	<link rel="stylesheet" href="css/problem/navigation.css">
+	<!-- TODO: remove this line after debugging this file. -->
+	<script type="text/javascript" src="js/problem/problem_navigator.js"></script>
+	<script>
+		if (!parent) {
+			parent = this;
+		}
+		if (!parent.problemNavigator) {
+			parent.problemNavigator = new schoolNavigator(/*IDHERE*/);
+		}
+		var scope = document;
+		parent.problemNavigator.addCallback(function(nav) {
+			scope.getElementById("selectionBoxNumber").innerHTML = nav.getCurrentNumber();
+			// set span state
+			var button = scope.getElementById("buttonNext");
+			if (nav.hasNext()) {
+				
+				button.onclick = function(){parent.problemNavigator.gotoNext();};
+			} else {
+				button.onclick = function(){};
+			}
+			button = scope.getElementById("buttonPrev");
+			if (nav.hasPrevious()) {
+				button.onclick = function(){parent.problemNavigator.gotoPrevious();};
+			} else {
+				button.onclick = function(){};
+			}
+		});
+	</script>
+</head>
+<body>
+<!--
+|---------------------------------|
+| |-|	|------------------------||
+| |#|	|Text text info info(PIC)||
+| |-|	|                        ||
+|<- ->	|------------------------||
+|---------------------------------|
+ -->
+ 	<div class = "panelWrapper" style = "width:100%;">
+		<div id = "navPanel">
+		<div class = "innerShadow">
+			<!--
+			|--------|
+			| prob # |
+			|--------|
+			 <== ==>
+			 -->
+			<div id ="selectionBox">
+				<!-- TODO: this box should have the problem state showing-->
+				<h1 id="selectionBoxNumber">1</h1>
+				<span id ="problemState"></span>
+			</div>
+			<div id = "arrowBox" style = "display:block-inline;">
+				<button id="buttonPrev" onclick="parent.problemNavigator.gotoPrevious();">Left</button>
+				<button id="buttonNext" onclick="parent.problemNavigator.gotoNext();">Right</button>
+			</div>
+		</div>
+		</div>
+		<div id = "problemPanel" style = "display: inline-block;width:50%;">
+			Text problem Text text text
+		</div>
+	</div>
+	<div class = "bottomShadow" style = "height:5px; width:100%;"></div>
+	
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="../../">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+  	<link rel="stylesheet" href="css/utility/problem_layout.css">
+  	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+ 
+	<!-- Libraries required for input for sketching -->
+	<script type="text/javascript" src="js/input/touch_event.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/input/sketching.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/input/highlighter.js"></script>
+
+	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
+	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+
+	<script type="text/javascript" src="js/problem/problem_navigator.js"></script>
+	<script type="text/javascript">
+		if (parent) {
+			parent.copyParentUtilityFunctions(this);
+			parent.copyParentProtos(this);
+			var serverConnection = parent.connection;
+		}
+	</script>
+	<script>
+		var problemNavigator = new schoolNavigator(/*IDHERE*/);
+	</script>
+	<style>
+	html, body, div, span, applet, object, iframe,
+	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+	a, abbr, acronym, address, big, cite, code,
+	del, dfn, em, font, img, ins, kbd, q, s, samp,
+	small, strike, strong, sub, sup, tt, var,
+	b, u, i, center,
+	dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend,
+	table, caption, tbody, tfoot, thead, tr, th, td {
+	        margin: 0;
+	        padding: 0;
+	        border: 0;
+	        outline: 0;
+	        font-size: 100%;
+	        vertical-align: baseline;
+	        background: transparent;
+	}
+	</style>
+</head>
+<body>
+	<div id = "navigation_panel">
+	<iframe src= "/html/problem/navigationPanel.html" frameborder="0" width=100% style = "width:100%;" height = 100px;><!--  --></iframe>
+	<!-- include navigation panel here! -->
+	</div>
+	<div id = "problem_panel">
+	<!-- include problem panel here! -->
+	</div>
+	<div id = "tool_panel">
+	<!-- include panel for tools here! -->
+	</div>
+</body>
+</html>
