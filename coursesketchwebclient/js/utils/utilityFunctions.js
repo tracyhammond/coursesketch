@@ -238,12 +238,10 @@ if (isUndefined(convertHexToRgb)) {
  * Takes the height and width of this element and expands it to fill the size of the screen.
  */
 if (isUndefined(fillScreen)) {
-	function fillScreen(id) {
-		var body = document.body,
-	    html = document.documentElement;
-		var height = window.innerHeight - 4;
-		var width = window.innerWidth - 4;
-		var element = document.getElementById(id);
+	function fillScreen(scope, id) {
+		var height = scope.window.innerHeight - 4;
+		var width = scope.window.innerWidth - 4;
+		var element = scope.document.getElementById(id);
 		element.height = height - element.offsetTop;
 		element.width = width  - element.offsetLeft;
 		element.style.width = element.width;
@@ -255,13 +253,11 @@ if (isUndefined(fillScreen)) {
  * Takes the height of this element and expands it to fill the size of the screen.
  */
 if (isUndefined(fillHeight)) {
-	function fillHeight(id) {
-		var body = document.body,
-	    html = document.documentElement;
-		var height = window.innerHeight - 4;
-		var element = document.getElementById(id);
+	function fillHeight(scope, id) {
+		var height = scope.window.innerHeight - 4;
+		var element = scope.document.getElementById(id);
 		element.height = height - element.offsetTop;
-		element.style.height = element.height;
+		element.style.height = element.height + "px";
 	}
 }
 
@@ -269,14 +265,106 @@ if (isUndefined(fillHeight)) {
  * Takes the width of this element and expands it to fill the size of the screen.
  */
 if (isUndefined(fillWidth)) {
-	function fillWidth(id) {
-		var body = document.body,
-	    html = document.documentElement;
-		var width = window.innerWidth - 4;
-		var element = document.getElementById(id);
+	function fillWidth(scope, id) {
+		var width = scope.window.innerWidth - 4;
+		var element = scope.document.getElementById(id);
 		element.width = width  - element.offsetLeft;
 		element.style.width = element.width;
 	}
+}
+
+/**
+ * Sets the height of the iFrame to the height of the content.
+ */
+if (isUndefined(setHeightToContent)) {
+	function setHeightToContent(scope, iframeId, contentId, offset) {
+		if (!offset) {
+			offset = 0;
+		}
+		var frameScope = scope.document.getElementById(iframeId).contentWindow.document;
+		var iFrame = scope.document.getElementById(iframeId);
+
+		var totalHeight = frameScope.getElementById(contentId).offsetHeight + offset;
+		iFrame.height = totalHeight + 1;
+		iFrame.style.height = iFrame.height;
+	}
+}
+
+/**
+ * Sets the height of the iFrame to the height of the content.
+ */
+if (isUndefined(setWidthToContent)) {
+	function setWidthToContent(scope, iframeId, contentId, offset) {
+		if (!offset) {
+			offset = 0;
+		}
+		var frameScope = scope.document.getElementById(iframeId).contentWindow.document;
+		var iFrame = scope.document.getElementById(iframeId);
+
+		var totalWidth = frameScope.getElementById(contentId).offsetWidth + offset;
+		iFrame.width = totalWidth + 1;
+		iFrame.style.width = iFrame.width;
+	}
+}
+
+/**
+ * Sets the height of the iFrame to the height of the content.
+ */
+if (isUndefined(setSizeToContent)) {
+	function setSizeToContent(scope, iframeId, contentId, offsetX, offsetY) {
+		if (!offsetX) {
+			offsetX = 0;
+		}
+		if (!offsetY) {
+			offsetY = 0;
+		}
+		var frameScope = scope.document.getElementById(iframeId).contentWindow.document;
+		var iFrame = scope.document.getElementById(iframeId);
+		var scopedValue = frameScope.getElementById(contentId);
+
+		var totalWidth = scopedValue.offsetWidth + offsetX;
+		iFrame.width = totalWidth + 1;
+		iFrame.style.width = iFrame.width;
+
+		var totalHeight = scopedValue.offsetHeight + offsetY;
+		iFrame.height = totalHeight + 1;
+		iFrame.style.height = iFrame.height;
+	}
+}
+
+/**
+ * Returns the iframe given the scope and the iframeId.
+ */
+if (isUndefined(getIframeScope)) {
+	function getIframeScope(scope, iframeId) {
+		return scope.getElementById(iframeId).contentWindow.document;
+	}
+}
+
+/**
+ **************************************************************
+ * onLoad utility Functions
+ * @author gigemjt
+ **************************************************************
+ */
+
+/**
+ * Creates a recursive set of functions that are all called onload
+ *
+ * The scope is the target for the onload
+ */
+function addScopedLoadEvent(scope, func) {
+  var oldonload = scope.onload;
+  if (typeof scope.onload != 'function') {
+	  scope.onload = func;
+  } else {
+	  scope.onload = function() {
+      if (oldonload) {
+        oldonload();
+      }
+      func();
+    }
+  }
 }
 
 /**
@@ -336,5 +424,15 @@ if (isUndefined(copyParentUtilityFunctions)) {
 		copyParentValues(scope, 'convertRGBtoHex');
 
 		copyParentValues(scope, 'printProperties');
+
+		copyParentValues(scope, 'setHeightToContent');
+		copyParentValues(scope, 'setWidthToContent');
+		copyParentValues(scope, 'setSizeToContent');
+
+		copyParentValues(scope, 'fillWidth');
+		copyParentValues(scope, 'fillHeight');
+		copyParentValues(scope, 'fillScreen');
+		
+		copyParentValues(scope, 'addScopedLoadEvent');
 	}
 }

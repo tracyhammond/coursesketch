@@ -25,6 +25,9 @@ function schoolNavigator(assignmentId, loop) {
 		changeProblem(currentIndex - 1);
 	}
 
+	this.refresh = function() {
+		changeProblem(currentIndex);
+	}
 	/**
 	 * Scopes the index for the callbackList.
 	 */
@@ -75,5 +78,36 @@ function schoolNavigator(assignmentId, loop) {
 	 */
 	this.getCurrentNumber = function() {
 		return currentIndex + 1;
+	}
+
+	/**
+	 * Returns the current problem number in a human readable format
+	 */
+	this.getLength = function() {
+		return problemList.length;
+	}
+
+	/**
+	 * Returns the problem text of the current problem.
+	 */
+	this.getProblemText = function() {
+		if (currentIndex == 0) {
+			return "Texty Text text";
+		} else {
+			return "THIS IS THE OTHER TEXT!";
+		}
+	}
+
+	/**
+	 * Returns the type of the base problem.
+	 *
+	 * This should be the first subProblem all subsequent subproblems are handled in different ways.
+	 */
+	this.getPoblemType = function() {
+		if (currentIndex == 0) {
+			return "multipleChoice";
+		} else {
+			return "sketching";
+		}
 	}
 }

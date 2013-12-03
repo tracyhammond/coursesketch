@@ -19,6 +19,7 @@ message SrlCourse {
 	optional DateTime accessDate = 9; //Date course can be accessed
 	optional DateTime closeDate = 10; //Date course can no longer be accessed
 	optional State state = 11;
+	optional int32 totalAssignmentNumber = 12;
 	
 	enum Accessibility {
 		PUBLIC = 1; //Any student can access course without approval.
@@ -44,6 +45,7 @@ message SrlAssignment {
 	optional DateTime closeDate = 13; //Date that the assignment closes and can no longer be accessed
 	optional State state = 14;
 	optional string imageUrl = 15;
+	optional int32 totalProblemNumber = 16;
 
 	enum AssignmentType {
 		HOMEWORK = 1;
