@@ -28,10 +28,16 @@
 			} else {
 				button.onclick = function(){};
 			}
+			var totalNumber = nav.getLength();
+			if (totalNumber) {
+				scope.getElementById("totalNumber").innerHTML = "out of " + totalNumber;
+			}
+			// TODO: change this to strip out bad HTML code
+			scope.getElementById("problemPanel").innerHTML = parent.problemNavigator.getProblemText();
 		});
 	</script>
 </head>
-<body>
+<body onload = "parent.loadNav(this);">
 <!--
 |---------------------------------|
 | |-|	|------------------------||
@@ -40,12 +46,13 @@
 |<- ->	|------------------------||
 |---------------------------------|
  -->
- 	<div class = "panelWrapper" style = "width:100%;">
+ 	<div id = "panelWrapper" class = "panelWrapper" style = "width:100%;">
 		<div id = "navPanel">
 		<div class = "innerShadow">
 			<!--
 			|--------|
 			| prob # |
+			| out of |
 			|--------|
 			 <== ==>
 			 -->
@@ -53,6 +60,7 @@
 				<!-- TODO: this box should have the problem state showing-->
 				<h1 id="selectionBoxNumber">1</h1>
 				<span id ="problemState"></span>
+				<p id="totalNumber">out of </p>
 			</div>
 			<div id = "arrowBox" style = "display:block-inline;">
 				<button id="buttonPrev" onclick="parent.problemNavigator.gotoPrevious();">Left</button>
@@ -60,7 +68,7 @@
 			</div>
 		</div>
 		</div>
-		<div id = "problemPanel" style = "display: inline-block;width:50%;">
+		<div id = "problemPanel" style = "display: inline-block;">
 			Text problem Text text text
 		</div>
 	</div>

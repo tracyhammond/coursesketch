@@ -3,58 +3,62 @@
 <head>
 <base href="../../">
   	<link rel="stylesheet" href="css/utility/columns.css">
-  	<link rel="stylesheet" href="css/utility/problem_layout.css">
-  	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
- 
-	<!-- Libraries required for input for sketching -->
-	<script type="text/javascript" src="js/input/touch_event.js"></script>
-	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
-	<script type="text/javascript" src="js/input/sketching.js"></script>
-	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
-	<script type="text/javascript" src="js/input/highlighter.js"></script>
-
-	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
-	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+  	<link rel="stylesheet" href="css/problem/problem_layout.css">
 
 	<script type="text/javascript" src="js/problem/problem_navigator.js"></script>
 	<script type="text/javascript">
+		var connection;
 		if (parent) {
 			parent.copyParentUtilityFunctions(this);
 			parent.copyParentProtos(this);
-			var serverConnection = parent.connection;
+			connection = parent.connection;
 		}
 	</script>
 	<script>
 		var problemNavigator = new schoolNavigator(/*IDHERE*/);
 	</script>
-	<style>
-	html, body, div, span, applet, object, iframe,
-	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-	a, abbr, acronym, address, big, cite, code,
-	del, dfn, em, font, img, ins, kbd, q, s, samp,
-	small, strike, strong, sub, sup, tt, var,
-	b, u, i, center,
-	dl, dt, dd, ol, ul, li,
-	fieldset, form, label, legend,
-	table, caption, tbody, tfoot, thead, tr, th, td {
-	        margin: 0;
-	        padding: 0;
-	        border: 0;
-	        outline: 0;
-	        font-size: 100%;
-	        vertical-align: baseline;
-	        background: transparent;
+	<script>
+	(function(scriptScope) {
+		scriptScope.loadNav = function(callerScope) {
+			callerScope.document.getElementById("panelWrapper").onresize = function() {
+				if (this.offsetHeight > 100) {
+					alert("resiszing iframe");
+					scriptScope.setHeightToContent(scriptScope, "nav_iframe", "panelWrapper", 5);
+				}
+			};
+			callerScope.document.getElementById("panelWrapper").onresize();
+		}
+		problemNavigator.addCallback(function (nav) {
+			var type = nav.getPoblemType();
+			var panelLoc = "default";
+			// type may change to be an int or an enum comparison.
+			if (type == "sketching") {
+				panelLoc = "sketching";
+			}  else if (type == "multipleChoice") {
+				panelLoc = "multipleChoice"
+			}   else if (type == "essay") {
+				panelLoc = "essay";
+			}
+			scriptScope.document.getElementById('problem_iframe').src = "/html/problem/problemType/" + panelLoc + "Panel.html";
+			fillHeight(scriptScope, 'problem_iframe');
+		});
+		scriptScope.window.onresize = function() {
+			fillHeight(scriptScope, 'problem_iframe');
+		}
+	})(this);
+	function onLoad() {
+		problemNavigator.refresh();
+		window.onresize();
 	}
-	</style>
+	</script>
 </head>
-<body>
-	<div id = "navigation_panel">
-	<iframe src= "/html/problem/navigationPanel.html" frameborder="0" width=100% style = "width:100%;" height = 100px;><!--  --></iframe>
+<body onload="onLoad();">
 	<!-- include navigation panel here! -->
-	</div>
-	<div id = "problem_panel">
+	<iframe id = "nav_iframe" src= "/html/problem/navigationPanel.html" scrolling="no" frameborder="0" width=100% style = "width:100%;" height = 100px;></iframe>
+
 	<!-- include problem panel here! -->
-	</div>
+	<iframe id = "problem_iframe" src = "/html/problem/problemType/defaultPanel.html" frameborder="0" width=100% height=100% style ="width:100%;height:100%;"></iframe>
+
 	<div id = "tool_panel">
 	<!-- include panel for tools here! -->
 	</div>

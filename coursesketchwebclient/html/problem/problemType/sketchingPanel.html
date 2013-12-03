@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<base href="../../">
+<base href="../../../">
   	<link rel="stylesheet" href="css/utility/columns.css">
   	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
  
@@ -23,12 +23,6 @@
 		var canvasContext = false;
 		var Long = false;
 		var commandManager = false;
-
-    	function init() {
-    		parent.redirector.setRedirect('html/drawing/drawing.html');
-    		initializeInput();
-    		matchParent('drawingCanvas');
-    	}
 
 	    function initializeInput() {
 			var input = new inputListener();
@@ -69,27 +63,18 @@
 	    }
 	</script>
 	<script type="text/javascript">
-			parent.addScopedLoadEvent(window, function() {
-	  				matchParent('drawingCanvas');
+		(function(scope){
+			addScopedLoadEvent(scope.window, function() {
+				initializeInput();
+				fillScreen(scope, 'drawingCanvas');
+				sketch.drawEntireSketch();
 	  		});
 
-			window.onresize = function() {
-					matchParent('drawingCanvas');
-			}
-
-	  		function matchParent(id) {
-	  			var body = document.body,
-			    html = document.documentElement;
-				var height = window.innerHeight - 4;
-				var width = window.innerWidth - 4;
-				var element = document.getElementById(id);
-				element.height = height - element.offsetTop;
-				element.width = width  - element.offsetLeft;
-				element.style.width = element.width;
-				element.style.height = element.height;
+			scope.window.onresize = function() {
+				fillScreen(scope, 'drawingCanvas');
 				sketch.drawEntireSketch();
-	  		}
-
+			}
+		})(this);
 	</script>
 	<style>
 	html, body {
@@ -99,7 +84,6 @@
 	}
 	</style>
 </head>
-<body onload="init()">
-<div>Problem statement!</div>
-		<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
+<body>
+	<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
 </body>
