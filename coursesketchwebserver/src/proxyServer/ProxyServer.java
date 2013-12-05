@@ -38,15 +38,12 @@ import protobuf.srl.request.Message.Request.MessageType;
  */
 public class ProxyServer extends MultiInternalConnectionServer {
 
-	
 	public static final int STATE_INVALID_LOGIN = 4002;
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
 	
-	private boolean pendingLogin;
-	
 	//private ExampleClient login = connectLogin(this, connectionType);
-	private ProxyConnectionManager serverManager=null;
+	private ProxyConnectionManager serverManager = new ProxyConnectionManager(this);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) throws UnknownHostException {
@@ -58,8 +55,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	}
 
 	public void reConnect() {
-		//recognition = ClientManager.connectRecognition(this, connectionType);
-		//logindata = ClientManager.connectData(this, connectionType);
+		serverManager.connectServers(this);
 	}
 
 	/**
@@ -89,7 +85,6 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			}
 			String userID = state.getKey();
 			serverManager.send(req, userID, LoginConnection.class);
-			return;
 		} else {
 			if (state.getTries() > MAX_LOGIN_TRIES) {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
@@ -127,7 +122,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
 		
-		System.out.println("Proxy Server: Version 1.0.2.boa");
+		System.out.println("Proxy Server: Version 1.0.2.chipmunk");
 		WebSocketImpl.DEBUG = true;
 		int port = 8888; // 843 flash policy port
 		try {

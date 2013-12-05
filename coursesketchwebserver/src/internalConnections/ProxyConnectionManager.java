@@ -6,13 +6,13 @@ import proxyServer.ProxyServer;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
-public class ProxyConnectionManager extends MultiConnectionManager{
+public class ProxyConnectionManager extends MultiConnectionManager {
 	
 	public ProxyConnectionManager(MultiInternalConnectionServer parent) {
 		super(parent);
 	}
 	
-	public void connectServers(ProxyServer serv) {
+	public void connectServers(MultiInternalConnectionServer serv) {
 		//System.out.println("Open Recognition...");
 		//createAndAddConnection(serv, true, 8887, RecognitionConnection.class);
 		System.out.println("Open Login...");
