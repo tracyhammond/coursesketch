@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/protobuf-2.5.0.jar"/>
 	<classpathentry kind="lib" path="libs/websocketsource.jar"/>
+	<classpathentry kind="lib" path="libs/multiConnection.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
