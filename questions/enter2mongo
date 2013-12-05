@@ -1,0 +1,21 @@
+Description,Name,Weight,Tags,Type
+"For problems 1-5, please write the negation of the given statement. You will receive no points if you write ""It is not the case that <the given statement>.""",H01-1,0,info,info
+I will do either math homework or physics homework tonight.,H01-2,6,"logic,negation",short_response
+"If the teacher assigns math homework tonight, I will do it.",H01-3,6,"logic,negation",short_response
+"I will go out to eat dinner if I do math homework, or if I do physics homework and computer science homework.",H01-4,6,"logic,negation",short_response
+Every door in this building was locked.,H01-5,6,"logic,negation",short_response
+There is a value of \[x\] such that \[P(x)\] is false.,H01-6,6,"logic,negation",short_response
+"For problems 6-8, please determine a domain for which the given statement is true, and for which it is false. If either domain does not exist, state so.",H01-7,0,info,info
+Everyone is studying discrete mathematics.,H01-8,6,"logic,negation",short_response
+3 = 3.,H01-9,6,"logic,negation",short_response
+Someone speaks Chinese.,H01-10,6,"logic,negation",short_response
+Prove that the following statements are equivalent: \[\neg(P \longrightarrow Q)\] and \[P \wedge \neg Q\].,H01-11,16,"logic,proofs",long_response
+"For problems 10-12, determine whether a conditional statement is true or false.",H01-12,0,info,"info				"
+"If 1+1=3, then the current year is 2314.",H01-13,6,"logic,truefalse",true_false
+sa,H01-14,6,omg,abcdef
+sa,H01-15,6,omg,abcdef
+Construct a truth table for the following statement: \[p \leftrightarrow q\],H01-16,9,"logic,table",sketch
+Construct a truth table for the following statement: \[(\neg p \leftrightarrow \neg q) \leftrightarrow (q \leftrightarrow r)\],H01-17,9,"logic,table",sketch
+Total,H01-T,100,total,n/a
+,,,,
+We are able to recognize images and save sketches as images,,,,
