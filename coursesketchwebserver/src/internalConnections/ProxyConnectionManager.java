@@ -19,8 +19,8 @@ public class ProxyConnectionManager extends MultiConnectionManager{
 		createAndAddConnection(serv, true, 8886, LoginConnection.class);
 		System.out.println("Open Data...");
 		createAndAddConnection(serv, true, 8885, DataConnection.class);
-		System.out.println("Open Answer Checker Server...");
-		createAndAddConnection(serv, true, 8884, AnswerConnection.class);
+		//System.out.println("Open Answer Checker Server...");
+		//createAndAddConnection(serv, true, 8884, AnswerConnection.class);
 	}
 
 }
