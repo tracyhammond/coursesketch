@@ -28,6 +28,11 @@ public class LoginConnection extends WrapperConnection {
 		//return createLoginResponse(req, false, "An Error Occured While Logging in: Wrong Message Type.", false);
 	}
 	
+public LoginConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
+		
+		this( serverUri, draft );
+	}
+	
 	public void onMessage(ByteBuffer buffer) {
 		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
 		LoginConnectionState state = (LoginConnectionState) getStateFromId(r.getSessionInfo());

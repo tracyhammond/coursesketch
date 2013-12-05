@@ -61,7 +61,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Recognition Server: Version 1.0.2");
+		System.out.println("Database Server: Version 1.0.2");
 		WebSocketImpl.DEBUG = true;
 		int port = 8885; // 843 flash policy port
 		try {
@@ -70,7 +70,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		}
 		DatabaseServer s = new DatabaseServer( port );
 		s.start();
-		System.out.println( "Recognition Server started on port: " + s.getPort() );
+		System.out.println( "Database Server started on port: " + s.getPort() );
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {

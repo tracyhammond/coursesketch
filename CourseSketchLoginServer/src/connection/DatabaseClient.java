@@ -16,7 +16,19 @@ import com.mongodb.MongoClient;
 import connection.PasswordHash;
 
 
-public class mongo_client {
+public class DatabaseClient {
+	private static DatabaseClient instance;
+	private DB db;
+	
+	private DatabaseClient(String url) throws UnknownHostException{
+		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
+		MongoClient mongoClient = new MongoClient(url);
+		db = mongoClient.getDB("login");
+		
+	}
+	
+	private DatabaseClient(){
+	}
 
 	public static void main(String[] args) throws Exception {
 
@@ -49,12 +61,16 @@ public class mongo_client {
 		
 	}
 	
-	static boolean MongoIdentify(String u, String p) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
-	{
-		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
-		DB db = mongoClient.getDB("login");
-		boolean auth = db.authenticate("headlogin","login".toCharArray());
-		DBCollection table = db.getCollection("CourseSketchUsers");
+	public static DatabaseClient getInstance(){
+		if(instance==null)
+			instance = new DatabaseClient();
+		return instance;
+	}
+	
+	static boolean MongoIdentify(String u, String p) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException {
+		
+		boolean auth = instance.db.authenticate("headlogin","login".toCharArray());
+		DBCollection table = instance.db.getCollection("CourseSketchUsers");
 		BasicDBObject query = new BasicDBObject("UserName",u);
 		
 		DBObject corsor = table.findOne(query);
@@ -67,8 +83,7 @@ public class mongo_client {
 	}
 	
 	
-	private static void MongoAddUser(String CollectionName, DB dbs, String u, String p,String EmailValue) throws GeneralSecurityException, InvalidKeySpecException
-	{
+	private static void MongoAddUser(String CollectionName, DB dbs, String u, String p,String EmailValue) throws GeneralSecurityException, InvalidKeySpecException {
 		DBCollection new_user = dbs.getCollection(CollectionName);
 		BasicDBObject query = new BasicDBObject("UserName",u).append("Password",PasswordHash.createHash(p)).append("Email", EmailValue);
 		new_user.insert(query);

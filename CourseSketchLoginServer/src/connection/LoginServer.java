@@ -131,7 +131,7 @@ public class LoginServer extends WebSocketServer {
 		}
 		LoginServer s = new LoginServer( port );
 		s.start();
-		System.out.println( "Recognition Server started on port: " + s.getPort() );
+		System.out.println( "Login Server started on port: " + s.getPort() );
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
@@ -174,7 +174,7 @@ public class LoginServer extends WebSocketServer {
 	
 	private boolean CheckUserLogin(String user, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
 	{
-		if(mongo_client.MongoIdentify(user,password))
+		if(DatabaseClient.MongoIdentify(user,password))
 			return true;
 		return false;
 	}
