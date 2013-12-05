@@ -28,7 +28,7 @@ public class WrapperConnection extends WebSocketClient {
 
 	@Override
 	public void onOpen( ServerHandshake handshakedata ) {
-		System.out.println( "Open Recognition connection" );
+		System.out.println( "Wrapper Connection Opened" );
 		// if you plan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
 	}
 

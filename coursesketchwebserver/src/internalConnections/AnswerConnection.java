@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
+import multiConnection.MultiInternalConnectionServer;
 import multiConnection.WrapperConnection;
 
 import org.java_websocket.WebSocket;
@@ -13,6 +14,7 @@ import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 
+import protobuf.srl.request.Message.Request;
 import proxyServer.ProxyServer;
 
 
@@ -24,6 +26,15 @@ public class AnswerConnection extends WrapperConnection {
 	public AnswerConnection( URI serverUri , Draft draft , ProxyServer parent) {
 		this( serverUri, draft );
 		this.parent = parent;
+	}
+	
+	public AnswerConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent, Request req, LoginConnectionState state) {
+		
+		this( serverUri, draft );
+	}
+	
+	public AnswerConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
+		this( serverUri, draft );
 	}
 	
 	public AnswerConnection( URI serverUri , Draft draft ) {

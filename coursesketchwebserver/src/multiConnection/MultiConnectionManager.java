@@ -38,6 +38,9 @@ public class MultiConnectionManager {
 	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean local, int port, Class<? extends WrapperConnection> connectionType) {
 		WrapperConnection c=null;
 		String location = local ? "ws://localhost:" + port : "ws://goldberglinux02.tamu.edu:" + port;
+		
+		System.out.println("Attempting to connect to: " + location);
+		//System.out.println("Attempting to connect to: " + "ws://localhost:" + port);
 		try {
 			Constructor construct = connectionType.getConstructor(URI.class, Draft.class, MultiInternalConnectionServer.class);
 			c = (WrapperConnection) construct.newInstance( new URI( location ), new Draft_10() , serv);

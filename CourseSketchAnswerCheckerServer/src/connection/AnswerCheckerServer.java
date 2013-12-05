@@ -45,7 +45,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 
 	public AnswerCheckerServer( InetSocketAddress address ) {
 		super( address );
-		internalConnections.createAndAddConnection(this, false, 9000, SolutionConnection.class);
+		//internalConnections.createAndAddConnection(this, false, 9000, SolutionConnection.class);
 	}
 
 	/**
@@ -97,16 +97,16 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 	}
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Recognition Server: Version 1.0.2");
+		System.out.println("Answer Server: Version 1.0.2");
 		WebSocketImpl.DEBUG = true;
-		int port = 8888; // 843 flash policy port
+		int port = 8884; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
 		AnswerCheckerServer s = new AnswerCheckerServer( port );
 		s.start();
-		System.out.println( "Recognition Server started on port: " + s.getPort() );
+		System.out.println( "Answer Server started on port: " + s.getPort() );
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {

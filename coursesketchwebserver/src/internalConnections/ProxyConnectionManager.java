@@ -13,12 +13,14 @@ public class ProxyConnectionManager extends MultiConnectionManager{
 	}
 	
 	public void connectServers(ProxyServer serv) {
-		System.out.println("Open Recognition...");
-		createAndAddConnection(serv, false, 8887, RecognitionConnection.class);
+		//System.out.println("Open Recognition...");
+		//createAndAddConnection(serv, true, 8887, RecognitionConnection.class);
 		System.out.println("Open Login...");
-		createAndAddConnection(serv, false, 8886, LoginConnection.class);
+		createAndAddConnection(serv, true, 8886, LoginConnection.class);
 		System.out.println("Open Data...");
-		createAndAddConnection(serv, false, 8885, DataConnection.class);
+		createAndAddConnection(serv, true, 8885, DataConnection.class);
+		System.out.println("Open Answer Checker Server...");
+		createAndAddConnection(serv, true, 8884, AnswerConnection.class);
 	}
 
 }
