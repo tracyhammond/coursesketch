@@ -14,7 +14,7 @@ import com.mongodb.MongoClient;
 
 public class AssignmentBuilder
 {
-	String courseId, name, type, other, description, resources, latePolicy, gradeWeigh, openDate, 
+	String courseId, name, type, other, description, resources, latePolicy, gradeWeight, openDate, 
 	       dueDate, closeDate, imageUrl;
 	String[] problemList;
 	PermissionBuilder permissions = new PermissionBuilder();
@@ -56,7 +56,7 @@ public class AssignmentBuilder
 	}
 	public AssignmentBuilder setGradeWeigh(String x)
 	{
-		gradeWeigh = x;
+		gradeWeight = x;
 		return this;
 	}	
 	public AssignmentBuilder setOpenDate(String x) 

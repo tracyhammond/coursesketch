@@ -18,7 +18,7 @@ public class AssignmentManager
 		CourseBuilder course = CourseManager.mongoGetCourse(dbs,assignment.courseId,userId);
 		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, course.permissions.admin);
 		boolean isMod = Authenticator.checkAuthentication(dbs, userId, course.permissions.mod);
-		
+
 		if(!isAdmin && !isMod)
 		{
 			throw new AuthenticationException();
@@ -30,7 +30,7 @@ public class AssignmentManager
 										 .append("Description",assignment.description)
 										 .append("Resources",assignment.resources)
 										 .append("LatePolicy", assignment.latePolicy)
-										 .append("GradeWeigh",assignment.gradeWeigh)
+										 .append("GradeWeigh",assignment.gradeWeight)
 										 .append("OpenDate", assignment.openDate)
 										 .append("DueDate", assignment.dueDate)
 										 .append("CloseDate",assignment.closeDate)
@@ -41,26 +41,22 @@ public class AssignmentManager
 										 .append("Users", assignment.permissions.users);
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
-		
+
 		String[] addedAssignment = Arrays.copyOf(course.assignmentList, course.assignmentList.length+1);;
-		
+
 		addedAssignment[course.assignmentList.length] = (String) corsor.get("_id"); 
-		
 		CourseBuilder newCourse = new CourseBuilder();
-		
 		newCourse.setAssignmentList(addedAssignment);
-		
 		CourseManager.mongoUpdateCourse(dbs, assignment.courseId,userId,newCourse);
-		
 		return (String) corsor.get("_id");
 	}
-	
+
 	static AssignmentBuilder mongoGetAssignment(DB dbs, String courseID,String userId) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Assignments");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = courses.findOne(query);
-		
+
 		String[] adminList = (String[])corsor.get("Admin");
 		String[] modList = (String[])corsor.get("Mod");	
 		String[] usersList = (String[])corsor.get("Users");
@@ -68,14 +64,14 @@ public class AssignmentManager
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
 		isUsers = Authenticator.checkAuthentication(dbs, userId, usersList);
-		
+
 		if(!isAdmin && !isMod && !isUsers)
 		{
 			throw new AuthenticationException();
 		}
-		
+
 		AssignmentBuilder exactAssignment = new AssignmentBuilder();
-		
+
 		exactAssignment.setCourseId((String)corsor.get("CourseId"));
 		exactAssignment.setName((String)corsor.get("Name"));
 		exactAssignment.setType((String)corsor.get("Type"));
@@ -89,8 +85,7 @@ public class AssignmentManager
 		exactAssignment.setCloseDate((String)corsor.get("CloseDate"));
 		exactAssignment.setImageUrl((String)corsor.get("ImageUrl"));
 		exactAssignment.setProblemList((String[])corsor.get("ProblemList"));
-		
-		
+
 		if (isAdmin) 
 		{
 			exactAssignment.permissions.setAdmin((String[])corsor.get("Admin")); // admin
@@ -124,7 +119,6 @@ public class AssignmentManager
 		BasicDBObject updated = new BasicDBObject();
 		if (isAdmin || isMod) 
 		{
-
 			if (assignment.name != null) {
 				updated.append("$set", new BasicDBObject("Name", assignment.name));
 			}
@@ -144,10 +138,9 @@ public class AssignmentManager
 			if (assignment.latePolicy != null) {
 				updated.append("$set", new BasicDBObject("LatePolicy", assignment.latePolicy));
 			}
-			if (assignment.gradeWeigh != null) {
-				updated.append("$set", new BasicDBObject("GradeWeigh", assignment.gradeWeigh));
+			if (assignment.gradeWeight != null) {
+				updated.append("$set", new BasicDBObject("GradeWeight", assignment.gradeWeight));
 			}
-			
 			if (assignment.openDate != null) {
 				updated.append("$set", new BasicDBObject("OpenDate", assignment.openDate));
 			}
@@ -163,8 +156,7 @@ public class AssignmentManager
 			if (assignment.problemList != null) {
 				updated.append("$set", new BasicDBObject("ProblemList", assignment.problemList));
 			}
-			
-			
+
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (isAdmin) 
 			{
@@ -185,9 +177,3 @@ public class AssignmentManager
 	}
 
 }
-
-
-
-
-
-
