@@ -16,11 +16,12 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		//createAndAddConnection(serv, true, 8887, RecognitionConnection.class);
 		System.out.println("Open Login...");
 		try {
-			createAndAddConnection(serv, false, "goldberglinux.tamu.edu", 8886, LoginConnection.class);
+			createAndAddConnection(serv, false, "srl02.tamu.edu", 8886, LoginConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		/*
 		System.out.println("Open Data...");
 		try {
 			createAndAddConnection(serv, false, "srl04.tamu.edu", 8885, DataConnection.class);
@@ -28,6 +29,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		//System.out.println("Open Answer Checker Server...");
 		//createAndAddConnection(serv, true, 8884, AnswerConnection.class);
 	}

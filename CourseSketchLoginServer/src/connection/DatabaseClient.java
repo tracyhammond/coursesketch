@@ -20,14 +20,23 @@ public class DatabaseClient {
 	private static DatabaseClient instance;
 	private DB db;
 
-	private DatabaseClient(String url) throws UnknownHostException{
+	private DatabaseClient(String url) {
+		System.out.println("creating new database instance");
 		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
-		MongoClient mongoClient = new MongoClient(url);
+		MongoClient mongoClient = null;
+		try {
+			mongoClient = new MongoClient(url);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 		db = mongoClient.getDB("login");
-
+		if (db == null) {
+			System.out.println("Db is null!");
+		}
 	}
 
 	private DatabaseClient(){
+		this("goldberglinux.tamu.edu");
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -42,7 +51,7 @@ public class DatabaseClient {
 
 	static boolean mongoIdentify(String u, String p) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException {
 
-		boolean auth = getInstance().db.authenticate("headlogin","login".toCharArray());
+		//boolean auth = getInstance().db.authenticate("headlogin","login".toCharArray());
 		DBCollection table = getInstance().db.getCollection("CourseSketchUsers");
 		BasicDBObject query = new BasicDBObject("UserName",u);
 

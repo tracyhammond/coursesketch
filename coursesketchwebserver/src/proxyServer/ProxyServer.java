@@ -34,7 +34,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public static final int STATE_INVALID_LOGIN = 4002;
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
-	
+
 	//private ExampleClient login = connectLogin(this, connectionType);
 	private ProxyConnectionManager serverManager = new ProxyConnectionManager(this);
 
