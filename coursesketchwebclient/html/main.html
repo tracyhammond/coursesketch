@@ -13,8 +13,12 @@
     <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
 	<script type="text/javascript" src="js/menu/header.js"></script>
 	<script>
+	try {
 		parent.copyParentUtilityFunctions(this);
 		parent.copyParentProtos(this);
+	} catch (exception) {
+		
+	}
 	</script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
     <!-- <script type="text/javascript" src="js/jquery/jquery.mobile-1.0rc2.min.js"></script>  -->
@@ -44,8 +48,6 @@
 						placeMenu(connection.isInstructor);
 					}
 				);
-	  		parent.copyParentUtilityFunctions(this);
-	  		parent.copyParentProtos(this);
 
 	  		/**
 	  		Resizes the iframe inside the window
