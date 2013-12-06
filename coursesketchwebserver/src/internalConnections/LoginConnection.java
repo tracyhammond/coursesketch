@@ -12,11 +12,8 @@ import protobuf.srl.request.Message.Request;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class LoginConnection extends WrapperConnection {
-	
-		
-	
+
 	public LoginConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent, Request req, LoginConnectionState state) {
-		
 		this( serverUri, draft );
 		// get connection state
 		// if log success = state -> login
@@ -28,23 +25,27 @@ public class LoginConnection extends WrapperConnection {
 		//return createLoginResponse(req, false, "An Error Occured While Logging in: Wrong Message Type.", false);
 	}
 	
-public LoginConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		
+	public LoginConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
+
 		this( serverUri, draft );
 	}
-	
+
 	public void onMessage(ByteBuffer buffer) {
 		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
 		LoginConnectionState state = (LoginConnectionState) getStateFromId(r.getSessionInfo());
-		if(r.getLogin().getIsLoggedIn()){
+		if (r.getLogin().getIsLoggedIn()) {
 			state.logIn(r.getLogin().getIsInstructor());
 		}
-			if(r.getLogin().getIsInstructor()){
+		if (r.getLogin().getIsInstructor()) {
 		}
-		
+
+		System.out.println("is logged in? " + r.getLogin().getIsLoggedIn());
+		System.out.println("session info? " + r.getSessionInfo());
+		System.out.println("response " + r.getResponseText());
+		System.out.println("instructor " + r.getLogin().getIsInstructor());
 		getConnectionFromState(state).send(buffer);
 	}
-	
+
 	public LoginConnection( URI serverUri , Draft draft ) {
 		super( serverUri, draft );
 	}
