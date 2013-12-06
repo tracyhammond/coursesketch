@@ -332,6 +332,18 @@ class LoginInformation : public ::google::protobuf::Message {
   inline bool isregistering() const;
   inline void set_isregistering(bool value);
 
+  // optional string email = 6;
+  inline bool has_email() const;
+  inline void clear_email();
+  static const int kEmailFieldNumber = 6;
+  inline const ::std::string& email() const;
+  inline void set_email(const ::std::string& value);
+  inline void set_email(const char* value);
+  inline void set_email(const char* value, size_t size);
+  inline ::std::string* mutable_email();
+  inline ::std::string* release_email();
+  inline void set_allocated_email(::std::string* email);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.request.LoginInformation)
  private:
   inline void set_has_username();
@@ -344,17 +356,20 @@ class LoginInformation : public ::google::protobuf::Message {
   inline void clear_has_isinstructor();
   inline void set_has_isregistering();
   inline void clear_has_isregistering();
+  inline void set_has_email();
+  inline void clear_has_email();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* username_;
   ::std::string* password_;
+  ::std::string* email_;
   bool isloggedin_;
   bool isinstructor_;
   bool isregistering_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fmessage_2eproto();
   friend void protobuf_AssignDesc_input_2fmessage_2eproto();
@@ -849,6 +864,76 @@ inline bool LoginInformation::isregistering() const {
 inline void LoginInformation::set_isregistering(bool value) {
   set_has_isregistering();
   isregistering_ = value;
+}
+
+// optional string email = 6;
+inline bool LoginInformation::has_email() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void LoginInformation::set_has_email() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void LoginInformation::clear_has_email() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void LoginInformation::clear_email() {
+  if (email_ != &::google::protobuf::internal::kEmptyString) {
+    email_->clear();
+  }
+  clear_has_email();
+}
+inline const ::std::string& LoginInformation::email() const {
+  return *email_;
+}
+inline void LoginInformation::set_email(const ::std::string& value) {
+  set_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    email_ = new ::std::string;
+  }
+  email_->assign(value);
+}
+inline void LoginInformation::set_email(const char* value) {
+  set_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    email_ = new ::std::string;
+  }
+  email_->assign(value);
+}
+inline void LoginInformation::set_email(const char* value, size_t size) {
+  set_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    email_ = new ::std::string;
+  }
+  email_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* LoginInformation::mutable_email() {
+  set_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    email_ = new ::std::string;
+  }
+  return email_;
+}
+inline ::std::string* LoginInformation::release_email() {
+  clear_has_email();
+  if (email_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = email_;
+    email_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void LoginInformation::set_allocated_email(::std::string* email) {
+  if (email_ != &::google::protobuf::internal::kEmptyString) {
+    delete email_;
+  }
+  if (email) {
+    set_has_email();
+    email_ = email;
+  } else {
+    clear_has_email();
+    email_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 
