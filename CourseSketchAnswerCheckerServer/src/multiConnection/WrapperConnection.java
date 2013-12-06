@@ -21,6 +21,9 @@ public class WrapperConnection extends WebSocketClient {
 		}
 	}
 
+	public void setParent(MultiInternalConnectionServer parent) {
+		this.parent = parent;
+	}
 	public WrapperConnection( URI serverUri , Draft draft ) {
 		this(serverUri, draft, null);
 	}

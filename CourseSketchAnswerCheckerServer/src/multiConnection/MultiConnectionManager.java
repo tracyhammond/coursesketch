@@ -39,6 +39,9 @@ public class MultiConnectionManager {
 	 */
 	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
 		WrapperConnection c = null;
+		if (serv == null) {
+			throw new ConnectionException("Can't create connection with a null parent server");
+		}
 		if (remoteAdress == null && !isLocal) {
 			throw new ConnectionException("Attempting to connect to null address");
 		}
@@ -52,6 +55,8 @@ public class MultiConnectionManager {
 		if (c != null) {
 			c.connect();
 		}
+		// In case of error do this!
+		c.setParent(serv);
 		if (c == null) {
 			throw new ConnectionException("failed to create WrapperConnection");
 		}
