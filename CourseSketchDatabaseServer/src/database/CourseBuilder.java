@@ -1,4 +1,4 @@
-package mongodb_client;
+package database;
 
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
@@ -12,64 +12,50 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-public static class CourseBuilder
+public class CourseBuilder
 {
-	String Description, Name, Access, Semesester, OpenDate, CloseDate, Image;
-	String[] AssignmentList, Admin, Mod, Users;
+	String description, name, access, semesester, openDate, closeDate, image;
+	String[] assignmentList;
+	PermissionBuilder permissions = new PermissionBuilder();
 	
-	public CourseBuilder Description(String x)
+	public CourseBuilder setDescription(String x)
 	{
-		Description = x;
+		description = x;
 		return this;
 	}
-	public CourseBuilder Name(String x)
+	public CourseBuilder setName(String x)
 	{
-		Name = x;
+		name = x;
 		return this;
 	}
-	public CourseBuilder Access(String x)
+	public CourseBuilder setAccess(String x)
 	{
-		Access = x;
+		access = x;
 		return this;
 	}
-	public CourseBuilder Semesester(String x) 
+	public CourseBuilder setSemesester(String x) 
 	{
-		Semesester = x;
+		semesester = x;
 		return this;
 	}
-	public CourseBuilder OpenDate(String x)
+	public CourseBuilder setOpenDate(String x)
 	{
-		OpenDate = x;
+		openDate = x;
 		return this;
 	}
-	public CourseBuilder CloseDate(String x)
+	public CourseBuilder setCloseDate(String x)
 	{
-		CloseDate = x;
+		closeDate = x;
 		return this;
 	}
-	public CourseBuilder Image(String x)
+	public CourseBuilder setImage(String x)
 	{
-		Image = x;
+		image = x;
 		return this;
 	}
-	public CourseBuilder AssignmentList(String[] x)
+	public CourseBuilder setAssignmentList(String[] x)
 	{
-		AssignmentList = x;
-		return this;
-	}	
-	public CourseBuilder Admin(String[] x)
-	{
-		Admin = x;
-		return this;
-	}	
-	public CourseBuilder Mod(String[] x)
-	{
-		Mod = x;
-		return this;
-	}	
-	public CourseBuilder Users(String[] x)
-	{
-		Users = x;
+		assignmentList = x;
 		return this;
 	}	
 }
