@@ -58,6 +58,8 @@ public class DatabaseClient {
 		DBObject corsor = table.findOne(query);
 
 		System.out.println();
+		if(corsor==null)
+			return false;
 		System.out.println(corsor.get("Password"));
 		return PasswordHash.validatePassword(p.toCharArray(),corsor.get("Password").toString());
 
