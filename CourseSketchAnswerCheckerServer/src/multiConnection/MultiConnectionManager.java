@@ -81,7 +81,11 @@ public class MultiConnectionManager {
 	}
 
 	public WrapperConnection getBestConnection(Class<? extends WrapperConnection> connectionType){
-		return connections.get(connectionType).get(0); // lame best connection.
+		ArrayList<WrapperConnection> cons = connections.get(connectionType);
+		if (cons == null) {
+			throw new NullPointerException("ConnectionType: "+ connectionType.getName() +" does not exist in this manager");
+		}
+		return cons.get(0); // lame best connection.
 	}
 
 }
