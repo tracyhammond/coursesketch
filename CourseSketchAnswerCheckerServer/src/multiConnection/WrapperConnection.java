@@ -66,6 +66,12 @@ public class WrapperConnection extends WebSocketClient {
 	}
 
 	protected MultiConnectionState getStateFromId(String key) {
+		if (parent == null) {
+			System.out.println("null parent");
+		}
+		if (parent.getIdToState() == null) {
+			System.out.println("null getIdToState");
+		}
 		return parent.getIdToState().get(key);
 	}
 	
