@@ -75,8 +75,14 @@ public class DatabaseClient {
 		DBCollection table = getInstance().db.getCollection("CourseSketchUsers");
 		BasicDBObject query = new BasicDBObject("UserName",user);
 
-		DBObject corsor = table.findOne(query);
-		return (Integer)corsor.get("IsInstructor") == 1;
+		DBObject cursor = table.findOne(query);
+		if (cursor == null) {
+			System.out.println("Unable to find user!");
+			return false;
+		}
+		String instructor = "" + cursor.get("IsInstructor");
+		System.out.println("Instructor value " + instructor);
+		return Integer.parseInt(instructor) == 1;
 	}
 
 }
