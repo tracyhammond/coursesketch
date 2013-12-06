@@ -4,6 +4,7 @@ public class CourseProblemBuilder {
 	String courseId, assignmentId, problemId;
 	String gradeWeight; // either points or percent
 	String problemBankId;
+	ProblemBuilder problemResource;
 	PermissionBuilder permissions;
 
 	public void setCourseId(String id) {
