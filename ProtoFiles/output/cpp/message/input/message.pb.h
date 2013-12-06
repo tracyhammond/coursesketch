@@ -325,17 +325,12 @@ class LoginInformation : public ::google::protobuf::Message {
   inline bool isinstructor() const;
   inline void set_isinstructor(bool value);
 
-  // optional string sessionInfo = 5;
-  inline bool has_sessioninfo() const;
-  inline void clear_sessioninfo();
-  static const int kSessionInfoFieldNumber = 5;
-  inline const ::std::string& sessioninfo() const;
-  inline void set_sessioninfo(const ::std::string& value);
-  inline void set_sessioninfo(const char* value);
-  inline void set_sessioninfo(const char* value, size_t size);
-  inline ::std::string* mutable_sessioninfo();
-  inline ::std::string* release_sessioninfo();
-  inline void set_allocated_sessioninfo(::std::string* sessioninfo);
+  // optional bool isRegistering = 5;
+  inline bool has_isregistering() const;
+  inline void clear_isregistering();
+  static const int kIsRegisteringFieldNumber = 5;
+  inline bool isregistering() const;
+  inline void set_isregistering(bool value);
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.request.LoginInformation)
  private:
@@ -347,16 +342,16 @@ class LoginInformation : public ::google::protobuf::Message {
   inline void clear_has_isloggedin();
   inline void set_has_isinstructor();
   inline void clear_has_isinstructor();
-  inline void set_has_sessioninfo();
-  inline void clear_has_sessioninfo();
+  inline void set_has_isregistering();
+  inline void clear_has_isregistering();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* username_;
   ::std::string* password_;
-  ::std::string* sessioninfo_;
   bool isloggedin_;
   bool isinstructor_;
+  bool isregistering_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
@@ -834,74 +829,26 @@ inline void LoginInformation::set_isinstructor(bool value) {
   isinstructor_ = value;
 }
 
-// optional string sessionInfo = 5;
-inline bool LoginInformation::has_sessioninfo() const {
+// optional bool isRegistering = 5;
+inline bool LoginInformation::has_isregistering() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void LoginInformation::set_has_sessioninfo() {
+inline void LoginInformation::set_has_isregistering() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void LoginInformation::clear_has_sessioninfo() {
+inline void LoginInformation::clear_has_isregistering() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void LoginInformation::clear_sessioninfo() {
-  if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {
-    sessioninfo_->clear();
-  }
-  clear_has_sessioninfo();
+inline void LoginInformation::clear_isregistering() {
+  isregistering_ = false;
+  clear_has_isregistering();
 }
-inline const ::std::string& LoginInformation::sessioninfo() const {
-  return *sessioninfo_;
+inline bool LoginInformation::isregistering() const {
+  return isregistering_;
 }
-inline void LoginInformation::set_sessioninfo(const ::std::string& value) {
-  set_has_sessioninfo();
-  if (sessioninfo_ == &::google::protobuf::internal::kEmptyString) {
-    sessioninfo_ = new ::std::string;
-  }
-  sessioninfo_->assign(value);
-}
-inline void LoginInformation::set_sessioninfo(const char* value) {
-  set_has_sessioninfo();
-  if (sessioninfo_ == &::google::protobuf::internal::kEmptyString) {
-    sessioninfo_ = new ::std::string;
-  }
-  sessioninfo_->assign(value);
-}
-inline void LoginInformation::set_sessioninfo(const char* value, size_t size) {
-  set_has_sessioninfo();
-  if (sessioninfo_ == &::google::protobuf::internal::kEmptyString) {
-    sessioninfo_ = new ::std::string;
-  }
-  sessioninfo_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* LoginInformation::mutable_sessioninfo() {
-  set_has_sessioninfo();
-  if (sessioninfo_ == &::google::protobuf::internal::kEmptyString) {
-    sessioninfo_ = new ::std::string;
-  }
-  return sessioninfo_;
-}
-inline ::std::string* LoginInformation::release_sessioninfo() {
-  clear_has_sessioninfo();
-  if (sessioninfo_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = sessioninfo_;
-    sessioninfo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void LoginInformation::set_allocated_sessioninfo(::std::string* sessioninfo) {
-  if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {
-    delete sessioninfo_;
-  }
-  if (sessioninfo) {
-    set_has_sessioninfo();
-    sessioninfo_ = sessioninfo;
-  } else {
-    clear_has_sessioninfo();
-    sessioninfo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
+inline void LoginInformation::set_isregistering(bool value) {
+  set_has_isregistering();
+  isregistering_ = value;
 }
 
 

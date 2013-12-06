@@ -19,12 +19,13 @@ message SrlCourse {
 	optional DateTime accessDate = 9; //Date course can be accessed
 	optional DateTime closeDate = 10; //Date course can no longer be accessed
 	optional State state = 11;
+	repeated string assignmentId = 12;
 	
 	enum Accessibility {
 		PUBLIC = 1; //Any student can access course without approval.
 		PROTECTED = 2; //Any student can request access for course and public information it is searchable, requires instructor approval
 		PROTECTED_NOSEARCH = 3; //No students can see course without a special link, it is not searchable, requires instructor approval
-		PRIVATE = 4; //No students can see course without instructor invitation
+		PRIVATE = 4; //No students can see course without instructor invitation, invitation only
 	}
 }
 
@@ -44,6 +45,8 @@ message SrlAssignment {
 	optional DateTime closeDate = 13; //Date that the assignment closes and can no longer be accessed
 	optional State state = 14;
 	optional string imageUrl = 15;
+	repeated string problemList = 16;
+	optional SrlPermission accessPermission = 17;
 
 	enum AssignmentType {
 		HOMEWORK = 1;

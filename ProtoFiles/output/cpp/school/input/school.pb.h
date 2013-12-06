@@ -459,6 +459,22 @@ class SrlCourse : public ::google::protobuf::Message {
   inline ::protobuf::srl::school::State* release_state();
   inline void set_allocated_state(::protobuf::srl::school::State* state);
 
+  // repeated string assignmentId = 12;
+  inline int assignmentid_size() const;
+  inline void clear_assignmentid();
+  static const int kAssignmentIdFieldNumber = 12;
+  inline const ::std::string& assignmentid(int index) const;
+  inline ::std::string* mutable_assignmentid(int index);
+  inline void set_assignmentid(int index, const ::std::string& value);
+  inline void set_assignmentid(int index, const char* value);
+  inline void set_assignmentid(int index, const char* value, size_t size);
+  inline ::std::string* add_assignmentid();
+  inline void add_assignmentid(const ::std::string& value);
+  inline void add_assignmentid(const char* value);
+  inline void add_assignmentid(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& assignmentid() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_assignmentid();
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlCourse)
  private:
   inline void set_has_id();
@@ -497,9 +513,10 @@ class SrlCourse : public ::google::protobuf::Message {
   ::protobuf::srl::school::DateTime* accessdate_;
   ::protobuf::srl::school::DateTime* closedate_;
   ::protobuf::srl::school::State* state_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> assignmentid_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -769,6 +786,31 @@ class SrlAssignment : public ::google::protobuf::Message {
   inline ::std::string* release_imageurl();
   inline void set_allocated_imageurl(::std::string* imageurl);
 
+  // repeated string problemList = 16;
+  inline int problemlist_size() const;
+  inline void clear_problemlist();
+  static const int kProblemListFieldNumber = 16;
+  inline const ::std::string& problemlist(int index) const;
+  inline ::std::string* mutable_problemlist(int index);
+  inline void set_problemlist(int index, const ::std::string& value);
+  inline void set_problemlist(int index, const char* value);
+  inline void set_problemlist(int index, const char* value, size_t size);
+  inline ::std::string* add_problemlist();
+  inline void add_problemlist(const ::std::string& value);
+  inline void add_problemlist(const char* value);
+  inline void add_problemlist(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& problemlist() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_problemlist();
+
+  // optional .protobuf.srl.school.SrlPermission accessPermission = 17;
+  inline bool has_accesspermission() const;
+  inline void clear_accesspermission();
+  static const int kAccessPermissionFieldNumber = 17;
+  inline const ::protobuf::srl::school::SrlPermission& accesspermission() const;
+  inline ::protobuf::srl::school::SrlPermission* mutable_accesspermission();
+  inline ::protobuf::srl::school::SrlPermission* release_accesspermission();
+  inline void set_allocated_accesspermission(::protobuf::srl::school::SrlPermission* accesspermission);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlAssignment)
  private:
   inline void set_has_courseid();
@@ -799,6 +841,8 @@ class SrlAssignment : public ::google::protobuf::Message {
   inline void clear_has_state();
   inline void set_has_imageurl();
   inline void clear_has_imageurl();
+  inline void set_has_accesspermission();
+  inline void clear_has_accesspermission();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -817,9 +861,11 @@ class SrlAssignment : public ::google::protobuf::Message {
   ::protobuf::srl::school::DateTime* closedate_;
   ::protobuf::srl::school::State* state_;
   ::std::string* imageurl_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> problemlist_;
+  ::protobuf::srl::school::SrlPermission* accesspermission_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(15 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(17 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -2634,6 +2680,50 @@ inline void SrlCourse::set_allocated_state(::protobuf::srl::school::State* state
   }
 }
 
+// repeated string assignmentId = 12;
+inline int SrlCourse::assignmentid_size() const {
+  return assignmentid_.size();
+}
+inline void SrlCourse::clear_assignmentid() {
+  assignmentid_.Clear();
+}
+inline const ::std::string& SrlCourse::assignmentid(int index) const {
+  return assignmentid_.Get(index);
+}
+inline ::std::string* SrlCourse::mutable_assignmentid(int index) {
+  return assignmentid_.Mutable(index);
+}
+inline void SrlCourse::set_assignmentid(int index, const ::std::string& value) {
+  assignmentid_.Mutable(index)->assign(value);
+}
+inline void SrlCourse::set_assignmentid(int index, const char* value) {
+  assignmentid_.Mutable(index)->assign(value);
+}
+inline void SrlCourse::set_assignmentid(int index, const char* value, size_t size) {
+  assignmentid_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlCourse::add_assignmentid() {
+  return assignmentid_.Add();
+}
+inline void SrlCourse::add_assignmentid(const ::std::string& value) {
+  assignmentid_.Add()->assign(value);
+}
+inline void SrlCourse::add_assignmentid(const char* value) {
+  assignmentid_.Add()->assign(value);
+}
+inline void SrlCourse::add_assignmentid(const char* value, size_t size) {
+  assignmentid_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SrlCourse::assignmentid() const {
+  return assignmentid_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SrlCourse::mutable_assignmentid() {
+  return &assignmentid_;
+}
+
 // -------------------------------------------------------------------
 
 // SrlAssignment
@@ -3341,6 +3431,88 @@ inline void SrlAssignment::set_allocated_imageurl(::std::string* imageurl) {
   } else {
     clear_has_imageurl();
     imageurl_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated string problemList = 16;
+inline int SrlAssignment::problemlist_size() const {
+  return problemlist_.size();
+}
+inline void SrlAssignment::clear_problemlist() {
+  problemlist_.Clear();
+}
+inline const ::std::string& SrlAssignment::problemlist(int index) const {
+  return problemlist_.Get(index);
+}
+inline ::std::string* SrlAssignment::mutable_problemlist(int index) {
+  return problemlist_.Mutable(index);
+}
+inline void SrlAssignment::set_problemlist(int index, const ::std::string& value) {
+  problemlist_.Mutable(index)->assign(value);
+}
+inline void SrlAssignment::set_problemlist(int index, const char* value) {
+  problemlist_.Mutable(index)->assign(value);
+}
+inline void SrlAssignment::set_problemlist(int index, const char* value, size_t size) {
+  problemlist_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlAssignment::add_problemlist() {
+  return problemlist_.Add();
+}
+inline void SrlAssignment::add_problemlist(const ::std::string& value) {
+  problemlist_.Add()->assign(value);
+}
+inline void SrlAssignment::add_problemlist(const char* value) {
+  problemlist_.Add()->assign(value);
+}
+inline void SrlAssignment::add_problemlist(const char* value, size_t size) {
+  problemlist_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SrlAssignment::problemlist() const {
+  return problemlist_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SrlAssignment::mutable_problemlist() {
+  return &problemlist_;
+}
+
+// optional .protobuf.srl.school.SrlPermission accessPermission = 17;
+inline bool SrlAssignment::has_accesspermission() const {
+  return (_has_bits_[0] & 0x00010000u) != 0;
+}
+inline void SrlAssignment::set_has_accesspermission() {
+  _has_bits_[0] |= 0x00010000u;
+}
+inline void SrlAssignment::clear_has_accesspermission() {
+  _has_bits_[0] &= ~0x00010000u;
+}
+inline void SrlAssignment::clear_accesspermission() {
+  if (accesspermission_ != NULL) accesspermission_->::protobuf::srl::school::SrlPermission::Clear();
+  clear_has_accesspermission();
+}
+inline const ::protobuf::srl::school::SrlPermission& SrlAssignment::accesspermission() const {
+  return accesspermission_ != NULL ? *accesspermission_ : *default_instance_->accesspermission_;
+}
+inline ::protobuf::srl::school::SrlPermission* SrlAssignment::mutable_accesspermission() {
+  set_has_accesspermission();
+  if (accesspermission_ == NULL) accesspermission_ = new ::protobuf::srl::school::SrlPermission;
+  return accesspermission_;
+}
+inline ::protobuf::srl::school::SrlPermission* SrlAssignment::release_accesspermission() {
+  clear_has_accesspermission();
+  ::protobuf::srl::school::SrlPermission* temp = accesspermission_;
+  accesspermission_ = NULL;
+  return temp;
+}
+inline void SrlAssignment::set_allocated_accesspermission(::protobuf::srl::school::SrlPermission* accesspermission) {
+  delete accesspermission_;
+  accesspermission_ = accesspermission;
+  if (accesspermission) {
+    set_has_accesspermission();
+  } else {
+    clear_has_accesspermission();
   }
 }
 

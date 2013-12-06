@@ -1273,32 +1273,15 @@ public final class Message {
      */
     boolean getIsInstructor();
 
-    // optional string sessionInfo = 5;
+    // optional bool isRegistering = 5;
     /**
-     * <code>optional string sessionInfo = 5;</code>
-     *
-     * <pre>
-     * This may be separated out more.
-     * </pre>
+     * <code>optional bool isRegistering = 5;</code>
      */
-    boolean hasSessionInfo();
+    boolean hasIsRegistering();
     /**
-     * <code>optional string sessionInfo = 5;</code>
-     *
-     * <pre>
-     * This may be separated out more.
-     * </pre>
+     * <code>optional bool isRegistering = 5;</code>
      */
-    java.lang.String getSessionInfo();
-    /**
-     * <code>optional string sessionInfo = 5;</code>
-     *
-     * <pre>
-     * This may be separated out more.
-     * </pre>
-     */
-    com.google.protobuf.ByteString
-        getSessionInfoBytes();
+    boolean getIsRegistering();
   }
   /**
    * Protobuf type {@code protobuf.srl.request.LoginInformation}
@@ -1371,9 +1354,9 @@ public final class Message {
               isInstructor_ = input.readBool();
               break;
             }
-            case 42: {
+            case 40: {
               bitField0_ |= 0x00000010;
-              sessionInfo_ = input.readBytes();
+              isRegistering_ = input.readBool();
               break;
             }
           }
@@ -1534,59 +1517,20 @@ public final class Message {
       return isInstructor_;
     }
 
-    // optional string sessionInfo = 5;
-    public static final int SESSIONINFO_FIELD_NUMBER = 5;
-    private java.lang.Object sessionInfo_;
+    // optional bool isRegistering = 5;
+    public static final int ISREGISTERING_FIELD_NUMBER = 5;
+    private boolean isRegistering_;
     /**
-     * <code>optional string sessionInfo = 5;</code>
-     *
-     * <pre>
-     * This may be separated out more.
-     * </pre>
+     * <code>optional bool isRegistering = 5;</code>
      */
-    public boolean hasSessionInfo() {
+    public boolean hasIsRegistering() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional string sessionInfo = 5;</code>
-     *
-     * <pre>
-     * This may be separated out more.
-     * </pre>
+     * <code>optional bool isRegistering = 5;</code>
      */
-    public java.lang.String getSessionInfo() {
-      java.lang.Object ref = sessionInfo_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          sessionInfo_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string sessionInfo = 5;</code>
-     *
-     * <pre>
-     * This may be separated out more.
-     * </pre>
-     */
-    public com.google.protobuf.ByteString
-        getSessionInfoBytes() {
-      java.lang.Object ref = sessionInfo_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        sessionInfo_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public boolean getIsRegistering() {
+      return isRegistering_;
     }
 
     private void initFields() {
@@ -1594,7 +1538,7 @@ public final class Message {
       password_ = "";
       isLoggedIn_ = false;
       isInstructor_ = false;
-      sessionInfo_ = "";
+      isRegistering_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1625,7 +1569,7 @@ public final class Message {
         output.writeBool(4, isInstructor_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeBytes(5, getSessionInfoBytes());
+        output.writeBool(5, isRegistering_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1654,7 +1598,7 @@ public final class Message {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, getSessionInfoBytes());
+          .computeBoolSize(5, isRegistering_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1780,7 +1724,7 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000004);
         isInstructor_ = false;
         bitField0_ = (bitField0_ & ~0x00000008);
-        sessionInfo_ = "";
+        isRegistering_ = false;
         bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
@@ -1829,7 +1773,7 @@ public final class Message {
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
-        result.sessionInfo_ = sessionInfo_;
+        result.isRegistering_ = isRegistering_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1862,10 +1806,8 @@ public final class Message {
         if (other.hasIsInstructor()) {
           setIsInstructor(other.getIsInstructor());
         }
-        if (other.hasSessionInfo()) {
-          bitField0_ |= 0x00000010;
-          sessionInfo_ = other.sessionInfo_;
-          onChanged();
+        if (other.hasIsRegistering()) {
+          setIsRegistering(other.getIsRegistering());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2112,100 +2054,35 @@ public final class Message {
         return this;
       }
 
-      // optional string sessionInfo = 5;
-      private java.lang.Object sessionInfo_ = "";
+      // optional bool isRegistering = 5;
+      private boolean isRegistering_ ;
       /**
-       * <code>optional string sessionInfo = 5;</code>
-       *
-       * <pre>
-       * This may be separated out more.
-       * </pre>
+       * <code>optional bool isRegistering = 5;</code>
        */
-      public boolean hasSessionInfo() {
+      public boolean hasIsRegistering() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional string sessionInfo = 5;</code>
-       *
-       * <pre>
-       * This may be separated out more.
-       * </pre>
+       * <code>optional bool isRegistering = 5;</code>
        */
-      public java.lang.String getSessionInfo() {
-        java.lang.Object ref = sessionInfo_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          sessionInfo_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      public boolean getIsRegistering() {
+        return isRegistering_;
       }
       /**
-       * <code>optional string sessionInfo = 5;</code>
-       *
-       * <pre>
-       * This may be separated out more.
-       * </pre>
+       * <code>optional bool isRegistering = 5;</code>
        */
-      public com.google.protobuf.ByteString
-          getSessionInfoBytes() {
-        java.lang.Object ref = sessionInfo_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          sessionInfo_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string sessionInfo = 5;</code>
-       *
-       * <pre>
-       * This may be separated out more.
-       * </pre>
-       */
-      public Builder setSessionInfo(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        sessionInfo_ = value;
+      public Builder setIsRegistering(boolean value) {
+        bitField0_ |= 0x00000010;
+        isRegistering_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string sessionInfo = 5;</code>
-       *
-       * <pre>
-       * This may be separated out more.
-       * </pre>
+       * <code>optional bool isRegistering = 5;</code>
        */
-      public Builder clearSessionInfo() {
+      public Builder clearIsRegistering() {
         bitField0_ = (bitField0_ & ~0x00000010);
-        sessionInfo_ = getDefaultInstance().getSessionInfo();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string sessionInfo = 5;</code>
-       *
-       * <pre>
-       * This may be separated out more.
-       * </pre>
-       */
-      public Builder setSessionInfoBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        sessionInfo_ = value;
+        isRegistering_ = false;
         onChanged();
         return this;
       }
@@ -2249,10 +2126,10 @@ public final class Message {
       "\001(\t\"w\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_RE" +
       "QUEST\020\001\022\020\n\014DATA_SENDING\020\002\022\017\n\013RECOGNITION" +
       "\020\003\022\013\n\007LOADING\020\004\022\016\n\nSUBMISSION\020\005\022\013\n\007PENDI" +
-      "NG\020\006\"u\n\020LoginInformation\022\020\n\010username\030\001 \002",
+      "NG\020\006\"w\n\020LoginInformation\022\020\n\010username\030\001 \002",
       "(\t\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010" +
-      "\022\024\n\014isInstructor\030\004 \001(\010\022\023\n\013sessionInfo\030\005 " +
-      "\001(\t"
+      "\022\024\n\014isInstructor\030\004 \001(\010\022\025\n\risRegistering\030" +
+      "\005 \001(\010"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2270,7 +2147,7 @@ public final class Message {
           internal_static_protobuf_srl_request_LoginInformation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_request_LoginInformation_descriptor,
-              new java.lang.String[] { "Username", "Password", "IsLoggedIn", "IsInstructor", "SessionInfo", });
+              new java.lang.String[] { "Username", "Password", "IsLoggedIn", "IsInstructor", "IsRegistering", });
           return null;
         }
       };
