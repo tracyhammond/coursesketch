@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/school.proto',
   package='protobuf.srl.school',
-  serialized_pb='\n\x12input/school.proto\x12\x13protobuf.srl.school\"\xa8\x01\n\tSrlSchool\x12/\n\x07\x63ourses\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.school.SrlCourse\x12\x37\n\x0b\x61ssignments\x18\x02 \x03(\x0b\x32\".protobuf.srl.school.SrlAssignment\x12\x31\n\x08problems\x18\x03 \x03(\x0b\x32\x1f.protobuf.srl.school.SrlProblem\"\xd5\x03\n\tSrlCourse\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12<\n\x10\x61\x63\x63\x65ssPermission\x18\x03 \x01(\x0b\x32\".protobuf.srl.school.SrlPermission\x12G\n\x06\x61\x63\x63\x65ss\x18\x04 \x01(\x0e\x32,.protobuf.srl.school.SrlCourse.Accessibility:\tPROTECTED\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08semester\x18\x06 \x01(\t\x12\x10\n\x08imageUrl\x18\x07 \x01(\t\x12\r\n\x05grade\x18\x08 \x01(\x05\x12\x31\n\naccessDate\x18\t \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12\x30\n\tcloseDate\x18\n \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12)\n\x05state\x18\x0b \x01(\x0b\x32\x1a.protobuf.srl.school.State\"O\n\rAccessibility\x12\n\n\x06PUBLIC\x10\x01\x12\r\n\tPROTECTED\x10\x02\x12\x16\n\x12PROTECTED_NOSEARCH\x10\x03\x12\x0b\n\x07PRIVATE\x10\x04\"\x84\x05\n\rSrlAssignment\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\n\n\x02id\x18\x02 \x02(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12I\n\x04type\x18\x04 \x01(\x0e\x32\x31.protobuf.srl.school.SrlAssignment.AssignmentType:\x08HOMEWORK\x12\r\n\x05other\x18\x05 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x06 \x01(\t\x12\r\n\x05links\x18\x07 \x03(\t\x12J\n\nlatePolicy\x18\x08 \x01(\x0e\x32-.protobuf.srl.school.SrlAssignment.LatePolicy:\x07POLICY1\x12\x13\n\x0bgradeWeight\x18\t \x01(\x05\x12\r\n\x05grade\x18\n \x01(\x05\x12\x31\n\naccessDate\x18\x0b \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12.\n\x07\x64ueDate\x18\x0c \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12\x30\n\tcloseDate\x18\r \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12)\n\x05state\x18\x0e \x01(\x0b\x32\x1a.protobuf.srl.school.State\x12\x10\n\x08imageUrl\x18\x0f \x01(\t\"R\n\x0e\x41ssignmentType\x12\x0c\n\x08HOMEWORK\x10\x01\x12\x08\n\x04QUIZ\x10\x02\x12\x07\n\x03LAB\x10\x03\x12\x08\n\x04\x45XAM\x10\x04\x12\n\n\x06SURVEY\x10\x05\x12\t\n\x05OTHER\x10\x06\"3\n\nLatePolicy\x12\x0b\n\x07POLICY1\x10\x01\x12\x0b\n\x07POLICY2\x10\x02\x12\x0b\n\x07POLICY3\x10\x03\"\xa9\x02\n\nSrlProblem\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\t\x12\n\n\x02id\x18\x03 \x02(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12?\n\x0bsubProblems\x18\x06 \x03(\x0b\x32*.protobuf.srl.school.subproblemInformation\x12\x34\n\x04info\x18\x07 \x03(\x0b\x32&.protobuf.srl.school.DomainInformation\x12\x13\n\x0bgradeWeight\x18\x08 \x01(\x05\x12\r\n\x05grade\x18\t \x01(\x05\x12)\n\x05state\x18\n \x01(\x0b\x32\x1a.protobuf.srl.school.State\"\x84\x02\n\x15subproblemInformation\x12\x14\n\x0cquestionText\x18\x01 \x01(\t\x12U\n\x0cquestionType\x18\x02 \x01(\x0e\x32\x37.protobuf.srl.school.subproblemInformation.QuestionType:\x06SKETCH\x12\x0f\n\x07options\x18\x03 \x01(\x0c\x12\x13\n\x0bgradeWeight\x18\x04 \x01(\x05\x12\r\n\x05grade\x18\x05 \x01(\x05\"I\n\x0cQuestionType\x12\n\n\x06SKETCH\x10\x01\x12\x0f\n\x0bMULT_CHOICE\x10\x02\x12\r\n\tFREE_RESP\x10\x03\x12\r\n\tCHECK_BOX\x10\x04\"w\n\x08\x44\x61teTime\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\r\n\x05month\x18\x02 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x03 \x01(\x05\x12\x0c\n\x04hour\x18\x04 \x01(\x05\x12\x0e\n\x06minute\x18\x05 \x01(\x05\x12\x0e\n\x06second\x18\x06 \x01(\x05\x12\x13\n\x0bmillisecond\x18\x07 \x01(\x04\"\"\n\x11\x44omainInformation\x12\r\n\x05stuff\x18\x01 \x01(\t\"c\n\x05State\x12\x11\n\tpublished\x18\x01 \x01(\x08\x12\x12\n\naccessible\x18\x02 \x01(\x08\x12\x0f\n\x07pastDue\x18\x03 \x01(\x08\x12\x0f\n\x07started\x18\x04 \x01(\x08\x12\x11\n\tcompleted\x18\x05 \x01(\x08\"b\n\x07SrlUser\x12\x10\n\x08username\x18\x01 \x02(\t\x12\x36\n\x08userType\x18\x02 \x01(\x0e\x32\x1d.protobuf.srl.school.UserType:\x05GUEST\x12\r\n\x05\x65mail\x18\x03 \x01(\t\">\n\x08SrlGroup\x12\x0e\n\x06userId\x18\x01 \x03(\t\x12\x0f\n\x07groupId\x18\x02 \x02(\t\x12\x11\n\tgroupName\x18\x03 \x01(\t\"H\n\x0bSrlSchoolId\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\t\x12\x11\n\tproblemId\x18\x03 \x01(\t\"\xba\x01\n\rSrlPermission\x12\x36\n\x0f\x61\x64minPermission\x18\x01 \x03(\x0b\x32\x1d.protobuf.srl.school.SrlGroup\x12:\n\x13moderatorPermission\x18\x02 \x03(\x0b\x32\x1d.protobuf.srl.school.SrlGroup\x12\x35\n\x0euserPermission\x18\x03 \x03(\x0b\x32\x1d.protobuf.srl.school.SrlGroup*U\n\x08UserType\x12\t\n\x05\x41\x44MIN\x10\x01\x12\x0e\n\nINSTRUCTOR\x10\x02\x12\x16\n\x12TEACHING_ASSISTANT\x10\x03\x12\x0b\n\x07STUDENT\x10\x04\x12\t\n\x05GUEST\x10\x05')
+  serialized_pb='\n\x12input/school.proto\x12\x13protobuf.srl.school\"\xa8\x01\n\tSrlSchool\x12/\n\x07\x63ourses\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.school.SrlCourse\x12\x37\n\x0b\x61ssignments\x18\x02 \x03(\x0b\x32\".protobuf.srl.school.SrlAssignment\x12\x31\n\x08problems\x18\x03 \x03(\x0b\x32\x1f.protobuf.srl.school.SrlProblem\"\xeb\x03\n\tSrlCourse\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12<\n\x10\x61\x63\x63\x65ssPermission\x18\x03 \x01(\x0b\x32\".protobuf.srl.school.SrlPermission\x12G\n\x06\x61\x63\x63\x65ss\x18\x04 \x01(\x0e\x32,.protobuf.srl.school.SrlCourse.Accessibility:\tPROTECTED\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08semester\x18\x06 \x01(\t\x12\x10\n\x08imageUrl\x18\x07 \x01(\t\x12\r\n\x05grade\x18\x08 \x01(\x05\x12\x31\n\naccessDate\x18\t \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12\x30\n\tcloseDate\x18\n \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12)\n\x05state\x18\x0b \x01(\x0b\x32\x1a.protobuf.srl.school.State\x12\x14\n\x0c\x61ssignmentId\x18\x0c \x03(\t\"O\n\rAccessibility\x12\n\n\x06PUBLIC\x10\x01\x12\r\n\tPROTECTED\x10\x02\x12\x16\n\x12PROTECTED_NOSEARCH\x10\x03\x12\x0b\n\x07PRIVATE\x10\x04\"\xd7\x05\n\rSrlAssignment\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\n\n\x02id\x18\x02 \x02(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12I\n\x04type\x18\x04 \x01(\x0e\x32\x31.protobuf.srl.school.SrlAssignment.AssignmentType:\x08HOMEWORK\x12\r\n\x05other\x18\x05 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x06 \x01(\t\x12\r\n\x05links\x18\x07 \x03(\t\x12J\n\nlatePolicy\x18\x08 \x01(\x0e\x32-.protobuf.srl.school.SrlAssignment.LatePolicy:\x07POLICY1\x12\x13\n\x0bgradeWeight\x18\t \x01(\x05\x12\r\n\x05grade\x18\n \x01(\x05\x12\x31\n\naccessDate\x18\x0b \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12.\n\x07\x64ueDate\x18\x0c \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12\x30\n\tcloseDate\x18\r \x01(\x0b\x32\x1d.protobuf.srl.school.DateTime\x12)\n\x05state\x18\x0e \x01(\x0b\x32\x1a.protobuf.srl.school.State\x12\x10\n\x08imageUrl\x18\x0f \x01(\t\x12\x13\n\x0bproblemList\x18\x10 \x03(\t\x12<\n\x10\x61\x63\x63\x65ssPermission\x18\x11 \x01(\x0b\x32\".protobuf.srl.school.SrlPermission\"R\n\x0e\x41ssignmentType\x12\x0c\n\x08HOMEWORK\x10\x01\x12\x08\n\x04QUIZ\x10\x02\x12\x07\n\x03LAB\x10\x03\x12\x08\n\x04\x45XAM\x10\x04\x12\n\n\x06SURVEY\x10\x05\x12\t\n\x05OTHER\x10\x06\"3\n\nLatePolicy\x12\x0b\n\x07POLICY1\x10\x01\x12\x0b\n\x07POLICY2\x10\x02\x12\x0b\n\x07POLICY3\x10\x03\"\xa9\x02\n\nSrlProblem\x12\x10\n\x08\x63ourseId\x18\x01 \x02(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x02(\t\x12\n\n\x02id\x18\x03 \x02(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12?\n\x0bsubProblems\x18\x06 \x03(\x0b\x32*.protobuf.srl.school.subproblemInformation\x12\x34\n\x04info\x18\x07 \x03(\x0b\x32&.protobuf.srl.school.DomainInformation\x12\x13\n\x0bgradeWeight\x18\x08 \x01(\x05\x12\r\n\x05grade\x18\t \x01(\x05\x12)\n\x05state\x18\n \x01(\x0b\x32\x1a.protobuf.srl.school.State\"\x84\x02\n\x15subproblemInformation\x12\x14\n\x0cquestionText\x18\x01 \x01(\t\x12U\n\x0cquestionType\x18\x02 \x01(\x0e\x32\x37.protobuf.srl.school.subproblemInformation.QuestionType:\x06SKETCH\x12\x0f\n\x07options\x18\x03 \x01(\x0c\x12\x13\n\x0bgradeWeight\x18\x04 \x01(\x05\x12\r\n\x05grade\x18\x05 \x01(\x05\"I\n\x0cQuestionType\x12\n\n\x06SKETCH\x10\x01\x12\x0f\n\x0bMULT_CHOICE\x10\x02\x12\r\n\tFREE_RESP\x10\x03\x12\r\n\tCHECK_BOX\x10\x04\"w\n\x08\x44\x61teTime\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\r\n\x05month\x18\x02 \x01(\x05\x12\x0b\n\x03\x64\x61y\x18\x03 \x01(\x05\x12\x0c\n\x04hour\x18\x04 \x01(\x05\x12\x0e\n\x06minute\x18\x05 \x01(\x05\x12\x0e\n\x06second\x18\x06 \x01(\x05\x12\x13\n\x0bmillisecond\x18\x07 \x01(\x04\"\"\n\x11\x44omainInformation\x12\r\n\x05stuff\x18\x01 \x01(\t\"c\n\x05State\x12\x11\n\tpublished\x18\x01 \x01(\x08\x12\x12\n\naccessible\x18\x02 \x01(\x08\x12\x0f\n\x07pastDue\x18\x03 \x01(\x08\x12\x0f\n\x07started\x18\x04 \x01(\x08\x12\x11\n\tcompleted\x18\x05 \x01(\x08\"b\n\x07SrlUser\x12\x10\n\x08username\x18\x01 \x02(\t\x12\x36\n\x08userType\x18\x02 \x01(\x0e\x32\x1d.protobuf.srl.school.UserType:\x05GUEST\x12\r\n\x05\x65mail\x18\x03 \x01(\t\">\n\x08SrlGroup\x12\x0e\n\x06userId\x18\x01 \x03(\t\x12\x0f\n\x07groupId\x18\x02 \x02(\t\x12\x11\n\tgroupName\x18\x03 \x01(\t\"H\n\x0bSrlSchoolId\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\t\x12\x11\n\tproblemId\x18\x03 \x01(\t\"\xba\x01\n\rSrlPermission\x12\x36\n\x0f\x61\x64minPermission\x18\x01 \x03(\x0b\x32\x1d.protobuf.srl.school.SrlGroup\x12:\n\x13moderatorPermission\x18\x02 \x03(\x0b\x32\x1d.protobuf.srl.school.SrlGroup\x12\x35\n\x0euserPermission\x18\x03 \x03(\x0b\x32\x1d.protobuf.srl.school.SrlGroup*U\n\x08UserType\x12\t\n\x05\x41\x44MIN\x10\x01\x12\x0e\n\nINSTRUCTOR\x10\x02\x12\x16\n\x12TEACHING_ASSISTANT\x10\x03\x12\x0b\n\x07STUDENT\x10\x04\x12\t\n\x05GUEST\x10\x05')
 
 _USERTYPE = _descriptor.EnumDescriptor(
   name='UserType',
@@ -45,8 +45,8 @@ _USERTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2581,
-  serialized_end=2666,
+  serialized_start=2686,
+  serialized_end=2771,
 )
 
 UserType = enum_type_wrapper.EnumTypeWrapper(_USERTYPE)
@@ -82,8 +82,8 @@ _SRLCOURSE_ACCESSIBILITY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=605,
-  serialized_end=684,
+  serialized_start=627,
+  serialized_end=706,
 )
 
 _SRLASSIGNMENT_ASSIGNMENTTYPE = _descriptor.EnumDescriptor(
@@ -119,8 +119,8 @@ _SRLASSIGNMENT_ASSIGNMENTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1196,
-  serialized_end=1278,
+  serialized_start=1301,
+  serialized_end=1383,
 )
 
 _SRLASSIGNMENT_LATEPOLICY = _descriptor.EnumDescriptor(
@@ -144,8 +144,8 @@ _SRLASSIGNMENT_LATEPOLICY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1280,
-  serialized_end=1331,
+  serialized_start=1385,
+  serialized_end=1436,
 )
 
 _SUBPROBLEMINFORMATION_QUESTIONTYPE = _descriptor.EnumDescriptor(
@@ -173,8 +173,8 @@ _SUBPROBLEMINFORMATION_QUESTIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1821,
-  serialized_end=1894,
+  serialized_start=1926,
+  serialized_end=1999,
 )
 
 
@@ -304,6 +304,13 @@ _SRLCOURSE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='assignmentId', full_name='protobuf.srl.school.SrlCourse.assignmentId', index=11,
+      number=12, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -315,7 +322,7 @@ _SRLCOURSE = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=215,
-  serialized_end=684,
+  serialized_end=706,
 )
 
 
@@ -431,6 +438,20 @@ _SRLASSIGNMENT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='problemList', full_name='protobuf.srl.school.SrlAssignment.problemList', index=15,
+      number=16, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='accessPermission', full_name='protobuf.srl.school.SrlAssignment.accessPermission', index=16,
+      number=17, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -442,8 +463,8 @@ _SRLASSIGNMENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=687,
-  serialized_end=1331,
+  serialized_start=709,
+  serialized_end=1436,
 )
 
 
@@ -533,8 +554,8 @@ _SRLPROBLEM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1334,
-  serialized_end=1631,
+  serialized_start=1439,
+  serialized_end=1736,
 )
 
 
@@ -590,8 +611,8 @@ _SUBPROBLEMINFORMATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1634,
-  serialized_end=1894,
+  serialized_start=1739,
+  serialized_end=1999,
 )
 
 
@@ -660,8 +681,8 @@ _DATETIME = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1896,
-  serialized_end=2015,
+  serialized_start=2001,
+  serialized_end=2120,
 )
 
 
@@ -688,8 +709,8 @@ _DOMAININFORMATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2017,
-  serialized_end=2051,
+  serialized_start=2122,
+  serialized_end=2156,
 )
 
 
@@ -744,8 +765,8 @@ _STATE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2053,
-  serialized_end=2152,
+  serialized_start=2158,
+  serialized_end=2257,
 )
 
 
@@ -786,8 +807,8 @@ _SRLUSER = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2154,
-  serialized_end=2252,
+  serialized_start=2259,
+  serialized_end=2357,
 )
 
 
@@ -828,8 +849,8 @@ _SRLGROUP = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2254,
-  serialized_end=2316,
+  serialized_start=2359,
+  serialized_end=2421,
 )
 
 
@@ -870,8 +891,8 @@ _SRLSCHOOLID = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2318,
-  serialized_end=2390,
+  serialized_start=2423,
+  serialized_end=2495,
 )
 
 
@@ -912,8 +933,8 @@ _SRLPERMISSION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2393,
-  serialized_end=2579,
+  serialized_start=2498,
+  serialized_end=2684,
 )
 
 _SRLSCHOOL.fields_by_name['courses'].message_type = _SRLCOURSE
@@ -931,6 +952,7 @@ _SRLASSIGNMENT.fields_by_name['accessDate'].message_type = _DATETIME
 _SRLASSIGNMENT.fields_by_name['dueDate'].message_type = _DATETIME
 _SRLASSIGNMENT.fields_by_name['closeDate'].message_type = _DATETIME
 _SRLASSIGNMENT.fields_by_name['state'].message_type = _STATE
+_SRLASSIGNMENT.fields_by_name['accessPermission'].message_type = _SRLPERMISSION
 _SRLASSIGNMENT_ASSIGNMENTTYPE.containing_type = _SRLASSIGNMENT;
 _SRLASSIGNMENT_LATEPOLICY.containing_type = _SRLASSIGNMENT;
 _SRLPROBLEM.fields_by_name['subProblems'].message_type = _SUBPROBLEMINFORMATION

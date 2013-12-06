@@ -65,7 +65,7 @@ void protobuf_AssignDesc_input_2fmessage_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, password_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, isloggedin_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, isinstructor_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, sessioninfo_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, isregistering_),
   };
   LoginInformation_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -121,10 +121,10 @@ void protobuf_AddDesc_input_2fmessage_2eproto() {
     "\001(\t\"w\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_RE"
     "QUEST\020\001\022\020\n\014DATA_SENDING\020\002\022\017\n\013RECOGNITION"
     "\020\003\022\013\n\007LOADING\020\004\022\016\n\nSUBMISSION\020\005\022\013\n\007PENDI"
-    "NG\020\006\"u\n\020LoginInformation\022\020\n\010username\030\001 \002"
+    "NG\020\006\"w\n\020LoginInformation\022\020\n\010username\030\001 \002"
     "(\t\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010"
-    "\022\024\n\014isInstructor\030\004 \001(\010\022\023\n\013sessionInfo\030\005 "
-    "\001(\t", 483);
+    "\022\024\n\014isInstructor\030\004 \001(\010\022\025\n\risRegistering\030"
+    "\005 \001(\010", 485);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/message.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -604,7 +604,7 @@ const int LoginInformation::kUsernameFieldNumber;
 const int LoginInformation::kPasswordFieldNumber;
 const int LoginInformation::kIsLoggedInFieldNumber;
 const int LoginInformation::kIsInstructorFieldNumber;
-const int LoginInformation::kSessionInfoFieldNumber;
+const int LoginInformation::kIsRegisteringFieldNumber;
 #endif  // !_MSC_VER
 
 LoginInformation::LoginInformation()
@@ -627,7 +627,7 @@ void LoginInformation::SharedCtor() {
   password_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   isloggedin_ = false;
   isinstructor_ = false;
-  sessioninfo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  isregistering_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -641,9 +641,6 @@ void LoginInformation::SharedDtor() {
   }
   if (password_ != &::google::protobuf::internal::kEmptyString) {
     delete password_;
-  }
-  if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {
-    delete sessioninfo_;
   }
   if (this != default_instance_) {
   }
@@ -684,11 +681,7 @@ void LoginInformation::Clear() {
     }
     isloggedin_ = false;
     isinstructor_ = false;
-    if (has_sessioninfo()) {
-      if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {
-        sessioninfo_->clear();
-      }
-    }
+    isregistering_ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -761,20 +754,19 @@ bool LoginInformation::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(42)) goto parse_sessionInfo;
+        if (input->ExpectTag(40)) goto parse_isRegistering;
         break;
       }
 
-      // optional string sessionInfo = 5;
+      // optional bool isRegistering = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_sessionInfo:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_sessioninfo()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->sessioninfo().data(), this->sessioninfo().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_isRegistering:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &isregistering_)));
+          set_has_isregistering();
         } else {
           goto handle_uninterpreted;
         }
@@ -828,13 +820,9 @@ void LoginInformation::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->isinstructor(), output);
   }
 
-  // optional string sessionInfo = 5;
-  if (has_sessioninfo()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->sessioninfo().data(), this->sessioninfo().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      5, this->sessioninfo(), output);
+  // optional bool isRegistering = 5;
+  if (has_isregistering()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->isregistering(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -875,14 +863,9 @@ void LoginInformation::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->isinstructor(), target);
   }
 
-  // optional string sessionInfo = 5;
-  if (has_sessioninfo()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->sessioninfo().data(), this->sessioninfo().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->sessioninfo(), target);
+  // optional bool isRegistering = 5;
+  if (has_isregistering()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->isregistering(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -920,11 +903,9 @@ int LoginInformation::ByteSize() const {
       total_size += 1 + 1;
     }
 
-    // optional string sessionInfo = 5;
-    if (has_sessioninfo()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->sessioninfo());
+    // optional bool isRegistering = 5;
+    if (has_isregistering()) {
+      total_size += 1 + 1;
     }
 
   }
@@ -966,8 +947,8 @@ void LoginInformation::MergeFrom(const LoginInformation& from) {
     if (from.has_isinstructor()) {
       set_isinstructor(from.isinstructor());
     }
-    if (from.has_sessioninfo()) {
-      set_sessioninfo(from.sessioninfo());
+    if (from.has_isregistering()) {
+      set_isregistering(from.isregistering());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -997,7 +978,7 @@ void LoginInformation::Swap(LoginInformation* other) {
     std::swap(password_, other->password_);
     std::swap(isloggedin_, other->isloggedin_);
     std::swap(isinstructor_, other->isinstructor_);
-    std::swap(sessioninfo_, other->sessioninfo_);
+    std::swap(isregistering_, other->isregistering_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
