@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_10;
@@ -100,6 +101,7 @@ public class MultiConnectionManager {
 			cons = new ArrayList<WrapperConnection>();
 			cons.add(connection);
 			connections.put(connectionType, cons);
+			System.out.println("creating a new connectionList for: " +connectionType.getName()+ " with list: " + connections.get(connectionType));
 		} else {
 			cons.add(connection);
 		}
@@ -119,4 +121,12 @@ public class MultiConnectionManager {
 		return cons.get(0); // lame best connection.
 	}
 
+	public void dropAllConnection() {
+		synchronized(connections) {
+			for(Class<? extends WrapperConnection> con:connections.keySet()) {
+				
+//				ArrayList<WrapperConnection>
+			}
+		}
+	}
 }
