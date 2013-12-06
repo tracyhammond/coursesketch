@@ -19,8 +19,8 @@ public class MultiConnectionManager {
 	private boolean connectionType = CONNECT_LOCALLY;
 	public static final boolean CONNECT_LOCALLY = true;
 	public static final boolean CONNECT_REMOTE = false;
-	HashMap<Class<? extends WrapperConnection>, ArrayList<WrapperConnection>> connections
-		= new HashMap<Class<? extends WrapperConnection>, ArrayList<WrapperConnection>> ();
+	HashMap<Class<?>, ArrayList<WrapperConnection>> connections
+		= new HashMap<Class<?>, ArrayList<WrapperConnection>> ();
 
 	MultiInternalConnectionServer parent;
 	public MultiConnectionManager(MultiInternalConnectionServer parent) {
@@ -84,7 +84,7 @@ public class MultiConnectionManager {
 	 * Adds a connection to a list with the given connectionType.
 	 *
 	 * @param connection the connection to be added
-	 * @param connectionType the type to differientiate connections by
+	 * @param connectionType the type to differentiate connections by
 	 * @throws {@link NullPointerException} if connection is null or connectionType is null
 	 */
 	public void addConnection(WrapperConnection connection, Class<? extends WrapperConnection> connectionType) {
@@ -101,7 +101,7 @@ public class MultiConnectionManager {
 			cons = new ArrayList<WrapperConnection>();
 			cons.add(connection);
 			connections.put(connectionType, cons);
-			System.out.println("creating a new connectionList for: " +connectionType.getName()+ " with list: " + connections.get(connectionType));
+			System.out.println("creating a new connectionList for: " + connectionType + " with list: " + connections.get(connectionType));
 		} else {
 			cons.add(connection);
 		}
@@ -114,6 +114,7 @@ public class MultiConnectionManager {
 	 * @return a valid connection.
 	 */
 	public WrapperConnection getBestConnection(Class<? extends WrapperConnection> connectionType){
+		System.out.println("getting Connection from type: " + connectionType);
 		ArrayList<WrapperConnection> cons = connections.get(connectionType);
 		if (cons == null) {
 			throw new NullPointerException("ConnectionType: "+ connectionType.getName() +" does not exist in this manager");
@@ -121,12 +122,25 @@ public class MultiConnectionManager {
 		return cons.get(0); // lame best connection.
 	}
 
-	public void dropAllConnection() {
+	/**
+	 * Closes all connections and removes them from storage.
+	 *
+	 * @param clearTypes if true then the mapping will be completely cleared.
+	 */
+	public void dropAllConnection(boolean clearTypes, boolean debugPrint) {
 		synchronized(connections) {
-			for(Class<? extends WrapperConnection> con:connections.keySet()) {
-				
-//				ArrayList<WrapperConnection>
+			//<?  extends WrapperConnection> // for safe keeping
+			for(Class<?> conKey:connections.keySet()) {
+				for(WrapperConnection connection: connections.get(conKey)) {
+					if (debugPrint) {
+						System.out.println(connection.getURI());
+					}
+					connection.close();
+				}
+				connections.get(conKey).clear();
 			}
+			if (clearTypes)
+				connections.clear();
 		}
 	}
 }
