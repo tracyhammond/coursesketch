@@ -30,26 +30,29 @@ public class MultiConnectionManager {
 	 * Creates a connection given the different information.
 	 *
 	 * @param serv the server that is connected to this connection manager
-	 * @param local if the connection that is being created is local or remote
+	 * @param isLocal if the connection that is being created is local or remote
 	 * @param port the port that this connection is created at.  (Has to be unique to this computer)
 	 * @param connectionType the class that will be made (should be a subclass of WrapperConnection)
-	 * @return
+	 * @return a completed {@link WrapperConnection}
+	 * @throws ConnectionException if a connection has failed to be made.
 	 */
-	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean local, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) {
-		WrapperConnection c=null;
-		if (remoteAdress == null) {
-			remoteAdress = "goldberglinux02.tamu.edu";
+	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
+		WrapperConnection c = null;
+		if (remoteAdress == null && !isLocal) {
+			throw new ConnectionException("Attempting to connect to null address");
 		}
-		String location = local ? "ws://localhost:" + port : "ws://" + remoteAdress + port;
+		String location = isLocal ? "ws://localhost:" + port : "ws://" + remoteAdress +":"+ port;
 		try {
 			Constructor construct = connectionType.getConstructor(URI.class, Draft.class, MultiInternalConnectionServer.class);
 			c = (WrapperConnection) construct.newInstance( new URI( location ), new Draft_10() , serv);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
 		if (c != null) {
 			c.connect();
+		}
+		if (c == null) {
+			throw new ConnectionException("failed to create WrapperConnection");
 		}
 		return c;
 	}
@@ -65,11 +68,33 @@ public class MultiConnectionManager {
 		getBestConnection(connectionType).send(packagedRequest.toByteArray());
 	}
 
-	public void createAndAddConnection(MultiInternalConnectionServer serv, boolean local, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) {
-		addConnection(createConnection(serv, local, remoteAdress, port, connectionType), connectionType);
+	/**
+	 * Creates and then adds a connection to the {@link MultiConnectionManager}.
+	 *
+	 * @see #createConnection(MultiInternalConnectionServer, boolean, String, int, Class)
+	 * @see #addConnection(WrapperConnection, Class) 
+	 */
+	public void createAndAddConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
+		WrapperConnection connection = createConnection(serv, isLocal, remoteAdress, port, connectionType);
+		addConnection(connection, connectionType);
 	}
 
+	/**
+	 * Adds a connection to a list with the given connectionType.
+	 *
+	 * @param connection the connection to be added
+	 * @param connectionType the type to differientiate connections by
+	 * @throws {@link NullPointerException} if connection is null or connectionType is null
+	 */
 	public void addConnection(WrapperConnection connection, Class<? extends WrapperConnection> connectionType) {
+		if (connection == null) {
+			throw new NullPointerException("can not add null connection");
+		}
+
+		if (connectionType == null) {
+			throw new NullPointerException("can not add connection to null type");
+		}
+
 		ArrayList<WrapperConnection> cons = connections.get(connectionType);
 		if (cons == null) {
 			cons = new ArrayList<WrapperConnection>();
@@ -80,6 +105,12 @@ public class MultiConnectionManager {
 		}
 	}
 
+	/**
+	 * Returns a connection that we believe to be the best connection at this time.
+	 *
+	 * @param connectionType
+	 * @return a valid connection.
+	 */
 	public WrapperConnection getBestConnection(Class<? extends WrapperConnection> connectionType){
 		ArrayList<WrapperConnection> cons = connections.get(connectionType);
 		if (cons == null) {
