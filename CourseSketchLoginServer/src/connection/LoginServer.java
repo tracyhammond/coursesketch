@@ -199,13 +199,13 @@ public class LoginServer extends WebSocketServer {
 		Request.Builder requestBuilder = Request.newBuilder();
 		requestBuilder.setRequestType(MessageType.LOGIN);
 		requestBuilder.setResponseText(message);
+		requestBuilder.setSessionInfo(req.getSessionInfo());
 		
 		// Create the Login Response.
 		LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
 		loginBuilder.setUsername(req.getLogin().getUsername());
 		loginBuilder.setIsLoggedIn(success);
 		loginBuilder.setIsInstructor(instructorIntent);
-		loginBuilder.setSessionInfo(req.getSessionInfo());
 
 		// Add login info.
 		requestBuilder.setLogin(loginBuilder.build());
