@@ -64,8 +64,8 @@ public class DatabaseClient {
 		//return corsor.hasNext();
 	}
 
-	private static boolean MongoAddUser(String CollectionName, DB dbs, String user, String password,String email,boolean isInstructor) throws GeneralSecurityException, InvalidKeySpecException {
-		DBCollection new_user = dbs.getCollection("CourseSketchUsers");
+	static boolean MongoAddUser(String user, String password,String email,boolean isInstructor) throws GeneralSecurityException, InvalidKeySpecException {
+		DBCollection new_user = getInstance().db.getCollection("CourseSketchUsers");
 		BasicDBObject query = new BasicDBObject("UserName",user);
 		DBObject corsor = new_user.findOne(query);
 		if(corsor == null)
