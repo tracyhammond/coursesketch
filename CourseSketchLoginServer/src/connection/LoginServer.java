@@ -171,18 +171,18 @@ public class LoginServer extends WebSocketServer {
 			}
 		}
 	}
-	
+
 	private boolean CheckUserLogin(String user, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
 	{
 		if(DatabaseClient.MongoIdentify(user,password))
 			return true;
 		return false;
 	}
-	
+
 	public List<WebSocket> getConnections(){
 		return connections;
 	}
-	
+
 	/**
 	 * Creates a {@link Request} to return on login request.
 	 */
@@ -196,7 +196,7 @@ public class LoginServer extends WebSocketServer {
 		loginBuilder.setUsername(req.getLogin().getUsername());
 		loginBuilder.setIsLoggedIn(success);
 		loginBuilder.setIsInstructor(instructorIntent);
-		loginBuilder.setSessionInfo("SESSION_KEY");
+		loginBuilder.setSessionInfo(req.getSessionInfo());
 
 		// Add login info.
 		requestBuilder.setLogin(loginBuilder.build());

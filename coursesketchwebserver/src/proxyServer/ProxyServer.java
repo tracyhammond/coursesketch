@@ -11,22 +11,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
 
 import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
-import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.framing.Framedata;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -85,6 +78,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 				return;
 			}
 			String userID = state.getKey();
+			System.out.println("Request type is " + req.getRequestType().name());
 			serverManager.send(req, userID, LoginConnection.class);
 		} else {
 			if (state.getTries() > MAX_LOGIN_TRIES) {
