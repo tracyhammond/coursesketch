@@ -14,12 +14,15 @@ public class WrapperConnection extends WebSocketClient {
 
 	protected MultiInternalConnectionServer parent;
 	public WrapperConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		this( serverUri, draft );
+		super( serverUri, draft );
 		this.parent = parent;
+		if (parent == null) {
+			System.out.println("Warning Parent is null");
+		}
 	}
 
 	public WrapperConnection( URI serverUri , Draft draft ) {
-		super( serverUri, draft );
+		this(serverUri, draft, null);
 	}
 
 	public WrapperConnection( URI serverURI ) {
@@ -67,6 +70,12 @@ public class WrapperConnection extends WebSocketClient {
 	}
 	
 	protected WebSocket getConnectionFromState(MultiConnectionState state) {
+		if (parent == null) {
+			System.out.println("null parent");
+		}
+		if (parent.getIdToConnection() == null) {
+			System.out.println("null IdToConnection");
+		}
 		return parent.getIdToConnection().get(state);
 	}
 }
