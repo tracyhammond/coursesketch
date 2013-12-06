@@ -105,7 +105,7 @@ public class LoginServer extends WebSocketServer {
 				conn.send(createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false).toByteArray());
 			}
 		}
-		catch (Exception e){
+		catch (Exception e) {
 			e.printStackTrace();
 			conn.send(createLoginResponse(req, false, LOGIN_ERROR_MESSAGE, false).toByteArray());
 		}
@@ -124,7 +124,7 @@ public class LoginServer extends WebSocketServer {
 	}*/
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Login Server: Version 1.0.2.boa");
+		System.out.println("Login Server: Version 1.0.2.cow");
 		WebSocketImpl.DEBUG = true;
 		int port = 8886; // 843 flash policy port
 		try {
@@ -176,6 +176,7 @@ public class LoginServer extends WebSocketServer {
 
 	private boolean checkUserLogin(String user, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
 	{
+		System.out.println("About to identify the user!");
 		if (DatabaseClient.mongoIdentify(user,password))
 			return true;
 		return false;
@@ -183,6 +184,7 @@ public class LoginServer extends WebSocketServer {
 	
 	private boolean checkUserInstructor(String user) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
 	{
+		System.out.println("About to check if user is an instructor!");
 		if (DatabaseClient.mongoIsInstructor(user))
 			return true;
 		return false;
@@ -200,6 +202,7 @@ public class LoginServer extends WebSocketServer {
 		requestBuilder.setRequestType(MessageType.LOGIN);
 		requestBuilder.setResponseText(message);
 		requestBuilder.setSessionInfo(req.getSessionInfo());
+		System.out.println("setting return session information " + req.getSessionInfo());
 		
 		// Create the Login Response.
 		LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
