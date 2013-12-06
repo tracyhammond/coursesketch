@@ -25,4 +25,5 @@ message LoginInformation {
     optional bool isLoggedIn = 3;
     optional bool isInstructor = 4;
 	optional bool isRegistering = 5;
+	optional string email = 6;
 }
