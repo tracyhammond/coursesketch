@@ -82,6 +82,10 @@ public class DatabaseClient {
 		}
 		String instructor = "" + cursor.get("IsInstructor");
 		System.out.println("Instructor value " + instructor);
+		if (instructor.equals("null")) {
+			System.out.println("no value for instructor");
+			return false;
+		}
 		return Integer.parseInt(instructor) == 1;
 	}
 
