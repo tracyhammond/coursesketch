@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Collection;
@@ -50,6 +51,7 @@ public class LoginServer extends WebSocketServer {
 	public static final String PERMISSION_ERROR_MESSAGE = "There was an error assigning permissions";
 	public static final String CORRECT_LOGIN_MESSAGE = "Login is successful";
 	public static final String LOGIN_ERROR_MESSAGE = "An Error Occured While Logging in: Wrong Message Type.";
+	public static final String REGISTRATION_ERROR_MESSAGE = "Could not Register: User name is already taken";
 
 	
 	List<WebSocket> connections = new LinkedList<WebSocket>();
@@ -95,6 +97,14 @@ public class LoginServer extends WebSocketServer {
 		try{
 			//This is assuming user is logged in
 			//conn.send(createLoginResponse(req, true));
+			
+			if (req.getLogin().getIsRegistering()){
+				boolean successfulRegistration = registerUser(req.getLogin().getUsername(), req.getLogin().getPassword(), req.getLogin().getEmail(), req.getLogin().getIsInstructor());
+				if(!successfulRegistration){
+					conn.send(createLoginResponse(req, false, REGISTRATION_ERROR_MESSAGE, false).toByteArray());
+					return;
+				}
+			}
 			boolean userLoggedIn = checkUserLogin(req.getLogin().getUsername(), req.getLogin().getPassword());
 			if (userLoggedIn) {
 				boolean isInstructor = checkUserInstructor(req.getLogin().getUsername());
@@ -187,6 +197,13 @@ public class LoginServer extends WebSocketServer {
 		System.out.println("About to check if user is an instructor!");
 		if (DatabaseClient.mongoIsInstructor(user))
 			return true;
+		return false;
+	}
+	
+	private boolean registerUser(String user, String password,String email,boolean isInstructor) throws InvalidKeySpecException, GeneralSecurityException{
+		if (DatabaseClient.MongoAddUser(user, password, email, isInstructor)){
+			return true;
+		}
 		return false;
 	}
 
