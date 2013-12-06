@@ -95,16 +95,18 @@ public class LoginServer extends WebSocketServer {
 		try{
 			//This is assuming user is logged in
 			//conn.send(createLoginResponse(req, true));
-			boolean userLoggedIn = CheckUserLogin(req.getLogin().getUsername(), req.getLogin().getPassword());
+			boolean userLoggedIn = checkUserLogin(req.getLogin().getUsername(), req.getLogin().getPassword());
 			if (userLoggedIn) {
+				boolean isInstructor = checkUserInstructor(req.getLogin().getUsername());
 			 	//return if database is an instructor
-				conn.send(createLoginResponse(req, true, CORRECT_LOGIN_MESSAGE, userLoggedIn).toByteArray());
+				conn.send(createLoginResponse(req, true, CORRECT_LOGIN_MESSAGE, isInstructor).toByteArray());
 			} else {
 				//state.addTry();
-				conn.send(createLoginResponse(req, true, INCORRECT_LOGIN_MESSAGE, userLoggedIn).toByteArray());
+				conn.send(createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false).toByteArray());
 			}
 		}
-		catch(Exception e){
+		catch (Exception e){
+			e.printStackTrace();
 			conn.send(createLoginResponse(req, false, LOGIN_ERROR_MESSAGE, false).toByteArray());
 		}
 	}
@@ -172,9 +174,16 @@ public class LoginServer extends WebSocketServer {
 		}
 	}
 
-	private boolean CheckUserLogin(String user, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
+	private boolean checkUserLogin(String user, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
 	{
-		if(DatabaseClient.MongoIdentify(user,password))
+		if (DatabaseClient.mongoIdentify(user,password))
+			return true;
+		return false;
+	}
+	
+	private boolean checkUserInstructor(String user) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
+	{
+		if (DatabaseClient.mongoIsInstructor(user))
 			return true;
 		return false;
 	}
