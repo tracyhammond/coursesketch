@@ -117,7 +117,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
 		
-		System.out.println("Proxy Server: Version 1.0.2.goat");
+		System.out.println("Proxy Server: Version 1.0.2.horse");
 		WebSocketImpl.DEBUG = true;
 		int port = 8888; // 843 flash policy port
 		try {
@@ -140,16 +140,21 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		while ( true ) {
 			String in = sysin.readLine();
 			if( in.equals( "exit" ) ) {
+				System.out.println("Closing down server");
 				s.stop();
+				s.serverManager.dropAllConnection(true, true);
 				break;
 			} else if( in.equals( "restart" ) ) {
 				s.stop();
 				s.start();
 				break;
 			} else if( in.equals( "reconnect")) {
+				System.out.println("Attempting to recoonect");
 				s.reConnect();
 			}
 		}
+		System.out.println("Closing down server! Forcefully");
+		System.exit(0);
 	}
 
 	@Override
