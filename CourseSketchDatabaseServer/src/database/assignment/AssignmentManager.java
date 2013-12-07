@@ -37,10 +37,13 @@ public class AssignmentManager
 										 .append("DueDate", assignment.dueDate)
 										 .append("CloseDate",assignment.closeDate)
 										 .append("ImageUrl", assignment.imageUrl)
-										 .append("ProblemList", assignment.problemList)
+										 
 										 .append("Admin", assignment.permissions.admin)
 										 .append("Mod",assignment.permissions.mod)
 										 .append("Users", assignment.permissions.users);
+		if (assignment.problemList != null) {
+			query.append("ProblemList", assignment.problemList);
+		}
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 
