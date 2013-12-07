@@ -53,7 +53,7 @@ public class AssignmentManager
 		return (String) corsor.get("_id");
 	}
 
-	static AssignmentBuilder mongoGetAssignment(DB dbs, String courseID,String userId) throws AuthenticationException
+	public static AssignmentBuilder mongoGetAssignment(DB dbs, String courseID,String userId) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Assignments");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
@@ -100,7 +100,7 @@ public class AssignmentManager
 
 	}
 
-	static boolean mongoUpdateAssignment(DB dbs, String courseID,String userId,AssignmentBuilder assignment) throws AuthenticationException
+	public static boolean mongoUpdateAssignment(DB dbs, String courseID,String userId,AssignmentBuilder assignment) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Courses");
 		BasicDBObject query = new BasicDBObject("_id",courseID);

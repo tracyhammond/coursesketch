@@ -1,25 +1,13 @@
 package database.assignment;
 
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.List;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-
 import database.PermissionBuilder;
 
 public class AssignmentBuilder
 {
-	String courseId, name, type, other, description, resources, latePolicy, gradeWeight, openDate, 
+	public String courseId, name, type, other, description, resources, latePolicy, gradeWeight, openDate, 
 	       dueDate, closeDate, imageUrl;
-	String[] problemList;
-	PermissionBuilder permissions = new PermissionBuilder();
+	public String[] problemList;
+	public PermissionBuilder permissions = new PermissionBuilder();
 	
 	public AssignmentBuilder setCourseId(String x)
 	{

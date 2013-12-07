@@ -30,7 +30,7 @@ public class CourseManager
 		return (String) corsor.get("_id");
 	}
 	
-	static CourseBuilder mongoGetCourse(DB dbs, String courseID,String userId) throws AuthenticationException
+	public static CourseBuilder mongoGetCourse(DB dbs, String courseID,String userId) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Courses");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
@@ -71,7 +71,7 @@ public class CourseManager
 	}
 	
 	
-	static boolean mongoUpdateCourse(DB dbs, String courseID,String userId,CourseBuilder course) throws AuthenticationException
+	public static boolean mongoUpdateCourse(DB dbs, String courseID,String userId,CourseBuilder course) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Courses");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
