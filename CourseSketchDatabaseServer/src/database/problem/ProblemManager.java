@@ -33,7 +33,7 @@ public class ProblemManager
 	
 	static ProblemBankBuilder mongoGetProblem(DB dbs, String problemBankID,String userId) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("Assignments");
+		DBCollection courses = dbs.getCollection("ProblemBank");
 		BasicDBObject query = new BasicDBObject("_id",problemBankID);
 		DBObject corsor = courses.findOne(query);
 
@@ -52,7 +52,7 @@ public class ProblemManager
 		
 		ProblemBankBuilder exactProblem = new ProblemBankBuilder();
 		
-		exactProblem.setQuestionText((String)corsor.get("QuestionText"));
+		exactProblem.setQuestionText((String)corsor.get("ProblemBank"));
 		exactProblem.setQestionImageName((String)corsor.get("QestionImageName"));
 		exactProblem.setQuestionAnswerId((String)corsor.get("QuestionAnswerId"));
 		exactProblem.setCourseTopic((String)corsor.get("CourseTopic"));
@@ -78,7 +78,7 @@ public class ProblemManager
 
 	static boolean mongoUpdateProblem(DB dbs, String courseID,String userId,ProblemBankBuilder problem) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("Courses");
+		DBCollection courses = dbs.getCollection("ProblemBank");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = courses.findOne(query);
 		
