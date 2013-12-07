@@ -11,7 +11,7 @@ import database.auth.Authenticator;
 public class CourseManager 
 {
 	
-	private static String mongoInsertCourse(DB dbs, CourseBuilder course)
+	public static String mongoInsertCourse(DB dbs, CourseBuilder course)
 	{
 		DBCollection new_user = dbs.getCollection("Courses");
 		BasicDBObject query = new BasicDBObject("Description",course.description)
