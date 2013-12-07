@@ -14,7 +14,7 @@ import database.course.CourseManager;
 
 public class AssignmentManager 
 {
-	private static String mongoInsertAssignment(DB dbs, String userId, AssignmentBuilder assignment) throws AuthenticationException
+	public static String mongoInsertAssignment(DB dbs, String userId, AssignmentBuilder assignment) throws AuthenticationException
 	{
 		DBCollection new_user = dbs.getCollection("Assignments");
 		CourseBuilder course = CourseManager.mongoGetCourse(dbs,assignment.courseId,userId);
