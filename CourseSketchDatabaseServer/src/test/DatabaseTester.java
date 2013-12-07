@@ -34,20 +34,25 @@ public class DatabaseTester {
 		
 		System.out.println("GETTING COURES AS ADMIN");
 		CourseBuilder builder = CourseManager.mongoGetCourse(dbs, courseId, "david");
+		System.out.println(builder.toString());
 		System.out.println("GETTING COURES AS MOD");
 		CourseBuilder modBuilder = CourseManager.mongoGetCourse(dbs, courseId, "manoj");
+		System.out.println(modBuilder.toString());
 		System.out.println("GETTING COURES AS USER");
 		CourseBuilder userBuilder = CourseManager.mongoGetCourse(dbs, courseId, "matt");
+		System.out.println(userBuilder.toString());
 		try {
 			System.out.println("GETTING COURES AS NO ONE");
 			CourseBuilder crashBuilder = CourseManager.mongoGetCourse(dbs, courseId, "NO_ONE");
+			System.out.println("SOMETHING FAILED, NO ONE SHOULD HAVE NOTHING" + crashBuilder.toString());
 		} catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate mongo get course");
 		}
-		
+
 		try {
 			System.out.println("UPDATING COURSE AS NO ONE");
 			boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "NO_ONE", userBuilder);
+			System.out.println("SOMETHING FAILED, NO ONE SHOULD HAVE NOTHING");
 		} catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate");
 		}
@@ -55,6 +60,7 @@ public class DatabaseTester {
 		try {
 			System.out.println("UPDATING COURSE AS USER");
 			boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "vijay", userBuilder);
+			System.out.println("SOMETHING FAILED, USER SHOULD HAVE NOTHING");
 		} catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate");
 		}
@@ -62,6 +68,7 @@ public class DatabaseTester {
 		try {
 			System.out.println("UPDATING COURSE AS MOD");
 			boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "raniero", userBuilder);
+			System.out.println("SOMETHING FAILED, MOD SHOULD HAVE NOTHING");
 		} catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate");
 		}
@@ -70,6 +77,8 @@ public class DatabaseTester {
 		userBuilder.description = "I HAVE A DIFFERENT DESCRIPTION NOW";
 		boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "larry", userBuilder);
 
+		System.out.println("GETTING UPDATED COURSE AS ADMIN");
+		CourseBuilder postUpdate = CourseManager.mongoGetCourse(dbs, courseId, "david");
 		return courseId;
 	}
 }
