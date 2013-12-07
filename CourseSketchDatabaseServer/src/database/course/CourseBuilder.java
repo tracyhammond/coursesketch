@@ -1,24 +1,12 @@
 package database.course;
 
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.List;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-
 import database.PermissionBuilder;
 
 public class CourseBuilder
 {
-	String description, name, access, semesester, openDate, closeDate, image;
-	String[] assignmentList;
-	PermissionBuilder permissions = new PermissionBuilder();
+	public String description, name, access, semesester, openDate, closeDate, image;
+	public String[] assignmentList;
+	public PermissionBuilder permissions = new PermissionBuilder();
 	
 	public CourseBuilder setDescription(String x)
 	{
