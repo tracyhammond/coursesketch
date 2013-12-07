@@ -16,7 +16,7 @@ public class AssignmentManager
 {
 	private static String mongoInsertAssignment(DB dbs, String userId, AssignmentBuilder assignment) throws AuthenticationException
 	{
-		DBCollection new_user = dbs.getCollection("Courses");
+		DBCollection new_user = dbs.getCollection("Assignments");
 		CourseBuilder course = CourseManager.mongoGetCourse(dbs,assignment.courseId,userId);
 		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, course.permissions.admin);
 		boolean isMod = Authenticator.checkAuthentication(dbs, userId, course.permissions.mod);
@@ -55,9 +55,9 @@ public class AssignmentManager
 
 	public static AssignmentBuilder mongoGetAssignment(DB dbs, String courseID,String userId) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("Assignments");
+		DBCollection assignments = dbs.getCollection("Assignments");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
-		DBObject corsor = courses.findOne(query);
+		DBObject corsor = assignments.findOne(query);
 
 		String[] adminList = (String[])corsor.get("Admin");
 		String[] modList = (String[])corsor.get("Mod");	
@@ -102,9 +102,9 @@ public class AssignmentManager
 
 	public static boolean mongoUpdateAssignment(DB dbs, String courseID,String userId,AssignmentBuilder assignment) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("Courses");
+		DBCollection assignments = dbs.getCollection("Assignments");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
-		DBObject corsor = courses.findOne(query);
+		DBObject corsor = assignments.findOne(query);
 
 		String[] adminList = (String[])corsor.get("Admin");
 		String[] modList = (String[])corsor.get("Mod");	
