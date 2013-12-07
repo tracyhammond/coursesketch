@@ -2,7 +2,9 @@ package database;
 
 public class PermissionBuilder 
 {
-	String[] admin, mod, users;
+	public String[] admin;
+	public String[] mod;
+	public String[] users;
 	
 	public PermissionBuilder setAdmin(String[] x)
 	{
