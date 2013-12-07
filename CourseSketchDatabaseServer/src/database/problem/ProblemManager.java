@@ -12,7 +12,7 @@ import database.auth.Authenticator;
 
 public class ProblemManager 
 {
-	private static String mongoInsertProblem(DB dbs, ProblemBankBuilder problem) throws AuthenticationException
+	static String mongoInsertProblem(DB dbs, ProblemBankBuilder problem) throws AuthenticationException
 	{
 	
 		DBCollection new_user = dbs.getCollection("ProblemBank");
@@ -31,7 +31,7 @@ public class ProblemManager
 		return (String) corsor.get("_id");
 	}
 	
-	private static ProblemBankBuilder mongoGetProblem(DB dbs, String problemBankID,String userId) throws AuthenticationException
+	static ProblemBankBuilder mongoGetProblem(DB dbs, String problemBankID,String userId) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Assignments");
 		BasicDBObject query = new BasicDBObject("_id",problemBankID);
@@ -76,7 +76,7 @@ public class ProblemManager
 	}
 
 
-	private static boolean mongoUpdateProblem(DB dbs, String courseID,String userId,ProblemBankBuilder problem) throws AuthenticationException
+	static boolean mongoUpdateProblem(DB dbs, String courseID,String userId,ProblemBankBuilder problem) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Courses");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
