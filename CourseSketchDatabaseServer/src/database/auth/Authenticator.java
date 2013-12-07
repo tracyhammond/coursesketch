@@ -14,11 +14,14 @@ public class Authenticator {
 	 * @return
 	 */
 	public static boolean checkAuthentication(DB dbs, String userId, String[] groupList) {
-		DBCollection new_user = dbs.getCollection("User_Group");
+		DBCollection new_user = dbs.getCollection("UserGroups");
 		for (String group: groupList) {
-			if (group.startsWith("group:")) {
-				group.substring(6); // should be correct?
-				new_user.find("?", group.substring(6));
+			if (group.startsWith("group")) {
+				group.substring(5); // should be correct?
+				String[] list = (String[])new_user.findOne(group.substring(5)).get("UserList");
+				if (checkAuthentication(dbs, userId, list)) {
+					return true;
+				}
 			} else {
 				if (group.equals(userId))
 					return true;

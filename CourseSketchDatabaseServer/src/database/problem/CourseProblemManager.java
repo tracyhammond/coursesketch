@@ -76,7 +76,7 @@ public class CourseProblemManager
 		
 
 		// problem manager get problem from bank (as a user!)
-		ProblemBankBuilder problemBank = ProblemManager.mongoGetProblem(dbs, (String)corsor.get("problemBankId"), exactProblem.courseId); // problem bank look up
+		ProblemBankBuilder problemBank = ProblemManager.mongoGetProblem(dbs, (String)corsor.get("problemBankId"), (String)exactProblem.courseId); // problem bank look up
 		exactProblem.problemResource = problemBank;
 		
 		if (isAdmin) {
