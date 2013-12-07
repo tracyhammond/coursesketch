@@ -27,8 +27,15 @@ public class DatabaseTester {
 		testBuilder.permissions.users = new String[] {"vijay", "matt"};
 		System.out.println(testBuilder.toString());
 		String courseId = CourseManager.mongoInsertCourse(dbs, testBuilder);
+
+		// testing getting
 		CourseBuilder builder = CourseManager.mongoGetCourse(dbs, courseId, "david");
 		CourseBuilder modBuilder = CourseManager.mongoGetCourse(dbs, courseId, "manoj");
 		CourseBuilder userBuilder = CourseManager.mongoGetCourse(dbs, courseId, "matt");
+		try {
+			CourseBuilder crashBuilder = CourseManager.mongoGetCourse(dbs, courseId, "NO_ONE");
+		} catch(AuthenticationException e) {
+			System.out.println("Succesfully failed to authenticate");
+		}
 	}
 }
