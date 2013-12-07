@@ -1,5 +1,6 @@
 package connection;
 
+import multiConnection.ConnectionException;
 import multiConnection.MultiConnectionManager;
 import multiConnection.MultiInternalConnectionServer;
 
@@ -10,7 +11,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager{
 		super(parent);
 	}
 	
-	public void connectServers(MultiInternalConnectionServer serv) {
+	public void connectServers(MultiInternalConnectionServer serv) throws ConnectionException {
 		System.out.println("Open Database...");
 		createAndAddConnection(serv, false, null, 8887, SolutionConnection.class);
 	}
