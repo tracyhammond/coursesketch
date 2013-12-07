@@ -31,7 +31,7 @@ public class ProblemManager
 		return (String) corsor.get("_id");
 	}
 	
-	private static ProblemBankBuilder mongoGetAssignment(DB dbs, String problemBankID,String userId) throws AuthenticationException
+	private static ProblemBankBuilder mongoGetProblem(DB dbs, String problemBankID,String userId) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Assignments");
 		BasicDBObject query = new BasicDBObject("_id",problemBankID);
@@ -76,7 +76,7 @@ public class ProblemManager
 	}
 
 
-	private static boolean mongoUpdateAssignment(DB dbs, String courseID,String userId,ProblemBankBuilder problem) throws AuthenticationException
+	private static boolean mongoUpdateProblem(DB dbs, String courseID,String userId,ProblemBankBuilder problem) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Courses");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
