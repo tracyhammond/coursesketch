@@ -89,13 +89,14 @@ public class DatabaseClient {
 			System.out.println("Unable to find user!");
 			return false;
 		}
+		
 		String instructor = "" + cursor.get("IsInstructor");
 		System.out.println("Instructor value " + instructor);
 		if (cursor.get("IsInstructor") == null || instructor.equals("null")) {
 			System.out.println("no value for instructor");
 			return false;
 		}
-		return Integer.parseInt(instructor) == 1;
+		return instructor.equals("true");
 	}
 
 }

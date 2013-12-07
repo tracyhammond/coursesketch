@@ -44,36 +44,6 @@ public class LoginChecker {
 					default:
 	}*/
 
-	/**
-	 * Checks the login information to see if it is valid.
-	 */
-	private static boolean checkLogin(LoginInformation information) {
-		String name = information.getUsername();
-		String password = information.getPassword();
-		if (name == null || password == null) {
-			return false;
-		}
-
-		if (name.equalsIgnoreCase("student") && password.equalsIgnoreCase("pass")) {
-			System.out.println("Logging in as student");
-			return true;
-		}
-
-		if (name.equalsIgnoreCase("instructor") && password.equalsIgnoreCase("pass")) {
-			System.out.println("Logging in as instructor");
-			return true;
-		}
-
-		if (name.equalsIgnoreCase("matt") && password.equalsIgnoreCase("japan")) {
-			System.out.println("Logging in as matt");
-			return true;
-		}
-
-		if (information.hasSessionInfo() && information.getSessionInfo().equals("SESSION_KEY")) {
-			return true;
-		}
-		return false;
-	}
 
 	/**
 	 * Checks to see if the request to login as an instructor is valid.
