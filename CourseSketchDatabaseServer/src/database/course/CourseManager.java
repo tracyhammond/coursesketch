@@ -21,10 +21,12 @@ public class CourseManager
 										 .append("OpenDate",course.openDate)
 										 .append("CloseDate",course.closeDate)
 										 .append("Image", course.image)
-										 .append("AssignmentList",course.assignmentList)
 										 .append("Admin", course.permissions.admin)
 										 .append("Mod",course.permissions.mod)
 										 .append("Users", course.permissions.users);
+		if (course.assignmentList != null) {
+			query.append("AssignmentList",course.assignmentList);
+		}
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 		return (String) corsor.get("_id");
