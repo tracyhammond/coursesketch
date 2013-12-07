@@ -2,9 +2,13 @@ package database;
 
 import java.util.Arrays;
 
+import database.assignment.AssignmentBuilder;
+import database.course.CourseBuilder;
+import database.problem.CourseProblemBuilder;
 import protobuf.srl.school.School.DateTime;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlProblem;
 
 public class RequestConverter{
 	static CourseBuilder convertProtobufToCourseBuilder(SrlCourse protoCourse){
@@ -49,6 +53,47 @@ public class RequestConverter{
 		//assignmentBuilder.setType(protoAssignment.getType());
 		
 		return assignmentBuilder;
+	}
+	
+	static SrlAssignment convertAssignmentToProtobuf(AssignmentBuilder assignment){
+		SrlAssignment.Builder srlAssignmentBuilder = SrlAssignment.newBuilder();
+		
+		srlAssignmentBuilder.setCloseDate(DateStringToProtobuf(assignment.closeDate));
+		srlAssignmentBuilder.setCourseId(assignment.courseId);
+		srlAssignmentBuilder.setDescription(assignment.description);
+		srlAssignmentBuilder.setDueDate(DateStringToProtobuf(assignment.dueDate));
+		srlAssignmentBuilder.setGradeWeight(Integer.parseInt(assignment.gradeWeight));
+		srlAssignmentBuilder.setImageUrl(assignment.imageUrl);
+		srlAssignmentBuilder.setName(assignment.name);
+		srlAssignmentBuilder.setAccessDate(DateStringToProtobuf(assignment.openDate));
+		srlAssignmentBuilder.setOther(assignment.other);
+		return srlAssignmentBuilder.build();
+	}
+	
+	static CourseProblemBuilder convertProtobufToProblem(SrlProblem protoProblem){
+		CourseProblemBuilder problemBuilder = new CourseProblemBuilder();
+		
+		problemBuilder.setAssignmentId(protoProblem.getAssignmentId());
+		problemBuilder.setCourseId(protoProblem.getCourseId());
+		problemBuilder.setGradeWeight(""+protoProblem.getGradeWeight());
+		//problemBuilder.setPermissions(protoProblem.get);
+		//problemBuilder.setProblemBankId(protoProblem.getP);
+		//problemBuilder.setProblemId(id);
+		
+		return problemBuilder;
+	}
+	
+	static SrlProblem convertProblemToProtobuf(CourseProblemBuilder problem){
+		SrlProblem.Builder srlProblemBuilder = SrlProblem.newBuilder();
+		
+		//srlProblemBuilder.setAssignmentId(problem.assignmentId);
+		//srlProblemBuilder.setCourseId(problem.courseId);
+		//srlProblemBuilder.setDescription(problem.description);
+		//srlProblemBuilder.setGradeWeight(problem.gradeWeight);
+		//srlProblemBuilder.setGrade(problem.grade);
+		//srlProblemBuilder.setId(problem.id);
+		
+		return srlProblemBuilder.build();
 	}
 	
 	private static DateTime DateStringToProtobuf(String date){
