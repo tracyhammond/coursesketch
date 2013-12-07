@@ -1,5 +1,7 @@
 package database;
 
+import database.assignment.AssignmentBuilder;
+
 public class ProblemBuilder 
 {
 	String courseId, name, type, other, description, resources, latePolicy, gradeWeigh, openDate, 

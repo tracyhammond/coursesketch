@@ -1,4 +1,4 @@
-package database;
+package database.assignment;
 
 import java.util.Arrays;
 
@@ -9,6 +9,8 @@ import com.mongodb.DBObject;
 
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import database.course.CourseBuilder;
+import database.course.CourseManager;
 
 public class AssignmentManager 
 {

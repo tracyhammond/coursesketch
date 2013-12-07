@@ -1,4 +1,7 @@
-package database;
+package database.problem;
+
+import database.PermissionBuilder;
+import database.ProblemBuilder;
 
 public class CourseProblemBuilder {
 	String courseId, assignmentId, problemId;
