@@ -1,4 +1,4 @@
-package database;
+package database.course;
 
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
@@ -11,6 +11,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+
+import database.PermissionBuilder;
 
 public class CourseBuilder
 {

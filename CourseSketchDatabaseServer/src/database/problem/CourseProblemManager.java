@@ -1,4 +1,4 @@
-package database;
+package database.problem;
 
 import java.util.Arrays;
 
@@ -7,6 +7,10 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
+import database.ProblemBuilder;
+import database.ProblemManager;
+import database.assignment.AssignmentBuilder;
+import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 

@@ -1,4 +1,4 @@
-package database;
+package database.course;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
