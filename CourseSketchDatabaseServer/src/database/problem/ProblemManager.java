@@ -98,30 +98,33 @@ public class ProblemManager
 		if (isAdmin) 
 		{
 			
-			if (problem.semesester != null) {
-				updated.append("$set", new BasicDBObject("Semesester", problem.semesester));
+			if (problem.questionText != null) {
+				updated.append("$set", new BasicDBObject("questionText", problem.questionText));
 			}
-			if (problem.openDate != null) {
-				updated.append("$set", new BasicDBObject("OpenDate", problem.openDate));
+			if (problem.qestionImageName != null) {
+				updated.append("$set", new BasicDBObject("qestionImageName", problem.qestionImageName));
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
-			if (problem.closeDate != null) {
-				updated.append("$set", new BasicDBObject("CloseDate", problem.closeDate));
+			if (problem.questionAnswerId != null) {
+				updated.append("$set", new BasicDBObject("questionAnswerId", problem.questionAnswerId));
 			}
-			if (problem.image != null) {
-				updated.append("$set", new BasicDBObject("Image", problem.image));
+			if (problem.courseTopic != null) {
+				updated.append("$set", new BasicDBObject("courseTopic", problem.courseTopic));
 			}
-			if (problem.assignmentList != null) {
-				updated.append("$set", new BasicDBObject("AssignmentList", problem.assignmentList));
+			if (problem.subTopic != null) {
+				updated.append("$set", new BasicDBObject("subTopic", problem.subTopic));
 			}
-			if (problem.description != null) {
-				updated.append("$set", new BasicDBObject("Description", problem.description));
+			if (problem.source != null) {
+				updated.append("$set", new BasicDBObject("source", problem.source));
 			}
-			if (problem.name != null) {
-				updated.append("$set", new BasicDBObject("Name", problem.name));
+			if (problem.questionType != null) {
+				updated.append("$set", new BasicDBObject("questionType", problem.questionType));
 			}
 			if (problem.access != null) {
 				updated.append("$set", new BasicDBObject("Access", problem.access));
+			}
+			if (problem.otherKeywords != null) {
+				updated.append("$set", new BasicDBObject("otherKeywords", problem.otherKeywords));
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (problem.permissions.admin != null) {
