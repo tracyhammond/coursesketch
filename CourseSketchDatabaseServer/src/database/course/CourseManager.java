@@ -1,9 +1,16 @@
 package database.course;
 
+import java.util.ArrayList;
+
+import org.bson.types.ObjectId;
+
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
@@ -29,20 +36,21 @@ public class CourseManager
 		}
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
-		return (String) corsor.get("_id");
+		return corsor.get("_id").toString();
 	}
 	
 	public static CourseBuilder mongoGetCourse(DB dbs, String courseID,String userId) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("Courses");
-		BasicDBObject query = new BasicDBObject("_id",courseID);
-		DBObject corsor = courses.findOne(query);
+		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseID));
+		DBObject corsor = myDbRef.fetch();
 		
-		String[] adminList = (String[])corsor.get("Admin");
+		System.out.println(corsor.get("Admin").getClass().getCanonicalName());
+		String[] bob = ((ArrayList<Object>) corsor.get("Admin")).toArray(new String[((ArrayList<Object>) corsor.get("Admin")).size()]);
+		System.out.println(bob[1]);
 		String[] modList = (String[])corsor.get("Mod");	
 		String[] usersList = (String[])corsor.get("Users");
 		boolean isAdmin,isMod,isUsers;
-		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
+		isAdmin = Authenticator.checkAuthentication(dbs, userId,bob);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
 		isUsers = Authenticator.checkAuthentication(dbs, userId, usersList);
 		
@@ -76,8 +84,8 @@ public class CourseManager
 	public static boolean mongoUpdateCourse(DB dbs, String courseID,String userId,CourseBuilder course) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Courses");
-		BasicDBObject query = new BasicDBObject("_id",courseID);
-		DBObject corsor = courses.findOne(query);
+		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(userId));
+		DBObject corsor = myDbRef.fetch();
 		
 		String[] adminList = (String[])corsor.get("Admin");
 		String[] modList = (String[])corsor.get("Mod");	
