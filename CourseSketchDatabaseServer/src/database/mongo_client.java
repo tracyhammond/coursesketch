@@ -1,4 +1,4 @@
-package mongodb_client;
+package database;
 
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
