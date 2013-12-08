@@ -8,6 +8,7 @@ import database.problem.CourseProblemBuilder;
 import protobuf.srl.school.School.DateTime;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 
 public class RequestConverter{
@@ -94,6 +95,16 @@ public class RequestConverter{
 		//srlProblemBuilder.setId(problem.id);
 		
 		return srlProblemBuilder.build();
+	}
+	
+	private static PermissionBuilder ProtoToPermission(SrlPermission permission){
+		PermissionBuilder permissionBuild = new PermissionBuilder();
+		
+		permissionBuild.setAdmin(Arrays.toArray(permission.getAdminPermissionList())); //List of strings
+		permissionBuild.setMod(Arrays.toArray(permission.getModeratorPermissionList()));
+		permissionBuild.setUsers(Arrays.toArray(permission.getUserPermissionList()));
+		
+		return null;
 	}
 	
 	private static DateTime DateStringToProtobuf(String date){
