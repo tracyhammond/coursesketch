@@ -1,14 +1,20 @@
 package test;
 
+import java.net.UnknownHostException;
+
 import com.mongodb.DB;
+import com.mongodb.MongoClient;
 
 import database.auth.AuthenticationException;
 import database.course.CourseBuilder;
 import database.course.CourseManager;
 
 public class DatabaseTester {
-	public static void main(String args[]) {
-		
+	public static void main(String args[]) throws UnknownHostException, AuthenticationException 
+	{
+		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
+		DB db = mongoClient.getDB("test");
+		testCourses(db);
 	}
 	
 	public static DB getDatabase() {
@@ -30,6 +36,7 @@ public class DatabaseTester {
 		System.out.println("INSERTING COURSE");
 		String courseId = CourseManager.mongoInsertCourse(dbs, testBuilder);
 		System.out.println("INSERTING COURSE SUCCESSFULT");
+		System.out.println(courseId);
 		// testing getting courses
 		
 		System.out.println("GETTING COURES AS ADMIN");

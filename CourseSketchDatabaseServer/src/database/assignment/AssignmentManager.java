@@ -37,7 +37,6 @@ public class AssignmentManager
 										 .append("DueDate", assignment.dueDate)
 										 .append("CloseDate",assignment.closeDate)
 										 .append("ImageUrl", assignment.imageUrl)
-										 
 										 .append("Admin", assignment.permissions.admin)
 										 .append("Mod",assignment.permissions.mod)
 										 .append("Users", assignment.permissions.users);
