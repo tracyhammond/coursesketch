@@ -1,22 +1,24 @@
 package database;
 
+import java.util.ArrayList;
+
 public class GroupBuilder 
 {
 	public String name;
-	public String[] userList;
-	public String[] admin;
+	public ArrayList<String> userList;
+	public ArrayList<String> admin;
 	
 	public GroupBuilder setName(String x)
 	{
 		name = x;
 		return this;
 	}
-	public GroupBuilder setuserList(String[] x)
+	public GroupBuilder setuserList(ArrayList<String> x)
 	{
 		userList = x;
 		return this;
 	}
-	public GroupBuilder setAdmin(String[] x)
+	public GroupBuilder setAdmin(ArrayList<String> x)
 	{
 		admin = x;
 		return this;
