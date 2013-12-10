@@ -121,7 +121,6 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
 									}
 									break;*/
-							
 					}
 				}
 				Request.Builder dataReq = Request.newBuilder();
@@ -130,12 +129,10 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 				dataReq.setSessionInfo(req.getSessionInfo());
 				conn.send(dataReq.build().toByteArray());
 			} catch (InvalidProtocolBufferException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			// decode request and pull correct information from database (courses, assignments, ...) then repackage everything and send it out
 			catch (AuthenticationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -149,7 +146,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Database Server: Version 1.0.2.crocodile");
-		WebSocketImpl.DEBUG = false;
+		WebSocketImpl.DEBUG = true;
 		int port = 8885; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
