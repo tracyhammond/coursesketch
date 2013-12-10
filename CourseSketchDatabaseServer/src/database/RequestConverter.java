@@ -37,8 +37,11 @@ public class RequestConverter{
 		if (course.assignmentList != null) {
 			srlCourseBuilder.addAllAssignmentId(course.assignmentList);
 		}
-		if (course.closeDate != null) {
+		if (course.closeDate != null && false) {
 			srlCourseBuilder.setCloseDate(DateStringToProtobuf(course.closeDate));
+		}
+		if (course.openDate != null && false) {
+			srlCourseBuilder.setAccessDate(DateStringToProtobuf(course.openDate));
 		}
 		if (course.description != null) {
 			srlCourseBuilder.setDescription(course.description);
@@ -143,7 +146,7 @@ public class RequestConverter{
 	
 	private static DateTime DateStringToProtobuf(String date){
 		DateTime.Builder protobufDateTime = DateTime.newBuilder();
-		
+
 		String[] splitDate = date.split(" ");
 		
 		protobufDateTime.setYear(Integer.parseInt(splitDate[0]));
