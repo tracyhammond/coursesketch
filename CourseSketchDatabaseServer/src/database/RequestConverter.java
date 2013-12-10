@@ -18,7 +18,7 @@ public class RequestConverter{
 	static CourseBuilder convertProtobufToCourseBuilder(SrlCourse protoCourse){
 		CourseBuilder courseBuilder = new CourseBuilder();
 		courseBuilder.setAccess(protoCourse.getAccess().toString());
-		courseBuilder.setAssignmentList((String[]) protoCourse.getAssignmentIdList().toArray());
+		courseBuilder.setAssignmentList((ArrayList<String>) protoCourse.getAssignmentIdList());
 		courseBuilder.setCloseDate(DateProtobufToString(protoCourse.getCloseDate()));
 		courseBuilder.setDescription(protoCourse.getDescription());
 		courseBuilder.setImage(protoCourse.getImageUrl());
@@ -32,7 +32,7 @@ public class RequestConverter{
 		SrlCourse.Builder srlCourseBuilder = SrlCourse.newBuilder();
 		
 		srlCourseBuilder.setAccess(SrlCourse.Accessibility.valueOf(course.access));
-		srlCourseBuilder.addAllAssignmentId(Arrays.asList(course.assignmentList));
+		srlCourseBuilder.addAllAssignmentId(course.assignmentList);
 		srlCourseBuilder.setCloseDate(DateStringToProtobuf(course.closeDate));
 		srlCourseBuilder.setDescription(course.description);
 		srlCourseBuilder.setImageUrl(course.image);
@@ -54,7 +54,6 @@ public class RequestConverter{
 		assignmentBuilder.setName(protoAssignment.getName());
 		assignmentBuilder.setOpenDate(DateProtobufToString(protoAssignment.getAccessDate()));
 		assignmentBuilder.setOther(protoAssignment.getOther());
-		assignmentBuilder.set
 		//assignmentBuilder.setType(protoAssignment.getType());
 		
 		return assignmentBuilder;
@@ -112,10 +111,9 @@ public class RequestConverter{
 	
 	private static PermissionBuilder ProtoToPermission(SrlPermission permission){
 		PermissionBuilder permissionBuild = new PermissionBuilder();
-		permission.get
-		permissionBuild.setAdmin(GroupToString(permission.getAdminPermissionList())); //List of strings
-		permissionBuild.setMod(Arrays.toArray(permission.getModeratorPermissionList()));
-		permissionBuild.setUsers(Arrays.toArray(permission.getUserPermissionList()));
+		permissionBuild.setAdmin((ArrayList<String>) permission.getAdminPermissionList()); //List of strings
+		permissionBuild.setMod((ArrayList<String>) permission.getModeratorPermissionList());
+		permissionBuild.setUsers((ArrayList<String>) permission.getUserPermissionList());
 		
 		return null;
 	}

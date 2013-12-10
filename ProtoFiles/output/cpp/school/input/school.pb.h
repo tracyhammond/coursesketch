@@ -1992,50 +1992,62 @@ class SrlPermission : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+  // repeated string adminPermission = 1;
   inline int adminpermission_size() const;
   inline void clear_adminpermission();
   static const int kAdminPermissionFieldNumber = 1;
-  inline const ::protobuf::srl::school::SrlGroup& adminpermission(int index) const;
-  inline ::protobuf::srl::school::SrlGroup* mutable_adminpermission(int index);
-  inline ::protobuf::srl::school::SrlGroup* add_adminpermission();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
-      adminpermission() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
-      mutable_adminpermission();
+  inline const ::std::string& adminpermission(int index) const;
+  inline ::std::string* mutable_adminpermission(int index);
+  inline void set_adminpermission(int index, const ::std::string& value);
+  inline void set_adminpermission(int index, const char* value);
+  inline void set_adminpermission(int index, const char* value, size_t size);
+  inline ::std::string* add_adminpermission();
+  inline void add_adminpermission(const ::std::string& value);
+  inline void add_adminpermission(const char* value);
+  inline void add_adminpermission(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& adminpermission() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_adminpermission();
 
-  // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+  // repeated string moderatorPermission = 2;
   inline int moderatorpermission_size() const;
   inline void clear_moderatorpermission();
   static const int kModeratorPermissionFieldNumber = 2;
-  inline const ::protobuf::srl::school::SrlGroup& moderatorpermission(int index) const;
-  inline ::protobuf::srl::school::SrlGroup* mutable_moderatorpermission(int index);
-  inline ::protobuf::srl::school::SrlGroup* add_moderatorpermission();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
-      moderatorpermission() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
-      mutable_moderatorpermission();
+  inline const ::std::string& moderatorpermission(int index) const;
+  inline ::std::string* mutable_moderatorpermission(int index);
+  inline void set_moderatorpermission(int index, const ::std::string& value);
+  inline void set_moderatorpermission(int index, const char* value);
+  inline void set_moderatorpermission(int index, const char* value, size_t size);
+  inline ::std::string* add_moderatorpermission();
+  inline void add_moderatorpermission(const ::std::string& value);
+  inline void add_moderatorpermission(const char* value);
+  inline void add_moderatorpermission(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& moderatorpermission() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_moderatorpermission();
 
-  // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+  // repeated string userPermission = 3;
   inline int userpermission_size() const;
   inline void clear_userpermission();
   static const int kUserPermissionFieldNumber = 3;
-  inline const ::protobuf::srl::school::SrlGroup& userpermission(int index) const;
-  inline ::protobuf::srl::school::SrlGroup* mutable_userpermission(int index);
-  inline ::protobuf::srl::school::SrlGroup* add_userpermission();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
-      userpermission() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
-      mutable_userpermission();
+  inline const ::std::string& userpermission(int index) const;
+  inline ::std::string* mutable_userpermission(int index);
+  inline void set_userpermission(int index, const ::std::string& value);
+  inline void set_userpermission(int index, const char* value);
+  inline void set_userpermission(int index, const char* value, size_t size);
+  inline ::std::string* add_userpermission();
+  inline void add_userpermission(const ::std::string& value);
+  inline void add_userpermission(const char* value);
+  inline void add_userpermission(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& userpermission() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_userpermission();
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlPermission)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup > adminpermission_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup > moderatorpermission_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup > userpermission_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> adminpermission_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> moderatorpermission_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> userpermission_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -5132,77 +5144,134 @@ inline void SrlSchoolId::set_allocated_problemid(::std::string* problemid) {
 
 // SrlPermission
 
-// repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+// repeated string adminPermission = 1;
 inline int SrlPermission::adminpermission_size() const {
   return adminpermission_.size();
 }
 inline void SrlPermission::clear_adminpermission() {
   adminpermission_.Clear();
 }
-inline const ::protobuf::srl::school::SrlGroup& SrlPermission::adminpermission(int index) const {
+inline const ::std::string& SrlPermission::adminpermission(int index) const {
   return adminpermission_.Get(index);
 }
-inline ::protobuf::srl::school::SrlGroup* SrlPermission::mutable_adminpermission(int index) {
+inline ::std::string* SrlPermission::mutable_adminpermission(int index) {
   return adminpermission_.Mutable(index);
 }
-inline ::protobuf::srl::school::SrlGroup* SrlPermission::add_adminpermission() {
+inline void SrlPermission::set_adminpermission(int index, const ::std::string& value) {
+  adminpermission_.Mutable(index)->assign(value);
+}
+inline void SrlPermission::set_adminpermission(int index, const char* value) {
+  adminpermission_.Mutable(index)->assign(value);
+}
+inline void SrlPermission::set_adminpermission(int index, const char* value, size_t size) {
+  adminpermission_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlPermission::add_adminpermission() {
   return adminpermission_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
+inline void SrlPermission::add_adminpermission(const ::std::string& value) {
+  adminpermission_.Add()->assign(value);
+}
+inline void SrlPermission::add_adminpermission(const char* value) {
+  adminpermission_.Add()->assign(value);
+}
+inline void SrlPermission::add_adminpermission(const char* value, size_t size) {
+  adminpermission_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 SrlPermission::adminpermission() const {
   return adminpermission_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 SrlPermission::mutable_adminpermission() {
   return &adminpermission_;
 }
 
-// repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+// repeated string moderatorPermission = 2;
 inline int SrlPermission::moderatorpermission_size() const {
   return moderatorpermission_.size();
 }
 inline void SrlPermission::clear_moderatorpermission() {
   moderatorpermission_.Clear();
 }
-inline const ::protobuf::srl::school::SrlGroup& SrlPermission::moderatorpermission(int index) const {
+inline const ::std::string& SrlPermission::moderatorpermission(int index) const {
   return moderatorpermission_.Get(index);
 }
-inline ::protobuf::srl::school::SrlGroup* SrlPermission::mutable_moderatorpermission(int index) {
+inline ::std::string* SrlPermission::mutable_moderatorpermission(int index) {
   return moderatorpermission_.Mutable(index);
 }
-inline ::protobuf::srl::school::SrlGroup* SrlPermission::add_moderatorpermission() {
+inline void SrlPermission::set_moderatorpermission(int index, const ::std::string& value) {
+  moderatorpermission_.Mutable(index)->assign(value);
+}
+inline void SrlPermission::set_moderatorpermission(int index, const char* value) {
+  moderatorpermission_.Mutable(index)->assign(value);
+}
+inline void SrlPermission::set_moderatorpermission(int index, const char* value, size_t size) {
+  moderatorpermission_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlPermission::add_moderatorpermission() {
   return moderatorpermission_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
+inline void SrlPermission::add_moderatorpermission(const ::std::string& value) {
+  moderatorpermission_.Add()->assign(value);
+}
+inline void SrlPermission::add_moderatorpermission(const char* value) {
+  moderatorpermission_.Add()->assign(value);
+}
+inline void SrlPermission::add_moderatorpermission(const char* value, size_t size) {
+  moderatorpermission_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 SrlPermission::moderatorpermission() const {
   return moderatorpermission_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 SrlPermission::mutable_moderatorpermission() {
   return &moderatorpermission_;
 }
 
-// repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+// repeated string userPermission = 3;
 inline int SrlPermission::userpermission_size() const {
   return userpermission_.size();
 }
 inline void SrlPermission::clear_userpermission() {
   userpermission_.Clear();
 }
-inline const ::protobuf::srl::school::SrlGroup& SrlPermission::userpermission(int index) const {
+inline const ::std::string& SrlPermission::userpermission(int index) const {
   return userpermission_.Get(index);
 }
-inline ::protobuf::srl::school::SrlGroup* SrlPermission::mutable_userpermission(int index) {
+inline ::std::string* SrlPermission::mutable_userpermission(int index) {
   return userpermission_.Mutable(index);
 }
-inline ::protobuf::srl::school::SrlGroup* SrlPermission::add_userpermission() {
+inline void SrlPermission::set_userpermission(int index, const ::std::string& value) {
+  userpermission_.Mutable(index)->assign(value);
+}
+inline void SrlPermission::set_userpermission(int index, const char* value) {
+  userpermission_.Mutable(index)->assign(value);
+}
+inline void SrlPermission::set_userpermission(int index, const char* value, size_t size) {
+  userpermission_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlPermission::add_userpermission() {
   return userpermission_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >&
+inline void SrlPermission::add_userpermission(const ::std::string& value) {
+  userpermission_.Add()->assign(value);
+}
+inline void SrlPermission::add_userpermission(const char* value) {
+  userpermission_.Add()->assign(value);
+}
+inline void SrlPermission::add_userpermission(const char* value, size_t size) {
+  userpermission_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 SrlPermission::userpermission() const {
   return userpermission_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlGroup >*
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 SrlPermission::mutable_userpermission() {
   return &userpermission_;
 }

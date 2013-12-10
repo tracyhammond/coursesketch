@@ -454,14 +454,11 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002"
     "(\t\022\021\n\tgroupName\030\003 \001(\t\"H\n\013SrlSchoolId\022\020\n\010"
     "courseId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\t"
-    "problemId\030\003 \001(\t\"\272\001\n\rSrlPermission\0226\n\017adm"
-    "inPermission\030\001 \003(\0132\035.protobuf.srl.school"
-    ".SrlGroup\022:\n\023moderatorPermission\030\002 \003(\0132\035"
-    ".protobuf.srl.school.SrlGroup\0225\n\016userPer"
-    "mission\030\003 \003(\0132\035.protobuf.srl.school.SrlG"
-    "roup*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTO"
-    "R\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004"
-    "\022\t\n\005GUEST\020\005", 2771);
+    "problemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017admi"
+    "nPermission\030\001 \003(\t\022\033\n\023moderatorPermission"
+    "\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserTy"
+    "pe\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHIN"
+    "G_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005", 2677);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/school.proto", &protobuf_RegisterTypes);
   SrlSchool::default_instance_ = new SrlSchool();
@@ -1574,9 +1571,6 @@ void SrlCourse::CopyFrom(const SrlCourse& from) {
 bool SrlCourse::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
-  if (has_accesspermission()) {
-    if (!this->accesspermission().IsInitialized()) return false;
-  }
   return true;
 }
 
@@ -2640,9 +2634,6 @@ void SrlAssignment::CopyFrom(const SrlAssignment& from) {
 bool SrlAssignment::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
-  if (has_accesspermission()) {
-    if (!this->accesspermission().IsInitialized()) return false;
-  }
   return true;
 }
 
@@ -5871,13 +5862,17 @@ bool SrlPermission::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+      // repeated string adminPermission = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_adminPermission:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_adminpermission()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_adminpermission()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->adminpermission(this->adminpermission_size() - 1).data(),
+            this->adminpermission(this->adminpermission_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -5886,13 +5881,17 @@ bool SrlPermission::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+      // repeated string moderatorPermission = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_moderatorPermission:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_moderatorpermission()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_moderatorpermission()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->moderatorpermission(this->moderatorpermission_size() - 1).data(),
+            this->moderatorpermission(this->moderatorpermission_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -5901,13 +5900,17 @@ bool SrlPermission::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+      // repeated string userPermission = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_userPermission:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_userpermission()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_userpermission()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->userpermission(this->userpermission_size() - 1).data(),
+            this->userpermission(this->userpermission_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -5934,21 +5937,30 @@ bool SrlPermission::MergePartialFromCodedStream(
 
 void SrlPermission::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+  // repeated string adminPermission = 1;
   for (int i = 0; i < this->adminpermission_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->adminpermission(i).data(), this->adminpermission(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       1, this->adminpermission(i), output);
   }
 
-  // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+  // repeated string moderatorPermission = 2;
   for (int i = 0; i < this->moderatorpermission_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->moderatorpermission(i).data(), this->moderatorpermission(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       2, this->moderatorpermission(i), output);
   }
 
-  // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+  // repeated string userPermission = 3;
   for (int i = 0; i < this->userpermission_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->userpermission(i).data(), this->userpermission(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       3, this->userpermission(i), output);
   }
 
@@ -5960,25 +5972,31 @@ void SrlPermission::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SrlPermission::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+  // repeated string adminPermission = 1;
   for (int i = 0; i < this->adminpermission_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->adminpermission(i).data(), this->adminpermission(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->adminpermission(i), target);
+      WriteStringToArray(1, this->adminpermission(i), target);
   }
 
-  // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+  // repeated string moderatorPermission = 2;
   for (int i = 0; i < this->moderatorpermission_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->moderatorpermission(i).data(), this->moderatorpermission(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->moderatorpermission(i), target);
+      WriteStringToArray(2, this->moderatorpermission(i), target);
   }
 
-  // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+  // repeated string userPermission = 3;
   for (int i = 0; i < this->userpermission_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->userpermission(i).data(), this->userpermission(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->userpermission(i), target);
+      WriteStringToArray(3, this->userpermission(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -5991,28 +6009,25 @@ void SrlPermission::SerializeWithCachedSizes(
 int SrlPermission::ByteSize() const {
   int total_size = 0;
 
-  // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+  // repeated string adminPermission = 1;
   total_size += 1 * this->adminpermission_size();
   for (int i = 0; i < this->adminpermission_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->adminpermission(i));
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->adminpermission(i));
   }
 
-  // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+  // repeated string moderatorPermission = 2;
   total_size += 1 * this->moderatorpermission_size();
   for (int i = 0; i < this->moderatorpermission_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->moderatorpermission(i));
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->moderatorpermission(i));
   }
 
-  // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+  // repeated string userPermission = 3;
   total_size += 1 * this->userpermission_size();
   for (int i = 0; i < this->userpermission_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->userpermission(i));
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->userpermission(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -6060,15 +6075,6 @@ void SrlPermission::CopyFrom(const SrlPermission& from) {
 
 bool SrlPermission::IsInitialized() const {
 
-  for (int i = 0; i < adminpermission_size(); i++) {
-    if (!this->adminpermission(i).IsInitialized()) return false;
-  }
-  for (int i = 0; i < moderatorpermission_size(); i++) {
-    if (!this->moderatorpermission(i).IsInitialized()) return false;
-  }
-  for (int i = 0; i < userpermission_size(); i++) {
-    if (!this->userpermission(i).IsInitialized()) return false;
-  }
   return true;
 }
 
