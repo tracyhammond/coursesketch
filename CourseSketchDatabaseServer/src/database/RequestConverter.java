@@ -34,13 +34,27 @@ public class RequestConverter{
 			srlCourseBuilder.setAccess(SrlCourse.Accessibility.valueOf(course.access));
 		} catch(Exception e) {
 		}
-		srlCourseBuilder.addAllAssignmentId(course.assignmentList);
-		srlCourseBuilder.setCloseDate(DateStringToProtobuf(course.closeDate));
-		srlCourseBuilder.setDescription(course.description);
-		srlCourseBuilder.setImageUrl(course.image);
-		srlCourseBuilder.setName(course.name);
-		srlCourseBuilder.setAccessDate(DateStringToProtobuf(course.access));
-		srlCourseBuilder.setSemester(course.semesester);
+		if (course.assignmentList != null) {
+			srlCourseBuilder.addAllAssignmentId(course.assignmentList);
+		}
+		if (course.closeDate != null) {
+			srlCourseBuilder.setCloseDate(DateStringToProtobuf(course.closeDate));
+		}
+		if (course.description != null) {
+			srlCourseBuilder.setDescription(course.description);
+		}
+		if (course.image != null) {
+			srlCourseBuilder.setImageUrl(course.image);
+		}
+		if (course.name != null) {
+			srlCourseBuilder.setName(course.name);
+		}
+		if (course.access != null) {
+			srlCourseBuilder.setAccessDate(DateStringToProtobuf(course.access));
+		}
+		if (course.semesester != null) {
+			srlCourseBuilder.setSemester(course.semesester);
+		}
 		return srlCourseBuilder.build();
 	}
 	
