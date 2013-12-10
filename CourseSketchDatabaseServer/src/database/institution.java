@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
+import protobuf.srl.school.School.DateTime;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -44,6 +46,14 @@ public class Institution
 	// if user can only access between open date and close date
 	// user can only access problem between assignment open and close date
 	public static CourseBuilder mongoGetCourse(String courseID,String userId) throws AuthenticationException {
+		CourseBuilder returnCourse = new CourseBuilder();
+		returnCourse = CourseManager.mongoGetCourse(getInstance().db, courseID, userId);
+		Long currentTime = System.currentTimeMillis();
+		
+		
+		if(currentTime < ){
+			
+		}
 		return CourseManager.mongoGetCourse(getInstance().db, courseID, userId);
 		// do open close checking
 	}
