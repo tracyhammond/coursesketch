@@ -127,7 +127,12 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 				dataReq.setRequestType(MessageType.DATA_REQUEST);
 				dataReq.setOtherData(finalSchool.build().toByteString());
 				dataReq.setSessionInfo(req.getSessionInfo());
-				conn.send(dataReq.build().toByteArray());
+				byte[] array = dataReq.build().toByteArray();
+				if (array != null) {
+					conn.send(array);
+				} else {
+					System.out.println("BLAH BLAH BALH");
+				}
 			} catch (InvalidProtocolBufferException e) {
 				e.printStackTrace();
 			}
