@@ -3,10 +3,13 @@ package database.problem;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.bson.types.ObjectId;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
@@ -34,9 +37,8 @@ public class ProblemManager
 	
 	public static ProblemBankBuilder mongoGetProblem(DB dbs, String problemBankID,String userId) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("ProblemBank");
-		BasicDBObject query = new BasicDBObject("_id",problemBankID);
-		DBObject corsor = courses.findOne(query);
+		DBRef myDbRef = new DBRef(dbs, "ProblemBank", new ObjectId(problemBankID));
+		DBObject corsor = myDbRef.fetch();
 
 		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
 		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
@@ -77,11 +79,10 @@ public class ProblemManager
 	}
 
 
-	static boolean mongoUpdateProblem(DB dbs, String courseID,String userId,ProblemBankBuilder problem) throws AuthenticationException
+	static boolean mongoUpdateProblem(DB dbs, String problemBankId,String userId,ProblemBankBuilder problem) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("ProblemBank");
-		BasicDBObject query = new BasicDBObject("_id",courseID);
-		DBObject corsor = courses.findOne(query);
+		DBRef myDbRef = new DBRef(dbs, "ProblemBank", new ObjectId(problemBankId));
+		DBObject corsor = myDbRef.fetch();
 		
 		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
 		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	

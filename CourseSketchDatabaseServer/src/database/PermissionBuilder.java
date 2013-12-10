@@ -1,6 +1,7 @@
 package database;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class PermissionBuilder 
 {
@@ -25,8 +26,11 @@ public class PermissionBuilder
 	}
 
 	public static boolean isTimeValid(long time, String openDate, String closeDate) {
-		long open = Long.parseLong(closeDate.split(" ")[5]);
+		long open = Long.parseLong(openDate.split(" ")[5]);
 		long close = Long.parseLong(closeDate.split(" ")[5]);
-		return time >= open && time <= close;
+		System.out.println("Open: " + new Date(open));
+		System.out.println("Time: " + new Date(time));
+		System.out.println("Close: " + new Date(close));
+		return time >= open && time <= close;	
 	}
 }
