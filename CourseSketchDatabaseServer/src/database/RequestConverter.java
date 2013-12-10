@@ -55,9 +55,6 @@ public class RequestConverter{
 		if (course.name != null) {
 			srlCourseBuilder.setName(course.name);
 		}
-		if (course.access != null) {
-			srlCourseBuilder.setAccessDate(DateStringToProtobuf(course.access));
-		}
 		if (course.semesester != null) {
 			srlCourseBuilder.setSemester(course.semesester);
 		}
