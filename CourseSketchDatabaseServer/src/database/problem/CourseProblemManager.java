@@ -3,10 +3,13 @@ package database.problem;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.bson.types.ObjectId;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 import database.PermissionBuilder;
 import database.assignment.AssignmentBuilder;
@@ -48,11 +51,10 @@ public class CourseProblemManager
 		return (String) corsor.get("_id");
 	}
 
-	private static CourseProblemBuilder mongoGetProblem(DB dbs, String courseID,String userId, long checkTime) throws AuthenticationException
+	private static CourseProblemBuilder mongoGetProblem(DB dbs, String problemId,String userId, long checkTime) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("Problems");
-		BasicDBObject query = new BasicDBObject("_id",courseID);
-		DBObject corsor = courses.findOne(query);
+		DBRef myDbRef = new DBRef(dbs, "Problems", new ObjectId(problemId));
+		DBObject corsor = myDbRef.fetch();
 
 		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
 		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
@@ -96,11 +98,10 @@ public class CourseProblemManager
 
 	}
 
-	private static boolean mongoUpdateAssignment(DB dbs, String courseID,String userId,CourseProblemBuilder problem) throws AuthenticationException
+	private static boolean mongoUpdateAssignment(DB dbs, String problemId,String userId,CourseProblemBuilder problem) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("Problems");
-		BasicDBObject query = new BasicDBObject("_id",courseID);
-		DBObject corsor = courses.findOne(query);
+		DBRef myDbRef = new DBRef(dbs, "Problems", new ObjectId(problemId));
+		DBObject corsor = myDbRef.fetch();
 
 		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
 		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	

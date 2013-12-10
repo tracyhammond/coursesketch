@@ -6,8 +6,8 @@ public class ProblemBankBuilder
 {
 	
 	
-	String questionText, qestionImageName, questionAnswerId, courseTopic, subTopic, source, questionType;
-	String[] access, otherKeywords;
+	public String questionText, qestionImageName, questionAnswerId, courseTopic, subTopic, source, questionType, id;
+	public String[] access, otherKeywords;
 	PermissionBuilder permissions = new PermissionBuilder();
 	//admin permission is normal
 	//mdo permission is normal

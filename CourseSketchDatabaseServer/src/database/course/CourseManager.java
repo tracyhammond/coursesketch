@@ -67,6 +67,8 @@ public class CourseManager
 		exactCourse.setSemesester((String)corsor.get("Semesester"));
 		exactCourse.setOpenDate((String)corsor.get("OpenDate"));
 		exactCourse.setCloseDate((String)corsor.get("CloseDate"));
+		System.out.println("manager opendate"+exactCourse.openDate);
+		System.out.println("manager closedate"+exactCourse.closeDate);
 		exactCourse.setImage((String)corsor.get("Image"));
 		// if you are a user the course must be open to view the assignments
 		if (isAdmin || isMod || (isUsers && PermissionBuilder.isTimeValid(checkTime, exactCourse.openDate, exactCourse.closeDate))) {
@@ -84,9 +86,8 @@ public class CourseManager
 	}
 	
 	
-	public static boolean mongoUpdateCourse(DB dbs, String courseID,String userId,CourseBuilder course) throws AuthenticationException
+	public static boolean mongoUpdateCourse(DB dbs, String courseID, String userId, CourseBuilder course) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("Courses");
 		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseID));
 		DBObject corsor = myDbRef.fetch();
 		
@@ -142,6 +143,9 @@ public class CourseManager
 				updated.append("$set", new BasicDBObject("AssignmentList", course.assignmentList));
 			}
 		}
+		
+		DBCollection new_user = dbs.getCollection("Courses");
+		new_user.update(new BasicDBObject("_id",corsor.get("_id").toString()), updated);
 		return true;
 		
 	}

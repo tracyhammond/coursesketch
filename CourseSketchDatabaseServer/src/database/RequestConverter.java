@@ -6,6 +6,7 @@ import java.util.Arrays;
 import database.assignment.AssignmentBuilder;
 import database.course.CourseBuilder;
 import database.problem.CourseProblemBuilder;
+import database.problem.ProblemBankBuilder;
 import protobuf.srl.school.School.DateTime;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
@@ -27,7 +28,7 @@ public class RequestConverter{
 		return courseBuilder;
 	}
 	
-	static SrlCourse convertCourseBuilderToProtobuf(CourseBuilder course){
+	public static SrlCourse convertCourseBuilderToProtobuf(CourseBuilder course){
 		SrlCourse.Builder srlCourseBuilder = SrlCourse.newBuilder();
 		
 		srlCourseBuilder.setAccess(SrlCourse.Accessibility.valueOf(course.access));
@@ -59,7 +60,7 @@ public class RequestConverter{
 		return assignmentBuilder;
 	}
 	
-	static SrlAssignment convertAssignmentToProtobuf(AssignmentBuilder assignment){
+	public static SrlAssignment convertAssignmentToProtobuf(AssignmentBuilder assignment){
 		SrlAssignment.Builder srlAssignmentBuilder = SrlAssignment.newBuilder();
 		
 		srlAssignmentBuilder.setCloseDate(DateStringToProtobuf(assignment.closeDate));
@@ -81,21 +82,30 @@ public class RequestConverter{
 		problemBuilder.setCourseId(protoProblem.getCourseId());
 		problemBuilder.setGradeWeight(""+protoProblem.getGradeWeight());
 		//problemBuilder.setPermissions(protoProblem.get);
-		//problemBuilder.setProblemBankId(protoProblem.getP);
+		//problemBuilder.setProblemBankId(protoProblem.get);
 		//problemBuilder.setProblemId(id);
 		
 		return problemBuilder;
 	}
 	
-	static SrlProblem convertProblemToProtobuf(CourseProblemBuilder problem){
+	public static SrlProblem convertProblemToProtobuf(CourseProblemBuilder problem){
 		SrlProblem.Builder srlProblemBuilder = SrlProblem.newBuilder();
 		
-		//srlProblemBuilder.setAssignmentId(problem.assignmentId);
-		//srlProblemBuilder.setCourseId(problem.courseId);
-		//srlProblemBuilder.setDescription(problem.description);
-		//srlProblemBuilder.setGradeWeight(problem.gradeWeight);
-		//srlProblemBuilder.setGrade(problem.grade);
-		//srlProblemBuilder.setId(problem.id);
+		srlProblemBuilder.setAssignmentId(problem.assignmentId);
+		srlProblemBuilder.setCourseId(problem.courseId);
+		srlProblemBuilder.setDescription(problem.problemResource.questionText);
+		srlProblemBuilder.setGradeWeight(Integer.parseInt(problem.gradeWeight));
+		srlProblemBuilder.setId(problem.id);
+		
+		return srlProblemBuilder.build();
+	}
+	
+	public static SrlProblem convertProblemBankToProtobuf(ProblemBankBuilder problem){
+		SrlProblem.Builder srlProblemBuilder = SrlProblem.newBuilder();
+		
+
+		srlProblemBuilder.setDescription(problem.questionText);
+		srlProblemBuilder.setId(problem.id);
 		
 		return srlProblemBuilder.build();
 	}

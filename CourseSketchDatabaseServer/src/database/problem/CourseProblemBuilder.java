@@ -3,10 +3,13 @@ package database.problem;
 import database.PermissionBuilder;
 
 public class CourseProblemBuilder {
-	String courseId, assignmentId, problemId;
-	String gradeWeight; // either points or percent
-	String problemBankId;
-	ProblemBankBuilder problemResource;
+	public String courseId;
+	public String assignmentId;
+	public String problemId;
+	public String gradeWeight; // either points or percent
+	public String problemBankId;
+	public String id;
+	public ProblemBankBuilder problemResource;
 	PermissionBuilder permissions;
 
 	public void setCourseId(String id) {

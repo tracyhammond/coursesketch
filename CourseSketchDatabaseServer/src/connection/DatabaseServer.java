@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,8 +19,19 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
+import database.Institution;
+import database.RequestConverter;
+import database.assignment.AssignmentBuilder;
+import database.auth.AuthenticationException;
+import database.course.CourseBuilder;
+import database.problem.CourseProblemBuilder;
+import database.problem.ProblemBankBuilder;
 import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.school.School.SrlSchool;
 
 /**
  * A simple WebSocketServer implementation.
@@ -56,7 +68,73 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 			updateHandler.addRequest(req);
 		}
 		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-			DataRequest request = DataRequest.parseFrom(req.getOtherData());
+			try {
+				SrlSchool.Builder finalSchool = SrlSchool.newBuilder();
+				DataRequest request = DataRequest.parseFrom(req.getOtherData());
+				for(int p=0; p<request.getItemsList().size(); p++){
+					ItemRequest itrequest = request.getItemsList().get(p);
+					switch(itrequest.getQuery()){
+						case COURSE: ArrayList<CourseBuilder> courseLoop = Institution.mongoGetCourses((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(CourseBuilder loopCourse: courseLoop){
+										finalSchool.addCourses(RequestConverter.convertCourseBuilderToProtobuf(loopCourse));
+									}
+									break;
+						case ASSIGNMENT: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;
+						case COURSE_PROBLEM: ArrayList<CourseProblemBuilder> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(CourseProblemBuilder loopCourse: courseProblemLoop){
+										finalSchool.addProblems(RequestConverter.convertProblemToProtobuf(loopCourse));
+									}
+									break;
+						case BANK_PROBLEM: ArrayList<ProblemBankBuilder> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(ProblemBankBuilder loopCourse: bankProblemLoop){
+										finalSchool.addProblems(RequestConverter.convertProblemBankToProtobuf(loopCourse));
+									}
+									break;
+						/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;
+						case CLASS_GRADE: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;
+						case USER_INFO: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;
+						case SOLUTION: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;
+						case EXPERIMENT: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;*/
+							
+					}
+					Request.Builder dataReq = Request.newBuilder();
+					dataReq.setOtherData(finalSchool.build().toByteString());
+					dataReq.setSessionInfo(req.getSessionInfo());
+					conn.send(dataReq.build().toByteArray());
+				}
+			} catch (InvalidProtocolBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// decode request and pull correct information from database (courses, assignments, ...) then repackage everything and send it out
+ catch (AuthenticationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
