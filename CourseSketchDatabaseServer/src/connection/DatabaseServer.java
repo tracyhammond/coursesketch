@@ -123,12 +123,12 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 									break;*/
 							
 					}
-					Request.Builder dataReq = Request.newBuilder();
-					dataReq.setRequestType(MessageType.DATA_REQUEST);
-					dataReq.setOtherData(finalSchool.build().toByteString());
-					dataReq.setSessionInfo(req.getSessionInfo());
-					conn.send(dataReq.build().toByteArray());
 				}
+				Request.Builder dataReq = Request.newBuilder();
+				dataReq.setRequestType(MessageType.DATA_REQUEST);
+				dataReq.setOtherData(finalSchool.build().toByteString());
+				dataReq.setSessionInfo(req.getSessionInfo());
+				conn.send(dataReq.build().toByteArray());
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
