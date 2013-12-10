@@ -51,7 +51,7 @@ public class CourseProblemManager
 		return (String) corsor.get("_id");
 	}
 
-	private static CourseProblemBuilder mongoGetProblem(DB dbs, String problemId,String userId, long checkTime) throws AuthenticationException
+	public static CourseProblemBuilder mongoGetProblem(DB dbs, String problemId,String userId, long checkTime) throws AuthenticationException
 	{
 		DBRef myDbRef = new DBRef(dbs, "Problems", new ObjectId(problemId));
 		DBObject corsor = myDbRef.fetch();

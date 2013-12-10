@@ -69,6 +69,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		}
 		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
 			try {
+				System.out.println("Receiving DATA Request...");
 				SrlSchool.Builder finalSchool = SrlSchool.newBuilder();
 				DataRequest request = DataRequest.parseFrom(req.getOtherData());
 				for(int p=0; p<request.getItemsList().size(); p++){
@@ -143,7 +144,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Database Server: Version 1.0.2");
+		System.out.println("Database Server: Version 1.0.2.boa");
 		WebSocketImpl.DEBUG = true;
 		int port = 8885; // 843 flash policy port
 		try {

@@ -23,6 +23,8 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.course.CourseBuilder;
 import database.course.CourseManager;
+import database.problem.CourseProblemBuilder;
+import database.problem.CourseProblemManager;
 import database.problem.ProblemBankBuilder;
 import database.problem.ProblemManager;
 
@@ -67,29 +69,24 @@ public class Institution
 		// do open close checking
 	}
 	
-	public static ArrayList<CourseBuilder> mongoGetCourses(ArrayList<String> courseID,String userId) throws AuthenticationException 
+	public static ArrayList<CourseProblemBuilder> mongoGetCourseProblem(ArrayList<String> problemID,String userId) throws AuthenticationException 
 	{
-		int courses = courseID.size();
+		int courseProblems = problemID.size();
 		long currentTime = System.currentTimeMillis();
-		ArrayList<CourseBuilder> allCourses = null;
+		ArrayList<CourseProblemBuilder> allCourses = null;
 		
-		while(courses > 0)
+		while(courseProblems > 0)
 		{
-			allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseID.get(courses), userId,currentTime));
-			courses--;
-		}
+			allCourses.add(CourseProblemManager.mongoGetProblem(getInstance().db, problemID.get(courseProblems), userId, currentTime));
+			courseProblems--;
+	}
 		
 		// need to return everything
 		return allCourses;
 		// do open close checking
 	}
 	
-	
-	
-	
 
-	
-	
 	public static ArrayList<AssignmentBuilder> mongoGetAssignment(ArrayList<String> assignementID,String userId) throws AuthenticationException 
 	{
 		
