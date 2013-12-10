@@ -134,8 +134,10 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 				e.printStackTrace();
 			}
 			// decode request and pull correct information from database (courses, assignments, ...) then repackage everything and send it out
- catch (AuthenticationException e) {
+			catch (AuthenticationException e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
