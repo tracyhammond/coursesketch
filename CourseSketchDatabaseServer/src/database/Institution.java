@@ -39,7 +39,7 @@ public class Institution
 		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
 		try {
 			MongoClient mongoClient = new MongoClient(url);
-			db = mongoClient.getDB("login");
+			db = mongoClient.getDB("institution");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
