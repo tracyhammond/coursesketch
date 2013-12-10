@@ -47,6 +47,7 @@ public class CourseManager
 		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseID));
 		DBObject corsor = myDbRef.fetch();
 		System.out.println("corosor is nulll???? " + corsor);
+		System.out.println("courses ID: " + courseID);
 		ArrayList adminList =  (ArrayList<Object>) corsor.get("Admin"); //convert to ArrayList<String>
 		ArrayList modList =  (ArrayList<Object>) corsor.get("Mod"); //convert to ArrayList<String>
 		ArrayList usersList =  (ArrayList<Object>) corsor.get("Users"); //convert to ArrayList<String>
