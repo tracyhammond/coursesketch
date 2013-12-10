@@ -18,6 +18,7 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.request.Message.Request;
 
 /**
@@ -53,6 +54,9 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		}
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			updateHandler.addRequest(req);
+		}
+		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
+			DataRequest request = DataRequest.parseFrom(req.getOtherData());
 		}
 	}
 

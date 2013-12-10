@@ -16,6 +16,10 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
+namespace protobuf {
+namespace srl {
+namespace query {
+
 namespace {
 
 const ::google::protobuf::Descriptor* DataRequest_descriptor_ = NULL;
@@ -176,21 +180,23 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\020input/data.proto\"M\n\013DataRequest\022\016\n\006use"
-    "rId\030\001 \002(\t\022\021\n\tsessionId\030\002 \002(\t\022\033\n\005items\030\003 "
-    "\003(\0132\014.ItemRequest\"\367\001\n\013ItemRequest\022\016\n\006ite"
-    "mId\030\001 \003(\t\022%\n\005query\030\002 \001(\0162\026.ItemRequest.I"
-    "temQuery\022\024\n\014advanceQuery\030\003 \001(\014\"\232\001\n\tItemQ"
-    "uery\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COUR"
-    "SE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGR"
-    "OUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n"
-    "\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\"Q\n\026AdvanceCo"
-    "urseGradePull\022\020\n\010courseId\030\001 \002(\t\022\025\n\rpullA"
-    "llGrades\030\002 \001(\010\022\016\n\006userId\030\003 \003(\t\"O\n\024Advanc"
-    "eUserGradePull\022\016\n\006userId\030\001 \002(\t\022\025\n\rpullAl"
-    "lGrades\030\002 \001(\010\022\020\n\010courseId\030\003 \003(\t\"P\n\rAdvan"
-    "ceReview\022\020\n\010courseId\030\001 \002(\t\022\024\n\014assignment"
-    "Id\030\002 \002(\t\022\027\n\017courseProblemId\030\003 \002(\t", 593);
+    "\n\020input/data.proto\022\022protobuf.srl.query\"`"
+    "\n\013DataRequest\022\016\n\006userId\030\001 \002(\t\022\021\n\tsession"
+    "Id\030\002 \002(\t\022.\n\005items\030\003 \003(\0132\037.protobuf.srl.q"
+    "uery.ItemRequest\"\212\002\n\013ItemRequest\022\016\n\006item"
+    "Id\030\001 \003(\t\0228\n\005query\030\002 \001(\0162).protobuf.srl.q"
+    "uery.ItemRequest.ItemQuery\022\024\n\014advanceQue"
+    "ry\030\003 \001(\014\"\232\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nAS"
+    "SIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_P"
+    "ROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005"
+    "\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIM"
+    "ENT\020\010\"Q\n\026AdvanceCourseGradePull\022\020\n\010cours"
+    "eId\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\016\n\006user"
+    "Id\030\003 \003(\t\"O\n\024AdvanceUserGradePull\022\016\n\006user"
+    "Id\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\020\n\010cours"
+    "eId\030\003 \003(\t\"P\n\rAdvanceReview\022\020\n\010courseId\030\001"
+    " \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\027\n\017courseProb"
+    "lemId\030\003 \002(\t", 651);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/data.proto", &protobuf_RegisterTypes);
   DataRequest::default_instance_ = new DataRequest();
@@ -335,7 +341,7 @@ bool DataRequest::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .ItemRequest items = 3;
+      // repeated .protobuf.srl.query.ItemRequest items = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -386,7 +392,7 @@ void DataRequest::SerializeWithCachedSizes(
       2, this->sessionid(), output);
   }
 
-  // repeated .ItemRequest items = 3;
+  // repeated .protobuf.srl.query.ItemRequest items = 3;
   for (int i = 0; i < this->items_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->items(i), output);
@@ -420,7 +426,7 @@ void DataRequest::SerializeWithCachedSizes(
         2, this->sessionid(), target);
   }
 
-  // repeated .ItemRequest items = 3;
+  // repeated .protobuf.srl.query.ItemRequest items = 3;
   for (int i = 0; i < this->items_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -453,7 +459,7 @@ int DataRequest::ByteSize() const {
     }
 
   }
-  // repeated .ItemRequest items = 3;
+  // repeated .protobuf.srl.query.ItemRequest items = 3;
   total_size += 1 * this->items_size();
   for (int i = 0; i < this->items_size(); i++) {
     total_size +=
@@ -672,7 +678,7 @@ bool ItemRequest::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .ItemRequest.ItemQuery query = 2;
+      // optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -681,8 +687,8 @@ bool ItemRequest::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::ItemRequest_ItemQuery_IsValid(value)) {
-            set_query(static_cast< ::ItemRequest_ItemQuery >(value));
+          if (::protobuf::srl::query::ItemRequest_ItemQuery_IsValid(value)) {
+            set_query(static_cast< ::protobuf::srl::query::ItemRequest_ItemQuery >(value));
           } else {
             mutable_unknown_fields()->AddVarint(2, value);
           }
@@ -734,7 +740,7 @@ void ItemRequest::SerializeWithCachedSizes(
       1, this->itemid(i), output);
   }
 
-  // optional .ItemRequest.ItemQuery query = 2;
+  // optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
   if (has_query()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       2, this->query(), output);
@@ -763,7 +769,7 @@ void ItemRequest::SerializeWithCachedSizes(
       WriteStringToArray(1, this->itemid(i), target);
   }
 
-  // optional .ItemRequest.ItemQuery query = 2;
+  // optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
   if (has_query()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       2, this->query(), target);
@@ -787,7 +793,7 @@ int ItemRequest::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // optional .ItemRequest.ItemQuery query = 2;
+    // optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
     if (has_query()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->query());
@@ -1847,5 +1853,9 @@ void AdvanceReview::Swap(AdvanceReview* other) {
 
 
 // @@protoc_insertion_point(namespace_scope)
+
+}  // namespace query
+}  // namespace srl
+}  // namespace protobuf
 
 // @@protoc_insertion_point(global_scope)

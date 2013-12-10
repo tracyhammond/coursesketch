@@ -1,3 +1,5 @@
+package protobuf.srl.query;
+
 message DataRequest {
 	required string userId = 1;
 	required string sessionId = 2;
