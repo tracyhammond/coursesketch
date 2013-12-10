@@ -1,5 +1,7 @@
 package database;
 
+import java.util.ArrayList;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -7,7 +9,6 @@ import com.mongodb.DBObject;
 
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
-import database.course.CourseBuilder;
 
 public class GroupManager
 {
@@ -29,7 +30,7 @@ public class GroupManager
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = courses.findOne(query);
 		
-		String[] adminList = (String[])corsor.get("Admin");
+		ArrayList<String> adminList = (ArrayList)corsor.get("Admin");
 		boolean isAdmin;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		
@@ -40,11 +41,11 @@ public class GroupManager
 		
 		GroupBuilder exactGroup = new GroupBuilder();
 		
-		exactGroup.setuserList((String[])corsor.get("UserList"));
+		exactGroup.setuserList((ArrayList)corsor.get("UserList"));
 		exactGroup.setName((String)corsor.get("Name"));
 		if (isAdmin) 
 		{
-			exactGroup.setAdmin((String[])corsor.get("Admin")); // admin
+			exactGroup.setAdmin((ArrayList)corsor.get("Admin")); // admin
 		}
 		
 		return exactGroup;
@@ -58,7 +59,7 @@ public class GroupManager
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = courses.findOne(query);
 		
-		String[] adminList = (String[])corsor.get("Admin");
+		ArrayList<String> adminList = (ArrayList)corsor.get("Admin");
 		boolean isAdmin;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 
