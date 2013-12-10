@@ -28,6 +28,7 @@ public class DatabaseTester {
 	
 	public static String testCourses(DB dbs) throws AuthenticationException {
 		CourseBuilder testBuilder = new CourseBuilder();
+		CourseBuilder testBuilder1 = new CourseBuilder();
 		testBuilder.setAccess("public");
 		testBuilder.setSemesester("FALL");
 		testBuilder.setName("Discrete Mathematics");
@@ -95,8 +96,8 @@ public class DatabaseTester {
 		}
 
 		System.out.println("UPDATING COURSE AS ADMIN");
-		userBuilder.description = "I HAVE A DIFFERENT DESCRIPTION NOW";
-		boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "larry", userBuilder);
+		testBuilder1.description = "I HAVE A DIFFERENT DESCRIPTION NOW";
+		boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "larry", testBuilder1);
 
 		System.out.println("GETTING UPDATED COURSE AS ADMIN");
 		CourseBuilder postUpdate = CourseManager.mongoGetCourse(dbs, courseId, "david", System.currentTimeMillis());
