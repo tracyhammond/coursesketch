@@ -1,12 +1,14 @@
 package database.assignment;
 
+import java.util.ArrayList;
+
 import database.PermissionBuilder;
 
 public class AssignmentBuilder
 {
 	public String courseId, name, type, other, description, resources, latePolicy, gradeWeight, openDate, 
 	       dueDate, closeDate, imageUrl;
-	public String[] problemList;
+	public ArrayList<String> problemList;
 	public PermissionBuilder permissions = new PermissionBuilder();
 	
 	public AssignmentBuilder setCourseId(String x)
@@ -69,7 +71,7 @@ public class AssignmentBuilder
 		imageUrl = x;
 		return this;
 	}
-	public AssignmentBuilder setProblemList(String[] x)
+	public AssignmentBuilder setProblemList(ArrayList<String> x)
 	{
 		problemList = x;
 		return this;

@@ -1,22 +1,24 @@
 package database;
 
+import java.util.ArrayList;
+
 public class PermissionBuilder 
 {
-	public String[] admin;
-	public String[] mod;
-	public String[] users;
+	public ArrayList<String> admin;
+	public ArrayList<String> mod;
+	public ArrayList<String> users;
 	
-	public PermissionBuilder setAdmin(String[] x)
+	public PermissionBuilder setAdmin(ArrayList<String> x)
 	{
 		admin = x;
 		return this;
 	}
-	public PermissionBuilder setMod(String[] x)
+	public PermissionBuilder setMod(ArrayList<String> x)
 	{
 		mod = x;
 		return this;
 	}
-	public PermissionBuilder setUsers(String[] x)
+	public PermissionBuilder setUsers(ArrayList<String> x)
 	{
 		users = x;
 		return this;

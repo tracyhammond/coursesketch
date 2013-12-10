@@ -1,5 +1,6 @@
 package database.assignment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.mongodb.BasicDBObject;
@@ -46,11 +47,9 @@ public class AssignmentManager
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 
-		String[] addedAssignment = Arrays.copyOf(course.assignmentList, course.assignmentList.length+1);;
-
-		addedAssignment[course.assignmentList.length] = (String) corsor.get("_id"); 
+		course.assignmentList.add((String) corsor.get("_id"));
 		CourseBuilder newCourse = new CourseBuilder();
-		newCourse.setAssignmentList(addedAssignment);
+		newCourse.setAssignmentList(course.assignmentList);
 		CourseManager.mongoUpdateCourse(dbs, assignment.courseId,userId,newCourse);
 		return (String) corsor.get("_id");
 	}
@@ -61,9 +60,9 @@ public class AssignmentManager
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = assignments.findOne(query);
 
-		String[] adminList = (String[])corsor.get("Admin");
-		String[] modList = (String[])corsor.get("Mod");	
-		String[] usersList = (String[])corsor.get("Users");
+		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
+		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
+		ArrayList usersList = (ArrayList<Object>)corsor.get("Users");
 		boolean isAdmin,isMod,isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
@@ -88,15 +87,15 @@ public class AssignmentManager
 		exactAssignment.setDueDate((String)corsor.get("DueDate"));
 		exactAssignment.setCloseDate((String)corsor.get("CloseDate"));
 		exactAssignment.setImageUrl((String)corsor.get("ImageUrl"));
-		exactAssignment.setProblemList((String[])corsor.get("ProblemList"));
+		exactAssignment.setProblemList((ArrayList)corsor.get("ProblemList"));
 
 		if (isAdmin) 
 		{
-			exactAssignment.permissions.setAdmin((String[])corsor.get("Admin")); // admin
-			exactAssignment.permissions.setMod((String[])corsor.get("Mod"));	 // admin
+			exactAssignment.permissions.setAdmin((ArrayList)corsor.get("Admin")); // admin
+			exactAssignment.permissions.setMod((ArrayList)corsor.get("Mod"));	 // admin
 		}
 		if (isAdmin || isMod) {
-			exactAssignment.permissions.setUsers((String[])corsor.get("Users")); //admin
+			exactAssignment.permissions.setUsers((ArrayList)corsor.get("Users")); //admin
 		}
 		return exactAssignment;
 
@@ -108,9 +107,9 @@ public class AssignmentManager
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = assignments.findOne(query);
 
-		String[] adminList = (String[])corsor.get("Admin");
-		String[] modList = (String[])corsor.get("Mod");	
-		String[] usersList = (String[])corsor.get("Users");
+		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
+		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
+		ArrayList usersList = (ArrayList<Object>)corsor.get("Users");
 		boolean isAdmin,isMod,isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);

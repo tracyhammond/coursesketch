@@ -1,6 +1,7 @@
 package database.course;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.bson.types.ObjectId;
 
@@ -45,12 +46,11 @@ public class CourseManager
 		DBObject corsor = myDbRef.fetch();
 		
 		System.out.println(corsor.get("Admin").getClass().getCanonicalName());
-		String[] bob = ((ArrayList<Object>) corsor.get("Admin")).toArray(new String[((ArrayList<Object>) corsor.get("Admin")).size()]);
-		System.out.println(bob[1]);
-		String[] modList = (String[])corsor.get("Mod");	
-		String[] usersList = (String[])corsor.get("Users");
+		ArrayList adminList =  (ArrayList<Object>) corsor.get("Admin"); //convert to ArrayList<String>
+		ArrayList modList =  (ArrayList<Object>) corsor.get("Mod"); //convert to ArrayList<String>
+		ArrayList usersList =  (ArrayList<Object>) corsor.get("Users"); //convert to ArrayList<String>
 		boolean isAdmin,isMod,isUsers;
-		isAdmin = Authenticator.checkAuthentication(dbs, userId,bob);
+		isAdmin = Authenticator.checkAuthentication(dbs, userId,adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
 		isUsers = Authenticator.checkAuthentication(dbs, userId, usersList);
 		
@@ -67,13 +67,16 @@ public class CourseManager
 		exactCourse.setOpenDate((String)corsor.get("OpenDate"));
 		exactCourse.setCloseDate((String)corsor.get("CloseDate"));
 		exactCourse.setImage((String)corsor.get("Image"));
-		exactCourse.setAssignmentList((String[])corsor.get("AssignmentList"));	
+		//---
+		exactCourse.setAssignmentList((ArrayList)corsor.get("AssignmentList"));	
+
 		if (isAdmin) 
 		{
 			exactCourse.setAccess((String)corsor.get("Access")); // admin
-			exactCourse.permissions.setAdmin((String[])corsor.get("Admin")); // admin
-			exactCourse.permissions.setMod((String[])corsor.get("Mod"));	 // admin
-			exactCourse.permissions.setUsers((String[])corsor.get("Users")); //admin
+			//---
+			exactCourse.permissions.setAdmin((ArrayList)corsor.get("Admin")); // admin
+			exactCourse.permissions.setMod((ArrayList)corsor.get("Mod"));	 // admin
+			exactCourse.permissions.setUsers((ArrayList)corsor.get("Users")); //admin
 		}
 		
 		return exactCourse;
@@ -84,13 +87,12 @@ public class CourseManager
 	public static boolean mongoUpdateCourse(DB dbs, String courseID,String userId,CourseBuilder course) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Courses");
-		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(userId));
+		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseID));
 		DBObject corsor = myDbRef.fetch();
 		
-		String[] adminList = (String[])corsor.get("Admin");
-		String[] modList = (String[])corsor.get("Mod");	
-		String[] usersList = (String[])corsor.get("Users");
-		boolean isAdmin,isMod,isUsers;
+		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
+		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");
+		boolean isAdmin,isMod;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
 
@@ -98,11 +100,10 @@ public class CourseManager
 		{
 			throw new AuthenticationException();
 		}
-		
+
 		BasicDBObject updated = new BasicDBObject();
 		if (isAdmin) 
 		{
-			
 			if (course.semesester != null) {
 				updated.append("$set", new BasicDBObject("Semesester", course.semesester));
 			}
@@ -115,9 +116,6 @@ public class CourseManager
 			}
 			if (course.image != null) {
 				updated.append("$set", new BasicDBObject("Image", course.image));
-			}
-			if (course.assignmentList != null) {
-				updated.append("$set", new BasicDBObject("AssignmentList", course.assignmentList));
 			}
 			if (course.description != null) {
 				updated.append("$set", new BasicDBObject("Description", course.description));
@@ -137,6 +135,11 @@ public class CourseManager
 			}
 			if (course.permissions.users != null) {
 				updated.append("$set", new BasicDBObject("Users", course.permissions.users));
+			}
+		}
+		if (isAdmin || isMod) {
+			if (course.assignmentList != null) {
+				updated.append("$set", new BasicDBObject("AssignmentList", course.assignmentList));
 			}
 		}
 		return true;

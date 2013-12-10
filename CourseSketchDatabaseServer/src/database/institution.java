@@ -16,6 +16,8 @@ import com.mongodb.MongoClient;
 import database.Institution;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import database.course.CourseBuilder;
+import database.course.CourseManager;
 
 
 public class Institution 
@@ -38,10 +40,16 @@ public class Institution
 			instance = new Institution();
 		return instance;
 	}
-
-
-
 	
+	// if user can only access between open date and close date
+	// user can only access problem between assignment open and close date
+	public static CourseBuilder mongoGetCourse(String courseID,String userId) throws AuthenticationException {
+		return CourseManager.mongoGetCourse(getInstance().db, courseID, userId);
+		// do open close checking
+	}
+	
+	//do get methods for course, assignment, problem
+
 //	MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
 //	DB db = mongoClient.getDB("institution");
 //	boolean auth = db.authenticate("headlogin","login".toCharArray());

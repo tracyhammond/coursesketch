@@ -1,11 +1,13 @@
 package database.course;
 
+import java.util.ArrayList;
+
 import database.PermissionBuilder;
 
 public class CourseBuilder
 {
 	public String description, name, access, semesester, openDate, closeDate, image;
-	public String[] assignmentList;
+	public ArrayList<String> assignmentList;
 	public PermissionBuilder permissions = new PermissionBuilder();
 	
 	public CourseBuilder setDescription(String x)
@@ -43,7 +45,7 @@ public class CourseBuilder
 		image = x;
 		return this;
 	}
-	public CourseBuilder setAssignmentList(String[] x)
+	public CourseBuilder setAssignmentList(ArrayList<String> x)
 	{
 		assignmentList = x;
 		return this;
