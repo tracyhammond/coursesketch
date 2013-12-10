@@ -34,14 +34,19 @@ public class Institution
 	private static Institution instance;
 	private DB db;
 	
-	private Institution(String url) throws UnknownHostException
+	private Institution(String url)
 	{
 		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
-		MongoClient mongoClient = new MongoClient(url);
-		db = mongoClient.getDB("login");
+		try {
+			MongoClient mongoClient = new MongoClient(url);
+			db = mongoClient.getDB("login");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private Institution(){
+		this("goldberglinux.tamu.edu");
 	}
 
 	public static Institution getInstance(){
