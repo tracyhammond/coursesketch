@@ -48,7 +48,7 @@ public class ProblemManager
 		
 		if(!isAdmin && !isMod && !isUsers)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 		
 		ProblemBankBuilder exactProblem = new ProblemBankBuilder();
@@ -92,7 +92,7 @@ public class ProblemManager
 
 		if(!isAdmin && !isMod)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 		
 		BasicDBObject updated = new BasicDBObject();

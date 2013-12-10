@@ -36,7 +36,7 @@ public class GroupManager
 		
 		if(!isAdmin)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 		
 		GroupBuilder exactGroup = new GroupBuilder();
@@ -65,7 +65,7 @@ public class GroupManager
 
 		if(!isAdmin)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 		
 		BasicDBObject updated = new BasicDBObject();

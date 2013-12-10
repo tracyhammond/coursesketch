@@ -24,4 +24,9 @@ public class PermissionBuilder
 		return this;
 	}
 
+	public static boolean isTimeValid(long time, String openDate, String closeDate) {
+		long open = Long.parseLong(closeDate.split(" ")[5]);
+		long close = Long.parseLong(closeDate.split(" ")[5]);
+		return time >= open && time <= close;
+	}
 }

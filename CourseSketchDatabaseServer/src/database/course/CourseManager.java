@@ -13,6 +13,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import database.PermissionBuilder;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 
@@ -40,7 +41,7 @@ public class CourseManager
 		return corsor.get("_id").toString();
 	}
 	
-	public static CourseBuilder mongoGetCourse(DB dbs, String courseID,String userId) throws AuthenticationException
+	public static CourseBuilder mongoGetCourse(DB dbs, String courseID,String userId, long checkTime) throws AuthenticationException
 	{
 		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseID));
 		DBObject corsor = myDbRef.fetch();
@@ -53,12 +54,12 @@ public class CourseManager
 		isAdmin = Authenticator.checkAuthentication(dbs, userId,adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
 		isUsers = Authenticator.checkAuthentication(dbs, userId, usersList);
-		
+
 		if(!isAdmin && !isMod && !isUsers)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
-		
+
 		CourseBuilder exactCourse = new CourseBuilder();
 		
 		exactCourse.setDescription((String)corsor.get("Description"));
@@ -67,18 +68,17 @@ public class CourseManager
 		exactCourse.setOpenDate((String)corsor.get("OpenDate"));
 		exactCourse.setCloseDate((String)corsor.get("CloseDate"));
 		exactCourse.setImage((String)corsor.get("Image"));
-		//---
-		exactCourse.setAssignmentList((ArrayList)corsor.get("AssignmentList"));	
-
+		// if you are a user the course must be open to view the assignments
+		if (isAdmin || isMod || (isUsers && PermissionBuilder.isTimeValid(checkTime, exactCourse.openDate, exactCourse.closeDate))) {
+			exactCourse.setAssignmentList((ArrayList)corsor.get("AssignmentList"));	
+		}
 		if (isAdmin) 
 		{
 			exactCourse.setAccess((String)corsor.get("Access")); // admin
-			//---
 			exactCourse.permissions.setAdmin((ArrayList)corsor.get("Admin")); // admin
 			exactCourse.permissions.setMod((ArrayList)corsor.get("Mod"));	 // admin
 			exactCourse.permissions.setUsers((ArrayList)corsor.get("Users")); //admin
 		}
-		
 		return exactCourse;
 		
 	}
@@ -98,7 +98,7 @@ public class CourseManager
 
 		if(!isAdmin && !isMod)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
 		BasicDBObject updated = new BasicDBObject();

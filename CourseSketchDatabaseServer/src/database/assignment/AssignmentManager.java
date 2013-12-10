@@ -8,6 +8,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
+import database.PermissionBuilder;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.course.CourseBuilder;
@@ -18,13 +19,13 @@ public class AssignmentManager
 	public static String mongoInsertAssignment(DB dbs, String userId, AssignmentBuilder assignment) throws AuthenticationException
 	{
 		DBCollection new_user = dbs.getCollection("Assignments");
-		CourseBuilder course = CourseManager.mongoGetCourse(dbs,assignment.courseId,userId);
+		CourseBuilder course = CourseManager.mongoGetCourse(dbs, assignment.courseId, userId, 0); // user can not insert anyways so we are good.
 		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, course.permissions.admin);
 		boolean isMod = Authenticator.checkAuthentication(dbs, userId, course.permissions.mod);
 
 		if(!isAdmin && !isMod)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 		BasicDBObject query = new BasicDBObject("CourseId",assignment.courseId)
 										 .append("Name",assignment.name)
@@ -54,10 +55,10 @@ public class AssignmentManager
 		return (String) corsor.get("_id");
 	}
 
-	public static AssignmentBuilder mongoGetAssignment(DB dbs, String courseID,String userId) throws AuthenticationException
+	public static AssignmentBuilder mongoGetAssignment(DB dbs, String assignmentId, String userId, long checkTime) throws AuthenticationException
 	{
 		DBCollection assignments = dbs.getCollection("Assignments");
-		BasicDBObject query = new BasicDBObject("_id",courseID);
+		BasicDBObject query = new BasicDBObject("_id",assignmentId);
 		DBObject corsor = assignments.findOne(query);
 
 		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
@@ -70,7 +71,7 @@ public class AssignmentManager
 
 		if(!isAdmin && !isMod && !isUsers)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
 		AssignmentBuilder exactAssignment = new AssignmentBuilder();
@@ -88,6 +89,13 @@ public class AssignmentManager
 		exactAssignment.setCloseDate((String)corsor.get("CloseDate"));
 		exactAssignment.setImageUrl((String)corsor.get("ImageUrl"));
 		exactAssignment.setProblemList((ArrayList)corsor.get("ProblemList"));
+
+		if (isUsers) {
+			CourseBuilder course = CourseManager.mongoGetCourse(dbs, exactAssignment.courseId, userId, checkTime);
+			if(!PermissionBuilder.isTimeValid(checkTime, course.openDate, course.closeDate)) {
+				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
+			}
+		}
 
 		if (isAdmin) 
 		{
@@ -116,7 +124,7 @@ public class AssignmentManager
 
 		if(!isAdmin && !isMod)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
 		BasicDBObject updated = new BasicDBObject();
