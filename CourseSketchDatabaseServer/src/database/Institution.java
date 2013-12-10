@@ -52,13 +52,13 @@ public class Institution
 	
 	// if user can only access between open date and close date
 	// user can only access problem between assignment open and close date
-	public static ArrayList<CourseBuilder> mongoGetCourses(ArrayList<String> courseID,String userId) throws AuthenticationException 
+	public static ArrayList<CourseBuilder> mongoGetCourses(List<String> courseID,String userId) throws AuthenticationException 
 	{
-		int courses = courseID.size();
+		int courses = courseID.size()-1;
 		long currentTime = System.currentTimeMillis();
 		ArrayList<CourseBuilder> allCourses = null;
 		
-		while(courses > 0)
+		while(courses >= 0)
 		{
 			allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseID.get(courses), userId,currentTime));
 			courses--;
@@ -69,13 +69,13 @@ public class Institution
 		// do open close checking
 	}
 	
-	public static ArrayList<CourseProblemBuilder> mongoGetCourseProblem(ArrayList<String> problemID,String userId) throws AuthenticationException 
+	public static ArrayList<CourseProblemBuilder> mongoGetCourseProblem(List<String> problemID,String userId) throws AuthenticationException 
 	{
-		int courseProblems = problemID.size();
+		int courseProblems = problemID.size()-1;
 		long currentTime = System.currentTimeMillis();
 		ArrayList<CourseProblemBuilder> allCourses = null;
 		
-		while(courseProblems > 0)
+		while(courseProblems >= 0)
 		{
 			allCourses.add(CourseProblemManager.mongoGetProblem(getInstance().db, problemID.get(courseProblems), userId, currentTime));
 			courseProblems--;
@@ -87,13 +87,13 @@ public class Institution
 	}
 	
 
-	public static ArrayList<AssignmentBuilder> mongoGetAssignment(ArrayList<String> assignementID,String userId) throws AuthenticationException 
+	public static ArrayList<AssignmentBuilder> mongoGetAssignment(List<String> assignementID,String userId) throws AuthenticationException 
 	{
 		
 		long currentTime = System.currentTimeMillis();
 		ArrayList<AssignmentBuilder> allAssignments = null;
 		
-		for(int assignments = assignementID.size(); assignments > 0; assignments--)
+		for(int assignments = assignementID.size()-1; assignments >= 0; assignments--)
 		{
 			allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().db, assignementID.get(assignments), userId,currentTime));
 		}
@@ -102,13 +102,13 @@ public class Institution
 		return allAssignments;
 		// do open close checking
 	}
-	public static ArrayList<ProblemBankBuilder> mongoGetProblem(ArrayList<String> problemID,String userId) throws AuthenticationException 
+	public static ArrayList<ProblemBankBuilder> mongoGetProblem(List<String> problemID,String userId) throws AuthenticationException 
 	{
 		
 		long currentTime = System.currentTimeMillis();
 		ArrayList<ProblemBankBuilder> allProblems = null;
 		
-		for(int problem = problemID.size(); problem > 0; problem --)
+		for(int problem = problemID.size()-1; problem >= 0; problem --)
 		{
 			allProblems.add(ProblemManager.mongoGetProblem(getInstance().db, problemID.get(problem), userId));
 		}
