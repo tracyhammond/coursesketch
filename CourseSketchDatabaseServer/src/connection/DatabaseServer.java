@@ -75,7 +75,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 				for(int p=0; p<request.getItemsList().size(); p++){
 					ItemRequest itrequest = request.getItemsList().get(p);
 					switch(itrequest.getQuery()){
-						case COURSE: ArrayList<CourseBuilder> courseLoop = Institution.mongoGetCourses((ArrayList)itrequest.getItemIdList(), request.getUserId());
+						case COURSE: ArrayList<CourseBuilder> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), request.getUserId());
 									for(CourseBuilder loopCourse: courseLoop){
 										finalSchool.addCourses(RequestConverter.convertCourseBuilderToProtobuf(loopCourse));
 									}
