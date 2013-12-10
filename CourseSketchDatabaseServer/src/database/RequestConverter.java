@@ -30,8 +30,10 @@ public class RequestConverter{
 	
 	public static SrlCourse convertCourseBuilderToProtobuf(CourseBuilder course){
 		SrlCourse.Builder srlCourseBuilder = SrlCourse.newBuilder();
-		
-		srlCourseBuilder.setAccess(SrlCourse.Accessibility.valueOf(course.access));
+		try {
+			srlCourseBuilder.setAccess(SrlCourse.Accessibility.valueOf(course.access));
+		} catch(Exception e) {
+		}
 		srlCourseBuilder.addAllAssignmentId(course.assignmentList);
 		srlCourseBuilder.setCloseDate(DateStringToProtobuf(course.closeDate));
 		srlCourseBuilder.setDescription(course.description);
