@@ -1,5 +1,6 @@
 package database.course;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -90,6 +91,8 @@ public class CourseManager
 	{
 		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseID));
 		DBObject corsor = myDbRef.fetch();
+		DBObject updateObj = null;
+		DBCollection courses = dbs.getCollection("Courses");
 		
 		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
 		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");
@@ -106,26 +109,28 @@ public class CourseManager
 		if (isAdmin) 
 		{
 			if (course.semesester != null) {
-				updated.append("$set", new BasicDBObject("Semesester", course.semesester));
+				updateObj = new BasicDBObject("Semesester", course.semesester);
+				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
 			if (course.openDate != null) {
-				updated.append("$set", new BasicDBObject("OpenDate", course.openDate));
+				((BasicDBObject) updateObj).append("$set", new BasicDBObject("OpenDate", course.openDate));
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (course.closeDate != null) {
-				updated.append("$set", new BasicDBObject("CloseDate", course.closeDate));
+				((BasicDBObject) updateObj).append("$set", new BasicDBObject("CloseDate", course.closeDate));
 			}
 			if (course.image != null) {
-				updated.append("$set", new BasicDBObject("Image", course.image));
+				((BasicDBObject) updateObj).append("$set", new BasicDBObject("Image", course.image));
 			}
 			if (course.description != null) {
-				updated.append("$set", new BasicDBObject("Description", course.description));
+				updateObj = new BasicDBObject("Description", course.description);
+				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
 			if (course.name != null) {
-				updated.append("$set", new BasicDBObject("Name", course.name));
+				((BasicDBObject) updateObj).append("$set", new BasicDBObject("Name", course.name));
 			}
 			if (course.access != null) {
-				updated.append("$set", new BasicDBObject("Access", course.access));
+				((BasicDBObject) updateObj).append("$set", new BasicDBObject("Access", course.access));
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (course.permissions.admin != null) {
@@ -137,15 +142,16 @@ public class CourseManager
 			if (course.permissions.users != null) {
 				updated.append("$set", new BasicDBObject("Users", course.permissions.users));
 			}
+			
+			
 		}
 		if (isAdmin || isMod) {
 			if (course.assignmentList != null) {
 				updated.append("$set", new BasicDBObject("AssignmentList", course.assignmentList));
 			}
 		}
+		//courses.update(corsor, new BasicDBObject ("$set",updateObj));
 		
-		DBCollection new_user = dbs.getCollection("Courses");
-		new_user.update(new BasicDBObject("_id",corsor.get("_id").toString()), updated);
 		return true;
 		
 	}
