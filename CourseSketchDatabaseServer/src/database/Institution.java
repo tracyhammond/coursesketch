@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.List;
 
 import protobuf.srl.school.School.DateTime;
@@ -45,16 +46,10 @@ public class Institution
 	
 	// if user can only access between open date and close date
 	// user can only access problem between assignment open and close date
-	public static CourseBuilder mongoGetCourse(String courseID,String userId) throws AuthenticationException {
-		CourseBuilder returnCourse = new CourseBuilder();
-		returnCourse = CourseManager.mongoGetCourse(getInstance().db, courseID, userId);
-		Long currentTime = System.currentTimeMillis();
-		
-		
-		if(currentTime < ){
-			
-		}
-		return CourseManager.mongoGetCourse(getInstance().db, courseID, userId);
+	public static ArrayList<CourseBuilder> mongoGetCourses(ArrayList<String> courseID,String userId) throws AuthenticationException {
+		long currentTime = System.currentTimeMillis();
+		// need to return everything
+		return CourseManager.mongoGetCourse(getInstance().db, courseID, userId, currentTime);
 		// do open close checking
 	}
 	
