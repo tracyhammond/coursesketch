@@ -406,12 +406,6 @@ public final class Submission {
           return false;
         }
       }
-      if (hasViewPermissions()) {
-        if (!getViewPermissions().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -722,12 +716,6 @@ public final class Submission {
         }
         if (hasSketch()) {
           if (!getSketch().isInitialized()) {
-            
-            return false;
-          }
-        }
-        if (hasViewPermissions()) {
-          if (!getViewPermissions().isInitialized()) {
             
             return false;
           }
@@ -1644,12 +1632,6 @@ public final class Submission {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasAdminPermissions()) {
-        if (!getAdminPermissions().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1906,12 +1888,6 @@ public final class Submission {
       }
 
       public final boolean isInitialized() {
-        if (hasAdminPermissions()) {
-          if (!getAdminPermissions().isInitialized()) {
-            
-            return false;
-          }
-        }
         return true;
       }
 

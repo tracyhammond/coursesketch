@@ -144,9 +144,9 @@ message SrlSchoolId {
  * Also can be called SrlUserGroup
  */
 message SrlPermission {
-	repeated SrlGroup adminPermission = 1;
-	repeated SrlGroup moderatorPermission = 2;
-	repeated SrlGroup userPermission = 3;
+	repeated string adminPermission = 1;
+	repeated string moderatorPermission = 2;
+	repeated string userPermission = 3;
 }
 /*----------------- Original
 package protobuf.srl.school;

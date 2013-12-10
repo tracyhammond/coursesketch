@@ -543,9 +543,6 @@ bool SrlSubmission::IsInitialized() const {
   if (has_sketch()) {
     if (!this->sketch().IsInitialized()) return false;
   }
-  if (has_viewpermissions()) {
-    if (!this->viewpermissions().IsInitialized()) return false;
-  }
   return true;
 }
 
@@ -893,9 +890,6 @@ void SrlSolution::CopyFrom(const SrlSolution& from) {
 
 bool SrlSolution::IsInitialized() const {
 
-  if (has_adminpermissions()) {
-    if (!this->adminpermissions().IsInitialized()) return false;
-  }
   return true;
 }
 

@@ -2560,12 +2560,6 @@ public final class School {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (hasAccessPermission()) {
-        if (!getAccessPermission().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -3002,12 +2996,6 @@ public final class School {
         if (!hasId()) {
           
           return false;
-        }
-        if (hasAccessPermission()) {
-          if (!getAccessPermission().isInitialized()) {
-            
-            return false;
-          }
         }
         return true;
       }
@@ -5614,12 +5602,6 @@ public final class School {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (hasAccessPermission()) {
-        if (!getAccessPermission().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -6165,12 +6147,6 @@ public final class School {
         if (!hasId()) {
           
           return false;
-        }
-        if (hasAccessPermission()) {
-          if (!getAccessPermission().isInitialized()) {
-            
-            return false;
-          }
         }
         return true;
       }
@@ -15842,80 +15818,65 @@ public final class School {
   public interface SrlPermissionOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+    // repeated string adminPermission = 1;
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     * <code>repeated string adminPermission = 1;</code>
      */
-    java.util.List<protobuf.srl.school.School.SrlGroup> 
-        getAdminPermissionList();
+    java.util.List<java.lang.String>
+    getAdminPermissionList();
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-     */
-    protobuf.srl.school.School.SrlGroup getAdminPermission(int index);
-    /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     * <code>repeated string adminPermission = 1;</code>
      */
     int getAdminPermissionCount();
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     * <code>repeated string adminPermission = 1;</code>
      */
-    java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
-        getAdminPermissionOrBuilderList();
+    java.lang.String getAdminPermission(int index);
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     * <code>repeated string adminPermission = 1;</code>
      */
-    protobuf.srl.school.School.SrlGroupOrBuilder getAdminPermissionOrBuilder(
-        int index);
+    com.google.protobuf.ByteString
+        getAdminPermissionBytes(int index);
 
-    // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+    // repeated string moderatorPermission = 2;
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     * <code>repeated string moderatorPermission = 2;</code>
      */
-    java.util.List<protobuf.srl.school.School.SrlGroup> 
-        getModeratorPermissionList();
+    java.util.List<java.lang.String>
+    getModeratorPermissionList();
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-     */
-    protobuf.srl.school.School.SrlGroup getModeratorPermission(int index);
-    /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     * <code>repeated string moderatorPermission = 2;</code>
      */
     int getModeratorPermissionCount();
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     * <code>repeated string moderatorPermission = 2;</code>
      */
-    java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
-        getModeratorPermissionOrBuilderList();
+    java.lang.String getModeratorPermission(int index);
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     * <code>repeated string moderatorPermission = 2;</code>
      */
-    protobuf.srl.school.School.SrlGroupOrBuilder getModeratorPermissionOrBuilder(
-        int index);
+    com.google.protobuf.ByteString
+        getModeratorPermissionBytes(int index);
 
-    // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+    // repeated string userPermission = 3;
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     * <code>repeated string userPermission = 3;</code>
      */
-    java.util.List<protobuf.srl.school.School.SrlGroup> 
-        getUserPermissionList();
+    java.util.List<java.lang.String>
+    getUserPermissionList();
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-     */
-    protobuf.srl.school.School.SrlGroup getUserPermission(int index);
-    /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     * <code>repeated string userPermission = 3;</code>
      */
     int getUserPermissionCount();
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     * <code>repeated string userPermission = 3;</code>
      */
-    java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
-        getUserPermissionOrBuilderList();
+    java.lang.String getUserPermission(int index);
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     * <code>repeated string userPermission = 3;</code>
      */
-    protobuf.srl.school.School.SrlGroupOrBuilder getUserPermissionOrBuilder(
-        int index);
+    com.google.protobuf.ByteString
+        getUserPermissionBytes(int index);
   }
   /**
    * Protobuf type {@code protobuf.srl.school.SrlPermission}
@@ -15975,26 +15936,26 @@ public final class School {
             }
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                adminPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>();
+                adminPermission_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000001;
               }
-              adminPermission_.add(input.readMessage(protobuf.srl.school.School.SrlGroup.PARSER, extensionRegistry));
+              adminPermission_.add(input.readBytes());
               break;
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                moderatorPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>();
+                moderatorPermission_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000002;
               }
-              moderatorPermission_.add(input.readMessage(protobuf.srl.school.School.SrlGroup.PARSER, extensionRegistry));
+              moderatorPermission_.add(input.readBytes());
               break;
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                userPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>();
+                userPermission_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000004;
               }
-              userPermission_.add(input.readMessage(protobuf.srl.school.School.SrlGroup.PARSER, extensionRegistry));
+              userPermission_.add(input.readBytes());
               break;
             }
           }
@@ -16006,13 +15967,13 @@ public final class School {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          adminPermission_ = java.util.Collections.unmodifiableList(adminPermission_);
+          adminPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(adminPermission_);
         }
         if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-          moderatorPermission_ = java.util.Collections.unmodifiableList(moderatorPermission_);
+          moderatorPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(moderatorPermission_);
         }
         if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          userPermission_ = java.util.Collections.unmodifiableList(userPermission_);
+          userPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(userPermission_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -16045,142 +16006,106 @@ public final class School {
       return PARSER;
     }
 
-    // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
+    // repeated string adminPermission = 1;
     public static final int ADMINPERMISSION_FIELD_NUMBER = 1;
-    private java.util.List<protobuf.srl.school.School.SrlGroup> adminPermission_;
+    private com.google.protobuf.LazyStringList adminPermission_;
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     * <code>repeated string adminPermission = 1;</code>
      */
-    public java.util.List<protobuf.srl.school.School.SrlGroup> getAdminPermissionList() {
+    public java.util.List<java.lang.String>
+        getAdminPermissionList() {
       return adminPermission_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-     */
-    public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
-        getAdminPermissionOrBuilderList() {
-      return adminPermission_;
-    }
-    /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     * <code>repeated string adminPermission = 1;</code>
      */
     public int getAdminPermissionCount() {
       return adminPermission_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     * <code>repeated string adminPermission = 1;</code>
      */
-    public protobuf.srl.school.School.SrlGroup getAdminPermission(int index) {
+    public java.lang.String getAdminPermission(int index) {
       return adminPermission_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+     * <code>repeated string adminPermission = 1;</code>
      */
-    public protobuf.srl.school.School.SrlGroupOrBuilder getAdminPermissionOrBuilder(
-        int index) {
-      return adminPermission_.get(index);
+    public com.google.protobuf.ByteString
+        getAdminPermissionBytes(int index) {
+      return adminPermission_.getByteString(index);
     }
 
-    // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
+    // repeated string moderatorPermission = 2;
     public static final int MODERATORPERMISSION_FIELD_NUMBER = 2;
-    private java.util.List<protobuf.srl.school.School.SrlGroup> moderatorPermission_;
+    private com.google.protobuf.LazyStringList moderatorPermission_;
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     * <code>repeated string moderatorPermission = 2;</code>
      */
-    public java.util.List<protobuf.srl.school.School.SrlGroup> getModeratorPermissionList() {
+    public java.util.List<java.lang.String>
+        getModeratorPermissionList() {
       return moderatorPermission_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-     */
-    public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
-        getModeratorPermissionOrBuilderList() {
-      return moderatorPermission_;
-    }
-    /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     * <code>repeated string moderatorPermission = 2;</code>
      */
     public int getModeratorPermissionCount() {
       return moderatorPermission_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     * <code>repeated string moderatorPermission = 2;</code>
      */
-    public protobuf.srl.school.School.SrlGroup getModeratorPermission(int index) {
+    public java.lang.String getModeratorPermission(int index) {
       return moderatorPermission_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+     * <code>repeated string moderatorPermission = 2;</code>
      */
-    public protobuf.srl.school.School.SrlGroupOrBuilder getModeratorPermissionOrBuilder(
-        int index) {
-      return moderatorPermission_.get(index);
+    public com.google.protobuf.ByteString
+        getModeratorPermissionBytes(int index) {
+      return moderatorPermission_.getByteString(index);
     }
 
-    // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
+    // repeated string userPermission = 3;
     public static final int USERPERMISSION_FIELD_NUMBER = 3;
-    private java.util.List<protobuf.srl.school.School.SrlGroup> userPermission_;
+    private com.google.protobuf.LazyStringList userPermission_;
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     * <code>repeated string userPermission = 3;</code>
      */
-    public java.util.List<protobuf.srl.school.School.SrlGroup> getUserPermissionList() {
+    public java.util.List<java.lang.String>
+        getUserPermissionList() {
       return userPermission_;
     }
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-     */
-    public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
-        getUserPermissionOrBuilderList() {
-      return userPermission_;
-    }
-    /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     * <code>repeated string userPermission = 3;</code>
      */
     public int getUserPermissionCount() {
       return userPermission_.size();
     }
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     * <code>repeated string userPermission = 3;</code>
      */
-    public protobuf.srl.school.School.SrlGroup getUserPermission(int index) {
+    public java.lang.String getUserPermission(int index) {
       return userPermission_.get(index);
     }
     /**
-     * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+     * <code>repeated string userPermission = 3;</code>
      */
-    public protobuf.srl.school.School.SrlGroupOrBuilder getUserPermissionOrBuilder(
-        int index) {
-      return userPermission_.get(index);
+    public com.google.protobuf.ByteString
+        getUserPermissionBytes(int index) {
+      return userPermission_.getByteString(index);
     }
 
     private void initFields() {
-      adminPermission_ = java.util.Collections.emptyList();
-      moderatorPermission_ = java.util.Collections.emptyList();
-      userPermission_ = java.util.Collections.emptyList();
+      adminPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      moderatorPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      userPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      for (int i = 0; i < getAdminPermissionCount(); i++) {
-        if (!getAdminPermission(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      for (int i = 0; i < getModeratorPermissionCount(); i++) {
-        if (!getModeratorPermission(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      for (int i = 0; i < getUserPermissionCount(); i++) {
-        if (!getUserPermission(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -16189,13 +16114,13 @@ public final class School {
                         throws java.io.IOException {
       getSerializedSize();
       for (int i = 0; i < adminPermission_.size(); i++) {
-        output.writeMessage(1, adminPermission_.get(i));
+        output.writeBytes(1, adminPermission_.getByteString(i));
       }
       for (int i = 0; i < moderatorPermission_.size(); i++) {
-        output.writeMessage(2, moderatorPermission_.get(i));
+        output.writeBytes(2, moderatorPermission_.getByteString(i));
       }
       for (int i = 0; i < userPermission_.size(); i++) {
-        output.writeMessage(3, userPermission_.get(i));
+        output.writeBytes(3, userPermission_.getByteString(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -16206,17 +16131,32 @@ public final class School {
       if (size != -1) return size;
 
       size = 0;
-      for (int i = 0; i < adminPermission_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, adminPermission_.get(i));
+      {
+        int dataSize = 0;
+        for (int i = 0; i < adminPermission_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(adminPermission_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getAdminPermissionList().size();
       }
-      for (int i = 0; i < moderatorPermission_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, moderatorPermission_.get(i));
+      {
+        int dataSize = 0;
+        for (int i = 0; i < moderatorPermission_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(moderatorPermission_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getModeratorPermissionList().size();
       }
-      for (int i = 0; i < userPermission_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, userPermission_.get(i));
+      {
+        int dataSize = 0;
+        for (int i = 0; i < userPermission_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(userPermission_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getUserPermissionList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -16331,9 +16271,6 @@ public final class School {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getAdminPermissionFieldBuilder();
-          getModeratorPermissionFieldBuilder();
-          getUserPermissionFieldBuilder();
         }
       }
       private static Builder create() {
@@ -16342,24 +16279,12 @@ public final class School {
 
       public Builder clear() {
         super.clear();
-        if (adminPermissionBuilder_ == null) {
-          adminPermission_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          adminPermissionBuilder_.clear();
-        }
-        if (moderatorPermissionBuilder_ == null) {
-          moderatorPermission_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        } else {
-          moderatorPermissionBuilder_.clear();
-        }
-        if (userPermissionBuilder_ == null) {
-          userPermission_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
-        } else {
-          userPermissionBuilder_.clear();
-        }
+        adminPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        moderatorPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        userPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -16387,33 +16312,24 @@ public final class School {
       public protobuf.srl.school.School.SrlPermission buildPartial() {
         protobuf.srl.school.School.SrlPermission result = new protobuf.srl.school.School.SrlPermission(this);
         int from_bitField0_ = bitField0_;
-        if (adminPermissionBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            adminPermission_ = java.util.Collections.unmodifiableList(adminPermission_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.adminPermission_ = adminPermission_;
-        } else {
-          result.adminPermission_ = adminPermissionBuilder_.build();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          adminPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              adminPermission_);
+          bitField0_ = (bitField0_ & ~0x00000001);
         }
-        if (moderatorPermissionBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002)) {
-            moderatorPermission_ = java.util.Collections.unmodifiableList(moderatorPermission_);
-            bitField0_ = (bitField0_ & ~0x00000002);
-          }
-          result.moderatorPermission_ = moderatorPermission_;
-        } else {
-          result.moderatorPermission_ = moderatorPermissionBuilder_.build();
+        result.adminPermission_ = adminPermission_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          moderatorPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              moderatorPermission_);
+          bitField0_ = (bitField0_ & ~0x00000002);
         }
-        if (userPermissionBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
-            userPermission_ = java.util.Collections.unmodifiableList(userPermission_);
-            bitField0_ = (bitField0_ & ~0x00000004);
-          }
-          result.userPermission_ = userPermission_;
-        } else {
-          result.userPermission_ = userPermissionBuilder_.build();
+        result.moderatorPermission_ = moderatorPermission_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          userPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              userPermission_);
+          bitField0_ = (bitField0_ & ~0x00000004);
         }
+        result.userPermission_ = userPermission_;
         onBuilt();
         return result;
       }
@@ -16429,107 +16345,41 @@ public final class School {
 
       public Builder mergeFrom(protobuf.srl.school.School.SrlPermission other) {
         if (other == protobuf.srl.school.School.SrlPermission.getDefaultInstance()) return this;
-        if (adminPermissionBuilder_ == null) {
-          if (!other.adminPermission_.isEmpty()) {
-            if (adminPermission_.isEmpty()) {
-              adminPermission_ = other.adminPermission_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureAdminPermissionIsMutable();
-              adminPermission_.addAll(other.adminPermission_);
-            }
-            onChanged();
+        if (!other.adminPermission_.isEmpty()) {
+          if (adminPermission_.isEmpty()) {
+            adminPermission_ = other.adminPermission_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureAdminPermissionIsMutable();
+            adminPermission_.addAll(other.adminPermission_);
           }
-        } else {
-          if (!other.adminPermission_.isEmpty()) {
-            if (adminPermissionBuilder_.isEmpty()) {
-              adminPermissionBuilder_.dispose();
-              adminPermissionBuilder_ = null;
-              adminPermission_ = other.adminPermission_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              adminPermissionBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getAdminPermissionFieldBuilder() : null;
-            } else {
-              adminPermissionBuilder_.addAllMessages(other.adminPermission_);
-            }
-          }
+          onChanged();
         }
-        if (moderatorPermissionBuilder_ == null) {
-          if (!other.moderatorPermission_.isEmpty()) {
-            if (moderatorPermission_.isEmpty()) {
-              moderatorPermission_ = other.moderatorPermission_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-            } else {
-              ensureModeratorPermissionIsMutable();
-              moderatorPermission_.addAll(other.moderatorPermission_);
-            }
-            onChanged();
+        if (!other.moderatorPermission_.isEmpty()) {
+          if (moderatorPermission_.isEmpty()) {
+            moderatorPermission_ = other.moderatorPermission_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureModeratorPermissionIsMutable();
+            moderatorPermission_.addAll(other.moderatorPermission_);
           }
-        } else {
-          if (!other.moderatorPermission_.isEmpty()) {
-            if (moderatorPermissionBuilder_.isEmpty()) {
-              moderatorPermissionBuilder_.dispose();
-              moderatorPermissionBuilder_ = null;
-              moderatorPermission_ = other.moderatorPermission_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-              moderatorPermissionBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getModeratorPermissionFieldBuilder() : null;
-            } else {
-              moderatorPermissionBuilder_.addAllMessages(other.moderatorPermission_);
-            }
-          }
+          onChanged();
         }
-        if (userPermissionBuilder_ == null) {
-          if (!other.userPermission_.isEmpty()) {
-            if (userPermission_.isEmpty()) {
-              userPermission_ = other.userPermission_;
-              bitField0_ = (bitField0_ & ~0x00000004);
-            } else {
-              ensureUserPermissionIsMutable();
-              userPermission_.addAll(other.userPermission_);
-            }
-            onChanged();
+        if (!other.userPermission_.isEmpty()) {
+          if (userPermission_.isEmpty()) {
+            userPermission_ = other.userPermission_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureUserPermissionIsMutable();
+            userPermission_.addAll(other.userPermission_);
           }
-        } else {
-          if (!other.userPermission_.isEmpty()) {
-            if (userPermissionBuilder_.isEmpty()) {
-              userPermissionBuilder_.dispose();
-              userPermissionBuilder_ = null;
-              userPermission_ = other.userPermission_;
-              bitField0_ = (bitField0_ & ~0x00000004);
-              userPermissionBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getUserPermissionFieldBuilder() : null;
-            } else {
-              userPermissionBuilder_.addAllMessages(other.userPermission_);
-            }
-          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        for (int i = 0; i < getAdminPermissionCount(); i++) {
-          if (!getAdminPermission(i).isInitialized()) {
-            
-            return false;
-          }
-        }
-        for (int i = 0; i < getModeratorPermissionCount(); i++) {
-          if (!getModeratorPermission(i).isInitialized()) {
-            
-            return false;
-          }
-        }
-        for (int i = 0; i < getUserPermissionCount(); i++) {
-          if (!getUserPermission(i).isInitialized()) {
-            
-            return false;
-          }
-        }
         return true;
       }
 
@@ -16552,724 +16402,283 @@ public final class School {
       }
       private int bitField0_;
 
-      // repeated .protobuf.srl.school.SrlGroup adminPermission = 1;
-      private java.util.List<protobuf.srl.school.School.SrlGroup> adminPermission_ =
-        java.util.Collections.emptyList();
+      // repeated string adminPermission = 1;
+      private com.google.protobuf.LazyStringList adminPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureAdminPermissionIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          adminPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>(adminPermission_);
+          adminPermission_ = new com.google.protobuf.LazyStringArrayList(adminPermission_);
           bitField0_ |= 0x00000001;
          }
       }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> adminPermissionBuilder_;
-
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       * <code>repeated string adminPermission = 1;</code>
        */
-      public java.util.List<protobuf.srl.school.School.SrlGroup> getAdminPermissionList() {
-        if (adminPermissionBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(adminPermission_);
-        } else {
-          return adminPermissionBuilder_.getMessageList();
-        }
+      public java.util.List<java.lang.String>
+          getAdminPermissionList() {
+        return java.util.Collections.unmodifiableList(adminPermission_);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       * <code>repeated string adminPermission = 1;</code>
        */
       public int getAdminPermissionCount() {
-        if (adminPermissionBuilder_ == null) {
-          return adminPermission_.size();
-        } else {
-          return adminPermissionBuilder_.getCount();
-        }
+        return adminPermission_.size();
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       * <code>repeated string adminPermission = 1;</code>
        */
-      public protobuf.srl.school.School.SrlGroup getAdminPermission(int index) {
-        if (adminPermissionBuilder_ == null) {
-          return adminPermission_.get(index);
-        } else {
-          return adminPermissionBuilder_.getMessage(index);
-        }
+      public java.lang.String getAdminPermission(int index) {
+        return adminPermission_.get(index);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       * <code>repeated string adminPermission = 1;</code>
        */
-      public Builder setAdminPermission(
-          int index, protobuf.srl.school.School.SrlGroup value) {
-        if (adminPermissionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAdminPermissionIsMutable();
-          adminPermission_.set(index, value);
-          onChanged();
-        } else {
-          adminPermissionBuilder_.setMessage(index, value);
-        }
-        return this;
+      public com.google.protobuf.ByteString
+          getAdminPermissionBytes(int index) {
+        return adminPermission_.getByteString(index);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       * <code>repeated string adminPermission = 1;</code>
        */
       public Builder setAdminPermission(
-          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
-        if (adminPermissionBuilder_ == null) {
-          ensureAdminPermissionIsMutable();
-          adminPermission_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          adminPermissionBuilder_.setMessage(index, builderForValue.build());
-        }
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAdminPermissionIsMutable();
+        adminPermission_.set(index, value);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-       */
-      public Builder addAdminPermission(protobuf.srl.school.School.SrlGroup value) {
-        if (adminPermissionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAdminPermissionIsMutable();
-          adminPermission_.add(value);
-          onChanged();
-        } else {
-          adminPermissionBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       * <code>repeated string adminPermission = 1;</code>
        */
       public Builder addAdminPermission(
-          int index, protobuf.srl.school.School.SrlGroup value) {
-        if (adminPermissionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAdminPermissionIsMutable();
-          adminPermission_.add(index, value);
-          onChanged();
-        } else {
-          adminPermissionBuilder_.addMessage(index, value);
-        }
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAdminPermissionIsMutable();
+        adminPermission_.add(value);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-       */
-      public Builder addAdminPermission(
-          protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
-        if (adminPermissionBuilder_ == null) {
-          ensureAdminPermissionIsMutable();
-          adminPermission_.add(builderForValue.build());
-          onChanged();
-        } else {
-          adminPermissionBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-       */
-      public Builder addAdminPermission(
-          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
-        if (adminPermissionBuilder_ == null) {
-          ensureAdminPermissionIsMutable();
-          adminPermission_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          adminPermissionBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       * <code>repeated string adminPermission = 1;</code>
        */
       public Builder addAllAdminPermission(
-          java.lang.Iterable<? extends protobuf.srl.school.School.SrlGroup> values) {
-        if (adminPermissionBuilder_ == null) {
-          ensureAdminPermissionIsMutable();
-          super.addAll(values, adminPermission_);
-          onChanged();
-        } else {
-          adminPermissionBuilder_.addAllMessages(values);
-        }
+          java.lang.Iterable<java.lang.String> values) {
+        ensureAdminPermissionIsMutable();
+        super.addAll(values, adminPermission_);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       * <code>repeated string adminPermission = 1;</code>
        */
       public Builder clearAdminPermission() {
-        if (adminPermissionBuilder_ == null) {
-          adminPermission_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          adminPermissionBuilder_.clear();
-        }
+        adminPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
+       * <code>repeated string adminPermission = 1;</code>
        */
-      public Builder removeAdminPermission(int index) {
-        if (adminPermissionBuilder_ == null) {
-          ensureAdminPermissionIsMutable();
-          adminPermission_.remove(index);
-          onChanged();
-        } else {
-          adminPermissionBuilder_.remove(index);
-        }
+      public Builder addAdminPermissionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAdminPermissionIsMutable();
+        adminPermission_.add(value);
+        onChanged();
         return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-       */
-      public protobuf.srl.school.School.SrlGroup.Builder getAdminPermissionBuilder(
-          int index) {
-        return getAdminPermissionFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-       */
-      public protobuf.srl.school.School.SrlGroupOrBuilder getAdminPermissionOrBuilder(
-          int index) {
-        if (adminPermissionBuilder_ == null) {
-          return adminPermission_.get(index);  } else {
-          return adminPermissionBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-       */
-      public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
-           getAdminPermissionOrBuilderList() {
-        if (adminPermissionBuilder_ != null) {
-          return adminPermissionBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(adminPermission_);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-       */
-      public protobuf.srl.school.School.SrlGroup.Builder addAdminPermissionBuilder() {
-        return getAdminPermissionFieldBuilder().addBuilder(
-            protobuf.srl.school.School.SrlGroup.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-       */
-      public protobuf.srl.school.School.SrlGroup.Builder addAdminPermissionBuilder(
-          int index) {
-        return getAdminPermissionFieldBuilder().addBuilder(
-            index, protobuf.srl.school.School.SrlGroup.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup adminPermission = 1;</code>
-       */
-      public java.util.List<protobuf.srl.school.School.SrlGroup.Builder> 
-           getAdminPermissionBuilderList() {
-        return getAdminPermissionFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> 
-          getAdminPermissionFieldBuilder() {
-        if (adminPermissionBuilder_ == null) {
-          adminPermissionBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder>(
-                  adminPermission_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
-                  getParentForChildren(),
-                  isClean());
-          adminPermission_ = null;
-        }
-        return adminPermissionBuilder_;
       }
 
-      // repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;
-      private java.util.List<protobuf.srl.school.School.SrlGroup> moderatorPermission_ =
-        java.util.Collections.emptyList();
+      // repeated string moderatorPermission = 2;
+      private com.google.protobuf.LazyStringList moderatorPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureModeratorPermissionIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          moderatorPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>(moderatorPermission_);
+          moderatorPermission_ = new com.google.protobuf.LazyStringArrayList(moderatorPermission_);
           bitField0_ |= 0x00000002;
          }
       }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> moderatorPermissionBuilder_;
-
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       * <code>repeated string moderatorPermission = 2;</code>
        */
-      public java.util.List<protobuf.srl.school.School.SrlGroup> getModeratorPermissionList() {
-        if (moderatorPermissionBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(moderatorPermission_);
-        } else {
-          return moderatorPermissionBuilder_.getMessageList();
-        }
+      public java.util.List<java.lang.String>
+          getModeratorPermissionList() {
+        return java.util.Collections.unmodifiableList(moderatorPermission_);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       * <code>repeated string moderatorPermission = 2;</code>
        */
       public int getModeratorPermissionCount() {
-        if (moderatorPermissionBuilder_ == null) {
-          return moderatorPermission_.size();
-        } else {
-          return moderatorPermissionBuilder_.getCount();
-        }
+        return moderatorPermission_.size();
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       * <code>repeated string moderatorPermission = 2;</code>
        */
-      public protobuf.srl.school.School.SrlGroup getModeratorPermission(int index) {
-        if (moderatorPermissionBuilder_ == null) {
-          return moderatorPermission_.get(index);
-        } else {
-          return moderatorPermissionBuilder_.getMessage(index);
-        }
+      public java.lang.String getModeratorPermission(int index) {
+        return moderatorPermission_.get(index);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       * <code>repeated string moderatorPermission = 2;</code>
        */
-      public Builder setModeratorPermission(
-          int index, protobuf.srl.school.School.SrlGroup value) {
-        if (moderatorPermissionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureModeratorPermissionIsMutable();
-          moderatorPermission_.set(index, value);
-          onChanged();
-        } else {
-          moderatorPermissionBuilder_.setMessage(index, value);
-        }
-        return this;
+      public com.google.protobuf.ByteString
+          getModeratorPermissionBytes(int index) {
+        return moderatorPermission_.getByteString(index);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       * <code>repeated string moderatorPermission = 2;</code>
        */
       public Builder setModeratorPermission(
-          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
-        if (moderatorPermissionBuilder_ == null) {
-          ensureModeratorPermissionIsMutable();
-          moderatorPermission_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          moderatorPermissionBuilder_.setMessage(index, builderForValue.build());
-        }
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureModeratorPermissionIsMutable();
+        moderatorPermission_.set(index, value);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-       */
-      public Builder addModeratorPermission(protobuf.srl.school.School.SrlGroup value) {
-        if (moderatorPermissionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureModeratorPermissionIsMutable();
-          moderatorPermission_.add(value);
-          onChanged();
-        } else {
-          moderatorPermissionBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       * <code>repeated string moderatorPermission = 2;</code>
        */
       public Builder addModeratorPermission(
-          int index, protobuf.srl.school.School.SrlGroup value) {
-        if (moderatorPermissionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureModeratorPermissionIsMutable();
-          moderatorPermission_.add(index, value);
-          onChanged();
-        } else {
-          moderatorPermissionBuilder_.addMessage(index, value);
-        }
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureModeratorPermissionIsMutable();
+        moderatorPermission_.add(value);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-       */
-      public Builder addModeratorPermission(
-          protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
-        if (moderatorPermissionBuilder_ == null) {
-          ensureModeratorPermissionIsMutable();
-          moderatorPermission_.add(builderForValue.build());
-          onChanged();
-        } else {
-          moderatorPermissionBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-       */
-      public Builder addModeratorPermission(
-          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
-        if (moderatorPermissionBuilder_ == null) {
-          ensureModeratorPermissionIsMutable();
-          moderatorPermission_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          moderatorPermissionBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       * <code>repeated string moderatorPermission = 2;</code>
        */
       public Builder addAllModeratorPermission(
-          java.lang.Iterable<? extends protobuf.srl.school.School.SrlGroup> values) {
-        if (moderatorPermissionBuilder_ == null) {
-          ensureModeratorPermissionIsMutable();
-          super.addAll(values, moderatorPermission_);
-          onChanged();
-        } else {
-          moderatorPermissionBuilder_.addAllMessages(values);
-        }
+          java.lang.Iterable<java.lang.String> values) {
+        ensureModeratorPermissionIsMutable();
+        super.addAll(values, moderatorPermission_);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       * <code>repeated string moderatorPermission = 2;</code>
        */
       public Builder clearModeratorPermission() {
-        if (moderatorPermissionBuilder_ == null) {
-          moderatorPermission_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-          onChanged();
-        } else {
-          moderatorPermissionBuilder_.clear();
-        }
+        moderatorPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
+       * <code>repeated string moderatorPermission = 2;</code>
        */
-      public Builder removeModeratorPermission(int index) {
-        if (moderatorPermissionBuilder_ == null) {
-          ensureModeratorPermissionIsMutable();
-          moderatorPermission_.remove(index);
-          onChanged();
-        } else {
-          moderatorPermissionBuilder_.remove(index);
-        }
+      public Builder addModeratorPermissionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureModeratorPermissionIsMutable();
+        moderatorPermission_.add(value);
+        onChanged();
         return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-       */
-      public protobuf.srl.school.School.SrlGroup.Builder getModeratorPermissionBuilder(
-          int index) {
-        return getModeratorPermissionFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-       */
-      public protobuf.srl.school.School.SrlGroupOrBuilder getModeratorPermissionOrBuilder(
-          int index) {
-        if (moderatorPermissionBuilder_ == null) {
-          return moderatorPermission_.get(index);  } else {
-          return moderatorPermissionBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-       */
-      public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
-           getModeratorPermissionOrBuilderList() {
-        if (moderatorPermissionBuilder_ != null) {
-          return moderatorPermissionBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(moderatorPermission_);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-       */
-      public protobuf.srl.school.School.SrlGroup.Builder addModeratorPermissionBuilder() {
-        return getModeratorPermissionFieldBuilder().addBuilder(
-            protobuf.srl.school.School.SrlGroup.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-       */
-      public protobuf.srl.school.School.SrlGroup.Builder addModeratorPermissionBuilder(
-          int index) {
-        return getModeratorPermissionFieldBuilder().addBuilder(
-            index, protobuf.srl.school.School.SrlGroup.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup moderatorPermission = 2;</code>
-       */
-      public java.util.List<protobuf.srl.school.School.SrlGroup.Builder> 
-           getModeratorPermissionBuilderList() {
-        return getModeratorPermissionFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> 
-          getModeratorPermissionFieldBuilder() {
-        if (moderatorPermissionBuilder_ == null) {
-          moderatorPermissionBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder>(
-                  moderatorPermission_,
-                  ((bitField0_ & 0x00000002) == 0x00000002),
-                  getParentForChildren(),
-                  isClean());
-          moderatorPermission_ = null;
-        }
-        return moderatorPermissionBuilder_;
       }
 
-      // repeated .protobuf.srl.school.SrlGroup userPermission = 3;
-      private java.util.List<protobuf.srl.school.School.SrlGroup> userPermission_ =
-        java.util.Collections.emptyList();
+      // repeated string userPermission = 3;
+      private com.google.protobuf.LazyStringList userPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureUserPermissionIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          userPermission_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGroup>(userPermission_);
+          userPermission_ = new com.google.protobuf.LazyStringArrayList(userPermission_);
           bitField0_ |= 0x00000004;
          }
       }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> userPermissionBuilder_;
-
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       * <code>repeated string userPermission = 3;</code>
        */
-      public java.util.List<protobuf.srl.school.School.SrlGroup> getUserPermissionList() {
-        if (userPermissionBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(userPermission_);
-        } else {
-          return userPermissionBuilder_.getMessageList();
-        }
+      public java.util.List<java.lang.String>
+          getUserPermissionList() {
+        return java.util.Collections.unmodifiableList(userPermission_);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       * <code>repeated string userPermission = 3;</code>
        */
       public int getUserPermissionCount() {
-        if (userPermissionBuilder_ == null) {
-          return userPermission_.size();
-        } else {
-          return userPermissionBuilder_.getCount();
-        }
+        return userPermission_.size();
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       * <code>repeated string userPermission = 3;</code>
        */
-      public protobuf.srl.school.School.SrlGroup getUserPermission(int index) {
-        if (userPermissionBuilder_ == null) {
-          return userPermission_.get(index);
-        } else {
-          return userPermissionBuilder_.getMessage(index);
-        }
+      public java.lang.String getUserPermission(int index) {
+        return userPermission_.get(index);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       * <code>repeated string userPermission = 3;</code>
        */
-      public Builder setUserPermission(
-          int index, protobuf.srl.school.School.SrlGroup value) {
-        if (userPermissionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureUserPermissionIsMutable();
-          userPermission_.set(index, value);
-          onChanged();
-        } else {
-          userPermissionBuilder_.setMessage(index, value);
-        }
-        return this;
+      public com.google.protobuf.ByteString
+          getUserPermissionBytes(int index) {
+        return userPermission_.getByteString(index);
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       * <code>repeated string userPermission = 3;</code>
        */
       public Builder setUserPermission(
-          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
-        if (userPermissionBuilder_ == null) {
-          ensureUserPermissionIsMutable();
-          userPermission_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          userPermissionBuilder_.setMessage(index, builderForValue.build());
-        }
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUserPermissionIsMutable();
+        userPermission_.set(index, value);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-       */
-      public Builder addUserPermission(protobuf.srl.school.School.SrlGroup value) {
-        if (userPermissionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureUserPermissionIsMutable();
-          userPermission_.add(value);
-          onChanged();
-        } else {
-          userPermissionBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       * <code>repeated string userPermission = 3;</code>
        */
       public Builder addUserPermission(
-          int index, protobuf.srl.school.School.SrlGroup value) {
-        if (userPermissionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureUserPermissionIsMutable();
-          userPermission_.add(index, value);
-          onChanged();
-        } else {
-          userPermissionBuilder_.addMessage(index, value);
-        }
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUserPermissionIsMutable();
+        userPermission_.add(value);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-       */
-      public Builder addUserPermission(
-          protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
-        if (userPermissionBuilder_ == null) {
-          ensureUserPermissionIsMutable();
-          userPermission_.add(builderForValue.build());
-          onChanged();
-        } else {
-          userPermissionBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-       */
-      public Builder addUserPermission(
-          int index, protobuf.srl.school.School.SrlGroup.Builder builderForValue) {
-        if (userPermissionBuilder_ == null) {
-          ensureUserPermissionIsMutable();
-          userPermission_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          userPermissionBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       * <code>repeated string userPermission = 3;</code>
        */
       public Builder addAllUserPermission(
-          java.lang.Iterable<? extends protobuf.srl.school.School.SrlGroup> values) {
-        if (userPermissionBuilder_ == null) {
-          ensureUserPermissionIsMutable();
-          super.addAll(values, userPermission_);
-          onChanged();
-        } else {
-          userPermissionBuilder_.addAllMessages(values);
-        }
+          java.lang.Iterable<java.lang.String> values) {
+        ensureUserPermissionIsMutable();
+        super.addAll(values, userPermission_);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       * <code>repeated string userPermission = 3;</code>
        */
       public Builder clearUserPermission() {
-        if (userPermissionBuilder_ == null) {
-          userPermission_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
-          onChanged();
-        } else {
-          userPermissionBuilder_.clear();
-        }
+        userPermission_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
         return this;
       }
       /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
+       * <code>repeated string userPermission = 3;</code>
        */
-      public Builder removeUserPermission(int index) {
-        if (userPermissionBuilder_ == null) {
-          ensureUserPermissionIsMutable();
-          userPermission_.remove(index);
-          onChanged();
-        } else {
-          userPermissionBuilder_.remove(index);
-        }
+      public Builder addUserPermissionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUserPermissionIsMutable();
+        userPermission_.add(value);
+        onChanged();
         return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-       */
-      public protobuf.srl.school.School.SrlGroup.Builder getUserPermissionBuilder(
-          int index) {
-        return getUserPermissionFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-       */
-      public protobuf.srl.school.School.SrlGroupOrBuilder getUserPermissionOrBuilder(
-          int index) {
-        if (userPermissionBuilder_ == null) {
-          return userPermission_.get(index);  } else {
-          return userPermissionBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-       */
-      public java.util.List<? extends protobuf.srl.school.School.SrlGroupOrBuilder> 
-           getUserPermissionOrBuilderList() {
-        if (userPermissionBuilder_ != null) {
-          return userPermissionBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(userPermission_);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-       */
-      public protobuf.srl.school.School.SrlGroup.Builder addUserPermissionBuilder() {
-        return getUserPermissionFieldBuilder().addBuilder(
-            protobuf.srl.school.School.SrlGroup.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-       */
-      public protobuf.srl.school.School.SrlGroup.Builder addUserPermissionBuilder(
-          int index) {
-        return getUserPermissionFieldBuilder().addBuilder(
-            index, protobuf.srl.school.School.SrlGroup.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.SrlGroup userPermission = 3;</code>
-       */
-      public java.util.List<protobuf.srl.school.School.SrlGroup.Builder> 
-           getUserPermissionBuilderList() {
-        return getUserPermissionFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder> 
-          getUserPermissionFieldBuilder() {
-        if (userPermissionBuilder_ == null) {
-          userPermissionBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.school.School.SrlGroup, protobuf.srl.school.School.SrlGroup.Builder, protobuf.srl.school.School.SrlGroupOrBuilder>(
-                  userPermission_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
-                  getParentForChildren(),
-                  isClean());
-          userPermission_ = null;
-        }
-        return userPermissionBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlPermission)
@@ -17414,14 +16823,11 @@ public final class School {
       "\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002",
       "(\t\022\021\n\tgroupName\030\003 \001(\t\"H\n\013SrlSchoolId\022\020\n\010" +
       "courseId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\t" +
-      "problemId\030\003 \001(\t\"\272\001\n\rSrlPermission\0226\n\017adm" +
-      "inPermission\030\001 \003(\0132\035.protobuf.srl.school" +
-      ".SrlGroup\022:\n\023moderatorPermission\030\002 \003(\0132\035" +
-      ".protobuf.srl.school.SrlGroup\0225\n\016userPer" +
-      "mission\030\003 \003(\0132\035.protobuf.srl.school.SrlG" +
-      "roup*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTO" +
-      "R\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004" +
-      "\022\t\n\005GUEST\020\005"
+      "problemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017admi" +
+      "nPermission\030\001 \003(\t\022\033\n\023moderatorPermission" +
+      "\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserTy" +
+      "pe\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHIN" +
+      "G_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
