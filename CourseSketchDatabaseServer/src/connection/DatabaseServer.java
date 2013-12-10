@@ -31,6 +31,7 @@ import database.problem.ProblemBankBuilder;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlSchool;
 
 /**
@@ -123,6 +124,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 							
 					}
 					Request.Builder dataReq = Request.newBuilder();
+					dataReq.setRequestType(MessageType.DATA_REQUEST);
 					dataReq.setOtherData(finalSchool.build().toByteString());
 					dataReq.setSessionInfo(req.getSessionInfo());
 					conn.send(dataReq.build().toByteArray());
