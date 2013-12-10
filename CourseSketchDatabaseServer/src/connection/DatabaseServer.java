@@ -144,8 +144,8 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Database Server: Version 1.0.2.boa");
-		WebSocketImpl.DEBUG = true;
+		System.out.println("Database Server: Version 1.0.2.crocodile");
+		WebSocketImpl.DEBUG = false;
 		int port = 8885; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
