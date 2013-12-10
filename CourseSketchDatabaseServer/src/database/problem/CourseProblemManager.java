@@ -53,7 +53,7 @@ public class CourseProblemManager
 		DBCollection courses = dbs.getCollection("Problems");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = courses.findOne(query);
-		
+
 		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
 		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
 		ArrayList usersList = (ArrayList<Object>)corsor.get("Users");
@@ -61,14 +61,14 @@ public class CourseProblemManager
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
 		isUsers = Authenticator.checkAuthentication(dbs, userId, usersList);
-		
+
 		if(!isAdmin && !isMod && !isUsers)
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
-		
+
 		CourseProblemBuilder exactProblem = new CourseProblemBuilder();
-		
+
 		exactProblem.setCourseId((String)corsor.get("CourseId"));
 		exactProblem.setAssignmentId((String)corsor.get("AssignmentId"));
 		exactProblem.setGradeWeight((String)corsor.get("GradeWeight"));
@@ -83,7 +83,7 @@ public class CourseProblemManager
 		// problem manager get problem from bank (as a user!)
 		ProblemBankBuilder problemBank = ProblemManager.mongoGetProblem(dbs, (String)corsor.get("problemBankId"), (String)exactProblem.courseId); // problem bank look up
 		exactProblem.problemResource = problemBank;
-		
+
 		if (isAdmin) {
 			exactProblem.permissions.setAdmin((ArrayList)corsor.get("Admin")); // admin
 			exactProblem.permissions.setMod((ArrayList)corsor.get("Mod"));	 // admin
@@ -95,7 +95,6 @@ public class CourseProblemManager
 		return exactProblem;
 
 	}
-
 
 	private static boolean mongoUpdateAssignment(DB dbs, String courseID,String userId,CourseProblemBuilder problem) throws AuthenticationException
 	{
@@ -144,9 +143,3 @@ public class CourseProblemManager
 	}
 
 }
-
-
-
-
-
-

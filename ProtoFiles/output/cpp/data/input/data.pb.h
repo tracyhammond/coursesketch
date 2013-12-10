@@ -27,6 +27,10 @@
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
+namespace protobuf {
+namespace srl {
+namespace query {
+
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_input_2fdata_2eproto();
 void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -144,19 +148,19 @@ class DataRequest : public ::google::protobuf::Message {
   inline ::std::string* release_sessionid();
   inline void set_allocated_sessionid(::std::string* sessionid);
 
-  // repeated .ItemRequest items = 3;
+  // repeated .protobuf.srl.query.ItemRequest items = 3;
   inline int items_size() const;
   inline void clear_items();
   static const int kItemsFieldNumber = 3;
-  inline const ::ItemRequest& items(int index) const;
-  inline ::ItemRequest* mutable_items(int index);
-  inline ::ItemRequest* add_items();
-  inline const ::google::protobuf::RepeatedPtrField< ::ItemRequest >&
+  inline const ::protobuf::srl::query::ItemRequest& items(int index) const;
+  inline ::protobuf::srl::query::ItemRequest* mutable_items(int index);
+  inline ::protobuf::srl::query::ItemRequest* add_items();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemRequest >&
       items() const;
-  inline ::google::protobuf::RepeatedPtrField< ::ItemRequest >*
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemRequest >*
       mutable_items();
 
-  // @@protoc_insertion_point(class_scope:DataRequest)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.DataRequest)
  private:
   inline void set_has_userid();
   inline void clear_has_userid();
@@ -167,7 +171,7 @@ class DataRequest : public ::google::protobuf::Message {
 
   ::std::string* userid_;
   ::std::string* sessionid_;
-  ::google::protobuf::RepeatedPtrField< ::ItemRequest > items_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemRequest > items_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -282,12 +286,12 @@ class ItemRequest : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& itemid() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_itemid();
 
-  // optional .ItemRequest.ItemQuery query = 2;
+  // optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
   inline bool has_query() const;
   inline void clear_query();
   static const int kQueryFieldNumber = 2;
-  inline ::ItemRequest_ItemQuery query() const;
-  inline void set_query(::ItemRequest_ItemQuery value);
+  inline ::protobuf::srl::query::ItemRequest_ItemQuery query() const;
+  inline void set_query(::protobuf::srl::query::ItemRequest_ItemQuery value);
 
   // optional bytes advanceQuery = 3;
   inline bool has_advancequery() const;
@@ -301,7 +305,7 @@ class ItemRequest : public ::google::protobuf::Message {
   inline ::std::string* release_advancequery();
   inline void set_allocated_advancequery(::std::string* advancequery);
 
-  // @@protoc_insertion_point(class_scope:ItemRequest)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemRequest)
  private:
   inline void set_has_query();
   inline void clear_has_query();
@@ -415,7 +419,7 @@ class AdvanceCourseGradePull : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& userid() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_userid();
 
-  // @@protoc_insertion_point(class_scope:AdvanceCourseGradePull)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.AdvanceCourseGradePull)
  private:
   inline void set_has_courseid();
   inline void clear_has_courseid();
@@ -529,7 +533,7 @@ class AdvanceUserGradePull : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& courseid() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_courseid();
 
-  // @@protoc_insertion_point(class_scope:AdvanceUserGradePull)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.AdvanceUserGradePull)
  private:
   inline void set_has_userid();
   inline void clear_has_userid();
@@ -644,7 +648,7 @@ class AdvanceReview : public ::google::protobuf::Message {
   inline ::std::string* release_courseproblemid();
   inline void set_allocated_courseproblemid(::std::string* courseproblemid);
 
-  // @@protoc_insertion_point(class_scope:AdvanceReview)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.AdvanceReview)
  private:
   inline void set_has_courseid();
   inline void clear_has_courseid();
@@ -816,27 +820,27 @@ inline void DataRequest::set_allocated_sessionid(::std::string* sessionid) {
   }
 }
 
-// repeated .ItemRequest items = 3;
+// repeated .protobuf.srl.query.ItemRequest items = 3;
 inline int DataRequest::items_size() const {
   return items_.size();
 }
 inline void DataRequest::clear_items() {
   items_.Clear();
 }
-inline const ::ItemRequest& DataRequest::items(int index) const {
+inline const ::protobuf::srl::query::ItemRequest& DataRequest::items(int index) const {
   return items_.Get(index);
 }
-inline ::ItemRequest* DataRequest::mutable_items(int index) {
+inline ::protobuf::srl::query::ItemRequest* DataRequest::mutable_items(int index) {
   return items_.Mutable(index);
 }
-inline ::ItemRequest* DataRequest::add_items() {
+inline ::protobuf::srl::query::ItemRequest* DataRequest::add_items() {
   return items_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::ItemRequest >&
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemRequest >&
 DataRequest::items() const {
   return items_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::ItemRequest >*
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemRequest >*
 DataRequest::mutable_items() {
   return &items_;
 }
@@ -889,7 +893,7 @@ ItemRequest::mutable_itemid() {
   return &itemid_;
 }
 
-// optional .ItemRequest.ItemQuery query = 2;
+// optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
 inline bool ItemRequest::has_query() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -903,11 +907,11 @@ inline void ItemRequest::clear_query() {
   query_ = 0;
   clear_has_query();
 }
-inline ::ItemRequest_ItemQuery ItemRequest::query() const {
-  return static_cast< ::ItemRequest_ItemQuery >(query_);
+inline ::protobuf::srl::query::ItemRequest_ItemQuery ItemRequest::query() const {
+  return static_cast< ::protobuf::srl::query::ItemRequest_ItemQuery >(query_);
 }
-inline void ItemRequest::set_query(::ItemRequest_ItemQuery value) {
-  assert(::ItemRequest_ItemQuery_IsValid(value));
+inline void ItemRequest::set_query(::protobuf::srl::query::ItemRequest_ItemQuery value) {
+  assert(::protobuf::srl::query::ItemRequest_ItemQuery_IsValid(value));
   set_has_query();
   query_ = value;
 }
@@ -1479,13 +1483,17 @@ inline void AdvanceReview::set_allocated_courseproblemid(::std::string* coursepr
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace query
+}  // namespace srl
+}  // namespace protobuf
+
 #ifndef SWIG
 namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::ItemRequest_ItemQuery>() {
-  return ::ItemRequest_ItemQuery_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::query::ItemRequest_ItemQuery>() {
+  return ::protobuf::srl::query::ItemRequest_ItemQuery_descriptor();
 }
 
 }  // namespace google
