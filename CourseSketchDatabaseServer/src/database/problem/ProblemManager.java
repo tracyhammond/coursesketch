@@ -22,7 +22,7 @@ public class ProblemManager
 		DBCollection new_user = dbs.getCollection("ProblemBank");
 		BasicDBObject query = new BasicDBObject("QuestionText",problem.questionText)
 										 .append("QestionImageName",problem.qestionImageName)
-										 .append("QuestionAnswerId",problem.questionAnswerId) 
+										 .append("QuestionSolutionId",problem.questionAnswerId) 
 										 .append("CourseTopic",problem.courseTopic)
 										 .append("SubTopic",problem.subTopic)
 										 .append("Source",problem.source)
@@ -57,7 +57,7 @@ public class ProblemManager
 		
 		exactProblem.setQuestionText((String)corsor.get("ProblemBank"));
 		exactProblem.setQestionImageName((String)corsor.get("QestionImageName"));
-		exactProblem.setQuestionAnswerId((String)corsor.get("QuestionAnswerId"));
+		exactProblem.setQuestionAnswerId((String)corsor.get("QuestionSolutionId"));
 		exactProblem.setCourseTopic((String)corsor.get("CourseTopic"));
 		exactProblem.setSubTopic((String)corsor.get("SubTopic"));
 		exactProblem.setSource((String)corsor.get("Source"));
@@ -108,7 +108,7 @@ public class ProblemManager
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (problem.questionAnswerId != null) {
-				updated.append("$set", new BasicDBObject("questionAnswerId", problem.questionAnswerId));
+				updated.append("$set", new BasicDBObject("QuestionSolutionId", problem.questionAnswerId));
 			}
 			if (problem.courseTopic != null) {
 				updated.append("$set", new BasicDBObject("courseTopic", problem.courseTopic));
