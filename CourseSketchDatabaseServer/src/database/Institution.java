@@ -17,10 +17,14 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import database.Institution;
+import database.assignment.AssignmentBuilder;
+import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.course.CourseBuilder;
 import database.course.CourseManager;
+import database.problem.ProblemBankBuilder;
+import database.problem.ProblemManager;
 
 
 public class Institution 
@@ -46,12 +50,55 @@ public class Institution
 	
 	// if user can only access between open date and close date
 	// user can only access problem between assignment open and close date
-	public static ArrayList<CourseBuilder> mongoGetCourses(ArrayList<String> courseID,String userId) throws AuthenticationException {
+	public static ArrayList<CourseBuilder> mongoGetCourses(ArrayList<String> courseID,String userId) throws AuthenticationException 
+	{
+		int courses = courseID.size();
 		long currentTime = System.currentTimeMillis();
+		ArrayList<CourseBuilder> allCourses = null;
+		
+		while(courses > 0)
+		{
+			allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseID.get(courses), userId));
+			courses--;
+		}
+		
 		// need to return everything
-		return CourseManager.mongoGetCourse(getInstance().db, courseID, userId, currentTime);
+		return allCourses;
 		// do open close checking
 	}
+	public static ArrayList<AssignmentBuilder> mongoGetAssignment(ArrayList<String> assignementID,String userId) throws AuthenticationException 
+	{
+		int assignments = assignementID.size();
+		long currentTime = System.currentTimeMillis();
+		ArrayList<AssignmentBuilder> allAssignments = null;
+		
+		while(assignments > 0)
+		{
+			allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().db, assignementID.get(assignments), userId));
+			assignments--;
+		}
+		
+		// need to return everything
+		return allAssignments;
+		// do open close checking
+	}
+	public static ArrayList<ProblemBankBuilder> mongoGetProblem(ArrayList<String> problemID,String userId) throws AuthenticationException 
+	{
+		int courses = problemID.size();
+		long currentTime = System.currentTimeMillis();
+		ArrayList<ProblemBankBuilder> allProblems = null;
+		
+		while(courses > 0)
+		{
+			allProblems.add(ProblemManager.mongoGetProblem(getInstance().db, problemID.get(courses), userId));
+			courses--;
+		}
+		
+		// need to return everything
+		return allProblems;
+		// do open close checking
+	}
+	
 	
 	//do get methods for course, assignment, problem
 
