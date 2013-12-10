@@ -32,7 +32,7 @@ public class ProblemManager
 		return (String) corsor.get("_id");
 	}
 	
-	static ProblemBankBuilder mongoGetProblem(DB dbs, String problemBankID,String userId) throws AuthenticationException
+	public static ProblemBankBuilder mongoGetProblem(DB dbs, String problemBankID,String userId) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("ProblemBank");
 		BasicDBObject query = new BasicDBObject("_id",problemBankID);
