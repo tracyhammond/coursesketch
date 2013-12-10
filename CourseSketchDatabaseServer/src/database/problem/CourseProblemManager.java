@@ -8,6 +8,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
+import database.PermissionBuilder;
 import database.assignment.AssignmentBuilder;
 import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
@@ -20,13 +21,13 @@ public class CourseProblemManager
 	private static String mongoInsertAssignment(DB dbs, String userId, CourseProblemBuilder problem) throws AuthenticationException
 	{
 		DBCollection new_user = dbs.getCollection("Problems");
-		AssignmentBuilder assignment = AssignmentManager.mongoGetAssignment(dbs,problem.courseId,userId);
+		AssignmentBuilder assignment = AssignmentManager.mongoGetAssignment(dbs,problem.courseId,userId, 0);
 		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, assignment.permissions.admin);
 		boolean isMod = Authenticator.checkAuthentication(dbs, userId, assignment.permissions.mod);
 
 		if(!isAdmin && !isMod)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
 		BasicDBObject query = new BasicDBObject("CourseId",problem.courseId)
@@ -39,26 +40,15 @@ public class CourseProblemManager
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 
-		//String[] addedProblem = Arrays.copyOf(assignment.problemList, assignment.problemList.length+1);
-
-		//addedProblem[assignment.problemList.length] = (String) corsor.get("_id"); 
-
-		//AssignmentBuilder newAssignment = new AssignmentBuilder();
-
-		//newAssignment.setProblemList(addedProblem);
-		
-		//AssignmentManager.mongoUpdateAssignment(dbs, problem.courseId,userId,newAssignment);
-
-		//return (String) corsor.get("_id");
-		
 		assignment.problemList.add((String) corsor.get("_id"));
 		AssignmentBuilder newAssignment = new AssignmentBuilder();
 		newAssignment.setProblemList(assignment.problemList);
 		AssignmentManager.mongoUpdateAssignment(dbs, assignment.courseId,userId,newAssignment);
+
 		return (String) corsor.get("_id");
 	}
 
-	private static CourseProblemBuilder mongoGetProblem(DB dbs, String courseID,String userId) throws AuthenticationException
+	private static CourseProblemBuilder mongoGetProblem(DB dbs, String courseID,String userId, long checkTime) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection("Problems");
 		BasicDBObject query = new BasicDBObject("_id",courseID);
@@ -74,7 +64,7 @@ public class CourseProblemManager
 		
 		if(!isAdmin && !isMod && !isUsers)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 		
 		CourseProblemBuilder exactProblem = new CourseProblemBuilder();
@@ -82,7 +72,13 @@ public class CourseProblemManager
 		exactProblem.setCourseId((String)corsor.get("CourseId"));
 		exactProblem.setAssignmentId((String)corsor.get("AssignmentId"));
 		exactProblem.setGradeWeight((String)corsor.get("GradeWeight"));
-		
+
+		if (isUsers) {
+			AssignmentBuilder assignment = AssignmentManager.mongoGetAssignment(dbs, exactProblem.assignmentId, userId, checkTime);
+			if(!PermissionBuilder.isTimeValid(checkTime, assignment.openDate, assignment.closeDate)) {
+				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
+			}
+		}
 
 		// problem manager get problem from bank (as a user!)
 		ProblemBankBuilder problemBank = ProblemManager.mongoGetProblem(dbs, (String)corsor.get("problemBankId"), (String)exactProblem.courseId); // problem bank look up
@@ -116,7 +112,7 @@ public class CourseProblemManager
 
 		if(!isAdmin && !isMod)
 		{
-			throw new AuthenticationException();
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
 		BasicDBObject updated = new BasicDBObject();
