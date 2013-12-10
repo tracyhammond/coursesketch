@@ -1,0 +1,50 @@
+message DataRequest {
+	required string userId = 1;
+	required string sessionId = 2;
+	repeated ItemRequest items = 3;
+}
+
+message ItemRequest {
+	repeated string itemId = 1; // to pull multiple of the same item
+	optional ItemQuery query = 2;
+	enum ItemQuery {
+		COURSE = 0;
+		ASSIGNMENT = 1;
+		COURSE_PROBLEM = 2;
+		BANK_PROBLEM = 3;
+		USERGROUP = 4;
+		CLASS_GRADE = 5;
+		USER_INFO = 6;
+		SOLUTION = 7;
+		EXPERIMENT = 8;
+	}
+
+	optional bytes advanceQuery = 3;
+}
+
+/**
+ * Pulls all grades of the users for a course
+ */
+message AdvanceCourseGradePull {
+	required string courseId = 1;
+	optional bool pullAllGrades = 2; // if true we pull all
+	repeated string userId = 3;
+}
+
+/**
+ * Pulls all grades for a user
+ */
+message AdvanceUserGradePull {
+	required string userId = 1;
+	optional bool pullAllGrades = 2; // if true we pull all
+	repeated string courseId = 3;
+}
+
+/**
+ * Pulls all of the information required for a user
+ */
+message AdvanceReview {
+	required string courseId = 1;
+	required string assignmentId = 2;
+	required string courseProblemId = 3;
+}
