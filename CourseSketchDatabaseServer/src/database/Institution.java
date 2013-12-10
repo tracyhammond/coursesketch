@@ -23,8 +23,6 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.course.CourseBuilder;
 import database.course.CourseManager;
-import database.problem.CourseProblemBuilder;
-import database.problem.CourseProblemManager;
 import database.problem.ProblemBankBuilder;
 import database.problem.ProblemManager;
 
@@ -60,7 +58,7 @@ public class Institution
 		
 		while(courses > 0)
 		{
-			allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseID.get(courses), userId));
+			allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseID.get(courses), userId,currentTime));
 			courses--;
 		}
 		
@@ -68,16 +66,39 @@ public class Institution
 		return allCourses;
 		// do open close checking
 	}
+	
+	public static ArrayList<CourseBuilder> mongoGetCourses(ArrayList<String> courseID,String userId) throws AuthenticationException 
+	{
+		int courses = courseID.size();
+		long currentTime = System.currentTimeMillis();
+		ArrayList<CourseBuilder> allCourses = null;
+		
+		while(courses > 0)
+		{
+			allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseID.get(courses), userId,currentTime));
+			courses--;
+		}
+		
+		// need to return everything
+		return allCourses;
+		// do open close checking
+	}
+	
+	
+	
+	
+
+	
+	
 	public static ArrayList<AssignmentBuilder> mongoGetAssignment(ArrayList<String> assignementID,String userId) throws AuthenticationException 
 	{
-		int assignments = assignementID.size();
+		
 		long currentTime = System.currentTimeMillis();
 		ArrayList<AssignmentBuilder> allAssignments = null;
 		
-		while(assignments > 0)
+		for(int assignments = assignementID.size(); assignments > 0; assignments--)
 		{
-			allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().db, assignementID.get(assignments), userId));
-			assignments--;
+			allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().db, assignementID.get(assignments), userId,currentTime));
 		}
 		
 		// need to return everything
@@ -86,35 +107,17 @@ public class Institution
 	}
 	public static ArrayList<ProblemBankBuilder> mongoGetProblem(ArrayList<String> problemID,String userId) throws AuthenticationException 
 	{
-		int courses = problemID.size();
+		
 		long currentTime = System.currentTimeMillis();
 		ArrayList<ProblemBankBuilder> allProblems = null;
 		
-		while(courses > 0)
+		for(int problem = problemID.size(); problem > 0; problem --)
 		{
-			allProblems.add(ProblemManager.mongoGetProblem(getInstance().db, problemID.get(courses), userId));
-			courses--;
+			allProblems.add(ProblemManager.mongoGetProblem(getInstance().db, problemID.get(problem), userId));
 		}
 		
 		// need to return everything
 		return allProblems;
-		// do open close checking
-	}
-	
-	public static ArrayList<CourseProblemBuilder> mongoGetCourseProblem(ArrayList<String> problemID,String userId) throws AuthenticationException 
-	{
-		int courseProblems = problemID.size();
-		long currentTime = System.currentTimeMillis();
-		ArrayList<CourseProblemBuilder> allCourses = null;
-		
-		while(courseProblems > 0)
-		{
-			allCourses.add(CourseProblemManager.mongoGetProblem(getInstance().db, problemID.get(courseProblems), userId));
-			courseProblems--;
-		}
-		
-		// need to return everything
-		return allCourses;
 		// do open close checking
 	}
 	
