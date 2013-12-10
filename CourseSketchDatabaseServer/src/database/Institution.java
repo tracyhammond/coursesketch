@@ -61,7 +61,7 @@ public class Institution
 	{
 		int courses = courseID.size()-1;
 		long currentTime = System.currentTimeMillis();
-		ArrayList<CourseBuilder> allCourses = null;
+		ArrayList<CourseBuilder> allCourses = new ArrayList<CourseBuilder>();
 		
 		while(courses >= 0)
 		{
@@ -78,7 +78,7 @@ public class Institution
 	{
 		int courseProblems = problemID.size()-1;
 		long currentTime = System.currentTimeMillis();
-		ArrayList<CourseProblemBuilder> allCourses = null;
+		ArrayList<CourseProblemBuilder> allCourses = new ArrayList<CourseProblemBuilder>();
 		
 		while(courseProblems >= 0)
 		{
@@ -96,7 +96,7 @@ public class Institution
 	{
 		
 		long currentTime = System.currentTimeMillis();
-		ArrayList<AssignmentBuilder> allAssignments = null;
+		ArrayList<AssignmentBuilder> allAssignments = new ArrayList<AssignmentBuilder>();
 		
 		for(int assignments = assignementID.size()-1; assignments >= 0; assignments--)
 		{
@@ -111,7 +111,7 @@ public class Institution
 	{
 		
 		long currentTime = System.currentTimeMillis();
-		ArrayList<ProblemBankBuilder> allProblems = null;
+		ArrayList<ProblemBankBuilder> allProblems = new ArrayList<ProblemBankBuilder>();
 		
 		for(int problem = problemID.size()-1; problem >= 0; problem --)
 		{
