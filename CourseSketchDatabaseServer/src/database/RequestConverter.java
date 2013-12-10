@@ -34,6 +34,9 @@ public class RequestConverter{
 			srlCourseBuilder.setAccess(SrlCourse.Accessibility.valueOf(course.access));
 		} catch(Exception e) {
 		}
+		if (course != null) {
+			srlCourseBuilder.setId("Fake test id");
+		}
 		if (course.assignmentList != null) {
 			srlCourseBuilder.addAllAssignmentId(course.assignmentList);
 		}
