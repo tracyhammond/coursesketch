@@ -1,6 +1,7 @@
 package test;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -28,9 +29,17 @@ public class DatabaseTester {
 		testBuilder.setName("Discrete Mathematics");
 		testBuilder.setDescription("mathematcs that do discrete things!");
 		testBuilder.setOpenDate("");
-		testBuilder.permissions.admin = new String[] {"david", "larry"};
-		testBuilder.permissions.mod = new String[] {"raniero", "manoj"};
-		testBuilder.permissions.users = new String[] {"vijay", "matt"};
+		testBuilder.permissions.admin = new ArrayList<String>();
+		testBuilder.permissions.admin.add("david");
+		testBuilder.permissions.admin.add("larry");
+		
+		testBuilder.permissions.mod = new ArrayList<String>();
+		testBuilder.permissions.mod.add("raniero");
+		testBuilder.permissions.mod.add("manoj");
+		
+		testBuilder.permissions.users = new ArrayList<String>();
+		testBuilder.permissions.users.add("vijay");
+		testBuilder.permissions.users.add("matt");
 		System.out.println(testBuilder.toString());
 		
 		System.out.println("INSERTING COURSE");
@@ -75,7 +84,7 @@ public class DatabaseTester {
 		try {
 			System.out.println("UPDATING COURSE AS MOD");
 			boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "raniero", userBuilder);
-			System.out.println("SOMETHING FAILED, MOD SHOULD HAVE NOTHING");
+			System.out.println("Mod can only do assignment list");
 		} catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate");
 		}

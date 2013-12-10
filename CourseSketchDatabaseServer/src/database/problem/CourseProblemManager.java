@@ -1,5 +1,6 @@
 package database.problem;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.mongodb.BasicDBObject;
@@ -11,6 +12,8 @@ import database.assignment.AssignmentBuilder;
 import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import database.course.CourseBuilder;
+import database.course.CourseManager;
 
 public class CourseProblemManager 
 {
@@ -36,16 +39,22 @@ public class CourseProblemManager
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 
-		String[] addedProblem = Arrays.copyOf(assignment.problemList, assignment.problemList.length+1);
+		//String[] addedProblem = Arrays.copyOf(assignment.problemList, assignment.problemList.length+1);
 
-		addedProblem[assignment.problemList.length] = (String) corsor.get("_id"); 
+		//addedProblem[assignment.problemList.length] = (String) corsor.get("_id"); 
 
+		//AssignmentBuilder newAssignment = new AssignmentBuilder();
+
+		//newAssignment.setProblemList(addedProblem);
+		
+		//AssignmentManager.mongoUpdateAssignment(dbs, problem.courseId,userId,newAssignment);
+
+		//return (String) corsor.get("_id");
+		
+		assignment.problemList.add((String) corsor.get("_id"));
 		AssignmentBuilder newAssignment = new AssignmentBuilder();
-
-		newAssignment.setProblemList(addedProblem);
-
-		AssignmentManager.mongoUpdateAssignment(dbs, problem.courseId,userId,newAssignment);
-
+		newAssignment.setProblemList(assignment.problemList);
+		AssignmentManager.mongoUpdateAssignment(dbs, assignment.courseId,userId,newAssignment);
 		return (String) corsor.get("_id");
 	}
 
@@ -55,9 +64,9 @@ public class CourseProblemManager
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = courses.findOne(query);
 		
-		String[] adminList = (String[])corsor.get("Admin");
-		String[] modList = (String[])corsor.get("Mod");	
-		String[] usersList = (String[])corsor.get("Users");
+		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
+		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
+		ArrayList usersList = (ArrayList<Object>)corsor.get("Users");
 		boolean isAdmin,isMod,isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
@@ -80,12 +89,12 @@ public class CourseProblemManager
 		exactProblem.problemResource = problemBank;
 		
 		if (isAdmin) {
-			exactProblem.permissions.setAdmin((String[])corsor.get("Admin")); // admin
-			exactProblem.permissions.setMod((String[])corsor.get("Mod"));	 // admin
+			exactProblem.permissions.setAdmin((ArrayList)corsor.get("Admin")); // admin
+			exactProblem.permissions.setMod((ArrayList)corsor.get("Mod"));	 // admin
 		}
 		if (isAdmin || isMod) {
 			exactProblem.setProblemBankId((String)corsor.get("ProblemBankId")); //admin or mod
-			exactProblem.permissions.setUsers((String[])corsor.get("Users")); //admin or mod
+			exactProblem.permissions.setUsers((ArrayList)corsor.get("Users")); //admin or mod
 		}
 		return exactProblem;
 
@@ -98,9 +107,9 @@ public class CourseProblemManager
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = courses.findOne(query);
 
-		String[] adminList = (String[])corsor.get("Admin");
-		String[] modList = (String[])corsor.get("Mod");	
-		String[] usersList = (String[])corsor.get("Users");
+		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
+		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
+		ArrayList usersList = (ArrayList<Object>)corsor.get("Users");
 		boolean isAdmin,isMod,isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);

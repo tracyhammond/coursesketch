@@ -1,5 +1,6 @@
 package database.problem;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.mongodb.BasicDBObject;
@@ -37,9 +38,9 @@ public class ProblemManager
 		BasicDBObject query = new BasicDBObject("_id",problemBankID);
 		DBObject corsor = courses.findOne(query);
 
-		String[] adminList = (String[])corsor.get("Admin");
-		String[] modList = (String[])corsor.get("Mod");	
-		String[] usersList = (String[])corsor.get("Users");
+		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
+		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
+		ArrayList usersList = (ArrayList<Object>)corsor.get("Users");
 		boolean isAdmin,isMod,isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
@@ -65,11 +66,11 @@ public class ProblemManager
 		
 		if (isAdmin) 
 		{
-			exactProblem.permissions.setAdmin((String[])corsor.get("Admin")); // admin
-			exactProblem.permissions.setMod((String[])corsor.get("Mod"));	 // admin
+			exactProblem.permissions.setAdmin((ArrayList)corsor.get("Admin")); // admin
+			exactProblem.permissions.setMod((ArrayList)corsor.get("Mod"));	 // admin
 		}
 		if (isAdmin || isMod) {
-			exactProblem.permissions.setUsers((String[])corsor.get("Users")); //admin
+			exactProblem.permissions.setUsers((ArrayList)corsor.get("Users")); //admin
 		}
 		return exactProblem;
 
@@ -82,9 +83,9 @@ public class ProblemManager
 		BasicDBObject query = new BasicDBObject("_id",courseID);
 		DBObject corsor = courses.findOne(query);
 		
-		String[] adminList = (String[])corsor.get("Admin");
-		String[] modList = (String[])corsor.get("Mod");	
-		String[] usersList = (String[])corsor.get("Users");
+		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
+		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
+		ArrayList<Object> usersList = (ArrayList<Object>)corsor.get("Users");
 		boolean isAdmin,isMod,isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);

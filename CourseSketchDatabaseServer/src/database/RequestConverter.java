@@ -1,5 +1,6 @@
 package database;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import database.assignment.AssignmentBuilder;
@@ -8,6 +9,7 @@ import database.problem.CourseProblemBuilder;
 import protobuf.srl.school.School.DateTime;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 
@@ -51,6 +53,7 @@ public class RequestConverter{
 		assignmentBuilder.setName(protoAssignment.getName());
 		assignmentBuilder.setOpenDate(DateProtobufToString(protoAssignment.getAccessDate()));
 		assignmentBuilder.setOther(protoAssignment.getOther());
+		assignmentBuilder.set
 		//assignmentBuilder.setType(protoAssignment.getType());
 		
 		return assignmentBuilder;
@@ -99,13 +102,20 @@ public class RequestConverter{
 	
 	private static PermissionBuilder ProtoToPermission(SrlPermission permission){
 		PermissionBuilder permissionBuild = new PermissionBuilder();
-		
-		permissionBuild.setAdmin(Arrays.toArray(permission.getAdminPermissionList())); //List of strings
+		permission.get
+		permissionBuild.setAdmin(GroupToString(permission.getAdminPermissionList())); //List of strings
 		permissionBuild.setMod(Arrays.toArray(permission.getModeratorPermissionList()));
 		permissionBuild.setUsers(Arrays.toArray(permission.getUserPermissionList()));
 		
 		return null;
 	}
+	
+	private static ArrayList<String> GroupToString(SrlGroup group){
+		ArrayList<String> inputGroup = new ArrayList<String>();
+		inputGroup.add(group.getGroupId());
+		return inputGroup;
+	}
+	
 	
 	private static DateTime DateStringToProtobuf(String date){
 		DateTime.Builder protobufDateTime = DateTime.newBuilder();
