@@ -40,7 +40,7 @@ class SrlSchool;
 class SrlCourse;
 class SrlAssignment;
 class SrlProblem;
-class subproblemInformation;
+class problemBankProblem;
 class DateTime;
 class DomainInformation;
 class State;
@@ -113,26 +113,26 @@ inline bool SrlAssignment_LatePolicy_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<SrlAssignment_LatePolicy>(
     SrlAssignment_LatePolicy_descriptor(), name, value);
 }
-enum subproblemInformation_QuestionType {
-  subproblemInformation_QuestionType_SKETCH = 1,
-  subproblemInformation_QuestionType_MULT_CHOICE = 2,
-  subproblemInformation_QuestionType_FREE_RESP = 3,
-  subproblemInformation_QuestionType_CHECK_BOX = 4
+enum problemBankProblem_QuestionType {
+  problemBankProblem_QuestionType_SKETCH = 1,
+  problemBankProblem_QuestionType_MULT_CHOICE = 2,
+  problemBankProblem_QuestionType_FREE_RESP = 3,
+  problemBankProblem_QuestionType_CHECK_BOX = 4
 };
-bool subproblemInformation_QuestionType_IsValid(int value);
-const subproblemInformation_QuestionType subproblemInformation_QuestionType_QuestionType_MIN = subproblemInformation_QuestionType_SKETCH;
-const subproblemInformation_QuestionType subproblemInformation_QuestionType_QuestionType_MAX = subproblemInformation_QuestionType_CHECK_BOX;
-const int subproblemInformation_QuestionType_QuestionType_ARRAYSIZE = subproblemInformation_QuestionType_QuestionType_MAX + 1;
+bool problemBankProblem_QuestionType_IsValid(int value);
+const problemBankProblem_QuestionType problemBankProblem_QuestionType_QuestionType_MIN = problemBankProblem_QuestionType_SKETCH;
+const problemBankProblem_QuestionType problemBankProblem_QuestionType_QuestionType_MAX = problemBankProblem_QuestionType_CHECK_BOX;
+const int problemBankProblem_QuestionType_QuestionType_ARRAYSIZE = problemBankProblem_QuestionType_QuestionType_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* subproblemInformation_QuestionType_descriptor();
-inline const ::std::string& subproblemInformation_QuestionType_Name(subproblemInformation_QuestionType value) {
+const ::google::protobuf::EnumDescriptor* problemBankProblem_QuestionType_descriptor();
+inline const ::std::string& problemBankProblem_QuestionType_Name(problemBankProblem_QuestionType value) {
   return ::google::protobuf::internal::NameOfEnum(
-    subproblemInformation_QuestionType_descriptor(), value);
+    problemBankProblem_QuestionType_descriptor(), value);
 }
-inline bool subproblemInformation_QuestionType_Parse(
-    const ::std::string& name, subproblemInformation_QuestionType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<subproblemInformation_QuestionType>(
-    subproblemInformation_QuestionType_descriptor(), name, value);
+inline bool problemBankProblem_QuestionType_Parse(
+    const ::std::string& name, problemBankProblem_QuestionType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<problemBankProblem_QuestionType>(
+    problemBankProblem_QuestionType_descriptor(), name, value);
 }
 enum UserType {
   ADMIN = 1,
@@ -935,34 +935,10 @@ class SrlProblem : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string courseId = 1;
-  inline bool has_courseid() const;
-  inline void clear_courseid();
-  static const int kCourseIdFieldNumber = 1;
-  inline const ::std::string& courseid() const;
-  inline void set_courseid(const ::std::string& value);
-  inline void set_courseid(const char* value);
-  inline void set_courseid(const char* value, size_t size);
-  inline ::std::string* mutable_courseid();
-  inline ::std::string* release_courseid();
-  inline void set_allocated_courseid(::std::string* courseid);
-
-  // required string assignmentId = 2;
-  inline bool has_assignmentid() const;
-  inline void clear_assignmentid();
-  static const int kAssignmentIdFieldNumber = 2;
-  inline const ::std::string& assignmentid() const;
-  inline void set_assignmentid(const ::std::string& value);
-  inline void set_assignmentid(const char* value);
-  inline void set_assignmentid(const char* value, size_t size);
-  inline ::std::string* mutable_assignmentid();
-  inline ::std::string* release_assignmentid();
-  inline void set_allocated_assignmentid(::std::string* assignmentid);
-
-  // required string id = 3;
+  // required string id = 1;
   inline bool has_id() const;
   inline void clear_id();
-  static const int kIdFieldNumber = 3;
+  static const int kIdFieldNumber = 1;
   inline const ::std::string& id() const;
   inline void set_id(const ::std::string& value);
   inline void set_id(const char* value);
@@ -971,10 +947,46 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::std::string* release_id();
   inline void set_allocated_id(::std::string* id);
 
-  // optional string name = 4;
+  // optional string courseId = 2;
+  inline bool has_courseid() const;
+  inline void clear_courseid();
+  static const int kCourseIdFieldNumber = 2;
+  inline const ::std::string& courseid() const;
+  inline void set_courseid(const ::std::string& value);
+  inline void set_courseid(const char* value);
+  inline void set_courseid(const char* value, size_t size);
+  inline ::std::string* mutable_courseid();
+  inline ::std::string* release_courseid();
+  inline void set_allocated_courseid(::std::string* courseid);
+
+  // optional string assignmentId = 3;
+  inline bool has_assignmentid() const;
+  inline void clear_assignmentid();
+  static const int kAssignmentIdFieldNumber = 3;
+  inline const ::std::string& assignmentid() const;
+  inline void set_assignmentid(const ::std::string& value);
+  inline void set_assignmentid(const char* value);
+  inline void set_assignmentid(const char* value, size_t size);
+  inline ::std::string* mutable_assignmentid();
+  inline ::std::string* release_assignmentid();
+  inline void set_allocated_assignmentid(::std::string* assignmentid);
+
+  // optional string problemBankId = 4;
+  inline bool has_problembankid() const;
+  inline void clear_problembankid();
+  static const int kProblemBankIdFieldNumber = 4;
+  inline const ::std::string& problembankid() const;
+  inline void set_problembankid(const ::std::string& value);
+  inline void set_problembankid(const char* value);
+  inline void set_problembankid(const char* value, size_t size);
+  inline ::std::string* mutable_problembankid();
+  inline ::std::string* release_problembankid();
+  inline void set_allocated_problembankid(::std::string* problembankid);
+
+  // optional string name = 5;
   inline bool has_name() const;
   inline void clear_name();
-  static const int kNameFieldNumber = 4;
+  static const int kNameFieldNumber = 5;
   inline const ::std::string& name() const;
   inline void set_name(const ::std::string& value);
   inline void set_name(const char* value);
@@ -983,10 +995,10 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
-  // optional string description = 5;
+  // optional string description = 6;
   inline bool has_description() const;
   inline void clear_description();
-  static const int kDescriptionFieldNumber = 5;
+  static const int kDescriptionFieldNumber = 6;
   inline const ::std::string& description() const;
   inline void set_description(const ::std::string& value);
   inline void set_description(const char* value);
@@ -995,22 +1007,19 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::std::string* release_description();
   inline void set_allocated_description(::std::string* description);
 
-  // repeated .protobuf.srl.school.subproblemInformation subProblems = 6;
-  inline int subproblems_size() const;
-  inline void clear_subproblems();
-  static const int kSubProblemsFieldNumber = 6;
-  inline const ::protobuf::srl::school::subproblemInformation& subproblems(int index) const;
-  inline ::protobuf::srl::school::subproblemInformation* mutable_subproblems(int index);
-  inline ::protobuf::srl::school::subproblemInformation* add_subproblems();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation >&
-      subproblems() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation >*
-      mutable_subproblems();
+  // optional .protobuf.srl.school.problemBankProblem problemInfo = 7;
+  inline bool has_probleminfo() const;
+  inline void clear_probleminfo();
+  static const int kProblemInfoFieldNumber = 7;
+  inline const ::protobuf::srl::school::problemBankProblem& probleminfo() const;
+  inline ::protobuf::srl::school::problemBankProblem* mutable_probleminfo();
+  inline ::protobuf::srl::school::problemBankProblem* release_probleminfo();
+  inline void set_allocated_probleminfo(::protobuf::srl::school::problemBankProblem* probleminfo);
 
-  // repeated .protobuf.srl.school.DomainInformation info = 7;
+  // repeated .protobuf.srl.school.DomainInformation info = 8;
   inline int info_size() const;
   inline void clear_info();
-  static const int kInfoFieldNumber = 7;
+  static const int kInfoFieldNumber = 8;
   inline const ::protobuf::srl::school::DomainInformation& info(int index) const;
   inline ::protobuf::srl::school::DomainInformation* mutable_info(int index);
   inline ::protobuf::srl::school::DomainInformation* add_info();
@@ -1019,10 +1028,10 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >*
       mutable_info();
 
-  // optional string gradeWeight = 8;
+  // optional string gradeWeight = 9;
   inline bool has_gradeweight() const;
   inline void clear_gradeweight();
-  static const int kGradeWeightFieldNumber = 8;
+  static const int kGradeWeightFieldNumber = 9;
   inline const ::std::string& gradeweight() const;
   inline void set_gradeweight(const ::std::string& value);
   inline void set_gradeweight(const char* value);
@@ -1031,56 +1040,73 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::std::string* release_gradeweight();
   inline void set_allocated_gradeweight(::std::string* gradeweight);
 
-  // optional float grade = 9;
+  // optional float grade = 10;
   inline bool has_grade() const;
   inline void clear_grade();
-  static const int kGradeFieldNumber = 9;
+  static const int kGradeFieldNumber = 10;
   inline float grade() const;
   inline void set_grade(float value);
 
-  // optional .protobuf.srl.school.State state = 10;
+  // optional .protobuf.srl.school.State state = 11;
   inline bool has_state() const;
   inline void clear_state();
-  static const int kStateFieldNumber = 10;
+  static const int kStateFieldNumber = 11;
   inline const ::protobuf::srl::school::State& state() const;
   inline ::protobuf::srl::school::State* mutable_state();
   inline ::protobuf::srl::school::State* release_state();
   inline void set_allocated_state(::protobuf::srl::school::State* state);
 
+  // optional .protobuf.srl.school.SrlPermission accessPermission = 12;
+  inline bool has_accesspermission() const;
+  inline void clear_accesspermission();
+  static const int kAccessPermissionFieldNumber = 12;
+  inline const ::protobuf::srl::school::SrlPermission& accesspermission() const;
+  inline ::protobuf::srl::school::SrlPermission* mutable_accesspermission();
+  inline ::protobuf::srl::school::SrlPermission* release_accesspermission();
+  inline void set_allocated_accesspermission(::protobuf::srl::school::SrlPermission* accesspermission);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlProblem)
  private:
+  inline void set_has_id();
+  inline void clear_has_id();
   inline void set_has_courseid();
   inline void clear_has_courseid();
   inline void set_has_assignmentid();
   inline void clear_has_assignmentid();
-  inline void set_has_id();
-  inline void clear_has_id();
+  inline void set_has_problembankid();
+  inline void clear_has_problembankid();
   inline void set_has_name();
   inline void clear_has_name();
   inline void set_has_description();
   inline void clear_has_description();
+  inline void set_has_probleminfo();
+  inline void clear_has_probleminfo();
   inline void set_has_gradeweight();
   inline void clear_has_gradeweight();
   inline void set_has_grade();
   inline void clear_has_grade();
   inline void set_has_state();
   inline void clear_has_state();
+  inline void set_has_accesspermission();
+  inline void clear_has_accesspermission();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* id_;
   ::std::string* courseid_;
   ::std::string* assignmentid_;
-  ::std::string* id_;
+  ::std::string* problembankid_;
   ::std::string* name_;
   ::std::string* description_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation > subproblems_;
+  ::protobuf::srl::school::problemBankProblem* probleminfo_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation > info_;
   ::std::string* gradeweight_;
   ::protobuf::srl::school::State* state_;
+  ::protobuf::srl::school::SrlPermission* accesspermission_;
   float grade_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -1091,14 +1117,14 @@ class SrlProblem : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class subproblemInformation : public ::google::protobuf::Message {
+class problemBankProblem : public ::google::protobuf::Message {
  public:
-  subproblemInformation();
-  virtual ~subproblemInformation();
+  problemBankProblem();
+  virtual ~problemBankProblem();
 
-  subproblemInformation(const subproblemInformation& from);
+  problemBankProblem(const problemBankProblem& from);
 
-  inline subproblemInformation& operator=(const subproblemInformation& from) {
+  inline problemBankProblem& operator=(const problemBankProblem& from) {
     CopyFrom(from);
     return *this;
   }
@@ -1112,17 +1138,17 @@ class subproblemInformation : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const subproblemInformation& default_instance();
+  static const problemBankProblem& default_instance();
 
-  void Swap(subproblemInformation* other);
+  void Swap(problemBankProblem* other);
 
   // implements Message ----------------------------------------------
 
-  subproblemInformation* New() const;
+  problemBankProblem* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const subproblemInformation& from);
-  void MergeFrom(const subproblemInformation& from);
+  void CopyFrom(const problemBankProblem& from);
+  void MergeFrom(const problemBankProblem& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -1143,38 +1169,50 @@ class subproblemInformation : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef subproblemInformation_QuestionType QuestionType;
-  static const QuestionType SKETCH = subproblemInformation_QuestionType_SKETCH;
-  static const QuestionType MULT_CHOICE = subproblemInformation_QuestionType_MULT_CHOICE;
-  static const QuestionType FREE_RESP = subproblemInformation_QuestionType_FREE_RESP;
-  static const QuestionType CHECK_BOX = subproblemInformation_QuestionType_CHECK_BOX;
+  typedef problemBankProblem_QuestionType QuestionType;
+  static const QuestionType SKETCH = problemBankProblem_QuestionType_SKETCH;
+  static const QuestionType MULT_CHOICE = problemBankProblem_QuestionType_MULT_CHOICE;
+  static const QuestionType FREE_RESP = problemBankProblem_QuestionType_FREE_RESP;
+  static const QuestionType CHECK_BOX = problemBankProblem_QuestionType_CHECK_BOX;
   static inline bool QuestionType_IsValid(int value) {
-    return subproblemInformation_QuestionType_IsValid(value);
+    return problemBankProblem_QuestionType_IsValid(value);
   }
   static const QuestionType QuestionType_MIN =
-    subproblemInformation_QuestionType_QuestionType_MIN;
+    problemBankProblem_QuestionType_QuestionType_MIN;
   static const QuestionType QuestionType_MAX =
-    subproblemInformation_QuestionType_QuestionType_MAX;
+    problemBankProblem_QuestionType_QuestionType_MAX;
   static const int QuestionType_ARRAYSIZE =
-    subproblemInformation_QuestionType_QuestionType_ARRAYSIZE;
+    problemBankProblem_QuestionType_QuestionType_ARRAYSIZE;
   static inline const ::google::protobuf::EnumDescriptor*
   QuestionType_descriptor() {
-    return subproblemInformation_QuestionType_descriptor();
+    return problemBankProblem_QuestionType_descriptor();
   }
   static inline const ::std::string& QuestionType_Name(QuestionType value) {
-    return subproblemInformation_QuestionType_Name(value);
+    return problemBankProblem_QuestionType_Name(value);
   }
   static inline bool QuestionType_Parse(const ::std::string& name,
       QuestionType* value) {
-    return subproblemInformation_QuestionType_Parse(name, value);
+    return problemBankProblem_QuestionType_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
 
-  // optional string questionText = 1;
+  // required string id = 1;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 1;
+  inline const ::std::string& id() const;
+  inline void set_id(const ::std::string& value);
+  inline void set_id(const char* value);
+  inline void set_id(const char* value, size_t size);
+  inline ::std::string* mutable_id();
+  inline ::std::string* release_id();
+  inline void set_allocated_id(::std::string* id);
+
+  // optional string questionText = 2;
   inline bool has_questiontext() const;
   inline void clear_questiontext();
-  static const int kQuestionTextFieldNumber = 1;
+  static const int kQuestionTextFieldNumber = 2;
   inline const ::std::string& questiontext() const;
   inline void set_questiontext(const ::std::string& value);
   inline void set_questiontext(const char* value);
@@ -1183,17 +1221,17 @@ class subproblemInformation : public ::google::protobuf::Message {
   inline ::std::string* release_questiontext();
   inline void set_allocated_questiontext(::std::string* questiontext);
 
-  // optional .protobuf.srl.school.subproblemInformation.QuestionType questionType = 2 [default = SKETCH];
+  // optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];
   inline bool has_questiontype() const;
   inline void clear_questiontype();
-  static const int kQuestionTypeFieldNumber = 2;
-  inline ::protobuf::srl::school::subproblemInformation_QuestionType questiontype() const;
-  inline void set_questiontype(::protobuf::srl::school::subproblemInformation_QuestionType value);
+  static const int kQuestionTypeFieldNumber = 3;
+  inline ::protobuf::srl::school::problemBankProblem_QuestionType questiontype() const;
+  inline void set_questiontype(::protobuf::srl::school::problemBankProblem_QuestionType value);
 
-  // optional bytes options = 3;
+  // optional bytes options = 4;
   inline bool has_options() const;
   inline void clear_options();
-  static const int kOptionsFieldNumber = 3;
+  static const int kOptionsFieldNumber = 4;
   inline const ::std::string& options() const;
   inline void set_options(const ::std::string& value);
   inline void set_options(const char* value);
@@ -1202,45 +1240,35 @@ class subproblemInformation : public ::google::protobuf::Message {
   inline ::std::string* release_options();
   inline void set_allocated_options(::std::string* options);
 
-  // optional string gradeWeight = 4;
-  inline bool has_gradeweight() const;
-  inline void clear_gradeweight();
-  static const int kGradeWeightFieldNumber = 4;
-  inline const ::std::string& gradeweight() const;
-  inline void set_gradeweight(const ::std::string& value);
-  inline void set_gradeweight(const char* value);
-  inline void set_gradeweight(const char* value, size_t size);
-  inline ::std::string* mutable_gradeweight();
-  inline ::std::string* release_gradeweight();
-  inline void set_allocated_gradeweight(::std::string* gradeweight);
+  // optional .protobuf.srl.school.SrlPermission accessPermission = 5;
+  inline bool has_accesspermission() const;
+  inline void clear_accesspermission();
+  static const int kAccessPermissionFieldNumber = 5;
+  inline const ::protobuf::srl::school::SrlPermission& accesspermission() const;
+  inline ::protobuf::srl::school::SrlPermission* mutable_accesspermission();
+  inline ::protobuf::srl::school::SrlPermission* release_accesspermission();
+  inline void set_allocated_accesspermission(::protobuf::srl::school::SrlPermission* accesspermission);
 
-  // optional float grade = 5;
-  inline bool has_grade() const;
-  inline void clear_grade();
-  static const int kGradeFieldNumber = 5;
-  inline float grade() const;
-  inline void set_grade(float value);
-
-  // @@protoc_insertion_point(class_scope:protobuf.srl.school.subproblemInformation)
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.problemBankProblem)
  private:
+  inline void set_has_id();
+  inline void clear_has_id();
   inline void set_has_questiontext();
   inline void clear_has_questiontext();
   inline void set_has_questiontype();
   inline void clear_has_questiontype();
   inline void set_has_options();
   inline void clear_has_options();
-  inline void set_has_gradeweight();
-  inline void clear_has_gradeweight();
-  inline void set_has_grade();
-  inline void clear_has_grade();
+  inline void set_has_accesspermission();
+  inline void clear_has_accesspermission();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* id_;
   ::std::string* questiontext_;
   ::std::string* options_;
+  ::protobuf::srl::school::SrlPermission* accesspermission_;
   int questiontype_;
-  float grade_;
-  ::std::string* gradeweight_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
@@ -1250,7 +1278,7 @@ class subproblemInformation : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_input_2fschool_2eproto();
 
   void InitAsDefaultInstance();
-  static subproblemInformation* default_instance_;
+  static problemBankProblem* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -3595,155 +3623,15 @@ inline void SrlAssignment::set_allocated_accesspermission(::protobuf::srl::schoo
 
 // SrlProblem
 
-// required string courseId = 1;
-inline bool SrlProblem::has_courseid() const {
+// required string id = 1;
+inline bool SrlProblem::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SrlProblem::set_has_courseid() {
+inline void SrlProblem::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SrlProblem::clear_has_courseid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void SrlProblem::clear_courseid() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    courseid_->clear();
-  }
-  clear_has_courseid();
-}
-inline const ::std::string& SrlProblem::courseid() const {
-  return *courseid_;
-}
-inline void SrlProblem::set_courseid(const ::std::string& value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
-}
-inline void SrlProblem::set_courseid(const char* value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
-}
-inline void SrlProblem::set_courseid(const char* value, size_t size) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SrlProblem::mutable_courseid() {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  return courseid_;
-}
-inline ::std::string* SrlProblem::release_courseid() {
-  clear_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = courseid_;
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SrlProblem::set_allocated_courseid(::std::string* courseid) {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (courseid) {
-    set_has_courseid();
-    courseid_ = courseid;
-  } else {
-    clear_has_courseid();
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// required string assignmentId = 2;
-inline bool SrlProblem::has_assignmentid() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void SrlProblem::set_has_assignmentid() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void SrlProblem::clear_has_assignmentid() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void SrlProblem::clear_assignmentid() {
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    assignmentid_->clear();
-  }
-  clear_has_assignmentid();
-}
-inline const ::std::string& SrlProblem::assignmentid() const {
-  return *assignmentid_;
-}
-inline void SrlProblem::set_assignmentid(const ::std::string& value) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(value);
-}
-inline void SrlProblem::set_assignmentid(const char* value) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(value);
-}
-inline void SrlProblem::set_assignmentid(const char* value, size_t size) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SrlProblem::mutable_assignmentid() {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  return assignmentid_;
-}
-inline ::std::string* SrlProblem::release_assignmentid() {
-  clear_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = assignmentid_;
-    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SrlProblem::set_allocated_assignmentid(::std::string* assignmentid) {
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentid_;
-  }
-  if (assignmentid) {
-    set_has_assignmentid();
-    assignmentid_ = assignmentid;
-  } else {
-    clear_has_assignmentid();
-    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// required string id = 3;
-inline bool SrlProblem::has_id() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SrlProblem::set_has_id() {
-  _has_bits_[0] |= 0x00000004u;
-}
 inline void SrlProblem::clear_has_id() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void SrlProblem::clear_id() {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
@@ -3805,15 +3693,225 @@ inline void SrlProblem::set_allocated_id(::std::string* id) {
   }
 }
 
-// optional string name = 4;
-inline bool SrlProblem::has_name() const {
+// optional string courseId = 2;
+inline bool SrlProblem::has_courseid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SrlProblem::set_has_courseid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SrlProblem::clear_has_courseid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SrlProblem::clear_courseid() {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    courseid_->clear();
+  }
+  clear_has_courseid();
+}
+inline const ::std::string& SrlProblem::courseid() const {
+  return *courseid_;
+}
+inline void SrlProblem::set_courseid(const ::std::string& value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
+}
+inline void SrlProblem::set_courseid(const char* value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
+}
+inline void SrlProblem::set_courseid(const char* value, size_t size) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlProblem::mutable_courseid() {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  return courseid_;
+}
+inline ::std::string* SrlProblem::release_courseid() {
+  clear_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = courseid_;
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlProblem::set_allocated_courseid(::std::string* courseid) {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    delete courseid_;
+  }
+  if (courseid) {
+    set_has_courseid();
+    courseid_ = courseid;
+  } else {
+    clear_has_courseid();
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string assignmentId = 3;
+inline bool SrlProblem::has_assignmentid() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SrlProblem::set_has_assignmentid() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SrlProblem::clear_has_assignmentid() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SrlProblem::clear_assignmentid() {
+  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+    assignmentid_->clear();
+  }
+  clear_has_assignmentid();
+}
+inline const ::std::string& SrlProblem::assignmentid() const {
+  return *assignmentid_;
+}
+inline void SrlProblem::set_assignmentid(const ::std::string& value) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(value);
+}
+inline void SrlProblem::set_assignmentid(const char* value) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(value);
+}
+inline void SrlProblem::set_assignmentid(const char* value, size_t size) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlProblem::mutable_assignmentid() {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  return assignmentid_;
+}
+inline ::std::string* SrlProblem::release_assignmentid() {
+  clear_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = assignmentid_;
+    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlProblem::set_allocated_assignmentid(::std::string* assignmentid) {
+  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+    delete assignmentid_;
+  }
+  if (assignmentid) {
+    set_has_assignmentid();
+    assignmentid_ = assignmentid;
+  } else {
+    clear_has_assignmentid();
+    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string problemBankId = 4;
+inline bool SrlProblem::has_problembankid() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void SrlProblem::set_has_name() {
+inline void SrlProblem::set_has_problembankid() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void SrlProblem::clear_has_name() {
+inline void SrlProblem::clear_has_problembankid() {
   _has_bits_[0] &= ~0x00000008u;
+}
+inline void SrlProblem::clear_problembankid() {
+  if (problembankid_ != &::google::protobuf::internal::kEmptyString) {
+    problembankid_->clear();
+  }
+  clear_has_problembankid();
+}
+inline const ::std::string& SrlProblem::problembankid() const {
+  return *problembankid_;
+}
+inline void SrlProblem::set_problembankid(const ::std::string& value) {
+  set_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    problembankid_ = new ::std::string;
+  }
+  problembankid_->assign(value);
+}
+inline void SrlProblem::set_problembankid(const char* value) {
+  set_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    problembankid_ = new ::std::string;
+  }
+  problembankid_->assign(value);
+}
+inline void SrlProblem::set_problembankid(const char* value, size_t size) {
+  set_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    problembankid_ = new ::std::string;
+  }
+  problembankid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlProblem::mutable_problembankid() {
+  set_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    problembankid_ = new ::std::string;
+  }
+  return problembankid_;
+}
+inline ::std::string* SrlProblem::release_problembankid() {
+  clear_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = problembankid_;
+    problembankid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlProblem::set_allocated_problembankid(::std::string* problembankid) {
+  if (problembankid_ != &::google::protobuf::internal::kEmptyString) {
+    delete problembankid_;
+  }
+  if (problembankid) {
+    set_has_problembankid();
+    problembankid_ = problembankid;
+  } else {
+    clear_has_problembankid();
+    problembankid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string name = 5;
+inline bool SrlProblem::has_name() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SrlProblem::set_has_name() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SrlProblem::clear_has_name() {
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void SrlProblem::clear_name() {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
@@ -3875,15 +3973,15 @@ inline void SrlProblem::set_allocated_name(::std::string* name) {
   }
 }
 
-// optional string description = 5;
+// optional string description = 6;
 inline bool SrlProblem::has_description() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void SrlProblem::set_has_description() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void SrlProblem::clear_has_description() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void SrlProblem::clear_description() {
   if (description_ != &::google::protobuf::internal::kEmptyString) {
@@ -3945,32 +4043,45 @@ inline void SrlProblem::set_allocated_description(::std::string* description) {
   }
 }
 
-// repeated .protobuf.srl.school.subproblemInformation subProblems = 6;
-inline int SrlProblem::subproblems_size() const {
-  return subproblems_.size();
+// optional .protobuf.srl.school.problemBankProblem problemInfo = 7;
+inline bool SrlProblem::has_probleminfo() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void SrlProblem::clear_subproblems() {
-  subproblems_.Clear();
+inline void SrlProblem::set_has_probleminfo() {
+  _has_bits_[0] |= 0x00000040u;
 }
-inline const ::protobuf::srl::school::subproblemInformation& SrlProblem::subproblems(int index) const {
-  return subproblems_.Get(index);
+inline void SrlProblem::clear_has_probleminfo() {
+  _has_bits_[0] &= ~0x00000040u;
 }
-inline ::protobuf::srl::school::subproblemInformation* SrlProblem::mutable_subproblems(int index) {
-  return subproblems_.Mutable(index);
+inline void SrlProblem::clear_probleminfo() {
+  if (probleminfo_ != NULL) probleminfo_->::protobuf::srl::school::problemBankProblem::Clear();
+  clear_has_probleminfo();
 }
-inline ::protobuf::srl::school::subproblemInformation* SrlProblem::add_subproblems() {
-  return subproblems_.Add();
+inline const ::protobuf::srl::school::problemBankProblem& SrlProblem::probleminfo() const {
+  return probleminfo_ != NULL ? *probleminfo_ : *default_instance_->probleminfo_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation >&
-SrlProblem::subproblems() const {
-  return subproblems_;
+inline ::protobuf::srl::school::problemBankProblem* SrlProblem::mutable_probleminfo() {
+  set_has_probleminfo();
+  if (probleminfo_ == NULL) probleminfo_ = new ::protobuf::srl::school::problemBankProblem;
+  return probleminfo_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation >*
-SrlProblem::mutable_subproblems() {
-  return &subproblems_;
+inline ::protobuf::srl::school::problemBankProblem* SrlProblem::release_probleminfo() {
+  clear_has_probleminfo();
+  ::protobuf::srl::school::problemBankProblem* temp = probleminfo_;
+  probleminfo_ = NULL;
+  return temp;
+}
+inline void SrlProblem::set_allocated_probleminfo(::protobuf::srl::school::problemBankProblem* probleminfo) {
+  delete probleminfo_;
+  probleminfo_ = probleminfo;
+  if (probleminfo) {
+    set_has_probleminfo();
+  } else {
+    clear_has_probleminfo();
+  }
 }
 
-// repeated .protobuf.srl.school.DomainInformation info = 7;
+// repeated .protobuf.srl.school.DomainInformation info = 8;
 inline int SrlProblem::info_size() const {
   return info_.size();
 }
@@ -3995,15 +4106,15 @@ SrlProblem::mutable_info() {
   return &info_;
 }
 
-// optional string gradeWeight = 8;
+// optional string gradeWeight = 9;
 inline bool SrlProblem::has_gradeweight() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void SrlProblem::set_has_gradeweight() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void SrlProblem::clear_has_gradeweight() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void SrlProblem::clear_gradeweight() {
   if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
@@ -4065,15 +4176,15 @@ inline void SrlProblem::set_allocated_gradeweight(::std::string* gradeweight) {
   }
 }
 
-// optional float grade = 9;
+// optional float grade = 10;
 inline bool SrlProblem::has_grade() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void SrlProblem::set_has_grade() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void SrlProblem::clear_has_grade() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void SrlProblem::clear_grade() {
   grade_ = 0;
@@ -4087,15 +4198,15 @@ inline void SrlProblem::set_grade(float value) {
   grade_ = value;
 }
 
-// optional .protobuf.srl.school.State state = 10;
+// optional .protobuf.srl.school.State state = 11;
 inline bool SrlProblem::has_state() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void SrlProblem::set_has_state() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void SrlProblem::clear_has_state() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void SrlProblem::clear_state() {
   if (state_ != NULL) state_->::protobuf::srl::school::State::Clear();
@@ -4125,58 +4236,166 @@ inline void SrlProblem::set_allocated_state(::protobuf::srl::school::State* stat
   }
 }
 
+// optional .protobuf.srl.school.SrlPermission accessPermission = 12;
+inline bool SrlProblem::has_accesspermission() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void SrlProblem::set_has_accesspermission() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void SrlProblem::clear_has_accesspermission() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void SrlProblem::clear_accesspermission() {
+  if (accesspermission_ != NULL) accesspermission_->::protobuf::srl::school::SrlPermission::Clear();
+  clear_has_accesspermission();
+}
+inline const ::protobuf::srl::school::SrlPermission& SrlProblem::accesspermission() const {
+  return accesspermission_ != NULL ? *accesspermission_ : *default_instance_->accesspermission_;
+}
+inline ::protobuf::srl::school::SrlPermission* SrlProblem::mutable_accesspermission() {
+  set_has_accesspermission();
+  if (accesspermission_ == NULL) accesspermission_ = new ::protobuf::srl::school::SrlPermission;
+  return accesspermission_;
+}
+inline ::protobuf::srl::school::SrlPermission* SrlProblem::release_accesspermission() {
+  clear_has_accesspermission();
+  ::protobuf::srl::school::SrlPermission* temp = accesspermission_;
+  accesspermission_ = NULL;
+  return temp;
+}
+inline void SrlProblem::set_allocated_accesspermission(::protobuf::srl::school::SrlPermission* accesspermission) {
+  delete accesspermission_;
+  accesspermission_ = accesspermission;
+  if (accesspermission) {
+    set_has_accesspermission();
+  } else {
+    clear_has_accesspermission();
+  }
+}
+
 // -------------------------------------------------------------------
 
-// subproblemInformation
+// problemBankProblem
 
-// optional string questionText = 1;
-inline bool subproblemInformation::has_questiontext() const {
+// required string id = 1;
+inline bool problemBankProblem::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void subproblemInformation::set_has_questiontext() {
+inline void problemBankProblem::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void subproblemInformation::clear_has_questiontext() {
+inline void problemBankProblem::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void subproblemInformation::clear_questiontext() {
+inline void problemBankProblem::clear_id() {
+  if (id_ != &::google::protobuf::internal::kEmptyString) {
+    id_->clear();
+  }
+  clear_has_id();
+}
+inline const ::std::string& problemBankProblem::id() const {
+  return *id_;
+}
+inline void problemBankProblem::set_id(const ::std::string& value) {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    id_ = new ::std::string;
+  }
+  id_->assign(value);
+}
+inline void problemBankProblem::set_id(const char* value) {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    id_ = new ::std::string;
+  }
+  id_->assign(value);
+}
+inline void problemBankProblem::set_id(const char* value, size_t size) {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    id_ = new ::std::string;
+  }
+  id_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* problemBankProblem::mutable_id() {
+  set_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    id_ = new ::std::string;
+  }
+  return id_;
+}
+inline ::std::string* problemBankProblem::release_id() {
+  clear_has_id();
+  if (id_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = id_;
+    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void problemBankProblem::set_allocated_id(::std::string* id) {
+  if (id_ != &::google::protobuf::internal::kEmptyString) {
+    delete id_;
+  }
+  if (id) {
+    set_has_id();
+    id_ = id;
+  } else {
+    clear_has_id();
+    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string questionText = 2;
+inline bool problemBankProblem::has_questiontext() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void problemBankProblem::set_has_questiontext() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void problemBankProblem::clear_has_questiontext() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void problemBankProblem::clear_questiontext() {
   if (questiontext_ != &::google::protobuf::internal::kEmptyString) {
     questiontext_->clear();
   }
   clear_has_questiontext();
 }
-inline const ::std::string& subproblemInformation::questiontext() const {
+inline const ::std::string& problemBankProblem::questiontext() const {
   return *questiontext_;
 }
-inline void subproblemInformation::set_questiontext(const ::std::string& value) {
+inline void problemBankProblem::set_questiontext(const ::std::string& value) {
   set_has_questiontext();
   if (questiontext_ == &::google::protobuf::internal::kEmptyString) {
     questiontext_ = new ::std::string;
   }
   questiontext_->assign(value);
 }
-inline void subproblemInformation::set_questiontext(const char* value) {
+inline void problemBankProblem::set_questiontext(const char* value) {
   set_has_questiontext();
   if (questiontext_ == &::google::protobuf::internal::kEmptyString) {
     questiontext_ = new ::std::string;
   }
   questiontext_->assign(value);
 }
-inline void subproblemInformation::set_questiontext(const char* value, size_t size) {
+inline void problemBankProblem::set_questiontext(const char* value, size_t size) {
   set_has_questiontext();
   if (questiontext_ == &::google::protobuf::internal::kEmptyString) {
     questiontext_ = new ::std::string;
   }
   questiontext_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* subproblemInformation::mutable_questiontext() {
+inline ::std::string* problemBankProblem::mutable_questiontext() {
   set_has_questiontext();
   if (questiontext_ == &::google::protobuf::internal::kEmptyString) {
     questiontext_ = new ::std::string;
   }
   return questiontext_;
 }
-inline ::std::string* subproblemInformation::release_questiontext() {
+inline ::std::string* problemBankProblem::release_questiontext() {
   clear_has_questiontext();
   if (questiontext_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -4186,7 +4405,7 @@ inline ::std::string* subproblemInformation::release_questiontext() {
     return temp;
   }
 }
-inline void subproblemInformation::set_allocated_questiontext(::std::string* questiontext) {
+inline void problemBankProblem::set_allocated_questiontext(::std::string* questiontext) {
   if (questiontext_ != &::google::protobuf::internal::kEmptyString) {
     delete questiontext_;
   }
@@ -4199,77 +4418,77 @@ inline void subproblemInformation::set_allocated_questiontext(::std::string* que
   }
 }
 
-// optional .protobuf.srl.school.subproblemInformation.QuestionType questionType = 2 [default = SKETCH];
-inline bool subproblemInformation::has_questiontype() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+// optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];
+inline bool problemBankProblem::has_questiontype() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void subproblemInformation::set_has_questiontype() {
-  _has_bits_[0] |= 0x00000002u;
+inline void problemBankProblem::set_has_questiontype() {
+  _has_bits_[0] |= 0x00000004u;
 }
-inline void subproblemInformation::clear_has_questiontype() {
-  _has_bits_[0] &= ~0x00000002u;
+inline void problemBankProblem::clear_has_questiontype() {
+  _has_bits_[0] &= ~0x00000004u;
 }
-inline void subproblemInformation::clear_questiontype() {
+inline void problemBankProblem::clear_questiontype() {
   questiontype_ = 1;
   clear_has_questiontype();
 }
-inline ::protobuf::srl::school::subproblemInformation_QuestionType subproblemInformation::questiontype() const {
-  return static_cast< ::protobuf::srl::school::subproblemInformation_QuestionType >(questiontype_);
+inline ::protobuf::srl::school::problemBankProblem_QuestionType problemBankProblem::questiontype() const {
+  return static_cast< ::protobuf::srl::school::problemBankProblem_QuestionType >(questiontype_);
 }
-inline void subproblemInformation::set_questiontype(::protobuf::srl::school::subproblemInformation_QuestionType value) {
-  assert(::protobuf::srl::school::subproblemInformation_QuestionType_IsValid(value));
+inline void problemBankProblem::set_questiontype(::protobuf::srl::school::problemBankProblem_QuestionType value) {
+  assert(::protobuf::srl::school::problemBankProblem_QuestionType_IsValid(value));
   set_has_questiontype();
   questiontype_ = value;
 }
 
-// optional bytes options = 3;
-inline bool subproblemInformation::has_options() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+// optional bytes options = 4;
+inline bool problemBankProblem::has_options() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void subproblemInformation::set_has_options() {
-  _has_bits_[0] |= 0x00000004u;
+inline void problemBankProblem::set_has_options() {
+  _has_bits_[0] |= 0x00000008u;
 }
-inline void subproblemInformation::clear_has_options() {
-  _has_bits_[0] &= ~0x00000004u;
+inline void problemBankProblem::clear_has_options() {
+  _has_bits_[0] &= ~0x00000008u;
 }
-inline void subproblemInformation::clear_options() {
+inline void problemBankProblem::clear_options() {
   if (options_ != &::google::protobuf::internal::kEmptyString) {
     options_->clear();
   }
   clear_has_options();
 }
-inline const ::std::string& subproblemInformation::options() const {
+inline const ::std::string& problemBankProblem::options() const {
   return *options_;
 }
-inline void subproblemInformation::set_options(const ::std::string& value) {
+inline void problemBankProblem::set_options(const ::std::string& value) {
   set_has_options();
   if (options_ == &::google::protobuf::internal::kEmptyString) {
     options_ = new ::std::string;
   }
   options_->assign(value);
 }
-inline void subproblemInformation::set_options(const char* value) {
+inline void problemBankProblem::set_options(const char* value) {
   set_has_options();
   if (options_ == &::google::protobuf::internal::kEmptyString) {
     options_ = new ::std::string;
   }
   options_->assign(value);
 }
-inline void subproblemInformation::set_options(const void* value, size_t size) {
+inline void problemBankProblem::set_options(const void* value, size_t size) {
   set_has_options();
   if (options_ == &::google::protobuf::internal::kEmptyString) {
     options_ = new ::std::string;
   }
   options_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* subproblemInformation::mutable_options() {
+inline ::std::string* problemBankProblem::mutable_options() {
   set_has_options();
   if (options_ == &::google::protobuf::internal::kEmptyString) {
     options_ = new ::std::string;
   }
   return options_;
 }
-inline ::std::string* subproblemInformation::release_options() {
+inline ::std::string* problemBankProblem::release_options() {
   clear_has_options();
   if (options_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -4279,7 +4498,7 @@ inline ::std::string* subproblemInformation::release_options() {
     return temp;
   }
 }
-inline void subproblemInformation::set_allocated_options(::std::string* options) {
+inline void problemBankProblem::set_allocated_options(::std::string* options) {
   if (options_ != &::google::protobuf::internal::kEmptyString) {
     delete options_;
   }
@@ -4292,96 +4511,42 @@ inline void subproblemInformation::set_allocated_options(::std::string* options)
   }
 }
 
-// optional string gradeWeight = 4;
-inline bool subproblemInformation::has_gradeweight() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void subproblemInformation::set_has_gradeweight() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void subproblemInformation::clear_has_gradeweight() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void subproblemInformation::clear_gradeweight() {
-  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
-    gradeweight_->clear();
-  }
-  clear_has_gradeweight();
-}
-inline const ::std::string& subproblemInformation::gradeweight() const {
-  return *gradeweight_;
-}
-inline void subproblemInformation::set_gradeweight(const ::std::string& value) {
-  set_has_gradeweight();
-  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
-    gradeweight_ = new ::std::string;
-  }
-  gradeweight_->assign(value);
-}
-inline void subproblemInformation::set_gradeweight(const char* value) {
-  set_has_gradeweight();
-  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
-    gradeweight_ = new ::std::string;
-  }
-  gradeweight_->assign(value);
-}
-inline void subproblemInformation::set_gradeweight(const char* value, size_t size) {
-  set_has_gradeweight();
-  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
-    gradeweight_ = new ::std::string;
-  }
-  gradeweight_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* subproblemInformation::mutable_gradeweight() {
-  set_has_gradeweight();
-  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
-    gradeweight_ = new ::std::string;
-  }
-  return gradeweight_;
-}
-inline ::std::string* subproblemInformation::release_gradeweight() {
-  clear_has_gradeweight();
-  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = gradeweight_;
-    gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void subproblemInformation::set_allocated_gradeweight(::std::string* gradeweight) {
-  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
-    delete gradeweight_;
-  }
-  if (gradeweight) {
-    set_has_gradeweight();
-    gradeweight_ = gradeweight;
-  } else {
-    clear_has_gradeweight();
-    gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional float grade = 5;
-inline bool subproblemInformation::has_grade() const {
+// optional .protobuf.srl.school.SrlPermission accessPermission = 5;
+inline bool problemBankProblem::has_accesspermission() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void subproblemInformation::set_has_grade() {
+inline void problemBankProblem::set_has_accesspermission() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void subproblemInformation::clear_has_grade() {
+inline void problemBankProblem::clear_has_accesspermission() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void subproblemInformation::clear_grade() {
-  grade_ = 0;
-  clear_has_grade();
+inline void problemBankProblem::clear_accesspermission() {
+  if (accesspermission_ != NULL) accesspermission_->::protobuf::srl::school::SrlPermission::Clear();
+  clear_has_accesspermission();
 }
-inline float subproblemInformation::grade() const {
-  return grade_;
+inline const ::protobuf::srl::school::SrlPermission& problemBankProblem::accesspermission() const {
+  return accesspermission_ != NULL ? *accesspermission_ : *default_instance_->accesspermission_;
 }
-inline void subproblemInformation::set_grade(float value) {
-  set_has_grade();
-  grade_ = value;
+inline ::protobuf::srl::school::SrlPermission* problemBankProblem::mutable_accesspermission() {
+  set_has_accesspermission();
+  if (accesspermission_ == NULL) accesspermission_ = new ::protobuf::srl::school::SrlPermission;
+  return accesspermission_;
+}
+inline ::protobuf::srl::school::SrlPermission* problemBankProblem::release_accesspermission() {
+  clear_has_accesspermission();
+  ::protobuf::srl::school::SrlPermission* temp = accesspermission_;
+  accesspermission_ = NULL;
+  return temp;
+}
+inline void problemBankProblem::set_allocated_accesspermission(::protobuf::srl::school::SrlPermission* accesspermission) {
+  delete accesspermission_;
+  accesspermission_ = accesspermission;
+  if (accesspermission) {
+    set_has_accesspermission();
+  } else {
+    clear_has_accesspermission();
+  }
 }
 
 // -------------------------------------------------------------------
@@ -5459,8 +5624,8 @@ inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlAssi
   return ::protobuf::srl::school::SrlAssignment_LatePolicy_descriptor();
 }
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::subproblemInformation_QuestionType>() {
-  return ::protobuf::srl::school::subproblemInformation_QuestionType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::problemBankProblem_QuestionType>() {
+  return ::protobuf::srl::school::problemBankProblem_QuestionType_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::UserType>() {

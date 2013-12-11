@@ -65,25 +65,27 @@ message SrlAssignment {
 }
 
 message SrlProblem {
-	required string courseId = 1; // To know who the grandParent is.
-	required string assignmentId = 2; // To know who the parent is.
-	required string id = 3; // This must be unique within an assignment.
-	optional string name = 4;
-	optional string description = 5;
-	repeated subproblemInformation subProblems = 6;
-	repeated DomainInformation info = 7;
-	optional string gradeWeight = 8; //Percentage of assignment grade
-	optional float grade = 9; //Calculated grade of all subproblems for this problem
-	optional State state = 10;
+	required string id = 1; // This must be unique within an assignment.
+	optional string courseId = 2; // To know who the grandParent is.
+	optional string assignmentId = 3; // To know who the parent is.
+	optional string problemBankId = 4;
+	optional string name = 5;
+	optional string description = 6;
+	optional problemBankProblem problemInfo = 7;
+	repeated DomainInformation info = 8;
+	optional string gradeWeight = 9; //Percentage of assignment grade
+	optional float grade = 10; //Calculated grade of all subproblems for this problem
+	optional State state = 11;
+	optional SrlPermission accessPermission = 12;
 }
 
-message subproblemInformation {
-	optional string questionText = 1;
-	optional QuestionType questionType = 2 [default=SKETCH];
-	optional bytes options = 3;
-	optional string gradeWeight = 4; //Percentage of total problem grade
-	optional float grade = 5; //Calculated grade for this subproblem
-	
+message problemBankProblem {
+	required string id = 1;
+	optional string questionText = 2;
+	optional QuestionType questionType = 3 [default=SKETCH];
+	optional bytes options = 4;
+	optional SrlPermission accessPermission= 5;
+
 	enum QuestionType {
 		SKETCH = 1;	
 		MULT_CHOICE = 2;
