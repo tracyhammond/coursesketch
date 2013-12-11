@@ -69,11 +69,13 @@ public class CourseManager
 
 		exactCourse.setDescription((String)corsor.get(DESCRIPTION));
 		exactCourse.setName((String)corsor.get(NAME));
-		exactCourse.setSemester((String)corsor.get(COURSE_SEMESTER));
+		if (corsor.get(COURSE_SEMESTER) != null) {
+			exactCourse.setSemester((String)corsor.get(COURSE_SEMESTER));
+		}
 		try {
 			exactCourse.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(ACCESS_DATE)).longValue()));
 			exactCourse.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(CLOSE_DATE)).longValue()));
-		}catch(Exception e ){
+		} catch(Exception e ){
 			e.printStackTrace();
 		}
 		exactCourse.setId(courseId); 
