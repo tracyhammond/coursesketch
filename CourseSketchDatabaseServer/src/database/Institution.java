@@ -3,12 +3,12 @@ package database;
 import java.util.ArrayList;
 import java.util.List;
 
+import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
-import database.assignment.AssignmentBuilder;
 import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
 import database.course.CourseManager;
@@ -54,7 +54,11 @@ public class Institution
 		
 		while(courses >= 0)
 		{
-			allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseID.get(courses), userId,currentTime));
+			try {
+				allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseID.get(courses), userId,currentTime));
+			} catch (DatabaseAccessException e) {
+				e.printStackTrace();
+			}
 			courses--;
 		}
 		
@@ -79,19 +83,19 @@ public class Institution
 		return allCourses;
 		// do open close checking
 	}
-	
 
-	public static ArrayList<AssignmentBuilder> mongoGetAssignment(List<String> assignementID,String userId) throws AuthenticationException 
+	public static ArrayList<SrlAssignment> mongoGetAssignment(List<String> assignementID,String userId) throws AuthenticationException 
 	{
-		
 		long currentTime = System.currentTimeMillis();
-		ArrayList<AssignmentBuilder> allAssignments = new ArrayList<AssignmentBuilder>();
-		
+		ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
 		for(int assignments = assignementID.size()-1; assignments >= 0; assignments--)
 		{
-			allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().db, assignementID.get(assignments), userId,currentTime));
+			try {
+				allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().db, assignementID.get(assignments), userId,currentTime));
+			} catch (DatabaseAccessException e) {
+				e.printStackTrace();
+			}
 		}
-		
 		// need to return everything
 		return allAssignments;
 		// do open close checking

@@ -425,12 +425,12 @@ class SrlCourse : public ::google::protobuf::Message {
   inline ::std::string* release_imageurl();
   inline void set_allocated_imageurl(::std::string* imageurl);
 
-  // optional int32 grade = 8;
+  // optional float grade = 8;
   inline bool has_grade() const;
   inline void clear_grade();
   static const int kGradeFieldNumber = 8;
-  inline ::google::protobuf::int32 grade() const;
-  inline void set_grade(::google::protobuf::int32 value);
+  inline float grade() const;
+  inline void set_grade(float value);
 
   // optional .protobuf.srl.school.DateTime accessDate = 9;
   inline bool has_accessdate() const;
@@ -508,7 +508,7 @@ class SrlCourse : public ::google::protobuf::Message {
   ::std::string* description_;
   ::std::string* semester_;
   int access_;
-  ::google::protobuf::int32 grade_;
+  float grade_;
   ::std::string* imageurl_;
   ::protobuf::srl::school::DateTime* accessdate_;
   ::protobuf::srl::school::DateTime* closedate_;
@@ -724,19 +724,24 @@ class SrlAssignment : public ::google::protobuf::Message {
   inline ::protobuf::srl::school::SrlAssignment_LatePolicy latepolicy() const;
   inline void set_latepolicy(::protobuf::srl::school::SrlAssignment_LatePolicy value);
 
-  // optional int32 gradeWeight = 9;
+  // optional string gradeWeight = 9;
   inline bool has_gradeweight() const;
   inline void clear_gradeweight();
   static const int kGradeWeightFieldNumber = 9;
-  inline ::google::protobuf::int32 gradeweight() const;
-  inline void set_gradeweight(::google::protobuf::int32 value);
+  inline const ::std::string& gradeweight() const;
+  inline void set_gradeweight(const ::std::string& value);
+  inline void set_gradeweight(const char* value);
+  inline void set_gradeweight(const char* value, size_t size);
+  inline ::std::string* mutable_gradeweight();
+  inline ::std::string* release_gradeweight();
+  inline void set_allocated_gradeweight(::std::string* gradeweight);
 
-  // optional int32 grade = 10;
+  // optional float grade = 10;
   inline bool has_grade() const;
   inline void clear_grade();
   static const int kGradeFieldNumber = 10;
-  inline ::google::protobuf::int32 grade() const;
-  inline void set_grade(::google::protobuf::int32 value);
+  inline float grade() const;
+  inline void set_grade(float value);
 
   // optional .protobuf.srl.school.DateTime accessDate = 11;
   inline bool has_accessdate() const;
@@ -854,8 +859,7 @@ class SrlAssignment : public ::google::protobuf::Message {
   int type_;
   int latepolicy_;
   ::google::protobuf::RepeatedPtrField< ::std::string> links_;
-  ::google::protobuf::int32 gradeweight_;
-  ::google::protobuf::int32 grade_;
+  ::std::string* gradeweight_;
   ::protobuf::srl::school::DateTime* accessdate_;
   ::protobuf::srl::school::DateTime* duedate_;
   ::protobuf::srl::school::DateTime* closedate_;
@@ -863,6 +867,7 @@ class SrlAssignment : public ::google::protobuf::Message {
   ::std::string* imageurl_;
   ::google::protobuf::RepeatedPtrField< ::std::string> problemlist_;
   ::protobuf::srl::school::SrlPermission* accesspermission_;
+  float grade_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(17 + 31) / 32];
@@ -1014,19 +1019,24 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >*
       mutable_info();
 
-  // optional int32 gradeWeight = 8;
+  // optional string gradeWeight = 8;
   inline bool has_gradeweight() const;
   inline void clear_gradeweight();
   static const int kGradeWeightFieldNumber = 8;
-  inline ::google::protobuf::int32 gradeweight() const;
-  inline void set_gradeweight(::google::protobuf::int32 value);
+  inline const ::std::string& gradeweight() const;
+  inline void set_gradeweight(const ::std::string& value);
+  inline void set_gradeweight(const char* value);
+  inline void set_gradeweight(const char* value, size_t size);
+  inline ::std::string* mutable_gradeweight();
+  inline ::std::string* release_gradeweight();
+  inline void set_allocated_gradeweight(::std::string* gradeweight);
 
-  // optional int32 grade = 9;
+  // optional float grade = 9;
   inline bool has_grade() const;
   inline void clear_grade();
   static const int kGradeFieldNumber = 9;
-  inline ::google::protobuf::int32 grade() const;
-  inline void set_grade(::google::protobuf::int32 value);
+  inline float grade() const;
+  inline void set_grade(float value);
 
   // optional .protobuf.srl.school.State state = 10;
   inline bool has_state() const;
@@ -1065,9 +1075,9 @@ class SrlProblem : public ::google::protobuf::Message {
   ::std::string* description_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::subproblemInformation > subproblems_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation > info_;
-  ::google::protobuf::int32 gradeweight_;
-  ::google::protobuf::int32 grade_;
+  ::std::string* gradeweight_;
   ::protobuf::srl::school::State* state_;
+  float grade_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
@@ -1192,19 +1202,24 @@ class subproblemInformation : public ::google::protobuf::Message {
   inline ::std::string* release_options();
   inline void set_allocated_options(::std::string* options);
 
-  // optional int32 gradeWeight = 4;
+  // optional string gradeWeight = 4;
   inline bool has_gradeweight() const;
   inline void clear_gradeweight();
   static const int kGradeWeightFieldNumber = 4;
-  inline ::google::protobuf::int32 gradeweight() const;
-  inline void set_gradeweight(::google::protobuf::int32 value);
+  inline const ::std::string& gradeweight() const;
+  inline void set_gradeweight(const ::std::string& value);
+  inline void set_gradeweight(const char* value);
+  inline void set_gradeweight(const char* value, size_t size);
+  inline ::std::string* mutable_gradeweight();
+  inline ::std::string* release_gradeweight();
+  inline void set_allocated_gradeweight(::std::string* gradeweight);
 
-  // optional int32 grade = 5;
+  // optional float grade = 5;
   inline bool has_grade() const;
   inline void clear_grade();
   static const int kGradeFieldNumber = 5;
-  inline ::google::protobuf::int32 grade() const;
-  inline void set_grade(::google::protobuf::int32 value);
+  inline float grade() const;
+  inline void set_grade(float value);
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.subproblemInformation)
  private:
@@ -1224,8 +1239,8 @@ class subproblemInformation : public ::google::protobuf::Message {
   ::std::string* questiontext_;
   ::std::string* options_;
   int questiontype_;
-  ::google::protobuf::int32 gradeweight_;
-  ::google::protobuf::int32 grade_;
+  float grade_;
+  ::std::string* gradeweight_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
@@ -2556,7 +2571,7 @@ inline void SrlCourse::set_allocated_imageurl(::std::string* imageurl) {
   }
 }
 
-// optional int32 grade = 8;
+// optional float grade = 8;
 inline bool SrlCourse::has_grade() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
@@ -2570,10 +2585,10 @@ inline void SrlCourse::clear_grade() {
   grade_ = 0;
   clear_has_grade();
 }
-inline ::google::protobuf::int32 SrlCourse::grade() const {
+inline float SrlCourse::grade() const {
   return grade_;
 }
-inline void SrlCourse::set_grade(::google::protobuf::int32 value) {
+inline void SrlCourse::set_grade(float value) {
   set_has_grade();
   grade_ = value;
 }
@@ -3180,7 +3195,7 @@ inline void SrlAssignment::set_latepolicy(::protobuf::srl::school::SrlAssignment
   latepolicy_ = value;
 }
 
-// optional int32 gradeWeight = 9;
+// optional string gradeWeight = 9;
 inline bool SrlAssignment::has_gradeweight() const {
   return (_has_bits_[0] & 0x00000100u) != 0;
 }
@@ -3191,18 +3206,66 @@ inline void SrlAssignment::clear_has_gradeweight() {
   _has_bits_[0] &= ~0x00000100u;
 }
 inline void SrlAssignment::clear_gradeweight() {
-  gradeweight_ = 0;
+  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+    gradeweight_->clear();
+  }
   clear_has_gradeweight();
 }
-inline ::google::protobuf::int32 SrlAssignment::gradeweight() const {
+inline const ::std::string& SrlAssignment::gradeweight() const {
+  return *gradeweight_;
+}
+inline void SrlAssignment::set_gradeweight(const ::std::string& value) {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
+  gradeweight_->assign(value);
+}
+inline void SrlAssignment::set_gradeweight(const char* value) {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
+  gradeweight_->assign(value);
+}
+inline void SrlAssignment::set_gradeweight(const char* value, size_t size) {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
+  gradeweight_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlAssignment::mutable_gradeweight() {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
   return gradeweight_;
 }
-inline void SrlAssignment::set_gradeweight(::google::protobuf::int32 value) {
-  set_has_gradeweight();
-  gradeweight_ = value;
+inline ::std::string* SrlAssignment::release_gradeweight() {
+  clear_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = gradeweight_;
+    gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlAssignment::set_allocated_gradeweight(::std::string* gradeweight) {
+  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+    delete gradeweight_;
+  }
+  if (gradeweight) {
+    set_has_gradeweight();
+    gradeweight_ = gradeweight;
+  } else {
+    clear_has_gradeweight();
+    gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
-// optional int32 grade = 10;
+// optional float grade = 10;
 inline bool SrlAssignment::has_grade() const {
   return (_has_bits_[0] & 0x00000200u) != 0;
 }
@@ -3216,10 +3279,10 @@ inline void SrlAssignment::clear_grade() {
   grade_ = 0;
   clear_has_grade();
 }
-inline ::google::protobuf::int32 SrlAssignment::grade() const {
+inline float SrlAssignment::grade() const {
   return grade_;
 }
-inline void SrlAssignment::set_grade(::google::protobuf::int32 value) {
+inline void SrlAssignment::set_grade(float value) {
   set_has_grade();
   grade_ = value;
 }
@@ -3932,7 +3995,7 @@ SrlProblem::mutable_info() {
   return &info_;
 }
 
-// optional int32 gradeWeight = 8;
+// optional string gradeWeight = 8;
 inline bool SrlProblem::has_gradeweight() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
@@ -3943,18 +4006,66 @@ inline void SrlProblem::clear_has_gradeweight() {
   _has_bits_[0] &= ~0x00000080u;
 }
 inline void SrlProblem::clear_gradeweight() {
-  gradeweight_ = 0;
+  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+    gradeweight_->clear();
+  }
   clear_has_gradeweight();
 }
-inline ::google::protobuf::int32 SrlProblem::gradeweight() const {
+inline const ::std::string& SrlProblem::gradeweight() const {
+  return *gradeweight_;
+}
+inline void SrlProblem::set_gradeweight(const ::std::string& value) {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
+  gradeweight_->assign(value);
+}
+inline void SrlProblem::set_gradeweight(const char* value) {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
+  gradeweight_->assign(value);
+}
+inline void SrlProblem::set_gradeweight(const char* value, size_t size) {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
+  gradeweight_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlProblem::mutable_gradeweight() {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
   return gradeweight_;
 }
-inline void SrlProblem::set_gradeweight(::google::protobuf::int32 value) {
-  set_has_gradeweight();
-  gradeweight_ = value;
+inline ::std::string* SrlProblem::release_gradeweight() {
+  clear_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = gradeweight_;
+    gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlProblem::set_allocated_gradeweight(::std::string* gradeweight) {
+  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+    delete gradeweight_;
+  }
+  if (gradeweight) {
+    set_has_gradeweight();
+    gradeweight_ = gradeweight;
+  } else {
+    clear_has_gradeweight();
+    gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
-// optional int32 grade = 9;
+// optional float grade = 9;
 inline bool SrlProblem::has_grade() const {
   return (_has_bits_[0] & 0x00000100u) != 0;
 }
@@ -3968,10 +4079,10 @@ inline void SrlProblem::clear_grade() {
   grade_ = 0;
   clear_has_grade();
 }
-inline ::google::protobuf::int32 SrlProblem::grade() const {
+inline float SrlProblem::grade() const {
   return grade_;
 }
-inline void SrlProblem::set_grade(::google::protobuf::int32 value) {
+inline void SrlProblem::set_grade(float value) {
   set_has_grade();
   grade_ = value;
 }
@@ -4181,7 +4292,7 @@ inline void subproblemInformation::set_allocated_options(::std::string* options)
   }
 }
 
-// optional int32 gradeWeight = 4;
+// optional string gradeWeight = 4;
 inline bool subproblemInformation::has_gradeweight() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -4192,18 +4303,66 @@ inline void subproblemInformation::clear_has_gradeweight() {
   _has_bits_[0] &= ~0x00000008u;
 }
 inline void subproblemInformation::clear_gradeweight() {
-  gradeweight_ = 0;
+  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+    gradeweight_->clear();
+  }
   clear_has_gradeweight();
 }
-inline ::google::protobuf::int32 subproblemInformation::gradeweight() const {
+inline const ::std::string& subproblemInformation::gradeweight() const {
+  return *gradeweight_;
+}
+inline void subproblemInformation::set_gradeweight(const ::std::string& value) {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
+  gradeweight_->assign(value);
+}
+inline void subproblemInformation::set_gradeweight(const char* value) {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
+  gradeweight_->assign(value);
+}
+inline void subproblemInformation::set_gradeweight(const char* value, size_t size) {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
+  gradeweight_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* subproblemInformation::mutable_gradeweight() {
+  set_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    gradeweight_ = new ::std::string;
+  }
   return gradeweight_;
 }
-inline void subproblemInformation::set_gradeweight(::google::protobuf::int32 value) {
-  set_has_gradeweight();
-  gradeweight_ = value;
+inline ::std::string* subproblemInformation::release_gradeweight() {
+  clear_has_gradeweight();
+  if (gradeweight_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = gradeweight_;
+    gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void subproblemInformation::set_allocated_gradeweight(::std::string* gradeweight) {
+  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+    delete gradeweight_;
+  }
+  if (gradeweight) {
+    set_has_gradeweight();
+    gradeweight_ = gradeweight;
+  } else {
+    clear_has_gradeweight();
+    gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
-// optional int32 grade = 5;
+// optional float grade = 5;
 inline bool subproblemInformation::has_grade() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -4217,10 +4376,10 @@ inline void subproblemInformation::clear_grade() {
   grade_ = 0;
   clear_has_grade();
 }
-inline ::google::protobuf::int32 subproblemInformation::grade() const {
+inline float subproblemInformation::grade() const {
   return grade_;
 }
-inline void subproblemInformation::set_grade(::google::protobuf::int32 value) {
+inline void subproblemInformation::set_grade(float value) {
   set_has_grade();
   grade_ = value;
 }
