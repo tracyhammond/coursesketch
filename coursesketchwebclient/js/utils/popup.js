@@ -20,6 +20,8 @@ function PopupBoxBuilder() {
 	this.isIframe = false;
 	this.footerHTML = false;
 	this.bodyHeight = false;
+	
+	this.onLoadFunction = false;
 
 	this.togglePopup = togglePopup;
 
@@ -51,7 +53,7 @@ function PopupBoxBuilder() {
 
 	this.getBody = function getBody() {
 		if(this.isIframe) {
-			return '<div class="boxbody" style = "background: #D4D4D4">\n<Iframe id="edit_frame_id" src="' +
+			return '<div class="boxbody" style = "background: #D4D4D4">\n<Iframe id="popup_frame" src="' +
 					(this.bodySrc ? this.bodySrc:'404.html') + '"' +
 					' height= "' + (this.bodyHeight ? this.bodyHeight:'100%') + '"' +
 					'width = "100%" ' +

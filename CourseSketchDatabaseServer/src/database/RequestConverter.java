@@ -35,7 +35,7 @@ public class RequestConverter{
 		} catch(Exception e) {
 		}
 		if (course != null) {
-			srlCourseBuilder.setId("Fake test id");
+			srlCourseBuilder.setId(course.id);
 		}
 		if (course.assignmentList != null) {
 			srlCourseBuilder.addAllAssignmentId(course.assignmentList);
@@ -63,6 +63,7 @@ public class RequestConverter{
 	
 	static AssignmentBuilder convertProtobufToAssignment(SrlAssignment protoAssignment){
 		AssignmentBuilder assignmentBuilder = new AssignmentBuilder();
+		if (protoAssignment.hasCloseDate())
 		assignmentBuilder.setCloseDate(DateProtobufToString(protoAssignment.getCloseDate()));
 		assignmentBuilder.setCourseId(protoAssignment.getCourseId());
 		assignmentBuilder.setDescription(protoAssignment.getDescription());

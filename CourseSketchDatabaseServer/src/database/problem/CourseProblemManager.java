@@ -71,6 +71,7 @@ public class CourseProblemManager
 
 		CourseProblemBuilder exactProblem = new CourseProblemBuilder();
 
+		exactProblem.setId(problemId);
 		exactProblem.setCourseId((String)corsor.get("CourseId"));
 		exactProblem.setAssignmentId((String)corsor.get("AssignmentId"));
 		exactProblem.setGradeWeight((String)corsor.get("GradeWeight"));

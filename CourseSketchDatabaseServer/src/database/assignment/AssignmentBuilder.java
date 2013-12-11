@@ -8,6 +8,7 @@ public class AssignmentBuilder
 {
 	public String courseId, name, type, other, description, resources, latePolicy, gradeWeight, openDate, 
 	       dueDate, closeDate, imageUrl;
+	public String id;
 	public ArrayList<String> problemList;
 	public PermissionBuilder permissions = new PermissionBuilder();
 	
@@ -74,6 +75,10 @@ public class AssignmentBuilder
 	public AssignmentBuilder setProblemList(ArrayList<String> x)
 	{
 		problemList = x;
+		return this;
+	}
+	public AssignmentBuilder setId(String x) {
+		id = x;
 		return this;
 	}
 	

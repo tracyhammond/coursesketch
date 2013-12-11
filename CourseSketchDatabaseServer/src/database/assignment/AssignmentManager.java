@@ -83,6 +83,7 @@ public class AssignmentManager
 
 		AssignmentBuilder exactAssignment = new AssignmentBuilder();
 
+		exactAssignment.setId(assignmentId);
 		exactAssignment.setCourseId((String)corsor.get("CourseId"));
 		exactAssignment.setName((String)corsor.get("Name"));
 		exactAssignment.setType((String)corsor.get("Type"));

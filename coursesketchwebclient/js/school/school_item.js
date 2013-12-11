@@ -109,7 +109,13 @@ function SchoolItemBuilder() {
 	 */
 	function findType(object) {
 		console.log(object);
-		return object.id.split("_")[0];
+		if (!isUndefined(object.assignmentList)) {
+			return "Course";
+		} else if (!isUndefinedobject.problemList) {
+			return "Assignment";
+		} else {
+			return "Problem";
+		}
 	}
 	
 //	function getSchoolItem(id){
@@ -137,6 +143,7 @@ function SchoolItemBuilder() {
 		for (var i = 0; i< this.dataList.length; i++) {
 			var srlSchoolItem = this.dataList[i];
 			var type = findType(srlSchoolItem); // We establish the type that it is.
+			console.log(type);
 			//option 1
 			//srlSchoolItem instanceof SrlCourse
 			//option2
@@ -180,7 +187,7 @@ function SchoolItemBuilder() {
 															// objectid
 		html+= this.addClickFunction(this.entireBoxClicked, srlSchoolItem.id) + '>\n';
 		
-		html+= this.createCompletionStatus(srlSchoolItem,type);
+		html+= this.createCompletionStatus(srlSchoolItem);
 
 		html+='		<div class="text">\n';
 		html+=			this.writeTextData(srlSchoolItem, currentDate, type);
@@ -240,14 +247,8 @@ function SchoolItemBuilder() {
 		return html + '"';
 	};
 
-	this.createCompletionStatus = function(srlSchoolItem, type) {
-		/*var index = type == 'class'?
-				4 : type == 'assignment'?
-						6 : type == 'problem'?
-								4 : list.length -1
-		*/
+	this.createCompletionStatus = function(srlSchoolItem) {
 		var html = '';
-		//var completionStatus = list[index];
 		var completionStatus = srlSchoolItem.state;
 		if (completionStatus != null) {
 			console.log(completionStatus);

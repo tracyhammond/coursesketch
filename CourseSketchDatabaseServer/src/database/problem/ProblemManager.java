@@ -55,6 +55,7 @@ public class ProblemManager
 		
 		ProblemBankBuilder exactProblem = new ProblemBankBuilder();
 		
+		exactProblem.setId(problemBankID);
 		exactProblem.setQuestionText((String)corsor.get("ProblemBank"));
 		exactProblem.setQestionImageName((String)corsor.get("QestionImageName"));
 		exactProblem.setQuestionAnswerId((String)corsor.get("QuestionSolutionId"));
