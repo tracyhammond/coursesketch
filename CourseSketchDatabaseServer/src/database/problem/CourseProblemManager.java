@@ -1,9 +1,17 @@
 package database.problem;
 
+import static database.StringConstants.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bson.types.ObjectId;
+
+import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.school.School.SrlProblem;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -11,54 +19,63 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import database.DatabaseAccessException;
 import database.PermissionBuilder;
-import database.assignment.AssignmentBuilder;
 import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
-import database.course.CourseBuilder;
-import database.course.CourseManager;
 
 public class CourseProblemManager 
 {
-	private static String mongoInsertAssignment(DB dbs, String userId, CourseProblemBuilder problem) throws AuthenticationException
+	private static String mongoInsertCourseProblem(DB dbs, String userId, SrlProblem problem) throws AuthenticationException, DatabaseAccessException
 	{
 		DBCollection new_user = dbs.getCollection("Problems");
-		AssignmentBuilder assignment = AssignmentManager.mongoGetAssignment(dbs,problem.courseId,userId, 0);
-		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, assignment.permissions.admin);
-		boolean isMod = Authenticator.checkAuthentication(dbs, userId, assignment.permissions.mod);
+		SrlAssignment assignment = AssignmentManager.mongoGetAssignment(dbs,problem.getAssignmentId(),userId, 0);
+		if (assignment.getAccessPermission().getAdminPermissionCount() <= 0) {
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+		}
+		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, assignment.getAccessPermission().getAdminPermissionList());
+		boolean isMod = Authenticator.checkAuthentication(dbs, userId, assignment.getAccessPermission().getModeratorPermissionList());
 
 		if(!isAdmin && !isMod)
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
-		BasicDBObject query = new BasicDBObject("CourseId",problem.courseId)
-										 .append("AssignmentId",problem.assignmentId)
-										 .append("ProblemBankId",problem.problemBankId)
-										 .append("GradeWeight",problem.gradeWeight)
-										 .append("Admin", problem.permissions.admin)
-										 .append("Mod",problem.permissions.mod)
-										 .append("Users", problem.permissions.users);
+		BasicDBObject query = new BasicDBObject(COURSE_ID,problem.getCourseId())
+										 .append(ASSIGNMENT_ID,problem.getAssignmentId())
+										 .append(PROBLEM_BANK_ID,problem.getProblemBankId())
+										 .append(GRADE_WEIGHT,problem.getGradeWeight())
+										 .append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
+										 .append(MOD, problem.getAccessPermission().getModeratorPermissionList())
+										 .append(USERS, problem.getAccessPermission().getUserPermissionList());
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 
-		assignment.problemList.add((String) corsor.get("_id"));
-		AssignmentBuilder newAssignment = new AssignmentBuilder();
-		newAssignment.setProblemList(assignment.problemList);
-		AssignmentManager.mongoUpdateAssignment(dbs, assignment.courseId,userId,newAssignment);
+		List<String> idList = new ArrayList<String>();
+		if (assignment.getProblemListCount() > 0) {
+			idList.addAll(assignment.getProblemListList());
+		}
+		idList.add((String) corsor.get(SELF_ID).toString());
+		SrlAssignment.Builder newAssignment = SrlAssignment.newBuilder();
+		newAssignment.addAllProblemList(idList);
 
-		return (String) corsor.get("_id");
+		AssignmentManager.mongoUpdateAssignment(dbs, problem.getAssignmentId(), userId, newAssignment.buildPartial());
+
+		return (String) corsor.get(SELF_ID);
 	}
 
-	public static CourseProblemBuilder mongoGetProblem(DB dbs, String problemId,String userId, long checkTime) throws AuthenticationException
+	public static SrlProblem mongoGetProblem(DB dbs, String problemId,String userId, long checkTime) throws AuthenticationException, DatabaseAccessException
 	{
 		DBRef myDbRef = new DBRef(dbs, "Problems", new ObjectId(problemId));
 		DBObject corsor = myDbRef.fetch();
+		if (corsor == null) {
+			throw new DatabaseAccessException("Course was not found with the following ID " + problemId);
+		}
 
-		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
-		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
-		ArrayList usersList = (ArrayList<Object>)corsor.get("Users");
+		ArrayList adminList = (ArrayList<Object>)corsor.get(ADMIN);
+		ArrayList modList = (ArrayList<Object>)corsor.get(MOD);	
+		ArrayList usersList = (ArrayList<Object>)corsor.get(USERS);
 		boolean isAdmin,isMod,isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
@@ -69,44 +86,48 @@ public class CourseProblemManager
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
-		CourseProblemBuilder exactProblem = new CourseProblemBuilder();
+		SrlProblem.Builder exactProblem = SrlProblem.newBuilder();
 
 		exactProblem.setId(problemId);
-		exactProblem.setCourseId((String)corsor.get("CourseId"));
-		exactProblem.setAssignmentId((String)corsor.get("AssignmentId"));
-		exactProblem.setGradeWeight((String)corsor.get("GradeWeight"));
+		exactProblem.setCourseId((String)corsor.get(COURSE_ID));
+		exactProblem.setAssignmentId((String)corsor.get(ASSIGNMENT_ID));
+		exactProblem.setGradeWeight((String)corsor.get(GRADE_WEIGHT));
 
 		if (isUsers) {
-			AssignmentBuilder assignment = AssignmentManager.mongoGetAssignment(dbs, exactProblem.assignmentId, userId, checkTime);
-			if(!PermissionBuilder.isTimeValid(checkTime, assignment.openDate, assignment.closeDate)) {
+			SrlAssignment assignment = AssignmentManager.mongoGetAssignment(dbs, exactProblem.getAssignmentId(), userId, checkTime);
+			if (!PermissionBuilder.isTimeValid(checkTime, assignment.getAccessDate(), assignment.getCloseDate())) {
 				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
 			}
 		}
 
 		// problem manager get problem from bank (as a user!)
-		ProblemBankBuilder problemBank = ProblemManager.mongoGetProblem(dbs, (String)corsor.get("problemBankId"), (String)exactProblem.courseId); // problem bank look up
-		exactProblem.problemResource = problemBank;
+		ProblemBankBuilder problemBank = ProblemManager.mongoGetProblem(dbs, (String)corsor.get(PROBLEM_BANK_ID), (String)exactProblem.getCourseId()); // problem bank look up
+		if (problemBank != null) {
+			exactProblem.setProblemInfo(problemBank);
+		}
 
-		if (isAdmin) {
-			exactProblem.permissions.setAdmin((ArrayList)corsor.get("Admin")); // admin
-			exactProblem.permissions.setMod((ArrayList)corsor.get("Mod"));	 // admin
+		SrlPermission.Builder permissions = SrlPermission.newBuilder();
+		if (isAdmin) 
+		{
+			permissions.addAllAdminPermission((ArrayList)corsor.get(ADMIN)); // admin
+			permissions.addAllModeratorPermission((ArrayList)corsor.get(MOD));	 // admin
 		}
 		if (isAdmin || isMod) {
-			exactProblem.setProblemBankId((String)corsor.get("ProblemBankId")); //admin or mod
-			exactProblem.permissions.setUsers((ArrayList)corsor.get("Users")); //admin or mod
+			permissions.addAllUserPermission((ArrayList)corsor.get(USERS)); // mod
+			exactProblem.setAccessPermission(permissions.build());
 		}
-		return exactProblem;
+		return exactProblem.build();
 
 	}
 
-	private static boolean mongoUpdateAssignment(DB dbs, String problemId,String userId,CourseProblemBuilder problem) throws AuthenticationException
+	private static boolean mongoUpdateCourseProblem(DB dbs, String problemId,String userId,SrlProblem problem) throws AuthenticationException
 	{
 		DBRef myDbRef = new DBRef(dbs, "Problems", new ObjectId(problemId));
 		DBObject corsor = myDbRef.fetch();
 
-		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
-		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");	
-		ArrayList usersList = (ArrayList<Object>)corsor.get("Users");
+		ArrayList adminList = (ArrayList<Object>)corsor.get(ADMIN);
+		ArrayList modList = (ArrayList<Object>)corsor.get(MOD);	
+		ArrayList usersList = (ArrayList<Object>)corsor.get(USERS);
 		boolean isAdmin,isMod,isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
@@ -119,26 +140,29 @@ public class CourseProblemManager
 		BasicDBObject updated = new BasicDBObject();
 		if (isAdmin || isMod) 
 		{
-			if (problem.gradeWeight != null) {
-				updated.append("$set", new BasicDBObject("Name", problem.gradeWeight));
+			if (problem.hasGradeWeight()) {
+				updated.append("$set", new BasicDBObject(GRADE_WEIGHT, problem.getGradeWeight()));
 			}
-			if (problem.problemBankId != null) {
-				updated.append("$set", new BasicDBObject("Type", problem.problemBankId));
+			if (problem.hasProblemBankId()) {
+				updated.append("$set", new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId()));
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
-			if (isAdmin) 
-			{
-				// ONLY ADMIN CAN CHANGE ADMIN OR MOD
-				if (problem.permissions.admin != null) {
-					updated.append("$set", new BasicDBObject("Admin", problem.permissions.admin));
+			if (problem.hasAccessPermission()) {
+				SrlPermission permissions = problem.getAccessPermission();
+				if (isAdmin)
+				{
+					// ONLY ADMIN CAN CHANGE ADMIN OR MOD
+					if (permissions.getAdminPermissionCount() > 0) {
+						updated.append("$set", new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+					}
+					if (permissions.getModeratorPermissionCount() > 0) {
+						updated.append("$set", new BasicDBObject(MOD, permissions.getModeratorPermissionList()));
+					}
 				}
-				if (problem.permissions.mod != null) {
-					updated.append("$set", new BasicDBObject("Mod", problem.permissions.mod));
+				if (permissions.getUserPermissionCount() > 0) 
+				{
+					updated.append("$set", new BasicDBObject(USERS, permissions.getUserPermissionList()));
 				}
-			}
-			if (problem.permissions.users != null) 
-			{
-				updated.append("$set", new BasicDBObject("Users", problem.permissions.users));
 			}
 		}
 		return true;
