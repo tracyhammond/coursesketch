@@ -75,7 +75,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 				DataRequest request = DataRequest.parseFrom(req.getOtherData());
 				for(int p=0; p<request.getItemsList().size(); p++){
 					ItemRequest itrequest = request.getItemsList().get(p);
-					switch(itrequest.getQuery()){
+					switch(itrequest.getQuery()) {
 						case COURSE: ArrayList<CourseBuilder> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), request.getUserId());
 									for(CourseBuilder loopCourse: courseLoop){
 										finalSchool.addCourses(RequestConverter.convertCourseBuilderToProtobuf(loopCourse));
@@ -148,10 +148,10 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	public void onFragment( WebSocket conn, Framedata fragment ) {
 		//System.out.println( "received fragment: " + fragment );
 	}
-	
+
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Database Server: Version 1.0.2.crocodile");
-		WebSocketImpl.DEBUG = true;
+		WebSocketImpl.DEBUG = false;
 		int port = 8885; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );

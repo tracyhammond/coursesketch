@@ -42,12 +42,12 @@ public class CourseManager
 		return corsor.get("_id").toString();
 	}
 	
-	public static CourseBuilder mongoGetCourse(DB dbs, String courseID,String userId, long checkTime) throws AuthenticationException
+	public static CourseBuilder mongoGetCourse(DB dbs, String courseId,String userId, long checkTime) throws AuthenticationException
 	{
-		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseID));
+		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseId));
 		DBObject corsor = myDbRef.fetch();
 		System.out.println("corosor is nulll???? " + corsor);
-		System.out.println("courses ID: " + courseID);
+		System.out.println("courses ID: " + courseId);
 		ArrayList adminList =  (ArrayList<Object>) corsor.get("Admin"); //convert to ArrayList<String>
 		ArrayList modList =  (ArrayList<Object>) corsor.get("Mod"); //convert to ArrayList<String>
 		ArrayList usersList =  (ArrayList<Object>) corsor.get("Users"); //convert to ArrayList<String>
@@ -68,6 +68,7 @@ public class CourseManager
 		exactCourse.setSemesester((String)corsor.get("Semesester"));
 		exactCourse.setOpenDate((String)corsor.get("OpenDate"));
 		exactCourse.setCloseDate((String)corsor.get("CloseDate"));
+		exactCourse.setId(courseId);
 		System.out.println("manager opendate"+exactCourse.openDate);
 		System.out.println("manager closedate"+exactCourse.closeDate);
 		exactCourse.setImage((String)corsor.get("Image"));

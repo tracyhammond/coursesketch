@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="../../">
+    <title>Drawing!</title>
+	<link rel="stylesheet" href="css/school/school_item.css">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+	<link rel="stylesheet" href="css/courseSketch2.css">
+
+	<script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
+
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+
+	<script type="text/javascript" src="js/input/touch_event.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/input/sketching.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/input/highlighter.js"></script>
+	<!-- DEBUG -->
+	<script type="text/javascript" src="js/test/SRL_SketchViewer.js"></script>
+
+	<script type="text/javascript" src="js/connection/connection_library.js"></script>
+	<script type="text/javascript" src="js/connection/submission.js"></script>
+	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
+	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+	<!-- DEBUG -->
+	<script type="text/javascript" src="js/test/Command_Viewer.js"></script>
+
+	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
+	<script type="text/javascript" src="js/school/school_item.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+		var drawingCreator = false;
+		var sketch = false;
+		var canvasContext = false;
+		var commandManager = false;
+		var serverConnection = false;
+		var clearCanvas = false;
+		var createBaseCommand = false;
+
+	    addLoadEvent(function () {
+			initializeServer();
+		});
+
+	    function initializeServer() {
+	    	//var wsUri = "srl04.tamu.edu:8885"; // our serve
+	    	var wsUri = "localhost:8885"; // our serve
+	    	serverConnection = new Connection(wsUri,false);
+	    	serverConnection.setOnCloseListener(function(evt) {
+				var reconnect = false;
+				if (evt.code == CONNECTION_LOST) {
+					alert('can not connect to the server');
+					reconnect = true;
+				} else if(evt.code == SERVER_FULL) {
+					alert(evt.reason); // Here we can try to connect to other servers.
+				} else {
+					alert("SERVER CLOSED CONNECTION");
+					reconnect = true;
+				}
+				if (reconnect) {
+					console.log("attempting to reconnet");
+					intervalVariable = setInterval(function() {console.log("RECONNECTING!");createWebSocket();}, 3000); 
+				}
+			});
+
+	    	serverConnection.setOnOpenListener(function(evt) {
+			});
+
+	    	serverConnection.setSchoolDataListener(function(evt, msg) {
+	    		var school = SchoolBuilder.SrlSchool.decode(msg.otherData);
+	    		var courseList = school.courses;
+	    		for(var i = 0; i <courseList.length; i++) {
+	    			user_courses[courseList[i].id] = courseList[i];
+	    		}
+	    		buildCourses();
+	    	})
+	    }
+	</script>
+	<script type="text/javascript" src="js/school/course_manager.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+    	parent.copyParentUtilityFunctions(this);
+  		parent.addScopedLoadEvent(window,
+				function()
+				{
+		  			var loader = new parent.DynamicFileLoader();
+					loader.sope = document;
+					loader.loadFile("js/utils/popup.js",'js');
+					buildCourses();
+
+					/**
+		  				Ensures that all of the columns reach to the bottom of the space they have 
+		  			*/
+			  		function manageColumnHeight() {
+			  			var maxHeight = parent.contentHeight;
+			  			var element = document.getElementById("column1");
+			  			var location = element.offsetTop;
+			  			for(var i = 1; i <= 4; i++) {
+			  				document.getElementById("column"+i).style.height = (maxHeight - location - 5)+"px";
+			  			}
+			  		}
+
+					manageColumnHeight();
+					window.onresize = function() {manageColumnHeight();};
+					
+					/*
+					for(var i = 1; i <= 4; i++) {
+		  				document.getElementById("column"+i).style.width = (311)+"px";
+		  			}
+					*/
+				}
+			);
+	  		function popupLatePolicy() {
+	  			var popupId = 'togglePopup1';
+	  			var builder = new PopupBoxBuilder();
+	  			builder.setBody(true,'html/course_managment_frames/late_policy.html');
+	  			builder.setHeader(true,'Late Policy Information');
+	  			builder.setFooter(true,'<button onclick = "togglePopup(\'' + popupId + '\')">close</button>');
+	  			builder.setBodyHeight('500px');
+	  			builder.build('popupDiv', popupId);
+	  			builder.togglePopup(popupId);
+	  		}
+
+	  		function createCourse() {
+	  			var popupId = 'togglePopup1';
+	  			var builder = new PopupBoxBuilder();
+	  			builder.setBody(true,'html/instructor/course_managment_frames/edit_course.html');
+	  			builder.setHeader(true,'Late Policy Information');
+	  			builder.setFooter(true,'<button onclick = "togglePopup(\'' + popupId + '\')">close</button>');
+	  			builder.setBodyHeight('500px');
+	  			builder.build('popupDiv', popupId);
+	  			builder.togglePopup(popupId);
+	  		}
+	  		
+	  		function exportData(scope, type) {
+	  			if (type == 'course') {
+	  				exportCourse(scope);
+	  			}
+	  		}
+
+	  		function exportCourse(scope) {
+	  			var course = new SrlCourse();
+	  			course.id = "course_" + generateUUID();
+	  			course.name = scope.document.getElementById('name').value;
+	  			course.description = scope.document.getElementById('description').value;
+	  			course.semester = scope.document.getElementById('semester').value;
+	  			var openDate = scope.document.getElementById('openDate').value;
+	  			var closeDate = scope.document.getElementById('closeDate').value;
+	  			var permission = new SchoolBuilder.SrlPermission();
+	  			permission.adminPermission = scope.document.getElementById('admins').value.split(" ");
+	  			permission.moderatorPermission = scope.document.getElementById('admins').value.split(" ");
+	  			permission.userPermission = scope.document.getElementById('admins').value.split(" ");
+	  			course.accessPermission = permission;
+	  			parent.user_courses[course.id] = course;
+	  			buildCourses();
+	  		}
+	  		
+	  		function buildCourses() {
+	  			try {
+	  				var builder = new SchoolItemBuilder();
+	  				printProperties(user_courses);
+					builder.setList(getMapAsList(user_courses)).setWidth('medium').centerItem(true);
+					builder.showImage = false;
+					builder.setOnBoxClick('courseClickerFunction');
+					builder.build('class_list_column');
+					clearLists(2);
+	  			}catch(exception) {
+	  				console.error(exception);
+	  			}
+	  		}
+
+	  		function getData() {
+	  			var request = new DataRequest("david","SessionId");
+	  			var courseItem = new ItemRequest();
+	  			courseItem.query = ItemRequest.ItemQuery.COURSE;
+	  			courseItem.itemId = [];
+	  			courseItem.itemId.push("52a77e1e6b2b611ffbc4d1b2");
+	  			courseItem.itemId.push("52a77e736b2b611ffbc4d1b3");
+	  			var assignmentItem = new ItemRequest();
+	  			assignmentItem.query = ItemRequest.ItemQuery.ASSIGNMENT;
+	  			assignmentItem.itemId = [];
+	  			assignmentItem.itemId.push("id0");
+	  			assignmentItem.itemId.push("id1");
+	  			var problemItem = new ItemRequest();
+	  			problemItem.query = ItemRequest.ItemQuery.COURSE_PROBLEM;
+	  			problemItem.itemId = [];
+	  			problemItem.itemId.push("id0");
+	  			problemItem.itemId.push("id1");
+	  			request.items = [];
+	  			request.items.push(courseItem);
+	  			//request.items.push(assignmentItem);
+	  			//request.items.push(problemItem);
+	  			serverConnection.sendRequest(serverConnection.createRequestFromData(request, Request.MessageType.DATA_REQUEST));
+	  		}
+	</script>
+	<style>
+		html, body {
+		    margin: 0px;
+		    padding: 0px;
+		    border: 0px;
+		    width: 100%;
+		    height: 100%;
+		}
+	</style>
+</head>
+<body>
+<!-- Menu Bar -->
+	<button onclick = "getData();">get Data from server</button>
+    <!-- Center Section -->
+   	<div class = "wide_centre">
+    	<div style="width:75%; float:left;">
+	    	<div class="col-group3">
+	    		<div>
+	    			<h2 style = "text-align:center">Courses</h2>
+		    		<div id="column1" class = "semi_wide_centre faded_column" style = "overflow:hidden; padding-top: 5px;">
+		    			<button class = "myButton2 centre" onclick="createCourse();">Add New Course</button>
+				    	<div id="class_list_column" class="school_div">
+			    		</div>
+			    	</div>
+		    	</div>
+		    	<div>
+		    		<h2 style = "text-align:center">Assignments</h2>
+			    	<div id="column2" class = "semi_wide_centre faded_column" style = "overflow:hidden; padding-top: 5px;">
+			    		<div id="assignment_button" style = "display:none;">
+			    			<button class = "myButton2 centre" onclick="createAssignment();">Add New Assignment</button>
+			    		</div>
+				    	<div id="assignment_list_column" class="school_div">
+				    	Hi
+						</div>
+					</div>
+				</div>
+				<div>
+					<h2 style = "text-align:center">Problems</h2>
+					<div id="column3" class = "semi_wide_centre faded_column" style = "overflow:hidden; padding-top: 5px;">
+						<div id="problem_button" style = "display:none;">
+							<button class = "myButton2 centre" onclick="createProblem();">Add New Problem</button>
+			    		</div>
+						<div id="problem_list_column" class="school_div">
+					    	Hi
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="width:25%; float:right;">
+			<h2 style = "text-align:center; visibility: hidden;">Hidden Title</h2>
+			<div id="column4" style = "padding-right: 10px; padding-left: 10px; padding-top:5px; background:#A9D0F5;">
+				<div style ="background:#FFFFFF; padding-right:1px;">
+					<div id = "editable_unit" style = "height:100%;">
+						<h2 style = "text-align:center">Nothing is selected yet</h2>
+						<h2 style = "text-align:center">Click an item to edit</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- PopupDiv -->
+	<div id="popupDiv">
+	</div>
+
+</body></html>

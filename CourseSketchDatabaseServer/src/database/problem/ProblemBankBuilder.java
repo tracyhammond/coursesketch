@@ -57,6 +57,10 @@ public class ProblemBankBuilder
 		otherKeywords = x;
 		return this;
 	}
+	public ProblemBankBuilder setId(String x) {
+		id = x;
+		return this;
+	}
 
 	
 

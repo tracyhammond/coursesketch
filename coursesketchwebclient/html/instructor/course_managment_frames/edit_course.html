@@ -5,12 +5,30 @@
     <link rel="stylesheet" href="css/school/course_manager_info.css">
     <link rel="stylesheet" href="css/utility/columns.css">
     <script type="text/javascript" src="js/utils/input_focus_manager.js"></script>
+    <script>
+    var saveFunction;
+    var myScope = this;
+    function save() {
+    	parent.exportData(myScope, 'course');
+    }
+    </script>
 </head>
 <body id="iframeBody" class = "wide_centre">
 		<div>
 			<h2 class = "title">Edit Course Content</h2>
 			<h3 id="uniqueIDHolder">Class ID: </h3>
-			<input type="text" placeholder="Class Name">
+			<input id ="name" type="text" placeholder="Class Name">
+			<textarea id = "description" type="textarea" placeholder="Description" rows="4" cols="50"></textarea>
+			<input id ="semester" type="text" placeholder="Semester">
+			<input id ="openDate" type="date">
+			<input id ="closeDate" type="date">
+			<input id ="admins" type="text" placeholder="List of admins separated by space">
+			<input id ="mods" type="text" placeholder="List of mods separated by space">
+			<input id ="users" type="text" placeholder="List of users separated by space">
+			<button onclick = "save();">SAVE</button>
+			<!-- public String description, name, access, semesester, openDate, closeDate, image;
+	public ArrayList<String> assignmentList;
+	public PermissionBuilder permissions = new PermissionBuilder(); -->
 		</div>
 </body>
 

@@ -149,6 +149,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 		try {
 			websocket.send(message.toArrayBuffer());
 		} catch(err) {
+			console.error(err);
 			if (onError) {
 				onError(null, err);
 			}

@@ -5,10 +5,9 @@ import database.PermissionBuilder;
 public class CourseProblemBuilder {
 	public String courseId;
 	public String assignmentId;
-	public String problemId;
+	public String id;
 	public String gradeWeight; // either points or percent
 	public String problemBankId;
-	public String id;
 	public ProblemBankBuilder problemResource;
 	PermissionBuilder permissions;
 
@@ -20,8 +19,8 @@ public class CourseProblemBuilder {
 		assignmentId = id;
 	}
 
-	public void setProblemId(String id) {
-		problemId = id;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public void setProblemBankId(String id) {

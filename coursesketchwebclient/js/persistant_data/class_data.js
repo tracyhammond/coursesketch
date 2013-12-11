@@ -1,4 +1,8 @@
 //Test Courses
+var user_problems = {};
+var user_assignments = {};
+var user_courses = {};
+try {
 if(!SrlCourse) {
 	parent.copyParentUtilityFunctions(this);
 	parent.copyParentProtos(this);
@@ -69,7 +73,7 @@ var problem4 = new SrlProblem("Course_01", "Assignment_001", "Problem_004");
 	
 /* ===============================================================================================*/
 
-var user_assignments = {};
+
 	user_assignments[assignment1.id] = assignment1;
 	user_assignments[assignment2.id] = assignment2;
 	user_assignments[assignment3.id] = assignment3;
@@ -138,7 +142,7 @@ var upcomming_assignments =
 	];
 	*/
 
-var user_courses = {};
+
 	user_courses[course1.id] = course1;
 	user_courses[course2.id] = course2;
 	user_courses[course3.id] = course3;
@@ -166,7 +170,7 @@ var user_courses =
 	 	 ],
 	];
 */
-var user_problems = {};
+
 	user_problems[problem1.id] = problem1;
 	user_problems[problem2.id] = problem2;
 	user_problems[problem3.id] = problem3;
@@ -183,12 +187,14 @@ var questions =
 	 	 ]
 	];
 */
-
+}catch(excetion) {
+	
+}
 /* ===============================================================================================*/
 
 var courseAssignments = new listMap();	
 var assignmentProblems = new listMap();	
-initialize();
+//initialize();
 /**
  * This map will hold a map of courses to a list of assignments.
  */
@@ -229,12 +235,3 @@ function initialize() {
 	 for (var i in user_problems)
 		 { assignmentProblems.addObject(user_problems[i].assignmentId, user_problems[i]);}
 }
-
-
-if(typeof(Storage)!=="undefined")
-  {
-  }
-else
-  {
-  // Sorry! No web storage support..
-  }
