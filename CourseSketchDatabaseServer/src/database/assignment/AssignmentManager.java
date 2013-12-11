@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 import org.bson.types.ObjectId;
 
+import protobuf.srl.school.School.SrlCourse;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -57,9 +59,9 @@ public class AssignmentManager
 			course.assignmentList = new ArrayList<String>();
 		}
 		course.assignmentList.add((String) corsor.get("_id").toString());
-		CourseBuilder newCourse = new CourseBuilder();
+		SrlCourse.Builder newCourse = SrlCourse.newBuilder();
 		newCourse.setAssignmentList(course.assignmentList);
-		CourseManager.mongoUpdateCourse(dbs, assignment.courseId,userId,newCourse);
+		CourseManager.mongoUpdateCourse(dbs, assignment.courseId, userId, newCourse.buildPartial());
 		return (String) corsor.get("_id").toString();
 	}
 

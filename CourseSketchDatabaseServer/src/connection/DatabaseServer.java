@@ -7,8 +7,6 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import multiConnection.MultiInternalConnectionServer;
@@ -16,8 +14,13 @@ import multiConnection.MultiInternalConnectionServer;
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
+
+import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.ItemRequest;
+import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlSchool;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -25,14 +28,8 @@ import database.Institution;
 import database.RequestConverter;
 import database.assignment.AssignmentBuilder;
 import database.auth.AuthenticationException;
-import database.course.CourseBuilder;
 import database.problem.CourseProblemBuilder;
 import database.problem.ProblemBankBuilder;
-import protobuf.srl.query.Data.DataRequest;
-import protobuf.srl.query.Data.ItemRequest;
-import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
-import protobuf.srl.school.School.SrlSchool;
 
 /**
  * A simple WebSocketServer implementation.
@@ -76,10 +73,8 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 				for(int p=0; p<request.getItemsList().size(); p++){
 					ItemRequest itrequest = request.getItemsList().get(p);
 					switch(itrequest.getQuery()) {
-						case COURSE: ArrayList<CourseBuilder> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), request.getUserId());
-									for(CourseBuilder loopCourse: courseLoop){
-										finalSchool.addCourses(RequestConverter.convertCourseBuilderToProtobuf(loopCourse));
-									}
+						case COURSE: ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), request.getUserId());
+									finalSchool.addAllCourses(courseLoop);
 									break;
 						case ASSIGNMENT: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
 									for(AssignmentBuilder loopCourse: assignmentLoop){

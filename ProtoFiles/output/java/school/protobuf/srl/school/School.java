@@ -1769,25 +1769,25 @@ public final class School {
      */
     protobuf.srl.school.School.StateOrBuilder getStateOrBuilder();
 
-    // repeated string assignmentId = 12;
+    // repeated string assignmentList = 12;
     /**
-     * <code>repeated string assignmentId = 12;</code>
+     * <code>repeated string assignmentList = 12;</code>
      */
     java.util.List<java.lang.String>
-    getAssignmentIdList();
+    getAssignmentListList();
     /**
-     * <code>repeated string assignmentId = 12;</code>
+     * <code>repeated string assignmentList = 12;</code>
      */
-    int getAssignmentIdCount();
+    int getAssignmentListCount();
     /**
-     * <code>repeated string assignmentId = 12;</code>
+     * <code>repeated string assignmentList = 12;</code>
      */
-    java.lang.String getAssignmentId(int index);
+    java.lang.String getAssignmentList(int index);
     /**
-     * <code>repeated string assignmentId = 12;</code>
+     * <code>repeated string assignmentList = 12;</code>
      */
     com.google.protobuf.ByteString
-        getAssignmentIdBytes(int index);
+        getAssignmentListBytes(int index);
   }
   /**
    * Protobuf type {@code protobuf.srl.school.SrlCourse}
@@ -1935,10 +1935,10 @@ public final class School {
             }
             case 98: {
               if (!((mutable_bitField0_ & 0x00000800) == 0x00000800)) {
-                assignmentId_ = new com.google.protobuf.LazyStringArrayList();
+                assignmentList_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000800;
               }
-              assignmentId_.add(input.readBytes());
+              assignmentList_.add(input.readBytes());
               break;
             }
           }
@@ -1950,7 +1950,7 @@ public final class School {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000800) == 0x00000800)) {
-          assignmentId_ = new com.google.protobuf.UnmodifiableLazyStringList(assignmentId_);
+          assignmentList_ = new com.google.protobuf.UnmodifiableLazyStringList(assignmentList_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -2507,34 +2507,34 @@ public final class School {
       return state_;
     }
 
-    // repeated string assignmentId = 12;
-    public static final int ASSIGNMENTID_FIELD_NUMBER = 12;
-    private com.google.protobuf.LazyStringList assignmentId_;
+    // repeated string assignmentList = 12;
+    public static final int ASSIGNMENTLIST_FIELD_NUMBER = 12;
+    private com.google.protobuf.LazyStringList assignmentList_;
     /**
-     * <code>repeated string assignmentId = 12;</code>
+     * <code>repeated string assignmentList = 12;</code>
      */
     public java.util.List<java.lang.String>
-        getAssignmentIdList() {
-      return assignmentId_;
+        getAssignmentListList() {
+      return assignmentList_;
     }
     /**
-     * <code>repeated string assignmentId = 12;</code>
+     * <code>repeated string assignmentList = 12;</code>
      */
-    public int getAssignmentIdCount() {
-      return assignmentId_.size();
+    public int getAssignmentListCount() {
+      return assignmentList_.size();
     }
     /**
-     * <code>repeated string assignmentId = 12;</code>
+     * <code>repeated string assignmentList = 12;</code>
      */
-    public java.lang.String getAssignmentId(int index) {
-      return assignmentId_.get(index);
+    public java.lang.String getAssignmentList(int index) {
+      return assignmentList_.get(index);
     }
     /**
-     * <code>repeated string assignmentId = 12;</code>
+     * <code>repeated string assignmentList = 12;</code>
      */
     public com.google.protobuf.ByteString
-        getAssignmentIdBytes(int index) {
-      return assignmentId_.getByteString(index);
+        getAssignmentListBytes(int index) {
+      return assignmentList_.getByteString(index);
     }
 
     private void initFields() {
@@ -2549,7 +2549,7 @@ public final class School {
       accessDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
       closeDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
       state_ = protobuf.srl.school.School.State.getDefaultInstance();
-      assignmentId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      assignmentList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2600,8 +2600,8 @@ public final class School {
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
         output.writeMessage(11, state_);
       }
-      for (int i = 0; i < assignmentId_.size(); i++) {
-        output.writeBytes(12, assignmentId_.getByteString(i));
+      for (int i = 0; i < assignmentList_.size(); i++) {
+        output.writeBytes(12, assignmentList_.getByteString(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -2658,12 +2658,12 @@ public final class School {
       }
       {
         int dataSize = 0;
-        for (int i = 0; i < assignmentId_.size(); i++) {
+        for (int i = 0; i < assignmentList_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeBytesSizeNoTag(assignmentId_.getByteString(i));
+            .computeBytesSizeNoTag(assignmentList_.getByteString(i));
         }
         size += dataSize;
-        size += 1 * getAssignmentIdList().size();
+        size += 1 * getAssignmentListList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2823,7 +2823,7 @@ public final class School {
           stateBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000400);
-        assignmentId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        assignmentList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000800);
         return this;
       }
@@ -2914,11 +2914,11 @@ public final class School {
           result.state_ = stateBuilder_.build();
         }
         if (((bitField0_ & 0x00000800) == 0x00000800)) {
-          assignmentId_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              assignmentId_);
+          assignmentList_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              assignmentList_);
           bitField0_ = (bitField0_ & ~0x00000800);
         }
-        result.assignmentId_ = assignmentId_;
+        result.assignmentList_ = assignmentList_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2978,13 +2978,13 @@ public final class School {
         if (other.hasState()) {
           mergeState(other.getState());
         }
-        if (!other.assignmentId_.isEmpty()) {
-          if (assignmentId_.isEmpty()) {
-            assignmentId_ = other.assignmentId_;
+        if (!other.assignmentList_.isEmpty()) {
+          if (assignmentList_.isEmpty()) {
+            assignmentList_ = other.assignmentList_;
             bitField0_ = (bitField0_ & ~0x00000800);
           } else {
-            ensureAssignmentIdIsMutable();
-            assignmentId_.addAll(other.assignmentId_);
+            ensureAssignmentListIsMutable();
+            assignmentList_.addAll(other.assignmentList_);
           }
           onChanged();
         }
@@ -4062,95 +4062,95 @@ public final class School {
         return stateBuilder_;
       }
 
-      // repeated string assignmentId = 12;
-      private com.google.protobuf.LazyStringList assignmentId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureAssignmentIdIsMutable() {
+      // repeated string assignmentList = 12;
+      private com.google.protobuf.LazyStringList assignmentList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureAssignmentListIsMutable() {
         if (!((bitField0_ & 0x00000800) == 0x00000800)) {
-          assignmentId_ = new com.google.protobuf.LazyStringArrayList(assignmentId_);
+          assignmentList_ = new com.google.protobuf.LazyStringArrayList(assignmentList_);
           bitField0_ |= 0x00000800;
          }
       }
       /**
-       * <code>repeated string assignmentId = 12;</code>
+       * <code>repeated string assignmentList = 12;</code>
        */
       public java.util.List<java.lang.String>
-          getAssignmentIdList() {
-        return java.util.Collections.unmodifiableList(assignmentId_);
+          getAssignmentListList() {
+        return java.util.Collections.unmodifiableList(assignmentList_);
       }
       /**
-       * <code>repeated string assignmentId = 12;</code>
+       * <code>repeated string assignmentList = 12;</code>
        */
-      public int getAssignmentIdCount() {
-        return assignmentId_.size();
+      public int getAssignmentListCount() {
+        return assignmentList_.size();
       }
       /**
-       * <code>repeated string assignmentId = 12;</code>
+       * <code>repeated string assignmentList = 12;</code>
        */
-      public java.lang.String getAssignmentId(int index) {
-        return assignmentId_.get(index);
+      public java.lang.String getAssignmentList(int index) {
+        return assignmentList_.get(index);
       }
       /**
-       * <code>repeated string assignmentId = 12;</code>
+       * <code>repeated string assignmentList = 12;</code>
        */
       public com.google.protobuf.ByteString
-          getAssignmentIdBytes(int index) {
-        return assignmentId_.getByteString(index);
+          getAssignmentListBytes(int index) {
+        return assignmentList_.getByteString(index);
       }
       /**
-       * <code>repeated string assignmentId = 12;</code>
+       * <code>repeated string assignmentList = 12;</code>
        */
-      public Builder setAssignmentId(
+      public Builder setAssignmentList(
           int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureAssignmentIdIsMutable();
-        assignmentId_.set(index, value);
+  ensureAssignmentListIsMutable();
+        assignmentList_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string assignmentId = 12;</code>
+       * <code>repeated string assignmentList = 12;</code>
        */
-      public Builder addAssignmentId(
+      public Builder addAssignmentList(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureAssignmentIdIsMutable();
-        assignmentId_.add(value);
+  ensureAssignmentListIsMutable();
+        assignmentList_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string assignmentId = 12;</code>
+       * <code>repeated string assignmentList = 12;</code>
        */
-      public Builder addAllAssignmentId(
+      public Builder addAllAssignmentList(
           java.lang.Iterable<java.lang.String> values) {
-        ensureAssignmentIdIsMutable();
-        super.addAll(values, assignmentId_);
+        ensureAssignmentListIsMutable();
+        super.addAll(values, assignmentList_);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string assignmentId = 12;</code>
+       * <code>repeated string assignmentList = 12;</code>
        */
-      public Builder clearAssignmentId() {
-        assignmentId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      public Builder clearAssignmentList() {
+        assignmentList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000800);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string assignmentId = 12;</code>
+       * <code>repeated string assignmentList = 12;</code>
        */
-      public Builder addAssignmentIdBytes(
+      public Builder addAssignmentListBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureAssignmentIdIsMutable();
-        assignmentId_.add(value);
+  ensureAssignmentListIsMutable();
+        assignmentList_.add(value);
         onChanged();
         return this;
       }
@@ -16766,7 +16766,7 @@ public final class School {
       "buf.srl.school.SrlCourse\0227\n\013assignments\030" +
       "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen" +
       "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo" +
-      "l.SrlProblem\"\353\003\n\tSrlCourse\022\n\n\002id\030\001 \002(\t\022\014" +
+      "l.SrlProblem\"\355\003\n\tSrlCourse\022\n\n\002id\030\001 \002(\t\022\014" +
       "\n\004name\030\002 \001(\t\022<\n\020accessPermission\030\003 \001(\0132\"" +
       ".protobuf.srl.school.SrlPermission\022G\n\006ac" +
       "cess\030\004 \001(\0162,.protobuf.srl.school.SrlCour" +
@@ -16776,58 +16776,58 @@ public final class School {
       "\035.protobuf.srl.school.DateTime\0220\n\tcloseD" +
       "ate\030\n \001(\0132\035.protobuf.srl.school.DateTime" +
       "\022)\n\005state\030\013 \001(\0132\032.protobuf.srl.school.St" +
-      "ate\022\024\n\014assignmentId\030\014 \003(\t\"O\n\rAccessibili" +
-      "ty\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\026\n\022PROTECT" +
-      "ED_NOSEARCH\020\003\022\013\n\007PRIVATE\020\004\"\327\005\n\rSrlAssign" +
-      "ment\022\020\n\010courseId\030\001 \002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004na" +
-      "me\030\003 \001(\t\022I\n\004type\030\004 \001(\01621.protobuf.srl.sc",
-      "hool.SrlAssignment.AssignmentType:\010HOMEW" +
-      "ORK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001(\t\022" +
-      "\r\n\005links\030\007 \003(\t\022J\n\nlatePolicy\030\010 \001(\0162-.pro" +
-      "tobuf.srl.school.SrlAssignment.LatePolic" +
-      "y:\007POLICY1\022\023\n\013gradeWeight\030\t \001(\005\022\r\n\005grade" +
-      "\030\n \001(\005\0221\n\naccessDate\030\013 \001(\0132\035.protobuf.sr" +
-      "l.school.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.pro" +
-      "tobuf.srl.school.DateTime\0220\n\tcloseDate\030\r" +
-      " \001(\0132\035.protobuf.srl.school.DateTime\022)\n\005s" +
-      "tate\030\016 \001(\0132\032.protobuf.srl.school.State\022\020",
-      "\n\010imageUrl\030\017 \001(\t\022\023\n\013problemList\030\020 \003(\t\022<\n" +
-      "\020accessPermission\030\021 \001(\0132\".protobuf.srl.s" +
-      "chool.SrlPermission\"R\n\016AssignmentType\022\014\n" +
-      "\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM\020\004" +
-      "\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3\n\nLatePolicy\022\013\n" +
-      "\007POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007POLICY3\020\003\"\251\002\n" +
-      "\nSrlProblem\022\020\n\010courseId\030\001 \002(\t\022\024\n\014assignm" +
-      "entId\030\002 \002(\t\022\n\n\002id\030\003 \002(\t\022\014\n\004name\030\004 \001(\t\022\023\n" +
-      "\013description\030\005 \001(\t\022?\n\013subProblems\030\006 \003(\0132" +
-      "*.protobuf.srl.school.subproblemInformat",
-      "ion\0224\n\004info\030\007 \003(\0132&.protobuf.srl.school." +
-      "DomainInformation\022\023\n\013gradeWeight\030\010 \001(\005\022\r" +
-      "\n\005grade\030\t \001(\005\022)\n\005state\030\n \001(\0132\032.protobuf." +
-      "srl.school.State\"\204\002\n\025subproblemInformati" +
-      "on\022\024\n\014questionText\030\001 \001(\t\022U\n\014questionType" +
-      "\030\002 \001(\01627.protobuf.srl.school.subproblemI" +
-      "nformation.QuestionType:\006SKETCH\022\017\n\007optio" +
-      "ns\030\003 \001(\014\022\023\n\013gradeWeight\030\004 \001(\005\022\r\n\005grade\030\005" +
-      " \001(\005\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MULT" +
-      "_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BOX\020\004\"",
-      "w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month\030\002 \001(\005" +
-      "\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006minute\030\005 " +
-      "\001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millisecond\030\007 \001(\004" +
-      "\"\"\n\021DomainInformation\022\r\n\005stuff\030\001 \001(\t\"c\n\005" +
-      "State\022\021\n\tpublished\030\001 \001(\010\022\022\n\naccessible\030\002" +
-      " \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007started\030\004 \001(\010\022\021" +
-      "\n\tcompleted\030\005 \001(\010\"b\n\007SrlUser\022\020\n\010username" +
-      "\030\001 \002(\t\0226\n\010userType\030\002 \001(\0162\035.protobuf.srl." +
-      "school.UserType:\005GUEST\022\r\n\005email\030\003 \001(\t\">\n" +
-      "\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002",
-      "(\t\022\021\n\tgroupName\030\003 \001(\t\"H\n\013SrlSchoolId\022\020\n\010" +
-      "courseId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\t" +
-      "problemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017admi" +
-      "nPermission\030\001 \003(\t\022\033\n\023moderatorPermission" +
-      "\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserTy" +
-      "pe\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHIN" +
-      "G_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
+      "ate\022\026\n\016assignmentList\030\014 \003(\t\"O\n\rAccessibi" +
+      "lity\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\026\n\022PROTE" +
+      "CTED_NOSEARCH\020\003\022\013\n\007PRIVATE\020\004\"\327\005\n\rSrlAssi" +
+      "gnment\022\020\n\010courseId\030\001 \002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004" +
+      "name\030\003 \001(\t\022I\n\004type\030\004 \001(\01621.protobuf.srl.",
+      "school.SrlAssignment.AssignmentType:\010HOM" +
+      "EWORK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001(" +
+      "\t\022\r\n\005links\030\007 \003(\t\022J\n\nlatePolicy\030\010 \001(\0162-.p" +
+      "rotobuf.srl.school.SrlAssignment.LatePol" +
+      "icy:\007POLICY1\022\023\n\013gradeWeight\030\t \001(\005\022\r\n\005gra" +
+      "de\030\n \001(\005\0221\n\naccessDate\030\013 \001(\0132\035.protobuf." +
+      "srl.school.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.p" +
+      "rotobuf.srl.school.DateTime\0220\n\tcloseDate" +
+      "\030\r \001(\0132\035.protobuf.srl.school.DateTime\022)\n" +
+      "\005state\030\016 \001(\0132\032.protobuf.srl.school.State",
+      "\022\020\n\010imageUrl\030\017 \001(\t\022\023\n\013problemList\030\020 \003(\t\022" +
+      "<\n\020accessPermission\030\021 \001(\0132\".protobuf.srl" +
+      ".school.SrlPermission\"R\n\016AssignmentType\022" +
+      "\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM" +
+      "\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3\n\nLatePolicy\022" +
+      "\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007POLICY3\020\003\"\251" +
+      "\002\n\nSrlProblem\022\020\n\010courseId\030\001 \002(\t\022\024\n\014assig" +
+      "nmentId\030\002 \002(\t\022\n\n\002id\030\003 \002(\t\022\014\n\004name\030\004 \001(\t\022" +
+      "\023\n\013description\030\005 \001(\t\022?\n\013subProblems\030\006 \003(" +
+      "\0132*.protobuf.srl.school.subproblemInform",
+      "ation\0224\n\004info\030\007 \003(\0132&.protobuf.srl.schoo" +
+      "l.DomainInformation\022\023\n\013gradeWeight\030\010 \001(\005" +
+      "\022\r\n\005grade\030\t \001(\005\022)\n\005state\030\n \001(\0132\032.protobu" +
+      "f.srl.school.State\"\204\002\n\025subproblemInforma" +
+      "tion\022\024\n\014questionText\030\001 \001(\t\022U\n\014questionTy" +
+      "pe\030\002 \001(\01627.protobuf.srl.school.subproble" +
+      "mInformation.QuestionType:\006SKETCH\022\017\n\007opt" +
+      "ions\030\003 \001(\014\022\023\n\013gradeWeight\030\004 \001(\005\022\r\n\005grade" +
+      "\030\005 \001(\005\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MU" +
+      "LT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BOX\020",
+      "\004\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month\030\002 \001" +
+      "(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006minute\030" +
+      "\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millisecond\030\007 \001" +
+      "(\004\"\"\n\021DomainInformation\022\r\n\005stuff\030\001 \001(\t\"c" +
+      "\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\naccessible" +
+      "\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007started\030\004 \001(\010" +
+      "\022\021\n\tcompleted\030\005 \001(\010\"b\n\007SrlUser\022\020\n\010userna" +
+      "me\030\001 \002(\t\0226\n\010userType\030\002 \001(\0162\035.protobuf.sr" +
+      "l.school.UserType:\005GUEST\022\r\n\005email\030\003 \001(\t\"" +
+      ">\n\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002",
+      " \002(\t\022\021\n\tgroupName\030\003 \001(\t\"H\n\013SrlSchoolId\022\020" +
+      "\n\010courseId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021" +
+      "\n\tproblemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017ad" +
+      "minPermission\030\001 \003(\t\022\033\n\023moderatorPermissi" +
+      "on\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010User" +
+      "Type\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACH" +
+      "ING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -16845,7 +16845,7 @@ public final class School {
           internal_static_protobuf_srl_school_SrlCourse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlCourse_descriptor,
-              new java.lang.String[] { "Id", "Name", "AccessPermission", "Access", "Description", "Semester", "ImageUrl", "Grade", "AccessDate", "CloseDate", "State", "AssignmentId", });
+              new java.lang.String[] { "Id", "Name", "AccessPermission", "Access", "Description", "Semester", "ImageUrl", "Grade", "AccessDate", "CloseDate", "State", "AssignmentList", });
           internal_static_protobuf_srl_school_SrlAssignment_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_srl_school_SrlAssignment_fieldAccessorTable = new

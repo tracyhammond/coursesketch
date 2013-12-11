@@ -1,66 +1,43 @@
 package database;
 
+import java.util.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import database.assignment.AssignmentBuilder;
-import database.course.CourseBuilder;
 import database.problem.CourseProblemBuilder;
 import database.problem.ProblemBankBuilder;
 import protobuf.srl.school.School.DateTime;
 import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 
 public class RequestConverter{
-	static CourseBuilder convertProtobufToCourseBuilder(SrlCourse protoCourse){
-		CourseBuilder courseBuilder = new CourseBuilder();
-		courseBuilder.setAccess(protoCourse.getAccess().toString());
-		courseBuilder.setAssignmentList((ArrayList<String>) protoCourse.getAssignmentIdList());
-		courseBuilder.setCloseDate(DateProtobufToString(protoCourse.getCloseDate()));
-		courseBuilder.setDescription(protoCourse.getDescription());
-		courseBuilder.setImage(protoCourse.getImageUrl());
-		courseBuilder.setName(protoCourse.getName());
-		courseBuilder.setOpenDate(DateProtobufToString(protoCourse.getAccessDate()));
-		courseBuilder.setSemesester(protoCourse.getSemester());
-		return courseBuilder;
+
+	public static DateTime getProtoFromDate(Date date) {
+		DateTime.Builder result = DateTime.newBuilder();
+		result.setMillisecond(date.getTime());
+		result.setYear(date.getYear());
+		result.setMonth(date.getMonth());
+		result.setDay(date.getDay());
+		result.setHour(date.getHours());
+		result.setMinute(date.getMinutes());
+		return result.build();
+	}
+
+	/**
+	 * Creates a proto version of a date from the given milliseconds
+	 * @param date
+	 * @return
+	 */
+	public static DateTime getProtoFromMilliseconds(long date) {
+		return getProtoFromDate(new Date(date));
 	}
 	
-	public static SrlCourse convertCourseBuilderToProtobuf(CourseBuilder course){
-		SrlCourse.Builder srlCourseBuilder = SrlCourse.newBuilder();
-		try {
-			srlCourseBuilder.setAccess(SrlCourse.Accessibility.valueOf(course.access));
-		} catch(Exception e) {
-		}
-		if (course != null) {
-			srlCourseBuilder.setId(course.id);
-		}
-		if (course.assignmentList != null) {
-			srlCourseBuilder.addAllAssignmentId(course.assignmentList);
-		}
-		if (course.closeDate != null && false) {
-			srlCourseBuilder.setCloseDate(DateStringToProtobuf(course.closeDate));
-		}
-		if (course.openDate != null && false) {
-			srlCourseBuilder.setAccessDate(DateStringToProtobuf(course.openDate));
-		}
-		if (course.description != null) {
-			srlCourseBuilder.setDescription(course.description);
-		}
-		if (course.image != null) {
-			srlCourseBuilder.setImageUrl(course.image);
-		}
-		if (course.name != null) {
-			srlCourseBuilder.setName(course.name);
-		}
-		if (course.semesester != null) {
-			srlCourseBuilder.setSemester(course.semesester);
-		}
-		return srlCourseBuilder.build();
+	public static Date getDateFromProto(DateTime date) {
+		return new Date(date.getMillisecond());
 	}
-	
+
 	static AssignmentBuilder convertProtobufToAssignment(SrlAssignment protoAssignment){
 		AssignmentBuilder assignmentBuilder = new AssignmentBuilder();
 		if (protoAssignment.hasCloseDate())
@@ -107,7 +84,7 @@ public class RequestConverter{
 		return problemBuilder;
 	}
 	
-	public static SrlProblem convertProblemToProtobuf(CourseProblemBuilder problem){
+	public static SrlProblem convertProblemToProtobuf(CourseProblemBuilder problem) {
 		SrlProblem.Builder srlProblemBuilder = SrlProblem.newBuilder();
 		
 		srlProblemBuilder.setAssignmentId(problem.assignmentId);
@@ -118,8 +95,8 @@ public class RequestConverter{
 		
 		return srlProblemBuilder.build();
 	}
-	
-	public static SrlProblem convertProblemBankToProtobuf(ProblemBankBuilder problem){
+
+	public static SrlProblem convertProblemBankToProtobuf(ProblemBankBuilder problem) {
 		SrlProblem.Builder srlProblemBuilder = SrlProblem.newBuilder();
 		
 

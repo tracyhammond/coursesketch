@@ -3,6 +3,8 @@ package database;
 import java.util.ArrayList;
 import java.util.Date;
 
+import protobuf.srl.school.School.DateTime;
+
 public class PermissionBuilder 
 {
 	public ArrayList<String> admin;
@@ -25,12 +27,7 @@ public class PermissionBuilder
 		return this;
 	}
 
-	public static boolean isTimeValid(long time, String openDate, String closeDate) {
-		long open = Long.parseLong(openDate.split(" ")[5]);
-		long close = Long.parseLong(closeDate.split(" ")[5]);
-		System.out.println("Open: " + new Date(open));
-		System.out.println("Time: " + new Date(time));
-		System.out.println("Close: " + new Date(close));
-		return time >= open && time <= close;	
+	public static boolean isTimeValid(long time, DateTime openDate, DateTime closeDate) {
+		return time >= openDate.getMillisecond() && time <= closeDate.getMillisecond();	
 	}
 }

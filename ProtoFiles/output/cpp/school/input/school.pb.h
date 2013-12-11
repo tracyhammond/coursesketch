@@ -459,21 +459,21 @@ class SrlCourse : public ::google::protobuf::Message {
   inline ::protobuf::srl::school::State* release_state();
   inline void set_allocated_state(::protobuf::srl::school::State* state);
 
-  // repeated string assignmentId = 12;
-  inline int assignmentid_size() const;
-  inline void clear_assignmentid();
-  static const int kAssignmentIdFieldNumber = 12;
-  inline const ::std::string& assignmentid(int index) const;
-  inline ::std::string* mutable_assignmentid(int index);
-  inline void set_assignmentid(int index, const ::std::string& value);
-  inline void set_assignmentid(int index, const char* value);
-  inline void set_assignmentid(int index, const char* value, size_t size);
-  inline ::std::string* add_assignmentid();
-  inline void add_assignmentid(const ::std::string& value);
-  inline void add_assignmentid(const char* value);
-  inline void add_assignmentid(const char* value, size_t size);
-  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& assignmentid() const;
-  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_assignmentid();
+  // repeated string assignmentList = 12;
+  inline int assignmentlist_size() const;
+  inline void clear_assignmentlist();
+  static const int kAssignmentListFieldNumber = 12;
+  inline const ::std::string& assignmentlist(int index) const;
+  inline ::std::string* mutable_assignmentlist(int index);
+  inline void set_assignmentlist(int index, const ::std::string& value);
+  inline void set_assignmentlist(int index, const char* value);
+  inline void set_assignmentlist(int index, const char* value, size_t size);
+  inline ::std::string* add_assignmentlist();
+  inline void add_assignmentlist(const ::std::string& value);
+  inline void add_assignmentlist(const char* value);
+  inline void add_assignmentlist(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& assignmentlist() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_assignmentlist();
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlCourse)
  private:
@@ -513,7 +513,7 @@ class SrlCourse : public ::google::protobuf::Message {
   ::protobuf::srl::school::DateTime* accessdate_;
   ::protobuf::srl::school::DateTime* closedate_;
   ::protobuf::srl::school::State* state_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> assignmentid_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> assignmentlist_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
@@ -2692,48 +2692,48 @@ inline void SrlCourse::set_allocated_state(::protobuf::srl::school::State* state
   }
 }
 
-// repeated string assignmentId = 12;
-inline int SrlCourse::assignmentid_size() const {
-  return assignmentid_.size();
+// repeated string assignmentList = 12;
+inline int SrlCourse::assignmentlist_size() const {
+  return assignmentlist_.size();
 }
-inline void SrlCourse::clear_assignmentid() {
-  assignmentid_.Clear();
+inline void SrlCourse::clear_assignmentlist() {
+  assignmentlist_.Clear();
 }
-inline const ::std::string& SrlCourse::assignmentid(int index) const {
-  return assignmentid_.Get(index);
+inline const ::std::string& SrlCourse::assignmentlist(int index) const {
+  return assignmentlist_.Get(index);
 }
-inline ::std::string* SrlCourse::mutable_assignmentid(int index) {
-  return assignmentid_.Mutable(index);
+inline ::std::string* SrlCourse::mutable_assignmentlist(int index) {
+  return assignmentlist_.Mutable(index);
 }
-inline void SrlCourse::set_assignmentid(int index, const ::std::string& value) {
-  assignmentid_.Mutable(index)->assign(value);
+inline void SrlCourse::set_assignmentlist(int index, const ::std::string& value) {
+  assignmentlist_.Mutable(index)->assign(value);
 }
-inline void SrlCourse::set_assignmentid(int index, const char* value) {
-  assignmentid_.Mutable(index)->assign(value);
+inline void SrlCourse::set_assignmentlist(int index, const char* value) {
+  assignmentlist_.Mutable(index)->assign(value);
 }
-inline void SrlCourse::set_assignmentid(int index, const char* value, size_t size) {
-  assignmentid_.Mutable(index)->assign(
+inline void SrlCourse::set_assignmentlist(int index, const char* value, size_t size) {
+  assignmentlist_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* SrlCourse::add_assignmentid() {
-  return assignmentid_.Add();
+inline ::std::string* SrlCourse::add_assignmentlist() {
+  return assignmentlist_.Add();
 }
-inline void SrlCourse::add_assignmentid(const ::std::string& value) {
-  assignmentid_.Add()->assign(value);
+inline void SrlCourse::add_assignmentlist(const ::std::string& value) {
+  assignmentlist_.Add()->assign(value);
 }
-inline void SrlCourse::add_assignmentid(const char* value) {
-  assignmentid_.Add()->assign(value);
+inline void SrlCourse::add_assignmentlist(const char* value) {
+  assignmentlist_.Add()->assign(value);
 }
-inline void SrlCourse::add_assignmentid(const char* value, size_t size) {
-  assignmentid_.Add()->assign(reinterpret_cast<const char*>(value), size);
+inline void SrlCourse::add_assignmentlist(const char* value, size_t size) {
+  assignmentlist_.Add()->assign(reinterpret_cast<const char*>(value), size);
 }
 inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-SrlCourse::assignmentid() const {
-  return assignmentid_;
+SrlCourse::assignmentlist() const {
+  return assignmentlist_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-SrlCourse::mutable_assignmentid() {
-  return &assignmentid_;
+SrlCourse::mutable_assignmentlist() {
+  return &assignmentlist_;
 }
 
 // -------------------------------------------------------------------
