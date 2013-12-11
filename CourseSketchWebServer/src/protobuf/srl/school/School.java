@@ -1685,9 +1685,9 @@ public final class School {
     com.google.protobuf.ByteString
         getImageUrlBytes();
 
-    // optional int32 grade = 8;
+    // optional float grade = 8;
     /**
-     * <code>optional int32 grade = 8;</code>
+     * <code>optional float grade = 8;</code>
      *
      * <pre>
      *Calculated grade for all Assignments in this course
@@ -1695,13 +1695,13 @@ public final class School {
      */
     boolean hasGrade();
     /**
-     * <code>optional int32 grade = 8;</code>
+     * <code>optional float grade = 8;</code>
      *
      * <pre>
      *Calculated grade for all Assignments in this course
      * </pre>
      */
-    int getGrade();
+    float getGrade();
 
     // optional .protobuf.srl.school.DateTime accessDate = 9;
     /**
@@ -1889,9 +1889,9 @@ public final class School {
               imageUrl_ = input.readBytes();
               break;
             }
-            case 64: {
+            case 69: {
               bitField0_ |= 0x00000080;
-              grade_ = input.readInt32();
+              grade_ = input.readFloat();
               break;
             }
             case 74: {
@@ -2393,11 +2393,11 @@ public final class School {
       }
     }
 
-    // optional int32 grade = 8;
+    // optional float grade = 8;
     public static final int GRADE_FIELD_NUMBER = 8;
-    private int grade_;
+    private float grade_;
     /**
-     * <code>optional int32 grade = 8;</code>
+     * <code>optional float grade = 8;</code>
      *
      * <pre>
      *Calculated grade for all Assignments in this course
@@ -2407,13 +2407,13 @@ public final class School {
       return ((bitField0_ & 0x00000080) == 0x00000080);
     }
     /**
-     * <code>optional int32 grade = 8;</code>
+     * <code>optional float grade = 8;</code>
      *
      * <pre>
      *Calculated grade for all Assignments in this course
      * </pre>
      */
-    public int getGrade() {
+    public float getGrade() {
       return grade_;
     }
 
@@ -2545,7 +2545,7 @@ public final class School {
       description_ = "";
       semester_ = "";
       imageUrl_ = "";
-      grade_ = 0;
+      grade_ = 0F;
       accessDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
       closeDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
       state_ = protobuf.srl.school.School.State.getDefaultInstance();
@@ -2589,7 +2589,7 @@ public final class School {
         output.writeBytes(7, getImageUrlBytes());
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        output.writeInt32(8, grade_);
+        output.writeFloat(8, grade_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         output.writeMessage(9, accessDate_);
@@ -2642,7 +2642,7 @@ public final class School {
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(8, grade_);
+          .computeFloatSize(8, grade_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
@@ -2803,7 +2803,7 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000020);
         imageUrl_ = "";
         bitField0_ = (bitField0_ & ~0x00000040);
-        grade_ = 0;
+        grade_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000080);
         if (accessDateBuilder_ == null) {
           accessDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
@@ -3590,10 +3590,10 @@ public final class School {
         return this;
       }
 
-      // optional int32 grade = 8;
-      private int grade_ ;
+      // optional float grade = 8;
+      private float grade_ ;
       /**
-       * <code>optional int32 grade = 8;</code>
+       * <code>optional float grade = 8;</code>
        *
        * <pre>
        *Calculated grade for all Assignments in this course
@@ -3603,30 +3603,30 @@ public final class School {
         return ((bitField0_ & 0x00000080) == 0x00000080);
       }
       /**
-       * <code>optional int32 grade = 8;</code>
+       * <code>optional float grade = 8;</code>
        *
        * <pre>
        *Calculated grade for all Assignments in this course
        * </pre>
        */
-      public int getGrade() {
+      public float getGrade() {
         return grade_;
       }
       /**
-       * <code>optional int32 grade = 8;</code>
+       * <code>optional float grade = 8;</code>
        *
        * <pre>
        *Calculated grade for all Assignments in this course
        * </pre>
        */
-      public Builder setGrade(int value) {
+      public Builder setGrade(float value) {
         bitField0_ |= 0x00000080;
         grade_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 grade = 8;</code>
+       * <code>optional float grade = 8;</code>
        *
        * <pre>
        *Calculated grade for all Assignments in this course
@@ -3634,7 +3634,7 @@ public final class School {
        */
       public Builder clearGrade() {
         bitField0_ = (bitField0_ & ~0x00000080);
-        grade_ = 0;
+        grade_ = 0F;
         onChanged();
         return this;
       }
@@ -4336,9 +4336,9 @@ public final class School {
      */
     protobuf.srl.school.School.SrlAssignment.LatePolicy getLatePolicy();
 
-    // optional int32 gradeWeight = 9;
+    // optional string gradeWeight = 9;
     /**
-     * <code>optional int32 gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
      *Percentage of Assignment Category's total grade
@@ -4346,17 +4346,26 @@ public final class School {
      */
     boolean hasGradeWeight();
     /**
-     * <code>optional int32 gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
      *Percentage of Assignment Category's total grade
      * </pre>
      */
-    int getGradeWeight();
-
-    // optional int32 grade = 10;
+    java.lang.String getGradeWeight();
     /**
-     * <code>optional int32 grade = 10;</code>
+     * <code>optional string gradeWeight = 9;</code>
+     *
+     * <pre>
+     *Percentage of Assignment Category's total grade
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getGradeWeightBytes();
+
+    // optional float grade = 10;
+    /**
+     * <code>optional float grade = 10;</code>
      *
      * <pre>
      *Calculated grade for whole Assignment
@@ -4364,13 +4373,13 @@ public final class School {
      */
     boolean hasGrade();
     /**
-     * <code>optional int32 grade = 10;</code>
+     * <code>optional float grade = 10;</code>
      *
      * <pre>
      *Calculated grade for whole Assignment
      * </pre>
      */
-    int getGrade();
+    float getGrade();
 
     // optional .protobuf.srl.school.DateTime accessDate = 11;
     /**
@@ -4619,14 +4628,14 @@ public final class School {
               }
               break;
             }
-            case 72: {
+            case 74: {
               bitField0_ |= 0x00000080;
-              gradeWeight_ = input.readInt32();
+              gradeWeight_ = input.readBytes();
               break;
             }
-            case 80: {
+            case 85: {
               bitField0_ |= 0x00000100;
-              grade_ = input.readInt32();
+              grade_ = input.readFloat();
               break;
             }
             case 90: {
@@ -5303,11 +5312,11 @@ public final class School {
       return latePolicy_;
     }
 
-    // optional int32 gradeWeight = 9;
+    // optional string gradeWeight = 9;
     public static final int GRADEWEIGHT_FIELD_NUMBER = 9;
-    private int gradeWeight_;
+    private java.lang.Object gradeWeight_;
     /**
-     * <code>optional int32 gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
      *Percentage of Assignment Category's total grade
@@ -5317,21 +5326,52 @@ public final class School {
       return ((bitField0_ & 0x00000080) == 0x00000080);
     }
     /**
-     * <code>optional int32 gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
      *Percentage of Assignment Category's total grade
      * </pre>
      */
-    public int getGradeWeight() {
-      return gradeWeight_;
+    public java.lang.String getGradeWeight() {
+      java.lang.Object ref = gradeWeight_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          gradeWeight_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string gradeWeight = 9;</code>
+     *
+     * <pre>
+     *Percentage of Assignment Category's total grade
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getGradeWeightBytes() {
+      java.lang.Object ref = gradeWeight_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        gradeWeight_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    // optional int32 grade = 10;
+    // optional float grade = 10;
     public static final int GRADE_FIELD_NUMBER = 10;
-    private int grade_;
+    private float grade_;
     /**
-     * <code>optional int32 grade = 10;</code>
+     * <code>optional float grade = 10;</code>
      *
      * <pre>
      *Calculated grade for whole Assignment
@@ -5341,13 +5381,13 @@ public final class School {
       return ((bitField0_ & 0x00000100) == 0x00000100);
     }
     /**
-     * <code>optional int32 grade = 10;</code>
+     * <code>optional float grade = 10;</code>
      *
      * <pre>
      *Calculated grade for whole Assignment
      * </pre>
      */
-    public int getGrade() {
+    public float getGrade() {
       return grade_;
     }
 
@@ -5579,8 +5619,8 @@ public final class School {
       description_ = "";
       links_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.POLICY1;
-      gradeWeight_ = 0;
-      grade_ = 0;
+      gradeWeight_ = "";
+      grade_ = 0F;
       accessDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
       dueDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
       closeDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
@@ -5634,10 +5674,10 @@ public final class School {
         output.writeEnum(8, latePolicy_.getNumber());
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        output.writeInt32(9, gradeWeight_);
+        output.writeBytes(9, getGradeWeightBytes());
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        output.writeInt32(10, grade_);
+        output.writeFloat(10, grade_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
         output.writeMessage(11, accessDate_);
@@ -5708,11 +5748,11 @@ public final class School {
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(9, gradeWeight_);
+          .computeBytesSize(9, getGradeWeightBytes());
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(10, grade_);
+          .computeFloatSize(10, grade_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
         size += com.google.protobuf.CodedOutputStream
@@ -5884,9 +5924,9 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000040);
         latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.POLICY1;
         bitField0_ = (bitField0_ & ~0x00000080);
-        gradeWeight_ = 0;
+        gradeWeight_ = "";
         bitField0_ = (bitField0_ & ~0x00000100);
-        grade_ = 0;
+        grade_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000200);
         if (accessDateBuilder_ == null) {
           accessDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
@@ -6100,7 +6140,9 @@ public final class School {
           setLatePolicy(other.getLatePolicy());
         }
         if (other.hasGradeWeight()) {
-          setGradeWeight(other.getGradeWeight());
+          bitField0_ |= 0x00000100;
+          gradeWeight_ = other.gradeWeight_;
+          onChanged();
         }
         if (other.hasGrade()) {
           setGrade(other.getGrade());
@@ -6813,10 +6855,10 @@ public final class School {
         return this;
       }
 
-      // optional int32 gradeWeight = 9;
-      private int gradeWeight_ ;
+      // optional string gradeWeight = 9;
+      private java.lang.Object gradeWeight_ = "";
       /**
-       * <code>optional int32 gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
        *Percentage of Assignment Category's total grade
@@ -6826,30 +6868,62 @@ public final class School {
         return ((bitField0_ & 0x00000100) == 0x00000100);
       }
       /**
-       * <code>optional int32 gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
        *Percentage of Assignment Category's total grade
        * </pre>
        */
-      public int getGradeWeight() {
-        return gradeWeight_;
+      public java.lang.String getGradeWeight() {
+        java.lang.Object ref = gradeWeight_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          gradeWeight_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional int32 gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
        *Percentage of Assignment Category's total grade
        * </pre>
        */
-      public Builder setGradeWeight(int value) {
-        bitField0_ |= 0x00000100;
+      public com.google.protobuf.ByteString
+          getGradeWeightBytes() {
+        java.lang.Object ref = gradeWeight_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          gradeWeight_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string gradeWeight = 9;</code>
+       *
+       * <pre>
+       *Percentage of Assignment Category's total grade
+       * </pre>
+       */
+      public Builder setGradeWeight(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
         gradeWeight_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
        *Percentage of Assignment Category's total grade
@@ -6857,15 +6931,32 @@ public final class School {
        */
       public Builder clearGradeWeight() {
         bitField0_ = (bitField0_ & ~0x00000100);
-        gradeWeight_ = 0;
+        gradeWeight_ = getDefaultInstance().getGradeWeight();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string gradeWeight = 9;</code>
+       *
+       * <pre>
+       *Percentage of Assignment Category's total grade
+       * </pre>
+       */
+      public Builder setGradeWeightBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
+        gradeWeight_ = value;
         onChanged();
         return this;
       }
 
-      // optional int32 grade = 10;
-      private int grade_ ;
+      // optional float grade = 10;
+      private float grade_ ;
       /**
-       * <code>optional int32 grade = 10;</code>
+       * <code>optional float grade = 10;</code>
        *
        * <pre>
        *Calculated grade for whole Assignment
@@ -6875,30 +6966,30 @@ public final class School {
         return ((bitField0_ & 0x00000200) == 0x00000200);
       }
       /**
-       * <code>optional int32 grade = 10;</code>
+       * <code>optional float grade = 10;</code>
        *
        * <pre>
        *Calculated grade for whole Assignment
        * </pre>
        */
-      public int getGrade() {
+      public float getGrade() {
         return grade_;
       }
       /**
-       * <code>optional int32 grade = 10;</code>
+       * <code>optional float grade = 10;</code>
        *
        * <pre>
        *Calculated grade for whole Assignment
        * </pre>
        */
-      public Builder setGrade(int value) {
+      public Builder setGrade(float value) {
         bitField0_ |= 0x00000200;
         grade_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 grade = 10;</code>
+       * <code>optional float grade = 10;</code>
        *
        * <pre>
        *Calculated grade for whole Assignment
@@ -6906,7 +6997,7 @@ public final class School {
        */
       public Builder clearGrade() {
         bitField0_ = (bitField0_ & ~0x00000200);
-        grade_ = 0;
+        grade_ = 0F;
         onChanged();
         return this;
       }
@@ -7946,9 +8037,9 @@ public final class School {
     protobuf.srl.school.School.DomainInformationOrBuilder getInfoOrBuilder(
         int index);
 
-    // optional int32 gradeWeight = 8;
+    // optional string gradeWeight = 8;
     /**
-     * <code>optional int32 gradeWeight = 8;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
      *Percentage of assignment grade
@@ -7956,17 +8047,26 @@ public final class School {
      */
     boolean hasGradeWeight();
     /**
-     * <code>optional int32 gradeWeight = 8;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
      *Percentage of assignment grade
      * </pre>
      */
-    int getGradeWeight();
-
-    // optional int32 grade = 9;
+    java.lang.String getGradeWeight();
     /**
-     * <code>optional int32 grade = 9;</code>
+     * <code>optional string gradeWeight = 8;</code>
+     *
+     * <pre>
+     *Percentage of assignment grade
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getGradeWeightBytes();
+
+    // optional float grade = 9;
+    /**
+     * <code>optional float grade = 9;</code>
      *
      * <pre>
      *Calculated grade of all subproblems for this problem
@@ -7974,13 +8074,13 @@ public final class School {
      */
     boolean hasGrade();
     /**
-     * <code>optional int32 grade = 9;</code>
+     * <code>optional float grade = 9;</code>
      *
      * <pre>
      *Calculated grade of all subproblems for this problem
      * </pre>
      */
-    int getGrade();
+    float getGrade();
 
     // optional .protobuf.srl.school.State state = 10;
     /**
@@ -8088,14 +8188,14 @@ public final class School {
               info_.add(input.readMessage(protobuf.srl.school.School.DomainInformation.PARSER, extensionRegistry));
               break;
             }
-            case 64: {
+            case 66: {
               bitField0_ |= 0x00000020;
-              gradeWeight_ = input.readInt32();
+              gradeWeight_ = input.readBytes();
               break;
             }
-            case 72: {
+            case 77: {
               bitField0_ |= 0x00000040;
-              grade_ = input.readInt32();
+              grade_ = input.readFloat();
               break;
             }
             case 82: {
@@ -8480,11 +8580,11 @@ public final class School {
       return info_.get(index);
     }
 
-    // optional int32 gradeWeight = 8;
+    // optional string gradeWeight = 8;
     public static final int GRADEWEIGHT_FIELD_NUMBER = 8;
-    private int gradeWeight_;
+    private java.lang.Object gradeWeight_;
     /**
-     * <code>optional int32 gradeWeight = 8;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
      *Percentage of assignment grade
@@ -8494,21 +8594,52 @@ public final class School {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
-     * <code>optional int32 gradeWeight = 8;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
      *Percentage of assignment grade
      * </pre>
      */
-    public int getGradeWeight() {
-      return gradeWeight_;
+    public java.lang.String getGradeWeight() {
+      java.lang.Object ref = gradeWeight_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          gradeWeight_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string gradeWeight = 8;</code>
+     *
+     * <pre>
+     *Percentage of assignment grade
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getGradeWeightBytes() {
+      java.lang.Object ref = gradeWeight_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        gradeWeight_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    // optional int32 grade = 9;
+    // optional float grade = 9;
     public static final int GRADE_FIELD_NUMBER = 9;
-    private int grade_;
+    private float grade_;
     /**
-     * <code>optional int32 grade = 9;</code>
+     * <code>optional float grade = 9;</code>
      *
      * <pre>
      *Calculated grade of all subproblems for this problem
@@ -8518,13 +8649,13 @@ public final class School {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
-     * <code>optional int32 grade = 9;</code>
+     * <code>optional float grade = 9;</code>
      *
      * <pre>
      *Calculated grade of all subproblems for this problem
      * </pre>
      */
-    public int getGrade() {
+    public float getGrade() {
       return grade_;
     }
 
@@ -8558,8 +8689,8 @@ public final class School {
       description_ = "";
       subProblems_ = java.util.Collections.emptyList();
       info_ = java.util.Collections.emptyList();
-      gradeWeight_ = 0;
-      grade_ = 0;
+      gradeWeight_ = "";
+      grade_ = 0F;
       state_ = protobuf.srl.school.School.State.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -8608,10 +8739,10 @@ public final class School {
         output.writeMessage(7, info_.get(i));
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeInt32(8, gradeWeight_);
+        output.writeBytes(8, getGradeWeightBytes());
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeInt32(9, grade_);
+        output.writeFloat(9, grade_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         output.writeMessage(10, state_);
@@ -8655,11 +8786,11 @@ public final class School {
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(8, gradeWeight_);
+          .computeBytesSize(8, getGradeWeightBytes());
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(9, grade_);
+          .computeFloatSize(9, grade_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
@@ -8806,9 +8937,9 @@ public final class School {
         } else {
           infoBuilder_.clear();
         }
-        gradeWeight_ = 0;
+        gradeWeight_ = "";
         bitField0_ = (bitField0_ & ~0x00000080);
-        grade_ = 0;
+        grade_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000100);
         if (stateBuilder_ == null) {
           state_ = protobuf.srl.school.School.State.getDefaultInstance();
@@ -8992,7 +9123,9 @@ public final class School {
           }
         }
         if (other.hasGradeWeight()) {
-          setGradeWeight(other.getGradeWeight());
+          bitField0_ |= 0x00000080;
+          gradeWeight_ = other.gradeWeight_;
+          onChanged();
         }
         if (other.hasGrade()) {
           setGrade(other.getGrade());
@@ -9961,10 +10094,10 @@ public final class School {
         return infoBuilder_;
       }
 
-      // optional int32 gradeWeight = 8;
-      private int gradeWeight_ ;
+      // optional string gradeWeight = 8;
+      private java.lang.Object gradeWeight_ = "";
       /**
-       * <code>optional int32 gradeWeight = 8;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
        *Percentage of assignment grade
@@ -9974,30 +10107,62 @@ public final class School {
         return ((bitField0_ & 0x00000080) == 0x00000080);
       }
       /**
-       * <code>optional int32 gradeWeight = 8;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
        *Percentage of assignment grade
        * </pre>
        */
-      public int getGradeWeight() {
-        return gradeWeight_;
+      public java.lang.String getGradeWeight() {
+        java.lang.Object ref = gradeWeight_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          gradeWeight_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional int32 gradeWeight = 8;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
        *Percentage of assignment grade
        * </pre>
        */
-      public Builder setGradeWeight(int value) {
-        bitField0_ |= 0x00000080;
+      public com.google.protobuf.ByteString
+          getGradeWeightBytes() {
+        java.lang.Object ref = gradeWeight_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          gradeWeight_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string gradeWeight = 8;</code>
+       *
+       * <pre>
+       *Percentage of assignment grade
+       * </pre>
+       */
+      public Builder setGradeWeight(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
         gradeWeight_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 gradeWeight = 8;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
        *Percentage of assignment grade
@@ -10005,15 +10170,32 @@ public final class School {
        */
       public Builder clearGradeWeight() {
         bitField0_ = (bitField0_ & ~0x00000080);
-        gradeWeight_ = 0;
+        gradeWeight_ = getDefaultInstance().getGradeWeight();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string gradeWeight = 8;</code>
+       *
+       * <pre>
+       *Percentage of assignment grade
+       * </pre>
+       */
+      public Builder setGradeWeightBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        gradeWeight_ = value;
         onChanged();
         return this;
       }
 
-      // optional int32 grade = 9;
-      private int grade_ ;
+      // optional float grade = 9;
+      private float grade_ ;
       /**
-       * <code>optional int32 grade = 9;</code>
+       * <code>optional float grade = 9;</code>
        *
        * <pre>
        *Calculated grade of all subproblems for this problem
@@ -10023,30 +10205,30 @@ public final class School {
         return ((bitField0_ & 0x00000100) == 0x00000100);
       }
       /**
-       * <code>optional int32 grade = 9;</code>
+       * <code>optional float grade = 9;</code>
        *
        * <pre>
        *Calculated grade of all subproblems for this problem
        * </pre>
        */
-      public int getGrade() {
+      public float getGrade() {
         return grade_;
       }
       /**
-       * <code>optional int32 grade = 9;</code>
+       * <code>optional float grade = 9;</code>
        *
        * <pre>
        *Calculated grade of all subproblems for this problem
        * </pre>
        */
-      public Builder setGrade(int value) {
+      public Builder setGrade(float value) {
         bitField0_ |= 0x00000100;
         grade_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 grade = 9;</code>
+       * <code>optional float grade = 9;</code>
        *
        * <pre>
        *Calculated grade of all subproblems for this problem
@@ -10054,7 +10236,7 @@ public final class School {
        */
       public Builder clearGrade() {
         bitField0_ = (bitField0_ & ~0x00000100);
-        grade_ = 0;
+        grade_ = 0F;
         onChanged();
         return this;
       }
@@ -10225,9 +10407,9 @@ public final class School {
      */
     com.google.protobuf.ByteString getOptions();
 
-    // optional int32 gradeWeight = 4;
+    // optional string gradeWeight = 4;
     /**
-     * <code>optional int32 gradeWeight = 4;</code>
+     * <code>optional string gradeWeight = 4;</code>
      *
      * <pre>
      *Percentage of total problem grade
@@ -10235,17 +10417,26 @@ public final class School {
      */
     boolean hasGradeWeight();
     /**
-     * <code>optional int32 gradeWeight = 4;</code>
+     * <code>optional string gradeWeight = 4;</code>
      *
      * <pre>
      *Percentage of total problem grade
      * </pre>
      */
-    int getGradeWeight();
-
-    // optional int32 grade = 5;
+    java.lang.String getGradeWeight();
     /**
-     * <code>optional int32 grade = 5;</code>
+     * <code>optional string gradeWeight = 4;</code>
+     *
+     * <pre>
+     *Percentage of total problem grade
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getGradeWeightBytes();
+
+    // optional float grade = 5;
+    /**
+     * <code>optional float grade = 5;</code>
      *
      * <pre>
      *Calculated grade for this subproblem
@@ -10253,13 +10444,13 @@ public final class School {
      */
     boolean hasGrade();
     /**
-     * <code>optional int32 grade = 5;</code>
+     * <code>optional float grade = 5;</code>
      *
      * <pre>
      *Calculated grade for this subproblem
      * </pre>
      */
-    int getGrade();
+    float getGrade();
   }
   /**
    * Protobuf type {@code protobuf.srl.school.subproblemInformation}
@@ -10333,14 +10524,14 @@ public final class School {
               options_ = input.readBytes();
               break;
             }
-            case 32: {
+            case 34: {
               bitField0_ |= 0x00000008;
-              gradeWeight_ = input.readInt32();
+              gradeWeight_ = input.readBytes();
               break;
             }
-            case 40: {
+            case 45: {
               bitField0_ |= 0x00000010;
-              grade_ = input.readInt32();
+              grade_ = input.readFloat();
               break;
             }
           }
@@ -10558,11 +10749,11 @@ public final class School {
       return options_;
     }
 
-    // optional int32 gradeWeight = 4;
+    // optional string gradeWeight = 4;
     public static final int GRADEWEIGHT_FIELD_NUMBER = 4;
-    private int gradeWeight_;
+    private java.lang.Object gradeWeight_;
     /**
-     * <code>optional int32 gradeWeight = 4;</code>
+     * <code>optional string gradeWeight = 4;</code>
      *
      * <pre>
      *Percentage of total problem grade
@@ -10572,21 +10763,52 @@ public final class School {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional int32 gradeWeight = 4;</code>
+     * <code>optional string gradeWeight = 4;</code>
      *
      * <pre>
      *Percentage of total problem grade
      * </pre>
      */
-    public int getGradeWeight() {
-      return gradeWeight_;
+    public java.lang.String getGradeWeight() {
+      java.lang.Object ref = gradeWeight_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          gradeWeight_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string gradeWeight = 4;</code>
+     *
+     * <pre>
+     *Percentage of total problem grade
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getGradeWeightBytes() {
+      java.lang.Object ref = gradeWeight_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        gradeWeight_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    // optional int32 grade = 5;
+    // optional float grade = 5;
     public static final int GRADE_FIELD_NUMBER = 5;
-    private int grade_;
+    private float grade_;
     /**
-     * <code>optional int32 grade = 5;</code>
+     * <code>optional float grade = 5;</code>
      *
      * <pre>
      *Calculated grade for this subproblem
@@ -10596,13 +10818,13 @@ public final class School {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional int32 grade = 5;</code>
+     * <code>optional float grade = 5;</code>
      *
      * <pre>
      *Calculated grade for this subproblem
      * </pre>
      */
-    public int getGrade() {
+    public float getGrade() {
       return grade_;
     }
 
@@ -10610,8 +10832,8 @@ public final class School {
       questionText_ = "";
       questionType_ = protobuf.srl.school.School.subproblemInformation.QuestionType.SKETCH;
       options_ = com.google.protobuf.ByteString.EMPTY;
-      gradeWeight_ = 0;
-      grade_ = 0;
+      gradeWeight_ = "";
+      grade_ = 0F;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -10635,10 +10857,10 @@ public final class School {
         output.writeBytes(3, options_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt32(4, gradeWeight_);
+        output.writeBytes(4, getGradeWeightBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeInt32(5, grade_);
+        output.writeFloat(5, grade_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -10663,11 +10885,11 @@ public final class School {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, gradeWeight_);
+          .computeBytesSize(4, getGradeWeightBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, grade_);
+          .computeFloatSize(5, grade_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -10791,9 +11013,9 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000002);
         options_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
-        gradeWeight_ = 0;
+        gradeWeight_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        grade_ = 0;
+        grade_ = 0F;
         bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
@@ -10871,7 +11093,9 @@ public final class School {
           setOptions(other.getOptions());
         }
         if (other.hasGradeWeight()) {
-          setGradeWeight(other.getGradeWeight());
+          bitField0_ |= 0x00000008;
+          gradeWeight_ = other.gradeWeight_;
+          onChanged();
         }
         if (other.hasGrade()) {
           setGrade(other.getGrade());
@@ -11049,10 +11273,10 @@ public final class School {
         return this;
       }
 
-      // optional int32 gradeWeight = 4;
-      private int gradeWeight_ ;
+      // optional string gradeWeight = 4;
+      private java.lang.Object gradeWeight_ = "";
       /**
-       * <code>optional int32 gradeWeight = 4;</code>
+       * <code>optional string gradeWeight = 4;</code>
        *
        * <pre>
        *Percentage of total problem grade
@@ -11062,30 +11286,62 @@ public final class School {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional int32 gradeWeight = 4;</code>
+       * <code>optional string gradeWeight = 4;</code>
        *
        * <pre>
        *Percentage of total problem grade
        * </pre>
        */
-      public int getGradeWeight() {
-        return gradeWeight_;
+      public java.lang.String getGradeWeight() {
+        java.lang.Object ref = gradeWeight_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          gradeWeight_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional int32 gradeWeight = 4;</code>
+       * <code>optional string gradeWeight = 4;</code>
        *
        * <pre>
        *Percentage of total problem grade
        * </pre>
        */
-      public Builder setGradeWeight(int value) {
-        bitField0_ |= 0x00000008;
+      public com.google.protobuf.ByteString
+          getGradeWeightBytes() {
+        java.lang.Object ref = gradeWeight_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          gradeWeight_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string gradeWeight = 4;</code>
+       *
+       * <pre>
+       *Percentage of total problem grade
+       * </pre>
+       */
+      public Builder setGradeWeight(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
         gradeWeight_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 gradeWeight = 4;</code>
+       * <code>optional string gradeWeight = 4;</code>
        *
        * <pre>
        *Percentage of total problem grade
@@ -11093,15 +11349,32 @@ public final class School {
        */
       public Builder clearGradeWeight() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        gradeWeight_ = 0;
+        gradeWeight_ = getDefaultInstance().getGradeWeight();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string gradeWeight = 4;</code>
+       *
+       * <pre>
+       *Percentage of total problem grade
+       * </pre>
+       */
+      public Builder setGradeWeightBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        gradeWeight_ = value;
         onChanged();
         return this;
       }
 
-      // optional int32 grade = 5;
-      private int grade_ ;
+      // optional float grade = 5;
+      private float grade_ ;
       /**
-       * <code>optional int32 grade = 5;</code>
+       * <code>optional float grade = 5;</code>
        *
        * <pre>
        *Calculated grade for this subproblem
@@ -11111,30 +11384,30 @@ public final class School {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional int32 grade = 5;</code>
+       * <code>optional float grade = 5;</code>
        *
        * <pre>
        *Calculated grade for this subproblem
        * </pre>
        */
-      public int getGrade() {
+      public float getGrade() {
         return grade_;
       }
       /**
-       * <code>optional int32 grade = 5;</code>
+       * <code>optional float grade = 5;</code>
        *
        * <pre>
        *Calculated grade for this subproblem
        * </pre>
        */
-      public Builder setGrade(int value) {
+      public Builder setGrade(float value) {
         bitField0_ |= 0x00000010;
         grade_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 grade = 5;</code>
+       * <code>optional float grade = 5;</code>
        *
        * <pre>
        *Calculated grade for this subproblem
@@ -11142,7 +11415,7 @@ public final class School {
        */
       public Builder clearGrade() {
         bitField0_ = (bitField0_ & ~0x00000010);
-        grade_ = 0;
+        grade_ = 0F;
         onChanged();
         return this;
       }
@@ -16772,7 +17045,7 @@ public final class School {
       "cess\030\004 \001(\0162,.protobuf.srl.school.SrlCour" +
       "se.Accessibility:\tPROTECTED\022\023\n\013descripti",
       "on\030\005 \001(\t\022\020\n\010semester\030\006 \001(\t\022\020\n\010imageUrl\030\007" +
-      " \001(\t\022\r\n\005grade\030\010 \001(\005\0221\n\naccessDate\030\t \001(\0132" +
+      " \001(\t\022\r\n\005grade\030\010 \001(\002\0221\n\naccessDate\030\t \001(\0132" +
       "\035.protobuf.srl.school.DateTime\0220\n\tcloseD" +
       "ate\030\n \001(\0132\035.protobuf.srl.school.DateTime" +
       "\022)\n\005state\030\013 \001(\0132\032.protobuf.srl.school.St" +
@@ -16785,8 +17058,8 @@ public final class School {
       "EWORK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001(" +
       "\t\022\r\n\005links\030\007 \003(\t\022J\n\nlatePolicy\030\010 \001(\0162-.p" +
       "rotobuf.srl.school.SrlAssignment.LatePol" +
-      "icy:\007POLICY1\022\023\n\013gradeWeight\030\t \001(\005\022\r\n\005gra" +
-      "de\030\n \001(\005\0221\n\naccessDate\030\013 \001(\0132\035.protobuf." +
+      "icy:\007POLICY1\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005gra" +
+      "de\030\n \001(\002\0221\n\naccessDate\030\013 \001(\0132\035.protobuf." +
       "srl.school.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.p" +
       "rotobuf.srl.school.DateTime\0220\n\tcloseDate" +
       "\030\r \001(\0132\035.protobuf.srl.school.DateTime\022)\n" +
@@ -16802,14 +17075,14 @@ public final class School {
       "\023\n\013description\030\005 \001(\t\022?\n\013subProblems\030\006 \003(" +
       "\0132*.protobuf.srl.school.subproblemInform",
       "ation\0224\n\004info\030\007 \003(\0132&.protobuf.srl.schoo" +
-      "l.DomainInformation\022\023\n\013gradeWeight\030\010 \001(\005" +
-      "\022\r\n\005grade\030\t \001(\005\022)\n\005state\030\n \001(\0132\032.protobu" +
+      "l.DomainInformation\022\023\n\013gradeWeight\030\010 \001(\t" +
+      "\022\r\n\005grade\030\t \001(\002\022)\n\005state\030\n \001(\0132\032.protobu" +
       "f.srl.school.State\"\204\002\n\025subproblemInforma" +
       "tion\022\024\n\014questionText\030\001 \001(\t\022U\n\014questionTy" +
       "pe\030\002 \001(\01627.protobuf.srl.school.subproble" +
       "mInformation.QuestionType:\006SKETCH\022\017\n\007opt" +
-      "ions\030\003 \001(\014\022\023\n\013gradeWeight\030\004 \001(\005\022\r\n\005grade" +
-      "\030\005 \001(\005\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MU" +
+      "ions\030\003 \001(\014\022\023\n\013gradeWeight\030\004 \001(\t\022\r\n\005grade" +
+      "\030\005 \001(\002\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MU" +
       "LT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BOX\020",
       "\004\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month\030\002 \001" +
       "(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006minute\030" +

@@ -1,11 +1,15 @@
 package database.assignment;
 
+import static database.StringConstants.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlPermission;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -13,17 +17,19 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import database.DatabaseAccessException;
 import database.PermissionBuilder;
+import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.course.CourseManager;
 
 public class AssignmentManager 
 {
-	public static String mongoInsertAssignment(DB dbs, String userId, AssignmentBuilder assignment) throws AuthenticationException
+	public static String mongoInsertAssignment(DB dbs, String userId, SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException
 	{
 		DBCollection new_user = dbs.getCollection("Assignments");
-		SrlCourse course = CourseManager.mongoGetCourse(dbs, assignment.courseId, userId, 0); // user can not insert anyways so we are good.
+		SrlCourse course = CourseManager.mongoGetCourse(dbs, assignment.getCourseId(), userId, 0); // user can not insert anyways so we are good.
 		if (course.getAccessPermission().getAdminPermissionList() == null) {
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
@@ -34,23 +40,23 @@ public class AssignmentManager
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
-		BasicDBObject query = new BasicDBObject("CourseId",assignment.courseId)
-										 .append("Name",assignment.name)
-										 .append("Type",assignment.type) 
-										 .append("Other",assignment.other)
-										 .append("Description",assignment.description)
-										 .append("Resources",assignment.resources)
-										 .append("LatePolicy", assignment.latePolicy)
-										 .append("GradeWeigh",assignment.gradeWeight)
-										 .append("OpenDate", assignment.openDate)
-										 .append("DueDate", assignment.dueDate)
-										 .append("CloseDate",assignment.closeDate)
-										 .append("ImageUrl", assignment.imageUrl)
-										 .append("Admin", assignment.permissions.admin)
-										 .append("Mod",assignment.permissions.mod)
-										 .append("Users", assignment.permissions.users);
-		if (assignment.problemList != null) {
-			query.append("ProblemList", assignment.problemList);
+		BasicDBObject query = new BasicDBObject(COURSE_ID,assignment.getCourseId())
+										 .append(NAME,assignment.getName())
+										 .append(ASSIGNMENT_TYPE,assignment.getType().getNumber()) 
+										 .append(ASSIGNMENT_OTHER_TYPE,assignment.getOther())
+										 .append(DESCRIPTION,assignment.getDescription())
+										 .append(ASSIGNMENT_RESOURCES,assignment.getLinksList())
+										 .append(LATE_POLICY, assignment.getLatePolicy().getNumber())
+										 .append(GRADE_WEIGHT,assignment.getGradeWeight())
+										 .append(ACCESS_DATE, assignment.getAccessDate().getMillisecond())
+										 .append(DUE_DATE, assignment.getDueDate().getMillisecond())
+										 .append(CLOSE_DATE,assignment.getCloseDate().getMillisecond())
+										 .append(IMAGE, assignment.getImageUrl())
+										 .append(ADMIN, assignment.getAccessPermission().getAdminPermissionList())
+										 .append(MOD,assignment.getAccessPermission().getModeratorPermissionList())
+										 .append(USERS, assignment.getAccessPermission().getUserPermissionList());
+		if (assignment.getProblemListList() != null) {
+			query.append(PROBLEM_LIST, assignment.getProblemListList());
 		}
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
@@ -59,21 +65,24 @@ public class AssignmentManager
 		if(course.getAssignmentListList() != null) {
 			idList.addAll(course.getAssignmentListList());
 		}
-		idList.add((String) corsor.get("_id").toString());
+		idList.add((String) corsor.get(SELF_ID).toString());
 		SrlCourse.Builder newCourse = SrlCourse.newBuilder();
 		newCourse.addAllAssignmentList(idList);
-		CourseManager.mongoUpdateCourse(dbs, assignment.courseId, userId, newCourse.buildPartial());
-		return (String) corsor.get("_id").toString();
+		CourseManager.mongoUpdateCourse(dbs, assignment.getCourseId(), userId, newCourse.buildPartial());
+		return (String) corsor.get(SELF_ID).toString();
 	}
 
-	public static AssignmentBuilder mongoGetAssignment(DB dbs, String assignmentId, String userId, long checkTime) throws AuthenticationException
+	public static SrlAssignment mongoGetAssignment(DB dbs, String assignmentId, String userId, long checkTime) throws AuthenticationException, DatabaseAccessException
 	{
 		DBRef myDbRef = new DBRef(dbs, "Assignments", new ObjectId(assignmentId));
 		DBObject corsor = myDbRef.fetch();
+		if (corsor == null) {
+			throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId);
+		}
 
-		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
-		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");
-		ArrayList usersList = (ArrayList<Object>)corsor.get("Users");
+		ArrayList adminList = (ArrayList<Object>)corsor.get(ADMIN);
+		ArrayList modList = (ArrayList<Object>)corsor.get(MOD);
+		ArrayList usersList = (ArrayList<Object>)corsor.get(USERS);
 		boolean isAdmin,isMod,isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
@@ -84,43 +93,50 @@ public class AssignmentManager
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
-		AssignmentBuilder exactAssignment = new AssignmentBuilder();
+		SrlAssignment.Builder exactAssignment = SrlAssignment.newBuilder();
 
 		exactAssignment.setId(assignmentId);
-		exactAssignment.setCourseId((String)corsor.get("CourseId"));
-		exactAssignment.setName((String)corsor.get("Name"));
-		exactAssignment.setType((String)corsor.get("Type"));
-		exactAssignment.setOther((String)corsor.get("Other"));
-		exactAssignment.setDescription((String)corsor.get("Description"));
-		exactAssignment.setResources((String)corsor.get("Resources"));
-		exactAssignment.setLatePolicy((String)corsor.get("LatePolicy"));
-		exactAssignment.setGradeWeigh((String)corsor.get("GradeWeigh"));
-		exactAssignment.setOpenDate((String)corsor.get("OpenDate"));
-		exactAssignment.setDueDate((String)corsor.get("DueDate"));
-		exactAssignment.setCloseDate((String)corsor.get("CloseDate"));
-		exactAssignment.setImageUrl((String)corsor.get("ImageUrl"));
-		exactAssignment.setProblemList((ArrayList)corsor.get("ProblemList"));
+		exactAssignment.setCourseId((String)corsor.get(COURSE_ID));
+		exactAssignment.setName((String)corsor.get(NAME));
+		exactAssignment.setType(SrlAssignment.AssignmentType.valueOf((Integer)corsor.get(ASSIGNMENT_TYPE)));
+		exactAssignment.setOther((String)corsor.get(ASSIGNMENT_OTHER_TYPE));
+		exactAssignment.setDescription((String)corsor.get(DESCRIPTION));
+		exactAssignment.addAllLinks((List)corsor.get(ASSIGNMENT_RESOURCES));
+		exactAssignment.setLatePolicy(SrlAssignment.LatePolicy.valueOf((Integer)corsor.get(LATE_POLICY)));
+		exactAssignment.setGradeWeight((String)corsor.get(GRADE_WEIGHT));
+
+		try {
+			exactAssignment.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(ACCESS_DATE)).longValue()));
+			exactAssignment.setDueDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(DUE_DATE)).longValue()));
+			exactAssignment.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(CLOSE_DATE)).longValue()));
+		}catch(Exception e ){
+			e.printStackTrace();
+		}
+
+		exactAssignment.setImageUrl((String)corsor.get(IMAGE));
+		exactAssignment.addAllProblemList((List)corsor.get(PROBLEM_LIST));
 
 		if (isUsers) {
-			SrlCourse course = CourseManager.mongoGetCourse(dbs, exactAssignment.courseId, userId, checkTime);
+			SrlCourse course = CourseManager.mongoGetCourse(dbs, exactAssignment.getCourseId(), userId, checkTime);
 			if (!PermissionBuilder.isTimeValid(checkTime, course.getAccessDate(), course.getCloseDate())) {
 				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
 			}
 		}
-
+		SrlPermission.Builder permissions = SrlPermission.newBuilder();
 		if (isAdmin) 
 		{
-			exactAssignment.permissions.setAdmin((ArrayList)corsor.get("Admin")); // admin
-			exactAssignment.permissions.setMod((ArrayList)corsor.get("Mod"));	 // admin
+			permissions.addAllAdminPermission((ArrayList)corsor.get(ADMIN)); // admin
+			permissions.addAllModeratorPermission((ArrayList)corsor.get(MOD));	 // admin
 		}
 		if (isAdmin || isMod) {
-			exactAssignment.permissions.setUsers((ArrayList)corsor.get("Users")); //admin
+			permissions.addAllUserPermission((ArrayList)corsor.get(USERS)); // mod
+			exactAssignment.setAccessPermission(permissions.build());
 		}
-		return exactAssignment;
+		return exactAssignment.build();
 
 	}
 
-	public static boolean mongoUpdateAssignment(DB dbs, String assignmentId,String userId,AssignmentBuilder assignment) throws AuthenticationException
+	public static boolean mongoUpdateAssignment(DB dbs, String assignmentId,String userId, SrlAssignment assignment) throws AuthenticationException
 	{
 		DBRef myDbRef = new DBRef(dbs, "Assignments", new ObjectId(assignmentId));
 		DBObject corsor = myDbRef.fetch();
@@ -139,58 +155,61 @@ public class AssignmentManager
 		BasicDBObject updated = new BasicDBObject();
 		if (isAdmin || isMod) 
 		{
-			if (assignment.name != null) {
-				updated.append("$set", new BasicDBObject("Name", assignment.name));
+			if (assignment.hasName()) {
+				updated.append("$set", new BasicDBObject(NAME, assignment.getName()));
 			}
-			if (assignment.type != null) {
-				updated.append("$set", new BasicDBObject("Type", assignment.type));
+			if (assignment.hasType()) {
+				updated.append("$set", new BasicDBObject(ASSIGNMENT_TYPE, assignment.getType()));
 			}
-			if (assignment.other != null) {
-				updated.append("$set", new BasicDBObject("Other", assignment.other));
+			if (assignment.hasOther()) {
+				updated.append("$set", new BasicDBObject(ASSIGNMENT_OTHER_TYPE, assignment.getOther()));
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
-			if (assignment.description != null) {
-				updated.append("$set", new BasicDBObject("Description", assignment.description));
+			if (assignment.hasDescription()) {
+				updated.append("$set", new BasicDBObject(DESCRIPTION, assignment.getDescription()));
 			}
-			if (assignment.resources != null) {
-				updated.append("$set", new BasicDBObject("Resources", assignment.resources));
+			if (assignment.getLinksList() != null) {
+				updated.append("$set", new BasicDBObject(ASSIGNMENT_RESOURCES, assignment.getLinksList()));
 			}
-			if (assignment.latePolicy != null) {
-				updated.append("$set", new BasicDBObject("LatePolicy", assignment.latePolicy));
+			if (assignment.hasLatePolicy()) {
+				updated.append("$set", new BasicDBObject(LATE_POLICY, assignment.getLatePolicy().getNumber()));
 			}
-			if (assignment.gradeWeight != null) {
-				updated.append("$set", new BasicDBObject("GradeWeight", assignment.gradeWeight));
+			if (assignment.hasGradeWeight()) {
+				updated.append("$set", new BasicDBObject(GRADE_WEIGHT, assignment.getGradeWeight()));
 			}
-			if (assignment.openDate != null) {
-				updated.append("$set", new BasicDBObject("OpenDate", assignment.openDate));
+			if (assignment.hasAccessDate()) {
+				updated.append("$set", new BasicDBObject(ACCESS_DATE, assignment.getAccessDate().getMillisecond()));
 			}
-			if (assignment.dueDate != null) {
-				updated.append("$set", new BasicDBObject("DueDate", assignment.dueDate));
+			if (assignment.hasDueDate()) {
+				updated.append("$set", new BasicDBObject(DUE_DATE, assignment.getDueDate().getMillisecond()));
 			}
-			if (assignment.closeDate != null) {
-				updated.append("$set", new BasicDBObject("CloseDate", assignment.closeDate));
+			if (assignment.hasCloseDate()) {
+				updated.append("$set", new BasicDBObject(CLOSE_DATE, assignment.getCloseDate().getMillisecond()));
 			}
-			if (assignment.imageUrl != null) {
-				updated.append("$set", new BasicDBObject("ImageUrl", assignment.imageUrl));
+			if (assignment.hasImageUrl()) {
+				updated.append("$set", new BasicDBObject(IMAGE, assignment.getImageUrl()));
 			}
-			if (assignment.problemList != null) {
-				updated.append("$set", new BasicDBObject("ProblemList", assignment.problemList));
+			if (assignment.getProblemListCount() > 0) {
+				updated.append("$set", new BasicDBObject(PROBLEM_LIST, assignment.getProblemListList()));
 			}
 
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
-			if (isAdmin) 
-			{
-				// ONLY ADMIN CAN CHANGE ADMIN OR MOD
-				if (assignment.permissions.admin != null) {
-					updated.append("$set", new BasicDBObject("Admin", assignment.permissions.admin));
+			if (assignment.hasAccessPermission()) {
+				SrlPermission permissions = assignment.getAccessPermission();
+				if (isAdmin)
+				{
+					// ONLY ADMIN CAN CHANGE ADMIN OR MOD
+					if (permissions.getAdminPermissionCount() > 0) {
+						updated.append("$set", new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+					}
+					if (permissions.getModeratorPermissionCount() > 0) {
+						updated.append("$set", new BasicDBObject(MOD, permissions.getModeratorPermissionList()));
+					}
 				}
-				if (assignment.permissions.mod != null) {
-					updated.append("$set", new BasicDBObject("Mod", assignment.permissions.mod));
+				if (permissions.getUserPermissionCount() > 0) 
+				{
+					updated.append("$set", new BasicDBObject(USERS, permissions.getUserPermissionList()));
 				}
-			}
-			if (assignment.permissions.users != null) 
-			{
-				updated.append("$set", new BasicDBObject("Users", assignment.permissions.users));
 			}
 		}
 		return true;

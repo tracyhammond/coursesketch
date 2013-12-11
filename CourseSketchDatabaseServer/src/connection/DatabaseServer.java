@@ -19,6 +19,7 @@ import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlSchool;
 
@@ -26,7 +27,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import database.Institution;
 import database.RequestConverter;
-import database.assignment.AssignmentBuilder;
 import database.auth.AuthenticationException;
 import database.problem.CourseProblemBuilder;
 import database.problem.ProblemBankBuilder;
@@ -76,10 +76,8 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 						case COURSE: ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), request.getUserId());
 									finalSchool.addAllCourses(courseLoop);
 									break;
-						case ASSIGNMENT: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
+						case ASSIGNMENT: ArrayList<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									finalSchool.addAllAssignments(assignmentLoop);
 									break;
 						case COURSE_PROBLEM: ArrayList<CourseProblemBuilder> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), request.getUserId());
 									for(CourseProblemBuilder loopCourse: courseProblemLoop){

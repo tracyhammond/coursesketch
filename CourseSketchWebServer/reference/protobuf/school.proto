@@ -15,7 +15,7 @@ message SrlCourse {
 	optional string description = 5;
 	optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer) 
 	optional string imageUrl = 7;
-	optional int32 grade = 8; //Calculated grade for all Assignments in this course
+	optional float grade = 8; //Calculated grade for all Assignments in this course
 	optional DateTime accessDate = 9; //Date course can be accessed
 	optional DateTime closeDate = 10; //Date course can no longer be accessed
 	optional State state = 11;
@@ -38,8 +38,8 @@ message SrlAssignment {
 	optional string description = 6;
 	repeated string links = 7; //external links/resources. Field needs improvement.
 	optional LatePolicy latePolicy = 8 [default=POLICY1]; 
-	optional int32 gradeWeight = 9; //Percentage of Assignment Category's total grade
-	optional int32 grade = 10; //Calculated grade for whole Assignment
+	optional string gradeWeight = 9; //Percentage of Assignment Category's total grade
+	optional float grade = 10; //Calculated grade for whole Assignment
 	optional DateTime accessDate = 11; //Date that a student can access/view/begin an assignment
 	optional DateTime dueDate = 12; //Date that the late policy goes into affect
 	optional DateTime closeDate = 13; //Date that the assignment closes and can no longer be accessed
@@ -72,8 +72,8 @@ message SrlProblem {
 	optional string description = 5;
 	repeated subproblemInformation subProblems = 6;
 	repeated DomainInformation info = 7;
-	optional int32 gradeWeight = 8; //Percentage of assignment grade
-	optional int32 grade = 9; //Calculated grade of all subproblems for this problem
+	optional string gradeWeight = 8; //Percentage of assignment grade
+	optional float grade = 9; //Calculated grade of all subproblems for this problem
 	optional State state = 10;
 }
 
@@ -81,8 +81,8 @@ message subproblemInformation {
 	optional string questionText = 1;
 	optional QuestionType questionType = 2 [default=SKETCH];
 	optional bytes options = 3;
-	optional int32 gradeWeight = 4; //Percentage of total problem grade
-	optional int32 grade = 5; //Calculated grade for this subproblem
+	optional string gradeWeight = 4; //Percentage of total problem grade
+	optional float grade = 5; //Calculated grade for this subproblem
 	
 	enum QuestionType {
 		SKETCH = 1;	

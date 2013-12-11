@@ -403,7 +403,7 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "cess\030\004 \001(\0162,.protobuf.srl.school.SrlCour"
     "se.Accessibility:\tPROTECTED\022\023\n\013descripti"
     "on\030\005 \001(\t\022\020\n\010semester\030\006 \001(\t\022\020\n\010imageUrl\030\007"
-    " \001(\t\022\r\n\005grade\030\010 \001(\005\0221\n\naccessDate\030\t \001(\0132"
+    " \001(\t\022\r\n\005grade\030\010 \001(\002\0221\n\naccessDate\030\t \001(\0132"
     "\035.protobuf.srl.school.DateTime\0220\n\tcloseD"
     "ate\030\n \001(\0132\035.protobuf.srl.school.DateTime"
     "\022)\n\005state\030\013 \001(\0132\032.protobuf.srl.school.St"
@@ -416,8 +416,8 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "EWORK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001("
     "\t\022\r\n\005links\030\007 \003(\t\022J\n\nlatePolicy\030\010 \001(\0162-.p"
     "rotobuf.srl.school.SrlAssignment.LatePol"
-    "icy:\007POLICY1\022\023\n\013gradeWeight\030\t \001(\005\022\r\n\005gra"
-    "de\030\n \001(\005\0221\n\naccessDate\030\013 \001(\0132\035.protobuf."
+    "icy:\007POLICY1\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005gra"
+    "de\030\n \001(\002\0221\n\naccessDate\030\013 \001(\0132\035.protobuf."
     "srl.school.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.p"
     "rotobuf.srl.school.DateTime\0220\n\tcloseDate"
     "\030\r \001(\0132\035.protobuf.srl.school.DateTime\022)\n"
@@ -433,14 +433,14 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "\023\n\013description\030\005 \001(\t\022\?\n\013subProblems\030\006 \003("
     "\0132*.protobuf.srl.school.subproblemInform"
     "ation\0224\n\004info\030\007 \003(\0132&.protobuf.srl.schoo"
-    "l.DomainInformation\022\023\n\013gradeWeight\030\010 \001(\005"
-    "\022\r\n\005grade\030\t \001(\005\022)\n\005state\030\n \001(\0132\032.protobu"
+    "l.DomainInformation\022\023\n\013gradeWeight\030\010 \001(\t"
+    "\022\r\n\005grade\030\t \001(\002\022)\n\005state\030\n \001(\0132\032.protobu"
     "f.srl.school.State\"\204\002\n\025subproblemInforma"
     "tion\022\024\n\014questionText\030\001 \001(\t\022U\n\014questionTy"
     "pe\030\002 \001(\01627.protobuf.srl.school.subproble"
     "mInformation.QuestionType:\006SKETCH\022\017\n\007opt"
-    "ions\030\003 \001(\014\022\023\n\013gradeWeight\030\004 \001(\005\022\r\n\005grade"
-    "\030\005 \001(\005\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MU"
+    "ions\030\003 \001(\014\022\023\n\013gradeWeight\030\004 \001(\t\022\r\n\005grade"
+    "\030\005 \001(\002\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MU"
     "LT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BOX\020"
     "\004\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month\030\002 \001"
     "(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006minute\030"
@@ -1099,17 +1099,17 @@ bool SrlCourse::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(64)) goto parse_grade;
+        if (input->ExpectTag(69)) goto parse_grade;
         break;
       }
 
-      // optional int32 grade = 8;
+      // optional float grade = 8;
       case 8: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_grade:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &grade_)));
           set_has_grade();
         } else {
@@ -1255,9 +1255,9 @@ void SrlCourse::SerializeWithCachedSizes(
       7, this->imageurl(), output);
   }
 
-  // optional int32 grade = 8;
+  // optional float grade = 8;
   if (has_grade()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(8, this->grade(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->grade(), output);
   }
 
   // optional .protobuf.srl.school.DateTime accessDate = 9;
@@ -1358,9 +1358,9 @@ void SrlCourse::SerializeWithCachedSizes(
         7, this->imageurl(), target);
   }
 
-  // optional int32 grade = 8;
+  // optional float grade = 8;
   if (has_grade()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(8, this->grade(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->grade(), target);
   }
 
   // optional .protobuf.srl.school.DateTime accessDate = 9;
@@ -1452,11 +1452,9 @@ int SrlCourse::ByteSize() const {
           this->imageurl());
     }
 
-    // optional int32 grade = 8;
+    // optional float grade = 8;
     if (has_grade()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->grade());
+      total_size += 1 + 4;
     }
 
   }
@@ -1705,7 +1703,7 @@ void SrlAssignment::SharedCtor() {
   other_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   latepolicy_ = 1;
-  gradeweight_ = 0;
+  gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   grade_ = 0;
   accessdate_ = NULL;
   duedate_ = NULL;
@@ -1735,6 +1733,9 @@ void SrlAssignment::SharedDtor() {
   }
   if (description_ != &::google::protobuf::internal::kEmptyString) {
     delete description_;
+  }
+  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+    delete gradeweight_;
   }
   if (imageurl_ != &::google::protobuf::internal::kEmptyString) {
     delete imageurl_;
@@ -1800,7 +1801,11 @@ void SrlAssignment::Clear() {
     latepolicy_ = 1;
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    gradeweight_ = 0;
+    if (has_gradeweight()) {
+      if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+        gradeweight_->clear();
+      }
+    }
     grade_ = 0;
     if (has_accessdate()) {
       if (accessdate_ != NULL) accessdate_->::protobuf::srl::school::DateTime::Clear();
@@ -1978,33 +1983,34 @@ bool SrlAssignment::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(72)) goto parse_gradeWeight;
+        if (input->ExpectTag(74)) goto parse_gradeWeight;
         break;
       }
 
-      // optional int32 gradeWeight = 9;
+      // optional string gradeWeight = 9;
       case 9: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_gradeWeight:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &gradeweight_)));
-          set_has_gradeweight();
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_gradeweight()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->gradeweight().data(), this->gradeweight().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(80)) goto parse_grade;
+        if (input->ExpectTag(85)) goto parse_grade;
         break;
       }
 
-      // optional int32 grade = 10;
+      // optional float grade = 10;
       case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_grade:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &grade_)));
           set_has_grade();
         } else {
@@ -2204,14 +2210,18 @@ void SrlAssignment::SerializeWithCachedSizes(
       8, this->latepolicy(), output);
   }
 
-  // optional int32 gradeWeight = 9;
+  // optional string gradeWeight = 9;
   if (has_gradeweight()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->gradeweight(), output);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->gradeweight().data(), this->gradeweight().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      9, this->gradeweight(), output);
   }
 
-  // optional int32 grade = 10;
+  // optional float grade = 10;
   if (has_grade()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(10, this->grade(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(10, this->grade(), output);
   }
 
   // optional .protobuf.srl.school.DateTime accessDate = 11;
@@ -2341,14 +2351,19 @@ void SrlAssignment::SerializeWithCachedSizes(
       8, this->latepolicy(), target);
   }
 
-  // optional int32 gradeWeight = 9;
+  // optional string gradeWeight = 9;
   if (has_gradeweight()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->gradeweight(), target);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->gradeweight().data(), this->gradeweight().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        9, this->gradeweight(), target);
   }
 
-  // optional int32 grade = 10;
+  // optional float grade = 10;
   if (has_grade()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(10, this->grade(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->grade(), target);
   }
 
   // optional .protobuf.srl.school.DateTime accessDate = 11;
@@ -2465,18 +2480,16 @@ int SrlAssignment::ByteSize() const {
 
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional int32 gradeWeight = 9;
+    // optional string gradeWeight = 9;
     if (has_gradeweight()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::StringSize(
           this->gradeweight());
     }
 
-    // optional int32 grade = 10;
+    // optional float grade = 10;
     if (has_grade()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->grade());
+      total_size += 1 + 4;
     }
 
     // optional .protobuf.srl.school.DateTime accessDate = 11;
@@ -2708,7 +2721,7 @@ void SrlProblem::SharedCtor() {
   id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   description_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  gradeweight_ = 0;
+  gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   grade_ = 0;
   state_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2733,6 +2746,9 @@ void SrlProblem::SharedDtor() {
   }
   if (description_ != &::google::protobuf::internal::kEmptyString) {
     delete description_;
+  }
+  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+    delete gradeweight_;
   }
   if (this != default_instance_) {
     delete state_;
@@ -2787,7 +2803,11 @@ void SrlProblem::Clear() {
         description_->clear();
       }
     }
-    gradeweight_ = 0;
+    if (has_gradeweight()) {
+      if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+        gradeweight_->clear();
+      }
+    }
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     grade_ = 0;
@@ -2917,33 +2937,34 @@ bool SrlProblem::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(58)) goto parse_info;
-        if (input->ExpectTag(64)) goto parse_gradeWeight;
+        if (input->ExpectTag(66)) goto parse_gradeWeight;
         break;
       }
 
-      // optional int32 gradeWeight = 8;
+      // optional string gradeWeight = 8;
       case 8: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_gradeWeight:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &gradeweight_)));
-          set_has_gradeweight();
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_gradeweight()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->gradeweight().data(), this->gradeweight().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(72)) goto parse_grade;
+        if (input->ExpectTag(77)) goto parse_grade;
         break;
       }
 
-      // optional int32 grade = 9;
+      // optional float grade = 9;
       case 9: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_grade:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &grade_)));
           set_has_grade();
         } else {
@@ -3042,14 +3063,18 @@ void SrlProblem::SerializeWithCachedSizes(
       7, this->info(i), output);
   }
 
-  // optional int32 gradeWeight = 8;
+  // optional string gradeWeight = 8;
   if (has_gradeweight()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(8, this->gradeweight(), output);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->gradeweight().data(), this->gradeweight().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      8, this->gradeweight(), output);
   }
 
-  // optional int32 grade = 9;
+  // optional float grade = 9;
   if (has_grade()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->grade(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(9, this->grade(), output);
   }
 
   // optional .protobuf.srl.school.State state = 10;
@@ -3130,14 +3155,19 @@ void SrlProblem::SerializeWithCachedSizes(
         7, this->info(i), target);
   }
 
-  // optional int32 gradeWeight = 8;
+  // optional string gradeWeight = 8;
   if (has_gradeweight()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(8, this->gradeweight(), target);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->gradeweight().data(), this->gradeweight().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        8, this->gradeweight(), target);
   }
 
-  // optional int32 grade = 9;
+  // optional float grade = 9;
   if (has_grade()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->grade(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(9, this->grade(), target);
   }
 
   // optional .protobuf.srl.school.State state = 10;
@@ -3193,20 +3223,18 @@ int SrlProblem::ByteSize() const {
           this->description());
     }
 
-    // optional int32 gradeWeight = 8;
+    // optional string gradeWeight = 8;
     if (has_gradeweight()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::StringSize(
           this->gradeweight());
     }
 
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional int32 grade = 9;
+    // optional float grade = 9;
     if (has_grade()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->grade());
+      total_size += 1 + 4;
     }
 
     // optional .protobuf.srl.school.State state = 10;
@@ -3390,7 +3418,7 @@ void subproblemInformation::SharedCtor() {
   questiontext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   questiontype_ = 1;
   options_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  gradeweight_ = 0;
+  gradeweight_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   grade_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -3405,6 +3433,9 @@ void subproblemInformation::SharedDtor() {
   }
   if (options_ != &::google::protobuf::internal::kEmptyString) {
     delete options_;
+  }
+  if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+    delete gradeweight_;
   }
   if (this != default_instance_) {
   }
@@ -3444,7 +3475,11 @@ void subproblemInformation::Clear() {
         options_->clear();
       }
     }
-    gradeweight_ = 0;
+    if (has_gradeweight()) {
+      if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
+        gradeweight_->clear();
+      }
+    }
     grade_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3504,33 +3539,34 @@ bool subproblemInformation::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(32)) goto parse_gradeWeight;
+        if (input->ExpectTag(34)) goto parse_gradeWeight;
         break;
       }
 
-      // optional int32 gradeWeight = 4;
+      // optional string gradeWeight = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_gradeWeight:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &gradeweight_)));
-          set_has_gradeweight();
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_gradeweight()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->gradeweight().data(), this->gradeweight().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(40)) goto parse_grade;
+        if (input->ExpectTag(45)) goto parse_grade;
         break;
       }
 
-      // optional int32 grade = 5;
+      // optional float grade = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_grade:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &grade_)));
           set_has_grade();
         } else {
@@ -3579,14 +3615,18 @@ void subproblemInformation::SerializeWithCachedSizes(
       3, this->options(), output);
   }
 
-  // optional int32 gradeWeight = 4;
+  // optional string gradeWeight = 4;
   if (has_gradeweight()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->gradeweight(), output);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->gradeweight().data(), this->gradeweight().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->gradeweight(), output);
   }
 
-  // optional int32 grade = 5;
+  // optional float grade = 5;
   if (has_grade()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->grade(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(5, this->grade(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3620,14 +3660,19 @@ void subproblemInformation::SerializeWithCachedSizes(
         3, this->options(), target);
   }
 
-  // optional int32 gradeWeight = 4;
+  // optional string gradeWeight = 4;
   if (has_gradeweight()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->gradeweight(), target);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->gradeweight().data(), this->gradeweight().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->gradeweight(), target);
   }
 
-  // optional int32 grade = 5;
+  // optional float grade = 5;
   if (has_grade()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->grade(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(5, this->grade(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3661,18 +3706,16 @@ int subproblemInformation::ByteSize() const {
           this->options());
     }
 
-    // optional int32 gradeWeight = 4;
+    // optional string gradeWeight = 4;
     if (has_gradeweight()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::StringSize(
           this->gradeweight());
     }
 
-    // optional int32 grade = 5;
+    // optional float grade = 5;
     if (has_grade()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->grade());
+      total_size += 1 + 4;
     }
 
   }
