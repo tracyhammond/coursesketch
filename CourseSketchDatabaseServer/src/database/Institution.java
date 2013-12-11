@@ -1,27 +1,16 @@
 package database;
 
-import java.net.UnknownHostException;
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
-import protobuf.srl.school.School.DateTime;
+import protobuf.srl.school.School.SrlCourse;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-import database.Institution;
 import database.assignment.AssignmentBuilder;
 import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.course.CourseBuilder;
 import database.course.CourseManager;
 import database.problem.CourseProblemBuilder;
 import database.problem.CourseProblemManager;
@@ -57,11 +46,11 @@ public class Institution
 	
 	// if user can only access between open date and close date
 	// user can only access problem between assignment open and close date
-	public static ArrayList<CourseBuilder> mongoGetCourses(List<String> courseID,String userId) throws AuthenticationException 
+	public static ArrayList<SrlCourse> mongoGetCourses(List<String> courseID,String userId) throws AuthenticationException 
 	{
 		int courses = courseID.size()-1;
 		long currentTime = System.currentTimeMillis();
-		ArrayList<CourseBuilder> allCourses = new ArrayList<CourseBuilder>();
+		ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
 		
 		while(courses >= 0)
 		{
