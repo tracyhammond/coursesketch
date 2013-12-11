@@ -4,13 +4,16 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlPermission;
+
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
+import database.RequestConverter;
 import database.assignment.AssignmentBuilder;
 import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
-import database.course.CourseBuilder;
 import database.course.CourseManager;
 
 public class DatabaseTester {
@@ -19,53 +22,53 @@ public class DatabaseTester {
 		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
 		DB db = mongoClient.getDB("test");
 		String returnId = testCourses(db);
-		testAssignments(db,returnId);
+		//testAssignments(db,returnId);
 	}
-	
+
 	public static DB getDatabase() {
 		return null;
 	}
-	
+
 	public static String testCourses(DB dbs) throws AuthenticationException {
-		CourseBuilder testBuilder = new CourseBuilder();
-		CourseBuilder testBuilder1 = new CourseBuilder();
-		testBuilder.setAccess("public");
-		testBuilder.setSemesester("FALL");
+		SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
+		SrlCourse.Builder testBuilder1 = SrlCourse.newBuilder();
+		testBuilder.setAccess(SrlCourse.Accessibility.PUBLIC);
+		testBuilder.setSemester("FALL");
 		testBuilder.setName("Discrete Mathematics");
 		testBuilder.setDescription("mathematcs that do discrete things!");
-		testBuilder.setOpenDate("yyyy mm dd hh ss " + (new Date(System.currentTimeMillis() - 1000000).getTime()));
-		testBuilder.setCloseDate("yyyy mm dd hh ss " + (new Date(System.currentTimeMillis() + 1000000).getTime()));
-		testBuilder.permissions.admin = new ArrayList<String>();
-		testBuilder.permissions.admin.add("david");
-		testBuilder.permissions.admin.add("larry");
+		testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
+		testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() + 1000000).getTime())));
+		SrlPermission.Builder permissions = SrlPermission.newBuilder();
+		permissions.addAdminPermission("david");
+		permissions.addAdminPermission("larry");
 
-		testBuilder.permissions.mod = new ArrayList<String>();
-		testBuilder.permissions.mod.add("raniero");
-		testBuilder.permissions.mod.add("manoj");
+		permissions.addModeratorPermission("raniero");
+		permissions.addModeratorPermission("manoj");
 
-		testBuilder.permissions.users = new ArrayList<String>();
-		testBuilder.permissions.users.add("vijay");
-		testBuilder.permissions.users.add("matt");
+		permissions.addUserPermission("vijay");
+		permissions.addUserPermission("matt");
+
+		testBuilder.setAccessPermission(permissions.build());
 		System.out.println(testBuilder.toString());
 
 		System.out.println("INSERTING COURSE");
-		String courseId = CourseManager.mongoInsertCourse(dbs, testBuilder);
+		String courseId = CourseManager.mongoInsertCourse(dbs, testBuilder.buildPartial());
 		System.out.println("INSERTING COURSE SUCCESSFULT");
 		System.out.println(courseId);
 		// testing getting courses
 
 		System.out.println("GETTING COURES AS ADMIN");
-		CourseBuilder builder = CourseManager.mongoGetCourse(dbs, courseId, "david", System.currentTimeMillis());
+		SrlCourse builder = CourseManager.mongoGetCourse(dbs, courseId, "david", System.currentTimeMillis());
 		System.out.println(builder.toString());
 		System.out.println("GETTING COURES AS MOD");
-		CourseBuilder modBuilder = CourseManager.mongoGetCourse(dbs, courseId, "manoj", System.currentTimeMillis());
+		SrlCourse modBuilder = CourseManager.mongoGetCourse(dbs, courseId, "manoj", System.currentTimeMillis());
 		System.out.println(modBuilder.toString());
 		System.out.println("GETTING COURES AS USER");
-		CourseBuilder userBuilder = CourseManager.mongoGetCourse(dbs, courseId, "matt", System.currentTimeMillis());
+		SrlCourse userBuilder = CourseManager.mongoGetCourse(dbs, courseId, "matt", System.currentTimeMillis());
 		System.out.println(userBuilder.toString());
 		try {
 			System.out.println("GETTING COURES AS NO ONE");
-			CourseBuilder crashBuilder = CourseManager.mongoGetCourse(dbs, courseId, "NO_ONE", System.currentTimeMillis());
+			SrlCourse crashBuilder = CourseManager.mongoGetCourse(dbs, courseId, "NO_ONE", System.currentTimeMillis());
 			System.out.println("SOMETHING FAILED, NO ONE SHOULD HAVE NOTHING" + crashBuilder.toString());
 		} catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate mongo get course");
@@ -96,11 +99,11 @@ public class DatabaseTester {
 		}
 
 		System.out.println("UPDATING COURSE AS ADMIN");
-		testBuilder1.description = "I HAVE A DIFFERENT DESCRIPTION NOW";
-		boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "larry", testBuilder1);
+		testBuilder1.setDescription("I HAVE A DIFFERENT DESCRIPTION NOW");
+		boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "larry", testBuilder1.buildPartial());
 
 		System.out.println("GETTING UPDATED COURSE AS ADMIN");
-		CourseBuilder postUpdate = CourseManager.mongoGetCourse(dbs, courseId, "david", System.currentTimeMillis());
+		SrlCourse postUpdate = CourseManager.mongoGetCourse(dbs, courseId, "david", System.currentTimeMillis());
 		return courseId;
 	}
 	
