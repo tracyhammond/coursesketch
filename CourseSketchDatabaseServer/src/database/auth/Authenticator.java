@@ -1,6 +1,7 @@
 package database.auth;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -12,12 +13,12 @@ public class Authenticator {
 	 *
 	 * looks up the groupId if there are groupId associated with this groupList
 	 * @param userId the userId within the program that is trying to be authenticated
-	 * @param groupList
+	 * @param list2
 	 * @return
 	 */
-	public static boolean checkAuthentication(DB dbs, String userId, ArrayList<String> groupList) {
+	public static boolean checkAuthentication(DB dbs, String userId, List<String> groups) {
 		DBCollection new_user = dbs.getCollection("UserGroups");
-		for (String group: groupList) {
+		for (String group: groups) {
 			if (group.startsWith("group")) {
 				group.substring(5); // should be correct?
 				ArrayList list = (ArrayList<Object>)new_user.findOne(group.substring(5)).get("UserList");

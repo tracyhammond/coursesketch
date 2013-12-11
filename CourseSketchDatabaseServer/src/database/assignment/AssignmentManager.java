@@ -1,7 +1,7 @@
 package database.assignment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 
@@ -16,7 +16,6 @@ import com.mongodb.DBRef;
 import database.PermissionBuilder;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
-import database.course.CourseBuilder;
 import database.course.CourseManager;
 
 public class AssignmentManager 
@@ -24,12 +23,12 @@ public class AssignmentManager
 	public static String mongoInsertAssignment(DB dbs, String userId, AssignmentBuilder assignment) throws AuthenticationException
 	{
 		DBCollection new_user = dbs.getCollection("Assignments");
-		CourseBuilder course = CourseManager.mongoGetCourse(dbs, assignment.courseId, userId, 0); // user can not insert anyways so we are good.
-		if (course.permissions.admin == null) {
+		SrlCourse course = CourseManager.mongoGetCourse(dbs, assignment.courseId, userId, 0); // user can not insert anyways so we are good.
+		if (course.getAccessPermission().getAdminPermissionList() == null) {
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
-		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, course.permissions.admin);
-		boolean isMod = Authenticator.checkAuthentication(dbs, userId, course.permissions.mod);
+		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, course.getAccessPermission().getAdminPermissionList());
+		boolean isMod = Authenticator.checkAuthentication(dbs, userId, course.getAccessPermission().getModeratorPermissionList());
 
 		if(!isAdmin && !isMod)
 		{
@@ -55,12 +54,14 @@ public class AssignmentManager
 		}
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
-		if(course.assignmentList == null) {
-			course.assignmentList = new ArrayList<String>();
+
+		List<String> idList = new ArrayList<String>();
+		if(course.getAssignmentListList() != null) {
+			idList.addAll(course.getAssignmentListList());
 		}
-		course.assignmentList.add((String) corsor.get("_id").toString());
+		idList.add((String) corsor.get("_id").toString());
 		SrlCourse.Builder newCourse = SrlCourse.newBuilder();
-		newCourse.setAssignmentList(course.assignmentList);
+		newCourse.addAllAssignmentList(idList);
 		CourseManager.mongoUpdateCourse(dbs, assignment.courseId, userId, newCourse.buildPartial());
 		return (String) corsor.get("_id").toString();
 	}
@@ -101,8 +102,8 @@ public class AssignmentManager
 		exactAssignment.setProblemList((ArrayList)corsor.get("ProblemList"));
 
 		if (isUsers) {
-			CourseBuilder course = CourseManager.mongoGetCourse(dbs, exactAssignment.courseId, userId, checkTime);
-			if (!PermissionBuilder.isTimeValid(checkTime, course.openDate, course.closeDate)) {
+			SrlCourse course = CourseManager.mongoGetCourse(dbs, exactAssignment.courseId, userId, checkTime);
+			if (!PermissionBuilder.isTimeValid(checkTime, course.getAccessDate(), course.getCloseDate())) {
 				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
 			}
 		}
