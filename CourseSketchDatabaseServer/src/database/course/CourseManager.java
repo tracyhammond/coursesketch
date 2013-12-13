@@ -127,41 +127,57 @@ public class CourseManager
 		BasicDBObject updated = new BasicDBObject();
 		if (isAdmin) 
 		{
-			if (course.hasSemester()) {
+			if (course.hasSemester()) 
+			{
 				updateObj = new BasicDBObject(COURSE_SEMESTER, course.getSemester());
 				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
-			if (course.hasAccessDate()) {
-				((BasicDBObject) updateObj).append("$set", new BasicDBObject(ACCESS_DATE, course.getAccessDate().getMillisecond()));
+			if (course.hasAccessDate()) 
+			{
+				
+				updateObj = new BasicDBObject(ACCESS_DATE, course.getAccessDate().getMillisecond());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
+				
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
-			if (course.hasCloseDate()) {
-				((BasicDBObject) updateObj).append("$set", new BasicDBObject(CLOSE_DATE, course.getCloseDate().getMillisecond()));
+			if (course.hasCloseDate()) 
+			{
+				updateObj = new BasicDBObject(CLOSE_DATE, course.getCloseDate().getMillisecond());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
+			
 			if (course.hasImageUrl()) {
-				((BasicDBObject) updateObj).append("$set", new BasicDBObject(IMAGE, course.getImageUrl()));
+				updateObj = new BasicDBObject(IMAGE, course.getImageUrl());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (course.hasDescription()) {
 				updateObj = new BasicDBObject(DESCRIPTION, course.getDescription());
 				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
 			if (course.hasName()) {
-				((BasicDBObject) updateObj).append("$set", new BasicDBObject(NAME, course.getName()));
+				updateObj = new BasicDBObject(NAME, course.getName());
+				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
-			if (course.hasAccess()) {
-				((BasicDBObject) updateObj).append("$set", new BasicDBObject(COURSE_ACCESS, course.getAccess().getNumber()));
+			if (course.hasAccess()) 
+			{
+				updateObj = new BasicDBObject(COURSE_ACCESS, course.getAccess().getNumber());
+				courses.update(corsor, new BasicDBObject ("$set",updateObj));
+				
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (course.getAccessPermission() != null) {
 				SrlPermission permissions = course.getAccessPermission();
 				if (permissions.getAdminPermissionList() != null) {
-					updated.append("$set", new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+					updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
+					courses.update(corsor, new BasicDBObject ("$set",updateObj));
 				}
 				if (permissions.getModeratorPermissionList() != null) {
-					updated.append("$set", new BasicDBObject(MOD, permissions.getModeratorPermissionList()));
+					updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
+					courses.update(corsor, new BasicDBObject ("$set",updateObj));
 				}
 				if (permissions.getUserPermissionList() != null) {
-					updated.append("$set", new BasicDBObject(USERS, permissions.getUserPermissionList()));
+					updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
+					courses.update(corsor, new BasicDBObject ("$set",updateObj));
 				}
 			}
 			
@@ -169,7 +185,8 @@ public class CourseManager
 		}
 		if (isAdmin || isMod) {
 			if (course.getAssignmentListList() != null) {
-				updated.append("$set", new BasicDBObject(ASSIGNMENT_LIST, course.getAssignmentListList()));
+				updateObj = new BasicDBObject(ASSIGNMENT_LIST, course.getAssignmentListList());
+				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
 		}
 		//courses.update(corsor, new BasicDBObject ("$set",updateObj));
