@@ -3,6 +3,8 @@ package database.auth;
 import java.util.ArrayList;
 import java.util.List;
 
+import protobuf.srl.school.School.DateTime;
+
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 
@@ -31,5 +33,9 @@ public class Authenticator {
 			}
 		}
 		return false;
+	}
+
+	public static boolean isTimeValid(long time, DateTime openDate, DateTime closeDate) {
+		return time >= openDate.getMillisecond() && time <= closeDate.getMillisecond();	
 	}
 }

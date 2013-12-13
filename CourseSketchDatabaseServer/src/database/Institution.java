@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlProblem;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -12,10 +14,8 @@ import com.mongodb.MongoClient;
 import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
 import database.course.CourseManager;
-import database.problem.CourseProblemBuilder;
+import database.problem.BankProblemManager;
 import database.problem.CourseProblemManager;
-import database.problem.ProblemBankBuilder;
-import database.problem.ProblemManager;
 
 
 public class Institution 
@@ -67,17 +67,21 @@ public class Institution
 		// do open close checking
 	}
 	
-	public static ArrayList<CourseProblemBuilder> mongoGetCourseProblem(List<String> problemID,String userId) throws AuthenticationException 
+	public static ArrayList<SrlProblem> mongoGetCourseProblem(List<String> problemID,String userId) throws AuthenticationException 
 	{
 		int courseProblems = problemID.size()-1;
 		long currentTime = System.currentTimeMillis();
-		ArrayList<CourseProblemBuilder> allCourses = new ArrayList<CourseProblemBuilder>();
+		ArrayList<SrlProblem> allCourses = new ArrayList<SrlProblem>();
 		
 		while(courseProblems >= 0)
 		{
-			allCourses.add(CourseProblemManager.mongoGetProblem(getInstance().db, problemID.get(courseProblems), userId, currentTime));
+			try {
+				allCourses.add(CourseProblemManager.mongoGetProblem(getInstance().db, problemID.get(courseProblems), userId, currentTime));
+			}catch(DatabaseAccessException e) {
+				e.printStackTrace();
+			}
 			courseProblems--;
-	}
+		}
 		
 		// need to return everything
 		return allCourses;
@@ -100,30 +104,17 @@ public class Institution
 		return allAssignments;
 		// do open close checking
 	}
-	public static ArrayList<ProblemBankBuilder> mongoGetProblem(List<String> problemID,String userId) throws AuthenticationException 
+	public static ArrayList<SrlBankProblem> mongoGetProblem(List<String> problemID,String userId) throws AuthenticationException 
 	{
-		
 		long currentTime = System.currentTimeMillis();
-		ArrayList<ProblemBankBuilder> allProblems = new ArrayList<ProblemBankBuilder>();
-		
-		for(int problem = problemID.size()-1; problem >= 0; problem --)
+		ArrayList<SrlBankProblem> allProblems = new ArrayList<SrlBankProblem>();
+		for(int problem = problemID.size()-1; problem >= 0; problem--)
 		{
-			allProblems.add(ProblemManager.mongoGetProblem(getInstance().db, problemID.get(problem), userId));
+			allProblems.add(BankProblemManager.mongoGetBankProblem(getInstance().db, problemID.get(problem), userId));
 		}
-		
 		// need to return everything
 		return allProblems;
 		// do open close checking
 	}
-	
-	
-	//do get methods for course, assignment, problem
-
-//	MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
-//	DB db = mongoClient.getDB("institution");
-//	boolean auth = db.authenticate("headlogin","login".toCharArray());
-	//System.out.println(auth);
-	//private static void MongoInsertCourse(String Description, String Name, String Access, String Semesester, String OpenDate, String CloseDate, String Image, String[] AssignmentList, String Admin, String Mod, String[] Users) throws GeneralSecurityException, InvalidKeySpecException	
-	
 
 }

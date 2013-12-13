@@ -19,7 +19,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import database.DatabaseAccessException;
-import database.PermissionBuilder;
 import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
@@ -94,7 +93,7 @@ public class CourseProblemManager
 
 		if (isUsers) {
 			SrlAssignment assignment = AssignmentManager.mongoGetAssignment(dbs, exactProblem.getAssignmentId(), userId, checkTime);
-			if (!PermissionBuilder.isTimeValid(checkTime, assignment.getAccessDate(), assignment.getCloseDate())) {
+			if (!Authenticator.isTimeValid(checkTime, assignment.getAccessDate(), assignment.getCloseDate())) {
 				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
 			}
 		}
