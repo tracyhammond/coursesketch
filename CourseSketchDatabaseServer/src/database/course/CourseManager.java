@@ -17,7 +17,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import database.DatabaseAccessException;
-import database.PermissionBuilder;
 import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
@@ -28,21 +27,21 @@ public class CourseManager
 	{
 		DBCollection new_user = dbs.getCollection("Courses");
 		BasicDBObject query = new BasicDBObject(DESCRIPTION,course.getDescription())
-										 .append("NAME",course.getName())
-										 .append("COURSE_ACCESS",course.getAccess().getNumber()) 
-										 .append("COURSE_SEMESTER",course.getSemester())
-										 .append("ACCESS_DATE", course.getAccessDate().getMillisecond())
-										 .append("CLOSE_DATE", course.getCloseDate().getMillisecond())
-										 .append("IMAGE", course.getImageUrl())
-										 .append("ADMIN", course.getAccessPermission().getAdminPermissionList())
-										 .append("MOD",course.getAccessPermission().getModeratorPermissionList())
-										 .append("USERS", course.getAccessPermission().getUserPermissionList());
+										 .append(NAME,course.getName())
+										 .append(COURSE_ACCESS,course.getAccess().getNumber()) 
+										 .append(COURSE_SEMESTER,course.getSemester())
+										 .append(ACCESS_DATE, course.getAccessDate().getMillisecond())
+										 .append(CLOSE_DATE, course.getCloseDate().getMillisecond())
+										 .append(IMAGE, course.getImageUrl())
+										 .append(ADMIN, course.getAccessPermission().getAdminPermissionList())
+										 .append(MOD,course.getAccessPermission().getModeratorPermissionList())
+										 .append(USERS, course.getAccessPermission().getUserPermissionList());
 		if (course.getAssignmentListList() != null) {
-			query.append("ASSIGNMENT_LIST",course.getAssignmentListList());
+			query.append(ASSIGNMENT_LIST,course.getAssignmentListList());
 		}
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
-		return corsor.get("SELF_ID").toString();
+		return corsor.get(SELF_ID).toString();
 	}
 	
 	public static SrlCourse mongoGetCourse(DB dbs, String courseId,String userId, long checkTime) throws AuthenticationException, DatabaseAccessException
@@ -79,11 +78,11 @@ public class CourseManager
 			e.printStackTrace();
 		}
 		exactCourse.setId(courseId); 
-		if (corsor.get("Image") != null) {
+		if (corsor.get(IMAGE) != null) {
 			exactCourse.setImageUrl((String)corsor.get(IMAGE));
 		}
 		// if you are a user the course must be open to view the assignments
-		if (isAdmin || isMod || (isUsers && PermissionBuilder.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
+		if (isAdmin || isMod || (isUsers && Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
 			if (corsor.get(ASSIGNMENT_LIST) != null) {
 				exactCourse.addAllAssignmentList((List)corsor.get(ASSIGNMENT_LIST));
 			}
