@@ -38,5 +38,10 @@ public class StringConstants {
 	public static final String ASSIGNMENT_RESOURCES = "Resources";
 	public static final String LATE_POLICY = "LatePolicy";
 	public static final String PROBLEM_LIST = "ProblemList";
+	
+	//solution specific
+	public static final String ALLOWED_IN_PROBLEMBANK = "AllowedInProblemBank";
+	public static final String PRACTICE_PROBLEM = "PracticeProblem";
+	public static final String SOLUTION = "Solution";
 
 }
