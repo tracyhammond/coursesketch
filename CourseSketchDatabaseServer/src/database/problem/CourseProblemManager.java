@@ -3,13 +3,12 @@ package database.problem;
 import static database.StringConstants.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bson.types.ObjectId;
 
 import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 
@@ -101,7 +100,7 @@ public class CourseProblemManager
 		}
 
 		// problem manager get problem from bank (as a user!)
-		ProblemBankBuilder problemBank = ProblemManager.mongoGetProblem(dbs, (String)corsor.get(PROBLEM_BANK_ID), (String)exactProblem.getCourseId()); // problem bank look up
+		SrlBankProblem problemBank = BankProblemManager.mongoGetBankProblem(dbs, (String)corsor.get(PROBLEM_BANK_ID), (String)exactProblem.getCourseId()); // problem bank look up
 		if (problemBank != null) {
 			exactProblem.setProblemInfo(problemBank);
 		}

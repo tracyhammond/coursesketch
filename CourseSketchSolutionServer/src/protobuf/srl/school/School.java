@@ -8002,19 +8002,19 @@ public final class School {
     com.google.protobuf.ByteString
         getDescriptionBytes();
 
-    // optional .protobuf.srl.school.problemBankProblem problemInfo = 7;
+    // optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
      */
     boolean hasProblemInfo();
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
      */
-    protobuf.srl.school.School.problemBankProblem getProblemInfo();
+    protobuf.srl.school.School.SrlBankProblem getProblemInfo();
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
      */
-    protobuf.srl.school.School.problemBankProblemOrBuilder getProblemInfoOrBuilder();
+    protobuf.srl.school.School.SrlBankProblemOrBuilder getProblemInfoOrBuilder();
 
     // repeated .protobuf.srl.school.DomainInformation info = 8;
     /**
@@ -8196,11 +8196,11 @@ public final class School {
               break;
             }
             case 58: {
-              protobuf.srl.school.School.problemBankProblem.Builder subBuilder = null;
+              protobuf.srl.school.School.SrlBankProblem.Builder subBuilder = null;
               if (((bitField0_ & 0x00000040) == 0x00000040)) {
                 subBuilder = problemInfo_.toBuilder();
               }
-              problemInfo_ = input.readMessage(protobuf.srl.school.School.problemBankProblem.PARSER, extensionRegistry);
+              problemInfo_ = input.readMessage(protobuf.srl.school.School.SrlBankProblem.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(problemInfo_);
                 problemInfo_ = subBuilder.buildPartial();
@@ -8589,25 +8589,25 @@ public final class School {
       }
     }
 
-    // optional .protobuf.srl.school.problemBankProblem problemInfo = 7;
+    // optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;
     public static final int PROBLEMINFO_FIELD_NUMBER = 7;
-    private protobuf.srl.school.School.problemBankProblem problemInfo_;
+    private protobuf.srl.school.School.SrlBankProblem problemInfo_;
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
      */
     public boolean hasProblemInfo() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
      */
-    public protobuf.srl.school.School.problemBankProblem getProblemInfo() {
+    public protobuf.srl.school.School.SrlBankProblem getProblemInfo() {
       return problemInfo_;
     }
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
      */
-    public protobuf.srl.school.School.problemBankProblemOrBuilder getProblemInfoOrBuilder() {
+    public protobuf.srl.school.School.SrlBankProblemOrBuilder getProblemInfoOrBuilder() {
       return problemInfo_;
     }
 
@@ -8777,7 +8777,7 @@ public final class School {
       problemBankId_ = "";
       name_ = "";
       description_ = "";
-      problemInfo_ = protobuf.srl.school.School.problemBankProblem.getDefaultInstance();
+      problemInfo_ = protobuf.srl.school.School.SrlBankProblem.getDefaultInstance();
       info_ = java.util.Collections.emptyList();
       gradeWeight_ = "";
       grade_ = 0F;
@@ -9032,7 +9032,7 @@ public final class School {
         description_ = "";
         bitField0_ = (bitField0_ & ~0x00000020);
         if (problemInfoBuilder_ == null) {
-          problemInfo_ = protobuf.srl.school.School.problemBankProblem.getDefaultInstance();
+          problemInfo_ = protobuf.srl.school.School.SrlBankProblem.getDefaultInstance();
         } else {
           problemInfoBuilder_.clear();
         }
@@ -9794,20 +9794,20 @@ public final class School {
         return this;
       }
 
-      // optional .protobuf.srl.school.problemBankProblem problemInfo = 7;
-      private protobuf.srl.school.School.problemBankProblem problemInfo_ = protobuf.srl.school.School.problemBankProblem.getDefaultInstance();
+      // optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;
+      private protobuf.srl.school.School.SrlBankProblem problemInfo_ = protobuf.srl.school.School.SrlBankProblem.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.school.School.problemBankProblem, protobuf.srl.school.School.problemBankProblem.Builder, protobuf.srl.school.School.problemBankProblemOrBuilder> problemInfoBuilder_;
+          protobuf.srl.school.School.SrlBankProblem, protobuf.srl.school.School.SrlBankProblem.Builder, protobuf.srl.school.School.SrlBankProblemOrBuilder> problemInfoBuilder_;
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
        */
       public boolean hasProblemInfo() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
        */
-      public protobuf.srl.school.School.problemBankProblem getProblemInfo() {
+      public protobuf.srl.school.School.SrlBankProblem getProblemInfo() {
         if (problemInfoBuilder_ == null) {
           return problemInfo_;
         } else {
@@ -9815,9 +9815,9 @@ public final class School {
         }
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
        */
-      public Builder setProblemInfo(protobuf.srl.school.School.problemBankProblem value) {
+      public Builder setProblemInfo(protobuf.srl.school.School.SrlBankProblem value) {
         if (problemInfoBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9831,10 +9831,10 @@ public final class School {
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
        */
       public Builder setProblemInfo(
-          protobuf.srl.school.School.problemBankProblem.Builder builderForValue) {
+          protobuf.srl.school.School.SrlBankProblem.Builder builderForValue) {
         if (problemInfoBuilder_ == null) {
           problemInfo_ = builderForValue.build();
           onChanged();
@@ -9845,14 +9845,14 @@ public final class School {
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
        */
-      public Builder mergeProblemInfo(protobuf.srl.school.School.problemBankProblem value) {
+      public Builder mergeProblemInfo(protobuf.srl.school.School.SrlBankProblem value) {
         if (problemInfoBuilder_ == null) {
           if (((bitField0_ & 0x00000040) == 0x00000040) &&
-              problemInfo_ != protobuf.srl.school.School.problemBankProblem.getDefaultInstance()) {
+              problemInfo_ != protobuf.srl.school.School.SrlBankProblem.getDefaultInstance()) {
             problemInfo_ =
-              protobuf.srl.school.School.problemBankProblem.newBuilder(problemInfo_).mergeFrom(value).buildPartial();
+              protobuf.srl.school.School.SrlBankProblem.newBuilder(problemInfo_).mergeFrom(value).buildPartial();
           } else {
             problemInfo_ = value;
           }
@@ -9864,11 +9864,11 @@ public final class School {
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
        */
       public Builder clearProblemInfo() {
         if (problemInfoBuilder_ == null) {
-          problemInfo_ = protobuf.srl.school.School.problemBankProblem.getDefaultInstance();
+          problemInfo_ = protobuf.srl.school.School.SrlBankProblem.getDefaultInstance();
           onChanged();
         } else {
           problemInfoBuilder_.clear();
@@ -9877,17 +9877,17 @@ public final class School {
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
        */
-      public protobuf.srl.school.School.problemBankProblem.Builder getProblemInfoBuilder() {
+      public protobuf.srl.school.School.SrlBankProblem.Builder getProblemInfoBuilder() {
         bitField0_ |= 0x00000040;
         onChanged();
         return getProblemInfoFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
        */
-      public protobuf.srl.school.School.problemBankProblemOrBuilder getProblemInfoOrBuilder() {
+      public protobuf.srl.school.School.SrlBankProblemOrBuilder getProblemInfoOrBuilder() {
         if (problemInfoBuilder_ != null) {
           return problemInfoBuilder_.getMessageOrBuilder();
         } else {
@@ -9895,14 +9895,14 @@ public final class School {
         }
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem problemInfo = 7;</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem problemInfo = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.school.School.problemBankProblem, protobuf.srl.school.School.problemBankProblem.Builder, protobuf.srl.school.School.problemBankProblemOrBuilder> 
+          protobuf.srl.school.School.SrlBankProblem, protobuf.srl.school.School.SrlBankProblem.Builder, protobuf.srl.school.School.SrlBankProblemOrBuilder> 
           getProblemInfoFieldBuilder() {
         if (problemInfoBuilder_ == null) {
           problemInfoBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              protobuf.srl.school.School.problemBankProblem, protobuf.srl.school.School.problemBankProblem.Builder, protobuf.srl.school.School.problemBankProblemOrBuilder>(
+              protobuf.srl.school.School.SrlBankProblem, protobuf.srl.school.School.SrlBankProblem.Builder, protobuf.srl.school.School.SrlBankProblemOrBuilder>(
                   problemInfo_,
                   getParentForChildren(),
                   isClean());
@@ -10543,7 +10543,7 @@ public final class School {
     // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlProblem)
   }
 
-  public interface problemBankProblemOrBuilder
+  public interface SrlBankProblemOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // required string id = 1;
@@ -10576,59 +10576,144 @@ public final class School {
     com.google.protobuf.ByteString
         getQuestionTextBytes();
 
-    // optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];
+    // optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
      */
     boolean hasQuestionType();
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
      */
-    protobuf.srl.school.School.problemBankProblem.QuestionType getQuestionType();
+    protobuf.srl.school.School.SrlBankProblem.QuestionType getQuestionType();
 
-    // optional bytes options = 4;
+    // optional string image = 4;
     /**
-     * <code>optional bytes options = 4;</code>
+     * <code>optional string image = 4;</code>
      */
-    boolean hasOptions();
+    boolean hasImage();
     /**
-     * <code>optional bytes options = 4;</code>
+     * <code>optional string image = 4;</code>
      */
-    com.google.protobuf.ByteString getOptions();
+    java.lang.String getImage();
+    /**
+     * <code>optional string image = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getImageBytes();
 
-    // optional .protobuf.srl.school.SrlPermission accessPermission = 5;
+    // optional string solutionId = 5;
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+     * <code>optional string solutionId = 5;</code>
+     */
+    boolean hasSolutionId();
+    /**
+     * <code>optional string solutionId = 5;</code>
+     */
+    java.lang.String getSolutionId();
+    /**
+     * <code>optional string solutionId = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getSolutionIdBytes();
+
+    // optional string courseTopic = 6;
+    /**
+     * <code>optional string courseTopic = 6;</code>
+     */
+    boolean hasCourseTopic();
+    /**
+     * <code>optional string courseTopic = 6;</code>
+     */
+    java.lang.String getCourseTopic();
+    /**
+     * <code>optional string courseTopic = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getCourseTopicBytes();
+
+    // optional string subTopic = 7;
+    /**
+     * <code>optional string subTopic = 7;</code>
+     */
+    boolean hasSubTopic();
+    /**
+     * <code>optional string subTopic = 7;</code>
+     */
+    java.lang.String getSubTopic();
+    /**
+     * <code>optional string subTopic = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getSubTopicBytes();
+
+    // optional string source = 8;
+    /**
+     * <code>optional string source = 8;</code>
+     */
+    boolean hasSource();
+    /**
+     * <code>optional string source = 8;</code>
+     */
+    java.lang.String getSource();
+    /**
+     * <code>optional string source = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getSourceBytes();
+
+    // repeated string otherKeywords = 9;
+    /**
+     * <code>repeated string otherKeywords = 9;</code>
+     */
+    java.util.List<java.lang.String>
+    getOtherKeywordsList();
+    /**
+     * <code>repeated string otherKeywords = 9;</code>
+     */
+    int getOtherKeywordsCount();
+    /**
+     * <code>repeated string otherKeywords = 9;</code>
+     */
+    java.lang.String getOtherKeywords(int index);
+    /**
+     * <code>repeated string otherKeywords = 9;</code>
+     */
+    com.google.protobuf.ByteString
+        getOtherKeywordsBytes(int index);
+
+    // optional .protobuf.srl.school.SrlPermission accessPermission = 10;
+    /**
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
      */
     boolean hasAccessPermission();
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
      */
     protobuf.srl.school.School.SrlPermission getAccessPermission();
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
      */
     protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionOrBuilder();
   }
   /**
-   * Protobuf type {@code protobuf.srl.school.problemBankProblem}
+   * Protobuf type {@code protobuf.srl.school.SrlBankProblem}
    */
-  public static final class problemBankProblem extends
+  public static final class SrlBankProblem extends
       com.google.protobuf.GeneratedMessage
-      implements problemBankProblemOrBuilder {
-    // Use problemBankProblem.newBuilder() to construct.
-    private problemBankProblem(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements SrlBankProblemOrBuilder {
+    // Use SrlBankProblem.newBuilder() to construct.
+    private SrlBankProblem(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private problemBankProblem(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private SrlBankProblem(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final problemBankProblem defaultInstance;
-    public static problemBankProblem getDefaultInstance() {
+    private static final SrlBankProblem defaultInstance;
+    public static SrlBankProblem getDefaultInstance() {
       return defaultInstance;
     }
 
-    public problemBankProblem getDefaultInstanceForType() {
+    public SrlBankProblem getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -10638,7 +10723,7 @@ public final class School {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private problemBankProblem(
+    private SrlBankProblem(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -10673,7 +10758,7 @@ public final class School {
             }
             case 24: {
               int rawValue = input.readEnum();
-              protobuf.srl.school.School.problemBankProblem.QuestionType value = protobuf.srl.school.School.problemBankProblem.QuestionType.valueOf(rawValue);
+              protobuf.srl.school.School.SrlBankProblem.QuestionType value = protobuf.srl.school.School.SrlBankProblem.QuestionType.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(3, rawValue);
               } else {
@@ -10684,12 +10769,40 @@ public final class School {
             }
             case 34: {
               bitField0_ |= 0x00000008;
-              options_ = input.readBytes();
+              image_ = input.readBytes();
               break;
             }
             case 42: {
+              bitField0_ |= 0x00000010;
+              solutionId_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000020;
+              courseTopic_ = input.readBytes();
+              break;
+            }
+            case 58: {
+              bitField0_ |= 0x00000040;
+              subTopic_ = input.readBytes();
+              break;
+            }
+            case 66: {
+              bitField0_ |= 0x00000080;
+              source_ = input.readBytes();
+              break;
+            }
+            case 74: {
+              if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+                otherKeywords_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000100;
+              }
+              otherKeywords_.add(input.readBytes());
+              break;
+            }
+            case 82: {
               protobuf.srl.school.School.SrlPermission.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000010) == 0x00000010)) {
+              if (((bitField0_ & 0x00000100) == 0x00000100)) {
                 subBuilder = accessPermission_.toBuilder();
               }
               accessPermission_ = input.readMessage(protobuf.srl.school.School.SrlPermission.PARSER, extensionRegistry);
@@ -10697,7 +10810,7 @@ public final class School {
                 subBuilder.mergeFrom(accessPermission_);
                 accessPermission_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000010;
+              bitField0_ |= 0x00000100;
               break;
             }
           }
@@ -10708,39 +10821,42 @@ public final class School {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+          otherKeywords_ = new com.google.protobuf.UnmodifiableLazyStringList(otherKeywords_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_problemBankProblem_descriptor;
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlBankProblem_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protobuf.srl.school.School.internal_static_protobuf_srl_school_problemBankProblem_fieldAccessorTable
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlBankProblem_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protobuf.srl.school.School.problemBankProblem.class, protobuf.srl.school.School.problemBankProblem.Builder.class);
+              protobuf.srl.school.School.SrlBankProblem.class, protobuf.srl.school.School.SrlBankProblem.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<problemBankProblem> PARSER =
-        new com.google.protobuf.AbstractParser<problemBankProblem>() {
-      public problemBankProblem parsePartialFrom(
+    public static com.google.protobuf.Parser<SrlBankProblem> PARSER =
+        new com.google.protobuf.AbstractParser<SrlBankProblem>() {
+      public SrlBankProblem parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new problemBankProblem(input, extensionRegistry);
+        return new SrlBankProblem(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<problemBankProblem> getParserForType() {
+    public com.google.protobuf.Parser<SrlBankProblem> getParserForType() {
       return PARSER;
     }
 
     /**
-     * Protobuf enum {@code protobuf.srl.school.problemBankProblem.QuestionType}
+     * Protobuf enum {@code protobuf.srl.school.SrlBankProblem.QuestionType}
      */
     public enum QuestionType
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -10814,7 +10930,7 @@ public final class School {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return protobuf.srl.school.School.problemBankProblem.getDescriptor().getEnumTypes().get(0);
+        return protobuf.srl.school.School.SrlBankProblem.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final QuestionType[] VALUES = values();
@@ -10836,7 +10952,7 @@ public final class School {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:protobuf.srl.school.problemBankProblem.QuestionType)
+      // @@protoc_insertion_point(enum_scope:protobuf.srl.school.SrlBankProblem.QuestionType)
     }
 
     private int bitField0_;
@@ -10926,55 +11042,284 @@ public final class School {
       }
     }
 
-    // optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];
+    // optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];
     public static final int QUESTIONTYPE_FIELD_NUMBER = 3;
-    private protobuf.srl.school.School.problemBankProblem.QuestionType questionType_;
+    private protobuf.srl.school.School.SrlBankProblem.QuestionType questionType_;
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
      */
     public boolean hasQuestionType() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
+     * <code>optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
      */
-    public protobuf.srl.school.School.problemBankProblem.QuestionType getQuestionType() {
+    public protobuf.srl.school.School.SrlBankProblem.QuestionType getQuestionType() {
       return questionType_;
     }
 
-    // optional bytes options = 4;
-    public static final int OPTIONS_FIELD_NUMBER = 4;
-    private com.google.protobuf.ByteString options_;
+    // optional string image = 4;
+    public static final int IMAGE_FIELD_NUMBER = 4;
+    private java.lang.Object image_;
     /**
-     * <code>optional bytes options = 4;</code>
+     * <code>optional string image = 4;</code>
      */
-    public boolean hasOptions() {
+    public boolean hasImage() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional bytes options = 4;</code>
+     * <code>optional string image = 4;</code>
      */
-    public com.google.protobuf.ByteString getOptions() {
-      return options_;
+    public java.lang.String getImage() {
+      java.lang.Object ref = image_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          image_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string image = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getImageBytes() {
+      java.lang.Object ref = image_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        image_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    // optional .protobuf.srl.school.SrlPermission accessPermission = 5;
-    public static final int ACCESSPERMISSION_FIELD_NUMBER = 5;
-    private protobuf.srl.school.School.SrlPermission accessPermission_;
+    // optional string solutionId = 5;
+    public static final int SOLUTIONID_FIELD_NUMBER = 5;
+    private java.lang.Object solutionId_;
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+     * <code>optional string solutionId = 5;</code>
      */
-    public boolean hasAccessPermission() {
+    public boolean hasSolutionId() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+     * <code>optional string solutionId = 5;</code>
+     */
+    public java.lang.String getSolutionId() {
+      java.lang.Object ref = solutionId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          solutionId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string solutionId = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSolutionIdBytes() {
+      java.lang.Object ref = solutionId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        solutionId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string courseTopic = 6;
+    public static final int COURSETOPIC_FIELD_NUMBER = 6;
+    private java.lang.Object courseTopic_;
+    /**
+     * <code>optional string courseTopic = 6;</code>
+     */
+    public boolean hasCourseTopic() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional string courseTopic = 6;</code>
+     */
+    public java.lang.String getCourseTopic() {
+      java.lang.Object ref = courseTopic_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          courseTopic_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string courseTopic = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCourseTopicBytes() {
+      java.lang.Object ref = courseTopic_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        courseTopic_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string subTopic = 7;
+    public static final int SUBTOPIC_FIELD_NUMBER = 7;
+    private java.lang.Object subTopic_;
+    /**
+     * <code>optional string subTopic = 7;</code>
+     */
+    public boolean hasSubTopic() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional string subTopic = 7;</code>
+     */
+    public java.lang.String getSubTopic() {
+      java.lang.Object ref = subTopic_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          subTopic_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string subTopic = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSubTopicBytes() {
+      java.lang.Object ref = subTopic_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        subTopic_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string source = 8;
+    public static final int SOURCE_FIELD_NUMBER = 8;
+    private java.lang.Object source_;
+    /**
+     * <code>optional string source = 8;</code>
+     */
+    public boolean hasSource() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional string source = 8;</code>
+     */
+    public java.lang.String getSource() {
+      java.lang.Object ref = source_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          source_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string source = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSourceBytes() {
+      java.lang.Object ref = source_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        source_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // repeated string otherKeywords = 9;
+    public static final int OTHERKEYWORDS_FIELD_NUMBER = 9;
+    private com.google.protobuf.LazyStringList otherKeywords_;
+    /**
+     * <code>repeated string otherKeywords = 9;</code>
+     */
+    public java.util.List<java.lang.String>
+        getOtherKeywordsList() {
+      return otherKeywords_;
+    }
+    /**
+     * <code>repeated string otherKeywords = 9;</code>
+     */
+    public int getOtherKeywordsCount() {
+      return otherKeywords_.size();
+    }
+    /**
+     * <code>repeated string otherKeywords = 9;</code>
+     */
+    public java.lang.String getOtherKeywords(int index) {
+      return otherKeywords_.get(index);
+    }
+    /**
+     * <code>repeated string otherKeywords = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getOtherKeywordsBytes(int index) {
+      return otherKeywords_.getByteString(index);
+    }
+
+    // optional .protobuf.srl.school.SrlPermission accessPermission = 10;
+    public static final int ACCESSPERMISSION_FIELD_NUMBER = 10;
+    private protobuf.srl.school.School.SrlPermission accessPermission_;
+    /**
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
+     */
+    public boolean hasAccessPermission() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    /**
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
      */
     public protobuf.srl.school.School.SrlPermission getAccessPermission() {
       return accessPermission_;
     }
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
      */
     public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionOrBuilder() {
       return accessPermission_;
@@ -10983,8 +11328,13 @@ public final class School {
     private void initFields() {
       id_ = "";
       questionText_ = "";
-      questionType_ = protobuf.srl.school.School.problemBankProblem.QuestionType.SKETCH;
-      options_ = com.google.protobuf.ByteString.EMPTY;
+      questionType_ = protobuf.srl.school.School.SrlBankProblem.QuestionType.SKETCH;
+      image_ = "";
+      solutionId_ = "";
+      courseTopic_ = "";
+      subTopic_ = "";
+      source_ = "";
+      otherKeywords_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -11013,10 +11363,25 @@ public final class School {
         output.writeEnum(3, questionType_.getNumber());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(4, options_);
+        output.writeBytes(4, getImageBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeMessage(5, accessPermission_);
+        output.writeBytes(5, getSolutionIdBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, getCourseTopicBytes());
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeBytes(7, getSubTopicBytes());
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeBytes(8, getSourceBytes());
+      }
+      for (int i = 0; i < otherKeywords_.size(); i++) {
+        output.writeBytes(9, otherKeywords_.getByteString(i));
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        output.writeMessage(10, accessPermission_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -11041,11 +11406,36 @@ public final class School {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, options_);
+          .computeBytesSize(4, getImageBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, accessPermission_);
+          .computeBytesSize(5, getSolutionIdBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, getCourseTopicBytes());
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, getSubTopicBytes());
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(8, getSourceBytes());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < otherKeywords_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(otherKeywords_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getOtherKeywordsList().size();
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(10, accessPermission_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -11059,53 +11449,53 @@ public final class School {
       return super.writeReplace();
     }
 
-    public static protobuf.srl.school.School.problemBankProblem parseFrom(
+    public static protobuf.srl.school.School.SrlBankProblem parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.problemBankProblem parseFrom(
+    public static protobuf.srl.school.School.SrlBankProblem parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.problemBankProblem parseFrom(byte[] data)
+    public static protobuf.srl.school.School.SrlBankProblem parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protobuf.srl.school.School.problemBankProblem parseFrom(
+    public static protobuf.srl.school.School.SrlBankProblem parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protobuf.srl.school.School.problemBankProblem parseFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlBankProblem parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.problemBankProblem parseFrom(
+    public static protobuf.srl.school.School.SrlBankProblem parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.problemBankProblem parseDelimitedFrom(java.io.InputStream input)
+    public static protobuf.srl.school.School.SrlBankProblem parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static protobuf.srl.school.School.problemBankProblem parseDelimitedFrom(
+    public static protobuf.srl.school.School.SrlBankProblem parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static protobuf.srl.school.School.problemBankProblem parseFrom(
+    public static protobuf.srl.school.School.SrlBankProblem parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static protobuf.srl.school.School.problemBankProblem parseFrom(
+    public static protobuf.srl.school.School.SrlBankProblem parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -11114,7 +11504,7 @@ public final class School {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.school.School.problemBankProblem prototype) {
+    public static Builder newBuilder(protobuf.srl.school.School.SrlBankProblem prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -11126,24 +11516,24 @@ public final class School {
       return builder;
     }
     /**
-     * Protobuf type {@code protobuf.srl.school.problemBankProblem}
+     * Protobuf type {@code protobuf.srl.school.SrlBankProblem}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.school.School.problemBankProblemOrBuilder {
+       implements protobuf.srl.school.School.SrlBankProblemOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_problemBankProblem_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlBankProblem_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_problemBankProblem_fieldAccessorTable
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlBankProblem_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protobuf.srl.school.School.problemBankProblem.class, protobuf.srl.school.School.problemBankProblem.Builder.class);
+                protobuf.srl.school.School.SrlBankProblem.class, protobuf.srl.school.School.SrlBankProblem.Builder.class);
       }
 
-      // Construct using protobuf.srl.school.School.problemBankProblem.newBuilder()
+      // Construct using protobuf.srl.school.School.SrlBankProblem.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -11168,16 +11558,26 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000001);
         questionText_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        questionType_ = protobuf.srl.school.School.problemBankProblem.QuestionType.SKETCH;
+        questionType_ = protobuf.srl.school.School.SrlBankProblem.QuestionType.SKETCH;
         bitField0_ = (bitField0_ & ~0x00000004);
-        options_ = com.google.protobuf.ByteString.EMPTY;
+        image_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
+        solutionId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
+        courseTopic_ = "";
+        bitField0_ = (bitField0_ & ~0x00000020);
+        subTopic_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
+        source_ = "";
+        bitField0_ = (bitField0_ & ~0x00000080);
+        otherKeywords_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000100);
         if (accessPermissionBuilder_ == null) {
           accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
         } else {
           accessPermissionBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
@@ -11187,23 +11587,23 @@ public final class School {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protobuf.srl.school.School.internal_static_protobuf_srl_school_problemBankProblem_descriptor;
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlBankProblem_descriptor;
       }
 
-      public protobuf.srl.school.School.problemBankProblem getDefaultInstanceForType() {
-        return protobuf.srl.school.School.problemBankProblem.getDefaultInstance();
+      public protobuf.srl.school.School.SrlBankProblem getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlBankProblem.getDefaultInstance();
       }
 
-      public protobuf.srl.school.School.problemBankProblem build() {
-        protobuf.srl.school.School.problemBankProblem result = buildPartial();
+      public protobuf.srl.school.School.SrlBankProblem build() {
+        protobuf.srl.school.School.SrlBankProblem result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public protobuf.srl.school.School.problemBankProblem buildPartial() {
-        protobuf.srl.school.School.problemBankProblem result = new protobuf.srl.school.School.problemBankProblem(this);
+      public protobuf.srl.school.School.SrlBankProblem buildPartial() {
+        protobuf.srl.school.School.SrlBankProblem result = new protobuf.srl.school.School.SrlBankProblem(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -11221,9 +11621,31 @@ public final class School {
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.options_ = options_;
+        result.image_ = image_;
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
+        }
+        result.solutionId_ = solutionId_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.courseTopic_ = courseTopic_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.subTopic_ = subTopic_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.source_ = source_;
+        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+          otherKeywords_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              otherKeywords_);
+          bitField0_ = (bitField0_ & ~0x00000100);
+        }
+        result.otherKeywords_ = otherKeywords_;
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000100;
         }
         if (accessPermissionBuilder_ == null) {
           result.accessPermission_ = accessPermission_;
@@ -11236,16 +11658,16 @@ public final class School {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.school.School.problemBankProblem) {
-          return mergeFrom((protobuf.srl.school.School.problemBankProblem)other);
+        if (other instanceof protobuf.srl.school.School.SrlBankProblem) {
+          return mergeFrom((protobuf.srl.school.School.SrlBankProblem)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protobuf.srl.school.School.problemBankProblem other) {
-        if (other == protobuf.srl.school.School.problemBankProblem.getDefaultInstance()) return this;
+      public Builder mergeFrom(protobuf.srl.school.School.SrlBankProblem other) {
+        if (other == protobuf.srl.school.School.SrlBankProblem.getDefaultInstance()) return this;
         if (other.hasId()) {
           bitField0_ |= 0x00000001;
           id_ = other.id_;
@@ -11259,8 +11681,40 @@ public final class School {
         if (other.hasQuestionType()) {
           setQuestionType(other.getQuestionType());
         }
-        if (other.hasOptions()) {
-          setOptions(other.getOptions());
+        if (other.hasImage()) {
+          bitField0_ |= 0x00000008;
+          image_ = other.image_;
+          onChanged();
+        }
+        if (other.hasSolutionId()) {
+          bitField0_ |= 0x00000010;
+          solutionId_ = other.solutionId_;
+          onChanged();
+        }
+        if (other.hasCourseTopic()) {
+          bitField0_ |= 0x00000020;
+          courseTopic_ = other.courseTopic_;
+          onChanged();
+        }
+        if (other.hasSubTopic()) {
+          bitField0_ |= 0x00000040;
+          subTopic_ = other.subTopic_;
+          onChanged();
+        }
+        if (other.hasSource()) {
+          bitField0_ |= 0x00000080;
+          source_ = other.source_;
+          onChanged();
+        }
+        if (!other.otherKeywords_.isEmpty()) {
+          if (otherKeywords_.isEmpty()) {
+            otherKeywords_ = other.otherKeywords_;
+            bitField0_ = (bitField0_ & ~0x00000100);
+          } else {
+            ensureOtherKeywordsIsMutable();
+            otherKeywords_.addAll(other.otherKeywords_);
+          }
+          onChanged();
         }
         if (other.hasAccessPermission()) {
           mergeAccessPermission(other.getAccessPermission());
@@ -11281,11 +11735,11 @@ public final class School {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protobuf.srl.school.School.problemBankProblem parsedMessage = null;
+        protobuf.srl.school.School.SrlBankProblem parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.school.School.problemBankProblem) e.getUnfinishedMessage();
+          parsedMessage = (protobuf.srl.school.School.SrlBankProblem) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -11444,24 +11898,24 @@ public final class School {
         return this;
       }
 
-      // optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];
-      private protobuf.srl.school.School.problemBankProblem.QuestionType questionType_ = protobuf.srl.school.School.problemBankProblem.QuestionType.SKETCH;
+      // optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];
+      private protobuf.srl.school.School.SrlBankProblem.QuestionType questionType_ = protobuf.srl.school.School.SrlBankProblem.QuestionType.SKETCH;
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
        */
       public boolean hasQuestionType() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
        */
-      public protobuf.srl.school.School.problemBankProblem.QuestionType getQuestionType() {
+      public protobuf.srl.school.School.SrlBankProblem.QuestionType getQuestionType() {
         return questionType_;
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
        */
-      public Builder setQuestionType(protobuf.srl.school.School.problemBankProblem.QuestionType value) {
+      public Builder setQuestionType(protobuf.srl.school.School.SrlBankProblem.QuestionType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -11471,63 +11925,490 @@ public final class School {
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.problemBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
+       * <code>optional .protobuf.srl.school.SrlBankProblem.QuestionType questionType = 3 [default = SKETCH];</code>
        */
       public Builder clearQuestionType() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        questionType_ = protobuf.srl.school.School.problemBankProblem.QuestionType.SKETCH;
+        questionType_ = protobuf.srl.school.School.SrlBankProblem.QuestionType.SKETCH;
         onChanged();
         return this;
       }
 
-      // optional bytes options = 4;
-      private com.google.protobuf.ByteString options_ = com.google.protobuf.ByteString.EMPTY;
+      // optional string image = 4;
+      private java.lang.Object image_ = "";
       /**
-       * <code>optional bytes options = 4;</code>
+       * <code>optional string image = 4;</code>
        */
-      public boolean hasOptions() {
+      public boolean hasImage() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional bytes options = 4;</code>
+       * <code>optional string image = 4;</code>
        */
-      public com.google.protobuf.ByteString getOptions() {
-        return options_;
+      public java.lang.String getImage() {
+        java.lang.Object ref = image_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          image_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional bytes options = 4;</code>
+       * <code>optional string image = 4;</code>
        */
-      public Builder setOptions(com.google.protobuf.ByteString value) {
+      public com.google.protobuf.ByteString
+          getImageBytes() {
+        java.lang.Object ref = image_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          image_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string image = 4;</code>
+       */
+      public Builder setImage(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000008;
-        options_ = value;
+        image_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bytes options = 4;</code>
+       * <code>optional string image = 4;</code>
        */
-      public Builder clearOptions() {
+      public Builder clearImage() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        options_ = getDefaultInstance().getOptions();
+        image_ = getDefaultInstance().getImage();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string image = 4;</code>
+       */
+      public Builder setImageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        image_ = value;
         onChanged();
         return this;
       }
 
-      // optional .protobuf.srl.school.SrlPermission accessPermission = 5;
+      // optional string solutionId = 5;
+      private java.lang.Object solutionId_ = "";
+      /**
+       * <code>optional string solutionId = 5;</code>
+       */
+      public boolean hasSolutionId() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string solutionId = 5;</code>
+       */
+      public java.lang.String getSolutionId() {
+        java.lang.Object ref = solutionId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          solutionId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string solutionId = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSolutionIdBytes() {
+        java.lang.Object ref = solutionId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          solutionId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string solutionId = 5;</code>
+       */
+      public Builder setSolutionId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        solutionId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string solutionId = 5;</code>
+       */
+      public Builder clearSolutionId() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        solutionId_ = getDefaultInstance().getSolutionId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string solutionId = 5;</code>
+       */
+      public Builder setSolutionIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        solutionId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string courseTopic = 6;
+      private java.lang.Object courseTopic_ = "";
+      /**
+       * <code>optional string courseTopic = 6;</code>
+       */
+      public boolean hasCourseTopic() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional string courseTopic = 6;</code>
+       */
+      public java.lang.String getCourseTopic() {
+        java.lang.Object ref = courseTopic_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          courseTopic_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string courseTopic = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCourseTopicBytes() {
+        java.lang.Object ref = courseTopic_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          courseTopic_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string courseTopic = 6;</code>
+       */
+      public Builder setCourseTopic(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        courseTopic_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string courseTopic = 6;</code>
+       */
+      public Builder clearCourseTopic() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        courseTopic_ = getDefaultInstance().getCourseTopic();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string courseTopic = 6;</code>
+       */
+      public Builder setCourseTopicBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        courseTopic_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string subTopic = 7;
+      private java.lang.Object subTopic_ = "";
+      /**
+       * <code>optional string subTopic = 7;</code>
+       */
+      public boolean hasSubTopic() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional string subTopic = 7;</code>
+       */
+      public java.lang.String getSubTopic() {
+        java.lang.Object ref = subTopic_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          subTopic_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string subTopic = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSubTopicBytes() {
+        java.lang.Object ref = subTopic_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          subTopic_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string subTopic = 7;</code>
+       */
+      public Builder setSubTopic(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        subTopic_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string subTopic = 7;</code>
+       */
+      public Builder clearSubTopic() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        subTopic_ = getDefaultInstance().getSubTopic();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string subTopic = 7;</code>
+       */
+      public Builder setSubTopicBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        subTopic_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string source = 8;
+      private java.lang.Object source_ = "";
+      /**
+       * <code>optional string source = 8;</code>
+       */
+      public boolean hasSource() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional string source = 8;</code>
+       */
+      public java.lang.String getSource() {
+        java.lang.Object ref = source_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          source_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string source = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSourceBytes() {
+        java.lang.Object ref = source_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          source_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string source = 8;</code>
+       */
+      public Builder setSource(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        source_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string source = 8;</code>
+       */
+      public Builder clearSource() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        source_ = getDefaultInstance().getSource();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string source = 8;</code>
+       */
+      public Builder setSourceBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        source_ = value;
+        onChanged();
+        return this;
+      }
+
+      // repeated string otherKeywords = 9;
+      private com.google.protobuf.LazyStringList otherKeywords_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureOtherKeywordsIsMutable() {
+        if (!((bitField0_ & 0x00000100) == 0x00000100)) {
+          otherKeywords_ = new com.google.protobuf.LazyStringArrayList(otherKeywords_);
+          bitField0_ |= 0x00000100;
+         }
+      }
+      /**
+       * <code>repeated string otherKeywords = 9;</code>
+       */
+      public java.util.List<java.lang.String>
+          getOtherKeywordsList() {
+        return java.util.Collections.unmodifiableList(otherKeywords_);
+      }
+      /**
+       * <code>repeated string otherKeywords = 9;</code>
+       */
+      public int getOtherKeywordsCount() {
+        return otherKeywords_.size();
+      }
+      /**
+       * <code>repeated string otherKeywords = 9;</code>
+       */
+      public java.lang.String getOtherKeywords(int index) {
+        return otherKeywords_.get(index);
+      }
+      /**
+       * <code>repeated string otherKeywords = 9;</code>
+       */
+      public com.google.protobuf.ByteString
+          getOtherKeywordsBytes(int index) {
+        return otherKeywords_.getByteString(index);
+      }
+      /**
+       * <code>repeated string otherKeywords = 9;</code>
+       */
+      public Builder setOtherKeywords(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureOtherKeywordsIsMutable();
+        otherKeywords_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string otherKeywords = 9;</code>
+       */
+      public Builder addOtherKeywords(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureOtherKeywordsIsMutable();
+        otherKeywords_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string otherKeywords = 9;</code>
+       */
+      public Builder addAllOtherKeywords(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureOtherKeywordsIsMutable();
+        super.addAll(values, otherKeywords_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string otherKeywords = 9;</code>
+       */
+      public Builder clearOtherKeywords() {
+        otherKeywords_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000100);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string otherKeywords = 9;</code>
+       */
+      public Builder addOtherKeywordsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureOtherKeywordsIsMutable();
+        otherKeywords_.add(value);
+        onChanged();
+        return this;
+      }
+
+      // optional .protobuf.srl.school.SrlPermission accessPermission = 10;
       private protobuf.srl.school.School.SrlPermission accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> accessPermissionBuilder_;
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
        */
       public boolean hasAccessPermission() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return ((bitField0_ & 0x00000200) == 0x00000200);
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
        */
       public protobuf.srl.school.School.SrlPermission getAccessPermission() {
         if (accessPermissionBuilder_ == null) {
@@ -11537,7 +12418,7 @@ public final class School {
         }
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
        */
       public Builder setAccessPermission(protobuf.srl.school.School.SrlPermission value) {
         if (accessPermissionBuilder_ == null) {
@@ -11549,11 +12430,11 @@ public final class School {
         } else {
           accessPermissionBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000200;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
        */
       public Builder setAccessPermission(
           protobuf.srl.school.School.SrlPermission.Builder builderForValue) {
@@ -11563,15 +12444,15 @@ public final class School {
         } else {
           accessPermissionBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000200;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
        */
       public Builder mergeAccessPermission(protobuf.srl.school.School.SrlPermission value) {
         if (accessPermissionBuilder_ == null) {
-          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+          if (((bitField0_ & 0x00000200) == 0x00000200) &&
               accessPermission_ != protobuf.srl.school.School.SrlPermission.getDefaultInstance()) {
             accessPermission_ =
               protobuf.srl.school.School.SrlPermission.newBuilder(accessPermission_).mergeFrom(value).buildPartial();
@@ -11582,11 +12463,11 @@ public final class School {
         } else {
           accessPermissionBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000200;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
        */
       public Builder clearAccessPermission() {
         if (accessPermissionBuilder_ == null) {
@@ -11595,19 +12476,19 @@ public final class School {
         } else {
           accessPermissionBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
        */
       public protobuf.srl.school.School.SrlPermission.Builder getAccessPermissionBuilder() {
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000200;
         onChanged();
         return getAccessPermissionFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
        */
       public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionOrBuilder() {
         if (accessPermissionBuilder_ != null) {
@@ -11617,7 +12498,7 @@ public final class School {
         }
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 5;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 10;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> 
@@ -11633,15 +12514,15 @@ public final class School {
         return accessPermissionBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.problemBankProblem)
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlBankProblem)
     }
 
     static {
-      defaultInstance = new problemBankProblem(true);
+      defaultInstance = new SrlBankProblem(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:protobuf.srl.school.problemBankProblem)
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlBankProblem)
   }
 
   public interface DateTimeOrBuilder
@@ -17199,10 +18080,10 @@ public final class School {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_school_SrlProblem_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_school_problemBankProblem_descriptor;
+    internal_static_protobuf_srl_school_SrlBankProblem_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_school_problemBankProblem_fieldAccessorTable;
+      internal_static_protobuf_srl_school_SrlBankProblem_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_school_DateTime_descriptor;
   private static
@@ -17282,41 +18163,43 @@ public final class School {
       ".school.SrlPermission\"R\n\016AssignmentType\022" +
       "\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM" +
       "\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3\n\nLatePolicy\022" +
-      "\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007POLICY3\020\003\"\373" +
+      "\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007POLICY3\020\003\"\367" +
       "\002\n\nSrlProblem\022\n\n\002id\030\001 \002(\t\022\020\n\010courseId\030\002 " +
       "\001(\t\022\024\n\014assignmentId\030\003 \001(\t\022\025\n\rproblemBank" +
       "Id\030\004 \001(\t\022\014\n\004name\030\005 \001(\t\022\023\n\013description\030\006 " +
-      "\001(\t\022<\n\013problemInfo\030\007 \001(\0132\'.protobuf.srl.",
-      "school.problemBankProblem\0224\n\004info\030\010 \003(\0132" +
-      "&.protobuf.srl.school.DomainInformation\022" +
-      "\023\n\013gradeWeight\030\t \001(\t\022\r\n\005grade\030\n \001(\002\022)\n\005s" +
-      "tate\030\013 \001(\0132\032.protobuf.srl.school.State\022<" +
-      "\n\020accessPermission\030\014 \001(\0132\".protobuf.srl." +
-      "school.SrlPermission\"\244\002\n\022problemBankProb" +
-      "lem\022\n\n\002id\030\001 \002(\t\022\024\n\014questionText\030\002 \001(\t\022R\n" +
-      "\014questionType\030\003 \001(\01624.protobuf.srl.schoo" +
-      "l.problemBankProblem.QuestionType:\006SKETC" +
-      "H\022\017\n\007options\030\004 \001(\014\022<\n\020accessPermission\030\005",
-      " \001(\0132\".protobuf.srl.school.SrlPermission" +
-      "\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MULT_CHO" +
-      "ICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BOX\020\004\"w\n\010D" +
-      "ateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003" +
-      "day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006minute\030\005 \001(\005\022" +
-      "\016\n\006second\030\006 \001(\005\022\023\n\013millisecond\030\007 \001(\004\"\"\n\021" +
-      "DomainInformation\022\r\n\005stuff\030\001 \001(\t\"c\n\005Stat" +
-      "e\022\021\n\tpublished\030\001 \001(\010\022\022\n\naccessible\030\002 \001(\010" +
-      "\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007started\030\004 \001(\010\022\021\n\tco" +
-      "mpleted\030\005 \001(\010\"b\n\007SrlUser\022\020\n\010username\030\001 \002",
-      "(\t\0226\n\010userType\030\002 \001(\0162\035.protobuf.srl.scho" +
-      "ol.UserType:\005GUEST\022\r\n\005email\030\003 \001(\t\">\n\010Srl" +
-      "Group\022\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021" +
-      "\n\tgroupName\030\003 \001(\t\"H\n\013SrlSchoolId\022\020\n\010cour" +
-      "seId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tprob" +
-      "lemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017adminPer" +
-      "mission\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003" +
-      "(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType\022\t" +
-      "\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_AS" +
-      "SISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
+      "\001(\t\0228\n\013problemInfo\030\007 \001(\0132#.protobuf.srl.",
+      "school.SrlBankProblem\0224\n\004info\030\010 \003(\0132&.pr" +
+      "otobuf.srl.school.DomainInformation\022\023\n\013g" +
+      "radeWeight\030\t \001(\t\022\r\n\005grade\030\n \001(\002\022)\n\005state" +
+      "\030\013 \001(\0132\032.protobuf.srl.school.State\022<\n\020ac" +
+      "cessPermission\030\014 \001(\0132\".protobuf.srl.scho" +
+      "ol.SrlPermission\"\374\002\n\016SrlBankProblem\022\n\n\002i" +
+      "d\030\001 \002(\t\022\024\n\014questionText\030\002 \001(\t\022N\n\014questio" +
+      "nType\030\003 \001(\01620.protobuf.srl.school.SrlBan" +
+      "kProblem.QuestionType:\006SKETCH\022\r\n\005image\030\004" +
+      " \001(\t\022\022\n\nsolutionId\030\005 \001(\t\022\023\n\013courseTopic\030",
+      "\006 \001(\t\022\020\n\010subTopic\030\007 \001(\t\022\016\n\006source\030\010 \001(\t\022" +
+      "\025\n\rotherKeywords\030\t \003(\t\022<\n\020accessPermissi" +
+      "on\030\n \001(\0132\".protobuf.srl.school.SrlPermis" +
+      "sion\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MULT" +
+      "_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BOX\020\004\"" +
+      "w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month\030\002 \001(\005" +
+      "\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006minute\030\005 " +
+      "\001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millisecond\030\007 \001(\004" +
+      "\"\"\n\021DomainInformation\022\r\n\005stuff\030\001 \001(\t\"c\n\005" +
+      "State\022\021\n\tpublished\030\001 \001(\010\022\022\n\naccessible\030\002",
+      " \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007started\030\004 \001(\010\022\021" +
+      "\n\tcompleted\030\005 \001(\010\"b\n\007SrlUser\022\020\n\010username" +
+      "\030\001 \002(\t\0226\n\010userType\030\002 \001(\0162\035.protobuf.srl." +
+      "school.UserType:\005GUEST\022\r\n\005email\030\003 \001(\t\">\n" +
+      "\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002" +
+      "(\t\022\021\n\tgroupName\030\003 \001(\t\"H\n\013SrlSchoolId\022\020\n\010" +
+      "courseId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\t" +
+      "problemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017admi" +
+      "nPermission\030\001 \003(\t\022\033\n\023moderatorPermission" +
+      "\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserTy",
+      "pe\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHIN" +
+      "G_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -17347,12 +18230,12 @@ public final class School {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlProblem_descriptor,
               new java.lang.String[] { "Id", "CourseId", "AssignmentId", "ProblemBankId", "Name", "Description", "ProblemInfo", "Info", "GradeWeight", "Grade", "State", "AccessPermission", });
-          internal_static_protobuf_srl_school_problemBankProblem_descriptor =
+          internal_static_protobuf_srl_school_SrlBankProblem_descriptor =
             getDescriptor().getMessageTypes().get(4);
-          internal_static_protobuf_srl_school_problemBankProblem_fieldAccessorTable = new
+          internal_static_protobuf_srl_school_SrlBankProblem_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_school_problemBankProblem_descriptor,
-              new java.lang.String[] { "Id", "QuestionText", "QuestionType", "Options", "AccessPermission", });
+              internal_static_protobuf_srl_school_SrlBankProblem_descriptor,
+              new java.lang.String[] { "Id", "QuestionText", "QuestionType", "Image", "SolutionId", "CourseTopic", "SubTopic", "Source", "OtherKeywords", "AccessPermission", });
           internal_static_protobuf_srl_school_DateTime_descriptor =
             getDescriptor().getMessageTypes().get(5);
           internal_static_protobuf_srl_school_DateTime_fieldAccessorTable = new

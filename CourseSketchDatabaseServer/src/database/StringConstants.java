@@ -7,6 +7,7 @@ public class StringConstants {
 	public static final String ASSIGNMENT_ID = "AssignmentId";
 	public static final String PROBLEM_BANK_ID = "ProblemBankId";
 	public static final String COURSE_PROBLEM_ID = "CourseProblemId";
+	public static final String SOLUTION_ID = "CourseProblemId";
 
 	// meta fields
 	public static final String NAME = "Name";
@@ -43,5 +44,13 @@ public class StringConstants {
 	public static final String ALLOWED_IN_PROBLEMBANK = "AllowedInProblemBank";
 	public static final String PRACTICE_PROBLEM = "PracticeProblem";
 	public static final String SOLUTION = "Solution";
+
+	// problem specific
+	public static final String QUESTION_TEXT = "QuestionText";
+	public static final String COURSE_TOPIC = "CourseTopic";
+	public static final String SUB_TOPIC = "SubTopic";
+	public static final String SOURCE = "Source";
+	public static final String QUESTION_TYPE = "QuestionType";
+	public static final String KEYWORDS = "OtherKeywords";
 
 }
