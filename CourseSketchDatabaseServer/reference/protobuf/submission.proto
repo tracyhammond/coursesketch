@@ -8,10 +8,10 @@ import "input/commands.proto";
  */
 message SrlSubmission {
 	optional protobuf.srl.school.SrlSchoolId schoolId = 1;
-	optional protobuf.srl.commands.SrlUpdateList updateList = 2; // if this is a collection of updates
-	optional protobuf.srl.sketch.SrlSketch sketch = 3; // if this is a sketch.
-	optional bytes extraData = 4;
-	optional protobuf.srl.school.SrlPermission viewPermissions = 5;
+	optional protobuf.srl.commands.SrlUpdateList updateList = 2; // if this is a collection of updates storage of byte arrays
+	optional protobuf.srl.sketch.SrlSketch sketch = 3; // if this is a sketch. //storage of byte arrays
+	optional bytes extraData = 4; //
+	optional protobuf.srl.school.SrlPermission viewPermissions = 5; //
 }
 
 message SrlSolution {
@@ -19,10 +19,12 @@ message SrlSolution {
 	optional bool allowedInProblemBank = 1;
 	optional bool practiceProblem = 3;
 	optional protobuf.srl.school.SrlPermission adminPermissions = 2;
+	optional SrlSubmission solution;
 }
 
 message SrlExperiment {
 	optional string userId = 1; // student Id
+	optional SrlSubmission experiment;
 
 }
 // Students submit experiments!
