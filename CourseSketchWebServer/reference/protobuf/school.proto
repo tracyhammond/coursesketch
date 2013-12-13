@@ -71,7 +71,7 @@ message SrlProblem {
 	optional string problemBankId = 4;
 	optional string name = 5;
 	optional string description = 6;
-	optional problemBankProblem problemInfo = 7;
+	optional SrlBankProblem problemInfo = 7;
 	repeated DomainInformation info = 8;
 	optional string gradeWeight = 9; //Percentage of assignment grade
 	optional float grade = 10; //Calculated grade of all subproblems for this problem
@@ -79,12 +79,17 @@ message SrlProblem {
 	optional SrlPermission accessPermission = 12;
 }
 
-message problemBankProblem {
+message SrlBankProblem {
 	required string id = 1;
 	optional string questionText = 2;
 	optional QuestionType questionType = 3 [default=SKETCH];
-	optional bytes options = 4;
-	optional SrlPermission accessPermission= 5;
+	optional string image = 4;
+	optional string solutionId = 5;
+	optional string courseTopic = 6;
+	optional string subTopic = 7;
+	optional string source = 8;
+	repeated string otherKeywords = 9;
+	optional SrlPermission accessPermission= 10;
 
 	enum QuestionType {
 		SKETCH = 1;	
