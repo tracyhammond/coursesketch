@@ -27,22 +27,22 @@ public class CourseManager
 	public static String mongoInsertCourse(DB dbs, SrlCourse course)
 	{
 		DBCollection new_user = dbs.getCollection("Courses");
-		BasicDBObject query = new BasicDBObject(DESCRIPTION,course.getDescription())
-										 .append(NAME,course.getName())
-										 .append(COURSE_ACCESS,course.getAccess().getNumber()) 
-										 .append(COURSE_SEMESTER,course.getSemester())
-										 .append(ACCESS_DATE, course.getAccessDate().getMillisecond())
-										 .append(CLOSE_DATE, course.getCloseDate().getMillisecond())
-										 .append(IMAGE, course.getImageUrl())
-										 .append(ADMIN, course.getAccessPermission().getAdminPermissionList())
-										 .append(MOD,course.getAccessPermission().getModeratorPermissionList())
-										 .append(USERS, course.getAccessPermission().getUserPermissionList());
+		BasicDBObject query = new BasicDBObject("Description",course.getDescription())
+										 .append("Name",course.getName())
+										 .append("CourseAccess",course.getAccess().getNumber()) 
+										 .append("CourseSemester",course.getSemester())
+										 .append("AccessDate", course.getAccessDate().getMillisecond())
+										 .append("CloseDate", course.getCloseDate().getMillisecond())
+										 .append("Image", course.getImageUrl())
+										 .append("Admin", course.getAccessPermission().getAdminPermissionList())
+										 .append("Mod",course.getAccessPermission().getModeratorPermissionList())
+										 .append("Users", course.getAccessPermission().getUserPermissionList());
 		if (course.getAssignmentListList() != null) {
-			query.append(ASSIGNMENT_LIST,course.getAssignmentListList());
+			query.append("AssignmentList",course.getAssignmentListList());
 		}
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
-		return corsor.get(SELF_ID).toString();
+		return corsor.get("_id").toString();
 	}
 	
 	public static SrlCourse mongoGetCourse(DB dbs, String courseId,String userId, long checkTime) throws AuthenticationException, DatabaseAccessException
