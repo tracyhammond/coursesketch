@@ -40,12 +40,13 @@ void protobuf_AssignDesc_input_2fmessage_2eproto() {
       "input/message.proto");
   GOOGLE_CHECK(file != NULL);
   Request_descriptor_ = file->message_type(0);
-  static const int Request_offsets_[5] = {
+  static const int Request_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, requesttype_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, login_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, otherdata_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, responsetext_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, sessioninfo_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, sessionid_),
   };
   Request_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -60,13 +61,14 @@ void protobuf_AssignDesc_input_2fmessage_2eproto() {
       sizeof(Request));
   Request_MessageType_descriptor_ = Request_descriptor_->enum_type(0);
   LoginInformation_descriptor_ = file->message_type(1);
-  static const int LoginInformation_offsets_[6] = {
+  static const int LoginInformation_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, username_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, password_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, isloggedin_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, isinstructor_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, isregistering_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, email_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoginInformation, userid_),
   };
   LoginInformation_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -114,18 +116,19 @@ void protobuf_AddDesc_input_2fmessage_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023input/message.proto\022\024protobuf.srl.requ"
-    "est\"\276\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
+    "est\"\321\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
     "rotobuf.srl.request.Request.MessageType:"
     "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req"
     "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014"
     "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 "
-    "\001(\t\"w\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_RE"
-    "QUEST\020\001\022\020\n\014DATA_SENDING\020\002\022\017\n\013RECOGNITION"
-    "\020\003\022\013\n\007LOADING\020\004\022\016\n\nSUBMISSION\020\005\022\013\n\007PENDI"
-    "NG\020\006\"\206\001\n\020LoginInformation\022\020\n\010username\030\001 "
-    "\002(\t\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001("
-    "\010\022\024\n\014isInstructor\030\004 \001(\010\022\025\n\risRegistering"
-    "\030\005 \001(\010\022\r\n\005email\030\006 \001(\t", 501);
+    "\001(\t\022\021\n\tsessionId\030\006 \001(\t\"w\n\013MessageType\022\t\n"
+    "\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SENDI"
+    "NG\020\002\022\017\n\013RECOGNITION\020\003\022\013\n\007LOADING\020\004\022\016\n\nSU"
+    "BMISSION\020\005\022\013\n\007PENDING\020\006\"\226\001\n\020LoginInforma"
+    "tion\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t"
+    "\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030\004 \001"
+    "(\010\022\025\n\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 \001(\t"
+    "\022\016\n\006userId\030\007 \001(\t", 536);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/message.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -181,6 +184,7 @@ const int Request::kLoginFieldNumber;
 const int Request::kOtherDataFieldNumber;
 const int Request::kResponseTextFieldNumber;
 const int Request::kSessionInfoFieldNumber;
+const int Request::kSessionIdFieldNumber;
 #endif  // !_MSC_VER
 
 Request::Request()
@@ -205,6 +209,7 @@ void Request::SharedCtor() {
   otherdata_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   responsetext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   sessioninfo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -221,6 +226,9 @@ void Request::SharedDtor() {
   }
   if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {
     delete sessioninfo_;
+  }
+  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
+    delete sessionid_;
   }
   if (this != default_instance_) {
     delete login_;
@@ -267,6 +275,11 @@ void Request::Clear() {
     if (has_sessioninfo()) {
       if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {
         sessioninfo_->clear();
+      }
+    }
+    if (has_sessionid()) {
+      if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
+        sessionid_->clear();
       }
     }
   }
@@ -358,6 +371,23 @@ bool Request::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(50)) goto parse_sessionId;
+        break;
+      }
+
+      // optional string sessionId = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_sessionId:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_sessionid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->sessionid().data(), this->sessionid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -416,6 +446,15 @@ void Request::SerializeWithCachedSizes(
       5, this->sessioninfo(), output);
   }
 
+  // optional string sessionId = 6;
+  if (has_sessionid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->sessionid().data(), this->sessionid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      6, this->sessionid(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -464,6 +503,16 @@ void Request::SerializeWithCachedSizes(
         5, this->sessioninfo(), target);
   }
 
+  // optional string sessionId = 6;
+  if (has_sessionid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->sessionid().data(), this->sessionid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        6, this->sessionid(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -509,6 +558,13 @@ int Request::ByteSize() const {
           this->sessioninfo());
     }
 
+    // optional string sessionId = 6;
+    if (has_sessionid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->sessionid());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -551,6 +607,9 @@ void Request::MergeFrom(const Request& from) {
     if (from.has_sessioninfo()) {
       set_sessioninfo(from.sessioninfo());
     }
+    if (from.has_sessionid()) {
+      set_sessionid(from.sessionid());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -583,6 +642,7 @@ void Request::Swap(Request* other) {
     std::swap(otherdata_, other->otherdata_);
     std::swap(responsetext_, other->responsetext_);
     std::swap(sessioninfo_, other->sessioninfo_);
+    std::swap(sessionid_, other->sessionid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -607,6 +667,7 @@ const int LoginInformation::kIsLoggedInFieldNumber;
 const int LoginInformation::kIsInstructorFieldNumber;
 const int LoginInformation::kIsRegisteringFieldNumber;
 const int LoginInformation::kEmailFieldNumber;
+const int LoginInformation::kUserIdFieldNumber;
 #endif  // !_MSC_VER
 
 LoginInformation::LoginInformation()
@@ -631,6 +692,7 @@ void LoginInformation::SharedCtor() {
   isinstructor_ = false;
   isregistering_ = false;
   email_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -647,6 +709,9 @@ void LoginInformation::SharedDtor() {
   }
   if (email_ != &::google::protobuf::internal::kEmptyString) {
     delete email_;
+  }
+  if (userid_ != &::google::protobuf::internal::kEmptyString) {
+    delete userid_;
   }
   if (this != default_instance_) {
   }
@@ -691,6 +756,11 @@ void LoginInformation::Clear() {
     if (has_email()) {
       if (email_ != &::google::protobuf::internal::kEmptyString) {
         email_->clear();
+      }
+    }
+    if (has_userid()) {
+      if (userid_ != &::google::protobuf::internal::kEmptyString) {
+        userid_->clear();
       }
     }
   }
@@ -798,6 +868,23 @@ bool LoginInformation::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(58)) goto parse_userId;
+        break;
+      }
+
+      // optional string userId = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_userId:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_userid()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->userid().data(), this->userid().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -862,6 +949,15 @@ void LoginInformation::SerializeWithCachedSizes(
       6, this->email(), output);
   }
 
+  // optional string userId = 7;
+  if (has_userid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->userid().data(), this->userid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      7, this->userid(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -915,6 +1011,16 @@ void LoginInformation::SerializeWithCachedSizes(
         6, this->email(), target);
   }
 
+  // optional string userId = 7;
+  if (has_userid()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->userid().data(), this->userid().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        7, this->userid(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -962,6 +1068,13 @@ int LoginInformation::ByteSize() const {
           this->email());
     }
 
+    // optional string userId = 7;
+    if (has_userid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->userid());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -1007,6 +1120,9 @@ void LoginInformation::MergeFrom(const LoginInformation& from) {
     if (from.has_email()) {
       set_email(from.email());
     }
+    if (from.has_userid()) {
+      set_userid(from.userid());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1037,6 +1153,7 @@ void LoginInformation::Swap(LoginInformation* other) {
     std::swap(isinstructor_, other->isinstructor_);
     std::swap(isregistering_, other->isregistering_);
     std::swap(email_, other->email_);
+    std::swap(userid_, other->userid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

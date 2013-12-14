@@ -6,8 +6,8 @@ public class LoginConnectionState extends MultiConnectionState {
 
 	private boolean isLoggedIn = false;
 	private boolean isInstructor = false; // flagged true if correct login and is instructor
-	private int previousMessageType = 0;
 	private int loginTries = 0;
+	private String sessionId = null;
 	
 	public LoginConnectionState(String key) {
 		super(key);
@@ -17,9 +17,10 @@ public class LoginConnectionState extends MultiConnectionState {
 		return isLoggedIn;
 	}
 	
-	/* package-private */ void logIn(boolean instructorFlag) {
+	/* package-private */ void logIn(boolean instructorFlag, String sessionId) {
 		isLoggedIn = true;
 		isInstructor = instructorFlag;
+		this.sessionId = sessionId;
 	}
 
 	public void addTry() {

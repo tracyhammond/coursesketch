@@ -1,11 +1,14 @@
 package internalConnections;
 
+import protobuf.srl.request.Message.Request;
 import multiConnection.MultiConnectionManager;
 import multiConnection.MultiInternalConnectionServer;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class ProxyConnectionManager extends MultiConnectionManager {
+	
+	private boolean connectLocally = CONNECT_LOCALLY;
 	
 	public ProxyConnectionManager(MultiInternalConnectionServer parent) {
 		super(parent);
@@ -16,7 +19,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		//createAndAddConnection(serv, true, 8887, RecognitionConnection.class);
 		System.out.println("Open Login...");
 		try {
-			createAndAddConnection(serv, false, "srl02.tamu.edu", 8886, LoginConnection.class);
+			createAndAddConnection(serv, connectLocally, "srl02.tamu.edu", 8886, LoginConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -24,7 +27,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		/*
 		System.out.println("Open Data...");
 		try {
-			createAndAddConnection(serv, false, "srl04.tamu.edu", 8885, DataConnection.class);
+			createAndAddConnection(serv, connectLocally, "srl04.tamu.edu", 8885, DataConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -34,4 +37,10 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		//createAndAddConnection(serv, true, 8884, AnswerConnection.class);
 	}
 
+	public static final Request createClientRequest(Request r) {
+		Request.Builder build = Request.newBuilder(r);
+		build.setSessionId("todo:ID");
+		build.setSessionInfo("todo:INFO");
+		return build.build();
+	}
 }

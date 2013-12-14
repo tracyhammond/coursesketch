@@ -116,8 +116,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
-		
-		System.out.println("Proxy Server: Version 1.0.2.horse");
+		System.out.println("Proxy Server: Version 1.0.2.iguana");
 		WebSocketImpl.DEBUG = true;
 		int port = 8888; // 843 flash policy port
 		try {

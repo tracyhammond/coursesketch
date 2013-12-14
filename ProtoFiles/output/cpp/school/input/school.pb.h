@@ -248,6 +248,18 @@ class SrlSchool : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlProblem >*
       mutable_problems();
 
+  // repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;
+  inline int bankproblems_size() const;
+  inline void clear_bankproblems();
+  static const int kBankProblemsFieldNumber = 4;
+  inline const ::protobuf::srl::school::SrlBankProblem& bankproblems(int index) const;
+  inline ::protobuf::srl::school::SrlBankProblem* mutable_bankproblems(int index);
+  inline ::protobuf::srl::school::SrlBankProblem* add_bankproblems();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlBankProblem >&
+      bankproblems() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlBankProblem >*
+      mutable_bankproblems();
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlSchool)
  private:
 
@@ -256,9 +268,10 @@ class SrlSchool : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlCourse > courses_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlAssignment > assignments_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlProblem > problems_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlBankProblem > bankproblems_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -2259,6 +2272,31 @@ SrlSchool::problems() const {
 inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlProblem >*
 SrlSchool::mutable_problems() {
   return &problems_;
+}
+
+// repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;
+inline int SrlSchool::bankproblems_size() const {
+  return bankproblems_.size();
+}
+inline void SrlSchool::clear_bankproblems() {
+  bankproblems_.Clear();
+}
+inline const ::protobuf::srl::school::SrlBankProblem& SrlSchool::bankproblems(int index) const {
+  return bankproblems_.Get(index);
+}
+inline ::protobuf::srl::school::SrlBankProblem* SrlSchool::mutable_bankproblems(int index) {
+  return bankproblems_.Mutable(index);
+}
+inline ::protobuf::srl::school::SrlBankProblem* SrlSchool::add_bankproblems() {
+  return bankproblems_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlBankProblem >&
+SrlSchool::bankproblems() const {
+  return bankproblems_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::SrlBankProblem >*
+SrlSchool::mutable_bankproblems() {
+  return &bankproblems_;
 }
 
 // -------------------------------------------------------------------
