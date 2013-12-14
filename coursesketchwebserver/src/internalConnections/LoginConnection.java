@@ -24,7 +24,7 @@ public class LoginConnection extends WrapperConnection {
 	
 		//return createLoginResponse(req, false, "An Error Occured While Logging in: Wrong Message Type.", false);
 	}
-	
+
 	public LoginConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
 
 		this( serverUri, draft );
@@ -34,16 +34,18 @@ public class LoginConnection extends WrapperConnection {
 		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
 		LoginConnectionState state = (LoginConnectionState) getStateFromId(r.getSessionInfo());
 		if (r.getLogin().getIsLoggedIn()) {
-			state.logIn(r.getLogin().getIsInstructor());
-		}
-		if (r.getLogin().getIsInstructor()) {
+			state.logIn(r.getLogin().getIsInstructor(), r.getSessionId());
 		}
 
 		System.out.println("is logged in? " + r.getLogin().getIsLoggedIn());
 		System.out.println("session info? " + r.getSessionInfo());
 		System.out.println("response " + r.getResponseText());
 		System.out.println("instructor " + r.getLogin().getIsInstructor());
-		getConnectionFromState(state).send(buffer);
+		System.out.println("userId " + r.getSessionId());
+		System.out.println("otherUserId " + r.getLogin().getUserId());
+
+		Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
+		getConnectionFromState(state).send(result.toByteArray());
 	}
 
 	public LoginConnection( URI serverUri , Draft draft ) {

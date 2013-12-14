@@ -20,16 +20,15 @@ import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import database.Institution;
-import database.RequestConverter;
 import database.auth.AuthenticationException;
-import database.problem.CourseProblemBuilder;
-import database.problem.ProblemBankBuilder;
 
 /**
  * A simple WebSocketServer implementation.
@@ -38,11 +37,9 @@ import database.problem.ProblemBankBuilder;
  */
 public class DatabaseServer extends MultiInternalConnectionServer {
 
-	public static final int MAX_CONNECTIONS = 20;
 	UpdateHandler updateHandler = new UpdateHandler();
 	Database database = new Database();
 
-	static int numberOfConnections = Integer.MIN_VALUE;
 	public DatabaseServer( int port ) throws UnknownHostException {
 		this( new InetSocketAddress( port ) );
 	}
@@ -79,14 +76,14 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 						case ASSIGNMENT: ArrayList<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
 									finalSchool.addAllAssignments(assignmentLoop);
 									break;
-						case COURSE_PROBLEM: ArrayList<CourseProblemBuilder> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(CourseProblemBuilder loopCourse: courseProblemLoop){
-										finalSchool.addProblems(RequestConverter.convertProblemToProtobuf(loopCourse));
+						case COURSE_PROBLEM: ArrayList<SrlProblem> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(SrlProblem loopCourse: courseProblemLoop){
+										finalSchool.addProblems(loopCourse);
 									}
 									break;
-						case BANK_PROBLEM: ArrayList<ProblemBankBuilder> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(ProblemBankBuilder loopCourse: bankProblemLoop){
-										finalSchool.addProblems(RequestConverter.convertProblemBankToProtobuf(loopCourse));
+						case BANK_PROBLEM: ArrayList<SrlBankProblem> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(SrlBankProblem loopCourse: bankProblemLoop){
+										finalSchool.addBankProblems(loopCourse);
 									}
 									break;
 						/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
@@ -143,7 +140,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Database Server: Version 1.0.2.jaguar");
+		System.out.println("Database Server: Version 1.0.2.kangaroo");
 		WebSocketImpl.DEBUG = false;
 		int port = 8885; // 843 flash policy port
 		try {

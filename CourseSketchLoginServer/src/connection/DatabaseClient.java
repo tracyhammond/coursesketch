@@ -49,7 +49,7 @@ public class DatabaseClient {
 		return instance;
 	}
 
-	static boolean mongoIdentify(String u, String p) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException {
+	static final String mongoIdentify(String u, String p) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException {
 
 		//boolean auth = getInstance().db.authenticate("headlogin","login".toCharArray());
 		DBCollection table = getInstance().db.getCollection("CourseSketchUsers");
@@ -57,29 +57,36 @@ public class DatabaseClient {
 
 		DBObject corsor = table.findOne(query);
 
-		System.out.println();
 		if(corsor==null)
-			return false;
-		System.out.println(corsor.get("Password"));
-		return PasswordHash.validatePassword(p.toCharArray(),corsor.get("Password").toString());
-
+			return null;
+		if (PasswordHash.validatePassword(p.toCharArray(),corsor.get("Password").toString())) {
+			String result = corsor.get("ServerId") + ":" + corsor.get("ClientId");
+			return result;
+		} else {
+			return null;
+		}
 		//return corsor.hasNext();
 	}
 
-	static boolean MongoAddUser(String user, String password,String email,boolean isInstructor) throws GeneralSecurityException, InvalidKeySpecException {
+	static final boolean MongoAddUser(String user, String password,String email,boolean isInstructor) throws GeneralSecurityException, InvalidKeySpecException {
 		DBCollection new_user = getInstance().db.getCollection("CourseSketchUsers");
 		BasicDBObject query = new BasicDBObject("UserName",user);
 		DBObject corsor = new_user.findOne(query);
 		if(corsor == null)
 		{
-			query = new BasicDBObject("UserName",user).append("Password",PasswordHash.createHash(password)).append("Email", email).append("IsInstructor",isInstructor);
+			query = new BasicDBObject("UserName",user)
+				.append("Password",PasswordHash.createHash(password))
+				.append("Email", email)
+				.append("IsInstructor",isInstructor)
+				.append("ServerId", Encoder.fancyID())
+				.append("ClientId", Encoder.nextID().toString());
 			new_user.insert(query);
 			return true;
 		}
 		return false;
 	}
 
-	public static boolean mongoIsInstructor(String user) {
+	public static final boolean mongoIsInstructor(String user) {
 		boolean auth = getInstance().db.authenticate("headlogin","login".toCharArray());
 		DBCollection table = getInstance().db.getCollection("CourseSketchUsers");
 		BasicDBObject query = new BasicDBObject("UserName",user);

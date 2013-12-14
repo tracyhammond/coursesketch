@@ -200,6 +200,18 @@ class Request : public ::google::protobuf::Message {
   inline ::std::string* release_sessioninfo();
   inline void set_allocated_sessioninfo(::std::string* sessioninfo);
 
+  // optional string sessionId = 6;
+  inline bool has_sessionid() const;
+  inline void clear_sessionid();
+  static const int kSessionIdFieldNumber = 6;
+  inline const ::std::string& sessionid() const;
+  inline void set_sessionid(const ::std::string& value);
+  inline void set_sessionid(const char* value);
+  inline void set_sessionid(const char* value, size_t size);
+  inline ::std::string* mutable_sessionid();
+  inline ::std::string* release_sessionid();
+  inline void set_allocated_sessionid(::std::string* sessionid);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.request.Request)
  private:
   inline void set_has_requesttype();
@@ -212,6 +224,8 @@ class Request : public ::google::protobuf::Message {
   inline void clear_has_responsetext();
   inline void set_has_sessioninfo();
   inline void clear_has_sessioninfo();
+  inline void set_has_sessionid();
+  inline void clear_has_sessionid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -219,10 +233,11 @@ class Request : public ::google::protobuf::Message {
   ::std::string* otherdata_;
   ::std::string* responsetext_;
   ::std::string* sessioninfo_;
+  ::std::string* sessionid_;
   int requesttype_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fmessage_2eproto();
   friend void protobuf_AssignDesc_input_2fmessage_2eproto();
@@ -344,6 +359,18 @@ class LoginInformation : public ::google::protobuf::Message {
   inline ::std::string* release_email();
   inline void set_allocated_email(::std::string* email);
 
+  // optional string userId = 7;
+  inline bool has_userid() const;
+  inline void clear_userid();
+  static const int kUserIdFieldNumber = 7;
+  inline const ::std::string& userid() const;
+  inline void set_userid(const ::std::string& value);
+  inline void set_userid(const char* value);
+  inline void set_userid(const char* value, size_t size);
+  inline ::std::string* mutable_userid();
+  inline ::std::string* release_userid();
+  inline void set_allocated_userid(::std::string* userid);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.request.LoginInformation)
  private:
   inline void set_has_username();
@@ -358,18 +385,21 @@ class LoginInformation : public ::google::protobuf::Message {
   inline void clear_has_isregistering();
   inline void set_has_email();
   inline void clear_has_email();
+  inline void set_has_userid();
+  inline void clear_has_userid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* username_;
   ::std::string* password_;
   ::std::string* email_;
+  ::std::string* userid_;
   bool isloggedin_;
   bool isinstructor_;
   bool isregistering_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fmessage_2eproto();
   friend void protobuf_AssignDesc_input_2fmessage_2eproto();
@@ -656,6 +686,76 @@ inline void Request::set_allocated_sessioninfo(::std::string* sessioninfo) {
   }
 }
 
+// optional string sessionId = 6;
+inline bool Request::has_sessionid() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Request::set_has_sessionid() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Request::clear_has_sessionid() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Request::clear_sessionid() {
+  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
+    sessionid_->clear();
+  }
+  clear_has_sessionid();
+}
+inline const ::std::string& Request::sessionid() const {
+  return *sessionid_;
+}
+inline void Request::set_sessionid(const ::std::string& value) {
+  set_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    sessionid_ = new ::std::string;
+  }
+  sessionid_->assign(value);
+}
+inline void Request::set_sessionid(const char* value) {
+  set_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    sessionid_ = new ::std::string;
+  }
+  sessionid_->assign(value);
+}
+inline void Request::set_sessionid(const char* value, size_t size) {
+  set_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    sessionid_ = new ::std::string;
+  }
+  sessionid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Request::mutable_sessionid() {
+  set_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    sessionid_ = new ::std::string;
+  }
+  return sessionid_;
+}
+inline ::std::string* Request::release_sessionid() {
+  clear_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = sessionid_;
+    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Request::set_allocated_sessionid(::std::string* sessionid) {
+  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
+    delete sessionid_;
+  }
+  if (sessionid) {
+    set_has_sessionid();
+    sessionid_ = sessionid;
+  } else {
+    clear_has_sessionid();
+    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // LoginInformation
@@ -933,6 +1033,76 @@ inline void LoginInformation::set_allocated_email(::std::string* email) {
   } else {
     clear_has_email();
     email_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string userId = 7;
+inline bool LoginInformation::has_userid() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void LoginInformation::set_has_userid() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void LoginInformation::clear_has_userid() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void LoginInformation::clear_userid() {
+  if (userid_ != &::google::protobuf::internal::kEmptyString) {
+    userid_->clear();
+  }
+  clear_has_userid();
+}
+inline const ::std::string& LoginInformation::userid() const {
+  return *userid_;
+}
+inline void LoginInformation::set_userid(const ::std::string& value) {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
+  }
+  userid_->assign(value);
+}
+inline void LoginInformation::set_userid(const char* value) {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
+  }
+  userid_->assign(value);
+}
+inline void LoginInformation::set_userid(const char* value, size_t size) {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
+  }
+  userid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* LoginInformation::mutable_userid() {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
+  }
+  return userid_;
+}
+inline ::std::string* LoginInformation::release_userid() {
+  clear_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = userid_;
+    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void LoginInformation::set_allocated_userid(::std::string* userid) {
+  if (userid_ != &::google::protobuf::internal::kEmptyString) {
+    delete userid_;
+  }
+  if (userid) {
+    set_has_userid();
+    userid_ = userid;
+  } else {
+    clear_has_userid();
+    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

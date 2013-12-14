@@ -86,6 +86,21 @@ public final class Message {
      */
     com.google.protobuf.ByteString
         getSessionInfoBytes();
+
+    // optional string sessionId = 6;
+    /**
+     * <code>optional string sessionId = 6;</code>
+     */
+    boolean hasSessionId();
+    /**
+     * <code>optional string sessionId = 6;</code>
+     */
+    java.lang.String getSessionId();
+    /**
+     * <code>optional string sessionId = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getSessionIdBytes();
   }
   /**
    * Protobuf type {@code protobuf.srl.request.Request}
@@ -179,6 +194,11 @@ public final class Message {
             case 42: {
               bitField0_ |= 0x00000010;
               sessionInfo_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000020;
+              sessionId_ = input.readBytes();
               break;
             }
           }
@@ -516,12 +536,56 @@ public final class Message {
       }
     }
 
+    // optional string sessionId = 6;
+    public static final int SESSIONID_FIELD_NUMBER = 6;
+    private java.lang.Object sessionId_;
+    /**
+     * <code>optional string sessionId = 6;</code>
+     */
+    public boolean hasSessionId() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional string sessionId = 6;</code>
+     */
+    public java.lang.String getSessionId() {
+      java.lang.Object ref = sessionId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          sessionId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string sessionId = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSessionIdBytes() {
+      java.lang.Object ref = sessionId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        sessionId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
       login_ = protobuf.srl.request.Message.LoginInformation.getDefaultInstance();
       otherData_ = com.google.protobuf.ByteString.EMPTY;
       responseText_ = "";
       sessionInfo_ = "";
+      sessionId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -560,6 +624,9 @@ public final class Message {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(5, getSessionInfoBytes());
       }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, getSessionIdBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -588,6 +655,10 @@ public final class Message {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, getSessionInfoBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, getSessionIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -724,6 +795,8 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000008);
         sessionInfo_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
+        sessionId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -776,6 +849,10 @@ public final class Message {
           to_bitField0_ |= 0x00000010;
         }
         result.sessionInfo_ = sessionInfo_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.sessionId_ = sessionId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -809,6 +886,11 @@ public final class Message {
         if (other.hasSessionInfo()) {
           bitField0_ |= 0x00000010;
           sessionInfo_ = other.sessionInfo_;
+          onChanged();
+        }
+        if (other.hasSessionId()) {
+          bitField0_ |= 0x00000020;
+          sessionId_ = other.sessionId_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -1209,6 +1291,80 @@ public final class Message {
         return this;
       }
 
+      // optional string sessionId = 6;
+      private java.lang.Object sessionId_ = "";
+      /**
+       * <code>optional string sessionId = 6;</code>
+       */
+      public boolean hasSessionId() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional string sessionId = 6;</code>
+       */
+      public java.lang.String getSessionId() {
+        java.lang.Object ref = sessionId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          sessionId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string sessionId = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSessionIdBytes() {
+        java.lang.Object ref = sessionId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          sessionId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string sessionId = 6;</code>
+       */
+      public Builder setSessionId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        sessionId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string sessionId = 6;</code>
+       */
+      public Builder clearSessionId() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        sessionId_ = getDefaultInstance().getSessionId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string sessionId = 6;</code>
+       */
+      public Builder setSessionIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        sessionId_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:protobuf.srl.request.Request)
     }
 
@@ -1297,6 +1453,21 @@ public final class Message {
      */
     com.google.protobuf.ByteString
         getEmailBytes();
+
+    // optional string userId = 7;
+    /**
+     * <code>optional string userId = 7;</code>
+     */
+    boolean hasUserId();
+    /**
+     * <code>optional string userId = 7;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>optional string userId = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
   }
   /**
    * Protobuf type {@code protobuf.srl.request.LoginInformation}
@@ -1377,6 +1548,11 @@ public final class Message {
             case 50: {
               bitField0_ |= 0x00000020;
               email_ = input.readBytes();
+              break;
+            }
+            case 58: {
+              bitField0_ |= 0x00000040;
+              userId_ = input.readBytes();
               break;
             }
           }
@@ -1596,6 +1772,49 @@ public final class Message {
       }
     }
 
+    // optional string userId = 7;
+    public static final int USERID_FIELD_NUMBER = 7;
+    private java.lang.Object userId_;
+    /**
+     * <code>optional string userId = 7;</code>
+     */
+    public boolean hasUserId() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional string userId = 7;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          userId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string userId = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       username_ = "";
       password_ = "";
@@ -1603,6 +1822,7 @@ public final class Message {
       isInstructor_ = false;
       isRegistering_ = false;
       email_ = "";
+      userId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1638,6 +1858,9 @@ public final class Message {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeBytes(6, getEmailBytes());
       }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeBytes(7, getUserIdBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -1670,6 +1893,10 @@ public final class Message {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(6, getEmailBytes());
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, getUserIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1799,6 +2026,8 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000010);
         email_ = "";
         bitField0_ = (bitField0_ & ~0x00000020);
+        userId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -1851,6 +2080,10 @@ public final class Message {
           to_bitField0_ |= 0x00000020;
         }
         result.email_ = email_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.userId_ = userId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1889,6 +2122,11 @@ public final class Message {
         if (other.hasEmail()) {
           bitField0_ |= 0x00000020;
           email_ = other.email_;
+          onChanged();
+        }
+        if (other.hasUserId()) {
+          bitField0_ |= 0x00000040;
+          userId_ = other.userId_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -2243,6 +2481,80 @@ public final class Message {
         return this;
       }
 
+      // optional string userId = 7;
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>optional string userId = 7;</code>
+       */
+      public boolean hasUserId() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional string userId = 7;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string userId = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string userId = 7;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string userId = 7;</code>
+       */
+      public Builder clearUserId() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string userId = 7;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:protobuf.srl.request.LoginInformation)
     }
 
@@ -2274,18 +2586,19 @@ public final class Message {
   static {
     java.lang.String[] descriptorData = {
       "\n\023input/message.proto\022\024protobuf.srl.requ" +
-      "est\"\276\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
+      "est\"\321\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
       "rotobuf.srl.request.Request.MessageType:" +
       "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req" +
       "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014" +
       "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 " +
-      "\001(\t\"w\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DATA_RE" +
-      "QUEST\020\001\022\020\n\014DATA_SENDING\020\002\022\017\n\013RECOGNITION" +
-      "\020\003\022\013\n\007LOADING\020\004\022\016\n\nSUBMISSION\020\005\022\013\n\007PENDI" +
-      "NG\020\006\"\206\001\n\020LoginInformation\022\020\n\010username\030\001 ",
-      "\002(\t\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(" +
-      "\010\022\024\n\014isInstructor\030\004 \001(\010\022\025\n\risRegistering" +
-      "\030\005 \001(\010\022\r\n\005email\030\006 \001(\t"
+      "\001(\t\022\021\n\tsessionId\030\006 \001(\t\"w\n\013MessageType\022\t\n" +
+      "\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SENDI" +
+      "NG\020\002\022\017\n\013RECOGNITION\020\003\022\013\n\007LOADING\020\004\022\016\n\nSU" +
+      "BMISSION\020\005\022\013\n\007PENDING\020\006\"\226\001\n\020LoginInforma",
+      "tion\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t" +
+      "\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030\004 \001" +
+      "(\010\022\025\n\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 \001(\t" +
+      "\022\016\n\006userId\030\007 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2297,13 +2610,13 @@ public final class Message {
           internal_static_protobuf_srl_request_Request_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_request_Request_descriptor,
-              new java.lang.String[] { "RequestType", "Login", "OtherData", "ResponseText", "SessionInfo", });
+              new java.lang.String[] { "RequestType", "Login", "OtherData", "ResponseText", "SessionInfo", "SessionId", });
           internal_static_protobuf_srl_request_LoginInformation_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_request_LoginInformation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_request_LoginInformation_descriptor,
-              new java.lang.String[] { "Username", "Password", "IsLoggedIn", "IsInstructor", "IsRegistering", "Email", });
+              new java.lang.String[] { "Username", "Password", "IsLoggedIn", "IsInstructor", "IsRegistering", "Email", "UserId", });
           return null;
         }
       };

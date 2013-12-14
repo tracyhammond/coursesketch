@@ -71,11 +71,30 @@
 	    	serverConnection.setSchoolDataListener(function(evt, msg) {
 	    		var school = SchoolBuilder.SrlSchool.decode(msg.otherData);
 	    		var courseList = school.courses;
+	    		var assignments = school.courses;
 	    		for(var i = 0; i <courseList.length; i++) {
 	    			user_courses[courseList[i].id] = courseList[i];
 	    		}
 	    		buildCourses();
-	    	})
+	    		if (courseList.length > 0) {
+		    		var assignmentIdList = [];
+		    		for(var i = 0; i <courseList.length; i++) {
+		    			var assigmmentList = courseList[i].assignmentList;
+		    			if (assignmentList) {
+			    			for(var i = 0; i <assignmentList.length; i++) {
+			    				assignmentIdList.push(assignmentList[i]);
+			    			}
+		    			}
+		    		}
+		    		createAssignmentRequest(assignmentIdList);
+	    		}
+	    		if (assignments.length > 0 ) {
+	    			for(var i = 0; i <assignments.length; i++) {
+		    			user_assignments[assignments[i].id] = assignments[i];
+		    		}
+		    		buildAssignments();
+	    		}
+	    	});
 	    }
 	</script>
 	<script type="text/javascript" src="js/school/course_manager.js"></script>
@@ -192,6 +211,19 @@
 	  			request.items.push(courseItem);
 	  			//request.items.push(assignmentItem);
 	  			//request.items.push(problemItem);
+	  			serverConnection.sendRequest(serverConnection.createRequestFromData(request, Request.MessageType.DATA_REQUEST));
+	  		}
+	  		
+	  		function createAssignmentRequest(ids) {
+	  			var request = new DataRequest("david","SessionId");
+	  			var assignmentItem = new ItemRequest();
+	  			assignmentItem.query = ItemRequest.ItemQuery.ASSIGNMENT;
+	  			assignmentItem.itemId = [];
+	  			for(var i = 0; i <ids.length; i++) {
+	  				assignmentItem.itemId.push(ids[i]);
+	  			}
+	  			request.items = [];
+	  			request.items.push(assignmentItem);
 	  			serverConnection.sendRequest(serverConnection.createRequestFromData(request, Request.MessageType.DATA_REQUEST));
 	  		}
 	</script>

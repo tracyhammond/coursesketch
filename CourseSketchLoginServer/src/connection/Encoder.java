@@ -11,6 +11,26 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 
 public class Encoder {
+
+	public static void main(String args[]) {
+		double averageTime = 0;
+		long entireLength = 20;
+		for (int q = 0; q < entireLength; q++) {
+			int length = Integer.MAX_VALUE / 1000;
+			long start = System.currentTimeMillis();
+			for(int k = 0; k < length; k++) { 
+				nextID();
+				fancyID();
+			}
+			long end = System.currentTimeMillis();
+			double timeTaken = end - start;
+			double totalLength = length;
+			double timePer = (timeTaken / totalLength) * 1000000;
+			averageTime += timePer;
+			System.out.println("Time per computation " + timePer + " ns, on trial " + q +" outof "+ entireLength);
+		}
+		System.out.println("Total Average Time per computation " + (averageTime/entireLength) + " ns");
+	}
 	/**
 	 * counter will be incremented by 0x10000 for each new SComponent that is
 	 * created counter is used as the most significant bits of the UUID
@@ -62,8 +82,16 @@ public class Encoder {
 		return requestBuilder.build();
 	}
 
-	public static UUID nextID() {
+	public static final UUID nextID() {
 		counter += 0x10000L; // Overflow is perfectly fine.
-		return new UUID(counter, System.nanoTime() | 0x8000000000000000L);
+		long random = (long) (Math.random() * ((double)Long.MAX_VALUE / 2.0));
+		return new UUID(counter | random, System.nanoTime() | 0x8000000000000000L);
+	}
+
+	public static final String fancyID() {
+		UUID nextId = nextID();
+		long random = (long)(Math.random() * ((double)Integer.MAX_VALUE));
+		long time = System.currentTimeMillis() | random;
+		return nextId.toString() + "-" + Long.toHexString(Math.abs(time + random * time));
 	}
 }

@@ -194,6 +194,31 @@ public final class School {
      */
     protobuf.srl.school.School.SrlProblemOrBuilder getProblemsOrBuilder(
         int index);
+
+    // repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    java.util.List<protobuf.srl.school.School.SrlBankProblem> 
+        getBankProblemsList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    protobuf.srl.school.School.SrlBankProblem getBankProblems(int index);
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    int getBankProblemsCount();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    java.util.List<? extends protobuf.srl.school.School.SrlBankProblemOrBuilder> 
+        getBankProblemsOrBuilderList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    protobuf.srl.school.School.SrlBankProblemOrBuilder getBankProblemsOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code protobuf.srl.school.SrlSchool}
@@ -274,6 +299,14 @@ public final class School {
               problems_.add(input.readMessage(protobuf.srl.school.School.SrlProblem.PARSER, extensionRegistry));
               break;
             }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                bankProblems_ = new java.util.ArrayList<protobuf.srl.school.School.SrlBankProblem>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              bankProblems_.add(input.readMessage(protobuf.srl.school.School.SrlBankProblem.PARSER, extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -290,6 +323,9 @@ public final class School {
         }
         if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           problems_ = java.util.Collections.unmodifiableList(problems_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          bankProblems_ = java.util.Collections.unmodifiableList(bankProblems_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -430,10 +466,47 @@ public final class School {
       return problems_.get(index);
     }
 
+    // repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;
+    public static final int BANKPROBLEMS_FIELD_NUMBER = 4;
+    private java.util.List<protobuf.srl.school.School.SrlBankProblem> bankProblems_;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    public java.util.List<protobuf.srl.school.School.SrlBankProblem> getBankProblemsList() {
+      return bankProblems_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    public java.util.List<? extends protobuf.srl.school.School.SrlBankProblemOrBuilder> 
+        getBankProblemsOrBuilderList() {
+      return bankProblems_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    public int getBankProblemsCount() {
+      return bankProblems_.size();
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    public protobuf.srl.school.School.SrlBankProblem getBankProblems(int index) {
+      return bankProblems_.get(index);
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+     */
+    public protobuf.srl.school.School.SrlBankProblemOrBuilder getBankProblemsOrBuilder(
+        int index) {
+      return bankProblems_.get(index);
+    }
+
     private void initFields() {
       courses_ = java.util.Collections.emptyList();
       assignments_ = java.util.Collections.emptyList();
       problems_ = java.util.Collections.emptyList();
+      bankProblems_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -458,6 +531,12 @@ public final class School {
           return false;
         }
       }
+      for (int i = 0; i < getBankProblemsCount(); i++) {
+        if (!getBankProblems(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -473,6 +552,9 @@ public final class School {
       }
       for (int i = 0; i < problems_.size(); i++) {
         output.writeMessage(3, problems_.get(i));
+      }
+      for (int i = 0; i < bankProblems_.size(); i++) {
+        output.writeMessage(4, bankProblems_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -494,6 +576,10 @@ public final class School {
       for (int i = 0; i < problems_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, problems_.get(i));
+      }
+      for (int i = 0; i < bankProblems_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, bankProblems_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -610,6 +696,7 @@ public final class School {
           getCoursesFieldBuilder();
           getAssignmentsFieldBuilder();
           getProblemsFieldBuilder();
+          getBankProblemsFieldBuilder();
         }
       }
       private static Builder create() {
@@ -635,6 +722,12 @@ public final class School {
           bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           problemsBuilder_.clear();
+        }
+        if (bankProblemsBuilder_ == null) {
+          bankProblems_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          bankProblemsBuilder_.clear();
         }
         return this;
       }
@@ -689,6 +782,15 @@ public final class School {
           result.problems_ = problems_;
         } else {
           result.problems_ = problemsBuilder_.build();
+        }
+        if (bankProblemsBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            bankProblems_ = java.util.Collections.unmodifiableList(bankProblems_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.bankProblems_ = bankProblems_;
+        } else {
+          result.bankProblems_ = bankProblemsBuilder_.build();
         }
         onBuilt();
         return result;
@@ -783,6 +885,32 @@ public final class School {
             }
           }
         }
+        if (bankProblemsBuilder_ == null) {
+          if (!other.bankProblems_.isEmpty()) {
+            if (bankProblems_.isEmpty()) {
+              bankProblems_ = other.bankProblems_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureBankProblemsIsMutable();
+              bankProblems_.addAll(other.bankProblems_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.bankProblems_.isEmpty()) {
+            if (bankProblemsBuilder_.isEmpty()) {
+              bankProblemsBuilder_.dispose();
+              bankProblemsBuilder_ = null;
+              bankProblems_ = other.bankProblems_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              bankProblemsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getBankProblemsFieldBuilder() : null;
+            } else {
+              bankProblemsBuilder_.addAllMessages(other.bankProblems_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -802,6 +930,12 @@ public final class School {
         }
         for (int i = 0; i < getProblemsCount(); i++) {
           if (!getProblems(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getBankProblemsCount(); i++) {
+          if (!getBankProblems(i).isInitialized()) {
             
             return false;
           }
@@ -1546,6 +1680,246 @@ public final class School {
           problems_ = null;
         }
         return problemsBuilder_;
+      }
+
+      // repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;
+      private java.util.List<protobuf.srl.school.School.SrlBankProblem> bankProblems_ =
+        java.util.Collections.emptyList();
+      private void ensureBankProblemsIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          bankProblems_ = new java.util.ArrayList<protobuf.srl.school.School.SrlBankProblem>(bankProblems_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlBankProblem, protobuf.srl.school.School.SrlBankProblem.Builder, protobuf.srl.school.School.SrlBankProblemOrBuilder> bankProblemsBuilder_;
+
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlBankProblem> getBankProblemsList() {
+        if (bankProblemsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(bankProblems_);
+        } else {
+          return bankProblemsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public int getBankProblemsCount() {
+        if (bankProblemsBuilder_ == null) {
+          return bankProblems_.size();
+        } else {
+          return bankProblemsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public protobuf.srl.school.School.SrlBankProblem getBankProblems(int index) {
+        if (bankProblemsBuilder_ == null) {
+          return bankProblems_.get(index);
+        } else {
+          return bankProblemsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public Builder setBankProblems(
+          int index, protobuf.srl.school.School.SrlBankProblem value) {
+        if (bankProblemsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureBankProblemsIsMutable();
+          bankProblems_.set(index, value);
+          onChanged();
+        } else {
+          bankProblemsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public Builder setBankProblems(
+          int index, protobuf.srl.school.School.SrlBankProblem.Builder builderForValue) {
+        if (bankProblemsBuilder_ == null) {
+          ensureBankProblemsIsMutable();
+          bankProblems_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          bankProblemsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public Builder addBankProblems(protobuf.srl.school.School.SrlBankProblem value) {
+        if (bankProblemsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureBankProblemsIsMutable();
+          bankProblems_.add(value);
+          onChanged();
+        } else {
+          bankProblemsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public Builder addBankProblems(
+          int index, protobuf.srl.school.School.SrlBankProblem value) {
+        if (bankProblemsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureBankProblemsIsMutable();
+          bankProblems_.add(index, value);
+          onChanged();
+        } else {
+          bankProblemsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public Builder addBankProblems(
+          protobuf.srl.school.School.SrlBankProblem.Builder builderForValue) {
+        if (bankProblemsBuilder_ == null) {
+          ensureBankProblemsIsMutable();
+          bankProblems_.add(builderForValue.build());
+          onChanged();
+        } else {
+          bankProblemsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public Builder addBankProblems(
+          int index, protobuf.srl.school.School.SrlBankProblem.Builder builderForValue) {
+        if (bankProblemsBuilder_ == null) {
+          ensureBankProblemsIsMutable();
+          bankProblems_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          bankProblemsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public Builder addAllBankProblems(
+          java.lang.Iterable<? extends protobuf.srl.school.School.SrlBankProblem> values) {
+        if (bankProblemsBuilder_ == null) {
+          ensureBankProblemsIsMutable();
+          super.addAll(values, bankProblems_);
+          onChanged();
+        } else {
+          bankProblemsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public Builder clearBankProblems() {
+        if (bankProblemsBuilder_ == null) {
+          bankProblems_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          bankProblemsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public Builder removeBankProblems(int index) {
+        if (bankProblemsBuilder_ == null) {
+          ensureBankProblemsIsMutable();
+          bankProblems_.remove(index);
+          onChanged();
+        } else {
+          bankProblemsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public protobuf.srl.school.School.SrlBankProblem.Builder getBankProblemsBuilder(
+          int index) {
+        return getBankProblemsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public protobuf.srl.school.School.SrlBankProblemOrBuilder getBankProblemsOrBuilder(
+          int index) {
+        if (bankProblemsBuilder_ == null) {
+          return bankProblems_.get(index);  } else {
+          return bankProblemsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public java.util.List<? extends protobuf.srl.school.School.SrlBankProblemOrBuilder> 
+           getBankProblemsOrBuilderList() {
+        if (bankProblemsBuilder_ != null) {
+          return bankProblemsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(bankProblems_);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public protobuf.srl.school.School.SrlBankProblem.Builder addBankProblemsBuilder() {
+        return getBankProblemsFieldBuilder().addBuilder(
+            protobuf.srl.school.School.SrlBankProblem.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public protobuf.srl.school.School.SrlBankProblem.Builder addBankProblemsBuilder(
+          int index) {
+        return getBankProblemsFieldBuilder().addBuilder(
+            index, protobuf.srl.school.School.SrlBankProblem.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlBankProblem bankProblems = 4;</code>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlBankProblem.Builder> 
+           getBankProblemsBuilderList() {
+        return getBankProblemsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlBankProblem, protobuf.srl.school.School.SrlBankProblem.Builder, protobuf.srl.school.School.SrlBankProblemOrBuilder> 
+          getBankProblemsFieldBuilder() {
+        if (bankProblemsBuilder_ == null) {
+          bankProblemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              protobuf.srl.school.School.SrlBankProblem, protobuf.srl.school.School.SrlBankProblem.Builder, protobuf.srl.school.School.SrlBankProblemOrBuilder>(
+                  bankProblems_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          bankProblems_ = null;
+        }
+        return bankProblemsBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlSchool)
@@ -18129,77 +18503,79 @@ public final class School {
   static {
     java.lang.String[] descriptorData = {
       "\n\022input/school.proto\022\023protobuf.srl.schoo" +
-      "l\"\250\001\n\tSrlSchool\022/\n\007courses\030\001 \003(\0132\036.proto" +
+      "l\"\343\001\n\tSrlSchool\022/\n\007courses\030\001 \003(\0132\036.proto" +
       "buf.srl.school.SrlCourse\0227\n\013assignments\030" +
       "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen" +
       "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo" +
-      "l.SrlProblem\"\355\003\n\tSrlCourse\022\n\n\002id\030\001 \002(\t\022\014" +
-      "\n\004name\030\002 \001(\t\022<\n\020accessPermission\030\003 \001(\0132\"" +
-      ".protobuf.srl.school.SrlPermission\022G\n\006ac" +
-      "cess\030\004 \001(\0162,.protobuf.srl.school.SrlCour" +
-      "se.Accessibility:\tPROTECTED\022\023\n\013descripti",
-      "on\030\005 \001(\t\022\020\n\010semester\030\006 \001(\t\022\020\n\010imageUrl\030\007" +
-      " \001(\t\022\r\n\005grade\030\010 \001(\002\0221\n\naccessDate\030\t \001(\0132" +
-      "\035.protobuf.srl.school.DateTime\0220\n\tcloseD" +
-      "ate\030\n \001(\0132\035.protobuf.srl.school.DateTime" +
-      "\022)\n\005state\030\013 \001(\0132\032.protobuf.srl.school.St" +
-      "ate\022\026\n\016assignmentList\030\014 \003(\t\"O\n\rAccessibi" +
-      "lity\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\026\n\022PROTE" +
-      "CTED_NOSEARCH\020\003\022\013\n\007PRIVATE\020\004\"\327\005\n\rSrlAssi" +
-      "gnment\022\020\n\010courseId\030\001 \002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004" +
-      "name\030\003 \001(\t\022I\n\004type\030\004 \001(\01621.protobuf.srl.",
-      "school.SrlAssignment.AssignmentType:\010HOM" +
-      "EWORK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001(" +
-      "\t\022\r\n\005links\030\007 \003(\t\022J\n\nlatePolicy\030\010 \001(\0162-.p" +
-      "rotobuf.srl.school.SrlAssignment.LatePol" +
-      "icy:\007POLICY1\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005gra" +
-      "de\030\n \001(\002\0221\n\naccessDate\030\013 \001(\0132\035.protobuf." +
-      "srl.school.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.p" +
-      "rotobuf.srl.school.DateTime\0220\n\tcloseDate" +
-      "\030\r \001(\0132\035.protobuf.srl.school.DateTime\022)\n" +
-      "\005state\030\016 \001(\0132\032.protobuf.srl.school.State",
-      "\022\020\n\010imageUrl\030\017 \001(\t\022\023\n\013problemList\030\020 \003(\t\022" +
-      "<\n\020accessPermission\030\021 \001(\0132\".protobuf.srl" +
-      ".school.SrlPermission\"R\n\016AssignmentType\022" +
-      "\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM" +
-      "\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3\n\nLatePolicy\022" +
-      "\013\n\007POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007POLICY3\020\003\"\367" +
-      "\002\n\nSrlProblem\022\n\n\002id\030\001 \002(\t\022\020\n\010courseId\030\002 " +
-      "\001(\t\022\024\n\014assignmentId\030\003 \001(\t\022\025\n\rproblemBank" +
-      "Id\030\004 \001(\t\022\014\n\004name\030\005 \001(\t\022\023\n\013description\030\006 " +
-      "\001(\t\0228\n\013problemInfo\030\007 \001(\0132#.protobuf.srl.",
-      "school.SrlBankProblem\0224\n\004info\030\010 \003(\0132&.pr" +
-      "otobuf.srl.school.DomainInformation\022\023\n\013g" +
-      "radeWeight\030\t \001(\t\022\r\n\005grade\030\n \001(\002\022)\n\005state" +
-      "\030\013 \001(\0132\032.protobuf.srl.school.State\022<\n\020ac" +
-      "cessPermission\030\014 \001(\0132\".protobuf.srl.scho" +
-      "ol.SrlPermission\"\374\002\n\016SrlBankProblem\022\n\n\002i" +
-      "d\030\001 \002(\t\022\024\n\014questionText\030\002 \001(\t\022N\n\014questio" +
-      "nType\030\003 \001(\01620.protobuf.srl.school.SrlBan" +
-      "kProblem.QuestionType:\006SKETCH\022\r\n\005image\030\004" +
-      " \001(\t\022\022\n\nsolutionId\030\005 \001(\t\022\023\n\013courseTopic\030",
-      "\006 \001(\t\022\020\n\010subTopic\030\007 \001(\t\022\016\n\006source\030\010 \001(\t\022" +
-      "\025\n\rotherKeywords\030\t \003(\t\022<\n\020accessPermissi" +
-      "on\030\n \001(\0132\".protobuf.srl.school.SrlPermis" +
-      "sion\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017\n\013MULT" +
-      "_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_BOX\020\004\"" +
-      "w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month\030\002 \001(\005" +
-      "\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006minute\030\005 " +
-      "\001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millisecond\030\007 \001(\004" +
-      "\"\"\n\021DomainInformation\022\r\n\005stuff\030\001 \001(\t\"c\n\005" +
-      "State\022\021\n\tpublished\030\001 \001(\010\022\022\n\naccessible\030\002",
-      " \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007started\030\004 \001(\010\022\021" +
-      "\n\tcompleted\030\005 \001(\010\"b\n\007SrlUser\022\020\n\010username" +
-      "\030\001 \002(\t\0226\n\010userType\030\002 \001(\0162\035.protobuf.srl." +
-      "school.UserType:\005GUEST\022\r\n\005email\030\003 \001(\t\">\n" +
-      "\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002" +
-      "(\t\022\021\n\tgroupName\030\003 \001(\t\"H\n\013SrlSchoolId\022\020\n\010" +
-      "courseId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\t" +
-      "problemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017admi" +
-      "nPermission\030\001 \003(\t\022\033\n\023moderatorPermission" +
-      "\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserTy",
-      "pe\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHIN" +
-      "G_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
+      "l.SrlProblem\0229\n\014bankProblems\030\004 \003(\0132#.pro" +
+      "tobuf.srl.school.SrlBankProblem\"\355\003\n\tSrlC" +
+      "ourse\022\n\n\002id\030\001 \002(\t\022\014\n\004name\030\002 \001(\t\022<\n\020acces" +
+      "sPermission\030\003 \001(\0132\".protobuf.srl.school." +
+      "SrlPermission\022G\n\006access\030\004 \001(\0162,.protobuf",
+      ".srl.school.SrlCourse.Accessibility:\tPRO" +
+      "TECTED\022\023\n\013description\030\005 \001(\t\022\020\n\010semester\030" +
+      "\006 \001(\t\022\020\n\010imageUrl\030\007 \001(\t\022\r\n\005grade\030\010 \001(\002\0221" +
+      "\n\naccessDate\030\t \001(\0132\035.protobuf.srl.school" +
+      ".DateTime\0220\n\tcloseDate\030\n \001(\0132\035.protobuf." +
+      "srl.school.DateTime\022)\n\005state\030\013 \001(\0132\032.pro" +
+      "tobuf.srl.school.State\022\026\n\016assignmentList" +
+      "\030\014 \003(\t\"O\n\rAccessibility\022\n\n\006PUBLIC\020\001\022\r\n\tP" +
+      "ROTECTED\020\002\022\026\n\022PROTECTED_NOSEARCH\020\003\022\013\n\007PR" +
+      "IVATE\020\004\"\327\005\n\rSrlAssignment\022\020\n\010courseId\030\001 ",
+      "\002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004name\030\003 \001(\t\022I\n\004type\030\004 " +
+      "\001(\01621.protobuf.srl.school.SrlAssignment." +
+      "AssignmentType:\010HOMEWORK\022\r\n\005other\030\005 \001(\t\022" +
+      "\023\n\013description\030\006 \001(\t\022\r\n\005links\030\007 \003(\t\022J\n\nl" +
+      "atePolicy\030\010 \001(\0162-.protobuf.srl.school.Sr" +
+      "lAssignment.LatePolicy:\007POLICY1\022\023\n\013grade" +
+      "Weight\030\t \001(\t\022\r\n\005grade\030\n \001(\002\0221\n\naccessDat" +
+      "e\030\013 \001(\0132\035.protobuf.srl.school.DateTime\022." +
+      "\n\007dueDate\030\014 \001(\0132\035.protobuf.srl.school.Da" +
+      "teTime\0220\n\tcloseDate\030\r \001(\0132\035.protobuf.srl",
+      ".school.DateTime\022)\n\005state\030\016 \001(\0132\032.protob" +
+      "uf.srl.school.State\022\020\n\010imageUrl\030\017 \001(\t\022\023\n" +
+      "\013problemList\030\020 \003(\t\022<\n\020accessPermission\030\021" +
+      " \001(\0132\".protobuf.srl.school.SrlPermission" +
+      "\"R\n\016AssignmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ" +
+      "\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTH" +
+      "ER\020\006\"3\n\nLatePolicy\022\013\n\007POLICY1\020\001\022\013\n\007POLIC" +
+      "Y2\020\002\022\013\n\007POLICY3\020\003\"\367\002\n\nSrlProblem\022\n\n\002id\030\001" +
+      " \002(\t\022\020\n\010courseId\030\002 \001(\t\022\024\n\014assignmentId\030\003" +
+      " \001(\t\022\025\n\rproblemBankId\030\004 \001(\t\022\014\n\004name\030\005 \001(",
+      "\t\022\023\n\013description\030\006 \001(\t\0228\n\013problemInfo\030\007 " +
+      "\001(\0132#.protobuf.srl.school.SrlBankProblem" +
+      "\0224\n\004info\030\010 \003(\0132&.protobuf.srl.school.Dom" +
+      "ainInformation\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005g" +
+      "rade\030\n \001(\002\022)\n\005state\030\013 \001(\0132\032.protobuf.srl" +
+      ".school.State\022<\n\020accessPermission\030\014 \001(\0132" +
+      "\".protobuf.srl.school.SrlPermission\"\374\002\n\016" +
+      "SrlBankProblem\022\n\n\002id\030\001 \002(\t\022\024\n\014questionTe" +
+      "xt\030\002 \001(\t\022N\n\014questionType\030\003 \001(\01620.protobu" +
+      "f.srl.school.SrlBankProblem.QuestionType",
+      ":\006SKETCH\022\r\n\005image\030\004 \001(\t\022\022\n\nsolutionId\030\005 " +
+      "\001(\t\022\023\n\013courseTopic\030\006 \001(\t\022\020\n\010subTopic\030\007 \001" +
+      "(\t\022\016\n\006source\030\010 \001(\t\022\025\n\rotherKeywords\030\t \003(" +
+      "\t\022<\n\020accessPermission\030\n \001(\0132\".protobuf.s" +
+      "rl.school.SrlPermission\"I\n\014QuestionType\022" +
+      "\n\n\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RES" +
+      "P\020\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001" +
+      " \001(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour" +
+      "\030\004 \001(\005\022\016\n\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023" +
+      "\n\013millisecond\030\007 \001(\004\"\"\n\021DomainInformation",
+      "\022\r\n\005stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 " +
+      "\001(\010\022\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010" +
+      "\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"b\n\007" +
+      "SrlUser\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 " +
+      "\001(\0162\035.protobuf.srl.school.UserType:\005GUES" +
+      "T\022\r\n\005email\030\003 \001(\t\">\n\010SrlGroup\022\016\n\006userId\030\001" +
+      " \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t" +
+      "\"H\n\013SrlSchoolId\022\020\n\010courseId\030\001 \001(\t\022\024\n\014ass" +
+      "ignmentId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\"]\n\rSr" +
+      "lPermission\022\027\n\017adminPermission\030\001 \003(\t\022\033\n\023",
+      "moderatorPermission\030\002 \003(\t\022\026\n\016userPermiss" +
+      "ion\030\003 \003(\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nINST" +
+      "RUCTOR\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007STUD" +
+      "ENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -18211,7 +18587,7 @@ public final class School {
           internal_static_protobuf_srl_school_SrlSchool_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlSchool_descriptor,
-              new java.lang.String[] { "Courses", "Assignments", "Problems", });
+              new java.lang.String[] { "Courses", "Assignments", "Problems", "BankProblems", });
           internal_static_protobuf_srl_school_SrlCourse_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_school_SrlCourse_fieldAccessorTable = new
