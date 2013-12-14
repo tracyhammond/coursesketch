@@ -139,6 +139,8 @@ public class AssignmentManager
 	{
 		DBRef myDbRef = new DBRef(dbs, "Assignments", new ObjectId(assignmentId));
 		DBObject corsor = myDbRef.fetch();
+		DBObject updateObj = null;
+		DBCollection courses = dbs.getCollection("Assignments");
 
 		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
 		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");
@@ -155,41 +157,54 @@ public class AssignmentManager
 		if (isAdmin || isMod) 
 		{
 			if (assignment.hasName()) {
-				updated.append("$set", new BasicDBObject(NAME, assignment.getName()));
+				updateObj = new BasicDBObject(NAME, assignment.getName());
+				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
 			if (assignment.hasType()) {
-				updated.append("$set", new BasicDBObject(ASSIGNMENT_TYPE, assignment.getType()));
+				updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getType());
+				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
 			if (assignment.hasOther()) {
-				updated.append("$set", new BasicDBObject(ASSIGNMENT_OTHER_TYPE, assignment.getOther()));
+				updateObj = new BasicDBObject(ASSIGNMENT_OTHER_TYPE,assignment.getOther());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (assignment.hasDescription()) {
-				updated.append("$set", new BasicDBObject(DESCRIPTION, assignment.getDescription()));
+				updateObj = new BasicDBObject(DESCRIPTION, assignment.getDescription());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.getLinksList() != null) {
-				updated.append("$set", new BasicDBObject(ASSIGNMENT_RESOURCES, assignment.getLinksList()));
+				updateObj = new BasicDBObject(ASSIGNMENT_RESOURCES, assignment.getLinksList());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.hasLatePolicy()) {
 				updated.append("$set", new BasicDBObject(LATE_POLICY, assignment.getLatePolicy().getNumber()));
+				updateObj = new BasicDBObject(LATE_POLICY, assignment.getLatePolicy().getNumber());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.hasGradeWeight()) {
-				updated.append("$set", new BasicDBObject(GRADE_WEIGHT, assignment.getGradeWeight()));
+				updateObj = new BasicDBObject(GRADE_WEIGHT, assignment.getGradeWeight());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.hasAccessDate()) {
-				updated.append("$set", new BasicDBObject(ACCESS_DATE, assignment.getAccessDate().getMillisecond()));
-			}
+				updateObj = new BasicDBObject(ACCESS_DATE, assignment.getAccessDate().getMillisecond());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
+			}	
 			if (assignment.hasDueDate()) {
-				updated.append("$set", new BasicDBObject(DUE_DATE, assignment.getDueDate().getMillisecond()));
+				updateObj = new BasicDBObject(DUE_DATE, assignment.getDueDate().getMillisecond());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.hasCloseDate()) {
-				updated.append("$set", new BasicDBObject(CLOSE_DATE, assignment.getCloseDate().getMillisecond()));
+				updateObj = new BasicDBObject(CLOSE_DATE, assignment.getCloseDate().getMillisecond());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.hasImageUrl()) {
-				updated.append("$set", new BasicDBObject(IMAGE, assignment.getImageUrl()));
+				updateObj = new BasicDBObject(IMAGE, assignment.getImageUrl());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.getProblemListCount() > 0) {
-				updated.append("$set", new BasicDBObject(PROBLEM_LIST, assignment.getProblemListList()));
+				updateObj = new BasicDBObject(PROBLEM_LIST, assignment.getProblemListList());
+				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
@@ -200,14 +215,18 @@ public class AssignmentManager
 					// ONLY ADMIN CAN CHANGE ADMIN OR MOD
 					if (permissions.getAdminPermissionCount() > 0) {
 						updated.append("$set", new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+						updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
+						courses.update(corsor, new BasicDBObject ("$set", updateObj));
 					}
 					if (permissions.getModeratorPermissionCount() > 0) {
-						updated.append("$set", new BasicDBObject(MOD, permissions.getModeratorPermissionList()));
+						updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
+						courses.update(corsor, new BasicDBObject ("$set", updateObj));
 					}
 				}
 				if (permissions.getUserPermissionCount() > 0) 
 				{
-					updated.append("$set", new BasicDBObject(USERS, permissions.getUserPermissionList()));
+					updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
+					courses.update(corsor, new BasicDBObject ("$set", updateObj));
 				}
 			}
 		}
