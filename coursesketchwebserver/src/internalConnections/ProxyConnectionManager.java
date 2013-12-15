@@ -3,17 +3,18 @@ package internalConnections;
 import protobuf.srl.request.Message.Request;
 import multiConnection.MultiConnectionManager;
 import multiConnection.MultiInternalConnectionServer;
+import multiConnection.WrapperConnection;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class ProxyConnectionManager extends MultiConnectionManager {
-	
+
 	private boolean connectLocally = CONNECT_LOCALLY;
-	
+
 	public ProxyConnectionManager(MultiInternalConnectionServer parent) {
 		super(parent);
 	}
-	
+
 	public void connectServers(MultiInternalConnectionServer serv) {
 		//System.out.println("Open Recognition...");
 		//createAndAddConnection(serv, true, 8887, RecognitionConnection.class);
@@ -42,5 +43,11 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		build.setSessionId("todo:ID");
 		build.setSessionInfo("todo:INFO");
 		return build.build();
+	}
+
+	public void send(Request req, String sessionId, Class<? extends WrapperConnection> connectionType, String userId) {
+		Request.Builder builder = Request.newBuilder(req);
+		builder.setSessionId(userId);
+		super.send(builder.build(), sessionId, connectionType);
 	}
 }

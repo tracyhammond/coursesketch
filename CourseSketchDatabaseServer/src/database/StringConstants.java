@@ -42,8 +42,8 @@ public class StringConstants {
 	
 	//solution specific
 	public static final String ALLOWED_IN_PROBLEMBANK = "AllowedInProblemBank";
-	public static final String PRACTICE_PROBLEM = "PracticeProblem";
-	public static final String SOLUTION = "Solution";
+	public static final String IS_PRACTICE_PROBLEM = "PracticeProblem";
+	public static final String UPDATELIST = "Solution";
 
 	// problem specific
 	public static final String QUESTION_TEXT = "QuestionText";

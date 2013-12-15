@@ -9,7 +9,38 @@ message DataRequest {
 message ItemRequest {
 	repeated string itemId = 1; // to pull multiple of the same item
 	optional ItemQuery query = 2;
-	enum ItemQuery {
+
+	optional bytes advanceQuery = 3;
+}
+
+/**
+ * Used when sending/updating results.
+ */
+message DataSend {
+	required string userId = 1;
+	required string sessionId = 2;
+	repeated ItemSend items = 3;
+}
+
+message ItemSend {
+	optional ItemQuery query = 1;
+	optional bool isInsert = 2;
+	optional bytes data = 3;
+}
+
+/**
+ * Returned upon any request/send from the database.
+ */
+message DataResult {
+	repeated ItemResult results = 1;
+}
+
+message ItemResult {
+	optional ItemQuery query = 1;
+	optional bytes data = 3;
+}
+
+enum ItemQuery {
 		COURSE = 0;
 		ASSIGNMENT = 1;
 		COURSE_PROBLEM = 2;
@@ -20,9 +51,6 @@ message ItemRequest {
 		SOLUTION = 7;
 		EXPERIMENT = 8;
 	}
-
-	optional bytes advanceQuery = 3;
-}
 
 /**
  * Pulls all grades of the users for a course

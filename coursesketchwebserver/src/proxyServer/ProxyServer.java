@@ -87,18 +87,18 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			}
 			if(req.getRequestType() == MessageType.RECOGNITION){
 				System.out.println("REQUEST TYPE = RECOGNITION");
-				String userID = state.getKey();
-				serverManager.send(req, userID, RecognitionConnection.class);
+				String sessionID = state.getKey();
+				serverManager.send(req, sessionID, RecognitionConnection.class);
 			}
 			if(req.getRequestType() == MessageType.SUBMISSION){
 				System.out.println("REQUEST TYPE = SUBMISSION");
-				String userID = state.getKey();
-				serverManager.send(req, userID, AnswerConnection.class);
+				String sessionID = state.getKey();
+				serverManager.send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
 			}
 			if(req.getRequestType() == MessageType.DATA_REQUEST){
 				System.out.println("REQUEST TYPE = DATA REQUEST");
-				String userID = state.getKey();
-				serverManager.send(req, userID, DataConnection.class);
+				String sessionID = state.getKey();
+				serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
 			}
 			return;
 		}
@@ -112,7 +112,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	 * Returns a number that should be unique.
 	 */
 	public LoginConnectionState getUniqueState() {
-		return new LoginConnectionState(Encoder.nextID().toString());
+		return new ProxyConnectionState(Encoder.nextID().toString());
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {

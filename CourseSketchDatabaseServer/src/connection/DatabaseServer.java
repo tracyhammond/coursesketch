@@ -66,22 +66,26 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 			try {
 				System.out.println("Receiving DATA Request...");
 				SrlSchool.Builder finalSchool = SrlSchool.newBuilder();
+				String userId = req.getSessionId();
 				DataRequest request = DataRequest.parseFrom(req.getOtherData());
+				if (userId == null) {
+					userId = request.getUserId();
+				}
 				for(int p=0; p<request.getItemsList().size(); p++){
 					ItemRequest itrequest = request.getItemsList().get(p);
 					switch(itrequest.getQuery()) {
-						case COURSE: ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), request.getUserId());
+						case COURSE: ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), userId);
 									finalSchool.addAllCourses(courseLoop);
 									break;
-						case ASSIGNMENT: ArrayList<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+						case ASSIGNMENT: ArrayList<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), userId);
 									finalSchool.addAllAssignments(assignmentLoop);
 									break;
-						case COURSE_PROBLEM: ArrayList<SrlProblem> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), request.getUserId());
+						case COURSE_PROBLEM: ArrayList<SrlProblem> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), userId);
 									for(SrlProblem loopCourse: courseProblemLoop){
 										finalSchool.addProblems(loopCourse);
 									}
 									break;
-						case BANK_PROBLEM: ArrayList<SrlBankProblem> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), request.getUserId());
+						case BANK_PROBLEM: ArrayList<SrlBankProblem> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), userId);
 									for(SrlBankProblem loopCourse: bankProblemLoop){
 										finalSchool.addBankProblems(loopCourse);
 									}

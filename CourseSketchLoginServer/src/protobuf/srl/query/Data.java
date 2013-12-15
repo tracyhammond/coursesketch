@@ -8,6 +8,151 @@ public final class Data {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
+  /**
+   * Protobuf enum {@code protobuf.srl.query.ItemQuery}
+   */
+  public enum ItemQuery
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>COURSE = 0;</code>
+     */
+    COURSE(0, 0),
+    /**
+     * <code>ASSIGNMENT = 1;</code>
+     */
+    ASSIGNMENT(1, 1),
+    /**
+     * <code>COURSE_PROBLEM = 2;</code>
+     */
+    COURSE_PROBLEM(2, 2),
+    /**
+     * <code>BANK_PROBLEM = 3;</code>
+     */
+    BANK_PROBLEM(3, 3),
+    /**
+     * <code>USERGROUP = 4;</code>
+     */
+    USERGROUP(4, 4),
+    /**
+     * <code>CLASS_GRADE = 5;</code>
+     */
+    CLASS_GRADE(5, 5),
+    /**
+     * <code>USER_INFO = 6;</code>
+     */
+    USER_INFO(6, 6),
+    /**
+     * <code>SOLUTION = 7;</code>
+     */
+    SOLUTION(7, 7),
+    /**
+     * <code>EXPERIMENT = 8;</code>
+     */
+    EXPERIMENT(8, 8),
+    ;
+
+    /**
+     * <code>COURSE = 0;</code>
+     */
+    public static final int COURSE_VALUE = 0;
+    /**
+     * <code>ASSIGNMENT = 1;</code>
+     */
+    public static final int ASSIGNMENT_VALUE = 1;
+    /**
+     * <code>COURSE_PROBLEM = 2;</code>
+     */
+    public static final int COURSE_PROBLEM_VALUE = 2;
+    /**
+     * <code>BANK_PROBLEM = 3;</code>
+     */
+    public static final int BANK_PROBLEM_VALUE = 3;
+    /**
+     * <code>USERGROUP = 4;</code>
+     */
+    public static final int USERGROUP_VALUE = 4;
+    /**
+     * <code>CLASS_GRADE = 5;</code>
+     */
+    public static final int CLASS_GRADE_VALUE = 5;
+    /**
+     * <code>USER_INFO = 6;</code>
+     */
+    public static final int USER_INFO_VALUE = 6;
+    /**
+     * <code>SOLUTION = 7;</code>
+     */
+    public static final int SOLUTION_VALUE = 7;
+    /**
+     * <code>EXPERIMENT = 8;</code>
+     */
+    public static final int EXPERIMENT_VALUE = 8;
+
+
+    public final int getNumber() { return value; }
+
+    public static ItemQuery valueOf(int value) {
+      switch (value) {
+        case 0: return COURSE;
+        case 1: return ASSIGNMENT;
+        case 2: return COURSE_PROBLEM;
+        case 3: return BANK_PROBLEM;
+        case 4: return USERGROUP;
+        case 5: return CLASS_GRADE;
+        case 6: return USER_INFO;
+        case 7: return SOLUTION;
+        case 8: return EXPERIMENT;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<ItemQuery>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static com.google.protobuf.Internal.EnumLiteMap<ItemQuery>
+        internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<ItemQuery>() {
+            public ItemQuery findValueByNumber(int number) {
+              return ItemQuery.valueOf(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(index);
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return protobuf.srl.query.Data.getDescriptor().getEnumTypes().get(0);
+    }
+
+    private static final ItemQuery[] VALUES = values();
+
+    public static ItemQuery valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int index;
+    private final int value;
+
+    private ItemQuery(int index, int value) {
+      this.index = index;
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:protobuf.srl.query.ItemQuery)
+  }
+
   public interface DataRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
@@ -1052,15 +1197,15 @@ public final class Data {
     com.google.protobuf.ByteString
         getItemIdBytes(int index);
 
-    // optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
+    // optional .protobuf.srl.query.ItemQuery query = 2;
     /**
-     * <code>optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;</code>
+     * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
      */
     boolean hasQuery();
     /**
-     * <code>optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;</code>
+     * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
      */
-    protobuf.srl.query.Data.ItemRequest.ItemQuery getQuery();
+    protobuf.srl.query.Data.ItemQuery getQuery();
 
     // optional bytes advanceQuery = 3;
     /**
@@ -1133,7 +1278,7 @@ public final class Data {
             }
             case 16: {
               int rawValue = input.readEnum();
-              protobuf.srl.query.Data.ItemRequest.ItemQuery value = protobuf.srl.query.Data.ItemRequest.ItemQuery.valueOf(rawValue);
+              protobuf.srl.query.Data.ItemQuery value = protobuf.srl.query.Data.ItemQuery.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
@@ -1189,151 +1334,6 @@ public final class Data {
       return PARSER;
     }
 
-    /**
-     * Protobuf enum {@code protobuf.srl.query.ItemRequest.ItemQuery}
-     */
-    public enum ItemQuery
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>COURSE = 0;</code>
-       */
-      COURSE(0, 0),
-      /**
-       * <code>ASSIGNMENT = 1;</code>
-       */
-      ASSIGNMENT(1, 1),
-      /**
-       * <code>COURSE_PROBLEM = 2;</code>
-       */
-      COURSE_PROBLEM(2, 2),
-      /**
-       * <code>BANK_PROBLEM = 3;</code>
-       */
-      BANK_PROBLEM(3, 3),
-      /**
-       * <code>USERGROUP = 4;</code>
-       */
-      USERGROUP(4, 4),
-      /**
-       * <code>CLASS_GRADE = 5;</code>
-       */
-      CLASS_GRADE(5, 5),
-      /**
-       * <code>USER_INFO = 6;</code>
-       */
-      USER_INFO(6, 6),
-      /**
-       * <code>SOLUTION = 7;</code>
-       */
-      SOLUTION(7, 7),
-      /**
-       * <code>EXPERIMENT = 8;</code>
-       */
-      EXPERIMENT(8, 8),
-      ;
-
-      /**
-       * <code>COURSE = 0;</code>
-       */
-      public static final int COURSE_VALUE = 0;
-      /**
-       * <code>ASSIGNMENT = 1;</code>
-       */
-      public static final int ASSIGNMENT_VALUE = 1;
-      /**
-       * <code>COURSE_PROBLEM = 2;</code>
-       */
-      public static final int COURSE_PROBLEM_VALUE = 2;
-      /**
-       * <code>BANK_PROBLEM = 3;</code>
-       */
-      public static final int BANK_PROBLEM_VALUE = 3;
-      /**
-       * <code>USERGROUP = 4;</code>
-       */
-      public static final int USERGROUP_VALUE = 4;
-      /**
-       * <code>CLASS_GRADE = 5;</code>
-       */
-      public static final int CLASS_GRADE_VALUE = 5;
-      /**
-       * <code>USER_INFO = 6;</code>
-       */
-      public static final int USER_INFO_VALUE = 6;
-      /**
-       * <code>SOLUTION = 7;</code>
-       */
-      public static final int SOLUTION_VALUE = 7;
-      /**
-       * <code>EXPERIMENT = 8;</code>
-       */
-      public static final int EXPERIMENT_VALUE = 8;
-
-
-      public final int getNumber() { return value; }
-
-      public static ItemQuery valueOf(int value) {
-        switch (value) {
-          case 0: return COURSE;
-          case 1: return ASSIGNMENT;
-          case 2: return COURSE_PROBLEM;
-          case 3: return BANK_PROBLEM;
-          case 4: return USERGROUP;
-          case 5: return CLASS_GRADE;
-          case 6: return USER_INFO;
-          case 7: return SOLUTION;
-          case 8: return EXPERIMENT;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<ItemQuery>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static com.google.protobuf.Internal.EnumLiteMap<ItemQuery>
-          internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<ItemQuery>() {
-              public ItemQuery findValueByNumber(int number) {
-                return ItemQuery.valueOf(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(index);
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return protobuf.srl.query.Data.ItemRequest.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final ItemQuery[] VALUES = values();
-
-      public static ItemQuery valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int index;
-      private final int value;
-
-      private ItemQuery(int index, int value) {
-        this.index = index;
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:protobuf.srl.query.ItemRequest.ItemQuery)
-    }
-
     private int bitField0_;
     // repeated string itemId = 1;
     public static final int ITEMID_FIELD_NUMBER = 1;
@@ -1381,19 +1381,19 @@ public final class Data {
       return itemId_.getByteString(index);
     }
 
-    // optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
+    // optional .protobuf.srl.query.ItemQuery query = 2;
     public static final int QUERY_FIELD_NUMBER = 2;
-    private protobuf.srl.query.Data.ItemRequest.ItemQuery query_;
+    private protobuf.srl.query.Data.ItemQuery query_;
     /**
-     * <code>optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;</code>
+     * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
      */
     public boolean hasQuery() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;</code>
+     * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
      */
-    public protobuf.srl.query.Data.ItemRequest.ItemQuery getQuery() {
+    public protobuf.srl.query.Data.ItemQuery getQuery() {
       return query_;
     }
 
@@ -1415,7 +1415,7 @@ public final class Data {
 
     private void initFields() {
       itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      query_ = protobuf.srl.query.Data.ItemRequest.ItemQuery.COURSE;
+      query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
       advanceQuery_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
@@ -1583,7 +1583,7 @@ public final class Data {
         super.clear();
         itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
-        query_ = protobuf.srl.query.Data.ItemRequest.ItemQuery.COURSE;
+        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
         bitField0_ = (bitField0_ & ~0x00000002);
         advanceQuery_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -1817,24 +1817,24 @@ public final class Data {
         return this;
       }
 
-      // optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
-      private protobuf.srl.query.Data.ItemRequest.ItemQuery query_ = protobuf.srl.query.Data.ItemRequest.ItemQuery.COURSE;
+      // optional .protobuf.srl.query.ItemQuery query = 2;
+      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
       /**
-       * <code>optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;</code>
+       * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
        */
       public boolean hasQuery() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;</code>
+       * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
        */
-      public protobuf.srl.query.Data.ItemRequest.ItemQuery getQuery() {
+      public protobuf.srl.query.Data.ItemQuery getQuery() {
         return query_;
       }
       /**
-       * <code>optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;</code>
+       * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
        */
-      public Builder setQuery(protobuf.srl.query.Data.ItemRequest.ItemQuery value) {
+      public Builder setQuery(protobuf.srl.query.Data.ItemQuery value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1844,11 +1844,11 @@ public final class Data {
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;</code>
+       * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
        */
       public Builder clearQuery() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        query_ = protobuf.srl.query.Data.ItemRequest.ItemQuery.COURSE;
+        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
         onChanged();
         return this;
       }
@@ -1898,6 +1898,2764 @@ public final class Data {
     }
 
     // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemRequest)
+  }
+
+  public interface DataSendOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required string userId = 1;
+    /**
+     * <code>required string userId = 1;</code>
+     */
+    boolean hasUserId();
+    /**
+     * <code>required string userId = 1;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>required string userId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
+
+    // required string sessionId = 2;
+    /**
+     * <code>required string sessionId = 2;</code>
+     */
+    boolean hasSessionId();
+    /**
+     * <code>required string sessionId = 2;</code>
+     */
+    java.lang.String getSessionId();
+    /**
+     * <code>required string sessionId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getSessionIdBytes();
+
+    // repeated .protobuf.srl.query.ItemSend items = 3;
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    java.util.List<protobuf.srl.query.Data.ItemSend> 
+        getItemsList();
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    protobuf.srl.query.Data.ItemSend getItems(int index);
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    int getItemsCount();
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    java.util.List<? extends protobuf.srl.query.Data.ItemSendOrBuilder> 
+        getItemsOrBuilderList();
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    protobuf.srl.query.Data.ItemSendOrBuilder getItemsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.query.DataSend}
+   *
+   * <pre>
+   **
+   * Used when sending/updating results.
+   * </pre>
+   */
+  public static final class DataSend extends
+      com.google.protobuf.GeneratedMessage
+      implements DataSendOrBuilder {
+    // Use DataSend.newBuilder() to construct.
+    private DataSend(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private DataSend(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final DataSend defaultInstance;
+    public static DataSend getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public DataSend getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DataSend(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              userId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              sessionId_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                items_ = new java.util.ArrayList<protobuf.srl.query.Data.ItemSend>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              items_.add(input.readMessage(protobuf.srl.query.Data.ItemSend.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          items_ = java.util.Collections.unmodifiableList(items_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataSend_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataSend_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.query.Data.DataSend.class, protobuf.srl.query.Data.DataSend.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<DataSend> PARSER =
+        new com.google.protobuf.AbstractParser<DataSend>() {
+      public DataSend parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DataSend(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DataSend> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required string userId = 1;
+    public static final int USERID_FIELD_NUMBER = 1;
+    private java.lang.Object userId_;
+    /**
+     * <code>required string userId = 1;</code>
+     */
+    public boolean hasUserId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string userId = 1;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          userId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string userId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // required string sessionId = 2;
+    public static final int SESSIONID_FIELD_NUMBER = 2;
+    private java.lang.Object sessionId_;
+    /**
+     * <code>required string sessionId = 2;</code>
+     */
+    public boolean hasSessionId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string sessionId = 2;</code>
+     */
+    public java.lang.String getSessionId() {
+      java.lang.Object ref = sessionId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          sessionId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string sessionId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSessionIdBytes() {
+      java.lang.Object ref = sessionId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        sessionId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // repeated .protobuf.srl.query.ItemSend items = 3;
+    public static final int ITEMS_FIELD_NUMBER = 3;
+    private java.util.List<protobuf.srl.query.Data.ItemSend> items_;
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    public java.util.List<protobuf.srl.query.Data.ItemSend> getItemsList() {
+      return items_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    public java.util.List<? extends protobuf.srl.query.Data.ItemSendOrBuilder> 
+        getItemsOrBuilderList() {
+      return items_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    public int getItemsCount() {
+      return items_.size();
+    }
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    public protobuf.srl.query.Data.ItemSend getItems(int index) {
+      return items_.get(index);
+    }
+    /**
+     * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+     */
+    public protobuf.srl.query.Data.ItemSendOrBuilder getItemsOrBuilder(
+        int index) {
+      return items_.get(index);
+    }
+
+    private void initFields() {
+      userId_ = "";
+      sessionId_ = "";
+      items_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasUserId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasSessionId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getUserIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getSessionIdBytes());
+      }
+      for (int i = 0; i < items_.size(); i++) {
+        output.writeMessage(3, items_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getUserIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getSessionIdBytes());
+      }
+      for (int i = 0; i < items_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, items_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.query.Data.DataSend parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.DataSend parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.DataSend parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.DataSend parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.DataSend parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.DataSend parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.DataSend parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.query.Data.DataSend parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.DataSend parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.DataSend parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.query.Data.DataSend prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.query.DataSend}
+     *
+     * <pre>
+     **
+     * Used when sending/updating results.
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.query.Data.DataSendOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataSend_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataSend_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.query.Data.DataSend.class, protobuf.srl.query.Data.DataSend.Builder.class);
+      }
+
+      // Construct using protobuf.srl.query.Data.DataSend.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getItemsFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        userId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        sessionId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        if (itemsBuilder_ == null) {
+          items_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          itemsBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataSend_descriptor;
+      }
+
+      public protobuf.srl.query.Data.DataSend getDefaultInstanceForType() {
+        return protobuf.srl.query.Data.DataSend.getDefaultInstance();
+      }
+
+      public protobuf.srl.query.Data.DataSend build() {
+        protobuf.srl.query.Data.DataSend result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.query.Data.DataSend buildPartial() {
+        protobuf.srl.query.Data.DataSend result = new protobuf.srl.query.Data.DataSend(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.userId_ = userId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.sessionId_ = sessionId_;
+        if (itemsBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            items_ = java.util.Collections.unmodifiableList(items_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.items_ = items_;
+        } else {
+          result.items_ = itemsBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.query.Data.DataSend) {
+          return mergeFrom((protobuf.srl.query.Data.DataSend)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.query.Data.DataSend other) {
+        if (other == protobuf.srl.query.Data.DataSend.getDefaultInstance()) return this;
+        if (other.hasUserId()) {
+          bitField0_ |= 0x00000001;
+          userId_ = other.userId_;
+          onChanged();
+        }
+        if (other.hasSessionId()) {
+          bitField0_ |= 0x00000002;
+          sessionId_ = other.sessionId_;
+          onChanged();
+        }
+        if (itemsBuilder_ == null) {
+          if (!other.items_.isEmpty()) {
+            if (items_.isEmpty()) {
+              items_ = other.items_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureItemsIsMutable();
+              items_.addAll(other.items_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.items_.isEmpty()) {
+            if (itemsBuilder_.isEmpty()) {
+              itemsBuilder_.dispose();
+              itemsBuilder_ = null;
+              items_ = other.items_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              itemsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getItemsFieldBuilder() : null;
+            } else {
+              itemsBuilder_.addAllMessages(other.items_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasUserId()) {
+          
+          return false;
+        }
+        if (!hasSessionId()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.query.Data.DataSend parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.query.Data.DataSend) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required string userId = 1;
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>required string userId = 1;</code>
+       */
+      public boolean hasUserId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string userId = 1;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string userId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string userId = 1;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string userId = 1;</code>
+       */
+      public Builder clearUserId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string userId = 1;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // required string sessionId = 2;
+      private java.lang.Object sessionId_ = "";
+      /**
+       * <code>required string sessionId = 2;</code>
+       */
+      public boolean hasSessionId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string sessionId = 2;</code>
+       */
+      public java.lang.String getSessionId() {
+        java.lang.Object ref = sessionId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          sessionId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string sessionId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSessionIdBytes() {
+        java.lang.Object ref = sessionId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          sessionId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string sessionId = 2;</code>
+       */
+      public Builder setSessionId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        sessionId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string sessionId = 2;</code>
+       */
+      public Builder clearSessionId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        sessionId_ = getDefaultInstance().getSessionId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string sessionId = 2;</code>
+       */
+      public Builder setSessionIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        sessionId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // repeated .protobuf.srl.query.ItemSend items = 3;
+      private java.util.List<protobuf.srl.query.Data.ItemSend> items_ =
+        java.util.Collections.emptyList();
+      private void ensureItemsIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          items_ = new java.util.ArrayList<protobuf.srl.query.Data.ItemSend>(items_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.query.Data.ItemSend, protobuf.srl.query.Data.ItemSend.Builder, protobuf.srl.query.Data.ItemSendOrBuilder> itemsBuilder_;
+
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public java.util.List<protobuf.srl.query.Data.ItemSend> getItemsList() {
+        if (itemsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(items_);
+        } else {
+          return itemsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public int getItemsCount() {
+        if (itemsBuilder_ == null) {
+          return items_.size();
+        } else {
+          return itemsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public protobuf.srl.query.Data.ItemSend getItems(int index) {
+        if (itemsBuilder_ == null) {
+          return items_.get(index);
+        } else {
+          return itemsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public Builder setItems(
+          int index, protobuf.srl.query.Data.ItemSend value) {
+        if (itemsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureItemsIsMutable();
+          items_.set(index, value);
+          onChanged();
+        } else {
+          itemsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public Builder setItems(
+          int index, protobuf.srl.query.Data.ItemSend.Builder builderForValue) {
+        if (itemsBuilder_ == null) {
+          ensureItemsIsMutable();
+          items_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          itemsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public Builder addItems(protobuf.srl.query.Data.ItemSend value) {
+        if (itemsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureItemsIsMutable();
+          items_.add(value);
+          onChanged();
+        } else {
+          itemsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public Builder addItems(
+          int index, protobuf.srl.query.Data.ItemSend value) {
+        if (itemsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureItemsIsMutable();
+          items_.add(index, value);
+          onChanged();
+        } else {
+          itemsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public Builder addItems(
+          protobuf.srl.query.Data.ItemSend.Builder builderForValue) {
+        if (itemsBuilder_ == null) {
+          ensureItemsIsMutable();
+          items_.add(builderForValue.build());
+          onChanged();
+        } else {
+          itemsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public Builder addItems(
+          int index, protobuf.srl.query.Data.ItemSend.Builder builderForValue) {
+        if (itemsBuilder_ == null) {
+          ensureItemsIsMutable();
+          items_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          itemsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public Builder addAllItems(
+          java.lang.Iterable<? extends protobuf.srl.query.Data.ItemSend> values) {
+        if (itemsBuilder_ == null) {
+          ensureItemsIsMutable();
+          super.addAll(values, items_);
+          onChanged();
+        } else {
+          itemsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public Builder clearItems() {
+        if (itemsBuilder_ == null) {
+          items_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          itemsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public Builder removeItems(int index) {
+        if (itemsBuilder_ == null) {
+          ensureItemsIsMutable();
+          items_.remove(index);
+          onChanged();
+        } else {
+          itemsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public protobuf.srl.query.Data.ItemSend.Builder getItemsBuilder(
+          int index) {
+        return getItemsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public protobuf.srl.query.Data.ItemSendOrBuilder getItemsOrBuilder(
+          int index) {
+        if (itemsBuilder_ == null) {
+          return items_.get(index);  } else {
+          return itemsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public java.util.List<? extends protobuf.srl.query.Data.ItemSendOrBuilder> 
+           getItemsOrBuilderList() {
+        if (itemsBuilder_ != null) {
+          return itemsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(items_);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public protobuf.srl.query.Data.ItemSend.Builder addItemsBuilder() {
+        return getItemsFieldBuilder().addBuilder(
+            protobuf.srl.query.Data.ItemSend.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public protobuf.srl.query.Data.ItemSend.Builder addItemsBuilder(
+          int index) {
+        return getItemsFieldBuilder().addBuilder(
+            index, protobuf.srl.query.Data.ItemSend.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
+       */
+      public java.util.List<protobuf.srl.query.Data.ItemSend.Builder> 
+           getItemsBuilderList() {
+        return getItemsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.query.Data.ItemSend, protobuf.srl.query.Data.ItemSend.Builder, protobuf.srl.query.Data.ItemSendOrBuilder> 
+          getItemsFieldBuilder() {
+        if (itemsBuilder_ == null) {
+          itemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              protobuf.srl.query.Data.ItemSend, protobuf.srl.query.Data.ItemSend.Builder, protobuf.srl.query.Data.ItemSendOrBuilder>(
+                  items_,
+                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  getParentForChildren(),
+                  isClean());
+          items_ = null;
+        }
+        return itemsBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.query.DataSend)
+    }
+
+    static {
+      defaultInstance = new DataSend(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.query.DataSend)
+  }
+
+  public interface ItemSendOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional .protobuf.srl.query.ItemQuery query = 1;
+    /**
+     * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    boolean hasQuery();
+    /**
+     * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    protobuf.srl.query.Data.ItemQuery getQuery();
+
+    // optional bool isInsert = 2;
+    /**
+     * <code>optional bool isInsert = 2;</code>
+     */
+    boolean hasIsInsert();
+    /**
+     * <code>optional bool isInsert = 2;</code>
+     */
+    boolean getIsInsert();
+
+    // optional bytes data = 3;
+    /**
+     * <code>optional bytes data = 3;</code>
+     */
+    boolean hasData();
+    /**
+     * <code>optional bytes data = 3;</code>
+     */
+    com.google.protobuf.ByteString getData();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.query.ItemSend}
+   */
+  public static final class ItemSend extends
+      com.google.protobuf.GeneratedMessage
+      implements ItemSendOrBuilder {
+    // Use ItemSend.newBuilder() to construct.
+    private ItemSend(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private ItemSend(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final ItemSend defaultInstance;
+    public static ItemSend getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ItemSend getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ItemSend(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              protobuf.srl.query.Data.ItemQuery value = protobuf.srl.query.Data.ItemQuery.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                query_ = value;
+              }
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              isInsert_ = input.readBool();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              data_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemSend_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemSend_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.query.Data.ItemSend.class, protobuf.srl.query.Data.ItemSend.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<ItemSend> PARSER =
+        new com.google.protobuf.AbstractParser<ItemSend>() {
+      public ItemSend parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ItemSend(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ItemSend> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional .protobuf.srl.query.ItemQuery query = 1;
+    public static final int QUERY_FIELD_NUMBER = 1;
+    private protobuf.srl.query.Data.ItemQuery query_;
+    /**
+     * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    public boolean hasQuery() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    public protobuf.srl.query.Data.ItemQuery getQuery() {
+      return query_;
+    }
+
+    // optional bool isInsert = 2;
+    public static final int ISINSERT_FIELD_NUMBER = 2;
+    private boolean isInsert_;
+    /**
+     * <code>optional bool isInsert = 2;</code>
+     */
+    public boolean hasIsInsert() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional bool isInsert = 2;</code>
+     */
+    public boolean getIsInsert() {
+      return isInsert_;
+    }
+
+    // optional bytes data = 3;
+    public static final int DATA_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString data_;
+    /**
+     * <code>optional bytes data = 3;</code>
+     */
+    public boolean hasData() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional bytes data = 3;</code>
+     */
+    public com.google.protobuf.ByteString getData() {
+      return data_;
+    }
+
+    private void initFields() {
+      query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      isInsert_ = false;
+      data_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeEnum(1, query_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBool(2, isInsert_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, data_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, query_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(2, isInsert_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, data_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.query.Data.ItemSend parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.ItemSend parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ItemSend parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.ItemSend parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ItemSend parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.ItemSend parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ItemSend parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.query.Data.ItemSend parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ItemSend parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.ItemSend parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.query.Data.ItemSend prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.query.ItemSend}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.query.Data.ItemSendOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemSend_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemSend_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.query.Data.ItemSend.class, protobuf.srl.query.Data.ItemSend.Builder.class);
+      }
+
+      // Construct using protobuf.srl.query.Data.ItemSend.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        isInsert_ = false;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        data_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemSend_descriptor;
+      }
+
+      public protobuf.srl.query.Data.ItemSend getDefaultInstanceForType() {
+        return protobuf.srl.query.Data.ItemSend.getDefaultInstance();
+      }
+
+      public protobuf.srl.query.Data.ItemSend build() {
+        protobuf.srl.query.Data.ItemSend result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.query.Data.ItemSend buildPartial() {
+        protobuf.srl.query.Data.ItemSend result = new protobuf.srl.query.Data.ItemSend(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.query_ = query_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.isInsert_ = isInsert_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.data_ = data_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.query.Data.ItemSend) {
+          return mergeFrom((protobuf.srl.query.Data.ItemSend)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.query.Data.ItemSend other) {
+        if (other == protobuf.srl.query.Data.ItemSend.getDefaultInstance()) return this;
+        if (other.hasQuery()) {
+          setQuery(other.getQuery());
+        }
+        if (other.hasIsInsert()) {
+          setIsInsert(other.getIsInsert());
+        }
+        if (other.hasData()) {
+          setData(other.getData());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.query.Data.ItemSend parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.query.Data.ItemSend) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional .protobuf.srl.query.ItemQuery query = 1;
+      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      /**
+       * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public boolean hasQuery() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public protobuf.srl.query.Data.ItemQuery getQuery() {
+        return query_;
+      }
+      /**
+       * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public Builder setQuery(protobuf.srl.query.Data.ItemQuery value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        query_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public Builder clearQuery() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        onChanged();
+        return this;
+      }
+
+      // optional bool isInsert = 2;
+      private boolean isInsert_ ;
+      /**
+       * <code>optional bool isInsert = 2;</code>
+       */
+      public boolean hasIsInsert() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bool isInsert = 2;</code>
+       */
+      public boolean getIsInsert() {
+        return isInsert_;
+      }
+      /**
+       * <code>optional bool isInsert = 2;</code>
+       */
+      public Builder setIsInsert(boolean value) {
+        bitField0_ |= 0x00000002;
+        isInsert_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool isInsert = 2;</code>
+       */
+      public Builder clearIsInsert() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        isInsert_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional bytes data = 3;
+      private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes data = 3;</code>
+       */
+      public boolean hasData() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional bytes data = 3;</code>
+       */
+      public com.google.protobuf.ByteString getData() {
+        return data_;
+      }
+      /**
+       * <code>optional bytes data = 3;</code>
+       */
+      public Builder setData(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        data_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes data = 3;</code>
+       */
+      public Builder clearData() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        data_ = getDefaultInstance().getData();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.query.ItemSend)
+    }
+
+    static {
+      defaultInstance = new ItemSend(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemSend)
+  }
+
+  public interface DataResultOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // repeated .protobuf.srl.query.ItemResult results = 1;
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    java.util.List<protobuf.srl.query.Data.ItemResult> 
+        getResultsList();
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    protobuf.srl.query.Data.ItemResult getResults(int index);
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    int getResultsCount();
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    java.util.List<? extends protobuf.srl.query.Data.ItemResultOrBuilder> 
+        getResultsOrBuilderList();
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    protobuf.srl.query.Data.ItemResultOrBuilder getResultsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.query.DataResult}
+   *
+   * <pre>
+   **
+   * Returned upon any request/send from the database.
+   * </pre>
+   */
+  public static final class DataResult extends
+      com.google.protobuf.GeneratedMessage
+      implements DataResultOrBuilder {
+    // Use DataResult.newBuilder() to construct.
+    private DataResult(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private DataResult(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final DataResult defaultInstance;
+    public static DataResult getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public DataResult getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DataResult(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                results_ = new java.util.ArrayList<protobuf.srl.query.Data.ItemResult>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              results_.add(input.readMessage(protobuf.srl.query.Data.ItemResult.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          results_ = java.util.Collections.unmodifiableList(results_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataResult_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataResult_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.query.Data.DataResult.class, protobuf.srl.query.Data.DataResult.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<DataResult> PARSER =
+        new com.google.protobuf.AbstractParser<DataResult>() {
+      public DataResult parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DataResult(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DataResult> getParserForType() {
+      return PARSER;
+    }
+
+    // repeated .protobuf.srl.query.ItemResult results = 1;
+    public static final int RESULTS_FIELD_NUMBER = 1;
+    private java.util.List<protobuf.srl.query.Data.ItemResult> results_;
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    public java.util.List<protobuf.srl.query.Data.ItemResult> getResultsList() {
+      return results_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    public java.util.List<? extends protobuf.srl.query.Data.ItemResultOrBuilder> 
+        getResultsOrBuilderList() {
+      return results_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    public int getResultsCount() {
+      return results_.size();
+    }
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    public protobuf.srl.query.Data.ItemResult getResults(int index) {
+      return results_.get(index);
+    }
+    /**
+     * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+     */
+    public protobuf.srl.query.Data.ItemResultOrBuilder getResultsOrBuilder(
+        int index) {
+      return results_.get(index);
+    }
+
+    private void initFields() {
+      results_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < results_.size(); i++) {
+        output.writeMessage(1, results_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < results_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, results_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.query.Data.DataResult parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.DataResult parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.DataResult parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.DataResult parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.DataResult parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.DataResult parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.DataResult parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.query.Data.DataResult parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.DataResult parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.DataResult parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.query.Data.DataResult prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.query.DataResult}
+     *
+     * <pre>
+     **
+     * Returned upon any request/send from the database.
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.query.Data.DataResultOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataResult_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataResult_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.query.Data.DataResult.class, protobuf.srl.query.Data.DataResult.Builder.class);
+      }
+
+      // Construct using protobuf.srl.query.Data.DataResult.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getResultsFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (resultsBuilder_ == null) {
+          results_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          resultsBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_DataResult_descriptor;
+      }
+
+      public protobuf.srl.query.Data.DataResult getDefaultInstanceForType() {
+        return protobuf.srl.query.Data.DataResult.getDefaultInstance();
+      }
+
+      public protobuf.srl.query.Data.DataResult build() {
+        protobuf.srl.query.Data.DataResult result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.query.Data.DataResult buildPartial() {
+        protobuf.srl.query.Data.DataResult result = new protobuf.srl.query.Data.DataResult(this);
+        int from_bitField0_ = bitField0_;
+        if (resultsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            results_ = java.util.Collections.unmodifiableList(results_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.results_ = results_;
+        } else {
+          result.results_ = resultsBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.query.Data.DataResult) {
+          return mergeFrom((protobuf.srl.query.Data.DataResult)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.query.Data.DataResult other) {
+        if (other == protobuf.srl.query.Data.DataResult.getDefaultInstance()) return this;
+        if (resultsBuilder_ == null) {
+          if (!other.results_.isEmpty()) {
+            if (results_.isEmpty()) {
+              results_ = other.results_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureResultsIsMutable();
+              results_.addAll(other.results_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.results_.isEmpty()) {
+            if (resultsBuilder_.isEmpty()) {
+              resultsBuilder_.dispose();
+              resultsBuilder_ = null;
+              results_ = other.results_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              resultsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getResultsFieldBuilder() : null;
+            } else {
+              resultsBuilder_.addAllMessages(other.results_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.query.Data.DataResult parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.query.Data.DataResult) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // repeated .protobuf.srl.query.ItemResult results = 1;
+      private java.util.List<protobuf.srl.query.Data.ItemResult> results_ =
+        java.util.Collections.emptyList();
+      private void ensureResultsIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          results_ = new java.util.ArrayList<protobuf.srl.query.Data.ItemResult>(results_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.query.Data.ItemResult, protobuf.srl.query.Data.ItemResult.Builder, protobuf.srl.query.Data.ItemResultOrBuilder> resultsBuilder_;
+
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public java.util.List<protobuf.srl.query.Data.ItemResult> getResultsList() {
+        if (resultsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(results_);
+        } else {
+          return resultsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public int getResultsCount() {
+        if (resultsBuilder_ == null) {
+          return results_.size();
+        } else {
+          return resultsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public protobuf.srl.query.Data.ItemResult getResults(int index) {
+        if (resultsBuilder_ == null) {
+          return results_.get(index);
+        } else {
+          return resultsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public Builder setResults(
+          int index, protobuf.srl.query.Data.ItemResult value) {
+        if (resultsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureResultsIsMutable();
+          results_.set(index, value);
+          onChanged();
+        } else {
+          resultsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public Builder setResults(
+          int index, protobuf.srl.query.Data.ItemResult.Builder builderForValue) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          resultsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public Builder addResults(protobuf.srl.query.Data.ItemResult value) {
+        if (resultsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureResultsIsMutable();
+          results_.add(value);
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public Builder addResults(
+          int index, protobuf.srl.query.Data.ItemResult value) {
+        if (resultsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureResultsIsMutable();
+          results_.add(index, value);
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public Builder addResults(
+          protobuf.srl.query.Data.ItemResult.Builder builderForValue) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.add(builderForValue.build());
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public Builder addResults(
+          int index, protobuf.srl.query.Data.ItemResult.Builder builderForValue) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public Builder addAllResults(
+          java.lang.Iterable<? extends protobuf.srl.query.Data.ItemResult> values) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          super.addAll(values, results_);
+          onChanged();
+        } else {
+          resultsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public Builder clearResults() {
+        if (resultsBuilder_ == null) {
+          results_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          resultsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public Builder removeResults(int index) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.remove(index);
+          onChanged();
+        } else {
+          resultsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public protobuf.srl.query.Data.ItemResult.Builder getResultsBuilder(
+          int index) {
+        return getResultsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public protobuf.srl.query.Data.ItemResultOrBuilder getResultsOrBuilder(
+          int index) {
+        if (resultsBuilder_ == null) {
+          return results_.get(index);  } else {
+          return resultsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public java.util.List<? extends protobuf.srl.query.Data.ItemResultOrBuilder> 
+           getResultsOrBuilderList() {
+        if (resultsBuilder_ != null) {
+          return resultsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(results_);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public protobuf.srl.query.Data.ItemResult.Builder addResultsBuilder() {
+        return getResultsFieldBuilder().addBuilder(
+            protobuf.srl.query.Data.ItemResult.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public protobuf.srl.query.Data.ItemResult.Builder addResultsBuilder(
+          int index) {
+        return getResultsFieldBuilder().addBuilder(
+            index, protobuf.srl.query.Data.ItemResult.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.query.ItemResult results = 1;</code>
+       */
+      public java.util.List<protobuf.srl.query.Data.ItemResult.Builder> 
+           getResultsBuilderList() {
+        return getResultsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.query.Data.ItemResult, protobuf.srl.query.Data.ItemResult.Builder, protobuf.srl.query.Data.ItemResultOrBuilder> 
+          getResultsFieldBuilder() {
+        if (resultsBuilder_ == null) {
+          resultsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              protobuf.srl.query.Data.ItemResult, protobuf.srl.query.Data.ItemResult.Builder, protobuf.srl.query.Data.ItemResultOrBuilder>(
+                  results_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          results_ = null;
+        }
+        return resultsBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.query.DataResult)
+    }
+
+    static {
+      defaultInstance = new DataResult(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.query.DataResult)
+  }
+
+  public interface ItemResultOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional .protobuf.srl.query.ItemQuery query = 1;
+    /**
+     * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    boolean hasQuery();
+    /**
+     * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    protobuf.srl.query.Data.ItemQuery getQuery();
+
+    // optional bytes data = 3;
+    /**
+     * <code>optional bytes data = 3;</code>
+     */
+    boolean hasData();
+    /**
+     * <code>optional bytes data = 3;</code>
+     */
+    com.google.protobuf.ByteString getData();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.query.ItemResult}
+   */
+  public static final class ItemResult extends
+      com.google.protobuf.GeneratedMessage
+      implements ItemResultOrBuilder {
+    // Use ItemResult.newBuilder() to construct.
+    private ItemResult(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private ItemResult(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final ItemResult defaultInstance;
+    public static ItemResult getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ItemResult getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ItemResult(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              protobuf.srl.query.Data.ItemQuery value = protobuf.srl.query.Data.ItemQuery.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                query_ = value;
+              }
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000002;
+              data_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemResult_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemResult_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.query.Data.ItemResult.class, protobuf.srl.query.Data.ItemResult.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<ItemResult> PARSER =
+        new com.google.protobuf.AbstractParser<ItemResult>() {
+      public ItemResult parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ItemResult(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ItemResult> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional .protobuf.srl.query.ItemQuery query = 1;
+    public static final int QUERY_FIELD_NUMBER = 1;
+    private protobuf.srl.query.Data.ItemQuery query_;
+    /**
+     * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    public boolean hasQuery() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    public protobuf.srl.query.Data.ItemQuery getQuery() {
+      return query_;
+    }
+
+    // optional bytes data = 3;
+    public static final int DATA_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString data_;
+    /**
+     * <code>optional bytes data = 3;</code>
+     */
+    public boolean hasData() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional bytes data = 3;</code>
+     */
+    public com.google.protobuf.ByteString getData() {
+      return data_;
+    }
+
+    private void initFields() {
+      query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      data_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeEnum(1, query_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(3, data_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, query_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, data_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.query.Data.ItemResult parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.ItemResult parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ItemResult parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.ItemResult parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ItemResult parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.ItemResult parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ItemResult parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.query.Data.ItemResult parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ItemResult parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.ItemResult parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.query.Data.ItemResult prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.query.ItemResult}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.query.Data.ItemResultOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemResult_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemResult_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.query.Data.ItemResult.class, protobuf.srl.query.Data.ItemResult.Builder.class);
+      }
+
+      // Construct using protobuf.srl.query.Data.ItemResult.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        data_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ItemResult_descriptor;
+      }
+
+      public protobuf.srl.query.Data.ItemResult getDefaultInstanceForType() {
+        return protobuf.srl.query.Data.ItemResult.getDefaultInstance();
+      }
+
+      public protobuf.srl.query.Data.ItemResult build() {
+        protobuf.srl.query.Data.ItemResult result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.query.Data.ItemResult buildPartial() {
+        protobuf.srl.query.Data.ItemResult result = new protobuf.srl.query.Data.ItemResult(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.query_ = query_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.data_ = data_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.query.Data.ItemResult) {
+          return mergeFrom((protobuf.srl.query.Data.ItemResult)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.query.Data.ItemResult other) {
+        if (other == protobuf.srl.query.Data.ItemResult.getDefaultInstance()) return this;
+        if (other.hasQuery()) {
+          setQuery(other.getQuery());
+        }
+        if (other.hasData()) {
+          setData(other.getData());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.query.Data.ItemResult parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.query.Data.ItemResult) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional .protobuf.srl.query.ItemQuery query = 1;
+      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      /**
+       * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public boolean hasQuery() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public protobuf.srl.query.Data.ItemQuery getQuery() {
+        return query_;
+      }
+      /**
+       * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public Builder setQuery(protobuf.srl.query.Data.ItemQuery value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        query_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public Builder clearQuery() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        onChanged();
+        return this;
+      }
+
+      // optional bytes data = 3;
+      private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes data = 3;</code>
+       */
+      public boolean hasData() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bytes data = 3;</code>
+       */
+      public com.google.protobuf.ByteString getData() {
+        return data_;
+      }
+      /**
+       * <code>optional bytes data = 3;</code>
+       */
+      public Builder setData(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        data_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes data = 3;</code>
+       */
+      public Builder clearData() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        data_ = getDefaultInstance().getData();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.query.ItemResult)
+    }
+
+    static {
+      defaultInstance = new ItemResult(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemResult)
   }
 
   public interface AdvanceCourseGradePullOrBuilder
@@ -4302,6 +7060,26 @@ public final class Data {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_query_ItemRequest_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_query_DataSend_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_query_DataSend_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_query_ItemSend_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_query_ItemSend_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_query_DataResult_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_query_DataResult_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_query_ItemResult_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_query_ItemResult_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -4328,20 +7106,27 @@ public final class Data {
       "\n\020input/data.proto\022\022protobuf.srl.query\"`" +
       "\n\013DataRequest\022\016\n\006userId\030\001 \002(\t\022\021\n\tsession" +
       "Id\030\002 \002(\t\022.\n\005items\030\003 \003(\0132\037.protobuf.srl.q" +
-      "uery.ItemRequest\"\212\002\n\013ItemRequest\022\016\n\006item" +
-      "Id\030\001 \003(\t\0228\n\005query\030\002 \001(\0162).protobuf.srl.q" +
-      "uery.ItemRequest.ItemQuery\022\024\n\014advanceQue" +
-      "ry\030\003 \001(\014\"\232\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nAS" +
-      "SIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_P" +
-      "ROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005" +
-      "\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIM",
-      "ENT\020\010\"Q\n\026AdvanceCourseGradePull\022\020\n\010cours" +
-      "eId\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\016\n\006user" +
-      "Id\030\003 \003(\t\"O\n\024AdvanceUserGradePull\022\016\n\006user" +
-      "Id\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\020\n\010cours" +
-      "eId\030\003 \003(\t\"P\n\rAdvanceReview\022\020\n\010courseId\030\001" +
-      " \002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\027\n\017courseProb" +
-      "lemId\030\003 \002(\t"
+      "uery.ItemRequest\"a\n\013ItemRequest\022\016\n\006itemI" +
+      "d\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.srl.qu" +
+      "ery.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014\"Z\n\010D" +
+      "ataSend\022\016\n\006userId\030\001 \002(\t\022\021\n\tsessionId\030\002 \002" +
+      "(\t\022+\n\005items\030\003 \003(\0132\034.protobuf.srl.query.I" +
+      "temSend\"X\n\010ItemSend\022,\n\005query\030\001 \001(\0162\035.pro" +
+      "tobuf.srl.query.ItemQuery\022\020\n\010isInsert\030\002 ",
+      "\001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResult\022/\n\007resul" +
+      "ts\030\001 \003(\0132\036.protobuf.srl.query.ItemResult" +
+      "\"H\n\nItemResult\022,\n\005query\030\001 \001(\0162\035.protobuf" +
+      ".srl.query.ItemQuery\022\014\n\004data\030\003 \001(\014\"Q\n\026Ad" +
+      "vanceCourseGradePull\022\020\n\010courseId\030\001 \002(\t\022\025" +
+      "\n\rpullAllGrades\030\002 \001(\010\022\016\n\006userId\030\003 \003(\t\"O\n" +
+      "\024AdvanceUserGradePull\022\016\n\006userId\030\001 \002(\t\022\025\n" +
+      "\rpullAllGrades\030\002 \001(\010\022\020\n\010courseId\030\003 \003(\t\"P" +
+      "\n\rAdvanceReview\022\020\n\010courseId\030\001 \002(\t\022\024\n\014ass" +
+      "ignmentId\030\002 \002(\t\022\027\n\017courseProblemId\030\003 \002(\t",
+      "*\232\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT" +
+      "\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003" +
+      "\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER" +
+      "_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4360,20 +7145,44 @@ public final class Data {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ItemRequest_descriptor,
               new java.lang.String[] { "ItemId", "Query", "AdvanceQuery", });
-          internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor =
+          internal_static_protobuf_srl_query_DataSend_descriptor =
             getDescriptor().getMessageTypes().get(2);
+          internal_static_protobuf_srl_query_DataSend_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_query_DataSend_descriptor,
+              new java.lang.String[] { "UserId", "SessionId", "Items", });
+          internal_static_protobuf_srl_query_ItemSend_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_protobuf_srl_query_ItemSend_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_query_ItemSend_descriptor,
+              new java.lang.String[] { "Query", "IsInsert", "Data", });
+          internal_static_protobuf_srl_query_DataResult_descriptor =
+            getDescriptor().getMessageTypes().get(4);
+          internal_static_protobuf_srl_query_DataResult_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_query_DataResult_descriptor,
+              new java.lang.String[] { "Results", });
+          internal_static_protobuf_srl_query_ItemResult_descriptor =
+            getDescriptor().getMessageTypes().get(5);
+          internal_static_protobuf_srl_query_ItemResult_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_query_ItemResult_descriptor,
+              new java.lang.String[] { "Query", "Data", });
+          internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor =
+            getDescriptor().getMessageTypes().get(6);
           internal_static_protobuf_srl_query_AdvanceCourseGradePull_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor,
               new java.lang.String[] { "CourseId", "PullAllGrades", "UserId", });
           internal_static_protobuf_srl_query_AdvanceUserGradePull_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_protobuf_srl_query_AdvanceUserGradePull_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_AdvanceUserGradePull_descriptor,
               new java.lang.String[] { "UserId", "PullAllGrades", "CourseId", });
           internal_static_protobuf_srl_query_AdvanceReview_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(8);
           internal_static_protobuf_srl_query_AdvanceReview_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_AdvanceReview_descriptor,
