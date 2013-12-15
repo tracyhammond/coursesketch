@@ -7,22 +7,22 @@ import "input/commands.proto";
  * Contains extra metadata for an UpdateList
  */
 message SrlSubmission {
-	optional protobuf.srl.school.SrlSchoolId schoolId = 1;
+	optional string id = 1;
 	optional protobuf.srl.commands.SrlUpdateList updateList = 2; // if this is a collection of updates
 	optional protobuf.srl.sketch.SrlSketch sketch = 3; // if this is a sketch.
-	optional bytes extraData = 4;
-	optional protobuf.srl.school.SrlPermission viewPermissions = 5;
 }
 
 message SrlSolution {
-	optional string userId = 4; // if it links to a user we know that too.
 	optional bool allowedInProblemBank = 1;
-	optional bool practiceProblem = 3;
-	optional protobuf.srl.school.SrlPermission adminPermissions = 2;
+	optional bool isPracticeProblem = 2;
+	optional protobuf.srl.school.SrlPermission accessPermissions = 3;
+	optional SrlSubmission submission = 4;
 }
 
-message SrlExperiment {
-	optional string userId = 1; // student Id
-
-}
 // Students submit experiments!
+message SrlExperiment {
+	optional protobuf.srl.school.SrlSchoolId schoolId = 1;
+	optional string userId = 2; // student Id
+	optional protobuf.srl.school.SrlPermission accessPermissions = 3;
+	optional SrlSubmission submission = 4;
+}

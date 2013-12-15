@@ -7,7 +7,7 @@ public class LoginConnectionState extends MultiConnectionState {
 	private boolean isLoggedIn = false;
 	private boolean isInstructor = false; // flagged true if correct login and is instructor
 	private int loginTries = 0;
-	private String sessionId = null;
+	protected String sessionId = null;
 	
 	public LoginConnectionState(String key) {
 		super(key);

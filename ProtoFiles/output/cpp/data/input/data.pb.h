@@ -38,35 +38,39 @@ void protobuf_ShutdownFile_input_2fdata_2eproto();
 
 class DataRequest;
 class ItemRequest;
+class DataSend;
+class ItemSend;
+class DataResult;
+class ItemResult;
 class AdvanceCourseGradePull;
 class AdvanceUserGradePull;
 class AdvanceReview;
 
-enum ItemRequest_ItemQuery {
-  ItemRequest_ItemQuery_COURSE = 0,
-  ItemRequest_ItemQuery_ASSIGNMENT = 1,
-  ItemRequest_ItemQuery_COURSE_PROBLEM = 2,
-  ItemRequest_ItemQuery_BANK_PROBLEM = 3,
-  ItemRequest_ItemQuery_USERGROUP = 4,
-  ItemRequest_ItemQuery_CLASS_GRADE = 5,
-  ItemRequest_ItemQuery_USER_INFO = 6,
-  ItemRequest_ItemQuery_SOLUTION = 7,
-  ItemRequest_ItemQuery_EXPERIMENT = 8
+enum ItemQuery {
+  COURSE = 0,
+  ASSIGNMENT = 1,
+  COURSE_PROBLEM = 2,
+  BANK_PROBLEM = 3,
+  USERGROUP = 4,
+  CLASS_GRADE = 5,
+  USER_INFO = 6,
+  SOLUTION = 7,
+  EXPERIMENT = 8
 };
-bool ItemRequest_ItemQuery_IsValid(int value);
-const ItemRequest_ItemQuery ItemRequest_ItemQuery_ItemQuery_MIN = ItemRequest_ItemQuery_COURSE;
-const ItemRequest_ItemQuery ItemRequest_ItemQuery_ItemQuery_MAX = ItemRequest_ItemQuery_EXPERIMENT;
-const int ItemRequest_ItemQuery_ItemQuery_ARRAYSIZE = ItemRequest_ItemQuery_ItemQuery_MAX + 1;
+bool ItemQuery_IsValid(int value);
+const ItemQuery ItemQuery_MIN = COURSE;
+const ItemQuery ItemQuery_MAX = EXPERIMENT;
+const int ItemQuery_ARRAYSIZE = ItemQuery_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* ItemRequest_ItemQuery_descriptor();
-inline const ::std::string& ItemRequest_ItemQuery_Name(ItemRequest_ItemQuery value) {
+const ::google::protobuf::EnumDescriptor* ItemQuery_descriptor();
+inline const ::std::string& ItemQuery_Name(ItemQuery value) {
   return ::google::protobuf::internal::NameOfEnum(
-    ItemRequest_ItemQuery_descriptor(), value);
+    ItemQuery_descriptor(), value);
 }
-inline bool ItemRequest_ItemQuery_Parse(
-    const ::std::string& name, ItemRequest_ItemQuery* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<ItemRequest_ItemQuery>(
-    ItemRequest_ItemQuery_descriptor(), name, value);
+inline bool ItemQuery_Parse(
+    const ::std::string& name, ItemQuery* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ItemQuery>(
+    ItemQuery_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -237,37 +241,6 @@ class ItemRequest : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef ItemRequest_ItemQuery ItemQuery;
-  static const ItemQuery COURSE = ItemRequest_ItemQuery_COURSE;
-  static const ItemQuery ASSIGNMENT = ItemRequest_ItemQuery_ASSIGNMENT;
-  static const ItemQuery COURSE_PROBLEM = ItemRequest_ItemQuery_COURSE_PROBLEM;
-  static const ItemQuery BANK_PROBLEM = ItemRequest_ItemQuery_BANK_PROBLEM;
-  static const ItemQuery USERGROUP = ItemRequest_ItemQuery_USERGROUP;
-  static const ItemQuery CLASS_GRADE = ItemRequest_ItemQuery_CLASS_GRADE;
-  static const ItemQuery USER_INFO = ItemRequest_ItemQuery_USER_INFO;
-  static const ItemQuery SOLUTION = ItemRequest_ItemQuery_SOLUTION;
-  static const ItemQuery EXPERIMENT = ItemRequest_ItemQuery_EXPERIMENT;
-  static inline bool ItemQuery_IsValid(int value) {
-    return ItemRequest_ItemQuery_IsValid(value);
-  }
-  static const ItemQuery ItemQuery_MIN =
-    ItemRequest_ItemQuery_ItemQuery_MIN;
-  static const ItemQuery ItemQuery_MAX =
-    ItemRequest_ItemQuery_ItemQuery_MAX;
-  static const int ItemQuery_ARRAYSIZE =
-    ItemRequest_ItemQuery_ItemQuery_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  ItemQuery_descriptor() {
-    return ItemRequest_ItemQuery_descriptor();
-  }
-  static inline const ::std::string& ItemQuery_Name(ItemQuery value) {
-    return ItemRequest_ItemQuery_Name(value);
-  }
-  static inline bool ItemQuery_Parse(const ::std::string& name,
-      ItemQuery* value) {
-    return ItemRequest_ItemQuery_Parse(name, value);
-  }
-
   // accessors -------------------------------------------------------
 
   // repeated string itemId = 1;
@@ -286,12 +259,12 @@ class ItemRequest : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& itemid() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_itemid();
 
-  // optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
+  // optional .protobuf.srl.query.ItemQuery query = 2;
   inline bool has_query() const;
   inline void clear_query();
   static const int kQueryFieldNumber = 2;
-  inline ::protobuf::srl::query::ItemRequest_ItemQuery query() const;
-  inline void set_query(::protobuf::srl::query::ItemRequest_ItemQuery value);
+  inline ::protobuf::srl::query::ItemQuery query() const;
+  inline void set_query(::protobuf::srl::query::ItemQuery value);
 
   // optional bytes advanceQuery = 3;
   inline bool has_advancequery() const;
@@ -327,6 +300,410 @@ class ItemRequest : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ItemRequest* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DataSend : public ::google::protobuf::Message {
+ public:
+  DataSend();
+  virtual ~DataSend();
+
+  DataSend(const DataSend& from);
+
+  inline DataSend& operator=(const DataSend& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DataSend& default_instance();
+
+  void Swap(DataSend* other);
+
+  // implements Message ----------------------------------------------
+
+  DataSend* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DataSend& from);
+  void MergeFrom(const DataSend& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string userId = 1;
+  inline bool has_userid() const;
+  inline void clear_userid();
+  static const int kUserIdFieldNumber = 1;
+  inline const ::std::string& userid() const;
+  inline void set_userid(const ::std::string& value);
+  inline void set_userid(const char* value);
+  inline void set_userid(const char* value, size_t size);
+  inline ::std::string* mutable_userid();
+  inline ::std::string* release_userid();
+  inline void set_allocated_userid(::std::string* userid);
+
+  // required string sessionId = 2;
+  inline bool has_sessionid() const;
+  inline void clear_sessionid();
+  static const int kSessionIdFieldNumber = 2;
+  inline const ::std::string& sessionid() const;
+  inline void set_sessionid(const ::std::string& value);
+  inline void set_sessionid(const char* value);
+  inline void set_sessionid(const char* value, size_t size);
+  inline ::std::string* mutable_sessionid();
+  inline ::std::string* release_sessionid();
+  inline void set_allocated_sessionid(::std::string* sessionid);
+
+  // repeated .protobuf.srl.query.ItemSend items = 3;
+  inline int items_size() const;
+  inline void clear_items();
+  static const int kItemsFieldNumber = 3;
+  inline const ::protobuf::srl::query::ItemSend& items(int index) const;
+  inline ::protobuf::srl::query::ItemSend* mutable_items(int index);
+  inline ::protobuf::srl::query::ItemSend* add_items();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemSend >&
+      items() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemSend >*
+      mutable_items();
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.DataSend)
+ private:
+  inline void set_has_userid();
+  inline void clear_has_userid();
+  inline void set_has_sessionid();
+  inline void clear_has_sessionid();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* userid_;
+  ::std::string* sessionid_;
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemSend > items_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fdata_2eproto();
+  friend void protobuf_AssignDesc_input_2fdata_2eproto();
+  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
+
+  void InitAsDefaultInstance();
+  static DataSend* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ItemSend : public ::google::protobuf::Message {
+ public:
+  ItemSend();
+  virtual ~ItemSend();
+
+  ItemSend(const ItemSend& from);
+
+  inline ItemSend& operator=(const ItemSend& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ItemSend& default_instance();
+
+  void Swap(ItemSend* other);
+
+  // implements Message ----------------------------------------------
+
+  ItemSend* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ItemSend& from);
+  void MergeFrom(const ItemSend& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .protobuf.srl.query.ItemQuery query = 1;
+  inline bool has_query() const;
+  inline void clear_query();
+  static const int kQueryFieldNumber = 1;
+  inline ::protobuf::srl::query::ItemQuery query() const;
+  inline void set_query(::protobuf::srl::query::ItemQuery value);
+
+  // optional bool isInsert = 2;
+  inline bool has_isinsert() const;
+  inline void clear_isinsert();
+  static const int kIsInsertFieldNumber = 2;
+  inline bool isinsert() const;
+  inline void set_isinsert(bool value);
+
+  // optional bytes data = 3;
+  inline bool has_data() const;
+  inline void clear_data();
+  static const int kDataFieldNumber = 3;
+  inline const ::std::string& data() const;
+  inline void set_data(const ::std::string& value);
+  inline void set_data(const char* value);
+  inline void set_data(const void* value, size_t size);
+  inline ::std::string* mutable_data();
+  inline ::std::string* release_data();
+  inline void set_allocated_data(::std::string* data);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemSend)
+ private:
+  inline void set_has_query();
+  inline void clear_has_query();
+  inline void set_has_isinsert();
+  inline void clear_has_isinsert();
+  inline void set_has_data();
+  inline void clear_has_data();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int query_;
+  bool isinsert_;
+  ::std::string* data_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fdata_2eproto();
+  friend void protobuf_AssignDesc_input_2fdata_2eproto();
+  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
+
+  void InitAsDefaultInstance();
+  static ItemSend* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DataResult : public ::google::protobuf::Message {
+ public:
+  DataResult();
+  virtual ~DataResult();
+
+  DataResult(const DataResult& from);
+
+  inline DataResult& operator=(const DataResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DataResult& default_instance();
+
+  void Swap(DataResult* other);
+
+  // implements Message ----------------------------------------------
+
+  DataResult* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DataResult& from);
+  void MergeFrom(const DataResult& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .protobuf.srl.query.ItemResult results = 1;
+  inline int results_size() const;
+  inline void clear_results();
+  static const int kResultsFieldNumber = 1;
+  inline const ::protobuf::srl::query::ItemResult& results(int index) const;
+  inline ::protobuf::srl::query::ItemResult* mutable_results(int index);
+  inline ::protobuf::srl::query::ItemResult* add_results();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemResult >&
+      results() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemResult >*
+      mutable_results();
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.DataResult)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemResult > results_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fdata_2eproto();
+  friend void protobuf_AssignDesc_input_2fdata_2eproto();
+  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
+
+  void InitAsDefaultInstance();
+  static DataResult* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ItemResult : public ::google::protobuf::Message {
+ public:
+  ItemResult();
+  virtual ~ItemResult();
+
+  ItemResult(const ItemResult& from);
+
+  inline ItemResult& operator=(const ItemResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ItemResult& default_instance();
+
+  void Swap(ItemResult* other);
+
+  // implements Message ----------------------------------------------
+
+  ItemResult* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ItemResult& from);
+  void MergeFrom(const ItemResult& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .protobuf.srl.query.ItemQuery query = 1;
+  inline bool has_query() const;
+  inline void clear_query();
+  static const int kQueryFieldNumber = 1;
+  inline ::protobuf::srl::query::ItemQuery query() const;
+  inline void set_query(::protobuf::srl::query::ItemQuery value);
+
+  // optional bytes data = 3;
+  inline bool has_data() const;
+  inline void clear_data();
+  static const int kDataFieldNumber = 3;
+  inline const ::std::string& data() const;
+  inline void set_data(const ::std::string& value);
+  inline void set_data(const char* value);
+  inline void set_data(const void* value, size_t size);
+  inline ::std::string* mutable_data();
+  inline ::std::string* release_data();
+  inline void set_allocated_data(::std::string* data);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemResult)
+ private:
+  inline void set_has_query();
+  inline void clear_has_query();
+  inline void set_has_data();
+  inline void clear_has_data();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* data_;
+  int query_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fdata_2eproto();
+  friend void protobuf_AssignDesc_input_2fdata_2eproto();
+  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
+
+  void InitAsDefaultInstance();
+  static ItemResult* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -893,7 +1270,7 @@ ItemRequest::mutable_itemid() {
   return &itemid_;
 }
 
-// optional .protobuf.srl.query.ItemRequest.ItemQuery query = 2;
+// optional .protobuf.srl.query.ItemQuery query = 2;
 inline bool ItemRequest::has_query() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -907,11 +1284,11 @@ inline void ItemRequest::clear_query() {
   query_ = 0;
   clear_has_query();
 }
-inline ::protobuf::srl::query::ItemRequest_ItemQuery ItemRequest::query() const {
-  return static_cast< ::protobuf::srl::query::ItemRequest_ItemQuery >(query_);
+inline ::protobuf::srl::query::ItemQuery ItemRequest::query() const {
+  return static_cast< ::protobuf::srl::query::ItemQuery >(query_);
 }
-inline void ItemRequest::set_query(::protobuf::srl::query::ItemRequest_ItemQuery value) {
-  assert(::protobuf::srl::query::ItemRequest_ItemQuery_IsValid(value));
+inline void ItemRequest::set_query(::protobuf::srl::query::ItemQuery value) {
+  assert(::protobuf::srl::query::ItemQuery_IsValid(value));
   set_has_query();
   query_ = value;
 }
@@ -983,6 +1360,420 @@ inline void ItemRequest::set_allocated_advancequery(::std::string* advancequery)
   } else {
     clear_has_advancequery();
     advancequery_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// DataSend
+
+// required string userId = 1;
+inline bool DataSend::has_userid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DataSend::set_has_userid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DataSend::clear_has_userid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DataSend::clear_userid() {
+  if (userid_ != &::google::protobuf::internal::kEmptyString) {
+    userid_->clear();
+  }
+  clear_has_userid();
+}
+inline const ::std::string& DataSend::userid() const {
+  return *userid_;
+}
+inline void DataSend::set_userid(const ::std::string& value) {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
+  }
+  userid_->assign(value);
+}
+inline void DataSend::set_userid(const char* value) {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
+  }
+  userid_->assign(value);
+}
+inline void DataSend::set_userid(const char* value, size_t size) {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
+  }
+  userid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DataSend::mutable_userid() {
+  set_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    userid_ = new ::std::string;
+  }
+  return userid_;
+}
+inline ::std::string* DataSend::release_userid() {
+  clear_has_userid();
+  if (userid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = userid_;
+    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DataSend::set_allocated_userid(::std::string* userid) {
+  if (userid_ != &::google::protobuf::internal::kEmptyString) {
+    delete userid_;
+  }
+  if (userid) {
+    set_has_userid();
+    userid_ = userid;
+  } else {
+    clear_has_userid();
+    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// required string sessionId = 2;
+inline bool DataSend::has_sessionid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DataSend::set_has_sessionid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DataSend::clear_has_sessionid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DataSend::clear_sessionid() {
+  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
+    sessionid_->clear();
+  }
+  clear_has_sessionid();
+}
+inline const ::std::string& DataSend::sessionid() const {
+  return *sessionid_;
+}
+inline void DataSend::set_sessionid(const ::std::string& value) {
+  set_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    sessionid_ = new ::std::string;
+  }
+  sessionid_->assign(value);
+}
+inline void DataSend::set_sessionid(const char* value) {
+  set_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    sessionid_ = new ::std::string;
+  }
+  sessionid_->assign(value);
+}
+inline void DataSend::set_sessionid(const char* value, size_t size) {
+  set_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    sessionid_ = new ::std::string;
+  }
+  sessionid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DataSend::mutable_sessionid() {
+  set_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    sessionid_ = new ::std::string;
+  }
+  return sessionid_;
+}
+inline ::std::string* DataSend::release_sessionid() {
+  clear_has_sessionid();
+  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = sessionid_;
+    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DataSend::set_allocated_sessionid(::std::string* sessionid) {
+  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
+    delete sessionid_;
+  }
+  if (sessionid) {
+    set_has_sessionid();
+    sessionid_ = sessionid;
+  } else {
+    clear_has_sessionid();
+    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated .protobuf.srl.query.ItemSend items = 3;
+inline int DataSend::items_size() const {
+  return items_.size();
+}
+inline void DataSend::clear_items() {
+  items_.Clear();
+}
+inline const ::protobuf::srl::query::ItemSend& DataSend::items(int index) const {
+  return items_.Get(index);
+}
+inline ::protobuf::srl::query::ItemSend* DataSend::mutable_items(int index) {
+  return items_.Mutable(index);
+}
+inline ::protobuf::srl::query::ItemSend* DataSend::add_items() {
+  return items_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemSend >&
+DataSend::items() const {
+  return items_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemSend >*
+DataSend::mutable_items() {
+  return &items_;
+}
+
+// -------------------------------------------------------------------
+
+// ItemSend
+
+// optional .protobuf.srl.query.ItemQuery query = 1;
+inline bool ItemSend::has_query() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ItemSend::set_has_query() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ItemSend::clear_has_query() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ItemSend::clear_query() {
+  query_ = 0;
+  clear_has_query();
+}
+inline ::protobuf::srl::query::ItemQuery ItemSend::query() const {
+  return static_cast< ::protobuf::srl::query::ItemQuery >(query_);
+}
+inline void ItemSend::set_query(::protobuf::srl::query::ItemQuery value) {
+  assert(::protobuf::srl::query::ItemQuery_IsValid(value));
+  set_has_query();
+  query_ = value;
+}
+
+// optional bool isInsert = 2;
+inline bool ItemSend::has_isinsert() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ItemSend::set_has_isinsert() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ItemSend::clear_has_isinsert() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ItemSend::clear_isinsert() {
+  isinsert_ = false;
+  clear_has_isinsert();
+}
+inline bool ItemSend::isinsert() const {
+  return isinsert_;
+}
+inline void ItemSend::set_isinsert(bool value) {
+  set_has_isinsert();
+  isinsert_ = value;
+}
+
+// optional bytes data = 3;
+inline bool ItemSend::has_data() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ItemSend::set_has_data() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ItemSend::clear_has_data() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ItemSend::clear_data() {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    data_->clear();
+  }
+  clear_has_data();
+}
+inline const ::std::string& ItemSend::data() const {
+  return *data_;
+}
+inline void ItemSend::set_data(const ::std::string& value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void ItemSend::set_data(const char* value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void ItemSend::set_data(const void* value, size_t size) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ItemSend::mutable_data() {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  return data_;
+}
+inline ::std::string* ItemSend::release_data() {
+  clear_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = data_;
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ItemSend::set_allocated_data(::std::string* data) {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    delete data_;
+  }
+  if (data) {
+    set_has_data();
+    data_ = data;
+  } else {
+    clear_has_data();
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// DataResult
+
+// repeated .protobuf.srl.query.ItemResult results = 1;
+inline int DataResult::results_size() const {
+  return results_.size();
+}
+inline void DataResult::clear_results() {
+  results_.Clear();
+}
+inline const ::protobuf::srl::query::ItemResult& DataResult::results(int index) const {
+  return results_.Get(index);
+}
+inline ::protobuf::srl::query::ItemResult* DataResult::mutable_results(int index) {
+  return results_.Mutable(index);
+}
+inline ::protobuf::srl::query::ItemResult* DataResult::add_results() {
+  return results_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemResult >&
+DataResult::results() const {
+  return results_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemResult >*
+DataResult::mutable_results() {
+  return &results_;
+}
+
+// -------------------------------------------------------------------
+
+// ItemResult
+
+// optional .protobuf.srl.query.ItemQuery query = 1;
+inline bool ItemResult::has_query() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ItemResult::set_has_query() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ItemResult::clear_has_query() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ItemResult::clear_query() {
+  query_ = 0;
+  clear_has_query();
+}
+inline ::protobuf::srl::query::ItemQuery ItemResult::query() const {
+  return static_cast< ::protobuf::srl::query::ItemQuery >(query_);
+}
+inline void ItemResult::set_query(::protobuf::srl::query::ItemQuery value) {
+  assert(::protobuf::srl::query::ItemQuery_IsValid(value));
+  set_has_query();
+  query_ = value;
+}
+
+// optional bytes data = 3;
+inline bool ItemResult::has_data() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ItemResult::set_has_data() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ItemResult::clear_has_data() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ItemResult::clear_data() {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    data_->clear();
+  }
+  clear_has_data();
+}
+inline const ::std::string& ItemResult::data() const {
+  return *data_;
+}
+inline void ItemResult::set_data(const ::std::string& value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void ItemResult::set_data(const char* value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void ItemResult::set_data(const void* value, size_t size) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ItemResult::mutable_data() {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  return data_;
+}
+inline ::std::string* ItemResult::release_data() {
+  clear_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = data_;
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ItemResult::set_allocated_data(::std::string* data) {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    delete data_;
+  }
+  if (data) {
+    set_has_data();
+    data_ = data;
+  } else {
+    clear_has_data();
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -1492,8 +2283,8 @@ namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::query::ItemRequest_ItemQuery>() {
-  return ::protobuf::srl::query::ItemRequest_ItemQuery_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::query::ItemQuery>() {
+  return ::protobuf::srl::query::ItemQuery_descriptor();
 }
 
 }  // namespace google
