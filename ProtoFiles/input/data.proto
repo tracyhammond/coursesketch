@@ -1,15 +1,12 @@
 package protobuf.srl.query;
 
 message DataRequest {
-	required string userId = 1;
-	required string sessionId = 2;
 	repeated ItemRequest items = 3;
 }
 
 message ItemRequest {
 	repeated string itemId = 1; // to pull multiple of the same item
 	optional ItemQuery query = 2;
-
 	optional bytes advanceQuery = 3;
 }
 
@@ -17,14 +14,12 @@ message ItemRequest {
  * Used when sending/updating results.
  */
 message DataSend {
-	required string userId = 1;
-	required string sessionId = 2;
 	repeated ItemSend items = 3;
 }
 
 message ItemSend {
 	optional ItemQuery query = 1;
-	optional bool isInsert = 2;
+	optional bool isInsert = 2; // true if inserting, false if updating
 	optional bytes data = 3;
 }
 

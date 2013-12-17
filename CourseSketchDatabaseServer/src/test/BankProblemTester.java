@@ -10,7 +10,7 @@ import com.mongodb.DB;
 
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
-import database.problem.BankProblemManager;
+import database.managers.BankProblemManager;
 
 public class BankProblemTester {
 

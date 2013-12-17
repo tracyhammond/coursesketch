@@ -165,36 +165,6 @@ public final class Data {
   public interface DataRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required string userId = 1;
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    boolean hasUserId();
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    java.lang.String getUserId();
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getUserIdBytes();
-
-    // required string sessionId = 2;
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    boolean hasSessionId();
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    java.lang.String getSessionId();
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getSessionIdBytes();
-
     // repeated .protobuf.srl.query.ItemRequest items = 3;
     /**
      * <code>repeated .protobuf.srl.query.ItemRequest items = 3;</code>
@@ -271,20 +241,10 @@ public final class Data {
               }
               break;
             }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              userId_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              sessionId_ = input.readBytes();
-              break;
-            }
             case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
                 items_ = new java.util.ArrayList<protobuf.srl.query.Data.ItemRequest>();
-                mutable_bitField0_ |= 0x00000004;
+                mutable_bitField0_ |= 0x00000001;
               }
               items_.add(input.readMessage(protobuf.srl.query.Data.ItemRequest.PARSER, extensionRegistry));
               break;
@@ -297,7 +257,7 @@ public final class Data {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
           items_ = java.util.Collections.unmodifiableList(items_);
         }
         this.unknownFields = unknownFields.build();
@@ -329,93 +289,6 @@ public final class Data {
     @java.lang.Override
     public com.google.protobuf.Parser<DataRequest> getParserForType() {
       return PARSER;
-    }
-
-    private int bitField0_;
-    // required string userId = 1;
-    public static final int USERID_FIELD_NUMBER = 1;
-    private java.lang.Object userId_;
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    public boolean hasUserId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    public java.lang.String getUserId() {
-      java.lang.Object ref = userId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          userId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getUserIdBytes() {
-      java.lang.Object ref = userId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        userId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // required string sessionId = 2;
-    public static final int SESSIONID_FIELD_NUMBER = 2;
-    private java.lang.Object sessionId_;
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    public boolean hasSessionId() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    public java.lang.String getSessionId() {
-      java.lang.Object ref = sessionId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          sessionId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSessionIdBytes() {
-      java.lang.Object ref = sessionId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        sessionId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
     }
 
     // repeated .protobuf.srl.query.ItemRequest items = 3;
@@ -455,8 +328,6 @@ public final class Data {
     }
 
     private void initFields() {
-      userId_ = "";
-      sessionId_ = "";
       items_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -464,14 +335,6 @@ public final class Data {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasUserId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSessionId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -479,12 +342,6 @@ public final class Data {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getUserIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getSessionIdBytes());
-      }
       for (int i = 0; i < items_.size(); i++) {
         output.writeMessage(3, items_.get(i));
       }
@@ -497,14 +354,6 @@ public final class Data {
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getUserIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getSessionIdBytes());
-      }
       for (int i = 0; i < items_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, items_.get(i));
@@ -626,13 +475,9 @@ public final class Data {
 
       public Builder clear() {
         super.clear();
-        userId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        sessionId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
         if (itemsBuilder_ == null) {
           items_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
           itemsBuilder_.clear();
         }
@@ -663,25 +508,15 @@ public final class Data {
       public protobuf.srl.query.Data.DataRequest buildPartial() {
         protobuf.srl.query.Data.DataRequest result = new protobuf.srl.query.Data.DataRequest(this);
         int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.userId_ = userId_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.sessionId_ = sessionId_;
         if (itemsBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
             items_ = java.util.Collections.unmodifiableList(items_);
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000001);
           }
           result.items_ = items_;
         } else {
           result.items_ = itemsBuilder_.build();
         }
-        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -697,21 +532,11 @@ public final class Data {
 
       public Builder mergeFrom(protobuf.srl.query.Data.DataRequest other) {
         if (other == protobuf.srl.query.Data.DataRequest.getDefaultInstance()) return this;
-        if (other.hasUserId()) {
-          bitField0_ |= 0x00000001;
-          userId_ = other.userId_;
-          onChanged();
-        }
-        if (other.hasSessionId()) {
-          bitField0_ |= 0x00000002;
-          sessionId_ = other.sessionId_;
-          onChanged();
-        }
         if (itemsBuilder_ == null) {
           if (!other.items_.isEmpty()) {
             if (items_.isEmpty()) {
               items_ = other.items_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000001);
             } else {
               ensureItemsIsMutable();
               items_.addAll(other.items_);
@@ -724,7 +549,7 @@ public final class Data {
               itemsBuilder_.dispose();
               itemsBuilder_ = null;
               items_ = other.items_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000001);
               itemsBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getItemsFieldBuilder() : null;
@@ -738,14 +563,6 @@ public final class Data {
       }
 
       public final boolean isInitialized() {
-        if (!hasUserId()) {
-          
-          return false;
-        }
-        if (!hasSessionId()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -768,161 +585,13 @@ public final class Data {
       }
       private int bitField0_;
 
-      // required string userId = 1;
-      private java.lang.Object userId_ = "";
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public boolean hasUserId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public java.lang.String getUserId() {
-        java.lang.Object ref = userId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          userId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getUserIdBytes() {
-        java.lang.Object ref = userId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          userId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public Builder setUserId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        userId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public Builder clearUserId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        userId_ = getDefaultInstance().getUserId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public Builder setUserIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        userId_ = value;
-        onChanged();
-        return this;
-      }
-
-      // required string sessionId = 2;
-      private java.lang.Object sessionId_ = "";
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public boolean hasSessionId() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public java.lang.String getSessionId() {
-        java.lang.Object ref = sessionId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          sessionId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getSessionIdBytes() {
-        java.lang.Object ref = sessionId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          sessionId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public Builder setSessionId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        sessionId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public Builder clearSessionId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        sessionId_ = getDefaultInstance().getSessionId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public Builder setSessionIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        sessionId_ = value;
-        onChanged();
-        return this;
-      }
-
       // repeated .protobuf.srl.query.ItemRequest items = 3;
       private java.util.List<protobuf.srl.query.Data.ItemRequest> items_ =
         java.util.Collections.emptyList();
       private void ensureItemsIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
           items_ = new java.util.ArrayList<protobuf.srl.query.Data.ItemRequest>(items_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000001;
          }
       }
 
@@ -1071,7 +740,7 @@ public final class Data {
       public Builder clearItems() {
         if (itemsBuilder_ == null) {
           items_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
         } else {
           itemsBuilder_.clear();
@@ -1148,7 +817,7 @@ public final class Data {
           itemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               protobuf.srl.query.Data.ItemRequest, protobuf.srl.query.Data.ItemRequest.Builder, protobuf.srl.query.Data.ItemRequestOrBuilder>(
                   items_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
                   isClean());
           items_ = null;
@@ -1912,36 +1581,6 @@ public final class Data {
   public interface DataSendOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required string userId = 1;
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    boolean hasUserId();
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    java.lang.String getUserId();
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getUserIdBytes();
-
-    // required string sessionId = 2;
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    boolean hasSessionId();
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    java.lang.String getSessionId();
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getSessionIdBytes();
-
     // repeated .protobuf.srl.query.ItemSend items = 3;
     /**
      * <code>repeated .protobuf.srl.query.ItemSend items = 3;</code>
@@ -2023,20 +1662,10 @@ public final class Data {
               }
               break;
             }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              userId_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              sessionId_ = input.readBytes();
-              break;
-            }
             case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
                 items_ = new java.util.ArrayList<protobuf.srl.query.Data.ItemSend>();
-                mutable_bitField0_ |= 0x00000004;
+                mutable_bitField0_ |= 0x00000001;
               }
               items_.add(input.readMessage(protobuf.srl.query.Data.ItemSend.PARSER, extensionRegistry));
               break;
@@ -2049,7 +1678,7 @@ public final class Data {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
           items_ = java.util.Collections.unmodifiableList(items_);
         }
         this.unknownFields = unknownFields.build();
@@ -2081,93 +1710,6 @@ public final class Data {
     @java.lang.Override
     public com.google.protobuf.Parser<DataSend> getParserForType() {
       return PARSER;
-    }
-
-    private int bitField0_;
-    // required string userId = 1;
-    public static final int USERID_FIELD_NUMBER = 1;
-    private java.lang.Object userId_;
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    public boolean hasUserId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    public java.lang.String getUserId() {
-      java.lang.Object ref = userId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          userId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getUserIdBytes() {
-      java.lang.Object ref = userId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        userId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // required string sessionId = 2;
-    public static final int SESSIONID_FIELD_NUMBER = 2;
-    private java.lang.Object sessionId_;
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    public boolean hasSessionId() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    public java.lang.String getSessionId() {
-      java.lang.Object ref = sessionId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          sessionId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string sessionId = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getSessionIdBytes() {
-      java.lang.Object ref = sessionId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        sessionId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
     }
 
     // repeated .protobuf.srl.query.ItemSend items = 3;
@@ -2207,8 +1749,6 @@ public final class Data {
     }
 
     private void initFields() {
-      userId_ = "";
-      sessionId_ = "";
       items_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -2216,14 +1756,6 @@ public final class Data {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasUserId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSessionId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -2231,12 +1763,6 @@ public final class Data {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getUserIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getSessionIdBytes());
-      }
       for (int i = 0; i < items_.size(); i++) {
         output.writeMessage(3, items_.get(i));
       }
@@ -2249,14 +1775,6 @@ public final class Data {
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getUserIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getSessionIdBytes());
-      }
       for (int i = 0; i < items_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, items_.get(i));
@@ -2383,13 +1901,9 @@ public final class Data {
 
       public Builder clear() {
         super.clear();
-        userId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        sessionId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
         if (itemsBuilder_ == null) {
           items_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
           itemsBuilder_.clear();
         }
@@ -2420,25 +1934,15 @@ public final class Data {
       public protobuf.srl.query.Data.DataSend buildPartial() {
         protobuf.srl.query.Data.DataSend result = new protobuf.srl.query.Data.DataSend(this);
         int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.userId_ = userId_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.sessionId_ = sessionId_;
         if (itemsBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
             items_ = java.util.Collections.unmodifiableList(items_);
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000001);
           }
           result.items_ = items_;
         } else {
           result.items_ = itemsBuilder_.build();
         }
-        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -2454,21 +1958,11 @@ public final class Data {
 
       public Builder mergeFrom(protobuf.srl.query.Data.DataSend other) {
         if (other == protobuf.srl.query.Data.DataSend.getDefaultInstance()) return this;
-        if (other.hasUserId()) {
-          bitField0_ |= 0x00000001;
-          userId_ = other.userId_;
-          onChanged();
-        }
-        if (other.hasSessionId()) {
-          bitField0_ |= 0x00000002;
-          sessionId_ = other.sessionId_;
-          onChanged();
-        }
         if (itemsBuilder_ == null) {
           if (!other.items_.isEmpty()) {
             if (items_.isEmpty()) {
               items_ = other.items_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000001);
             } else {
               ensureItemsIsMutable();
               items_.addAll(other.items_);
@@ -2481,7 +1975,7 @@ public final class Data {
               itemsBuilder_.dispose();
               itemsBuilder_ = null;
               items_ = other.items_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000001);
               itemsBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getItemsFieldBuilder() : null;
@@ -2495,14 +1989,6 @@ public final class Data {
       }
 
       public final boolean isInitialized() {
-        if (!hasUserId()) {
-          
-          return false;
-        }
-        if (!hasSessionId()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -2525,161 +2011,13 @@ public final class Data {
       }
       private int bitField0_;
 
-      // required string userId = 1;
-      private java.lang.Object userId_ = "";
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public boolean hasUserId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public java.lang.String getUserId() {
-        java.lang.Object ref = userId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          userId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getUserIdBytes() {
-        java.lang.Object ref = userId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          userId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public Builder setUserId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        userId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public Builder clearUserId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        userId_ = getDefaultInstance().getUserId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public Builder setUserIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        userId_ = value;
-        onChanged();
-        return this;
-      }
-
-      // required string sessionId = 2;
-      private java.lang.Object sessionId_ = "";
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public boolean hasSessionId() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public java.lang.String getSessionId() {
-        java.lang.Object ref = sessionId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          sessionId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getSessionIdBytes() {
-        java.lang.Object ref = sessionId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          sessionId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public Builder setSessionId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        sessionId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public Builder clearSessionId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        sessionId_ = getDefaultInstance().getSessionId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string sessionId = 2;</code>
-       */
-      public Builder setSessionIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        sessionId_ = value;
-        onChanged();
-        return this;
-      }
-
       // repeated .protobuf.srl.query.ItemSend items = 3;
       private java.util.List<protobuf.srl.query.Data.ItemSend> items_ =
         java.util.Collections.emptyList();
       private void ensureItemsIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
           items_ = new java.util.ArrayList<protobuf.srl.query.Data.ItemSend>(items_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000001;
          }
       }
 
@@ -2828,7 +2166,7 @@ public final class Data {
       public Builder clearItems() {
         if (itemsBuilder_ == null) {
           items_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
         } else {
           itemsBuilder_.clear();
@@ -2905,7 +2243,7 @@ public final class Data {
           itemsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               protobuf.srl.query.Data.ItemSend, protobuf.srl.query.Data.ItemSend.Builder, protobuf.srl.query.Data.ItemSendOrBuilder>(
                   items_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
                   isClean());
           items_ = null;
@@ -2940,10 +2278,18 @@ public final class Data {
     // optional bool isInsert = 2;
     /**
      * <code>optional bool isInsert = 2;</code>
+     *
+     * <pre>
+     * true if inserting, false if updating
+     * </pre>
      */
     boolean hasIsInsert();
     /**
      * <code>optional bool isInsert = 2;</code>
+     *
+     * <pre>
+     * true if inserting, false if updating
+     * </pre>
      */
     boolean getIsInsert();
 
@@ -3090,12 +2436,20 @@ public final class Data {
     private boolean isInsert_;
     /**
      * <code>optional bool isInsert = 2;</code>
+     *
+     * <pre>
+     * true if inserting, false if updating
+     * </pre>
      */
     public boolean hasIsInsert() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>optional bool isInsert = 2;</code>
+     *
+     * <pre>
+     * true if inserting, false if updating
+     * </pre>
      */
     public boolean getIsInsert() {
       return isInsert_;
@@ -3418,18 +2772,30 @@ public final class Data {
       private boolean isInsert_ ;
       /**
        * <code>optional bool isInsert = 2;</code>
+       *
+       * <pre>
+       * true if inserting, false if updating
+       * </pre>
        */
       public boolean hasIsInsert() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>optional bool isInsert = 2;</code>
+       *
+       * <pre>
+       * true if inserting, false if updating
+       * </pre>
        */
       public boolean getIsInsert() {
         return isInsert_;
       }
       /**
        * <code>optional bool isInsert = 2;</code>
+       *
+       * <pre>
+       * true if inserting, false if updating
+       * </pre>
        */
       public Builder setIsInsert(boolean value) {
         bitField0_ |= 0x00000002;
@@ -3439,6 +2805,10 @@ public final class Data {
       }
       /**
        * <code>optional bool isInsert = 2;</code>
+       *
+       * <pre>
+       * true if inserting, false if updating
+       * </pre>
        */
       public Builder clearIsInsert() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -7112,31 +6482,29 @@ public final class Data {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020input/data.proto\022\022protobuf.srl.query\"`" +
-      "\n\013DataRequest\022\016\n\006userId\030\001 \002(\t\022\021\n\tsession" +
-      "Id\030\002 \002(\t\022.\n\005items\030\003 \003(\0132\037.protobuf.srl.q" +
-      "uery.ItemRequest\"a\n\013ItemRequest\022\016\n\006itemI" +
-      "d\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.srl.qu" +
-      "ery.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014\"Z\n\010D" +
-      "ataSend\022\016\n\006userId\030\001 \002(\t\022\021\n\tsessionId\030\002 \002" +
-      "(\t\022+\n\005items\030\003 \003(\0132\034.protobuf.srl.query.I" +
-      "temSend\"X\n\010ItemSend\022,\n\005query\030\001 \001(\0162\035.pro" +
-      "tobuf.srl.query.ItemQuery\022\020\n\010isInsert\030\002 ",
-      "\001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResult\022/\n\007resul" +
-      "ts\030\001 \003(\0132\036.protobuf.srl.query.ItemResult" +
-      "\"H\n\nItemResult\022,\n\005query\030\001 \001(\0162\035.protobuf" +
-      ".srl.query.ItemQuery\022\014\n\004data\030\003 \001(\014\"Q\n\026Ad" +
-      "vanceCourseGradePull\022\020\n\010courseId\030\001 \002(\t\022\025" +
-      "\n\rpullAllGrades\030\002 \001(\010\022\016\n\006userId\030\003 \003(\t\"O\n" +
-      "\024AdvanceUserGradePull\022\016\n\006userId\030\001 \002(\t\022\025\n" +
-      "\rpullAllGrades\030\002 \001(\010\022\020\n\010courseId\030\003 \003(\t\"P" +
-      "\n\rAdvanceReview\022\020\n\010courseId\030\001 \002(\t\022\024\n\014ass" +
-      "ignmentId\030\002 \002(\t\022\027\n\017courseProblemId\030\003 \002(\t",
-      "*\246\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT" +
-      "\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003" +
-      "\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER" +
-      "_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n" +
-      "\006SCHOOL\020\t"
+      "\n\020input/data.proto\022\022protobuf.srl.query\"=" +
+      "\n\013DataRequest\022.\n\005items\030\003 \003(\0132\037.protobuf." +
+      "srl.query.ItemRequest\"a\n\013ItemRequest\022\016\n\006" +
+      "itemId\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.s" +
+      "rl.query.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014" +
+      "\"7\n\010DataSend\022+\n\005items\030\003 \003(\0132\034.protobuf.s" +
+      "rl.query.ItemSend\"X\n\010ItemSend\022,\n\005query\030\001" +
+      " \001(\0162\035.protobuf.srl.query.ItemQuery\022\020\n\010i" +
+      "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResul" +
+      "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query.",
+      "ItemResult\"H\n\nItemResult\022,\n\005query\030\001 \001(\0162" +
+      "\035.protobuf.srl.query.ItemQuery\022\014\n\004data\030\003" +
+      " \001(\014\"Q\n\026AdvanceCourseGradePull\022\020\n\010course" +
+      "Id\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\016\n\006userI" +
+      "d\030\003 \003(\t\"O\n\024AdvanceUserGradePull\022\016\n\006userI" +
+      "d\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\020\n\010course" +
+      "Id\030\003 \003(\t\"P\n\rAdvanceReview\022\020\n\010courseId\030\001 " +
+      "\002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\027\n\017courseProbl" +
+      "emId\030\003 \002(\t*\246\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\n" +
+      "ASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK",
+      "_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE" +
+      "\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPER" +
+      "IMENT\020\010\022\n\n\006SCHOOL\020\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7148,7 +6516,7 @@ public final class Data {
           internal_static_protobuf_srl_query_DataRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_DataRequest_descriptor,
-              new java.lang.String[] { "UserId", "SessionId", "Items", });
+              new java.lang.String[] { "Items", });
           internal_static_protobuf_srl_query_ItemRequest_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_query_ItemRequest_fieldAccessorTable = new
@@ -7160,7 +6528,7 @@ public final class Data {
           internal_static_protobuf_srl_query_DataSend_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_DataSend_descriptor,
-              new java.lang.String[] { "UserId", "SessionId", "Items", });
+              new java.lang.String[] { "Items", });
           internal_static_protobuf_srl_query_ItemSend_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_protobuf_srl_query_ItemSend_fieldAccessorTable = new

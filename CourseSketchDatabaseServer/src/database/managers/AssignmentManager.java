@@ -1,4 +1,4 @@
-package database.assignment;
+package database.managers;
 
 import static database.StringConstants.*;
 
@@ -21,7 +21,6 @@ import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
-import database.course.CourseManager;
 
 public class AssignmentManager 
 {

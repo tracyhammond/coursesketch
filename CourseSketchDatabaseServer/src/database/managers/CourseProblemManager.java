@@ -1,4 +1,4 @@
-package database.problem;
+package database.managers;
 
 import static database.StringConstants.*;
 
@@ -19,7 +19,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import database.DatabaseAccessException;
-import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 

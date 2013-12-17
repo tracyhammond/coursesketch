@@ -10,7 +10,7 @@ import com.mongodb.DB;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.auth.AuthenticationException;
-import database.course.CourseManager;
+import database.managers.CourseManager;
 
 public class CourseTester {
 

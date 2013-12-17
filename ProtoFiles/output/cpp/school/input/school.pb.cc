@@ -275,10 +275,11 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SrlUser));
   SrlGroup_descriptor_ = file->message_type(9);
-  static const int SrlGroup_offsets_[3] = {
+  static const int SrlGroup_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlGroup, userid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlGroup, groupid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlGroup, groupname_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlGroup, admin_),
   };
   SrlGroup_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -465,15 +466,15 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"b\n\007"
     "SrlUser\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 "
     "\001(\0162\035.protobuf.srl.school.UserType:\005GUES"
-    "T\022\r\n\005email\030\003 \001(\t\">\n\010SrlGroup\022\016\n\006userId\030\001"
+    "T\022\r\n\005email\030\003 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001"
     " \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t"
-    "\"H\n\013SrlSchoolId\022\020\n\010courseId\030\001 \001(\t\022\024\n\014ass"
-    "ignmentId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\"]\n\rSr"
-    "lPermission\022\027\n\017adminPermission\030\001 \003(\t\022\033\n\023"
-    "moderatorPermission\030\002 \003(\t\022\026\n\016userPermiss"
-    "ion\030\003 \003(\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nINST"
-    "RUCTOR\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007STUD"
-    "ENT\020\004\022\t\n\005GUEST\020\005", 2936);
+    "\022\r\n\005admin\030\004 \003(\t\"H\n\013SrlSchoolId\022\020\n\010course"
+    "Id\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tproble"
+    "mId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017adminPermi"
+    "ssion\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003(\t"
+    "\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n\005"
+    "ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSI"
+    "STANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005", 2951);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/school.proto", &protobuf_RegisterTypes);
   SrlSchool::default_instance_ = new SrlSchool();
@@ -5636,6 +5637,7 @@ void SrlUser::Swap(SrlUser* other) {
 const int SrlGroup::kUserIdFieldNumber;
 const int SrlGroup::kGroupIdFieldNumber;
 const int SrlGroup::kGroupNameFieldNumber;
+const int SrlGroup::kAdminFieldNumber;
 #endif  // !_MSC_VER
 
 SrlGroup::SrlGroup()
@@ -5709,6 +5711,7 @@ void SrlGroup::Clear() {
     }
   }
   userid_.Clear();
+  admin_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -5768,6 +5771,25 @@ bool SrlGroup::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(34)) goto parse_admin;
+        break;
+      }
+
+      // repeated string admin = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_admin:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_admin()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->admin(this->admin_size() - 1).data(),
+            this->admin(this->admin_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_admin;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -5817,6 +5839,15 @@ void SrlGroup::SerializeWithCachedSizes(
       3, this->groupname(), output);
   }
 
+  // repeated string admin = 4;
+  for (int i = 0; i < this->admin_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->admin(i).data(), this->admin(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->admin(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -5854,6 +5885,15 @@ void SrlGroup::SerializeWithCachedSizes(
         3, this->groupname(), target);
   }
 
+  // repeated string admin = 4;
+  for (int i = 0; i < this->admin_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->admin(i).data(), this->admin(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(4, this->admin(i), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -5887,6 +5927,13 @@ int SrlGroup::ByteSize() const {
       this->userid(i));
   }
 
+  // repeated string admin = 4;
+  total_size += 1 * this->admin_size();
+  for (int i = 0; i < this->admin_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->admin(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -5913,6 +5960,7 @@ void SrlGroup::MergeFrom(const ::google::protobuf::Message& from) {
 void SrlGroup::MergeFrom(const SrlGroup& from) {
   GOOGLE_CHECK_NE(&from, this);
   userid_.MergeFrom(from.userid_);
+  admin_.MergeFrom(from.admin_);
   if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
     if (from.has_groupid()) {
       set_groupid(from.groupid());
@@ -5947,6 +5995,7 @@ void SrlGroup::Swap(SrlGroup* other) {
     userid_.Swap(&other->userid_);
     std::swap(groupid_, other->groupid_);
     std::swap(groupname_, other->groupname_);
+    admin_.Swap(&other->admin_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

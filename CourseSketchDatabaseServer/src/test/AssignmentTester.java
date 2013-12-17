@@ -9,8 +9,8 @@ import com.mongodb.DB;
 
 import database.DatabaseAccessException;
 import database.RequestConverter;
-import database.assignment.AssignmentManager;
 import database.auth.AuthenticationException;
+import database.managers.AssignmentManager;
 
 public class AssignmentTester {
 

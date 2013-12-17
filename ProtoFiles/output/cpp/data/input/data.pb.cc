@@ -61,9 +61,7 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       "input/data.proto");
   GOOGLE_CHECK(file != NULL);
   DataRequest_descriptor_ = file->message_type(0);
-  static const int DataRequest_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataRequest, userid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataRequest, sessionid_),
+  static const int DataRequest_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataRequest, items_),
   };
   DataRequest_reflection_ =
@@ -95,9 +93,7 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ItemRequest));
   DataSend_descriptor_ = file->message_type(2);
-  static const int DataSend_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataSend, userid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataSend, sessionid_),
+  static const int DataSend_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataSend, items_),
   };
   DataSend_reflection_ =
@@ -273,31 +269,29 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\020input/data.proto\022\022protobuf.srl.query\"`"
-    "\n\013DataRequest\022\016\n\006userId\030\001 \002(\t\022\021\n\tsession"
-    "Id\030\002 \002(\t\022.\n\005items\030\003 \003(\0132\037.protobuf.srl.q"
-    "uery.ItemRequest\"a\n\013ItemRequest\022\016\n\006itemI"
-    "d\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.srl.qu"
-    "ery.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014\"Z\n\010D"
-    "ataSend\022\016\n\006userId\030\001 \002(\t\022\021\n\tsessionId\030\002 \002"
-    "(\t\022+\n\005items\030\003 \003(\0132\034.protobuf.srl.query.I"
-    "temSend\"X\n\010ItemSend\022,\n\005query\030\001 \001(\0162\035.pro"
-    "tobuf.srl.query.ItemQuery\022\020\n\010isInsert\030\002 "
-    "\001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResult\022/\n\007resul"
-    "ts\030\001 \003(\0132\036.protobuf.srl.query.ItemResult"
-    "\"H\n\nItemResult\022,\n\005query\030\001 \001(\0162\035.protobuf"
-    ".srl.query.ItemQuery\022\014\n\004data\030\003 \001(\014\"Q\n\026Ad"
-    "vanceCourseGradePull\022\020\n\010courseId\030\001 \002(\t\022\025"
-    "\n\rpullAllGrades\030\002 \001(\010\022\016\n\006userId\030\003 \003(\t\"O\n"
-    "\024AdvanceUserGradePull\022\016\n\006userId\030\001 \002(\t\022\025\n"
-    "\rpullAllGrades\030\002 \001(\010\022\020\n\010courseId\030\003 \003(\t\"P"
-    "\n\rAdvanceReview\022\020\n\010courseId\030\001 \002(\t\022\024\n\014ass"
-    "ignmentId\030\002 \002(\t\022\027\n\017courseProblemId\030\003 \002(\t"
-    "*\246\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT"
-    "\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003"
-    "\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER"
-    "_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n"
-    "\006SCHOOL\020\t", 969);
+    "\n\020input/data.proto\022\022protobuf.srl.query\"="
+    "\n\013DataRequest\022.\n\005items\030\003 \003(\0132\037.protobuf."
+    "srl.query.ItemRequest\"a\n\013ItemRequest\022\016\n\006"
+    "itemId\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.s"
+    "rl.query.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014"
+    "\"7\n\010DataSend\022+\n\005items\030\003 \003(\0132\034.protobuf.s"
+    "rl.query.ItemSend\"X\n\010ItemSend\022,\n\005query\030\001"
+    " \001(\0162\035.protobuf.srl.query.ItemQuery\022\020\n\010i"
+    "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResul"
+    "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query."
+    "ItemResult\"H\n\nItemResult\022,\n\005query\030\001 \001(\0162"
+    "\035.protobuf.srl.query.ItemQuery\022\014\n\004data\030\003"
+    " \001(\014\"Q\n\026AdvanceCourseGradePull\022\020\n\010course"
+    "Id\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\016\n\006userI"
+    "d\030\003 \003(\t\"O\n\024AdvanceUserGradePull\022\016\n\006userI"
+    "d\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\020\n\010course"
+    "Id\030\003 \003(\t\"P\n\rAdvanceReview\022\020\n\010courseId\030\001 "
+    "\002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\027\n\017courseProbl"
+    "emId\030\003 \002(\t*\246\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\n"
+    "ASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK"
+    "_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE"
+    "\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPER"
+    "IMENT\020\010\022\n\n\006SCHOOL\020\t", 899);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/data.proto", &protobuf_RegisterTypes);
   DataRequest::default_instance_ = new DataRequest();
@@ -353,8 +347,6 @@ bool ItemQuery_IsValid(int value) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DataRequest::kUserIdFieldNumber;
-const int DataRequest::kSessionIdFieldNumber;
 const int DataRequest::kItemsFieldNumber;
 #endif  // !_MSC_VER
 
@@ -374,8 +366,6 @@ DataRequest::DataRequest(const DataRequest& from)
 
 void DataRequest::SharedCtor() {
   _cached_size_ = 0;
-  userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -384,12 +374,6 @@ DataRequest::~DataRequest() {
 }
 
 void DataRequest::SharedDtor() {
-  if (userid_ != &::google::protobuf::internal::kEmptyString) {
-    delete userid_;
-  }
-  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-    delete sessionid_;
-  }
   if (this != default_instance_) {
   }
 }
@@ -416,18 +400,6 @@ DataRequest* DataRequest::New() const {
 }
 
 void DataRequest::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_userid()) {
-      if (userid_ != &::google::protobuf::internal::kEmptyString) {
-        userid_->clear();
-      }
-    }
-    if (has_sessionid()) {
-      if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-        sessionid_->clear();
-      }
-    }
-  }
   items_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -439,39 +411,6 @@ bool DataRequest::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string userId = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_userid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->userid().data(), this->userid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_sessionId;
-        break;
-      }
-
-      // required string sessionId = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_sessionId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_sessionid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->sessionid().data(), this->sessionid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_items;
-        break;
-      }
-
       // repeated .protobuf.srl.query.ItemRequest items = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
@@ -505,24 +444,6 @@ bool DataRequest::MergePartialFromCodedStream(
 
 void DataRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string userId = 1;
-  if (has_userid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->userid().data(), this->userid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->userid(), output);
-  }
-
-  // required string sessionId = 2;
-  if (has_sessionid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->sessionid().data(), this->sessionid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->sessionid(), output);
-  }
-
   // repeated .protobuf.srl.query.ItemRequest items = 3;
   for (int i = 0; i < this->items_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -537,26 +458,6 @@ void DataRequest::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DataRequest::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string userId = 1;
-  if (has_userid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->userid().data(), this->userid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->userid(), target);
-  }
-
-  // required string sessionId = 2;
-  if (has_sessionid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->sessionid().data(), this->sessionid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->sessionid(), target);
-  }
-
   // repeated .protobuf.srl.query.ItemRequest items = 3;
   for (int i = 0; i < this->items_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -574,22 +475,6 @@ void DataRequest::SerializeWithCachedSizes(
 int DataRequest::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string userId = 1;
-    if (has_userid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->userid());
-    }
-
-    // required string sessionId = 2;
-    if (has_sessionid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->sessionid());
-    }
-
-  }
   // repeated .protobuf.srl.query.ItemRequest items = 3;
   total_size += 1 * this->items_size();
   for (int i = 0; i < this->items_size(); i++) {
@@ -624,14 +509,6 @@ void DataRequest::MergeFrom(const ::google::protobuf::Message& from) {
 void DataRequest::MergeFrom(const DataRequest& from) {
   GOOGLE_CHECK_NE(&from, this);
   items_.MergeFrom(from.items_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_userid()) {
-      set_userid(from.userid());
-    }
-    if (from.has_sessionid()) {
-      set_sessionid(from.sessionid());
-    }
-  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -648,15 +525,12 @@ void DataRequest::CopyFrom(const DataRequest& from) {
 }
 
 bool DataRequest::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
 void DataRequest::Swap(DataRequest* other) {
   if (other != this) {
-    std::swap(userid_, other->userid_);
-    std::swap(sessionid_, other->sessionid_);
     items_.Swap(&other->items_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -987,8 +861,6 @@ void ItemRequest::Swap(ItemRequest* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DataSend::kUserIdFieldNumber;
-const int DataSend::kSessionIdFieldNumber;
 const int DataSend::kItemsFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1008,8 +880,6 @@ DataSend::DataSend(const DataSend& from)
 
 void DataSend::SharedCtor() {
   _cached_size_ = 0;
-  userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1018,12 +888,6 @@ DataSend::~DataSend() {
 }
 
 void DataSend::SharedDtor() {
-  if (userid_ != &::google::protobuf::internal::kEmptyString) {
-    delete userid_;
-  }
-  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-    delete sessionid_;
-  }
   if (this != default_instance_) {
   }
 }
@@ -1050,18 +914,6 @@ DataSend* DataSend::New() const {
 }
 
 void DataSend::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_userid()) {
-      if (userid_ != &::google::protobuf::internal::kEmptyString) {
-        userid_->clear();
-      }
-    }
-    if (has_sessionid()) {
-      if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-        sessionid_->clear();
-      }
-    }
-  }
   items_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1073,39 +925,6 @@ bool DataSend::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string userId = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_userid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->userid().data(), this->userid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_sessionId;
-        break;
-      }
-
-      // required string sessionId = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_sessionId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_sessionid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->sessionid().data(), this->sessionid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_items;
-        break;
-      }
-
       // repeated .protobuf.srl.query.ItemSend items = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
@@ -1139,24 +958,6 @@ bool DataSend::MergePartialFromCodedStream(
 
 void DataSend::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string userId = 1;
-  if (has_userid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->userid().data(), this->userid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->userid(), output);
-  }
-
-  // required string sessionId = 2;
-  if (has_sessionid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->sessionid().data(), this->sessionid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->sessionid(), output);
-  }
-
   // repeated .protobuf.srl.query.ItemSend items = 3;
   for (int i = 0; i < this->items_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -1171,26 +972,6 @@ void DataSend::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DataSend::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string userId = 1;
-  if (has_userid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->userid().data(), this->userid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->userid(), target);
-  }
-
-  // required string sessionId = 2;
-  if (has_sessionid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->sessionid().data(), this->sessionid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->sessionid(), target);
-  }
-
   // repeated .protobuf.srl.query.ItemSend items = 3;
   for (int i = 0; i < this->items_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -1208,22 +989,6 @@ void DataSend::SerializeWithCachedSizes(
 int DataSend::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string userId = 1;
-    if (has_userid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->userid());
-    }
-
-    // required string sessionId = 2;
-    if (has_sessionid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->sessionid());
-    }
-
-  }
   // repeated .protobuf.srl.query.ItemSend items = 3;
   total_size += 1 * this->items_size();
   for (int i = 0; i < this->items_size(); i++) {
@@ -1258,14 +1023,6 @@ void DataSend::MergeFrom(const ::google::protobuf::Message& from) {
 void DataSend::MergeFrom(const DataSend& from) {
   GOOGLE_CHECK_NE(&from, this);
   items_.MergeFrom(from.items_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_userid()) {
-      set_userid(from.userid());
-    }
-    if (from.has_sessionid()) {
-      set_sessionid(from.sessionid());
-    }
-  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -1282,15 +1039,12 @@ void DataSend::CopyFrom(const DataSend& from) {
 }
 
 bool DataSend::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
 void DataSend::Swap(DataSend* other) {
   if (other != this) {
-    std::swap(userid_, other->userid_);
-    std::swap(sessionid_, other->sessionid_);
     items_.Swap(&other->items_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

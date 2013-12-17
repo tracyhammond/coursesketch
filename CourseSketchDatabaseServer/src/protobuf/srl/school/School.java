@@ -16005,6 +16005,42 @@ public final class School {
      */
     com.google.protobuf.ByteString
         getGroupNameBytes();
+
+    // repeated string admin = 4;
+    /**
+     * <code>repeated string admin = 4;</code>
+     *
+     * <pre>
+     * this is the only group of people who are allowed to use this group.
+     * </pre>
+     */
+    java.util.List<java.lang.String>
+    getAdminList();
+    /**
+     * <code>repeated string admin = 4;</code>
+     *
+     * <pre>
+     * this is the only group of people who are allowed to use this group.
+     * </pre>
+     */
+    int getAdminCount();
+    /**
+     * <code>repeated string admin = 4;</code>
+     *
+     * <pre>
+     * this is the only group of people who are allowed to use this group.
+     * </pre>
+     */
+    java.lang.String getAdmin(int index);
+    /**
+     * <code>repeated string admin = 4;</code>
+     *
+     * <pre>
+     * this is the only group of people who are allowed to use this group.
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getAdminBytes(int index);
   }
   /**
    * Protobuf type {@code protobuf.srl.school.SrlGroup}
@@ -16075,6 +16111,14 @@ public final class School {
               groupName_ = input.readBytes();
               break;
             }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                admin_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              admin_.add(input.readBytes());
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -16085,6 +16129,9 @@ public final class School {
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
           userId_ = new com.google.protobuf.UnmodifiableLazyStringList(userId_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          admin_ = new com.google.protobuf.UnmodifiableLazyStringList(admin_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -16234,10 +16281,57 @@ public final class School {
       }
     }
 
+    // repeated string admin = 4;
+    public static final int ADMIN_FIELD_NUMBER = 4;
+    private com.google.protobuf.LazyStringList admin_;
+    /**
+     * <code>repeated string admin = 4;</code>
+     *
+     * <pre>
+     * this is the only group of people who are allowed to use this group.
+     * </pre>
+     */
+    public java.util.List<java.lang.String>
+        getAdminList() {
+      return admin_;
+    }
+    /**
+     * <code>repeated string admin = 4;</code>
+     *
+     * <pre>
+     * this is the only group of people who are allowed to use this group.
+     * </pre>
+     */
+    public int getAdminCount() {
+      return admin_.size();
+    }
+    /**
+     * <code>repeated string admin = 4;</code>
+     *
+     * <pre>
+     * this is the only group of people who are allowed to use this group.
+     * </pre>
+     */
+    public java.lang.String getAdmin(int index) {
+      return admin_.get(index);
+    }
+    /**
+     * <code>repeated string admin = 4;</code>
+     *
+     * <pre>
+     * this is the only group of people who are allowed to use this group.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getAdminBytes(int index) {
+      return admin_.getByteString(index);
+    }
+
     private void initFields() {
       userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       groupId_ = "";
       groupName_ = "";
+      admin_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -16264,6 +16358,9 @@ public final class School {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(3, getGroupNameBytes());
       }
+      for (int i = 0; i < admin_.size(); i++) {
+        output.writeBytes(4, admin_.getByteString(i));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -16289,6 +16386,15 @@ public final class School {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, getGroupNameBytes());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < admin_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(admin_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getAdminList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -16412,6 +16518,8 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000002);
         groupName_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
+        admin_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -16454,6 +16562,12 @@ public final class School {
           to_bitField0_ |= 0x00000002;
         }
         result.groupName_ = groupName_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          admin_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              admin_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.admin_ = admin_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -16488,6 +16602,16 @@ public final class School {
         if (other.hasGroupName()) {
           bitField0_ |= 0x00000004;
           groupName_ = other.groupName_;
+          onChanged();
+        }
+        if (!other.admin_.isEmpty()) {
+          if (admin_.isEmpty()) {
+            admin_ = other.admin_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureAdminIsMutable();
+            admin_.addAll(other.admin_);
+          }
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -16758,6 +16882,135 @@ public final class School {
   }
   bitField0_ |= 0x00000004;
         groupName_ = value;
+        onChanged();
+        return this;
+      }
+
+      // repeated string admin = 4;
+      private com.google.protobuf.LazyStringList admin_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureAdminIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          admin_ = new com.google.protobuf.LazyStringArrayList(admin_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+      /**
+       * <code>repeated string admin = 4;</code>
+       *
+       * <pre>
+       * this is the only group of people who are allowed to use this group.
+       * </pre>
+       */
+      public java.util.List<java.lang.String>
+          getAdminList() {
+        return java.util.Collections.unmodifiableList(admin_);
+      }
+      /**
+       * <code>repeated string admin = 4;</code>
+       *
+       * <pre>
+       * this is the only group of people who are allowed to use this group.
+       * </pre>
+       */
+      public int getAdminCount() {
+        return admin_.size();
+      }
+      /**
+       * <code>repeated string admin = 4;</code>
+       *
+       * <pre>
+       * this is the only group of people who are allowed to use this group.
+       * </pre>
+       */
+      public java.lang.String getAdmin(int index) {
+        return admin_.get(index);
+      }
+      /**
+       * <code>repeated string admin = 4;</code>
+       *
+       * <pre>
+       * this is the only group of people who are allowed to use this group.
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getAdminBytes(int index) {
+        return admin_.getByteString(index);
+      }
+      /**
+       * <code>repeated string admin = 4;</code>
+       *
+       * <pre>
+       * this is the only group of people who are allowed to use this group.
+       * </pre>
+       */
+      public Builder setAdmin(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAdminIsMutable();
+        admin_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string admin = 4;</code>
+       *
+       * <pre>
+       * this is the only group of people who are allowed to use this group.
+       * </pre>
+       */
+      public Builder addAdmin(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAdminIsMutable();
+        admin_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string admin = 4;</code>
+       *
+       * <pre>
+       * this is the only group of people who are allowed to use this group.
+       * </pre>
+       */
+      public Builder addAllAdmin(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureAdminIsMutable();
+        super.addAll(values, admin_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string admin = 4;</code>
+       *
+       * <pre>
+       * this is the only group of people who are allowed to use this group.
+       * </pre>
+       */
+      public Builder clearAdmin() {
+        admin_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string admin = 4;</code>
+       *
+       * <pre>
+       * this is the only group of people who are allowed to use this group.
+       * </pre>
+       */
+      public Builder addAdminBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAdminIsMutable();
+        admin_.add(value);
         onChanged();
         return this;
       }
@@ -18567,15 +18820,15 @@ public final class School {
       "\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"b\n\007" +
       "SrlUser\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 " +
       "\001(\0162\035.protobuf.srl.school.UserType:\005GUES" +
-      "T\022\r\n\005email\030\003 \001(\t\">\n\010SrlGroup\022\016\n\006userId\030\001" +
+      "T\022\r\n\005email\030\003 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001" +
       " \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t" +
-      "\"H\n\013SrlSchoolId\022\020\n\010courseId\030\001 \001(\t\022\024\n\014ass" +
-      "ignmentId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\"]\n\rSr" +
-      "lPermission\022\027\n\017adminPermission\030\001 \003(\t\022\033\n\023",
-      "moderatorPermission\030\002 \003(\t\022\026\n\016userPermiss" +
-      "ion\030\003 \003(\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nINST" +
-      "RUCTOR\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007STUD" +
-      "ENT\020\004\022\t\n\005GUEST\020\005"
+      "\022\r\n\005admin\030\004 \003(\t\"H\n\013SrlSchoolId\022\020\n\010course" +
+      "Id\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tproble" +
+      "mId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017adminPermi",
+      "ssion\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003(\t" +
+      "\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n\005" +
+      "ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSI" +
+      "STANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -18641,7 +18894,7 @@ public final class School {
           internal_static_protobuf_srl_school_SrlGroup_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlGroup_descriptor,
-              new java.lang.String[] { "UserId", "GroupId", "GroupName", });
+              new java.lang.String[] { "UserId", "GroupId", "GroupName", "Admin", });
           internal_static_protobuf_srl_school_SrlSchoolId_descriptor =
             getDescriptor().getMessageTypes().get(10);
           internal_static_protobuf_srl_school_SrlSchoolId_fieldAccessorTable = new

@@ -1929,6 +1929,22 @@ class SrlGroup : public ::google::protobuf::Message {
   inline ::std::string* release_groupname();
   inline void set_allocated_groupname(::std::string* groupname);
 
+  // repeated string admin = 4;
+  inline int admin_size() const;
+  inline void clear_admin();
+  static const int kAdminFieldNumber = 4;
+  inline const ::std::string& admin(int index) const;
+  inline ::std::string* mutable_admin(int index);
+  inline void set_admin(int index, const ::std::string& value);
+  inline void set_admin(int index, const char* value);
+  inline void set_admin(int index, const char* value, size_t size);
+  inline ::std::string* add_admin();
+  inline void add_admin(const ::std::string& value);
+  inline void add_admin(const char* value);
+  inline void add_admin(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& admin() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_admin();
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlGroup)
  private:
   inline void set_has_groupid();
@@ -1941,9 +1957,10 @@ class SrlGroup : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::std::string> userid_;
   ::std::string* groupid_;
   ::std::string* groupname_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> admin_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -5687,6 +5704,50 @@ inline void SrlGroup::set_allocated_groupname(::std::string* groupname) {
     clear_has_groupname();
     groupname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// repeated string admin = 4;
+inline int SrlGroup::admin_size() const {
+  return admin_.size();
+}
+inline void SrlGroup::clear_admin() {
+  admin_.Clear();
+}
+inline const ::std::string& SrlGroup::admin(int index) const {
+  return admin_.Get(index);
+}
+inline ::std::string* SrlGroup::mutable_admin(int index) {
+  return admin_.Mutable(index);
+}
+inline void SrlGroup::set_admin(int index, const ::std::string& value) {
+  admin_.Mutable(index)->assign(value);
+}
+inline void SrlGroup::set_admin(int index, const char* value) {
+  admin_.Mutable(index)->assign(value);
+}
+inline void SrlGroup::set_admin(int index, const char* value, size_t size) {
+  admin_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlGroup::add_admin() {
+  return admin_.Add();
+}
+inline void SrlGroup::add_admin(const ::std::string& value) {
+  admin_.Add()->assign(value);
+}
+inline void SrlGroup::add_admin(const char* value) {
+  admin_.Add()->assign(value);
+}
+inline void SrlGroup::add_admin(const char* value, size_t size) {
+  admin_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SrlGroup::admin() const {
+  return admin_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SrlGroup::mutable_admin() {
+  return &admin_;
 }
 
 // -------------------------------------------------------------------

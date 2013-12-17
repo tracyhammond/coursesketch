@@ -7,7 +7,7 @@ import com.mongodb.DB;
 
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
-import database.problem.CourseProblemManager;
+import database.managers.CourseProblemManager;
 
 public class CourseProblemTester {
 

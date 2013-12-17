@@ -1,4 +1,4 @@
-package database.course;
+package database.managers;
 
 import static database.StringConstants.*;
 
