@@ -7,7 +7,7 @@ public class StringConstants {
 	public static final String ASSIGNMENT_ID = "AssignmentId";
 	public static final String PROBLEM_BANK_ID = "ProblemBankId";
 	public static final String COURSE_PROBLEM_ID = "CourseProblemId";
-	public static final String SOLUTION_ID = "CourseProblemId";
+	public static final String SOLUTION_ID = "SolutionId";
 
 	// meta fields
 	public static final String NAME = "Name";

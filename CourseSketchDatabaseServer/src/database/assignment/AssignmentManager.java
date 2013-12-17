@@ -161,7 +161,7 @@ public class AssignmentManager
 				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
 			if (assignment.hasType()) {
-				updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getType());
+				updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getType().getNumber());
 				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
 			if (assignment.hasOther()) {
@@ -178,7 +178,6 @@ public class AssignmentManager
 				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.hasLatePolicy()) {
-				updated.append("$set", new BasicDBObject(LATE_POLICY, assignment.getLatePolicy().getNumber()));
 				updateObj = new BasicDBObject(LATE_POLICY, assignment.getLatePolicy().getNumber());
 				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}

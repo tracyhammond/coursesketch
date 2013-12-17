@@ -49,6 +49,10 @@ public final class Data {
      * <code>EXPERIMENT = 8;</code>
      */
     EXPERIMENT(8, 8),
+    /**
+     * <code>SCHOOL = 9;</code>
+     */
+    SCHOOL(9, 9),
     ;
 
     /**
@@ -87,6 +91,10 @@ public final class Data {
      * <code>EXPERIMENT = 8;</code>
      */
     public static final int EXPERIMENT_VALUE = 8;
+    /**
+     * <code>SCHOOL = 9;</code>
+     */
+    public static final int SCHOOL_VALUE = 9;
 
 
     public final int getNumber() { return value; }
@@ -102,6 +110,7 @@ public final class Data {
         case 6: return USER_INFO;
         case 7: return SOLUTION;
         case 8: return EXPERIMENT;
+        case 9: return SCHOOL;
         default: return null;
       }
     }
@@ -7123,10 +7132,11 @@ public final class Data {
       "\rpullAllGrades\030\002 \001(\010\022\020\n\010courseId\030\003 \003(\t\"P" +
       "\n\rAdvanceReview\022\020\n\010courseId\030\001 \002(\t\022\024\n\014ass" +
       "ignmentId\030\002 \002(\t\022\027\n\017courseProblemId\030\003 \002(\t",
-      "*\232\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT" +
+      "*\246\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT" +
       "\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003" +
       "\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER" +
-      "_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010"
+      "_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n" +
+      "\006SCHOOL\020\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

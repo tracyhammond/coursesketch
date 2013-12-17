@@ -41,16 +41,17 @@ message ItemResult {
 }
 
 enum ItemQuery {
-		COURSE = 0;
-		ASSIGNMENT = 1;
-		COURSE_PROBLEM = 2;
-		BANK_PROBLEM = 3;
-		USERGROUP = 4;
-		CLASS_GRADE = 5;
-		USER_INFO = 6;
-		SOLUTION = 7;
-		EXPERIMENT = 8;
-	}
+	COURSE = 0;
+	ASSIGNMENT = 1;
+	COURSE_PROBLEM = 2;
+	BANK_PROBLEM = 3;
+	USERGROUP = 4;
+	CLASS_GRADE = 5;
+	USER_INFO = 6;
+	SOLUTION = 7;
+	EXPERIMENT = 8;
+	SCHOOL = 9;
+}
 
 /**
  * Pulls all grades of the users for a course

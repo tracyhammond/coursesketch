@@ -20,9 +20,8 @@ import database.auth.Authenticator;
 
 public class BankProblemManager 
 {
-	static String mongoInsertBankProblem(DB dbs, SrlBankProblem problem) throws AuthenticationException
+	public static String mongoInsertBankProblem(DB dbs, SrlBankProblem problem) throws AuthenticationException
 	{
-	
 		DBCollection new_user = dbs.getCollection("ProblemBank");
 		BasicDBObject query = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())
 										 .append(IMAGE, problem.getImage())
@@ -37,17 +36,17 @@ public class BankProblemManager
 										 
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
-		return (String) corsor.get(SELF_ID);
+		return corsor.get(SELF_ID).toString();
 	}
-	
+
 	public static SrlBankProblem mongoGetBankProblem(DB dbs, String problemBankID,String userId) throws AuthenticationException
 	{
 		DBRef myDbRef = new DBRef(dbs, "ProblemBank", new ObjectId(problemBankID));
 		DBObject corsor = myDbRef.fetch();
 
-		ArrayList adminList = (ArrayList<Object>)corsor.get(ADMIN);
-		ArrayList usersList = (ArrayList<Object>)corsor.get(USERS);
-		boolean isAdmin,isMod,isUsers;
+		ArrayList adminList = (ArrayList)corsor.get(ADMIN);
+		ArrayList usersList = (ArrayList)corsor.get(USERS);
+		boolean isAdmin, isUsers;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 		isUsers = Authenticator.checkAuthentication(dbs, userId, usersList);
 
@@ -55,13 +54,15 @@ public class BankProblemManager
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
-		
+
 		SrlBankProblem.Builder exactProblem = SrlBankProblem.newBuilder();
 
 		exactProblem.setId(problemBankID);
-		exactProblem.setQuestionText((String)corsor.get("ProblemBank"));
+		exactProblem.setQuestionText((String)corsor.get(QUESTION_TEXT));
 		exactProblem.setImage((String)corsor.get(IMAGE));
-		exactProblem.setSolutionId((String)corsor.get(SOLUTION_ID));
+		if (isAdmin) {
+			exactProblem.setSolutionId((String)corsor.get(SOLUTION_ID));
+		}
 		exactProblem.setCourseTopic((String)corsor.get(COURSE_TOPIC));
 		exactProblem.setSubTopic((String)corsor.get(SUB_TOPIC));
 		exactProblem.setSource((String)corsor.get(SOURCE));
@@ -79,12 +80,11 @@ public class BankProblemManager
 
 	}
 
-
-	static boolean mongoUpdateBankProblem(DB dbs, String problemBankId,String userId, SrlBankProblem problem) throws AuthenticationException
+	public static boolean mongoUpdateBankProblem(DB dbs, String problemBankId,String userId, SrlBankProblem problem) throws AuthenticationException
 	{
 		DBRef myDbRef = new DBRef(dbs, "ProblemBank", new ObjectId(problemBankId));
 		DBObject corsor = myDbRef.fetch();
-		
+
 		ArrayList adminList = (ArrayList<Object>)corsor.get(ADMIN);
 		ArrayList<Object> usersList = (ArrayList<Object>)corsor.get(USERS);
 		boolean isAdmin,isMod,isUsers;

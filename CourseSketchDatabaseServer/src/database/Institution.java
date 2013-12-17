@@ -76,7 +76,7 @@ public class Institution
 		while(courseProblems >= 0)
 		{
 			try {
-				allCourses.add(CourseProblemManager.mongoGetProblem(getInstance().db, problemID.get(courseProblems), userId, currentTime));
+				allCourses.add(CourseProblemManager.mongoGetCourseProblem(getInstance().db, problemID.get(courseProblems), userId, currentTime));
 			}catch(DatabaseAccessException e) {
 				e.printStackTrace();
 			}
