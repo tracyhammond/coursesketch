@@ -1,4 +1,4 @@
-package connection;
+package handlers;
 
 import java.util.ArrayList;
 import java.util.HashMap;

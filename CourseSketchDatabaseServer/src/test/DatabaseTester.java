@@ -2,7 +2,9 @@ package test;
 
 import java.net.UnknownHostException;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
@@ -13,6 +15,7 @@ public class DatabaseTester {
 		MongoClient mongoClient = new MongoClient("localhost");
 		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
 		DB db = mongoClient.getDB("test");
+		deleteCollections(db);
 		try {
 			String returnId = CourseTester.testCourses(db);
 			System.out.println("Inserting assignment into course! " + returnId);
@@ -28,5 +31,19 @@ public class DatabaseTester {
 
 	public static DB getDatabase() {
 		return null;
+	}
+
+	public static void deleteCollections(DB dbs) {
+		DBCollection collection = dbs.getCollection("ProblemBank");
+		collection.remove(new BasicDBObject());
+		
+		collection = dbs.getCollection("Courses");
+		collection.remove(new BasicDBObject());
+		
+		collection = dbs.getCollection("Assignments");
+		collection.remove(new BasicDBObject());
+		
+		collection = dbs.getCollection("CourseProblems");
+		collection.remove(new BasicDBObject());
 	}
 }

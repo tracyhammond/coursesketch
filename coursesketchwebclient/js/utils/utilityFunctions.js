@@ -182,6 +182,14 @@ if (isUndefined(replaceAll)) {
 }
 
 /**
+ * Replaces the character or a string at the specific index
+ */
+if (isUndefined(String.prototype.replaceAt)) {
+	String.prototype.replaceAt = function(index, string) {
+	    return this.substr(0, index) + character + this.substr(index+character.length);
+	}
+}
+/**
  **************************************************************
  * Debug Functions
  * @author gigemjt

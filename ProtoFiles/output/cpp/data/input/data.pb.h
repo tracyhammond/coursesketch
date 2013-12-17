@@ -129,30 +129,6 @@ class DataRequest : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string userId = 1;
-  inline bool has_userid() const;
-  inline void clear_userid();
-  static const int kUserIdFieldNumber = 1;
-  inline const ::std::string& userid() const;
-  inline void set_userid(const ::std::string& value);
-  inline void set_userid(const char* value);
-  inline void set_userid(const char* value, size_t size);
-  inline ::std::string* mutable_userid();
-  inline ::std::string* release_userid();
-  inline void set_allocated_userid(::std::string* userid);
-
-  // required string sessionId = 2;
-  inline bool has_sessionid() const;
-  inline void clear_sessionid();
-  static const int kSessionIdFieldNumber = 2;
-  inline const ::std::string& sessionid() const;
-  inline void set_sessionid(const ::std::string& value);
-  inline void set_sessionid(const char* value);
-  inline void set_sessionid(const char* value, size_t size);
-  inline ::std::string* mutable_sessionid();
-  inline ::std::string* release_sessionid();
-  inline void set_allocated_sessionid(::std::string* sessionid);
-
   // repeated .protobuf.srl.query.ItemRequest items = 3;
   inline int items_size() const;
   inline void clear_items();
@@ -167,19 +143,13 @@ class DataRequest : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.query.DataRequest)
  private:
-  inline void set_has_userid();
-  inline void clear_has_userid();
-  inline void set_has_sessionid();
-  inline void clear_has_sessionid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* userid_;
-  ::std::string* sessionid_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemRequest > items_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -358,30 +328,6 @@ class DataSend : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string userId = 1;
-  inline bool has_userid() const;
-  inline void clear_userid();
-  static const int kUserIdFieldNumber = 1;
-  inline const ::std::string& userid() const;
-  inline void set_userid(const ::std::string& value);
-  inline void set_userid(const char* value);
-  inline void set_userid(const char* value, size_t size);
-  inline ::std::string* mutable_userid();
-  inline ::std::string* release_userid();
-  inline void set_allocated_userid(::std::string* userid);
-
-  // required string sessionId = 2;
-  inline bool has_sessionid() const;
-  inline void clear_sessionid();
-  static const int kSessionIdFieldNumber = 2;
-  inline const ::std::string& sessionid() const;
-  inline void set_sessionid(const ::std::string& value);
-  inline void set_sessionid(const char* value);
-  inline void set_sessionid(const char* value, size_t size);
-  inline ::std::string* mutable_sessionid();
-  inline ::std::string* release_sessionid();
-  inline void set_allocated_sessionid(::std::string* sessionid);
-
   // repeated .protobuf.srl.query.ItemSend items = 3;
   inline int items_size() const;
   inline void clear_items();
@@ -396,19 +342,13 @@ class DataSend : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.query.DataSend)
  private:
-  inline void set_has_userid();
-  inline void clear_has_userid();
-  inline void set_has_sessionid();
-  inline void clear_has_sessionid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* userid_;
-  ::std::string* sessionid_;
   ::google::protobuf::RepeatedPtrField< ::protobuf::srl::query::ItemSend > items_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -1058,146 +998,6 @@ class AdvanceReview : public ::google::protobuf::Message {
 
 // DataRequest
 
-// required string userId = 1;
-inline bool DataRequest::has_userid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void DataRequest::set_has_userid() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void DataRequest::clear_has_userid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void DataRequest::clear_userid() {
-  if (userid_ != &::google::protobuf::internal::kEmptyString) {
-    userid_->clear();
-  }
-  clear_has_userid();
-}
-inline const ::std::string& DataRequest::userid() const {
-  return *userid_;
-}
-inline void DataRequest::set_userid(const ::std::string& value) {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  userid_->assign(value);
-}
-inline void DataRequest::set_userid(const char* value) {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  userid_->assign(value);
-}
-inline void DataRequest::set_userid(const char* value, size_t size) {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  userid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* DataRequest::mutable_userid() {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  return userid_;
-}
-inline ::std::string* DataRequest::release_userid() {
-  clear_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = userid_;
-    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void DataRequest::set_allocated_userid(::std::string* userid) {
-  if (userid_ != &::google::protobuf::internal::kEmptyString) {
-    delete userid_;
-  }
-  if (userid) {
-    set_has_userid();
-    userid_ = userid;
-  } else {
-    clear_has_userid();
-    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// required string sessionId = 2;
-inline bool DataRequest::has_sessionid() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void DataRequest::set_has_sessionid() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void DataRequest::clear_has_sessionid() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void DataRequest::clear_sessionid() {
-  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-    sessionid_->clear();
-  }
-  clear_has_sessionid();
-}
-inline const ::std::string& DataRequest::sessionid() const {
-  return *sessionid_;
-}
-inline void DataRequest::set_sessionid(const ::std::string& value) {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
-  }
-  sessionid_->assign(value);
-}
-inline void DataRequest::set_sessionid(const char* value) {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
-  }
-  sessionid_->assign(value);
-}
-inline void DataRequest::set_sessionid(const char* value, size_t size) {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
-  }
-  sessionid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* DataRequest::mutable_sessionid() {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
-  }
-  return sessionid_;
-}
-inline ::std::string* DataRequest::release_sessionid() {
-  clear_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = sessionid_;
-    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void DataRequest::set_allocated_sessionid(::std::string* sessionid) {
-  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-    delete sessionid_;
-  }
-  if (sessionid) {
-    set_has_sessionid();
-    sessionid_ = sessionid;
-  } else {
-    clear_has_sessionid();
-    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
 // repeated .protobuf.srl.query.ItemRequest items = 3;
 inline int DataRequest::items_size() const {
   return items_.size();
@@ -1367,146 +1167,6 @@ inline void ItemRequest::set_allocated_advancequery(::std::string* advancequery)
 // -------------------------------------------------------------------
 
 // DataSend
-
-// required string userId = 1;
-inline bool DataSend::has_userid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void DataSend::set_has_userid() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void DataSend::clear_has_userid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void DataSend::clear_userid() {
-  if (userid_ != &::google::protobuf::internal::kEmptyString) {
-    userid_->clear();
-  }
-  clear_has_userid();
-}
-inline const ::std::string& DataSend::userid() const {
-  return *userid_;
-}
-inline void DataSend::set_userid(const ::std::string& value) {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  userid_->assign(value);
-}
-inline void DataSend::set_userid(const char* value) {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  userid_->assign(value);
-}
-inline void DataSend::set_userid(const char* value, size_t size) {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  userid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* DataSend::mutable_userid() {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  return userid_;
-}
-inline ::std::string* DataSend::release_userid() {
-  clear_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = userid_;
-    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void DataSend::set_allocated_userid(::std::string* userid) {
-  if (userid_ != &::google::protobuf::internal::kEmptyString) {
-    delete userid_;
-  }
-  if (userid) {
-    set_has_userid();
-    userid_ = userid;
-  } else {
-    clear_has_userid();
-    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// required string sessionId = 2;
-inline bool DataSend::has_sessionid() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void DataSend::set_has_sessionid() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void DataSend::clear_has_sessionid() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void DataSend::clear_sessionid() {
-  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-    sessionid_->clear();
-  }
-  clear_has_sessionid();
-}
-inline const ::std::string& DataSend::sessionid() const {
-  return *sessionid_;
-}
-inline void DataSend::set_sessionid(const ::std::string& value) {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
-  }
-  sessionid_->assign(value);
-}
-inline void DataSend::set_sessionid(const char* value) {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
-  }
-  sessionid_->assign(value);
-}
-inline void DataSend::set_sessionid(const char* value, size_t size) {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
-  }
-  sessionid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* DataSend::mutable_sessionid() {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
-  }
-  return sessionid_;
-}
-inline ::std::string* DataSend::release_sessionid() {
-  clear_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = sessionid_;
-    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void DataSend::set_allocated_sessionid(::std::string* sessionid) {
-  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-    delete sessionid_;
-  }
-  if (sessionid) {
-    set_has_sessionid();
-    sessionid_ = sessionid;
-  } else {
-    clear_has_sessionid();
-    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
 
 // repeated .protobuf.srl.query.ItemSend items = 3;
 inline int DataSend::items_size() const {

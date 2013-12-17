@@ -77,28 +77,37 @@ public class ProxyServer extends MultiInternalConnectionServer {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 				return;
 			}
-			String userID = state.getKey();
+			String sessionID = state.getKey();
 			System.out.println("Request type is " + req.getRequestType().name());
-			serverManager.send(req, userID, LoginConnection.class);
+			serverManager.send(req, sessionID, LoginConnection.class);
 		} else {
 			if (state.getTries() > MAX_LOGIN_TRIES) {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 				return;
 			}
-			if(req.getRequestType() == MessageType.RECOGNITION){
+			if (req.getRequestType() == MessageType.RECOGNITION) {
 				System.out.println("REQUEST TYPE = RECOGNITION");
 				String sessionID = state.getKey();
 				serverManager.send(req, sessionID, RecognitionConnection.class);
+				return;
 			}
-			if(req.getRequestType() == MessageType.SUBMISSION){
+			if (req.getRequestType() == MessageType.SUBMISSION) {
 				System.out.println("REQUEST TYPE = SUBMISSION");
 				String sessionID = state.getKey();
 				serverManager.send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
+				return;
 			}
-			if(req.getRequestType() == MessageType.DATA_REQUEST){
+			if (req.getRequestType() == MessageType.DATA_REQUEST) {
 				System.out.println("REQUEST TYPE = DATA REQUEST");
 				String sessionID = state.getKey();
 				serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
+				return;
+			}
+			if (req.getRequestType() == MessageType.DATA_SENDING) {
+				System.out.println("REQUEST TYPE = DATA SENDING");
+				String sessionID = state.getKey();
+				serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
+				return;
 			}
 			return;
 		}

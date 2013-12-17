@@ -94,11 +94,11 @@ public class LoginServer extends WebSocketServer {
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		Request req = Decoder.parseRequest(buffer);
-		try{
+		try {
 			//This is assuming user is logged in
 			//conn.send(createLoginResponse(req, true));
 			
-			if (req.getLogin().getIsRegistering()){
+			if (req.getLogin().getIsRegistering()) {
 				boolean successfulRegistration = registerUser(req.getLogin().getUsername(), req.getLogin().getPassword(), req.getLogin().getEmail(), req.getLogin().getIsInstructor());
 				if(!successfulRegistration){
 					conn.send(createLoginResponse(req, false, REGISTRATION_ERROR_MESSAGE, false, null).toByteArray());
@@ -106,18 +106,20 @@ public class LoginServer extends WebSocketServer {
 				}
 			}
 			String userLoggedIn = checkUserLogin(req.getLogin().getUsername(), req.getLogin().getPassword());
-			String[] ids= userLoggedIn.split(":");
-			if (userLoggedIn != null && ids.length == 2) {
-				boolean isInstructor = checkUserInstructor(req.getLogin().getUsername());
-			 	//return if database is an instructor
-				conn.send(createLoginResponse(req, true, CORRECT_LOGIN_MESSAGE, isInstructor, ids).toByteArray());
-			} else {
-				conn.send(createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false, null).toByteArray());
+			if (userLoggedIn != null) {
+				String[] ids= userLoggedIn.split(":");
+				if (ids.length == 2) {
+					boolean isInstructor = checkUserInstructor(req.getLogin().getUsername());
+				 	//return if database is an instructor
+					conn.send(createLoginResponse(req, true, CORRECT_LOGIN_MESSAGE, isInstructor, ids).toByteArray());
+					return;
+				}
 			}
+			conn.send(createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false, null).toByteArray());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			conn.send(createLoginResponse(req, false, LOGIN_ERROR_MESSAGE, false, null).toByteArray());
+			conn.send(createLoginResponse(req, false, e.getMessage(), false, null).toByteArray());
 		}
 	}
 	
@@ -167,7 +169,9 @@ public class LoginServer extends WebSocketServer {
 		requestBuilder.setRequestType(MessageType.LOGIN);
 		requestBuilder.setResponseText(message);
 		requestBuilder.setSessionInfo(req.getSessionInfo());
-		requestBuilder.setSessionId(ids[0]); // TODO: encrypt this id
+		if (ids != null && ids.length > 0) {
+			requestBuilder.setSessionId(ids[0]); // TODO: encrypt this id
+		}
 		System.out.println("setting return session information " + req.getSessionInfo());
 		
 		// Create the Login Response.
@@ -175,7 +179,9 @@ public class LoginServer extends WebSocketServer {
 		loginBuilder.setUsername(req.getLogin().getUsername());
 		loginBuilder.setIsLoggedIn(success);
 		loginBuilder.setIsInstructor(instructorIntent);
-		loginBuilder.setUserId(ids[1]);
+		if (ids != null && ids.length > 1) {
+			loginBuilder.setUserId(ids[1]);
+		}
 
 		// Add login info.
 		requestBuilder.setLogin(loginBuilder.build());

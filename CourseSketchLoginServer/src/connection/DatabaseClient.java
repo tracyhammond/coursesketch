@@ -22,7 +22,6 @@ public class DatabaseClient {
 
 	private DatabaseClient(String url) {
 		System.out.println("creating new database instance");
-		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
 		MongoClient mongoClient = null;
 		try {
 			mongoClient = new MongoClient(url);
@@ -36,7 +35,8 @@ public class DatabaseClient {
 	}
 
 	private DatabaseClient(){
-		this("goldberglinux.tamu.edu");
+		//this("goldberglinux.tamu.edu");
+		this("localhost");
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -57,7 +57,7 @@ public class DatabaseClient {
 
 		DBObject corsor = table.findOne(query);
 
-		if(corsor==null)
+		if (corsor==null)
 			return null;
 		if (PasswordHash.validatePassword(p.toCharArray(),corsor.get("Password").toString())) {
 			String result = corsor.get("ServerId") + ":" + corsor.get("ClientId");

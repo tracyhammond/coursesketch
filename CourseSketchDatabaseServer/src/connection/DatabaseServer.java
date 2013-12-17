@@ -1,5 +1,9 @@
 package connection;
 
+import handlers.DataRequestHandler;
+import handlers.DataSendHandler;
+import handlers.UpdateHandler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,7 +45,6 @@ import database.auth.AuthenticationException;
 public class DatabaseServer extends MultiInternalConnectionServer {
 
 	UpdateHandler updateHandler = new UpdateHandler();
-	Database database = new Database();
 
 	public DatabaseServer( int port ) throws UnknownHostException {
 		this( new InetSocketAddress( port ) );
@@ -64,86 +67,10 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		}
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			updateHandler.addRequest(req);
-		}
-		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-			try {
-				System.out.println("Receiving DATA Request...");
-				SrlSchool.Builder finalSchool = SrlSchool.newBuilder();
-				String userId = req.getSessionId();
-				DataRequest request = DataRequest.parseFrom(req.getOtherData());
-				if (userId == null) {
-					userId = request.getUserId();
-				}
-				for(int p=0; p<request.getItemsList().size(); p++){
-					ItemRequest itrequest = request.getItemsList().get(p);
-					switch(itrequest.getQuery()) {
-						case COURSE: ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), userId);
-									finalSchool.addAllCourses(courseLoop);
-									break;
-						case ASSIGNMENT: ArrayList<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), userId);
-									finalSchool.addAllAssignments(assignmentLoop);
-									break;
-						case COURSE_PROBLEM: ArrayList<SrlProblem> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), userId);
-									for(SrlProblem loopCourse: courseProblemLoop){
-										finalSchool.addProblems(loopCourse);
-									}
-									break;
-						case BANK_PROBLEM: ArrayList<SrlBankProblem> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), userId);
-									for(SrlBankProblem loopCourse: bankProblemLoop){
-										finalSchool.addBankProblems(loopCourse);
-									}
-									break;
-						/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case CLASS_GRADE: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case USER_INFO: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case SOLUTION: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case EXPERIMENT: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;*/
-					}
-				}
-				Request.Builder dataReq = Request.newBuilder();
-				dataReq.setRequestType(MessageType.DATA_REQUEST);
-				DataResult.Builder dataResult = DataResult.newBuilder();
-				ItemResult.Builder result = ItemResult.newBuilder();
-				result.setData(finalSchool.build().toByteString());
-				result.setQuery(ItemQuery.SCHOOL);
-				dataResult.addResults(result.build());
-				dataReq.setSessionInfo(req.getSessionInfo());
-				dataReq.setOtherData(dataResult.build().toByteString());
-				byte[] array = dataReq.build().toByteArray();
-				if (array != null) {
-					conn.send(array);
-				} else {
-					System.out.println("BLAH BLAH BALH");
-				}
-			} catch (InvalidProtocolBufferException e) {
-				e.printStackTrace();
-			}
-			// decode request and pull correct information from database (courses, assignments, ...) then repackage everything and send it out
-			catch (AuthenticationException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
+			DataRequestHandler.handleRequest(req, conn);
+		} else if (req.getRequestType() == Request.MessageType.DATA_SENDING) {
+			DataSendHandler.handleData(req, conn);
 		}
 	}
 

@@ -153,6 +153,17 @@
 	  			builder.togglePopup(popupId);
 	  		}
 	  		
+	  		function createBankProblem() {
+	  			var popupId = 'togglePopup1';
+	  			var builder = new PopupBoxBuilder();
+	  			builder.setBody(true,'html/instructor/course_managment_frames/edit_bankProblem.html');
+	  			builder.setHeader(true,'Late Policy Information');
+	  			builder.setFooter(true,'<button onclick = "togglePopup(\'' + popupId + '\')">close</button>');
+	  			builder.setBodyHeight('500px');
+	  			builder.build('popupDiv', popupId);
+	  			builder.togglePopup(popupId);
+	  		}
+	  		
 	  		function exportData(scope, type) {
 	  			if (type == 'course') {
 	  				exportCourse(scope);
@@ -169,8 +180,8 @@
 	  			var closeDate = scope.document.getElementById('closeDate').value;
 	  			var permission = new SchoolBuilder.SrlPermission();
 	  			permission.adminPermission = scope.document.getElementById('admins').value.split(" ");
-	  			permission.moderatorPermission = scope.document.getElementById('admins').value.split(" ");
-	  			permission.userPermission = scope.document.getElementById('admins').value.split(" ");
+	  			permission.moderatorPermission = scope.document.getElementById('mods').value.split(" ");
+	  			permission.userPermission = scope.document.getElementById('users').value.split(" ");
 	  			course.accessPermission = permission;
 	  			parent.user_courses[course.id] = course;
 	  			buildCourses();
@@ -240,6 +251,7 @@
 <body>
 <!-- Menu Bar -->
 	<button onclick = "getData();">get Data from server</button>
+	<button onclick = "createBankProblem();">createBankProblem</button>
     <!-- Center Section -->
    	<div class = "wide_centre">
     	<div style="width:75%; float:left;">

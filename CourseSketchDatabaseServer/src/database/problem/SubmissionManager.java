@@ -1,15 +1,6 @@
 package database.problem;
 
-import static database.StringConstants.ACCESS_DATE;
-import static database.StringConstants.ADMIN;
-import static database.StringConstants.CLOSE_DATE;
-import static database.StringConstants.COURSE_ACCESS;
-import static database.StringConstants.COURSE_SEMESTER;
-import static database.StringConstants.DESCRIPTION;
-import static database.StringConstants.IMAGE;
-import static database.StringConstants.MOD;
-import static database.StringConstants.NAME;
-import static database.StringConstants.USERS;
+import static database.StringConstants.*;
 
 import java.util.ArrayList;
 
@@ -17,6 +8,7 @@ import org.bson.types.ObjectId;
 
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.submission.Submission.SrlSubmission;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -30,10 +22,11 @@ import database.auth.Authenticator;
 
 public class SubmissionManager 
 {
+	/*
 	public static String mongoInsertCourse(DB dbs, SrlSubmission submission)
 	{
 		DBCollection new_user = dbs.getCollection("Solutions");
-		BasicDBObject query = new BasicDBObject(SCHOOLID,submission.getschoolId())
+		BasicDBObject query = new BasicDBObject(SCHOOL_ID,submission.getschoolId())
 										 .append(UPDATE_LIST,submission.getupdateList())
 										 .append(SKETCH, submission.getsketch())
 										 .append(EXTRA_DATA, submission.getextraData())
@@ -147,5 +140,5 @@ public class SubmissionManager
 		return true;
 		
 	}
-
+*/
 }

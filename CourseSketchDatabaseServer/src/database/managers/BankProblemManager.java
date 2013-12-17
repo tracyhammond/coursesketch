@@ -1,4 +1,4 @@
-package database.problem;
+package database.managers;
 
 import static database.StringConstants.*;
 
