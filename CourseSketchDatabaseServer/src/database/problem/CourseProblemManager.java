@@ -25,7 +25,7 @@ import database.auth.Authenticator;
 
 public class CourseProblemManager 
 {
-	private static String mongoInsertCourseProblem(DB dbs, String userId, SrlProblem problem) throws AuthenticationException, DatabaseAccessException
+	public static String mongoInsertCourseProblem(DB dbs, String userId, SrlProblem problem) throws AuthenticationException, DatabaseAccessException
 	{
 		DBCollection new_user = dbs.getCollection("Problems");
 		SrlAssignment assignment = AssignmentManager.mongoGetAssignment(dbs,problem.getAssignmentId(),userId, 0);
@@ -60,10 +60,10 @@ public class CourseProblemManager
 
 		AssignmentManager.mongoUpdateAssignment(dbs, problem.getAssignmentId(), userId, newAssignment.buildPartial());
 
-		return (String) corsor.get(SELF_ID);
+		return corsor.get(SELF_ID).toString();
 	}
 
-	public static SrlProblem mongoGetProblem(DB dbs, String problemId,String userId, long checkTime) throws AuthenticationException, DatabaseAccessException
+	public static SrlProblem mongoGetCourseProblem(DB dbs, String problemId,String userId, long checkTime) throws AuthenticationException, DatabaseAccessException
 	{
 		DBRef myDbRef = new DBRef(dbs, "Problems", new ObjectId(problemId));
 		DBObject corsor = myDbRef.fetch();
@@ -118,7 +118,7 @@ public class CourseProblemManager
 
 	}
 
-	private static boolean mongoUpdateCourseProblem(DB dbs, String problemId,String userId,SrlProblem problem) throws AuthenticationException
+	public static boolean mongoUpdateCourseProblem(DB dbs, String problemId,String userId,SrlProblem problem) throws AuthenticationException
 	{
 		DBRef myDbRef = new DBRef(dbs, "Problems", new ObjectId(problemId));
 		DBObject corsor = myDbRef.fetch();

@@ -16,7 +16,10 @@ import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 
 import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.DataResult;
+import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
+import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
@@ -119,8 +122,13 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 				}
 				Request.Builder dataReq = Request.newBuilder();
 				dataReq.setRequestType(MessageType.DATA_REQUEST);
-				dataReq.setOtherData(finalSchool.build().toByteString());
+				DataResult.Builder dataResult = DataResult.newBuilder();
+				ItemResult.Builder result = ItemResult.newBuilder();
+				result.setData(finalSchool.build().toByteString());
+				result.setQuery(ItemQuery.SCHOOL);
+				dataResult.addResults(result.build());
 				dataReq.setSessionInfo(req.getSessionInfo());
+				dataReq.setOtherData(dataResult.build().toByteString());
 				byte[] array = dataReq.build().toByteArray();
 				if (array != null) {
 					conn.send(array);

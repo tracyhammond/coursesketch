@@ -164,7 +164,8 @@ public class CourseManager
 				
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
-			if (course.getAccessPermission() != null) {
+			if (course.hasAccessPermission()) {
+				System.out.println("Updating permissions!");
 				SrlPermission permissions = course.getAccessPermission();
 				if (permissions.getAdminPermissionList() != null) {
 					updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
