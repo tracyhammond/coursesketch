@@ -79,7 +79,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Database Server: Version 1.0.2.kangaroo");
+		System.out.println("Database Server: Version 1.0.2.mouse");
 		WebSocketImpl.DEBUG = false;
 		int port = 8885; // 843 flash policy port
 		try {

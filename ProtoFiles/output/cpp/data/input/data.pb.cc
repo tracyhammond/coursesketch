@@ -287,11 +287,12 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
     "d\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\020\n\010course"
     "Id\030\003 \003(\t\"P\n\rAdvanceReview\022\020\n\010courseId\030\001 "
     "\002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\027\n\017courseProbl"
-    "emId\030\003 \002(\t*\246\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\n"
+    "emId\030\003 \002(\t*\312\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\n"
     "ASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK"
     "_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE"
     "\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPER"
-    "IMENT\020\010\022\n\n\006SCHOOL\020\t", 899);
+    "IMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017"
+    "\n\013BANK_SEARCH\020\n", 935);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/data.proto", &protobuf_RegisterTypes);
   DataRequest::default_instance_ = new DataRequest();
@@ -337,6 +338,7 @@ bool ItemQuery_IsValid(int value) {
     case 7:
     case 8:
     case 9:
+    case 10:
       return true;
     default:
       return false;

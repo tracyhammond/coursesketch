@@ -31,7 +31,7 @@ public class DatabaseTester {
 			System.out.println("Creating course problem");
 			CourseProblemTester.testCourseProblems(db, returnId, assignmentId, bankId1);
 			System.out.println("Creating course problem2");
-			CourseProblemTester.testCourseProblems(db, returnId, assignmentId, bankId2);
+			CourseProblemTester.testCourseProblems(db, returnId, assignmentId2, bankId2);
 		} catch (DatabaseAccessException e) {
 			e.printStackTrace();
 		}
