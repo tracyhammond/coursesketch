@@ -15,14 +15,11 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 
 
-public class Institution 
-{
+public class Institution {
 	private static Institution instance;
 	private DB db;
 
-	private Institution(String url)
-	{
-		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
+	private Institution(String url) {
 		try {
 			MongoClient mongoClient = new MongoClient(url);
 			db = mongoClient.getDB("institution");
@@ -31,88 +28,87 @@ public class Institution
 		}
 	}
 
-	private Institution(){
+	private Institution() {
 		//this("goldberglinux.tamu.edu");
 		this("localhost");
 	}
 
-	public static Institution getInstance(){
+	private static Institution getInstance() {
 		if(instance==null)
 			instance = new Institution();
 		return instance;
 	}
 
-	// if user can only access between open date and close date
-	// user can only access problem between assignment open and close date
-	public static ArrayList<SrlCourse> mongoGetCourses(List<String> courseID,String userId) throws AuthenticationException 
-	{
-		int courses = courseID.size()-1;
+	/**
+	 * Returns a list of courses given a list of Ids for the courses
+	 * @throws AuthenticationException
+	 */
+	public static ArrayList<SrlCourse> mongoGetCourses(List<String> courseIds,String userId) throws AuthenticationException {
 		long currentTime = System.currentTimeMillis();
 		ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
-
-		while(courses >= 0)
-		{
+		for(String courseId : courseIds) {
 			try {
-				allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseID.get(courses), userId,currentTime));
+				allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseId, userId,currentTime));
 			} catch (DatabaseAccessException e) {
 				e.printStackTrace();
 			}
-			courses--;
 		}
-
-		// need to return everything
 		return allCourses;
-		// do open close checking
 	}
 
-	public static ArrayList<SrlProblem> mongoGetCourseProblem(List<String> problemID,String userId) throws AuthenticationException 
-	{
-		int courseProblems = problemID.size()-1;
+	/**
+	 * Returns a list of problems given a list of Ids for the course problems.
+	 * @throws AuthenticationException
+	 */
+	public static ArrayList<SrlProblem> mongoGetCourseProblem(List<String> problemID,String userId) throws AuthenticationException {
 		long currentTime = System.currentTimeMillis();
 		ArrayList<SrlProblem> allCourses = new ArrayList<SrlProblem>();
-
-		while(courseProblems >= 0)
-		{
+		for(int index = 0; index < problemID.size(); index ++) {
 			try {
-				allCourses.add(CourseProblemManager.mongoGetCourseProblem(getInstance().db, problemID.get(courseProblems), userId, currentTime));
-			}catch(DatabaseAccessException e) {
-				e.printStackTrace();
-			}
-			courseProblems--;
-		}
-
-		// need to return everything
-		return allCourses;
-		// do open close checking
-	}
-
-	public static ArrayList<SrlAssignment> mongoGetAssignment(List<String> assignementID,String userId) throws AuthenticationException 
-	{
-		long currentTime = System.currentTimeMillis();
-		ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
-		for(int assignments = assignementID.size()-1; assignments >= 0; assignments--)
-		{
-			try {
-				allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().db, assignementID.get(assignments), userId,currentTime));
+				allCourses.add(CourseProblemManager.mongoGetCourseProblem(getInstance().db, problemID.get(index), userId, currentTime));
 			} catch (DatabaseAccessException e) {
 				e.printStackTrace();
+			} catch (AuthenticationException e) {
+				if (e.getType() != AuthenticationException.INVALID_DATE) {
+					throw e;
+				}
 			}
 		}
-		// need to return everything
-		return allAssignments;
-		// do open close checking
-	}
-	public static ArrayList<SrlBankProblem> mongoGetProblem(List<String> problemID,String userId) throws AuthenticationException 
-	{
-		long currentTime = System.currentTimeMillis();
-		ArrayList<SrlBankProblem> allProblems = new ArrayList<SrlBankProblem>();
-		for(int problem = problemID.size()-1; problem >= 0; problem--)
-		{
-			allProblems.add(BankProblemManager.mongoGetBankProblem(getInstance().db, problemID.get(problem), userId));
-		}
-		// need to return everything
-		return allProblems;
-		// do open close checking
+		return allCourses;
 	}
 
+	/**
+	 * Returns a list of problems given a list of Ids for the course problems.
+	 * @throws AuthenticationException
+	 */
+	public static ArrayList<SrlAssignment> mongoGetAssignment(List<String> assignementID,String userId) throws AuthenticationException {
+		long currentTime = System.currentTimeMillis();
+		ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
+		for (int assignments = assignementID.size() - 1; assignments >= 0; assignments--) {
+			try {
+				allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().db, assignementID.get(assignments),
+						userId, currentTime));
+			} catch (DatabaseAccessException e) {
+				e.printStackTrace();
+			} catch (AuthenticationException e) {
+				if (e.getType() != AuthenticationException.INVALID_DATE) {
+					throw e;
+				}
+			}
+		}
+		return allAssignments;
+	}
+
+	public static ArrayList<SrlBankProblem> mongoGetProblem(List<String> problemID,String userId) throws AuthenticationException {
+		long currentTime = System.currentTimeMillis();
+		ArrayList<SrlBankProblem> allProblems = new ArrayList<SrlBankProblem>();
+		for (int problem = problemID.size() - 1; problem >= 0; problem--) {
+			allProblems.add(BankProblemManager.mongoGetBankProblem(getInstance().db, problemID.get(problem), userId));
+		}
+		return allProblems;
+	}
+	
+	public static ArrayList<SrlCourse> getAllPublicCourses() {
+		return CourseManager.mongoGetAllPublicCourses(getInstance().db);
+	}
 }

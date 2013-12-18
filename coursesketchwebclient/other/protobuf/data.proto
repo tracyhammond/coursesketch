@@ -46,6 +46,8 @@ enum ItemQuery {
 	SOLUTION = 7;
 	EXPERIMENT = 8;
 	SCHOOL = 9;
+	COURSE_SEARCH = 10;
+	BANK_SEARCH = 10;
 }
 
 /**

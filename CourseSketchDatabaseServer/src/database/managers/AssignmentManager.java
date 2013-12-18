@@ -88,7 +88,7 @@ public class AssignmentManager
 		if (isUsers) {
 			if (!Authenticator.mognoIsAuthenticated(dbs, COURSE_COLLECTION, (String)corsor.get(COURSE_ID), userId, checkTime, auth))
 			{
-				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
+				throw new AuthenticationException(AuthenticationException.INVALID_DATE);
 			}
 		}
 

@@ -53,8 +53,16 @@ public final class Data {
      * <code>SCHOOL = 9;</code>
      */
     SCHOOL(9, 9),
+    /**
+     * <code>COURSE_SEARCH = 10;</code>
+     */
+    COURSE_SEARCH(10, 10),
     ;
 
+    /**
+     * <code>BANK_SEARCH = 10;</code>
+     */
+    public static final ItemQuery BANK_SEARCH = COURSE_SEARCH;
     /**
      * <code>COURSE = 0;</code>
      */
@@ -95,6 +103,14 @@ public final class Data {
      * <code>SCHOOL = 9;</code>
      */
     public static final int SCHOOL_VALUE = 9;
+    /**
+     * <code>COURSE_SEARCH = 10;</code>
+     */
+    public static final int COURSE_SEARCH_VALUE = 10;
+    /**
+     * <code>BANK_SEARCH = 10;</code>
+     */
+    public static final int BANK_SEARCH_VALUE = 10;
 
 
     public final int getNumber() { return value; }
@@ -111,6 +127,7 @@ public final class Data {
         case 7: return SOLUTION;
         case 8: return EXPERIMENT;
         case 9: return SCHOOL;
+        case 10: return COURSE_SEARCH;
         default: return null;
       }
     }
@@ -140,7 +157,9 @@ public final class Data {
       return protobuf.srl.query.Data.getDescriptor().getEnumTypes().get(0);
     }
 
-    private static final ItemQuery[] VALUES = values();
+    private static final ItemQuery[] VALUES = {
+      COURSE, ASSIGNMENT, COURSE_PROBLEM, BANK_PROBLEM, USERGROUP, CLASS_GRADE, USER_INFO, SOLUTION, EXPERIMENT, SCHOOL, COURSE_SEARCH, BANK_SEARCH, 
+    };
 
     public static ItemQuery valueOf(
         com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
@@ -6500,11 +6519,12 @@ public final class Data {
       "d\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\020\n\010course" +
       "Id\030\003 \003(\t\"P\n\rAdvanceReview\022\020\n\010courseId\030\001 " +
       "\002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\027\n\017courseProbl" +
-      "emId\030\003 \002(\t*\246\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\n" +
+      "emId\030\003 \002(\t*\312\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\n" +
       "ASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK",
       "_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE" +
       "\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPER" +
-      "IMENT\020\010\022\n\n\006SCHOOL\020\t"
+      "IMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017" +
+      "\n\013BANK_SEARCH\020\n"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

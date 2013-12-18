@@ -56,11 +56,13 @@ enum ItemQuery {
   USER_INFO = 6,
   SOLUTION = 7,
   EXPERIMENT = 8,
-  SCHOOL = 9
+  SCHOOL = 9,
+  COURSE_SEARCH = 10,
+  BANK_SEARCH = 10
 };
 bool ItemQuery_IsValid(int value);
 const ItemQuery ItemQuery_MIN = COURSE;
-const ItemQuery ItemQuery_MAX = SCHOOL;
+const ItemQuery ItemQuery_MAX = COURSE_SEARCH;
 const int ItemQuery_ARRAYSIZE = ItemQuery_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ItemQuery_descriptor();

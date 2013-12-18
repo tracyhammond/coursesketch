@@ -22,7 +22,7 @@ public class BankProblemManager
 {
 	public static String mongoInsertBankProblem(DB dbs, SrlBankProblem problem) throws AuthenticationException
 	{
-		DBCollection new_user = dbs.getCollection("ProblemBank");
+		DBCollection new_user = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 		BasicDBObject query = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())
 										 .append(IMAGE, problem.getImage())
 										 .append(SOLUTION_ID, problem.getSolutionId()) 
@@ -41,7 +41,7 @@ public class BankProblemManager
 
 	public static SrlBankProblem mongoGetBankProblem(DB dbs, String problemBankID,String userId) throws AuthenticationException
 	{
-		DBRef myDbRef = new DBRef(dbs, "ProblemBank", new ObjectId(problemBankID));
+		DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankID));
 		DBObject corsor = myDbRef.fetch();
 
 		ArrayList adminList = (ArrayList)corsor.get(ADMIN);
@@ -82,7 +82,7 @@ public class BankProblemManager
 
 	public static boolean mongoUpdateBankProblem(DB dbs, String problemBankId,String userId, SrlBankProblem problem) throws AuthenticationException
 	{
-		DBRef myDbRef = new DBRef(dbs, "ProblemBank", new ObjectId(problemBankId));
+		DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
 		DBObject corsor = myDbRef.fetch();
 
 		ArrayList adminList = (ArrayList<Object>)corsor.get(ADMIN);

@@ -69,13 +69,32 @@
 			});
 
 	    	serverConnection.setSchoolDataListener(function(evt, msg) {
-	    		var school = SchoolBuilder.SrlSchool.decode(msg.otherData);
+	    		console.log("Recieved message back from the server");
+	    		var result = QueryBuilder.DataResult.decode(msg.otherData);
+	    		var list = result.results;
+	    		for (var i = 0; i <list.length; i++) {
+	    			var item = list[i];
+	    			console.log("going through item");
+	    			console.log(QueryBuilder.ItemQuery.COURSE);
+	    			if (item.query == QueryBuilder.ItemQuery.COURSE) {
+	    				console.log("DCODING COURSE RESPONSE");
+	    				decodeSchool(item.data);
+	    			}
+	    		}
+	    	});
+	    	
+	    	function decodeSchool(data) {
+	    		var school = SchoolBuilder.SrlSchool.decode(data);
+	    		console.log(school);
 	    		var courseList = school.courses;
 	    		var assignments = school.courses;
 	    		for(var i = 0; i <courseList.length; i++) {
+	    			console.log("Adding course");
+	    			console.log(courseList[i]);
 	    			user_courses[courseList[i].id] = courseList[i];
 	    		}
 	    		buildCourses();
+	    		/*
 	    		if (courseList.length > 0) {
 		    		var assignmentIdList = [];
 		    		for(var i = 0; i <courseList.length; i++) {
@@ -88,13 +107,14 @@
 		    		}
 		    		createAssignmentRequest(assignmentIdList);
 	    		}
+	    		*/
 	    		if (assignments.length > 0 ) {
 	    			for(var i = 0; i <assignments.length; i++) {
 		    			user_assignments[assignments[i].id] = assignments[i];
 		    		}
 		    		buildAssignments();
 	    		}
-	    	});
+	    	}
 	    }
 	</script>
 	<script type="text/javascript" src="js/school/course_manager.js"></script>
@@ -202,27 +222,16 @@
 	  		}
 
 	  		function getData() {
-	  			var request = new DataRequest("david","SessionId");
+	  			var request = new DataRequest();
 	  			var courseItem = new ItemRequest();
-	  			courseItem.query = ItemRequest.ItemQuery.COURSE;
+	  			courseItem.query = QueryBuilder.ItemQuery.COURSE_SEARCH;
 	  			courseItem.itemId = [];
-	  			courseItem.itemId.push("52a77e1e6b2b611ffbc4d1b2");
-	  			courseItem.itemId.push("52a77e736b2b611ffbc4d1b3");
-	  			var assignmentItem = new ItemRequest();
-	  			assignmentItem.query = ItemRequest.ItemQuery.ASSIGNMENT;
-	  			assignmentItem.itemId = [];
-	  			assignmentItem.itemId.push("id0");
-	  			assignmentItem.itemId.push("id1");
-	  			var problemItem = new ItemRequest();
-	  			problemItem.query = ItemRequest.ItemQuery.COURSE_PROBLEM;
-	  			problemItem.itemId = [];
-	  			problemItem.itemId.push("id0");
-	  			problemItem.itemId.push("id1");
-	  			request.items = [];
+	  			//courseItem.itemId.push("52a77e1e6b2b611ffbc4d1b2");
+	  			//courseItem.itemId.push("52a77e736b2b611ffbc4d1b3");
 	  			request.items.push(courseItem);
-	  			//request.items.push(assignmentItem);
-	  			//request.items.push(problemItem);
-	  			serverConnection.sendRequest(serverConnection.createRequestFromData(request, Request.MessageType.DATA_REQUEST));
+	  			var message = serverConnection.createRequestFromData(request, Request.MessageType.DATA_REQUEST);
+	  			//message.sessionId = "david";
+	  			serverConnection.sendRequest(message);
 	  		}
 	  		
 	  		function createAssignmentRequest(ids) {

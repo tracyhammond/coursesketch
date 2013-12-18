@@ -12,8 +12,8 @@ public class StringConstants {
 	// collections
 	public static final String COURSE_COLLECTION = "Courses";
 	public static final String ASSIGNMENT_COLLECTION = "Assignments";
-	public static final String PROBLEM_BANK_COLLECTION = "Problems";
-	public static final String COURSE_PROBLEM_COLLECTION = "ProblemBank";
+	public static final String PROBLEM_BANK_COLLECTION = "ProblemBank";
+	public static final String COURSE_PROBLEM_COLLECTION = "Problems";
 
 	// meta fields
 	public static final String NAME = "Name";
