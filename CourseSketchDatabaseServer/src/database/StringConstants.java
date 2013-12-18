@@ -9,6 +9,12 @@ public class StringConstants {
 	public static final String COURSE_PROBLEM_ID = "CourseProblemId";
 	public static final String SOLUTION_ID = "SolutionId";
 
+	// collections
+	public static final String COURSE_COLLECTION = "Courses";
+	public static final String ASSIGNMENT_COLLECTION = "Assignments";
+	public static final String PROBLEM_BANK_COLLECTION = "Problems";
+	public static final String COURSE_PROBLEM_COLLECTION = "ProblemBank";
+
 	// meta fields
 	public static final String NAME = "Name";
 	public static final String DESCRIPTION = "Description";

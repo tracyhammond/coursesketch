@@ -3,11 +3,9 @@ package database.managers;
 import static database.StringConstants.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
@@ -21,20 +19,18 @@ import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import database.auth.Authenticator.AuthType;
 
 public class CourseProblemManager 
 {
 	public static String mongoInsertCourseProblem(DB dbs, String userId, SrlProblem problem) throws AuthenticationException, DatabaseAccessException
 	{
 		DBCollection new_user = dbs.getCollection("Problems");
-		SrlAssignment assignment = AssignmentManager.mongoGetAssignment(dbs,problem.getAssignmentId(),userId, 0);
-		if (assignment.getAccessPermission().getAdminPermissionCount() <= 0) {
-			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
-		}
-		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, assignment.getAccessPermission().getAdminPermissionList());
-		boolean isMod = Authenticator.checkAuthentication(dbs, userId, assignment.getAccessPermission().getModeratorPermissionList());
 
-		if(!isAdmin && !isMod)
+		// make sure person is mod or admin for the assignment
+		AuthType auth = new AuthType();
+		auth.checkAdminOrMod = true;
+		if (!Authenticator.mognoIsAuthenticated(dbs, ASSIGNMENT_COLLECTION, problem.getAssignmentId(), userId, 0, auth))
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
@@ -49,15 +45,8 @@ public class CourseProblemManager
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 
-		List<String> idList = new ArrayList<String>();
-		if (assignment.getProblemListCount() > 0) {
-			idList.addAll(assignment.getProblemListList());
-		}
-		idList.add((String) corsor.get(SELF_ID).toString());
-		SrlAssignment.Builder newAssignment = SrlAssignment.newBuilder();
-		newAssignment.addAllProblemList(idList);
-
-		AssignmentManager.mongoUpdateAssignment(dbs, problem.getAssignmentId(), userId, newAssignment.buildPartial());
+		// inserts the id into the previous the course
+		AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), corsor.get(SELF_ID).toString());
 
 		return corsor.get(SELF_ID).toString();
 	}
@@ -90,13 +79,17 @@ public class CourseProblemManager
 		exactProblem.setAssignmentId((String)corsor.get(ASSIGNMENT_ID));
 		exactProblem.setGradeWeight((String)corsor.get(GRADE_WEIGHT));
 
+		// check to make sure the problem is within the time period that the assignment is open and the user is in the assignment
+		AuthType auth = new AuthType();
+		auth.checkDate = true;
+		auth.user = true;
 		if (isUsers) {
-			SrlAssignment assignment = AssignmentManager.mongoGetAssignment(dbs, exactProblem.getAssignmentId(), userId, checkTime);
-			if (!Authenticator.isTimeValid(checkTime, assignment.getAccessDate(), assignment.getCloseDate())) {
+			if (!Authenticator.mognoIsAuthenticated(dbs, COURSE_COLLECTION, (String)corsor.get(COURSE_ID), userId, checkTime, auth))
+			{
 				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
 			}
 		}
-
+		
 		// problem manager get problem from bank (as a user!)
 		SrlBankProblem problemBank = BankProblemManager.mongoGetBankProblem(dbs, (String)corsor.get(PROBLEM_BANK_ID), (String)exactProblem.getCourseId()); // problem bank look up
 		if (problemBank != null) {

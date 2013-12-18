@@ -39,22 +39,11 @@ public class AssignmentTester {
 		System.out.println(testBuilder.toString());
 		System.out.println("Inserting Assignments");
 		String assignmentId = null;
-		try{
-			System.out.println("Admin");
-			assignmentId = AssignmentManager.mongoInsertAssignment(dbs,"david",testBuilder.buildPartial());
-		}
-		catch(AuthenticationException e) {
-			System.out.println("Succesfully failed to authenticate mongo get assignment");
-		}
-		try
-		{
-			System.out.println("Mod");
-			assignmentId = AssignmentManager.mongoInsertAssignment(dbs,"raniero",testBuilder.buildPartial());
-		}
-		catch(AuthenticationException e) {
-			System.out.println("Succesfully failed to authenticate mongo get assignment");
-		}
-		
+		System.out.println("Admin");
+		assignmentId = AssignmentManager.mongoInsertAssignment(dbs,"david",testBuilder.buildPartial());
+		System.out.println("Mod");
+	//	testBuilder.setDescription("Added by moderator");
+	//	assignmentId = AssignmentManager.mongoInsertAssignment(dbs,"raniero",testBuilder.buildPartial());
 		try
 		{
 			System.out.println("User");

@@ -43,6 +43,7 @@ public class CourseProblemTester {
 		}
 		try
 		{
+			testBuilder.setDescription("Added by moderator");
 			System.out.println("Mod");
 			problemId = CourseProblemManager.mongoInsertCourseProblem(dbs,"raniero",testBuilder.buildPartial());
 		}

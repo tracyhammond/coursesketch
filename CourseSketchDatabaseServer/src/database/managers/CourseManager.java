@@ -22,10 +22,9 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 public class CourseManager 
 {
-	
 	public static String mongoInsertCourse(DB dbs, SrlCourse course)
 	{
-		DBCollection new_user = dbs.getCollection("Courses");
+		DBCollection new_user = dbs.getCollection(COURSE_COLLECTION);
 		BasicDBObject query = new BasicDBObject(DESCRIPTION,course.getDescription())
 										 .append(NAME,course.getName())
 										 .append(COURSE_ACCESS,course.getAccess().getNumber()) 
@@ -43,10 +42,10 @@ public class CourseManager
 		DBObject corsor = new_user.findOne(query);
 		return corsor.get(SELF_ID).toString();
 	}
-	
+
 	public static SrlCourse mongoGetCourse(DB dbs, String courseId,String userId, long checkTime) throws AuthenticationException, DatabaseAccessException
 	{
-		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseId));
+		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
 		DBObject corsor = myDbRef.fetch();
 		if (corsor == null) {
 			throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
@@ -103,14 +102,13 @@ public class CourseManager
 		return exactCourse.build();
 		
 	}
-	
-	
+
 	public static boolean mongoUpdateCourse(DB dbs, String courseID, String userId, SrlCourse course) throws AuthenticationException
 	{
-		DBRef myDbRef = new DBRef(dbs, "Courses", new ObjectId(courseID));
+		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseID));
 		DBObject corsor = myDbRef.fetch();
 		DBObject updateObj = null;
-		DBCollection courses = dbs.getCollection("Courses");
+		DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
 		
 		ArrayList adminList = (ArrayList<Object>)corsor.get(ADMIN);
 		ArrayList modList = (ArrayList<Object>)corsor.get(MOD);
@@ -157,13 +155,12 @@ public class CourseManager
 				updateObj = new BasicDBObject(NAME, course.getName());
 				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 			}
-			if (course.hasAccess()) 
-			{
+			if (course.hasAccess()) {
 				updateObj = new BasicDBObject(COURSE_ACCESS, course.getAccess().getNumber());
 				courses.update(corsor, new BasicDBObject ("$set",updateObj));
 				
 			}
-		//Optimization: have something to do with pulling values of an array and pushing values to an array
+			//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (course.hasAccessPermission()) {
 				System.out.println("Updating permissions!");
 				SrlPermission permissions = course.getAccessPermission();
@@ -180,8 +177,6 @@ public class CourseManager
 					courses.update(corsor, new BasicDBObject ("$set",updateObj));
 				}
 			}
-			
-			
 		}
 		if (isAdmin || isMod) {
 			if (course.getAssignmentListList() != null) {
@@ -195,4 +190,13 @@ public class CourseManager
 		
 	}
 
+	static boolean mongoInsert(DB dbs, String courseId, String assignmentId) {
+		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+		DBObject corsor = myDbRef.fetch();
+		DBObject updateObj = null;
+		DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
+		updateObj = new BasicDBObject(ASSIGNMENT_LIST, assignmentId);
+		courses.update(corsor, new BasicDBObject ("$addToSet",updateObj));
+		return true;
+	}
 }
