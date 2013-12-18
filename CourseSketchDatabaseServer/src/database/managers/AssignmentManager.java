@@ -8,7 +8,6 @@ import java.util.List;
 import org.bson.types.ObjectId;
 
 import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlPermission;
 
 import com.mongodb.BasicDBObject;
@@ -21,20 +20,16 @@ import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import database.auth.Authenticator.AuthType;
 
 public class AssignmentManager 
 {
 	public static String mongoInsertAssignment(DB dbs, String userId, SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException
 	{
 		DBCollection new_user = dbs.getCollection("Assignments");
-		SrlCourse course = CourseManager.mongoGetCourse(dbs, assignment.getCourseId(), userId, 0); // user can not insert anyways so we are good.
-		if (course.getAccessPermission().getAdminPermissionList() == null) {
-			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
-		}
-		boolean isAdmin = Authenticator.checkAuthentication(dbs, userId, course.getAccessPermission().getAdminPermissionList());
-		boolean isMod = Authenticator.checkAuthentication(dbs, userId, course.getAccessPermission().getModeratorPermissionList());
-
-		if(!isAdmin && !isMod)
+		AuthType auth = new AuthType();
+		auth.checkAdminOrMod = true;
+		if (!Authenticator.mognoIsAuthenticated(dbs, COURSE_COLLECTION, assignment.getCourseId(), userId, 0, auth))
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
@@ -59,20 +54,15 @@ public class AssignmentManager
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 
-		List<String> idList = new ArrayList<String>();
-		if(course.getAssignmentListList() != null) {
-			idList.addAll(course.getAssignmentListList());
-		}
-		idList.add((String) corsor.get(SELF_ID).toString());
-		SrlCourse.Builder newCourse = SrlCourse.newBuilder();
-		newCourse.addAllAssignmentList(idList);
-		CourseManager.mongoUpdateCourse(dbs, assignment.getCourseId(), userId, newCourse.buildPartial());
-		return (String) corsor.get(SELF_ID).toString();
+		// inserts the id into the previous the course
+		CourseManager.mongoInsert(dbs, assignment.getCourseId(),corsor.get(SELF_ID).toString() );
+
+		return corsor.get(SELF_ID).toString();
 	}
 
 	public static SrlAssignment mongoGetAssignment(DB dbs, String assignmentId, String userId, long checkTime) throws AuthenticationException, DatabaseAccessException
 	{
-		DBRef myDbRef = new DBRef(dbs, "Assignments", new ObjectId(assignmentId));
+		DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
 		DBObject corsor = myDbRef.fetch();
 		if (corsor == null) {
 			throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId);
@@ -89,6 +79,17 @@ public class AssignmentManager
 		if(!isAdmin && !isMod && !isUsers)
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+		}
+
+		// check to make sure the assignment is within the time period that the course is open and the user is in the course
+		AuthType auth = new AuthType();
+		auth.checkDate = true;
+		auth.user = true;
+		if (isUsers) {
+			if (!Authenticator.mognoIsAuthenticated(dbs, COURSE_COLLECTION, (String)corsor.get(COURSE_ID), userId, checkTime, auth))
+			{
+				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
+			}
 		}
 
 		SrlAssignment.Builder exactAssignment = SrlAssignment.newBuilder();
@@ -114,12 +115,6 @@ public class AssignmentManager
 		exactAssignment.setImageUrl((String)corsor.get(IMAGE));
 		exactAssignment.addAllProblemList((List)corsor.get(PROBLEM_LIST));
 
-		if (isUsers) {
-			SrlCourse course = CourseManager.mongoGetCourse(dbs, exactAssignment.getCourseId(), userId, checkTime);
-			if (!Authenticator.isTimeValid(checkTime, course.getAccessDate(), course.getCloseDate())) {
-				throw new AuthenticationException(AuthenticationException.EARLY_ACCESS);
-			}
-		}
 		SrlPermission.Builder permissions = SrlPermission.newBuilder();
 		if (isAdmin) 
 		{
@@ -136,10 +131,10 @@ public class AssignmentManager
 
 	public static boolean mongoUpdateAssignment(DB dbs, String assignmentId,String userId, SrlAssignment assignment) throws AuthenticationException
 	{
-		DBRef myDbRef = new DBRef(dbs, "Assignments", new ObjectId(assignmentId));
+		DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
 		DBObject corsor = myDbRef.fetch();
 		DBObject updateObj = null;
-		DBCollection courses = dbs.getCollection("Assignments");
+		DBCollection courses = dbs.getCollection(ASSIGNMENT_COLLECTION);
 
 		ArrayList adminList = (ArrayList<Object>)corsor.get("Admin");
 		ArrayList modList = (ArrayList<Object>)corsor.get("Mod");
@@ -231,4 +226,12 @@ public class AssignmentManager
 		return true;
 	}
 
+	static boolean mongoInsert(DB dbs, String assignmentId, String problemId) {
+		DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
+		DBObject corsor = myDbRef.fetch();
+		DBCollection courses = dbs.getCollection(ASSIGNMENT_COLLECTION);
+		DBObject updateObj = new BasicDBObject(PROBLEM_LIST, problemId);
+		courses.update(corsor, new BasicDBObject ("$addToSet", updateObj));
+		return true;
+	}
 }
