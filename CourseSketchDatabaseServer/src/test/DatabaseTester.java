@@ -11,12 +11,14 @@ import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
+import database.institution.Institution;
 
 public class DatabaseTester {
 	public static void main(String args[]) throws UnknownHostException, AuthenticationException {
 		MongoClient mongoClient = new MongoClient("localhost");
 		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
 		DB db = mongoClient.getDB("test");
+		new Institution(true);
 		deleteCollections(db);
 		try {
 			String returnId = CourseTester.testCourses(db);
@@ -52,6 +54,9 @@ public class DatabaseTester {
 		collection.remove(new BasicDBObject());
 		
 		collection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
+		collection.remove(new BasicDBObject());
+		
+		collection = dbs.getCollection(USER_GROUP_COLLECTION);
 		collection.remove(new BasicDBObject());
 	}
 }

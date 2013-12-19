@@ -11,6 +11,7 @@ import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.institution.AssignmentManager;
+import database.institution.Institution;
 
 public class AssignmentTester {
 
@@ -24,6 +25,7 @@ public class AssignmentTester {
 		testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
 		testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() + 1000000).getTime())));
 		SrlPermission.Builder permissions = SrlPermission.newBuilder();
+		/*
 		permissions.addAdminPermission("david");
 		permissions.addAdminPermission("larry");
 
@@ -32,6 +34,7 @@ public class AssignmentTester {
 
 		permissions.addUserPermission("vijay");
 		permissions.addUserPermission("matt");
+		*/
 		permissions.addUserPermission("saby");
 		permissions.addUserPermission("stephanie");
 		
@@ -40,14 +43,14 @@ public class AssignmentTester {
 		System.out.println("Inserting Assignments");
 		String assignmentId = null;
 		System.out.println("Admin");
-		assignmentId = AssignmentManager.mongoInsertAssignment(dbs,"david",testBuilder.buildPartial());
+		assignmentId = Institution.mongoInsertAssignment("david", testBuilder.buildPartial());
 		System.out.println("Mod");
-	//	testBuilder.setDescription("Added by moderator");
-	//	assignmentId = AssignmentManager.mongoInsertAssignment(dbs,"raniero",testBuilder.buildPartial());
+		testBuilder.setDescription("Added by moderator");
+		assignmentId = Institution.mongoInsertAssignment("raniero", testBuilder.buildPartial());
 		try
 		{
 			System.out.println("User");
-			assignmentId = AssignmentManager.mongoInsertAssignment(dbs,"matt",testBuilder.buildPartial());
+			assignmentId = Institution.mongoInsertAssignment("matt", testBuilder.buildPartial());
 		}
 		catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate mongo get assignment");
@@ -55,13 +58,13 @@ public class AssignmentTester {
 
 		System.out.println("GETTING ASSIGNMENTS AS ADMIN");
 		SrlAssignment builder = AssignmentManager.mongoGetAssignment(dbs, assignmentId, "david", System.currentTimeMillis());
-		System.out.println(builder.toString());
+		//System.out.println(builder.toString());
 		System.out.println("GETTING ASSIGNMENTS AS MOD");
 		SrlAssignment modBuilder = AssignmentManager.mongoGetAssignment(dbs, assignmentId, "manoj", System.currentTimeMillis());
-		System.out.println(modBuilder.toString());
+		//System.out.println(modBuilder.toString());
 		System.out.println("GETTING ASSIGNMENTS AS USER");
 		SrlAssignment userBuilder = AssignmentManager.mongoGetAssignment(dbs, assignmentId, "matt", System.currentTimeMillis());
-		System.out.println(userBuilder.toString());
+		//System.out.println(userBuilder.toString());
 		try {
 			System.out.println("GETTING ASSIGNMENTS AS NO ONE");
 			SrlAssignment crashBuilder = AssignmentManager.mongoGetAssignment(dbs, assignmentId, "NO_ONE", System.currentTimeMillis());
