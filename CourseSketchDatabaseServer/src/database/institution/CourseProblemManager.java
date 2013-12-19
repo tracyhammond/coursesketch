@@ -157,14 +157,21 @@ public class CourseProblemManager
 	static void mongoInsertDefaultGroupId(DB dbs, String courseProblemId, ArrayList<String>[] ids) {
 		DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(courseProblemId));
 		DBObject corsor = myDbRef.fetch();
-		DBCollection assignments = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
+		DBCollection problems = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 
+		BasicDBObject updateQuery = null;
+		BasicDBObject fieldQuery = null;
 		for(int k = 0; k <ids.length; k++) {
 			ArrayList<String> list = ids[k];
-			String field = k == 0 ? ADMIN : k == 1 ? MOD : USERS; // k = 0 ADMIN, k = 1 MOD, k = 2 USERS
-			DBObject updateQuery = new BasicDBObject("$addToSet", new BasicDBObject(field, new BasicDBObject("$each", list)));
-			System.out.println(updateQuery);
-			assignments.update(corsor, updateQuery);
+			String field = (k == 0) ? ADMIN : (k == 1 ? MOD : USERS); // k = 0 ADMIN, k = 1 MOD, k = 2 USERS
+			if (k == 0 ) {
+				fieldQuery = new BasicDBObject(field, new BasicDBObject("$each", list));
+				updateQuery = new BasicDBObject("$addToSet", fieldQuery);
+			} else {
+				fieldQuery.append(field, new BasicDBObject("$each", list));
+			}
 		}
+		System.out.println(updateQuery);
+		problems.update(corsor, updateQuery);
 	}
 }
