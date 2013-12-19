@@ -251,13 +251,20 @@ public class AssignmentManager
 		DBObject corsor = myDbRef.fetch();
 		DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);
 
+		BasicDBObject updateQuery = null;
+		BasicDBObject fieldQuery = null;
 		for(int k = 0; k <ids.length; k++) {
 			ArrayList<String> list = ids[k];
 			String field = (k == 0) ? ADMIN : (k == 1 ? MOD : USERS); // k = 0 ADMIN, k = 1 MOD, k = 2 USERS
-			DBObject updateQuery = new BasicDBObject("$addToSet", new BasicDBObject(field, new BasicDBObject("$each", list)));
-			System.out.println(updateQuery);
-			assignments.update(corsor, updateQuery);
+			if (k == 0 ) {
+				fieldQuery = new BasicDBObject(field, new BasicDBObject("$each", list));
+				updateQuery = new BasicDBObject("$addToSet", fieldQuery);
+			} else {
+				fieldQuery.append(field, new BasicDBObject("$each", list));
+			}
 		}
+		System.out.println(updateQuery);
+		assignments.update(corsor, updateQuery);
 	}
 
 	/**
