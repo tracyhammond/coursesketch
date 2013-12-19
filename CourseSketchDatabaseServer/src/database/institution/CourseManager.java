@@ -227,8 +227,8 @@ public class CourseManager {
 		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
 		DBObject corsor = myDbRef.fetch();
 		DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
-		DBObject courseQuery = new BasicDBObject("$set", new BasicDBObject(ADMIN_GROUP_ID, adminGroupId))
-			.append("$set", new BasicDBObject(MOD_GROUP_ID, modGroupId)).append("$set", new BasicDBObject(USER_GROUP_ID, userGroupId)); // the value for a public course
+		BasicDBObject listQueries = new BasicDBObject(ADMIN_GROUP_ID, adminGroupId).append(MOD_GROUP_ID, modGroupId).append(USER_GROUP_ID, userGroupId);
+		DBObject courseQuery = new BasicDBObject("$set", listQueries);
 		courses.update(corsor, courseQuery);
 	}
 
