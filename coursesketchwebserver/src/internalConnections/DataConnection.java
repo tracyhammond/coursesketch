@@ -11,14 +11,6 @@ import org.java_websocket.drafts.Draft;
 public class DataConnection extends WrapperConnection {
 	
 	public DataConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		this( serverUri, draft );
-	}
-	
-	public DataConnection( URI serverUri , Draft draft ) {
-		super( serverUri, draft );
-	}
-
-	public DataConnection( URI serverURI ) {
-		super( serverURI );
+		super( serverUri, draft, parent);
 	}
 }

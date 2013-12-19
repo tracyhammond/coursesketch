@@ -87,20 +87,20 @@ public final class Message {
     com.google.protobuf.ByteString
         getSessionInfoBytes();
 
-    // optional string sessionId = 6;
+    // optional string serversideId = 6;
     /**
-     * <code>optional string sessionId = 6;</code>
+     * <code>optional string serversideId = 6;</code>
      */
-    boolean hasSessionId();
+    boolean hasServersideId();
     /**
-     * <code>optional string sessionId = 6;</code>
+     * <code>optional string serversideId = 6;</code>
      */
-    java.lang.String getSessionId();
+    java.lang.String getServersideId();
     /**
-     * <code>optional string sessionId = 6;</code>
+     * <code>optional string serversideId = 6;</code>
      */
     com.google.protobuf.ByteString
-        getSessionIdBytes();
+        getServersideIdBytes();
   }
   /**
    * Protobuf type {@code protobuf.srl.request.Request}
@@ -198,7 +198,7 @@ public final class Message {
             }
             case 50: {
               bitField0_ |= 0x00000020;
-              sessionId_ = input.readBytes();
+              serversideId_ = input.readBytes();
               break;
             }
           }
@@ -536,20 +536,20 @@ public final class Message {
       }
     }
 
-    // optional string sessionId = 6;
-    public static final int SESSIONID_FIELD_NUMBER = 6;
-    private java.lang.Object sessionId_;
+    // optional string serversideId = 6;
+    public static final int SERVERSIDEID_FIELD_NUMBER = 6;
+    private java.lang.Object serversideId_;
     /**
-     * <code>optional string sessionId = 6;</code>
+     * <code>optional string serversideId = 6;</code>
      */
-    public boolean hasSessionId() {
+    public boolean hasServersideId() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
-     * <code>optional string sessionId = 6;</code>
+     * <code>optional string serversideId = 6;</code>
      */
-    public java.lang.String getSessionId() {
-      java.lang.Object ref = sessionId_;
+    public java.lang.String getServersideId() {
+      java.lang.Object ref = serversideId_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -557,22 +557,22 @@ public final class Message {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          sessionId_ = s;
+          serversideId_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>optional string sessionId = 6;</code>
+     * <code>optional string serversideId = 6;</code>
      */
     public com.google.protobuf.ByteString
-        getSessionIdBytes() {
-      java.lang.Object ref = sessionId_;
+        getServersideIdBytes() {
+      java.lang.Object ref = serversideId_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        sessionId_ = b;
+        serversideId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -585,7 +585,7 @@ public final class Message {
       otherData_ = com.google.protobuf.ByteString.EMPTY;
       responseText_ = "";
       sessionInfo_ = "";
-      sessionId_ = "";
+      serversideId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -625,7 +625,7 @@ public final class Message {
         output.writeBytes(5, getSessionInfoBytes());
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeBytes(6, getSessionIdBytes());
+        output.writeBytes(6, getServersideIdBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -658,7 +658,7 @@ public final class Message {
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(6, getSessionIdBytes());
+          .computeBytesSize(6, getServersideIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -795,7 +795,7 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000008);
         sessionInfo_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
-        sessionId_ = "";
+        serversideId_ = "";
         bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
@@ -852,7 +852,7 @@ public final class Message {
         if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
           to_bitField0_ |= 0x00000020;
         }
-        result.sessionId_ = sessionId_;
+        result.serversideId_ = serversideId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -888,9 +888,9 @@ public final class Message {
           sessionInfo_ = other.sessionInfo_;
           onChanged();
         }
-        if (other.hasSessionId()) {
+        if (other.hasServersideId()) {
           bitField0_ |= 0x00000020;
-          sessionId_ = other.sessionId_;
+          serversideId_ = other.serversideId_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -1291,76 +1291,76 @@ public final class Message {
         return this;
       }
 
-      // optional string sessionId = 6;
-      private java.lang.Object sessionId_ = "";
+      // optional string serversideId = 6;
+      private java.lang.Object serversideId_ = "";
       /**
-       * <code>optional string sessionId = 6;</code>
+       * <code>optional string serversideId = 6;</code>
        */
-      public boolean hasSessionId() {
+      public boolean hasServersideId() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       /**
-       * <code>optional string sessionId = 6;</code>
+       * <code>optional string serversideId = 6;</code>
        */
-      public java.lang.String getSessionId() {
-        java.lang.Object ref = sessionId_;
+      public java.lang.String getServersideId() {
+        java.lang.Object ref = serversideId_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          sessionId_ = s;
+          serversideId_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>optional string sessionId = 6;</code>
+       * <code>optional string serversideId = 6;</code>
        */
       public com.google.protobuf.ByteString
-          getSessionIdBytes() {
-        java.lang.Object ref = sessionId_;
+          getServersideIdBytes() {
+        java.lang.Object ref = serversideId_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          sessionId_ = b;
+          serversideId_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>optional string sessionId = 6;</code>
+       * <code>optional string serversideId = 6;</code>
        */
-      public Builder setSessionId(
+      public Builder setServersideId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000020;
-        sessionId_ = value;
+        serversideId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string sessionId = 6;</code>
+       * <code>optional string serversideId = 6;</code>
        */
-      public Builder clearSessionId() {
+      public Builder clearServersideId() {
         bitField0_ = (bitField0_ & ~0x00000020);
-        sessionId_ = getDefaultInstance().getSessionId();
+        serversideId_ = getDefaultInstance().getServersideId();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string sessionId = 6;</code>
+       * <code>optional string serversideId = 6;</code>
        */
-      public Builder setSessionIdBytes(
+      public Builder setServersideIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000020;
-        sessionId_ = value;
+        serversideId_ = value;
         onChanged();
         return this;
       }
@@ -2586,19 +2586,19 @@ public final class Message {
   static {
     java.lang.String[] descriptorData = {
       "\n\023input/message.proto\022\024protobuf.srl.requ" +
-      "est\"\321\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
+      "est\"\324\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
       "rotobuf.srl.request.Request.MessageType:" +
       "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req" +
       "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014" +
       "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 " +
-      "\001(\t\022\021\n\tsessionId\030\006 \001(\t\"w\n\013MessageType\022\t\n" +
-      "\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SENDI" +
-      "NG\020\002\022\017\n\013RECOGNITION\020\003\022\013\n\007LOADING\020\004\022\016\n\nSU" +
-      "BMISSION\020\005\022\013\n\007PENDING\020\006\"\226\001\n\020LoginInforma",
-      "tion\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t" +
-      "\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030\004 \001" +
-      "(\010\022\025\n\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 \001(\t" +
-      "\022\016\n\006userId\030\007 \001(\t"
+      "\001(\t\022\024\n\014serversideId\030\006 \001(\t\"w\n\013MessageType" +
+      "\022\t\n\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SE" +
+      "NDING\020\002\022\017\n\013RECOGNITION\020\003\022\013\n\007LOADING\020\004\022\016\n" +
+      "\nSUBMISSION\020\005\022\013\n\007PENDING\020\006\"\226\001\n\020LoginInfo",
+      "rmation\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 " +
+      "\001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030" +
+      "\004 \001(\010\022\025\n\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 " +
+      "\001(\t\022\016\n\006userId\030\007 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2610,7 +2610,7 @@ public final class Message {
           internal_static_protobuf_srl_request_Request_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_request_Request_descriptor,
-              new java.lang.String[] { "RequestType", "Login", "OtherData", "ResponseText", "SessionInfo", "SessionId", });
+              new java.lang.String[] { "RequestType", "Login", "OtherData", "ResponseText", "SessionInfo", "ServersideId", });
           internal_static_protobuf_srl_request_LoginInformation_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_request_LoginInformation_fieldAccessorTable = new

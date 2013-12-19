@@ -16,7 +16,7 @@ import protobuf.srl.request.Message.Request;
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class MultiConnectionManager {
 
-	private boolean connectionType = CONNECT_LOCALLY;
+	protected boolean connectionType = CONNECT_LOCALLY;
 	public static final boolean CONNECT_LOCALLY = true;
 	public static final boolean CONNECT_REMOTE = false;
 	HashMap<Class<?>, ArrayList<WrapperConnection>> connections
@@ -31,6 +31,7 @@ public class MultiConnectionManager {
 	 * Creates a connection given the different information.
 	 *
 	 * @param serv the server that is connected to this connection manager
+	 * @param man this is the manager that will then hold the connection
 	 * @param isLocal if the connection that is being created is local or remote
 	 * @param port the port that this connection is created at.  (Has to be unique to this computer)
 	 * @param connectionType the class that will be made (should be a subclass of WrapperConnection)
@@ -56,7 +57,7 @@ public class MultiConnectionManager {
 			c.connect();
 		}
 		// In case of error do this!
-		c.setParent(serv);
+		//c.setParent(serv);
 		if (c == null) {
 			throw new ConnectionException("failed to create WrapperConnection");
 		}
@@ -66,11 +67,11 @@ public class MultiConnectionManager {
 	/**
 	 * Sends a request with the id and the connection at the given index.
 	 * @param req The request to send.
-	 * @param userID The session Id of the request.
+	 * @param sessionID The session Id of the request.
 	 * @param connectionNumber the location of where to find the location.
 	 */
-	public void send(Request req, String userID, Class<? extends WrapperConnection> connectionType) {
-		Request packagedRequest = MultiInternalConnectionServer.Encoder.requestIDBuilder(req, userID);		//Attach the existing request with the UserID
+	public void send(Request req, String sessionID, Class<? extends WrapperConnection> connectionType) {
+		Request packagedRequest = MultiInternalConnectionServer.Encoder.requestIDBuilder(req, sessionID);		//Attach the existing request with the UserID
 		getBestConnection(connectionType).send(packagedRequest.toByteArray());
 	}
 
@@ -101,6 +102,8 @@ public class MultiConnectionManager {
 			throw new NullPointerException("can not add connection to null type");
 		}
 
+		connection.parentManager = this;
+		
 		ArrayList<WrapperConnection> cons = connections.get(connectionType);
 		if (cons == null) {
 			cons = new ArrayList<WrapperConnection>();

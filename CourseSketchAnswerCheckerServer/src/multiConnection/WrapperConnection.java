@@ -12,24 +12,14 @@ import org.java_websocket.handshake.ServerHandshake;
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class WrapperConnection extends WebSocketClient {
 
-	protected MultiInternalConnectionServer parent;
-	public WrapperConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
+	protected MultiInternalConnectionServer parentServer;
+	protected MultiConnectionManager parentManager;
+	public WrapperConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parentServer) {
 		super( serverUri, draft );
-		this.parent = parent;
-		if (parent == null) {
+		this.parentServer = parentServer;
+		if (parentServer == null) {
 			System.out.println("Warning Parent is null");
 		}
-	}
-
-	public void setParent(MultiInternalConnectionServer parent) {
-		this.parent = parent;
-	}
-	public WrapperConnection( URI serverUri , Draft draft ) {
-		this(serverUri, draft, null);
-	}
-
-	public WrapperConnection( URI serverURI ) {
-		super( serverURI );
 	}
 
 	@Override
@@ -69,22 +59,22 @@ public class WrapperConnection extends WebSocketClient {
 	}
 
 	protected MultiConnectionState getStateFromId(String key) {
-		if (parent == null) {
+		if (parentServer == null) {
 			System.out.println("null parent");
 		}
-		if (parent.getIdToState() == null) {
+		if (parentServer.getIdToState() == null) {
 			System.out.println("null getIdToState");
 		}
-		return parent.getIdToState().get(key);
+		return parentServer.getIdToState().get(key);
 	}
 	
 	protected WebSocket getConnectionFromState(MultiConnectionState state) {
-		if (parent == null) {
+		if (parentServer == null) {
 			System.out.println("null parent");
 		}
-		if (parent.getIdToConnection() == null) {
+		if (parentServer.getIdToConnection() == null) {
 			System.out.println("null IdToConnection");
 		}
-		return parent.getIdToConnection().get(state);
+		return parentServer.getIdToConnection().get(state);
 	}
 }

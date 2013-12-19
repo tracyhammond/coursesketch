@@ -8,13 +8,16 @@ import org.java_websocket.WebSocket;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import database.auth.AuthenticationException;
-import database.managers.Institution;
+import database.institution.auth.AuthenticationException;
+import database.institution.managers.Institution;
+import database.user.manager.UserClient;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
+import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
+import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
@@ -30,16 +33,17 @@ public class DataSendHandler {
 		try {
 			System.out.println("Receiving DATA SEND Request...");
 			
-			String userId = req.getSessionId();
-			DataRequest request = DataRequest.parseFrom(req.getOtherData());
+			String userId = req.getServersideId();
+			DataSend request = DataSend.parseFrom(req.getOtherData());
 			if (userId == null) {
 				throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
 			}
 			ArrayList<ItemResult> results = new ArrayList<ItemResult> ();
 
 			for(int p=0; p<request.getItemsList().size(); p++) {
-				ItemRequest itrequest = request.getItemsList().get(p);
+				ItemSend itrequest = request.getItemsList().get(p);
 				switch(itrequest.getQuery()) {
+					/*
 					case COURSE: ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), userId);
 								SrlSchool.Builder courseSchool = SrlSchool.newBuilder();
 								courseSchool.addAllCourses(courseLoop);
@@ -60,17 +64,18 @@ public class DataSendHandler {
 								bankproblemSchool.addAllBankProblems(bankProblemLoop);
 								results.add(buildResult(bankproblemSchool.build().toByteString(),ItemQuery.BANK_PROBLEM));
 								break;
+					*/
+					case USER_INFO: {
+						if (itrequest.getIsInsert()) {
+							UserClient.insertUser(itrequest.getData());
+						}
+					}
 					/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
 								for(AssignmentBuilder loopCourse: assignmentLoop){
 									finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
 								}
 								break;
 					case CLASS_GRADE: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-								for(AssignmentBuilder loopCourse: assignmentLoop){
-									finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-								}
-								break;
-					case USER_INFO: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
 								for(AssignmentBuilder loopCourse: assignmentLoop){
 									finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
 								}
@@ -87,12 +92,15 @@ public class DataSendHandler {
 								break;*/
 				}
 			}
-			conn.send(buildRequest(results, SUCCESS_MESSAGE, req).toByteArray());
+			if (results.size() > 0) {
+				conn.send(buildRequest(results, SUCCESS_MESSAGE, req).toByteArray());
+			}
+			return;
 		} catch (InvalidProtocolBufferException e) {
 			e.printStackTrace();
 			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());
 		}
-		// decode request and pull correct information from database (courses, assignments, ...) then repackage everything and send it out
+		// decode request and pull correct information from database.institution (courses, assignments, ...) then repackage everything and send it out
 		catch (AuthenticationException e) {
 			e.printStackTrace();
 			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());

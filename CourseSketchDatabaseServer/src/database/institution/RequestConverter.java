@@ -1,4 +1,4 @@
-package database;
+package database.institution;
 
 import java.util.ArrayList;
 import java.util.Date;

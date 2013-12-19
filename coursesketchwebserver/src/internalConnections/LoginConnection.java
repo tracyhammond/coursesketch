@@ -8,52 +8,47 @@ import multiConnection.WrapperConnection;
 
 import org.java_websocket.drafts.Draft;
 
+import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.DataSend;
+import protobuf.srl.query.Data.ItemQuery;
+import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.school.School.SrlUser;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class LoginConnection extends WrapperConnection {
 
-	public LoginConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent, Request req, LoginConnectionState state) {
-		this( serverUri, draft );
-		// get connection state
-		// if log success = state -> login
-		// if log fail state -> addTry
-		// state -> stopPending
-		// send result
-		//boolean instructor = false;
-	
-		//return createLoginResponse(req, false, "An Error Occured While Logging in: Wrong Message Type.", false);
-	}
-
 	public LoginConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-
-		this( serverUri, draft );
+		super( serverUri, draft, parent);
 	}
 
 	public void onMessage(ByteBuffer buffer) {
 		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
 		LoginConnectionState state = (LoginConnectionState) getStateFromId(r.getSessionInfo());
 		if (r.getLogin().getIsLoggedIn()) {
-			state.logIn(r.getLogin().getIsInstructor(), r.getSessionId());
+			state.logIn(r.getLogin().getIsInstructor(), r.getServersideId());
 		}
-
-		System.out.println("is logged in? " + r.getLogin().getIsLoggedIn());
-		System.out.println("session info? " + r.getSessionInfo());
-		System.out.println("response " + r.getResponseText());
-		System.out.println("instructor " + r.getLogin().getIsInstructor());
-		System.out.println("userId " + r.getSessionId());
-		System.out.println("otherUserId " + r.getLogin().getUserId());
 
 		Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
 		getConnectionFromState(state).send(result.toByteArray());
-	}
 
-	public LoginConnection( URI serverUri , Draft draft ) {
-		super( serverUri, draft );
-	}
-
-	public LoginConnection( URI serverURI ) {
-		super( serverURI );
+		if (r.getLogin().getIsRegistering() && r.getLogin().getIsLoggedIn()) {
+			// extra steps that we need to do
+			Request.Builder createUser = Request.newBuilder();
+			createUser.setRequestType(MessageType.DATA_SENDING);
+			DataSend.Builder dataSend = DataSend.newBuilder();
+			ItemSend.Builder itemSend = ItemSend.newBuilder();
+			itemSend.setIsInsert(true);
+			itemSend.setQuery(ItemQuery.USER_INFO);
+			SrlUser.Builder user = SrlUser.newBuilder();
+			user.setEmail(r.getLogin().getEmail());
+			user.setUsername(r.getLogin().getUsername());
+			itemSend.setData(user.build().toByteString());
+			dataSend.addItems(itemSend);
+			createUser.setOtherData(dataSend.build().toByteString());
+			this.parentManager.send(createUser.build(), r.getSessionInfo(), DataConnection.class);
+		}
 	}
 }

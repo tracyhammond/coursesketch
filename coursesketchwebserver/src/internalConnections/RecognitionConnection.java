@@ -11,14 +11,6 @@ import org.java_websocket.drafts.Draft;
 public class RecognitionConnection extends WrapperConnection {
 
 	public RecognitionConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		this( serverUri, draft );
-	}
-	
-	public RecognitionConnection( URI serverUri , Draft draft ) {
-		super( serverUri, draft );
-	}
-
-	public RecognitionConnection( URI serverURI ) {
-		super( serverURI );
+		super( serverUri, draft, parent);
 	}
 }

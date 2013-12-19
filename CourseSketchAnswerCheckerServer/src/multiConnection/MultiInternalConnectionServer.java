@@ -108,13 +108,13 @@ public abstract class MultiInternalConnectionServer extends WebSocketServer {
 		public static long counter = 0x4000L | (long) (Math.random() * 0x1000);
 
 		/**
-		 * Returns a {@link Request} as it is parsed from the ByteBuffer.
+		 * Returns a {@link Request} that contains the sessionInfo.
 		 *
-		 * Returns null if the ByteBuffer does not exist.
-		 * @param buffer
-		 * @return
+		 * Returns itself if the sessionInfo is null.
 		 */
 		public static Request requestIDBuilder(Request req, String sessionInfo) {
+			if (sessionInfo == null) 
+				return req;
 			Request.Builder breq = Request.newBuilder();
 			breq.mergeFrom(req);
 			breq.setSessionInfo(sessionInfo);

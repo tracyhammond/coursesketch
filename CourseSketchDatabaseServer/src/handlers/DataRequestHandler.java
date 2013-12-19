@@ -21,8 +21,8 @@ import protobuf.srl.school.School.SrlSchool;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import database.auth.AuthenticationException;
-import database.managers.Institution;
+import database.institution.auth.AuthenticationException;
+import database.institution.managers.Institution;
 
 public class DataRequestHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
@@ -31,7 +31,7 @@ public class DataRequestHandler {
 		try {
 			System.out.println("Receiving DATA Request...");
 			
-			String userId = req.getSessionId();
+			String userId = req.getServersideId();
 			DataRequest request = DataRequest.parseFrom(req.getOtherData());
 			if (userId == null) {
 				throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
@@ -109,7 +109,7 @@ public class DataRequestHandler {
 			e.printStackTrace();
 			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());
 		}
-		// decode request and pull correct information from database (courses, assignments, ...) then repackage everything and send it out
+		// decode request and pull correct information from database.institution (courses, assignments, ...) then repackage everything and send it out
 		catch (AuthenticationException e) {
 			e.printStackTrace();
 			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());

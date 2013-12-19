@@ -1,4 +1,4 @@
-package database;
+package database.institution;
 
 public class StringConstants {
 	// Id
@@ -14,7 +14,9 @@ public class StringConstants {
 	public static final String ASSIGNMENT_COLLECTION = "Assignments";
 	public static final String PROBLEM_BANK_COLLECTION = "ProblemBank";
 	public static final String COURSE_PROBLEM_COLLECTION = "Problems";
-
+	public static final String USER_GROUP_COLLECTION = "UserGroups"; // also contains groups for admins and mods
+	public static final String USER_COLLECTION = "Users";
+	
 	// meta fields
 	public static final String NAME = "Name";
 	public static final String DESCRIPTION = "Description";
@@ -62,4 +64,15 @@ public class StringConstants {
 	public static final String QUESTION_TYPE = "QuestionType";
 	public static final String KEYWORDS = "OtherKeywords";
 
+	// user specific
+	public static final String COURSE_LIST = "CourseList";
+	public static final String FIRST_NAME = "FirstName";
+	public static final String LAST_NAME = "LastName";
+	public static final String USER_NAME = "UserName";
+	public static final String EMAIL = "Email";
+	public static final String SCHOOL_IDENTIFICATION = "UIN";
+	public static final String CREDENTIALS = "Credentials";
+	
+	// user group specific
+	public static final String USER_LIST = "UserList";
 }

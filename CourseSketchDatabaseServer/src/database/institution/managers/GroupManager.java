@@ -1,4 +1,4 @@
-package database.managers;
+package database.institution.managers;
 
 import java.util.ArrayList;
 
@@ -9,8 +9,8 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
+import database.institution.auth.AuthenticationException;
+import database.institution.auth.Authenticator;
 
 public class GroupManager
 {

@@ -46,7 +46,7 @@ void protobuf_AssignDesc_input_2fmessage_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, otherdata_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, responsetext_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, sessioninfo_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, sessionid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, serversideid_),
   };
   Request_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -116,19 +116,19 @@ void protobuf_AddDesc_input_2fmessage_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023input/message.proto\022\024protobuf.srl.requ"
-    "est\"\321\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
+    "est\"\324\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
     "rotobuf.srl.request.Request.MessageType:"
     "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req"
     "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014"
     "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 "
-    "\001(\t\022\021\n\tsessionId\030\006 \001(\t\"w\n\013MessageType\022\t\n"
-    "\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SENDI"
-    "NG\020\002\022\017\n\013RECOGNITION\020\003\022\013\n\007LOADING\020\004\022\016\n\nSU"
-    "BMISSION\020\005\022\013\n\007PENDING\020\006\"\226\001\n\020LoginInforma"
-    "tion\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t"
-    "\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030\004 \001"
-    "(\010\022\025\n\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 \001(\t"
-    "\022\016\n\006userId\030\007 \001(\t", 536);
+    "\001(\t\022\024\n\014serversideId\030\006 \001(\t\"w\n\013MessageType"
+    "\022\t\n\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SE"
+    "NDING\020\002\022\017\n\013RECOGNITION\020\003\022\013\n\007LOADING\020\004\022\016\n"
+    "\nSUBMISSION\020\005\022\013\n\007PENDING\020\006\"\226\001\n\020LoginInfo"
+    "rmation\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 "
+    "\001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030"
+    "\004 \001(\010\022\025\n\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 "
+    "\001(\t\022\016\n\006userId\030\007 \001(\t", 539);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/message.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -184,7 +184,7 @@ const int Request::kLoginFieldNumber;
 const int Request::kOtherDataFieldNumber;
 const int Request::kResponseTextFieldNumber;
 const int Request::kSessionInfoFieldNumber;
-const int Request::kSessionIdFieldNumber;
+const int Request::kServersideIdFieldNumber;
 #endif  // !_MSC_VER
 
 Request::Request()
@@ -209,7 +209,7 @@ void Request::SharedCtor() {
   otherdata_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   responsetext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   sessioninfo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  serversideid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -227,8 +227,8 @@ void Request::SharedDtor() {
   if (sessioninfo_ != &::google::protobuf::internal::kEmptyString) {
     delete sessioninfo_;
   }
-  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-    delete sessionid_;
+  if (serversideid_ != &::google::protobuf::internal::kEmptyString) {
+    delete serversideid_;
   }
   if (this != default_instance_) {
     delete login_;
@@ -277,9 +277,9 @@ void Request::Clear() {
         sessioninfo_->clear();
       }
     }
-    if (has_sessionid()) {
-      if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-        sessionid_->clear();
+    if (has_serversideid()) {
+      if (serversideid_ != &::google::protobuf::internal::kEmptyString) {
+        serversideid_->clear();
       }
     }
   }
@@ -371,19 +371,19 @@ bool Request::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(50)) goto parse_sessionId;
+        if (input->ExpectTag(50)) goto parse_serversideId;
         break;
       }
 
-      // optional string sessionId = 6;
+      // optional string serversideId = 6;
       case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_sessionId:
+         parse_serversideId:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_sessionid()));
+                input, this->mutable_serversideid()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->sessionid().data(), this->sessionid().length(),
+            this->serversideid().data(), this->serversideid().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -446,13 +446,13 @@ void Request::SerializeWithCachedSizes(
       5, this->sessioninfo(), output);
   }
 
-  // optional string sessionId = 6;
-  if (has_sessionid()) {
+  // optional string serversideId = 6;
+  if (has_serversideid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->sessionid().data(), this->sessionid().length(),
+      this->serversideid().data(), this->serversideid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      6, this->sessionid(), output);
+      6, this->serversideid(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -503,14 +503,14 @@ void Request::SerializeWithCachedSizes(
         5, this->sessioninfo(), target);
   }
 
-  // optional string sessionId = 6;
-  if (has_sessionid()) {
+  // optional string serversideId = 6;
+  if (has_serversideid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->sessionid().data(), this->sessionid().length(),
+      this->serversideid().data(), this->serversideid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        6, this->sessionid(), target);
+        6, this->serversideid(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -558,11 +558,11 @@ int Request::ByteSize() const {
           this->sessioninfo());
     }
 
-    // optional string sessionId = 6;
-    if (has_sessionid()) {
+    // optional string serversideId = 6;
+    if (has_serversideid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->sessionid());
+          this->serversideid());
     }
 
   }
@@ -607,8 +607,8 @@ void Request::MergeFrom(const Request& from) {
     if (from.has_sessioninfo()) {
       set_sessioninfo(from.sessioninfo());
     }
-    if (from.has_sessionid()) {
-      set_sessionid(from.sessionid());
+    if (from.has_serversideid()) {
+      set_serversideid(from.serversideid());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -642,7 +642,7 @@ void Request::Swap(Request* other) {
     std::swap(otherdata_, other->otherdata_);
     std::swap(responsetext_, other->responsetext_);
     std::swap(sessioninfo_, other->sessioninfo_);
-    std::swap(sessionid_, other->sessionid_);
+    std::swap(serversideid_, other->serversideid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

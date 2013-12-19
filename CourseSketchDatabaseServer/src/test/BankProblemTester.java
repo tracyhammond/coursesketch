@@ -8,9 +8,9 @@ import protobuf.srl.school.School.SrlPermission;
 
 import com.mongodb.DB;
 
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.managers.BankProblemManager;
+import database.institution.DatabaseAccessException;
+import database.institution.auth.AuthenticationException;
+import database.institution.managers.BankProblemManager;
 
 public class BankProblemTester {
 

@@ -1,6 +1,6 @@
-package database.auth;
+package database.institution.auth;
 
-import static database.StringConstants.*;
+import static database.institution.StringConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import database.DatabaseAccessException;
-import database.RequestConverter;
+import database.institution.DatabaseAccessException;
+import database.institution.RequestConverter;
 
 public class Authenticator {
 
@@ -69,7 +69,7 @@ public class Authenticator {
 	/**
 	 * Checks to make sure that the user is authenticated for all values that are true.
 	 *
-	 * @param dbs The database to use
+	 * @param dbs The database.institution to use
 	 * @param courseId The Id of the course we are checking
 	 * @param userId The user we are checking is valid
 	 * @param user True if we want to check if the person is a user

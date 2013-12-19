@@ -1789,17 +1789,10 @@ class SrlUser : public ::google::protobuf::Message {
   inline ::std::string* release_username();
   inline void set_allocated_username(::std::string* username);
 
-  // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
-  inline bool has_usertype() const;
-  inline void clear_usertype();
-  static const int kUserTypeFieldNumber = 2;
-  inline ::protobuf::srl::school::UserType usertype() const;
-  inline void set_usertype(::protobuf::srl::school::UserType value);
-
-  // optional string email = 3;
+  // optional string email = 2;
   inline bool has_email() const;
   inline void clear_email();
-  static const int kEmailFieldNumber = 3;
+  static const int kEmailFieldNumber = 2;
   inline const ::std::string& email() const;
   inline void set_email(const ::std::string& value);
   inline void set_email(const char* value);
@@ -1808,23 +1801,97 @@ class SrlUser : public ::google::protobuf::Message {
   inline ::std::string* release_email();
   inline void set_allocated_email(::std::string* email);
 
+  // repeated string courseList = 3;
+  inline int courselist_size() const;
+  inline void clear_courselist();
+  static const int kCourseListFieldNumber = 3;
+  inline const ::std::string& courselist(int index) const;
+  inline ::std::string* mutable_courselist(int index);
+  inline void set_courselist(int index, const ::std::string& value);
+  inline void set_courselist(int index, const char* value);
+  inline void set_courselist(int index, const char* value, size_t size);
+  inline ::std::string* add_courselist();
+  inline void add_courselist(const ::std::string& value);
+  inline void add_courselist(const char* value);
+  inline void add_courselist(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& courselist() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_courselist();
+
+  // optional string schoolIdentity = 4;
+  inline bool has_schoolidentity() const;
+  inline void clear_schoolidentity();
+  static const int kSchoolIdentityFieldNumber = 4;
+  inline const ::std::string& schoolidentity() const;
+  inline void set_schoolidentity(const ::std::string& value);
+  inline void set_schoolidentity(const char* value);
+  inline void set_schoolidentity(const char* value, size_t size);
+  inline ::std::string* mutable_schoolidentity();
+  inline ::std::string* release_schoolidentity();
+  inline void set_allocated_schoolidentity(::std::string* schoolidentity);
+
+  // optional string firstName = 5;
+  inline bool has_firstname() const;
+  inline void clear_firstname();
+  static const int kFirstNameFieldNumber = 5;
+  inline const ::std::string& firstname() const;
+  inline void set_firstname(const ::std::string& value);
+  inline void set_firstname(const char* value);
+  inline void set_firstname(const char* value, size_t size);
+  inline ::std::string* mutable_firstname();
+  inline ::std::string* release_firstname();
+  inline void set_allocated_firstname(::std::string* firstname);
+
+  // optional string lastName = 6;
+  inline bool has_lastname() const;
+  inline void clear_lastname();
+  static const int kLastNameFieldNumber = 6;
+  inline const ::std::string& lastname() const;
+  inline void set_lastname(const ::std::string& value);
+  inline void set_lastname(const char* value);
+  inline void set_lastname(const char* value, size_t size);
+  inline ::std::string* mutable_lastname();
+  inline ::std::string* release_lastname();
+  inline void set_allocated_lastname(::std::string* lastname);
+
+  // optional string password = 7;
+  inline bool has_password() const;
+  inline void clear_password();
+  static const int kPasswordFieldNumber = 7;
+  inline const ::std::string& password() const;
+  inline void set_password(const ::std::string& value);
+  inline void set_password(const char* value);
+  inline void set_password(const char* value, size_t size);
+  inline ::std::string* mutable_password();
+  inline ::std::string* release_password();
+  inline void set_allocated_password(::std::string* password);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlUser)
  private:
   inline void set_has_username();
   inline void clear_has_username();
-  inline void set_has_usertype();
-  inline void clear_has_usertype();
   inline void set_has_email();
   inline void clear_has_email();
+  inline void set_has_schoolidentity();
+  inline void clear_has_schoolidentity();
+  inline void set_has_firstname();
+  inline void clear_has_firstname();
+  inline void set_has_lastname();
+  inline void clear_has_lastname();
+  inline void set_has_password();
+  inline void clear_has_password();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* username_;
   ::std::string* email_;
-  int usertype_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> courselist_;
+  ::std::string* schoolidentity_;
+  ::std::string* firstname_;
+  ::std::string* lastname_;
+  ::std::string* password_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -5425,38 +5492,15 @@ inline void SrlUser::set_allocated_username(::std::string* username) {
   }
 }
 
-// optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
-inline bool SrlUser::has_usertype() const {
+// optional string email = 2;
+inline bool SrlUser::has_email() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SrlUser::set_has_usertype() {
+inline void SrlUser::set_has_email() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SrlUser::clear_has_usertype() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void SrlUser::clear_usertype() {
-  usertype_ = 5;
-  clear_has_usertype();
-}
-inline ::protobuf::srl::school::UserType SrlUser::usertype() const {
-  return static_cast< ::protobuf::srl::school::UserType >(usertype_);
-}
-inline void SrlUser::set_usertype(::protobuf::srl::school::UserType value) {
-  assert(::protobuf::srl::school::UserType_IsValid(value));
-  set_has_usertype();
-  usertype_ = value;
-}
-
-// optional string email = 3;
-inline bool SrlUser::has_email() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SrlUser::set_has_email() {
-  _has_bits_[0] |= 0x00000004u;
-}
 inline void SrlUser::clear_has_email() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void SrlUser::clear_email() {
   if (email_ != &::google::protobuf::internal::kEmptyString) {
@@ -5515,6 +5559,330 @@ inline void SrlUser::set_allocated_email(::std::string* email) {
   } else {
     clear_has_email();
     email_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated string courseList = 3;
+inline int SrlUser::courselist_size() const {
+  return courselist_.size();
+}
+inline void SrlUser::clear_courselist() {
+  courselist_.Clear();
+}
+inline const ::std::string& SrlUser::courselist(int index) const {
+  return courselist_.Get(index);
+}
+inline ::std::string* SrlUser::mutable_courselist(int index) {
+  return courselist_.Mutable(index);
+}
+inline void SrlUser::set_courselist(int index, const ::std::string& value) {
+  courselist_.Mutable(index)->assign(value);
+}
+inline void SrlUser::set_courselist(int index, const char* value) {
+  courselist_.Mutable(index)->assign(value);
+}
+inline void SrlUser::set_courselist(int index, const char* value, size_t size) {
+  courselist_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlUser::add_courselist() {
+  return courselist_.Add();
+}
+inline void SrlUser::add_courselist(const ::std::string& value) {
+  courselist_.Add()->assign(value);
+}
+inline void SrlUser::add_courselist(const char* value) {
+  courselist_.Add()->assign(value);
+}
+inline void SrlUser::add_courselist(const char* value, size_t size) {
+  courselist_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SrlUser::courselist() const {
+  return courselist_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SrlUser::mutable_courselist() {
+  return &courselist_;
+}
+
+// optional string schoolIdentity = 4;
+inline bool SrlUser::has_schoolidentity() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SrlUser::set_has_schoolidentity() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SrlUser::clear_has_schoolidentity() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SrlUser::clear_schoolidentity() {
+  if (schoolidentity_ != &::google::protobuf::internal::kEmptyString) {
+    schoolidentity_->clear();
+  }
+  clear_has_schoolidentity();
+}
+inline const ::std::string& SrlUser::schoolidentity() const {
+  return *schoolidentity_;
+}
+inline void SrlUser::set_schoolidentity(const ::std::string& value) {
+  set_has_schoolidentity();
+  if (schoolidentity_ == &::google::protobuf::internal::kEmptyString) {
+    schoolidentity_ = new ::std::string;
+  }
+  schoolidentity_->assign(value);
+}
+inline void SrlUser::set_schoolidentity(const char* value) {
+  set_has_schoolidentity();
+  if (schoolidentity_ == &::google::protobuf::internal::kEmptyString) {
+    schoolidentity_ = new ::std::string;
+  }
+  schoolidentity_->assign(value);
+}
+inline void SrlUser::set_schoolidentity(const char* value, size_t size) {
+  set_has_schoolidentity();
+  if (schoolidentity_ == &::google::protobuf::internal::kEmptyString) {
+    schoolidentity_ = new ::std::string;
+  }
+  schoolidentity_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlUser::mutable_schoolidentity() {
+  set_has_schoolidentity();
+  if (schoolidentity_ == &::google::protobuf::internal::kEmptyString) {
+    schoolidentity_ = new ::std::string;
+  }
+  return schoolidentity_;
+}
+inline ::std::string* SrlUser::release_schoolidentity() {
+  clear_has_schoolidentity();
+  if (schoolidentity_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = schoolidentity_;
+    schoolidentity_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlUser::set_allocated_schoolidentity(::std::string* schoolidentity) {
+  if (schoolidentity_ != &::google::protobuf::internal::kEmptyString) {
+    delete schoolidentity_;
+  }
+  if (schoolidentity) {
+    set_has_schoolidentity();
+    schoolidentity_ = schoolidentity;
+  } else {
+    clear_has_schoolidentity();
+    schoolidentity_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string firstName = 5;
+inline bool SrlUser::has_firstname() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SrlUser::set_has_firstname() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SrlUser::clear_has_firstname() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SrlUser::clear_firstname() {
+  if (firstname_ != &::google::protobuf::internal::kEmptyString) {
+    firstname_->clear();
+  }
+  clear_has_firstname();
+}
+inline const ::std::string& SrlUser::firstname() const {
+  return *firstname_;
+}
+inline void SrlUser::set_firstname(const ::std::string& value) {
+  set_has_firstname();
+  if (firstname_ == &::google::protobuf::internal::kEmptyString) {
+    firstname_ = new ::std::string;
+  }
+  firstname_->assign(value);
+}
+inline void SrlUser::set_firstname(const char* value) {
+  set_has_firstname();
+  if (firstname_ == &::google::protobuf::internal::kEmptyString) {
+    firstname_ = new ::std::string;
+  }
+  firstname_->assign(value);
+}
+inline void SrlUser::set_firstname(const char* value, size_t size) {
+  set_has_firstname();
+  if (firstname_ == &::google::protobuf::internal::kEmptyString) {
+    firstname_ = new ::std::string;
+  }
+  firstname_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlUser::mutable_firstname() {
+  set_has_firstname();
+  if (firstname_ == &::google::protobuf::internal::kEmptyString) {
+    firstname_ = new ::std::string;
+  }
+  return firstname_;
+}
+inline ::std::string* SrlUser::release_firstname() {
+  clear_has_firstname();
+  if (firstname_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = firstname_;
+    firstname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlUser::set_allocated_firstname(::std::string* firstname) {
+  if (firstname_ != &::google::protobuf::internal::kEmptyString) {
+    delete firstname_;
+  }
+  if (firstname) {
+    set_has_firstname();
+    firstname_ = firstname;
+  } else {
+    clear_has_firstname();
+    firstname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string lastName = 6;
+inline bool SrlUser::has_lastname() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void SrlUser::set_has_lastname() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void SrlUser::clear_has_lastname() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void SrlUser::clear_lastname() {
+  if (lastname_ != &::google::protobuf::internal::kEmptyString) {
+    lastname_->clear();
+  }
+  clear_has_lastname();
+}
+inline const ::std::string& SrlUser::lastname() const {
+  return *lastname_;
+}
+inline void SrlUser::set_lastname(const ::std::string& value) {
+  set_has_lastname();
+  if (lastname_ == &::google::protobuf::internal::kEmptyString) {
+    lastname_ = new ::std::string;
+  }
+  lastname_->assign(value);
+}
+inline void SrlUser::set_lastname(const char* value) {
+  set_has_lastname();
+  if (lastname_ == &::google::protobuf::internal::kEmptyString) {
+    lastname_ = new ::std::string;
+  }
+  lastname_->assign(value);
+}
+inline void SrlUser::set_lastname(const char* value, size_t size) {
+  set_has_lastname();
+  if (lastname_ == &::google::protobuf::internal::kEmptyString) {
+    lastname_ = new ::std::string;
+  }
+  lastname_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlUser::mutable_lastname() {
+  set_has_lastname();
+  if (lastname_ == &::google::protobuf::internal::kEmptyString) {
+    lastname_ = new ::std::string;
+  }
+  return lastname_;
+}
+inline ::std::string* SrlUser::release_lastname() {
+  clear_has_lastname();
+  if (lastname_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = lastname_;
+    lastname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlUser::set_allocated_lastname(::std::string* lastname) {
+  if (lastname_ != &::google::protobuf::internal::kEmptyString) {
+    delete lastname_;
+  }
+  if (lastname) {
+    set_has_lastname();
+    lastname_ = lastname;
+  } else {
+    clear_has_lastname();
+    lastname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string password = 7;
+inline bool SrlUser::has_password() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void SrlUser::set_has_password() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void SrlUser::clear_has_password() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void SrlUser::clear_password() {
+  if (password_ != &::google::protobuf::internal::kEmptyString) {
+    password_->clear();
+  }
+  clear_has_password();
+}
+inline const ::std::string& SrlUser::password() const {
+  return *password_;
+}
+inline void SrlUser::set_password(const ::std::string& value) {
+  set_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    password_ = new ::std::string;
+  }
+  password_->assign(value);
+}
+inline void SrlUser::set_password(const char* value) {
+  set_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    password_ = new ::std::string;
+  }
+  password_->assign(value);
+}
+inline void SrlUser::set_password(const char* value, size_t size) {
+  set_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    password_ = new ::std::string;
+  }
+  password_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlUser::mutable_password() {
+  set_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    password_ = new ::std::string;
+  }
+  return password_;
+}
+inline ::std::string* SrlUser::release_password() {
+  clear_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = password_;
+    password_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlUser::set_allocated_password(::std::string* password) {
+  if (password_ != &::google::protobuf::internal::kEmptyString) {
+    delete password_;
+  }
+  if (password) {
+    set_has_password();
+    password_ = password;
+  } else {
+    clear_has_password();
+    password_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

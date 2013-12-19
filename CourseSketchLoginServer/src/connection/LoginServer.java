@@ -45,7 +45,7 @@ public class LoginServer extends WebSocketServer {
 	public static final int MAX_CONNECTIONS = 20;
 	public static final int STATE_SERVER_FULL = 4001;
 	static final String FULL_SERVER_MESSAGE = "Sorry, the RECOGNITION server is full";
-	
+
 	public static final String INCORRECT_LOGIN_MESSAGE = "Incorrect username or password";
 	public static final String INCORRECT_LOGIN_TYPE_MESSAGE = "You do not have the ability to login as that type!";
 	public static final String PERMISSION_ERROR_MESSAGE = "There was an error assigning permissions";
@@ -169,18 +169,23 @@ public class LoginServer extends WebSocketServer {
 		requestBuilder.setRequestType(MessageType.LOGIN);
 		requestBuilder.setResponseText(message);
 		requestBuilder.setSessionInfo(req.getSessionInfo());
-		if (ids != null && ids.length > 0) {
-			requestBuilder.setSessionId(ids[0]); // TODO: encrypt this id
+		if (ids != null && ids.length > 0 && success) {
+			requestBuilder.setServersideId(ids[0]); // TODO: encrypt this id
 		}
-		System.out.println("setting return session information " + req.getSessionInfo());
-		
+
 		// Create the Login Response.
 		LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
 		loginBuilder.setUsername(req.getLogin().getUsername());
 		loginBuilder.setIsLoggedIn(success);
 		loginBuilder.setIsInstructor(instructorIntent);
-		if (ids != null && ids.length > 1) {
-			loginBuilder.setUserId(ids[1]);
+		if (success) {
+			loginBuilder.setIsRegistering(req.getLogin().getIsRegistering()); // The reason for this is so the the proxy can continue to register user!
+			if (loginBuilder.getIsRegistering()) {
+				loginBuilder.setEmail(req.getLogin().getEmail());
+			}
+			if (ids != null && ids.length > 1) {
+				loginBuilder.setUserId(ids[1]);
+			}
 		}
 
 		// Add login info.

@@ -7,7 +7,7 @@ message Request {
     optional bytes otherData = 3;
 	optional string responseText = 4;
 	optional string sessionInfo = 5; // This may be separated out more.
-	optional string sessionId = 6;
+	optional string serversideId = 6;
 
     enum MessageType {
 		LOGIN = 0;

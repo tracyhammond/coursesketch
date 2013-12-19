@@ -5,9 +5,9 @@ import protobuf.srl.school.School.SrlProblem;
 
 import com.mongodb.DB;
 
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.managers.CourseProblemManager;
+import database.institution.DatabaseAccessException;
+import database.institution.auth.AuthenticationException;
+import database.institution.managers.CourseProblemManager;
 
 public class CourseProblemTester {
 

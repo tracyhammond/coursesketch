@@ -21,29 +21,10 @@ import proxyServer.ProxyServer;
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class AnswerConnection extends WrapperConnection {
 
-	public LoginConnectionState connection = null;
-	ProxyServer parent;
-	public AnswerConnection( URI serverUri , Draft draft , ProxyServer parent) {
-		this( serverUri, draft );
-		this.parent = parent;
-	}
-	
-	public AnswerConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent, Request req, LoginConnectionState state) {
-		
-		this( serverUri, draft );
-	}
-	
-	public AnswerConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		this( serverUri, draft );
-	}
-	
-	public AnswerConnection( URI serverUri , Draft draft ) {
-		super( serverUri, draft );
+	public AnswerConnection(URI serverUri, Draft draft, MultiInternalConnectionServer parentServer) {
+		super(serverUri, draft, parentServer);
 	}
 
-	public AnswerConnection( URI serverURI ) {
-		super( serverURI );
-	}
 	/*
 	@Override
 	public void onOpen( ServerHandshake handshakedata ) {
