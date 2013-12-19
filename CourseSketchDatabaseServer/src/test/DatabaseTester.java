@@ -46,16 +46,16 @@ public class DatabaseTester {
 	public static void deleteCollections(DB dbs) {
 		DBCollection collection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 		collection.remove(new BasicDBObject());
-		
+
 		collection = dbs.getCollection(COURSE_COLLECTION);
 		collection.remove(new BasicDBObject());
-		
+
 		collection = dbs.getCollection(ASSIGNMENT_COLLECTION);
 		collection.remove(new BasicDBObject());
-		
+
 		collection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 		collection.remove(new BasicDBObject());
-		
+
 		collection = dbs.getCollection(USER_GROUP_COLLECTION);
 		collection.remove(new BasicDBObject());
 	}
