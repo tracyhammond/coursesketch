@@ -12,6 +12,7 @@ import com.mongodb.MongoClient;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
+import database.user.UserClient;
 
 public class DatabaseTester {
 	public static void main(String args[]) throws UnknownHostException, AuthenticationException {
@@ -19,6 +20,7 @@ public class DatabaseTester {
 		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
 		DB db = mongoClient.getDB("test");
 		new Institution(true);
+		new UserClient(true);
 		deleteCollections(db);
 		try {
 			String returnId = CourseTester.testCourses(db);
@@ -34,6 +36,9 @@ public class DatabaseTester {
 			CourseProblemTester.testCourseProblems(db, returnId, assignmentId, bankId1);
 			System.out.println("Creating course problem2");
 			CourseProblemTester.testCourseProblems(db, returnId, assignmentId2, bankId2);
+			
+			System.out.println("Test Users");
+			UserTester.testUsers(returnId);
 		} catch (DatabaseAccessException e) {
 			e.printStackTrace();
 		}
@@ -57,6 +62,9 @@ public class DatabaseTester {
 		collection.remove(new BasicDBObject());
 
 		collection = dbs.getCollection(USER_GROUP_COLLECTION);
+		collection.remove(new BasicDBObject());
+		
+		collection = dbs.getCollection(USER_COLLECTION);
 		collection.remove(new BasicDBObject());
 	}
 }

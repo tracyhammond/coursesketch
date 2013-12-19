@@ -34,14 +34,26 @@ public final class UserClient {
 		return instance;
 	}
 
-	public static boolean insertUser(ByteString data) throws DatabaseAccessException {
-		SrlUser user = null;
+	/**
+	 * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database
+	 * @param testOnly
+	 */
+	public UserClient(boolean testOnly) {
 		try {
-			user = SrlUser.parseFrom(data);
-		} catch (InvalidProtocolBufferException e) {
+			MongoClient mongoClient = new MongoClient("localhost");
+			db = mongoClient.getDB("test");
+		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		UserManager.createUser(getInstance().db, user.getUsername(), user.getEmail());
+		instance = this;
+	}
+
+	public static boolean insertUser(SrlUser user, String userId) throws DatabaseAccessException {
+		UserManager.createUser(getInstance().db, user, userId);
 		return true;
+	}
+
+	public static void addCourseToUser(String userName, String courseId) {
+		UserManager.addCourseToUser(getInstance().db, userName, courseId);
 	}
 }

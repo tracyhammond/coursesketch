@@ -21,7 +21,6 @@ import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
-import database.user.GroupManager;
 
 public class AssignmentManager 
 {

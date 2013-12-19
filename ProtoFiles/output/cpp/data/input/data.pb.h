@@ -42,9 +42,6 @@ class DataSend;
 class ItemSend;
 class DataResult;
 class ItemResult;
-class AdvanceCourseGradePull;
-class AdvanceUserGradePull;
-class AdvanceReview;
 
 enum ItemQuery {
   COURSE = 0,
@@ -58,11 +55,12 @@ enum ItemQuery {
   EXPERIMENT = 8,
   SCHOOL = 9,
   COURSE_SEARCH = 10,
-  BANK_SEARCH = 10
+  BANK_SEARCH = 11,
+  REGISTER = 12
 };
 bool ItemQuery_IsValid(int value);
 const ItemQuery ItemQuery_MIN = COURSE;
-const ItemQuery ItemQuery_MAX = COURSE_SEARCH;
+const ItemQuery ItemQuery_MAX = REGISTER;
 const int ItemQuery_ARRAYSIZE = ItemQuery_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ItemQuery_descriptor();
@@ -441,6 +439,22 @@ class ItemSend : public ::google::protobuf::Message {
   inline ::std::string* release_data();
   inline void set_allocated_data(::std::string* data);
 
+  // repeated string textData = 4;
+  inline int textdata_size() const;
+  inline void clear_textdata();
+  static const int kTextDataFieldNumber = 4;
+  inline const ::std::string& textdata(int index) const;
+  inline ::std::string* mutable_textdata(int index);
+  inline void set_textdata(int index, const ::std::string& value);
+  inline void set_textdata(int index, const char* value);
+  inline void set_textdata(int index, const char* value, size_t size);
+  inline ::std::string* add_textdata();
+  inline void add_textdata(const ::std::string& value);
+  inline void add_textdata(const char* value);
+  inline void add_textdata(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& textdata() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_textdata();
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemSend)
  private:
   inline void set_has_query();
@@ -455,9 +469,10 @@ class ItemSend : public ::google::protobuf::Message {
   int query_;
   bool isinsert_;
   ::std::string* data_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> textdata_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -614,6 +629,18 @@ class ItemResult : public ::google::protobuf::Message {
   inline ::protobuf::srl::query::ItemQuery query() const;
   inline void set_query(::protobuf::srl::query::ItemQuery value);
 
+  // optional string returnText = 2;
+  inline bool has_returntext() const;
+  inline void clear_returntext();
+  static const int kReturnTextFieldNumber = 2;
+  inline const ::std::string& returntext() const;
+  inline void set_returntext(const ::std::string& value);
+  inline void set_returntext(const char* value);
+  inline void set_returntext(const char* value, size_t size);
+  inline ::std::string* mutable_returntext();
+  inline ::std::string* release_returntext();
+  inline void set_allocated_returntext(::std::string* returntext);
+
   // optional bytes data = 3;
   inline bool has_data() const;
   inline void clear_data();
@@ -630,16 +657,19 @@ class ItemResult : public ::google::protobuf::Message {
  private:
   inline void set_has_query();
   inline void clear_has_query();
+  inline void set_has_returntext();
+  inline void clear_has_returntext();
   inline void set_has_data();
   inline void clear_has_data();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* returntext_;
   ::std::string* data_;
   int query_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -647,351 +677,6 @@ class ItemResult : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ItemResult* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class AdvanceCourseGradePull : public ::google::protobuf::Message {
- public:
-  AdvanceCourseGradePull();
-  virtual ~AdvanceCourseGradePull();
-
-  AdvanceCourseGradePull(const AdvanceCourseGradePull& from);
-
-  inline AdvanceCourseGradePull& operator=(const AdvanceCourseGradePull& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const AdvanceCourseGradePull& default_instance();
-
-  void Swap(AdvanceCourseGradePull* other);
-
-  // implements Message ----------------------------------------------
-
-  AdvanceCourseGradePull* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const AdvanceCourseGradePull& from);
-  void MergeFrom(const AdvanceCourseGradePull& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required string courseId = 1;
-  inline bool has_courseid() const;
-  inline void clear_courseid();
-  static const int kCourseIdFieldNumber = 1;
-  inline const ::std::string& courseid() const;
-  inline void set_courseid(const ::std::string& value);
-  inline void set_courseid(const char* value);
-  inline void set_courseid(const char* value, size_t size);
-  inline ::std::string* mutable_courseid();
-  inline ::std::string* release_courseid();
-  inline void set_allocated_courseid(::std::string* courseid);
-
-  // optional bool pullAllGrades = 2;
-  inline bool has_pullallgrades() const;
-  inline void clear_pullallgrades();
-  static const int kPullAllGradesFieldNumber = 2;
-  inline bool pullallgrades() const;
-  inline void set_pullallgrades(bool value);
-
-  // repeated string userId = 3;
-  inline int userid_size() const;
-  inline void clear_userid();
-  static const int kUserIdFieldNumber = 3;
-  inline const ::std::string& userid(int index) const;
-  inline ::std::string* mutable_userid(int index);
-  inline void set_userid(int index, const ::std::string& value);
-  inline void set_userid(int index, const char* value);
-  inline void set_userid(int index, const char* value, size_t size);
-  inline ::std::string* add_userid();
-  inline void add_userid(const ::std::string& value);
-  inline void add_userid(const char* value);
-  inline void add_userid(const char* value, size_t size);
-  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& userid() const;
-  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_userid();
-
-  // @@protoc_insertion_point(class_scope:protobuf.srl.query.AdvanceCourseGradePull)
- private:
-  inline void set_has_courseid();
-  inline void clear_has_courseid();
-  inline void set_has_pullallgrades();
-  inline void clear_has_pullallgrades();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::std::string* courseid_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> userid_;
-  bool pullallgrades_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
-
-  friend void  protobuf_AddDesc_input_2fdata_2eproto();
-  friend void protobuf_AssignDesc_input_2fdata_2eproto();
-  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
-
-  void InitAsDefaultInstance();
-  static AdvanceCourseGradePull* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class AdvanceUserGradePull : public ::google::protobuf::Message {
- public:
-  AdvanceUserGradePull();
-  virtual ~AdvanceUserGradePull();
-
-  AdvanceUserGradePull(const AdvanceUserGradePull& from);
-
-  inline AdvanceUserGradePull& operator=(const AdvanceUserGradePull& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const AdvanceUserGradePull& default_instance();
-
-  void Swap(AdvanceUserGradePull* other);
-
-  // implements Message ----------------------------------------------
-
-  AdvanceUserGradePull* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const AdvanceUserGradePull& from);
-  void MergeFrom(const AdvanceUserGradePull& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required string userId = 1;
-  inline bool has_userid() const;
-  inline void clear_userid();
-  static const int kUserIdFieldNumber = 1;
-  inline const ::std::string& userid() const;
-  inline void set_userid(const ::std::string& value);
-  inline void set_userid(const char* value);
-  inline void set_userid(const char* value, size_t size);
-  inline ::std::string* mutable_userid();
-  inline ::std::string* release_userid();
-  inline void set_allocated_userid(::std::string* userid);
-
-  // optional bool pullAllGrades = 2;
-  inline bool has_pullallgrades() const;
-  inline void clear_pullallgrades();
-  static const int kPullAllGradesFieldNumber = 2;
-  inline bool pullallgrades() const;
-  inline void set_pullallgrades(bool value);
-
-  // repeated string courseId = 3;
-  inline int courseid_size() const;
-  inline void clear_courseid();
-  static const int kCourseIdFieldNumber = 3;
-  inline const ::std::string& courseid(int index) const;
-  inline ::std::string* mutable_courseid(int index);
-  inline void set_courseid(int index, const ::std::string& value);
-  inline void set_courseid(int index, const char* value);
-  inline void set_courseid(int index, const char* value, size_t size);
-  inline ::std::string* add_courseid();
-  inline void add_courseid(const ::std::string& value);
-  inline void add_courseid(const char* value);
-  inline void add_courseid(const char* value, size_t size);
-  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& courseid() const;
-  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_courseid();
-
-  // @@protoc_insertion_point(class_scope:protobuf.srl.query.AdvanceUserGradePull)
- private:
-  inline void set_has_userid();
-  inline void clear_has_userid();
-  inline void set_has_pullallgrades();
-  inline void clear_has_pullallgrades();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::std::string* userid_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> courseid_;
-  bool pullallgrades_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
-
-  friend void  protobuf_AddDesc_input_2fdata_2eproto();
-  friend void protobuf_AssignDesc_input_2fdata_2eproto();
-  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
-
-  void InitAsDefaultInstance();
-  static AdvanceUserGradePull* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class AdvanceReview : public ::google::protobuf::Message {
- public:
-  AdvanceReview();
-  virtual ~AdvanceReview();
-
-  AdvanceReview(const AdvanceReview& from);
-
-  inline AdvanceReview& operator=(const AdvanceReview& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const AdvanceReview& default_instance();
-
-  void Swap(AdvanceReview* other);
-
-  // implements Message ----------------------------------------------
-
-  AdvanceReview* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const AdvanceReview& from);
-  void MergeFrom(const AdvanceReview& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required string courseId = 1;
-  inline bool has_courseid() const;
-  inline void clear_courseid();
-  static const int kCourseIdFieldNumber = 1;
-  inline const ::std::string& courseid() const;
-  inline void set_courseid(const ::std::string& value);
-  inline void set_courseid(const char* value);
-  inline void set_courseid(const char* value, size_t size);
-  inline ::std::string* mutable_courseid();
-  inline ::std::string* release_courseid();
-  inline void set_allocated_courseid(::std::string* courseid);
-
-  // required string assignmentId = 2;
-  inline bool has_assignmentid() const;
-  inline void clear_assignmentid();
-  static const int kAssignmentIdFieldNumber = 2;
-  inline const ::std::string& assignmentid() const;
-  inline void set_assignmentid(const ::std::string& value);
-  inline void set_assignmentid(const char* value);
-  inline void set_assignmentid(const char* value, size_t size);
-  inline ::std::string* mutable_assignmentid();
-  inline ::std::string* release_assignmentid();
-  inline void set_allocated_assignmentid(::std::string* assignmentid);
-
-  // required string courseProblemId = 3;
-  inline bool has_courseproblemid() const;
-  inline void clear_courseproblemid();
-  static const int kCourseProblemIdFieldNumber = 3;
-  inline const ::std::string& courseproblemid() const;
-  inline void set_courseproblemid(const ::std::string& value);
-  inline void set_courseproblemid(const char* value);
-  inline void set_courseproblemid(const char* value, size_t size);
-  inline ::std::string* mutable_courseproblemid();
-  inline ::std::string* release_courseproblemid();
-  inline void set_allocated_courseproblemid(::std::string* courseproblemid);
-
-  // @@protoc_insertion_point(class_scope:protobuf.srl.query.AdvanceReview)
- private:
-  inline void set_has_courseid();
-  inline void clear_has_courseid();
-  inline void set_has_assignmentid();
-  inline void clear_has_assignmentid();
-  inline void set_has_courseproblemid();
-  inline void clear_has_courseproblemid();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::std::string* courseid_;
-  ::std::string* assignmentid_;
-  ::std::string* courseproblemid_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
-
-  friend void  protobuf_AddDesc_input_2fdata_2eproto();
-  friend void protobuf_AssignDesc_input_2fdata_2eproto();
-  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
-
-  void InitAsDefaultInstance();
-  static AdvanceReview* default_instance_;
 };
 // ===================================================================
 
@@ -1314,6 +999,50 @@ inline void ItemSend::set_allocated_data(::std::string* data) {
   }
 }
 
+// repeated string textData = 4;
+inline int ItemSend::textdata_size() const {
+  return textdata_.size();
+}
+inline void ItemSend::clear_textdata() {
+  textdata_.Clear();
+}
+inline const ::std::string& ItemSend::textdata(int index) const {
+  return textdata_.Get(index);
+}
+inline ::std::string* ItemSend::mutable_textdata(int index) {
+  return textdata_.Mutable(index);
+}
+inline void ItemSend::set_textdata(int index, const ::std::string& value) {
+  textdata_.Mutable(index)->assign(value);
+}
+inline void ItemSend::set_textdata(int index, const char* value) {
+  textdata_.Mutable(index)->assign(value);
+}
+inline void ItemSend::set_textdata(int index, const char* value, size_t size) {
+  textdata_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ItemSend::add_textdata() {
+  return textdata_.Add();
+}
+inline void ItemSend::add_textdata(const ::std::string& value) {
+  textdata_.Add()->assign(value);
+}
+inline void ItemSend::add_textdata(const char* value) {
+  textdata_.Add()->assign(value);
+}
+inline void ItemSend::add_textdata(const char* value, size_t size) {
+  textdata_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ItemSend::textdata() const {
+  return textdata_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+ItemSend::mutable_textdata() {
+  return &textdata_;
+}
+
 // -------------------------------------------------------------------
 
 // DataResult
@@ -1370,15 +1099,85 @@ inline void ItemResult::set_query(::protobuf::srl::query::ItemQuery value) {
   query_ = value;
 }
 
-// optional bytes data = 3;
-inline bool ItemResult::has_data() const {
+// optional string returnText = 2;
+inline bool ItemResult::has_returntext() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ItemResult::set_has_data() {
+inline void ItemResult::set_has_returntext() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ItemResult::clear_has_data() {
+inline void ItemResult::clear_has_returntext() {
   _has_bits_[0] &= ~0x00000002u;
+}
+inline void ItemResult::clear_returntext() {
+  if (returntext_ != &::google::protobuf::internal::kEmptyString) {
+    returntext_->clear();
+  }
+  clear_has_returntext();
+}
+inline const ::std::string& ItemResult::returntext() const {
+  return *returntext_;
+}
+inline void ItemResult::set_returntext(const ::std::string& value) {
+  set_has_returntext();
+  if (returntext_ == &::google::protobuf::internal::kEmptyString) {
+    returntext_ = new ::std::string;
+  }
+  returntext_->assign(value);
+}
+inline void ItemResult::set_returntext(const char* value) {
+  set_has_returntext();
+  if (returntext_ == &::google::protobuf::internal::kEmptyString) {
+    returntext_ = new ::std::string;
+  }
+  returntext_->assign(value);
+}
+inline void ItemResult::set_returntext(const char* value, size_t size) {
+  set_has_returntext();
+  if (returntext_ == &::google::protobuf::internal::kEmptyString) {
+    returntext_ = new ::std::string;
+  }
+  returntext_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ItemResult::mutable_returntext() {
+  set_has_returntext();
+  if (returntext_ == &::google::protobuf::internal::kEmptyString) {
+    returntext_ = new ::std::string;
+  }
+  return returntext_;
+}
+inline ::std::string* ItemResult::release_returntext() {
+  clear_has_returntext();
+  if (returntext_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = returntext_;
+    returntext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ItemResult::set_allocated_returntext(::std::string* returntext) {
+  if (returntext_ != &::google::protobuf::internal::kEmptyString) {
+    delete returntext_;
+  }
+  if (returntext) {
+    set_has_returntext();
+    returntext_ = returntext;
+  } else {
+    clear_has_returntext();
+    returntext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes data = 3;
+inline bool ItemResult::has_data() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ItemResult::set_has_data() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ItemResult::clear_has_data() {
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void ItemResult::clear_data() {
   if (data_ != &::google::protobuf::internal::kEmptyString) {
@@ -1437,500 +1236,6 @@ inline void ItemResult::set_allocated_data(::std::string* data) {
   } else {
     clear_has_data();
     data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// -------------------------------------------------------------------
-
-// AdvanceCourseGradePull
-
-// required string courseId = 1;
-inline bool AdvanceCourseGradePull::has_courseid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void AdvanceCourseGradePull::set_has_courseid() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void AdvanceCourseGradePull::clear_has_courseid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void AdvanceCourseGradePull::clear_courseid() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    courseid_->clear();
-  }
-  clear_has_courseid();
-}
-inline const ::std::string& AdvanceCourseGradePull::courseid() const {
-  return *courseid_;
-}
-inline void AdvanceCourseGradePull::set_courseid(const ::std::string& value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
-}
-inline void AdvanceCourseGradePull::set_courseid(const char* value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
-}
-inline void AdvanceCourseGradePull::set_courseid(const char* value, size_t size) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* AdvanceCourseGradePull::mutable_courseid() {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  return courseid_;
-}
-inline ::std::string* AdvanceCourseGradePull::release_courseid() {
-  clear_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = courseid_;
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void AdvanceCourseGradePull::set_allocated_courseid(::std::string* courseid) {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (courseid) {
-    set_has_courseid();
-    courseid_ = courseid;
-  } else {
-    clear_has_courseid();
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional bool pullAllGrades = 2;
-inline bool AdvanceCourseGradePull::has_pullallgrades() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void AdvanceCourseGradePull::set_has_pullallgrades() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void AdvanceCourseGradePull::clear_has_pullallgrades() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void AdvanceCourseGradePull::clear_pullallgrades() {
-  pullallgrades_ = false;
-  clear_has_pullallgrades();
-}
-inline bool AdvanceCourseGradePull::pullallgrades() const {
-  return pullallgrades_;
-}
-inline void AdvanceCourseGradePull::set_pullallgrades(bool value) {
-  set_has_pullallgrades();
-  pullallgrades_ = value;
-}
-
-// repeated string userId = 3;
-inline int AdvanceCourseGradePull::userid_size() const {
-  return userid_.size();
-}
-inline void AdvanceCourseGradePull::clear_userid() {
-  userid_.Clear();
-}
-inline const ::std::string& AdvanceCourseGradePull::userid(int index) const {
-  return userid_.Get(index);
-}
-inline ::std::string* AdvanceCourseGradePull::mutable_userid(int index) {
-  return userid_.Mutable(index);
-}
-inline void AdvanceCourseGradePull::set_userid(int index, const ::std::string& value) {
-  userid_.Mutable(index)->assign(value);
-}
-inline void AdvanceCourseGradePull::set_userid(int index, const char* value) {
-  userid_.Mutable(index)->assign(value);
-}
-inline void AdvanceCourseGradePull::set_userid(int index, const char* value, size_t size) {
-  userid_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* AdvanceCourseGradePull::add_userid() {
-  return userid_.Add();
-}
-inline void AdvanceCourseGradePull::add_userid(const ::std::string& value) {
-  userid_.Add()->assign(value);
-}
-inline void AdvanceCourseGradePull::add_userid(const char* value) {
-  userid_.Add()->assign(value);
-}
-inline void AdvanceCourseGradePull::add_userid(const char* value, size_t size) {
-  userid_.Add()->assign(reinterpret_cast<const char*>(value), size);
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-AdvanceCourseGradePull::userid() const {
-  return userid_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-AdvanceCourseGradePull::mutable_userid() {
-  return &userid_;
-}
-
-// -------------------------------------------------------------------
-
-// AdvanceUserGradePull
-
-// required string userId = 1;
-inline bool AdvanceUserGradePull::has_userid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void AdvanceUserGradePull::set_has_userid() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void AdvanceUserGradePull::clear_has_userid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void AdvanceUserGradePull::clear_userid() {
-  if (userid_ != &::google::protobuf::internal::kEmptyString) {
-    userid_->clear();
-  }
-  clear_has_userid();
-}
-inline const ::std::string& AdvanceUserGradePull::userid() const {
-  return *userid_;
-}
-inline void AdvanceUserGradePull::set_userid(const ::std::string& value) {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  userid_->assign(value);
-}
-inline void AdvanceUserGradePull::set_userid(const char* value) {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  userid_->assign(value);
-}
-inline void AdvanceUserGradePull::set_userid(const char* value, size_t size) {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  userid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* AdvanceUserGradePull::mutable_userid() {
-  set_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    userid_ = new ::std::string;
-  }
-  return userid_;
-}
-inline ::std::string* AdvanceUserGradePull::release_userid() {
-  clear_has_userid();
-  if (userid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = userid_;
-    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void AdvanceUserGradePull::set_allocated_userid(::std::string* userid) {
-  if (userid_ != &::google::protobuf::internal::kEmptyString) {
-    delete userid_;
-  }
-  if (userid) {
-    set_has_userid();
-    userid_ = userid;
-  } else {
-    clear_has_userid();
-    userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional bool pullAllGrades = 2;
-inline bool AdvanceUserGradePull::has_pullallgrades() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void AdvanceUserGradePull::set_has_pullallgrades() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void AdvanceUserGradePull::clear_has_pullallgrades() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void AdvanceUserGradePull::clear_pullallgrades() {
-  pullallgrades_ = false;
-  clear_has_pullallgrades();
-}
-inline bool AdvanceUserGradePull::pullallgrades() const {
-  return pullallgrades_;
-}
-inline void AdvanceUserGradePull::set_pullallgrades(bool value) {
-  set_has_pullallgrades();
-  pullallgrades_ = value;
-}
-
-// repeated string courseId = 3;
-inline int AdvanceUserGradePull::courseid_size() const {
-  return courseid_.size();
-}
-inline void AdvanceUserGradePull::clear_courseid() {
-  courseid_.Clear();
-}
-inline const ::std::string& AdvanceUserGradePull::courseid(int index) const {
-  return courseid_.Get(index);
-}
-inline ::std::string* AdvanceUserGradePull::mutable_courseid(int index) {
-  return courseid_.Mutable(index);
-}
-inline void AdvanceUserGradePull::set_courseid(int index, const ::std::string& value) {
-  courseid_.Mutable(index)->assign(value);
-}
-inline void AdvanceUserGradePull::set_courseid(int index, const char* value) {
-  courseid_.Mutable(index)->assign(value);
-}
-inline void AdvanceUserGradePull::set_courseid(int index, const char* value, size_t size) {
-  courseid_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* AdvanceUserGradePull::add_courseid() {
-  return courseid_.Add();
-}
-inline void AdvanceUserGradePull::add_courseid(const ::std::string& value) {
-  courseid_.Add()->assign(value);
-}
-inline void AdvanceUserGradePull::add_courseid(const char* value) {
-  courseid_.Add()->assign(value);
-}
-inline void AdvanceUserGradePull::add_courseid(const char* value, size_t size) {
-  courseid_.Add()->assign(reinterpret_cast<const char*>(value), size);
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-AdvanceUserGradePull::courseid() const {
-  return courseid_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-AdvanceUserGradePull::mutable_courseid() {
-  return &courseid_;
-}
-
-// -------------------------------------------------------------------
-
-// AdvanceReview
-
-// required string courseId = 1;
-inline bool AdvanceReview::has_courseid() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void AdvanceReview::set_has_courseid() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void AdvanceReview::clear_has_courseid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void AdvanceReview::clear_courseid() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    courseid_->clear();
-  }
-  clear_has_courseid();
-}
-inline const ::std::string& AdvanceReview::courseid() const {
-  return *courseid_;
-}
-inline void AdvanceReview::set_courseid(const ::std::string& value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
-}
-inline void AdvanceReview::set_courseid(const char* value) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(value);
-}
-inline void AdvanceReview::set_courseid(const char* value, size_t size) {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  courseid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* AdvanceReview::mutable_courseid() {
-  set_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    courseid_ = new ::std::string;
-  }
-  return courseid_;
-}
-inline ::std::string* AdvanceReview::release_courseid() {
-  clear_has_courseid();
-  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = courseid_;
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void AdvanceReview::set_allocated_courseid(::std::string* courseid) {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (courseid) {
-    set_has_courseid();
-    courseid_ = courseid;
-  } else {
-    clear_has_courseid();
-    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// required string assignmentId = 2;
-inline bool AdvanceReview::has_assignmentid() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void AdvanceReview::set_has_assignmentid() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void AdvanceReview::clear_has_assignmentid() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void AdvanceReview::clear_assignmentid() {
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    assignmentid_->clear();
-  }
-  clear_has_assignmentid();
-}
-inline const ::std::string& AdvanceReview::assignmentid() const {
-  return *assignmentid_;
-}
-inline void AdvanceReview::set_assignmentid(const ::std::string& value) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(value);
-}
-inline void AdvanceReview::set_assignmentid(const char* value) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(value);
-}
-inline void AdvanceReview::set_assignmentid(const char* value, size_t size) {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  assignmentid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* AdvanceReview::mutable_assignmentid() {
-  set_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    assignmentid_ = new ::std::string;
-  }
-  return assignmentid_;
-}
-inline ::std::string* AdvanceReview::release_assignmentid() {
-  clear_has_assignmentid();
-  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = assignmentid_;
-    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void AdvanceReview::set_allocated_assignmentid(::std::string* assignmentid) {
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentid_;
-  }
-  if (assignmentid) {
-    set_has_assignmentid();
-    assignmentid_ = assignmentid;
-  } else {
-    clear_has_assignmentid();
-    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// required string courseProblemId = 3;
-inline bool AdvanceReview::has_courseproblemid() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void AdvanceReview::set_has_courseproblemid() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void AdvanceReview::clear_has_courseproblemid() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void AdvanceReview::clear_courseproblemid() {
-  if (courseproblemid_ != &::google::protobuf::internal::kEmptyString) {
-    courseproblemid_->clear();
-  }
-  clear_has_courseproblemid();
-}
-inline const ::std::string& AdvanceReview::courseproblemid() const {
-  return *courseproblemid_;
-}
-inline void AdvanceReview::set_courseproblemid(const ::std::string& value) {
-  set_has_courseproblemid();
-  if (courseproblemid_ == &::google::protobuf::internal::kEmptyString) {
-    courseproblemid_ = new ::std::string;
-  }
-  courseproblemid_->assign(value);
-}
-inline void AdvanceReview::set_courseproblemid(const char* value) {
-  set_has_courseproblemid();
-  if (courseproblemid_ == &::google::protobuf::internal::kEmptyString) {
-    courseproblemid_ = new ::std::string;
-  }
-  courseproblemid_->assign(value);
-}
-inline void AdvanceReview::set_courseproblemid(const char* value, size_t size) {
-  set_has_courseproblemid();
-  if (courseproblemid_ == &::google::protobuf::internal::kEmptyString) {
-    courseproblemid_ = new ::std::string;
-  }
-  courseproblemid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* AdvanceReview::mutable_courseproblemid() {
-  set_has_courseproblemid();
-  if (courseproblemid_ == &::google::protobuf::internal::kEmptyString) {
-    courseproblemid_ = new ::std::string;
-  }
-  return courseproblemid_;
-}
-inline ::std::string* AdvanceReview::release_courseproblemid() {
-  clear_has_courseproblemid();
-  if (courseproblemid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = courseproblemid_;
-    courseproblemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void AdvanceReview::set_allocated_courseproblemid(::std::string* courseproblemid) {
-  if (courseproblemid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseproblemid_;
-  }
-  if (courseproblemid) {
-    set_has_courseproblemid();
-    courseproblemid_ = courseproblemid;
-  } else {
-    clear_has_courseproblemid();
-    courseproblemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

@@ -40,15 +40,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* ItemResult_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ItemResult_reflection_ = NULL;
-const ::google::protobuf::Descriptor* AdvanceCourseGradePull_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  AdvanceCourseGradePull_reflection_ = NULL;
-const ::google::protobuf::Descriptor* AdvanceUserGradePull_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  AdvanceUserGradePull_reflection_ = NULL;
-const ::google::protobuf::Descriptor* AdvanceReview_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  AdvanceReview_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* ItemQuery_descriptor_ = NULL;
 
 }  // namespace
@@ -108,10 +99,11 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DataSend));
   ItemSend_descriptor_ = file->message_type(3);
-  static const int ItemSend_offsets_[3] = {
+  static const int ItemSend_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemSend, query_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemSend, isinsert_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemSend, data_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemSend, textdata_),
   };
   ItemSend_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -140,8 +132,9 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DataResult));
   ItemResult_descriptor_ = file->message_type(5);
-  static const int ItemResult_offsets_[2] = {
+  static const int ItemResult_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemResult, query_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemResult, returntext_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemResult, data_),
   };
   ItemResult_reflection_ =
@@ -155,57 +148,6 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ItemResult));
-  AdvanceCourseGradePull_descriptor_ = file->message_type(6);
-  static const int AdvanceCourseGradePull_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceCourseGradePull, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceCourseGradePull, pullallgrades_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceCourseGradePull, userid_),
-  };
-  AdvanceCourseGradePull_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      AdvanceCourseGradePull_descriptor_,
-      AdvanceCourseGradePull::default_instance_,
-      AdvanceCourseGradePull_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceCourseGradePull, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceCourseGradePull, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(AdvanceCourseGradePull));
-  AdvanceUserGradePull_descriptor_ = file->message_type(7);
-  static const int AdvanceUserGradePull_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceUserGradePull, userid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceUserGradePull, pullallgrades_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceUserGradePull, courseid_),
-  };
-  AdvanceUserGradePull_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      AdvanceUserGradePull_descriptor_,
-      AdvanceUserGradePull::default_instance_,
-      AdvanceUserGradePull_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceUserGradePull, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceUserGradePull, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(AdvanceUserGradePull));
-  AdvanceReview_descriptor_ = file->message_type(8);
-  static const int AdvanceReview_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceReview, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceReview, assignmentid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceReview, courseproblemid_),
-  };
-  AdvanceReview_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      AdvanceReview_descriptor_,
-      AdvanceReview::default_instance_,
-      AdvanceReview_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceReview, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceReview, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(AdvanceReview));
   ItemQuery_descriptor_ = file->enum_type(0);
 }
 
@@ -231,12 +173,6 @@ void protobuf_RegisterTypes(const ::std::string&) {
     DataResult_descriptor_, &DataResult::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ItemResult_descriptor_, &ItemResult::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    AdvanceCourseGradePull_descriptor_, &AdvanceCourseGradePull::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    AdvanceUserGradePull_descriptor_, &AdvanceUserGradePull::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    AdvanceReview_descriptor_, &AdvanceReview::default_instance());
 }
 
 }  // namespace
@@ -254,12 +190,6 @@ void protobuf_ShutdownFile_input_2fdata_2eproto() {
   delete DataResult_reflection_;
   delete ItemResult::default_instance_;
   delete ItemResult_reflection_;
-  delete AdvanceCourseGradePull::default_instance_;
-  delete AdvanceCourseGradePull_reflection_;
-  delete AdvanceUserGradePull::default_instance_;
-  delete AdvanceUserGradePull_reflection_;
-  delete AdvanceReview::default_instance_;
-  delete AdvanceReview_reflection_;
 }
 
 void protobuf_AddDesc_input_2fdata_2eproto() {
@@ -275,24 +205,19 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
     "itemId\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.s"
     "rl.query.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014"
     "\"7\n\010DataSend\022+\n\005items\030\003 \003(\0132\034.protobuf.s"
-    "rl.query.ItemSend\"X\n\010ItemSend\022,\n\005query\030\001"
+    "rl.query.ItemSend\"j\n\010ItemSend\022,\n\005query\030\001"
     " \001(\0162\035.protobuf.srl.query.ItemQuery\022\020\n\010i"
-    "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResul"
-    "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query."
-    "ItemResult\"H\n\nItemResult\022,\n\005query\030\001 \001(\0162"
-    "\035.protobuf.srl.query.ItemQuery\022\014\n\004data\030\003"
-    " \001(\014\"Q\n\026AdvanceCourseGradePull\022\020\n\010course"
-    "Id\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\016\n\006userI"
-    "d\030\003 \003(\t\"O\n\024AdvanceUserGradePull\022\016\n\006userI"
-    "d\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\020\n\010course"
-    "Id\030\003 \003(\t\"P\n\rAdvanceReview\022\020\n\010courseId\030\001 "
-    "\002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\027\n\017courseProbl"
-    "emId\030\003 \002(\t*\312\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\n"
-    "ASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK"
-    "_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE"
-    "\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPER"
-    "IMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017"
-    "\n\013BANK_SEARCH\020\n", 935);
+    "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\022\020\n\010textData\030"
+    "\004 \003(\t\"=\n\nDataResult\022/\n\007results\030\001 \003(\0132\036.p"
+    "rotobuf.srl.query.ItemResult\"\\\n\nItemResu"
+    "lt\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.query.I"
+    "temQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004data\030\003 \001"
+    "(\014*\330\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nASSIGNME"
+    "NT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM"
+    "\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUS"
+    "ER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022"
+    "\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n\013BANK_S"
+    "EARCH\020\013\022\014\n\010REGISTER\020\014", 741);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/data.proto", &protobuf_RegisterTypes);
   DataRequest::default_instance_ = new DataRequest();
@@ -301,18 +226,12 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
   ItemSend::default_instance_ = new ItemSend();
   DataResult::default_instance_ = new DataResult();
   ItemResult::default_instance_ = new ItemResult();
-  AdvanceCourseGradePull::default_instance_ = new AdvanceCourseGradePull();
-  AdvanceUserGradePull::default_instance_ = new AdvanceUserGradePull();
-  AdvanceReview::default_instance_ = new AdvanceReview();
   DataRequest::default_instance_->InitAsDefaultInstance();
   ItemRequest::default_instance_->InitAsDefaultInstance();
   DataSend::default_instance_->InitAsDefaultInstance();
   ItemSend::default_instance_->InitAsDefaultInstance();
   DataResult::default_instance_->InitAsDefaultInstance();
   ItemResult::default_instance_->InitAsDefaultInstance();
-  AdvanceCourseGradePull::default_instance_->InitAsDefaultInstance();
-  AdvanceUserGradePull::default_instance_->InitAsDefaultInstance();
-  AdvanceReview::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_input_2fdata_2eproto);
 }
 
@@ -339,6 +258,8 @@ bool ItemQuery_IsValid(int value) {
     case 8:
     case 9:
     case 10:
+    case 11:
+    case 12:
       return true;
     default:
       return false;
@@ -1069,6 +990,7 @@ void DataSend::Swap(DataSend* other) {
 const int ItemSend::kQueryFieldNumber;
 const int ItemSend::kIsInsertFieldNumber;
 const int ItemSend::kDataFieldNumber;
+const int ItemSend::kTextDataFieldNumber;
 #endif  // !_MSC_VER
 
 ItemSend::ItemSend()
@@ -1136,6 +1058,7 @@ void ItemSend::Clear() {
       }
     }
   }
+  textdata_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -1192,6 +1115,25 @@ bool ItemSend::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(34)) goto parse_textData;
+        break;
+      }
+
+      // repeated string textData = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_textData:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_textdata()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->textdata(this->textdata_size() - 1).data(),
+            this->textdata(this->textdata_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_textData;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1231,6 +1173,15 @@ void ItemSend::SerializeWithCachedSizes(
       3, this->data(), output);
   }
 
+  // repeated string textData = 4;
+  for (int i = 0; i < this->textdata_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->textdata(i).data(), this->textdata(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->textdata(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1255,6 +1206,15 @@ void ItemSend::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         3, this->data(), target);
+  }
+
+  // repeated string textData = 4;
+  for (int i = 0; i < this->textdata_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->textdata(i).data(), this->textdata(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(4, this->textdata(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1287,6 +1247,13 @@ int ItemSend::ByteSize() const {
     }
 
   }
+  // repeated string textData = 4;
+  total_size += 1 * this->textdata_size();
+  for (int i = 0; i < this->textdata_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->textdata(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -1312,6 +1279,7 @@ void ItemSend::MergeFrom(const ::google::protobuf::Message& from) {
 
 void ItemSend::MergeFrom(const ItemSend& from) {
   GOOGLE_CHECK_NE(&from, this);
+  textdata_.MergeFrom(from.textdata_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_query()) {
       set_query(from.query());
@@ -1348,6 +1316,7 @@ void ItemSend::Swap(ItemSend* other) {
     std::swap(query_, other->query_);
     std::swap(isinsert_, other->isinsert_);
     std::swap(data_, other->data_);
+    textdata_.Swap(&other->textdata_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -1570,6 +1539,7 @@ void DataResult::Swap(DataResult* other) {
 
 #ifndef _MSC_VER
 const int ItemResult::kQueryFieldNumber;
+const int ItemResult::kReturnTextFieldNumber;
 const int ItemResult::kDataFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1590,6 +1560,7 @@ ItemResult::ItemResult(const ItemResult& from)
 void ItemResult::SharedCtor() {
   _cached_size_ = 0;
   query_ = 0;
+  returntext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -1599,6 +1570,9 @@ ItemResult::~ItemResult() {
 }
 
 void ItemResult::SharedDtor() {
+  if (returntext_ != &::google::protobuf::internal::kEmptyString) {
+    delete returntext_;
+  }
   if (data_ != &::google::protobuf::internal::kEmptyString) {
     delete data_;
   }
@@ -1630,6 +1604,11 @@ ItemResult* ItemResult::New() const {
 void ItemResult::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     query_ = 0;
+    if (has_returntext()) {
+      if (returntext_ != &::google::protobuf::internal::kEmptyString) {
+        returntext_->clear();
+      }
+    }
     if (has_data()) {
       if (data_ != &::google::protobuf::internal::kEmptyString) {
         data_->clear();
@@ -1659,6 +1638,23 @@ bool ItemResult::MergePartialFromCodedStream(
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_returnText;
+        break;
+      }
+
+      // optional string returnText = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_returnText:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_returntext()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->returntext().data(), this->returntext().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -1704,6 +1700,15 @@ void ItemResult::SerializeWithCachedSizes(
       1, this->query(), output);
   }
 
+  // optional string returnText = 2;
+  if (has_returntext()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->returntext().data(), this->returntext().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->returntext(), output);
+  }
+
   // optional bytes data = 3;
   if (has_data()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
@@ -1722,6 +1727,16 @@ void ItemResult::SerializeWithCachedSizes(
   if (has_query()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->query(), target);
+  }
+
+  // optional string returnText = 2;
+  if (has_returntext()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->returntext().data(), this->returntext().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->returntext(), target);
   }
 
   // optional bytes data = 3;
@@ -1746,6 +1761,13 @@ int ItemResult::ByteSize() const {
     if (has_query()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->query());
+    }
+
+    // optional string returnText = 2;
+    if (has_returntext()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->returntext());
     }
 
     // optional bytes data = 3;
@@ -1785,6 +1807,9 @@ void ItemResult::MergeFrom(const ItemResult& from) {
     if (from.has_query()) {
       set_query(from.query());
     }
+    if (from.has_returntext()) {
+      set_returntext(from.returntext());
+    }
     if (from.has_data()) {
       set_data(from.data());
     }
@@ -1812,6 +1837,7 @@ bool ItemResult::IsInitialized() const {
 void ItemResult::Swap(ItemResult* other) {
   if (other != this) {
     std::swap(query_, other->query_);
+    std::swap(returntext_, other->returntext_);
     std::swap(data_, other->data_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -1824,970 +1850,6 @@ void ItemResult::Swap(ItemResult* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = ItemResult_descriptor_;
   metadata.reflection = ItemResult_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int AdvanceCourseGradePull::kCourseIdFieldNumber;
-const int AdvanceCourseGradePull::kPullAllGradesFieldNumber;
-const int AdvanceCourseGradePull::kUserIdFieldNumber;
-#endif  // !_MSC_VER
-
-AdvanceCourseGradePull::AdvanceCourseGradePull()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void AdvanceCourseGradePull::InitAsDefaultInstance() {
-}
-
-AdvanceCourseGradePull::AdvanceCourseGradePull(const AdvanceCourseGradePull& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void AdvanceCourseGradePull::SharedCtor() {
-  _cached_size_ = 0;
-  courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  pullallgrades_ = false;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-AdvanceCourseGradePull::~AdvanceCourseGradePull() {
-  SharedDtor();
-}
-
-void AdvanceCourseGradePull::SharedDtor() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (this != default_instance_) {
-  }
-}
-
-void AdvanceCourseGradePull::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* AdvanceCourseGradePull::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return AdvanceCourseGradePull_descriptor_;
-}
-
-const AdvanceCourseGradePull& AdvanceCourseGradePull::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_input_2fdata_2eproto();
-  return *default_instance_;
-}
-
-AdvanceCourseGradePull* AdvanceCourseGradePull::default_instance_ = NULL;
-
-AdvanceCourseGradePull* AdvanceCourseGradePull::New() const {
-  return new AdvanceCourseGradePull;
-}
-
-void AdvanceCourseGradePull::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_courseid()) {
-      if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-        courseid_->clear();
-      }
-    }
-    pullallgrades_ = false;
-  }
-  userid_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AdvanceCourseGradePull::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string courseId = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_courseid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->courseid().data(), this->courseid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(16)) goto parse_pullAllGrades;
-        break;
-      }
-
-      // optional bool pullAllGrades = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_pullAllGrades:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &pullallgrades_)));
-          set_has_pullallgrades();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_userId;
-        break;
-      }
-
-      // repeated string userId = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_userId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->add_userid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->userid(this->userid_size() - 1).data(),
-            this->userid(this->userid_size() - 1).length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_userId;
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void AdvanceCourseGradePull::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->courseid(), output);
-  }
-
-  // optional bool pullAllGrades = 2;
-  if (has_pullallgrades()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->pullallgrades(), output);
-  }
-
-  // repeated string userId = 3;
-  for (int i = 0; i < this->userid_size(); i++) {
-  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-    this->userid(i).data(), this->userid(i).length(),
-    ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->userid(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* AdvanceCourseGradePull::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // required string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->courseid(), target);
-  }
-
-  // optional bool pullAllGrades = 2;
-  if (has_pullallgrades()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->pullallgrades(), target);
-  }
-
-  // repeated string userId = 3;
-  for (int i = 0; i < this->userid_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->userid(i).data(), this->userid(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteStringToArray(3, this->userid(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int AdvanceCourseGradePull::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string courseId = 1;
-    if (has_courseid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->courseid());
-    }
-
-    // optional bool pullAllGrades = 2;
-    if (has_pullallgrades()) {
-      total_size += 1 + 1;
-    }
-
-  }
-  // repeated string userId = 3;
-  total_size += 1 * this->userid_size();
-  for (int i = 0; i < this->userid_size(); i++) {
-    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
-      this->userid(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AdvanceCourseGradePull::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AdvanceCourseGradePull* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AdvanceCourseGradePull*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AdvanceCourseGradePull::MergeFrom(const AdvanceCourseGradePull& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  userid_.MergeFrom(from.userid_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_courseid()) {
-      set_courseid(from.courseid());
-    }
-    if (from.has_pullallgrades()) {
-      set_pullallgrades(from.pullallgrades());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AdvanceCourseGradePull::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AdvanceCourseGradePull::CopyFrom(const AdvanceCourseGradePull& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AdvanceCourseGradePull::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
-
-  return true;
-}
-
-void AdvanceCourseGradePull::Swap(AdvanceCourseGradePull* other) {
-  if (other != this) {
-    std::swap(courseid_, other->courseid_);
-    std::swap(pullallgrades_, other->pullallgrades_);
-    userid_.Swap(&other->userid_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata AdvanceCourseGradePull::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = AdvanceCourseGradePull_descriptor_;
-  metadata.reflection = AdvanceCourseGradePull_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int AdvanceUserGradePull::kUserIdFieldNumber;
-const int AdvanceUserGradePull::kPullAllGradesFieldNumber;
-const int AdvanceUserGradePull::kCourseIdFieldNumber;
-#endif  // !_MSC_VER
-
-AdvanceUserGradePull::AdvanceUserGradePull()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void AdvanceUserGradePull::InitAsDefaultInstance() {
-}
-
-AdvanceUserGradePull::AdvanceUserGradePull(const AdvanceUserGradePull& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void AdvanceUserGradePull::SharedCtor() {
-  _cached_size_ = 0;
-  userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  pullallgrades_ = false;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-AdvanceUserGradePull::~AdvanceUserGradePull() {
-  SharedDtor();
-}
-
-void AdvanceUserGradePull::SharedDtor() {
-  if (userid_ != &::google::protobuf::internal::kEmptyString) {
-    delete userid_;
-  }
-  if (this != default_instance_) {
-  }
-}
-
-void AdvanceUserGradePull::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* AdvanceUserGradePull::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return AdvanceUserGradePull_descriptor_;
-}
-
-const AdvanceUserGradePull& AdvanceUserGradePull::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_input_2fdata_2eproto();
-  return *default_instance_;
-}
-
-AdvanceUserGradePull* AdvanceUserGradePull::default_instance_ = NULL;
-
-AdvanceUserGradePull* AdvanceUserGradePull::New() const {
-  return new AdvanceUserGradePull;
-}
-
-void AdvanceUserGradePull::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_userid()) {
-      if (userid_ != &::google::protobuf::internal::kEmptyString) {
-        userid_->clear();
-      }
-    }
-    pullallgrades_ = false;
-  }
-  courseid_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AdvanceUserGradePull::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string userId = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_userid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->userid().data(), this->userid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(16)) goto parse_pullAllGrades;
-        break;
-      }
-
-      // optional bool pullAllGrades = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_pullAllGrades:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &pullallgrades_)));
-          set_has_pullallgrades();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_courseId;
-        break;
-      }
-
-      // repeated string courseId = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_courseId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->add_courseid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->courseid(this->courseid_size() - 1).data(),
-            this->courseid(this->courseid_size() - 1).length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_courseId;
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void AdvanceUserGradePull::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string userId = 1;
-  if (has_userid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->userid().data(), this->userid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->userid(), output);
-  }
-
-  // optional bool pullAllGrades = 2;
-  if (has_pullallgrades()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->pullallgrades(), output);
-  }
-
-  // repeated string courseId = 3;
-  for (int i = 0; i < this->courseid_size(); i++) {
-  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-    this->courseid(i).data(), this->courseid(i).length(),
-    ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->courseid(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* AdvanceUserGradePull::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // required string userId = 1;
-  if (has_userid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->userid().data(), this->userid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->userid(), target);
-  }
-
-  // optional bool pullAllGrades = 2;
-  if (has_pullallgrades()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->pullallgrades(), target);
-  }
-
-  // repeated string courseId = 3;
-  for (int i = 0; i < this->courseid_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid(i).data(), this->courseid(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteStringToArray(3, this->courseid(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int AdvanceUserGradePull::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string userId = 1;
-    if (has_userid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->userid());
-    }
-
-    // optional bool pullAllGrades = 2;
-    if (has_pullallgrades()) {
-      total_size += 1 + 1;
-    }
-
-  }
-  // repeated string courseId = 3;
-  total_size += 1 * this->courseid_size();
-  for (int i = 0; i < this->courseid_size(); i++) {
-    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
-      this->courseid(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AdvanceUserGradePull::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AdvanceUserGradePull* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AdvanceUserGradePull*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AdvanceUserGradePull::MergeFrom(const AdvanceUserGradePull& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  courseid_.MergeFrom(from.courseid_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_userid()) {
-      set_userid(from.userid());
-    }
-    if (from.has_pullallgrades()) {
-      set_pullallgrades(from.pullallgrades());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AdvanceUserGradePull::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AdvanceUserGradePull::CopyFrom(const AdvanceUserGradePull& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AdvanceUserGradePull::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
-
-  return true;
-}
-
-void AdvanceUserGradePull::Swap(AdvanceUserGradePull* other) {
-  if (other != this) {
-    std::swap(userid_, other->userid_);
-    std::swap(pullallgrades_, other->pullallgrades_);
-    courseid_.Swap(&other->courseid_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata AdvanceUserGradePull::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = AdvanceUserGradePull_descriptor_;
-  metadata.reflection = AdvanceUserGradePull_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int AdvanceReview::kCourseIdFieldNumber;
-const int AdvanceReview::kAssignmentIdFieldNumber;
-const int AdvanceReview::kCourseProblemIdFieldNumber;
-#endif  // !_MSC_VER
-
-AdvanceReview::AdvanceReview()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void AdvanceReview::InitAsDefaultInstance() {
-}
-
-AdvanceReview::AdvanceReview(const AdvanceReview& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void AdvanceReview::SharedCtor() {
-  _cached_size_ = 0;
-  courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  courseproblemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-AdvanceReview::~AdvanceReview() {
-  SharedDtor();
-}
-
-void AdvanceReview::SharedDtor() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentid_;
-  }
-  if (courseproblemid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseproblemid_;
-  }
-  if (this != default_instance_) {
-  }
-}
-
-void AdvanceReview::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* AdvanceReview::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return AdvanceReview_descriptor_;
-}
-
-const AdvanceReview& AdvanceReview::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_input_2fdata_2eproto();
-  return *default_instance_;
-}
-
-AdvanceReview* AdvanceReview::default_instance_ = NULL;
-
-AdvanceReview* AdvanceReview::New() const {
-  return new AdvanceReview;
-}
-
-void AdvanceReview::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_courseid()) {
-      if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-        courseid_->clear();
-      }
-    }
-    if (has_assignmentid()) {
-      if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-        assignmentid_->clear();
-      }
-    }
-    if (has_courseproblemid()) {
-      if (courseproblemid_ != &::google::protobuf::internal::kEmptyString) {
-        courseproblemid_->clear();
-      }
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AdvanceReview::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string courseId = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_courseid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->courseid().data(), this->courseid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_assignmentId;
-        break;
-      }
-
-      // required string assignmentId = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_assignmentId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_assignmentid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->assignmentid().data(), this->assignmentid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_courseProblemId;
-        break;
-      }
-
-      // required string courseProblemId = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_courseProblemId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_courseproblemid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->courseproblemid().data(), this->courseproblemid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void AdvanceReview::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->courseid(), output);
-  }
-
-  // required string assignmentId = 2;
-  if (has_assignmentid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->assignmentid(), output);
-  }
-
-  // required string courseProblemId = 3;
-  if (has_courseproblemid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseproblemid().data(), this->courseproblemid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->courseproblemid(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* AdvanceReview::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // required string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->courseid(), target);
-  }
-
-  // required string assignmentId = 2;
-  if (has_assignmentid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->assignmentid(), target);
-  }
-
-  // required string courseProblemId = 3;
-  if (has_courseproblemid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseproblemid().data(), this->courseproblemid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->courseproblemid(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int AdvanceReview::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string courseId = 1;
-    if (has_courseid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->courseid());
-    }
-
-    // required string assignmentId = 2;
-    if (has_assignmentid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->assignmentid());
-    }
-
-    // required string courseProblemId = 3;
-    if (has_courseproblemid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->courseproblemid());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AdvanceReview::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AdvanceReview* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AdvanceReview*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AdvanceReview::MergeFrom(const AdvanceReview& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_courseid()) {
-      set_courseid(from.courseid());
-    }
-    if (from.has_assignmentid()) {
-      set_assignmentid(from.assignmentid());
-    }
-    if (from.has_courseproblemid()) {
-      set_courseproblemid(from.courseproblemid());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AdvanceReview::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AdvanceReview::CopyFrom(const AdvanceReview& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AdvanceReview::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
-
-  return true;
-}
-
-void AdvanceReview::Swap(AdvanceReview* other) {
-  if (other != this) {
-    std::swap(courseid_, other->courseid_);
-    std::swap(assignmentid_, other->assignmentid_);
-    std::swap(courseproblemid_, other->courseproblemid_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata AdvanceReview::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = AdvanceReview_descriptor_;
-  metadata.reflection = AdvanceReview_reflection_;
   return metadata;
 }
 

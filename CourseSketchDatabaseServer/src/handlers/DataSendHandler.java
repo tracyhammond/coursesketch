@@ -25,7 +25,15 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
+import protobuf.srl.school.School.SrlUser;
 
+/**
+ * Handles data being added or edited.
+ *
+ * In most cases insert returns the mongoId and the id that was taken in.
+ * This allows the client to replace the old assignment id with the new assignment id.
+ * @author gigemjt
+ */
 public class DataSendHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
 	
@@ -42,33 +50,49 @@ public class DataSendHandler {
 
 			for(int p=0; p<request.getItemsList().size(); p++) {
 				ItemSend itrequest = request.getItemsList().get(p);
-				switch(itrequest.getQuery()) {
-					/*
-					case COURSE: ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), userId);
-								SrlSchool.Builder courseSchool = SrlSchool.newBuilder();
-								courseSchool.addAllCourses(courseLoop);
-								results.add(buildResult(courseSchool.build().toByteString(),ItemQuery.COURSE));
-								break;
-					case ASSIGNMENT: ArrayList<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), userId);
-								SrlSchool.Builder assignmentSchool = SrlSchool.newBuilder();
-								assignmentSchool.addAllAssignments(assignmentLoop);
-								results.add(buildResult(assignmentSchool.build().toByteString(),ItemQuery.ASSIGNMENT));
-								break;
-					case COURSE_PROBLEM: ArrayList<SrlProblem> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), userId);
-								SrlSchool.Builder problemSchool = SrlSchool.newBuilder();
-								problemSchool.addAllProblems(courseProblemLoop);
-								results.add(buildResult(problemSchool.build().toByteString(),ItemQuery.COURSE_PROBLEM));
-								break;
-					case BANK_PROBLEM: ArrayList<SrlBankProblem> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), userId);
-								SrlSchool.Builder bankproblemSchool = SrlSchool.newBuilder();
-								bankproblemSchool.addAllBankProblems(bankProblemLoop);
-								results.add(buildResult(bankproblemSchool.build().toByteString(),ItemQuery.BANK_PROBLEM));
-								break;
-					*/
-					case USER_INFO: {
-						if (itrequest.getIsInsert()) {
-							UserClient.insertUser(itrequest.getData());
-						}
+				switch (itrequest.getQuery()) {
+					case COURSE: if (itrequest.getIsInsert()) {
+						SrlCourse course = SrlCourse.parseFrom(itrequest.getData());
+						String resultId = Institution.mongoInsertCourse(userId, course);
+						results.add(buildResult(resultId + " : " + course.getId(), itrequest.getQuery()));
+					} else {
+						// update here
+						// update does not need to return anything
+					}
+					case ASSIGNMENT: if (itrequest.getIsInsert()) {
+						SrlAssignment assignment = SrlAssignment.parseFrom(itrequest.getData());
+						String resultId = Institution.mongoInsertAssignment(userId, assignment);
+						results.add(buildResult(resultId + " : " + assignment.getId(), itrequest.getQuery()));
+					} else {
+						// update here
+						// update does not need to return anything
+					}
+					case COURSE_PROBLEM: if (itrequest.getIsInsert()) {
+						SrlProblem problem = SrlProblem.parseFrom(itrequest.getData());
+						String resultId = Institution.mongoInsertCourseProblem(userId, problem);
+						results.add(buildResult(resultId + " : " + problem.getId(), itrequest.getQuery()));
+					} else {
+						// update here
+						// update does not need to return anything
+					}
+					case BANK_PROBLEM: if (itrequest.getIsInsert()) {
+						SrlBankProblem problem = SrlBankProblem.parseFrom(itrequest.getData());
+						String resultId = Institution.mongoInsertBankProblem(userId, problem);
+						results.add(buildResult(resultId + " : " + problem.getId(), itrequest.getQuery()));
+					} else {
+						// update here
+						// update does not need to return anything
+					}
+					case USER_INFO: if (itrequest.getIsInsert()) {
+						UserClient.insertUser(SrlUser.parseFrom(itrequest.getData()), userId);
+					} else {
+						// update here
+						// update does not need to return anything	
+					}
+					case REGISTER: {
+						SrlCourse course = SrlCourse.parseFrom(itrequest.getData());
+						String courseId = course.getId();
+						Institution.putUserInCourse(courseId, userId);
 					}
 					/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
 								for(AssignmentBuilder loopCourse: assignmentLoop){
@@ -110,9 +134,9 @@ public class DataSendHandler {
 		}
 	}
 
-	private static ItemResult buildResult(ByteString data, ItemQuery type) {
+	private static ItemResult buildResult(String data, ItemQuery type) {
 		ItemResult.Builder result = ItemResult.newBuilder();
-		result.setData(data);
+		result.setReturnText(data);
 		result.setQuery(type);
 		return result.build();
 	}
