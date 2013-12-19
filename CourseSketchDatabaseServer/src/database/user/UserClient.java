@@ -1,4 +1,4 @@
-package database.user.manager;
+package database.user;
 
 import protobuf.srl.school.School.SrlUser;
 
@@ -7,7 +7,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
-import database.institution.DatabaseAccessException;
+import database.DatabaseAccessException;
 
 
 public final class UserClient {

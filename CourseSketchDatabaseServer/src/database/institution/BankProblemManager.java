@@ -1,6 +1,6 @@
-package database.institution.managers;
+package database.institution;
 
-import static database.institution.StringConstants.*;
+import static database.StringConstants.*;
 
 import java.util.ArrayList;
 
@@ -15,8 +15,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import database.institution.auth.AuthenticationException;
-import database.institution.auth.Authenticator;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
 
 public class BankProblemManager 
 {

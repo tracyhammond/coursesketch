@@ -1,6 +1,6 @@
-package database.institution.problem;
+package database.submission;
 
-import static database.institution.StringConstants.*;
+import static database.StringConstants.*;
 
 import java.util.ArrayList;
 
@@ -16,9 +16,9 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import database.institution.DatabaseAccessException;
-import database.institution.auth.AuthenticationException;
-import database.institution.auth.Authenticator;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
 
 public class SubmissionManager 
 {

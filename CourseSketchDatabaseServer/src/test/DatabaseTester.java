@@ -1,6 +1,6 @@
 package test;
 
-import static database.institution.StringConstants.*;
+import static database.StringConstants.*;
 
 import java.net.UnknownHostException;
 
@@ -9,8 +9,8 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
-import database.institution.DatabaseAccessException;
-import database.institution.auth.AuthenticationException;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
 
 public class DatabaseTester {
 	public static void main(String args[]) throws UnknownHostException, AuthenticationException {

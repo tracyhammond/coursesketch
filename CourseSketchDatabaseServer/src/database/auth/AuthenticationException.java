@@ -1,4 +1,4 @@
-package database.institution.auth;
+package database.auth;
 
 public class AuthenticationException extends Exception {
 

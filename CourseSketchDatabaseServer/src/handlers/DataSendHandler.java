@@ -8,9 +8,9 @@ import org.java_websocket.WebSocket;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import database.institution.auth.AuthenticationException;
-import database.institution.managers.Institution;
-import database.user.manager.UserClient;
+import database.auth.AuthenticationException;
+import database.institution.Institution;
+import database.user.UserClient;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.DataSend;

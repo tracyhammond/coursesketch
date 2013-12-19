@@ -1,4 +1,4 @@
-package database.institution.managers;
+package database.institution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import protobuf.srl.school.School.SrlProblem;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
-import database.institution.DatabaseAccessException;
-import database.institution.auth.AuthenticationException;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
 
 
 public final class Institution {

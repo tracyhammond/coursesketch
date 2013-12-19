@@ -1,6 +1,6 @@
-package database.user.manager;
+package database.user;
 
-import static database.institution.StringConstants.*;
+import static database.StringConstants.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -11,8 +11,8 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
+import database.DatabaseAccessException;
 import database.PasswordHash;
-import database.institution.DatabaseAccessException;
 
 public class UserManager {
 

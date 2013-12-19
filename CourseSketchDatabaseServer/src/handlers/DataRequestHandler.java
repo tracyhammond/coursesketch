@@ -21,8 +21,8 @@ import protobuf.srl.school.School.SrlSchool;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import database.institution.auth.AuthenticationException;
-import database.institution.managers.Institution;
+import database.auth.AuthenticationException;
+import database.institution.Institution;
 
 public class DataRequestHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
