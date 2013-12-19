@@ -231,4 +231,16 @@ public final class Institution {
 		CourseProblemManager.mongoInsertDefaultGroupId(getInstance().db, resultId, ids);
 		return resultId;
 	}
+
+	/**
+	 * Inserts the {@link SrlBankProblem} into the the database.
+	 *
+	 * Upon insertion a bank problem is created within the problem bank.
+	 * @param userId The credentials used to authenticate the insertion
+	 * @param problem The object being inserted 
+	 * @return The Id of the object that was inserted
+	 */
+	public static String mongoInsertBankProblem(String userId, SrlBankProblem problem) throws AuthenticationException {
+		return BankProblemManager.mongoInsertBankProblem(getInstance().db, problem);
+	}
 }
