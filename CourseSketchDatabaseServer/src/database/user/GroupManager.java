@@ -55,7 +55,7 @@ public class GroupManager
 	public static boolean mongoUpdateGroup(DB dbs, String groupID, String userId, SrlGroup group) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
-		BasicDBObject query = new BasicDBObject("_id",groupID);
+		BasicDBObject query = new BasicDBObject(SELF_ID,groupID);
 		DBObject corsor = courses.findOne(query);
 
 		ArrayList<String> adminList = (ArrayList)corsor.get("Admin");

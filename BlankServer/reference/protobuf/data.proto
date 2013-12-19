@@ -21,6 +21,7 @@ message ItemSend {
 	optional ItemQuery query = 1;
 	optional bool isInsert = 2; // true if inserting, false if updating
 	optional bytes data = 3;
+	repeated string textData = 4;
 }
 
 /**
@@ -32,6 +33,7 @@ message DataResult {
 
 message ItemResult {
 	optional ItemQuery query = 1;
+	optional string returnText = 2;
 	optional bytes data = 3;
 }
 
@@ -47,32 +49,6 @@ enum ItemQuery {
 	EXPERIMENT = 8;
 	SCHOOL = 9;
 	COURSE_SEARCH = 10;
-	BANK_SEARCH = 10;
-}
-
-/**
- * Pulls all grades of the users for a course
- */
-message AdvanceCourseGradePull {
-	required string courseId = 1;
-	optional bool pullAllGrades = 2; // if true we pull all
-	repeated string userId = 3;
-}
-
-/**
- * Pulls all grades for a user
- */
-message AdvanceUserGradePull {
-	required string userId = 1;
-	optional bool pullAllGrades = 2; // if true we pull all
-	repeated string courseId = 3;
-}
-
-/**
- * Pulls all of the information required for a user
- */
-message AdvanceReview {
-	required string courseId = 1;
-	required string assignmentId = 2;
-	required string courseProblemId = 3;
+	BANK_SEARCH = 11;
+	REGISTER = 12;
 }

@@ -237,15 +237,32 @@ public class CourseManager {
 	 *
 	 * Returns a list of Id for the default group for an assignment.
 	 *
-	 * the Ids are ordered as so: AdminGroup, ModGroup, UserGroup
+	 * The list are ordered as so: AdminGroup, ModGroup, UserGroup
 	 */
-	static ArrayList<String>[] mongoGetDefaultGroupId(DB dbs, String courseId) {
+	static ArrayList<String>[] mongoGetDefaultGroupList(DB dbs, String courseId) {
 		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
 		DBObject corsor = myDbRef.fetch();
 		ArrayList<String>[] returnValue = new ArrayList[3];
 		returnValue[0] = (ArrayList)corsor.get(ADMIN);
 		returnValue[1] = (ArrayList)corsor.get(MOD);
 		returnValue[2] = (ArrayList)corsor.get(USERS);
+		return returnValue;
+	}
+	
+	/**
+	 * NOTE: This is meant for internal use do not make this method public
+	 *
+	 * Returns a list of Id for the default group for an assignment.
+	 *
+	 * The Ids are ordered as so: AdminGroup, ModGroup, UserGroup
+	 */
+	static String[] mongoGetDefaultGroupId(DB dbs, String courseId) {
+		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+		DBObject corsor = myDbRef.fetch();
+		String[] returnValue = new String[3];
+		returnValue[0] = corsor.get(ADMIN_GROUP_ID).toString();
+		returnValue[1] = corsor.get(MOD_GROUP_ID).toString();
+		returnValue[2] = corsor.get(USER_GROUP_ID).toString();
 		return returnValue;
 	}
 }

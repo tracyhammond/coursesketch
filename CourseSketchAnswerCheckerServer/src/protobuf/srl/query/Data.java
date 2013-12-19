@@ -57,12 +57,16 @@ public final class Data {
      * <code>COURSE_SEARCH = 10;</code>
      */
     COURSE_SEARCH(10, 10),
+    /**
+     * <code>BANK_SEARCH = 11;</code>
+     */
+    BANK_SEARCH(11, 11),
+    /**
+     * <code>REGISTER = 12;</code>
+     */
+    REGISTER(12, 12),
     ;
 
-    /**
-     * <code>BANK_SEARCH = 10;</code>
-     */
-    public static final ItemQuery BANK_SEARCH = COURSE_SEARCH;
     /**
      * <code>COURSE = 0;</code>
      */
@@ -108,9 +112,13 @@ public final class Data {
      */
     public static final int COURSE_SEARCH_VALUE = 10;
     /**
-     * <code>BANK_SEARCH = 10;</code>
+     * <code>BANK_SEARCH = 11;</code>
      */
-    public static final int BANK_SEARCH_VALUE = 10;
+    public static final int BANK_SEARCH_VALUE = 11;
+    /**
+     * <code>REGISTER = 12;</code>
+     */
+    public static final int REGISTER_VALUE = 12;
 
 
     public final int getNumber() { return value; }
@@ -128,6 +136,8 @@ public final class Data {
         case 8: return EXPERIMENT;
         case 9: return SCHOOL;
         case 10: return COURSE_SEARCH;
+        case 11: return BANK_SEARCH;
+        case 12: return REGISTER;
         default: return null;
       }
     }
@@ -157,9 +167,7 @@ public final class Data {
       return protobuf.srl.query.Data.getDescriptor().getEnumTypes().get(0);
     }
 
-    private static final ItemQuery[] VALUES = {
-      COURSE, ASSIGNMENT, COURSE_PROBLEM, BANK_PROBLEM, USERGROUP, CLASS_GRADE, USER_INFO, SOLUTION, EXPERIMENT, SCHOOL, COURSE_SEARCH, BANK_SEARCH, 
-    };
+    private static final ItemQuery[] VALUES = values();
 
     public static ItemQuery valueOf(
         com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
@@ -2321,6 +2329,26 @@ public final class Data {
      * <code>optional bytes data = 3;</code>
      */
     com.google.protobuf.ByteString getData();
+
+    // repeated string textData = 4;
+    /**
+     * <code>repeated string textData = 4;</code>
+     */
+    java.util.List<java.lang.String>
+    getTextDataList();
+    /**
+     * <code>repeated string textData = 4;</code>
+     */
+    int getTextDataCount();
+    /**
+     * <code>repeated string textData = 4;</code>
+     */
+    java.lang.String getTextData(int index);
+    /**
+     * <code>repeated string textData = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getTextDataBytes(int index);
   }
   /**
    * Protobuf type {@code protobuf.srl.query.ItemSend}
@@ -2394,6 +2422,14 @@ public final class Data {
               data_ = input.readBytes();
               break;
             }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                textData_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              textData_.add(input.readBytes());
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -2402,6 +2438,9 @@ public final class Data {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          textData_ = new com.google.protobuf.UnmodifiableLazyStringList(textData_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -2490,10 +2529,41 @@ public final class Data {
       return data_;
     }
 
+    // repeated string textData = 4;
+    public static final int TEXTDATA_FIELD_NUMBER = 4;
+    private com.google.protobuf.LazyStringList textData_;
+    /**
+     * <code>repeated string textData = 4;</code>
+     */
+    public java.util.List<java.lang.String>
+        getTextDataList() {
+      return textData_;
+    }
+    /**
+     * <code>repeated string textData = 4;</code>
+     */
+    public int getTextDataCount() {
+      return textData_.size();
+    }
+    /**
+     * <code>repeated string textData = 4;</code>
+     */
+    public java.lang.String getTextData(int index) {
+      return textData_.get(index);
+    }
+    /**
+     * <code>repeated string textData = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTextDataBytes(int index) {
+      return textData_.getByteString(index);
+    }
+
     private void initFields() {
       query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
       isInsert_ = false;
       data_ = com.google.protobuf.ByteString.EMPTY;
+      textData_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2516,6 +2586,9 @@ public final class Data {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, data_);
       }
+      for (int i = 0; i < textData_.size(); i++) {
+        output.writeBytes(4, textData_.getByteString(i));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -2536,6 +2609,15 @@ public final class Data {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, data_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < textData_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(textData_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getTextDataList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2659,6 +2741,8 @@ public final class Data {
         bitField0_ = (bitField0_ & ~0x00000002);
         data_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
+        textData_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -2699,6 +2783,12 @@ public final class Data {
           to_bitField0_ |= 0x00000004;
         }
         result.data_ = data_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          textData_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              textData_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.textData_ = textData_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2723,6 +2813,16 @@ public final class Data {
         }
         if (other.hasData()) {
           setData(other.getData());
+        }
+        if (!other.textData_.isEmpty()) {
+          if (textData_.isEmpty()) {
+            textData_ = other.textData_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureTextDataIsMutable();
+            textData_.addAll(other.textData_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2868,6 +2968,99 @@ public final class Data {
       public Builder clearData() {
         bitField0_ = (bitField0_ & ~0x00000004);
         data_ = getDefaultInstance().getData();
+        onChanged();
+        return this;
+      }
+
+      // repeated string textData = 4;
+      private com.google.protobuf.LazyStringList textData_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureTextDataIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          textData_ = new com.google.protobuf.LazyStringArrayList(textData_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+      /**
+       * <code>repeated string textData = 4;</code>
+       */
+      public java.util.List<java.lang.String>
+          getTextDataList() {
+        return java.util.Collections.unmodifiableList(textData_);
+      }
+      /**
+       * <code>repeated string textData = 4;</code>
+       */
+      public int getTextDataCount() {
+        return textData_.size();
+      }
+      /**
+       * <code>repeated string textData = 4;</code>
+       */
+      public java.lang.String getTextData(int index) {
+        return textData_.get(index);
+      }
+      /**
+       * <code>repeated string textData = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTextDataBytes(int index) {
+        return textData_.getByteString(index);
+      }
+      /**
+       * <code>repeated string textData = 4;</code>
+       */
+      public Builder setTextData(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureTextDataIsMutable();
+        textData_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string textData = 4;</code>
+       */
+      public Builder addTextData(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureTextDataIsMutable();
+        textData_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string textData = 4;</code>
+       */
+      public Builder addAllTextData(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureTextDataIsMutable();
+        super.addAll(values, textData_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string textData = 4;</code>
+       */
+      public Builder clearTextData() {
+        textData_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string textData = 4;</code>
+       */
+      public Builder addTextDataBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureTextDataIsMutable();
+        textData_.add(value);
         onChanged();
         return this;
       }
@@ -3580,6 +3773,21 @@ public final class Data {
      */
     protobuf.srl.query.Data.ItemQuery getQuery();
 
+    // optional string returnText = 2;
+    /**
+     * <code>optional string returnText = 2;</code>
+     */
+    boolean hasReturnText();
+    /**
+     * <code>optional string returnText = 2;</code>
+     */
+    java.lang.String getReturnText();
+    /**
+     * <code>optional string returnText = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getReturnTextBytes();
+
     // optional bytes data = 3;
     /**
      * <code>optional bytes data = 3;</code>
@@ -3652,8 +3860,13 @@ public final class Data {
               }
               break;
             }
-            case 26: {
+            case 18: {
               bitField0_ |= 0x00000002;
+              returnText_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
               data_ = input.readBytes();
               break;
             }
@@ -3713,6 +3926,49 @@ public final class Data {
       return query_;
     }
 
+    // optional string returnText = 2;
+    public static final int RETURNTEXT_FIELD_NUMBER = 2;
+    private java.lang.Object returnText_;
+    /**
+     * <code>optional string returnText = 2;</code>
+     */
+    public boolean hasReturnText() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string returnText = 2;</code>
+     */
+    public java.lang.String getReturnText() {
+      java.lang.Object ref = returnText_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          returnText_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string returnText = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getReturnTextBytes() {
+      java.lang.Object ref = returnText_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        returnText_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     // optional bytes data = 3;
     public static final int DATA_FIELD_NUMBER = 3;
     private com.google.protobuf.ByteString data_;
@@ -3720,7 +3976,7 @@ public final class Data {
      * <code>optional bytes data = 3;</code>
      */
     public boolean hasData() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
      * <code>optional bytes data = 3;</code>
@@ -3731,6 +3987,7 @@ public final class Data {
 
     private void initFields() {
       query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      returnText_ = "";
       data_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
@@ -3749,6 +4006,9 @@ public final class Data {
         output.writeEnum(1, query_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getReturnTextBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, data_);
       }
       getUnknownFields().writeTo(output);
@@ -3765,6 +4025,10 @@ public final class Data {
           .computeEnumSize(1, query_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getReturnTextBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, data_);
       }
@@ -3886,8 +4150,10 @@ public final class Data {
         super.clear();
         query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
         bitField0_ = (bitField0_ & ~0x00000001);
-        data_ = com.google.protobuf.ByteString.EMPTY;
+        returnText_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        data_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -3923,6 +4189,10 @@ public final class Data {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
+        result.returnText_ = returnText_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
         result.data_ = data_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -3942,6 +4212,11 @@ public final class Data {
         if (other == protobuf.srl.query.Data.ItemResult.getDefaultInstance()) return this;
         if (other.hasQuery()) {
           setQuery(other.getQuery());
+        }
+        if (other.hasReturnText()) {
+          bitField0_ |= 0x00000002;
+          returnText_ = other.returnText_;
+          onChanged();
         }
         if (other.hasData()) {
           setData(other.getData());
@@ -4009,13 +4284,87 @@ public final class Data {
         return this;
       }
 
+      // optional string returnText = 2;
+      private java.lang.Object returnText_ = "";
+      /**
+       * <code>optional string returnText = 2;</code>
+       */
+      public boolean hasReturnText() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string returnText = 2;</code>
+       */
+      public java.lang.String getReturnText() {
+        java.lang.Object ref = returnText_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          returnText_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string returnText = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getReturnTextBytes() {
+        java.lang.Object ref = returnText_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          returnText_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string returnText = 2;</code>
+       */
+      public Builder setReturnText(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        returnText_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string returnText = 2;</code>
+       */
+      public Builder clearReturnText() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        returnText_ = getDefaultInstance().getReturnText();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string returnText = 2;</code>
+       */
+      public Builder setReturnTextBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        returnText_ = value;
+        onChanged();
+        return this;
+      }
+
       // optional bytes data = 3;
       private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <code>optional bytes data = 3;</code>
        */
       public boolean hasData() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
        * <code>optional bytes data = 3;</code>
@@ -4030,7 +4379,7 @@ public final class Data {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000004;
         data_ = value;
         onChanged();
         return this;
@@ -4039,7 +4388,7 @@ public final class Data {
        * <code>optional bytes data = 3;</code>
        */
       public Builder clearData() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         data_ = getDefaultInstance().getData();
         onChanged();
         return this;
@@ -4054,2397 +4403,6 @@ public final class Data {
     }
 
     // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemResult)
-  }
-
-  public interface AdvanceCourseGradePullOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // required string courseId = 1;
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    boolean hasCourseId();
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    java.lang.String getCourseId();
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getCourseIdBytes();
-
-    // optional bool pullAllGrades = 2;
-    /**
-     * <code>optional bool pullAllGrades = 2;</code>
-     *
-     * <pre>
-     * if true we pull all
-     * </pre>
-     */
-    boolean hasPullAllGrades();
-    /**
-     * <code>optional bool pullAllGrades = 2;</code>
-     *
-     * <pre>
-     * if true we pull all
-     * </pre>
-     */
-    boolean getPullAllGrades();
-
-    // repeated string userId = 3;
-    /**
-     * <code>repeated string userId = 3;</code>
-     */
-    java.util.List<java.lang.String>
-    getUserIdList();
-    /**
-     * <code>repeated string userId = 3;</code>
-     */
-    int getUserIdCount();
-    /**
-     * <code>repeated string userId = 3;</code>
-     */
-    java.lang.String getUserId(int index);
-    /**
-     * <code>repeated string userId = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getUserIdBytes(int index);
-  }
-  /**
-   * Protobuf type {@code protobuf.srl.query.AdvanceCourseGradePull}
-   *
-   * <pre>
-   **
-   * Pulls all grades of the users for a course
-   * </pre>
-   */
-  public static final class AdvanceCourseGradePull extends
-      com.google.protobuf.GeneratedMessage
-      implements AdvanceCourseGradePullOrBuilder {
-    // Use AdvanceCourseGradePull.newBuilder() to construct.
-    private AdvanceCourseGradePull(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private AdvanceCourseGradePull(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final AdvanceCourseGradePull defaultInstance;
-    public static AdvanceCourseGradePull getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public AdvanceCourseGradePull getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private AdvanceCourseGradePull(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              courseId_ = input.readBytes();
-              break;
-            }
-            case 16: {
-              bitField0_ |= 0x00000002;
-              pullAllGrades_ = input.readBool();
-              break;
-            }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                userId_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              userId_.add(input.readBytes());
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          userId_ = new com.google.protobuf.UnmodifiableLazyStringList(userId_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceCourseGradePull_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              protobuf.srl.query.Data.AdvanceCourseGradePull.class, protobuf.srl.query.Data.AdvanceCourseGradePull.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<AdvanceCourseGradePull> PARSER =
-        new com.google.protobuf.AbstractParser<AdvanceCourseGradePull>() {
-      public AdvanceCourseGradePull parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new AdvanceCourseGradePull(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<AdvanceCourseGradePull> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // required string courseId = 1;
-    public static final int COURSEID_FIELD_NUMBER = 1;
-    private java.lang.Object courseId_;
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    public boolean hasCourseId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    public java.lang.String getCourseId() {
-      java.lang.Object ref = courseId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          courseId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCourseIdBytes() {
-      java.lang.Object ref = courseId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        courseId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // optional bool pullAllGrades = 2;
-    public static final int PULLALLGRADES_FIELD_NUMBER = 2;
-    private boolean pullAllGrades_;
-    /**
-     * <code>optional bool pullAllGrades = 2;</code>
-     *
-     * <pre>
-     * if true we pull all
-     * </pre>
-     */
-    public boolean hasPullAllGrades() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional bool pullAllGrades = 2;</code>
-     *
-     * <pre>
-     * if true we pull all
-     * </pre>
-     */
-    public boolean getPullAllGrades() {
-      return pullAllGrades_;
-    }
-
-    // repeated string userId = 3;
-    public static final int USERID_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList userId_;
-    /**
-     * <code>repeated string userId = 3;</code>
-     */
-    public java.util.List<java.lang.String>
-        getUserIdList() {
-      return userId_;
-    }
-    /**
-     * <code>repeated string userId = 3;</code>
-     */
-    public int getUserIdCount() {
-      return userId_.size();
-    }
-    /**
-     * <code>repeated string userId = 3;</code>
-     */
-    public java.lang.String getUserId(int index) {
-      return userId_.get(index);
-    }
-    /**
-     * <code>repeated string userId = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getUserIdBytes(int index) {
-      return userId_.getByteString(index);
-    }
-
-    private void initFields() {
-      courseId_ = "";
-      pullAllGrades_ = false;
-      userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      if (!hasCourseId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getCourseIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBool(2, pullAllGrades_);
-      }
-      for (int i = 0; i < userId_.size(); i++) {
-        output.writeBytes(3, userId_.getByteString(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getCourseIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(2, pullAllGrades_);
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < userId_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeBytesSizeNoTag(userId_.getByteString(i));
-        }
-        size += dataSize;
-        size += 1 * getUserIdList().size();
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.query.Data.AdvanceCourseGradePull parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.query.Data.AdvanceCourseGradePull prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protobuf.srl.query.AdvanceCourseGradePull}
-     *
-     * <pre>
-     **
-     * Pulls all grades of the users for a course
-     * </pre>
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.query.Data.AdvanceCourseGradePullOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceCourseGradePull_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                protobuf.srl.query.Data.AdvanceCourseGradePull.class, protobuf.srl.query.Data.AdvanceCourseGradePull.Builder.class);
-      }
-
-      // Construct using protobuf.srl.query.Data.AdvanceCourseGradePull.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        courseId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        pullAllGrades_ = false;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor;
-      }
-
-      public protobuf.srl.query.Data.AdvanceCourseGradePull getDefaultInstanceForType() {
-        return protobuf.srl.query.Data.AdvanceCourseGradePull.getDefaultInstance();
-      }
-
-      public protobuf.srl.query.Data.AdvanceCourseGradePull build() {
-        protobuf.srl.query.Data.AdvanceCourseGradePull result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public protobuf.srl.query.Data.AdvanceCourseGradePull buildPartial() {
-        protobuf.srl.query.Data.AdvanceCourseGradePull result = new protobuf.srl.query.Data.AdvanceCourseGradePull(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.courseId_ = courseId_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.pullAllGrades_ = pullAllGrades_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          userId_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              userId_);
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.userId_ = userId_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.query.Data.AdvanceCourseGradePull) {
-          return mergeFrom((protobuf.srl.query.Data.AdvanceCourseGradePull)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(protobuf.srl.query.Data.AdvanceCourseGradePull other) {
-        if (other == protobuf.srl.query.Data.AdvanceCourseGradePull.getDefaultInstance()) return this;
-        if (other.hasCourseId()) {
-          bitField0_ |= 0x00000001;
-          courseId_ = other.courseId_;
-          onChanged();
-        }
-        if (other.hasPullAllGrades()) {
-          setPullAllGrades(other.getPullAllGrades());
-        }
-        if (!other.userId_.isEmpty()) {
-          if (userId_.isEmpty()) {
-            userId_ = other.userId_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensureUserIdIsMutable();
-            userId_.addAll(other.userId_);
-          }
-          onChanged();
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        if (!hasCourseId()) {
-          
-          return false;
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        protobuf.srl.query.Data.AdvanceCourseGradePull parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.query.Data.AdvanceCourseGradePull) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // required string courseId = 1;
-      private java.lang.Object courseId_ = "";
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public boolean hasCourseId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public java.lang.String getCourseId() {
-        java.lang.Object ref = courseId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          courseId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCourseIdBytes() {
-        java.lang.Object ref = courseId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          courseId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public Builder setCourseId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        courseId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public Builder clearCourseId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        courseId_ = getDefaultInstance().getCourseId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public Builder setCourseIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        courseId_ = value;
-        onChanged();
-        return this;
-      }
-
-      // optional bool pullAllGrades = 2;
-      private boolean pullAllGrades_ ;
-      /**
-       * <code>optional bool pullAllGrades = 2;</code>
-       *
-       * <pre>
-       * if true we pull all
-       * </pre>
-       */
-      public boolean hasPullAllGrades() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional bool pullAllGrades = 2;</code>
-       *
-       * <pre>
-       * if true we pull all
-       * </pre>
-       */
-      public boolean getPullAllGrades() {
-        return pullAllGrades_;
-      }
-      /**
-       * <code>optional bool pullAllGrades = 2;</code>
-       *
-       * <pre>
-       * if true we pull all
-       * </pre>
-       */
-      public Builder setPullAllGrades(boolean value) {
-        bitField0_ |= 0x00000002;
-        pullAllGrades_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool pullAllGrades = 2;</code>
-       *
-       * <pre>
-       * if true we pull all
-       * </pre>
-       */
-      public Builder clearPullAllGrades() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        pullAllGrades_ = false;
-        onChanged();
-        return this;
-      }
-
-      // repeated string userId = 3;
-      private com.google.protobuf.LazyStringList userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureUserIdIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          userId_ = new com.google.protobuf.LazyStringArrayList(userId_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-      /**
-       * <code>repeated string userId = 3;</code>
-       */
-      public java.util.List<java.lang.String>
-          getUserIdList() {
-        return java.util.Collections.unmodifiableList(userId_);
-      }
-      /**
-       * <code>repeated string userId = 3;</code>
-       */
-      public int getUserIdCount() {
-        return userId_.size();
-      }
-      /**
-       * <code>repeated string userId = 3;</code>
-       */
-      public java.lang.String getUserId(int index) {
-        return userId_.get(index);
-      }
-      /**
-       * <code>repeated string userId = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getUserIdBytes(int index) {
-        return userId_.getByteString(index);
-      }
-      /**
-       * <code>repeated string userId = 3;</code>
-       */
-      public Builder setUserId(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureUserIdIsMutable();
-        userId_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string userId = 3;</code>
-       */
-      public Builder addUserId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureUserIdIsMutable();
-        userId_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string userId = 3;</code>
-       */
-      public Builder addAllUserId(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureUserIdIsMutable();
-        super.addAll(values, userId_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string userId = 3;</code>
-       */
-      public Builder clearUserId() {
-        userId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string userId = 3;</code>
-       */
-      public Builder addUserIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureUserIdIsMutable();
-        userId_.add(value);
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.query.AdvanceCourseGradePull)
-    }
-
-    static {
-      defaultInstance = new AdvanceCourseGradePull(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:protobuf.srl.query.AdvanceCourseGradePull)
-  }
-
-  public interface AdvanceUserGradePullOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // required string userId = 1;
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    boolean hasUserId();
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    java.lang.String getUserId();
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getUserIdBytes();
-
-    // optional bool pullAllGrades = 2;
-    /**
-     * <code>optional bool pullAllGrades = 2;</code>
-     *
-     * <pre>
-     * if true we pull all
-     * </pre>
-     */
-    boolean hasPullAllGrades();
-    /**
-     * <code>optional bool pullAllGrades = 2;</code>
-     *
-     * <pre>
-     * if true we pull all
-     * </pre>
-     */
-    boolean getPullAllGrades();
-
-    // repeated string courseId = 3;
-    /**
-     * <code>repeated string courseId = 3;</code>
-     */
-    java.util.List<java.lang.String>
-    getCourseIdList();
-    /**
-     * <code>repeated string courseId = 3;</code>
-     */
-    int getCourseIdCount();
-    /**
-     * <code>repeated string courseId = 3;</code>
-     */
-    java.lang.String getCourseId(int index);
-    /**
-     * <code>repeated string courseId = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getCourseIdBytes(int index);
-  }
-  /**
-   * Protobuf type {@code protobuf.srl.query.AdvanceUserGradePull}
-   *
-   * <pre>
-   **
-   * Pulls all grades for a user
-   * </pre>
-   */
-  public static final class AdvanceUserGradePull extends
-      com.google.protobuf.GeneratedMessage
-      implements AdvanceUserGradePullOrBuilder {
-    // Use AdvanceUserGradePull.newBuilder() to construct.
-    private AdvanceUserGradePull(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private AdvanceUserGradePull(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final AdvanceUserGradePull defaultInstance;
-    public static AdvanceUserGradePull getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public AdvanceUserGradePull getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private AdvanceUserGradePull(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              userId_ = input.readBytes();
-              break;
-            }
-            case 16: {
-              bitField0_ |= 0x00000002;
-              pullAllGrades_ = input.readBool();
-              break;
-            }
-            case 26: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                courseId_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              courseId_.add(input.readBytes());
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          courseId_ = new com.google.protobuf.UnmodifiableLazyStringList(courseId_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceUserGradePull_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceUserGradePull_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              protobuf.srl.query.Data.AdvanceUserGradePull.class, protobuf.srl.query.Data.AdvanceUserGradePull.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<AdvanceUserGradePull> PARSER =
-        new com.google.protobuf.AbstractParser<AdvanceUserGradePull>() {
-      public AdvanceUserGradePull parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new AdvanceUserGradePull(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<AdvanceUserGradePull> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // required string userId = 1;
-    public static final int USERID_FIELD_NUMBER = 1;
-    private java.lang.Object userId_;
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    public boolean hasUserId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    public java.lang.String getUserId() {
-      java.lang.Object ref = userId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          userId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string userId = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getUserIdBytes() {
-      java.lang.Object ref = userId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        userId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // optional bool pullAllGrades = 2;
-    public static final int PULLALLGRADES_FIELD_NUMBER = 2;
-    private boolean pullAllGrades_;
-    /**
-     * <code>optional bool pullAllGrades = 2;</code>
-     *
-     * <pre>
-     * if true we pull all
-     * </pre>
-     */
-    public boolean hasPullAllGrades() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional bool pullAllGrades = 2;</code>
-     *
-     * <pre>
-     * if true we pull all
-     * </pre>
-     */
-    public boolean getPullAllGrades() {
-      return pullAllGrades_;
-    }
-
-    // repeated string courseId = 3;
-    public static final int COURSEID_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList courseId_;
-    /**
-     * <code>repeated string courseId = 3;</code>
-     */
-    public java.util.List<java.lang.String>
-        getCourseIdList() {
-      return courseId_;
-    }
-    /**
-     * <code>repeated string courseId = 3;</code>
-     */
-    public int getCourseIdCount() {
-      return courseId_.size();
-    }
-    /**
-     * <code>repeated string courseId = 3;</code>
-     */
-    public java.lang.String getCourseId(int index) {
-      return courseId_.get(index);
-    }
-    /**
-     * <code>repeated string courseId = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCourseIdBytes(int index) {
-      return courseId_.getByteString(index);
-    }
-
-    private void initFields() {
-      userId_ = "";
-      pullAllGrades_ = false;
-      courseId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      if (!hasUserId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getUserIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBool(2, pullAllGrades_);
-      }
-      for (int i = 0; i < courseId_.size(); i++) {
-        output.writeBytes(3, courseId_.getByteString(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getUserIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(2, pullAllGrades_);
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < courseId_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeBytesSizeNoTag(courseId_.getByteString(i));
-        }
-        size += dataSize;
-        size += 1 * getCourseIdList().size();
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.query.Data.AdvanceUserGradePull parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.query.Data.AdvanceUserGradePull prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protobuf.srl.query.AdvanceUserGradePull}
-     *
-     * <pre>
-     **
-     * Pulls all grades for a user
-     * </pre>
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.query.Data.AdvanceUserGradePullOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceUserGradePull_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceUserGradePull_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                protobuf.srl.query.Data.AdvanceUserGradePull.class, protobuf.srl.query.Data.AdvanceUserGradePull.Builder.class);
-      }
-
-      // Construct using protobuf.srl.query.Data.AdvanceUserGradePull.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        userId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        pullAllGrades_ = false;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        courseId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceUserGradePull_descriptor;
-      }
-
-      public protobuf.srl.query.Data.AdvanceUserGradePull getDefaultInstanceForType() {
-        return protobuf.srl.query.Data.AdvanceUserGradePull.getDefaultInstance();
-      }
-
-      public protobuf.srl.query.Data.AdvanceUserGradePull build() {
-        protobuf.srl.query.Data.AdvanceUserGradePull result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public protobuf.srl.query.Data.AdvanceUserGradePull buildPartial() {
-        protobuf.srl.query.Data.AdvanceUserGradePull result = new protobuf.srl.query.Data.AdvanceUserGradePull(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.userId_ = userId_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.pullAllGrades_ = pullAllGrades_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          courseId_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              courseId_);
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.courseId_ = courseId_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.query.Data.AdvanceUserGradePull) {
-          return mergeFrom((protobuf.srl.query.Data.AdvanceUserGradePull)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(protobuf.srl.query.Data.AdvanceUserGradePull other) {
-        if (other == protobuf.srl.query.Data.AdvanceUserGradePull.getDefaultInstance()) return this;
-        if (other.hasUserId()) {
-          bitField0_ |= 0x00000001;
-          userId_ = other.userId_;
-          onChanged();
-        }
-        if (other.hasPullAllGrades()) {
-          setPullAllGrades(other.getPullAllGrades());
-        }
-        if (!other.courseId_.isEmpty()) {
-          if (courseId_.isEmpty()) {
-            courseId_ = other.courseId_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensureCourseIdIsMutable();
-            courseId_.addAll(other.courseId_);
-          }
-          onChanged();
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        if (!hasUserId()) {
-          
-          return false;
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        protobuf.srl.query.Data.AdvanceUserGradePull parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.query.Data.AdvanceUserGradePull) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // required string userId = 1;
-      private java.lang.Object userId_ = "";
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public boolean hasUserId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public java.lang.String getUserId() {
-        java.lang.Object ref = userId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          userId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getUserIdBytes() {
-        java.lang.Object ref = userId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          userId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public Builder setUserId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        userId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public Builder clearUserId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        userId_ = getDefaultInstance().getUserId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string userId = 1;</code>
-       */
-      public Builder setUserIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        userId_ = value;
-        onChanged();
-        return this;
-      }
-
-      // optional bool pullAllGrades = 2;
-      private boolean pullAllGrades_ ;
-      /**
-       * <code>optional bool pullAllGrades = 2;</code>
-       *
-       * <pre>
-       * if true we pull all
-       * </pre>
-       */
-      public boolean hasPullAllGrades() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional bool pullAllGrades = 2;</code>
-       *
-       * <pre>
-       * if true we pull all
-       * </pre>
-       */
-      public boolean getPullAllGrades() {
-        return pullAllGrades_;
-      }
-      /**
-       * <code>optional bool pullAllGrades = 2;</code>
-       *
-       * <pre>
-       * if true we pull all
-       * </pre>
-       */
-      public Builder setPullAllGrades(boolean value) {
-        bitField0_ |= 0x00000002;
-        pullAllGrades_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool pullAllGrades = 2;</code>
-       *
-       * <pre>
-       * if true we pull all
-       * </pre>
-       */
-      public Builder clearPullAllGrades() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        pullAllGrades_ = false;
-        onChanged();
-        return this;
-      }
-
-      // repeated string courseId = 3;
-      private com.google.protobuf.LazyStringList courseId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureCourseIdIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          courseId_ = new com.google.protobuf.LazyStringArrayList(courseId_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-      /**
-       * <code>repeated string courseId = 3;</code>
-       */
-      public java.util.List<java.lang.String>
-          getCourseIdList() {
-        return java.util.Collections.unmodifiableList(courseId_);
-      }
-      /**
-       * <code>repeated string courseId = 3;</code>
-       */
-      public int getCourseIdCount() {
-        return courseId_.size();
-      }
-      /**
-       * <code>repeated string courseId = 3;</code>
-       */
-      public java.lang.String getCourseId(int index) {
-        return courseId_.get(index);
-      }
-      /**
-       * <code>repeated string courseId = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCourseIdBytes(int index) {
-        return courseId_.getByteString(index);
-      }
-      /**
-       * <code>repeated string courseId = 3;</code>
-       */
-      public Builder setCourseId(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureCourseIdIsMutable();
-        courseId_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string courseId = 3;</code>
-       */
-      public Builder addCourseId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureCourseIdIsMutable();
-        courseId_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string courseId = 3;</code>
-       */
-      public Builder addAllCourseId(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureCourseIdIsMutable();
-        super.addAll(values, courseId_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string courseId = 3;</code>
-       */
-      public Builder clearCourseId() {
-        courseId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string courseId = 3;</code>
-       */
-      public Builder addCourseIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureCourseIdIsMutable();
-        courseId_.add(value);
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.query.AdvanceUserGradePull)
-    }
-
-    static {
-      defaultInstance = new AdvanceUserGradePull(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:protobuf.srl.query.AdvanceUserGradePull)
-  }
-
-  public interface AdvanceReviewOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // required string courseId = 1;
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    boolean hasCourseId();
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    java.lang.String getCourseId();
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getCourseIdBytes();
-
-    // required string assignmentId = 2;
-    /**
-     * <code>required string assignmentId = 2;</code>
-     */
-    boolean hasAssignmentId();
-    /**
-     * <code>required string assignmentId = 2;</code>
-     */
-    java.lang.String getAssignmentId();
-    /**
-     * <code>required string assignmentId = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getAssignmentIdBytes();
-
-    // required string courseProblemId = 3;
-    /**
-     * <code>required string courseProblemId = 3;</code>
-     */
-    boolean hasCourseProblemId();
-    /**
-     * <code>required string courseProblemId = 3;</code>
-     */
-    java.lang.String getCourseProblemId();
-    /**
-     * <code>required string courseProblemId = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getCourseProblemIdBytes();
-  }
-  /**
-   * Protobuf type {@code protobuf.srl.query.AdvanceReview}
-   *
-   * <pre>
-   **
-   * Pulls all of the information required for a user
-   * </pre>
-   */
-  public static final class AdvanceReview extends
-      com.google.protobuf.GeneratedMessage
-      implements AdvanceReviewOrBuilder {
-    // Use AdvanceReview.newBuilder() to construct.
-    private AdvanceReview(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private AdvanceReview(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final AdvanceReview defaultInstance;
-    public static AdvanceReview getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public AdvanceReview getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private AdvanceReview(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              courseId_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              assignmentId_ = input.readBytes();
-              break;
-            }
-            case 26: {
-              bitField0_ |= 0x00000004;
-              courseProblemId_ = input.readBytes();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceReview_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceReview_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              protobuf.srl.query.Data.AdvanceReview.class, protobuf.srl.query.Data.AdvanceReview.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<AdvanceReview> PARSER =
-        new com.google.protobuf.AbstractParser<AdvanceReview>() {
-      public AdvanceReview parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new AdvanceReview(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<AdvanceReview> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // required string courseId = 1;
-    public static final int COURSEID_FIELD_NUMBER = 1;
-    private java.lang.Object courseId_;
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    public boolean hasCourseId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    public java.lang.String getCourseId() {
-      java.lang.Object ref = courseId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          courseId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string courseId = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCourseIdBytes() {
-      java.lang.Object ref = courseId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        courseId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // required string assignmentId = 2;
-    public static final int ASSIGNMENTID_FIELD_NUMBER = 2;
-    private java.lang.Object assignmentId_;
-    /**
-     * <code>required string assignmentId = 2;</code>
-     */
-    public boolean hasAssignmentId() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required string assignmentId = 2;</code>
-     */
-    public java.lang.String getAssignmentId() {
-      java.lang.Object ref = assignmentId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          assignmentId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string assignmentId = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getAssignmentIdBytes() {
-      java.lang.Object ref = assignmentId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        assignmentId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // required string courseProblemId = 3;
-    public static final int COURSEPROBLEMID_FIELD_NUMBER = 3;
-    private java.lang.Object courseProblemId_;
-    /**
-     * <code>required string courseProblemId = 3;</code>
-     */
-    public boolean hasCourseProblemId() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>required string courseProblemId = 3;</code>
-     */
-    public java.lang.String getCourseProblemId() {
-      java.lang.Object ref = courseProblemId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          courseProblemId_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string courseProblemId = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCourseProblemIdBytes() {
-      java.lang.Object ref = courseProblemId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        courseProblemId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private void initFields() {
-      courseId_ = "";
-      assignmentId_ = "";
-      courseProblemId_ = "";
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      if (!hasCourseId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasAssignmentId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasCourseProblemId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getCourseIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getAssignmentIdBytes());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getCourseProblemIdBytes());
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getCourseIdBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getAssignmentIdBytes());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getCourseProblemIdBytes());
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static protobuf.srl.query.Data.AdvanceReview parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.query.Data.AdvanceReview parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceReview parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static protobuf.srl.query.Data.AdvanceReview parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceReview parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.query.Data.AdvanceReview parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceReview parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static protobuf.srl.query.Data.AdvanceReview parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static protobuf.srl.query.Data.AdvanceReview parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static protobuf.srl.query.Data.AdvanceReview parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(protobuf.srl.query.Data.AdvanceReview prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protobuf.srl.query.AdvanceReview}
-     *
-     * <pre>
-     **
-     * Pulls all of the information required for a user
-     * </pre>
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements protobuf.srl.query.Data.AdvanceReviewOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceReview_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceReview_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                protobuf.srl.query.Data.AdvanceReview.class, protobuf.srl.query.Data.AdvanceReview.Builder.class);
-      }
-
-      // Construct using protobuf.srl.query.Data.AdvanceReview.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        courseId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        assignmentId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        courseProblemId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_AdvanceReview_descriptor;
-      }
-
-      public protobuf.srl.query.Data.AdvanceReview getDefaultInstanceForType() {
-        return protobuf.srl.query.Data.AdvanceReview.getDefaultInstance();
-      }
-
-      public protobuf.srl.query.Data.AdvanceReview build() {
-        protobuf.srl.query.Data.AdvanceReview result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public protobuf.srl.query.Data.AdvanceReview buildPartial() {
-        protobuf.srl.query.Data.AdvanceReview result = new protobuf.srl.query.Data.AdvanceReview(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.courseId_ = courseId_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.assignmentId_ = assignmentId_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.courseProblemId_ = courseProblemId_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protobuf.srl.query.Data.AdvanceReview) {
-          return mergeFrom((protobuf.srl.query.Data.AdvanceReview)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(protobuf.srl.query.Data.AdvanceReview other) {
-        if (other == protobuf.srl.query.Data.AdvanceReview.getDefaultInstance()) return this;
-        if (other.hasCourseId()) {
-          bitField0_ |= 0x00000001;
-          courseId_ = other.courseId_;
-          onChanged();
-        }
-        if (other.hasAssignmentId()) {
-          bitField0_ |= 0x00000002;
-          assignmentId_ = other.assignmentId_;
-          onChanged();
-        }
-        if (other.hasCourseProblemId()) {
-          bitField0_ |= 0x00000004;
-          courseProblemId_ = other.courseProblemId_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        if (!hasCourseId()) {
-          
-          return false;
-        }
-        if (!hasAssignmentId()) {
-          
-          return false;
-        }
-        if (!hasCourseProblemId()) {
-          
-          return false;
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        protobuf.srl.query.Data.AdvanceReview parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protobuf.srl.query.Data.AdvanceReview) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // required string courseId = 1;
-      private java.lang.Object courseId_ = "";
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public boolean hasCourseId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public java.lang.String getCourseId() {
-        java.lang.Object ref = courseId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          courseId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCourseIdBytes() {
-        java.lang.Object ref = courseId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          courseId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public Builder setCourseId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        courseId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public Builder clearCourseId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        courseId_ = getDefaultInstance().getCourseId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string courseId = 1;</code>
-       */
-      public Builder setCourseIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        courseId_ = value;
-        onChanged();
-        return this;
-      }
-
-      // required string assignmentId = 2;
-      private java.lang.Object assignmentId_ = "";
-      /**
-       * <code>required string assignmentId = 2;</code>
-       */
-      public boolean hasAssignmentId() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>required string assignmentId = 2;</code>
-       */
-      public java.lang.String getAssignmentId() {
-        java.lang.Object ref = assignmentId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          assignmentId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string assignmentId = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getAssignmentIdBytes() {
-        java.lang.Object ref = assignmentId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          assignmentId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string assignmentId = 2;</code>
-       */
-      public Builder setAssignmentId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        assignmentId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string assignmentId = 2;</code>
-       */
-      public Builder clearAssignmentId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        assignmentId_ = getDefaultInstance().getAssignmentId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string assignmentId = 2;</code>
-       */
-      public Builder setAssignmentIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        assignmentId_ = value;
-        onChanged();
-        return this;
-      }
-
-      // required string courseProblemId = 3;
-      private java.lang.Object courseProblemId_ = "";
-      /**
-       * <code>required string courseProblemId = 3;</code>
-       */
-      public boolean hasCourseProblemId() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>required string courseProblemId = 3;</code>
-       */
-      public java.lang.String getCourseProblemId() {
-        java.lang.Object ref = courseProblemId_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          courseProblemId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string courseProblemId = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCourseProblemIdBytes() {
-        java.lang.Object ref = courseProblemId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          courseProblemId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string courseProblemId = 3;</code>
-       */
-      public Builder setCourseProblemId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        courseProblemId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string courseProblemId = 3;</code>
-       */
-      public Builder clearCourseProblemId() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        courseProblemId_ = getDefaultInstance().getCourseProblemId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string courseProblemId = 3;</code>
-       */
-      public Builder setCourseProblemIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        courseProblemId_ = value;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:protobuf.srl.query.AdvanceReview)
-    }
-
-    static {
-      defaultInstance = new AdvanceReview(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:protobuf.srl.query.AdvanceReview)
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
@@ -6477,21 +4435,6 @@ public final class Data {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_query_ItemResult_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_query_AdvanceCourseGradePull_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_query_AdvanceUserGradePull_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_query_AdvanceUserGradePull_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_protobuf_srl_query_AdvanceReview_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_protobuf_srl_query_AdvanceReview_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -6507,24 +4450,19 @@ public final class Data {
       "itemId\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.s" +
       "rl.query.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014" +
       "\"7\n\010DataSend\022+\n\005items\030\003 \003(\0132\034.protobuf.s" +
-      "rl.query.ItemSend\"X\n\010ItemSend\022,\n\005query\030\001" +
+      "rl.query.ItemSend\"j\n\010ItemSend\022,\n\005query\030\001" +
       " \001(\0162\035.protobuf.srl.query.ItemQuery\022\020\n\010i" +
-      "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResul" +
-      "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query.",
-      "ItemResult\"H\n\nItemResult\022,\n\005query\030\001 \001(\0162" +
-      "\035.protobuf.srl.query.ItemQuery\022\014\n\004data\030\003" +
-      " \001(\014\"Q\n\026AdvanceCourseGradePull\022\020\n\010course" +
-      "Id\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\016\n\006userI" +
-      "d\030\003 \003(\t\"O\n\024AdvanceUserGradePull\022\016\n\006userI" +
-      "d\030\001 \002(\t\022\025\n\rpullAllGrades\030\002 \001(\010\022\020\n\010course" +
-      "Id\030\003 \003(\t\"P\n\rAdvanceReview\022\020\n\010courseId\030\001 " +
-      "\002(\t\022\024\n\014assignmentId\030\002 \002(\t\022\027\n\017courseProbl" +
-      "emId\030\003 \002(\t*\312\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\n" +
-      "ASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK",
-      "_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE" +
-      "\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPER" +
-      "IMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017" +
-      "\n\013BANK_SEARCH\020\n"
+      "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\022\020\n\010textData\030" +
+      "\004 \003(\t\"=\n\nDataResult\022/\n\007results\030\001 \003(\0132\036.p",
+      "rotobuf.srl.query.ItemResult\"\\\n\nItemResu" +
+      "lt\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.query.I" +
+      "temQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004data\030\003 \001" +
+      "(\014*\330\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nASSIGNME" +
+      "NT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM" +
+      "\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUS" +
+      "ER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022" +
+      "\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n\013BANK_S" +
+      "EARCH\020\013\022\014\n\010REGISTER\020\014"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6554,7 +4492,7 @@ public final class Data {
           internal_static_protobuf_srl_query_ItemSend_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ItemSend_descriptor,
-              new java.lang.String[] { "Query", "IsInsert", "Data", });
+              new java.lang.String[] { "Query", "IsInsert", "Data", "TextData", });
           internal_static_protobuf_srl_query_DataResult_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_protobuf_srl_query_DataResult_fieldAccessorTable = new
@@ -6566,25 +4504,7 @@ public final class Data {
           internal_static_protobuf_srl_query_ItemResult_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ItemResult_descriptor,
-              new java.lang.String[] { "Query", "Data", });
-          internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor =
-            getDescriptor().getMessageTypes().get(6);
-          internal_static_protobuf_srl_query_AdvanceCourseGradePull_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_query_AdvanceCourseGradePull_descriptor,
-              new java.lang.String[] { "CourseId", "PullAllGrades", "UserId", });
-          internal_static_protobuf_srl_query_AdvanceUserGradePull_descriptor =
-            getDescriptor().getMessageTypes().get(7);
-          internal_static_protobuf_srl_query_AdvanceUserGradePull_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_query_AdvanceUserGradePull_descriptor,
-              new java.lang.String[] { "UserId", "PullAllGrades", "CourseId", });
-          internal_static_protobuf_srl_query_AdvanceReview_descriptor =
-            getDescriptor().getMessageTypes().get(8);
-          internal_static_protobuf_srl_query_AdvanceReview_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_protobuf_srl_query_AdvanceReview_descriptor,
-              new java.lang.String[] { "CourseId", "AssignmentId", "CourseProblemId", });
+              new java.lang.String[] { "Query", "ReturnText", "Data", });
           return null;
         }
       };

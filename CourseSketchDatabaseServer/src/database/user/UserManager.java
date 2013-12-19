@@ -6,10 +6,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 
+import org.bson.types.ObjectId;
+
+import protobuf.srl.school.School.SrlUser;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 import database.DatabaseAccessException;
 import database.PasswordHash;
@@ -36,12 +41,13 @@ public class UserManager {
 		return (ArrayList) cursor.get(COURSE_LIST);
 	}
 
-	public static void createUser(DB dbs, String userName, String email) throws DatabaseAccessException {
+	public static void createUser(DB dbs, SrlUser user, String userId) throws DatabaseAccessException {
 		DBCollection users = dbs.getCollection(USER_COLLECTION);
 		 // NOSHIP: userId must be hashed using the userName as a salt?
 		BasicDBObject query = null;
 		try {
-			query = new BasicDBObject(SELF_ID, userName).append(COURSE_LIST, new ArrayList<String>()).append(CREDENTIALS, PasswordHash.createHash(email)).append(EMAIL, email);
+			query = new BasicDBObject(SELF_ID, userId).append(COURSE_LIST, new ArrayList<String>())
+					.append(CREDENTIALS, PasswordHash.createHash(user.getEmail())).append(EMAIL, user.getEmail()).append(ADMIN, PasswordHash.createHash(userId));
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (InvalidKeySpecException e) {
@@ -63,6 +69,20 @@ public class UserManager {
 		DBCollection users = dbs.getCollection(USER_COLLECTION);
 		BasicDBObject query = new BasicDBObject(COURSE_LIST, new ArrayList<String>());
 		users.insert(query);
+	}
+
+	/**
+	 * After this method is called a user now has the 
+	 * @param db
+	 * @param userId
+	 * @param courseId
+	 */
+	static void addCourseToUser(DB db, String userId, String courseId) {
+		DBCollection users = db.getCollection(USER_COLLECTION);
+		BasicDBObject query =  new BasicDBObject("$addToSet", new BasicDBObject(COURSE_LIST, courseId));
+		DBRef myDbRef = new DBRef(db, USER_COLLECTION, userId);
+		DBObject corsor = myDbRef.fetch();
+		users.update(corsor, query);
 	}
 
 	/*

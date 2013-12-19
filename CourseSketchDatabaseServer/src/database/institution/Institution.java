@@ -1,9 +1,14 @@
 package database.institution;
 
-import static database.StringConstants.*;
+import static database.StringConstants.DATABASE;
+import static database.StringConstants.GROUP_PREFIX;
+import static database.StringConstants.USER_GROUP_COLLECTION;
+import static database.StringConstants.USER_LIST;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bson.types.ObjectId;
 
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -12,12 +17,18 @@ import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.user.GroupManager;
+import database.user.UserClient;
+import database.user.UserManager;
 
 public final class Institution {
 	private static Institution instance;
@@ -205,7 +216,7 @@ public final class Institution {
 	public static String mongoInsertAssignment(String userId, SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
 		String resultId = AssignmentManager.mongoInsertAssignment(getInstance().db, userId, assignment);
 
-		ArrayList<String>[] ids = CourseManager.mongoGetDefaultGroupId(getInstance().db, assignment.getCourseId());
+		ArrayList<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().db, assignment.getCourseId());
 		AssignmentManager.mongoInsertDefaultGroupId(getInstance().db, resultId, ids);
 
 		return resultId;
@@ -242,5 +253,31 @@ public final class Institution {
 	 */
 	public static String mongoInsertBankProblem(String userId, SrlBankProblem problem) throws AuthenticationException {
 		return BankProblemManager.mongoInsertBankProblem(getInstance().db, problem);
+	}
+
+	/**
+	 * Registers a user for a course
+	 *
+	 * Upon registration 2 steps happen:
+	 * <ol>
+	 * <li> The user is added to the user permission list </li>
+	 * <li> The user now has the course in its list of courses</li>
+	 * </ol>
+	 * @param userId The credentials used to authenticate the insertion
+	 * @param problem The object being inserted 
+	 * @return The Id of the object that was inserted
+	 */
+	public static final void putUserInCourse(String courseId, String userId) {
+		// this actually requires getting the data from the course itself
+		String userGroupId = CourseManager.mongoGetDefaultGroupId(getInstance().db, courseId)[2]; // user group!
+
+		// DO NOT USE THIS CODE ANY WHERE ESLE
+		DBRef myDbRef = new DBRef(getInstance().db, USER_GROUP_COLLECTION, new ObjectId(userGroupId));
+		DBObject corsor = myDbRef.fetch();
+		DBCollection courses = getInstance().db.getCollection(USER_GROUP_COLLECTION);
+		BasicDBObject object = new BasicDBObject("$addToSet", new BasicDBObject(USER_LIST, userId));
+		courses.update(corsor, object);
+
+		UserClient.addCourseToUser(userId, courseId);
 	}
 }
