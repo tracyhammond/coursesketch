@@ -16,6 +16,7 @@ public class StringConstants {
 	public static final String COURSE_PROBLEM_COLLECTION = "Problems";
 	public static final String USER_GROUP_COLLECTION = "UserGroups"; // also contains groups for admins and mods
 	public static final String USER_COLLECTION = "Users";
+	public static final String DATABASE = "institution";
 	
 	// meta fields
 	public static final String NAME = "Name";
@@ -31,6 +32,9 @@ public class StringConstants {
 	public static final String ADMIN = "Admin";
 	public static final String MOD = "Mod";
 	public static final String USERS = "Users";
+	public static final String ADMIN_GROUP_ID = "AdminGroupId";
+	public static final String MOD_GROUP_ID = "ModGroupId";
+	public static final String USER_GROUP_ID = "UserGroupId";
 
 	// grades
 	public static final String GRADE_WEIGHT = "GradeWeight";
@@ -75,4 +79,6 @@ public class StringConstants {
 	
 	// user group specific
 	public static final String USER_LIST = "UserList";
+	public static final String GROUP_PREFIX = "group";
+	public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();
 }
