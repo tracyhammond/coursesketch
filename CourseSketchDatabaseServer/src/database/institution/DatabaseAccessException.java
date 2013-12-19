@@ -1,4 +1,4 @@
-package database;
+package database.institution;
 
 public class DatabaseAccessException extends Exception {
 

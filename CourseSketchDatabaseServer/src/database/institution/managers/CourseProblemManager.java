@@ -1,6 +1,6 @@
-package database.managers;
+package database.institution.managers;
 
-import static database.StringConstants.*;
+import static database.institution.StringConstants.*;
 
 import java.util.ArrayList;
 
@@ -16,10 +16,10 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.Authenticator.AuthType;
+import database.institution.DatabaseAccessException;
+import database.institution.auth.AuthenticationException;
+import database.institution.auth.Authenticator;
+import database.institution.auth.Authenticator.AuthType;
 
 public class CourseProblemManager 
 {

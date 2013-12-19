@@ -200,17 +200,17 @@ class Request : public ::google::protobuf::Message {
   inline ::std::string* release_sessioninfo();
   inline void set_allocated_sessioninfo(::std::string* sessioninfo);
 
-  // optional string sessionId = 6;
-  inline bool has_sessionid() const;
-  inline void clear_sessionid();
-  static const int kSessionIdFieldNumber = 6;
-  inline const ::std::string& sessionid() const;
-  inline void set_sessionid(const ::std::string& value);
-  inline void set_sessionid(const char* value);
-  inline void set_sessionid(const char* value, size_t size);
-  inline ::std::string* mutable_sessionid();
-  inline ::std::string* release_sessionid();
-  inline void set_allocated_sessionid(::std::string* sessionid);
+  // optional string serversideId = 6;
+  inline bool has_serversideid() const;
+  inline void clear_serversideid();
+  static const int kServersideIdFieldNumber = 6;
+  inline const ::std::string& serversideid() const;
+  inline void set_serversideid(const ::std::string& value);
+  inline void set_serversideid(const char* value);
+  inline void set_serversideid(const char* value, size_t size);
+  inline ::std::string* mutable_serversideid();
+  inline ::std::string* release_serversideid();
+  inline void set_allocated_serversideid(::std::string* serversideid);
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.request.Request)
  private:
@@ -224,8 +224,8 @@ class Request : public ::google::protobuf::Message {
   inline void clear_has_responsetext();
   inline void set_has_sessioninfo();
   inline void clear_has_sessioninfo();
-  inline void set_has_sessionid();
-  inline void clear_has_sessionid();
+  inline void set_has_serversideid();
+  inline void clear_has_serversideid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -233,7 +233,7 @@ class Request : public ::google::protobuf::Message {
   ::std::string* otherdata_;
   ::std::string* responsetext_;
   ::std::string* sessioninfo_;
-  ::std::string* sessionid_;
+  ::std::string* serversideid_;
   int requesttype_;
 
   mutable int _cached_size_;
@@ -686,73 +686,73 @@ inline void Request::set_allocated_sessioninfo(::std::string* sessioninfo) {
   }
 }
 
-// optional string sessionId = 6;
-inline bool Request::has_sessionid() const {
+// optional string serversideId = 6;
+inline bool Request::has_serversideid() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void Request::set_has_sessionid() {
+inline void Request::set_has_serversideid() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void Request::clear_has_sessionid() {
+inline void Request::clear_has_serversideid() {
   _has_bits_[0] &= ~0x00000020u;
 }
-inline void Request::clear_sessionid() {
-  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-    sessionid_->clear();
+inline void Request::clear_serversideid() {
+  if (serversideid_ != &::google::protobuf::internal::kEmptyString) {
+    serversideid_->clear();
   }
-  clear_has_sessionid();
+  clear_has_serversideid();
 }
-inline const ::std::string& Request::sessionid() const {
-  return *sessionid_;
+inline const ::std::string& Request::serversideid() const {
+  return *serversideid_;
 }
-inline void Request::set_sessionid(const ::std::string& value) {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
+inline void Request::set_serversideid(const ::std::string& value) {
+  set_has_serversideid();
+  if (serversideid_ == &::google::protobuf::internal::kEmptyString) {
+    serversideid_ = new ::std::string;
   }
-  sessionid_->assign(value);
+  serversideid_->assign(value);
 }
-inline void Request::set_sessionid(const char* value) {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
+inline void Request::set_serversideid(const char* value) {
+  set_has_serversideid();
+  if (serversideid_ == &::google::protobuf::internal::kEmptyString) {
+    serversideid_ = new ::std::string;
   }
-  sessionid_->assign(value);
+  serversideid_->assign(value);
 }
-inline void Request::set_sessionid(const char* value, size_t size) {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
+inline void Request::set_serversideid(const char* value, size_t size) {
+  set_has_serversideid();
+  if (serversideid_ == &::google::protobuf::internal::kEmptyString) {
+    serversideid_ = new ::std::string;
   }
-  sessionid_->assign(reinterpret_cast<const char*>(value), size);
+  serversideid_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Request::mutable_sessionid() {
-  set_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
-    sessionid_ = new ::std::string;
+inline ::std::string* Request::mutable_serversideid() {
+  set_has_serversideid();
+  if (serversideid_ == &::google::protobuf::internal::kEmptyString) {
+    serversideid_ = new ::std::string;
   }
-  return sessionid_;
+  return serversideid_;
 }
-inline ::std::string* Request::release_sessionid() {
-  clear_has_sessionid();
-  if (sessionid_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* Request::release_serversideid() {
+  clear_has_serversideid();
+  if (serversideid_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = sessionid_;
-    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = serversideid_;
+    serversideid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void Request::set_allocated_sessionid(::std::string* sessionid) {
-  if (sessionid_ != &::google::protobuf::internal::kEmptyString) {
-    delete sessionid_;
+inline void Request::set_allocated_serversideid(::std::string* serversideid) {
+  if (serversideid_ != &::google::protobuf::internal::kEmptyString) {
+    delete serversideid_;
   }
-  if (sessionid) {
-    set_has_sessionid();
-    sessionid_ = sessionid;
+  if (serversideid) {
+    set_has_serversideid();
+    serversideid_ = serversideid;
   } else {
-    clear_has_sessionid();
-    sessionid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_serversideid();
+    serversideid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

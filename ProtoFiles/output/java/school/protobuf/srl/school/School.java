@@ -15210,30 +15210,100 @@ public final class School {
     com.google.protobuf.ByteString
         getUsernameBytes();
 
-    // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
+    // optional string email = 2;
     /**
-     * <code>optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];</code>
-     */
-    boolean hasUserType();
-    /**
-     * <code>optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];</code>
-     */
-    protobuf.srl.school.School.UserType getUserType();
-
-    // optional string email = 3;
-    /**
-     * <code>optional string email = 3;</code>
+     * <code>optional string email = 2;</code>
      */
     boolean hasEmail();
     /**
-     * <code>optional string email = 3;</code>
+     * <code>optional string email = 2;</code>
      */
     java.lang.String getEmail();
     /**
-     * <code>optional string email = 3;</code>
+     * <code>optional string email = 2;</code>
      */
     com.google.protobuf.ByteString
         getEmailBytes();
+
+    // repeated string courseList = 3;
+    /**
+     * <code>repeated string courseList = 3;</code>
+     */
+    java.util.List<java.lang.String>
+    getCourseListList();
+    /**
+     * <code>repeated string courseList = 3;</code>
+     */
+    int getCourseListCount();
+    /**
+     * <code>repeated string courseList = 3;</code>
+     */
+    java.lang.String getCourseList(int index);
+    /**
+     * <code>repeated string courseList = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getCourseListBytes(int index);
+
+    // optional string schoolIdentity = 4;
+    /**
+     * <code>optional string schoolIdentity = 4;</code>
+     */
+    boolean hasSchoolIdentity();
+    /**
+     * <code>optional string schoolIdentity = 4;</code>
+     */
+    java.lang.String getSchoolIdentity();
+    /**
+     * <code>optional string schoolIdentity = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getSchoolIdentityBytes();
+
+    // optional string firstName = 5;
+    /**
+     * <code>optional string firstName = 5;</code>
+     */
+    boolean hasFirstName();
+    /**
+     * <code>optional string firstName = 5;</code>
+     */
+    java.lang.String getFirstName();
+    /**
+     * <code>optional string firstName = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getFirstNameBytes();
+
+    // optional string lastName = 6;
+    /**
+     * <code>optional string lastName = 6;</code>
+     */
+    boolean hasLastName();
+    /**
+     * <code>optional string lastName = 6;</code>
+     */
+    java.lang.String getLastName();
+    /**
+     * <code>optional string lastName = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getLastNameBytes();
+
+    // optional string password = 7;
+    /**
+     * <code>optional string password = 7;</code>
+     */
+    boolean hasPassword();
+    /**
+     * <code>optional string password = 7;</code>
+     */
+    java.lang.String getPassword();
+    /**
+     * <code>optional string password = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getPasswordBytes();
   }
   /**
    * Protobuf type {@code protobuf.srl.school.SrlUser}
@@ -15291,20 +15361,37 @@ public final class School {
               username_ = input.readBytes();
               break;
             }
-            case 16: {
-              int rawValue = input.readEnum();
-              protobuf.srl.school.School.UserType value = protobuf.srl.school.School.UserType.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(2, rawValue);
-              } else {
-                bitField0_ |= 0x00000002;
-                userType_ = value;
-              }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              email_ = input.readBytes();
               break;
             }
             case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                courseList_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              courseList_.add(input.readBytes());
+              break;
+            }
+            case 34: {
               bitField0_ |= 0x00000004;
-              email_ = input.readBytes();
+              schoolIdentity_ = input.readBytes();
+              break;
+            }
+            case 42: {
+              bitField0_ |= 0x00000008;
+              firstName_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000010;
+              lastName_ = input.readBytes();
+              break;
+            }
+            case 58: {
+              bitField0_ |= 0x00000020;
+              password_ = input.readBytes();
               break;
             }
           }
@@ -15315,6 +15402,9 @@ public final class School {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          courseList_ = new com.google.protobuf.UnmodifiableLazyStringList(courseList_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -15402,33 +15492,17 @@ public final class School {
       }
     }
 
-    // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
-    public static final int USERTYPE_FIELD_NUMBER = 2;
-    private protobuf.srl.school.School.UserType userType_;
+    // optional string email = 2;
+    public static final int EMAIL_FIELD_NUMBER = 2;
+    private java.lang.Object email_;
     /**
-     * <code>optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];</code>
+     * <code>optional string email = 2;</code>
      */
-    public boolean hasUserType() {
+    public boolean hasEmail() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];</code>
-     */
-    public protobuf.srl.school.School.UserType getUserType() {
-      return userType_;
-    }
-
-    // optional string email = 3;
-    public static final int EMAIL_FIELD_NUMBER = 3;
-    private java.lang.Object email_;
-    /**
-     * <code>optional string email = 3;</code>
-     */
-    public boolean hasEmail() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional string email = 3;</code>
+     * <code>optional string email = 2;</code>
      */
     public java.lang.String getEmail() {
       java.lang.Object ref = email_;
@@ -15445,7 +15519,7 @@ public final class School {
       }
     }
     /**
-     * <code>optional string email = 3;</code>
+     * <code>optional string email = 2;</code>
      */
     public com.google.protobuf.ByteString
         getEmailBytes() {
@@ -15461,10 +15535,216 @@ public final class School {
       }
     }
 
+    // repeated string courseList = 3;
+    public static final int COURSELIST_FIELD_NUMBER = 3;
+    private com.google.protobuf.LazyStringList courseList_;
+    /**
+     * <code>repeated string courseList = 3;</code>
+     */
+    public java.util.List<java.lang.String>
+        getCourseListList() {
+      return courseList_;
+    }
+    /**
+     * <code>repeated string courseList = 3;</code>
+     */
+    public int getCourseListCount() {
+      return courseList_.size();
+    }
+    /**
+     * <code>repeated string courseList = 3;</code>
+     */
+    public java.lang.String getCourseList(int index) {
+      return courseList_.get(index);
+    }
+    /**
+     * <code>repeated string courseList = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCourseListBytes(int index) {
+      return courseList_.getByteString(index);
+    }
+
+    // optional string schoolIdentity = 4;
+    public static final int SCHOOLIDENTITY_FIELD_NUMBER = 4;
+    private java.lang.Object schoolIdentity_;
+    /**
+     * <code>optional string schoolIdentity = 4;</code>
+     */
+    public boolean hasSchoolIdentity() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string schoolIdentity = 4;</code>
+     */
+    public java.lang.String getSchoolIdentity() {
+      java.lang.Object ref = schoolIdentity_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          schoolIdentity_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string schoolIdentity = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSchoolIdentityBytes() {
+      java.lang.Object ref = schoolIdentity_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        schoolIdentity_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string firstName = 5;
+    public static final int FIRSTNAME_FIELD_NUMBER = 5;
+    private java.lang.Object firstName_;
+    /**
+     * <code>optional string firstName = 5;</code>
+     */
+    public boolean hasFirstName() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string firstName = 5;</code>
+     */
+    public java.lang.String getFirstName() {
+      java.lang.Object ref = firstName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          firstName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string firstName = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getFirstNameBytes() {
+      java.lang.Object ref = firstName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        firstName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string lastName = 6;
+    public static final int LASTNAME_FIELD_NUMBER = 6;
+    private java.lang.Object lastName_;
+    /**
+     * <code>optional string lastName = 6;</code>
+     */
+    public boolean hasLastName() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional string lastName = 6;</code>
+     */
+    public java.lang.String getLastName() {
+      java.lang.Object ref = lastName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          lastName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string lastName = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getLastNameBytes() {
+      java.lang.Object ref = lastName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        lastName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string password = 7;
+    public static final int PASSWORD_FIELD_NUMBER = 7;
+    private java.lang.Object password_;
+    /**
+     * <code>optional string password = 7;</code>
+     */
+    public boolean hasPassword() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional string password = 7;</code>
+     */
+    public java.lang.String getPassword() {
+      java.lang.Object ref = password_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          password_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string password = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPasswordBytes() {
+      java.lang.Object ref = password_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        password_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       username_ = "";
-      userType_ = protobuf.srl.school.School.UserType.GUEST;
       email_ = "";
+      courseList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      schoolIdentity_ = "";
+      firstName_ = "";
+      lastName_ = "";
+      password_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -15486,10 +15766,22 @@ public final class School {
         output.writeBytes(1, getUsernameBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, userType_.getNumber());
+        output.writeBytes(2, getEmailBytes());
+      }
+      for (int i = 0; i < courseList_.size(); i++) {
+        output.writeBytes(3, courseList_.getByteString(i));
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getEmailBytes());
+        output.writeBytes(4, getSchoolIdentityBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(5, getFirstNameBytes());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(6, getLastNameBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(7, getPasswordBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -15506,11 +15798,32 @@ public final class School {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, userType_.getNumber());
+          .computeBytesSize(2, getEmailBytes());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < courseList_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(courseList_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getCourseListList().size();
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getEmailBytes());
+          .computeBytesSize(4, getSchoolIdentityBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, getFirstNameBytes());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, getLastNameBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, getPasswordBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -15630,10 +15943,18 @@ public final class School {
         super.clear();
         username_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        userType_ = protobuf.srl.school.School.UserType.GUEST;
-        bitField0_ = (bitField0_ & ~0x00000002);
         email_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        courseList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
+        schoolIdentity_ = "";
+        bitField0_ = (bitField0_ & ~0x00000008);
+        firstName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
+        lastName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000020);
+        password_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -15669,11 +15990,29 @@ public final class School {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.userType_ = userType_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+        result.email_ = email_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          courseList_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              courseList_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.courseList_ = courseList_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.email_ = email_;
+        result.schoolIdentity_ = schoolIdentity_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.firstName_ = firstName_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.lastName_ = lastName_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.password_ = password_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -15695,12 +16034,39 @@ public final class School {
           username_ = other.username_;
           onChanged();
         }
-        if (other.hasUserType()) {
-          setUserType(other.getUserType());
-        }
         if (other.hasEmail()) {
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000002;
           email_ = other.email_;
+          onChanged();
+        }
+        if (!other.courseList_.isEmpty()) {
+          if (courseList_.isEmpty()) {
+            courseList_ = other.courseList_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureCourseListIsMutable();
+            courseList_.addAll(other.courseList_);
+          }
+          onChanged();
+        }
+        if (other.hasSchoolIdentity()) {
+          bitField0_ |= 0x00000008;
+          schoolIdentity_ = other.schoolIdentity_;
+          onChanged();
+        }
+        if (other.hasFirstName()) {
+          bitField0_ |= 0x00000010;
+          firstName_ = other.firstName_;
+          onChanged();
+        }
+        if (other.hasLastName()) {
+          bitField0_ |= 0x00000020;
+          lastName_ = other.lastName_;
+          onChanged();
+        }
+        if (other.hasPassword()) {
+          bitField0_ |= 0x00000040;
+          password_ = other.password_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -15832,52 +16198,16 @@ public final class School {
         return this;
       }
 
-      // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
-      private protobuf.srl.school.School.UserType userType_ = protobuf.srl.school.School.UserType.GUEST;
+      // optional string email = 2;
+      private java.lang.Object email_ = "";
       /**
-       * <code>optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];</code>
+       * <code>optional string email = 2;</code>
        */
-      public boolean hasUserType() {
+      public boolean hasEmail() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];</code>
-       */
-      public protobuf.srl.school.School.UserType getUserType() {
-        return userType_;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];</code>
-       */
-      public Builder setUserType(protobuf.srl.school.School.UserType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000002;
-        userType_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];</code>
-       */
-      public Builder clearUserType() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        userType_ = protobuf.srl.school.School.UserType.GUEST;
-        onChanged();
-        return this;
-      }
-
-      // optional string email = 3;
-      private java.lang.Object email_ = "";
-      /**
-       * <code>optional string email = 3;</code>
-       */
-      public boolean hasEmail() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional string email = 3;</code>
+       * <code>optional string email = 2;</code>
        */
       public java.lang.String getEmail() {
         java.lang.Object ref = email_;
@@ -15891,7 +16221,7 @@ public final class School {
         }
       }
       /**
-       * <code>optional string email = 3;</code>
+       * <code>optional string email = 2;</code>
        */
       public com.google.protobuf.ByteString
           getEmailBytes() {
@@ -15907,37 +16237,426 @@ public final class School {
         }
       }
       /**
-       * <code>optional string email = 3;</code>
+       * <code>optional string email = 2;</code>
        */
       public Builder setEmail(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000002;
         email_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string email = 3;</code>
+       * <code>optional string email = 2;</code>
        */
       public Builder clearEmail() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         email_ = getDefaultInstance().getEmail();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string email = 3;</code>
+       * <code>optional string email = 2;</code>
        */
       public Builder setEmailBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000002;
         email_ = value;
+        onChanged();
+        return this;
+      }
+
+      // repeated string courseList = 3;
+      private com.google.protobuf.LazyStringList courseList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureCourseListIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          courseList_ = new com.google.protobuf.LazyStringArrayList(courseList_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      /**
+       * <code>repeated string courseList = 3;</code>
+       */
+      public java.util.List<java.lang.String>
+          getCourseListList() {
+        return java.util.Collections.unmodifiableList(courseList_);
+      }
+      /**
+       * <code>repeated string courseList = 3;</code>
+       */
+      public int getCourseListCount() {
+        return courseList_.size();
+      }
+      /**
+       * <code>repeated string courseList = 3;</code>
+       */
+      public java.lang.String getCourseList(int index) {
+        return courseList_.get(index);
+      }
+      /**
+       * <code>repeated string courseList = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCourseListBytes(int index) {
+        return courseList_.getByteString(index);
+      }
+      /**
+       * <code>repeated string courseList = 3;</code>
+       */
+      public Builder setCourseList(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureCourseListIsMutable();
+        courseList_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string courseList = 3;</code>
+       */
+      public Builder addCourseList(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureCourseListIsMutable();
+        courseList_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string courseList = 3;</code>
+       */
+      public Builder addAllCourseList(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureCourseListIsMutable();
+        super.addAll(values, courseList_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string courseList = 3;</code>
+       */
+      public Builder clearCourseList() {
+        courseList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string courseList = 3;</code>
+       */
+      public Builder addCourseListBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureCourseListIsMutable();
+        courseList_.add(value);
+        onChanged();
+        return this;
+      }
+
+      // optional string schoolIdentity = 4;
+      private java.lang.Object schoolIdentity_ = "";
+      /**
+       * <code>optional string schoolIdentity = 4;</code>
+       */
+      public boolean hasSchoolIdentity() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional string schoolIdentity = 4;</code>
+       */
+      public java.lang.String getSchoolIdentity() {
+        java.lang.Object ref = schoolIdentity_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          schoolIdentity_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string schoolIdentity = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSchoolIdentityBytes() {
+        java.lang.Object ref = schoolIdentity_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          schoolIdentity_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string schoolIdentity = 4;</code>
+       */
+      public Builder setSchoolIdentity(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        schoolIdentity_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string schoolIdentity = 4;</code>
+       */
+      public Builder clearSchoolIdentity() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        schoolIdentity_ = getDefaultInstance().getSchoolIdentity();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string schoolIdentity = 4;</code>
+       */
+      public Builder setSchoolIdentityBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        schoolIdentity_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string firstName = 5;
+      private java.lang.Object firstName_ = "";
+      /**
+       * <code>optional string firstName = 5;</code>
+       */
+      public boolean hasFirstName() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string firstName = 5;</code>
+       */
+      public java.lang.String getFirstName() {
+        java.lang.Object ref = firstName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          firstName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string firstName = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getFirstNameBytes() {
+        java.lang.Object ref = firstName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          firstName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string firstName = 5;</code>
+       */
+      public Builder setFirstName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        firstName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string firstName = 5;</code>
+       */
+      public Builder clearFirstName() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        firstName_ = getDefaultInstance().getFirstName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string firstName = 5;</code>
+       */
+      public Builder setFirstNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        firstName_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string lastName = 6;
+      private java.lang.Object lastName_ = "";
+      /**
+       * <code>optional string lastName = 6;</code>
+       */
+      public boolean hasLastName() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional string lastName = 6;</code>
+       */
+      public java.lang.String getLastName() {
+        java.lang.Object ref = lastName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          lastName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string lastName = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getLastNameBytes() {
+        java.lang.Object ref = lastName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          lastName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string lastName = 6;</code>
+       */
+      public Builder setLastName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        lastName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string lastName = 6;</code>
+       */
+      public Builder clearLastName() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        lastName_ = getDefaultInstance().getLastName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string lastName = 6;</code>
+       */
+      public Builder setLastNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        lastName_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string password = 7;
+      private java.lang.Object password_ = "";
+      /**
+       * <code>optional string password = 7;</code>
+       */
+      public boolean hasPassword() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional string password = 7;</code>
+       */
+      public java.lang.String getPassword() {
+        java.lang.Object ref = password_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          password_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string password = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPasswordBytes() {
+        java.lang.Object ref = password_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          password_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string password = 7;</code>
+       */
+      public Builder setPassword(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        password_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string password = 7;</code>
+       */
+      public Builder clearPassword() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        password_ = getDefaultInstance().getPassword();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string password = 7;</code>
+       */
+      public Builder setPasswordBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        password_ = value;
         onChanged();
         return this;
       }
@@ -18817,18 +19536,19 @@ public final class School {
       "\n\013millisecond\030\007 \001(\004\"\"\n\021DomainInformation",
       "\022\r\n\005stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 " +
       "\001(\010\022\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010" +
-      "\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"b\n\007" +
-      "SrlUser\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 " +
-      "\001(\0162\035.protobuf.srl.school.UserType:\005GUES" +
-      "T\022\r\n\005email\030\003 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001" +
-      " \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t" +
-      "\022\r\n\005admin\030\004 \003(\t\"H\n\013SrlSchoolId\022\020\n\010course" +
-      "Id\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tproble" +
-      "mId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017adminPermi",
-      "ssion\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003(\t" +
-      "\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n\005" +
-      "ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSI" +
-      "STANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
+      "\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n" +
+      "\007SrlUser\022\020\n\010username\030\001 \002(\t\022\r\n\005email\030\002 \001(" +
+      "\t\022\022\n\ncourseList\030\003 \003(\t\022\026\n\016schoolIdentity\030" +
+      "\004 \001(\t\022\021\n\tfirstName\030\005 \001(\t\022\020\n\010lastName\030\006 \001" +
+      "(\t\022\020\n\010password\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006user" +
+      "Id\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003" +
+      " \001(\t\022\r\n\005admin\030\004 \003(\t\"H\n\013SrlSchoolId\022\020\n\010co" +
+      "urseId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tpr",
+      "oblemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017adminP" +
+      "ermission\030\001 \003(\t\022\033\n\023moderatorPermission\030\002" +
+      " \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType" +
+      "\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_" +
+      "ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -18888,7 +19608,7 @@ public final class School {
           internal_static_protobuf_srl_school_SrlUser_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlUser_descriptor,
-              new java.lang.String[] { "Username", "UserType", "Email", });
+              new java.lang.String[] { "Username", "Email", "CourseList", "SchoolIdentity", "FirstName", "LastName", "Password", });
           internal_static_protobuf_srl_school_SrlGroup_descriptor =
             getDescriptor().getMessageTypes().get(9);
           internal_static_protobuf_srl_school_SrlGroup_fieldAccessorTable = new

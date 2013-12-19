@@ -258,10 +258,14 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(State));
   SrlUser_descriptor_ = file->message_type(8);
-  static const int SrlUser_offsets_[3] = {
+  static const int SrlUser_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUser, username_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUser, usertype_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUser, email_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUser, courselist_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUser, schoolidentity_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUser, firstname_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUser, lastname_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlUser, password_),
   };
   SrlUser_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -463,18 +467,19 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "\n\013millisecond\030\007 \001(\004\"\"\n\021DomainInformation"
     "\022\r\n\005stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 "
     "\001(\010\022\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010"
-    "\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"b\n\007"
-    "SrlUser\022\020\n\010username\030\001 \002(\t\0226\n\010userType\030\002 "
-    "\001(\0162\035.protobuf.srl.school.UserType:\005GUES"
-    "T\022\r\n\005email\030\003 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001"
-    " \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t"
-    "\022\r\n\005admin\030\004 \003(\t\"H\n\013SrlSchoolId\022\020\n\010course"
-    "Id\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tproble"
-    "mId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017adminPermi"
-    "ssion\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003(\t"
-    "\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n\005"
-    "ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSI"
-    "STANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005", 2951);
+    "\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n"
+    "\007SrlUser\022\020\n\010username\030\001 \002(\t\022\r\n\005email\030\002 \001("
+    "\t\022\022\n\ncourseList\030\003 \003(\t\022\026\n\016schoolIdentity\030"
+    "\004 \001(\t\022\021\n\tfirstName\030\005 \001(\t\022\020\n\010lastName\030\006 \001"
+    "(\t\022\020\n\010password\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006user"
+    "Id\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003"
+    " \001(\t\022\r\n\005admin\030\004 \003(\t\"H\n\013SrlSchoolId\022\020\n\010co"
+    "urseId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tpr"
+    "oblemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017adminP"
+    "ermission\030\001 \003(\t\022\033\n\023moderatorPermission\030\002"
+    " \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType"
+    "\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_"
+    "ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005", 2995);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/school.proto", &protobuf_RegisterTypes);
   SrlSchool::default_instance_ = new SrlSchool();
@@ -5306,8 +5311,12 @@ void State::Swap(State* other) {
 
 #ifndef _MSC_VER
 const int SrlUser::kUsernameFieldNumber;
-const int SrlUser::kUserTypeFieldNumber;
 const int SrlUser::kEmailFieldNumber;
+const int SrlUser::kCourseListFieldNumber;
+const int SrlUser::kSchoolIdentityFieldNumber;
+const int SrlUser::kFirstNameFieldNumber;
+const int SrlUser::kLastNameFieldNumber;
+const int SrlUser::kPasswordFieldNumber;
 #endif  // !_MSC_VER
 
 SrlUser::SrlUser()
@@ -5327,8 +5336,11 @@ SrlUser::SrlUser(const SrlUser& from)
 void SrlUser::SharedCtor() {
   _cached_size_ = 0;
   username_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  usertype_ = 5;
   email_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  schoolidentity_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  firstname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  lastname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  password_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -5342,6 +5354,18 @@ void SrlUser::SharedDtor() {
   }
   if (email_ != &::google::protobuf::internal::kEmptyString) {
     delete email_;
+  }
+  if (schoolidentity_ != &::google::protobuf::internal::kEmptyString) {
+    delete schoolidentity_;
+  }
+  if (firstname_ != &::google::protobuf::internal::kEmptyString) {
+    delete firstname_;
+  }
+  if (lastname_ != &::google::protobuf::internal::kEmptyString) {
+    delete lastname_;
+  }
+  if (password_ != &::google::protobuf::internal::kEmptyString) {
+    delete password_;
   }
   if (this != default_instance_) {
   }
@@ -5375,13 +5399,33 @@ void SrlUser::Clear() {
         username_->clear();
       }
     }
-    usertype_ = 5;
     if (has_email()) {
       if (email_ != &::google::protobuf::internal::kEmptyString) {
         email_->clear();
       }
     }
+    if (has_schoolidentity()) {
+      if (schoolidentity_ != &::google::protobuf::internal::kEmptyString) {
+        schoolidentity_->clear();
+      }
+    }
+    if (has_firstname()) {
+      if (firstname_ != &::google::protobuf::internal::kEmptyString) {
+        firstname_->clear();
+      }
+    }
+    if (has_lastname()) {
+      if (lastname_ != &::google::protobuf::internal::kEmptyString) {
+        lastname_->clear();
+      }
+    }
+    if (has_password()) {
+      if (password_ != &::google::protobuf::internal::kEmptyString) {
+        password_->clear();
+      }
+    }
   }
+  courselist_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -5404,33 +5448,12 @@ bool SrlUser::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(16)) goto parse_userType;
+        if (input->ExpectTag(18)) goto parse_email;
         break;
       }
 
-      // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
+      // optional string email = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_userType:
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::protobuf::srl::school::UserType_IsValid(value)) {
-            set_usertype(static_cast< ::protobuf::srl::school::UserType >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(2, value);
-          }
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_email;
-        break;
-      }
-
-      // optional string email = 3;
-      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_email:
@@ -5438,6 +5461,93 @@ bool SrlUser::MergePartialFromCodedStream(
                 input, this->mutable_email()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->email().data(), this->email().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_courseList;
+        break;
+      }
+
+      // repeated string courseList = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_courseList:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_courselist()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->courselist(this->courselist_size() - 1).data(),
+            this->courselist(this->courselist_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_courseList;
+        if (input->ExpectTag(34)) goto parse_schoolIdentity;
+        break;
+      }
+
+      // optional string schoolIdentity = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_schoolIdentity:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_schoolidentity()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->schoolidentity().data(), this->schoolidentity().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(42)) goto parse_firstName;
+        break;
+      }
+
+      // optional string firstName = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_firstName:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_firstname()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->firstname().data(), this->firstname().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(50)) goto parse_lastName;
+        break;
+      }
+
+      // optional string lastName = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_lastName:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_lastname()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->lastname().data(), this->lastname().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(58)) goto parse_password;
+        break;
+      }
+
+      // optional string password = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_password:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_password()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->password().data(), this->password().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -5473,19 +5583,58 @@ void SrlUser::SerializeWithCachedSizes(
       1, this->username(), output);
   }
 
-  // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
-  if (has_usertype()) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      2, this->usertype(), output);
-  }
-
-  // optional string email = 3;
+  // optional string email = 2;
   if (has_email()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->email().data(), this->email().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->email(), output);
+      2, this->email(), output);
+  }
+
+  // repeated string courseList = 3;
+  for (int i = 0; i < this->courselist_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->courselist(i).data(), this->courselist(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      3, this->courselist(i), output);
+  }
+
+  // optional string schoolIdentity = 4;
+  if (has_schoolidentity()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->schoolidentity().data(), this->schoolidentity().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->schoolidentity(), output);
+  }
+
+  // optional string firstName = 5;
+  if (has_firstname()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->firstname().data(), this->firstname().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      5, this->firstname(), output);
+  }
+
+  // optional string lastName = 6;
+  if (has_lastname()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->lastname().data(), this->lastname().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      6, this->lastname(), output);
+  }
+
+  // optional string password = 7;
+  if (has_password()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->password().data(), this->password().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      7, this->password(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -5506,20 +5655,63 @@ void SrlUser::SerializeWithCachedSizes(
         1, this->username(), target);
   }
 
-  // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
-  if (has_usertype()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      2, this->usertype(), target);
-  }
-
-  // optional string email = 3;
+  // optional string email = 2;
   if (has_email()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->email().data(), this->email().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->email(), target);
+        2, this->email(), target);
+  }
+
+  // repeated string courseList = 3;
+  for (int i = 0; i < this->courselist_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->courselist(i).data(), this->courselist(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(3, this->courselist(i), target);
+  }
+
+  // optional string schoolIdentity = 4;
+  if (has_schoolidentity()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->schoolidentity().data(), this->schoolidentity().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->schoolidentity(), target);
+  }
+
+  // optional string firstName = 5;
+  if (has_firstname()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->firstname().data(), this->firstname().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        5, this->firstname(), target);
+  }
+
+  // optional string lastName = 6;
+  if (has_lastname()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->lastname().data(), this->lastname().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        6, this->lastname(), target);
+  }
+
+  // optional string password = 7;
+  if (has_password()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->password().data(), this->password().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        7, this->password(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -5540,20 +5732,49 @@ int SrlUser::ByteSize() const {
           this->username());
     }
 
-    // optional .protobuf.srl.school.UserType userType = 2 [default = GUEST];
-    if (has_usertype()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->usertype());
-    }
-
-    // optional string email = 3;
+    // optional string email = 2;
     if (has_email()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->email());
     }
 
+    // optional string schoolIdentity = 4;
+    if (has_schoolidentity()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->schoolidentity());
+    }
+
+    // optional string firstName = 5;
+    if (has_firstname()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->firstname());
+    }
+
+    // optional string lastName = 6;
+    if (has_lastname()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->lastname());
+    }
+
+    // optional string password = 7;
+    if (has_password()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->password());
+    }
+
   }
+  // repeated string courseList = 3;
+  total_size += 1 * this->courselist_size();
+  for (int i = 0; i < this->courselist_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->courselist(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -5579,15 +5800,25 @@ void SrlUser::MergeFrom(const ::google::protobuf::Message& from) {
 
 void SrlUser::MergeFrom(const SrlUser& from) {
   GOOGLE_CHECK_NE(&from, this);
+  courselist_.MergeFrom(from.courselist_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_username()) {
       set_username(from.username());
     }
-    if (from.has_usertype()) {
-      set_usertype(from.usertype());
-    }
     if (from.has_email()) {
       set_email(from.email());
+    }
+    if (from.has_schoolidentity()) {
+      set_schoolidentity(from.schoolidentity());
+    }
+    if (from.has_firstname()) {
+      set_firstname(from.firstname());
+    }
+    if (from.has_lastname()) {
+      set_lastname(from.lastname());
+    }
+    if (from.has_password()) {
+      set_password(from.password());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -5614,8 +5845,12 @@ bool SrlUser::IsInitialized() const {
 void SrlUser::Swap(SrlUser* other) {
   if (other != this) {
     std::swap(username_, other->username_);
-    std::swap(usertype_, other->usertype_);
     std::swap(email_, other->email_);
+    courselist_.Swap(&other->courselist_);
+    std::swap(schoolidentity_, other->schoolidentity_);
+    std::swap(firstname_, other->firstname_);
+    std::swap(lastname_, other->lastname_);
+    std::swap(password_, other->password_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

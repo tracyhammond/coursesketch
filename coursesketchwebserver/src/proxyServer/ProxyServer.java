@@ -11,8 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import multiConnection.MultiInternalConnectionServer;
@@ -39,7 +37,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	private ProxyConnectionManager serverManager = new ProxyConnectionManager(this);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public ProxyServer( int port ) throws UnknownHostException {
+	public ProxyServer( int port ) {
 		this( new InetSocketAddress( port ) );
 	}
 
@@ -113,6 +111,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		}
 	}
 
+	@Override
 	public void onFragment( WebSocket conn, Framedata fragment ) {
 		//System.out.println( "received fragment: " + fragment );
 	}
@@ -120,12 +119,13 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	/**
 	 * Returns a number that should be unique.
 	 */
+	@Override
 	public LoginConnectionState getUniqueState() {
 		return new ProxyConnectionState(Encoder.nextID().toString());
 	}
 
-	public static void main( String[] args ) throws InterruptedException , IOException, URISyntaxException {
-		System.out.println("Proxy Server: Version 1.0.2.iguana");
+	public static void main( String[] args ) throws InterruptedException , IOException {
+		System.out.println("Proxy Server: Version 1.0.2.lemur");
 		WebSocketImpl.DEBUG = true;
 		int port = 8888; // 843 flash policy port
 		try {

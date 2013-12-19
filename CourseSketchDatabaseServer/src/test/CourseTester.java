@@ -7,10 +7,10 @@ import protobuf.srl.school.School.SrlPermission;
 
 import com.mongodb.DB;
 
-import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.auth.AuthenticationException;
-import database.managers.CourseManager;
+import database.institution.DatabaseAccessException;
+import database.institution.RequestConverter;
+import database.institution.auth.AuthenticationException;
+import database.institution.managers.CourseManager;
 
 public class CourseTester {
 

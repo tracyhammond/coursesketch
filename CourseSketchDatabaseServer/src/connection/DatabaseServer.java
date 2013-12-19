@@ -34,8 +34,8 @@ import protobuf.srl.school.School.SrlSchool;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import database.auth.AuthenticationException;
-import database.managers.Institution;
+import database.institution.auth.AuthenticationException;
+import database.institution.managers.Institution;
 
 /**
  * A simple WebSocketServer implementation.

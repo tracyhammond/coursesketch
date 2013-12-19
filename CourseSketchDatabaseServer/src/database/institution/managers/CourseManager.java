@@ -1,6 +1,6 @@
-package database.managers;
+package database.institution.managers;
 
-import static database.StringConstants.*;
+import static database.institution.StringConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +18,10 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
+import database.institution.DatabaseAccessException;
+import database.institution.RequestConverter;
+import database.institution.auth.AuthenticationException;
+import database.institution.auth.Authenticator;
 
 public class CourseManager {
 	public static String mongoInsertCourse(DB dbs, SrlCourse course) {

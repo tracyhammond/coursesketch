@@ -124,8 +124,12 @@ message State {
 
 message SrlUser {
 	required string username = 1; //Must be globally unique
-	optional UserType userType = 2 [default=GUEST];
-	optional string email = 3;
+	optional string email = 2;
+	repeated string courseList = 3;
+	optional string schoolIdentity = 4;
+	optional string firstName = 5;
+	optional string lastName = 6;
+	optional string password = 7;
 }
 
 enum UserType {
