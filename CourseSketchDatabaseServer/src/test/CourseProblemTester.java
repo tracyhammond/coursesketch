@@ -8,6 +8,7 @@ import com.mongodb.DB;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.institution.CourseProblemManager;
+import database.institution.Institution;
 
 public class CourseProblemTester {
 
@@ -19,6 +20,7 @@ public class CourseProblemTester {
 		testBuilder.setName("Raising Puppies");
 		testBuilder.setDescription("genetically engineered puppies that potty train themselves!");
 		SrlPermission.Builder permissions = SrlPermission.newBuilder();
+		/*
 		permissions.addAdminPermission("david");
 		permissions.addAdminPermission("larry");
 
@@ -29,32 +31,23 @@ public class CourseProblemTester {
 		permissions.addUserPermission("matt");
 		permissions.addUserPermission("saby");
 		permissions.addUserPermission("stephanie");
+		*/
 		
 		testBuilder.setAccessPermission(permissions.build());
 		System.out.println(testBuilder.toString());
+		// testing insertion
 		System.out.println("Inserting PROBLEMS");
 		String problemId = null;
-		try{
-			System.out.println("Admin");
-			problemId = CourseProblemManager.mongoInsertCourseProblem(dbs,"david",testBuilder.buildPartial());
-		}
-		catch(AuthenticationException e) {
-			System.out.println("Succesfully failed to authenticate mongo get assignment");
-		}
-		try
-		{
-			testBuilder.setDescription("Added by moderator");
-			System.out.println("Mod");
-			problemId = CourseProblemManager.mongoInsertCourseProblem(dbs,"raniero",testBuilder.buildPartial());
-		}
-		catch(AuthenticationException e) {
-			System.out.println("Succesfully failed to authenticate mongo get assignment");
-		}
+		System.out.println("Admin");
+		problemId = Institution.mongoInsertCourseProblem("david",testBuilder.buildPartial());
+		testBuilder.setDescription("Added by moderator");
+		System.out.println("Mod");
+		problemId = Institution.mongoInsertCourseProblem("raniero",testBuilder.buildPartial());
 		
 		try
 		{
 			System.out.println("User");
-			problemId = CourseProblemManager.mongoInsertCourseProblem(dbs,"matt",testBuilder.buildPartial());
+			problemId = Institution.mongoInsertCourseProblem("matt",testBuilder.buildPartial());
 		}
 		catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate mongo get assignment");

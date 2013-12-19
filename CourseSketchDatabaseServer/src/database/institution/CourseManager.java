@@ -25,7 +25,7 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 
 public class CourseManager {
-	public static String mongoInsertCourse(DB dbs, SrlCourse course) {
+	static String mongoInsertCourse(DB dbs, SrlCourse course) {
 		DBCollection new_user = dbs.getCollection(COURSE_COLLECTION);
 		BasicDBObject query = new BasicDBObject(DESCRIPTION, course.getDescription()).append(NAME, course.getName())
 				.append(COURSE_ACCESS, course.getAccess().getNumber()).append(COURSE_SEMESTER, course.getSemester())
@@ -41,7 +41,7 @@ public class CourseManager {
 		return corsor.get(SELF_ID).toString();
 	}
 
-	public static SrlCourse mongoGetCourse(DB dbs, String courseId, String userId, long checkTime) throws AuthenticationException,
+	static SrlCourse mongoGetCourse(DB dbs, String courseId, String userId, long checkTime) throws AuthenticationException,
 			DatabaseAccessException {
 		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
 		DBObject corsor = myDbRef.fetch();
@@ -227,8 +227,8 @@ public class CourseManager {
 		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
 		DBObject corsor = myDbRef.fetch();
 		DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
-		DBObject courseQuery = new BasicDBObject(ADMIN_GROUP_ID, adminGroupId)
-			.append(MOD_GROUP_ID, modGroupId).append(USER_GROUP_ID, userGroupId); // the value for a public course
+		DBObject courseQuery = new BasicDBObject("$set", new BasicDBObject(ADMIN_GROUP_ID, adminGroupId))
+			.append("$set", new BasicDBObject(MOD_GROUP_ID, modGroupId)).append("$set", new BasicDBObject(USER_GROUP_ID, userGroupId)); // the value for a public course
 		courses.update(corsor, courseQuery);
 	}
 

@@ -28,11 +28,12 @@ public class Authenticator {
 	 * @return
 	 */
 	public static boolean checkAuthentication(DB dbs, String userId, List<String> groups) {
-		DBCollection new_user = dbs.getCollection(USER_GROUP_COLLECTION);
+		//DBCollection new_user = dbs.getCollection(USER_GROUP_COLLECTION);
 		for (String group: groups) {
 			if (group.startsWith(GROUP_PREFIX)) {
-				//group.substring(5); // should be correct?
-				ArrayList list = (ArrayList<Object>)new_user.findOne(group.substring(GROUP_PREFIX_LENGTH)).get("UserList");
+				DBRef myDbRef = new DBRef(dbs, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
+				DBObject corsor = myDbRef.fetch();
+				ArrayList list = (ArrayList)corsor.get(USER_LIST);
 				if (checkAuthentication(dbs, userId, list)) {
 					return true;
 				}
@@ -45,9 +46,6 @@ public class Authenticator {
 	}
 
 	public static boolean isTimeValid(long time, DateTime openDate, DateTime closeDate) {
-		System.out.println("Past " + openDate.getMillisecond());
-		System.out.println("Now " + time);
-		System.out.println("Future " + closeDate.getMillisecond());
 		return time >= openDate.getMillisecond() && time <= closeDate.getMillisecond();	
 	}
 	
@@ -129,11 +127,6 @@ public class Authenticator {
 				RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(ACCESS_DATE)).longValue()),
 				RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(CLOSE_DATE)).longValue()));
 		}
-		System.out.println("USER: " + checkType.user + " is " + validUser);
-		System.out.println("MOD: " + checkType.mod + " is " + validMod);
-		System.out.println("ADMIN: " + checkType.admin + " is " + validAdmin);
-		System.out.println("CHECK DATE: " + checkType.checkDate + " is " + validDate);
-		System.out.println("ADMIN OR MOD: " + checkType.checkAdminOrMod + " is " + validModOrAdmin);
 		return (validUser == checkType.user) && (validMod == checkType.mod) &&
 				(validAdmin == checkType.admin) && (validDate == checkType.checkDate) &&
 				(validModOrAdmin == checkType.checkAdminOrMod);

@@ -19,15 +19,15 @@ public class GroupManager
 	public static String mongoInsertGroup(DB dbs, SrlGroup group)
 	{
 		DBCollection new_user = dbs.getCollection(USER_GROUP_COLLECTION);
-		BasicDBObject query = new BasicDBObject("UserList",group.getUserIdList())
-										.append("Name",group.getGroupName())
-										.append("Admin",group.getAdminList());
+		BasicDBObject query = new BasicDBObject(USER_LIST,group.getUserIdList())
+										.append(NAME,group.getGroupName())
+										.append(ADMIN,group.getAdminList());
 
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
-		return ("Group"+(String) corsor.get("_id"));
+		return corsor.get(SELF_ID).toString();
 	}
-	
+
 	public static SrlGroup mongoGetGroup(DB dbs, String groupId, String userId) throws AuthenticationException
 	{
 		DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);

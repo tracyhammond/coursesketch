@@ -44,6 +44,20 @@ public final class Institution {
 	}
 
 	/**
+	 * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database
+	 * @param testOnly
+	 */
+	public Institution(boolean testOnly) {
+		try {
+			MongoClient mongoClient = new MongoClient("localhost");
+			db = mongoClient.getDB("test");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		instance = this;
+	}
+	
+	/**
 	 * Returns a list of courses given a list of Ids for the courses
 	 * @throws AuthenticationException
 	 */
@@ -138,27 +152,28 @@ public final class Institution {
 		}
 
 		SrlGroup.Builder courseGroup = SrlGroup.newBuilder();
+		courseGroup.addAdmin(userId);
 		courseGroup.setGroupName(course.getName() + "_User");
-		courseGroup.clearGroupId();
+		courseGroup.clearUserId();
 		if (permission != null && permission.getUserPermissionCount() > 0) {
 			courseGroup.addAllUserId(permission.getUserPermissionList());
 		}
-		String userGroupId = GroupManager.mongoInsertGroup(getInstance().db, courseGroup.build());
+		String userGroupId = GroupManager.mongoInsertGroup(getInstance().db, courseGroup.buildPartial());
 
 		courseGroup.setGroupName(course.getName() + "_Mod");
-		courseGroup.clearGroupId();
+		courseGroup.clearUserId();
 		if (permission != null && permission.getModeratorPermissionCount() > 0) {
 			courseGroup.addAllUserId(permission.getModeratorPermissionList());
 		}
-		String modGroupId = GroupManager.mongoInsertGroup(getInstance().db, courseGroup.build());
+		String modGroupId = GroupManager.mongoInsertGroup(getInstance().db, courseGroup.buildPartial());
 
 		courseGroup.setGroupName(course.getName() + "_Admin");
-		courseGroup.clearGroupId();
+		courseGroup.clearUserId();
 		if (permission != null && permission.getAdminPermissionCount() > 0) {
 			courseGroup.addAllUserId(permission.getAdminPermissionList());
 		}
 		courseGroup.addUserId(userId); // an admin will always exist
-		String adminGroupId = GroupManager.mongoInsertGroup(getInstance().db, courseGroup.build());
+		String adminGroupId = GroupManager.mongoInsertGroup(getInstance().db, courseGroup.buildPartial());
 
 		// overwrites the existing permissions with the new user specific course permission
 		SrlCourse.Builder builder = SrlCourse.newBuilder(course);
@@ -167,7 +182,7 @@ public final class Institution {
 		permissions.addModeratorPermission(GROUP_PREFIX + modGroupId);
 		permissions.addUserPermission(GROUP_PREFIX + userGroupId);
 		builder.setAccessPermission(permissions.build());
-		String resultId = CourseManager.mongoInsertCourse(getInstance().db, builder.build());
+		String resultId = CourseManager.mongoInsertCourse(getInstance().db, builder.buildPartial());
 
 		// links the course to the group!
 		CourseManager.mongoInsertDefaultGroupId(getInstance().db, resultId, userGroupId, modGroupId, adminGroupId);

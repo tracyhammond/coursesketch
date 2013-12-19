@@ -253,7 +253,7 @@ public class AssignmentManager
 
 		for(int k = 0; k <ids.length; k++) {
 			ArrayList<String> list = ids[k];
-			String field = k == 0 ? ADMIN : k == 1 ? MOD : USERS; // k = 0 ADMIN, k = 1 MOD, k = 2 USERS
+			String field = (k == 0) ? ADMIN : (k == 1 ? MOD : USERS); // k = 0 ADMIN, k = 1 MOD, k = 2 USERS
 			DBObject updateQuery = new BasicDBObject("$addToSet", new BasicDBObject(field, new BasicDBObject("$each", list)));
 			System.out.println(updateQuery);
 			assignments.update(corsor, updateQuery);
