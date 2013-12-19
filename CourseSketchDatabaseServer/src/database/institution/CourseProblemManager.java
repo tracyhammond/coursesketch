@@ -148,4 +148,23 @@ public class CourseProblemManager
 		}
 		return true;
 	}
+
+	/**
+	 * NOTE: This is meant for internal use do not make this method public
+	 *
+	 * This is used to copy permissions from the parent assignment into the current problem.
+	 */
+	static void mongoInsertDefaultGroupId(DB dbs, String courseProblemId, ArrayList<String>[] ids) {
+		DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(courseProblemId));
+		DBObject corsor = myDbRef.fetch();
+		DBCollection assignments = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
+
+		for(int k = 0; k <ids.length; k++) {
+			ArrayList<String> list = ids[k];
+			String field = k == 0 ? ADMIN : k == 1 ? MOD : USERS; // k = 0 ADMIN, k = 1 MOD, k = 2 USERS
+			DBObject updateQuery = new BasicDBObject("$addToSet", new BasicDBObject(field, new BasicDBObject("$each", list)));
+			System.out.println(updateQuery);
+			assignments.update(corsor, updateQuery);
+		}
+	}
 }

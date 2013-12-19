@@ -17,7 +17,7 @@ public final class UserClient {
 	private UserClient(String url) {
 		try {
 			MongoClient mongoClient = new MongoClient(url);
-			db = mongoClient.getDB("user_db");
+			db = mongoClient.getDB("institution");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

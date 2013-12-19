@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.school.School.SrlPermission.Builder;
 import protobuf.srl.school.School.SrlProblem;
 
 import com.mongodb.BasicDBObject;
@@ -179,7 +180,12 @@ public class CourseManager {
 
 	}
 
-	static boolean mongoInsert(DB dbs, String courseId, String assignmentId) {
+	/**
+	 * NOTE: This is meant for internal use do not make this method public
+	 *
+	 * With that being said this allows a course to be updated adding the assignmentId to its list of items.
+	 */
+	static boolean mongoInsertIntoCourse(DB dbs, String courseId, String assignmentId) {
 		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
 		DBObject corsor = myDbRef.fetch();
 		DBObject updateObj = null;
@@ -210,5 +216,36 @@ public class CourseManager {
 			resultList.add(build.build());
 		}
 		return resultList;
+	}
+
+	/**
+	 * NOTE: This is meant for internal use do not make this method public
+	 *
+	 * With that being said this allows the default ids to be inserted
+	 */
+	static void mongoInsertDefaultGroupId(DB dbs, String courseId, String userGroupId, String modGroupId, String adminGroupId) {
+		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+		DBObject corsor = myDbRef.fetch();
+		DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
+		DBObject courseQuery = new BasicDBObject(ADMIN_GROUP_ID, adminGroupId)
+			.append(MOD_GROUP_ID, modGroupId).append(USER_GROUP_ID, userGroupId); // the value for a public course
+		courses.update(corsor, courseQuery);
+	}
+
+	/**
+	 * NOTE: This is meant for internal use do not make this method public
+	 *
+	 * Returns a list of Id for the default group for an assignment.
+	 *
+	 * the Ids are ordered as so: AdminGroup, ModGroup, UserGroup
+	 */
+	static ArrayList<String>[] mongoGetDefaultGroupId(DB dbs, String courseId) {
+		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+		DBObject corsor = myDbRef.fetch();
+		ArrayList<String>[] returnValue = new ArrayList[3];
+		returnValue[0] = (ArrayList)corsor.get(ADMIN);
+		returnValue[1] = (ArrayList)corsor.get(MOD);
+		returnValue[2] = (ArrayList)corsor.get(USERS);
+		return returnValue;
 	}
 }

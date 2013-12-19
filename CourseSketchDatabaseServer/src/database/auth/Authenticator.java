@@ -28,11 +28,11 @@ public class Authenticator {
 	 * @return
 	 */
 	public static boolean checkAuthentication(DB dbs, String userId, List<String> groups) {
-		DBCollection new_user = dbs.getCollection("UserGroups");
+		DBCollection new_user = dbs.getCollection(USER_GROUP_COLLECTION);
 		for (String group: groups) {
-			if (group.startsWith("group")) {
-				group.substring(5); // should be correct?
-				ArrayList list = (ArrayList<Object>)new_user.findOne(group.substring(5)).get("UserList");
+			if (group.startsWith(GROUP_PREFIX)) {
+				//group.substring(5); // should be correct?
+				ArrayList list = (ArrayList<Object>)new_user.findOne(group.substring(GROUP_PREFIX_LENGTH)).get("UserList");
 				if (checkAuthentication(dbs, userId, list)) {
 					return true;
 				}

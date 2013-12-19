@@ -21,6 +21,7 @@ import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
+import database.user.GroupManager;
 
 public class AssignmentManager 
 {
@@ -55,7 +56,7 @@ public class AssignmentManager
 		DBObject corsor = new_user.findOne(query);
 
 		// inserts the id into the previous the course
-		CourseManager.mongoInsert(dbs, assignment.getCourseId(),corsor.get(SELF_ID).toString() );
+		CourseManager.mongoInsertIntoCourse(dbs, assignment.getCourseId(),corsor.get(SELF_ID).toString() );
 
 		return corsor.get(SELF_ID).toString();
 	}
@@ -226,6 +227,11 @@ public class AssignmentManager
 		return true;
 	}
 
+	/**
+	 * NOTE: This is meant for internal use do not make this method public
+	 *
+	 * With that being said this allows an assignment to be updated adding the problemId to its list of items.
+	 */
 	static boolean mongoInsert(DB dbs, String assignmentId, String problemId) {
 		DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
 		DBObject corsor = myDbRef.fetch();
@@ -233,5 +239,41 @@ public class AssignmentManager
 		DBObject updateObj = new BasicDBObject(PROBLEM_LIST, problemId);
 		courses.update(corsor, new BasicDBObject ("$addToSet", updateObj));
 		return true;
+	}
+
+	/**
+	 * NOTE: This is meant for internal use do not make this method public
+	 *
+	 * This is used to copy permissions from the parent course into the current assignment.
+	 */
+	static void mongoInsertDefaultGroupId(DB dbs, String assignmentId, ArrayList<String>[] ids) {
+		DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
+		DBObject corsor = myDbRef.fetch();
+		DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);
+
+		for(int k = 0; k <ids.length; k++) {
+			ArrayList<String> list = ids[k];
+			String field = k == 0 ? ADMIN : k == 1 ? MOD : USERS; // k = 0 ADMIN, k = 1 MOD, k = 2 USERS
+			DBObject updateQuery = new BasicDBObject("$addToSet", new BasicDBObject(field, new BasicDBObject("$each", list)));
+			System.out.println(updateQuery);
+			assignments.update(corsor, updateQuery);
+		}
+	}
+
+	/**
+	 * NOTE: This is meant for internal use do not make this method public
+	 *
+	 * Returns a list of Id for the default group for an assignment.
+	 *
+	 * the Ids are ordered as so: AdminGroup, ModGroup, UserGroup
+	 */
+	static ArrayList<String>[] mongoGetDefaultGroupId(DB dbs, String assignmentId) {
+		DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
+		DBObject corsor = myDbRef.fetch();
+		ArrayList<String>[] returnValue = new ArrayList[3];
+		returnValue[0] = (ArrayList)corsor.get(ADMIN);
+		returnValue[1] = (ArrayList)corsor.get(MOD);
+		returnValue[2] = (ArrayList)corsor.get(USERS);
+		return returnValue;
 	}
 }

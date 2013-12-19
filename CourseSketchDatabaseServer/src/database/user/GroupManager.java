@@ -1,4 +1,6 @@
-package database.institution;
+package database.user;
+
+import static database.StringConstants.*;
 
 import java.util.ArrayList;
 
@@ -14,33 +16,33 @@ import database.auth.Authenticator;
 
 public class GroupManager
 {
-	private static String mongoInsertGroup(DB dbs, SrlGroup group)
+	public static String mongoInsertGroup(DB dbs, SrlGroup group)
 	{
-		DBCollection new_user = dbs.getCollection("UserGroups");
+		DBCollection new_user = dbs.getCollection(USER_GROUP_COLLECTION);
 		BasicDBObject query = new BasicDBObject("UserList",group.getUserIdList())
 										.append("Name",group.getGroupName())
 										.append("Admin",group.getAdminList());
-										 
+
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 		return ("Group"+(String) corsor.get("_id"));
 	}
 	
-	public static SrlGroup mongoGetCourse(DB dbs, String courseID,String userId) throws AuthenticationException
+	public static SrlGroup mongoGetGroup(DB dbs, String groupId, String userId) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("UserGroups");
-		BasicDBObject query = new BasicDBObject("_id",courseID);
+		DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
+		BasicDBObject query = new BasicDBObject("_id",groupId);
 		DBObject corsor = courses.findOne(query);
-		
+
 		ArrayList<String> adminList = (ArrayList)corsor.get("Admin");
 		boolean isAdmin;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
-		
+
 		if(!isAdmin)
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
-		
+
 		SrlGroup.Builder exactGroup = SrlGroup.newBuilder();
 		exactGroup.addAllUserId((ArrayList)corsor.get("UserList"));
 		exactGroup.setGroupName((String)corsor.get("Name"));
@@ -50,10 +52,10 @@ public class GroupManager
 		return exactGroup.build();
 	}
 
-	public static boolean mongoUpdateGroup(DB dbs, String courseID, String userId, SrlGroup group) throws AuthenticationException
+	public static boolean mongoUpdateGroup(DB dbs, String groupID, String userId, SrlGroup group) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection("UserGroups");
-		BasicDBObject query = new BasicDBObject("_id",courseID);
+		DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
+		BasicDBObject query = new BasicDBObject("_id",groupID);
 		DBObject corsor = courses.findOne(query);
 
 		ArrayList<String> adminList = (ArrayList)corsor.get("Admin");
@@ -78,7 +80,5 @@ public class GroupManager
 			}
 		}
 		return true;
-		
 	}
-
 }
