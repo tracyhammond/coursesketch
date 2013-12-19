@@ -1,4 +1,4 @@
-package database.user.manager;
+package database.user;
 
 /**
  * Handles inserting and receiving grades.

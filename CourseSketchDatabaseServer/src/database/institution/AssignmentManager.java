@@ -1,6 +1,6 @@
-package database.institution.managers;
+package database.institution;
 
-import static database.institution.StringConstants.*;
+import static database.StringConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,11 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import database.institution.DatabaseAccessException;
-import database.institution.RequestConverter;
-import database.institution.auth.AuthenticationException;
-import database.institution.auth.Authenticator;
-import database.institution.auth.Authenticator.AuthType;
+import database.DatabaseAccessException;
+import database.RequestConverter;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import database.auth.Authenticator.AuthType;
 
 public class AssignmentManager 
 {

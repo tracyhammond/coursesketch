@@ -1,6 +1,6 @@
-package database.institution.auth;
+package database.auth;
 
-import static database.institution.StringConstants.*;
+import static database.StringConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import database.institution.DatabaseAccessException;
-import database.institution.RequestConverter;
+import database.DatabaseAccessException;
+import database.RequestConverter;
 
 public class Authenticator {
 
