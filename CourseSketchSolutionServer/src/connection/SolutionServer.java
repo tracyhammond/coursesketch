@@ -7,35 +7,36 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+
+import multiConnection.MultiConnectionManager;
+import multiConnection.MultiConnectionState;
+import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
 
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
+import protobuf.srl.submission.Submission.SrlSubmission;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import database.Database;
+import database.DatabaseClient;
+import database.UpdateHandler;
 
 /**
  * A simple WebSocketServer implementation.
  *
  * This is a backend server that is only connected by other servers
  */
-public class SolutionServer extends WebSocketServer {
+public class SolutionServer extends MultiInternalConnectionServer {
 
-	public static final int MAX_CONNECTIONS = 20;
-	public static final int STATE_SERVER_FULL = 4001;
-	static final String FULL_SERVER_MESSAGE = "Sorry, the BLANK server is full";
-
-	Database storage = new Database();
-	List<WebSocket> connections = new LinkedList<WebSocket>();
+	UpdateHandler updateHandler = new UpdateHandler();
+	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public SolutionServer( int port ) throws UnknownHostException {
@@ -45,56 +46,64 @@ public class SolutionServer extends WebSocketServer {
 	public SolutionServer( InetSocketAddress address ) {
 		super( address );
 	}
-
-	@Override
-	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		if (connections.size() >= MAX_CONNECTIONS) {
-			// Return negatative state.
-			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
-			System.out.println("FULL SERVER"); // send message to someone?
-			return;
-		}
-		connections.add(conn);
-		System.out.println("Added connection");
-	}
-
-	@Override
-	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
-		System.out.println( conn + " has disconnected from Recognition.");
-		connections.remove(conn);
-	}
-
-	@Override
-	public void onMessage( WebSocket conn, String message ) {
-	}
-
+	
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
-
+		String sessionInfo = req.getSessionInfo();
 		if (req == null) {
 			System.out.println("protobuf error");
-			//this.
-			// we need to somehow send an error to the client here
 			return;
 		}
 
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			try {
-				SrlSolution solution = SrlSolution.parseFrom(req.getOtherData());
-				storage.saveSolution(solution);
+				String resultantId = null;
+				if (updateHandler.addRequest(req)) {
+					ByteString data = null;
+					if (updateHandler.isSolution(sessionInfo)) {
+						resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
+						if (resultantId != null) {
+							SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
+							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
+							data = builder.build().toByteString();
+						}
+					} else {
+						resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
+						if (resultantId != null) {
+							SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
+							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
+							data = builder.build().toByteString();
+						}
+					}
+					if (resultantId != null) {
+						// it can be null if this solution has already been stored
+						Request.Builder build = Request.newBuilder(req);
+						build.setResponseText(resultantId);
+						build.clearOtherData();
+						conn.send(build.build().toByteArray());
+						if (data != null) {
+							// passes the data to the database for connecting
+							build.setOtherData(data);
+							internalConnections.send(build.build(), "", DataConnection.class);
+						}
+					}
+				} 
+				//ItemResult 
 			} catch (InvalidProtocolBufferException e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
 		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-			SrlSolution solution = storage.getSolution();// something we send in.
-			Request.Builder build = Request.newBuilder(req);
-			build.setOtherData(solution.toByteString());
-			conn.send(build.build().toByteArray());
+			//SrlSolution solution = storage.getSolution();// something we send in.
+			//Request.Builder build = Request.newBuilder(req);
+			//build.setOtherData(solution.toByteString());
+			//conn.send(build.build().toByteArray());
 		}
 		// CODE GOES HERE
 	}

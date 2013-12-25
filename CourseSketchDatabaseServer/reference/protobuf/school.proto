@@ -148,12 +148,6 @@ message SrlGroup {
 	//(and see it outside the database)
 }
 
-message SrlSchoolId {
-	optional string courseId = 1;
-	optional string assignmentId = 2;
-	optional string problemId = 3;
-}
-
 /**
  * Also can be called SrlUserGroup
  */
@@ -162,46 +156,3 @@ message SrlPermission {
 	repeated string moderatorPermission = 2;
 	repeated string userPermission = 3;
 }
-/*----------------- Original
-package protobuf.srl.school;
-
-// holds all data that is sent from server. (grades, roster, classes, assignments, problems
-message SrlSchool {
-	repeated SrlCourse courses = 1;
-	repeated SrlAssignment assignments = 2;
-	repeated SrlProblem problems = 3;
-}
-
-message SrlCourse {
-	required string courseId = 1; // This must be globally unique.
-	optional string courseName = 2;
-}
-
-message SrlAssignment {
-	required string courseId = 1; // To know who the parent is.
-	required string assignmentId = 2; // This must be unique within a course.
-	optional string assignmentName = 3;
-	// TODO: date information
-}
-
-message SrlProblem {
-	required string courseId = 1; // To know who the grandParent is.
-	required string assignmentId = 2; // To know who the parent is.
-	required string problemId = 3; // This must be unique within an assignment.
-	optional string problemName = 4;
-	optional subproblemInformation mainProblem = 5;
-	repeated subproblemInformation subProblems = 6; // only if there are multiple subproblems
-}
-
-message subproblemInformation {
-	optional string questionText = 1;
-	optional QuestionType questionType = 2 [default=SKETCH];
-	optional bytes options = 3;
-	enum QuestionType {
-		SKETCH = 1;	
-		MULT_CHOICE = 2;
-		FREE_RESP = 3;
-		CHECK_BOX = 4;	
-	}
-}
----------------------------*/

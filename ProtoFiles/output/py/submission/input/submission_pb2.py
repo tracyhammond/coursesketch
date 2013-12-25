@@ -16,7 +16,7 @@ import input.commands_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/submission.proto',
   package='protobuf.srl.submission',
-  serialized_pb='\n\x16input/submission.proto\x12\x17protobuf.srl.submission\x1a\x12input/school.proto\x1a\x12input/sketch.proto\x1a\x14input/commands.proto\"\x85\x01\n\rSrlSubmission\x12\n\n\x02id\x18\x01 \x01(\t\x12\x38\n\nupdateList\x18\x02 \x01(\x0b\x32$.protobuf.srl.commands.SrlUpdateList\x12.\n\x06sketch\x18\x03 \x01(\x0b\x32\x1e.protobuf.srl.sketch.SrlSketch\"\xc1\x01\n\x0bSrlSolution\x12\x1c\n\x14\x61llowedInProblemBank\x18\x01 \x01(\x08\x12\x19\n\x11isPracticeProblem\x18\x02 \x01(\x08\x12=\n\x11\x61\x63\x63\x65ssPermissions\x18\x03 \x01(\x0b\x32\".protobuf.srl.school.SrlPermission\x12:\n\nsubmission\x18\x04 \x01(\x0b\x32&.protobuf.srl.submission.SrlSubmission\"\xce\x01\n\rSrlExperiment\x12\x32\n\x08schoolId\x18\x01 \x01(\x0b\x32 .protobuf.srl.school.SrlSchoolId\x12\x0e\n\x06userId\x18\x02 \x01(\t\x12=\n\x11\x61\x63\x63\x65ssPermissions\x18\x03 \x01(\x0b\x32\".protobuf.srl.school.SrlPermission\x12:\n\nsubmission\x18\x04 \x01(\x0b\x32&.protobuf.srl.submission.SrlSubmission')
+  serialized_pb='\n\x16input/submission.proto\x12\x17protobuf.srl.submission\x1a\x12input/school.proto\x1a\x12input/sketch.proto\x1a\x14input/commands.proto\"\x85\x01\n\rSrlSubmission\x12\n\n\x02id\x18\x01 \x01(\t\x12\x38\n\nupdateList\x18\x02 \x01(\x0b\x32$.protobuf.srl.commands.SrlUpdateList\x12.\n\x06sketch\x18\x03 \x01(\x0b\x32\x1e.protobuf.srl.sketch.SrlSketch\"\xd8\x01\n\x0bSrlSolution\x12\x1c\n\x14\x61llowedInProblemBank\x18\x01 \x01(\x08\x12\x19\n\x11isPracticeProblem\x18\x02 \x01(\x08\x12=\n\x11\x61\x63\x63\x65ssPermissions\x18\x03 \x01(\x0b\x32\".protobuf.srl.school.SrlPermission\x12:\n\nsubmission\x18\x04 \x01(\x0b\x32&.protobuf.srl.submission.SrlSubmission\x12\x15\n\rproblemBankId\x18\x05 \x01(\t\"\xd5\x01\n\rSrlExperiment\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\t\x12\x11\n\tproblemId\x18\x03 \x01(\t\x12\x0e\n\x06userId\x18\x05 \x01(\t\x12=\n\x11\x61\x63\x63\x65ssPermissions\x18\x06 \x01(\x0b\x32\".protobuf.srl.school.SrlPermission\x12:\n\nsubmission\x18\x07 \x01(\x0b\x32&.protobuf.srl.submission.SrlSubmission')
 
 
 
@@ -98,6 +98,13 @@ _SRLSOLUTION = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='problemBankId', full_name='protobuf.srl.submission.SrlSolution.problemBankId', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -108,7 +115,7 @@ _SRLSOLUTION = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=250,
-  serialized_end=443,
+  serialized_end=466,
 )
 
 
@@ -120,29 +127,43 @@ _SRLEXPERIMENT = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='schoolId', full_name='protobuf.srl.submission.SrlExperiment.schoolId', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='courseId', full_name='protobuf.srl.submission.SrlExperiment.courseId', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='userId', full_name='protobuf.srl.submission.SrlExperiment.userId', index=1,
+      name='assignmentId', full_name='protobuf.srl.submission.SrlExperiment.assignmentId', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='accessPermissions', full_name='protobuf.srl.submission.SrlExperiment.accessPermissions', index=2,
-      number=3, type=11, cpp_type=10, label=1,
+      name='problemId', full_name='protobuf.srl.submission.SrlExperiment.problemId', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='userId', full_name='protobuf.srl.submission.SrlExperiment.userId', index=3,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='accessPermissions', full_name='protobuf.srl.submission.SrlExperiment.accessPermissions', index=4,
+      number=6, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='submission', full_name='protobuf.srl.submission.SrlExperiment.submission', index=3,
-      number=4, type=11, cpp_type=10, label=1,
+      name='submission', full_name='protobuf.srl.submission.SrlExperiment.submission', index=5,
+      number=7, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -156,15 +177,14 @@ _SRLEXPERIMENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=446,
-  serialized_end=652,
+  serialized_start=469,
+  serialized_end=682,
 )
 
 _SRLSUBMISSION.fields_by_name['updateList'].message_type = input.commands_pb2._SRLUPDATELIST
 _SRLSUBMISSION.fields_by_name['sketch'].message_type = input.sketch_pb2._SRLSKETCH
 _SRLSOLUTION.fields_by_name['accessPermissions'].message_type = input.school_pb2._SRLPERMISSION
 _SRLSOLUTION.fields_by_name['submission'].message_type = _SRLSUBMISSION
-_SRLEXPERIMENT.fields_by_name['schoolId'].message_type = input.school_pb2._SRLSCHOOLID
 _SRLEXPERIMENT.fields_by_name['accessPermissions'].message_type = input.school_pb2._SRLPERMISSION
 _SRLEXPERIMENT.fields_by_name['submission'].message_type = _SRLSUBMISSION
 DESCRIPTOR.message_types_by_name['SrlSubmission'] = _SRLSUBMISSION

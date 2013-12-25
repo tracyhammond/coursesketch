@@ -439,22 +439,6 @@ class ItemSend : public ::google::protobuf::Message {
   inline ::std::string* release_data();
   inline void set_allocated_data(::std::string* data);
 
-  // repeated string textData = 4;
-  inline int textdata_size() const;
-  inline void clear_textdata();
-  static const int kTextDataFieldNumber = 4;
-  inline const ::std::string& textdata(int index) const;
-  inline ::std::string* mutable_textdata(int index);
-  inline void set_textdata(int index, const ::std::string& value);
-  inline void set_textdata(int index, const char* value);
-  inline void set_textdata(int index, const char* value, size_t size);
-  inline ::std::string* add_textdata();
-  inline void add_textdata(const ::std::string& value);
-  inline void add_textdata(const char* value);
-  inline void add_textdata(const char* value, size_t size);
-  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& textdata() const;
-  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_textdata();
-
   // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemSend)
  private:
   inline void set_has_query();
@@ -469,10 +453,9 @@ class ItemSend : public ::google::protobuf::Message {
   int query_;
   bool isinsert_;
   ::std::string* data_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> textdata_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -997,50 +980,6 @@ inline void ItemSend::set_allocated_data(::std::string* data) {
     clear_has_data();
     data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
-}
-
-// repeated string textData = 4;
-inline int ItemSend::textdata_size() const {
-  return textdata_.size();
-}
-inline void ItemSend::clear_textdata() {
-  textdata_.Clear();
-}
-inline const ::std::string& ItemSend::textdata(int index) const {
-  return textdata_.Get(index);
-}
-inline ::std::string* ItemSend::mutable_textdata(int index) {
-  return textdata_.Mutable(index);
-}
-inline void ItemSend::set_textdata(int index, const ::std::string& value) {
-  textdata_.Mutable(index)->assign(value);
-}
-inline void ItemSend::set_textdata(int index, const char* value) {
-  textdata_.Mutable(index)->assign(value);
-}
-inline void ItemSend::set_textdata(int index, const char* value, size_t size) {
-  textdata_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* ItemSend::add_textdata() {
-  return textdata_.Add();
-}
-inline void ItemSend::add_textdata(const ::std::string& value) {
-  textdata_.Add()->assign(value);
-}
-inline void ItemSend::add_textdata(const char* value) {
-  textdata_.Add()->assign(value);
-}
-inline void ItemSend::add_textdata(const char* value, size_t size) {
-  textdata_.Add()->assign(reinterpret_cast<const char*>(value), size);
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-ItemSend::textdata() const {
-  return textdata_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-ItemSend::mutable_textdata() {
-  return &textdata_;
 }
 
 // -------------------------------------------------------------------

@@ -21,7 +21,10 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 
+import protobuf.srl.query.Data.ItemQuery;
+import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 
@@ -68,28 +71,32 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 		}
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			// then we submit!
-			try {
-				SrlExperiment student = SrlExperiment.parseFrom(req.getOtherData());
+			if (req.getResponseText().equals("student")) {
 				MultiConnectionState state = connectionToId.get(conn);
-				((AnswerConnectionState) state).addPendingExperiment(req.getSessionInfo(),student);
-				// ask for a specific solution
-				internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class);
-				return;
-			} catch (InvalidProtocolBufferException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				SrlSolution instructor = SrlSolution.parseFrom(req.getOtherData());
-				// I know it is a solution...
+				try {
+					SrlExperiment student = SrlExperiment.parseFrom(req.getOtherData());
+					((AnswerConnectionState) state).addPendingExperiment(req.getSessionInfo(),student);
+					internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class); // pass submission on
+
+					// request the solution for checking  NOSHIP: need to actually retrieve answer.
+					Request.Builder builder = Request.newBuilder();
+					builder.setRequestType(MessageType.DATA_REQUEST);
+					builder.setSessionInfo(req.getSessionInfo() + "+" + state.getKey());
+					ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
+					itemRequest.setQuery(ItemQuery.SOLUTION);
+					itemRequest.addItemId(student.getProblemId());  // FIXME: this needs to change probably to make this work
+					internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(), state.getKey(), SolutionConnection.class);
+					return;
+				} catch (InvalidProtocolBufferException e) {
+					e.printStackTrace();
+					// must be an update list!
+					internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class);
+					return;
+				}
+			} else {
 				internalConnections.send(req, req.getSessionInfo(), SolutionConnection.class);
-				return;
-			} catch (InvalidProtocolBufferException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
-		// CODE GOES HERE
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {

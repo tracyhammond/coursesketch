@@ -11,6 +11,7 @@ import org.java_websocket.drafts.Draft;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 
@@ -27,15 +28,26 @@ public class SolutionConnection extends WrapperConnection {
 		Request req = MultiInternalConnectionServer.Decoder.parseRequest(buffer); // this contains the solution
 		String[] sessionInfo = req.getSessionInfo().split("+");
 		AnswerConnectionState state = (AnswerConnectionState) getStateFromId(sessionInfo[0]);
-		SrlExperiment expr = state.getExperiment(sessionInfo[1]);
-		SrlSolution sol = null;
-		try {
-			sol = SrlSolution.parseFrom(req.getOtherData());
-		} catch (InvalidProtocolBufferException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (req.getRequestType() == MessageType.DATA_REQUEST) {
+			SrlExperiment expr = state.getExperiment(sessionInfo[1]);
+			SrlSolution sol = null;
+			try {
+				sol = SrlSolution.parseFrom(req.getOtherData());
+			} catch (InvalidProtocolBufferException e) {
+				e.printStackTrace();
+			}
+			// FIXME: implement comparison.
+			// this could take a very very long time!
+
+			// we need to this at least
+			Request.Builder builder = Request.newBuilder(req);
+			builder.setSessionInfo(sessionInfo[0]);
+			getConnectionFromState(state).send(builder.build().toByteArray());
+		} else if (req.getRequestType() == MessageType.SUBMISSION) {
+			// pass up the Id to the client
+			Request.Builder builder = Request.newBuilder(req);
+			builder.setSessionInfo(sessionInfo[0]);
+			getConnectionFromState(state).send(builder.build().toByteArray());
 		}
-		// TODO: implement comparison.
-		getConnectionFromState(state).send(buffer);
 	}
 }

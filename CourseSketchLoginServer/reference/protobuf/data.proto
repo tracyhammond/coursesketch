@@ -21,7 +21,6 @@ message ItemSend {
 	optional ItemQuery query = 1;
 	optional bool isInsert = 2; // true if inserting, false if updating
 	optional bytes data = 3;
-	repeated string textData = 4;
 }
 
 /**
@@ -50,5 +49,5 @@ enum ItemQuery {
 	SCHOOL = 9;
 	COURSE_SEARCH = 10;
 	BANK_SEARCH = 11;
-	REGISTER = 12;
+	REGISTER = 12; // userId = 0 courseId = 1
 }
