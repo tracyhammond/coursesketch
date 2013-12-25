@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/data.proto',
   package='protobuf.srl.query',
-  serialized_pb='\n\x10input/data.proto\x12\x12protobuf.srl.query\"=\n\x0b\x44\x61taRequest\x12.\n\x05items\x18\x03 \x03(\x0b\x32\x1f.protobuf.srl.query.ItemRequest\"a\n\x0bItemRequest\x12\x0e\n\x06itemId\x18\x01 \x03(\t\x12,\n\x05query\x18\x02 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x14\n\x0c\x61\x64vanceQuery\x18\x03 \x01(\x0c\"7\n\x08\x44\x61taSend\x12+\n\x05items\x18\x03 \x03(\x0b\x32\x1c.protobuf.srl.query.ItemSend\"j\n\x08ItemSend\x12,\n\x05query\x18\x01 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x10\n\x08isInsert\x18\x02 \x01(\x08\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\x12\x10\n\x08textData\x18\x04 \x03(\t\"=\n\nDataResult\x12/\n\x07results\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.query.ItemResult\"\\\n\nItemResult\x12,\n\x05query\x18\x01 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x12\n\nreturnText\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c*\xd8\x01\n\tItemQuery\x12\n\n\x06\x43OURSE\x10\x00\x12\x0e\n\nASSIGNMENT\x10\x01\x12\x12\n\x0e\x43OURSE_PROBLEM\x10\x02\x12\x10\n\x0c\x42\x41NK_PROBLEM\x10\x03\x12\r\n\tUSERGROUP\x10\x04\x12\x0f\n\x0b\x43LASS_GRADE\x10\x05\x12\r\n\tUSER_INFO\x10\x06\x12\x0c\n\x08SOLUTION\x10\x07\x12\x0e\n\nEXPERIMENT\x10\x08\x12\n\n\x06SCHOOL\x10\t\x12\x11\n\rCOURSE_SEARCH\x10\n\x12\x0f\n\x0b\x42\x41NK_SEARCH\x10\x0b\x12\x0c\n\x08REGISTER\x10\x0c')
+  serialized_pb='\n\x10input/data.proto\x12\x12protobuf.srl.query\"=\n\x0b\x44\x61taRequest\x12.\n\x05items\x18\x03 \x03(\x0b\x32\x1f.protobuf.srl.query.ItemRequest\"a\n\x0bItemRequest\x12\x0e\n\x06itemId\x18\x01 \x03(\t\x12,\n\x05query\x18\x02 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x14\n\x0c\x61\x64vanceQuery\x18\x03 \x01(\x0c\"7\n\x08\x44\x61taSend\x12+\n\x05items\x18\x03 \x03(\x0b\x32\x1c.protobuf.srl.query.ItemSend\"X\n\x08ItemSend\x12,\n\x05query\x18\x01 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x10\n\x08isInsert\x18\x02 \x01(\x08\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"=\n\nDataResult\x12/\n\x07results\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.query.ItemResult\"\\\n\nItemResult\x12,\n\x05query\x18\x01 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x12\n\nreturnText\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c*\xd8\x01\n\tItemQuery\x12\n\n\x06\x43OURSE\x10\x00\x12\x0e\n\nASSIGNMENT\x10\x01\x12\x12\n\x0e\x43OURSE_PROBLEM\x10\x02\x12\x10\n\x0c\x42\x41NK_PROBLEM\x10\x03\x12\r\n\tUSERGROUP\x10\x04\x12\x0f\n\x0b\x43LASS_GRADE\x10\x05\x12\r\n\tUSER_INFO\x10\x06\x12\x0c\n\x08SOLUTION\x10\x07\x12\x0e\n\nEXPERIMENT\x10\x08\x12\n\n\x06SCHOOL\x10\t\x12\x11\n\rCOURSE_SEARCH\x10\n\x12\x0f\n\x0b\x42\x41NK_SEARCH\x10\x0b\x12\x0c\n\x08REGISTER\x10\x0c')
 
 _ITEMQUERY = _descriptor.EnumDescriptor(
   name='ItemQuery',
@@ -77,8 +77,8 @@ _ITEMQUERY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=525,
-  serialized_end=741,
+  serialized_start=507,
+  serialized_end=723,
 )
 
 ItemQuery = enum_type_wrapper.EnumTypeWrapper(_ITEMQUERY)
@@ -224,13 +224,6 @@ _ITEMSEND = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
-    _descriptor.FieldDescriptor(
-      name='textData', full_name='protobuf.srl.query.ItemSend.textData', index=3,
-      number=4, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
   ],
   extensions=[
   ],
@@ -241,7 +234,7 @@ _ITEMSEND = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=259,
-  serialized_end=365,
+  serialized_end=347,
 )
 
 
@@ -268,8 +261,8 @@ _DATARESULT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=367,
-  serialized_end=428,
+  serialized_start=349,
+  serialized_end=410,
 )
 
 
@@ -310,8 +303,8 @@ _ITEMRESULT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=430,
-  serialized_end=522,
+  serialized_start=412,
+  serialized_end=504,
 )
 
 _DATAREQUEST.fields_by_name['items'].message_type = _ITEMREQUEST

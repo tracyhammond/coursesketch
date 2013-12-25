@@ -63,6 +63,10 @@ public final class Data {
     BANK_SEARCH(11, 11),
     /**
      * <code>REGISTER = 12;</code>
+     *
+     * <pre>
+     * userId = 0 courseId = 1
+     * </pre>
      */
     REGISTER(12, 12),
     ;
@@ -117,6 +121,10 @@ public final class Data {
     public static final int BANK_SEARCH_VALUE = 11;
     /**
      * <code>REGISTER = 12;</code>
+     *
+     * <pre>
+     * userId = 0 courseId = 1
+     * </pre>
      */
     public static final int REGISTER_VALUE = 12;
 
@@ -2329,26 +2337,6 @@ public final class Data {
      * <code>optional bytes data = 3;</code>
      */
     com.google.protobuf.ByteString getData();
-
-    // repeated string textData = 4;
-    /**
-     * <code>repeated string textData = 4;</code>
-     */
-    java.util.List<java.lang.String>
-    getTextDataList();
-    /**
-     * <code>repeated string textData = 4;</code>
-     */
-    int getTextDataCount();
-    /**
-     * <code>repeated string textData = 4;</code>
-     */
-    java.lang.String getTextData(int index);
-    /**
-     * <code>repeated string textData = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getTextDataBytes(int index);
   }
   /**
    * Protobuf type {@code protobuf.srl.query.ItemSend}
@@ -2422,14 +2410,6 @@ public final class Data {
               data_ = input.readBytes();
               break;
             }
-            case 34: {
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                textData_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000008;
-              }
-              textData_.add(input.readBytes());
-              break;
-            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -2438,9 +2418,6 @@ public final class Data {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-          textData_ = new com.google.protobuf.UnmodifiableLazyStringList(textData_);
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -2529,41 +2506,10 @@ public final class Data {
       return data_;
     }
 
-    // repeated string textData = 4;
-    public static final int TEXTDATA_FIELD_NUMBER = 4;
-    private com.google.protobuf.LazyStringList textData_;
-    /**
-     * <code>repeated string textData = 4;</code>
-     */
-    public java.util.List<java.lang.String>
-        getTextDataList() {
-      return textData_;
-    }
-    /**
-     * <code>repeated string textData = 4;</code>
-     */
-    public int getTextDataCount() {
-      return textData_.size();
-    }
-    /**
-     * <code>repeated string textData = 4;</code>
-     */
-    public java.lang.String getTextData(int index) {
-      return textData_.get(index);
-    }
-    /**
-     * <code>repeated string textData = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTextDataBytes(int index) {
-      return textData_.getByteString(index);
-    }
-
     private void initFields() {
       query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
       isInsert_ = false;
       data_ = com.google.protobuf.ByteString.EMPTY;
-      textData_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2586,9 +2532,6 @@ public final class Data {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, data_);
       }
-      for (int i = 0; i < textData_.size(); i++) {
-        output.writeBytes(4, textData_.getByteString(i));
-      }
       getUnknownFields().writeTo(output);
     }
 
@@ -2609,15 +2552,6 @@ public final class Data {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, data_);
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < textData_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeBytesSizeNoTag(textData_.getByteString(i));
-        }
-        size += dataSize;
-        size += 1 * getTextDataList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2741,8 +2675,6 @@ public final class Data {
         bitField0_ = (bitField0_ & ~0x00000002);
         data_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
-        textData_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -2783,12 +2715,6 @@ public final class Data {
           to_bitField0_ |= 0x00000004;
         }
         result.data_ = data_;
-        if (((bitField0_ & 0x00000008) == 0x00000008)) {
-          textData_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              textData_);
-          bitField0_ = (bitField0_ & ~0x00000008);
-        }
-        result.textData_ = textData_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2813,16 +2739,6 @@ public final class Data {
         }
         if (other.hasData()) {
           setData(other.getData());
-        }
-        if (!other.textData_.isEmpty()) {
-          if (textData_.isEmpty()) {
-            textData_ = other.textData_;
-            bitField0_ = (bitField0_ & ~0x00000008);
-          } else {
-            ensureTextDataIsMutable();
-            textData_.addAll(other.textData_);
-          }
-          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2968,99 +2884,6 @@ public final class Data {
       public Builder clearData() {
         bitField0_ = (bitField0_ & ~0x00000004);
         data_ = getDefaultInstance().getData();
-        onChanged();
-        return this;
-      }
-
-      // repeated string textData = 4;
-      private com.google.protobuf.LazyStringList textData_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureTextDataIsMutable() {
-        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-          textData_ = new com.google.protobuf.LazyStringArrayList(textData_);
-          bitField0_ |= 0x00000008;
-         }
-      }
-      /**
-       * <code>repeated string textData = 4;</code>
-       */
-      public java.util.List<java.lang.String>
-          getTextDataList() {
-        return java.util.Collections.unmodifiableList(textData_);
-      }
-      /**
-       * <code>repeated string textData = 4;</code>
-       */
-      public int getTextDataCount() {
-        return textData_.size();
-      }
-      /**
-       * <code>repeated string textData = 4;</code>
-       */
-      public java.lang.String getTextData(int index) {
-        return textData_.get(index);
-      }
-      /**
-       * <code>repeated string textData = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getTextDataBytes(int index) {
-        return textData_.getByteString(index);
-      }
-      /**
-       * <code>repeated string textData = 4;</code>
-       */
-      public Builder setTextData(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureTextDataIsMutable();
-        textData_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string textData = 4;</code>
-       */
-      public Builder addTextData(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureTextDataIsMutable();
-        textData_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string textData = 4;</code>
-       */
-      public Builder addAllTextData(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureTextDataIsMutable();
-        super.addAll(values, textData_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string textData = 4;</code>
-       */
-      public Builder clearTextData() {
-        textData_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string textData = 4;</code>
-       */
-      public Builder addTextDataBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureTextDataIsMutable();
-        textData_.add(value);
         onChanged();
         return this;
       }
@@ -4450,19 +4273,19 @@ public final class Data {
       "itemId\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.s" +
       "rl.query.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014" +
       "\"7\n\010DataSend\022+\n\005items\030\003 \003(\0132\034.protobuf.s" +
-      "rl.query.ItemSend\"j\n\010ItemSend\022,\n\005query\030\001" +
+      "rl.query.ItemSend\"X\n\010ItemSend\022,\n\005query\030\001" +
       " \001(\0162\035.protobuf.srl.query.ItemQuery\022\020\n\010i" +
-      "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\022\020\n\010textData\030" +
-      "\004 \003(\t\"=\n\nDataResult\022/\n\007results\030\001 \003(\0132\036.p",
-      "rotobuf.srl.query.ItemResult\"\\\n\nItemResu" +
-      "lt\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.query.I" +
-      "temQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004data\030\003 \001" +
-      "(\014*\330\001\n\tItemQuery\022\n\n\006COURSE\020\000\022\016\n\nASSIGNME" +
-      "NT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM" +
-      "\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUS" +
-      "ER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022" +
-      "\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n\013BANK_S" +
-      "EARCH\020\013\022\014\n\010REGISTER\020\014"
+      "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResul" +
+      "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query.",
+      "ItemResult\"\\\n\nItemResult\022,\n\005query\030\001 \001(\0162" +
+      "\035.protobuf.srl.query.ItemQuery\022\022\n\nreturn" +
+      "Text\030\002 \001(\t\022\014\n\004data\030\003 \001(\014*\330\001\n\tItemQuery\022\n" +
+      "\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE_PRO" +
+      "BLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022" +
+      "\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUT" +
+      "ION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOU" +
+      "RSE_SEARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REGISTE" +
+      "R\020\014"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4492,7 +4315,7 @@ public final class Data {
           internal_static_protobuf_srl_query_ItemSend_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ItemSend_descriptor,
-              new java.lang.String[] { "Query", "IsInsert", "Data", "TextData", });
+              new java.lang.String[] { "Query", "IsInsert", "Data", });
           internal_static_protobuf_srl_query_DataResult_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_protobuf_srl_query_DataResult_fieldAccessorTable = new

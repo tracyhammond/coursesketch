@@ -56,9 +56,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SrlGroup_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SrlGroup_reflection_ = NULL;
-const ::google::protobuf::Descriptor* SrlSchoolId_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  SrlSchoolId_reflection_ = NULL;
 const ::google::protobuf::Descriptor* SrlPermission_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SrlPermission_reflection_ = NULL;
@@ -296,24 +293,7 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SrlGroup));
-  SrlSchoolId_descriptor_ = file->message_type(10);
-  static const int SrlSchoolId_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchoolId, courseid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchoolId, assignmentid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchoolId, problemid_),
-  };
-  SrlSchoolId_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      SrlSchoolId_descriptor_,
-      SrlSchoolId::default_instance_,
-      SrlSchoolId_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchoolId, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSchoolId, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(SrlSchoolId));
-  SrlPermission_descriptor_ = file->message_type(11);
+  SrlPermission_descriptor_ = file->message_type(10);
   static const int SrlPermission_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlPermission, adminpermission_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlPermission, moderatorpermission_),
@@ -364,8 +344,6 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SrlGroup_descriptor_, &SrlGroup::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    SrlSchoolId_descriptor_, &SrlSchoolId::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SrlPermission_descriptor_, &SrlPermission::default_instance());
 }
 
@@ -392,8 +370,6 @@ void protobuf_ShutdownFile_input_2fschool_2eproto() {
   delete SrlUser_reflection_;
   delete SrlGroup::default_instance_;
   delete SrlGroup_reflection_;
-  delete SrlSchoolId::default_instance_;
-  delete SrlSchoolId_reflection_;
   delete SrlPermission::default_instance_;
   delete SrlPermission_reflection_;
 }
@@ -473,13 +449,12 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "\004 \001(\t\022\021\n\tfirstName\030\005 \001(\t\022\020\n\010lastName\030\006 \001"
     "(\t\022\020\n\010password\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006user"
     "Id\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003"
-    " \001(\t\022\r\n\005admin\030\004 \003(\t\"H\n\013SrlSchoolId\022\020\n\010co"
-    "urseId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tpr"
-    "oblemId\030\003 \001(\t\"]\n\rSrlPermission\022\027\n\017adminP"
-    "ermission\030\001 \003(\t\022\033\n\023moderatorPermission\030\002"
-    " \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType"
-    "\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_"
-    "ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005", 2995);
+    " \001(\t\022\r\n\005admin\030\004 \003(\t\"]\n\rSrlPermission\022\027\n\017"
+    "adminPermission\030\001 \003(\t\022\033\n\023moderatorPermis"
+    "sion\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010Us"
+    "erType\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEA"
+    "CHING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020"
+    "\005", 2921);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/school.proto", &protobuf_RegisterTypes);
   SrlSchool::default_instance_ = new SrlSchool();
@@ -492,7 +467,6 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
   State::default_instance_ = new State();
   SrlUser::default_instance_ = new SrlUser();
   SrlGroup::default_instance_ = new SrlGroup();
-  SrlSchoolId::default_instance_ = new SrlSchoolId();
   SrlPermission::default_instance_ = new SrlPermission();
   SrlSchool::default_instance_->InitAsDefaultInstance();
   SrlCourse::default_instance_->InitAsDefaultInstance();
@@ -504,7 +478,6 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
   State::default_instance_->InitAsDefaultInstance();
   SrlUser::default_instance_->InitAsDefaultInstance();
   SrlGroup::default_instance_->InitAsDefaultInstance();
-  SrlSchoolId::default_instance_->InitAsDefaultInstance();
   SrlPermission::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_input_2fschool_2eproto);
 }
@@ -6242,345 +6215,6 @@ void SrlGroup::Swap(SrlGroup* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = SrlGroup_descriptor_;
   metadata.reflection = SrlGroup_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int SrlSchoolId::kCourseIdFieldNumber;
-const int SrlSchoolId::kAssignmentIdFieldNumber;
-const int SrlSchoolId::kProblemIdFieldNumber;
-#endif  // !_MSC_VER
-
-SrlSchoolId::SrlSchoolId()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void SrlSchoolId::InitAsDefaultInstance() {
-}
-
-SrlSchoolId::SrlSchoolId(const SrlSchoolId& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void SrlSchoolId::SharedCtor() {
-  _cached_size_ = 0;
-  courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-SrlSchoolId::~SrlSchoolId() {
-  SharedDtor();
-}
-
-void SrlSchoolId::SharedDtor() {
-  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-    delete courseid_;
-  }
-  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-    delete assignmentid_;
-  }
-  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-    delete problemid_;
-  }
-  if (this != default_instance_) {
-  }
-}
-
-void SrlSchoolId::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* SrlSchoolId::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return SrlSchoolId_descriptor_;
-}
-
-const SrlSchoolId& SrlSchoolId::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_input_2fschool_2eproto();
-  return *default_instance_;
-}
-
-SrlSchoolId* SrlSchoolId::default_instance_ = NULL;
-
-SrlSchoolId* SrlSchoolId::New() const {
-  return new SrlSchoolId;
-}
-
-void SrlSchoolId::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_courseid()) {
-      if (courseid_ != &::google::protobuf::internal::kEmptyString) {
-        courseid_->clear();
-      }
-    }
-    if (has_assignmentid()) {
-      if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
-        assignmentid_->clear();
-      }
-    }
-    if (has_problemid()) {
-      if (problemid_ != &::google::protobuf::internal::kEmptyString) {
-        problemid_->clear();
-      }
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool SrlSchoolId::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string courseId = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_courseid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->courseid().data(), this->courseid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_assignmentId;
-        break;
-      }
-
-      // optional string assignmentId = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_assignmentId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_assignmentid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->assignmentid().data(), this->assignmentid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_problemId;
-        break;
-      }
-
-      // optional string problemId = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_problemId:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_problemid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->problemid().data(), this->problemid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void SrlSchoolId::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->courseid(), output);
-  }
-
-  // optional string assignmentId = 2;
-  if (has_assignmentid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->assignmentid(), output);
-  }
-
-  // optional string problemId = 3;
-  if (has_problemid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemid().data(), this->problemid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->problemid(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* SrlSchoolId::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // optional string courseId = 1;
-  if (has_courseid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->courseid().data(), this->courseid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->courseid(), target);
-  }
-
-  // optional string assignmentId = 2;
-  if (has_assignmentid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->assignmentid().data(), this->assignmentid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->assignmentid(), target);
-  }
-
-  // optional string problemId = 3;
-  if (has_problemid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->problemid().data(), this->problemid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->problemid(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int SrlSchoolId::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string courseId = 1;
-    if (has_courseid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->courseid());
-    }
-
-    // optional string assignmentId = 2;
-    if (has_assignmentid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->assignmentid());
-    }
-
-    // optional string problemId = 3;
-    if (has_problemid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->problemid());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void SrlSchoolId::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const SrlSchoolId* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SrlSchoolId*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void SrlSchoolId::MergeFrom(const SrlSchoolId& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_courseid()) {
-      set_courseid(from.courseid());
-    }
-    if (from.has_assignmentid()) {
-      set_assignmentid(from.assignmentid());
-    }
-    if (from.has_problemid()) {
-      set_problemid(from.problemid());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void SrlSchoolId::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void SrlSchoolId::CopyFrom(const SrlSchoolId& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool SrlSchoolId::IsInitialized() const {
-
-  return true;
-}
-
-void SrlSchoolId::Swap(SrlSchoolId* other) {
-  if (other != this) {
-    std::swap(courseid_, other->courseid_);
-    std::swap(assignmentid_, other->assignmentid_);
-    std::swap(problemid_, other->problemid_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata SrlSchoolId::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = SrlSchoolId_descriptor_;
-  metadata.reflection = SrlSchoolId_reflection_;
   return metadata;
 }
 

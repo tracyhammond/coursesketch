@@ -241,6 +241,18 @@ class SrlSolution : public ::google::protobuf::Message {
   inline ::protobuf::srl::submission::SrlSubmission* release_submission();
   inline void set_allocated_submission(::protobuf::srl::submission::SrlSubmission* submission);
 
+  // optional string problemBankId = 5;
+  inline bool has_problembankid() const;
+  inline void clear_problembankid();
+  static const int kProblemBankIdFieldNumber = 5;
+  inline const ::std::string& problembankid() const;
+  inline void set_problembankid(const ::std::string& value);
+  inline void set_problembankid(const char* value);
+  inline void set_problembankid(const char* value, size_t size);
+  inline ::std::string* mutable_problembankid();
+  inline ::std::string* release_problembankid();
+  inline void set_allocated_problembankid(::std::string* problembankid);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlSolution)
  private:
   inline void set_has_allowedinproblembank();
@@ -251,16 +263,19 @@ class SrlSolution : public ::google::protobuf::Message {
   inline void clear_has_accesspermissions();
   inline void set_has_submission();
   inline void clear_has_submission();
+  inline void set_has_problembankid();
+  inline void clear_has_problembankid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::protobuf::srl::school::SrlPermission* accesspermissions_;
   ::protobuf::srl::submission::SrlSubmission* submission_;
+  ::std::string* problembankid_;
   bool allowedinproblembank_;
   bool ispracticeproblem_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fsubmission_2eproto();
   friend void protobuf_AssignDesc_input_2fsubmission_2eproto();
@@ -325,19 +340,46 @@ class SrlExperiment : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .protobuf.srl.school.SrlSchoolId schoolId = 1;
-  inline bool has_schoolid() const;
-  inline void clear_schoolid();
-  static const int kSchoolIdFieldNumber = 1;
-  inline const ::protobuf::srl::school::SrlSchoolId& schoolid() const;
-  inline ::protobuf::srl::school::SrlSchoolId* mutable_schoolid();
-  inline ::protobuf::srl::school::SrlSchoolId* release_schoolid();
-  inline void set_allocated_schoolid(::protobuf::srl::school::SrlSchoolId* schoolid);
+  // optional string courseId = 1;
+  inline bool has_courseid() const;
+  inline void clear_courseid();
+  static const int kCourseIdFieldNumber = 1;
+  inline const ::std::string& courseid() const;
+  inline void set_courseid(const ::std::string& value);
+  inline void set_courseid(const char* value);
+  inline void set_courseid(const char* value, size_t size);
+  inline ::std::string* mutable_courseid();
+  inline ::std::string* release_courseid();
+  inline void set_allocated_courseid(::std::string* courseid);
 
-  // optional string userId = 2;
+  // optional string assignmentId = 2;
+  inline bool has_assignmentid() const;
+  inline void clear_assignmentid();
+  static const int kAssignmentIdFieldNumber = 2;
+  inline const ::std::string& assignmentid() const;
+  inline void set_assignmentid(const ::std::string& value);
+  inline void set_assignmentid(const char* value);
+  inline void set_assignmentid(const char* value, size_t size);
+  inline ::std::string* mutable_assignmentid();
+  inline ::std::string* release_assignmentid();
+  inline void set_allocated_assignmentid(::std::string* assignmentid);
+
+  // optional string problemId = 3;
+  inline bool has_problemid() const;
+  inline void clear_problemid();
+  static const int kProblemIdFieldNumber = 3;
+  inline const ::std::string& problemid() const;
+  inline void set_problemid(const ::std::string& value);
+  inline void set_problemid(const char* value);
+  inline void set_problemid(const char* value, size_t size);
+  inline ::std::string* mutable_problemid();
+  inline ::std::string* release_problemid();
+  inline void set_allocated_problemid(::std::string* problemid);
+
+  // optional string userId = 5;
   inline bool has_userid() const;
   inline void clear_userid();
-  static const int kUserIdFieldNumber = 2;
+  static const int kUserIdFieldNumber = 5;
   inline const ::std::string& userid() const;
   inline void set_userid(const ::std::string& value);
   inline void set_userid(const char* value);
@@ -346,19 +388,19 @@ class SrlExperiment : public ::google::protobuf::Message {
   inline ::std::string* release_userid();
   inline void set_allocated_userid(::std::string* userid);
 
-  // optional .protobuf.srl.school.SrlPermission accessPermissions = 3;
+  // optional .protobuf.srl.school.SrlPermission accessPermissions = 6;
   inline bool has_accesspermissions() const;
   inline void clear_accesspermissions();
-  static const int kAccessPermissionsFieldNumber = 3;
+  static const int kAccessPermissionsFieldNumber = 6;
   inline const ::protobuf::srl::school::SrlPermission& accesspermissions() const;
   inline ::protobuf::srl::school::SrlPermission* mutable_accesspermissions();
   inline ::protobuf::srl::school::SrlPermission* release_accesspermissions();
   inline void set_allocated_accesspermissions(::protobuf::srl::school::SrlPermission* accesspermissions);
 
-  // optional .protobuf.srl.submission.SrlSubmission submission = 4;
+  // optional .protobuf.srl.submission.SrlSubmission submission = 7;
   inline bool has_submission() const;
   inline void clear_submission();
-  static const int kSubmissionFieldNumber = 4;
+  static const int kSubmissionFieldNumber = 7;
   inline const ::protobuf::srl::submission::SrlSubmission& submission() const;
   inline ::protobuf::srl::submission::SrlSubmission* mutable_submission();
   inline ::protobuf::srl::submission::SrlSubmission* release_submission();
@@ -366,8 +408,12 @@ class SrlExperiment : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlExperiment)
  private:
-  inline void set_has_schoolid();
-  inline void clear_has_schoolid();
+  inline void set_has_courseid();
+  inline void clear_has_courseid();
+  inline void set_has_assignmentid();
+  inline void clear_has_assignmentid();
+  inline void set_has_problemid();
+  inline void clear_has_problemid();
   inline void set_has_userid();
   inline void clear_has_userid();
   inline void set_has_accesspermissions();
@@ -377,13 +423,15 @@ class SrlExperiment : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::protobuf::srl::school::SrlSchoolId* schoolid_;
+  ::std::string* courseid_;
+  ::std::string* assignmentid_;
+  ::std::string* problemid_;
   ::std::string* userid_;
   ::protobuf::srl::school::SrlPermission* accesspermissions_;
   ::protobuf::srl::submission::SrlSubmission* submission_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fsubmission_2eproto();
   friend void protobuf_AssignDesc_input_2fsubmission_2eproto();
@@ -669,57 +717,299 @@ inline void SrlSolution::set_allocated_submission(::protobuf::srl::submission::S
   }
 }
 
+// optional string problemBankId = 5;
+inline bool SrlSolution::has_problembankid() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SrlSolution::set_has_problembankid() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SrlSolution::clear_has_problembankid() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SrlSolution::clear_problembankid() {
+  if (problembankid_ != &::google::protobuf::internal::kEmptyString) {
+    problembankid_->clear();
+  }
+  clear_has_problembankid();
+}
+inline const ::std::string& SrlSolution::problembankid() const {
+  return *problembankid_;
+}
+inline void SrlSolution::set_problembankid(const ::std::string& value) {
+  set_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    problembankid_ = new ::std::string;
+  }
+  problembankid_->assign(value);
+}
+inline void SrlSolution::set_problembankid(const char* value) {
+  set_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    problembankid_ = new ::std::string;
+  }
+  problembankid_->assign(value);
+}
+inline void SrlSolution::set_problembankid(const char* value, size_t size) {
+  set_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    problembankid_ = new ::std::string;
+  }
+  problembankid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlSolution::mutable_problembankid() {
+  set_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    problembankid_ = new ::std::string;
+  }
+  return problembankid_;
+}
+inline ::std::string* SrlSolution::release_problembankid() {
+  clear_has_problembankid();
+  if (problembankid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = problembankid_;
+    problembankid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlSolution::set_allocated_problembankid(::std::string* problembankid) {
+  if (problembankid_ != &::google::protobuf::internal::kEmptyString) {
+    delete problembankid_;
+  }
+  if (problembankid) {
+    set_has_problembankid();
+    problembankid_ = problembankid;
+  } else {
+    clear_has_problembankid();
+    problembankid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // SrlExperiment
 
-// optional .protobuf.srl.school.SrlSchoolId schoolId = 1;
-inline bool SrlExperiment::has_schoolid() const {
+// optional string courseId = 1;
+inline bool SrlExperiment::has_courseid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SrlExperiment::set_has_schoolid() {
+inline void SrlExperiment::set_has_courseid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SrlExperiment::clear_has_schoolid() {
+inline void SrlExperiment::clear_has_courseid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SrlExperiment::clear_schoolid() {
-  if (schoolid_ != NULL) schoolid_->::protobuf::srl::school::SrlSchoolId::Clear();
-  clear_has_schoolid();
+inline void SrlExperiment::clear_courseid() {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    courseid_->clear();
+  }
+  clear_has_courseid();
 }
-inline const ::protobuf::srl::school::SrlSchoolId& SrlExperiment::schoolid() const {
-  return schoolid_ != NULL ? *schoolid_ : *default_instance_->schoolid_;
+inline const ::std::string& SrlExperiment::courseid() const {
+  return *courseid_;
 }
-inline ::protobuf::srl::school::SrlSchoolId* SrlExperiment::mutable_schoolid() {
-  set_has_schoolid();
-  if (schoolid_ == NULL) schoolid_ = new ::protobuf::srl::school::SrlSchoolId;
-  return schoolid_;
+inline void SrlExperiment::set_courseid(const ::std::string& value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
 }
-inline ::protobuf::srl::school::SrlSchoolId* SrlExperiment::release_schoolid() {
-  clear_has_schoolid();
-  ::protobuf::srl::school::SrlSchoolId* temp = schoolid_;
-  schoolid_ = NULL;
-  return temp;
+inline void SrlExperiment::set_courseid(const char* value) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(value);
 }
-inline void SrlExperiment::set_allocated_schoolid(::protobuf::srl::school::SrlSchoolId* schoolid) {
-  delete schoolid_;
-  schoolid_ = schoolid;
-  if (schoolid) {
-    set_has_schoolid();
+inline void SrlExperiment::set_courseid(const char* value, size_t size) {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  courseid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlExperiment::mutable_courseid() {
+  set_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    courseid_ = new ::std::string;
+  }
+  return courseid_;
+}
+inline ::std::string* SrlExperiment::release_courseid() {
+  clear_has_courseid();
+  if (courseid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
   } else {
-    clear_has_schoolid();
+    ::std::string* temp = courseid_;
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlExperiment::set_allocated_courseid(::std::string* courseid) {
+  if (courseid_ != &::google::protobuf::internal::kEmptyString) {
+    delete courseid_;
+  }
+  if (courseid) {
+    set_has_courseid();
+    courseid_ = courseid;
+  } else {
+    clear_has_courseid();
+    courseid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
-// optional string userId = 2;
-inline bool SrlExperiment::has_userid() const {
+// optional string assignmentId = 2;
+inline bool SrlExperiment::has_assignmentid() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SrlExperiment::set_has_userid() {
+inline void SrlExperiment::set_has_assignmentid() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SrlExperiment::clear_has_userid() {
+inline void SrlExperiment::clear_has_assignmentid() {
   _has_bits_[0] &= ~0x00000002u;
+}
+inline void SrlExperiment::clear_assignmentid() {
+  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+    assignmentid_->clear();
+  }
+  clear_has_assignmentid();
+}
+inline const ::std::string& SrlExperiment::assignmentid() const {
+  return *assignmentid_;
+}
+inline void SrlExperiment::set_assignmentid(const ::std::string& value) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(value);
+}
+inline void SrlExperiment::set_assignmentid(const char* value) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(value);
+}
+inline void SrlExperiment::set_assignmentid(const char* value, size_t size) {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  assignmentid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlExperiment::mutable_assignmentid() {
+  set_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    assignmentid_ = new ::std::string;
+  }
+  return assignmentid_;
+}
+inline ::std::string* SrlExperiment::release_assignmentid() {
+  clear_has_assignmentid();
+  if (assignmentid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = assignmentid_;
+    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlExperiment::set_allocated_assignmentid(::std::string* assignmentid) {
+  if (assignmentid_ != &::google::protobuf::internal::kEmptyString) {
+    delete assignmentid_;
+  }
+  if (assignmentid) {
+    set_has_assignmentid();
+    assignmentid_ = assignmentid;
+  } else {
+    clear_has_assignmentid();
+    assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string problemId = 3;
+inline bool SrlExperiment::has_problemid() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SrlExperiment::set_has_problemid() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SrlExperiment::clear_has_problemid() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SrlExperiment::clear_problemid() {
+  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
+    problemid_->clear();
+  }
+  clear_has_problemid();
+}
+inline const ::std::string& SrlExperiment::problemid() const {
+  return *problemid_;
+}
+inline void SrlExperiment::set_problemid(const ::std::string& value) {
+  set_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    problemid_ = new ::std::string;
+  }
+  problemid_->assign(value);
+}
+inline void SrlExperiment::set_problemid(const char* value) {
+  set_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    problemid_ = new ::std::string;
+  }
+  problemid_->assign(value);
+}
+inline void SrlExperiment::set_problemid(const char* value, size_t size) {
+  set_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    problemid_ = new ::std::string;
+  }
+  problemid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlExperiment::mutable_problemid() {
+  set_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    problemid_ = new ::std::string;
+  }
+  return problemid_;
+}
+inline ::std::string* SrlExperiment::release_problemid() {
+  clear_has_problemid();
+  if (problemid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = problemid_;
+    problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SrlExperiment::set_allocated_problemid(::std::string* problemid) {
+  if (problemid_ != &::google::protobuf::internal::kEmptyString) {
+    delete problemid_;
+  }
+  if (problemid) {
+    set_has_problemid();
+    problemid_ = problemid;
+  } else {
+    clear_has_problemid();
+    problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string userId = 5;
+inline bool SrlExperiment::has_userid() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SrlExperiment::set_has_userid() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SrlExperiment::clear_has_userid() {
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void SrlExperiment::clear_userid() {
   if (userid_ != &::google::protobuf::internal::kEmptyString) {
@@ -781,15 +1071,15 @@ inline void SrlExperiment::set_allocated_userid(::std::string* userid) {
   }
 }
 
-// optional .protobuf.srl.school.SrlPermission accessPermissions = 3;
+// optional .protobuf.srl.school.SrlPermission accessPermissions = 6;
 inline bool SrlExperiment::has_accesspermissions() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void SrlExperiment::set_has_accesspermissions() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void SrlExperiment::clear_has_accesspermissions() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void SrlExperiment::clear_accesspermissions() {
   if (accesspermissions_ != NULL) accesspermissions_->::protobuf::srl::school::SrlPermission::Clear();
@@ -819,15 +1109,15 @@ inline void SrlExperiment::set_allocated_accesspermissions(::protobuf::srl::scho
   }
 }
 
-// optional .protobuf.srl.submission.SrlSubmission submission = 4;
+// optional .protobuf.srl.submission.SrlSubmission submission = 7;
 inline bool SrlExperiment::has_submission() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void SrlExperiment::set_has_submission() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void SrlExperiment::clear_has_submission() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void SrlExperiment::clear_submission() {
   if (submission_ != NULL) submission_->::protobuf::srl::submission::SrlSubmission::Clear();
