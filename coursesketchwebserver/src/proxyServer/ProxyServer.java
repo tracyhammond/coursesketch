@@ -86,7 +86,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			if (req.getRequestType() == MessageType.RECOGNITION) {
 				System.out.println("REQUEST TYPE = RECOGNITION");
 				String sessionID = state.getKey();
-				serverManager.send(req, sessionID, RecognitionConnection.class);
+				serverManager.send(req, sessionID, RecognitionConnection.class); // no userId is sent for security reasons.
 				return;
 			}
 			if (req.getRequestType() == MessageType.SUBMISSION) {
