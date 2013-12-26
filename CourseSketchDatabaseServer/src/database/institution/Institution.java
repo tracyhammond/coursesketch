@@ -280,4 +280,8 @@ public final class Institution {
 
 		UserClient.addCourseToUser(userId, courseId);
 	}
+
+	public static final ArrayList<SrlCourse> getUserCourses(String userId) throws AuthenticationException {
+		return Institution.mongoGetCourses(UserClient.getUserCourses(userId), userId);
+	}
 }

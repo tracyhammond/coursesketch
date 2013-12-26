@@ -204,9 +204,21 @@
 	  			permission.userPermission = scope.document.getElementById('users').value.split(" ");
 	  			course.accessPermission = permission;
 	  			parent.user_courses[course.id] = course;
+
 	  			buildCourses();
 	  		}
-	  		
+
+	  		function saveCourse(course) {
+	  			var request = new QueryBuilder.DataSend();
+	  			var courseItem = new QueryBuilder.ItemSend();
+	  			courseItem.insert = true;
+	  			courseItem.query = QueryBuilder.ItemQuery.COURSE_SEARCH;
+	  			courseItem.data = course.toArrayBuffer();
+	  			request.items.push(courseItem);
+	  			var message = serverConnection.createRequestFromData(request, Request.MessageType.DATA_REQUEST);
+	  			serverConnection.sendRequest(message);
+	  		}
+
 	  		function buildCourses() {
 	  			try {
 	  				var builder = new SchoolItemBuilder();

@@ -77,6 +77,13 @@ public class DataRequestHandler {
 						results.add(buildResult(courseSearch.build().toByteString(),ItemQuery.COURSE));
 						break;
 					}
+					case SCHOOL: {
+						ArrayList<SrlCourse> courseLoop = Institution.getUserCourses(userId);
+						SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
+						courseSearch.addAllCourses(courseLoop);
+						results.add(buildResult(courseSearch.build().toByteString(), ItemQuery.COURSE));
+						break;
+					}
 					/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
 								for(AssignmentBuilder loopCourse: assignmentLoop){
 									finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));

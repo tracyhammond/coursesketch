@@ -229,10 +229,6 @@ function Connection(uri, encrypted, attemptReconnect) {
 		function buildDataQuery() {
 			var builder = ProtoBuf.protoFromFile(protobufDirectory + "data.proto");
 			QueryBuilder = builder.build("protobuf").srl.query;
-			if (!DataRequest)
-				DataRequest = QueryBuilder.DataRequest;
-			if (!ItemRequest)
-				ItemRequest = QueryBuilder.ItemRequest;
 		}
 		
 		function buildSchool() {
@@ -406,9 +402,7 @@ var ProtoSrlCommand = false;
 var ProtoSrlCommandType = false;
 var IdChain = false;
 
-var QueryBuilder = false; // TODO: ADD THESE INTO PARENT COPY
-var DataRequest = false;
-var ItemRequest = false
+var QueryBuilder = false;
 
 const CONNECTION_LOST = 1006;
 const INCORRECT_LOGIN = 4002;
@@ -444,6 +438,8 @@ function copyParentProtos(scope) {
 	copyParentValues(scope,'ProtoSrlCommand');
 	copyParentValues(scope,'ProtoSrlCommandType');
 	copyParentValues(scope,'IdChain');
+	
+	copyParentValues(scope,'QueryBuilder');
 
 	// so this can happen forever!
 	copyParentValues(scope,'copyParentProtos');
