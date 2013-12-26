@@ -1,5 +1,7 @@
 package database.user;
 
+import java.util.ArrayList;
+
 import protobuf.srl.school.School.SrlUser;
 
 import com.google.protobuf.ByteString;
@@ -53,7 +55,11 @@ public final class UserClient {
 		return true;
 	}
 
-	public static void addCourseToUser(String userName, String courseId) {
-		UserManager.addCourseToUser(getInstance().db, userName, courseId);
+	public static void addCourseToUser(String userId, String courseId) {
+		UserManager.addCourseToUser(getInstance().db, userId, courseId);
+	}
+
+	public static ArrayList<String> getUserCourses(String userId) {
+		return UserManager.getUserCourses(getInstance().db, userId);
 	}
 }

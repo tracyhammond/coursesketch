@@ -34,9 +34,9 @@ public class UserManager {
 	 * @param userId
 	 * @return
 	 */
-	public static ArrayList<String> getUserCourses(DB dbs, String userName) {
+	public static ArrayList<String> getUserCourses(DB dbs, String userId) {
 		DBCollection users = dbs.getCollection(USER_COLLECTION);
-		BasicDBObject query = new BasicDBObject(SELF_ID, userName);
+		BasicDBObject query = new BasicDBObject(SELF_ID, userId);
 		DBObject cursor = users.findOne(query);
 		return (ArrayList) cursor.get(COURSE_LIST);
 	}

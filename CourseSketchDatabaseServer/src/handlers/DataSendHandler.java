@@ -49,48 +49,48 @@ public class DataSendHandler {
 			ArrayList<ItemResult> results = new ArrayList<ItemResult> ();
 
 			for(int p=0; p<request.getItemsList().size(); p++) {
-				ItemSend itrequest = request.getItemsList().get(p);
-				switch (itrequest.getQuery()) {
-					case COURSE: if (itrequest.getIsInsert()) {
-						SrlCourse course = SrlCourse.parseFrom(itrequest.getData());
+				ItemSend itemSet = request.getItemsList().get(p);
+				switch (itemSet.getQuery()) {
+					case COURSE: if (itemSet.getIsInsert()) {
+						SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
 						String resultId = Institution.mongoInsertCourse(userId, course);
-						results.add(buildResult(resultId + " : " + course.getId(), itrequest.getQuery()));
+						results.add(buildResult(resultId + " : " + course.getId(), itemSet.getQuery()));
 					} else {
 						// update here
 						// update does not need to return anything
 					}
-					case ASSIGNMENT: if (itrequest.getIsInsert()) {
-						SrlAssignment assignment = SrlAssignment.parseFrom(itrequest.getData());
+					case ASSIGNMENT: if (itemSet.getIsInsert()) {
+						SrlAssignment assignment = SrlAssignment.parseFrom(itemSet.getData());
 						String resultId = Institution.mongoInsertAssignment(userId, assignment);
-						results.add(buildResult(resultId + " : " + assignment.getId(), itrequest.getQuery()));
+						results.add(buildResult(resultId + " : " + assignment.getId(), itemSet.getQuery()));
 					} else {
 						// update here
 						// update does not need to return anything
 					}
-					case COURSE_PROBLEM: if (itrequest.getIsInsert()) {
-						SrlProblem problem = SrlProblem.parseFrom(itrequest.getData());
+					case COURSE_PROBLEM: if (itemSet.getIsInsert()) {
+						SrlProblem problem = SrlProblem.parseFrom(itemSet.getData());
 						String resultId = Institution.mongoInsertCourseProblem(userId, problem);
-						results.add(buildResult(resultId + " : " + problem.getId(), itrequest.getQuery()));
+						results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
 					} else {
 						// update here
 						// update does not need to return anything
 					}
-					case BANK_PROBLEM: if (itrequest.getIsInsert()) {
-						SrlBankProblem problem = SrlBankProblem.parseFrom(itrequest.getData());
+					case BANK_PROBLEM: if (itemSet.getIsInsert()) {
+						SrlBankProblem problem = SrlBankProblem.parseFrom(itemSet.getData());
 						String resultId = Institution.mongoInsertBankProblem(userId, problem);
-						results.add(buildResult(resultId + " : " + problem.getId(), itrequest.getQuery()));
+						results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
 					} else {
 						// update here
 						// update does not need to return anything
 					}
-					case USER_INFO: if (itrequest.getIsInsert()) {
-						UserClient.insertUser(SrlUser.parseFrom(itrequest.getData()), userId);
+					case USER_INFO: if (itemSet.getIsInsert()) {
+						UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), userId);
 					} else {
 						// update here
 						// update does not need to return anything	
 					}
 					case REGISTER: {
-						SrlCourse course = SrlCourse.parseFrom(itrequest.getData());
+						SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
 						String courseId = course.getId();
 						Institution.putUserInCourse(courseId, userId);
 					}

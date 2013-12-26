@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
+import multiConnection.MultiConnectionState;
 import multiConnection.MultiInternalConnectionServer;
 import multiConnection.WrapperConnection;
 
@@ -23,6 +24,20 @@ public class AnswerConnection extends WrapperConnection {
 
 	public AnswerConnection(URI serverUri, Draft draft, MultiInternalConnectionServer parentServer) {
 		super(serverUri, draft, parentServer);
+	}
+
+	/**
+	 * Accepts messages and sends the request to the correct server and holds minimum client state.
+	 *
+	 * Also removes all identification that should not be sent to the client.
+	 */
+	@Override
+	public void onMessage(ByteBuffer buffer) {
+		MultiConnectionState state = getStateFromId(MultiInternalConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
+
+		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
+		Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
+		getConnectionFromState(state).send(result.toByteArray());
 	}
 
 	/*
