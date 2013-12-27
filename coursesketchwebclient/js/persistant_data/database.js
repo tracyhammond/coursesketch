@@ -74,7 +74,6 @@ function protoDatabase(databaseName, version, openCallback) {
 	function createTableFunctions() {
 		for (var i = 0; i < updgradeTables.length; i++) {
 			table = updgradeTables[i];
-			console.log(table);
 			(function(localTable) {
 				/**
 				 * Creates a function for adding items to the database.
@@ -85,14 +84,14 @@ function protoDatabase(databaseName, version, openCallback) {
 					var store = trans.objectStore(localTable.name);
 					var request = localTable.add(store, objectId, objectToAdd);
 					request.onsuccess = function(e) {
-						callback(e, request);
+						if (callback)
+							callback(e, request);
 					}
 
 					request.onerror = function(e) {
 						console.log(e.value);
 					};
 				};
-				console.log("adding function" + 'putIn' + localTable.name);
 				/**
 				 * Creates a function for deleting items from the database.
 				 */
@@ -102,7 +101,8 @@ function protoDatabase(databaseName, version, openCallback) {
 					var store = trans.objectStore(localTable.name);
 					var request = store.delete(objectId);
 					request.onsuccess = function(e) {
-						callback(e, request);
+						if (callback)
+							callback(e, request);
 					}
 
 					request.onerror = function(e) {
@@ -119,7 +119,8 @@ function protoDatabase(databaseName, version, openCallback) {
 					var store = trans.objectStore(localTable.name);
 					var request = store.get(objectId);
 					request.onsuccess = function(e) {
-						callback(e, request, request.result);
+						if (callback)
+							callback(e, request, request.result);
 					}
 
 					request.onerror = function(e) {

@@ -9,7 +9,12 @@
 	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
     <script type="text/javascript" src="js/connection/connection_library.js"></script>
     <script type="text/javascript" src="js/connection/advance_data_listener.js"></script>
+
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+   
+    <script type="text/javascript" src="js/persistant_data/database.js"></script>
+    <script type="text/javascript" src="js/persistant_data/course_sketch_data_manager.js"></script>
+
     <script type="text/javascript" src="js/jquery/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
 	<script type="text/javascript" src="js/menu/header.js"></script>
@@ -50,12 +55,13 @@
 						placeMenu(connection.isInstructor);
 
 						dataListener = new AdvanceDataListener(connection, Request, QueryBuilder, function(evt, item) {
-							//alert(evt.);
 							console.log("default listener");
 						});
+						dataManager = new SchoolDataManager(connection.userId, dataListener, connection, SchoolBuilder, QueryBuilder,
+								Request, parent.dcodeIO.ByteBuffer);
+						connection.userId = undefined;
 					}
 				);
-
 	  		/**
 	  		Resizes the iframe inside the window
 	  		*/
@@ -81,6 +87,7 @@
 	  		var contentHeight = 0;
 	  		var headerManager = new HeaderHandler();
 	  		var dataListener = false;
+	  		var dataManager = false;
 
 	  		function redirectContent(url, title) {
 	  			document.getElementById('iframeContent').src = url;

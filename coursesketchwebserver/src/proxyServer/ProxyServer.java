@@ -93,25 +93,41 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			if (req.getRequestType() == MessageType.RECOGNITION) {
 				System.out.println("REQUEST TYPE = RECOGNITION");
 				String sessionID = state.getKey();
-				serverManager.send(req, sessionID, RecognitionConnection.class); // no userId is sent for security reasons.
+				try {
+					serverManager.send(req, sessionID, RecognitionConnection.class); // no userId is sent for security reasons.
+				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
+					conn.send(createBadConnectionResponse(req, RecognitionConnection.class).toByteArray());
+				}
 				return;
 			}
 			if (req.getRequestType() == MessageType.SUBMISSION) {
 				System.out.println("REQUEST TYPE = SUBMISSION");
 				String sessionID = state.getKey();
-				serverManager.send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
+				try {
+					serverManager.send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
+				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
+					conn.send(createBadConnectionResponse(req, AnswerConnection.class).toByteArray());
+				}
 				return;
 			}
 			if (req.getRequestType() == MessageType.DATA_REQUEST) {
 				System.out.println("REQUEST TYPE = DATA REQUEST");
 				String sessionID = state.getKey();
-				serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
+				try {
+					serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
+				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
+					conn.send(createBadConnectionResponse(req, DataConnection.class).toByteArray());
+				}
 				return;
 			}
 			if (req.getRequestType() == MessageType.DATA_SENDING) {
 				System.out.println("REQUEST TYPE = DATA SENDING");
 				String sessionID = state.getKey();
-				serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
+				try {
+					serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
+				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
+					conn.send(createBadConnectionResponse(req, DataConnection.class).toByteArray());
+				}
 				return;
 			}
 			return;

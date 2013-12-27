@@ -63,9 +63,9 @@
 
 	  			function onLogin(evt, message) {
 	  				if (message.login && message.login.isLoggedIn) {
-	  					// Redirect to main.html
+	  					// successful login here
 	  					connection.isInstructor = message.login.isInstructor;
-	  					//window.location.href = ("/main.html");
+	  					connection.userId = message.login.userId;
 	  					parent.redirector.moveWindow("html/main.html");
 	  					console.log("Redirecting to the other window");
 	  				} else {

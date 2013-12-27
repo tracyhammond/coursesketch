@@ -13,15 +13,18 @@
 	<script type="text/javascript" src="js/school/course_manager.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
+    	var localScope = this;
+		parent.dataListener.setErrorListener(function(msg) {
+			alert("Unable able to load data: " + msg.getResponseText());
+		});
   		parent.addScopedLoadEvent(window,
 				function()
 				{
-					var builder = new SchoolItemBuilder();
-					builder.setList(getMapAsList(parent.user_courses)).setWidth('medium').centerItem(true);
-					builder.showImage = false;
-					builder.setOnBoxClick('courseClickerFunction');
-					builder.build('class_list_column');
-					clearLists(2);
+  					parent.dataManager.getAllCourses(function(courseList) {
+  						console.log(courseList);
+  						localScope.showCourses(courseList);
+  					});
+
 					var loader = new parent.DynamicFileLoader();
 					loader.sope = document;
 					loader.loadFile("js/utils/popup.js",'js');

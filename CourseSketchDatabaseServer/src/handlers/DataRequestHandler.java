@@ -42,6 +42,7 @@ public class DataRequestHandler {
 			for(int p=0; p<request.getItemsList().size(); p++) {
 				ItemRequest itrequest = request.getItemsList().get(p);
 				try {
+					System.out.println("looking at query " + itrequest.getQuery().name());
 					switch(itrequest.getQuery()) {
 						case COURSE: {
 							ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), userId);
@@ -89,6 +90,8 @@ public class DataRequestHandler {
 								results.add(buildResult(courseSearch.build().toByteString(),ItemQuery.SCHOOL));
 							}
 							break;
+						}
+						default: {
 						}
 						/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
 									for(AssignmentBuilder loopCourse: assignmentLoop){

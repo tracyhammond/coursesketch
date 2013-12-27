@@ -13,7 +13,7 @@
 			parent.copyParentUtilityFunctions(this);
 			parent.copyParentProtos(this);
 		} catch (exception) {
-			console.log(excpetion);
+			console.log(exception);
 		}
 	</script>
 	<script>
@@ -42,7 +42,6 @@
 			var courseList = school.courses;
 			var idList = [];
 			for(var i = 0; i < courseList.length; i++) {
-				console.log(courseList[i]);
 				courseProtoMap[courseList[i].id] = courseList[i];
 				if (i % 2 == 0) {
 					courseList1.push(courseList[i]);
@@ -56,6 +55,10 @@
 			schoolItemBuilder.setList(courseList2).build("class_list_column2");
 			localDoc.getElementById("loadingIcon").style.display="none";
 		});
+		
+		parent.dataListener.setErrorListener(function(msg){
+			localDoc.getElementById("loadingIcon").innerHTML = '<h1>error loading data</h1> <p>' + msg.getResponseText() + '</p>';
+		});
 
 		parent.dataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.REGISTER, function(evt, item) {
 			alert("User is already registered for this course");
@@ -65,7 +68,7 @@
 			var element = localDoc.getElementById(id);
 			var width = element.offsetWidth/2;
 			var moveAmount = width + "px";
-			console.log("style "  + element.style.marginLeft);
+			//console.log("style "  + element.style.marginLeft);
 			if (element.style.marginLeft == "" || element.style.marginLeft == "0px") {
 				if (courseRightSide[id]) {
 					moveAmount = "" + moveAmount;
@@ -108,6 +111,11 @@
 			item.data = courseProtoMap[id].toArrayBuffer();
 			request.items = [item];
 			parent.connection.sendRequest(parent.connection.createRequestFromData(request, Request.MessageType.DATA_SENDING));
+			$("#" + id).animate({
+                marginLeft: "0px",
+            	}, 300, function () {
+            		localDoc.getElementById("registerButton").removeChild(localDoc.getElementById("button" + id));
+            });	
 		}
 	</script>
 	<style>

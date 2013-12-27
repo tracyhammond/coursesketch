@@ -1,3 +1,12 @@
+this.showCourses = function showCourses(courseList) {
+	var builder = new SchoolItemBuilder();
+	builder.setList(courseList).setWidth('medium').centerItem(true);
+	builder.showImage = false;
+	builder.setOnBoxClick('courseClickerFunction');
+	builder.build('class_list_column');
+	clearLists(2);
+}
+
 function courseClickerFunction(id) {
 	console.log(id);
 	clearLists(2);
