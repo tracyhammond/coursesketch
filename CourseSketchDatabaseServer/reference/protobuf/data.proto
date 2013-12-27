@@ -37,6 +37,7 @@ message ItemResult {
 }
 
 enum ItemQuery {
+	ERROR = -1;
 	COURSE = 0;
 	ASSIGNMENT = 1;
 	COURSE_PROBLEM = 2;
@@ -46,8 +47,9 @@ enum ItemQuery {
 	USER_INFO = 6;
 	SOLUTION = 7;
 	EXPERIMENT = 8;
-	SCHOOL = 9;
+	SCHOOL = 9; // used to get the list of courses for a specific user, returns text if there are no courses.
 	COURSE_SEARCH = 10;
 	BANK_SEARCH = 11;
 	REGISTER = 12; // userId = 0 courseId = 1
+	COURSE_LIST = 13; // returns a list of Ids
 }

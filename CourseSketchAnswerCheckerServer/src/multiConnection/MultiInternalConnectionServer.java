@@ -17,7 +17,7 @@ import protobuf.srl.request.Message.Request;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 public abstract class MultiInternalConnectionServer extends WebSocketServer {
-	public static final int MAX_CONNECTIONS = 20;
+	public static final int MAX_CONNECTIONS = 80;
 	public static final int STATE_SERVER_FULL = 4001;
 	static final String FULL_SERVER_MESSAGE = "Sorry, the BLANK server is full";
 

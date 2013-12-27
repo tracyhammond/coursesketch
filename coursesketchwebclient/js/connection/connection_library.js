@@ -119,7 +119,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	this.setAnswerCheckingListener = function(listener) {
 		ononAnswerChecker = listener;
 	};
-	
+
 	this.setSchoolDataListener = function(listener) {
 		onSchoolData = listener;
 	}

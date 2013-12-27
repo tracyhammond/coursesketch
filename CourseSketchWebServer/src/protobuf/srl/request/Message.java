@@ -258,29 +258,33 @@ public final class Message {
        */
       DATA_SENDING(2, 2),
       /**
-       * <code>RECOGNITION = 3;</code>
+       * <code>DATA_UPDATE = 3;</code>
        */
-      RECOGNITION(3, 3),
+      DATA_UPDATE(3, 3),
       /**
-       * <code>LOADING = 4;</code>
+       * <code>RECOGNITION = 4;</code>
+       */
+      RECOGNITION(4, 4),
+      /**
+       * <code>LOADING = 5;</code>
        *
        * <pre>
        * this is for when the client is loading.
        * </pre>
        */
-      LOADING(4, 4),
+      LOADING(5, 5),
       /**
-       * <code>SUBMISSION = 5;</code>
+       * <code>SUBMISSION = 6;</code>
        *
        * <pre>
        * sent to both servers at the same time. (Answer checking and database)
        * </pre>
        */
-      SUBMISSION(5, 5),
+      SUBMISSION(6, 6),
       /**
-       * <code>PENDING = 6;</code>
+       * <code>PENDING = 7;</code>
        */
-      PENDING(6, 6),
+      PENDING(7, 7),
       ;
 
       /**
@@ -296,29 +300,33 @@ public final class Message {
        */
       public static final int DATA_SENDING_VALUE = 2;
       /**
-       * <code>RECOGNITION = 3;</code>
+       * <code>DATA_UPDATE = 3;</code>
        */
-      public static final int RECOGNITION_VALUE = 3;
+      public static final int DATA_UPDATE_VALUE = 3;
       /**
-       * <code>LOADING = 4;</code>
+       * <code>RECOGNITION = 4;</code>
+       */
+      public static final int RECOGNITION_VALUE = 4;
+      /**
+       * <code>LOADING = 5;</code>
        *
        * <pre>
        * this is for when the client is loading.
        * </pre>
        */
-      public static final int LOADING_VALUE = 4;
+      public static final int LOADING_VALUE = 5;
       /**
-       * <code>SUBMISSION = 5;</code>
+       * <code>SUBMISSION = 6;</code>
        *
        * <pre>
        * sent to both servers at the same time. (Answer checking and database)
        * </pre>
        */
-      public static final int SUBMISSION_VALUE = 5;
+      public static final int SUBMISSION_VALUE = 6;
       /**
-       * <code>PENDING = 6;</code>
+       * <code>PENDING = 7;</code>
        */
-      public static final int PENDING_VALUE = 6;
+      public static final int PENDING_VALUE = 7;
 
 
       public final int getNumber() { return value; }
@@ -328,10 +336,11 @@ public final class Message {
           case 0: return LOGIN;
           case 1: return DATA_REQUEST;
           case 2: return DATA_SENDING;
-          case 3: return RECOGNITION;
-          case 4: return LOADING;
-          case 5: return SUBMISSION;
-          case 6: return PENDING;
+          case 3: return DATA_UPDATE;
+          case 4: return RECOGNITION;
+          case 5: return LOADING;
+          case 6: return SUBMISSION;
+          case 7: return PENDING;
           default: return null;
         }
       }
@@ -2586,19 +2595,19 @@ public final class Message {
   static {
     java.lang.String[] descriptorData = {
       "\n\023input/message.proto\022\024protobuf.srl.requ" +
-      "est\"\324\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
+      "est\"\346\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
       "rotobuf.srl.request.Request.MessageType:" +
       "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req" +
       "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014" +
       "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 " +
-      "\001(\t\022\024\n\014serversideId\030\006 \001(\t\"w\n\013MessageType" +
-      "\022\t\n\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_SE" +
-      "NDING\020\002\022\017\n\013RECOGNITION\020\003\022\013\n\007LOADING\020\004\022\016\n" +
-      "\nSUBMISSION\020\005\022\013\n\007PENDING\020\006\"\226\001\n\020LoginInfo",
-      "rmation\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 " +
-      "\001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030" +
-      "\004 \001(\010\022\025\n\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 " +
-      "\001(\t\022\016\n\006userId\030\007 \001(\t"
+      "\001(\t\022\024\n\014serversideId\030\006 \001(\t\"\210\001\n\013MessageTyp" +
+      "e\022\t\n\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_S" +
+      "ENDING\020\002\022\017\n\013DATA_UPDATE\020\003\022\017\n\013RECOGNITION" +
+      "\020\004\022\013\n\007LOADING\020\005\022\016\n\nSUBMISSION\020\006\022\013\n\007PENDI",
+      "NG\020\007\"\226\001\n\020LoginInformation\022\020\n\010username\030\001 " +
+      "\002(\t\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(" +
+      "\010\022\024\n\014isInstructor\030\004 \001(\010\022\025\n\risRegistering" +
+      "\030\005 \001(\010\022\r\n\005email\030\006 \001(\t\022\016\n\006userId\030\007 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

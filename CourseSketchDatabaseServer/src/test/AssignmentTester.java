@@ -3,6 +3,8 @@ package test;
 import java.util.Date;
 
 import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.School.SrlAssignment.AssignmentType;
+import protobuf.srl.school.School.SrlAssignment.LatePolicy;
 import protobuf.srl.school.School.SrlPermission;
 
 import com.mongodb.DB;
@@ -37,6 +39,7 @@ public class AssignmentTester {
 		*/
 		permissions.addUserPermission("saby");
 		permissions.addUserPermission("stephanie");
+		testBuilder.setLatePolicy(LatePolicy.POLICY1);
 		
 		testBuilder.setAccessPermission(permissions.build());
 		System.out.println(testBuilder.toString());

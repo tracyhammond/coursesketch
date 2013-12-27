@@ -22,7 +22,7 @@ public class MultiConnectionManager {
 	HashMap<Class<?>, ArrayList<WrapperConnection>> connections
 		= new HashMap<Class<?>, ArrayList<WrapperConnection>> ();
 
-	MultiInternalConnectionServer parent;
+	protected MultiInternalConnectionServer parent;
 	public MultiConnectionManager(MultiInternalConnectionServer parent) {
 		this.parent = parent;
 	}

@@ -14,6 +14,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 import multiConnection.MultiInternalConnectionServer;
+import multiConnection.WrapperConnection;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
@@ -28,6 +29,8 @@ import protobuf.srl.request.Message.Request.MessageType;
  * Contains simple proxy information that is sent to other servers.
  */
 public class ProxyServer extends MultiInternalConnectionServer {
+
+	public static final int MAX_CONNECTIONS = 60; // sets see if this works!
 
 	public static final int STATE_INVALID_LOGIN = 4002;
 	public static final int MAX_LOGIN_TRIES = 5;
@@ -77,7 +80,11 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			}
 			String sessionID = state.getKey();
 			System.out.println("Request type is " + req.getRequestType().name());
-			serverManager.send(req, sessionID, LoginConnection.class);
+			try {
+				serverManager.send(req, sessionID, LoginConnection.class);
+			} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
+				conn.send(createBadConnectionResponse(req, LoginConnection.class).toByteArray());
+			}
 		} else {
 			if (state.getTries() > MAX_LOGIN_TRIES) {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
@@ -116,6 +123,13 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		//System.out.println( "received fragment: " + fragment );
 	}
 
+	private static Request createBadConnectionResponse(Request req, Class<? extends WrapperConnection> connectionType) {
+		Request.Builder response = Request.newBuilder();
+		response.setRequestType(req.getRequestType());
+		response.setResponseText("A server with connection type: " + connectionType.getSimpleName() +" Is not connected correctly");
+		return response.build();
+	}
+	
 	/**
 	 * Returns a number that should be unique.
 	 */

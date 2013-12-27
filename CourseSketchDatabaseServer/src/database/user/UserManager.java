@@ -45,6 +45,7 @@ public class UserManager {
 		DBCollection users = dbs.getCollection(USER_COLLECTION);
 		 // NOSHIP: userId must be hashed using the userName as a salt?
 		BasicDBObject query = null;
+		System.out.println(userId);
 		try {
 			query = new BasicDBObject(SELF_ID, userId).append(COURSE_LIST, new ArrayList<String>())
 					.append(CREDENTIALS, PasswordHash.createHash(user.getEmail())).append(EMAIL, user.getEmail()).append(ADMIN, PasswordHash.createHash(userId));
@@ -78,10 +79,14 @@ public class UserManager {
 	 * @param courseId
 	 */
 	static void addCourseToUser(DB db, String userId, String courseId) {
+		System.out.println("The users Id " + userId);
 		DBCollection users = db.getCollection(USER_COLLECTION);
 		BasicDBObject query =  new BasicDBObject("$addToSet", new BasicDBObject(COURSE_LIST, courseId));
 		DBRef myDbRef = new DBRef(db, USER_COLLECTION, userId);
 		DBObject corsor = myDbRef.fetch();
+		System.out.println("coros" + corsor);
+		System.out.println("query" + query);
+		System.out.println("courseId " + courseId);
 		users.update(corsor, query);
 	}
 
