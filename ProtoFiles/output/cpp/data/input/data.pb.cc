@@ -210,13 +210,13 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
     "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query."
     "ItemResult\"\\\n\nItemResult\022,\n\005query\030\001 \001(\0162"
     "\035.protobuf.srl.query.ItemQuery\022\022\n\nreturn"
-    "Text\030\002 \001(\t\022\014\n\004data\030\003 \001(\014*\330\001\n\tItemQuery\022\n"
-    "\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE_PRO"
-    "BLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022"
-    "\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUT"
-    "ION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOU"
-    "RSE_SEARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REGISTE"
-    "R\020\014", 723);
+    "Text\030\002 \001(\t\022\014\n\004data\030\003 \001(\014*\375\001\n\tItemQuery\022\022"
+    "\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\nASSIGN"
+    "MENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBL"
+    "EM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\t"
+    "USER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020"
+    "\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n\013BANK"
+    "_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013COURSE_LIST\020\r", 760);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/data.proto", &protobuf_RegisterTypes);
   DataRequest::default_instance_ = new DataRequest();
@@ -246,6 +246,7 @@ const ::google::protobuf::EnumDescriptor* ItemQuery_descriptor() {
 }
 bool ItemQuery_IsValid(int value) {
   switch(value) {
+    case -1:
     case 0:
     case 1:
     case 2:
@@ -259,6 +260,7 @@ bool ItemQuery_IsValid(int value) {
     case 10:
     case 11:
     case 12:
+    case 13:
       return true;
     default:
       return false;
@@ -493,7 +495,7 @@ ItemRequest::ItemRequest(const ItemRequest& from)
 
 void ItemRequest::SharedCtor() {
   _cached_size_ = 0;
-  query_ = 0;
+  query_ = -1;
   advancequery_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -533,7 +535,7 @@ ItemRequest* ItemRequest::New() const {
 
 void ItemRequest::Clear() {
   if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    query_ = 0;
+    query_ = -1;
     if (has_advancequery()) {
       if (advancequery_ != &::google::protobuf::internal::kEmptyString) {
         advancequery_->clear();
@@ -1007,7 +1009,7 @@ ItemSend::ItemSend(const ItemSend& from)
 
 void ItemSend::SharedCtor() {
   _cached_size_ = 0;
-  query_ = 0;
+  query_ = -1;
   isinsert_ = false;
   data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1048,7 +1050,7 @@ ItemSend* ItemSend::New() const {
 
 void ItemSend::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    query_ = 0;
+    query_ = -1;
     isinsert_ = false;
     if (has_data()) {
       if (data_ != &::google::protobuf::internal::kEmptyString) {
@@ -1510,7 +1512,7 @@ ItemResult::ItemResult(const ItemResult& from)
 
 void ItemResult::SharedCtor() {
   _cached_size_ = 0;
-  query_ = 0;
+  query_ = -1;
   returntext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1554,7 +1556,7 @@ ItemResult* ItemResult::New() const {
 
 void ItemResult::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    query_ = 0;
+    query_ = -1;
     if (has_returntext()) {
       if (returntext_ != &::google::protobuf::internal::kEmptyString) {
         returntext_->clear();

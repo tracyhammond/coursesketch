@@ -62,10 +62,7 @@
 	  			}
 
 	  			function onLogin(evt, message) {
-	  				console.log(evt);
-	  				console.log(message);
-	  				console.log(message.login);
-	  				if (message.login.isLoggedIn) {
+	  				if (message.login && message.login.isLoggedIn) {
 	  					// Redirect to main.html
 	  					connection.isInstructor = message.login.isInstructor;
 	  					//window.location.href = ("/main.html");

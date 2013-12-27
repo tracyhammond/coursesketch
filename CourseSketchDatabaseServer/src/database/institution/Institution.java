@@ -23,9 +23,11 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
+import com.mongodb.WriteResult;
 
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
+import database.auth.Authenticator;
 import database.user.GroupManager;
 import database.user.UserClient;
 import database.user.UserManager;
@@ -258,19 +260,27 @@ public final class Institution {
 	/**
 	 * Registers a user for a course
 	 *
-	 * Upon registration 2 steps happen:
+	 * Upon registration 3 steps happen:
 	 * <ol>
-	 * <li> The user is added to the user permission list </li>
-	 * <li> The user now has the course in its list of courses</li>
+	 * <li> The user is checked to make sure that they already are not enrolled in the course.
+	 * <li> The user is added to the user permission list. </li>
+	 * <li> The user now has the course in its list of courses.</li>
 	 * </ol>
 	 * @param userId The credentials used to authenticate the insertion
 	 * @param problem The object being inserted 
 	 * @return The Id of the object that was inserted
+	 * @throws DatabaseAccessException only thrown if the user is already registered for the course
 	 */
-	public static final void putUserInCourse(String courseId, String userId) {
+	public static final boolean putUserInCourse(String courseId, String userId) throws DatabaseAccessException {
 		// this actually requires getting the data from the course itself
 		String userGroupId = CourseManager.mongoGetDefaultGroupId(getInstance().db, courseId)[2]; // user group!
-
+		
+		// FIXME: when mongo version 2.5.5 java client comes out please change this!
+		ArrayList<String> hack = new ArrayList<String>();
+		hack.add(GROUP_PREFIX+userGroupId);
+		if (Authenticator.checkAuthentication(getInstance().db, userId, hack)) {
+			return false;
+		}
 		// DO NOT USE THIS CODE ANY WHERE ESLE
 		DBRef myDbRef = new DBRef(getInstance().db, USER_GROUP_COLLECTION, new ObjectId(userGroupId));
 		DBObject corsor = myDbRef.fetch();
@@ -279,6 +289,7 @@ public final class Institution {
 		courses.update(corsor, object);
 
 		UserClient.addCourseToUser(userId, courseId);
+		return true;
 	}
 
 	public static final ArrayList<SrlCourse> getUserCourses(String userId) throws AuthenticationException {

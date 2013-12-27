@@ -37,6 +37,7 @@ public class LoginConnection extends WrapperConnection {
 		if (r.getLogin().getIsRegistering() && r.getLogin().getIsLoggedIn()) {
 			// extra steps that we need to do
 			Request.Builder createUser = Request.newBuilder();
+			createUser.setServersideId(r.getServersideId());
 			createUser.setRequestType(MessageType.DATA_SENDING);
 			DataSend.Builder dataSend = DataSend.newBuilder();
 			ItemSend.Builder itemSend = ItemSend.newBuilder();

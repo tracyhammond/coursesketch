@@ -44,6 +44,7 @@ class DataResult;
 class ItemResult;
 
 enum ItemQuery {
+  ERROR = -1,
   COURSE = 0,
   ASSIGNMENT = 1,
   COURSE_PROBLEM = 2,
@@ -56,11 +57,12 @@ enum ItemQuery {
   SCHOOL = 9,
   COURSE_SEARCH = 10,
   BANK_SEARCH = 11,
-  REGISTER = 12
+  REGISTER = 12,
+  COURSE_LIST = 13
 };
 bool ItemQuery_IsValid(int value);
-const ItemQuery ItemQuery_MIN = COURSE;
-const ItemQuery ItemQuery_MAX = REGISTER;
+const ItemQuery ItemQuery_MIN = ERROR;
+const ItemQuery ItemQuery_MAX = COURSE_LIST;
 const int ItemQuery_ARRAYSIZE = ItemQuery_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ItemQuery_descriptor();
@@ -752,7 +754,7 @@ inline void ItemRequest::clear_has_query() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void ItemRequest::clear_query() {
-  query_ = 0;
+  query_ = -1;
   clear_has_query();
 }
 inline ::protobuf::srl::query::ItemQuery ItemRequest::query() const {
@@ -878,7 +880,7 @@ inline void ItemSend::clear_has_query() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void ItemSend::clear_query() {
-  query_ = 0;
+  query_ = -1;
   clear_has_query();
 }
 inline ::protobuf::srl::query::ItemQuery ItemSend::query() const {
@@ -1026,7 +1028,7 @@ inline void ItemResult::clear_has_query() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void ItemResult::clear_query() {
-  query_ = 0;
+  query_ = -1;
   clear_has_query();
 }
 inline ::protobuf::srl::query::ItemQuery ItemResult::query() const {

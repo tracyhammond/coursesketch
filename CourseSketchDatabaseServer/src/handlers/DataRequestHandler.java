@@ -26,6 +26,7 @@ import database.institution.Institution;
 
 public class DataRequestHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
+	public static String NO_COURSE_MESSAGE = "You do not have any courses associated with this account";
 	
 	public static void handleRequest(Request req, WebSocket conn) {
 		try {
@@ -40,75 +41,96 @@ public class DataRequestHandler {
 
 			for(int p=0; p<request.getItemsList().size(); p++) {
 				ItemRequest itrequest = request.getItemsList().get(p);
-				switch(itrequest.getQuery()) {
-					case COURSE: {
-						ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), userId);
-						SrlSchool.Builder courseSchool = SrlSchool.newBuilder();
-						courseSchool.addAllCourses(courseLoop);
-						results.add(buildResult(courseSchool.build().toByteString(),ItemQuery.COURSE));
-						break;
+				try {
+					switch(itrequest.getQuery()) {
+						case COURSE: {
+							ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), userId);
+							SrlSchool.Builder courseSchool = SrlSchool.newBuilder();
+							courseSchool.addAllCourses(courseLoop);
+							results.add(buildResult(courseSchool.build().toByteString(),ItemQuery.COURSE));
+							break;
+						}
+						case ASSIGNMENT: {
+							ArrayList<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), userId);
+							SrlSchool.Builder assignmentSchool = SrlSchool.newBuilder();
+							assignmentSchool.addAllAssignments(assignmentLoop);
+							results.add(buildResult(assignmentSchool.build().toByteString(),ItemQuery.ASSIGNMENT));
+							break;
+						}
+						case COURSE_PROBLEM: {
+							ArrayList<SrlProblem> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), userId);
+							SrlSchool.Builder problemSchool = SrlSchool.newBuilder();
+							problemSchool.addAllProblems(courseProblemLoop);
+							results.add(buildResult(problemSchool.build().toByteString(),ItemQuery.COURSE_PROBLEM));
+							break;
+						}
+						case BANK_PROBLEM: {
+							ArrayList<SrlBankProblem> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), userId);
+							SrlSchool.Builder bankproblemSchool = SrlSchool.newBuilder();
+							bankproblemSchool.addAllBankProblems(bankProblemLoop);
+							results.add(buildResult(bankproblemSchool.build().toByteString(),ItemQuery.BANK_PROBLEM));
+							break;
+						}
+						case COURSE_SEARCH: {
+							ArrayList<SrlCourse> courseLoop = Institution.getAllPublicCourses();
+							System.out.println("Searching all public courses: " + courseLoop);
+							SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
+							courseSearch.addAllCourses(courseLoop);
+							results.add(buildResult(courseSearch.build().toByteString(),ItemQuery.COURSE_SEARCH));
+							break;
+						}
+						case SCHOOL: {
+							ArrayList<SrlCourse> courseLoop = Institution.getUserCourses(userId);
+							SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
+							courseSearch.addAllCourses(courseLoop);
+							if (courseLoop.size() <= 0) {
+								results.add(buildResult(courseSearch.build().toByteString(), NO_COURSE_MESSAGE, ItemQuery.SCHOOL));
+							} else {
+								results.add(buildResult(courseSearch.build().toByteString(),ItemQuery.SCHOOL));
+							}
+							break;
+						}
+						/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;
+						case CLASS_GRADE: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;
+						case USER_INFO: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;
+						case SOLUTION: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;
+						case EXPERIMENT: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
+									for(AssignmentBuilder loopCourse: assignmentLoop){
+										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
+									}
+									break;*/
 					}
-					case ASSIGNMENT: {
-						ArrayList<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), userId);
-						SrlSchool.Builder assignmentSchool = SrlSchool.newBuilder();
-						assignmentSchool.addAllAssignments(assignmentLoop);
-						results.add(buildResult(assignmentSchool.build().toByteString(),ItemQuery.ASSIGNMENT));
-						break;
+				} catch(AuthenticationException e) {
+					if (e.getType() == AuthenticationException.INVALID_DATE) {
+						ItemResult.Builder build = ItemResult.newBuilder();
+						build.setQuery(itrequest.getQuery());
+						results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
+					} else {
+						e.printStackTrace();
+						throw e;
 					}
-					case COURSE_PROBLEM: {
-						ArrayList<SrlProblem> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), userId);
-						SrlSchool.Builder problemSchool = SrlSchool.newBuilder();
-						problemSchool.addAllProblems(courseProblemLoop);
-						results.add(buildResult(problemSchool.build().toByteString(),ItemQuery.COURSE_PROBLEM));
-						break;
-					}
-					case BANK_PROBLEM: {
-						ArrayList<SrlBankProblem> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), userId);
-						SrlSchool.Builder bankproblemSchool = SrlSchool.newBuilder();
-						bankproblemSchool.addAllBankProblems(bankProblemLoop);
-						results.add(buildResult(bankproblemSchool.build().toByteString(),ItemQuery.BANK_PROBLEM));
-						break;
-					}
-					case COURSE_SEARCH: {
-						ArrayList<SrlCourse> courseLoop = Institution.getAllPublicCourses();
-						System.out.println("Searching all public courses: " + courseLoop);
-						SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
-						courseSearch.addAllCourses(courseLoop);
-						results.add(buildResult(courseSearch.build().toByteString(),ItemQuery.COURSE));
-						break;
-					}
-					case SCHOOL: {
-						ArrayList<SrlCourse> courseLoop = Institution.getUserCourses(userId);
-						SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
-						courseSearch.addAllCourses(courseLoop);
-						results.add(buildResult(courseSearch.build().toByteString(), ItemQuery.COURSE));
-						break;
-					}
-					/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-								for(AssignmentBuilder loopCourse: assignmentLoop){
-									finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-								}
-								break;
-					case CLASS_GRADE: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-								for(AssignmentBuilder loopCourse: assignmentLoop){
-									finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-								}
-								break;
-					case USER_INFO: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-								for(AssignmentBuilder loopCourse: assignmentLoop){
-									finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-								}
-								break;
-					case SOLUTION: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-								for(AssignmentBuilder loopCourse: assignmentLoop){
-									finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-								}
-								break;
-					case EXPERIMENT: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-								for(AssignmentBuilder loopCourse: assignmentLoop){
-									finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-								}
-								break;*/
+				} catch(Exception e) {
+					e.printStackTrace();
+					ItemResult.Builder build = ItemResult.newBuilder();
+					build.setQuery(itrequest.getQuery());
+					build.setData(itrequest.toByteString());
+					results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
 				}
 			}
 			conn.send(buildRequest(results, SUCCESS_MESSAGE, req).toByteArray());
@@ -130,6 +152,14 @@ public class DataRequestHandler {
 		ItemResult.Builder result = ItemResult.newBuilder();
 		result.setData(data);
 		result.setQuery(type);
+		return result.build();
+	}
+
+	private static ItemResult buildResult(ByteString data, String text, ItemQuery type) {
+		ItemResult.Builder result = ItemResult.newBuilder();
+		result.setData(data);
+		result.setQuery(type);
+		result.setReturnText(text);
 		return result.build();
 	}
 

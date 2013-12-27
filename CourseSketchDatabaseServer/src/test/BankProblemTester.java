@@ -18,6 +18,9 @@ public class BankProblemTester {
 		SrlBankProblem.Builder testBuilder = SrlBankProblem.newBuilder();
 		testBuilder.setQuestionType(QuestionType.SKETCH);
 		testBuilder.setQuestionText("genetically engineered puppies that potty train themselves!");
+		testBuilder.setCourseTopic("Course Topic");
+		testBuilder.setSubTopic("Sub topic of course");
+		testBuilder.setSource("Source location");
 		System.out.println("MINUS TEST " + new Date(System.currentTimeMillis()- 1000000));
 		System.out.println("NORMAL TEST " + new Date(System.currentTimeMillis()));
 		SrlPermission.Builder permissions = SrlPermission.newBuilder();

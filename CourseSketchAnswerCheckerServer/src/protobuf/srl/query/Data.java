@@ -14,53 +14,61 @@ public final class Data {
   public enum ItemQuery
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
+     * <code>ERROR = -1;</code>
+     */
+    ERROR(0, -1),
+    /**
      * <code>COURSE = 0;</code>
      */
-    COURSE(0, 0),
+    COURSE(1, 0),
     /**
      * <code>ASSIGNMENT = 1;</code>
      */
-    ASSIGNMENT(1, 1),
+    ASSIGNMENT(2, 1),
     /**
      * <code>COURSE_PROBLEM = 2;</code>
      */
-    COURSE_PROBLEM(2, 2),
+    COURSE_PROBLEM(3, 2),
     /**
      * <code>BANK_PROBLEM = 3;</code>
      */
-    BANK_PROBLEM(3, 3),
+    BANK_PROBLEM(4, 3),
     /**
      * <code>USERGROUP = 4;</code>
      */
-    USERGROUP(4, 4),
+    USERGROUP(5, 4),
     /**
      * <code>CLASS_GRADE = 5;</code>
      */
-    CLASS_GRADE(5, 5),
+    CLASS_GRADE(6, 5),
     /**
      * <code>USER_INFO = 6;</code>
      */
-    USER_INFO(6, 6),
+    USER_INFO(7, 6),
     /**
      * <code>SOLUTION = 7;</code>
      */
-    SOLUTION(7, 7),
+    SOLUTION(8, 7),
     /**
      * <code>EXPERIMENT = 8;</code>
      */
-    EXPERIMENT(8, 8),
+    EXPERIMENT(9, 8),
     /**
      * <code>SCHOOL = 9;</code>
+     *
+     * <pre>
+     * used to get the list of courses for a specific user, returns text if there are no courses.
+     * </pre>
      */
-    SCHOOL(9, 9),
+    SCHOOL(10, 9),
     /**
      * <code>COURSE_SEARCH = 10;</code>
      */
-    COURSE_SEARCH(10, 10),
+    COURSE_SEARCH(11, 10),
     /**
      * <code>BANK_SEARCH = 11;</code>
      */
-    BANK_SEARCH(11, 11),
+    BANK_SEARCH(12, 11),
     /**
      * <code>REGISTER = 12;</code>
      *
@@ -68,9 +76,21 @@ public final class Data {
      * userId = 0 courseId = 1
      * </pre>
      */
-    REGISTER(12, 12),
+    REGISTER(13, 12),
+    /**
+     * <code>COURSE_LIST = 13;</code>
+     *
+     * <pre>
+     * returns a list of Ids
+     * </pre>
+     */
+    COURSE_LIST(14, 13),
     ;
 
+    /**
+     * <code>ERROR = -1;</code>
+     */
+    public static final int ERROR_VALUE = -1;
     /**
      * <code>COURSE = 0;</code>
      */
@@ -109,6 +129,10 @@ public final class Data {
     public static final int EXPERIMENT_VALUE = 8;
     /**
      * <code>SCHOOL = 9;</code>
+     *
+     * <pre>
+     * used to get the list of courses for a specific user, returns text if there are no courses.
+     * </pre>
      */
     public static final int SCHOOL_VALUE = 9;
     /**
@@ -127,12 +151,21 @@ public final class Data {
      * </pre>
      */
     public static final int REGISTER_VALUE = 12;
+    /**
+     * <code>COURSE_LIST = 13;</code>
+     *
+     * <pre>
+     * returns a list of Ids
+     * </pre>
+     */
+    public static final int COURSE_LIST_VALUE = 13;
 
 
     public final int getNumber() { return value; }
 
     public static ItemQuery valueOf(int value) {
       switch (value) {
+        case -1: return ERROR;
         case 0: return COURSE;
         case 1: return ASSIGNMENT;
         case 2: return COURSE_PROBLEM;
@@ -146,6 +179,7 @@ public final class Data {
         case 10: return COURSE_SEARCH;
         case 11: return BANK_SEARCH;
         case 12: return REGISTER;
+        case 13: return COURSE_LIST;
         default: return null;
       }
     }
@@ -1128,7 +1162,7 @@ public final class Data {
 
     private void initFields() {
       itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
       advanceQuery_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
@@ -1296,7 +1330,7 @@ public final class Data {
         super.clear();
         itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
-        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
         bitField0_ = (bitField0_ & ~0x00000002);
         advanceQuery_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -1531,7 +1565,7 @@ public final class Data {
       }
 
       // optional .protobuf.srl.query.ItemQuery query = 2;
-      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
       /**
        * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
        */
@@ -1561,7 +1595,7 @@ public final class Data {
        */
       public Builder clearQuery() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
         onChanged();
         return this;
       }
@@ -2507,7 +2541,7 @@ public final class Data {
     }
 
     private void initFields() {
-      query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
       isInsert_ = false;
       data_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -2669,7 +2703,7 @@ public final class Data {
 
       public Builder clear() {
         super.clear();
-        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
         bitField0_ = (bitField0_ & ~0x00000001);
         isInsert_ = false;
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -2768,7 +2802,7 @@ public final class Data {
       private int bitField0_;
 
       // optional .protobuf.srl.query.ItemQuery query = 1;
-      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
       /**
        * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
        */
@@ -2798,7 +2832,7 @@ public final class Data {
        */
       public Builder clearQuery() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
         onChanged();
         return this;
       }
@@ -3809,7 +3843,7 @@ public final class Data {
     }
 
     private void initFields() {
-      query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
       returnText_ = "";
       data_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -3971,7 +4005,7 @@ public final class Data {
 
       public Builder clear() {
         super.clear();
-        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
         bitField0_ = (bitField0_ & ~0x00000001);
         returnText_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -4072,7 +4106,7 @@ public final class Data {
       private int bitField0_;
 
       // optional .protobuf.srl.query.ItemQuery query = 1;
-      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
       /**
        * <code>optional .protobuf.srl.query.ItemQuery query = 1;</code>
        */
@@ -4102,7 +4136,7 @@ public final class Data {
        */
       public Builder clearQuery() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        query_ = protobuf.srl.query.Data.ItemQuery.COURSE;
+        query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
         onChanged();
         return this;
       }
@@ -4279,13 +4313,13 @@ public final class Data {
       "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query.",
       "ItemResult\"\\\n\nItemResult\022,\n\005query\030\001 \001(\0162" +
       "\035.protobuf.srl.query.ItemQuery\022\022\n\nreturn" +
-      "Text\030\002 \001(\t\022\014\n\004data\030\003 \001(\014*\330\001\n\tItemQuery\022\n" +
-      "\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE_PRO" +
-      "BLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022" +
-      "\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUT" +
-      "ION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOU" +
-      "RSE_SEARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REGISTE" +
-      "R\020\014"
+      "Text\030\002 \001(\t\022\014\n\004data\030\003 \001(\014*\375\001\n\tItemQuery\022\022" +
+      "\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\nASSIGN" +
+      "MENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBL" +
+      "EM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\t" +
+      "USER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020" +
+      "\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n\013BANK" +
+      "_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013COURSE_LIST\020\r"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

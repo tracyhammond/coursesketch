@@ -43,10 +43,11 @@ enum Request_MessageType {
   Request_MessageType_LOGIN = 0,
   Request_MessageType_DATA_REQUEST = 1,
   Request_MessageType_DATA_SENDING = 2,
-  Request_MessageType_RECOGNITION = 3,
-  Request_MessageType_LOADING = 4,
-  Request_MessageType_SUBMISSION = 5,
-  Request_MessageType_PENDING = 6
+  Request_MessageType_DATA_UPDATE = 3,
+  Request_MessageType_RECOGNITION = 4,
+  Request_MessageType_LOADING = 5,
+  Request_MessageType_SUBMISSION = 6,
+  Request_MessageType_PENDING = 7
 };
 bool Request_MessageType_IsValid(int value);
 const Request_MessageType Request_MessageType_MessageType_MIN = Request_MessageType_LOGIN;
@@ -121,6 +122,7 @@ class Request : public ::google::protobuf::Message {
   static const MessageType LOGIN = Request_MessageType_LOGIN;
   static const MessageType DATA_REQUEST = Request_MessageType_DATA_REQUEST;
   static const MessageType DATA_SENDING = Request_MessageType_DATA_SENDING;
+  static const MessageType DATA_UPDATE = Request_MessageType_DATA_UPDATE;
   static const MessageType RECOGNITION = Request_MessageType_RECOGNITION;
   static const MessageType LOADING = Request_MessageType_LOADING;
   static const MessageType SUBMISSION = Request_MessageType_SUBMISSION;

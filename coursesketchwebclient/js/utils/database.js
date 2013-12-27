@@ -3,16 +3,16 @@
  *
  * It will also create all the functions needed for the specific database.
  */
-function protoDatabase = function(databaseName, version, openCallback) {
+function protoDatabase(databaseName, version, openCallback) {
 	if (!window.indexedDB) {
 		return;
 		window.alert("Your browser doesn't support a stable version of IndexedDB. So storing your data will not be possible");
 	}
 	var self = this;
-	var courseSketch = null;
-	courseSketch.indexedDB = null;
+	var courseSketch = {};
+	courseSketch.indexedDB = window.indexedDB;
 	var updgradeTables = null;
-	this.setTables(tables) {
+	this.setTables = function(tables) {
 		updgradeTables = tables;
 	}
 
@@ -35,7 +35,7 @@ function protoDatabase = function(databaseName, version, openCallback) {
 	 * @param gettingFunction
 	 * @param callback Is called upon success of a data change (either adding or 
 	 */
-	this.createTable(tableName, keyValue, addingFunction) {
+	this.createTable = function(tableName, keyValue, addingFunction) {
 		return {
 			name: tableName,
 			key: keyValue,
@@ -52,7 +52,8 @@ function protoDatabase = function(databaseName, version, openCallback) {
 			var db = e.target.result;
 			// A versionchange transaction is started automatically.
 			e.target.transaction.onerror = courseSketch.indexedDB.onerror;
-			for (table in updgradeTables) {
+			for (var i = 0; i < updgradeTables.length; i++) {
+				table = updgradeTables[i];
 				// delete existing table
 				if (db.objectStoreNames.contains(table.name)) {
 					db.deleteObjectStore(table.name);
@@ -71,7 +72,9 @@ function protoDatabase = function(databaseName, version, openCallback) {
 	 * creates a bunch of functions for the table which are created upon successful database creation.
 	 */
 	function createTableFunctions() {
-		for (table in updgradeTables) {
+		for (var i = 0; i < updgradeTables.length; i++) {
+			table = updgradeTables[i];
+			console.log(table);
 			(function(localTable) {
 				/**
 				 * Creates a function for adding items to the database.
@@ -89,7 +92,7 @@ function protoDatabase = function(databaseName, version, openCallback) {
 						console.log(e.value);
 					};
 				};
-
+				console.log("adding function" + 'putIn' + localTable.name);
 				/**
 				 * Creates a function for deleting items from the database.
 				 */
@@ -125,6 +128,32 @@ function protoDatabase = function(databaseName, version, openCallback) {
 				};
 			})(table);
 		}
-		openCallback();
+		if (openCallback)
+			openCallback();
+	}
+
+	this.emptySelf = function() {
+		emptyDB(databaseName);
+	}
+
+	function emptyDB(databaseName) {
+		try {
+			var result = confirm("Do you want to empty all of the local data?");
+			if(result == true) {
+				var dbreq = courseSketch.indexedDB.deleteDatabase(databaseName);
+				dbreq.onsuccess = function (event) {
+					var db = event.result;
+					output_trace("indexedDB: " + databaseName + " deleted");
+				}
+				dbreq.onerror = function (event) {
+					output_trace("indexedDB.delete Error: " + event.message);
+				}
+			} else {
+				alert("The local data was not emptied");
+			}
+		}
+		catch (e) {
+			output_trace("Error: " + e.message);
+		}
 	}
 }

@@ -8,16 +8,18 @@
 	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
 	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
     <script type="text/javascript" src="js/connection/connection_library.js"></script>
+    <script type="text/javascript" src="js/connection/advance_data_listener.js"></script>
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
 	<script type="text/javascript" src="js/menu/header.js"></script>
-	<script>
+
+	<script type="text/javascript">
 	try {
 		parent.copyParentUtilityFunctions(this);
 		parent.copyParentProtos(this);
 	} catch (exception) {
-		
+		console.log(excpetion);
 	}
 	</script>
 	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
@@ -46,6 +48,11 @@
 							redirectContent("html/student/course_management.html", "Welcome Student!");
 						}
 						placeMenu(connection.isInstructor);
+
+						dataListener = new AdvanceDataListener(connection, Request, QueryBuilder, function(evt, item) {
+							//alert(evt.);
+							console.log("default listener");
+						});
 					}
 				);
 
@@ -73,6 +80,7 @@
 	  		var redirector = parent.redirector;
 	  		var contentHeight = 0;
 	  		var headerManager = new HeaderHandler();
+	  		var dataListener = false;
 
 	  		function redirectContent(url, title) {
 	  			document.getElementById('iframeContent').src = url;

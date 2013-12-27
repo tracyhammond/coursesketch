@@ -19,6 +19,7 @@ public class CourseProblemTester {
 		testBuilder.setProblemBankId(problemBankId);
 		testBuilder.setName("Raising Puppies");
 		testBuilder.setDescription("genetically engineered puppies that potty train themselves!");
+		testBuilder.setGradeWeight("either points or percent");
 		SrlPermission.Builder permissions = SrlPermission.newBuilder();
 		/*
 		permissions.addAdminPermission("david");

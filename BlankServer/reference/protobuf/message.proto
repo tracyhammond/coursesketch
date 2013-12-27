@@ -2,7 +2,7 @@ package protobuf.srl.request;
 
 // Always sent and is filled out properly.
 message Request {
-	required MessageType requestType= 1 [default=LOGIN];
+	required MessageType requestType = 1 [default=LOGIN];
 	optional LoginInformation login = 2;
     optional bytes otherData = 3;
 	optional string responseText = 4;
@@ -13,10 +13,11 @@ message Request {
 		LOGIN = 0;
         DATA_REQUEST = 1;
         DATA_SENDING = 2;
-        RECOGNITION = 3;
-		LOADING = 4; // this is for when the client is loading.
-		SUBMISSION = 5; // sent to both servers at the same time. (Answer checking and database)
-		PENDING = 6;
+        DATA_UPDATE = 3;
+        RECOGNITION = 4;
+		LOADING = 5; // this is for when the client is loading.
+		SUBMISSION = 6; // sent to both servers at the same time. (Answer checking and database)
+		PENDING = 7;
     }
 }
 
