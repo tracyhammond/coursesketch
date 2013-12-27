@@ -15,16 +15,21 @@ function AdvanceDataListener(connection, Request, query, defListener) {
 
 	var myScope = this;
 	var defaultListener = defListener;
+	var errorListener;
 	var QueryBuilder = query;
+	
+	this.setErrorListener = function(func) {
+		errorListener = func;
+	}
 	
 	/**
 	 * Sets
 	 */
 	this.setListener = function(messageType, queryType, func) {
 		var localMap = requestMap[messageType];
-		console.log("Adding listener");
-		console.log(messageType);
-		console.log(queryType);
+		//console.log("Adding listener");
+		//console.log(messageType);
+		//console.log(queryType);
 		localMap[queryType] = func;
 	}
 
@@ -35,18 +40,31 @@ function AdvanceDataListener(connection, Request, query, defListener) {
 	 */
 	function decode(evt, msg, messageType) {
 		var localMap = requestMap[messageType];
-		var dataList = QueryBuilder.DataResult.decode(msg.otherData).results;
-		for(var i = 0; i < dataList.length; i++) {
-			console.log("Decoding listener");
-			var item = dataList[i];
-			var func = localMap[item.query];
-			console.log(messageType);
-			console.log(item.query);
-			console.log(func);
-			if (!isUndefined(func)) {
-				func(evt, item);
-			} else {
-				defListener(evt, item);
+		try {
+			var dataList = QueryBuilder.DataResult.decode(msg.otherData).results;
+			for(var i = 0; i < dataList.length; i++) {
+				//console.log("Decoding listener");
+				var item = dataList[i];
+				var func = localMap[item.query];
+				//console.log(messageType);
+				//console.log(item.query);
+				if (!isUndefined(func)) {
+					try {
+						func(evt, item);
+					} catch(exception) {
+						console.error(exception);
+						console.error(exception.stack);
+					}
+				} else {
+					defListener(evt, item);
+				}
+			}
+		}catch(exception) {
+			console.error(exception);
+			console.error(exception.stack);
+			console.log("decoding data failed: " + msg.responseText);
+			if (errorListener) {
+				errorListener(msg);
 			}
 		}
 	}

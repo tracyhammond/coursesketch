@@ -108,7 +108,6 @@ function SchoolItemBuilder() {
 	 * Returns a string of the object's type (SrlCourse, SrlAssignment, or SrlProblem
 	 */
 	function findType(object) {
-		console.log(object);
 		if (!isUndefined(object.assignmentList)) {
 			return "Course";
 		} else if (!isUndefinedobject.problemList) {
@@ -143,11 +142,6 @@ function SchoolItemBuilder() {
 		for (var i = 0; i< this.dataList.length; i++) {
 			var srlSchoolItem = this.dataList[i];
 			var type = findType(srlSchoolItem); // We establish the type that it is.
-			console.log(type);
-			//option 1
-			//srlSchoolItem instanceof SrlCourse
-			//option2
-			// type = srlSchoolItem.id.split("_")[0];// course , assignment, problem
 			html+='<li ' + (this.centerInDiv?'class = "child_center"':'') + '>';
 			if (this.isSimpleList) {
 				html += this.createSimpleSchoolItem(srlSchoolItem);
@@ -251,7 +245,6 @@ function SchoolItemBuilder() {
 		var html = '';
 		var completionStatus = srlSchoolItem.state;
 		if (completionStatus != null) {
-			console.log(completionStatus);
 			 if (!completionStatus.accessible && completionStatus.pastDue) {
 				html = '<span class="school_item_state assignment_closed"></span>';
 				//The assignment was accessible, but is now closed
