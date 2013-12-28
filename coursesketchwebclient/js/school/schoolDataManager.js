@@ -8,8 +8,8 @@
  * @param query Holds the protobuf builder for querying items.
  * @param byteBuffer The static instance that is used for encoding and decoding data.
  */
-function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilder, query, request, byteBuffer) {
-	const COURSE_LIST = "COURSE_LIST";
+function schoolDataManager(userId, advanceDataListener, connection, schoolBuilder, query, request, byteBuffer) {
+	const courseList = "COURSE_LIST";
 	var localScope = this;
 	var localUserId = userId;
 
@@ -37,9 +37,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	 */
 
 	var initalizedFunction = function() {
-		console.log("database is ready for use! with user: " + userId);
+		console.log("database is ready for use!");
 		useable = true;
-		database.getFromCourses(COURSE_LIST, function(e, request, result) {
+		database.getFromCourses(courseList, function(e, request, result) {
 			if (isUndefined(result) || isUndefined(result.data)) {
 				return;
 			}
@@ -53,6 +53,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		return store.put({"id" : objectId, "data" : objectToAdd});
 	}
 	var courseTable = database.createTable("Courses","id", addFunction);
+	console.log(courseTable);
 	var assignmentTable = database.createTable("Assignments","id", addFunction);
 	var problemTable = database.createTable("Problems","id", addFunction);
 
@@ -81,6 +82,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 				courseCallback(nonExistantValue);
 				return;
 			}
+			console.log(userCourses[courseId]);
 			var bytes = ByteBuffer.decode64(userCourses[courseId]);
 			courseCallback(SrlCourse.decode(bytes));
 			return;
@@ -135,11 +137,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		});
 		userCourses[course.id] = undefined; // removing it from the local map
 	};
-	
-	function setCourseIdList(idList) {
-		userCourseId = idList;
-		database.putInCourses(COURSE_LIST, idList); // no call back needed!
-	}
 
 	/**
 	 * Returns a list of all of the courses in database.
@@ -147,13 +144,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	 * This does attempt to pull courses from the server!
 	 */
 	this.getAllCourses = function(courseCallback) {
-		var localFunction = setCourseIdList;
 		// there are no courses loaded onto this client!
 		if (userCourseId.length == 0 && userHasCourses) {
-			advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.SCHOOL, function(evt, item) {
-				if (!isUndefined(item.returnText) && item.returnText != "" && item.returnText !="null" && item.returnText != null) {
-					userHasCourses = false;
-					console.log(item.returnText);
+			advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE, function(evt, item) {
+				if (!isUndefined(item.returnText) && item.returnText != "") {
 					alert(item.returnText);
 					return;
 				}
@@ -166,12 +160,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 					idList.push(course.id);
 				}
 				courseCallback(courseList);
-				setCourseIdList(idList);
+				localScope.setCourseIdList(idList);
 			});
-
-			sendDataRequest(QueryBuilder.ItemQuery.SCHOOL, [""]);
-			console.log("course list from server polled!");
 		} else {
+<<<<<<< HEAD:coursesketchwebclient/js/persistant_data/course_sketch_data_manager.js
 			// This calls the server for updates then creates a list from the local data to appear fast
 			// then updates list after server polling and comparing the two list.
 			console.log("course list from local place polled!");
@@ -199,18 +191,24 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			}
 
 			// we ask the program for the list of courses by id then we compare and update!
+=======
+			
+>>>>>>> 42d542e1cdf2bdcdb5f65839bc9ec3c05dc77c4f:coursesketchwebclient/js/school/schoolDataManager.js
 		}
 	};
 
-	function sendDataRequest(queryType, idList) {
-		var dataSend = new QueryBuilder.DataRequest();
-		dataSend.items = new Array();
-		dataSend.items.push(new QueryBuilder.ItemRequest(idList, queryType));
-		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
+	function setCourseIdList(idList) {
+		userCourseId = idList;
+		this.putInCourses(COURSE_LIST, idList); // no call back needed!
 	}
 
 	this.emptySchoolData = function() {
 		database.emptySelf();
 	};
+	/*
+	connection.setSchoolDataListener(function(event, msg) {
+	
+	});
+	*/
 }
 const nonExistantValue = "NONEXISTANT_VALUE";

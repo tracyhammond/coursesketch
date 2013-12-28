@@ -181,26 +181,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 		var barrierCount = 0;
 		var postFunction = postLoadedFunction;
 		function load1() {
-			//loader.loadFile("js/connection/libraries/Long.min.js",'js',loadBarrier.bind(this));
-			//loader.loadFile("js/connection/libraries/ByteBuffer.min.js",'js',loadBarrier.bind(this));
-			loadBarrier();
-			loadBarrier();
-		}
-
-		function load2() {
-			//loader.loadFile("js/connection/libraries/Protobuf.min.js",'js',loadBarrier.bind(this));
-			loadBarrier();
-		}
-
-		function loadBarrier() {
-			barrierCount++;
-			if (barrierCount == 2) {
-				load2();
-			}else if (barrierCount == 3) {
-				//Next Function.
-				initializeBuf();
-				filesLoaded = true;
-			}
+			initializeBuf();
 		}
 
 		function initializeBuf() {
