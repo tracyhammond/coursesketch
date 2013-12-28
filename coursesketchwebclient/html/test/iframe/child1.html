@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<base href="../../../"> <!-- this is because of where I am importing from -->
+		<script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+		<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+		<script type="text/javascript">
+		window.onload = function() {
+			var myBuffer = parent.ByteBuffer;
+			console.log("CHILD FRAME1: using parent byte buffer");
+			var inner = new parent.builder.Inner("string1");
+			var outer = new parent.builder.Outer([inner]);
+			console.log(outer);
+			// encode the built message
+			var encoded = outer.toBase64();
+			console.log(encoded);
+			var bytes = myBuffer.decode64(encoded);
+			var newOuter = parent.builder.Outer.decode(bytes);
+			document.getElementById("testFrame1").innerHTML= encoded + " decoded successfully using parent";
+	
+			myBuffer = dcodeIO.ByteBuffer;
+			console.log("CHILD FRAME2: using own byte buffer");
+			var inner = new parent.builder.Inner("string1");
+			var outer = new parent.builder.Outer([inner]);
+			console.log(outer);
+			// encode the built message
+			var encoded = outer.toBase64();
+			console.log(encoded);
+			var bytes = myBuffer.decode64(encoded);
+			var newOuter = parent.builder.Outer.decode(bytes);
+			document.getElementById("testFrame2").innerHTML= encoded + " decoded successfully using own byte buffer";
+		};
+		</script>
+	</head>
+	<body>
+	<p id="testFrame1">
+	random filler
+	</p>
+	<p id="testFrame2">
+	random filler
+	</p>
+	</body>
+</html>

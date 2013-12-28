@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<base href="../../../">
+    <title>Welcome!</title>
+    <script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script> <!-- 2.2.0 -->
+	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script><!-- 2.0.2 --> 
+	<script type="text/javascript">
+	var ProtoBuf = false;
+	var ByteBuffer = false;
+	var builder = false;
+	var protobufDirectory = "other/protobuf/";
+	if (!ProtoBuf) {
+		ProtoBuf = dcodeIO.ProtoBuf;
+	}
+	if (!ByteBuffer) {
+		ByteBuffer = dcodeIO.ByteBuffer;
+	}
+	if (!builder) {
+		builder = ProtoBuf.protoFromFile(protobufDirectory + "test.proto").result.protobuf;
+		/*
+		// contents of test.proto
+		package protobuf;
+
+		message Outer {
+		    repeated Inner inners = 4;
+		}
+		
+		message Inner {
+		    required string str = 1;
+		}
+		*/
+	}
+
+	window.onload = function() {
+			console.log("TOP FRAME");
+			var inner = new builder.Inner("string1");
+			var outer = new builder.Outer([inner]);
+			console.log(outer);
+			// encode the built message
+			var encoded = outer.toBase64();
+			console.log(encoded);
+			var bytes = ByteBuffer.decode64(encoded);
+			var newOuter = builder.Outer.decode(bytes);
+			document.getElementById("testFrame").innerHTML= encoded + " decoded successfully";
+			// var newOuter = builder.Outer.decode(bytes.array);
+	};
+	</script>
+</head>
+<body>
+<iframe src = "html/test/iframe/child1.html"></iframe>
+<p id = "testFrame">
+random filler
+</p>
+</body>
+</html>
