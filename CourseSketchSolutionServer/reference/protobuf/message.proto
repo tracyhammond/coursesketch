@@ -12,12 +12,12 @@ message Request {
     enum MessageType {
 		LOGIN = 0;
         DATA_REQUEST = 1;
-        DATA_SENDING = 2;
+        DATA_INSERT = 2;
         DATA_UPDATE = 3;
-        RECOGNITION = 4;
-		LOADING = 5; // this is for when the client is loading.
-		SUBMISSION = 6; // sent to both servers at the same time. (Answer checking and database)
-		PENDING = 7;
+        DATA_REMOVE = 4;
+        RECOGNITION = 5;
+		LOADING = 6; // this is for when the client is loading.
+		SUBMISSION = 7; // sent to both servers at the same time. (Answer checking and database)
     }
 }
 

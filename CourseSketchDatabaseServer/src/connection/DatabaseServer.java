@@ -69,7 +69,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 			updateHandler.addRequest(req);
 		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
 			DataRequestHandler.handleRequest(req, conn);
-		} else if (req.getRequestType() == Request.MessageType.DATA_SENDING) {
+		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
 			DataSendHandler.handleData(req, conn);
 		}
 	}

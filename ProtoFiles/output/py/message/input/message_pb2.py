@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/message.proto',
   package='protobuf.srl.request',
-  serialized_pb='\n\x13input/message.proto\x12\x14protobuf.srl.request\"\xe6\x02\n\x07Request\x12\x45\n\x0brequestType\x18\x01 \x02(\x0e\x32).protobuf.srl.request.Request.MessageType:\x05LOGIN\x12\x35\n\x05login\x18\x02 \x01(\x0b\x32&.protobuf.srl.request.LoginInformation\x12\x11\n\totherData\x18\x03 \x01(\x0c\x12\x14\n\x0cresponseText\x18\x04 \x01(\t\x12\x13\n\x0bsessionInfo\x18\x05 \x01(\t\x12\x14\n\x0cserversideId\x18\x06 \x01(\t\"\x88\x01\n\x0bMessageType\x12\t\n\x05LOGIN\x10\x00\x12\x10\n\x0c\x44\x41TA_REQUEST\x10\x01\x12\x10\n\x0c\x44\x41TA_SENDING\x10\x02\x12\x0f\n\x0b\x44\x41TA_UPDATE\x10\x03\x12\x0f\n\x0bRECOGNITION\x10\x04\x12\x0b\n\x07LOADING\x10\x05\x12\x0e\n\nSUBMISSION\x10\x06\x12\x0b\n\x07PENDING\x10\x07\"\x96\x01\n\x10LoginInformation\x12\x10\n\x08username\x18\x01 \x02(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x12\n\nisLoggedIn\x18\x03 \x01(\x08\x12\x14\n\x0cisInstructor\x18\x04 \x01(\x08\x12\x15\n\risRegistering\x18\x05 \x01(\x08\x12\r\n\x05\x65mail\x18\x06 \x01(\t\x12\x0e\n\x06userId\x18\x07 \x01(\t')
+  serialized_pb='\n\x13input/message.proto\x12\x14protobuf.srl.request\"\xe9\x02\n\x07Request\x12\x45\n\x0brequestType\x18\x01 \x02(\x0e\x32).protobuf.srl.request.Request.MessageType:\x05LOGIN\x12\x35\n\x05login\x18\x02 \x01(\x0b\x32&.protobuf.srl.request.LoginInformation\x12\x11\n\totherData\x18\x03 \x01(\x0c\x12\x14\n\x0cresponseText\x18\x04 \x01(\t\x12\x13\n\x0bsessionInfo\x18\x05 \x01(\t\x12\x14\n\x0cserversideId\x18\x06 \x01(\t\"\x8b\x01\n\x0bMessageType\x12\t\n\x05LOGIN\x10\x00\x12\x10\n\x0c\x44\x41TA_REQUEST\x10\x01\x12\x0f\n\x0b\x44\x41TA_INSERT\x10\x02\x12\x0f\n\x0b\x44\x41TA_UPDATE\x10\x03\x12\x0f\n\x0b\x44\x41TA_REMOVE\x10\x04\x12\x0f\n\x0bRECOGNITION\x10\x05\x12\x0b\n\x07LOADING\x10\x06\x12\x0e\n\nSUBMISSION\x10\x07\"\x96\x01\n\x10LoginInformation\x12\x10\n\x08username\x18\x01 \x02(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x12\n\nisLoggedIn\x18\x03 \x01(\x08\x12\x14\n\x0cisInstructor\x18\x04 \x01(\x08\x12\x15\n\risRegistering\x18\x05 \x01(\x08\x12\r\n\x05\x65mail\x18\x06 \x01(\t\x12\x0e\n\x06userId\x18\x07 \x01(\t')
 
 
 
@@ -32,7 +32,7 @@ _REQUEST_MESSAGETYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DATA_SENDING', index=2, number=2,
+      name='DATA_INSERT', index=2, number=2,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
@@ -40,26 +40,26 @@ _REQUEST_MESSAGETYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='RECOGNITION', index=4, number=4,
+      name='DATA_REMOVE', index=4, number=4,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='LOADING', index=5, number=5,
+      name='RECOGNITION', index=5, number=5,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='SUBMISSION', index=6, number=6,
+      name='LOADING', index=6, number=6,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='PENDING', index=7, number=7,
+      name='SUBMISSION', index=7, number=7,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=268,
-  serialized_end=404,
+  serialized_end=407,
 )
 
 
@@ -123,7 +123,7 @@ _REQUEST = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=46,
-  serialized_end=404,
+  serialized_end=407,
 )
 
 
@@ -192,8 +192,8 @@ _LOGININFORMATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=407,
-  serialized_end=557,
+  serialized_start=410,
+  serialized_end=560,
 )
 
 _REQUEST.fields_by_name['requestType'].enum_type = _REQUEST_MESSAGETYPE

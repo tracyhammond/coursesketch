@@ -42,6 +42,7 @@ class DataSend;
 class ItemSend;
 class DataResult;
 class ItemResult;
+class IdList;
 
 enum ItemQuery {
   ERROR = -1,
@@ -663,6 +664,95 @@ class ItemResult : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static ItemResult* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class IdList : public ::google::protobuf::Message {
+ public:
+  IdList();
+  virtual ~IdList();
+
+  IdList(const IdList& from);
+
+  inline IdList& operator=(const IdList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const IdList& default_instance();
+
+  void Swap(IdList* other);
+
+  // implements Message ----------------------------------------------
+
+  IdList* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const IdList& from);
+  void MergeFrom(const IdList& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated string list = 1;
+  inline int list_size() const;
+  inline void clear_list();
+  static const int kListFieldNumber = 1;
+  inline const ::std::string& list(int index) const;
+  inline ::std::string* mutable_list(int index);
+  inline void set_list(int index, const ::std::string& value);
+  inline void set_list(int index, const char* value);
+  inline void set_list(int index, const char* value, size_t size);
+  inline ::std::string* add_list();
+  inline void add_list(const ::std::string& value);
+  inline void add_list(const char* value);
+  inline void add_list(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& list() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_list();
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.IdList)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::std::string> list_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fdata_2eproto();
+  friend void protobuf_AssignDesc_input_2fdata_2eproto();
+  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
+
+  void InitAsDefaultInstance();
+  static IdList* default_instance_;
+};
 // ===================================================================
 
 
@@ -1178,6 +1268,54 @@ inline void ItemResult::set_allocated_data(::std::string* data) {
     clear_has_data();
     data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// -------------------------------------------------------------------
+
+// IdList
+
+// repeated string list = 1;
+inline int IdList::list_size() const {
+  return list_.size();
+}
+inline void IdList::clear_list() {
+  list_.Clear();
+}
+inline const ::std::string& IdList::list(int index) const {
+  return list_.Get(index);
+}
+inline ::std::string* IdList::mutable_list(int index) {
+  return list_.Mutable(index);
+}
+inline void IdList::set_list(int index, const ::std::string& value) {
+  list_.Mutable(index)->assign(value);
+}
+inline void IdList::set_list(int index, const char* value) {
+  list_.Mutable(index)->assign(value);
+}
+inline void IdList::set_list(int index, const char* value, size_t size) {
+  list_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* IdList::add_list() {
+  return list_.Add();
+}
+inline void IdList::add_list(const ::std::string& value) {
+  list_.Add()->assign(value);
+}
+inline void IdList::add_list(const char* value) {
+  list_.Add()->assign(value);
+}
+inline void IdList::add_list(const char* value, size_t size) {
+  list_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+IdList::list() const {
+  return list_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+IdList::mutable_list() {
+  return &list_;
 }
 
 

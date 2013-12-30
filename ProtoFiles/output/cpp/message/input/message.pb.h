@@ -42,16 +42,16 @@ class LoginInformation;
 enum Request_MessageType {
   Request_MessageType_LOGIN = 0,
   Request_MessageType_DATA_REQUEST = 1,
-  Request_MessageType_DATA_SENDING = 2,
+  Request_MessageType_DATA_INSERT = 2,
   Request_MessageType_DATA_UPDATE = 3,
-  Request_MessageType_RECOGNITION = 4,
-  Request_MessageType_LOADING = 5,
-  Request_MessageType_SUBMISSION = 6,
-  Request_MessageType_PENDING = 7
+  Request_MessageType_DATA_REMOVE = 4,
+  Request_MessageType_RECOGNITION = 5,
+  Request_MessageType_LOADING = 6,
+  Request_MessageType_SUBMISSION = 7
 };
 bool Request_MessageType_IsValid(int value);
 const Request_MessageType Request_MessageType_MessageType_MIN = Request_MessageType_LOGIN;
-const Request_MessageType Request_MessageType_MessageType_MAX = Request_MessageType_PENDING;
+const Request_MessageType Request_MessageType_MessageType_MAX = Request_MessageType_SUBMISSION;
 const int Request_MessageType_MessageType_ARRAYSIZE = Request_MessageType_MessageType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* Request_MessageType_descriptor();
@@ -121,12 +121,12 @@ class Request : public ::google::protobuf::Message {
   typedef Request_MessageType MessageType;
   static const MessageType LOGIN = Request_MessageType_LOGIN;
   static const MessageType DATA_REQUEST = Request_MessageType_DATA_REQUEST;
-  static const MessageType DATA_SENDING = Request_MessageType_DATA_SENDING;
+  static const MessageType DATA_INSERT = Request_MessageType_DATA_INSERT;
   static const MessageType DATA_UPDATE = Request_MessageType_DATA_UPDATE;
+  static const MessageType DATA_REMOVE = Request_MessageType_DATA_REMOVE;
   static const MessageType RECOGNITION = Request_MessageType_RECOGNITION;
   static const MessageType LOADING = Request_MessageType_LOADING;
   static const MessageType SUBMISSION = Request_MessageType_SUBMISSION;
-  static const MessageType PENDING = Request_MessageType_PENDING;
   static inline bool MessageType_IsValid(int value) {
     return Request_MessageType_IsValid(value);
   }
