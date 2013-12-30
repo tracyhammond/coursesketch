@@ -4262,6 +4262,513 @@ public final class Data {
     // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemResult)
   }
 
+  public interface IdListOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // repeated string list = 1;
+    /**
+     * <code>repeated string list = 1;</code>
+     */
+    java.util.List<java.lang.String>
+    getListList();
+    /**
+     * <code>repeated string list = 1;</code>
+     */
+    int getListCount();
+    /**
+     * <code>repeated string list = 1;</code>
+     */
+    java.lang.String getList(int index);
+    /**
+     * <code>repeated string list = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getListBytes(int index);
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.query.IdList}
+   *
+   * <pre>
+   **
+   * Used for when we want to return a list of Ids
+   * </pre>
+   */
+  public static final class IdList extends
+      com.google.protobuf.GeneratedMessage
+      implements IdListOrBuilder {
+    // Use IdList.newBuilder() to construct.
+    private IdList(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private IdList(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final IdList defaultInstance;
+    public static IdList getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public IdList getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private IdList(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                list_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              list_.add(input.readBytes());
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          list_ = new com.google.protobuf.UnmodifiableLazyStringList(list_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_IdList_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_IdList_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.query.Data.IdList.class, protobuf.srl.query.Data.IdList.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<IdList> PARSER =
+        new com.google.protobuf.AbstractParser<IdList>() {
+      public IdList parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new IdList(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<IdList> getParserForType() {
+      return PARSER;
+    }
+
+    // repeated string list = 1;
+    public static final int LIST_FIELD_NUMBER = 1;
+    private com.google.protobuf.LazyStringList list_;
+    /**
+     * <code>repeated string list = 1;</code>
+     */
+    public java.util.List<java.lang.String>
+        getListList() {
+      return list_;
+    }
+    /**
+     * <code>repeated string list = 1;</code>
+     */
+    public int getListCount() {
+      return list_.size();
+    }
+    /**
+     * <code>repeated string list = 1;</code>
+     */
+    public java.lang.String getList(int index) {
+      return list_.get(index);
+    }
+    /**
+     * <code>repeated string list = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getListBytes(int index) {
+      return list_.getByteString(index);
+    }
+
+    private void initFields() {
+      list_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < list_.size(); i++) {
+        output.writeBytes(1, list_.getByteString(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < list_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(list_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getListList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.query.Data.IdList parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.IdList parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.IdList parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.IdList parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.IdList parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.IdList parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.IdList parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.query.Data.IdList parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.IdList parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.IdList parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.query.Data.IdList prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.query.IdList}
+     *
+     * <pre>
+     **
+     * Used for when we want to return a list of Ids
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.query.Data.IdListOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_IdList_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_IdList_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.query.Data.IdList.class, protobuf.srl.query.Data.IdList.Builder.class);
+      }
+
+      // Construct using protobuf.srl.query.Data.IdList.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        list_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_IdList_descriptor;
+      }
+
+      public protobuf.srl.query.Data.IdList getDefaultInstanceForType() {
+        return protobuf.srl.query.Data.IdList.getDefaultInstance();
+      }
+
+      public protobuf.srl.query.Data.IdList build() {
+        protobuf.srl.query.Data.IdList result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.query.Data.IdList buildPartial() {
+        protobuf.srl.query.Data.IdList result = new protobuf.srl.query.Data.IdList(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          list_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              list_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.list_ = list_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.query.Data.IdList) {
+          return mergeFrom((protobuf.srl.query.Data.IdList)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.query.Data.IdList other) {
+        if (other == protobuf.srl.query.Data.IdList.getDefaultInstance()) return this;
+        if (!other.list_.isEmpty()) {
+          if (list_.isEmpty()) {
+            list_ = other.list_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureListIsMutable();
+            list_.addAll(other.list_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.query.Data.IdList parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.query.Data.IdList) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // repeated string list = 1;
+      private com.google.protobuf.LazyStringList list_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureListIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          list_ = new com.google.protobuf.LazyStringArrayList(list_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated string list = 1;</code>
+       */
+      public java.util.List<java.lang.String>
+          getListList() {
+        return java.util.Collections.unmodifiableList(list_);
+      }
+      /**
+       * <code>repeated string list = 1;</code>
+       */
+      public int getListCount() {
+        return list_.size();
+      }
+      /**
+       * <code>repeated string list = 1;</code>
+       */
+      public java.lang.String getList(int index) {
+        return list_.get(index);
+      }
+      /**
+       * <code>repeated string list = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getListBytes(int index) {
+        return list_.getByteString(index);
+      }
+      /**
+       * <code>repeated string list = 1;</code>
+       */
+      public Builder setList(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureListIsMutable();
+        list_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string list = 1;</code>
+       */
+      public Builder addList(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureListIsMutable();
+        list_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string list = 1;</code>
+       */
+      public Builder addAllList(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureListIsMutable();
+        super.addAll(values, list_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string list = 1;</code>
+       */
+      public Builder clearList() {
+        list_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string list = 1;</code>
+       */
+      public Builder addListBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureListIsMutable();
+        list_.add(value);
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.query.IdList)
+    }
+
+    static {
+      defaultInstance = new IdList(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.query.IdList)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_query_DataRequest_descriptor;
   private static
@@ -4292,6 +4799,11 @@ public final class Data {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_query_ItemResult_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_query_IdList_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_query_IdList_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -4313,13 +4825,14 @@ public final class Data {
       "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query.",
       "ItemResult\"\\\n\nItemResult\022,\n\005query\030\001 \001(\0162" +
       "\035.protobuf.srl.query.ItemQuery\022\022\n\nreturn" +
-      "Text\030\002 \001(\t\022\014\n\004data\030\003 \001(\014*\375\001\n\tItemQuery\022\022" +
-      "\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\nASSIGN" +
-      "MENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBL" +
-      "EM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\t" +
-      "USER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020" +
-      "\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n\013BANK" +
-      "_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013COURSE_LIST\020\r"
+      "Text\030\002 \001(\t\022\014\n\004data\030\003 \001(\014\"\026\n\006IdList\022\014\n\004li" +
+      "st\030\001 \003(\t*\375\001\n\tItemQuery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377" +
+      "\377\001\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE" +
+      "_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROU" +
+      "P\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010S" +
+      "OLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n" +
+      "\rCOURSE_SEARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REG" +
+      "ISTER\020\014\022\017\n\013COURSE_LIST\020\r"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4362,6 +4875,12 @@ public final class Data {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ItemResult_descriptor,
               new java.lang.String[] { "Query", "ReturnText", "Data", });
+          internal_static_protobuf_srl_query_IdList_descriptor =
+            getDescriptor().getMessageTypes().get(6);
+          internal_static_protobuf_srl_query_IdList_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_query_IdList_descriptor,
+              new java.lang.String[] { "List", });
           return null;
         }
       };

@@ -110,18 +110,9 @@ public class ProxyServer extends MultiInternalConnectionServer {
 				}
 				return;
 			}
-			if (req.getRequestType() == MessageType.DATA_REQUEST) {
+			if (req.getRequestType() == MessageType.DATA_REQUEST || req.getRequestType() == MessageType.DATA_INSERT
+					|| req.getRequestType() == MessageType.DATA_UPDATE || req.getRequestType() == MessageType.DATA_REMOVE) {
 				System.out.println("REQUEST TYPE = DATA REQUEST");
-				String sessionID = state.getKey();
-				try {
-					serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
-				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
-					conn.send(createBadConnectionResponse(req, DataConnection.class).toByteArray());
-				}
-				return;
-			}
-			if (req.getRequestType() == MessageType.DATA_SENDING) {
-				System.out.println("REQUEST TYPE = DATA SENDING");
 				String sessionID = state.getKey();
 				try {
 					serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());

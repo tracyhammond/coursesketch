@@ -116,19 +116,19 @@ void protobuf_AddDesc_input_2fmessage_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023input/message.proto\022\024protobuf.srl.requ"
-    "est\"\346\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
+    "est\"\351\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
     "rotobuf.srl.request.Request.MessageType:"
     "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req"
     "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014"
     "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 "
-    "\001(\t\022\024\n\014serversideId\030\006 \001(\t\"\210\001\n\013MessageTyp"
-    "e\022\t\n\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\020\n\014DATA_S"
-    "ENDING\020\002\022\017\n\013DATA_UPDATE\020\003\022\017\n\013RECOGNITION"
-    "\020\004\022\013\n\007LOADING\020\005\022\016\n\nSUBMISSION\020\006\022\013\n\007PENDI"
-    "NG\020\007\"\226\001\n\020LoginInformation\022\020\n\010username\030\001 "
-    "\002(\t\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001("
-    "\010\022\024\n\014isInstructor\030\004 \001(\010\022\025\n\risRegistering"
-    "\030\005 \001(\010\022\r\n\005email\030\006 \001(\t\022\016\n\006userId\030\007 \001(\t", 557);
+    "\001(\t\022\024\n\014serversideId\030\006 \001(\t\"\213\001\n\013MessageTyp"
+    "e\022\t\n\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\017\n\013DATA_I"
+    "NSERT\020\002\022\017\n\013DATA_UPDATE\020\003\022\017\n\013DATA_REMOVE\020"
+    "\004\022\017\n\013RECOGNITION\020\005\022\013\n\007LOADING\020\006\022\016\n\nSUBMI"
+    "SSION\020\007\"\226\001\n\020LoginInformation\022\020\n\010username"
+    "\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003"
+    " \001(\010\022\024\n\014isInstructor\030\004 \001(\010\022\025\n\risRegister"
+    "ing\030\005 \001(\010\022\r\n\005email\030\006 \001(\t\022\016\n\006userId\030\007 \001(\t", 560);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/message.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -170,12 +170,12 @@ bool Request_MessageType_IsValid(int value) {
 #ifndef _MSC_VER
 const Request_MessageType Request::LOGIN;
 const Request_MessageType Request::DATA_REQUEST;
-const Request_MessageType Request::DATA_SENDING;
+const Request_MessageType Request::DATA_INSERT;
 const Request_MessageType Request::DATA_UPDATE;
+const Request_MessageType Request::DATA_REMOVE;
 const Request_MessageType Request::RECOGNITION;
 const Request_MessageType Request::LOADING;
 const Request_MessageType Request::SUBMISSION;
-const Request_MessageType Request::PENDING;
 const Request_MessageType Request::MessageType_MIN;
 const Request_MessageType Request::MessageType_MAX;
 const int Request::MessageType_ARRAYSIZE;

@@ -53,3 +53,10 @@ enum ItemQuery {
 	REGISTER = 12; // userId = 0 courseId = 1
 	COURSE_LIST = 13; // returns a list of Ids
 }
+
+/**
+ * Used for when we want to return a list of Ids
+ */
+message IdList {
+	repeated string list = 1;
+}
