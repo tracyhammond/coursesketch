@@ -13,19 +13,19 @@ public class ManyTestCourses {
 		String[] descsription = new String[]{"This hands-on course will expose students to musical tools developed by the Center for New Music and Audio Technologies (CNMAT). "
 				+ "Topics include performative and compositional applications of current research at CNMAT, "
 				+ "including sound synthesis and diffusion, high-level control, and network applications.",
-				
+
 				"Linear Algebra is at the heart of many diverse current applications of mathematics."
 				+ "Notable contemporary examples involve understanding large data setssuch as the idea behind Google searches and the structure of DNA. "
 				+ "Our goal is to present both the major ideas and give you technical skills. "
 				+ "To be successful in this course, you should be present for all class meetings and plan to take good notes.",
-				
+
 				"Welcome to Phys 108! The purpose of this course is to help you explore the natural phenomenaof electricity and magnetism by "
 				+ "<br>exposing you to physical phenomena in the laboratory<br>"
 				+ "engaging you in a group oriented setting to allow collaboration with peers",
-				
+
 				"In this classrom u will learn crucial spelling information dawgs"
 				+ "This course is importatn to ur edu",
-						
+
 				"496620796f752063616e206465636f64652074686973207468656e20796f752073686f756c642074616b65207468697320636f75727365"};
 		for(int k = 0; k < 2; k ++) {
 			SrlCourse.Builder testBuilder = SrlCourse.newBuilder();

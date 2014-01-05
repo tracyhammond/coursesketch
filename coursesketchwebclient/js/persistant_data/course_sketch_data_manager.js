@@ -31,6 +31,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 
 	var courseManager;
 	var assignmentManager;
+	var courseProblemManager;
 
 	/*
 	 * END OF VARIABLE SETTING
@@ -49,13 +50,19 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	}
 	var courseTable = database.createTable("Courses","id", addFunction);
 	var assignmentTable = database.createTable("Assignments","id", addFunction);
-	var problemTable = database.createTable("Problems","id", addFunction);
+	var problemTable = database.createTable("CourseProblems","id", addFunction);
+	var bankProblemTable = database.createTable("BankProblems","id", addFunction);
+	var experimentTable = database.createTable("Experiments","id", addFunction);
+	var solutionTable = database.createTable("Solutions","id", addFunction);
 
 	(function() {
 		var tables = new Array();
 		tables.push(courseTable);
 		tables.push(assignmentTable);
 		tables.push(problemTable);
+		tables.push(bankProblemTable);
+		tables.push(experimentTable);
+		tables.push(solutionTable);
 		database.setTables(tables);
 		database.open();
 	})();
@@ -75,6 +82,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		// creates a manager for just courses.
 		courseManager = new CourseDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 		assignmentManager = new AssignmentDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		courseProblemManager = new CourseProblemDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 	}
 
 	/**
@@ -98,11 +106,12 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	 * The callback is called with a list of assignment objects
 	 */
 	this.getAllProblemsFromAssignment = function(assignmentId, problemCallback) {
+		var getCourseProblems = this.getCourseProblems;
 		this.getAssignment(assignmentId, function(assignment) {
 			if (isUndefined(assignment)) {
 				throw "Assignment not defined";
 			}
-			this.getProblems(assignment.problemList, problemCallback);
+			getCourseProblems(assignment.problemList, problemCallback);
 		});
 	}
 }

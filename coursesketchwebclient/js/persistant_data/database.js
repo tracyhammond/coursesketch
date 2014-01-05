@@ -84,6 +84,8 @@ function protoDatabase(databaseName, version, openCallback) {
 					var store = trans.objectStore(localTable.name);
 					var request = localTable.add(store, objectId, objectToAdd);
 					request.onsuccess = function(e) {
+						// add objectId to some sort of id list so we know what data is contained
+						// this data is only to be used for the local deletion of all items in the database
 						if (callback)
 							callback(e, request);
 					}

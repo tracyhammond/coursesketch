@@ -23,7 +23,7 @@ function courseClickerFunction(id) {
 		builder.setOnBoxClick('assignmentClickerFunction');
 		builder.build('assignment_list_column');
 		try {
-		replaceIframe('html/instructor/course_managment_frames/edit_course.html');
+			replaceIframe('html/instructor/course_managment_frames/edit_course.html');
 		} catch(exception) {
 			
 		}
@@ -43,7 +43,11 @@ function assignmentClickerFunction(id) {
 		builder.setEmptyListMessage('There are no problems for this assignment!');
 		builder.setOnBoxClick('problemClickerFunction');
 		builder.build('problem_list_column');
-		replaceIframe('html/instructor/course_managment_frames/edit_assignment.html');
+		try {
+			replaceIframe('html/instructor/course_managment_frames/edit_assignment.html');
+		} catch(exception) {
+			
+		}
 		showButton('problem_button');
 	});
 }
