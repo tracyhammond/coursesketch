@@ -37,7 +37,9 @@ public class CourseProblemManager
 				.append(PROBLEM_BANK_ID, problem.getProblemBankId()).append(GRADE_WEIGHT, problem.getGradeWeight())
 				.append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
 				.append(MOD, problem.getAccessPermission().getModeratorPermissionList())
-				.append(USERS, problem.getAccessPermission().getUserPermissionList());
+				.append(USERS, problem.getAccessPermission().getUserPermissionList())
+				.append(NAME, problem.getName())
+				.append(DESCRIPTION, problem.getDescription());
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 
@@ -73,6 +75,8 @@ public class CourseProblemManager
 		exactProblem.setCourseId((String) corsor.get(COURSE_ID));
 		exactProblem.setAssignmentId((String) corsor.get(ASSIGNMENT_ID));
 		exactProblem.setGradeWeight((String) corsor.get(GRADE_WEIGHT));
+		exactProblem.setName((String) corsor.get(NAME));
+		exactProblem.setDescription((String) corsor.get(DESCRIPTION));
 
 		// check to make sure the problem is within the time period that the
 		// assignment is open and the user is in the assignment
