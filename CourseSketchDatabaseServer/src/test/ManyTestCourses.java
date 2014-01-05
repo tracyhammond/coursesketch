@@ -27,14 +27,14 @@ public class ManyTestCourses {
 				+ "This course is importatn to ur edu",
 						
 				"496620796f752063616e206465636f64652074686973207468656e20796f752073686f756c642074616b65207468697320636f75727365"};
-		for(int k = 0; k < 5; k ++) {
+		for(int k = 0; k < 2; k ++) {
 			SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
 			testBuilder.setAccess(SrlCourse.Accessibility.PUBLIC);
 			testBuilder.setSemester("FALL");
 			testBuilder.setName(name[k]);
 			testBuilder.setDescription(descsription[k]);
 			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
-			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() + 1000000).getTime())));
+			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1414126800000L).getTime())));
 			SrlPermission.Builder permissions = SrlPermission.newBuilder();
 			permissions.addAdminPermission("larry");
 	
@@ -52,6 +52,7 @@ public class ManyTestCourses {
 				String courseId = Institution.mongoInsertCourse("david", testBuilder.buildPartial());
 				System.out.println("INSERTING COURSE SUCCESSFULT");
 				System.out.println(courseId);
+				ManyTestAssignments.testAssignments(courseId);
 		}
 	}
 	

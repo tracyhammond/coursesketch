@@ -45,35 +45,35 @@ public class DataRequestHandler {
 					System.out.println("looking at query " + itrequest.getQuery().name());
 					switch(itrequest.getQuery()) {
 						case COURSE: {
-							ArrayList<SrlCourse> courseLoop = Institution.mongoGetCourses((List)itrequest.getItemIdList(), userId);
+							List<SrlCourse> courseLoop = Institution.mongoGetCourses(itrequest.getItemIdList(), userId);
 							SrlSchool.Builder courseSchool = SrlSchool.newBuilder();
 							courseSchool.addAllCourses(courseLoop);
 							results.add(buildResult(courseSchool.build().toByteString(),ItemQuery.COURSE));
 							break;
 						}
 						case ASSIGNMENT: {
-							ArrayList<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), userId);
+							List<SrlAssignment> assignmentLoop = Institution.mongoGetAssignment(itrequest.getItemIdList(), userId);
 							SrlSchool.Builder assignmentSchool = SrlSchool.newBuilder();
 							assignmentSchool.addAllAssignments(assignmentLoop);
 							results.add(buildResult(assignmentSchool.build().toByteString(),ItemQuery.ASSIGNMENT));
 							break;
 						}
 						case COURSE_PROBLEM: {
-							ArrayList<SrlProblem> courseProblemLoop = Institution.mongoGetCourseProblem((ArrayList)itrequest.getItemIdList(), userId);
+							List<SrlProblem> courseProblemLoop = Institution.mongoGetCourseProblem(itrequest.getItemIdList(), userId);
 							SrlSchool.Builder problemSchool = SrlSchool.newBuilder();
 							problemSchool.addAllProblems(courseProblemLoop);
 							results.add(buildResult(problemSchool.build().toByteString(),ItemQuery.COURSE_PROBLEM));
 							break;
 						}
 						case BANK_PROBLEM: {
-							ArrayList<SrlBankProblem> bankProblemLoop = Institution.mongoGetProblem((ArrayList)itrequest.getItemIdList(), userId);
+							List<SrlBankProblem> bankProblemLoop = Institution.mongoGetProblem(itrequest.getItemIdList(), userId);
 							SrlSchool.Builder bankproblemSchool = SrlSchool.newBuilder();
 							bankproblemSchool.addAllBankProblems(bankProblemLoop);
 							results.add(buildResult(bankproblemSchool.build().toByteString(),ItemQuery.BANK_PROBLEM));
 							break;
 						}
 						case COURSE_SEARCH: {
-							ArrayList<SrlCourse> courseLoop = Institution.getAllPublicCourses();
+							List<SrlCourse> courseLoop = Institution.getAllPublicCourses();
 							System.out.println("Searching all public courses: " + courseLoop);
 							SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
 							courseSearch.addAllCourses(courseLoop);
