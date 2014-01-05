@@ -14,16 +14,21 @@ function courseClickerFunction(id) {
 	assignmentSelectionManager.clearAllSelectedItems();
 	problemSelectionManager.clearAllSelectedItems();
 	//we get the list from the id.
-	var assignmentList = parent.courseAssignments.getList(id);
-	console.log(assignmentList);
-	var builder = new SchoolItemBuilder();
-	builder.setList(assignmentList).setWidth('medium').centerItem(true);
-	builder.showImage = false;
-	builder.setEmptyListMessage('There are no assignments for this course!');
-	builder.setOnBoxClick('assignmentClickerFunction');
-	builder.build('assignment_list_column');
-	replaceIframe('html/instructor/course_managment_frames/edit_course.html');
-	showButton('assignment_button');
+	parent.dataManager.getAllAssignmentsFromCourse(id, function(assignmentList) {
+		console.log(assignmentList);
+		var builder = new SchoolItemBuilder();
+		builder.setList(assignmentList).setWidth('medium').centerItem(true);
+		builder.showImage = false;
+		builder.setEmptyListMessage('There are no assignments for this course!');
+		builder.setOnBoxClick('assignmentClickerFunction');
+		builder.build('assignment_list_column');
+		try {
+		replaceIframe('html/instructor/course_managment_frames/edit_course.html');
+		} catch(exception) {
+			
+		}
+		showButton('assignment_button');
+	});
 }
 
 function assignmentClickerFunction(id) {
@@ -31,16 +36,16 @@ function assignmentClickerFunction(id) {
 	changeSelection(id, assignmentSelectionManager);
 	problemSelectionManager.clearAllSelectedItems();
 	clearLists(1);
-	new SchoolItemBuilder().build('problem_list_column');
-	var problemList = parent.assignmentProblems.getList(id);
-	var builder = new SchoolItemBuilder();
-	builder.setList(problemList).setWidth('medium').centerItem(true);
-	builder.showImage = false;
-	builder.setEmptyListMessage('There are no problems for this assignment!');
-	builder.setOnBoxClick('problemClickerFunction');
-	builder.build('problem_list_column');
-	replaceIframe('html/instructor/course_managment_frames/edit_assignment.html');
-	showButton('problem_button');
+	parent.dataManager.getAllProblemsFromAssignment(id, function(problemList) {
+		var builder = new SchoolItemBuilder();
+		builder.setList(problemList).setWidth('medium').centerItem(true);
+		builder.showImage = false;
+		builder.setEmptyListMessage('There are no problems for this assignment!');
+		builder.setOnBoxClick('problemClickerFunction');
+		builder.build('problem_list_column');
+		replaceIframe('html/instructor/course_managment_frames/edit_assignment.html');
+		showButton('problem_button');
+	});
 }
 
 function problemClickerFunction(id) {
@@ -103,7 +108,7 @@ function manageHeight() {
 */
 function replaceIframe(src) {
 	var toReplace = document.getElementById('editable_unit');
-	if (src && toReplace != null) {
+	if (src && toReplace && toReplace != null) {
 		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" width = 100% ' +
 		'sanbox = "allow-same-origin allow-scripts"' +
 		'seamless = "seamless" onload="manageHeight()">';

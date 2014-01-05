@@ -2,6 +2,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 	const COURSE_LIST = "COURSE_LIST";
 	var userCourses = {};
 	var userCourseId = [];
+	var userHasCourses = true;
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
 	var sendDataRequest = sendData;

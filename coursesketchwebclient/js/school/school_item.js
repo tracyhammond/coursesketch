@@ -110,7 +110,7 @@ function SchoolItemBuilder() {
 	function findType(object) {
 		if (!isUndefined(object.assignmentList)) {
 			return "Course";
-		} else if (!isUndefinedobject.problemList) {
+		} else if (!isUndefined(object.problemList)) {
 			return "Assignment";
 		} else {
 			return "Problem";

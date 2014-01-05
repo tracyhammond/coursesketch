@@ -15,7 +15,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 
 	var useable = false;
 	var version = 2;
-	var userHasCourses = true;
 	var dataListener = advanceDataListener;
 
 	var ByteBuffer = byteBuffer;
@@ -31,6 +30,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var serverConnection = connection;
 
 	var courseManager;
+	var assignmentManager;
 
 	/*
 	 * END OF VARIABLE SETTING
@@ -74,6 +74,36 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	this.start = function() {
 		// creates a manager for just courses.
 		courseManager = new CourseDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		assignmentManager = new AssignmentDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+	}
+
+	/**
+	 * retrieves all the assignments for a given course.
+	 *
+	 * The callback is called with a list of assignment objects
+	 */
+	this.getAllAssignmentsFromCourse = function(courseId, assignmentCallback) {
+		var getAssignments = this.getAssignments;
+		this.getCourse(courseId, function(course) {
+			if (isUndefined(course)) {
+				throw "Course not defined";
+			}
+			getAssignments(course.assignmentList, assignmentCallback);
+		});
+	}
+	
+	/**
+	 * retrieves all the assignments for a given course.
+	 *
+	 * The callback is called with a list of assignment objects
+	 */
+	this.getAllProblemsFromAssignment = function(assignmentId, problemCallback) {
+		this.getAssignment(assignmentId, function(assignment) {
+			if (isUndefined(assignment)) {
+				throw "Assignment not defined";
+			}
+			this.getProblems(assignment.problemList, problemCallback);
+		});
 	}
 }
 const nonExistantValue = "NONEXISTANT_VALUE";
