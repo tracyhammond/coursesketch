@@ -110,7 +110,7 @@
 			item.query = QueryBuilder.ItemQuery.REGISTER;
 			item.data = courseProtoMap[id].toArrayBuffer();
 			request.items = [item];
-			parent.connection.sendRequest(parent.connection.createRequestFromData(request, Request.MessageType.DATA_SENDING));
+			parent.connection.sendRequest(parent.connection.createRequestFromData(request, Request.MessageType.DATA_INSERT));
 			$("#" + id).animate({
                 marginLeft: "0px",
             	}, 300, function () {
