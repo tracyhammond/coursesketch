@@ -99,7 +99,6 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 								assignmentCallback(assignmentList);
 							});
 							// creates a request that is then sent to the server
-							alert(leftOverId);
 							console.log(leftOverId);
 							sendDataRequest(QueryBuilder.ItemQuery.ASSIGNMENT, leftOverId);
 						}

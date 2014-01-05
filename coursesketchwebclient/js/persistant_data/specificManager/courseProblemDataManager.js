@@ -99,7 +99,6 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 								courseProblemCallback(courseProblemList);
 							});
 							// creates a request that is then sent to the server
-							alert(leftOverId);
 							console.log(leftOverId);
 							sendDataRequest(QueryBuilder.ItemQuery.COURSE_PROBLEM, leftOverId);
 						}
