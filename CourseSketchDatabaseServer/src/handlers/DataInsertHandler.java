@@ -34,7 +34,7 @@ import protobuf.srl.school.School.SrlUser;
  * This allows the client to replace the old assignment id with the new assignment id.
  * @author gigemjt
  */
-public class DataSendHandler {
+public class DataInsertHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
 	
 	public static void handleData(Request req, WebSocket conn) {
@@ -52,44 +52,29 @@ public class DataSendHandler {
 				ItemSend itemSet = request.getItemsList().get(p);
 				try {
 					switch (itemSet.getQuery()) {
-						case COURSE: if (itemSet.getIsInsert()) {
+						case COURSE: {
 							SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
 							String resultId = Institution.mongoInsertCourse(userId, course);
 							results.add(buildResult(resultId + " : " + course.getId(), itemSet.getQuery()));
-						} else {
-							// update here
-							// update does not need to return anything
-						}break;
-						case ASSIGNMENT: if (itemSet.getIsInsert()) {
+						} break;
+						case ASSIGNMENT: {
 							SrlAssignment assignment = SrlAssignment.parseFrom(itemSet.getData());
 							String resultId = Institution.mongoInsertAssignment(userId, assignment);
 							results.add(buildResult(resultId + " : " + assignment.getId(), itemSet.getQuery()));
-						} else {
-							// update here
-							// update does not need to return anything
-						}break;
-						case COURSE_PROBLEM: if (itemSet.getIsInsert()) {
+						} break;
+						case COURSE_PROBLEM: {
 							SrlProblem problem = SrlProblem.parseFrom(itemSet.getData());
 							String resultId = Institution.mongoInsertCourseProblem(userId, problem);
 							results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
-						} else {
-							// update here
-							// update does not need to return anything
-						}break;
-						case BANK_PROBLEM: if (itemSet.getIsInsert()) {
+						} break;
+						case BANK_PROBLEM: {
 							SrlBankProblem problem = SrlBankProblem.parseFrom(itemSet.getData());
 							String resultId = Institution.mongoInsertBankProblem(userId, problem);
 							results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
-						} else {
-							// update here
-							// update does not need to return anything
-						}break;
-						case USER_INFO: if (itemSet.getIsInsert()) {
+						} break;
+						case USER_INFO: {
 							UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), userId);
-						} else {
-							// update here
-							// update does not need to return anything	
-						}break;
+						} break;
 						case REGISTER: {
 							SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
 							String courseId = course.getId();

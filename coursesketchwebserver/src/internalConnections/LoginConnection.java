@@ -38,7 +38,7 @@ public class LoginConnection extends WrapperConnection {
 			// extra steps that we need to do
 			Request.Builder createUser = Request.newBuilder();
 			createUser.setServersideId(r.getServersideId());
-			createUser.setRequestType(MessageType.DATA_SENDING);
+			createUser.setRequestType(MessageType.DATA_INSERT);
 			DataSend.Builder dataSend = DataSend.newBuilder();
 			ItemSend.Builder itemSend = ItemSend.newBuilder();
 			itemSend.setIsInsert(true);

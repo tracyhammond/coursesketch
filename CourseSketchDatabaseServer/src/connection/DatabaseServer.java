@@ -1,7 +1,7 @@
 package connection;
 
 import handlers.DataRequestHandler;
-import handlers.DataSendHandler;
+import handlers.DataInsertHandler;
 import handlers.UpdateHandler;
 
 import java.io.BufferedReader;
@@ -70,7 +70,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
 			DataRequestHandler.handleRequest(req, conn);
 		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
-			DataSendHandler.handleData(req, conn);
+			DataInsertHandler.handleData(req, conn);
 		}
 	}
 

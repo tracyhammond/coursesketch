@@ -111,8 +111,9 @@ public final class Institution {
 	/**
 	 * Returns a list of problems given a list of Ids for the course problems.
 	 * @throws AuthenticationException
+	 * @throws DatabaseAccessException 
 	 */
-	public static ArrayList<SrlAssignment> mongoGetAssignment(List<String> assignementID,String userId) throws AuthenticationException {
+	public static ArrayList<SrlAssignment> mongoGetAssignment(List<String> assignementID,String userId) throws AuthenticationException, DatabaseAccessException {
 		long currentTime = System.currentTimeMillis();
 		ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
 		for (int assignments = assignementID.size() - 1; assignments >= 0; assignments--) {
@@ -121,6 +122,7 @@ public final class Institution {
 						userId, currentTime));
 			} catch (DatabaseAccessException e) {
 				e.printStackTrace();
+				throw e;
 			} catch (AuthenticationException e) {
 				if (e.getType() != AuthenticationException.INVALID_DATE) {
 					throw e;
