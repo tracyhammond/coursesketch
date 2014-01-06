@@ -326,6 +326,10 @@ function clickSelectionManager() {
 		// Clears array.
 		this.selectedItems = [];
 	}
+
+	this.isItemSelected = function(id) {
+		return this.selectedItems.indexOf(id) > -1;
+	}
 }
 /*
 function getFormattedDate(currentDate, dueDate) {

@@ -72,6 +72,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
 			DataInsertHandler.handleData(req, conn);
 		}
+		System.out.println("Finished looking at query");
 	}
 
 	public void onFragment( WebSocket conn, Framedata fragment ) {

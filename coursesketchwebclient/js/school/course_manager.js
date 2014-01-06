@@ -22,12 +22,14 @@ function courseClickerFunction(id) {
 		builder.setEmptyListMessage('There are no assignments for this course!');
 		builder.setOnBoxClick('assignmentClickerFunction');
 		builder.build('assignment_list_column');
+		/*
 		try {
 			replaceIframe('html/instructor/course_managment_frames/edit_course.html');
 		} catch(exception) {
 			
 		}
 		showButton('assignment_button');
+		*/
 	});
 }
 
@@ -43,18 +45,29 @@ function assignmentClickerFunction(id) {
 		builder.setEmptyListMessage('There are no problems for this assignment!');
 		builder.setOnBoxClick('problemClickerFunction');
 		builder.build('problem_list_column');
+		/*
 		try {
 			replaceIframe('html/instructor/course_managment_frames/edit_assignment.html');
 		} catch(exception) {
 			
 		}
 		showButton('problem_button');
+		*/
 	});
 }
 
 function problemClickerFunction(id) {
-	changeSelection(id, problemSelectionManager);
+	if (problemSelectionManager.isItemSelected(id)) {
+		// change source to the problem page! and load problem
+		parent.redirectContent("html/problem/problemlayout.html","title!");
+	}
+	else {
+		changeSelection(id, problemSelectionManager);
+	}
+	
+	/*
 	replaceIframe('html/instructor/course_managment_frames/edit_problem.html');
+	*/
 }
 
 function showButton(id) {

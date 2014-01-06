@@ -114,5 +114,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			getCourseProblems(assignment.problemList, problemCallback);
 		});
 	}
+	
+	/**
+	 * Add the ability to set and remove state objects (for the use of transitioning from one page to the next!)
+	 */
 }
 const nonExistantValue = "NONEXISTANT_VALUE";
