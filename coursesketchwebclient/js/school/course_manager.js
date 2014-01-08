@@ -57,7 +57,11 @@ function assignmentClickerFunction(id) {
 }
 
 function problemClickerFunction(id) {
+	alet("");
 	if (problemSelectionManager.isItemSelected(id)) {
+		// do the parent majigger thingy
+		parent.dataManager.addState("CURRENT_ASSIGNMENT", id);
+		parent.dataManager.addState("CURRENT_QUESTION", id);
 		// change source to the problem page! and load problem
 		parent.redirectContent("html/problem/problemlayout.html","title!");
 	}

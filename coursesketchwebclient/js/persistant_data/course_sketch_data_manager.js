@@ -12,6 +12,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	const COURSE_LIST = "COURSE_LIST";
 	var localScope = this;
 	var localUserId = userId;
+	var stateMachine = {};
 
 	var useable = false;
 	var version = 2;
@@ -114,9 +115,26 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			getCourseProblems(assignment.problemList, problemCallback);
 		});
 	}
-	
+
 	/**
-	 * Add the ability to set and remove state objects (for the use of transitioning from one page to the next!)
+	 * Adds the ability to set and remove state objects (for the use of transitioning from one page to the next!)
 	 */
+	this.addState = function(key, value) {
+		stateMachine[key] = value;
+	}
+	
+	this.getState = function(key) {
+		return stateMachine[key];
+	}
+	
+	this.hasState = function(key) {
+		return !isUndefined(stateMachine[key]);
+	}
+	
+	this.clearStates = function() {
+		stateMachine = {};
+	}
 }
 const nonExistantValue = "NONEXISTANT_VALUE";
+const CURRENT_QUESTION = "CURRENT_QUESTION";
+const CURRENT_ASSIGNMENT = "CURRENT_ASSIGNMENT";

@@ -8,4 +8,5 @@ bin/
 Non_Commit/
 *.pyc
 
-*.pyc
+.~lock*
+
