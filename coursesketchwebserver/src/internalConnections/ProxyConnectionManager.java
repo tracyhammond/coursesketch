@@ -9,7 +9,7 @@ import multiConnection.WrapperConnection;
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class ProxyConnectionManager extends MultiConnectionManager {
 
-	private boolean connectLocally = CONNECT_LOCALLY;
+	private boolean connectLocally = CONNECT_REMOTE;
 
 	public ProxyConnectionManager(MultiInternalConnectionServer parent) {
 		super(parent);
