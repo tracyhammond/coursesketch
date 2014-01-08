@@ -46,8 +46,8 @@ public final class Institution {
 	}
 
 	private Institution() {
-		//this("goldberglinux.tamu.edu");
-		this("localhost");
+		this("goldberglinux.tamu.edu");
+		//this("localhost");
 	}
 
 	private static Institution getInstance() {
