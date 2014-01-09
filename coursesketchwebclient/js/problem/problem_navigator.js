@@ -28,6 +28,10 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 	this.refresh = function() {
 		changeProblem(currentIndex);
 	}
+
+	function getProblemInfo() {
+		return currentProblem.problemInfo;
+	}
 	/**
 	 * Scopes the index for the callbackList.
 	 */
@@ -91,11 +95,7 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 	 * Returns the problem text of the current problem.
 	 */
 	this.getProblemText = function() {
-		if (currentIndex == 0) {
-			return "Texty Text text";
-		} else {
-			return "THIS IS THE OTHER TEXT!";
-		}
+		return getProblemInfo().questionText;
 	}
 
 	/**
@@ -104,16 +104,27 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 	 * This should be the first subProblem all subsequent subproblems are handled in different ways.
 	 */
 	this.getPoblemType = function() {
-		if (currentIndex == 0) {
-			return "multipleChoice";
-		} else {
-			return "sketching";
+		var type = getProblemInfo().questionType;
+		if (type == 1) {
+			return "SKETCH";
+		}
+		if (type == 2) {
+			return "MULT_CHOICE";
+		}
+		if (type == 3) {
+			return "FREE_RESP";
+		}
+		if (type == 4) {
+			return "CHECK_BOX";
 		}
 	}
-	
-	this.reloadProblem() = function() {
-		dataManager.getAllProblemsFromAssignment(assignmentId, function() {
-			
+
+	this.reloadProblems = function() {
+		dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
+			for(var i = 0; i <problems.length; i++) {
+				problemList.push(problems[i]);
+			}
 		});
 	}
+	this.reloadProblems();
 }

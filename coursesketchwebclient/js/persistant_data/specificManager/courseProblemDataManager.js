@@ -78,7 +78,6 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 						courseProblemList.push(courseProblem);
 					} else {
 						leftOverId.push(courseProblemId);
-						console.log(leftOverId);
 					}	
 					barrier -= 1;
 					if (barrier == 0) {
@@ -99,14 +98,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 								courseProblemCallback(courseProblemList);
 							});
 							// creates a request that is then sent to the server
-							console.log(leftOverId);
 							sendDataRequest(QueryBuilder.ItemQuery.COURSE_PROBLEM, leftOverId);
 						}
 
 						// this calls actually before the response from the server is received!
 						if (courseProblemList.length > 0) {
-							console.log("local list complete");
-							console.log(courseProblemList);
 							courseProblemCallback(courseProblemList);
 						}
 					}// end of if(barrier == 0)

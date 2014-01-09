@@ -78,7 +78,6 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 						assignmentList.push(assignment);
 					} else {
 						leftOverId.push(assignmentId);
-						console.log(leftOverId);
 					}	
 					barrier -= 1;
 					if (barrier == 0) {
@@ -99,14 +98,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 								assignmentCallback(assignmentList);
 							});
 							// creates a request that is then sent to the server
-							console.log(leftOverId);
 							sendDataRequest(QueryBuilder.ItemQuery.ASSIGNMENT, leftOverId);
 						}
 
 						// this calls actually before the response from the server is received!
 						if (assignmentList.length > 0) {
-							console.log("local list complete");
-							console.log(assignmentList);
 							assignmentCallback(assignmentList);
 						}
 					}// end of if(barrier == 0)
