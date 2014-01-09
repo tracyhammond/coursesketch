@@ -57,7 +57,6 @@ function assignmentClickerFunction(id) {
 }
 
 function problemClickerFunction(id) {
-	alet("");
 	if (problemSelectionManager.isItemSelected(id)) {
 		// do the parent majigger thingy
 		parent.dataManager.addState("CURRENT_ASSIGNMENT", id);
@@ -66,6 +65,16 @@ function problemClickerFunction(id) {
 		parent.redirectContent("html/problem/problemlayout.html","title!");
 	}
 	else {
+		var element = document.getElementById(id);
+		var myOpenTip = new Opentip(element, { target: element, tipJoint: "bottom" });
+		myOpenTip.prepareToShow(); // Shows the tooltip after the given delays. This could get interrupted
+
+		myOpenTip.setContent("Click again to open up a problem"); // Updates Opentips content
+		var pastToolTip = problemSelectionManager['currentToolTip'];
+		if (pastToolTip) {
+			pastToolTip.deactivate();
+		}
+		problemSelectionManager['currentToolTip'] = myOpenTip;
 		changeSelection(id, problemSelectionManager);
 	}
 	

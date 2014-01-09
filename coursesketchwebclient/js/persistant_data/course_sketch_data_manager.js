@@ -21,11 +21,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var ByteBuffer = byteBuffer;
 	var Request = request;
 
-	var SchoolBuilder = schoolBuilder;/*
-	var SrlCourse = SchoolBuilder.SrlCourse;
-	var SrlAssignment = SchoolBuilder.SrlAssignment;
-	var SrlProblem = SchoolBuilder.SrlProblem;
-	var SrlBankProblem = SchoolBuilder.SrlBankProblem;*/
+	var SchoolBuilder = schoolBuilder;
 
 	var QueryBuilder = query;
 	var serverConnection = connection;
@@ -122,17 +118,21 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	this.addState = function(key, value) {
 		stateMachine[key] = value;
 	}
-	
+
 	this.getState = function(key) {
 		return stateMachine[key];
 	}
-	
+
 	this.hasState = function(key) {
 		return !isUndefined(stateMachine[key]);
 	}
-	
+
 	this.clearStates = function() {
 		stateMachine = {};
+	}
+
+	this.getCurrentId = function() {
+		return localUserId;
 	}
 }
 const nonExistantValue = "NONEXISTANT_VALUE";
