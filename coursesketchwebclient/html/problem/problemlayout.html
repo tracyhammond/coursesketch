@@ -15,7 +15,7 @@
 		}
 	</script>
 	<script>
-		var problemNavigator = new schoolNavigator(parent.dataManager.getState("CURRENT_ASSIGNMENT"), false);
+		var problemNavigator = new schoolNavigator(parent.dataManager.getState("CURRENT_ASSIGNMENT"),parent.dataManager, false);
 	</script>
 	<script>
 	(function(scriptScope) {
@@ -32,11 +32,11 @@
 			var type = nav.getPoblemType();
 			var panelLoc = "default";
 			// type may change to be an int or an enum comparison.
-			if (type == "sketching") {
+			if (type == "SKETCH") {
 				panelLoc = "sketching";
-			}  else if (type == "multipleChoice") {
+			}  else if (type == "MULT_CHOICE") {
 				panelLoc = "multipleChoice"
-			}   else if (type == "essay") {
+			}   else if (type == "FREE_RESP") {
 				panelLoc = "essay";
 			}
 			scriptScope.document.getElementById('problem_iframe').src = "/html/problem/problemType/" + panelLoc + "Panel.html";

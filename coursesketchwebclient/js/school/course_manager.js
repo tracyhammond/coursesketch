@@ -8,14 +8,12 @@ this.showCourses = function showCourses(courseList) {
 }
 
 function courseClickerFunction(id) {
-	console.log(id);
 	clearLists(2);
 	changeSelection(id, courseSelectionManager);
 	assignmentSelectionManager.clearAllSelectedItems();
 	problemSelectionManager.clearAllSelectedItems();
 	//we get the list from the id.
 	parent.dataManager.getAllAssignmentsFromCourse(id, function(assignmentList) {
-		console.log(assignmentList);
 		var builder = new SchoolItemBuilder();
 		builder.setList(assignmentList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
@@ -59,10 +57,12 @@ function assignmentClickerFunction(id) {
 function problemClickerFunction(id) {
 	if (problemSelectionManager.isItemSelected(id)) {
 		// do the parent majigger thingy
-		parent.dataManager.addState("CURRENT_ASSIGNMENT", id);
-		parent.dataManager.addState("CURRENT_QUESTION", id);
-		// change source to the problem page! and load problem
-		parent.redirectContent("html/problem/problemlayout.html","title!");
+		var assignment = parent.dataManager.getCourseProblem(id, function(problem) {
+			parent.dataManager.addState("CURRENT_ASSIGNMENT", problem.assignmentId);
+			parent.dataManager.addState("CURRENT_QUESTION", id);
+			// change source to the problem page! and load problem
+			parent.redirectContent("html/problem/problemlayout.html","title!");
+		});
 	}
 	else {
 		var element = document.getElementById(id);
