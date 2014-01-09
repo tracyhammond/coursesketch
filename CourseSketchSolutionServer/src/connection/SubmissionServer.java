@@ -33,17 +33,17 @@ import database.UpdateHandler;
  *
  * This is a backend server that is only connected by other servers
  */
-public class SolutionServer extends MultiInternalConnectionServer {
+public class SubmissionServer extends MultiInternalConnectionServer {
 
 	UpdateHandler updateHandler = new UpdateHandler();
 	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public SolutionServer( int port ) throws UnknownHostException {
+	public SubmissionServer( int port ) throws UnknownHostException {
 		this( new InetSocketAddress( port ) );
 	}
 
-	public SolutionServer( InetSocketAddress address ) {
+	public SubmissionServer( InetSocketAddress address ) {
 		super( address );
 	}
 	
@@ -120,7 +120,7 @@ public class SolutionServer extends MultiInternalConnectionServer {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
-		SolutionServer s = new SolutionServer( port );
+		SubmissionServer s = new SubmissionServer( port );
 		s.start();
 		System.out.println( "Recognition Server started on port: " + s.getPort() );
 
