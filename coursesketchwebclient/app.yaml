@@ -12,6 +12,10 @@ handlers:
 - url: /
   script: main.app
 
+- url: /index\.html
+  static_files: index.html
+  upload: index\.html
+
 - url: /testList
   script: testFiles.app
 

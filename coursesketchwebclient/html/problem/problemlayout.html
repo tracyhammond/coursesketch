@@ -15,7 +15,7 @@
 		}
 	</script>
 	<script>
-		var problemNavigator = new schoolNavigator(/*IDHERE*/);
+		var problemNavigator = new schoolNavigator(parent.dataManager.getState("CURRENT_ASSIGNMENT"), false);
 	</script>
 	<script>
 	(function(scriptScope) {

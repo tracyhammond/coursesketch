@@ -5,10 +5,10 @@
  * different parts of the system.
  * Callbacks are not guaranteed in any order.
  */
-function schoolNavigator(assignmentId, loop) {
+function schoolNavigator(assignmentId, dataManagerR, loop) {
+	var currentAssignmentId = assignmentId;
+	var dataManager = dataManagerR;
 	var problemList = [];
-	problemList.push("hi");
-	problemList.push("ho");
 	var currentProblem;
 	var callbackList = [];
 	var currentIndex = 0;
@@ -109,5 +109,11 @@ function schoolNavigator(assignmentId, loop) {
 		} else {
 			return "sketching";
 		}
+	}
+	
+	this.reloadProblem() = function() {
+		dataManager.getAllProblemsFromAssignment(assignmentId, function() {
+			
+		});
 	}
 }
