@@ -29,14 +29,13 @@ public class DatabaseClient {
 	private DB db;
 
 	private DatabaseClient(String url) {
-		System.out.println("creating new database instance");
 		MongoClient mongoClient = null;
 		try {
 			mongoClient = new MongoClient(url);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		db = mongoClient.getDB("login");
+		db = mongoClient.getDB("submissions");
 		if (db == null) {
 			System.out.println("Db is null!");
 		}
