@@ -78,6 +78,18 @@ if (isUndefined(Array.prototype.removeObject)) {
 	};
 }
 
+if (isUndefined(removeObjectFromArray)) {
+	function removeObjectFromArray(array, object) {
+		var index = array.indexOf(object);
+		if (index != -1) {
+			var result = array[index];
+			array.splice(index, 1);
+			return result;
+		}
+		throw "attempt to remove invalid object";
+	};
+}
+
 /**
  * removes the object from an array.
  *
@@ -310,7 +322,6 @@ if (isUndefined(setWidthToContent)) {
 		}
 		var frameScope = scope.document.getElementById(iframeId).contentWindow.document;
 		var iFrame = scope.document.getElementById(iframeId);
-
 		var totalWidth = frameScope.getElementById(contentId).offsetWidth + offset;
 		iFrame.width = totalWidth + 1;
 		iFrame.style.width = iFrame.width;
@@ -424,6 +435,7 @@ if (isUndefined(copyParentUtilityFunctions)) {
 		copyParentValues(scope, 'replaceAll');
 
 		copyParentValues(scope, 'isArray');
+		copyParentValues(scope, 'removeObjectFromArray');
 		copyParentValues(scope, 'getMapAsList');
 
 		copyParentValues(scope, 'createTimeStamp');

@@ -2363,13 +2363,21 @@ public final class School {
     public enum Accessibility
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       * <code>SUPER_PUBLIC = 0;</code>
+       *
+       * <pre>
+       * no registration is needed for this course
+       * </pre>
+       */
+      SUPER_PUBLIC(0, 0),
+      /**
        * <code>PUBLIC = 1;</code>
        *
        * <pre>
        *Any student can access course without approval.
        * </pre>
        */
-      PUBLIC(0, 1),
+      PUBLIC(1, 1),
       /**
        * <code>PROTECTED = 2;</code>
        *
@@ -2377,7 +2385,7 @@ public final class School {
        *Any student can request access for course and public information it is searchable, requires instructor approval
        * </pre>
        */
-      PROTECTED(1, 2),
+      PROTECTED(2, 2),
       /**
        * <code>PROTECTED_NOSEARCH = 3;</code>
        *
@@ -2385,7 +2393,7 @@ public final class School {
        *No students can see course without a special link, it is not searchable, requires instructor approval
        * </pre>
        */
-      PROTECTED_NOSEARCH(2, 3),
+      PROTECTED_NOSEARCH(3, 3),
       /**
        * <code>PRIVATE = 4;</code>
        *
@@ -2393,9 +2401,17 @@ public final class School {
        *No students can see course without instructor invitation, invitation only
        * </pre>
        */
-      PRIVATE(3, 4),
+      PRIVATE(4, 4),
       ;
 
+      /**
+       * <code>SUPER_PUBLIC = 0;</code>
+       *
+       * <pre>
+       * no registration is needed for this course
+       * </pre>
+       */
+      public static final int SUPER_PUBLIC_VALUE = 0;
       /**
        * <code>PUBLIC = 1;</code>
        *
@@ -2434,6 +2450,7 @@ public final class School {
 
       public static Accessibility valueOf(int value) {
         switch (value) {
+          case 0: return SUPER_PUBLIC;
           case 1: return PUBLIC;
           case 2: return PROTECTED;
           case 3: return PROTECTED_NOSEARCH;
@@ -4627,7 +4644,7 @@ public final class School {
      * <code>optional string other = 5;</code>
      *
      * <pre>
-     *Name of an Instructor-defined assignment type
+     * Name of an Instructor-defined assignment type
      * </pre>
      */
     boolean hasOther();
@@ -4635,7 +4652,7 @@ public final class School {
      * <code>optional string other = 5;</code>
      *
      * <pre>
-     *Name of an Instructor-defined assignment type
+     * Name of an Instructor-defined assignment type
      * </pre>
      */
     java.lang.String getOther();
@@ -4643,7 +4660,7 @@ public final class School {
      * <code>optional string other = 5;</code>
      *
      * <pre>
-     *Name of an Instructor-defined assignment type
+     * Name of an Instructor-defined assignment type
      * </pre>
      */
     com.google.protobuf.ByteString
@@ -4669,7 +4686,7 @@ public final class School {
      * <code>repeated string links = 7;</code>
      *
      * <pre>
-     *external links/resources. Field needs improvement.
+     * external links/resources. Field needs improvement.
      * </pre>
      */
     java.util.List<java.lang.String>
@@ -4678,7 +4695,7 @@ public final class School {
      * <code>repeated string links = 7;</code>
      *
      * <pre>
-     *external links/resources. Field needs improvement.
+     * external links/resources. Field needs improvement.
      * </pre>
      */
     int getLinksCount();
@@ -4686,7 +4703,7 @@ public final class School {
      * <code>repeated string links = 7;</code>
      *
      * <pre>
-     *external links/resources. Field needs improvement.
+     * external links/resources. Field needs improvement.
      * </pre>
      */
     java.lang.String getLinks(int index);
@@ -4694,7 +4711,7 @@ public final class School {
      * <code>repeated string links = 7;</code>
      *
      * <pre>
-     *external links/resources. Field needs improvement.
+     * external links/resources. Field needs improvement.
      * </pre>
      */
     com.google.protobuf.ByteString
@@ -4715,7 +4732,7 @@ public final class School {
      * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
-     *Percentage of Assignment Category's total grade
+     * Percentage of Assignment Category's total grade
      * </pre>
      */
     boolean hasGradeWeight();
@@ -4723,7 +4740,7 @@ public final class School {
      * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
-     *Percentage of Assignment Category's total grade
+     * Percentage of Assignment Category's total grade
      * </pre>
      */
     java.lang.String getGradeWeight();
@@ -4731,7 +4748,7 @@ public final class School {
      * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
-     *Percentage of Assignment Category's total grade
+     * Percentage of Assignment Category's total grade
      * </pre>
      */
     com.google.protobuf.ByteString
@@ -4742,7 +4759,7 @@ public final class School {
      * <code>optional float grade = 10;</code>
      *
      * <pre>
-     *Calculated grade for whole Assignment
+     * Calculated grade for whole Assignment
      * </pre>
      */
     boolean hasGrade();
@@ -4750,7 +4767,7 @@ public final class School {
      * <code>optional float grade = 10;</code>
      *
      * <pre>
-     *Calculated grade for whole Assignment
+     * Calculated grade for whole Assignment
      * </pre>
      */
     float getGrade();
@@ -4760,7 +4777,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
      *
      * <pre>
-     *Date that a student can access/view/begin an assignment
+     * Date that a student can access/view/begin an assignment
      * </pre>
      */
     boolean hasAccessDate();
@@ -4768,7 +4785,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
      *
      * <pre>
-     *Date that a student can access/view/begin an assignment
+     * Date that a student can access/view/begin an assignment
      * </pre>
      */
     protobuf.srl.school.School.DateTime getAccessDate();
@@ -4776,7 +4793,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
      *
      * <pre>
-     *Date that a student can access/view/begin an assignment
+     * Date that a student can access/view/begin an assignment
      * </pre>
      */
     protobuf.srl.school.School.DateTimeOrBuilder getAccessDateOrBuilder();
@@ -4786,7 +4803,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
      *
      * <pre>
-     *Date that the late policy goes into affect
+     * Date that the late policy goes into affect
      * </pre>
      */
     boolean hasDueDate();
@@ -4794,7 +4811,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
      *
      * <pre>
-     *Date that the late policy goes into affect
+     * Date that the late policy goes into affect
      * </pre>
      */
     protobuf.srl.school.School.DateTime getDueDate();
@@ -4802,7 +4819,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
      *
      * <pre>
-     *Date that the late policy goes into affect
+     * Date that the late policy goes into affect
      * </pre>
      */
     protobuf.srl.school.School.DateTimeOrBuilder getDueDateOrBuilder();
@@ -4812,7 +4829,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
      *
      * <pre>
-     *Date that the assignment closes and can no longer be accessed
+     * Date that the assignment closes and can no longer be accessed
      * </pre>
      */
     boolean hasCloseDate();
@@ -4820,7 +4837,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
      *
      * <pre>
-     *Date that the assignment closes and can no longer be accessed
+     * Date that the assignment closes and can no longer be accessed
      * </pre>
      */
     protobuf.srl.school.School.DateTime getCloseDate();
@@ -4828,7 +4845,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
      *
      * <pre>
-     *Date that the assignment closes and can no longer be accessed
+     * Date that the assignment closes and can no longer be accessed
      * </pre>
      */
     protobuf.srl.school.School.DateTimeOrBuilder getCloseDateOrBuilder();
@@ -5164,7 +5181,7 @@ public final class School {
        * <code>OTHER = 6;</code>
        *
        * <pre>
-       *Allows instructors to create unique assignment types
+       * Allows instructors to create unique assignment types
        * </pre>
        */
       OTHER(5, 6),
@@ -5194,7 +5211,7 @@ public final class School {
        * <code>OTHER = 6;</code>
        *
        * <pre>
-       *Allows instructors to create unique assignment types
+       * Allows instructors to create unique assignment types
        * </pre>
        */
       public static final int OTHER_VALUE = 6;
@@ -5265,7 +5282,7 @@ public final class School {
      * Protobuf enum {@code protobuf.srl.school.SrlAssignment.LatePolicy}
      *
      * <pre>
-     *Needs to be improved
+     * Needs to be improved
      * </pre>
      */
     public enum LatePolicy
@@ -5533,7 +5550,7 @@ public final class School {
      * <code>optional string other = 5;</code>
      *
      * <pre>
-     *Name of an Instructor-defined assignment type
+     * Name of an Instructor-defined assignment type
      * </pre>
      */
     public boolean hasOther() {
@@ -5543,7 +5560,7 @@ public final class School {
      * <code>optional string other = 5;</code>
      *
      * <pre>
-     *Name of an Instructor-defined assignment type
+     * Name of an Instructor-defined assignment type
      * </pre>
      */
     public java.lang.String getOther() {
@@ -5564,7 +5581,7 @@ public final class School {
      * <code>optional string other = 5;</code>
      *
      * <pre>
-     *Name of an Instructor-defined assignment type
+     * Name of an Instructor-defined assignment type
      * </pre>
      */
     public com.google.protobuf.ByteString
@@ -5631,7 +5648,7 @@ public final class School {
      * <code>repeated string links = 7;</code>
      *
      * <pre>
-     *external links/resources. Field needs improvement.
+     * external links/resources. Field needs improvement.
      * </pre>
      */
     public java.util.List<java.lang.String>
@@ -5642,7 +5659,7 @@ public final class School {
      * <code>repeated string links = 7;</code>
      *
      * <pre>
-     *external links/resources. Field needs improvement.
+     * external links/resources. Field needs improvement.
      * </pre>
      */
     public int getLinksCount() {
@@ -5652,7 +5669,7 @@ public final class School {
      * <code>repeated string links = 7;</code>
      *
      * <pre>
-     *external links/resources. Field needs improvement.
+     * external links/resources. Field needs improvement.
      * </pre>
      */
     public java.lang.String getLinks(int index) {
@@ -5662,7 +5679,7 @@ public final class School {
      * <code>repeated string links = 7;</code>
      *
      * <pre>
-     *external links/resources. Field needs improvement.
+     * external links/resources. Field needs improvement.
      * </pre>
      */
     public com.google.protobuf.ByteString
@@ -5693,7 +5710,7 @@ public final class School {
      * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
-     *Percentage of Assignment Category's total grade
+     * Percentage of Assignment Category's total grade
      * </pre>
      */
     public boolean hasGradeWeight() {
@@ -5703,7 +5720,7 @@ public final class School {
      * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
-     *Percentage of Assignment Category's total grade
+     * Percentage of Assignment Category's total grade
      * </pre>
      */
     public java.lang.String getGradeWeight() {
@@ -5724,7 +5741,7 @@ public final class School {
      * <code>optional string gradeWeight = 9;</code>
      *
      * <pre>
-     *Percentage of Assignment Category's total grade
+     * Percentage of Assignment Category's total grade
      * </pre>
      */
     public com.google.protobuf.ByteString
@@ -5748,7 +5765,7 @@ public final class School {
      * <code>optional float grade = 10;</code>
      *
      * <pre>
-     *Calculated grade for whole Assignment
+     * Calculated grade for whole Assignment
      * </pre>
      */
     public boolean hasGrade() {
@@ -5758,7 +5775,7 @@ public final class School {
      * <code>optional float grade = 10;</code>
      *
      * <pre>
-     *Calculated grade for whole Assignment
+     * Calculated grade for whole Assignment
      * </pre>
      */
     public float getGrade() {
@@ -5772,7 +5789,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
      *
      * <pre>
-     *Date that a student can access/view/begin an assignment
+     * Date that a student can access/view/begin an assignment
      * </pre>
      */
     public boolean hasAccessDate() {
@@ -5782,7 +5799,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
      *
      * <pre>
-     *Date that a student can access/view/begin an assignment
+     * Date that a student can access/view/begin an assignment
      * </pre>
      */
     public protobuf.srl.school.School.DateTime getAccessDate() {
@@ -5792,7 +5809,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
      *
      * <pre>
-     *Date that a student can access/view/begin an assignment
+     * Date that a student can access/view/begin an assignment
      * </pre>
      */
     public protobuf.srl.school.School.DateTimeOrBuilder getAccessDateOrBuilder() {
@@ -5806,7 +5823,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
      *
      * <pre>
-     *Date that the late policy goes into affect
+     * Date that the late policy goes into affect
      * </pre>
      */
     public boolean hasDueDate() {
@@ -5816,7 +5833,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
      *
      * <pre>
-     *Date that the late policy goes into affect
+     * Date that the late policy goes into affect
      * </pre>
      */
     public protobuf.srl.school.School.DateTime getDueDate() {
@@ -5826,7 +5843,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
      *
      * <pre>
-     *Date that the late policy goes into affect
+     * Date that the late policy goes into affect
      * </pre>
      */
     public protobuf.srl.school.School.DateTimeOrBuilder getDueDateOrBuilder() {
@@ -5840,7 +5857,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
      *
      * <pre>
-     *Date that the assignment closes and can no longer be accessed
+     * Date that the assignment closes and can no longer be accessed
      * </pre>
      */
     public boolean hasCloseDate() {
@@ -5850,7 +5867,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
      *
      * <pre>
-     *Date that the assignment closes and can no longer be accessed
+     * Date that the assignment closes and can no longer be accessed
      * </pre>
      */
     public protobuf.srl.school.School.DateTime getCloseDate() {
@@ -5860,7 +5877,7 @@ public final class School {
      * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
      *
      * <pre>
-     *Date that the assignment closes and can no longer be accessed
+     * Date that the assignment closes and can no longer be accessed
      * </pre>
      */
     public protobuf.srl.school.School.DateTimeOrBuilder getCloseDateOrBuilder() {
@@ -6898,7 +6915,7 @@ public final class School {
        * <code>optional string other = 5;</code>
        *
        * <pre>
-       *Name of an Instructor-defined assignment type
+       * Name of an Instructor-defined assignment type
        * </pre>
        */
       public boolean hasOther() {
@@ -6908,7 +6925,7 @@ public final class School {
        * <code>optional string other = 5;</code>
        *
        * <pre>
-       *Name of an Instructor-defined assignment type
+       * Name of an Instructor-defined assignment type
        * </pre>
        */
       public java.lang.String getOther() {
@@ -6926,7 +6943,7 @@ public final class School {
        * <code>optional string other = 5;</code>
        *
        * <pre>
-       *Name of an Instructor-defined assignment type
+       * Name of an Instructor-defined assignment type
        * </pre>
        */
       public com.google.protobuf.ByteString
@@ -6946,7 +6963,7 @@ public final class School {
        * <code>optional string other = 5;</code>
        *
        * <pre>
-       *Name of an Instructor-defined assignment type
+       * Name of an Instructor-defined assignment type
        * </pre>
        */
       public Builder setOther(
@@ -6963,7 +6980,7 @@ public final class School {
        * <code>optional string other = 5;</code>
        *
        * <pre>
-       *Name of an Instructor-defined assignment type
+       * Name of an Instructor-defined assignment type
        * </pre>
        */
       public Builder clearOther() {
@@ -6976,7 +6993,7 @@ public final class School {
        * <code>optional string other = 5;</code>
        *
        * <pre>
-       *Name of an Instructor-defined assignment type
+       * Name of an Instructor-defined assignment type
        * </pre>
        */
       public Builder setOtherBytes(
@@ -7076,7 +7093,7 @@ public final class School {
        * <code>repeated string links = 7;</code>
        *
        * <pre>
-       *external links/resources. Field needs improvement.
+       * external links/resources. Field needs improvement.
        * </pre>
        */
       public java.util.List<java.lang.String>
@@ -7087,7 +7104,7 @@ public final class School {
        * <code>repeated string links = 7;</code>
        *
        * <pre>
-       *external links/resources. Field needs improvement.
+       * external links/resources. Field needs improvement.
        * </pre>
        */
       public int getLinksCount() {
@@ -7097,7 +7114,7 @@ public final class School {
        * <code>repeated string links = 7;</code>
        *
        * <pre>
-       *external links/resources. Field needs improvement.
+       * external links/resources. Field needs improvement.
        * </pre>
        */
       public java.lang.String getLinks(int index) {
@@ -7107,7 +7124,7 @@ public final class School {
        * <code>repeated string links = 7;</code>
        *
        * <pre>
-       *external links/resources. Field needs improvement.
+       * external links/resources. Field needs improvement.
        * </pre>
        */
       public com.google.protobuf.ByteString
@@ -7118,7 +7135,7 @@ public final class School {
        * <code>repeated string links = 7;</code>
        *
        * <pre>
-       *external links/resources. Field needs improvement.
+       * external links/resources. Field needs improvement.
        * </pre>
        */
       public Builder setLinks(
@@ -7135,7 +7152,7 @@ public final class School {
        * <code>repeated string links = 7;</code>
        *
        * <pre>
-       *external links/resources. Field needs improvement.
+       * external links/resources. Field needs improvement.
        * </pre>
        */
       public Builder addLinks(
@@ -7152,7 +7169,7 @@ public final class School {
        * <code>repeated string links = 7;</code>
        *
        * <pre>
-       *external links/resources. Field needs improvement.
+       * external links/resources. Field needs improvement.
        * </pre>
        */
       public Builder addAllLinks(
@@ -7166,7 +7183,7 @@ public final class School {
        * <code>repeated string links = 7;</code>
        *
        * <pre>
-       *external links/resources. Field needs improvement.
+       * external links/resources. Field needs improvement.
        * </pre>
        */
       public Builder clearLinks() {
@@ -7179,7 +7196,7 @@ public final class School {
        * <code>repeated string links = 7;</code>
        *
        * <pre>
-       *external links/resources. Field needs improvement.
+       * external links/resources. Field needs improvement.
        * </pre>
        */
       public Builder addLinksBytes(
@@ -7235,7 +7252,7 @@ public final class School {
        * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
-       *Percentage of Assignment Category's total grade
+       * Percentage of Assignment Category's total grade
        * </pre>
        */
       public boolean hasGradeWeight() {
@@ -7245,7 +7262,7 @@ public final class School {
        * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
-       *Percentage of Assignment Category's total grade
+       * Percentage of Assignment Category's total grade
        * </pre>
        */
       public java.lang.String getGradeWeight() {
@@ -7263,7 +7280,7 @@ public final class School {
        * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
-       *Percentage of Assignment Category's total grade
+       * Percentage of Assignment Category's total grade
        * </pre>
        */
       public com.google.protobuf.ByteString
@@ -7283,7 +7300,7 @@ public final class School {
        * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
-       *Percentage of Assignment Category's total grade
+       * Percentage of Assignment Category's total grade
        * </pre>
        */
       public Builder setGradeWeight(
@@ -7300,7 +7317,7 @@ public final class School {
        * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
-       *Percentage of Assignment Category's total grade
+       * Percentage of Assignment Category's total grade
        * </pre>
        */
       public Builder clearGradeWeight() {
@@ -7313,7 +7330,7 @@ public final class School {
        * <code>optional string gradeWeight = 9;</code>
        *
        * <pre>
-       *Percentage of Assignment Category's total grade
+       * Percentage of Assignment Category's total grade
        * </pre>
        */
       public Builder setGradeWeightBytes(
@@ -7333,7 +7350,7 @@ public final class School {
        * <code>optional float grade = 10;</code>
        *
        * <pre>
-       *Calculated grade for whole Assignment
+       * Calculated grade for whole Assignment
        * </pre>
        */
       public boolean hasGrade() {
@@ -7343,7 +7360,7 @@ public final class School {
        * <code>optional float grade = 10;</code>
        *
        * <pre>
-       *Calculated grade for whole Assignment
+       * Calculated grade for whole Assignment
        * </pre>
        */
       public float getGrade() {
@@ -7353,7 +7370,7 @@ public final class School {
        * <code>optional float grade = 10;</code>
        *
        * <pre>
-       *Calculated grade for whole Assignment
+       * Calculated grade for whole Assignment
        * </pre>
        */
       public Builder setGrade(float value) {
@@ -7366,7 +7383,7 @@ public final class School {
        * <code>optional float grade = 10;</code>
        *
        * <pre>
-       *Calculated grade for whole Assignment
+       * Calculated grade for whole Assignment
        * </pre>
        */
       public Builder clearGrade() {
@@ -7384,7 +7401,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
        *
        * <pre>
-       *Date that a student can access/view/begin an assignment
+       * Date that a student can access/view/begin an assignment
        * </pre>
        */
       public boolean hasAccessDate() {
@@ -7394,7 +7411,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
        *
        * <pre>
-       *Date that a student can access/view/begin an assignment
+       * Date that a student can access/view/begin an assignment
        * </pre>
        */
       public protobuf.srl.school.School.DateTime getAccessDate() {
@@ -7408,7 +7425,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
        *
        * <pre>
-       *Date that a student can access/view/begin an assignment
+       * Date that a student can access/view/begin an assignment
        * </pre>
        */
       public Builder setAccessDate(protobuf.srl.school.School.DateTime value) {
@@ -7428,7 +7445,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
        *
        * <pre>
-       *Date that a student can access/view/begin an assignment
+       * Date that a student can access/view/begin an assignment
        * </pre>
        */
       public Builder setAccessDate(
@@ -7446,7 +7463,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
        *
        * <pre>
-       *Date that a student can access/view/begin an assignment
+       * Date that a student can access/view/begin an assignment
        * </pre>
        */
       public Builder mergeAccessDate(protobuf.srl.school.School.DateTime value) {
@@ -7469,7 +7486,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
        *
        * <pre>
-       *Date that a student can access/view/begin an assignment
+       * Date that a student can access/view/begin an assignment
        * </pre>
        */
       public Builder clearAccessDate() {
@@ -7486,7 +7503,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
        *
        * <pre>
-       *Date that a student can access/view/begin an assignment
+       * Date that a student can access/view/begin an assignment
        * </pre>
        */
       public protobuf.srl.school.School.DateTime.Builder getAccessDateBuilder() {
@@ -7498,7 +7515,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
        *
        * <pre>
-       *Date that a student can access/view/begin an assignment
+       * Date that a student can access/view/begin an assignment
        * </pre>
        */
       public protobuf.srl.school.School.DateTimeOrBuilder getAccessDateOrBuilder() {
@@ -7512,7 +7529,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime accessDate = 11;</code>
        *
        * <pre>
-       *Date that a student can access/view/begin an assignment
+       * Date that a student can access/view/begin an assignment
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
@@ -7537,7 +7554,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
        *
        * <pre>
-       *Date that the late policy goes into affect
+       * Date that the late policy goes into affect
        * </pre>
        */
       public boolean hasDueDate() {
@@ -7547,7 +7564,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
        *
        * <pre>
-       *Date that the late policy goes into affect
+       * Date that the late policy goes into affect
        * </pre>
        */
       public protobuf.srl.school.School.DateTime getDueDate() {
@@ -7561,7 +7578,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
        *
        * <pre>
-       *Date that the late policy goes into affect
+       * Date that the late policy goes into affect
        * </pre>
        */
       public Builder setDueDate(protobuf.srl.school.School.DateTime value) {
@@ -7581,7 +7598,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
        *
        * <pre>
-       *Date that the late policy goes into affect
+       * Date that the late policy goes into affect
        * </pre>
        */
       public Builder setDueDate(
@@ -7599,7 +7616,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
        *
        * <pre>
-       *Date that the late policy goes into affect
+       * Date that the late policy goes into affect
        * </pre>
        */
       public Builder mergeDueDate(protobuf.srl.school.School.DateTime value) {
@@ -7622,7 +7639,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
        *
        * <pre>
-       *Date that the late policy goes into affect
+       * Date that the late policy goes into affect
        * </pre>
        */
       public Builder clearDueDate() {
@@ -7639,7 +7656,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
        *
        * <pre>
-       *Date that the late policy goes into affect
+       * Date that the late policy goes into affect
        * </pre>
        */
       public protobuf.srl.school.School.DateTime.Builder getDueDateBuilder() {
@@ -7651,7 +7668,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
        *
        * <pre>
-       *Date that the late policy goes into affect
+       * Date that the late policy goes into affect
        * </pre>
        */
       public protobuf.srl.school.School.DateTimeOrBuilder getDueDateOrBuilder() {
@@ -7665,7 +7682,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime dueDate = 12;</code>
        *
        * <pre>
-       *Date that the late policy goes into affect
+       * Date that the late policy goes into affect
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
@@ -7690,7 +7707,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
        *
        * <pre>
-       *Date that the assignment closes and can no longer be accessed
+       * Date that the assignment closes and can no longer be accessed
        * </pre>
        */
       public boolean hasCloseDate() {
@@ -7700,7 +7717,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
        *
        * <pre>
-       *Date that the assignment closes and can no longer be accessed
+       * Date that the assignment closes and can no longer be accessed
        * </pre>
        */
       public protobuf.srl.school.School.DateTime getCloseDate() {
@@ -7714,7 +7731,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
        *
        * <pre>
-       *Date that the assignment closes and can no longer be accessed
+       * Date that the assignment closes and can no longer be accessed
        * </pre>
        */
       public Builder setCloseDate(protobuf.srl.school.School.DateTime value) {
@@ -7734,7 +7751,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
        *
        * <pre>
-       *Date that the assignment closes and can no longer be accessed
+       * Date that the assignment closes and can no longer be accessed
        * </pre>
        */
       public Builder setCloseDate(
@@ -7752,7 +7769,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
        *
        * <pre>
-       *Date that the assignment closes and can no longer be accessed
+       * Date that the assignment closes and can no longer be accessed
        * </pre>
        */
       public Builder mergeCloseDate(protobuf.srl.school.School.DateTime value) {
@@ -7775,7 +7792,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
        *
        * <pre>
-       *Date that the assignment closes and can no longer be accessed
+       * Date that the assignment closes and can no longer be accessed
        * </pre>
        */
       public Builder clearCloseDate() {
@@ -7792,7 +7809,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
        *
        * <pre>
-       *Date that the assignment closes and can no longer be accessed
+       * Date that the assignment closes and can no longer be accessed
        * </pre>
        */
       public protobuf.srl.school.School.DateTime.Builder getCloseDateBuilder() {
@@ -7804,7 +7821,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
        *
        * <pre>
-       *Date that the assignment closes and can no longer be accessed
+       * Date that the assignment closes and can no longer be accessed
        * </pre>
        */
       public protobuf.srl.school.School.DateTimeOrBuilder getCloseDateOrBuilder() {
@@ -7818,7 +7835,7 @@ public final class School {
        * <code>optional .protobuf.srl.school.DateTime closeDate = 13;</code>
        *
        * <pre>
-       *Date that the assignment closes and can no longer be accessed
+       * Date that the assignment closes and can no longer be accessed
        * </pre>
        */
       private com.google.protobuf.SingleFieldBuilder<
@@ -8390,103 +8407,88 @@ public final class School {
      */
     protobuf.srl.school.School.SrlBankProblemOrBuilder getProblemInfoOrBuilder();
 
-    // repeated .protobuf.srl.school.DomainInformation info = 8;
+    // optional string gradeWeight = 8;
     /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    java.util.List<protobuf.srl.school.School.DomainInformation> 
-        getInfoList();
-    /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    protobuf.srl.school.School.DomainInformation getInfo(int index);
-    /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    int getInfoCount();
-    /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    java.util.List<? extends protobuf.srl.school.School.DomainInformationOrBuilder> 
-        getInfoOrBuilderList();
-    /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    protobuf.srl.school.School.DomainInformationOrBuilder getInfoOrBuilder(
-        int index);
-
-    // optional string gradeWeight = 9;
-    /**
-     * <code>optional string gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
-     *Percentage of assignment grade
+     * Percentage of assignment grade
      * </pre>
      */
     boolean hasGradeWeight();
     /**
-     * <code>optional string gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
-     *Percentage of assignment grade
+     * Percentage of assignment grade
      * </pre>
      */
     java.lang.String getGradeWeight();
     /**
-     * <code>optional string gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
-     *Percentage of assignment grade
+     * Percentage of assignment grade
      * </pre>
      */
     com.google.protobuf.ByteString
         getGradeWeightBytes();
 
-    // optional float grade = 10;
+    // optional float grade = 9;
     /**
-     * <code>optional float grade = 10;</code>
+     * <code>optional float grade = 9;</code>
      *
      * <pre>
-     *Calculated grade of all subproblems for this problem
+     * Calculated grade of all subproblems for this problem
      * </pre>
      */
     boolean hasGrade();
     /**
-     * <code>optional float grade = 10;</code>
+     * <code>optional float grade = 9;</code>
      *
      * <pre>
-     *Calculated grade of all subproblems for this problem
+     * Calculated grade of all subproblems for this problem
      * </pre>
      */
     float getGrade();
 
-    // optional .protobuf.srl.school.State state = 11;
+    // optional .protobuf.srl.school.State state = 10;
     /**
-     * <code>optional .protobuf.srl.school.State state = 11;</code>
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
      */
     boolean hasState();
     /**
-     * <code>optional .protobuf.srl.school.State state = 11;</code>
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
      */
     protobuf.srl.school.School.State getState();
     /**
-     * <code>optional .protobuf.srl.school.State state = 11;</code>
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
      */
     protobuf.srl.school.School.StateOrBuilder getStateOrBuilder();
 
-    // optional .protobuf.srl.school.SrlPermission accessPermission = 12;
+    // optional .protobuf.srl.school.SrlPermission accessPermission = 11;
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
      */
     boolean hasAccessPermission();
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
      */
     protobuf.srl.school.School.SrlPermission getAccessPermission();
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
      */
     protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionOrBuilder();
+
+    // optional int32 problemNumber = 12;
+    /**
+     * <code>optional int32 problemNumber = 12;</code>
+     */
+    boolean hasProblemNumber();
+    /**
+     * <code>optional int32 problemNumber = 12;</code>
+     */
+    int getProblemNumber();
   }
   /**
    * Protobuf type {@code protobuf.srl.school.SrlProblem}
@@ -8583,24 +8585,16 @@ public final class School {
               break;
             }
             case 66: {
-              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-                info_ = new java.util.ArrayList<protobuf.srl.school.School.DomainInformation>();
-                mutable_bitField0_ |= 0x00000080;
-              }
-              info_.add(input.readMessage(protobuf.srl.school.School.DomainInformation.PARSER, extensionRegistry));
-              break;
-            }
-            case 74: {
               bitField0_ |= 0x00000080;
               gradeWeight_ = input.readBytes();
               break;
             }
-            case 85: {
+            case 77: {
               bitField0_ |= 0x00000100;
               grade_ = input.readFloat();
               break;
             }
-            case 90: {
+            case 82: {
               protobuf.srl.school.School.State.Builder subBuilder = null;
               if (((bitField0_ & 0x00000200) == 0x00000200)) {
                 subBuilder = state_.toBuilder();
@@ -8613,7 +8607,7 @@ public final class School {
               bitField0_ |= 0x00000200;
               break;
             }
-            case 98: {
+            case 90: {
               protobuf.srl.school.School.SrlPermission.Builder subBuilder = null;
               if (((bitField0_ & 0x00000400) == 0x00000400)) {
                 subBuilder = accessPermission_.toBuilder();
@@ -8626,6 +8620,11 @@ public final class School {
               bitField0_ |= 0x00000400;
               break;
             }
+            case 96: {
+              bitField0_ |= 0x00000800;
+              problemNumber_ = input.readInt32();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -8634,9 +8633,6 @@ public final class School {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-          info_ = java.util.Collections.unmodifiableList(info_);
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -8985,60 +8981,24 @@ public final class School {
       return problemInfo_;
     }
 
-    // repeated .protobuf.srl.school.DomainInformation info = 8;
-    public static final int INFO_FIELD_NUMBER = 8;
-    private java.util.List<protobuf.srl.school.School.DomainInformation> info_;
-    /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    public java.util.List<protobuf.srl.school.School.DomainInformation> getInfoList() {
-      return info_;
-    }
-    /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    public java.util.List<? extends protobuf.srl.school.School.DomainInformationOrBuilder> 
-        getInfoOrBuilderList() {
-      return info_;
-    }
-    /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    public int getInfoCount() {
-      return info_.size();
-    }
-    /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    public protobuf.srl.school.School.DomainInformation getInfo(int index) {
-      return info_.get(index);
-    }
-    /**
-     * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-     */
-    public protobuf.srl.school.School.DomainInformationOrBuilder getInfoOrBuilder(
-        int index) {
-      return info_.get(index);
-    }
-
-    // optional string gradeWeight = 9;
-    public static final int GRADEWEIGHT_FIELD_NUMBER = 9;
+    // optional string gradeWeight = 8;
+    public static final int GRADEWEIGHT_FIELD_NUMBER = 8;
     private java.lang.Object gradeWeight_;
     /**
-     * <code>optional string gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
-     *Percentage of assignment grade
+     * Percentage of assignment grade
      * </pre>
      */
     public boolean hasGradeWeight() {
       return ((bitField0_ & 0x00000080) == 0x00000080);
     }
     /**
-     * <code>optional string gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
-     *Percentage of assignment grade
+     * Percentage of assignment grade
      * </pre>
      */
     public java.lang.String getGradeWeight() {
@@ -9056,10 +9016,10 @@ public final class School {
       }
     }
     /**
-     * <code>optional string gradeWeight = 9;</code>
+     * <code>optional string gradeWeight = 8;</code>
      *
      * <pre>
-     *Percentage of assignment grade
+     * Percentage of assignment grade
      * </pre>
      */
     public com.google.protobuf.ByteString
@@ -9076,72 +9036,88 @@ public final class School {
       }
     }
 
-    // optional float grade = 10;
-    public static final int GRADE_FIELD_NUMBER = 10;
+    // optional float grade = 9;
+    public static final int GRADE_FIELD_NUMBER = 9;
     private float grade_;
     /**
-     * <code>optional float grade = 10;</code>
+     * <code>optional float grade = 9;</code>
      *
      * <pre>
-     *Calculated grade of all subproblems for this problem
+     * Calculated grade of all subproblems for this problem
      * </pre>
      */
     public boolean hasGrade() {
       return ((bitField0_ & 0x00000100) == 0x00000100);
     }
     /**
-     * <code>optional float grade = 10;</code>
+     * <code>optional float grade = 9;</code>
      *
      * <pre>
-     *Calculated grade of all subproblems for this problem
+     * Calculated grade of all subproblems for this problem
      * </pre>
      */
     public float getGrade() {
       return grade_;
     }
 
-    // optional .protobuf.srl.school.State state = 11;
-    public static final int STATE_FIELD_NUMBER = 11;
+    // optional .protobuf.srl.school.State state = 10;
+    public static final int STATE_FIELD_NUMBER = 10;
     private protobuf.srl.school.School.State state_;
     /**
-     * <code>optional .protobuf.srl.school.State state = 11;</code>
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
      */
     public boolean hasState() {
       return ((bitField0_ & 0x00000200) == 0x00000200);
     }
     /**
-     * <code>optional .protobuf.srl.school.State state = 11;</code>
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
      */
     public protobuf.srl.school.School.State getState() {
       return state_;
     }
     /**
-     * <code>optional .protobuf.srl.school.State state = 11;</code>
+     * <code>optional .protobuf.srl.school.State state = 10;</code>
      */
     public protobuf.srl.school.School.StateOrBuilder getStateOrBuilder() {
       return state_;
     }
 
-    // optional .protobuf.srl.school.SrlPermission accessPermission = 12;
-    public static final int ACCESSPERMISSION_FIELD_NUMBER = 12;
+    // optional .protobuf.srl.school.SrlPermission accessPermission = 11;
+    public static final int ACCESSPERMISSION_FIELD_NUMBER = 11;
     private protobuf.srl.school.School.SrlPermission accessPermission_;
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
      */
     public boolean hasAccessPermission() {
       return ((bitField0_ & 0x00000400) == 0x00000400);
     }
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
      */
     public protobuf.srl.school.School.SrlPermission getAccessPermission() {
       return accessPermission_;
     }
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+     * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
      */
     public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionOrBuilder() {
       return accessPermission_;
+    }
+
+    // optional int32 problemNumber = 12;
+    public static final int PROBLEMNUMBER_FIELD_NUMBER = 12;
+    private int problemNumber_;
+    /**
+     * <code>optional int32 problemNumber = 12;</code>
+     */
+    public boolean hasProblemNumber() {
+      return ((bitField0_ & 0x00000800) == 0x00000800);
+    }
+    /**
+     * <code>optional int32 problemNumber = 12;</code>
+     */
+    public int getProblemNumber() {
+      return problemNumber_;
     }
 
     private void initFields() {
@@ -9152,11 +9128,11 @@ public final class School {
       name_ = "";
       description_ = "";
       problemInfo_ = protobuf.srl.school.School.SrlBankProblem.getDefaultInstance();
-      info_ = java.util.Collections.emptyList();
       gradeWeight_ = "";
       grade_ = 0F;
       state_ = protobuf.srl.school.School.State.getDefaultInstance();
       accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
+      problemNumber_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -9201,20 +9177,20 @@ public final class School {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         output.writeMessage(7, problemInfo_);
       }
-      for (int i = 0; i < info_.size(); i++) {
-        output.writeMessage(8, info_.get(i));
-      }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        output.writeBytes(9, getGradeWeightBytes());
+        output.writeBytes(8, getGradeWeightBytes());
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        output.writeFloat(10, grade_);
+        output.writeFloat(9, grade_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
-        output.writeMessage(11, state_);
+        output.writeMessage(10, state_);
       }
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
-        output.writeMessage(12, accessPermission_);
+        output.writeMessage(11, accessPermission_);
+      }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
+        output.writeInt32(12, problemNumber_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -9253,25 +9229,25 @@ public final class School {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(7, problemInfo_);
       }
-      for (int i = 0; i < info_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(8, info_.get(i));
-      }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(9, getGradeWeightBytes());
+          .computeBytesSize(8, getGradeWeightBytes());
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(10, grade_);
+          .computeFloatSize(9, grade_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(11, state_);
+          .computeMessageSize(10, state_);
       }
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(12, accessPermission_);
+          .computeMessageSize(11, accessPermission_);
+      }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(12, problemNumber_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -9382,7 +9358,6 @@ public final class School {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getProblemInfoFieldBuilder();
-          getInfoFieldBuilder();
           getStateFieldBuilder();
           getAccessPermissionFieldBuilder();
         }
@@ -9411,27 +9386,23 @@ public final class School {
           problemInfoBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000040);
-        if (infoBuilder_ == null) {
-          info_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000080);
-        } else {
-          infoBuilder_.clear();
-        }
         gradeWeight_ = "";
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ = (bitField0_ & ~0x00000080);
         grade_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000200);
+        bitField0_ = (bitField0_ & ~0x00000100);
         if (stateBuilder_ == null) {
           state_ = protobuf.srl.school.School.State.getDefaultInstance();
         } else {
           stateBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000400);
+        bitField0_ = (bitField0_ & ~0x00000200);
         if (accessPermissionBuilder_ == null) {
           accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
         } else {
           accessPermissionBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000400);
+        problemNumber_ = 0;
         bitField0_ = (bitField0_ & ~0x00000800);
         return this;
       }
@@ -9493,24 +9464,15 @@ public final class School {
         } else {
           result.problemInfo_ = problemInfoBuilder_.build();
         }
-        if (infoBuilder_ == null) {
-          if (((bitField0_ & 0x00000080) == 0x00000080)) {
-            info_ = java.util.Collections.unmodifiableList(info_);
-            bitField0_ = (bitField0_ & ~0x00000080);
-          }
-          result.info_ = info_;
-        } else {
-          result.info_ = infoBuilder_.build();
-        }
-        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
           to_bitField0_ |= 0x00000080;
         }
         result.gradeWeight_ = gradeWeight_;
-        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
           to_bitField0_ |= 0x00000100;
         }
         result.grade_ = grade_;
-        if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
           to_bitField0_ |= 0x00000200;
         }
         if (stateBuilder_ == null) {
@@ -9518,7 +9480,7 @@ public final class School {
         } else {
           result.state_ = stateBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
+        if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
           to_bitField0_ |= 0x00000400;
         }
         if (accessPermissionBuilder_ == null) {
@@ -9526,6 +9488,10 @@ public final class School {
         } else {
           result.accessPermission_ = accessPermissionBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
+          to_bitField0_ |= 0x00000800;
+        }
+        result.problemNumber_ = problemNumber_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -9575,34 +9541,8 @@ public final class School {
         if (other.hasProblemInfo()) {
           mergeProblemInfo(other.getProblemInfo());
         }
-        if (infoBuilder_ == null) {
-          if (!other.info_.isEmpty()) {
-            if (info_.isEmpty()) {
-              info_ = other.info_;
-              bitField0_ = (bitField0_ & ~0x00000080);
-            } else {
-              ensureInfoIsMutable();
-              info_.addAll(other.info_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.info_.isEmpty()) {
-            if (infoBuilder_.isEmpty()) {
-              infoBuilder_.dispose();
-              infoBuilder_ = null;
-              info_ = other.info_;
-              bitField0_ = (bitField0_ & ~0x00000080);
-              infoBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getInfoFieldBuilder() : null;
-            } else {
-              infoBuilder_.addAllMessages(other.info_);
-            }
-          }
-        }
         if (other.hasGradeWeight()) {
-          bitField0_ |= 0x00000100;
+          bitField0_ |= 0x00000080;
           gradeWeight_ = other.gradeWeight_;
           onChanged();
         }
@@ -9614,6 +9554,9 @@ public final class School {
         }
         if (other.hasAccessPermission()) {
           mergeAccessPermission(other.getAccessPermission());
+        }
+        if (other.hasProblemNumber()) {
+          setProblemNumber(other.getProblemNumber());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -10285,263 +10228,23 @@ public final class School {
         return problemInfoBuilder_;
       }
 
-      // repeated .protobuf.srl.school.DomainInformation info = 8;
-      private java.util.List<protobuf.srl.school.School.DomainInformation> info_ =
-        java.util.Collections.emptyList();
-      private void ensureInfoIsMutable() {
-        if (!((bitField0_ & 0x00000080) == 0x00000080)) {
-          info_ = new java.util.ArrayList<protobuf.srl.school.School.DomainInformation>(info_);
-          bitField0_ |= 0x00000080;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.DomainInformation, protobuf.srl.school.School.DomainInformation.Builder, protobuf.srl.school.School.DomainInformationOrBuilder> infoBuilder_;
-
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public java.util.List<protobuf.srl.school.School.DomainInformation> getInfoList() {
-        if (infoBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(info_);
-        } else {
-          return infoBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public int getInfoCount() {
-        if (infoBuilder_ == null) {
-          return info_.size();
-        } else {
-          return infoBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public protobuf.srl.school.School.DomainInformation getInfo(int index) {
-        if (infoBuilder_ == null) {
-          return info_.get(index);
-        } else {
-          return infoBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public Builder setInfo(
-          int index, protobuf.srl.school.School.DomainInformation value) {
-        if (infoBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureInfoIsMutable();
-          info_.set(index, value);
-          onChanged();
-        } else {
-          infoBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public Builder setInfo(
-          int index, protobuf.srl.school.School.DomainInformation.Builder builderForValue) {
-        if (infoBuilder_ == null) {
-          ensureInfoIsMutable();
-          info_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          infoBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public Builder addInfo(protobuf.srl.school.School.DomainInformation value) {
-        if (infoBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureInfoIsMutable();
-          info_.add(value);
-          onChanged();
-        } else {
-          infoBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public Builder addInfo(
-          int index, protobuf.srl.school.School.DomainInformation value) {
-        if (infoBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureInfoIsMutable();
-          info_.add(index, value);
-          onChanged();
-        } else {
-          infoBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public Builder addInfo(
-          protobuf.srl.school.School.DomainInformation.Builder builderForValue) {
-        if (infoBuilder_ == null) {
-          ensureInfoIsMutable();
-          info_.add(builderForValue.build());
-          onChanged();
-        } else {
-          infoBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public Builder addInfo(
-          int index, protobuf.srl.school.School.DomainInformation.Builder builderForValue) {
-        if (infoBuilder_ == null) {
-          ensureInfoIsMutable();
-          info_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          infoBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public Builder addAllInfo(
-          java.lang.Iterable<? extends protobuf.srl.school.School.DomainInformation> values) {
-        if (infoBuilder_ == null) {
-          ensureInfoIsMutable();
-          super.addAll(values, info_);
-          onChanged();
-        } else {
-          infoBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public Builder clearInfo() {
-        if (infoBuilder_ == null) {
-          info_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000080);
-          onChanged();
-        } else {
-          infoBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public Builder removeInfo(int index) {
-        if (infoBuilder_ == null) {
-          ensureInfoIsMutable();
-          info_.remove(index);
-          onChanged();
-        } else {
-          infoBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public protobuf.srl.school.School.DomainInformation.Builder getInfoBuilder(
-          int index) {
-        return getInfoFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public protobuf.srl.school.School.DomainInformationOrBuilder getInfoOrBuilder(
-          int index) {
-        if (infoBuilder_ == null) {
-          return info_.get(index);  } else {
-          return infoBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public java.util.List<? extends protobuf.srl.school.School.DomainInformationOrBuilder> 
-           getInfoOrBuilderList() {
-        if (infoBuilder_ != null) {
-          return infoBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(info_);
-        }
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public protobuf.srl.school.School.DomainInformation.Builder addInfoBuilder() {
-        return getInfoFieldBuilder().addBuilder(
-            protobuf.srl.school.School.DomainInformation.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public protobuf.srl.school.School.DomainInformation.Builder addInfoBuilder(
-          int index) {
-        return getInfoFieldBuilder().addBuilder(
-            index, protobuf.srl.school.School.DomainInformation.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .protobuf.srl.school.DomainInformation info = 8;</code>
-       */
-      public java.util.List<protobuf.srl.school.School.DomainInformation.Builder> 
-           getInfoBuilderList() {
-        return getInfoFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          protobuf.srl.school.School.DomainInformation, protobuf.srl.school.School.DomainInformation.Builder, protobuf.srl.school.School.DomainInformationOrBuilder> 
-          getInfoFieldBuilder() {
-        if (infoBuilder_ == null) {
-          infoBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              protobuf.srl.school.School.DomainInformation, protobuf.srl.school.School.DomainInformation.Builder, protobuf.srl.school.School.DomainInformationOrBuilder>(
-                  info_,
-                  ((bitField0_ & 0x00000080) == 0x00000080),
-                  getParentForChildren(),
-                  isClean());
-          info_ = null;
-        }
-        return infoBuilder_;
-      }
-
-      // optional string gradeWeight = 9;
+      // optional string gradeWeight = 8;
       private java.lang.Object gradeWeight_ = "";
       /**
-       * <code>optional string gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
-       *Percentage of assignment grade
+       * Percentage of assignment grade
        * </pre>
        */
       public boolean hasGradeWeight() {
-        return ((bitField0_ & 0x00000100) == 0x00000100);
+        return ((bitField0_ & 0x00000080) == 0x00000080);
       }
       /**
-       * <code>optional string gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
-       *Percentage of assignment grade
+       * Percentage of assignment grade
        * </pre>
        */
       public java.lang.String getGradeWeight() {
@@ -10556,10 +10259,10 @@ public final class School {
         }
       }
       /**
-       * <code>optional string gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
-       *Percentage of assignment grade
+       * Percentage of assignment grade
        * </pre>
        */
       public com.google.protobuf.ByteString
@@ -10576,10 +10279,10 @@ public final class School {
         }
       }
       /**
-       * <code>optional string gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
-       *Percentage of assignment grade
+       * Percentage of assignment grade
        * </pre>
        */
       public Builder setGradeWeight(
@@ -10587,29 +10290,29 @@ public final class School {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000100;
+  bitField0_ |= 0x00000080;
         gradeWeight_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
-       *Percentage of assignment grade
+       * Percentage of assignment grade
        * </pre>
        */
       public Builder clearGradeWeight() {
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ = (bitField0_ & ~0x00000080);
         gradeWeight_ = getDefaultInstance().getGradeWeight();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string gradeWeight = 9;</code>
+       * <code>optional string gradeWeight = 8;</code>
        *
        * <pre>
-       *Percentage of assignment grade
+       * Percentage of assignment grade
        * </pre>
        */
       public Builder setGradeWeightBytes(
@@ -10617,73 +10320,73 @@ public final class School {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000100;
+  bitField0_ |= 0x00000080;
         gradeWeight_ = value;
         onChanged();
         return this;
       }
 
-      // optional float grade = 10;
+      // optional float grade = 9;
       private float grade_ ;
       /**
-       * <code>optional float grade = 10;</code>
+       * <code>optional float grade = 9;</code>
        *
        * <pre>
-       *Calculated grade of all subproblems for this problem
+       * Calculated grade of all subproblems for this problem
        * </pre>
        */
       public boolean hasGrade() {
-        return ((bitField0_ & 0x00000200) == 0x00000200);
+        return ((bitField0_ & 0x00000100) == 0x00000100);
       }
       /**
-       * <code>optional float grade = 10;</code>
+       * <code>optional float grade = 9;</code>
        *
        * <pre>
-       *Calculated grade of all subproblems for this problem
+       * Calculated grade of all subproblems for this problem
        * </pre>
        */
       public float getGrade() {
         return grade_;
       }
       /**
-       * <code>optional float grade = 10;</code>
+       * <code>optional float grade = 9;</code>
        *
        * <pre>
-       *Calculated grade of all subproblems for this problem
+       * Calculated grade of all subproblems for this problem
        * </pre>
        */
       public Builder setGrade(float value) {
-        bitField0_ |= 0x00000200;
+        bitField0_ |= 0x00000100;
         grade_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional float grade = 10;</code>
+       * <code>optional float grade = 9;</code>
        *
        * <pre>
-       *Calculated grade of all subproblems for this problem
+       * Calculated grade of all subproblems for this problem
        * </pre>
        */
       public Builder clearGrade() {
-        bitField0_ = (bitField0_ & ~0x00000200);
+        bitField0_ = (bitField0_ & ~0x00000100);
         grade_ = 0F;
         onChanged();
         return this;
       }
 
-      // optional .protobuf.srl.school.State state = 11;
+      // optional .protobuf.srl.school.State state = 10;
       private protobuf.srl.school.School.State state_ = protobuf.srl.school.School.State.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.school.School.State, protobuf.srl.school.School.State.Builder, protobuf.srl.school.School.StateOrBuilder> stateBuilder_;
       /**
-       * <code>optional .protobuf.srl.school.State state = 11;</code>
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
        */
       public boolean hasState() {
-        return ((bitField0_ & 0x00000400) == 0x00000400);
+        return ((bitField0_ & 0x00000200) == 0x00000200);
       }
       /**
-       * <code>optional .protobuf.srl.school.State state = 11;</code>
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
        */
       public protobuf.srl.school.School.State getState() {
         if (stateBuilder_ == null) {
@@ -10693,7 +10396,7 @@ public final class School {
         }
       }
       /**
-       * <code>optional .protobuf.srl.school.State state = 11;</code>
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
        */
       public Builder setState(protobuf.srl.school.School.State value) {
         if (stateBuilder_ == null) {
@@ -10705,11 +10408,11 @@ public final class School {
         } else {
           stateBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000400;
+        bitField0_ |= 0x00000200;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.State state = 11;</code>
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
        */
       public Builder setState(
           protobuf.srl.school.School.State.Builder builderForValue) {
@@ -10719,15 +10422,15 @@ public final class School {
         } else {
           stateBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000400;
+        bitField0_ |= 0x00000200;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.State state = 11;</code>
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
        */
       public Builder mergeState(protobuf.srl.school.School.State value) {
         if (stateBuilder_ == null) {
-          if (((bitField0_ & 0x00000400) == 0x00000400) &&
+          if (((bitField0_ & 0x00000200) == 0x00000200) &&
               state_ != protobuf.srl.school.School.State.getDefaultInstance()) {
             state_ =
               protobuf.srl.school.School.State.newBuilder(state_).mergeFrom(value).buildPartial();
@@ -10738,11 +10441,11 @@ public final class School {
         } else {
           stateBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000400;
+        bitField0_ |= 0x00000200;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.State state = 11;</code>
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
        */
       public Builder clearState() {
         if (stateBuilder_ == null) {
@@ -10751,19 +10454,19 @@ public final class School {
         } else {
           stateBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000400);
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.State state = 11;</code>
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
        */
       public protobuf.srl.school.School.State.Builder getStateBuilder() {
-        bitField0_ |= 0x00000400;
+        bitField0_ |= 0x00000200;
         onChanged();
         return getStateFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .protobuf.srl.school.State state = 11;</code>
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
        */
       public protobuf.srl.school.School.StateOrBuilder getStateOrBuilder() {
         if (stateBuilder_ != null) {
@@ -10773,7 +10476,7 @@ public final class School {
         }
       }
       /**
-       * <code>optional .protobuf.srl.school.State state = 11;</code>
+       * <code>optional .protobuf.srl.school.State state = 10;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.school.School.State, protobuf.srl.school.School.State.Builder, protobuf.srl.school.School.StateOrBuilder> 
@@ -10789,18 +10492,18 @@ public final class School {
         return stateBuilder_;
       }
 
-      // optional .protobuf.srl.school.SrlPermission accessPermission = 12;
+      // optional .protobuf.srl.school.SrlPermission accessPermission = 11;
       private protobuf.srl.school.School.SrlPermission accessPermission_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> accessPermissionBuilder_;
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
        */
       public boolean hasAccessPermission() {
-        return ((bitField0_ & 0x00000800) == 0x00000800);
+        return ((bitField0_ & 0x00000400) == 0x00000400);
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
        */
       public protobuf.srl.school.School.SrlPermission getAccessPermission() {
         if (accessPermissionBuilder_ == null) {
@@ -10810,7 +10513,7 @@ public final class School {
         }
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
        */
       public Builder setAccessPermission(protobuf.srl.school.School.SrlPermission value) {
         if (accessPermissionBuilder_ == null) {
@@ -10822,11 +10525,11 @@ public final class School {
         } else {
           accessPermissionBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000800;
+        bitField0_ |= 0x00000400;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
        */
       public Builder setAccessPermission(
           protobuf.srl.school.School.SrlPermission.Builder builderForValue) {
@@ -10836,15 +10539,15 @@ public final class School {
         } else {
           accessPermissionBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000800;
+        bitField0_ |= 0x00000400;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
        */
       public Builder mergeAccessPermission(protobuf.srl.school.School.SrlPermission value) {
         if (accessPermissionBuilder_ == null) {
-          if (((bitField0_ & 0x00000800) == 0x00000800) &&
+          if (((bitField0_ & 0x00000400) == 0x00000400) &&
               accessPermission_ != protobuf.srl.school.School.SrlPermission.getDefaultInstance()) {
             accessPermission_ =
               protobuf.srl.school.School.SrlPermission.newBuilder(accessPermission_).mergeFrom(value).buildPartial();
@@ -10855,11 +10558,11 @@ public final class School {
         } else {
           accessPermissionBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000800;
+        bitField0_ |= 0x00000400;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
        */
       public Builder clearAccessPermission() {
         if (accessPermissionBuilder_ == null) {
@@ -10868,19 +10571,19 @@ public final class School {
         } else {
           accessPermissionBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000800);
+        bitField0_ = (bitField0_ & ~0x00000400);
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
        */
       public protobuf.srl.school.School.SrlPermission.Builder getAccessPermissionBuilder() {
-        bitField0_ |= 0x00000800;
+        bitField0_ |= 0x00000400;
         onChanged();
         return getAccessPermissionFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
        */
       public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionOrBuilder() {
         if (accessPermissionBuilder_ != null) {
@@ -10890,7 +10593,7 @@ public final class School {
         }
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 12;</code>
+       * <code>optional .protobuf.srl.school.SrlPermission accessPermission = 11;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> 
@@ -10904,6 +10607,39 @@ public final class School {
           accessPermission_ = null;
         }
         return accessPermissionBuilder_;
+      }
+
+      // optional int32 problemNumber = 12;
+      private int problemNumber_ ;
+      /**
+       * <code>optional int32 problemNumber = 12;</code>
+       */
+      public boolean hasProblemNumber() {
+        return ((bitField0_ & 0x00000800) == 0x00000800);
+      }
+      /**
+       * <code>optional int32 problemNumber = 12;</code>
+       */
+      public int getProblemNumber() {
+        return problemNumber_;
+      }
+      /**
+       * <code>optional int32 problemNumber = 12;</code>
+       */
+      public Builder setProblemNumber(int value) {
+        bitField0_ |= 0x00000800;
+        problemNumber_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 problemNumber = 12;</code>
+       */
+      public Builder clearProblemNumber() {
+        bitField0_ = (bitField0_ & ~0x00000800);
+        problemNumber_ = 0;
+        onChanged();
+        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlProblem)
@@ -12967,7 +12703,7 @@ public final class School {
      * <code>optional uint64 millisecond = 7;</code>
      *
      * <pre>
-     *To ensure capabilities to communicate with systems with diverse date-time handling methods
+     * To ensure capabilities to communicate with systems with diverse date-time handling methods
      * </pre>
      */
     boolean hasMillisecond();
@@ -12975,7 +12711,7 @@ public final class School {
      * <code>optional uint64 millisecond = 7;</code>
      *
      * <pre>
-     *To ensure capabilities to communicate with systems with diverse date-time handling methods
+     * To ensure capabilities to communicate with systems with diverse date-time handling methods
      * </pre>
      */
     long getMillisecond();
@@ -12984,7 +12720,7 @@ public final class School {
    * Protobuf type {@code protobuf.srl.school.DateTime}
    *
    * <pre>
-   *Needs to be implemented with enums. Probably already exists elsewhere.
+   * Needs to be implemented with enums. Probably already exists elsewhere.
    * </pre>
    */
   public static final class DateTime extends
@@ -13213,7 +12949,7 @@ public final class School {
      * <code>optional uint64 millisecond = 7;</code>
      *
      * <pre>
-     *To ensure capabilities to communicate with systems with diverse date-time handling methods
+     * To ensure capabilities to communicate with systems with diverse date-time handling methods
      * </pre>
      */
     public boolean hasMillisecond() {
@@ -13223,7 +12959,7 @@ public final class School {
      * <code>optional uint64 millisecond = 7;</code>
      *
      * <pre>
-     *To ensure capabilities to communicate with systems with diverse date-time handling methods
+     * To ensure capabilities to communicate with systems with diverse date-time handling methods
      * </pre>
      */
     public long getMillisecond() {
@@ -13391,7 +13127,7 @@ public final class School {
      * Protobuf type {@code protobuf.srl.school.DateTime}
      *
      * <pre>
-     *Needs to be implemented with enums. Probably already exists elsewhere.
+     * Needs to be implemented with enums. Probably already exists elsewhere.
      * </pre>
      */
     public static final class Builder extends
@@ -13767,7 +13503,7 @@ public final class School {
        * <code>optional uint64 millisecond = 7;</code>
        *
        * <pre>
-       *To ensure capabilities to communicate with systems with diverse date-time handling methods
+       * To ensure capabilities to communicate with systems with diverse date-time handling methods
        * </pre>
        */
       public boolean hasMillisecond() {
@@ -13777,7 +13513,7 @@ public final class School {
        * <code>optional uint64 millisecond = 7;</code>
        *
        * <pre>
-       *To ensure capabilities to communicate with systems with diverse date-time handling methods
+       * To ensure capabilities to communicate with systems with diverse date-time handling methods
        * </pre>
        */
       public long getMillisecond() {
@@ -13787,7 +13523,7 @@ public final class School {
        * <code>optional uint64 millisecond = 7;</code>
        *
        * <pre>
-       *To ensure capabilities to communicate with systems with diverse date-time handling methods
+       * To ensure capabilities to communicate with systems with diverse date-time handling methods
        * </pre>
        */
       public Builder setMillisecond(long value) {
@@ -13800,7 +13536,7 @@ public final class School {
        * <code>optional uint64 millisecond = 7;</code>
        *
        * <pre>
-       *To ensure capabilities to communicate with systems with diverse date-time handling methods
+       * To ensure capabilities to communicate with systems with diverse date-time handling methods
        * </pre>
        */
       public Builder clearMillisecond() {
@@ -13843,7 +13579,7 @@ public final class School {
    * Protobuf type {@code protobuf.srl.school.DomainInformation}
    *
    * <pre>
-   *Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
+   * Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
    * </pre>
    */
   public static final class DomainInformation extends
@@ -14095,7 +13831,7 @@ public final class School {
      * Protobuf type {@code protobuf.srl.school.DomainInformation}
      *
      * <pre>
-     *Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
+     * Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
      * </pre>
      */
     public static final class Builder extends
@@ -14308,7 +14044,7 @@ public final class School {
      * <code>optional bool published = 1;</code>
      *
      * <pre>
-     *Instructor has finished construction of school item
+     * Instructor has finished construction of school item
      * </pre>
      */
     boolean hasPublished();
@@ -14316,7 +14052,7 @@ public final class School {
      * <code>optional bool published = 1;</code>
      *
      * <pre>
-     *Instructor has finished construction of school item
+     * Instructor has finished construction of school item
      * </pre>
      */
     boolean getPublished();
@@ -14326,7 +14062,7 @@ public final class School {
      * <code>optional bool accessible = 2;</code>
      *
      * <pre>
-     *Has been made the school item available to be viewed and worked on
+     * Has been made the school item available to be viewed and worked on
      * </pre>
      */
     boolean hasAccessible();
@@ -14334,7 +14070,7 @@ public final class School {
      * <code>optional bool accessible = 2;</code>
      *
      * <pre>
-     *Has been made the school item available to be viewed and worked on
+     * Has been made the school item available to be viewed and worked on
      * </pre>
      */
     boolean getAccessible();
@@ -14344,7 +14080,7 @@ public final class School {
      * <code>optional bool pastDue = 3;</code>
      *
      * <pre>
-     *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+     * Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
      * </pre>
      */
     boolean hasPastDue();
@@ -14352,7 +14088,7 @@ public final class School {
      * <code>optional bool pastDue = 3;</code>
      *
      * <pre>
-     *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+     * Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
      * </pre>
      */
     boolean getPastDue();
@@ -14362,7 +14098,7 @@ public final class School {
      * <code>optional bool started = 4;</code>
      *
      * <pre>
-     *Student has viewed or begun the school item
+     * Student has viewed or begun the school item
      * </pre>
      */
     boolean hasStarted();
@@ -14370,7 +14106,7 @@ public final class School {
      * <code>optional bool started = 4;</code>
      *
      * <pre>
-     *Student has viewed or begun the school item
+     * Student has viewed or begun the school item
      * </pre>
      */
     boolean getStarted();
@@ -14380,7 +14116,7 @@ public final class School {
      * <code>optional bool completed = 5;</code>
      *
      * <pre>
-     *Student has saved/submitted work on all parts of school item
+     * Student has saved/submitted work on all parts of school item
      * </pre>
      */
     boolean hasCompleted();
@@ -14388,7 +14124,7 @@ public final class School {
      * <code>optional bool completed = 5;</code>
      *
      * <pre>
-     *Student has saved/submitted work on all parts of school item
+     * Student has saved/submitted work on all parts of school item
      * </pre>
      */
     boolean getCompleted();
@@ -14516,7 +14252,7 @@ public final class School {
      * <code>optional bool published = 1;</code>
      *
      * <pre>
-     *Instructor has finished construction of school item
+     * Instructor has finished construction of school item
      * </pre>
      */
     public boolean hasPublished() {
@@ -14526,7 +14262,7 @@ public final class School {
      * <code>optional bool published = 1;</code>
      *
      * <pre>
-     *Instructor has finished construction of school item
+     * Instructor has finished construction of school item
      * </pre>
      */
     public boolean getPublished() {
@@ -14540,7 +14276,7 @@ public final class School {
      * <code>optional bool accessible = 2;</code>
      *
      * <pre>
-     *Has been made the school item available to be viewed and worked on
+     * Has been made the school item available to be viewed and worked on
      * </pre>
      */
     public boolean hasAccessible() {
@@ -14550,7 +14286,7 @@ public final class School {
      * <code>optional bool accessible = 2;</code>
      *
      * <pre>
-     *Has been made the school item available to be viewed and worked on
+     * Has been made the school item available to be viewed and worked on
      * </pre>
      */
     public boolean getAccessible() {
@@ -14564,7 +14300,7 @@ public final class School {
      * <code>optional bool pastDue = 3;</code>
      *
      * <pre>
-     *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+     * Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
      * </pre>
      */
     public boolean hasPastDue() {
@@ -14574,7 +14310,7 @@ public final class School {
      * <code>optional bool pastDue = 3;</code>
      *
      * <pre>
-     *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+     * Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
      * </pre>
      */
     public boolean getPastDue() {
@@ -14588,7 +14324,7 @@ public final class School {
      * <code>optional bool started = 4;</code>
      *
      * <pre>
-     *Student has viewed or begun the school item
+     * Student has viewed or begun the school item
      * </pre>
      */
     public boolean hasStarted() {
@@ -14598,7 +14334,7 @@ public final class School {
      * <code>optional bool started = 4;</code>
      *
      * <pre>
-     *Student has viewed or begun the school item
+     * Student has viewed or begun the school item
      * </pre>
      */
     public boolean getStarted() {
@@ -14612,7 +14348,7 @@ public final class School {
      * <code>optional bool completed = 5;</code>
      *
      * <pre>
-     *Student has saved/submitted work on all parts of school item
+     * Student has saved/submitted work on all parts of school item
      * </pre>
      */
     public boolean hasCompleted() {
@@ -14622,7 +14358,7 @@ public final class School {
      * <code>optional bool completed = 5;</code>
      *
      * <pre>
-     *Student has saved/submitted work on all parts of school item
+     * Student has saved/submitted work on all parts of school item
      * </pre>
      */
     public boolean getCompleted() {
@@ -14930,7 +14666,7 @@ public final class School {
        * <code>optional bool published = 1;</code>
        *
        * <pre>
-       *Instructor has finished construction of school item
+       * Instructor has finished construction of school item
        * </pre>
        */
       public boolean hasPublished() {
@@ -14940,7 +14676,7 @@ public final class School {
        * <code>optional bool published = 1;</code>
        *
        * <pre>
-       *Instructor has finished construction of school item
+       * Instructor has finished construction of school item
        * </pre>
        */
       public boolean getPublished() {
@@ -14950,7 +14686,7 @@ public final class School {
        * <code>optional bool published = 1;</code>
        *
        * <pre>
-       *Instructor has finished construction of school item
+       * Instructor has finished construction of school item
        * </pre>
        */
       public Builder setPublished(boolean value) {
@@ -14963,7 +14699,7 @@ public final class School {
        * <code>optional bool published = 1;</code>
        *
        * <pre>
-       *Instructor has finished construction of school item
+       * Instructor has finished construction of school item
        * </pre>
        */
       public Builder clearPublished() {
@@ -14979,7 +14715,7 @@ public final class School {
        * <code>optional bool accessible = 2;</code>
        *
        * <pre>
-       *Has been made the school item available to be viewed and worked on
+       * Has been made the school item available to be viewed and worked on
        * </pre>
        */
       public boolean hasAccessible() {
@@ -14989,7 +14725,7 @@ public final class School {
        * <code>optional bool accessible = 2;</code>
        *
        * <pre>
-       *Has been made the school item available to be viewed and worked on
+       * Has been made the school item available to be viewed and worked on
        * </pre>
        */
       public boolean getAccessible() {
@@ -14999,7 +14735,7 @@ public final class School {
        * <code>optional bool accessible = 2;</code>
        *
        * <pre>
-       *Has been made the school item available to be viewed and worked on
+       * Has been made the school item available to be viewed and worked on
        * </pre>
        */
       public Builder setAccessible(boolean value) {
@@ -15012,7 +14748,7 @@ public final class School {
        * <code>optional bool accessible = 2;</code>
        *
        * <pre>
-       *Has been made the school item available to be viewed and worked on
+       * Has been made the school item available to be viewed and worked on
        * </pre>
        */
       public Builder clearAccessible() {
@@ -15028,7 +14764,7 @@ public final class School {
        * <code>optional bool pastDue = 3;</code>
        *
        * <pre>
-       *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+       * Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
        * </pre>
        */
       public boolean hasPastDue() {
@@ -15038,7 +14774,7 @@ public final class School {
        * <code>optional bool pastDue = 3;</code>
        *
        * <pre>
-       *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+       * Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
        * </pre>
        */
       public boolean getPastDue() {
@@ -15048,7 +14784,7 @@ public final class School {
        * <code>optional bool pastDue = 3;</code>
        *
        * <pre>
-       *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+       * Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
        * </pre>
        */
       public Builder setPastDue(boolean value) {
@@ -15061,7 +14797,7 @@ public final class School {
        * <code>optional bool pastDue = 3;</code>
        *
        * <pre>
-       *Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+       * Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
        * </pre>
        */
       public Builder clearPastDue() {
@@ -15077,7 +14813,7 @@ public final class School {
        * <code>optional bool started = 4;</code>
        *
        * <pre>
-       *Student has viewed or begun the school item
+       * Student has viewed or begun the school item
        * </pre>
        */
       public boolean hasStarted() {
@@ -15087,7 +14823,7 @@ public final class School {
        * <code>optional bool started = 4;</code>
        *
        * <pre>
-       *Student has viewed or begun the school item
+       * Student has viewed or begun the school item
        * </pre>
        */
       public boolean getStarted() {
@@ -15097,7 +14833,7 @@ public final class School {
        * <code>optional bool started = 4;</code>
        *
        * <pre>
-       *Student has viewed or begun the school item
+       * Student has viewed or begun the school item
        * </pre>
        */
       public Builder setStarted(boolean value) {
@@ -15110,7 +14846,7 @@ public final class School {
        * <code>optional bool started = 4;</code>
        *
        * <pre>
-       *Student has viewed or begun the school item
+       * Student has viewed or begun the school item
        * </pre>
        */
       public Builder clearStarted() {
@@ -15126,7 +14862,7 @@ public final class School {
        * <code>optional bool completed = 5;</code>
        *
        * <pre>
-       *Student has saved/submitted work on all parts of school item
+       * Student has saved/submitted work on all parts of school item
        * </pre>
        */
       public boolean hasCompleted() {
@@ -15136,7 +14872,7 @@ public final class School {
        * <code>optional bool completed = 5;</code>
        *
        * <pre>
-       *Student has saved/submitted work on all parts of school item
+       * Student has saved/submitted work on all parts of school item
        * </pre>
        */
       public boolean getCompleted() {
@@ -15146,7 +14882,7 @@ public final class School {
        * <code>optional bool completed = 5;</code>
        *
        * <pre>
-       *Student has saved/submitted work on all parts of school item
+       * Student has saved/submitted work on all parts of school item
        * </pre>
        */
       public Builder setCompleted(boolean value) {
@@ -15159,7 +14895,7 @@ public final class School {
        * <code>optional bool completed = 5;</code>
        *
        * <pre>
-       *Student has saved/submitted work on all parts of school item
+       * Student has saved/submitted work on all parts of school item
        * </pre>
        */
       public Builder clearCompleted() {
@@ -15188,7 +14924,7 @@ public final class School {
      * <code>required string username = 1;</code>
      *
      * <pre>
-     *Must be globally unique
+     * Must be globally unique
      * </pre>
      */
     boolean hasUsername();
@@ -15196,7 +14932,7 @@ public final class School {
      * <code>required string username = 1;</code>
      *
      * <pre>
-     *Must be globally unique
+     * Must be globally unique
      * </pre>
      */
     java.lang.String getUsername();
@@ -15204,7 +14940,7 @@ public final class School {
      * <code>required string username = 1;</code>
      *
      * <pre>
-     *Must be globally unique
+     * Must be globally unique
      * </pre>
      */
     com.google.protobuf.ByteString
@@ -15444,7 +15180,7 @@ public final class School {
      * <code>required string username = 1;</code>
      *
      * <pre>
-     *Must be globally unique
+     * Must be globally unique
      * </pre>
      */
     public boolean hasUsername() {
@@ -15454,7 +15190,7 @@ public final class School {
      * <code>required string username = 1;</code>
      *
      * <pre>
-     *Must be globally unique
+     * Must be globally unique
      * </pre>
      */
     public java.lang.String getUsername() {
@@ -15475,7 +15211,7 @@ public final class School {
      * <code>required string username = 1;</code>
      *
      * <pre>
-     *Must be globally unique
+     * Must be globally unique
      * </pre>
      */
     public com.google.protobuf.ByteString
@@ -16106,7 +15842,7 @@ public final class School {
        * <code>required string username = 1;</code>
        *
        * <pre>
-       *Must be globally unique
+       * Must be globally unique
        * </pre>
        */
       public boolean hasUsername() {
@@ -16116,7 +15852,7 @@ public final class School {
        * <code>required string username = 1;</code>
        *
        * <pre>
-       *Must be globally unique
+       * Must be globally unique
        * </pre>
        */
       public java.lang.String getUsername() {
@@ -16134,7 +15870,7 @@ public final class School {
        * <code>required string username = 1;</code>
        *
        * <pre>
-       *Must be globally unique
+       * Must be globally unique
        * </pre>
        */
       public com.google.protobuf.ByteString
@@ -16154,7 +15890,7 @@ public final class School {
        * <code>required string username = 1;</code>
        *
        * <pre>
-       *Must be globally unique
+       * Must be globally unique
        * </pre>
        */
       public Builder setUsername(
@@ -16171,7 +15907,7 @@ public final class School {
        * <code>required string username = 1;</code>
        *
        * <pre>
-       *Must be globally unique
+       * Must be globally unique
        * </pre>
        */
       public Builder clearUsername() {
@@ -16184,7 +15920,7 @@ public final class School {
        * <code>required string username = 1;</code>
        *
        * <pre>
-       *Must be globally unique
+       * Must be globally unique
        * </pre>
        */
       public Builder setUsernameBytes(
@@ -18692,7 +18428,7 @@ public final class School {
       "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen" +
       "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo" +
       "l.SrlProblem\0229\n\014bankProblems\030\004 \003(\0132#.pro" +
-      "tobuf.srl.school.SrlBankProblem\"\355\003\n\tSrlC" +
+      "tobuf.srl.school.SrlBankProblem\"\377\003\n\tSrlC" +
       "ourse\022\n\n\002id\030\001 \002(\t\022\014\n\004name\030\002 \001(\t\022<\n\020acces" +
       "sPermission\030\003 \001(\0132\".protobuf.srl.school." +
       "SrlPermission\022G\n\006access\030\004 \001(\0162,.protobuf",
@@ -18703,63 +18439,62 @@ public final class School {
       ".DateTime\0220\n\tcloseDate\030\n \001(\0132\035.protobuf." +
       "srl.school.DateTime\022)\n\005state\030\013 \001(\0132\032.pro" +
       "tobuf.srl.school.State\022\026\n\016assignmentList" +
-      "\030\014 \003(\t\"O\n\rAccessibility\022\n\n\006PUBLIC\020\001\022\r\n\tP" +
-      "ROTECTED\020\002\022\026\n\022PROTECTED_NOSEARCH\020\003\022\013\n\007PR" +
-      "IVATE\020\004\"\327\005\n\rSrlAssignment\022\020\n\010courseId\030\001 ",
-      "\002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004name\030\003 \001(\t\022I\n\004type\030\004 " +
-      "\001(\01621.protobuf.srl.school.SrlAssignment." +
-      "AssignmentType:\010HOMEWORK\022\r\n\005other\030\005 \001(\t\022" +
-      "\023\n\013description\030\006 \001(\t\022\r\n\005links\030\007 \003(\t\022J\n\nl" +
-      "atePolicy\030\010 \001(\0162-.protobuf.srl.school.Sr" +
-      "lAssignment.LatePolicy:\007POLICY1\022\023\n\013grade" +
-      "Weight\030\t \001(\t\022\r\n\005grade\030\n \001(\002\0221\n\naccessDat" +
-      "e\030\013 \001(\0132\035.protobuf.srl.school.DateTime\022." +
-      "\n\007dueDate\030\014 \001(\0132\035.protobuf.srl.school.Da" +
-      "teTime\0220\n\tcloseDate\030\r \001(\0132\035.protobuf.srl",
-      ".school.DateTime\022)\n\005state\030\016 \001(\0132\032.protob" +
-      "uf.srl.school.State\022\020\n\010imageUrl\030\017 \001(\t\022\023\n" +
-      "\013problemList\030\020 \003(\t\022<\n\020accessPermission\030\021" +
-      " \001(\0132\".protobuf.srl.school.SrlPermission" +
-      "\"R\n\016AssignmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ" +
-      "\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTH" +
-      "ER\020\006\"3\n\nLatePolicy\022\013\n\007POLICY1\020\001\022\013\n\007POLIC" +
-      "Y2\020\002\022\013\n\007POLICY3\020\003\"\367\002\n\nSrlProblem\022\n\n\002id\030\001" +
-      " \002(\t\022\020\n\010courseId\030\002 \001(\t\022\024\n\014assignmentId\030\003" +
-      " \001(\t\022\025\n\rproblemBankId\030\004 \001(\t\022\014\n\004name\030\005 \001(",
-      "\t\022\023\n\013description\030\006 \001(\t\0228\n\013problemInfo\030\007 " +
-      "\001(\0132#.protobuf.srl.school.SrlBankProblem" +
-      "\0224\n\004info\030\010 \003(\0132&.protobuf.srl.school.Dom" +
-      "ainInformation\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005g" +
-      "rade\030\n \001(\002\022)\n\005state\030\013 \001(\0132\032.protobuf.srl" +
-      ".school.State\022<\n\020accessPermission\030\014 \001(\0132" +
-      "\".protobuf.srl.school.SrlPermission\"\374\002\n\016" +
-      "SrlBankProblem\022\n\n\002id\030\001 \002(\t\022\024\n\014questionTe" +
-      "xt\030\002 \001(\t\022N\n\014questionType\030\003 \001(\01620.protobu" +
-      "f.srl.school.SrlBankProblem.QuestionType",
-      ":\006SKETCH\022\r\n\005image\030\004 \001(\t\022\022\n\nsolutionId\030\005 " +
-      "\001(\t\022\023\n\013courseTopic\030\006 \001(\t\022\020\n\010subTopic\030\007 \001" +
-      "(\t\022\016\n\006source\030\010 \001(\t\022\025\n\rotherKeywords\030\t \003(" +
-      "\t\022<\n\020accessPermission\030\n \001(\0132\".protobuf.s" +
-      "rl.school.SrlPermission\"I\n\014QuestionType\022" +
-      "\n\n\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RES" +
-      "P\020\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001" +
-      " \001(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour" +
-      "\030\004 \001(\005\022\016\n\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023" +
-      "\n\013millisecond\030\007 \001(\004\"\"\n\021DomainInformation",
-      "\022\r\n\005stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 " +
-      "\001(\010\022\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010" +
-      "\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n" +
-      "\007SrlUser\022\020\n\010username\030\001 \002(\t\022\r\n\005email\030\002 \001(" +
-      "\t\022\022\n\ncourseList\030\003 \003(\t\022\026\n\016schoolIdentity\030" +
-      "\004 \001(\t\022\021\n\tfirstName\030\005 \001(\t\022\020\n\010lastName\030\006 \001" +
-      "(\t\022\020\n\010password\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006user" +
-      "Id\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003" +
-      " \001(\t\022\r\n\005admin\030\004 \003(\t\"]\n\rSrlPermission\022\027\n\017" +
-      "adminPermission\030\001 \003(\t\022\033\n\023moderatorPermis",
-      "sion\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010Us" +
-      "erType\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEA" +
-      "CHING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020" +
-      "\005"
+      "\030\014 \003(\t\"a\n\rAccessibility\022\020\n\014SUPER_PUBLIC\020" +
+      "\000\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\026\n\022PROTECTE" +
+      "D_NOSEARCH\020\003\022\013\n\007PRIVATE\020\004\"\327\005\n\rSrlAssignm",
+      "ent\022\020\n\010courseId\030\001 \002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004nam" +
+      "e\030\003 \001(\t\022I\n\004type\030\004 \001(\01621.protobuf.srl.sch" +
+      "ool.SrlAssignment.AssignmentType:\010HOMEWO" +
+      "RK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001(\t\022\r" +
+      "\n\005links\030\007 \003(\t\022J\n\nlatePolicy\030\010 \001(\0162-.prot" +
+      "obuf.srl.school.SrlAssignment.LatePolicy" +
+      ":\007POLICY1\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005grade\030" +
+      "\n \001(\002\0221\n\naccessDate\030\013 \001(\0132\035.protobuf.srl" +
+      ".school.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.prot" +
+      "obuf.srl.school.DateTime\0220\n\tcloseDate\030\r ",
+      "\001(\0132\035.protobuf.srl.school.DateTime\022)\n\005st" +
+      "ate\030\016 \001(\0132\032.protobuf.srl.school.State\022\020\n" +
+      "\010imageUrl\030\017 \001(\t\022\023\n\013problemList\030\020 \003(\t\022<\n\020" +
+      "accessPermission\030\021 \001(\0132\".protobuf.srl.sc" +
+      "hool.SrlPermission\"R\n\016AssignmentType\022\014\n\010" +
+      "HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM\020\004\022" +
+      "\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3\n\nLatePolicy\022\013\n\007" +
+      "POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007POLICY3\020\003\"\330\002\n\n" +
+      "SrlProblem\022\n\n\002id\030\001 \002(\t\022\020\n\010courseId\030\002 \001(\t" +
+      "\022\024\n\014assignmentId\030\003 \001(\t\022\025\n\rproblemBankId\030",
+      "\004 \001(\t\022\014\n\004name\030\005 \001(\t\022\023\n\013description\030\006 \001(\t" +
+      "\0228\n\013problemInfo\030\007 \001(\0132#.protobuf.srl.sch" +
+      "ool.SrlBankProblem\022\023\n\013gradeWeight\030\010 \001(\t\022" +
+      "\r\n\005grade\030\t \001(\002\022)\n\005state\030\n \001(\0132\032.protobuf" +
+      ".srl.school.State\022<\n\020accessPermission\030\013 " +
+      "\001(\0132\".protobuf.srl.school.SrlPermission\022" +
+      "\025\n\rproblemNumber\030\014 \001(\005\"\374\002\n\016SrlBankProble" +
+      "m\022\n\n\002id\030\001 \002(\t\022\024\n\014questionText\030\002 \001(\t\022N\n\014q" +
+      "uestionType\030\003 \001(\01620.protobuf.srl.school." +
+      "SrlBankProblem.QuestionType:\006SKETCH\022\r\n\005i",
+      "mage\030\004 \001(\t\022\022\n\nsolutionId\030\005 \001(\t\022\023\n\013course" +
+      "Topic\030\006 \001(\t\022\020\n\010subTopic\030\007 \001(\t\022\016\n\006source\030" +
+      "\010 \001(\t\022\025\n\rotherKeywords\030\t \003(\t\022<\n\020accessPe" +
+      "rmission\030\n \001(\0132\".protobuf.srl.school.Srl" +
+      "Permission\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017" +
+      "\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_" +
+      "BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month" +
+      "\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006min" +
+      "ute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millisecond" +
+      "\030\007 \001(\004\"\"\n\021DomainInformation\022\r\n\005stuff\030\001 \001",
+      "(\t\"c\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\naccess" +
+      "ible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007started\030\004" +
+      " \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n\007SrlUser\022\020\n\010u" +
+      "sername\030\001 \002(\t\022\r\n\005email\030\002 \001(\t\022\022\n\ncourseLi" +
+      "st\030\003 \003(\t\022\026\n\016schoolIdentity\030\004 \001(\t\022\021\n\tfirs" +
+      "tName\030\005 \001(\t\022\020\n\010lastName\030\006 \001(\t\022\020\n\010passwor" +
+      "d\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022\017\n\007g" +
+      "roupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t\022\r\n\005admin" +
+      "\030\004 \003(\t\"]\n\rSrlPermission\022\027\n\017adminPermissi" +
+      "on\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003(\t\022\026\n",
+      "\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n\005ADM" +
+      "IN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSISTA" +
+      "NT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -18789,7 +18524,7 @@ public final class School {
           internal_static_protobuf_srl_school_SrlProblem_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlProblem_descriptor,
-              new java.lang.String[] { "Id", "CourseId", "AssignmentId", "ProblemBankId", "Name", "Description", "ProblemInfo", "Info", "GradeWeight", "Grade", "State", "AccessPermission", });
+              new java.lang.String[] { "Id", "CourseId", "AssignmentId", "ProblemBankId", "Name", "Description", "ProblemInfo", "GradeWeight", "Grade", "State", "AccessPermission", "ProblemNumber", });
           internal_static_protobuf_srl_school_SrlBankProblem_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_protobuf_srl_school_SrlBankProblem_fieldAccessorTable = new

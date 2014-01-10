@@ -35,8 +35,8 @@ public class DatabaseClient {
 	}
 
 	private DatabaseClient() {
-		this("goldberglinux.tamu.edu");
-		//this("localhost");
+		//this("goldberglinux.tamu.edu");
+		this("localhost");
 	}
 
 	public static void main(String[] args) throws Exception {

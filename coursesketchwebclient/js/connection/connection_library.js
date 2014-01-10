@@ -56,7 +56,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 			        } else if (msg.requestType == Request.MessageType.RECOGNITION && onRecognition) {
 			        	console.log("getting from recognition");
 			        	onRecognition(evt, msg);
-			        } else if (msg.requestType == Request.MessageType.ANSWER_CHECKING && onAnswerChecker) {
+			        } else if (msg.requestType == Request.MessageType.SUBMISSION && onAnswerChecker) {
 			        	console.log("getting from answer checker");
 			        	onAnswerChecker(evt, msg);
 			        } else if (msg.requestType == Request.MessageType.DATA_REQUEST && onSchoolData) {
@@ -117,7 +117,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	};
 
 	this.setAnswerCheckingListener = function(listener) {
-		ononAnswerChecker = listener;
+		onAnswerChecker = listener;
 	};
 
 	this.setSchoolDataListener = function(listener) {
@@ -201,6 +201,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 			buildSketch();
 			buildUpdateList();
 			buildDataQuery();
+			buildSubmissions();
 			if (!Long) {
 				Long = dcodeIO.Long;
 			}
@@ -257,6 +258,13 @@ function Connection(uri, encrypted, attemptReconnect) {
 				ProtoSrlCommandType = ProtoUpdateCommand.CommandType;
 			if (!IdChain)
 				IdChain = ProtoUpdateCommand.IdChain;
+		}
+
+		function buildSubmissions() {
+			if (!ProtoSubmissionBuilder) {
+				var builder = ProtoBuf.protoFromFile(protobufDirectory + "submission.proto");
+				ProtoSubmissionBuilder = builder.build("protobuf").srl.submission;
+			}
 		}
 		/*
 		function testRepeated() {
@@ -384,6 +392,7 @@ var ProtoSrlCommandType = false;
 var IdChain = false;
 
 var QueryBuilder = false;
+var ProtoSubmissionBuilder = false;
 
 const CONNECTION_LOST = 1006;
 const INCORRECT_LOGIN = 4002;
@@ -418,6 +427,8 @@ function copyParentProtos(scope) {
 	copyParentValues(scope,'ProtoSrlUpdate');
 	copyParentValues(scope,'ProtoSrlCommand');
 	copyParentValues(scope,'ProtoSrlCommandType');
+	copyParentValues(scope,'ProtoSubmissionBuilder');
+	ProtoSubmissionBuilder
 	copyParentValues(scope,'IdChain');
 	
 	copyParentValues(scope,'QueryBuilder');

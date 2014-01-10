@@ -26,9 +26,9 @@ public final class Submission {
     com.google.protobuf.ByteString
         getIdBytes();
 
-    // optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+    // optional bytes updateList = 2;
     /**
-     * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
+     * <code>optional bytes updateList = 2;</code>
      *
      * <pre>
      * if this is a collection of updates
@@ -36,25 +36,17 @@ public final class Submission {
      */
     boolean hasUpdateList();
     /**
-     * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
+     * <code>optional bytes updateList = 2;</code>
      *
      * <pre>
      * if this is a collection of updates
      * </pre>
      */
-    protobuf.srl.commands.Commands.SrlUpdateList getUpdateList();
-    /**
-     * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
-     *
-     * <pre>
-     * if this is a collection of updates
-     * </pre>
-     */
-    protobuf.srl.commands.Commands.SrlUpdateListOrBuilder getUpdateListOrBuilder();
+    com.google.protobuf.ByteString getUpdateList();
 
-    // optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+    // optional bytes sketch = 3;
     /**
-     * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
+     * <code>optional bytes sketch = 3;</code>
      *
      * <pre>
      * if this is a sketch.
@@ -62,21 +54,13 @@ public final class Submission {
      */
     boolean hasSketch();
     /**
-     * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
+     * <code>optional bytes sketch = 3;</code>
      *
      * <pre>
      * if this is a sketch.
      * </pre>
      */
-    protobuf.srl.sketch.Sketch.SrlSketch getSketch();
-    /**
-     * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
-     *
-     * <pre>
-     * if this is a sketch.
-     * </pre>
-     */
-    protobuf.srl.sketch.Sketch.SrlSketchOrBuilder getSketchOrBuilder();
+    com.google.protobuf.ByteString getSketch();
   }
   /**
    * Protobuf type {@code protobuf.srl.submission.SrlSubmission}
@@ -140,29 +124,13 @@ public final class Submission {
               break;
             }
             case 18: {
-              protobuf.srl.commands.Commands.SrlUpdateList.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                subBuilder = updateList_.toBuilder();
-              }
-              updateList_ = input.readMessage(protobuf.srl.commands.Commands.SrlUpdateList.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(updateList_);
-                updateList_ = subBuilder.buildPartial();
-              }
               bitField0_ |= 0x00000002;
+              updateList_ = input.readBytes();
               break;
             }
             case 26: {
-              protobuf.srl.sketch.Sketch.SrlSketch.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000004) == 0x00000004)) {
-                subBuilder = sketch_.toBuilder();
-              }
-              sketch_ = input.readMessage(protobuf.srl.sketch.Sketch.SrlSketch.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(sketch_);
-                sketch_ = subBuilder.buildPartial();
-              }
               bitField0_ |= 0x00000004;
+              sketch_ = input.readBytes();
               break;
             }
           }
@@ -248,11 +216,11 @@ public final class Submission {
       }
     }
 
-    // optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+    // optional bytes updateList = 2;
     public static final int UPDATELIST_FIELD_NUMBER = 2;
-    private protobuf.srl.commands.Commands.SrlUpdateList updateList_;
+    private com.google.protobuf.ByteString updateList_;
     /**
-     * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
+     * <code>optional bytes updateList = 2;</code>
      *
      * <pre>
      * if this is a collection of updates
@@ -262,31 +230,21 @@ public final class Submission {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
+     * <code>optional bytes updateList = 2;</code>
      *
      * <pre>
      * if this is a collection of updates
      * </pre>
      */
-    public protobuf.srl.commands.Commands.SrlUpdateList getUpdateList() {
-      return updateList_;
-    }
-    /**
-     * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
-     *
-     * <pre>
-     * if this is a collection of updates
-     * </pre>
-     */
-    public protobuf.srl.commands.Commands.SrlUpdateListOrBuilder getUpdateListOrBuilder() {
+    public com.google.protobuf.ByteString getUpdateList() {
       return updateList_;
     }
 
-    // optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+    // optional bytes sketch = 3;
     public static final int SKETCH_FIELD_NUMBER = 3;
-    private protobuf.srl.sketch.Sketch.SrlSketch sketch_;
+    private com.google.protobuf.ByteString sketch_;
     /**
-     * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
+     * <code>optional bytes sketch = 3;</code>
      *
      * <pre>
      * if this is a sketch.
@@ -296,48 +254,26 @@ public final class Submission {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
+     * <code>optional bytes sketch = 3;</code>
      *
      * <pre>
      * if this is a sketch.
      * </pre>
      */
-    public protobuf.srl.sketch.Sketch.SrlSketch getSketch() {
-      return sketch_;
-    }
-    /**
-     * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
-     *
-     * <pre>
-     * if this is a sketch.
-     * </pre>
-     */
-    public protobuf.srl.sketch.Sketch.SrlSketchOrBuilder getSketchOrBuilder() {
+    public com.google.protobuf.ByteString getSketch() {
       return sketch_;
     }
 
     private void initFields() {
       id_ = "";
-      updateList_ = protobuf.srl.commands.Commands.SrlUpdateList.getDefaultInstance();
-      sketch_ = protobuf.srl.sketch.Sketch.SrlSketch.getDefaultInstance();
+      updateList_ = com.google.protobuf.ByteString.EMPTY;
+      sketch_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasUpdateList()) {
-        if (!getUpdateList().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      if (hasSketch()) {
-        if (!getSketch().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -349,10 +285,10 @@ public final class Submission {
         output.writeBytes(1, getIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, updateList_);
+        output.writeBytes(2, updateList_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeMessage(3, sketch_);
+        output.writeBytes(3, sketch_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -369,11 +305,11 @@ public final class Submission {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, updateList_);
+          .computeBytesSize(2, updateList_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, sketch_);
+          .computeBytesSize(3, sketch_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -488,8 +424,6 @@ public final class Submission {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getUpdateListFieldBuilder();
-          getSketchFieldBuilder();
         }
       }
       private static Builder create() {
@@ -500,17 +434,9 @@ public final class Submission {
         super.clear();
         id_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        if (updateListBuilder_ == null) {
-          updateList_ = protobuf.srl.commands.Commands.SrlUpdateList.getDefaultInstance();
-        } else {
-          updateListBuilder_.clear();
-        }
+        updateList_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000002);
-        if (sketchBuilder_ == null) {
-          sketch_ = protobuf.srl.sketch.Sketch.SrlSketch.getDefaultInstance();
-        } else {
-          sketchBuilder_.clear();
-        }
+        sketch_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
@@ -547,19 +473,11 @@ public final class Submission {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        if (updateListBuilder_ == null) {
-          result.updateList_ = updateList_;
-        } else {
-          result.updateList_ = updateListBuilder_.build();
-        }
+        result.updateList_ = updateList_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        if (sketchBuilder_ == null) {
-          result.sketch_ = sketch_;
-        } else {
-          result.sketch_ = sketchBuilder_.build();
-        }
+        result.sketch_ = sketch_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -582,28 +500,16 @@ public final class Submission {
           onChanged();
         }
         if (other.hasUpdateList()) {
-          mergeUpdateList(other.getUpdateList());
+          setUpdateList(other.getUpdateList());
         }
         if (other.hasSketch()) {
-          mergeSketch(other.getSketch());
+          setSketch(other.getSketch());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (hasUpdateList()) {
-          if (!getUpdateList().isInitialized()) {
-            
-            return false;
-          }
-        }
-        if (hasSketch()) {
-          if (!getSketch().isInitialized()) {
-            
-            return false;
-          }
-        }
         return true;
       }
 
@@ -700,12 +606,10 @@ public final class Submission {
         return this;
       }
 
-      // optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
-      private protobuf.srl.commands.Commands.SrlUpdateList updateList_ = protobuf.srl.commands.Commands.SrlUpdateList.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.commands.Commands.SrlUpdateList, protobuf.srl.commands.Commands.SrlUpdateList.Builder, protobuf.srl.commands.Commands.SrlUpdateListOrBuilder> updateListBuilder_;
+      // optional bytes updateList = 2;
+      private com.google.protobuf.ByteString updateList_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
+       * <code>optional bytes updateList = 2;</code>
        *
        * <pre>
        * if this is a collection of updates
@@ -715,150 +619,49 @@ public final class Submission {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
+       * <code>optional bytes updateList = 2;</code>
        *
        * <pre>
        * if this is a collection of updates
        * </pre>
        */
-      public protobuf.srl.commands.Commands.SrlUpdateList getUpdateList() {
-        if (updateListBuilder_ == null) {
-          return updateList_;
-        } else {
-          return updateListBuilder_.getMessage();
-        }
+      public com.google.protobuf.ByteString getUpdateList() {
+        return updateList_;
       }
       /**
-       * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
+       * <code>optional bytes updateList = 2;</code>
        *
        * <pre>
        * if this is a collection of updates
        * </pre>
        */
-      public Builder setUpdateList(protobuf.srl.commands.Commands.SrlUpdateList value) {
-        if (updateListBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          updateList_ = value;
-          onChanged();
-        } else {
-          updateListBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000002;
+      public Builder setUpdateList(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        updateList_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
-       *
-       * <pre>
-       * if this is a collection of updates
-       * </pre>
-       */
-      public Builder setUpdateList(
-          protobuf.srl.commands.Commands.SrlUpdateList.Builder builderForValue) {
-        if (updateListBuilder_ == null) {
-          updateList_ = builderForValue.build();
-          onChanged();
-        } else {
-          updateListBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000002;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
-       *
-       * <pre>
-       * if this is a collection of updates
-       * </pre>
-       */
-      public Builder mergeUpdateList(protobuf.srl.commands.Commands.SrlUpdateList value) {
-        if (updateListBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              updateList_ != protobuf.srl.commands.Commands.SrlUpdateList.getDefaultInstance()) {
-            updateList_ =
-              protobuf.srl.commands.Commands.SrlUpdateList.newBuilder(updateList_).mergeFrom(value).buildPartial();
-          } else {
-            updateList_ = value;
-          }
-          onChanged();
-        } else {
-          updateListBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000002;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
+       * <code>optional bytes updateList = 2;</code>
        *
        * <pre>
        * if this is a collection of updates
        * </pre>
        */
       public Builder clearUpdateList() {
-        if (updateListBuilder_ == null) {
-          updateList_ = protobuf.srl.commands.Commands.SrlUpdateList.getDefaultInstance();
-          onChanged();
-        } else {
-          updateListBuilder_.clear();
-        }
         bitField0_ = (bitField0_ & ~0x00000002);
+        updateList_ = getDefaultInstance().getUpdateList();
+        onChanged();
         return this;
       }
-      /**
-       * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
-       *
-       * <pre>
-       * if this is a collection of updates
-       * </pre>
-       */
-      public protobuf.srl.commands.Commands.SrlUpdateList.Builder getUpdateListBuilder() {
-        bitField0_ |= 0x00000002;
-        onChanged();
-        return getUpdateListFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
-       *
-       * <pre>
-       * if this is a collection of updates
-       * </pre>
-       */
-      public protobuf.srl.commands.Commands.SrlUpdateListOrBuilder getUpdateListOrBuilder() {
-        if (updateListBuilder_ != null) {
-          return updateListBuilder_.getMessageOrBuilder();
-        } else {
-          return updateList_;
-        }
-      }
-      /**
-       * <code>optional .protobuf.srl.commands.SrlUpdateList updateList = 2;</code>
-       *
-       * <pre>
-       * if this is a collection of updates
-       * </pre>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.commands.Commands.SrlUpdateList, protobuf.srl.commands.Commands.SrlUpdateList.Builder, protobuf.srl.commands.Commands.SrlUpdateListOrBuilder> 
-          getUpdateListFieldBuilder() {
-        if (updateListBuilder_ == null) {
-          updateListBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              protobuf.srl.commands.Commands.SrlUpdateList, protobuf.srl.commands.Commands.SrlUpdateList.Builder, protobuf.srl.commands.Commands.SrlUpdateListOrBuilder>(
-                  updateList_,
-                  getParentForChildren(),
-                  isClean());
-          updateList_ = null;
-        }
-        return updateListBuilder_;
-      }
 
-      // optional .protobuf.srl.sketch.SrlSketch sketch = 3;
-      private protobuf.srl.sketch.Sketch.SrlSketch sketch_ = protobuf.srl.sketch.Sketch.SrlSketch.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.sketch.Sketch.SrlSketch, protobuf.srl.sketch.Sketch.SrlSketch.Builder, protobuf.srl.sketch.Sketch.SrlSketchOrBuilder> sketchBuilder_;
+      // optional bytes sketch = 3;
+      private com.google.protobuf.ByteString sketch_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
+       * <code>optional bytes sketch = 3;</code>
        *
        * <pre>
        * if this is a sketch.
@@ -868,142 +671,43 @@ public final class Submission {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
+       * <code>optional bytes sketch = 3;</code>
        *
        * <pre>
        * if this is a sketch.
        * </pre>
        */
-      public protobuf.srl.sketch.Sketch.SrlSketch getSketch() {
-        if (sketchBuilder_ == null) {
-          return sketch_;
-        } else {
-          return sketchBuilder_.getMessage();
-        }
+      public com.google.protobuf.ByteString getSketch() {
+        return sketch_;
       }
       /**
-       * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
+       * <code>optional bytes sketch = 3;</code>
        *
        * <pre>
        * if this is a sketch.
        * </pre>
        */
-      public Builder setSketch(protobuf.srl.sketch.Sketch.SrlSketch value) {
-        if (sketchBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          sketch_ = value;
-          onChanged();
-        } else {
-          sketchBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000004;
+      public Builder setSketch(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        sketch_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
-       *
-       * <pre>
-       * if this is a sketch.
-       * </pre>
-       */
-      public Builder setSketch(
-          protobuf.srl.sketch.Sketch.SrlSketch.Builder builderForValue) {
-        if (sketchBuilder_ == null) {
-          sketch_ = builderForValue.build();
-          onChanged();
-        } else {
-          sketchBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
-       *
-       * <pre>
-       * if this is a sketch.
-       * </pre>
-       */
-      public Builder mergeSketch(protobuf.srl.sketch.Sketch.SrlSketch value) {
-        if (sketchBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              sketch_ != protobuf.srl.sketch.Sketch.SrlSketch.getDefaultInstance()) {
-            sketch_ =
-              protobuf.srl.sketch.Sketch.SrlSketch.newBuilder(sketch_).mergeFrom(value).buildPartial();
-          } else {
-            sketch_ = value;
-          }
-          onChanged();
-        } else {
-          sketchBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
+       * <code>optional bytes sketch = 3;</code>
        *
        * <pre>
        * if this is a sketch.
        * </pre>
        */
       public Builder clearSketch() {
-        if (sketchBuilder_ == null) {
-          sketch_ = protobuf.srl.sketch.Sketch.SrlSketch.getDefaultInstance();
-          onChanged();
-        } else {
-          sketchBuilder_.clear();
-        }
         bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
-       *
-       * <pre>
-       * if this is a sketch.
-       * </pre>
-       */
-      public protobuf.srl.sketch.Sketch.SrlSketch.Builder getSketchBuilder() {
-        bitField0_ |= 0x00000004;
+        sketch_ = getDefaultInstance().getSketch();
         onChanged();
-        return getSketchFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
-       *
-       * <pre>
-       * if this is a sketch.
-       * </pre>
-       */
-      public protobuf.srl.sketch.Sketch.SrlSketchOrBuilder getSketchOrBuilder() {
-        if (sketchBuilder_ != null) {
-          return sketchBuilder_.getMessageOrBuilder();
-        } else {
-          return sketch_;
-        }
-      }
-      /**
-       * <code>optional .protobuf.srl.sketch.SrlSketch sketch = 3;</code>
-       *
-       * <pre>
-       * if this is a sketch.
-       * </pre>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.sketch.Sketch.SrlSketch, protobuf.srl.sketch.Sketch.SrlSketch.Builder, protobuf.srl.sketch.Sketch.SrlSketchOrBuilder> 
-          getSketchFieldBuilder() {
-        if (sketchBuilder_ == null) {
-          sketchBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              protobuf.srl.sketch.Sketch.SrlSketch, protobuf.srl.sketch.Sketch.SrlSketch.Builder, protobuf.srl.sketch.Sketch.SrlSketchOrBuilder>(
-                  sketch_,
-                  getParentForChildren(),
-                  isClean());
-          sketch_ = null;
-        }
-        return sketchBuilder_;
+        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:protobuf.srl.submission.SrlSubmission)
@@ -1346,12 +1050,6 @@ public final class Submission {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasSubmission()) {
-        if (!getSubmission().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1633,12 +1331,6 @@ public final class Submission {
       }
 
       public final boolean isInitialized() {
-        if (hasSubmission()) {
-          if (!getSubmission().isInitialized()) {
-            
-            return false;
-          }
-        }
         return true;
       }
 
@@ -2531,12 +2223,6 @@ public final class Submission {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasSubmission()) {
-        if (!getSubmission().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -2844,12 +2530,6 @@ public final class Submission {
       }
 
       public final boolean isInitialized() {
-        if (hasSubmission()) {
-          if (!getSubmission().isInitialized()) {
-            
-            return false;
-          }
-        }
         return true;
       }
 
@@ -3462,23 +3142,20 @@ public final class Submission {
   static {
     java.lang.String[] descriptorData = {
       "\n\026input/submission.proto\022\027protobuf.srl.s" +
-      "ubmission\032\022input/school.proto\032\022input/ske" +
-      "tch.proto\032\024input/commands.proto\"\205\001\n\rSrlS" +
-      "ubmission\022\n\n\002id\030\001 \001(\t\0228\n\nupdateList\030\002 \001(" +
-      "\0132$.protobuf.srl.commands.SrlUpdateList\022" +
-      ".\n\006sketch\030\003 \001(\0132\036.protobuf.srl.sketch.Sr" +
-      "lSketch\"\330\001\n\013SrlSolution\022\034\n\024allowedInProb" +
-      "lemBank\030\001 \001(\010\022\031\n\021isPracticeProblem\030\002 \001(\010" +
-      "\022=\n\021accessPermissions\030\003 \001(\0132\".protobuf.s" +
-      "rl.school.SrlPermission\022:\n\nsubmission\030\004 ",
-      "\001(\0132&.protobuf.srl.submission.SrlSubmiss" +
-      "ion\022\025\n\rproblemBankId\030\005 \001(\t\"\325\001\n\rSrlExperi" +
-      "ment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignmentId\030\002" +
-      " \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022" +
-      "=\n\021accessPermissions\030\006 \001(\0132\".protobuf.sr" +
-      "l.school.SrlPermission\022:\n\nsubmission\030\007 \001" +
-      "(\0132&.protobuf.srl.submission.SrlSubmissi" +
-      "on"
+      "ubmission\032\022input/school.proto\"?\n\rSrlSubm" +
+      "ission\022\n\n\002id\030\001 \001(\t\022\022\n\nupdateList\030\002 \001(\014\022\016" +
+      "\n\006sketch\030\003 \001(\014\"\330\001\n\013SrlSolution\022\034\n\024allowe" +
+      "dInProblemBank\030\001 \001(\010\022\031\n\021isPracticeProble" +
+      "m\030\002 \001(\010\022=\n\021accessPermissions\030\003 \001(\0132\".pro" +
+      "tobuf.srl.school.SrlPermission\022:\n\nsubmis" +
+      "sion\030\004 \001(\0132&.protobuf.srl.submission.Srl" +
+      "Submission\022\025\n\rproblemBankId\030\005 \001(\t\"\325\001\n\rSr" +
+      "lExperiment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignm",
+      "entId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId" +
+      "\030\005 \001(\t\022=\n\021accessPermissions\030\006 \001(\0132\".prot" +
+      "obuf.srl.school.SrlPermission\022:\n\nsubmiss" +
+      "ion\030\007 \001(\0132&.protobuf.srl.submission.SrlS" +
+      "ubmission"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3510,8 +3187,6 @@ public final class Submission {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           protobuf.srl.school.School.getDescriptor(),
-          protobuf.srl.sketch.Sketch.getDescriptor(),
-          protobuf.srl.commands.Commands.getDescriptor(),
         }, assigner);
   }
 

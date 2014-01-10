@@ -49,13 +49,14 @@ class SrlGroup;
 class SrlPermission;
 
 enum SrlCourse_Accessibility {
+  SrlCourse_Accessibility_SUPER_PUBLIC = 0,
   SrlCourse_Accessibility_PUBLIC = 1,
   SrlCourse_Accessibility_PROTECTED = 2,
   SrlCourse_Accessibility_PROTECTED_NOSEARCH = 3,
   SrlCourse_Accessibility_PRIVATE = 4
 };
 bool SrlCourse_Accessibility_IsValid(int value);
-const SrlCourse_Accessibility SrlCourse_Accessibility_Accessibility_MIN = SrlCourse_Accessibility_PUBLIC;
+const SrlCourse_Accessibility SrlCourse_Accessibility_Accessibility_MIN = SrlCourse_Accessibility_SUPER_PUBLIC;
 const SrlCourse_Accessibility SrlCourse_Accessibility_Accessibility_MAX = SrlCourse_Accessibility_PRIVATE;
 const int SrlCourse_Accessibility_Accessibility_ARRAYSIZE = SrlCourse_Accessibility_Accessibility_MAX + 1;
 
@@ -334,6 +335,7 @@ class SrlCourse : public ::google::protobuf::Message {
   // nested types ----------------------------------------------------
 
   typedef SrlCourse_Accessibility Accessibility;
+  static const Accessibility SUPER_PUBLIC = SrlCourse_Accessibility_SUPER_PUBLIC;
   static const Accessibility PUBLIC = SrlCourse_Accessibility_PUBLIC;
   static const Accessibility PROTECTED = SrlCourse_Accessibility_PROTECTED;
   static const Accessibility PROTECTED_NOSEARCH = SrlCourse_Accessibility_PROTECTED_NOSEARCH;
@@ -1028,22 +1030,10 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::protobuf::srl::school::SrlBankProblem* release_probleminfo();
   inline void set_allocated_probleminfo(::protobuf::srl::school::SrlBankProblem* probleminfo);
 
-  // repeated .protobuf.srl.school.DomainInformation info = 8;
-  inline int info_size() const;
-  inline void clear_info();
-  static const int kInfoFieldNumber = 8;
-  inline const ::protobuf::srl::school::DomainInformation& info(int index) const;
-  inline ::protobuf::srl::school::DomainInformation* mutable_info(int index);
-  inline ::protobuf::srl::school::DomainInformation* add_info();
-  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >&
-      info() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >*
-      mutable_info();
-
-  // optional string gradeWeight = 9;
+  // optional string gradeWeight = 8;
   inline bool has_gradeweight() const;
   inline void clear_gradeweight();
-  static const int kGradeWeightFieldNumber = 9;
+  static const int kGradeWeightFieldNumber = 8;
   inline const ::std::string& gradeweight() const;
   inline void set_gradeweight(const ::std::string& value);
   inline void set_gradeweight(const char* value);
@@ -1052,30 +1042,37 @@ class SrlProblem : public ::google::protobuf::Message {
   inline ::std::string* release_gradeweight();
   inline void set_allocated_gradeweight(::std::string* gradeweight);
 
-  // optional float grade = 10;
+  // optional float grade = 9;
   inline bool has_grade() const;
   inline void clear_grade();
-  static const int kGradeFieldNumber = 10;
+  static const int kGradeFieldNumber = 9;
   inline float grade() const;
   inline void set_grade(float value);
 
-  // optional .protobuf.srl.school.State state = 11;
+  // optional .protobuf.srl.school.State state = 10;
   inline bool has_state() const;
   inline void clear_state();
-  static const int kStateFieldNumber = 11;
+  static const int kStateFieldNumber = 10;
   inline const ::protobuf::srl::school::State& state() const;
   inline ::protobuf::srl::school::State* mutable_state();
   inline ::protobuf::srl::school::State* release_state();
   inline void set_allocated_state(::protobuf::srl::school::State* state);
 
-  // optional .protobuf.srl.school.SrlPermission accessPermission = 12;
+  // optional .protobuf.srl.school.SrlPermission accessPermission = 11;
   inline bool has_accesspermission() const;
   inline void clear_accesspermission();
-  static const int kAccessPermissionFieldNumber = 12;
+  static const int kAccessPermissionFieldNumber = 11;
   inline const ::protobuf::srl::school::SrlPermission& accesspermission() const;
   inline ::protobuf::srl::school::SrlPermission* mutable_accesspermission();
   inline ::protobuf::srl::school::SrlPermission* release_accesspermission();
   inline void set_allocated_accesspermission(::protobuf::srl::school::SrlPermission* accesspermission);
+
+  // optional int32 problemNumber = 12;
+  inline bool has_problemnumber() const;
+  inline void clear_problemnumber();
+  static const int kProblemNumberFieldNumber = 12;
+  inline ::google::protobuf::int32 problemnumber() const;
+  inline void set_problemnumber(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlProblem)
  private:
@@ -1101,6 +1098,8 @@ class SrlProblem : public ::google::protobuf::Message {
   inline void clear_has_state();
   inline void set_has_accesspermission();
   inline void clear_has_accesspermission();
+  inline void set_has_problemnumber();
+  inline void clear_has_problemnumber();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1111,11 +1110,11 @@ class SrlProblem : public ::google::protobuf::Message {
   ::std::string* name_;
   ::std::string* description_;
   ::protobuf::srl::school::SrlBankProblem* probleminfo_;
-  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation > info_;
   ::std::string* gradeweight_;
   ::protobuf::srl::school::State* state_;
-  ::protobuf::srl::school::SrlPermission* accesspermission_;
   float grade_;
+  ::google::protobuf::int32 problemnumber_;
+  ::protobuf::srl::school::SrlPermission* accesspermission_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
@@ -4162,40 +4161,15 @@ inline void SrlProblem::set_allocated_probleminfo(::protobuf::srl::school::SrlBa
   }
 }
 
-// repeated .protobuf.srl.school.DomainInformation info = 8;
-inline int SrlProblem::info_size() const {
-  return info_.size();
-}
-inline void SrlProblem::clear_info() {
-  info_.Clear();
-}
-inline const ::protobuf::srl::school::DomainInformation& SrlProblem::info(int index) const {
-  return info_.Get(index);
-}
-inline ::protobuf::srl::school::DomainInformation* SrlProblem::mutable_info(int index) {
-  return info_.Mutable(index);
-}
-inline ::protobuf::srl::school::DomainInformation* SrlProblem::add_info() {
-  return info_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >&
-SrlProblem::info() const {
-  return info_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::school::DomainInformation >*
-SrlProblem::mutable_info() {
-  return &info_;
-}
-
-// optional string gradeWeight = 9;
+// optional string gradeWeight = 8;
 inline bool SrlProblem::has_gradeweight() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void SrlProblem::set_has_gradeweight() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void SrlProblem::clear_has_gradeweight() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void SrlProblem::clear_gradeweight() {
   if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
@@ -4257,15 +4231,15 @@ inline void SrlProblem::set_allocated_gradeweight(::std::string* gradeweight) {
   }
 }
 
-// optional float grade = 10;
+// optional float grade = 9;
 inline bool SrlProblem::has_grade() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void SrlProblem::set_has_grade() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void SrlProblem::clear_has_grade() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void SrlProblem::clear_grade() {
   grade_ = 0;
@@ -4279,15 +4253,15 @@ inline void SrlProblem::set_grade(float value) {
   grade_ = value;
 }
 
-// optional .protobuf.srl.school.State state = 11;
+// optional .protobuf.srl.school.State state = 10;
 inline bool SrlProblem::has_state() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void SrlProblem::set_has_state() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void SrlProblem::clear_has_state() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void SrlProblem::clear_state() {
   if (state_ != NULL) state_->::protobuf::srl::school::State::Clear();
@@ -4317,15 +4291,15 @@ inline void SrlProblem::set_allocated_state(::protobuf::srl::school::State* stat
   }
 }
 
-// optional .protobuf.srl.school.SrlPermission accessPermission = 12;
+// optional .protobuf.srl.school.SrlPermission accessPermission = 11;
 inline bool SrlProblem::has_accesspermission() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void SrlProblem::set_has_accesspermission() {
-  _has_bits_[0] |= 0x00000800u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void SrlProblem::clear_has_accesspermission() {
-  _has_bits_[0] &= ~0x00000800u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void SrlProblem::clear_accesspermission() {
   if (accesspermission_ != NULL) accesspermission_->::protobuf::srl::school::SrlPermission::Clear();
@@ -4353,6 +4327,28 @@ inline void SrlProblem::set_allocated_accesspermission(::protobuf::srl::school::
   } else {
     clear_has_accesspermission();
   }
+}
+
+// optional int32 problemNumber = 12;
+inline bool SrlProblem::has_problemnumber() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void SrlProblem::set_has_problemnumber() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void SrlProblem::clear_has_problemnumber() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void SrlProblem::clear_problemnumber() {
+  problemnumber_ = 0;
+  clear_has_problemnumber();
+}
+inline ::google::protobuf::int32 SrlProblem::problemnumber() const {
+  return problemnumber_;
+}
+inline void SrlProblem::set_problemnumber(::google::protobuf::int32 value) {
+  set_has_problemnumber();
+  problemnumber_ = value;
 }
 
 // -------------------------------------------------------------------

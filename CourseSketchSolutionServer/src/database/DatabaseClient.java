@@ -70,6 +70,7 @@ public class DatabaseClient {
 	}
 
 	public static final String saveExperiment(SrlExperiment experiment) {
+		System.out.println("saving the solution!");
 		DBCollection new_user = getInstance().db.getCollection("Solutions");
 		BasicDBObject query = new BasicDBObject(COURSE_ID, experiment.getCourseId())
 		.append(ASSIGNMENT_ID, experiment.getAssignmentId())

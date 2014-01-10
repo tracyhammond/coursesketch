@@ -135,27 +135,22 @@ void protobuf_AddDesc_input_2fsubmission_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::protobuf::srl::school::protobuf_AddDesc_input_2fschool_2eproto();
-  ::protobuf::srl::sketch::protobuf_AddDesc_input_2fsketch_2eproto();
-  ::protobuf::srl::commands::protobuf_AddDesc_input_2fcommands_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\026input/submission.proto\022\027protobuf.srl.s"
-    "ubmission\032\022input/school.proto\032\022input/ske"
-    "tch.proto\032\024input/commands.proto\"\205\001\n\rSrlS"
-    "ubmission\022\n\n\002id\030\001 \001(\t\0228\n\nupdateList\030\002 \001("
-    "\0132$.protobuf.srl.commands.SrlUpdateList\022"
-    ".\n\006sketch\030\003 \001(\0132\036.protobuf.srl.sketch.Sr"
-    "lSketch\"\330\001\n\013SrlSolution\022\034\n\024allowedInProb"
-    "lemBank\030\001 \001(\010\022\031\n\021isPracticeProblem\030\002 \001(\010"
-    "\022=\n\021accessPermissions\030\003 \001(\0132\".protobuf.s"
-    "rl.school.SrlPermission\022:\n\nsubmission\030\004 "
-    "\001(\0132&.protobuf.srl.submission.SrlSubmiss"
-    "ion\022\025\n\rproblemBankId\030\005 \001(\t\"\325\001\n\rSrlExperi"
-    "ment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignmentId\030\002"
-    " \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022"
-    "=\n\021accessPermissions\030\006 \001(\0132\".protobuf.sr"
-    "l.school.SrlPermission\022:\n\nsubmission\030\007 \001"
-    "(\0132&.protobuf.srl.submission.SrlSubmissi"
-    "on", 682);
+    "ubmission\032\022input/school.proto\"\?\n\rSrlSubm"
+    "ission\022\n\n\002id\030\001 \001(\t\022\022\n\nupdateList\030\002 \001(\014\022\016"
+    "\n\006sketch\030\003 \001(\014\"\330\001\n\013SrlSolution\022\034\n\024allowe"
+    "dInProblemBank\030\001 \001(\010\022\031\n\021isPracticeProble"
+    "m\030\002 \001(\010\022=\n\021accessPermissions\030\003 \001(\0132\".pro"
+    "tobuf.srl.school.SrlPermission\022:\n\nsubmis"
+    "sion\030\004 \001(\0132&.protobuf.srl.submission.Srl"
+    "Submission\022\025\n\rproblemBankId\030\005 \001(\t\"\325\001\n\rSr"
+    "lExperiment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignm"
+    "entId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId"
+    "\030\005 \001(\t\022=\n\021accessPermissions\030\006 \001(\0132\".prot"
+    "obuf.srl.school.SrlPermission\022:\n\nsubmiss"
+    "ion\030\007 \001(\0132&.protobuf.srl.submission.SrlS"
+    "ubmission", 569);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/submission.proto", &protobuf_RegisterTypes);
   SrlSubmission::default_instance_ = new SrlSubmission();
@@ -188,8 +183,6 @@ SrlSubmission::SrlSubmission()
 }
 
 void SrlSubmission::InitAsDefaultInstance() {
-  updatelist_ = const_cast< ::protobuf::srl::commands::SrlUpdateList*>(&::protobuf::srl::commands::SrlUpdateList::default_instance());
-  sketch_ = const_cast< ::protobuf::srl::sketch::SrlSketch*>(&::protobuf::srl::sketch::SrlSketch::default_instance());
 }
 
 SrlSubmission::SrlSubmission(const SrlSubmission& from)
@@ -201,8 +194,8 @@ SrlSubmission::SrlSubmission(const SrlSubmission& from)
 void SrlSubmission::SharedCtor() {
   _cached_size_ = 0;
   id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  updatelist_ = NULL;
-  sketch_ = NULL;
+  updatelist_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  sketch_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -214,9 +207,13 @@ void SrlSubmission::SharedDtor() {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     delete id_;
   }
-  if (this != default_instance_) {
+  if (updatelist_ != &::google::protobuf::internal::kEmptyString) {
     delete updatelist_;
+  }
+  if (sketch_ != &::google::protobuf::internal::kEmptyString) {
     delete sketch_;
+  }
+  if (this != default_instance_) {
   }
 }
 
@@ -249,10 +246,14 @@ void SrlSubmission::Clear() {
       }
     }
     if (has_updatelist()) {
-      if (updatelist_ != NULL) updatelist_->::protobuf::srl::commands::SrlUpdateList::Clear();
+      if (updatelist_ != &::google::protobuf::internal::kEmptyString) {
+        updatelist_->clear();
+      }
     }
     if (has_sketch()) {
-      if (sketch_ != NULL) sketch_->::protobuf::srl::sketch::SrlSketch::Clear();
+      if (sketch_ != &::google::protobuf::internal::kEmptyString) {
+        sketch_->clear();
+      }
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -281,13 +282,13 @@ bool SrlSubmission::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+      // optional bytes updateList = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_updateList:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_updatelist()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_updatelist()));
         } else {
           goto handle_uninterpreted;
         }
@@ -295,13 +296,13 @@ bool SrlSubmission::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+      // optional bytes sketch = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_sketch:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_sketch()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_sketch()));
         } else {
           goto handle_uninterpreted;
         }
@@ -336,15 +337,15 @@ void SrlSubmission::SerializeWithCachedSizes(
       1, this->id(), output);
   }
 
-  // optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+  // optional bytes updateList = 2;
   if (has_updatelist()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       2, this->updatelist(), output);
   }
 
-  // optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+  // optional bytes sketch = 3;
   if (has_sketch()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
       3, this->sketch(), output);
   }
 
@@ -366,17 +367,17 @@ void SrlSubmission::SerializeWithCachedSizes(
         1, this->id(), target);
   }
 
-  // optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+  // optional bytes updateList = 2;
   if (has_updatelist()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         2, this->updatelist(), target);
   }
 
-  // optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+  // optional bytes sketch = 3;
   if (has_sketch()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         3, this->sketch(), target);
   }
 
@@ -398,17 +399,17 @@ int SrlSubmission::ByteSize() const {
           this->id());
     }
 
-    // optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+    // optional bytes updateList = 2;
     if (has_updatelist()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->updatelist());
     }
 
-    // optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+    // optional bytes sketch = 3;
     if (has_sketch()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->sketch());
     }
 
@@ -443,10 +444,10 @@ void SrlSubmission::MergeFrom(const SrlSubmission& from) {
       set_id(from.id());
     }
     if (from.has_updatelist()) {
-      mutable_updatelist()->::protobuf::srl::commands::SrlUpdateList::MergeFrom(from.updatelist());
+      set_updatelist(from.updatelist());
     }
     if (from.has_sketch()) {
-      mutable_sketch()->::protobuf::srl::sketch::SrlSketch::MergeFrom(from.sketch());
+      set_sketch(from.sketch());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -466,12 +467,6 @@ void SrlSubmission::CopyFrom(const SrlSubmission& from) {
 
 bool SrlSubmission::IsInitialized() const {
 
-  if (has_updatelist()) {
-    if (!this->updatelist().IsInitialized()) return false;
-  }
-  if (has_sketch()) {
-    if (!this->sketch().IsInitialized()) return false;
-  }
   return true;
 }
 
@@ -861,9 +856,6 @@ void SrlSolution::CopyFrom(const SrlSolution& from) {
 
 bool SrlSolution::IsInitialized() const {
 
-  if (has_submission()) {
-    if (!this->submission().IsInitialized()) return false;
-  }
   return true;
 }
 
@@ -1349,9 +1341,6 @@ void SrlExperiment::CopyFrom(const SrlExperiment& from) {
 
 bool SrlExperiment::IsInitialized() const {
 
-  if (has_submission()) {
-    if (!this->submission().IsInitialized()) return false;
-  }
   return true;
 }
 

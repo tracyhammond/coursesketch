@@ -67,11 +67,13 @@ public class Solutions
 		SrlSubmission.Builder sub = SrlSubmission.newBuilder();
 		sub.setId((String)corsor.get(SELF_ID));
 		System.out.println(corsor.get(UPDATELIST).getClass());
+		/*
 		try {
 			sub.setUpdateList(SrlUpdateList.parseFrom(((byte[])corsor.get(UPDATELIST))));
 		} catch (InvalidProtocolBufferException e) {
 			e.printStackTrace();
 		}
+		*/
 		exactSolution.setSubmission(sub.build());
 		return exactSolution.build();
 		

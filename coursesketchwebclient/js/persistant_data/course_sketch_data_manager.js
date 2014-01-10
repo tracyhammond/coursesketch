@@ -135,6 +135,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		return localUserId;
 	}
 }
-const nonExistantValue = "NONEXISTANT_VALUE";
-const CURRENT_QUESTION = "CURRENT_QUESTION";
-const CURRENT_ASSIGNMENT = "CURRENT_ASSIGNMENT";
+var nonExistantValue = "NONEXISTANT_VALUE";
+var CURRENT_QUESTION = "CURRENT_QUESTION";
+var CURRENT_ASSIGNMENT = "CURRENT_ASSIGNMENT";
