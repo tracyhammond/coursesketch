@@ -1,7 +1,5 @@
 package protobuf.srl.submission;
 
-import "school.proto";
-
 /**
  * Contains extra metadata for an UpdateList
  */
@@ -14,9 +12,8 @@ message SrlSubmission {
 message SrlSolution {
 	optional bool allowedInProblemBank = 1;
 	optional bool isPracticeProblem = 2;
-	optional protobuf.srl.school.SrlPermission accessPermissions = 3;
-	optional SrlSubmission submission = 4;
-	optional string problemBankId = 5;
+	optional SrlSubmission submission = 3;
+	optional string problemBankId = 4;
 }
 
 // Students submit experiments!
@@ -25,6 +22,5 @@ message SrlExperiment {
 	optional string assignmentId = 2;
 	optional string problemId = 3;
 	optional string userId = 5; // student Id
-	optional protobuf.srl.school.SrlPermission accessPermissions = 6;
-	optional SrlSubmission submission = 7;
+	optional SrlSubmission submission = 6;
 }

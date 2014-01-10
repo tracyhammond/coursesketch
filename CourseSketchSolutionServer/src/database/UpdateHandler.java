@@ -21,20 +21,18 @@ public class UpdateHandler {
 		SrlUpdateList updates = null;
 		System.out.println("Adding request!");
 		if (!sessionToInstance.containsKey(req.getSessionInfo())) {
+			System.out.println("NEW INSTANCE!");
 			SubmissionInstance instance = new SubmissionInstance();
 			sessionToInstance.put(req.getSessionInfo(), instance);
 			try {
 				if (req.getResponseText().equals("student")) {
 					SrlExperiment experiment = SrlExperiment.parseFrom(req.getOtherData());
-					System.out.println("Problem Id: " + experiment.getProblemId());
 					instance.setExperiment(experiment);
-					updates = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList()); // gets the first update chunk
-					System.out.println("Parsing request and getting getting updates!\n" + updates);
-					System.out.println(updates.getListList());
+					return false;
 				} else {
 					SrlSolution solution = SrlSolution.parseFrom(req.getOtherData());
 					instance.setSolution(solution);
-					updates = SrlUpdateList.parseFrom(solution.getSubmission().getUpdateList()); // gets the first update chunk
+					return false;
 					// if this is the first submission it will contain stuff regarding that submission
 				}
 			} catch(Exception e) {
@@ -58,6 +56,7 @@ public class UpdateHandler {
 			}
 		}
 		if (updates == null) {
+			//return false;
 			throw new Exception("Mismatched Message Exception");
 		}
 		return sessionToInstance.get(req.getSessionInfo()).addRequest(updates);

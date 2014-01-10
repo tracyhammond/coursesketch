@@ -60,9 +60,9 @@ public class DatabaseClient {
 		DBCollection new_user = getInstance().db.getCollection(SOLUTION_COLLECTION);
 		BasicDBObject query = new BasicDBObject(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
 		.append(IS_PRACTICE_PROBLEM, solution.getIsPracticeProblem())
-		.append(ADMIN, solution.getAccessPermissions().getAdminPermissionList())
-		.append(MOD, solution.getAccessPermissions().getModeratorPermissionList())
-		.append(USERS, solution.getAccessPermissions().getUserPermissionList())
+		//.append(ADMIN, solution.getAccessPermissions().getAdminPermissionList())
+		//.append(MOD, solution.getAccessPermissions().getModeratorPermissionList())
+		//.append(USERS, solution.getAccessPermissions().getUserPermissionList())
 		.append(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray());
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
@@ -76,9 +76,9 @@ public class DatabaseClient {
 		.append(ASSIGNMENT_ID, experiment.getAssignmentId())
 		.append(COURSE_PROBLEM_ID, experiment.getProblemId())
 		.append(USER_ID, experiment.getUserId())
-		.append(ADMIN, experiment.getAccessPermissions().getAdminPermissionList())
-		.append(MOD, experiment.getAccessPermissions().getModeratorPermissionList())
-		.append(USERS, experiment.getAccessPermissions().getUserPermissionList())
+		//.append(ADMIN, experiment.getAccessPermissions().getAdminPermissionList())
+		//.append(MOD, experiment.getAccessPermissions().getModeratorPermissionList())
+		//.append(USERS, experiment.getAccessPermissions().getUserPermissionList())
 		.append(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray());
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);

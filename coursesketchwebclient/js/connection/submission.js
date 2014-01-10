@@ -36,44 +36,28 @@ function submitUpdateList(connection, updateList, builders, firstPiece, RequestT
 	}
 
 	function openSync() {
-		var command = connection.createBaseCommand(CommandBuilder.CommandType.OPEN_SYNC, false);
-		var array = new Array();
-		array.push(command);
-		var update = connection.createUpdateFromCommands(array);
-		update.commandNumber = -1;
-		console.log("Update!");
-		console.log(update);
-		// add update to the list
-		var listOfUpdates = new Array();
-		listOfUpdates.push(update);
-		var srlUpdateList = new CommandBuilder.SrlUpdateList();
-		srlUpdateList.setList(listOfUpdates);
-		console.log("UPDATE LIST");
-		console.log(srlUpdateList);
-
-		// add list to experiment
-		firstPiece.submission.updateList = srlUpdateList.toArrayBuffer();
-		console.log("pre compiling!");
-		console.log(firstPiece);
 
 		request = connection.createRequestFromData(firstPiece, RequestType);
-		console.log("post compiling!");
-		var decodedExp = SubmissionBuilder.SrlExperiment.decode(request.otherData);
-		console.log(decodedExp);
-		console.log("post post compiling!");
-		console.log(CommandBuilder.SrlUpdateList.decode(decodedExp.submission.updateList));
 		if (firstPiece instanceof SubmissionBuilder.SrlExperiment) {
 			request.responseText = "student";
 		}
-		console.log("Submission start");
-		console.log(request);
-		
+
 		connection.sendRequest(request);
+
+		setTimeout(function() {
+			var command = connection.createBaseCommand(CommandBuilder.CommandType.OPEN_SYNC, false);
+			var array = new Array();
+			array.push(command);
+			var update = connection.createUpdateFromCommands(array);
+			submitOnce(update, -1);
+			setTimeout(submitList, 100);
+		}, 200);
+		
 		if (startMethod) {
 			startMethod();
 		}
 		// wait for server to send back ready!
-		setTimeout(submitList(),5000); // so that the server has time to capture them all correctly!
+		// // so that the server has time to capture them all correctly!
 	}
 
 	function closeSync() {
@@ -102,7 +86,7 @@ function submitUpdateList(connection, updateList, builders, firstPiece, RequestT
 					}
 					if (submitIndex == updateList.length) {
 						clearInterval(interval);
-						closeSync();
+						setTimeout(closeSync, 100); // to make sure all the other updates made it in first
 					}
 				} catch(Exception) {
 					clearInterval(interval);
