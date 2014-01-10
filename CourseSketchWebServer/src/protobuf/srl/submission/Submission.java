@@ -744,45 +744,31 @@ public final class Submission {
      */
     boolean getIsPracticeProblem();
 
-    // optional .protobuf.srl.school.SrlPermission accessPermissions = 3;
+    // optional .protobuf.srl.submission.SrlSubmission submission = 3;
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-     */
-    boolean hasAccessPermissions();
-    /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-     */
-    protobuf.srl.school.School.SrlPermission getAccessPermissions();
-    /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-     */
-    protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionsOrBuilder();
-
-    // optional .protobuf.srl.submission.SrlSubmission submission = 4;
-    /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
      */
     boolean hasSubmission();
     /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
      */
     protobuf.srl.submission.Submission.SrlSubmission getSubmission();
     /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
      */
     protobuf.srl.submission.Submission.SrlSubmissionOrBuilder getSubmissionOrBuilder();
 
-    // optional string problemBankId = 5;
+    // optional string problemBankId = 4;
     /**
-     * <code>optional string problemBankId = 5;</code>
+     * <code>optional string problemBankId = 4;</code>
      */
     boolean hasProblemBankId();
     /**
-     * <code>optional string problemBankId = 5;</code>
+     * <code>optional string problemBankId = 4;</code>
      */
     java.lang.String getProblemBankId();
     /**
-     * <code>optional string problemBankId = 5;</code>
+     * <code>optional string problemBankId = 4;</code>
      */
     com.google.protobuf.ByteString
         getProblemBankIdBytes();
@@ -849,21 +835,8 @@ public final class Submission {
               break;
             }
             case 26: {
-              protobuf.srl.school.School.SrlPermission.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000004) == 0x00000004)) {
-                subBuilder = accessPermissions_.toBuilder();
-              }
-              accessPermissions_ = input.readMessage(protobuf.srl.school.School.SrlPermission.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(accessPermissions_);
-                accessPermissions_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000004;
-              break;
-            }
-            case 34: {
               protobuf.srl.submission.Submission.SrlSubmission.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000008) == 0x00000008)) {
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 subBuilder = submission_.toBuilder();
               }
               submission_ = input.readMessage(protobuf.srl.submission.Submission.SrlSubmission.PARSER, extensionRegistry);
@@ -871,11 +844,11 @@ public final class Submission {
                 subBuilder.mergeFrom(submission_);
                 submission_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000004;
               break;
             }
-            case 42: {
-              bitField0_ |= 0x00000010;
+            case 34: {
+              bitField0_ |= 0x00000008;
               problemBankId_ = input.readBytes();
               break;
             }
@@ -951,61 +924,39 @@ public final class Submission {
       return isPracticeProblem_;
     }
 
-    // optional .protobuf.srl.school.SrlPermission accessPermissions = 3;
-    public static final int ACCESSPERMISSIONS_FIELD_NUMBER = 3;
-    private protobuf.srl.school.School.SrlPermission accessPermissions_;
+    // optional .protobuf.srl.submission.SrlSubmission submission = 3;
+    public static final int SUBMISSION_FIELD_NUMBER = 3;
+    private protobuf.srl.submission.Submission.SrlSubmission submission_;
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
      */
-    public boolean hasAccessPermissions() {
+    public boolean hasSubmission() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-     */
-    public protobuf.srl.school.School.SrlPermission getAccessPermissions() {
-      return accessPermissions_;
-    }
-    /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-     */
-    public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionsOrBuilder() {
-      return accessPermissions_;
-    }
-
-    // optional .protobuf.srl.submission.SrlSubmission submission = 4;
-    public static final int SUBMISSION_FIELD_NUMBER = 4;
-    private protobuf.srl.submission.Submission.SrlSubmission submission_;
-    /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
-     */
-    public boolean hasSubmission() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
      */
     public protobuf.srl.submission.Submission.SrlSubmission getSubmission() {
       return submission_;
     }
     /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
      */
     public protobuf.srl.submission.Submission.SrlSubmissionOrBuilder getSubmissionOrBuilder() {
       return submission_;
     }
 
-    // optional string problemBankId = 5;
-    public static final int PROBLEMBANKID_FIELD_NUMBER = 5;
+    // optional string problemBankId = 4;
+    public static final int PROBLEMBANKID_FIELD_NUMBER = 4;
     private java.lang.Object problemBankId_;
     /**
-     * <code>optional string problemBankId = 5;</code>
+     * <code>optional string problemBankId = 4;</code>
      */
     public boolean hasProblemBankId() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional string problemBankId = 5;</code>
+     * <code>optional string problemBankId = 4;</code>
      */
     public java.lang.String getProblemBankId() {
       java.lang.Object ref = problemBankId_;
@@ -1022,7 +973,7 @@ public final class Submission {
       }
     }
     /**
-     * <code>optional string problemBankId = 5;</code>
+     * <code>optional string problemBankId = 4;</code>
      */
     public com.google.protobuf.ByteString
         getProblemBankIdBytes() {
@@ -1041,7 +992,6 @@ public final class Submission {
     private void initFields() {
       allowedInProblemBank_ = false;
       isPracticeProblem_ = false;
-      accessPermissions_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
       submission_ = protobuf.srl.submission.Submission.SrlSubmission.getDefaultInstance();
       problemBankId_ = "";
     }
@@ -1064,13 +1014,10 @@ public final class Submission {
         output.writeBool(2, isPracticeProblem_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeMessage(3, accessPermissions_);
+        output.writeMessage(3, submission_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeMessage(4, submission_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeBytes(5, getProblemBankIdBytes());
+        output.writeBytes(4, getProblemBankIdBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -1091,15 +1038,11 @@ public final class Submission {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, accessPermissions_);
+          .computeMessageSize(3, submission_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, submission_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, getProblemBankIdBytes());
+          .computeBytesSize(4, getProblemBankIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1209,7 +1152,6 @@ public final class Submission {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getAccessPermissionsFieldBuilder();
           getSubmissionFieldBuilder();
         }
       }
@@ -1223,20 +1165,14 @@ public final class Submission {
         bitField0_ = (bitField0_ & ~0x00000001);
         isPracticeProblem_ = false;
         bitField0_ = (bitField0_ & ~0x00000002);
-        if (accessPermissionsBuilder_ == null) {
-          accessPermissions_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
-        } else {
-          accessPermissionsBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000004);
         if (submissionBuilder_ == null) {
           submission_ = protobuf.srl.submission.Submission.SrlSubmission.getDefaultInstance();
         } else {
           submissionBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         problemBankId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1276,21 +1212,13 @@ public final class Submission {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        if (accessPermissionsBuilder_ == null) {
-          result.accessPermissions_ = accessPermissions_;
-        } else {
-          result.accessPermissions_ = accessPermissionsBuilder_.build();
-        }
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
         if (submissionBuilder_ == null) {
           result.submission_ = submission_;
         } else {
           result.submission_ = submissionBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
         }
         result.problemBankId_ = problemBankId_;
         result.bitField0_ = to_bitField0_;
@@ -1315,14 +1243,11 @@ public final class Submission {
         if (other.hasIsPracticeProblem()) {
           setIsPracticeProblem(other.getIsPracticeProblem());
         }
-        if (other.hasAccessPermissions()) {
-          mergeAccessPermissions(other.getAccessPermissions());
-        }
         if (other.hasSubmission()) {
           mergeSubmission(other.getSubmission());
         }
         if (other.hasProblemBankId()) {
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000008;
           problemBankId_ = other.problemBankId_;
           onChanged();
         }
@@ -1419,135 +1344,18 @@ public final class Submission {
         return this;
       }
 
-      // optional .protobuf.srl.school.SrlPermission accessPermissions = 3;
-      private protobuf.srl.school.School.SrlPermission accessPermissions_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> accessPermissionsBuilder_;
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-       */
-      public boolean hasAccessPermissions() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-       */
-      public protobuf.srl.school.School.SrlPermission getAccessPermissions() {
-        if (accessPermissionsBuilder_ == null) {
-          return accessPermissions_;
-        } else {
-          return accessPermissionsBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-       */
-      public Builder setAccessPermissions(protobuf.srl.school.School.SrlPermission value) {
-        if (accessPermissionsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          accessPermissions_ = value;
-          onChanged();
-        } else {
-          accessPermissionsBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-       */
-      public Builder setAccessPermissions(
-          protobuf.srl.school.School.SrlPermission.Builder builderForValue) {
-        if (accessPermissionsBuilder_ == null) {
-          accessPermissions_ = builderForValue.build();
-          onChanged();
-        } else {
-          accessPermissionsBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-       */
-      public Builder mergeAccessPermissions(protobuf.srl.school.School.SrlPermission value) {
-        if (accessPermissionsBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              accessPermissions_ != protobuf.srl.school.School.SrlPermission.getDefaultInstance()) {
-            accessPermissions_ =
-              protobuf.srl.school.School.SrlPermission.newBuilder(accessPermissions_).mergeFrom(value).buildPartial();
-          } else {
-            accessPermissions_ = value;
-          }
-          onChanged();
-        } else {
-          accessPermissionsBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-       */
-      public Builder clearAccessPermissions() {
-        if (accessPermissionsBuilder_ == null) {
-          accessPermissions_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
-          onChanged();
-        } else {
-          accessPermissionsBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-       */
-      public protobuf.srl.school.School.SrlPermission.Builder getAccessPermissionsBuilder() {
-        bitField0_ |= 0x00000004;
-        onChanged();
-        return getAccessPermissionsFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-       */
-      public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionsOrBuilder() {
-        if (accessPermissionsBuilder_ != null) {
-          return accessPermissionsBuilder_.getMessageOrBuilder();
-        } else {
-          return accessPermissions_;
-        }
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> 
-          getAccessPermissionsFieldBuilder() {
-        if (accessPermissionsBuilder_ == null) {
-          accessPermissionsBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder>(
-                  accessPermissions_,
-                  getParentForChildren(),
-                  isClean());
-          accessPermissions_ = null;
-        }
-        return accessPermissionsBuilder_;
-      }
-
-      // optional .protobuf.srl.submission.SrlSubmission submission = 4;
+      // optional .protobuf.srl.submission.SrlSubmission submission = 3;
       private protobuf.srl.submission.Submission.SrlSubmission submission_ = protobuf.srl.submission.Submission.SrlSubmission.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.submission.Submission.SrlSubmission, protobuf.srl.submission.Submission.SrlSubmission.Builder, protobuf.srl.submission.Submission.SrlSubmissionOrBuilder> submissionBuilder_;
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
        */
       public boolean hasSubmission() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
        */
       public protobuf.srl.submission.Submission.SrlSubmission getSubmission() {
         if (submissionBuilder_ == null) {
@@ -1557,7 +1365,7 @@ public final class Submission {
         }
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
        */
       public Builder setSubmission(protobuf.srl.submission.Submission.SrlSubmission value) {
         if (submissionBuilder_ == null) {
@@ -1569,11 +1377,11 @@ public final class Submission {
         } else {
           submissionBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
        */
       public Builder setSubmission(
           protobuf.srl.submission.Submission.SrlSubmission.Builder builderForValue) {
@@ -1583,15 +1391,15 @@ public final class Submission {
         } else {
           submissionBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
        */
       public Builder mergeSubmission(protobuf.srl.submission.Submission.SrlSubmission value) {
         if (submissionBuilder_ == null) {
-          if (((bitField0_ & 0x00000008) == 0x00000008) &&
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
               submission_ != protobuf.srl.submission.Submission.SrlSubmission.getDefaultInstance()) {
             submission_ =
               protobuf.srl.submission.Submission.SrlSubmission.newBuilder(submission_).mergeFrom(value).buildPartial();
@@ -1602,11 +1410,11 @@ public final class Submission {
         } else {
           submissionBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
        */
       public Builder clearSubmission() {
         if (submissionBuilder_ == null) {
@@ -1615,19 +1423,19 @@ public final class Submission {
         } else {
           submissionBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
        */
       public protobuf.srl.submission.Submission.SrlSubmission.Builder getSubmissionBuilder() {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         onChanged();
         return getSubmissionFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
        */
       public protobuf.srl.submission.Submission.SrlSubmissionOrBuilder getSubmissionOrBuilder() {
         if (submissionBuilder_ != null) {
@@ -1637,7 +1445,7 @@ public final class Submission {
         }
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 4;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.submission.Submission.SrlSubmission, protobuf.srl.submission.Submission.SrlSubmission.Builder, protobuf.srl.submission.Submission.SrlSubmissionOrBuilder> 
@@ -1653,16 +1461,16 @@ public final class Submission {
         return submissionBuilder_;
       }
 
-      // optional string problemBankId = 5;
+      // optional string problemBankId = 4;
       private java.lang.Object problemBankId_ = "";
       /**
-       * <code>optional string problemBankId = 5;</code>
+       * <code>optional string problemBankId = 4;</code>
        */
       public boolean hasProblemBankId() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional string problemBankId = 5;</code>
+       * <code>optional string problemBankId = 4;</code>
        */
       public java.lang.String getProblemBankId() {
         java.lang.Object ref = problemBankId_;
@@ -1676,7 +1484,7 @@ public final class Submission {
         }
       }
       /**
-       * <code>optional string problemBankId = 5;</code>
+       * <code>optional string problemBankId = 4;</code>
        */
       public com.google.protobuf.ByteString
           getProblemBankIdBytes() {
@@ -1692,36 +1500,36 @@ public final class Submission {
         }
       }
       /**
-       * <code>optional string problemBankId = 5;</code>
+       * <code>optional string problemBankId = 4;</code>
        */
       public Builder setProblemBankId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000008;
         problemBankId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string problemBankId = 5;</code>
+       * <code>optional string problemBankId = 4;</code>
        */
       public Builder clearProblemBankId() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
         problemBankId_ = getDefaultInstance().getProblemBankId();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string problemBankId = 5;</code>
+       * <code>optional string problemBankId = 4;</code>
        */
       public Builder setProblemBankIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
+  bitField0_ |= 0x00000008;
         problemBankId_ = value;
         onChanged();
         return this;
@@ -1813,31 +1621,17 @@ public final class Submission {
     com.google.protobuf.ByteString
         getUserIdBytes();
 
-    // optional .protobuf.srl.school.SrlPermission accessPermissions = 6;
+    // optional .protobuf.srl.submission.SrlSubmission submission = 6;
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-     */
-    boolean hasAccessPermissions();
-    /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-     */
-    protobuf.srl.school.School.SrlPermission getAccessPermissions();
-    /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-     */
-    protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionsOrBuilder();
-
-    // optional .protobuf.srl.submission.SrlSubmission submission = 7;
-    /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
      */
     boolean hasSubmission();
     /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
      */
     protobuf.srl.submission.Submission.SrlSubmission getSubmission();
     /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
      */
     protobuf.srl.submission.Submission.SrlSubmissionOrBuilder getSubmissionOrBuilder();
   }
@@ -1917,21 +1711,8 @@ public final class Submission {
               break;
             }
             case 50: {
-              protobuf.srl.school.School.SrlPermission.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000010) == 0x00000010)) {
-                subBuilder = accessPermissions_.toBuilder();
-              }
-              accessPermissions_ = input.readMessage(protobuf.srl.school.School.SrlPermission.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(accessPermissions_);
-                accessPermissions_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000010;
-              break;
-            }
-            case 58: {
               protobuf.srl.submission.Submission.SrlSubmission.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000020) == 0x00000020)) {
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 subBuilder = submission_.toBuilder();
               }
               submission_ = input.readMessage(protobuf.srl.submission.Submission.SrlSubmission.PARSER, extensionRegistry);
@@ -1939,7 +1720,7 @@ public final class Submission {
                 subBuilder.mergeFrom(submission_);
                 submission_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000020;
+              bitField0_ |= 0x00000010;
               break;
             }
           }
@@ -2166,45 +1947,23 @@ public final class Submission {
       }
     }
 
-    // optional .protobuf.srl.school.SrlPermission accessPermissions = 6;
-    public static final int ACCESSPERMISSIONS_FIELD_NUMBER = 6;
-    private protobuf.srl.school.School.SrlPermission accessPermissions_;
+    // optional .protobuf.srl.submission.SrlSubmission submission = 6;
+    public static final int SUBMISSION_FIELD_NUMBER = 6;
+    private protobuf.srl.submission.Submission.SrlSubmission submission_;
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
      */
-    public boolean hasAccessPermissions() {
+    public boolean hasSubmission() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-     */
-    public protobuf.srl.school.School.SrlPermission getAccessPermissions() {
-      return accessPermissions_;
-    }
-    /**
-     * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-     */
-    public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionsOrBuilder() {
-      return accessPermissions_;
-    }
-
-    // optional .protobuf.srl.submission.SrlSubmission submission = 7;
-    public static final int SUBMISSION_FIELD_NUMBER = 7;
-    private protobuf.srl.submission.Submission.SrlSubmission submission_;
-    /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
-     */
-    public boolean hasSubmission() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
-    }
-    /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
      */
     public protobuf.srl.submission.Submission.SrlSubmission getSubmission() {
       return submission_;
     }
     /**
-     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+     * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
      */
     public protobuf.srl.submission.Submission.SrlSubmissionOrBuilder getSubmissionOrBuilder() {
       return submission_;
@@ -2215,7 +1974,6 @@ public final class Submission {
       assignmentId_ = "";
       problemId_ = "";
       userId_ = "";
-      accessPermissions_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
       submission_ = protobuf.srl.submission.Submission.SrlSubmission.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -2243,10 +2001,7 @@ public final class Submission {
         output.writeBytes(5, getUserIdBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeMessage(6, accessPermissions_);
-      }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeMessage(7, submission_);
+        output.writeMessage(6, submission_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -2275,11 +2030,7 @@ public final class Submission {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, accessPermissions_);
-      }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, submission_);
+          .computeMessageSize(6, submission_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2393,7 +2144,6 @@ public final class Submission {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getAccessPermissionsFieldBuilder();
           getSubmissionFieldBuilder();
         }
       }
@@ -2411,18 +2161,12 @@ public final class Submission {
         bitField0_ = (bitField0_ & ~0x00000004);
         userId_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        if (accessPermissionsBuilder_ == null) {
-          accessPermissions_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
-        } else {
-          accessPermissionsBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000010);
         if (submissionBuilder_ == null) {
           submission_ = protobuf.srl.submission.Submission.SrlSubmission.getDefaultInstance();
         } else {
           submissionBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -2470,14 +2214,6 @@ public final class Submission {
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
-        if (accessPermissionsBuilder_ == null) {
-          result.accessPermissions_ = accessPermissions_;
-        } else {
-          result.accessPermissions_ = accessPermissionsBuilder_.build();
-        }
-        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-          to_bitField0_ |= 0x00000020;
-        }
         if (submissionBuilder_ == null) {
           result.submission_ = submission_;
         } else {
@@ -2518,9 +2254,6 @@ public final class Submission {
           bitField0_ |= 0x00000008;
           userId_ = other.userId_;
           onChanged();
-        }
-        if (other.hasAccessPermissions()) {
-          mergeAccessPermissions(other.getAccessPermissions());
         }
         if (other.hasSubmission()) {
           mergeSubmission(other.getSubmission());
@@ -2872,135 +2605,18 @@ public final class Submission {
         return this;
       }
 
-      // optional .protobuf.srl.school.SrlPermission accessPermissions = 6;
-      private protobuf.srl.school.School.SrlPermission accessPermissions_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> accessPermissionsBuilder_;
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-       */
-      public boolean hasAccessPermissions() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-       */
-      public protobuf.srl.school.School.SrlPermission getAccessPermissions() {
-        if (accessPermissionsBuilder_ == null) {
-          return accessPermissions_;
-        } else {
-          return accessPermissionsBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-       */
-      public Builder setAccessPermissions(protobuf.srl.school.School.SrlPermission value) {
-        if (accessPermissionsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          accessPermissions_ = value;
-          onChanged();
-        } else {
-          accessPermissionsBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000010;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-       */
-      public Builder setAccessPermissions(
-          protobuf.srl.school.School.SrlPermission.Builder builderForValue) {
-        if (accessPermissionsBuilder_ == null) {
-          accessPermissions_ = builderForValue.build();
-          onChanged();
-        } else {
-          accessPermissionsBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000010;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-       */
-      public Builder mergeAccessPermissions(protobuf.srl.school.School.SrlPermission value) {
-        if (accessPermissionsBuilder_ == null) {
-          if (((bitField0_ & 0x00000010) == 0x00000010) &&
-              accessPermissions_ != protobuf.srl.school.School.SrlPermission.getDefaultInstance()) {
-            accessPermissions_ =
-              protobuf.srl.school.School.SrlPermission.newBuilder(accessPermissions_).mergeFrom(value).buildPartial();
-          } else {
-            accessPermissions_ = value;
-          }
-          onChanged();
-        } else {
-          accessPermissionsBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000010;
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-       */
-      public Builder clearAccessPermissions() {
-        if (accessPermissionsBuilder_ == null) {
-          accessPermissions_ = protobuf.srl.school.School.SrlPermission.getDefaultInstance();
-          onChanged();
-        } else {
-          accessPermissionsBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000010);
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-       */
-      public protobuf.srl.school.School.SrlPermission.Builder getAccessPermissionsBuilder() {
-        bitField0_ |= 0x00000010;
-        onChanged();
-        return getAccessPermissionsFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-       */
-      public protobuf.srl.school.School.SrlPermissionOrBuilder getAccessPermissionsOrBuilder() {
-        if (accessPermissionsBuilder_ != null) {
-          return accessPermissionsBuilder_.getMessageOrBuilder();
-        } else {
-          return accessPermissions_;
-        }
-      }
-      /**
-       * <code>optional .protobuf.srl.school.SrlPermission accessPermissions = 6;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder> 
-          getAccessPermissionsFieldBuilder() {
-        if (accessPermissionsBuilder_ == null) {
-          accessPermissionsBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              protobuf.srl.school.School.SrlPermission, protobuf.srl.school.School.SrlPermission.Builder, protobuf.srl.school.School.SrlPermissionOrBuilder>(
-                  accessPermissions_,
-                  getParentForChildren(),
-                  isClean());
-          accessPermissions_ = null;
-        }
-        return accessPermissionsBuilder_;
-      }
-
-      // optional .protobuf.srl.submission.SrlSubmission submission = 7;
+      // optional .protobuf.srl.submission.SrlSubmission submission = 6;
       private protobuf.srl.submission.Submission.SrlSubmission submission_ = protobuf.srl.submission.Submission.SrlSubmission.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.submission.Submission.SrlSubmission, protobuf.srl.submission.Submission.SrlSubmission.Builder, protobuf.srl.submission.Submission.SrlSubmissionOrBuilder> submissionBuilder_;
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
        */
       public boolean hasSubmission() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
        */
       public protobuf.srl.submission.Submission.SrlSubmission getSubmission() {
         if (submissionBuilder_ == null) {
@@ -3010,7 +2626,7 @@ public final class Submission {
         }
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
        */
       public Builder setSubmission(protobuf.srl.submission.Submission.SrlSubmission value) {
         if (submissionBuilder_ == null) {
@@ -3022,11 +2638,11 @@ public final class Submission {
         } else {
           submissionBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
        */
       public Builder setSubmission(
           protobuf.srl.submission.Submission.SrlSubmission.Builder builderForValue) {
@@ -3036,15 +2652,15 @@ public final class Submission {
         } else {
           submissionBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
        */
       public Builder mergeSubmission(protobuf.srl.submission.Submission.SrlSubmission value) {
         if (submissionBuilder_ == null) {
-          if (((bitField0_ & 0x00000020) == 0x00000020) &&
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
               submission_ != protobuf.srl.submission.Submission.SrlSubmission.getDefaultInstance()) {
             submission_ =
               protobuf.srl.submission.Submission.SrlSubmission.newBuilder(submission_).mergeFrom(value).buildPartial();
@@ -3055,11 +2671,11 @@ public final class Submission {
         } else {
           submissionBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
        */
       public Builder clearSubmission() {
         if (submissionBuilder_ == null) {
@@ -3068,19 +2684,19 @@ public final class Submission {
         } else {
           submissionBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
        */
       public protobuf.srl.submission.Submission.SrlSubmission.Builder getSubmissionBuilder() {
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000010;
         onChanged();
         return getSubmissionFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
        */
       public protobuf.srl.submission.Submission.SrlSubmissionOrBuilder getSubmissionOrBuilder() {
         if (submissionBuilder_ != null) {
@@ -3090,7 +2706,7 @@ public final class Submission {
         }
       }
       /**
-       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 7;</code>
+       * <code>optional .protobuf.srl.submission.SrlSubmission submission = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.srl.submission.Submission.SrlSubmission, protobuf.srl.submission.Submission.SrlSubmission.Builder, protobuf.srl.submission.Submission.SrlSubmissionOrBuilder> 
@@ -3142,20 +2758,16 @@ public final class Submission {
   static {
     java.lang.String[] descriptorData = {
       "\n\026input/submission.proto\022\027protobuf.srl.s" +
-      "ubmission\032\022input/school.proto\"?\n\rSrlSubm" +
-      "ission\022\n\n\002id\030\001 \001(\t\022\022\n\nupdateList\030\002 \001(\014\022\016" +
-      "\n\006sketch\030\003 \001(\014\"\330\001\n\013SrlSolution\022\034\n\024allowe" +
-      "dInProblemBank\030\001 \001(\010\022\031\n\021isPracticeProble" +
-      "m\030\002 \001(\010\022=\n\021accessPermissions\030\003 \001(\0132\".pro" +
-      "tobuf.srl.school.SrlPermission\022:\n\nsubmis" +
-      "sion\030\004 \001(\0132&.protobuf.srl.submission.Srl" +
-      "Submission\022\025\n\rproblemBankId\030\005 \001(\t\"\325\001\n\rSr" +
-      "lExperiment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignm",
-      "entId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId" +
-      "\030\005 \001(\t\022=\n\021accessPermissions\030\006 \001(\0132\".prot" +
-      "obuf.srl.school.SrlPermission\022:\n\nsubmiss" +
-      "ion\030\007 \001(\0132&.protobuf.srl.submission.SrlS" +
-      "ubmission"
+      "ubmission\"?\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022\022" +
+      "\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\"\231\001\n\013S" +
+      "rlSolution\022\034\n\024allowedInProblemBank\030\001 \001(\010" +
+      "\022\031\n\021isPracticeProblem\030\002 \001(\010\022:\n\nsubmissio" +
+      "n\030\003 \001(\0132&.protobuf.srl.submission.SrlSub" +
+      "mission\022\025\n\rproblemBankId\030\004 \001(\t\"\226\001\n\rSrlEx" +
+      "periment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignment" +
+      "Id\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId\030\005 " +
+      "\001(\t\022:\n\nsubmission\030\006 \001(\0132&.protobuf.srl.s",
+      "ubmission.SrlSubmission"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3173,20 +2785,19 @@ public final class Submission {
           internal_static_protobuf_srl_submission_SrlSolution_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_submission_SrlSolution_descriptor,
-              new java.lang.String[] { "AllowedInProblemBank", "IsPracticeProblem", "AccessPermissions", "Submission", "ProblemBankId", });
+              new java.lang.String[] { "AllowedInProblemBank", "IsPracticeProblem", "Submission", "ProblemBankId", });
           internal_static_protobuf_srl_submission_SrlExperiment_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_srl_submission_SrlExperiment_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_submission_SrlExperiment_descriptor,
-              new java.lang.String[] { "CourseId", "AssignmentId", "ProblemId", "UserId", "AccessPermissions", "Submission", });
+              new java.lang.String[] { "CourseId", "AssignmentId", "ProblemId", "UserId", "Submission", });
           return null;
         }
       };
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          protobuf.srl.school.School.getDescriptor(),
         }, assigner);
   }
 

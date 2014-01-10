@@ -59,10 +59,9 @@ void protobuf_AssignDesc_input_2fsubmission_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SrlSubmission));
   SrlSolution_descriptor_ = file->message_type(1);
-  static const int SrlSolution_offsets_[5] = {
+  static const int SrlSolution_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSolution, allowedinproblembank_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSolution, ispracticeproblem_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSolution, accesspermissions_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSolution, submission_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSolution, problembankid_),
   };
@@ -78,12 +77,11 @@ void protobuf_AssignDesc_input_2fsubmission_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SrlSolution));
   SrlExperiment_descriptor_ = file->message_type(2);
-  static const int SrlExperiment_offsets_[6] = {
+  static const int SrlExperiment_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlExperiment, courseid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlExperiment, assignmentid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlExperiment, problemid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlExperiment, userid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlExperiment, accesspermissions_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlExperiment, submission_),
   };
   SrlExperiment_reflection_ =
@@ -134,23 +132,18 @@ void protobuf_AddDesc_input_2fsubmission_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::protobuf::srl::school::protobuf_AddDesc_input_2fschool_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\026input/submission.proto\022\027protobuf.srl.s"
-    "ubmission\032\022input/school.proto\"\?\n\rSrlSubm"
-    "ission\022\n\n\002id\030\001 \001(\t\022\022\n\nupdateList\030\002 \001(\014\022\016"
-    "\n\006sketch\030\003 \001(\014\"\330\001\n\013SrlSolution\022\034\n\024allowe"
-    "dInProblemBank\030\001 \001(\010\022\031\n\021isPracticeProble"
-    "m\030\002 \001(\010\022=\n\021accessPermissions\030\003 \001(\0132\".pro"
-    "tobuf.srl.school.SrlPermission\022:\n\nsubmis"
-    "sion\030\004 \001(\0132&.protobuf.srl.submission.Srl"
-    "Submission\022\025\n\rproblemBankId\030\005 \001(\t\"\325\001\n\rSr"
-    "lExperiment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignm"
-    "entId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId"
-    "\030\005 \001(\t\022=\n\021accessPermissions\030\006 \001(\0132\".prot"
-    "obuf.srl.school.SrlPermission\022:\n\nsubmiss"
-    "ion\030\007 \001(\0132&.protobuf.srl.submission.SrlS"
-    "ubmission", 569);
+    "ubmission\"\?\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022\022"
+    "\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\"\231\001\n\013S"
+    "rlSolution\022\034\n\024allowedInProblemBank\030\001 \001(\010"
+    "\022\031\n\021isPracticeProblem\030\002 \001(\010\022:\n\nsubmissio"
+    "n\030\003 \001(\0132&.protobuf.srl.submission.SrlSub"
+    "mission\022\025\n\rproblemBankId\030\004 \001(\t\"\226\001\n\rSrlEx"
+    "periment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignment"
+    "Id\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId\030\005 "
+    "\001(\t\022:\n\nsubmission\030\006 \001(\0132&.protobuf.srl.s"
+    "ubmission.SrlSubmission", 423);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/submission.proto", &protobuf_RegisterTypes);
   SrlSubmission::default_instance_ = new SrlSubmission();
@@ -495,7 +488,6 @@ void SrlSubmission::Swap(SrlSubmission* other) {
 #ifndef _MSC_VER
 const int SrlSolution::kAllowedInProblemBankFieldNumber;
 const int SrlSolution::kIsPracticeProblemFieldNumber;
-const int SrlSolution::kAccessPermissionsFieldNumber;
 const int SrlSolution::kSubmissionFieldNumber;
 const int SrlSolution::kProblemBankIdFieldNumber;
 #endif  // !_MSC_VER
@@ -506,7 +498,6 @@ SrlSolution::SrlSolution()
 }
 
 void SrlSolution::InitAsDefaultInstance() {
-  accesspermissions_ = const_cast< ::protobuf::srl::school::SrlPermission*>(&::protobuf::srl::school::SrlPermission::default_instance());
   submission_ = const_cast< ::protobuf::srl::submission::SrlSubmission*>(&::protobuf::srl::submission::SrlSubmission::default_instance());
 }
 
@@ -520,7 +511,6 @@ void SrlSolution::SharedCtor() {
   _cached_size_ = 0;
   allowedinproblembank_ = false;
   ispracticeproblem_ = false;
-  accesspermissions_ = NULL;
   submission_ = NULL;
   problembankid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -535,7 +525,6 @@ void SrlSolution::SharedDtor() {
     delete problembankid_;
   }
   if (this != default_instance_) {
-    delete accesspermissions_;
     delete submission_;
   }
 }
@@ -565,9 +554,6 @@ void SrlSolution::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     allowedinproblembank_ = false;
     ispracticeproblem_ = false;
-    if (has_accesspermissions()) {
-      if (accesspermissions_ != NULL) accesspermissions_->::protobuf::srl::school::SrlPermission::Clear();
-    }
     if (has_submission()) {
       if (submission_ != NULL) submission_->::protobuf::srl::submission::SrlSubmission::Clear();
     }
@@ -614,26 +600,12 @@ bool SrlSolution::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(26)) goto parse_accessPermissions;
+        if (input->ExpectTag(26)) goto parse_submission;
         break;
       }
 
-      // optional .protobuf.srl.school.SrlPermission accessPermissions = 3;
+      // optional .protobuf.srl.submission.SrlSubmission submission = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_accessPermissions:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_accesspermissions()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(34)) goto parse_submission;
-        break;
-      }
-
-      // optional .protobuf.srl.submission.SrlSubmission submission = 4;
-      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_submission:
@@ -642,12 +614,12 @@ bool SrlSolution::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(42)) goto parse_problemBankId;
+        if (input->ExpectTag(34)) goto parse_problemBankId;
         break;
       }
 
-      // optional string problemBankId = 5;
-      case 5: {
+      // optional string problemBankId = 4;
+      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_problemBankId:
@@ -691,25 +663,19 @@ void SrlSolution::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->ispracticeproblem(), output);
   }
 
-  // optional .protobuf.srl.school.SrlPermission accessPermissions = 3;
-  if (has_accesspermissions()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->accesspermissions(), output);
-  }
-
-  // optional .protobuf.srl.submission.SrlSubmission submission = 4;
+  // optional .protobuf.srl.submission.SrlSubmission submission = 3;
   if (has_submission()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->submission(), output);
+      3, this->submission(), output);
   }
 
-  // optional string problemBankId = 5;
+  // optional string problemBankId = 4;
   if (has_problembankid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->problembankid().data(), this->problembankid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      5, this->problembankid(), output);
+      4, this->problembankid(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -730,28 +696,21 @@ void SrlSolution::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->ispracticeproblem(), target);
   }
 
-  // optional .protobuf.srl.school.SrlPermission accessPermissions = 3;
-  if (has_accesspermissions()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->accesspermissions(), target);
-  }
-
-  // optional .protobuf.srl.submission.SrlSubmission submission = 4;
+  // optional .protobuf.srl.submission.SrlSubmission submission = 3;
   if (has_submission()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        4, this->submission(), target);
+        3, this->submission(), target);
   }
 
-  // optional string problemBankId = 5;
+  // optional string problemBankId = 4;
   if (has_problembankid()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->problembankid().data(), this->problembankid().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->problembankid(), target);
+        4, this->problembankid(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -775,21 +734,14 @@ int SrlSolution::ByteSize() const {
       total_size += 1 + 1;
     }
 
-    // optional .protobuf.srl.school.SrlPermission accessPermissions = 3;
-    if (has_accesspermissions()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->accesspermissions());
-    }
-
-    // optional .protobuf.srl.submission.SrlSubmission submission = 4;
+    // optional .protobuf.srl.submission.SrlSubmission submission = 3;
     if (has_submission()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->submission());
     }
 
-    // optional string problemBankId = 5;
+    // optional string problemBankId = 4;
     if (has_problembankid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -829,9 +781,6 @@ void SrlSolution::MergeFrom(const SrlSolution& from) {
     if (from.has_ispracticeproblem()) {
       set_ispracticeproblem(from.ispracticeproblem());
     }
-    if (from.has_accesspermissions()) {
-      mutable_accesspermissions()->::protobuf::srl::school::SrlPermission::MergeFrom(from.accesspermissions());
-    }
     if (from.has_submission()) {
       mutable_submission()->::protobuf::srl::submission::SrlSubmission::MergeFrom(from.submission());
     }
@@ -863,7 +812,6 @@ void SrlSolution::Swap(SrlSolution* other) {
   if (other != this) {
     std::swap(allowedinproblembank_, other->allowedinproblembank_);
     std::swap(ispracticeproblem_, other->ispracticeproblem_);
-    std::swap(accesspermissions_, other->accesspermissions_);
     std::swap(submission_, other->submission_);
     std::swap(problembankid_, other->problembankid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -888,7 +836,6 @@ const int SrlExperiment::kCourseIdFieldNumber;
 const int SrlExperiment::kAssignmentIdFieldNumber;
 const int SrlExperiment::kProblemIdFieldNumber;
 const int SrlExperiment::kUserIdFieldNumber;
-const int SrlExperiment::kAccessPermissionsFieldNumber;
 const int SrlExperiment::kSubmissionFieldNumber;
 #endif  // !_MSC_VER
 
@@ -898,7 +845,6 @@ SrlExperiment::SrlExperiment()
 }
 
 void SrlExperiment::InitAsDefaultInstance() {
-  accesspermissions_ = const_cast< ::protobuf::srl::school::SrlPermission*>(&::protobuf::srl::school::SrlPermission::default_instance());
   submission_ = const_cast< ::protobuf::srl::submission::SrlSubmission*>(&::protobuf::srl::submission::SrlSubmission::default_instance());
 }
 
@@ -914,7 +860,6 @@ void SrlExperiment::SharedCtor() {
   assignmentid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   problemid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   userid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  accesspermissions_ = NULL;
   submission_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -937,7 +882,6 @@ void SrlExperiment::SharedDtor() {
     delete userid_;
   }
   if (this != default_instance_) {
-    delete accesspermissions_;
     delete submission_;
   }
 }
@@ -984,9 +928,6 @@ void SrlExperiment::Clear() {
       if (userid_ != &::google::protobuf::internal::kEmptyString) {
         userid_->clear();
       }
-    }
-    if (has_accesspermissions()) {
-      if (accesspermissions_ != NULL) accesspermissions_->::protobuf::srl::school::SrlPermission::Clear();
     }
     if (has_submission()) {
       if (submission_ != NULL) submission_->::protobuf::srl::submission::SrlSubmission::Clear();
@@ -1065,26 +1006,12 @@ bool SrlExperiment::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(50)) goto parse_accessPermissions;
+        if (input->ExpectTag(50)) goto parse_submission;
         break;
       }
 
-      // optional .protobuf.srl.school.SrlPermission accessPermissions = 6;
+      // optional .protobuf.srl.submission.SrlSubmission submission = 6;
       case 6: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_accessPermissions:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_accesspermissions()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(58)) goto parse_submission;
-        break;
-      }
-
-      // optional .protobuf.srl.submission.SrlSubmission submission = 7;
-      case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_submission:
@@ -1151,16 +1078,10 @@ void SrlExperiment::SerializeWithCachedSizes(
       5, this->userid(), output);
   }
 
-  // optional .protobuf.srl.school.SrlPermission accessPermissions = 6;
-  if (has_accesspermissions()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, this->accesspermissions(), output);
-  }
-
-  // optional .protobuf.srl.submission.SrlSubmission submission = 7;
+  // optional .protobuf.srl.submission.SrlSubmission submission = 6;
   if (has_submission()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      7, this->submission(), output);
+      6, this->submission(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1211,18 +1132,11 @@ void SrlExperiment::SerializeWithCachedSizes(
         5, this->userid(), target);
   }
 
-  // optional .protobuf.srl.school.SrlPermission accessPermissions = 6;
-  if (has_accesspermissions()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        6, this->accesspermissions(), target);
-  }
-
-  // optional .protobuf.srl.submission.SrlSubmission submission = 7;
+  // optional .protobuf.srl.submission.SrlSubmission submission = 6;
   if (has_submission()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        7, this->submission(), target);
+        6, this->submission(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1264,14 +1178,7 @@ int SrlExperiment::ByteSize() const {
           this->userid());
     }
 
-    // optional .protobuf.srl.school.SrlPermission accessPermissions = 6;
-    if (has_accesspermissions()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->accesspermissions());
-    }
-
-    // optional .protobuf.srl.submission.SrlSubmission submission = 7;
+    // optional .protobuf.srl.submission.SrlSubmission submission = 6;
     if (has_submission()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1317,9 +1224,6 @@ void SrlExperiment::MergeFrom(const SrlExperiment& from) {
     if (from.has_userid()) {
       set_userid(from.userid());
     }
-    if (from.has_accesspermissions()) {
-      mutable_accesspermissions()->::protobuf::srl::school::SrlPermission::MergeFrom(from.accesspermissions());
-    }
     if (from.has_submission()) {
       mutable_submission()->::protobuf::srl::submission::SrlSubmission::MergeFrom(from.submission());
     }
@@ -1350,7 +1254,6 @@ void SrlExperiment::Swap(SrlExperiment* other) {
     std::swap(assignmentid_, other->assignmentid_);
     std::swap(problemid_, other->problemid_);
     std::swap(userid_, other->userid_);
-    std::swap(accesspermissions_, other->accesspermissions_);
     std::swap(submission_, other->submission_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

@@ -21,6 +21,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 
+import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
@@ -79,7 +80,18 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 			if (req.getResponseText().equals("student")) {
 				MultiConnectionState state = connectionToId.get(conn);
 				try {
-					SrlExperiment student = SrlExperiment.parseFrom(req.getOtherData());
+					SrlUpdate update = SrlUpdate.parseFrom(req.getOtherData());
+					System.out.println("Parsing as an update");
+					internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class);
+					return;
+				} catch (InvalidProtocolBufferException e) {
+					System.out.println("Parsing as an experiment");
+					SrlExperiment student = null;
+					try {
+						student = SrlExperiment.parseFrom(req.getOtherData());
+					} catch (InvalidProtocolBufferException e1) {
+						e1.printStackTrace();
+					}
 					((AnswerConnectionState) state).addPendingExperiment(req.getSessionInfo(), student);
 					System.out.println("Student exp " + student);
 					internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class); // pass submission on
@@ -92,12 +104,6 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 					itemRequest.setQuery(ItemQuery.SOLUTION);
 					itemRequest.addItemId(student.getProblemId());  // FIXME: this needs to change probably to make this work
 					internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(), state.getKey(), SolutionConnection.class);
-
-					return;
-				} catch (InvalidProtocolBufferException e) {
-					e.printStackTrace();
-					// must be an update list!
-					internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class);
 					return;
 				}
 			} else {
