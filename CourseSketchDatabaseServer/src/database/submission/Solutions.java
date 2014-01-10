@@ -30,11 +30,11 @@ public class Solutions
 	{
 		DBCollection new_user = dbs.getCollection("Solutions");
 		BasicDBObject query = new BasicDBObject(ALLOWED_IN_PROBLEMBANK,solution.getAllowedInProblemBank())
-										 .append(IS_PRACTICE_PROBLEM,solution.getIsPracticeProblem()) 
-										 .append(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray()) // byte blob
-										 .append(ADMIN, solution.getAccessPermissions().getAdminPermissionList())
-										 .append(MOD,solution.getAccessPermissions().getModeratorPermissionList())
-										 .append(USERS, solution.getAccessPermissions().getUserPermissionList());
+										 .append(IS_PRACTICE_PROBLEM,solution.getIsPracticeProblem())
+										 .append(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray()); // byte blob
+									//	 .append(ADMIN, solution.getAccessPermissions().getAdminPermissionList())
+									//	 .append(MOD,solution.getAccessPermissions().getModeratorPermissionList())
+									//	 .append(USERS, solution.getAccessPermissions().getUserPermissionList());
 										 
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
