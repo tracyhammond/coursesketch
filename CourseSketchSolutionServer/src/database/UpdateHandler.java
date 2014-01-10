@@ -2,10 +2,10 @@ package database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.List;
 
 import protobuf.srl.commands.Commands.CommandType;
+import protobuf.srl.commands.Commands.SrlCommand;
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.request.Message.Request;
@@ -13,32 +13,48 @@ import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 public class UpdateHandler {
 	HashMap<String, ListInstance> sessionToInstance = new HashMap<String, ListInstance>();
 	public boolean addRequest(Request req) throws Exception {
 		SrlUpdateList updates = null;
+		System.out.println("Adding request!");
 		if (!sessionToInstance.containsKey(req.getSessionInfo())) {
 			SubmissionInstance instance = new SubmissionInstance();
 			sessionToInstance.put(req.getSessionInfo(), instance);
 			try {
 				if (req.getResponseText().equals("student")) {
 					SrlExperiment experiment = SrlExperiment.parseFrom(req.getOtherData());
+					System.out.println("Problem Id: " + experiment.getProblemId());
 					instance.setExperiment(experiment);
-					updates = experiment.getSubmission().getUpdateList(); // gets the first update chunk
+					updates = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList()); // gets the first update chunk
+					System.out.println("Parsing request and getting getting updates!\n" + updates);
+					System.out.println(updates.getListList());
 				} else {
 					SrlSolution solution = SrlSolution.parseFrom(req.getOtherData());
 					instance.setSolution(solution);
-					updates = solution.getSubmission().getUpdateList(); // gets the first update chunk
+					updates = SrlUpdateList.parseFrom(solution.getSubmission().getUpdateList()); // gets the first update chunk
 					// if this is the first submission it will contain stuff regarding that submission
 				}
 			} catch(Exception e) {
+				e.printStackTrace();
 			}
 		}
 		if (updates == null) {
 			try {
 				updates = SrlUpdateList.parseFrom(req.getOtherData());
 			} catch (InvalidProtocolBufferException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
+				System.out.println("Parsing as a single update");
+			}
+			if (updates == null) {
+				try {
+					SrlUpdate update = SrlUpdate.parseFrom(req.getOtherData());
+					updates = SrlUpdateList.newBuilder().addList(update).build();
+				} catch(InvalidProtocolBufferException e) {
+					
+				}
 			}
 		}
 		if (updates == null) {
@@ -90,15 +106,24 @@ public class UpdateHandler {
 				return true;
 			}
 			try {
-				for (SrlUpdate update: updates.getListList()) {
-					//SrlUpdate update = SrlUpdate.parseFrom(req.getOtherData());
-					if (started && update.getCommands(update.getCommandsCount() - 1).getCommandType() == CommandType.CLOSE_SYNC) {
+				List<SrlUpdate> updateList = updates.getListList();
+				for (SrlUpdate update: updateList) {
+					List<SrlCommand> commandList = update.getCommandsList();
+					if (commandList.size() == 0) {
+						throw new Exception("EMPTY LIST!");
+					}
+					if(!started) {
+						System.out.println("UPDATE: " + update);
+					}
+					if (started && commandList.get(commandList.size()-1).getCommandType() == CommandType.CLOSE_SYNC) {
 						started = false;
 						finished = true;
 						result = list.build();
+						System.out.println("Finished parsing list!");
 						return true;
 					}
-					if (!started && update.getCommands(0).getCommandType() ==CommandType.OPEN_SYNC) {
+					if (!started && commandList.get(0).getCommandType() == CommandType.OPEN_SYNC) {
+						System.out.println("RECIEVED OPEN SYNC");
 						started = true;
 					} else if (!started) {
 						insertInBuffer(update);
@@ -108,7 +133,7 @@ public class UpdateHandler {
 							currentIndex +=1;
 							searchBuffer();
 						}
-				}
+					}
 				}
 				return false;
 			} catch(Exception e) {
@@ -141,6 +166,7 @@ public class UpdateHandler {
 		 * The list will be sorted before this insertion and it will remain sorted after this insertion.
 		 */
 		private void insertInBuffer(SrlUpdate update) {
+			System.out.println("INSRTING INTO BUFFER!");
 			// TODO Insert an update into the list so that the list is always sorted.
 		}
 
@@ -183,7 +209,7 @@ public class UpdateHandler {
 					newSubmission.setId(oldSubmission.getId());
 				}
 			}
-			newSubmission.setUpdateList(this.result);
+			newSubmission.setUpdateList(this.result.toByteString());
 			return builder.setSubmission(newSubmission).build();
 		}
 
@@ -202,7 +228,7 @@ public class UpdateHandler {
 					newSubmission.setId(oldSubmission.getId());
 				}
 			}
-			newSubmission.setUpdateList(this.result);
+			newSubmission.setUpdateList(this.result.toByteString());
 			return builder.setSubmission(newSubmission).build();
 		}
 	}

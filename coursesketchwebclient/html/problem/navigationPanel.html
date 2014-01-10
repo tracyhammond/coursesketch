@@ -2,16 +2,7 @@
 <head>
 	<base href="../../">
 	<link rel="stylesheet" href="css/problem/navigation.css">
-	<!-- TODO: remove this line after debugging this file. -->
-	<script type="text/javascript" src="js/problem/problem_navigator.js"></script>
 	<script>
-		if (!parent) {
-			parent = this;
-		}
-		if (!parent.problemNavigator) {
-			parent.problemNavigator = new schoolNavigator(/*IDHERE*/);
-			alert("creating new navigator!");
-		}
 		var scope = document;
 		parent.problemNavigator.addCallback(function(nav) {
 			scope.getElementById("selectionBoxNumber").innerHTML = nav.getCurrentNumber();
@@ -74,6 +65,5 @@
 		</div>
 	</div>
 	<div class = "bottomShadow" style = "height:5px; width:100%;"></div>
-	
 </body>
 </html>

@@ -25,8 +25,6 @@
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
 #include "input/school.pb.h"
-#include "input/sketch.pb.h"
-#include "input/commands.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace protobuf {
@@ -110,23 +108,29 @@ class SrlSubmission : public ::google::protobuf::Message {
   inline ::std::string* release_id();
   inline void set_allocated_id(::std::string* id);
 
-  // optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+  // optional bytes updateList = 2;
   inline bool has_updatelist() const;
   inline void clear_updatelist();
   static const int kUpdateListFieldNumber = 2;
-  inline const ::protobuf::srl::commands::SrlUpdateList& updatelist() const;
-  inline ::protobuf::srl::commands::SrlUpdateList* mutable_updatelist();
-  inline ::protobuf::srl::commands::SrlUpdateList* release_updatelist();
-  inline void set_allocated_updatelist(::protobuf::srl::commands::SrlUpdateList* updatelist);
+  inline const ::std::string& updatelist() const;
+  inline void set_updatelist(const ::std::string& value);
+  inline void set_updatelist(const char* value);
+  inline void set_updatelist(const void* value, size_t size);
+  inline ::std::string* mutable_updatelist();
+  inline ::std::string* release_updatelist();
+  inline void set_allocated_updatelist(::std::string* updatelist);
 
-  // optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+  // optional bytes sketch = 3;
   inline bool has_sketch() const;
   inline void clear_sketch();
   static const int kSketchFieldNumber = 3;
-  inline const ::protobuf::srl::sketch::SrlSketch& sketch() const;
-  inline ::protobuf::srl::sketch::SrlSketch* mutable_sketch();
-  inline ::protobuf::srl::sketch::SrlSketch* release_sketch();
-  inline void set_allocated_sketch(::protobuf::srl::sketch::SrlSketch* sketch);
+  inline const ::std::string& sketch() const;
+  inline void set_sketch(const ::std::string& value);
+  inline void set_sketch(const char* value);
+  inline void set_sketch(const void* value, size_t size);
+  inline ::std::string* mutable_sketch();
+  inline ::std::string* release_sketch();
+  inline void set_allocated_sketch(::std::string* sketch);
 
   // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlSubmission)
  private:
@@ -140,8 +144,8 @@ class SrlSubmission : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* id_;
-  ::protobuf::srl::commands::SrlUpdateList* updatelist_;
-  ::protobuf::srl::sketch::SrlSketch* sketch_;
+  ::std::string* updatelist_;
+  ::std::string* sketch_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -517,7 +521,7 @@ inline void SrlSubmission::set_allocated_id(::std::string* id) {
   }
 }
 
-// optional .protobuf.srl.commands.SrlUpdateList updateList = 2;
+// optional bytes updateList = 2;
 inline bool SrlSubmission::has_updatelist() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -528,34 +532,66 @@ inline void SrlSubmission::clear_has_updatelist() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void SrlSubmission::clear_updatelist() {
-  if (updatelist_ != NULL) updatelist_->::protobuf::srl::commands::SrlUpdateList::Clear();
+  if (updatelist_ != &::google::protobuf::internal::kEmptyString) {
+    updatelist_->clear();
+  }
   clear_has_updatelist();
 }
-inline const ::protobuf::srl::commands::SrlUpdateList& SrlSubmission::updatelist() const {
-  return updatelist_ != NULL ? *updatelist_ : *default_instance_->updatelist_;
+inline const ::std::string& SrlSubmission::updatelist() const {
+  return *updatelist_;
 }
-inline ::protobuf::srl::commands::SrlUpdateList* SrlSubmission::mutable_updatelist() {
+inline void SrlSubmission::set_updatelist(const ::std::string& value) {
   set_has_updatelist();
-  if (updatelist_ == NULL) updatelist_ = new ::protobuf::srl::commands::SrlUpdateList;
+  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
+    updatelist_ = new ::std::string;
+  }
+  updatelist_->assign(value);
+}
+inline void SrlSubmission::set_updatelist(const char* value) {
+  set_has_updatelist();
+  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
+    updatelist_ = new ::std::string;
+  }
+  updatelist_->assign(value);
+}
+inline void SrlSubmission::set_updatelist(const void* value, size_t size) {
+  set_has_updatelist();
+  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
+    updatelist_ = new ::std::string;
+  }
+  updatelist_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlSubmission::mutable_updatelist() {
+  set_has_updatelist();
+  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
+    updatelist_ = new ::std::string;
+  }
   return updatelist_;
 }
-inline ::protobuf::srl::commands::SrlUpdateList* SrlSubmission::release_updatelist() {
+inline ::std::string* SrlSubmission::release_updatelist() {
   clear_has_updatelist();
-  ::protobuf::srl::commands::SrlUpdateList* temp = updatelist_;
-  updatelist_ = NULL;
-  return temp;
+  if (updatelist_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = updatelist_;
+    updatelist_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
 }
-inline void SrlSubmission::set_allocated_updatelist(::protobuf::srl::commands::SrlUpdateList* updatelist) {
-  delete updatelist_;
-  updatelist_ = updatelist;
+inline void SrlSubmission::set_allocated_updatelist(::std::string* updatelist) {
+  if (updatelist_ != &::google::protobuf::internal::kEmptyString) {
+    delete updatelist_;
+  }
   if (updatelist) {
     set_has_updatelist();
+    updatelist_ = updatelist;
   } else {
     clear_has_updatelist();
+    updatelist_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
-// optional .protobuf.srl.sketch.SrlSketch sketch = 3;
+// optional bytes sketch = 3;
 inline bool SrlSubmission::has_sketch() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -566,30 +602,62 @@ inline void SrlSubmission::clear_has_sketch() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void SrlSubmission::clear_sketch() {
-  if (sketch_ != NULL) sketch_->::protobuf::srl::sketch::SrlSketch::Clear();
+  if (sketch_ != &::google::protobuf::internal::kEmptyString) {
+    sketch_->clear();
+  }
   clear_has_sketch();
 }
-inline const ::protobuf::srl::sketch::SrlSketch& SrlSubmission::sketch() const {
-  return sketch_ != NULL ? *sketch_ : *default_instance_->sketch_;
+inline const ::std::string& SrlSubmission::sketch() const {
+  return *sketch_;
 }
-inline ::protobuf::srl::sketch::SrlSketch* SrlSubmission::mutable_sketch() {
+inline void SrlSubmission::set_sketch(const ::std::string& value) {
   set_has_sketch();
-  if (sketch_ == NULL) sketch_ = new ::protobuf::srl::sketch::SrlSketch;
+  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
+    sketch_ = new ::std::string;
+  }
+  sketch_->assign(value);
+}
+inline void SrlSubmission::set_sketch(const char* value) {
+  set_has_sketch();
+  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
+    sketch_ = new ::std::string;
+  }
+  sketch_->assign(value);
+}
+inline void SrlSubmission::set_sketch(const void* value, size_t size) {
+  set_has_sketch();
+  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
+    sketch_ = new ::std::string;
+  }
+  sketch_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlSubmission::mutable_sketch() {
+  set_has_sketch();
+  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
+    sketch_ = new ::std::string;
+  }
   return sketch_;
 }
-inline ::protobuf::srl::sketch::SrlSketch* SrlSubmission::release_sketch() {
+inline ::std::string* SrlSubmission::release_sketch() {
   clear_has_sketch();
-  ::protobuf::srl::sketch::SrlSketch* temp = sketch_;
-  sketch_ = NULL;
-  return temp;
+  if (sketch_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = sketch_;
+    sketch_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
 }
-inline void SrlSubmission::set_allocated_sketch(::protobuf::srl::sketch::SrlSketch* sketch) {
-  delete sketch_;
-  sketch_ = sketch;
+inline void SrlSubmission::set_allocated_sketch(::std::string* sketch) {
+  if (sketch_ != &::google::protobuf::internal::kEmptyString) {
+    delete sketch_;
+  }
   if (sketch) {
     set_has_sketch();
+    sketch_ = sketch;
   } else {
     clear_has_sketch();
+    sketch_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

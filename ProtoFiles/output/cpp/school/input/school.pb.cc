@@ -157,11 +157,11 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, description_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, probleminfo_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, info_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, gradeweight_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, grade_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, state_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, accesspermission_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlProblem, problemnumber_),
   };
   SrlProblem_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -387,7 +387,7 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen"
     "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo"
     "l.SrlProblem\0229\n\014bankProblems\030\004 \003(\0132#.pro"
-    "tobuf.srl.school.SrlBankProblem\"\355\003\n\tSrlC"
+    "tobuf.srl.school.SrlBankProblem\"\377\003\n\tSrlC"
     "ourse\022\n\n\002id\030\001 \002(\t\022\014\n\004name\030\002 \001(\t\022<\n\020acces"
     "sPermission\030\003 \001(\0132\".protobuf.srl.school."
     "SrlPermission\022G\n\006access\030\004 \001(\0162,.protobuf"
@@ -398,63 +398,62 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     ".DateTime\0220\n\tcloseDate\030\n \001(\0132\035.protobuf."
     "srl.school.DateTime\022)\n\005state\030\013 \001(\0132\032.pro"
     "tobuf.srl.school.State\022\026\n\016assignmentList"
-    "\030\014 \003(\t\"O\n\rAccessibility\022\n\n\006PUBLIC\020\001\022\r\n\tP"
-    "ROTECTED\020\002\022\026\n\022PROTECTED_NOSEARCH\020\003\022\013\n\007PR"
-    "IVATE\020\004\"\327\005\n\rSrlAssignment\022\020\n\010courseId\030\001 "
-    "\002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004name\030\003 \001(\t\022I\n\004type\030\004 "
-    "\001(\01621.protobuf.srl.school.SrlAssignment."
-    "AssignmentType:\010HOMEWORK\022\r\n\005other\030\005 \001(\t\022"
-    "\023\n\013description\030\006 \001(\t\022\r\n\005links\030\007 \003(\t\022J\n\nl"
-    "atePolicy\030\010 \001(\0162-.protobuf.srl.school.Sr"
-    "lAssignment.LatePolicy:\007POLICY1\022\023\n\013grade"
-    "Weight\030\t \001(\t\022\r\n\005grade\030\n \001(\002\0221\n\naccessDat"
-    "e\030\013 \001(\0132\035.protobuf.srl.school.DateTime\022."
-    "\n\007dueDate\030\014 \001(\0132\035.protobuf.srl.school.Da"
-    "teTime\0220\n\tcloseDate\030\r \001(\0132\035.protobuf.srl"
-    ".school.DateTime\022)\n\005state\030\016 \001(\0132\032.protob"
-    "uf.srl.school.State\022\020\n\010imageUrl\030\017 \001(\t\022\023\n"
-    "\013problemList\030\020 \003(\t\022<\n\020accessPermission\030\021"
-    " \001(\0132\".protobuf.srl.school.SrlPermission"
-    "\"R\n\016AssignmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ"
-    "\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTH"
-    "ER\020\006\"3\n\nLatePolicy\022\013\n\007POLICY1\020\001\022\013\n\007POLIC"
-    "Y2\020\002\022\013\n\007POLICY3\020\003\"\367\002\n\nSrlProblem\022\n\n\002id\030\001"
-    " \002(\t\022\020\n\010courseId\030\002 \001(\t\022\024\n\014assignmentId\030\003"
-    " \001(\t\022\025\n\rproblemBankId\030\004 \001(\t\022\014\n\004name\030\005 \001("
-    "\t\022\023\n\013description\030\006 \001(\t\0228\n\013problemInfo\030\007 "
-    "\001(\0132#.protobuf.srl.school.SrlBankProblem"
-    "\0224\n\004info\030\010 \003(\0132&.protobuf.srl.school.Dom"
-    "ainInformation\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005g"
-    "rade\030\n \001(\002\022)\n\005state\030\013 \001(\0132\032.protobuf.srl"
-    ".school.State\022<\n\020accessPermission\030\014 \001(\0132"
-    "\".protobuf.srl.school.SrlPermission\"\374\002\n\016"
-    "SrlBankProblem\022\n\n\002id\030\001 \002(\t\022\024\n\014questionTe"
-    "xt\030\002 \001(\t\022N\n\014questionType\030\003 \001(\01620.protobu"
-    "f.srl.school.SrlBankProblem.QuestionType"
-    ":\006SKETCH\022\r\n\005image\030\004 \001(\t\022\022\n\nsolutionId\030\005 "
-    "\001(\t\022\023\n\013courseTopic\030\006 \001(\t\022\020\n\010subTopic\030\007 \001"
-    "(\t\022\016\n\006source\030\010 \001(\t\022\025\n\rotherKeywords\030\t \003("
-    "\t\022<\n\020accessPermission\030\n \001(\0132\".protobuf.s"
-    "rl.school.SrlPermission\"I\n\014QuestionType\022"
-    "\n\n\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RES"
-    "P\020\003\022\r\n\tCHECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001"
-    " \001(\005\022\r\n\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour"
-    "\030\004 \001(\005\022\016\n\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023"
-    "\n\013millisecond\030\007 \001(\004\"\"\n\021DomainInformation"
-    "\022\r\n\005stuff\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 "
-    "\001(\010\022\022\n\naccessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010"
-    "\022\017\n\007started\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n"
-    "\007SrlUser\022\020\n\010username\030\001 \002(\t\022\r\n\005email\030\002 \001("
-    "\t\022\022\n\ncourseList\030\003 \003(\t\022\026\n\016schoolIdentity\030"
-    "\004 \001(\t\022\021\n\tfirstName\030\005 \001(\t\022\020\n\010lastName\030\006 \001"
-    "(\t\022\020\n\010password\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006user"
-    "Id\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003"
-    " \001(\t\022\r\n\005admin\030\004 \003(\t\"]\n\rSrlPermission\022\027\n\017"
-    "adminPermission\030\001 \003(\t\022\033\n\023moderatorPermis"
-    "sion\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010Us"
-    "erType\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEA"
-    "CHING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020"
-    "\005", 2921);
+    "\030\014 \003(\t\"a\n\rAccessibility\022\020\n\014SUPER_PUBLIC\020"
+    "\000\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\026\n\022PROTECTE"
+    "D_NOSEARCH\020\003\022\013\n\007PRIVATE\020\004\"\327\005\n\rSrlAssignm"
+    "ent\022\020\n\010courseId\030\001 \002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004nam"
+    "e\030\003 \001(\t\022I\n\004type\030\004 \001(\01621.protobuf.srl.sch"
+    "ool.SrlAssignment.AssignmentType:\010HOMEWO"
+    "RK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001(\t\022\r"
+    "\n\005links\030\007 \003(\t\022J\n\nlatePolicy\030\010 \001(\0162-.prot"
+    "obuf.srl.school.SrlAssignment.LatePolicy"
+    ":\007POLICY1\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005grade\030"
+    "\n \001(\002\0221\n\naccessDate\030\013 \001(\0132\035.protobuf.srl"
+    ".school.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.prot"
+    "obuf.srl.school.DateTime\0220\n\tcloseDate\030\r "
+    "\001(\0132\035.protobuf.srl.school.DateTime\022)\n\005st"
+    "ate\030\016 \001(\0132\032.protobuf.srl.school.State\022\020\n"
+    "\010imageUrl\030\017 \001(\t\022\023\n\013problemList\030\020 \003(\t\022<\n\020"
+    "accessPermission\030\021 \001(\0132\".protobuf.srl.sc"
+    "hool.SrlPermission\"R\n\016AssignmentType\022\014\n\010"
+    "HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM\020\004\022"
+    "\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3\n\nLatePolicy\022\013\n\007"
+    "POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007POLICY3\020\003\"\330\002\n\n"
+    "SrlProblem\022\n\n\002id\030\001 \002(\t\022\020\n\010courseId\030\002 \001(\t"
+    "\022\024\n\014assignmentId\030\003 \001(\t\022\025\n\rproblemBankId\030"
+    "\004 \001(\t\022\014\n\004name\030\005 \001(\t\022\023\n\013description\030\006 \001(\t"
+    "\0228\n\013problemInfo\030\007 \001(\0132#.protobuf.srl.sch"
+    "ool.SrlBankProblem\022\023\n\013gradeWeight\030\010 \001(\t\022"
+    "\r\n\005grade\030\t \001(\002\022)\n\005state\030\n \001(\0132\032.protobuf"
+    ".srl.school.State\022<\n\020accessPermission\030\013 "
+    "\001(\0132\".protobuf.srl.school.SrlPermission\022"
+    "\025\n\rproblemNumber\030\014 \001(\005\"\374\002\n\016SrlBankProble"
+    "m\022\n\n\002id\030\001 \002(\t\022\024\n\014questionText\030\002 \001(\t\022N\n\014q"
+    "uestionType\030\003 \001(\01620.protobuf.srl.school."
+    "SrlBankProblem.QuestionType:\006SKETCH\022\r\n\005i"
+    "mage\030\004 \001(\t\022\022\n\nsolutionId\030\005 \001(\t\022\023\n\013course"
+    "Topic\030\006 \001(\t\022\020\n\010subTopic\030\007 \001(\t\022\016\n\006source\030"
+    "\010 \001(\t\022\025\n\rotherKeywords\030\t \003(\t\022<\n\020accessPe"
+    "rmission\030\n \001(\0132\".protobuf.srl.school.Srl"
+    "Permission\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017"
+    "\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_"
+    "BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month"
+    "\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006min"
+    "ute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millisecond"
+    "\030\007 \001(\004\"\"\n\021DomainInformation\022\r\n\005stuff\030\001 \001"
+    "(\t\"c\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\naccess"
+    "ible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007started\030\004"
+    " \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n\007SrlUser\022\020\n\010u"
+    "sername\030\001 \002(\t\022\r\n\005email\030\002 \001(\t\022\022\n\ncourseLi"
+    "st\030\003 \003(\t\022\026\n\016schoolIdentity\030\004 \001(\t\022\021\n\tfirs"
+    "tName\030\005 \001(\t\022\020\n\010lastName\030\006 \001(\t\022\020\n\010passwor"
+    "d\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022\017\n\007g"
+    "roupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t\022\r\n\005admin"
+    "\030\004 \003(\t\"]\n\rSrlPermission\022\027\n\017adminPermissi"
+    "on\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003(\t\022\026\n"
+    "\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n\005ADM"
+    "IN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSISTA"
+    "NT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005", 2908);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/school.proto", &protobuf_RegisterTypes);
   SrlSchool::default_instance_ = new SrlSchool();
@@ -849,6 +848,7 @@ const ::google::protobuf::EnumDescriptor* SrlCourse_Accessibility_descriptor() {
 }
 bool SrlCourse_Accessibility_IsValid(int value) {
   switch(value) {
+    case 0:
     case 1:
     case 2:
     case 3:
@@ -860,6 +860,7 @@ bool SrlCourse_Accessibility_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
+const SrlCourse_Accessibility SrlCourse::SUPER_PUBLIC;
 const SrlCourse_Accessibility SrlCourse::PUBLIC;
 const SrlCourse_Accessibility SrlCourse::PROTECTED;
 const SrlCourse_Accessibility SrlCourse::PROTECTED_NOSEARCH;
@@ -2731,11 +2732,11 @@ const int SrlProblem::kProblemBankIdFieldNumber;
 const int SrlProblem::kNameFieldNumber;
 const int SrlProblem::kDescriptionFieldNumber;
 const int SrlProblem::kProblemInfoFieldNumber;
-const int SrlProblem::kInfoFieldNumber;
 const int SrlProblem::kGradeWeightFieldNumber;
 const int SrlProblem::kGradeFieldNumber;
 const int SrlProblem::kStateFieldNumber;
 const int SrlProblem::kAccessPermissionFieldNumber;
+const int SrlProblem::kProblemNumberFieldNumber;
 #endif  // !_MSC_VER
 
 SrlProblem::SrlProblem()
@@ -2768,6 +2769,7 @@ void SrlProblem::SharedCtor() {
   grade_ = 0;
   state_ = NULL;
   accesspermission_ = NULL;
+  problemnumber_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2860,13 +2862,13 @@ void SrlProblem::Clear() {
     if (has_probleminfo()) {
       if (probleminfo_ != NULL) probleminfo_->::protobuf::srl::school::SrlBankProblem::Clear();
     }
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (has_gradeweight()) {
       if (gradeweight_ != &::google::protobuf::internal::kEmptyString) {
         gradeweight_->clear();
       }
     }
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     grade_ = 0;
     if (has_state()) {
       if (state_ != NULL) state_->::protobuf::srl::school::State::Clear();
@@ -2874,8 +2876,8 @@ void SrlProblem::Clear() {
     if (has_accesspermission()) {
       if (accesspermission_ != NULL) accesspermission_->::protobuf::srl::school::SrlPermission::Clear();
     }
+    problemnumber_ = 0;
   }
-  info_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -2997,27 +2999,12 @@ bool SrlProblem::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(66)) goto parse_info;
+        if (input->ExpectTag(66)) goto parse_gradeWeight;
         break;
       }
 
-      // repeated .protobuf.srl.school.DomainInformation info = 8;
+      // optional string gradeWeight = 8;
       case 8: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_info:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_info()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(66)) goto parse_info;
-        if (input->ExpectTag(74)) goto parse_gradeWeight;
-        break;
-      }
-
-      // optional string gradeWeight = 9;
-      case 9: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_gradeWeight:
@@ -3029,12 +3016,12 @@ bool SrlProblem::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(85)) goto parse_grade;
+        if (input->ExpectTag(77)) goto parse_grade;
         break;
       }
 
-      // optional float grade = 10;
-      case 10: {
+      // optional float grade = 9;
+      case 9: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_grade:
@@ -3045,12 +3032,12 @@ bool SrlProblem::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(90)) goto parse_state;
+        if (input->ExpectTag(82)) goto parse_state;
         break;
       }
 
-      // optional .protobuf.srl.school.State state = 11;
-      case 11: {
+      // optional .protobuf.srl.school.State state = 10;
+      case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_state:
@@ -3059,17 +3046,33 @@ bool SrlProblem::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(98)) goto parse_accessPermission;
+        if (input->ExpectTag(90)) goto parse_accessPermission;
         break;
       }
 
-      // optional .protobuf.srl.school.SrlPermission accessPermission = 12;
-      case 12: {
+      // optional .protobuf.srl.school.SrlPermission accessPermission = 11;
+      case 11: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_accessPermission:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_accesspermission()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(96)) goto parse_problemNumber;
+        break;
+      }
+
+      // optional int32 problemNumber = 12;
+      case 12: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_problemNumber:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &problemnumber_)));
+          set_has_problemnumber();
         } else {
           goto handle_uninterpreted;
         }
@@ -3155,36 +3158,35 @@ void SrlProblem::SerializeWithCachedSizes(
       7, this->probleminfo(), output);
   }
 
-  // repeated .protobuf.srl.school.DomainInformation info = 8;
-  for (int i = 0; i < this->info_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      8, this->info(i), output);
-  }
-
-  // optional string gradeWeight = 9;
+  // optional string gradeWeight = 8;
   if (has_gradeweight()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->gradeweight().data(), this->gradeweight().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      9, this->gradeweight(), output);
+      8, this->gradeweight(), output);
   }
 
-  // optional float grade = 10;
+  // optional float grade = 9;
   if (has_grade()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(10, this->grade(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(9, this->grade(), output);
   }
 
-  // optional .protobuf.srl.school.State state = 11;
+  // optional .protobuf.srl.school.State state = 10;
   if (has_state()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      11, this->state(), output);
+      10, this->state(), output);
   }
 
-  // optional .protobuf.srl.school.SrlPermission accessPermission = 12;
+  // optional .protobuf.srl.school.SrlPermission accessPermission = 11;
   if (has_accesspermission()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      12, this->accesspermission(), output);
+      11, this->accesspermission(), output);
+  }
+
+  // optional int32 problemNumber = 12;
+  if (has_problemnumber()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(12, this->problemnumber(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3262,40 +3264,38 @@ void SrlProblem::SerializeWithCachedSizes(
         7, this->probleminfo(), target);
   }
 
-  // repeated .protobuf.srl.school.DomainInformation info = 8;
-  for (int i = 0; i < this->info_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        8, this->info(i), target);
-  }
-
-  // optional string gradeWeight = 9;
+  // optional string gradeWeight = 8;
   if (has_gradeweight()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->gradeweight().data(), this->gradeweight().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        9, this->gradeweight(), target);
+        8, this->gradeweight(), target);
   }
 
-  // optional float grade = 10;
+  // optional float grade = 9;
   if (has_grade()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->grade(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(9, this->grade(), target);
   }
 
-  // optional .protobuf.srl.school.State state = 11;
+  // optional .protobuf.srl.school.State state = 10;
   if (has_state()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        11, this->state(), target);
+        10, this->state(), target);
   }
 
-  // optional .protobuf.srl.school.SrlPermission accessPermission = 12;
+  // optional .protobuf.srl.school.SrlPermission accessPermission = 11;
   if (has_accesspermission()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        12, this->accesspermission(), target);
+        11, this->accesspermission(), target);
+  }
+
+  // optional int32 problemNumber = 12;
+  if (has_problemnumber()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(12, this->problemnumber(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3358,43 +3358,42 @@ int SrlProblem::ByteSize() const {
           this->probleminfo());
     }
 
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional string gradeWeight = 9;
+    // optional string gradeWeight = 8;
     if (has_gradeweight()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->gradeweight());
     }
 
-    // optional float grade = 10;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional float grade = 9;
     if (has_grade()) {
       total_size += 1 + 4;
     }
 
-    // optional .protobuf.srl.school.State state = 11;
+    // optional .protobuf.srl.school.State state = 10;
     if (has_state()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->state());
     }
 
-    // optional .protobuf.srl.school.SrlPermission accessPermission = 12;
+    // optional .protobuf.srl.school.SrlPermission accessPermission = 11;
     if (has_accesspermission()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->accesspermission());
     }
 
-  }
-  // repeated .protobuf.srl.school.DomainInformation info = 8;
-  total_size += 1 * this->info_size();
-  for (int i = 0; i < this->info_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->info(i));
-  }
+    // optional int32 problemNumber = 12;
+    if (has_problemnumber()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->problemnumber());
+    }
 
+  }
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -3420,7 +3419,6 @@ void SrlProblem::MergeFrom(const ::google::protobuf::Message& from) {
 
 void SrlProblem::MergeFrom(const SrlProblem& from) {
   GOOGLE_CHECK_NE(&from, this);
-  info_.MergeFrom(from.info_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_id()) {
       set_id(from.id());
@@ -3443,11 +3441,11 @@ void SrlProblem::MergeFrom(const SrlProblem& from) {
     if (from.has_probleminfo()) {
       mutable_probleminfo()->::protobuf::srl::school::SrlBankProblem::MergeFrom(from.probleminfo());
     }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_gradeweight()) {
       set_gradeweight(from.gradeweight());
     }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_grade()) {
       set_grade(from.grade());
     }
@@ -3456,6 +3454,9 @@ void SrlProblem::MergeFrom(const SrlProblem& from) {
     }
     if (from.has_accesspermission()) {
       mutable_accesspermission()->::protobuf::srl::school::SrlPermission::MergeFrom(from.accesspermission());
+    }
+    if (from.has_problemnumber()) {
+      set_problemnumber(from.problemnumber());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -3491,11 +3492,11 @@ void SrlProblem::Swap(SrlProblem* other) {
     std::swap(name_, other->name_);
     std::swap(description_, other->description_);
     std::swap(probleminfo_, other->probleminfo_);
-    info_.Swap(&other->info_);
     std::swap(gradeweight_, other->gradeweight_);
     std::swap(grade_, other->grade_);
     std::swap(state_, other->state_);
     std::swap(accesspermission_, other->accesspermission_);
+    std::swap(problemnumber_, other->problemnumber_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

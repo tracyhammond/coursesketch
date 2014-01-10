@@ -1,15 +1,14 @@
 package protobuf.srl.submission;
 
-import "input/school.proto";
-import "input/sketch.proto";
-import "input/commands.proto";
+import "school.proto";
+
 /**
  * Contains extra metadata for an UpdateList
  */
 message SrlSubmission {
 	optional string id = 1;
-	optional protobuf.srl.commands.SrlUpdateList updateList = 2; // if this is a collection of updates
-	optional protobuf.srl.sketch.SrlSketch sketch = 3; // if this is a sketch.
+	optional bytes updateList = 2; // if this is a collection of updates
+	optional bytes sketch = 3; // if this is a sketch.
 }
 
 message SrlSolution {

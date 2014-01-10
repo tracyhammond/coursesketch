@@ -46,7 +46,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	public SubmissionServer( InetSocketAddress address ) {
 		super( address );
 	}
-	
+
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		System.out.println("Receiving message...");
@@ -61,6 +61,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 			try {
 				String resultantId = null;
 				if (updateHandler.addRequest(req)) {
+					System.out.println("Update is finished building!");
 					ByteString data = null;
 					if (updateHandler.isSolution(sessionInfo)) {
 						resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
@@ -70,6 +71,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 							data = builder.build().toByteString();
 						}
 					} else {
+						System.out.println("Saving experiment");
 						resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
 						if (resultantId != null) {
 							SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
@@ -113,21 +115,20 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Recognition Server: Version 1.0.2");
-		WebSocketImpl.DEBUG = true;
-		int port = 8888; // 843 flash policy port
+		System.out.println("Submission Server: Version 0.0.2.ant");
+		WebSocketImpl.DEBUG = false;
+		int port = 8883; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
 		SubmissionServer s = new SubmissionServer( port );
 		s.start();
-		System.out.println( "Recognition Server started on port: " + s.getPort() );
+		System.out.println( "Submission Server started on port: " + s.getPort() );
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();
-			s.sendToAll( in );
 			if( in.equals( "exit" ) ) {
 				s.stop();
 				break;
@@ -143,23 +144,6 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		ex.printStackTrace();
 		if( conn != null ) {
 			// some errors like port binding failed may not be assignable to a specific websocket
-		}
-	}
-
-	/**
-	 * Sends <var>text</var> to all currently connected WebSocket clients.
-	 * 
-	 * @param text
-	 *            The String to send across the network.
-	 * @throws InterruptedException
-	 *             When socket related I/O errors occur.
-	 */
-	public void sendToAll( String text ) {
-		Collection<WebSocket> con = connections();
-		synchronized ( con ) {
-			for( WebSocket c : con ) {
-				c.send( text );
-			}
 		}
 	}
 }

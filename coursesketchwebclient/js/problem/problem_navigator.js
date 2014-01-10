@@ -7,12 +7,14 @@
  */
 function schoolNavigator(assignmentId, dataManagerR, loop) {
 	var currentAssignmentId = assignmentId;
+	var currentAssignment;
 	var dataManager = dataManagerR;
 	var problemList = [];
 	var currentProblem;
 	var callbackList = [];
 	var currentIndex = 0;
 	var navScope = this;
+	var eventMappingCallback = {};
 	this.goToProblem = function goToProblem(index) {
 		changeProblem(index)
 	}
@@ -98,6 +100,15 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 		return getProblemInfo().questionText;
 	}
 
+	this.setSubmissionInformation = function(submission, isExperiment) {
+		if (isExperiment) {
+			console.log()
+			submission.courseId = currentProblem.courseId;
+			submission.assignmentId = currentProblem.assignmentId;
+			submission.problemId = currentProblem.id;
+			submission.submission.id = getProblemInfo().id;
+		}
+	}
 	/**
 	 * Returns the type of the base problem.
 	 *
@@ -125,6 +136,49 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 				problemList.push(problems[i]);
 			}
 		});
+		dataManager.getAssignment(assignmentId, function(assignment) {
+			currentAssignment = assignment;
+		});
 	}
 	this.reloadProblems();
+
+	this.addEventMapping = function(key, funct) {
+		if (isUndefined(eventMappingCallback[key])) {
+			var list = [];
+			list.push(funct);
+			eventMappingCallback[key] = list;
+		} else {
+			eventMappingCallback[key].push(funct);
+		}
+	}
+
+	this.removeEventMapping = function(key, funct) {
+		if (isUndefined(eventMappingCallback[key])) {
+			return;
+		}
+		removeObjectFromArray(eventMappingCallback[key], funct);
+	}
+
+	/**
+	 * Attempts to execute all of the events.
+	 *
+	 * The failure of one event should not affect the other events.
+	 * The order of events firing is not guaranteed.
+	 */
+	this.executeEvent = function(key, arguments) {
+		var list = eventMappingCallback[key];
+		if (isUndefined(eventMappingCallback[key])) {
+			return;
+		}
+		for (var i = 0; i <list.length; i++) {
+			(function(funct, args) {
+				setTimeout(function() {
+					funct(args);
+				}, 10);
+			})(list[i], arguments);
+		}
+	}
+
+	this.SUBMIT_EVENT = "submit";
+	this.COMPLETED_PROBLEM_EVENT = "completion";
 }

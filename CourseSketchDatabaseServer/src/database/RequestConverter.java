@@ -20,7 +20,7 @@ public class RequestConverter {
 		result.setMinute(date.getMinutes());
 		return result.build();
 	}
-	
+
 	public static DateTime getProtoFromDate(Date date) {
 		DateTime.Builder result = DateTime.newBuilder();
 		result.setYear(date.getYear() + 1900);
@@ -37,9 +37,9 @@ public class RequestConverter {
 	 * @return
 	 */
 	public static DateTime getProtoFromMilliseconds(long date) {
-	//	Calendar cal = Calendar.getInstance();
-	//	cal.setTimeInMillis(date);
-		return getProtoFromDate(new Date(date));
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(date);
+		return getProtoFromDate(cal);
 	}
 
 	public static Date getDateFromProto(DateTime date) {

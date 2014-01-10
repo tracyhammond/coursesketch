@@ -58,9 +58,14 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 		return new AnswerConnectionState(Encoder.nextID().toString());
 	}
 
+	public void reConnect() {
+		internalConnections.dropAllConnection(false, true);
+		internalConnections.connectServers(this);
+	}
+	
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
-		System.out.println("Receiving message...");
+		//System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
 
 		if (req == null) {
@@ -75,7 +80,8 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 				MultiConnectionState state = connectionToId.get(conn);
 				try {
 					SrlExperiment student = SrlExperiment.parseFrom(req.getOtherData());
-					((AnswerConnectionState) state).addPendingExperiment(req.getSessionInfo(),student);
+					((AnswerConnectionState) state).addPendingExperiment(req.getSessionInfo(), student);
+					System.out.println("Student exp " + student);
 					internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class); // pass submission on
 
 					// request the solution for checking  NOSHIP: need to actually retrieve answer.
@@ -86,6 +92,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 					itemRequest.setQuery(ItemQuery.SOLUTION);
 					itemRequest.addItemId(student.getProblemId());  // FIXME: this needs to change probably to make this work
 					internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(), state.getKey(), SolutionConnection.class);
+
 					return;
 				} catch (InvalidProtocolBufferException e) {
 					e.printStackTrace();
@@ -102,10 +109,10 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 	public void onFragment( WebSocket conn, Framedata fragment ) {
 		//System.out.println( "received fragment: " + fragment );
 	}
-	
+
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Answer Server: Version 1.0.2");
-		WebSocketImpl.DEBUG = true;
+		System.out.println("Answer Server: Version 0.0.1");
+		WebSocketImpl.DEBUG = false;
 		int port = 8884; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
@@ -114,6 +121,9 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 		AnswerCheckerServer s = new AnswerCheckerServer( port );
 		s.start();
 		System.out.println( "Answer Server started on port: " + s.getPort() );
+
+		System.out.println("Connecting to servers...");
+		s.reConnect();
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
@@ -125,6 +135,9 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 				s.stop();
 				s.start();
 				break;
+			} else if( in.equals( "reconnect")) {
+				System.out.println("Attempting to recoonect");
+				s.reConnect();
 			}
 		}
 	}

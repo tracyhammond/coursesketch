@@ -12,6 +12,8 @@
 
 	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
 	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+	<script type="text/javascript" src="js/connection/submission.js"></script>
+	<script type="text/javascript" src="js/input/highlighter.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
     	parent.copyParentUtilityFunctions(this);
@@ -23,8 +25,10 @@
 		var canvasContext = false;
 		var Long = false;
 		var commandManager = false;
+		var highlighter = false;
 
 	    function initializeInput() {
+	    	var ProtoSubmissionBuilder = parent.ProtoSubmissionBuilder;
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
 			canvasContext = input.canvasContext;
@@ -32,6 +36,8 @@
 			sketch = new SRL_Sketch();
 			sketch.canvasContext = canvasContext;
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+			highlighter = new Highlighter(input, sketch, callback, canvasContext);
+
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
 					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommand);
 			serverConnection.setRecognitionListener(function(evt, message) {
@@ -40,6 +46,33 @@
 					var update = parent.ProtoSrlUpdate.decode(data);
 					commandManager.addUpdate(update, true);
 				}
+			});
+
+			var submitFunction = function() {
+				var experiment = new ProtoSubmissionBuilder.SrlExperiment();
+				experiment.submission = new ProtoSubmissionBuilder.SrlSubmission();
+				parent.problemNavigator.setSubmissionInformation(experiment, true);
+
+				submitUpdateList(serverConnection, commandManager.getUpdates(), [ProtoUpdateCommand, ProtoSubmissionBuilder], experiment,
+						Request.MessageType.SUBMISSION, displayBar, updateBar, finishBar);
+			};
+			parent.problemNavigator.addEventMapping("submit", submitFunction);
+
+			var feedbackFunction = function(args) {
+				console.log(args);
+				event = args[0];
+				msg = args[1];
+				if (msg.responseText) {
+					alert(msg.responseText);
+				} else {
+					alert("GETTING FEEDBACK!");
+				}
+			};
+			parent.problemNavigator.addEventMapping("feedback", feedbackFunction);
+
+			window.addEventListener("beforeunload", function( e ) {
+				parent.problemNavigator.removeEventMapping("submit", submitFunction);
+				parent.problemNavigator.removeEventMapping("feedback", feedbackFunction); 
 			});
 		}
 
@@ -61,6 +94,16 @@
 			var update = serverConnection.createUpdateFromCommands(array);
 			commandManager.addUpdate(update, false);
 	    }
+
+	    function displayBar() {
+	    	document.getElementById("PercentBar").style = "display:block;position:absolute;left:20px;top:20px;"
+	    }
+	    function updateBar(index, total) {
+	    	document.getElementById("PercentBar").innerHTML = "" + (index/total) * 100 + "% total: "+total;
+ 	    }
+	    function finishBar() {
+	    	alert("done submitting");
+	    }
 	</script>
 	<script type="text/javascript">
 		(function(scope){
@@ -71,7 +114,7 @@
 	  		});
 
 			scope.window.onresize = function() {
-				fillScreen(scope, 'drawingCanvas');
+				scope.fillScreen(scope, 'drawingCanvas');
 				sketch.drawEntireSketch();
 			}
 		})(this);
@@ -85,5 +128,6 @@
 	</style>
 </head>
 <body>
+	<div id = "PercentBar">0%</div>
 	<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
 </body>

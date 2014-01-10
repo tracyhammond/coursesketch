@@ -156,15 +156,10 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		ProxyServer s = new ProxyServer( port );
 		s.start();
 		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
-		
-		//attempt to connect to recognition
-		//attempt to connect to answer server
-		//attempt to connect to user database
-		
+
 		System.out.println("Connecting to servers...");
-		//serverManager.connectServers(s);
 		s.reConnect();
-		
+
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();

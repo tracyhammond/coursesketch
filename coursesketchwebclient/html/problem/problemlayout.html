@@ -16,15 +16,38 @@
 	</script>
 	<script>
 		var problemNavigator = new schoolNavigator(parent.dataManager.getState("CURRENT_ASSIGNMENT"),parent.dataManager, false);
+		connection.setAnswerCheckingListener(function(event, msg) {
+			problemNavigator.executeEvent('feedback', [event, msg]);
+		});
 	</script>
 	<script>
 	(function(scriptScope) {
+		/**
+		* Resizes the height of the navbar based on the height of the content
+		*/
 		scriptScope.loadNav = function(callerScope) {
 			callerScope.document.getElementById("panelWrapper").onresize = function() {
 				if (this.offsetHeight > 100) {
-					alert("resiszing iframe");
 					scriptScope.setHeightToContent(scriptScope, "nav_iframe", "panelWrapper", 5);
 				}
+			};
+			callerScope.document.getElementById("panelWrapper").onresize();
+		}
+		/**
+		* Resizes the width of the toolbar based on the width of the content.
+		*
+		* Also moves the content so that it is positioned at the right side	
+		*/
+		scriptScope.loadTool = function(callerScope) {
+			callerScope.document.getElementById("panelWrapper").onresize = function() {
+				var width = this.offsetWidth + 10;
+				var height = this.offsetHeight + 10;
+				scriptScope.document.getElementById('toolHolder').style.width = width +'px';
+				scriptScope.document.getElementById('toolHolder').style.height = height +'px';
+				scriptScope.document.getElementById('toolHolder').style.right = '5px';
+				scriptScope.setWidthToContent(scriptScope, "tool_iframe", "panelWrapper", 5);
+				scriptScope.setHeightToContent(scriptScope, "tool_iframe", "panelWrapper", 5);
+				
 			};
 			callerScope.document.getElementById("panelWrapper").onresize();
 		}
@@ -44,6 +67,9 @@
 		});
 		scriptScope.window.onresize = function() {
 			fillHeight(scriptScope, 'problem_iframe');
+			var navBar = scriptScope.document.getElementById('nav_iframe');
+			var displacement = navBar.offsetHeight;
+			scriptScope.document.getElementById('toolHolder').style.top = displacement+'px';
 		}
 	})(this);
 	function onLoad() {
@@ -59,8 +85,9 @@
 	<!-- include problem panel here! -->
 	<iframe id = "problem_iframe" src = "/html/problem/problemType/defaultPanel.html" frameborder="0" width=100% height=100% style ="width:100%;height:100%;"></iframe>
 
-	<div id = "tool_panel">
-	<!-- include panel for tools here! -->
+	<!-- include problem panel here! -->
+	<div id = "toolHolder" style = "position:absolute; right:5px; top:5px;">
+	<iframe id = "tool_iframe" src = "/html/problem/toolPanel.html" scrolling="no" frameborder="0" width=100% height=100% style ="width:100%;height:100%;" ></iframe>
 	</div>
 </body>
 </html>
