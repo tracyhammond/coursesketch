@@ -34,8 +34,10 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public static final int MAX_CONNECTIONS = 60; // sets see if this works!
 
 	public static final int STATE_INVALID_LOGIN = 4002;
+	public static final int STATE_CLIENT_CLOSE = 4003;
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
+	public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
 
 	//private ExampleClient login = connectLogin(this, connectionType);
 	private ProxyConnectionManager serverManager = new ProxyConnectionManager(this);
@@ -53,7 +55,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		serverManager.dropAllConnection(false, true);
 		serverManager.connectServers(this);
 	}
-	
+
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 		super.onOpen(conn, handshake);
 		System.out.println("Recieving connection " + connectionToId.size());
@@ -66,6 +68,11 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
+		if (req.getRequestType().equals(Request.MessageType.CLOSE)) {
+			System.out.println("CLOSE THE SERVER FROM THE CLIENT");
+			conn.close(STATE_CLIENT_CLOSE, CLIENT_CLOSE_MESSAGE);
+			return;
+		}
 		LoginConnectionState state = (LoginConnectionState) connectionToId.get(conn);
 
 		if (req == null) {

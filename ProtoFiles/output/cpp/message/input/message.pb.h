@@ -47,11 +47,12 @@ enum Request_MessageType {
   Request_MessageType_DATA_REMOVE = 4,
   Request_MessageType_RECOGNITION = 5,
   Request_MessageType_LOADING = 6,
-  Request_MessageType_SUBMISSION = 7
+  Request_MessageType_SUBMISSION = 7,
+  Request_MessageType_CLOSE = 8
 };
 bool Request_MessageType_IsValid(int value);
 const Request_MessageType Request_MessageType_MessageType_MIN = Request_MessageType_LOGIN;
-const Request_MessageType Request_MessageType_MessageType_MAX = Request_MessageType_SUBMISSION;
+const Request_MessageType Request_MessageType_MessageType_MAX = Request_MessageType_CLOSE;
 const int Request_MessageType_MessageType_ARRAYSIZE = Request_MessageType_MessageType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* Request_MessageType_descriptor();
@@ -127,6 +128,7 @@ class Request : public ::google::protobuf::Message {
   static const MessageType RECOGNITION = Request_MessageType_RECOGNITION;
   static const MessageType LOADING = Request_MessageType_LOADING;
   static const MessageType SUBMISSION = Request_MessageType_SUBMISSION;
+  static const MessageType CLOSE = Request_MessageType_CLOSE;
   static inline bool MessageType_IsValid(int value) {
     return Request_MessageType_IsValid(value);
   }

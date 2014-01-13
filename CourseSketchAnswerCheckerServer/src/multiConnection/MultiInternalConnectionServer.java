@@ -57,6 +57,9 @@ public abstract class MultiInternalConnectionServer extends WebSocketServer {
 	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
 		System.out.println( conn + " has disconnected from Recognition.");
 		connections.remove(conn);
+		MultiConnectionState id = connectionToId.remove(conn);
+		idToConnection.remove(id);
+		idToState.remove(id.getKey());
 	}
 
 	@Override
