@@ -106,7 +106,6 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 			submission.courseId = currentProblem.courseId;
 			submission.assignmentId = currentProblem.assignmentId;
 			submission.problemId = currentProblem.id;
-			submission.submission.id = getProblemInfo().id;
 		}
 	}
 	/**
