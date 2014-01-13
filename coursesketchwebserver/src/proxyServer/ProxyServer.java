@@ -19,6 +19,7 @@ import multiConnection.WrapperConnection;
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
+import org.java_websocket.handshake.ClientHandshake;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -51,6 +52,11 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public void reConnect() {
 		serverManager.dropAllConnection(false, true);
 		serverManager.connectServers(this);
+	}
+	
+	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
+		super.onOpen(conn, handshake);
+		System.out.println("Recieving connection " + connectionToId.size());
 	}
 
 	/**
@@ -145,6 +151,9 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		return new ProxyConnectionState(Encoder.nextID().toString());
 	}
 
+	public int getCurrentConnectionNumber() {
+		return super.connectionToId.size();
+	}
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Proxy Server: Version 1.0.2.lemur");
 		WebSocketImpl.DEBUG = true;
@@ -175,6 +184,8 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			} else if( in.equals( "reconnect")) {
 				System.out.println("Attempting to recoonect");
 				s.reConnect();
+			} else if(in.equals("connectionNumber")) {
+				System.out.println(s.getCurrentConnectionNumber());
 			}
 		}
 		System.out.println("Closing down server! Forcefully");
