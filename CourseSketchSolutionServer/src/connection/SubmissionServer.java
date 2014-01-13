@@ -64,19 +64,29 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 					System.out.println("Update is finished building!");
 					ByteString data = null;
 					if (updateHandler.isSolution(sessionInfo)) {
-						resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
-						if (resultantId != null) {
-							SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
-							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
-							data = builder.build().toByteString();
+						if (updateHandler.hasSubmissionId(sessionInfo)) {
+							resultantId = updateHandler.getSubmissionId(sessionInfo);
+							DatabaseClient.updateSolution(resultantId);
+						} else {
+							resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
+							if (resultantId != null) {
+								SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
+								builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
+								data = builder.build().toByteString();
+							}
 						}
 					} else {
-						System.out.println("Saving experiment");
-						resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
-						if (resultantId != null) {
-							SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
-							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
-							data = builder.build().toByteString();
+						if (updateHandler.hasSubmissionId(sessionInfo)) {
+							resultantId = updateHandler.getSubmissionId(sessionInfo);
+							DatabaseClient.updateExperiment(resultantId);
+						} else {
+							System.out.println("Saving experiment");
+							resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
+							if (resultantId != null) {
+								SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
+								builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
+								data = builder.build().toByteString();
+							}
 						}
 					}
 					if (resultantId != null) {

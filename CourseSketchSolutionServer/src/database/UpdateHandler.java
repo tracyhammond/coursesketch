@@ -62,6 +62,14 @@ public class UpdateHandler {
 		return sessionToInstance.get(req.getSessionInfo()).addRequest(updates);
 	}
 
+	public boolean hasSubmissionId(String sessionInfo) {
+		return ((SubmissionInstance) sessionToInstance.get(sessionInfo)).hasId();
+	}
+	
+	public String getSubmissionId(String sessionInfo) {
+		return ((SubmissionInstance) sessionToInstance.get(sessionInfo)).getId();
+	}
+
 	public boolean isSolution(String sessionInfo) {
 		return ((SubmissionInstance) sessionToInstance.get(sessionInfo)).isSolution();
 	}
@@ -179,6 +187,8 @@ public class UpdateHandler {
 	private class SubmissionInstance extends ListInstance {
 		com.google.protobuf.GeneratedMessage submission = null;
 		private boolean isSolution = false;
+		private boolean hasId = false;
+		private String id = null;
 		public boolean isSolution() {
 			return isSolution;
 		}
@@ -186,11 +196,15 @@ public class UpdateHandler {
 		public void setExperiment(SrlExperiment experiment) {
 			isSolution = false;
 			submission = experiment;
+			hasId = experiment.getSubmission().hasId();
+			id = experiment.getSubmission().getId();
 		}
 		
 		public void setSolution(SrlSolution solution) {
 			isSolution = true;
 			submission = solution;
+			hasId = solution.getSubmission().hasId();
+			id = solution.getSubmission().getId();
 		}
 
 		public SrlSolution getSolution() throws Exception {
@@ -229,6 +243,14 @@ public class UpdateHandler {
 			}
 			newSubmission.setUpdateList(this.result.toByteString());
 			return builder.setSubmission(newSubmission).build();
+		}
+		
+		public boolean hasId() {
+			return hasId;
+		}
+		
+		String getId() {
+			return id;
 		}
 	}
 }
