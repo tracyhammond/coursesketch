@@ -28,8 +28,8 @@
 	var connected = false;
 	function createWebSocket() {
 		console.log("connecting");
-		//var wsUri = "srl01.tamu.edu:8888"; // our server
-		var wsUri = "localhost:8888"; // local server
+		var wsUri = "srl01.tamu.edu:8888"; // our server
+		//var wsUri = "localhost:8888"; // local server
 		connection = new Connection(wsUri, false, true);
 
 		connection.setOnCloseListener(function(evt, attemptingToReconnect) {

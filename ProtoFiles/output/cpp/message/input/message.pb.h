@@ -216,6 +216,13 @@ class Request : public ::google::protobuf::Message {
   inline ::std::string* release_serversideid();
   inline void set_allocated_serversideid(::std::string* serversideid);
 
+  // optional int64 messageTime = 7;
+  inline bool has_messagetime() const;
+  inline void clear_messagetime();
+  static const int kMessageTimeFieldNumber = 7;
+  inline ::google::protobuf::int64 messagetime() const;
+  inline void set_messagetime(::google::protobuf::int64 value);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.request.Request)
  private:
   inline void set_has_requesttype();
@@ -230,6 +237,8 @@ class Request : public ::google::protobuf::Message {
   inline void clear_has_sessioninfo();
   inline void set_has_serversideid();
   inline void clear_has_serversideid();
+  inline void set_has_messagetime();
+  inline void clear_has_messagetime();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -238,10 +247,11 @@ class Request : public ::google::protobuf::Message {
   ::std::string* responsetext_;
   ::std::string* sessioninfo_;
   ::std::string* serversideid_;
+  ::google::protobuf::int64 messagetime_;
   int requesttype_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fmessage_2eproto();
   friend void protobuf_AssignDesc_input_2fmessage_2eproto();
@@ -758,6 +768,28 @@ inline void Request::set_allocated_serversideid(::std::string* serversideid) {
     clear_has_serversideid();
     serversideid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// optional int64 messageTime = 7;
+inline bool Request::has_messagetime() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Request::set_has_messagetime() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Request::clear_has_messagetime() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Request::clear_messagetime() {
+  messagetime_ = GOOGLE_LONGLONG(0);
+  clear_has_messagetime();
+}
+inline ::google::protobuf::int64 Request::messagetime() const {
+  return messagetime_;
+}
+inline void Request::set_messagetime(::google::protobuf::int64 value) {
+  set_has_messagetime();
+  messagetime_ = value;
 }
 
 // -------------------------------------------------------------------

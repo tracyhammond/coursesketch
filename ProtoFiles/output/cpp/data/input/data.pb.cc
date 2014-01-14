@@ -102,9 +102,8 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DataSend));
   ItemSend_descriptor_ = file->message_type(3);
-  static const int ItemSend_offsets_[3] = {
+  static const int ItemSend_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemSend, query_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemSend, isinsert_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemSend, data_),
   };
   ItemSend_reflection_ =
@@ -226,20 +225,20 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
     "itemId\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.s"
     "rl.query.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014"
     "\"7\n\010DataSend\022+\n\005items\030\003 \003(\0132\034.protobuf.s"
-    "rl.query.ItemSend\"X\n\010ItemSend\022,\n\005query\030\001"
-    " \001(\0162\035.protobuf.srl.query.ItemQuery\022\020\n\010i"
-    "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResul"
-    "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query."
-    "ItemResult\"\\\n\nItemResult\022,\n\005query\030\001 \001(\0162"
-    "\035.protobuf.srl.query.ItemQuery\022\022\n\nreturn"
-    "Text\030\002 \001(\t\022\014\n\004data\030\003 \001(\014\"\026\n\006IdList\022\014\n\004li"
-    "st\030\001 \003(\t*\375\001\n\tItemQuery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377"
-    "\377\001\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE"
-    "_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROU"
-    "P\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010S"
-    "OLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n"
-    "\rCOURSE_SEARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REG"
-    "ISTER\020\014\022\017\n\013COURSE_LIST\020\r", 784);
+    "rl.query.ItemSend\"F\n\010ItemSend\022,\n\005query\030\001"
+    " \001(\0162\035.protobuf.srl.query.ItemQuery\022\014\n\004d"
+    "ata\030\003 \001(\014\"=\n\nDataResult\022/\n\007results\030\001 \003(\013"
+    "2\036.protobuf.srl.query.ItemResult\"\\\n\nItem"
+    "Result\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.que"
+    "ry.ItemQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004data"
+    "\030\003 \001(\014\"\026\n\006IdList\022\014\n\004list\030\001 \003(\t*\375\001\n\tItemQ"
+    "uery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\n"
+    "ASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK"
+    "_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE"
+    "\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPER"
+    "IMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017"
+    "\n\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013COURSE_"
+    "LIST\020\r", 766);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/data.proto", &protobuf_RegisterTypes);
   DataRequest::default_instance_ = new DataRequest();
@@ -1014,7 +1013,6 @@ void DataSend::Swap(DataSend* other) {
 
 #ifndef _MSC_VER
 const int ItemSend::kQueryFieldNumber;
-const int ItemSend::kIsInsertFieldNumber;
 const int ItemSend::kDataFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1035,7 +1033,6 @@ ItemSend::ItemSend(const ItemSend& from)
 void ItemSend::SharedCtor() {
   _cached_size_ = 0;
   query_ = -1;
-  isinsert_ = false;
   data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -1076,7 +1073,6 @@ ItemSend* ItemSend::New() const {
 void ItemSend::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     query_ = -1;
-    isinsert_ = false;
     if (has_data()) {
       if (data_ != &::google::protobuf::internal::kEmptyString) {
         data_->clear();
@@ -1106,22 +1102,6 @@ bool ItemSend::MergePartialFromCodedStream(
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(16)) goto parse_isInsert;
-        break;
-      }
-
-      // optional bool isInsert = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_isInsert:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &isinsert_)));
-          set_has_isinsert();
         } else {
           goto handle_uninterpreted;
         }
@@ -1167,11 +1147,6 @@ void ItemSend::SerializeWithCachedSizes(
       1, this->query(), output);
   }
 
-  // optional bool isInsert = 2;
-  if (has_isinsert()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->isinsert(), output);
-  }
-
   // optional bytes data = 3;
   if (has_data()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
@@ -1190,11 +1165,6 @@ void ItemSend::SerializeWithCachedSizes(
   if (has_query()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->query(), target);
-  }
-
-  // optional bool isInsert = 2;
-  if (has_isinsert()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->isinsert(), target);
   }
 
   // optional bytes data = 3;
@@ -1219,11 +1189,6 @@ int ItemSend::ByteSize() const {
     if (has_query()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->query());
-    }
-
-    // optional bool isInsert = 2;
-    if (has_isinsert()) {
-      total_size += 1 + 1;
     }
 
     // optional bytes data = 3;
@@ -1263,9 +1228,6 @@ void ItemSend::MergeFrom(const ItemSend& from) {
     if (from.has_query()) {
       set_query(from.query());
     }
-    if (from.has_isinsert()) {
-      set_isinsert(from.isinsert());
-    }
     if (from.has_data()) {
       set_data(from.data());
     }
@@ -1293,7 +1255,6 @@ bool ItemSend::IsInitialized() const {
 void ItemSend::Swap(ItemSend* other) {
   if (other != this) {
     std::swap(query_, other->query_);
-    std::swap(isinsert_, other->isinsert_);
     std::swap(data_, other->data_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

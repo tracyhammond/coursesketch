@@ -2344,24 +2344,6 @@ public final class Data {
      */
     protobuf.srl.query.Data.ItemQuery getQuery();
 
-    // optional bool isInsert = 2;
-    /**
-     * <code>optional bool isInsert = 2;</code>
-     *
-     * <pre>
-     * true if inserting, false if updating
-     * </pre>
-     */
-    boolean hasIsInsert();
-    /**
-     * <code>optional bool isInsert = 2;</code>
-     *
-     * <pre>
-     * true if inserting, false if updating
-     * </pre>
-     */
-    boolean getIsInsert();
-
     // optional bytes data = 3;
     /**
      * <code>optional bytes data = 3;</code>
@@ -2434,13 +2416,8 @@ public final class Data {
               }
               break;
             }
-            case 16: {
-              bitField0_ |= 0x00000002;
-              isInsert_ = input.readBool();
-              break;
-            }
             case 26: {
-              bitField0_ |= 0x00000004;
+              bitField0_ |= 0x00000002;
               data_ = input.readBytes();
               break;
             }
@@ -2500,30 +2477,6 @@ public final class Data {
       return query_;
     }
 
-    // optional bool isInsert = 2;
-    public static final int ISINSERT_FIELD_NUMBER = 2;
-    private boolean isInsert_;
-    /**
-     * <code>optional bool isInsert = 2;</code>
-     *
-     * <pre>
-     * true if inserting, false if updating
-     * </pre>
-     */
-    public boolean hasIsInsert() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional bool isInsert = 2;</code>
-     *
-     * <pre>
-     * true if inserting, false if updating
-     * </pre>
-     */
-    public boolean getIsInsert() {
-      return isInsert_;
-    }
-
     // optional bytes data = 3;
     public static final int DATA_FIELD_NUMBER = 3;
     private com.google.protobuf.ByteString data_;
@@ -2531,7 +2484,7 @@ public final class Data {
      * <code>optional bytes data = 3;</code>
      */
     public boolean hasData() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>optional bytes data = 3;</code>
@@ -2542,7 +2495,6 @@ public final class Data {
 
     private void initFields() {
       query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
-      isInsert_ = false;
       data_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
@@ -2561,9 +2513,6 @@ public final class Data {
         output.writeEnum(1, query_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBool(2, isInsert_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, data_);
       }
       getUnknownFields().writeTo(output);
@@ -2580,10 +2529,6 @@ public final class Data {
           .computeEnumSize(1, query_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(2, isInsert_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, data_);
       }
@@ -2705,10 +2650,8 @@ public final class Data {
         super.clear();
         query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
         bitField0_ = (bitField0_ & ~0x00000001);
-        isInsert_ = false;
-        bitField0_ = (bitField0_ & ~0x00000002);
         data_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -2744,10 +2687,6 @@ public final class Data {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.isInsert_ = isInsert_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
         result.data_ = data_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -2767,9 +2706,6 @@ public final class Data {
         if (other == protobuf.srl.query.Data.ItemSend.getDefaultInstance()) return this;
         if (other.hasQuery()) {
           setQuery(other.getQuery());
-        }
-        if (other.hasIsInsert()) {
-          setIsInsert(other.getIsInsert());
         }
         if (other.hasData()) {
           setData(other.getData());
@@ -2837,62 +2773,13 @@ public final class Data {
         return this;
       }
 
-      // optional bool isInsert = 2;
-      private boolean isInsert_ ;
-      /**
-       * <code>optional bool isInsert = 2;</code>
-       *
-       * <pre>
-       * true if inserting, false if updating
-       * </pre>
-       */
-      public boolean hasIsInsert() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional bool isInsert = 2;</code>
-       *
-       * <pre>
-       * true if inserting, false if updating
-       * </pre>
-       */
-      public boolean getIsInsert() {
-        return isInsert_;
-      }
-      /**
-       * <code>optional bool isInsert = 2;</code>
-       *
-       * <pre>
-       * true if inserting, false if updating
-       * </pre>
-       */
-      public Builder setIsInsert(boolean value) {
-        bitField0_ |= 0x00000002;
-        isInsert_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool isInsert = 2;</code>
-       *
-       * <pre>
-       * true if inserting, false if updating
-       * </pre>
-       */
-      public Builder clearIsInsert() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        isInsert_ = false;
-        onChanged();
-        return this;
-      }
-
       // optional bytes data = 3;
       private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <code>optional bytes data = 3;</code>
        */
       public boolean hasData() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>optional bytes data = 3;</code>
@@ -2907,7 +2794,7 @@ public final class Data {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000002;
         data_ = value;
         onChanged();
         return this;
@@ -2916,7 +2803,7 @@ public final class Data {
        * <code>optional bytes data = 3;</code>
        */
       public Builder clearData() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         data_ = getDefaultInstance().getData();
         onChanged();
         return this;
@@ -4819,20 +4706,20 @@ public final class Data {
       "itemId\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.s" +
       "rl.query.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014" +
       "\"7\n\010DataSend\022+\n\005items\030\003 \003(\0132\034.protobuf.s" +
-      "rl.query.ItemSend\"X\n\010ItemSend\022,\n\005query\030\001" +
-      " \001(\0162\035.protobuf.srl.query.ItemQuery\022\020\n\010i" +
-      "sInsert\030\002 \001(\010\022\014\n\004data\030\003 \001(\014\"=\n\nDataResul" +
-      "t\022/\n\007results\030\001 \003(\0132\036.protobuf.srl.query.",
-      "ItemResult\"\\\n\nItemResult\022,\n\005query\030\001 \001(\0162" +
-      "\035.protobuf.srl.query.ItemQuery\022\022\n\nreturn" +
-      "Text\030\002 \001(\t\022\014\n\004data\030\003 \001(\014\"\026\n\006IdList\022\014\n\004li" +
-      "st\030\001 \003(\t*\375\001\n\tItemQuery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377" +
-      "\377\001\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE" +
-      "_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROU" +
-      "P\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010S" +
-      "OLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n" +
-      "\rCOURSE_SEARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REG" +
-      "ISTER\020\014\022\017\n\013COURSE_LIST\020\r"
+      "rl.query.ItemSend\"F\n\010ItemSend\022,\n\005query\030\001" +
+      " \001(\0162\035.protobuf.srl.query.ItemQuery\022\014\n\004d" +
+      "ata\030\003 \001(\014\"=\n\nDataResult\022/\n\007results\030\001 \003(\013" +
+      "2\036.protobuf.srl.query.ItemResult\"\\\n\nItem",
+      "Result\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.que" +
+      "ry.ItemQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004data" +
+      "\030\003 \001(\014\"\026\n\006IdList\022\014\n\004list\030\001 \003(\t*\375\001\n\tItemQ" +
+      "uery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\n" +
+      "ASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK" +
+      "_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE" +
+      "\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPER" +
+      "IMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017" +
+      "\n\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013COURSE_" +
+      "LIST\020\r"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4862,7 +4749,7 @@ public final class Data {
           internal_static_protobuf_srl_query_ItemSend_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ItemSend_descriptor,
-              new java.lang.String[] { "Query", "IsInsert", "Data", });
+              new java.lang.String[] { "Query", "Data", });
           internal_static_protobuf_srl_query_DataResult_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_protobuf_srl_query_DataResult_fieldAccessorTable = new

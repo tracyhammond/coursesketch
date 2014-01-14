@@ -34,7 +34,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 			e.printStackTrace();
 		}
 		try {
-			createAndAddConnection(serv, connectLocally, "srl03.tamu.edu", 8884, AnswerConnection.class);
+			createAndAddConnection(serv, connectLocally, "srl04.tamu.edu", 8884, AnswerConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

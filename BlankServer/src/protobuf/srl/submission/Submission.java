@@ -61,6 +61,16 @@ public final class Submission {
      * </pre>
      */
     com.google.protobuf.ByteString getSketch();
+
+    // optional int64 submissionTime = 4;
+    /**
+     * <code>optional int64 submissionTime = 4;</code>
+     */
+    boolean hasSubmissionTime();
+    /**
+     * <code>optional int64 submissionTime = 4;</code>
+     */
+    long getSubmissionTime();
   }
   /**
    * Protobuf type {@code protobuf.srl.submission.SrlSubmission}
@@ -131,6 +141,11 @@ public final class Submission {
             case 26: {
               bitField0_ |= 0x00000004;
               sketch_ = input.readBytes();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              submissionTime_ = input.readInt64();
               break;
             }
           }
@@ -264,10 +279,27 @@ public final class Submission {
       return sketch_;
     }
 
+    // optional int64 submissionTime = 4;
+    public static final int SUBMISSIONTIME_FIELD_NUMBER = 4;
+    private long submissionTime_;
+    /**
+     * <code>optional int64 submissionTime = 4;</code>
+     */
+    public boolean hasSubmissionTime() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional int64 submissionTime = 4;</code>
+     */
+    public long getSubmissionTime() {
+      return submissionTime_;
+    }
+
     private void initFields() {
       id_ = "";
       updateList_ = com.google.protobuf.ByteString.EMPTY;
       sketch_ = com.google.protobuf.ByteString.EMPTY;
+      submissionTime_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -290,6 +322,9 @@ public final class Submission {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, sketch_);
       }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt64(4, submissionTime_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -310,6 +345,10 @@ public final class Submission {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, sketch_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(4, submissionTime_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -438,6 +477,8 @@ public final class Submission {
         bitField0_ = (bitField0_ & ~0x00000002);
         sketch_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
+        submissionTime_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -478,6 +519,10 @@ public final class Submission {
           to_bitField0_ |= 0x00000004;
         }
         result.sketch_ = sketch_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.submissionTime_ = submissionTime_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -504,6 +549,9 @@ public final class Submission {
         }
         if (other.hasSketch()) {
           setSketch(other.getSketch());
+        }
+        if (other.hasSubmissionTime()) {
+          setSubmissionTime(other.getSubmissionTime());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -706,6 +754,39 @@ public final class Submission {
       public Builder clearSketch() {
         bitField0_ = (bitField0_ & ~0x00000004);
         sketch_ = getDefaultInstance().getSketch();
+        onChanged();
+        return this;
+      }
+
+      // optional int64 submissionTime = 4;
+      private long submissionTime_ ;
+      /**
+       * <code>optional int64 submissionTime = 4;</code>
+       */
+      public boolean hasSubmissionTime() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional int64 submissionTime = 4;</code>
+       */
+      public long getSubmissionTime() {
+        return submissionTime_;
+      }
+      /**
+       * <code>optional int64 submissionTime = 4;</code>
+       */
+      public Builder setSubmissionTime(long value) {
+        bitField0_ |= 0x00000008;
+        submissionTime_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int64 submissionTime = 4;</code>
+       */
+      public Builder clearSubmissionTime() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        submissionTime_ = 0L;
         onChanged();
         return this;
       }
@@ -2758,16 +2839,17 @@ public final class Submission {
   static {
     java.lang.String[] descriptorData = {
       "\n\026input/submission.proto\022\027protobuf.srl.s" +
-      "ubmission\"?\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022\022" +
-      "\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\"\231\001\n\013S" +
-      "rlSolution\022\034\n\024allowedInProblemBank\030\001 \001(\010" +
-      "\022\031\n\021isPracticeProblem\030\002 \001(\010\022:\n\nsubmissio" +
-      "n\030\003 \001(\0132&.protobuf.srl.submission.SrlSub" +
-      "mission\022\025\n\rproblemBankId\030\004 \001(\t\"\226\001\n\rSrlEx" +
-      "periment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignment" +
-      "Id\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId\030\005 " +
-      "\001(\t\022:\n\nsubmission\030\006 \001(\0132&.protobuf.srl.s",
-      "ubmission.SrlSubmission"
+      "ubmission\"W\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022\022" +
+      "\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\022\026\n\016su" +
+      "bmissionTime\030\004 \001(\003\"\231\001\n\013SrlSolution\022\034\n\024al" +
+      "lowedInProblemBank\030\001 \001(\010\022\031\n\021isPracticePr" +
+      "oblem\030\002 \001(\010\022:\n\nsubmission\030\003 \001(\0132&.protob" +
+      "uf.srl.submission.SrlSubmission\022\025\n\rprobl" +
+      "emBankId\030\004 \001(\t\"\226\001\n\rSrlExperiment\022\020\n\010cour" +
+      "seId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tprob" +
+      "lemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022:\n\nsubmissio",
+      "n\030\006 \001(\0132&.protobuf.srl.submission.SrlSub" +
+      "mission"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2779,7 +2861,7 @@ public final class Submission {
           internal_static_protobuf_srl_submission_SrlSubmission_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_submission_SrlSubmission_descriptor,
-              new java.lang.String[] { "Id", "UpdateList", "Sketch", });
+              new java.lang.String[] { "Id", "UpdateList", "Sketch", "SubmissionTime", });
           internal_static_protobuf_srl_submission_SrlSolution_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_submission_SrlSolution_fieldAccessorTable = new

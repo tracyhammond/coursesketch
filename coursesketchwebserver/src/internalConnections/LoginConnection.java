@@ -41,7 +41,6 @@ public class LoginConnection extends WrapperConnection {
 			createUser.setRequestType(MessageType.DATA_INSERT);
 			DataSend.Builder dataSend = DataSend.newBuilder();
 			ItemSend.Builder itemSend = ItemSend.newBuilder();
-			itemSend.setIsInsert(true);
 			itemSend.setQuery(ItemQuery.USER_INFO);
 			SrlUser.Builder user = SrlUser.newBuilder();
 			user.setEmail(r.getLogin().getEmail());

@@ -103,7 +103,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 					ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
 					itemRequest.setQuery(ItemQuery.SOLUTION);
 					itemRequest.addItemId(student.getProblemId());  // FIXME: this needs to change probably to make this work
-					internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(), state.getKey(), SolutionConnection.class);
+					//internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(), state.getKey(), SolutionConnection.class);
 					return;
 				}
 			} else {

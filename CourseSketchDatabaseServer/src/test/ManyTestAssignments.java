@@ -13,7 +13,7 @@ import database.institution.Institution;
 public class ManyTestAssignments {
 	public static void testAssignments(String courseId) {
 		String[] name = new String[]{"Assignment1", "Assignment2", "Assignment3", "Assignmen4", "Assignment5"};
-		String[] descsription = new String[]{"This is the first assignment",
+		String[] descsription = new String[]{"This is first assignment is to get you used to the system and find out how it works",
 				
 				"This is the second assignment",
 				
@@ -22,7 +22,7 @@ public class ManyTestAssignments {
 				"Wait i added this assignment",
 						
 				"blah blah blah"};
-		for(int k = 0; k < 5; k ++) {
+		for(int k = 0; k < 1; k ++) {
 			SrlAssignment.Builder testBuilder = SrlAssignment.newBuilder();
 			testBuilder.setName(name[k]);
 			testBuilder.setCourseId(courseId);

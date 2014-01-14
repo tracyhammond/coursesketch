@@ -131,6 +131,13 @@ class SrlSubmission : public ::google::protobuf::Message {
   inline ::std::string* release_sketch();
   inline void set_allocated_sketch(::std::string* sketch);
 
+  // optional int64 submissionTime = 4;
+  inline bool has_submissiontime() const;
+  inline void clear_submissiontime();
+  static const int kSubmissionTimeFieldNumber = 4;
+  inline ::google::protobuf::int64 submissiontime() const;
+  inline void set_submissiontime(::google::protobuf::int64 value);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlSubmission)
  private:
   inline void set_has_id();
@@ -139,15 +146,18 @@ class SrlSubmission : public ::google::protobuf::Message {
   inline void clear_has_updatelist();
   inline void set_has_sketch();
   inline void clear_has_sketch();
+  inline void set_has_submissiontime();
+  inline void clear_has_submissiontime();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* id_;
   ::std::string* updatelist_;
   ::std::string* sketch_;
+  ::google::protobuf::int64 submissiontime_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fsubmission_2eproto();
   friend void protobuf_AssignDesc_input_2fsubmission_2eproto();
@@ -634,6 +644,28 @@ inline void SrlSubmission::set_allocated_sketch(::std::string* sketch) {
     clear_has_sketch();
     sketch_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// optional int64 submissionTime = 4;
+inline bool SrlSubmission::has_submissiontime() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SrlSubmission::set_has_submissiontime() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SrlSubmission::clear_has_submissiontime() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SrlSubmission::clear_submissiontime() {
+  submissiontime_ = GOOGLE_LONGLONG(0);
+  clear_has_submissiontime();
+}
+inline ::google::protobuf::int64 SrlSubmission::submissiontime() const {
+  return submissiontime_;
+}
+inline void SrlSubmission::set_submissiontime(::google::protobuf::int64 value) {
+  set_has_submissiontime();
+  submissiontime_ = value;
 }
 
 // -------------------------------------------------------------------

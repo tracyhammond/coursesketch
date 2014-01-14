@@ -42,10 +42,11 @@ void protobuf_AssignDesc_input_2fsubmission_2eproto() {
       "input/submission.proto");
   GOOGLE_CHECK(file != NULL);
   SrlSubmission_descriptor_ = file->message_type(0);
-  static const int SrlSubmission_offsets_[3] = {
+  static const int SrlSubmission_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSubmission, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSubmission, updatelist_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSubmission, sketch_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSubmission, submissiontime_),
   };
   SrlSubmission_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -134,16 +135,17 @@ void protobuf_AddDesc_input_2fsubmission_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\026input/submission.proto\022\027protobuf.srl.s"
-    "ubmission\"\?\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022\022"
-    "\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\"\231\001\n\013S"
-    "rlSolution\022\034\n\024allowedInProblemBank\030\001 \001(\010"
-    "\022\031\n\021isPracticeProblem\030\002 \001(\010\022:\n\nsubmissio"
-    "n\030\003 \001(\0132&.protobuf.srl.submission.SrlSub"
-    "mission\022\025\n\rproblemBankId\030\004 \001(\t\"\226\001\n\rSrlEx"
-    "periment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignment"
-    "Id\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId\030\005 "
-    "\001(\t\022:\n\nsubmission\030\006 \001(\0132&.protobuf.srl.s"
-    "ubmission.SrlSubmission", 423);
+    "ubmission\"W\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022\022"
+    "\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\022\026\n\016su"
+    "bmissionTime\030\004 \001(\003\"\231\001\n\013SrlSolution\022\034\n\024al"
+    "lowedInProblemBank\030\001 \001(\010\022\031\n\021isPracticePr"
+    "oblem\030\002 \001(\010\022:\n\nsubmission\030\003 \001(\0132&.protob"
+    "uf.srl.submission.SrlSubmission\022\025\n\rprobl"
+    "emBankId\030\004 \001(\t\"\226\001\n\rSrlExperiment\022\020\n\010cour"
+    "seId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tprob"
+    "lemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022:\n\nsubmissio"
+    "n\030\006 \001(\0132&.protobuf.srl.submission.SrlSub"
+    "mission", 447);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/submission.proto", &protobuf_RegisterTypes);
   SrlSubmission::default_instance_ = new SrlSubmission();
@@ -168,6 +170,7 @@ struct StaticDescriptorInitializer_input_2fsubmission_2eproto {
 const int SrlSubmission::kIdFieldNumber;
 const int SrlSubmission::kUpdateListFieldNumber;
 const int SrlSubmission::kSketchFieldNumber;
+const int SrlSubmission::kSubmissionTimeFieldNumber;
 #endif  // !_MSC_VER
 
 SrlSubmission::SrlSubmission()
@@ -189,6 +192,7 @@ void SrlSubmission::SharedCtor() {
   id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   updatelist_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   sketch_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  submissiontime_ = GOOGLE_LONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -248,6 +252,7 @@ void SrlSubmission::Clear() {
         sketch_->clear();
       }
     }
+    submissiontime_ = GOOGLE_LONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -299,6 +304,22 @@ bool SrlSubmission::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(32)) goto parse_submissionTime;
+        break;
+      }
+
+      // optional int64 submissionTime = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_submissionTime:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &submissiontime_)));
+          set_has_submissiontime();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -342,6 +363,11 @@ void SrlSubmission::SerializeWithCachedSizes(
       3, this->sketch(), output);
   }
 
+  // optional int64 submissionTime = 4;
+  if (has_submissiontime()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(4, this->submissiontime(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -374,6 +400,11 @@ void SrlSubmission::SerializeWithCachedSizes(
         3, this->sketch(), target);
   }
 
+  // optional int64 submissionTime = 4;
+  if (has_submissiontime()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(4, this->submissiontime(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -404,6 +435,13 @@ int SrlSubmission::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->sketch());
+    }
+
+    // optional int64 submissionTime = 4;
+    if (has_submissiontime()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int64Size(
+          this->submissiontime());
     }
 
   }
@@ -442,6 +480,9 @@ void SrlSubmission::MergeFrom(const SrlSubmission& from) {
     if (from.has_sketch()) {
       set_sketch(from.sketch());
     }
+    if (from.has_submissiontime()) {
+      set_submissiontime(from.submissiontime());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -468,6 +509,7 @@ void SrlSubmission::Swap(SrlSubmission* other) {
     std::swap(id_, other->id_);
     std::swap(updatelist_, other->updatelist_);
     std::swap(sketch_, other->sketch_);
+    std::swap(submissiontime_, other->submissiontime_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

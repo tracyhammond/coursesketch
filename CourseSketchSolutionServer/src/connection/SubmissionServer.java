@@ -92,7 +92,8 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 					} else {
 						if (updateHandler.hasSubmissionId(sessionInfo)) {
 							resultantId = updateHandler.getSubmissionId(sessionInfo);
-							DatabaseClient.updateSubmission(resultantId, updateHandler.getSolution(sessionInfo).getSubmission().getUpdateList());
+							System.out.println("I already have an Id " + updateHandler.getSubmissionId(sessionInfo));
+							DatabaseClient.updateSubmission(resultantId, updateHandler.getExperiment(sessionInfo).getSubmission().getUpdateList());
 							return;
 						}
 						System.out.println("Saving experiment");
@@ -162,7 +163,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Submission Server: Version 0.0.2.ant");
+		System.out.println("Submission Server: Version 0.0.2.elephant");
 		WebSocketImpl.DEBUG = false;
 		int port = 8883; // 843 flash policy port
 		try {

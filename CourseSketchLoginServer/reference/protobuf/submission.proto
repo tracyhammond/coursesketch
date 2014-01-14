@@ -7,6 +7,7 @@ message SrlSubmission {
 	optional string id = 1;
 	optional bytes updateList = 2; // if this is a collection of updates
 	optional bytes sketch = 3; // if this is a sketch.
+	optional int64 submissionTime = 4;
 }
 
 message SrlSolution {

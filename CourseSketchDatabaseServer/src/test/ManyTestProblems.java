@@ -14,7 +14,9 @@ import database.institution.Institution;
 
 public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId) {
-		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5"};
+		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11"};
+		//10 is fuzzy logic
+		/*
 		String[] descsription = new String[]{"This is the first problem",
 				
 				"This is the second problem",
@@ -24,12 +26,38 @@ public class ManyTestProblems {
 				"Wait i added this problem",
 						
 				"blah blah blah"};
+		*/
 		String[] questionText = new String[] {
-				"The question text for this problem is seen here",
-				"The question text for this problem is now a question text",
-				"Yeah yeah yeah question text",
-				"Hey you count to 10",
-				"Draw a kitty kat!"};
+				"Please draw a picture of yourself",
+				"Prove that the square root of 3 is irrational.",
+				"Suppose that Smartphone A has 256MBRAM and 32GB ROM, and the resolution of its camera is 8 MP; Smartphone B has 288 MB RAM and 64 GB ROM,"
+				+ " and the resolution of its camera is 4 MP;"
+				+ " and Smartphone C has 128 MB RAM and 32 GB ROM, and the resolution of its camera is 5 MP."
+				+ " Determine the truth value of the following proposition. Show your work (using a truth table). <br>" +
+				"\"Smartphone A has more RAM than Smartphone B if and only if Smartphone B has more RAM than Smartphone A.\"",
+				"Let p and q be the propositions “The election is decided” and \"The votes have been counted,\" respectively. Express the following compound proposition as an English sentence: ~q ∨ (~p ∧ q)",
+				
+				"Let p, q, and r be the propositions<br>" +
+				"p :You get an A on the final exam.<br>" +
+				"q :You do every exercise in this book.<br>" +
+				"r :You get an A in this class.<br>" +
+				"Write the following statement in terms of p,q,r. \"You will get an A in this class if and only if you either" +
+				"do every exercise in this book or you get an A on the final.\"",
+				
+				"Write this statement in the form of if p, then q. \"A sufficient condition for the warranty to be good is that you bought the computer less than a year ago.\"",
+				
+				"Construct a truth table for (p ↔ q) ⊕ (p ↔~q)",
+				
+				"Construct a truth table for (p AND q) AND ~(p OR q)",
+				
+				"Evaluate this using bit operators <br>" +
+				 "(1 1011 XOR 0 1010) AND (1 0001 OR 1 1011)",
+
+				 "p: John is happy = .6, q: Alex is happy = .7, r: Samantha is happy = .2<br>" +
+				 "Evaluate the value of this statement using fuzzy logic.   Either John and Alex are happy, or Samantha isn't.",
+				 
+				 "Create a combinatorial circuit that is equivalent to p --> q"
+				};
 		QuestionType[] questionType = new QuestionType[] {
 				QuestionType.CHECK_BOX,
 				QuestionType.FREE_RESP,
@@ -37,14 +65,14 @@ public class ManyTestProblems {
 				QuestionType.SKETCH,
 				QuestionType.SKETCH
 		};
-		for(int k = 0; k < 5; k ++) {
+		for(int k = 0; k < 11; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
 			permissions2.addAdminPermission("larry");
 			permissions2.addUserPermission(courseId);
 			bankBuilder.setAccessPermission(permissions2.build());
-			bankBuilder.setQuestionType(questionType[k]);
+			bankBuilder.setQuestionType(QuestionType.SKETCH);
 			String resultantId = null;
 			try {
 				resultantId = Institution.mongoInsertBankProblem("david", bankBuilder.buildPartial());
@@ -54,7 +82,7 @@ public class ManyTestProblems {
 
 			SrlProblem.Builder testBuilder = SrlProblem.newBuilder();
 			testBuilder.setName(name[k]);
-			testBuilder.setDescription(descsription[k]);
+			//testBuilder.setDescription(descsription[k]);
 			testBuilder.setGradeWeight("50%");
 			testBuilder.setAssignmentId(assignmentId);
 			testBuilder.setCourseId(courseId);
