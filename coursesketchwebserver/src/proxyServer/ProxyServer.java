@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
+import multiConnection.MultiConnectionManager;
 import multiConnection.MultiInternalConnectionServer;
 import multiConnection.WrapperConnection;
 
@@ -40,7 +41,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
 
 	//private ExampleClient login = connectLogin(this, connectionType);
-	private ProxyConnectionManager serverManager = new ProxyConnectionManager(this);
+	private ProxyConnectionManager serverManager = new ProxyConnectionManager(this, MultiConnectionManager.CONNECT_REMOTE);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer( int port ) {

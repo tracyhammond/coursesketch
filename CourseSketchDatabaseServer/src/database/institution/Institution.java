@@ -307,7 +307,7 @@ public final class Institution {
 	public static void mongoInsertSubmission(Request req) {
 		try {
 			SrlExperiment exp = SrlExperiment.parseFrom(req.getOtherData());
-			SubmissionManager.mongoInsertSubmission(getInstance().db, exp.getProblemId(), exp.getUserId(), exp.getSubmission().getId(), true);
+			SubmissionManager.mongoInsertSubmission(getInstance().db, exp.getProblemId(), req.getServersideId(), exp.getSubmission().getId(), true);
 			return;
 		} catch(Exception e) {
 			e.printStackTrace();

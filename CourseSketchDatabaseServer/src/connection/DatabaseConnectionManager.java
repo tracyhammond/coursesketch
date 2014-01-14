@@ -13,7 +13,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager{
 	
 	public void connectServers(MultiInternalConnectionServer serv) throws ConnectionException {
 		System.out.println("Open Database...");
-		createAndAddConnection(serv, false, null, 8887, SolutionConnection.class);
+		createAndAddConnection(serv, false, "Srl02.tamu.edu", 8887, SolutionConnection.class);
 	}
 
 }

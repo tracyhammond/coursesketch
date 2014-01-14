@@ -1,28 +1,21 @@
 package database;
 
-import static database.StringConstants.ADMIN;
-import static database.StringConstants.ALLOWED_IN_PROBLEMBANK;
-import static database.StringConstants.ASSIGNMENT_ID;
-import static database.StringConstants.COURSE_ID;
-import static database.StringConstants.COURSE_PROBLEM_ID;
-import static database.StringConstants.IS_PRACTICE_PROBLEM;
-import static database.StringConstants.MOD;
-import static database.StringConstants.SELF_ID;
-import static database.StringConstants.SOLUTION_COLLECTION;
-import static database.StringConstants.UPDATELIST;
-import static database.StringConstants.USERS;
-import static database.StringConstants.USER_ID;
+import static database.StringConstants.*;
 
 import java.net.UnknownHostException;
 
+import org.bson.types.ObjectId;
+
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
+import protobuf.srl.submission.Submission.SrlSubmission;
 
 import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 
 public class DatabaseClient {
@@ -71,8 +64,8 @@ public class DatabaseClient {
 	}
 
 	public static final String saveExperiment(SrlExperiment experiment) {
-		System.out.println("saving the solution!");
-		DBCollection new_user = getInstance().db.getCollection("Solutions");
+		System.out.println("saving the experiment!");
+		DBCollection new_user = getInstance().db.getCollection(EXPERIMENT_COLLECTION);
 		BasicDBObject query = new BasicDBObject(COURSE_ID, experiment.getCourseId())
 		.append(ASSIGNMENT_ID, experiment.getAssignmentId())
 		.append(COURSE_PROBLEM_ID, experiment.getProblemId())
@@ -88,5 +81,19 @@ public class DatabaseClient {
 
 	public static void updateSubmission(String resultantId, ByteString updateList) throws Exception {
 		throw new Exception("Not supported yet!");
+	}
+
+	public static SrlExperiment getExperiment(String itemId) {
+		DBRef myDbRef = new DBRef(getInstance().db, EXPERIMENT_COLLECTION, new ObjectId(itemId));
+		DBObject corsor = myDbRef.fetch();
+		SrlExperiment.Builder build = SrlExperiment.newBuilder();
+		build.setAssignmentId(corsor.get(ASSIGNMENT_ID).toString());
+		build.setUserId(corsor.get(USER_ID).toString());
+		build.setProblemId(corsor.get(COURSE_PROBLEM_ID).toString());
+		build.setCourseId(corsor.get(COURSE_ID).toString());
+		SrlSubmission.Builder sub = SrlSubmission.newBuilder();
+		sub.setUpdateList(ByteString.copyFrom((byte[])corsor.get(UPDATELIST)));
+		build.setSubmission(sub.build());
+		return build.build();
 	}
 }

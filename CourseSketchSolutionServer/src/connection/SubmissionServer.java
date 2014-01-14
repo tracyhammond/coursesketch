@@ -6,18 +6,21 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.util.Collection;
 
 import multiConnection.ConnectionException;
 import multiConnection.MultiConnectionManager;
-import multiConnection.MultiConnectionState;
 import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
-import org.java_websocket.handshake.ClientHandshake;
 
+import protobuf.srl.commands.Commands.SrlUpdate;
+import protobuf.srl.commands.Commands.SrlUpdateList;
+import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.ItemQuery;
+import protobuf.srl.query.Data.ItemRequest;
+import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
@@ -36,7 +39,7 @@ import database.UpdateHandler;
  */
 public class SubmissionServer extends MultiInternalConnectionServer {
 
-	private boolean connectLocally = MultiConnectionManager.CONNECT_LOCALLY;
+	private boolean connectLocally = MultiConnectionManager.CONNECT_REMOTE;
 	UpdateHandler updateHandler = new UpdateHandler();
 	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
 
@@ -105,6 +108,8 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 						Request.Builder build = Request.newBuilder(req);
 						build.setResponseText(resultantId);
 						build.clearOtherData();
+						build.setSessionInfo(req.getSessionInfo());
+						System.out.println(req.getSessionInfo());
 						// sends the response back to the answer checker which can then send it back to the client.
 						conn.send(build.build().toByteArray());
 						if (data != null) {
@@ -123,6 +128,27 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		}
 
 		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
+			DataRequest dataReq;
+			try {
+				dataReq = DataRequest.parseFrom(req.getOtherData());
+				Request.Builder resultReq = Request.newBuilder(req);
+				resultReq.clearOtherData();
+				for(ItemRequest itemReq: dataReq.getItemsList()) {
+					if (itemReq.getQuery() == ItemQuery.EXPERIMENT) {
+						SrlExperiment experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
+						ItemSend.Builder send = ItemSend.newBuilder();
+						send.setQuery(ItemQuery.EXPERIMENT);
+						SrlUpdateList list = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
+						for(SrlUpdate update: list.getListList()) {
+							send.setData(update.toByteString());
+							resultReq.setOtherData(send.build().toByteString());
+							conn.send(resultReq.build().toByteArray());
+						}
+					}
+				}
+			} catch (InvalidProtocolBufferException e) {
+				e.printStackTrace();
+			}
 			//SrlSolution solution = storage.getSolution();// something we send in.
 			//Request.Builder build = Request.newBuilder(req);
 			//build.setOtherData(solution.toByteString());

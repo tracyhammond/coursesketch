@@ -61,7 +61,7 @@ public class StringConstants {
 	public static final String IS_PRACTICE_PROBLEM = "PracticeProblem";
 
 	//submission specific
-	public static final String UPDATELIST = "Solution";
+	public static final String UPDATELIST = "UpdateList";
 	public static final String SKETCH = "Sketch";
 
 	// problem specific

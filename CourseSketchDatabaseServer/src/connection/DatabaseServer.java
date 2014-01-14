@@ -13,6 +13,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import multiConnection.ConnectionException;
+import multiConnection.MultiConnectionManager;
 import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
@@ -44,7 +46,9 @@ import database.institution.Institution;
  */
 public class DatabaseServer extends MultiInternalConnectionServer {
 
+	private boolean connectLocal = MultiConnectionManager.CONNECT_REMOTE;
 	UpdateHandler updateHandler = new UpdateHandler();
+	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
 
 	public DatabaseServer( int port ) throws UnknownHostException {
 		this( new InetSocketAddress( port ) );
@@ -66,6 +70,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 			return;
 		}
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
+			System.out.println("Submitting submission id");
 			Institution.mongoInsertSubmission(req);
 		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
 			DataRequestHandler.handleRequest(req, conn);
@@ -79,6 +84,14 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		//System.out.println( "received fragment: " + fragment );
 	}
 
+	public void reconnect() {
+		internalConnections.dropAllConnection(true, false);
+		try {
+			internalConnections.createAndAddConnection(this, connectLocal, "Srl02.tamu.edu", 8883, SolutionConnection.class);
+		} catch (ConnectionException e) {
+			e.printStackTrace();
+		}
+	}
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Database Server: Version 1.0.2.mouse");
 		WebSocketImpl.DEBUG = false;
@@ -89,6 +102,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		}
 		DatabaseServer s = new DatabaseServer( port );
 		s.start();
+		s.reconnect();
 		System.out.println( "Database Server started on port: " + s.getPort() );
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
@@ -101,6 +115,8 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 				s.stop();
 				s.start();
 				break;
+			} else if( in.equals("reconnect")) {
+				s.reconnect();
 			}
 		}
 	}
