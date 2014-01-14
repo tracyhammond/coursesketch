@@ -18,6 +18,7 @@ import java.net.UnknownHostException;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 
+import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -83,5 +84,9 @@ public class DatabaseClient {
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 		return corsor.get(SELF_ID).toString();
+	}
+
+	public static void updateSubmission(String resultantId, ByteString updateList) throws Exception {
+		throw new Exception("Not supported yet!");
 	}
 }

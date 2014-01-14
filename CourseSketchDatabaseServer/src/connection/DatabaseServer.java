@@ -66,7 +66,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 			return;
 		}
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
-			updateHandler.addRequest(req);
+			Institution.mongoInsertSubmission(req);
 		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
 			DataRequestHandler.handleRequest(req, conn);
 		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
