@@ -13,6 +13,7 @@ import com.mongodb.DBRef;
 
 public class SubmissionManager 
 {
+	
 	/**
 	 * Inserts a submission into the database.
 	 *

@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 
+import multiConnection.ConnectionException;
 import multiConnection.MultiConnectionManager;
 import multiConnection.MultiConnectionState;
 import multiConnection.MultiInternalConnectionServer;
@@ -35,6 +36,7 @@ import database.UpdateHandler;
  */
 public class SubmissionServer extends MultiInternalConnectionServer {
 
+	private boolean connectLocally = MultiConnectionManager.CONNECT_LOCALLY;
 	UpdateHandler updateHandler = new UpdateHandler();
 	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
 
@@ -45,6 +47,15 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 
 	public SubmissionServer( InetSocketAddress address ) {
 		super( address );
+	}
+	
+	public void reconnect() {
+		internalConnections.dropAllConnection(true, false);
+		try {
+			internalConnections.createAndAddConnection(this, connectLocally, "Srl04.tamu.edu", 8885, DataConnection.class);
+		} catch (ConnectionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -66,27 +77,27 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 					if (updateHandler.isSolution(sessionInfo)) {
 						if (updateHandler.hasSubmissionId(sessionInfo)) {
 							resultantId = updateHandler.getSubmissionId(sessionInfo);
-							DatabaseClient.updateSolution(resultantId);
-						} else {
-							resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
-							if (resultantId != null) {
-								SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
-								builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
-								data = builder.build().toByteString();
-							}
+							DatabaseClient.updateSubmission(resultantId, updateHandler.getSolution(sessionInfo).getSubmission().getUpdateList());
+							return;
+						}
+						resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
+						if (resultantId != null) {
+							SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
+							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
+							data = builder.build().toByteString();
 						}
 					} else {
 						if (updateHandler.hasSubmissionId(sessionInfo)) {
 							resultantId = updateHandler.getSubmissionId(sessionInfo);
-							DatabaseClient.updateExperiment(resultantId);
-						} else {
-							System.out.println("Saving experiment");
-							resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
-							if (resultantId != null) {
-								SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
-								builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
-								data = builder.build().toByteString();
-							}
+							DatabaseClient.updateSubmission(resultantId, updateHandler.getSolution(sessionInfo).getSubmission().getUpdateList());
+							return;
+						}
+						System.out.println("Saving experiment");
+						resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
+						if (resultantId != null) {
+							SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
+							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
+							data = builder.build().toByteString();
 						}
 					}
 					if (resultantId != null) {
@@ -94,6 +105,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 						Request.Builder build = Request.newBuilder(req);
 						build.setResponseText(resultantId);
 						build.clearOtherData();
+						// sends the response back to the answer checker which can then send it back to the client.
 						conn.send(build.build().toByteArray());
 						if (data != null) {
 							// passes the data to the database for connecting
@@ -104,7 +116,6 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 				} 
 				//ItemResult 
 			} catch (InvalidProtocolBufferException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -134,6 +145,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		}
 		SubmissionServer s = new SubmissionServer( port );
 		s.start();
+		s.reconnect();
 		System.out.println( "Submission Server started on port: " + s.getPort() );
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
@@ -145,6 +157,9 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 			} else if( in.equals( "restart" ) ) {
 				s.stop();
 				s.start();
+				break;
+			} else if( in.equals( "reconnect" ) ) {
+				s.reconnect();
 				break;
 			}
 		}

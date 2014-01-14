@@ -10,12 +10,15 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.submission.Submission.SrlExperiment;
+import protobuf.srl.submission.Submission.SrlSolution;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -23,14 +26,13 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
-import com.mongodb.WriteResult;
 
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import database.submission.SubmissionManager;
 import database.user.GroupManager;
 import database.user.UserClient;
-import database.user.UserManager;
 
 public final class Institution {
 	private static Institution instance;
@@ -296,5 +298,28 @@ public final class Institution {
 
 	public static final ArrayList<SrlCourse> getUserCourses(String userId) throws AuthenticationException {
 		return Institution.mongoGetCourses(UserClient.getUserCourses(userId), userId);
+	}
+
+	/**
+	 * A message sent from the submission server that allows the insertion of the message
+	 * @param req
+	 */
+	public static void mongoInsertSubmission(Request req) {
+		try {
+			SrlExperiment exp = SrlExperiment.parseFrom(req.getOtherData());
+			SubmissionManager.mongoInsertSubmission(getInstance().db, exp.getProblemId(), exp.getUserId(), exp.getSubmission().getId(), true);
+			return;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			// TODO: change how this process works for instructors!
+			SrlSolution exp = SrlSolution.parseFrom(req.getOtherData());
+			throw new Exception("Instructors need to be authenticated first!");
+			//SubmissionManager.mongoInsertSubmission(getInstance().db, exp.getProblemBankId(), exp.getProblemBankId(), exp.getSubmission().getId(), false);
+			//return;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
