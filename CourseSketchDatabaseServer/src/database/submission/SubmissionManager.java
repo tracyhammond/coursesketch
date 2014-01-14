@@ -26,15 +26,21 @@ public class SubmissionManager
 	 * @param experiment
 	 */
 	public static void mongoInsertSubmission(DB dbs, String problemId, String uniqueId, String submissionId, boolean experiment) {
+		System.out.println("Inserting an experiment " + experiment);
+		System.out.println("database is " + dbs);
 		DBRef myDbRef = new DBRef(dbs, experiment?EXPERIMENT_COLLECTION:SOLUTION_COLLECTION, new ObjectId(problemId));
 		DBCollection collection = dbs.getCollection(experiment?EXPERIMENT_COLLECTION:SOLUTION_COLLECTION);
 		DBObject corsor = myDbRef.fetch();
+		System.out.println(corsor);
+		System.out.println("uniuq id " + uniqueId);
 		BasicDBObject queryObj = new BasicDBObject( experiment ? uniqueId : SOLUTION_ID, submissionId);
 		if (corsor == null) {
+			System.out.println("creating a new instance for this problemId");
 			queryObj.append(SELF_ID, new ObjectId(problemId));
 			collection.insert(queryObj);
 			// we need to create a new corsor
 		} else {
+			System.out.println("adding a new submission to this old itemid");
 			// insert the submissionId, if it is an experiment then we need to use the uniqueId to make it work.
 			collection.update(corsor, new BasicDBObject("$set", queryObj));
 		}
