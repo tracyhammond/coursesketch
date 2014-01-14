@@ -74,16 +74,15 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 			// the purpose of this function is purely to scope the assignmentId so that it changes
 			function loopContainer(assignmentId) {
 				getAssignmentLocal(assignmentId, function(assignment) {
-					if (!isUndefined(assignment)) { 
+					if (!isUndefined(assignment)) {
 						assignmentList.push(assignment);
 					} else {
 						leftOverId.push(assignmentId);
 					}	
 					barrier -= 1;
-					if (barrier == 0) {
-
+					if (barrier <= 0) {
 						// after the entire list has been gone through pull the leftovers from the server
-						if (leftOverId.length > 1) {
+						if (leftOverId.length >= 1) {
 							advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.ASSIGNMENT, function(evt, item) {
 								var school = SchoolBuilder.SrlSchool.decode(item.data);
 								var assignment = school.assignments[0];
