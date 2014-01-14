@@ -40,13 +40,14 @@ void protobuf_AssignDesc_input_2fmessage_2eproto() {
       "input/message.proto");
   GOOGLE_CHECK(file != NULL);
   Request_descriptor_ = file->message_type(0);
-  static const int Request_offsets_[6] = {
+  static const int Request_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, requesttype_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, login_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, otherdata_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, responsetext_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, sessioninfo_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, serversideid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, messagetime_),
   };
   Request_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -116,20 +117,20 @@ void protobuf_AddDesc_input_2fmessage_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023input/message.proto\022\024protobuf.srl.requ"
-    "est\"\364\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
+    "est\"\211\003\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
     "rotobuf.srl.request.Request.MessageType:"
     "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req"
     "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014"
     "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 "
-    "\001(\t\022\024\n\014serversideId\030\006 \001(\t\"\226\001\n\013MessageTyp"
-    "e\022\t\n\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\017\n\013DATA_I"
-    "NSERT\020\002\022\017\n\013DATA_UPDATE\020\003\022\017\n\013DATA_REMOVE\020"
-    "\004\022\017\n\013RECOGNITION\020\005\022\013\n\007LOADING\020\006\022\016\n\nSUBMI"
-    "SSION\020\007\022\t\n\005CLOSE\020\010\"\226\001\n\020LoginInformation\022"
-    "\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\022\022\n\ni"
-    "sLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030\004 \001(\010\022\025\n"
-    "\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 \001(\t\022\016\n\006u"
-    "serId\030\007 \001(\t", 571);
+    "\001(\t\022\024\n\014serversideId\030\006 \001(\t\022\023\n\013messageTime"
+    "\030\007 \001(\003\"\226\001\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DAT"
+    "A_REQUEST\020\001\022\017\n\013DATA_INSERT\020\002\022\017\n\013DATA_UPD"
+    "ATE\020\003\022\017\n\013DATA_REMOVE\020\004\022\017\n\013RECOGNITION\020\005\022"
+    "\013\n\007LOADING\020\006\022\016\n\nSUBMISSION\020\007\022\t\n\005CLOSE\020\010\""
+    "\226\001\n\020LoginInformation\022\020\n\010username\030\001 \002(\t\022\020"
+    "\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014"
+    "isInstructor\030\004 \001(\010\022\025\n\risRegistering\030\005 \001("
+    "\010\022\r\n\005email\030\006 \001(\t\022\016\n\006userId\030\007 \001(\t", 592);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/message.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -190,6 +191,7 @@ const int Request::kOtherDataFieldNumber;
 const int Request::kResponseTextFieldNumber;
 const int Request::kSessionInfoFieldNumber;
 const int Request::kServersideIdFieldNumber;
+const int Request::kMessageTimeFieldNumber;
 #endif  // !_MSC_VER
 
 Request::Request()
@@ -215,6 +217,7 @@ void Request::SharedCtor() {
   responsetext_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   sessioninfo_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   serversideid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  messagetime_ = GOOGLE_LONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -287,6 +290,7 @@ void Request::Clear() {
         serversideid_->clear();
       }
     }
+    messagetime_ = GOOGLE_LONGLONG(0);
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -393,6 +397,22 @@ bool Request::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(56)) goto parse_messageTime;
+        break;
+      }
+
+      // optional int64 messageTime = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_messageTime:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &messagetime_)));
+          set_has_messagetime();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -460,6 +480,11 @@ void Request::SerializeWithCachedSizes(
       6, this->serversideid(), output);
   }
 
+  // optional int64 messageTime = 7;
+  if (has_messagetime()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(7, this->messagetime(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -518,6 +543,11 @@ void Request::SerializeWithCachedSizes(
         6, this->serversideid(), target);
   }
 
+  // optional int64 messageTime = 7;
+  if (has_messagetime()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(7, this->messagetime(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -570,6 +600,13 @@ int Request::ByteSize() const {
           this->serversideid());
     }
 
+    // optional int64 messageTime = 7;
+    if (has_messagetime()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int64Size(
+          this->messagetime());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -615,6 +652,9 @@ void Request::MergeFrom(const Request& from) {
     if (from.has_serversideid()) {
       set_serversideid(from.serversideid());
     }
+    if (from.has_messagetime()) {
+      set_messagetime(from.messagetime());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -648,6 +688,7 @@ void Request::Swap(Request* other) {
     std::swap(responsetext_, other->responsetext_);
     std::swap(sessioninfo_, other->sessioninfo_);
     std::swap(serversideid_, other->serversideid_);
+    std::swap(messagetime_, other->messagetime_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

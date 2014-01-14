@@ -63,6 +63,7 @@ public class StringConstants {
 	//submission specific
 	public static final String UPDATELIST = "UpdateList";
 	public static final String SKETCH = "Sketch";
+	public static final String SUBMISSION_TIME = "time";
 
 	// problem specific
 	public static final String QUESTION_TEXT = "QuestionText";

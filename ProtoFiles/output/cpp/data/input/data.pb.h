@@ -423,13 +423,6 @@ class ItemSend : public ::google::protobuf::Message {
   inline ::protobuf::srl::query::ItemQuery query() const;
   inline void set_query(::protobuf::srl::query::ItemQuery value);
 
-  // optional bool isInsert = 2;
-  inline bool has_isinsert() const;
-  inline void clear_isinsert();
-  static const int kIsInsertFieldNumber = 2;
-  inline bool isinsert() const;
-  inline void set_isinsert(bool value);
-
   // optional bytes data = 3;
   inline bool has_data() const;
   inline void clear_data();
@@ -446,19 +439,16 @@ class ItemSend : public ::google::protobuf::Message {
  private:
   inline void set_has_query();
   inline void clear_has_query();
-  inline void set_has_isinsert();
-  inline void clear_has_isinsert();
   inline void set_has_data();
   inline void clear_has_data();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  int query_;
-  bool isinsert_;
   ::std::string* data_;
+  int query_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -982,37 +972,15 @@ inline void ItemSend::set_query(::protobuf::srl::query::ItemQuery value) {
   query_ = value;
 }
 
-// optional bool isInsert = 2;
-inline bool ItemSend::has_isinsert() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void ItemSend::set_has_isinsert() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void ItemSend::clear_has_isinsert() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void ItemSend::clear_isinsert() {
-  isinsert_ = false;
-  clear_has_isinsert();
-}
-inline bool ItemSend::isinsert() const {
-  return isinsert_;
-}
-inline void ItemSend::set_isinsert(bool value) {
-  set_has_isinsert();
-  isinsert_ = value;
-}
-
 // optional bytes data = 3;
 inline bool ItemSend::has_data() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void ItemSend::set_has_data() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void ItemSend::clear_has_data() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void ItemSend::clear_data() {
   if (data_ != &::google::protobuf::internal::kEmptyString) {

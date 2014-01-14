@@ -57,7 +57,8 @@ public class DatabaseClient {
 		//.append(ADMIN, solution.getAccessPermissions().getAdminPermissionList())
 		//.append(MOD, solution.getAccessPermissions().getModeratorPermissionList())
 		//.append(USERS, solution.getAccessPermissions().getUserPermissionList())
-		.append(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray());
+		.append(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray())
+		.append(SUBMISSION_TIME, solution.getSubmission().getSubmissionTime());
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 		return corsor.get(SELF_ID).toString();
@@ -73,7 +74,8 @@ public class DatabaseClient {
 		//.append(ADMIN, experiment.getAccessPermissions().getAdminPermissionList())
 		//.append(MOD, experiment.getAccessPermissions().getModeratorPermissionList())
 		//.append(USERS, experiment.getAccessPermissions().getUserPermissionList())
-		.append(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray());
+		.append(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray())
+		.append(SUBMISSION_TIME, experiment.getSubmission().getSubmissionTime());
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 		return corsor.get(SELF_ID).toString();

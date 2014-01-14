@@ -28,7 +28,7 @@ public class UserManager {
 	// isert real world identity
 	// update real world identity (need second password)
 	// 
-	
+
 	/**
 	 * Returns the list of courses that a users has registered for
 	 * @param userId

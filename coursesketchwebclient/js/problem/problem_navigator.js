@@ -102,7 +102,6 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 
 	this.setSubmissionInformation = function(submission, isExperiment) {
 		if (isExperiment) {
-			console.log()
 			submission.courseId = currentProblem.courseId;
 			submission.assignmentId = currentProblem.assignmentId;
 			submission.problemId = currentProblem.id;

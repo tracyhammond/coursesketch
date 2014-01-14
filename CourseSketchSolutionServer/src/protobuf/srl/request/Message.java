@@ -101,6 +101,24 @@ public final class Message {
      */
     com.google.protobuf.ByteString
         getServersideIdBytes();
+
+    // optional int64 messageTime = 7;
+    /**
+     * <code>optional int64 messageTime = 7;</code>
+     *
+     * <pre>
+     * this is the time that the message is received by the server
+     * </pre>
+     */
+    boolean hasMessageTime();
+    /**
+     * <code>optional int64 messageTime = 7;</code>
+     *
+     * <pre>
+     * this is the time that the message is received by the server
+     * </pre>
+     */
+    long getMessageTime();
   }
   /**
    * Protobuf type {@code protobuf.srl.request.Request}
@@ -199,6 +217,11 @@ public final class Message {
             case 50: {
               bitField0_ |= 0x00000020;
               serversideId_ = input.readBytes();
+              break;
+            }
+            case 56: {
+              bitField0_ |= 0x00000040;
+              messageTime_ = input.readInt64();
               break;
             }
           }
@@ -605,6 +628,30 @@ public final class Message {
       }
     }
 
+    // optional int64 messageTime = 7;
+    public static final int MESSAGETIME_FIELD_NUMBER = 7;
+    private long messageTime_;
+    /**
+     * <code>optional int64 messageTime = 7;</code>
+     *
+     * <pre>
+     * this is the time that the message is received by the server
+     * </pre>
+     */
+    public boolean hasMessageTime() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional int64 messageTime = 7;</code>
+     *
+     * <pre>
+     * this is the time that the message is received by the server
+     * </pre>
+     */
+    public long getMessageTime() {
+      return messageTime_;
+    }
+
     private void initFields() {
       requestType_ = protobuf.srl.request.Message.Request.MessageType.LOGIN;
       login_ = protobuf.srl.request.Message.LoginInformation.getDefaultInstance();
@@ -612,6 +659,7 @@ public final class Message {
       responseText_ = "";
       sessionInfo_ = "";
       serversideId_ = "";
+      messageTime_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -653,6 +701,9 @@ public final class Message {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeBytes(6, getServersideIdBytes());
       }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeInt64(7, messageTime_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -685,6 +736,10 @@ public final class Message {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(6, getServersideIdBytes());
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(7, messageTime_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -823,6 +878,8 @@ public final class Message {
         bitField0_ = (bitField0_ & ~0x00000010);
         serversideId_ = "";
         bitField0_ = (bitField0_ & ~0x00000020);
+        messageTime_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -879,6 +936,10 @@ public final class Message {
           to_bitField0_ |= 0x00000020;
         }
         result.serversideId_ = serversideId_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.messageTime_ = messageTime_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -918,6 +979,9 @@ public final class Message {
           bitField0_ |= 0x00000020;
           serversideId_ = other.serversideId_;
           onChanged();
+        }
+        if (other.hasMessageTime()) {
+          setMessageTime(other.getMessageTime());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1387,6 +1451,55 @@ public final class Message {
   }
   bitField0_ |= 0x00000020;
         serversideId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional int64 messageTime = 7;
+      private long messageTime_ ;
+      /**
+       * <code>optional int64 messageTime = 7;</code>
+       *
+       * <pre>
+       * this is the time that the message is received by the server
+       * </pre>
+       */
+      public boolean hasMessageTime() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional int64 messageTime = 7;</code>
+       *
+       * <pre>
+       * this is the time that the message is received by the server
+       * </pre>
+       */
+      public long getMessageTime() {
+        return messageTime_;
+      }
+      /**
+       * <code>optional int64 messageTime = 7;</code>
+       *
+       * <pre>
+       * this is the time that the message is received by the server
+       * </pre>
+       */
+      public Builder setMessageTime(long value) {
+        bitField0_ |= 0x00000040;
+        messageTime_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int64 messageTime = 7;</code>
+       *
+       * <pre>
+       * this is the time that the message is received by the server
+       * </pre>
+       */
+      public Builder clearMessageTime() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        messageTime_ = 0L;
         onChanged();
         return this;
       }
@@ -2612,20 +2725,20 @@ public final class Message {
   static {
     java.lang.String[] descriptorData = {
       "\n\023input/message.proto\022\024protobuf.srl.requ" +
-      "est\"\364\002\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
+      "est\"\211\003\n\007Request\022E\n\013requestType\030\001 \002(\0162).p" +
       "rotobuf.srl.request.Request.MessageType:" +
       "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req" +
       "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014" +
       "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 " +
-      "\001(\t\022\024\n\014serversideId\030\006 \001(\t\"\226\001\n\013MessageTyp" +
-      "e\022\t\n\005LOGIN\020\000\022\020\n\014DATA_REQUEST\020\001\022\017\n\013DATA_I" +
-      "NSERT\020\002\022\017\n\013DATA_UPDATE\020\003\022\017\n\013DATA_REMOVE\020" +
-      "\004\022\017\n\013RECOGNITION\020\005\022\013\n\007LOADING\020\006\022\016\n\nSUBMI",
-      "SSION\020\007\022\t\n\005CLOSE\020\010\"\226\001\n\020LoginInformation\022" +
-      "\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001(\t\022\022\n\ni" +
-      "sLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030\004 \001(\010\022\025\n" +
-      "\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 \001(\t\022\016\n\006u" +
-      "serId\030\007 \001(\t"
+      "\001(\t\022\024\n\014serversideId\030\006 \001(\t\022\023\n\013messageTime" +
+      "\030\007 \001(\003\"\226\001\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DAT" +
+      "A_REQUEST\020\001\022\017\n\013DATA_INSERT\020\002\022\017\n\013DATA_UPD" +
+      "ATE\020\003\022\017\n\013DATA_REMOVE\020\004\022\017\n\013RECOGNITION\020\005\022",
+      "\013\n\007LOADING\020\006\022\016\n\nSUBMISSION\020\007\022\t\n\005CLOSE\020\010\"" +
+      "\226\001\n\020LoginInformation\022\020\n\010username\030\001 \002(\t\022\020" +
+      "\n\010password\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014" +
+      "isInstructor\030\004 \001(\010\022\025\n\risRegistering\030\005 \001(" +
+      "\010\022\r\n\005email\030\006 \001(\t\022\016\n\006userId\030\007 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2637,7 +2750,7 @@ public final class Message {
           internal_static_protobuf_srl_request_Request_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_request_Request_descriptor,
-              new java.lang.String[] { "RequestType", "Login", "OtherData", "ResponseText", "SessionInfo", "ServersideId", });
+              new java.lang.String[] { "RequestType", "Login", "OtherData", "ResponseText", "SessionInfo", "ServersideId", "MessageTime", });
           internal_static_protobuf_srl_request_LoginInformation_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_request_LoginInformation_fieldAccessorTable = new

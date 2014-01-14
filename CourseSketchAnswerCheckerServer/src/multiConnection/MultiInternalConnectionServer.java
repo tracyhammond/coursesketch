@@ -111,7 +111,7 @@ public abstract class MultiInternalConnectionServer extends WebSocketServer {
 		public static long counter = 0x4000L | (long) (Math.random() * 0x1000);
 
 		/**
-		 * Returns a {@link Request} that contains the sessionInfo.
+		 * Returns a {@link Request} that contains the sessionInfo and the time that the message was sent.
 		 *
 		 * Returns itself if the sessionInfo is null.
 		 */
@@ -121,6 +121,9 @@ public abstract class MultiInternalConnectionServer extends WebSocketServer {
 			Request.Builder breq = Request.newBuilder();
 			breq.mergeFrom(req);
 			breq.setSessionInfo(sessionInfo);
+			if (!breq.hasMessageTime()) {
+				breq.setMessageTime(System.currentTimeMillis());
+			}
 			return breq.build();
 		}
 

@@ -87,7 +87,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	public void reconnect() {
 		internalConnections.dropAllConnection(true, false);
 		try {
-			internalConnections.createAndAddConnection(this, connectLocal, "Srl02.tamu.edu", 8883, SolutionConnection.class);
+			internalConnections.createAndAddConnection(this, connectLocal, "srl02.tamu.edu", 8883, SolutionConnection.class);
 		} catch (ConnectionException e) {
 			e.printStackTrace();
 		}

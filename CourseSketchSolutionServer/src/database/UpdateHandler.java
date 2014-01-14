@@ -28,6 +28,7 @@ public class UpdateHandler {
 				if (req.getResponseText().equals("student")) {
 					SrlExperiment experiment = SrlExperiment.parseFrom(req.getOtherData());
 					instance.setExperiment(experiment);
+					instance.setSubmissionTime(req.getMessageTime());
 					return false;
 				} else {
 					SrlSolution solution = SrlSolution.parseFrom(req.getOtherData());
@@ -189,8 +190,13 @@ public class UpdateHandler {
 		private boolean isSolution = false;
 		private boolean hasId = false;
 		private String id = null;
+		private long messageTime;
 		public boolean isSolution() {
 			return isSolution;
+		}
+
+		public void setSubmissionTime(long messageTime) {
+			this.messageTime = messageTime;
 		}
 
 		public void setExperiment(SrlExperiment experiment) {
@@ -198,6 +204,11 @@ public class UpdateHandler {
 			submission = experiment;
 			hasId = experiment.getSubmission().hasId();
 			id = experiment.getSubmission().getId();
+			if (id == null || id.equals("" ) || id.equals(experiment.getCourseId()) ||
+					id.equals(experiment.getAssignmentId()) || id.equals(experiment.getProblemId()) || id.equals(experiment.getUserId())) {
+				hasId = false;
+				id = null;
+			}
 		}
 		
 		public void setSolution(SrlSolution solution) {
@@ -205,6 +216,10 @@ public class UpdateHandler {
 			submission = solution;
 			hasId = solution.getSubmission().hasId();
 			id = solution.getSubmission().getId();
+			if (id == null || id.equals("" )) {
+				hasId = false;
+				id = null;
+			}
 		}
 
 		public SrlSolution getSolution() throws Exception {
@@ -223,6 +238,7 @@ public class UpdateHandler {
 				}
 			}
 			newSubmission.setUpdateList(this.result.toByteString());
+			newSubmission.setSubmissionTime(messageTime);
 			return builder.setSubmission(newSubmission).build();
 		}
 
@@ -242,11 +258,12 @@ public class UpdateHandler {
 				}
 			}
 			newSubmission.setUpdateList(this.result.toByteString());
+			newSubmission.setSubmissionTime(messageTime);
 			return builder.setSubmission(newSubmission).build();
 		}
 		
 		public boolean hasId() {
-			return hasId;
+			return false; // need to fix this
 		}
 		
 		String getId() {

@@ -19,7 +19,6 @@ message DataSend {
 
 message ItemSend {
 	optional ItemQuery query = 1;
-	optional bool isInsert = 2; // true if inserting, false if updating
 	optional bytes data = 3;
 }
 
