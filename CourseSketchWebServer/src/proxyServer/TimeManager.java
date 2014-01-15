@@ -16,13 +16,12 @@ public class TimeManager {
 		new Thread() {
 			public void run() {
 				while(true) {
-					if(userTimeManager.isEmpty())
+					if (userTimeManager.isEmpty())
 						try {
 							Thread.sleep(180000);
 						}catch(InterruptedException e) {}
 					
-					while(userTimeManager.peek().getTimeSinceLastActive() >= EXPERATION_TIME)
-					{
+					while(userTimeManager.peek().getTimeSinceLastActive() >= EXPERATION_TIME) {
 						ProxyConnectionState removedUser = userTimeManager.poll();
 						if (expiredListener != null) {
 							expiredListener.actionPerformed(new ActionEvent(this, 0, removedUser.getKey()));
@@ -37,11 +36,9 @@ public class TimeManager {
 		};
 	}
 	
-	public void updateManager(ProxyConnectionState userID){
-		for(int i = 0;i < userTimeManager.size(); i++)
-		{
-			if(((LinkedList<ProxyConnectionState>) userTimeManager).get(i).getUserId() == userID.getUserId())
-			{
+	public void updateManager(ProxyConnectionState userID) {
+		for(int i = 0; i < userTimeManager.size(); i++) {
+			if (((LinkedList<ProxyConnectionState>) userTimeManager).get(i).getUserId() == userID.getUserId()) {
 				userTimeManager.remove(i);
 				userTimeManager.add(userID);
 			}
@@ -49,19 +46,17 @@ public class TimeManager {
 		
 	}
 	
-	public void deleteManager(ProxyConnectionState userID){
+	public void deleteManager(ProxyConnectionState userID) {
 		userTimeManager.remove(userID);
 		
 	}
 	
-	public void addToManager(ProxyConnectionState userID){
+	public void addToManager(ProxyConnectionState userID) {
 		userTimeManager.add(userID);
 		
 	}
 	
-	public setExpiredListiner(){
-		
-		
+	public void setExpiredListiner(ActionListener experation) {
+		expiredListener = experation;
 	}
-	
 }
