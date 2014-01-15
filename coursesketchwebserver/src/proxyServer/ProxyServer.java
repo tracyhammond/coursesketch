@@ -7,6 +7,8 @@ import internalConnections.LoginConnectionState;
 import internalConnections.ProxyConnectionManager;
 import internalConnections.RecognitionConnection;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,17 +41,25 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
 	public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
-
+	
+	private TimeManager timeManager = new TimeManager();
+	
 	//private ExampleClient login = connectLogin(this, connectionType);
 	private ProxyConnectionManager serverManager = new ProxyConnectionManager(this, MultiConnectionManager.CONNECT_REMOTE);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public ProxyServer( int port ) {
+	public ProxyServer(int port) {
 		this( new InetSocketAddress( port ) );
 	}
 
-	public ProxyServer( InetSocketAddress address ) {
-		super( address );
+	public ProxyServer(InetSocketAddress address) {
+		super(address);
+		timeManager.setExpiredListiner(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				idToConnection.get(e.getActionCommand()).close();		
+			}
+		});
 	}
 
 	public void reConnect() {
