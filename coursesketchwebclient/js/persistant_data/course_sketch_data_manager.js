@@ -13,6 +13,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var localScope = this;
 	var localUserId = userId;
 	var stateMachine = {};
+	var databaseFinishedLoading = false;
 
 	var useable = false;
 	var version = 2;
@@ -34,10 +35,31 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	 * END OF VARIABLE SETTING
 	 */
 
+	/**
+	 * Returns true if the database is ready false otherwise.
+	 *
+	 * it is placed this far up so that it can be called even before most of the database is set up.
+	 */
+	this.isDatabaseReady = function() {
+		return databaseFinishedLoading;
+	}
+	
+	/**
+	 * After the lower level database has been completely setup the higher level specific databases can be called.
+	 */
 	var initalizedFunction = function() {
-		console.log("database is ready for use! with user: " + userId);
 		useable = true;
-		localScope.start();
+		if (!localScope.start) {
+			var intervalVar = setInterval(function() {
+				if (localScope.start) {
+					console.log("Checking if higher database is truely ready!");
+					clearInterval(intervalVar);
+					localScope.start();
+				}
+			}, 100);
+		} else {
+			localScope.start();
+		}
 	};
 	
 	var database = new protoDatabase(localUserId, version, initalizedFunction);
@@ -45,6 +67,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var addFunction = function(store, objectId, objectToAdd) {
 		return store.put({"id" : objectId, "data" : objectToAdd});
 	}
+
 	var courseTable = database.createTable("Courses","id", addFunction);
 	var assignmentTable = database.createTable("Assignments","id", addFunction);
 	var problemTable = database.createTable("CourseProblems","id", addFunction);
@@ -80,8 +103,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		courseManager = new CourseDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 		assignmentManager = new AssignmentDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 		courseProblemManager = new CourseProblemDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		console.log("database is ready for use! with user: " + userId);
+		databaseFinishedLoading = true;
 	}
-
+	
 	/**
 	 * retrieves all the assignments for a given course.
 	 *
@@ -131,6 +156,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		stateMachine = {};
 	}
 
+	/**
+	 * Returns the current id that is being used with the database
+	 */
 	this.getCurrentId = function() {
 		return localUserId;
 	}

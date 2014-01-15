@@ -4,13 +4,20 @@
  * It will also create all the functions needed for the specific database.
  */
 function protoDatabase(databaseName, version, openCallback) {
+	var databaseSupported = true;
 	if (!window.indexedDB) {
-		return;
-		window.alert("Your browser doesn't support a stable version of IndexedDB. So storing your data will not be possible");
+		databaseSupported = false;
+		console.log("Your browser doesn't support a stable version of IndexedDB. So storing your data will not be possible");
+		//window.alert("Your browser doesn't support a stable version of IndexedDB. So storing your data will not be possible");
 	}
 	var self = this;
 	var courseSketch = {};
-	courseSketch.indexedDB = window.indexedDB;
+	if (databaseSupported) {
+		courseSketch.indexedDB = window.indexedDB;
+	} else {
+		courseSketch.indexedDB = undefined;
+	}
+
 	var updgradeTables = null;
 	this.setTables = function(tables) {
 		updgradeTables = tables;
@@ -44,28 +51,34 @@ function protoDatabase(databaseName, version, openCallback) {
 	}
 
 	this.open = function() {
-		// lets do browser checking for compatability.
-		var request = indexedDB.open(databaseName, version);
-
-		// We can only create Object stores in a versionchange transaction.
-		request.onupgradeneeded = function(e) {
-			var db = e.target.result;
-			// A versionchange transaction is started automatically.
-			e.target.transaction.onerror = courseSketch.indexedDB.onerror;
-			for (var i = 0; i < updgradeTables.length; i++) {
-				table = updgradeTables[i];
-				// delete existing table
-				if (db.objectStoreNames.contains(table.name)) {
-					db.deleteObjectStore(table.name);
+		try {
+			// lets do browser checking for compatability.
+			var request = indexedDB.open(databaseName, version);
+	
+			// We can only create Object stores in a versionchange transaction.
+			request.onupgradeneeded = function(e) {
+				var db = e.target.result;
+				// A versionchange transaction is started automatically.
+				e.target.transaction.onerror = courseSketch.indexedDB.onerror;
+				for (var i = 0; i < updgradeTables.length; i++) {
+					table = updgradeTables[i];
+					// delete existing table
+					if (db.objectStoreNames.contains(table.name)) {
+						db.deleteObjectStore(table.name);
+					}
+					var store = db.createObjectStore(table.name, {keyPath: table.key});
 				}
-				var store = db.createObjectStore(table.name, {keyPath: table.key});
-			}
-		};
-		request.onsuccess = function(e) {
-			courseSketch.indexedDB.db = e.target.result;
+			};
+			request.onsuccess = function(e) {
+				courseSketch.indexedDB.db = e.target.result;
+				createTableFunctions();
+			};
+			request.onerror = courseSketch.indexedDB.onerror;
+		} catch(exception) {
+			// if there is an exception then we should continue
+			courseSketch.indexedDB = null;
 			createTableFunctions();
-		};
-		request.onerror = courseSketch.indexedDB.onerror;
+		}
 	}
 
 	/**
@@ -79,6 +92,10 @@ function protoDatabase(databaseName, version, openCallback) {
 				 * Creates a function for adding items to the database.
 				 */
 				self['putIn' + localTable.name] = function(objectId, objectToAdd, callback) {
+					if (!databaseSupported || !courseSketch.indexedDB) {
+						return; // fail silently
+					}
+
 					var db = courseSketch.indexedDB.db;
 					var trans = db.transaction([localTable.name], "readwrite");
 					var store = trans.objectStore(localTable.name);
@@ -98,6 +115,10 @@ function protoDatabase(databaseName, version, openCallback) {
 				 * Creates a function for deleting items from the database.
 				 */
 				self['deleteFrom' + localTable.name] = function(objectId, callback) {
+					if (!databaseSupported || !courseSketch.indexedDB) {
+						return; // fail silently
+					}
+
 					var db = courseSketch.indexedDB.db;
 					var trans = db.transaction([localTable.name], "readwrite");
 					var store = trans.objectStore(localTable.name);
@@ -116,6 +137,12 @@ function protoDatabase(databaseName, version, openCallback) {
 				 * Creates a function for deleting items from the database.
 				 */
 				self['getFrom' + localTable.name] = function(objectId, callback) {
+					if (!databaseSupported || !courseSketch.indexedDB) {
+						// return undefined
+						callback(undefined, undefined, undefined);
+						return;
+					}
+
 					var db = courseSketch.indexedDB.db;
 					var trans = db.transaction([localTable.name]);
 					var store = trans.objectStore(localTable.name);
