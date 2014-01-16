@@ -245,19 +245,19 @@ function Connection(uri, encrypted, attemptReconnect) {
 		}
 
 		function buildUpdateList() {
-			if (!ProtoUpdateCommand) {
+			if (!ProtoUpdateCommandBuilder) {
 				var builder = ProtoBuf.protoFromFile(protobufDirectory + "commands.proto");
-				ProtoUpdateCommand = builder.build("protobuf").srl.commands;
+				ProtoUpdateCommandBuilder = builder.build("protobuf").srl.commands;
 			}
 
 			if (!ProtoSrlUpdate)
-				ProtoSrlUpdate = ProtoUpdateCommand.SrlUpdate;
+				ProtoSrlUpdate = ProtoUpdateCommandBuilder.SrlUpdate;
 			if (!ProtoSrlCommand)
-				ProtoSrlCommand = ProtoUpdateCommand.SrlCommand;
+				ProtoSrlCommand = ProtoUpdateCommandBuilder.SrlCommand;
 			if (!ProtoSrlCommandType)
-				ProtoSrlCommandType = ProtoUpdateCommand.CommandType;
+				ProtoSrlCommandType = ProtoUpdateCommandBuilder.CommandType;
 			if (!IdChain)
-				IdChain = ProtoUpdateCommand.IdChain;
+				IdChain = ProtoUpdateCommandBuilder.IdChain;
 		}
 
 		function buildSubmissions() {
@@ -385,7 +385,7 @@ var ProtoSrlInterpretation = false;
  *
  * (capitol P because they classes)
  */
-var ProtoUpdateCommand = false;
+var ProtoUpdateCommandBuilder = false;
 var ProtoSrlUpdate = false;
 var ProtoSrlCommand = false;
 var ProtoSrlCommandType = false;
@@ -423,7 +423,7 @@ function copyParentProtos(scope) {
 	copyParentValues(scope,'ProtoSrlPoint');
 	copyParentValues(scope,'ProtoSrlInterpretation');
 
-	copyParentValues(scope,'ProtoUpdateCommand');
+	copyParentValues(scope,'ProtoUpdateCommandBuilder');
 	copyParentValues(scope,'ProtoSrlUpdate');
 	copyParentValues(scope,'ProtoSrlCommand');
 	copyParentValues(scope,'ProtoSrlCommandType');

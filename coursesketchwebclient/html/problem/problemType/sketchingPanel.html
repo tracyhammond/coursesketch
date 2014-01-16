@@ -20,6 +20,7 @@
     	parent.copyParentProtos(this);
 
 		var serverConnection = parent.connection;
+		var ByteBuffer = parent.ByteBuffer;
 		var drawingCreator = false;
 		var sketch = false;
 		var canvasContext = false;
@@ -39,7 +40,7 @@
 			highlighter = new Highlighter(input, sketch, callback, canvasContext);
 
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
-					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommand);
+					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommandBuilder);
 			serverConnection.setRecognitionListener(function(evt, message) {
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
 					var data = message.otherData;
@@ -49,12 +50,23 @@
 			});
 
 			var submitFunction = function() {
+				// submits your work to the server.
 				var experiment = new ProtoSubmissionBuilder.SrlExperiment();
 				experiment.submission = new ProtoSubmissionBuilder.SrlSubmission();
 				parent.problemNavigator.setSubmissionInformation(experiment, true);
 
-				submitUpdateList(serverConnection, commandManager.getUpdates(), [ProtoUpdateCommand, ProtoSubmissionBuilder], experiment,
+				submitUpdateList(serverConnection, commandManager.getUpdates(), [ProtoUpdateCommandBuilder, ProtoSubmissionBuilder], experiment,
 						Request.MessageType.SUBMISSION, displayBar, updateBar, finishBar);
+				// submis the work locally
+				commandManager.getUpdateList(function(updateList) {
+					var localSubmission = new ProtoSubmissionBuilder.SrlSubmission();
+					var listContainer = new ProtoUpdateCommandBuilder.SrlUpdateList();
+					listContainer.setList(updateList);
+					localSubmission.setUpdateList(listContainer.toArrayBuffer());
+					alert("getting local list");
+					console.log(updateList); // contains the entire update list
+					parent.problemNavigator.getDataManager().setSubmission(parent.problemNavigator.getCurrentProblemId(), localSubmission);
+				});
 			};
 			parent.problemNavigator.addEventMapping("submit", submitFunction);
 
@@ -74,7 +86,20 @@
 				parent.problemNavigator.removeEventMapping("submit", submitFunction);
 				parent.problemNavigator.removeEventMapping("feedback", feedbackFunction); 
 			});
+			
+			loadUpdateList();
 		}
+
+	    function loadUpdateList() {
+	    	parent.problemNavigator.getDataManager().getSubmission(parent.problemNavigator.getCurrentProblemId(), function(submission) {
+	    		if (isUndefined(submission)) {
+	    			return;
+	    		}
+	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(submission.getUpdateList());
+	    		console.log(updateList);
+	    		commandManager.setUpdateList(updateList.getList());
+	    	});
+	    }
 
 	    function callback(stroke) {
 			stroke.draw(canvasContext);

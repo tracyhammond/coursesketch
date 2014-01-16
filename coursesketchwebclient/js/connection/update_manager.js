@@ -3,6 +3,7 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	var serverConnection = connection;
 	var currentUpdateIndex = 0; // holds a state of updates (for undoing and redoing)
 	var sketchProtoBuilder = sketchBuilder;
+	var localScope = this;
 	/*
 	 * Holds the list of updates that are waiting to be sent to the server.
 	 *
@@ -16,7 +17,10 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	var updateList = [];
 	var Action = Action;
 
-	this.getUpdates = function() {
+	this.getUpdates = function(callback) {
+		if (callback) {
+			callback(updateList);
+		}
 		return updateList;
 	}
 
@@ -58,6 +62,71 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 				}
 			}
 		}.bind(this),10);
+	}
+
+	/**
+	 * Returns a copy of the updateList for the purpose of not being edited while in use.
+	 *
+	 * this is a delayed method to prevent javascript from freezing the browser.
+	 */
+	this.getUpdateList = function(callback) {
+		var index = 0;
+		var maxIndex = updateList.length;
+		var newList = new Array();
+		var oldList = updateList; // for local scoping
+		var intervalHolder = setInterval(function() {
+			var startIndex = index;
+			while (index < maxIndex && startIndex - index <= 5) {
+				var update = oldList[index];
+				var newUpdate = new ProtoSrlUpdate();
+				var newCommandList = new Array();
+				for (var i = 0; i < update.commands.length; i++) {
+					var command = update.commands[i];
+					var cleanCommand = new ProtoSrlCommand();
+					cleanCommand.commandType = command.commandType;
+					cleanCommand.isUserCreated = command.isUserCreated;
+					cleanCommand.commandData = command.commandData;
+					cleanCommand.commandId = command.commandId;
+					newCommandList.push(cleanCommand);
+				}
+				newUpdate.updateId = update.updateId;
+				newUpdate.time = update.time;
+				if (update.commandNumber) newUpdate.commandNumber = update.commandNumber;
+				newUpdate.commands = newCommandList;
+				newList.push(newUpdate);
+				index++;
+			}
+			if (index >= maxIndex) {
+				clearInterval(intervalHolder);
+				if (callback) {
+					callback(newList);
+				}
+			}
+		}, 10);	
+	}
+
+	/**
+	 * This clears any current updates
+	 */
+	this.setUpdateList = function(list) {
+		this.clearUpdates();
+		var index = 0;
+		var maxIndex = list.length;
+		var intervalHolder = setInterval(function() {
+			var startIndex = index;
+			while (index < maxIndex && index - startIndex < 1) {
+				localScope.addUpdate(list[index], false, true);
+				index++;
+			}
+			if (index >= maxIndex) {
+				clearInterval(intervalHolder);
+			}
+		}, 100);
+	}
+
+	this.clearUpdates = function() {
+		currentUpdateIndex = 0;
+		updateList = [];
 	}
 
 	/**
@@ -129,8 +198,8 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 				return 'SYNC';
 		}
 		return "NO_NAME # is: " +this.getCommandType();
-	}	
-	
+	}
+
 	ProtoSrlCommand.prototype.CommandType = ProtoSrlCommandType; // TODO: figure out how to get static properties from instance.
 	ProtoSrlCommand.prototype.decodedData = false;
 
@@ -146,9 +215,13 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 		switch (command) {
 			case this.CommandType.ADD_STROKE:
 				if (!this.decodedData) {
+			//		console.log(this.commandData);
 					//console.log("Executing " + this.CommandType.ADD_STROKE);
 					var stroke = parent.ProtoSrlStroke.decode(this.commandData);
+					this.commandData.offset = 0;
+					this.commandData.markedOffset = this.commandData.length;
 					this.decodedData = SRL_Stroke.createFromProtobuf(stroke);
+			//		console.log(this.commandData);
 				}
 				sketch.addObject(this.decodedData);
 				redraw = true;
@@ -157,6 +230,8 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 				if (!this.decodedData) {
 					//console.log("Executing " + this.CommandType.ADD_SHAPE);
 					var shape = parent.ProtoSrlShape.decode(this.commandData);
+					this.commandData.offset = 0;
+					this.commandData.markedOffset = this.commandData.length;
 					this.decodedData = SRL_Shape.createFromProtobuf(shape);
 				}
 				sketch.addObject(this.decodedData);
@@ -166,7 +241,8 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 					this.decodedData = new Array();
 					//console.log("Executing " + this.CommandType.ADD_SHAPE);
 					var idChain = parent.IdChain.decode(this.commandData);
-
+					this.commandData.offset = 0;
+					this.commandData.markedOffset = this.commandData.length;
 					this.decodedData[0] = idChain;
 				}
 				// holds the decoded data in the second part of the list.
@@ -177,6 +253,8 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 				console.log("Executing PACKAGE_SHAPE");
 				if (isUndefined(this.decodedData) || (!this.decodedData)) {
 					this.decodedData = Action.ActionPackageShape.decode(this.commandData);
+					this.commandData.offset = 0;
+					this.commandData.markedOffset = this.commandData.length;
 				}
 				this.decodedData.redo();
 			break;

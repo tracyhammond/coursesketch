@@ -44,6 +44,7 @@
 		var StrokeProto = scope ? scope.ProtoSrlStroke : ProtoSrlStroke;
 		var proto = new StrokeProto();
 		proto.id = this.getId();
+		alert(proto.id);
 		var n = this.getTime();
 		var longVersion = scope.Long.fromString("" + n);
 		proto.setTime(longVersion);
