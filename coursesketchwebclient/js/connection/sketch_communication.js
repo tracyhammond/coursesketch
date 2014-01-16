@@ -42,11 +42,11 @@
 	 */
 	SRL_Stroke.prototype.sendToProtobuf = function(scope) {
 		var StrokeProto = scope ? scope.ProtoSrlStroke : ProtoSrlStroke;
+		var long = scope.Long || Long;
 		var proto = new StrokeProto();
 		proto.id = this.getId();
-		alert(proto.id);
 		var n = this.getTime();
-		var longVersion = scope.Long.fromString("" + n);
+		var longVersion = long.fromString("" + n);
 		proto.setTime(longVersion);
 		proto.name = this.getName();
 		var array = new Array();
