@@ -1,8 +1,7 @@
-function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, ProtoSrlCommandType, Action, sketchBuilder) {
+function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, ProtoSrlCommandType, Action) {
 	var sketch = sketch;
 	var serverConnection = connection;
 	var currentUpdateIndex = 0; // holds a state of updates (for undoing and redoing)
-	var sketchProtoBuilder = sketchBuilder;
 	var localScope = this;
 	/*
 	 * Holds the list of updates that are waiting to be sent to the server.
@@ -51,6 +50,9 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 		}
 	}
 
+	/**
+	 * Slowly empties the queue for sending messages to the server.
+	 */
 	this.emptyQueue = function() {
 		setTimeout(function() {
 			if (queuedUpdates.length > 0) {
@@ -129,6 +131,15 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 		updateList = [];
 	}
 
+	/**
+	 * Decodes the data and perserves the bytebuffer for later use
+	 */
+	function decodeCommandData(commandData, proto) {
+		commandData.mark();
+		var decoded = proto.decode(commandData);
+		commandData.reset();
+		return decoded;
+	}
 	/**
 	 * Redo the commands in a certain order.
 	 *
@@ -215,24 +226,15 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 		switch (command) {
 			case this.CommandType.ADD_STROKE:
 				if (!this.decodedData) {
-			//		console.log(this.commandData);
-					//console.log("Executing " + this.CommandType.ADD_STROKE);
-					var stroke = parent.ProtoSrlStroke.decode(this.commandData);
-				//	this.commandData.offset = 0;
-				//	this.commandData.markedOffset = this.commandData.length;
+					var stroke = decodeCommandData(this.commandData, parent.ProtoSrlStroke);
 					this.decodedData = SRL_Stroke.createFromProtobuf(stroke);
-					this.commandData = this.decodedData.sendToProtobuf(connection.serverScope);
-			//		console.log(this.commandData);
 				}
 				sketch.addObject(this.decodedData);
 				redraw = true;
 			break;
 			case this.CommandType.ADD_SHAPE:
 				if (!this.decodedData) {
-					//console.log("Executing " + this.CommandType.ADD_SHAPE);
-					var shape = parent.ProtoSrlShape.decode(this.commandData);
-					this.commandData.offset = 0;
-					this.commandData.markedOffset = this.commandData.length;
+					var shape = decodeCommandData(this.commandData, parent.ProtoSrlShape);
 					this.decodedData = SRL_Shape.createFromProtobuf(shape);
 				}
 				sketch.addObject(this.decodedData);
@@ -240,22 +242,15 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 			case this.CommandType.REMOVE_OBJECT:
 				if (!this.decodedData || !isArray(this.decodedData)) {
 					this.decodedData = new Array();
-					//console.log("Executing " + this.CommandType.ADD_SHAPE);
-					var idChain = parent.IdChain.decode(this.commandData);
-					this.commandData.offset = 0;
-					this.commandData.markedOffset = this.commandData.length;
+					var idChain = decodeCommandData(this.commandData, parent.IdChain);
 					this.decodedData[0] = idChain;
 				}
-				// holds the decoded data in the second part of the list.
 				this.decodedData[1] = sketch.removeSubObjectByIdChain(this.decodedData[0].idChain);
 				redraw = true;
 			break;
 			case this.CommandType.PACKAGE_SHAPE:
-				console.log("Executing PACKAGE_SHAPE");
 				if (isUndefined(this.decodedData) || (!this.decodedData)) {
-					this.decodedData = Action.ActionPackageShape.decode(this.commandData);
-					this.commandData.offset = 0;
-					this.commandData.markedOffset = this.commandData.length;
+					this.decodedData = decodeCommandData(this.commandData, Action.ActionPackageShape);
 				}
 				this.decodedData.redo();
 			break;

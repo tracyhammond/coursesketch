@@ -31,7 +31,6 @@
 		var wsUri = "srl01.tamu.edu:8888"; // our server
 		//var wsUri = "localhost:8888"; // local server
 		connection = new Connection(wsUri, false, true);
-		connection.serverScope = this;
 
 		connection.setOnCloseListener(function(evt, attemptingToReconnect) {
 			if (evt.code == CONNECTION_LOST) {
