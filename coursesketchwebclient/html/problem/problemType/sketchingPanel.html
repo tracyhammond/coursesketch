@@ -63,7 +63,6 @@
 					var listContainer = new ProtoUpdateCommandBuilder.SrlUpdateList();
 					listContainer.setList(updateList);
 					localSubmission.setUpdateList(listContainer.toArrayBuffer());
-					alert("getting local list");
 					console.log(updateList); // contains the entire update list
 					parent.problemNavigator.getDataManager().setSubmission(parent.problemNavigator.getCurrentProblemId(), localSubmission);
 				});
@@ -128,7 +127,7 @@
 	    	document.getElementById("PercentBar").innerHTML = "" + (index/total) * 100 + "% total: "+total;
  	    }
 	    function finishBar() {
-	    	//alert("done submitting");
+	    	alert("done submitting");
 	    }
 	</script>
 	<script type="text/javascript">
