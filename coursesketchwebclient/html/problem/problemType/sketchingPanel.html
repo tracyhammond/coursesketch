@@ -40,7 +40,7 @@
 			highlighter = new Highlighter(input, sketch, callback, canvasContext);
 
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
-					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommandBuilder);
+					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommandBuilder, parent.problemNavigator.getDataManager().Long);
 			serverConnection.setRecognitionListener(function(evt, message) {
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
 					var data = message.otherData;
@@ -114,6 +114,7 @@
 			// then finish him!
 			command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
 			command.decodedData = stroke;
+			console.log(command.commandData);
 			var array = new Array();
 			array.push(command);
 			var update = serverConnection.createUpdateFromCommands(array);

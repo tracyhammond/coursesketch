@@ -218,9 +218,10 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 			//		console.log(this.commandData);
 					//console.log("Executing " + this.CommandType.ADD_STROKE);
 					var stroke = parent.ProtoSrlStroke.decode(this.commandData);
-					this.commandData.offset = 0;
-					this.commandData.markedOffset = this.commandData.length;
+				//	this.commandData.offset = 0;
+				//	this.commandData.markedOffset = this.commandData.length;
 					this.decodedData = SRL_Stroke.createFromProtobuf(stroke);
+					this.commandData = this.decodedData.sendToProtobuf(connection.serverScope);
 			//		console.log(this.commandData);
 				}
 				sketch.addObject(this.decodedData);

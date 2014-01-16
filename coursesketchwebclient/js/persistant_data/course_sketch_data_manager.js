@@ -8,7 +8,7 @@
  * @param query Holds the protobuf builder for querying items.
  * @param byteBuffer The static instance that is used for encoding and decoding data.
  */
-function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilder, query, request, byteBuffer) {
+function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilder, query, request, byteBuffer, long) {
 	const COURSE_LIST = "COURSE_LIST";
 	var localScope = this;
 	var localUserId = userId;
