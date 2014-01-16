@@ -30,8 +30,8 @@ message SrlShape {
 }
 
 message SrlStroke {
-	optional string id = 1;
-	optional uint64 time = 2;
+	required string id = 1;
+	required uint64 time = 2;
 	optional string name = 3;
 	repeated SrlPoint points = 4;
 	optional SrlBoundingBox boundingbox = 5;

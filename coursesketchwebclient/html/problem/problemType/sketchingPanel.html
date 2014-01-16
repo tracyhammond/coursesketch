@@ -40,7 +40,7 @@
 			highlighter = new Highlighter(input, sketch, callback, canvasContext);
 
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
-					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommandBuilder, parent.problemNavigator.getDataManager().Long);
+					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommandBuilder);
 			serverConnection.setRecognitionListener(function(evt, message) {
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
 					var data = message.otherData;
@@ -54,11 +54,11 @@
 				var experiment = new ProtoSubmissionBuilder.SrlExperiment();
 				experiment.submission = new ProtoSubmissionBuilder.SrlSubmission();
 				parent.problemNavigator.setSubmissionInformation(experiment, true);
-
-				submitUpdateList(serverConnection, commandManager.getUpdates(), [ProtoUpdateCommandBuilder, ProtoSubmissionBuilder], experiment,
-						Request.MessageType.SUBMISSION, displayBar, updateBar, finishBar);
-				// submis the work locally
 				commandManager.getUpdateList(function(updateList) {
+					submitUpdateList(serverConnection, updateList, [ProtoUpdateCommandBuilder, ProtoSubmissionBuilder], experiment,
+							Request.MessageType.SUBMISSION, displayBar, updateBar, finishBar);
+
+					// submis the work locally
 					var localSubmission = new ProtoSubmissionBuilder.SrlSubmission();
 					var listContainer = new ProtoUpdateCommandBuilder.SrlUpdateList();
 					listContainer.setList(updateList);

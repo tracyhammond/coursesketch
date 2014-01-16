@@ -29,6 +29,7 @@ public class UpdateHandler {
 					SrlExperiment experiment = SrlExperiment.parseFrom(req.getOtherData());
 					instance.setExperiment(experiment);
 					instance.setSubmissionTime(req.getMessageTime());
+					instance.setUserId(req.getServersideId());
 					return false;
 				} else {
 					SrlSolution solution = SrlSolution.parseFrom(req.getOtherData());
@@ -190,9 +191,14 @@ public class UpdateHandler {
 		private boolean isSolution = false;
 		private boolean hasId = false;
 		private String id = null;
+		private String userId = null;
 		private long messageTime;
 		public boolean isSolution() {
 			return isSolution;
+		}
+
+		public void setUserId(String serversideId) {
+			userId = serversideId;
 		}
 
 		public void setSubmissionTime(long messageTime) {
@@ -250,6 +256,7 @@ public class UpdateHandler {
 				throw new Exception("cannot retrieve incomplete submission");
 			}
 			SrlExperiment.Builder builder = SrlExperiment.newBuilder((SrlExperiment) submission);
+			builder.setUserId(userId);
 			SrlSubmission.Builder newSubmission = SrlSubmission.newBuilder();
 			if (((SrlExperiment) submission).hasSubmission()) { 
 				SrlSubmission oldSubmission = ((SrlExperiment) submission).getSubmission();
