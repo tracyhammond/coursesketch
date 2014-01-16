@@ -16,10 +16,11 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var databaseFinishedLoading = false;
 
 	var useable = false;
-	var version = 2;
+	var version = 3;
 	var dataListener = advanceDataListener;
 
 	var ByteBuffer = byteBuffer;
+	this.ByteBuffer = ByteBuffer;
 	var Request = request;
 
 	var SchoolBuilder = schoolBuilder;
@@ -30,6 +31,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var courseManager;
 	var assignmentManager;
 	var courseProblemManager;
+	var submissionManager;
 
 	/*
 	 * END OF VARIABLE SETTING
@@ -72,8 +74,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var assignmentTable = database.createTable("Assignments","id", addFunction);
 	var problemTable = database.createTable("CourseProblems","id", addFunction);
 	var bankProblemTable = database.createTable("BankProblems","id", addFunction);
-	var experimentTable = database.createTable("Experiments","id", addFunction);
-	var solutionTable = database.createTable("Solutions","id", addFunction);
+	var submissionTable = database.createTable("Submissions","id", addFunction);
 
 	(function() {
 		var tables = new Array();
@@ -81,8 +82,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		tables.push(assignmentTable);
 		tables.push(problemTable);
 		tables.push(bankProblemTable);
-		tables.push(experimentTable);
-		tables.push(solutionTable);
+		tables.push(submissionTable);
 		database.setTables(tables);
 		database.open();
 	})();
@@ -103,6 +103,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		courseManager = new CourseDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 		assignmentManager = new AssignmentDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 		courseProblemManager = new CourseProblemDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		submissionManager = new SubmissionDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
 		console.log("database is ready for use! with user: " + userId);
 		databaseFinishedLoading = true;
 	}

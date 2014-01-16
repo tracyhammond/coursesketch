@@ -34,6 +34,11 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 	function getProblemInfo() {
 		return currentProblem.problemInfo;
 	}
+
+	this.getDataManager = function() {
+		return dataManager;
+	}
+
 	/**
 	 * Scopes the index for the callbackList.
 	 */
@@ -107,6 +112,14 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 			submission.problemId = currentProblem.id;
 		}
 	}
+
+	/**
+	 * Returns the Id of the current problem.
+	 */
+	this.getCurrentProblemId = function() {
+		return currentProblem.id;
+	}
+
 	/**
 	 * Returns the type of the base problem.
 	 *
