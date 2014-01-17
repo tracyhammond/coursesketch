@@ -9,26 +9,27 @@
 			console.log("please resize my panel");
 			scope.getElementById("panelWrapper").onresize();
 		}
-		
+
 		parent.problemNavigator.addCallback(function(nav) {
-			var specificButtonHolder = scope.getElementById("specificButtons");
-			specificButtonHolder.innerHTML = "";
 			var eventFunction = nav.executeEvent;
 			var type = nav.getPoblemType();
+
+			var specificButtonHolder = scope.getElementById("specificButtons");
+			specificButtonHolder.innerHTML = "";
+
+			// utility function to create buttons
+			function createButton(img, onclickFunction, onloadFunction) {
+				var element = scope.createElement("img");
+				element.src = img;
+				element.onclick = onclickFunction;
+				element.onload = onloadFunction
+				specificButtonHolder.appendChild(element);
+			}
+
 			if (type == "SKETCH") {
-				setTimeout(function() {
-					var element = scope.createElement("img");
-					element.src = "images/toolbar/clear_button.svg";
-					element.onclick = function() {
-						eventFunction("clear");
-					};
-					element.onload = function() {
-						console.log("please resize my panel");
-						scope.getElementById("panelWrapper").onresize();
-					}
-					specificButtonHolder.appendChild(element);
-				}, 1000);
-				
+				createButton("images/toolbar/clear_button.svg", function() {
+					eventFunction("clear");
+				}, resizeParent);
 				// add sketching tools
 			}  else if (type == "MULT_CHOICE") {
 				// add mult choice tools
@@ -36,14 +37,6 @@
 				// add free resp tools
 			}
 		});
-		
-		function createButton(img, onclickFunction, onloadFunction) {
-			var element = scope.createElement("img");
-			element.src = img;
-			element.onclick = onclickFunction;
-			element.onload = onloadFunction
-			specificButtonHolder.appendChild(element);
-		}
 
 		function initialize(scope) {
 			parent.loadTool(scope);
