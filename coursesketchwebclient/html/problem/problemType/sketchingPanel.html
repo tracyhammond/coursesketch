@@ -33,10 +33,16 @@
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
 			canvasContext = input.canvasContext;
-
+			
+			// creating a new sketch
 			sketch = new SRL_Sketch();
 			sketch.canvasContext = canvasContext;
+			sketch.clearCanvas = input.clearCanvas;
+			
+			//creating the drawing creator which submits strokes to the sketch
 			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+			
+			// creating the highligheter which changes the color of strokes when they are highlighted
 			highlighter = new Highlighter(input, sketch, callback, canvasContext);
 
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
@@ -68,6 +74,10 @@
 				});
 			};
 			parent.problemNavigator.addEventMapping("submit", submitFunction);
+			
+			parent.problemNavigator.addEventMapping("clear", function() {
+				commandManager.clearUpdates(true);
+			});
 
 			var feedbackFunction = function(args) {
 				console.log(args);

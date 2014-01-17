@@ -108,10 +108,10 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 	}
 
 	/**
-	 * This clears any current updates
+	 * This clears any current updates and replaces the list with a new list
 	 */
 	this.setUpdateList = function(list) {
-		this.clearUpdates();
+		this.clearUpdates(false);
 		var index = 0;
 		var maxIndex = list.length;
 		var intervalHolder = setInterval(function() {
@@ -123,12 +123,16 @@ function UpdateManager(sketch, connection, ProtoSrlUpdate, ProtoSrlCommand, Prot
 			if (index >= maxIndex) {
 				clearInterval(intervalHolder);
 			}
-		}, 100);
+		}, 20);
 	}
 
-	this.clearUpdates = function() {
+	this.clearUpdates = function(redraw) {
 		currentUpdateIndex = 0;
-		updateList = [];
+		updateList.length = 0;
+		sketch.resetSketch();
+		if (redraw) {
+			sketch.drawEntireSketch();
+		}
 	}
 
 	/**

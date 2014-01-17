@@ -250,8 +250,8 @@ function SRL_Sketch() {
 	var objectList = [];
 	var objectIdMap = [];
 	var boundingBox = new SRL_BoundingBox();
-
 	var objectMap = {};
+
 	this.addObject = function(srlObject) {
 		objectList.push(srlObject);
 		objectIdMap[srlObject.getId()] = srlObject;
@@ -340,6 +340,17 @@ function SRL_Sketch() {
 		}
 		var returnShape = parentShape.removeSubObjectById(idList[idList.length - 1]);
 		return returnShape;
+	}
+
+	/**
+	 * Resets the sketch to its starting state.
+	 * 
+	 */
+	this.resetSketch = function() {
+		objectList = [];
+		objectIdMap = [];
+		boundingBox = new SRL_BoundingBox();
+		objectMap = {};
 	}
 }
 
