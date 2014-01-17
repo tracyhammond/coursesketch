@@ -25,8 +25,21 @@
 				scope.getElementById("totalNumber").innerHTML = "out of " + totalNumber;
 			}
 			// TODO: change this to strip out bad HTML code
-			scope.getElementById("problemPanel").innerHTML = parent.problemNavigator.getProblemText();
+			scope.getElementById("problemPanel").innerHTML = '<p>' + parent.problemNavigator.getProblemText() + '</p>';
+			var navWidth = scope.getElementById("navPanel").offsetWidth;
+			var textWidth = scope.getElementById("panelWrapper").offsetWidth - navWidth;
+			scope.getElementById("problemPanel").style.width = textWidth - 15;
 		});
+		window.onresize = function() {
+			var navWidth = document.getElementById("navPanel").offsetWidth;
+			var navHeight = document.getElementById("navPanel").offsetHeight;
+		//	alert('nav ' + navWidth);
+			var textWidth = document.getElementById("panelWrapper").offsetWidth - navWidth;
+		//	alert('wrapper ' + document.getElementById("panelWrapper").offsetWidth);
+			document.getElementById("problemPanel").style.width = (textWidth - 15) +"px";
+			document.getElementById("problemPanel").style.height = (navHeight -15) +"px";
+		//	alert(textWidth);
+		}
 	</script>
 </head>
 <body onload = "parent.loadNav(this);">
@@ -60,7 +73,7 @@
 			</div>
 		</div>
 		</div>
-		<div id = "problemPanel" style = "display: inline-block;">
+		<div id = "problemPanel" style = "display:inline-block; overflow-y:scroll;">
 			Text problem Text text text
 		</div>
 	</div>
