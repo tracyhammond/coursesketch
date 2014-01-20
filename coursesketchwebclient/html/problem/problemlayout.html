@@ -15,7 +15,8 @@
 		}
 	</script>
 	<script>
-		var problemNavigator = new schoolNavigator(parent.dataManager.getState("CURRENT_ASSIGNMENT"),parent.dataManager, false);
+		var problemNavigator = new schoolNavigator(parent.dataManager.getState("CURRENT_ASSIGNMENT"), parent.dataManager, false,
+				parseInt(parent.dataManager.getState("CURRENT_QUESTION_INDEX")));
 		connection.setAnswerCheckingListener(function(event, msg) {
 			problemNavigator.executeEvent('feedback', [event, msg]);
 		});
@@ -74,7 +75,10 @@
 		}
 	})(this);
 	function onLoad() {
-		problemNavigator.refresh();
+		problemNavigator.setUiLoaded(true);
+		if (problemNavigator.isDataLoaded()) {
+			problemNavigator.refresh();
+		}
 		window.onresize();
 	}
 	</script>
