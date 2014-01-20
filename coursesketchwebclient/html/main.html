@@ -94,7 +94,11 @@
 	  		var dataManager = false;
 
 	  		function redirectContent(url, title) {
-	  			document.getElementById('iframeContent').src = url;
+	  			var iframe = document.getElementById('iframeContent');
+	  			var docWindow = iframe.documentWindow || iframe.contentDocument;
+	  			docWindow.location.replace(url); // it allows the url to change without adding an event to the history!
+
+	  			//document.getElementById('iframeContent').src = url;
 	  			redirector.setRedirect(url);
 
 	  			if (title) {
