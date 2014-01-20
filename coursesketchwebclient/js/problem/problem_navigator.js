@@ -5,7 +5,7 @@
  * different parts of the system.
  * Callbacks are not guaranteed in any order.
  */
-function schoolNavigator(assignmentId, dataManagerR, loop) {
+function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 	var currentAssignmentId = assignmentId;
 	var currentAssignment;
 	var dataManager = dataManagerR;
@@ -15,6 +15,9 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 	var currentIndex = 0;
 	var navScope = this;
 	var eventMappingCallback = {};
+	var dataLoaded = false;
+	var uiLoaded = false;
+
 	this.goToProblem = function goToProblem(index) {
 		changeProblem(index)
 	}
@@ -27,8 +30,20 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 		changeProblem(currentIndex - 1);
 	}
 
+	if (!isUndefined(preferredIndex)) {
+		currentIndex = preferredIndex;
+	}
+
 	this.refresh = function() {
 		changeProblem(currentIndex);
+	}
+
+	this.isDataLoaded = function() {
+		return dataLoaded;
+	}
+
+	this.setUiLoaded = function(value) {
+		uiLoaded = value;
 	}
 
 	function getProblemInfo() {
@@ -142,11 +157,17 @@ function schoolNavigator(assignmentId, dataManagerR, loop) {
 	}
 
 	this.reloadProblems = function() {
+		dataLoaded = false;
 		dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
-			for(var i = 0; i <problems.length; i++) {
+			for (var i = 0; i <problems.length; i++) {
 				problemList.push(problems[i]);
 			}
+			if (uiLoaded) {
+				refresh();
+			}
+			dataLoaded = true; // this one will take longer so we do this one second.
 		});
+
 		dataManager.getAssignment(assignmentId, function(assignment) {
 			currentAssignment = assignment;
 		});
