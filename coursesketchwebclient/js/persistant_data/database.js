@@ -21,7 +21,7 @@ function protoDatabase(databaseName, version, openCallback) {
 	var updgradeTables = null;
 	this.setTables = function(tables) {
 		updgradeTables = tables;
-	}
+	};
 
 	/**
 	 * Returns an object that can be converted to a table.
@@ -48,7 +48,7 @@ function protoDatabase(databaseName, version, openCallback) {
 			key: keyValue,
 			add: addingFunction
 		};
-	}
+	};
 
 	this.open = function() {
 		try {
@@ -79,7 +79,7 @@ function protoDatabase(databaseName, version, openCallback) {
 			courseSketch.indexedDB = null;
 			createTableFunctions();
 		}
-	}
+	};
 
 	/**
 	 * creates a bunch of functions for the table which are created upon successful database creation.
@@ -105,7 +105,7 @@ function protoDatabase(databaseName, version, openCallback) {
 						// this data is only to be used for the local deletion of all items in the database
 						if (callback)
 							callback(e, request);
-					}
+					};
 
 					request.onerror = function(e) {
 						console.log(e.value);
@@ -172,12 +172,11 @@ function protoDatabase(databaseName, version, openCallback) {
 			if(result == true) {
 				var dbreq = courseSketch.indexedDB.deleteDatabase(databaseName);
 				dbreq.onsuccess = function (event) {
-					var db = event.result;
 					output_trace("indexedDB: " + databaseName + " deleted");
-				}
+				};
 				dbreq.onerror = function (event) {
 					output_trace("indexedDB.delete Error: " + event.message);
-				}
+				};
 			} else {
 				alert("The local data was not emptied");
 			}
@@ -185,5 +184,5 @@ function protoDatabase(databaseName, version, openCallback) {
 		catch (e) {
 			output_trace("Error: " + e.message);
 		}
-	}
-}
+	};
+};

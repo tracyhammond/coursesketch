@@ -16,7 +16,7 @@
 		proto.size = this.getSize();
 		proto.speed = this.getSpeed();
 		return proto;
-	}
+	};
 
 	/**
 	 * Static function that returns an {@link SRL_Point}.
@@ -35,7 +35,7 @@
 		if (proto.speed)
 			point.setSpeed(proto.speed);
 		return point;
-	}
+	};
 
 	/**
 	 * Creates an SRL protobuf version of a stroke
@@ -56,7 +56,7 @@
 		}
 		proto.setPoints(array); // THIS FUNCTION SUCKS!
 		return proto;
-	}
+	};
 
 	/**
 	 * Static function that returns an {@link SRL_Stroke}.
@@ -75,7 +75,7 @@
 		srlStroke.finish();
 		srlStroke.setId(stroke.getId());
 		return srlStroke;
-	}
+	};
 
 	/**
 	 * Creates an SRL protobuf version of a shape.
@@ -88,7 +88,7 @@
 		var protoInterp = new Array();
 		for(var i = 0; i < interpretations.length; i ++) {
 			var protoInter = interpretations[i];
-			protoInterp = i.sendToProtobuf(scope);
+			protoInterp = protoInter.sendToProtobuf(scope);
 		}
 		proto.setInterpretations(protoInterp);
 		
@@ -105,7 +105,7 @@
 		proto.setTime(longVersion);
 		proto.name = this.getName();
 		return proto;
-	}
+	};
 
 	/**
 	 * Static function that returns an {@link SRL_Shape}.
@@ -125,7 +125,7 @@
 		}
 
 		return newShape;
-	}
+	};
 
 	/**
 	 * Creates an SRL protobuf version of an Interpretation.
@@ -137,7 +137,7 @@
 		proto.confidence = this.confidence;
 		proto.complexity = this.complexity;
 		return proto;
-	}
+	};
 
 	function decodeSrlObject(object) {
 		var proto = false;
