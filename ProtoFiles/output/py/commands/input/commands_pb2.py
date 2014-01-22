@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/commands.proto',
   package='protobuf.srl.commands',
-  serialized_pb='\n\x14input/commands.proto\x12\x15protobuf.srl.commands\"?\n\rSrlUpdateList\x12.\n\x04list\x18\x01 \x03(\x0b\x32 .protobuf.srl.commands.SrlUpdate\"w\n\tSrlUpdate\x12\x10\n\x08updateId\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x01(\x03\x12\x33\n\x08\x63ommands\x18\x03 \x03(\x0b\x32!.protobuf.srl.commands.SrlCommand\x12\x15\n\rcommandNumber\x18\x04 \x01(\x05\"\x84\x01\n\nSrlCommand\x12\x37\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32\".protobuf.srl.commands.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x01(\x0c\x12\x11\n\tcommandId\x18\x04 \x01(\t\"\x1a\n\x07IdChain\x12\x0f\n\x07idChain\x18\x01 \x03(\t\"\x8c\x01\n\x06Marker\x12\n\n\x02id\x18\x01 \x02(\t\x12\x36\n\x04type\x18\x02 \x02(\x0e\x32(.protobuf.srl.commands.Marker.MarkerType\">\n\nMarkerType\x12\x0e\n\nSUBMISSION\x10\x00\x12\x0c\n\x08\x46\x45\x45\x44\x42\x41\x43K\x10\x01\x12\x08\n\x04SAVE\x10\x02\x12\x08\n\x04LOAD\x10\x03\"\xa1\x01\n\x12\x41\x63tionPackageShape\x12\x36\n\x0eoldContainerId\x18\x01 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x36\n\x0enewContainerId\x18\x02 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x1b\n\x13shapesToBeContained\x18\x03 \x03(\t\"d\n\x19\x41\x63tionForceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12/\n\x07shapeId\x18\x02 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"s\n\x12\x41\x63tionAddAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c\"v\n\x15\x41\x63tionRemoveAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c*\xf5\x01\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x11\n\rPACKAGE_SHAPE\x10\x02\x12\x11\n\rREMOVE_OBJECT\x10\x03\x12\x14\n\x10\x41SSIGN_ATTRIBUTE\x10\x04\x12\x14\n\x10REMOVE_ATTRIBUTE\x10\x05\x12\n\n\x06MARKER\x10\x06\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\n\x12\x08\n\x04UNDO\x10\x0b\x12\x08\n\x04REDO\x10\x0c\x12\x0b\n\x07REWRITE\x10\r\x12\x0f\n\x0b\x43LEAR_STACK\x10\x0e\x12\r\n\tOPEN_SYNC\x10\x0f\x12\x0e\n\nCLOSE_SYNC\x10\x10')
+  serialized_pb='\n\x14input/commands.proto\x12\x15protobuf.srl.commands\"?\n\rSrlUpdateList\x12.\n\x04list\x18\x01 \x03(\x0b\x32 .protobuf.srl.commands.SrlUpdate\"w\n\tSrlUpdate\x12\x10\n\x08updateId\x18\x01 \x02(\t\x12\x0c\n\x04time\x18\x02 \x01(\x03\x12\x33\n\x08\x63ommands\x18\x03 \x03(\x0b\x32!.protobuf.srl.commands.SrlCommand\x12\x15\n\rcommandNumber\x18\x04 \x01(\x05\"\x84\x01\n\nSrlCommand\x12\x37\n\x0b\x63ommandType\x18\x01 \x02(\x0e\x32\".protobuf.srl.commands.CommandType\x12\x15\n\risUserCreated\x18\x02 \x02(\x08\x12\x13\n\x0b\x63ommandData\x18\x03 \x01(\x0c\x12\x11\n\tcommandId\x18\x04 \x01(\t\"\x1a\n\x07IdChain\x12\x0f\n\x07idChain\x18\x01 \x03(\t\"\x9f\x01\n\x06Marker\x12\x36\n\x04type\x18\x01 \x02(\x0e\x32(.protobuf.srl.commands.Marker.MarkerType\x12\x11\n\totherData\x18\x02 \x01(\t\"J\n\nMarkerType\x12\x0e\n\nSUBMISSION\x10\x00\x12\x0c\n\x08\x46\x45\x45\x44\x42\x41\x43K\x10\x01\x12\x08\n\x04SAVE\x10\x02\x12\t\n\x05SPLIT\x10\x03\x12\t\n\x05\x43LEAR\x10\x04\"\xa1\x01\n\x12\x41\x63tionPackageShape\x12\x36\n\x0eoldContainerId\x18\x01 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x36\n\x0enewContainerId\x18\x02 \x01(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x1b\n\x13shapesToBeContained\x18\x03 \x03(\t\"d\n\x19\x41\x63tionForceInterpretation\x12\x16\n\x0einterpretation\x18\x01 \x02(\x0c\x12/\n\x07shapeId\x18\x02 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\"s\n\x12\x41\x63tionAddAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c\"v\n\x15\x41\x63tionRemoveAttribtue\x12/\n\x07shapeId\x18\x01 \x02(\x0b\x32\x1e.protobuf.srl.commands.IdChain\x12\x14\n\x0c\x61ttributeKey\x18\x02 \x02(\t\x12\x16\n\x0e\x61ttributeValue\x18\x03 \x02(\x0c*\xf5\x01\n\x0b\x43ommandType\x12\x0e\n\nADD_STROKE\x10\x00\x12\r\n\tADD_SHAPE\x10\x01\x12\x11\n\rPACKAGE_SHAPE\x10\x02\x12\x11\n\rREMOVE_OBJECT\x10\x03\x12\x14\n\x10\x41SSIGN_ATTRIBUTE\x10\x04\x12\x14\n\x10REMOVE_ATTRIBUTE\x10\x05\x12\n\n\x06MARKER\x10\x06\x12\x18\n\x14\x46ORCE_INTERPRETATION\x10\n\x12\x08\n\x04UNDO\x10\x0b\x12\x08\n\x04REDO\x10\x0c\x12\x0b\n\x07REWRITE\x10\r\x12\x0f\n\x0b\x43LEAR_STACK\x10\x0e\x12\r\n\tOPEN_SYNC\x10\x0f\x12\x0e\n\nCLOSE_SYNC\x10\x10')
 
 _COMMANDTYPE = _descriptor.EnumDescriptor(
   name='CommandType',
@@ -81,8 +81,8 @@ _COMMANDTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1043,
-  serialized_end=1288,
+  serialized_start=1062,
+  serialized_end=1307,
 )
 
 CommandType = enum_type_wrapper.EnumTypeWrapper(_COMMANDTYPE)
@@ -121,14 +121,18 @@ _MARKER_MARKERTYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='LOAD', index=3, number=3,
+      name='SPLIT', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='CLEAR', index=4, number=4,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=475,
-  serialized_end=537,
+  serialized_start=482,
+  serialized_end=556,
 )
 
 
@@ -294,16 +298,16 @@ _MARKER = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='protobuf.srl.commands.Marker.id', index=0,
-      number=1, type=9, cpp_type=9, label=2,
-      has_default_value=False, default_value=unicode("", "utf-8"),
+      name='type', full_name='protobuf.srl.commands.Marker.type', index=0,
+      number=1, type=14, cpp_type=8, label=2,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='type', full_name='protobuf.srl.commands.Marker.type', index=1,
-      number=2, type=14, cpp_type=8, label=2,
-      has_default_value=False, default_value=0,
+      name='otherData', full_name='protobuf.srl.commands.Marker.otherData', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -318,7 +322,7 @@ _MARKER = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=397,
-  serialized_end=537,
+  serialized_end=556,
 )
 
 
@@ -359,8 +363,8 @@ _ACTIONPACKAGESHAPE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=540,
-  serialized_end=701,
+  serialized_start=559,
+  serialized_end=720,
 )
 
 
@@ -394,8 +398,8 @@ _ACTIONFORCEINTERPRETATION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=703,
-  serialized_end=803,
+  serialized_start=722,
+  serialized_end=822,
 )
 
 
@@ -436,8 +440,8 @@ _ACTIONADDATTRIBTUE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=805,
-  serialized_end=920,
+  serialized_start=824,
+  serialized_end=939,
 )
 
 
@@ -478,8 +482,8 @@ _ACTIONREMOVEATTRIBTUE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=922,
-  serialized_end=1040,
+  serialized_start=941,
+  serialized_end=1059,
 )
 
 _SRLUPDATELIST.fields_by_name['list'].message_type = _SRLUPDATE
