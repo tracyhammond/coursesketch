@@ -55,7 +55,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	public void reconnect() {
 		internalConnections.dropAllConnection(true, false);
 		try {
-			internalConnections.createAndAddConnection(this, connectLocally, "Srl04.tamu.edu", 8885, DataConnection.class);
+			internalConnections.createAndAddConnection(this, connectLocally, "srl04.tamu.edu", 8885, DataConnection.class);
 		} catch (ConnectionException e) {
 			e.printStackTrace();
 		}
@@ -163,7 +163,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Submission Server: Version 0.0.2.elephant");
+		System.out.println("Submission Server: Version 0.0.2.gopher");
 		WebSocketImpl.DEBUG = false;
 		int port = 8883; // 843 flash policy port
 		try {
