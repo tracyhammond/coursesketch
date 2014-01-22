@@ -50,11 +50,12 @@ enum Marker_MarkerType {
   Marker_MarkerType_SUBMISSION = 0,
   Marker_MarkerType_FEEDBACK = 1,
   Marker_MarkerType_SAVE = 2,
-  Marker_MarkerType_LOAD = 3
+  Marker_MarkerType_SPLIT = 3,
+  Marker_MarkerType_CLEAR = 4
 };
 bool Marker_MarkerType_IsValid(int value);
 const Marker_MarkerType Marker_MarkerType_MarkerType_MIN = Marker_MarkerType_SUBMISSION;
-const Marker_MarkerType Marker_MarkerType_MarkerType_MAX = Marker_MarkerType_LOAD;
+const Marker_MarkerType Marker_MarkerType_MarkerType_MAX = Marker_MarkerType_CLEAR;
 const int Marker_MarkerType_MarkerType_ARRAYSIZE = Marker_MarkerType_MarkerType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* Marker_MarkerType_descriptor();
@@ -572,7 +573,8 @@ class Marker : public ::google::protobuf::Message {
   static const MarkerType SUBMISSION = Marker_MarkerType_SUBMISSION;
   static const MarkerType FEEDBACK = Marker_MarkerType_FEEDBACK;
   static const MarkerType SAVE = Marker_MarkerType_SAVE;
-  static const MarkerType LOAD = Marker_MarkerType_LOAD;
+  static const MarkerType SPLIT = Marker_MarkerType_SPLIT;
+  static const MarkerType CLEAR = Marker_MarkerType_CLEAR;
   static inline bool MarkerType_IsValid(int value) {
     return Marker_MarkerType_IsValid(value);
   }
@@ -596,35 +598,35 @@ class Marker : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string id = 1;
-  inline bool has_id() const;
-  inline void clear_id();
-  static const int kIdFieldNumber = 1;
-  inline const ::std::string& id() const;
-  inline void set_id(const ::std::string& value);
-  inline void set_id(const char* value);
-  inline void set_id(const char* value, size_t size);
-  inline ::std::string* mutable_id();
-  inline ::std::string* release_id();
-  inline void set_allocated_id(::std::string* id);
-
-  // required .protobuf.srl.commands.Marker.MarkerType type = 2;
+  // required .protobuf.srl.commands.Marker.MarkerType type = 1;
   inline bool has_type() const;
   inline void clear_type();
-  static const int kTypeFieldNumber = 2;
+  static const int kTypeFieldNumber = 1;
   inline ::protobuf::srl::commands::Marker_MarkerType type() const;
   inline void set_type(::protobuf::srl::commands::Marker_MarkerType value);
 
+  // optional string otherData = 2;
+  inline bool has_otherdata() const;
+  inline void clear_otherdata();
+  static const int kOtherDataFieldNumber = 2;
+  inline const ::std::string& otherdata() const;
+  inline void set_otherdata(const ::std::string& value);
+  inline void set_otherdata(const char* value);
+  inline void set_otherdata(const char* value, size_t size);
+  inline ::std::string* mutable_otherdata();
+  inline ::std::string* release_otherdata();
+  inline void set_allocated_otherdata(::std::string* otherdata);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.commands.Marker)
  private:
-  inline void set_has_id();
-  inline void clear_has_id();
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_otherdata();
+  inline void clear_has_otherdata();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* id_;
+  ::std::string* otherdata_;
   int type_;
 
   mutable int _cached_size_;
@@ -1493,85 +1495,15 @@ IdChain::mutable_idchain() {
 
 // Marker
 
-// required string id = 1;
-inline bool Marker::has_id() const {
+// required .protobuf.srl.commands.Marker.MarkerType type = 1;
+inline bool Marker::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Marker::set_has_id() {
+inline void Marker::set_has_type() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Marker::clear_has_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Marker::clear_id() {
-  if (id_ != &::google::protobuf::internal::kEmptyString) {
-    id_->clear();
-  }
-  clear_has_id();
-}
-inline const ::std::string& Marker::id() const {
-  return *id_;
-}
-inline void Marker::set_id(const ::std::string& value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    id_ = new ::std::string;
-  }
-  id_->assign(value);
-}
-inline void Marker::set_id(const char* value) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    id_ = new ::std::string;
-  }
-  id_->assign(value);
-}
-inline void Marker::set_id(const char* value, size_t size) {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    id_ = new ::std::string;
-  }
-  id_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* Marker::mutable_id() {
-  set_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    id_ = new ::std::string;
-  }
-  return id_;
-}
-inline ::std::string* Marker::release_id() {
-  clear_has_id();
-  if (id_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = id_;
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void Marker::set_allocated_id(::std::string* id) {
-  if (id_ != &::google::protobuf::internal::kEmptyString) {
-    delete id_;
-  }
-  if (id) {
-    set_has_id();
-    id_ = id;
-  } else {
-    clear_has_id();
-    id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// required .protobuf.srl.commands.Marker.MarkerType type = 2;
-inline bool Marker::has_type() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Marker::set_has_type() {
-  _has_bits_[0] |= 0x00000002u;
-}
 inline void Marker::clear_has_type() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void Marker::clear_type() {
   type_ = 0;
@@ -1584,6 +1516,76 @@ inline void Marker::set_type(::protobuf::srl::commands::Marker_MarkerType value)
   assert(::protobuf::srl::commands::Marker_MarkerType_IsValid(value));
   set_has_type();
   type_ = value;
+}
+
+// optional string otherData = 2;
+inline bool Marker::has_otherdata() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Marker::set_has_otherdata() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Marker::clear_has_otherdata() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Marker::clear_otherdata() {
+  if (otherdata_ != &::google::protobuf::internal::kEmptyString) {
+    otherdata_->clear();
+  }
+  clear_has_otherdata();
+}
+inline const ::std::string& Marker::otherdata() const {
+  return *otherdata_;
+}
+inline void Marker::set_otherdata(const ::std::string& value) {
+  set_has_otherdata();
+  if (otherdata_ == &::google::protobuf::internal::kEmptyString) {
+    otherdata_ = new ::std::string;
+  }
+  otherdata_->assign(value);
+}
+inline void Marker::set_otherdata(const char* value) {
+  set_has_otherdata();
+  if (otherdata_ == &::google::protobuf::internal::kEmptyString) {
+    otherdata_ = new ::std::string;
+  }
+  otherdata_->assign(value);
+}
+inline void Marker::set_otherdata(const char* value, size_t size) {
+  set_has_otherdata();
+  if (otherdata_ == &::google::protobuf::internal::kEmptyString) {
+    otherdata_ = new ::std::string;
+  }
+  otherdata_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Marker::mutable_otherdata() {
+  set_has_otherdata();
+  if (otherdata_ == &::google::protobuf::internal::kEmptyString) {
+    otherdata_ = new ::std::string;
+  }
+  return otherdata_;
+}
+inline ::std::string* Marker::release_otherdata() {
+  clear_has_otherdata();
+  if (otherdata_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = otherdata_;
+    otherdata_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Marker::set_allocated_otherdata(::std::string* otherdata) {
+  if (otherdata_ != &::google::protobuf::internal::kEmptyString) {
+    delete otherdata_;
+  }
+  if (otherdata) {
+    set_has_otherdata();
+    otherdata_ = otherdata;
+  } else {
+    clear_has_otherdata();
+    otherdata_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

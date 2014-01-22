@@ -8483,10 +8483,18 @@ public final class School {
     // optional int32 problemNumber = 12;
     /**
      * <code>optional int32 problemNumber = 12;</code>
+     *
+     * <pre>
+     * the order in which the problem appears in the assignment.
+     * </pre>
      */
     boolean hasProblemNumber();
     /**
      * <code>optional int32 problemNumber = 12;</code>
+     *
+     * <pre>
+     * the order in which the problem appears in the assignment.
+     * </pre>
      */
     int getProblemNumber();
   }
@@ -9109,12 +9117,20 @@ public final class School {
     private int problemNumber_;
     /**
      * <code>optional int32 problemNumber = 12;</code>
+     *
+     * <pre>
+     * the order in which the problem appears in the assignment.
+     * </pre>
      */
     public boolean hasProblemNumber() {
       return ((bitField0_ & 0x00000800) == 0x00000800);
     }
     /**
      * <code>optional int32 problemNumber = 12;</code>
+     *
+     * <pre>
+     * the order in which the problem appears in the assignment.
+     * </pre>
      */
     public int getProblemNumber() {
       return problemNumber_;
@@ -10613,18 +10629,30 @@ public final class School {
       private int problemNumber_ ;
       /**
        * <code>optional int32 problemNumber = 12;</code>
+       *
+       * <pre>
+       * the order in which the problem appears in the assignment.
+       * </pre>
        */
       public boolean hasProblemNumber() {
         return ((bitField0_ & 0x00000800) == 0x00000800);
       }
       /**
        * <code>optional int32 problemNumber = 12;</code>
+       *
+       * <pre>
+       * the order in which the problem appears in the assignment.
+       * </pre>
        */
       public int getProblemNumber() {
         return problemNumber_;
       }
       /**
        * <code>optional int32 problemNumber = 12;</code>
+       *
+       * <pre>
+       * the order in which the problem appears in the assignment.
+       * </pre>
        */
       public Builder setProblemNumber(int value) {
         bitField0_ |= 0x00000800;
@@ -10634,6 +10662,10 @@ public final class School {
       }
       /**
        * <code>optional int32 problemNumber = 12;</code>
+       *
+       * <pre>
+       * the order in which the problem appears in the assignment.
+       * </pre>
        */
       public Builder clearProblemNumber() {
         bitField0_ = (bitField0_ & ~0x00000800);

@@ -56,15 +56,17 @@ message IdChain {
  * Marks can have special purposes.  For example quick look through for the progress of the sketch (like when reviewing)
  */
 message Marker {
-	required string id = 1;
-	required MarkerType type = 2;
+	required MarkerType type = 1;
 	enum MarkerType {
 		SUBMISSION = 0;
 		FEEDBACK = 1;
 		SAVE = 2;
-		LOAD = 3;
+		SPLIT = 3;
+		CLEAR = 4; // To be supported later
 	}
+	optional string otherData = 2;
 }
+
 /**
  * This tells us to do 2 things
  * #1 add all shapes with an id in the list of {@link shapesToBeContained} into shape with an id of {@link newContainerId}

@@ -78,7 +78,7 @@ message SrlProblem {
 	optional float grade = 9; // Calculated grade of all subproblems for this problem
 	optional State state = 10;
 	optional SrlPermission accessPermission = 11;
-	optional int32 problemNumber = 12;
+	optional int32 problemNumber = 12; // the order in which the problem appears in the assignment.
 }
 
 message SrlBankProblem {
