@@ -20,7 +20,7 @@ SRL_Object.prototype.draw = function draw(graphics, forcedColor) {
 		this.draw = this.drawStroke;
 		this.drawStroke(graphics, forcedColor);
 	}
-}
+};
 
 /**
  * A color is given to a stroke as a HEX string
@@ -36,15 +36,15 @@ SRL_Object.prototype.setColorHex = function(hex) {
 		hex = '#' + hex;
 	}
 	this.color = hex;
-}
+};
 
 SRL_Object.prototype.isHighlighted = false;
 SRL_Object.prototype.setIsHighlighted = function(value) {
 	this.isHighlighted = value;
-}
+};
 SRL_Object.prototype.getIsHighlighted = function() {
 	return this.isHighlighted;
-}
+};
 
 SRL_Object.prototype.highlightColor = false;
 SRL_Object.prototype.setHighlightColorHex = function(hex) {
@@ -52,11 +52,11 @@ SRL_Object.prototype.setHighlightColorHex = function(hex) {
 		hex = '#' + hex;
 	}
 	this.highlightColor = hex;
-}
+};
 
 SRL_Object.prototype.getHighlightColor = function() {
 	return this.highlightColor;
-}
+};
 /**
  * Draws the {@link SRL_Stroke}.
  *
@@ -99,20 +99,20 @@ SRL_Stroke.prototype.drawStroke = function drawStroke(graphics, forcedColor) {
 	graphics.stroke();
 	//this.getBoundingBox().drawBounds(graphics);
 	//this.getStrokeIntersector().drawBounds(graphics);
-}
+};
 
 SRL_BoundingBox.prototype.drawBounds = function drawBounds(graphics) {
 	var rectangle = this.getRectangle();
 	graphics.rect(rectangle.x,rectangle.y,rectangle.width,rectangle.height);
 	graphics.stroke();
-}
+};
 
 SRL_IntersectionHandler.prototype.drawBounds = function(graphics) {
 	var list = this.getSubBounds();
 	for(var i = 0; i < list.length; i++) {
 		list[i].drawBounds(graphics);
 	}
-}
+};
 
 /**
  * Draws the {@link SRL_Shape}.
@@ -130,7 +130,7 @@ SRL_Shape.prototype.drawShape = function drawShape(graphics, forcedColor) {
 		subShapes[i].draw(graphics, forcedColor);
 	}
 	//var rectangle = this.getBoundingBox().drawBounds(graphics);
-}
+};
 
 SRL_Sketch.prototype.drawEntireSketch = function() {
 	if (this.clearCanvas) {
@@ -144,7 +144,8 @@ SRL_Sketch.prototype.drawEntireSketch = function() {
 			object.draw(this.canvasContext);
 		}
 	}
-}
+};
+
 SRL_Sketch.prototype.canvasContext = false;
 
  /*******************************

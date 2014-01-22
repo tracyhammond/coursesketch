@@ -11,13 +11,13 @@ function inputListener() {
 		this.initializeElement(canvasId);
 		this.clearCanvas = function(canvasContext) {
 			canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-		}
-	}
+		};
+	};
 
 	this.initializeElement = function initializeElement(elementId) {
 		inputElement = document.getElementById(elementId);
 		this.registerListeners(inputElement);
-	}
+	};
 
 	// Registers all of the touch listeners.
 	this.registerListeners = function registerListeners(element) {
@@ -29,7 +29,7 @@ function inputListener() {
 		function(event){this.listenerScope.mouseUp(event);}, false);
 		element.addEventListener ("mouseout",
 		function(event){this.listenerScope.mouseExit(event);}, false);
-		
+
 		// Touch Specific ones
 		element.addEventListener('touchend', 
 		function(event){
@@ -50,11 +50,11 @@ function inputListener() {
 		function(event){this.listenerScope.touchDragged(event);}, false);
 		element.listenerScope = this;
 		*/
-		
+
 		document.body.addEventListener('touchmove', function(event) {
 		  event.preventDefault();
 		}, false);
-	}
+	};
 
 	/*********************
 	UTILITY METHODS
@@ -62,7 +62,7 @@ function inputListener() {
 	// Creates a time stamp for every point.
 	this.createTimeStamp = function createTimeStamp() {
 		return new Date().getTime();
-	}
+	};
 
 	// gets the mouse position on the screen
 	// subtracts the location of the box
@@ -79,11 +79,11 @@ function inputListener() {
           x: event.pageX - inputElement.offsetLeft,
           y: event.pageY - inputElement.offsetTop
         };
-	}
+	};
 
 	this.getThickness = function getThickness(speed, size, pressure, index, lastStroke, type) {
-
-	}
+		throw "Thickness not implemented exception";
+	};
 
 	/*******************
 		INPUT EVENTS
@@ -99,7 +99,7 @@ function inputListener() {
 		} else if(this.unifiedInputListener) {
 			this.unifiedInputListener(newEvent);
 		}
-	}
+	};
 
 	this.draggingEnd = function draggingEnd(event)  {
 		dragging = false;
@@ -111,7 +111,7 @@ function inputListener() {
 		} else if(this.unifiedInputListener) {
 			this.unifiedInputListener(newEvent);
 		}
-	}
+	};
 
 	/*******************
 		TOUCH EVENTS
@@ -121,7 +121,7 @@ function inputListener() {
 		if (isNaN(force))
 			return .5;
 		return force;
-	}
+	};
 
 	this.getTouchRadius = function getTouchRadius(touchEvent) {
 		var radius = 0;
@@ -139,7 +139,7 @@ function inputListener() {
 		if (isNaN(radius))
 			return .5;
 		return radius;
-	}
+	};
 
 	/*******************
 		MOUSE EVENTS
@@ -162,7 +162,7 @@ function inputListener() {
 		} else if(this.unifiedInputListener) {
 			this.unifiedInputListener(newEvent);
 		}
-	}
+	};
 
 	this.mouseDragged = function mouseDragged(event)  {
 		if (!dragging) {
@@ -177,7 +177,7 @@ function inputListener() {
 		} else if(this.unifiedInputListener) {
 			this.unifiedInputListener(newEvent);
 		}
-	}
+	};
 
 	this.mouseEnter = function mouseEnter(event) {
 		touchInBounds = true;
@@ -189,7 +189,7 @@ function inputListener() {
 		} else if(this.unifiedInputListener) {
 			this.unifiedInputListener(newEvent);
 		}
-	}
+	};
 
 	this.mouseExit = function mouseExit(event)  {
 		if (touchDown) {
@@ -204,7 +204,7 @@ function inputListener() {
 		} else if(this.unifiedInputListener) {
 			this.unifiedInputListener(newEvent);
 		}
-	}
+	};
 
 	this.mouseDown = function mouseDown(event)  {
 		touchDown = true;
@@ -219,14 +219,14 @@ function inputListener() {
 		} else if(this.unifiedInputListener) {
 			this.unifiedInputListener(newEvent);
 		}
-	}
+	};
 
 	this.mouseUp = function mouseUp(event)  {
 		if (dragging) {
 			this.draggingEnd(event);
 		}
 
-		if(touchInBounds && touchDown) {
+		if (touchInBounds && touchDown) {
 			touchDown = false;
 			var touchPos = this.getTouchPos(event);
 			var time = this.createTimeStamp();
@@ -237,78 +237,78 @@ function inputListener() {
 				this.unifiedInputListener(newEvent);
 			}
 		}
-	}
+	};
 
 	/**
 	 * Sets the default listener, this is only called if a unique listener is not set.
 	 */
 	this.setUnifiedListener = function(callBack) {
 		this.unifiedInputListener = callBack;
-	}
+	};
 
 	/**
 	 * Sets the listener for input moved.
 	 * call this method with false to remove the listener.
 	 */
 	this.setInputMovedListener = function(listener) {
-		this.inputMovedListener = listener
-	}
+		this.inputMovedListener = listener;
+	};
 
 	/**
 	 * Sets the listener for input dragged.
 	 * call this method with false to remove the listener.
 	 */
 	this.setInputDraggedListener = function(listener) {
-		this.inputDraggedListener = listener
-	}
-	
+		this.inputDraggedListener = listener;
+	};
+
 	/**
 	 * Sets the listener for the start of dragging.
 	 * call this method with false to remove the listener.
 	 */
 	this.setDraggingStartListener = function(listener) {
-		this.inputDraggingStartListener = listener
-	}
+		this.inputDraggingStartListener = listener;
+	};
 
 	/**
 	 * Sets the listener for the end of dragging.
 	 * call this method with false to remove the listener.
 	 */
 	this.setDraggingEndListener = function(listener) {
-		this.inputDraggingEndListener = listener
-	}
+		this.inputDraggingEndListener = listener;
+	};
 
 	/**
 	 * Sets the listener for input enter.
 	 * call this method with false to remove the listener.
 	 */
 	this.setInputEnterListener = function(listener) {
-		this.inputEnterListener = listener
-	}
+		this.inputEnterListener = listener;
+	};
 
 	/**
 	 * Sets the listener for input exit.
 	 * call this method with false to remove the listener.
 	 */
 	this.setInputExitListener = function(listener) {
-		this.inputExitListener = listener
-	}
+		this.inputExitListener = listener;
+	};
 
 	/**
 	 * Sets the listener for input down.
 	 * call this method with false to remove the listener.
 	 */
 	this.setInputDownListener = function(listener) {
-		this.inputDownListener = listener
-	}
+		this.inputDownListener = listener;
+	};
 
 	/**
 	 * Sets the listener for input up.
 	 * call this method with false to remove the listener.
 	 */
 	this.setInputUpListener = function(listener) {
-		this.inputUpListener = listener
-	}
+		this.inputUpListener = listener;
+	};
 
 	/***********
 		DATA
