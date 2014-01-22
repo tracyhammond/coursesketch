@@ -11,7 +11,7 @@
 	<script type="text/javascript" src="js/input/sketching.js"></script>
 
 	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
-	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+	<script type="text/javascript" src="js/sketching/updatemanager.js"></script>
 	<script type="text/javascript" src="js/connection/submission.js"></script>
 	<script type="text/javascript" src="js/input/highlighter.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
@@ -38,15 +38,17 @@
 			sketch = new SRL_Sketch();
 			sketch.canvasContext = canvasContext;
 			sketch.clearCanvas = input.clearCanvas;
-			
+
 			//creating the drawing creator which submits strokes to the sketch
-			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
-			
+			drawingCreator = new drawingInputCreator(input, callback, canvasContext);
+
 			// creating the highligheter which changes the color of strokes when they are highlighted
 			highlighter = new Highlighter(input, sketch, callback, canvasContext);
 
-			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
-					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommandBuilder);
+			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoUpdateCommandBuilder, function(exception) {
+				alert(exception);
+				alert("ERROR");	
+			});
 			serverConnection.setRecognitionListener(function(evt, message) {
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
 					var data = message.otherData;

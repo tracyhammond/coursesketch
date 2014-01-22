@@ -47,7 +47,7 @@
 			sketch = new SRL_Sketch();
 			sketch.canvasContext = canvasContext;
 			sketch.clearCanvas = clearCanvas;
-			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+			drawingCreator = new drawingInputCreator(input, callback, canvasContext);
 			highlighter = new Highlighter(input,sketch,callback,canvasContext);
 			createStuff();
 			initializeServer();
@@ -86,8 +86,8 @@
 
 	    	serverConnection.setOnOpenListener(function(evt) {
 			});
-			commandManager = new UpdateManager(sketch, serverConnection, ProtoUpdateCommandBuilder, function() {
-				alert("error");
+			commandManager = new UpdateManager(sketch, serverConnection, ProtoUpdateCommandBuilder, function(exception) {
+				alert(exception);
 			});
 			serverConnection.setRecognitionListener(function(evt, message) {
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
@@ -138,7 +138,7 @@
 	    	firstCommand.commandData = shape.sendToProtobuf(this).toArrayBuffer();
 	    	firstCommand.decodedData = shape;
 	    	var secondCommand = createBaseCommand(ProtoSrlCommandType.PACKAGE_SHAPE, false);
-	    	var packageShape = new ProtoUpdateCommand.ActionPackageShape();
+	    	var packageShape = new ProtoUpdateCommandBuilder.ActionPackageShape();
 	    	var list = sketch.getList();
 	    	var idList = [];
 	    	for (var i = 0; i < list.length; i ++) {
