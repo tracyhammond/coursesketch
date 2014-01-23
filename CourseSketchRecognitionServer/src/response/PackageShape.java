@@ -1,6 +1,7 @@
 package response;
 
 import java.util.List;
+import java.util.LinkedList;
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
@@ -32,20 +33,27 @@ public class PackageShape extends Command {
 	}
 	
 	public PackageShape(SContainer from, SContainer to, List<String> moving){
-		if(from == null)
-			oldContainer = null;
-		else{
-			IdChainBuilder
-		}
-		if(to == null)
-			newContainer = null;
-		else{
-			
-		}
+		oldContainer = forgeChain(from);
+		newContainer = forgeChain(to);
 		
 		contained = moving;
 	}
 
+	/**
+	 * Helper function to make a list of the hierarchical containers
+	 * from a single top level object. Designed for using communication
+	 * using [data which keeps track of its own structure] with someone
+	 * who has data that does not keep track
+	 * @return IdChain
+	 */
+	private IdChain forgeChain(SContainer top){
+		// FIXME this is not implemented
+		List<String> chain = new LinkedList<String>();
+				
+		IdChain.Builder builder = IdChain.newBuilder();
+		return builder.build();
+	}
+	
 	@Override
 	public ByteString toByteString() {
 		ActionPackageShape.Builder build = ActionPackageShape.newBuilder();

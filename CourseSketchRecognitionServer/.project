@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/paleonn/models/cousesketch.paleonn.model</name>
-			<type>1</type>
-			<location>C:/Applications/eclipse/Eclipse.app/Contents/MacOS/J::/Projects/Git/coursesketch/CourseSketchRecognitionServer/src/paleonn/models/cousesketch.paleonn.model</location>
-		</link>
-	</linkedResources>
 </projectDescription>
