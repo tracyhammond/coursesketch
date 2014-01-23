@@ -85,6 +85,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 						}, 10);
 					}
 				} catch(exception) {
+					console.log(exception.stack);
 					executionLock = false;
 					if (onError) onError(exception);
 				}
@@ -116,16 +117,16 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	function executeUpdate(update) {
 		var command = update.getCommands()[0].commandType;
 		if (inRedoUndoMode) {
-			if ((command != ProtoCommandBuilder.CommandType.REDO || command != ProtoCommandBuilder.CommandType.UNDO) && netCount != 0) {
+			if ((command != ProtoCommandBuilder.CommandType.REDO && command != ProtoCommandBuilder.CommandType.UNDO) && netCount != 0) {
 				// we do a bunch of changing then we call the executeUpdate method again
 				var splitDifference = updateList.length - currentUpdateIndex;
 
 				// creates and inserts the first marker [update] -> [marker] -> [unreachable update]
-				var startingMarker = createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, splitDifference);
+				var startingMarker = this.createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, splitDifference);
 				updateList.splice(currentUpdateIndex, 0, serverConnection.createUpdateFromCommands([startingMarker]));
 
 				// creates and inserts the second marker [unreachable update (probably undo or redo)] -> [marker] -> [index out of range]
-				var endingMarker = createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, 0-splitDifference);
+				var endingMarker = this.createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, 0-splitDifference);
 				updateList.push(serverConnection.createUpdateFromCommands([endingMarker]));
 
 				// reset the information
@@ -135,6 +136,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			}
 		}
 		updateList.push(update);
+		console.log(updateList.length);
 		if (command == ProtoCommandBuilder.CommandType.REDO) {
 			if (netCount >= 0) {
 				throw "Can't Redo Anymore";
@@ -144,6 +146,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			currentUpdateIndex += 1;
 			return redraw;
 		} else if (command == ProtoCommandBuilder.CommandType.UNDO) {
+			console.log("UNDOING AN ACTION!");
 			if (!inRedoUndoMode) {
 				netCount = 0;
 				inRedoUndoMode = true;
@@ -182,6 +185,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	 * If the update is a marker than it will skip that parts that can not be reached
 	 */
 	function undoUpdate(update) {
+		console.log("UNDOING AN UPDATE!" + update);
 		var command = update.getCommands()[0];
 		if (command.commandType == ProtoCommandBuilder.CommandType.MARKER) {
 			var marker = ProtoCommandBuilder.Marker.decode(command.commandData);
@@ -242,6 +246,9 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		return updateList;
 	};
 
+	this.getCurrentPointer = function() {
+		return currentUpdateIndex;
+	}
 	/**
 	 * This clears any current updates and replaces the list with a new list.
 	 */
@@ -273,6 +280,26 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		if (redraw) {
 			sketch.drawEntireSketch();
 		}
+	};
+
+	/**
+	 * creates and adds a redo update to the stack.
+	 */
+	this.redoAction = function() {
+		var redoCommand = new ProtoSrlCommand(ProtoSrlCommandType.REDO, new Date().getTime());
+		var update = serverConnection.createUpdateFromCommands([redoCommand]);
+		var tempIndex = currentUpdateIndex;
+		this.addUpdate(update, false);
+	};
+
+	/**
+	 * creates and adds a redo update to the stack.
+	 */
+	this.undoAction = function() {
+		var undoCommand = new ProtoSrlCommand(ProtoSrlCommandType.UNDO, new Date().getTime());
+		var update = serverConnection.createUpdateFromCommands([undoCommand]);
+		var tempIndex = currentUpdateIndex;
+		this.addUpdate(update, false);
 	};
 
 	/******************************************
@@ -308,9 +335,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			var commandList = this.getCommands();
 			var commandLength = commandList.length;
 			for (var i = 0; i < commandLength; i++) {
-				if (commandList[i].redo() == true) {
-					redraw = true;
-				}
+				if (commandList[i].redo() == true) redraw = true;
 			}
 			return redraw;
 		};
@@ -324,9 +349,8 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			var commandList = this.getCommands();
 			var commandLength = commandList.length;
 			var redraw = false;
-			for(var i = commandLength -1; i >= 0; i++) {
-				if (commandList[i].undo() == true)
-					redraw = true;
+			for(var i = commandLength -1; i >= 0; i--) {
+				if (commandList[i].undo() == true) redraw = true;
 			}
 			return redraw;
 		};
@@ -413,7 +437,50 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			}
 			return redraw;
 		};
-		
+
+		/**
+		 * Executes a command.
+		 *
+		 * Returns true if the sketch needs to be redrawn.
+		 */
+		ProtoSrlCommand.prototype.undo = function() {
+			var redraw = false;
+			var command = this.getCommandType();
+			switch (command) {
+				case this.CommandType.ADD_STROKE:
+					if (!this.decodedData) {
+						var stroke = decodeCommandData(this.commandData, parent.ProtoSrlStroke);
+						this.decodedData = SRL_Stroke.createFromProtobuf(stroke);
+					}
+					sketch.removeSubObjectByIdChain([this.decodedData.id]);
+					redraw = true;
+				break;
+				case this.CommandType.ADD_SHAPE:
+					if (!this.decodedData) {
+						var shape = decodeCommandData(this.commandData, parent.ProtoSrlShape);
+						this.decodedData = SRL_Shape.createFromProtobuf(shape);
+					}
+					sketch.addObject(this.decodedData);
+				break;
+				case this.CommandType.REMOVE_OBJECT:
+					if (!this.decodedData || !isArray(this.decodedData)) {
+						this.decodedData = new Array();
+						var idChain = decodeCommandData(this.commandData, parent.IdChain);
+						this.decodedData[0] = idChain;
+					}
+					this.decodedData[1] = sketch.removeSubObjectByIdChain(this.decodedData[0].idChain);
+					redraw = true;
+				break;
+				case this.CommandType.PACKAGE_SHAPE:
+					if (isUndefined(this.decodedData) || (!this.decodedData)) {
+						this.decodedData = decodeCommandData(this.commandData, Action.ActionPackageShape);
+					}
+					this.decodedData.redo();
+				break;
+			}
+			return redraw;
+		};
+
 		/*********
 		 * Specific commands and their actions.
 		 *******/

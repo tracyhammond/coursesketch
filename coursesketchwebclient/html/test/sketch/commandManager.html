@@ -66,7 +66,8 @@
 
 	    function initializeServer() {
 	    	var wsUri = "goldberglinux02.tamu.edu:8888"; // our serve
-	    	serverConnection = new Connection(wsUri,false);
+	    	serverConnection = new Connection(wsUri, false, false);
+	    	/*
 	    	serverConnection.setOnCloseListener(function(evt) {
 				var reconnect = false;
 				if (evt.code == CONNECTION_LOST) {
@@ -83,6 +84,7 @@
 					intervalVariable = setInterval(function() {console.log("RECONNECTING!");createWebSocket();}, 3000); 
 				}
 			});
+	    	*/
 
 	    	serverConnection.setOnOpenListener(function(evt) {
 			});
@@ -183,7 +185,7 @@
 	    	createSketchViewer(sketch.getList(), sketchOutput);
 	    	if (commandManager) {
 	    		commandManager.getUpdateList(function(updateList) {
-	    			createCommandViewer(updateList, updateOutput);
+	    			createCommandViewer(updateList, updateOutput, commandManager.getCurrentPointer());
 	    		});
 		    	
 	    	}
@@ -212,6 +214,9 @@
 	<button onclick = "packageShapes();">packageSketch</button>
 	<button onclick = "removeFirst();">removeFirst</button>
 	<button onclick = "submitAction();">submit</button>
+	<button onclick = "commandManager.undoAction();">undo</button>
+	<button onclick = "commandManager.redoAction();">redo</button>
+	<button onclick = "createViewer();">refresh</button>
 	<div id = "PercentBar">0%</div>
 	<div id = "sketch_output" style = "height:400px;position:relative; overflow:scroll;border:1px;border-style:solid;"></div>
 	<canvas id="drawingCanvas" width="700" height="600" style="top:0px; left:0px; width: 700; height: 600; background:#FFFFFF;float:left;"></canvas>
