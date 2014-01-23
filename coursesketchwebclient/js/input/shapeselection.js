@@ -30,7 +30,7 @@
 */
 
 
-function Highlighter(externalInputListener, externalSketchContainer, highlightedCallback, graphics) {
+function ShapeSelection(externalInputListener, externalSketchContainer, highlightedCallback, onClick, graphics) {
 	var inputListener = externalInputListener;
 	var sketchContainer = externalSketchContainer;
 	var currentPoint;

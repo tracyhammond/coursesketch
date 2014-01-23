@@ -232,7 +232,7 @@ function path() {
 	    }
 
 	/**
-	 * Returns the midpoint fo the 2 given points.
+	 * Returns the midpoint of the 2 given points.
 	 */
 	function midPoint(p1x, p1y, p2x, p2y) {
 		return {
