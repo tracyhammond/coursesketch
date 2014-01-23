@@ -3,20 +3,25 @@
 */
 
 /**
-*Ideation: 
+*Ideation(s): 
 *	Utilize highlighted callback in order to pinpoint/identify sketch component warranting action
 *	allow multiple options for user interface:
 *		copy
 *		move
 *		erase
-*		remove(?)
+*		remove (?)
 */
 
 /**
 *STILL IN DEVELOPMENT!!!
 */
 
-function Onclick(externalInputListener, externalSketchContainer, highlightedCallback, graphics) {
+/**
+*'Clicker'
+*
+*/
+
+function Clicker(externalInputListener, externalSketchContainer, highlightedCallback, graphics) {
 	var inputListener = externalInputListener;
 	var sketchContainer = externalSketchContainer;
 	var currentPoint;
