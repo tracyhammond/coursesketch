@@ -1,6 +1,7 @@
 package response;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import protobuf.srl.commands.Commands.ActionPackageShape;
 import protobuf.srl.commands.Commands.IdChain;
@@ -52,7 +53,11 @@ public class Response {
 		
 		//perform recognition
 		Update actions = new Update();
-		IRecognitionResult result = m_recognizer.recognize(m_syncList.back().getStroke());
+		actions.add(new AddShape(m_recognizer.recognize(m_syncList.back().getStroke())));
+		
+		List<String> ids = new LinkedList<String>();
+		ids.add(m_syncList.back().getStroke().getId().toString());
+		actions.add(new PackageShape(null, m_syncList.back().getShape(), ids));
 		
 		actions.setTime(System.currentTimeMillis());
 		m_syncList.add(actions);
