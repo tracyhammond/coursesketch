@@ -5,7 +5,11 @@
 /**
 *Ideation: 
 *	Utilize highlighted callback in order to pinpoint/identify sketch component warranting action
-*	
+*	allow multiple options for user interface:
+*		copy
+*		move
+*		erase
+*		remove(?)
 */
 
 /**
