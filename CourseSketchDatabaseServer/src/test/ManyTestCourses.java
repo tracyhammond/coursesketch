@@ -29,20 +29,13 @@ public class ManyTestCourses {
 			d.setDate(20);
 			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((d.getTime())));
 			SrlPermission.Builder permissions = SrlPermission.newBuilder();
-			permissions.addAdminPermission("larry");
-	
-			permissions.addModeratorPermission("raniero");
-			permissions.addModeratorPermission("manoj");
-	
-			permissions.addUserPermission("vijay");
-			permissions.addUserPermission("matt");
 	
 			testBuilder.setAccessPermission(permissions.build());
 			System.out.println(testBuilder.toString());
 	
 			// testing inserting course
 				System.out.println("INSERTING COURSE");
-				String courseId = Institution.mongoInsertCourse("david", testBuilder.buildPartial());
+				String courseId = Institution.mongoInsertCourse("0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332", testBuilder.buildPartial());
 				System.out.println("INSERTING COURSE SUCCESSFULT");
 				System.out.println(courseId);
 				ManyTestAssignments.testAssignments(courseId);

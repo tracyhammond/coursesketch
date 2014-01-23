@@ -8,9 +8,8 @@
 /**
  * Gets input events and creates sketch components out of the events.
  */
-function drawingInputCreator(externalInputListener, externalSketchContainer, strokeCreationCallback, graphics) {
+function drawingInputCreator(externalInputListener, strokeCreationCallback, graphics) {
 	var inputListener = externalInputListener;
-	var sketchContainer = externalSketchContainer;
 	var currentPoint;
 	var pastPoint;
 	var currentStroke;
@@ -48,13 +47,14 @@ function drawingInputCreator(externalInputListener, externalSketchContainer, str
 		currentStroke.addPoint(currentPoint);
 		currentStroke.setTime(currentPoint.getTime());
 		currentStroke.finish();
-		sketchContainer.addObject(currentStroke);
-		//try {
+		try {
 			if (strokeCreationCallback)
 				strokeCreationCallback(currentStroke); // Sends back the current stroke.
-		/*} catch(err) {
-			console.error(err.message);
-		}*/
+		} catch(err) {
+			currentStroke = false;
+			currentPoint = false;
+			throw err;
+		}
 		currentStroke = false;
 		currentPoint = false;
 	}.bind(this));

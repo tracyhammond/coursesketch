@@ -12,9 +12,11 @@ import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
 
-public class ManyTestProblems {
-	public static void testProblems(String courseId, String assignmentId) {
-		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11"};
+public class TestProblemsSmall {
+	public static void testProblems() {
+		String assignmentId = "52d55a580364615fe8a4496d";
+		String courseId = "52d55a580364615fe8a4496c";
+		String[] name = new String[]{"Problem12", "Problem13"};
 		//10 is fuzzy logic
 		/*
 		String[] descsription = new String[]{"This is the first problem",
@@ -28,35 +30,14 @@ public class ManyTestProblems {
 				"blah blah blah"};
 		*/
 		String[] questionText = new String[] {
-				"Please draw a picture of yourself",
-				"Prove that the square root of 3 is irrational.",
-				"Suppose that Smartphone A has 256MBRAM and 32GB ROM, and the resolution of its camera is 8 MP; Smartphone B has 288 MB RAM and 64 GB ROM,"
-				+ " and the resolution of its camera is 4 MP;"
-				+ " and Smartphone C has 128 MB RAM and 32 GB ROM, and the resolution of its camera is 5 MP."
-				+ " Determine the truth value of the following proposition. Show your work (using a truth table). <br>" +
-				"\"Smartphone A has more RAM than Smartphone B if and only if Smartphone B has more RAM than Smartphone A.\"",
-				"Let p and q be the propositions “The election is decided” and \"The votes have been counted,\" respectively. Express the following compound proposition as an English sentence: ~q ∨ (~p ∧ q)",
-				
-				"Let p, q, and r be the propositions<br>" +
-				"p :You get an A on the final exam.<br>" +
-				"q :You do every exercise in this book.<br>" +
-				"r :You get an A in this class.<br>" +
-				"Write the following statement in terms of p,q,r. \"You will get an A in this class if and only if you either" +
-				"do every exercise in this book or you get an A on the final.\"",
-				
-				"Write this statement in the form of if p, then q. \"A sufficient condition for the warranty to be good is that you bought the computer less than a year ago.\"",
-				
-				"Construct a truth table for (p ↔ q) ⊕ (p ↔~q)",
-				
-				"Construct a truth table for (p AND q) AND ~(p OR q)",
-				
-				"Evaluate this using bit operators <br>" +
-				 "(1 1011 XOR 0 1010) AND (1 0001 OR 1 1011)",
+				"When planning a party you want to know whom to invite. Among the people you would like to invite are three touchy friends.You know that if Jasmine attends,<br>"
+				+ " she will become unhappy if Samir is there, Samir will attend only if Kanti will be there, and Kanti will not attend unless Jasmine also does."
+				+ "<br>Which combinations of these three friends can you invite so as not to make someone unhappy?<br>"
+				+ "Write the logic expression using S,J,K.  Write out a truth table displaying the results.<br>"
+				+ " Circle the selections of friends that will work for your party. ",
 
-				 "p: John is happy = .6, q: Alex is happy = .7, r: Samantha is happy = .2<br>" +
-				 "Evaluate the value of this statement using fuzzy logic.   Either John and Alex are happy, or Samantha isn't.",
-				 
-				 "Create a combinatorial circuit that is equivalent to p --> q"
+				"Construct a combinatorial circuit using inverters, OR gates, and AND gates that produces the output<br>"
+				+ " ((¬p ∨¬r)∧¬q) ∨ (¬p ∧ (q ∨ r)) from input bits p,q, and r."
 				};
 		QuestionType[] questionType = new QuestionType[] {
 				QuestionType.CHECK_BOX,
@@ -65,7 +46,7 @@ public class ManyTestProblems {
 				QuestionType.SKETCH,
 				QuestionType.SKETCH
 		};
-		for(int k = 0; k < 11; k ++) {
+		for(int k = 0; k < 2; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
@@ -87,14 +68,7 @@ public class ManyTestProblems {
 			testBuilder.setCourseId(courseId);
 			testBuilder.setProblemBankId(resultantId);
 			SrlPermission.Builder permissions = SrlPermission.newBuilder();
-			permissions.addAdminPermission("larry");
-	
-			permissions.addModeratorPermission("raniero");
-			permissions.addModeratorPermission("manoj");
-	
-			permissions.addUserPermission("vijay");
-			permissions.addUserPermission("matt");
-	
+
 			testBuilder.setAccessPermission(permissions.build());
 			System.out.println(testBuilder.toString());
 	
@@ -109,5 +83,9 @@ public class ManyTestProblems {
 				}
 				System.out.println("INSERTING PROBLEM SUCCESSFULT");
 		}
+	}
+	
+	public static void main(String args[]) {
+		testProblems();
 	}
 }

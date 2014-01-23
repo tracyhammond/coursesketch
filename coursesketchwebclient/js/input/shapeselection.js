@@ -1,5 +1,32 @@
 /**
+*IN PROGRESS
+*	Will merge 'onclick' and 'highlight' functionalities
+*/
+
+/**
+*
+*
+*/
+
+/**
 *Colorizes ('highlights') a currently selected/pinpointed sketch component blue ("#0000FF")
+*/
+
+/**
+*Ideation(s): 
+*	Utilize highlighted callback in order to pinpoint/identify sketch component warranting action
+*	allow multiple options for user interface:
+*		copy
+*		move
+*		erase
+*		remove (?)
+*		colorize object/sketch component red upon selection (click)
+*/
+
+/**
+*Define case where shape is
+*Shape isn't highlighted
+*
 */
 
 
@@ -41,4 +68,3 @@ function Highlighter(externalInputListener, externalSketchContainer, highlighted
 		return false;
 	}
 }
-	

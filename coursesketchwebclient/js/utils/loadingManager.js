@@ -11,7 +11,7 @@ function addLoadEvent(func) {
         oldonload();
       }
       func();
-    }
+    };
   }
 }
 
@@ -30,7 +30,7 @@ function addScopedLoadEvent(scope, func) {
         oldonload();
       }
       func();
-    }
+    };
   }
 }
 
@@ -45,7 +45,7 @@ function DynamicFileLoader() {
 		if (fileref) {
 			this.scope.getElementsByTagName("head")[0].appendChild(fileref);
 		}
-	}
+	};
 
 	this.createFile = function createFile(filename, filetype, callBack) {
 		if(callBack && typeof callBack !== 'function') {
@@ -68,7 +68,7 @@ function DynamicFileLoader() {
 			fileref.onload = callBack;
 		}
 		return fileref;
-	}	
+	};
 
 	/**
 	 * Removes the given javascript file.
@@ -82,7 +82,7 @@ function DynamicFileLoader() {
 				allsuspects[i].parentNode.removeChild(allsuspects[i]); //remove element by calling parentNode.removeChild()
 			}
 		}
-	}
+	};
 
 	/**
 	 * Replaces the old filename with the new filename.
@@ -98,7 +98,7 @@ function DynamicFileLoader() {
 				allsuspects[i].parentNode.replaceChild(newelement, allsuspects[i]);
 			}
 		}
-	}
+	};
 }
 
 var loader = new DynamicFileLoader();

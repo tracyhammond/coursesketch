@@ -54,7 +54,8 @@ function Overloads() {
 			classType = class_type;
 		}
 		return classType;
-	}
+	};
+
 	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
 	 * See SRL_Shape.getArea() and SRL_Line.getArea() for more details.
@@ -67,7 +68,8 @@ function Overloads() {
 		} else if (this.check_type() == "SRL_Line") {
 			return(this.getArea.SRL_Line.apply( this, arguments ));
 		}
-	}
+	};
+
 	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
 	 * See SRL_Stroke.getMinX(), SRL_Line.getMinX() SRL_Point.getMinX() for more details.
@@ -82,7 +84,7 @@ function Overloads() {
 		} else if (this.check_type() == "SRL_Line") {
 			return(this.getMinX.SRL_Line.apply( this, arguments ));
 		}
-	}
+	};
 
 	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
@@ -98,7 +100,7 @@ function Overloads() {
 		} else if (this.check_type() == "SRL_Line") {
 			return(this.getMinY.SRL_Line.apply( this, arguments ));
 		}
-	}
+	};
 
 	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
@@ -114,7 +116,7 @@ function Overloads() {
 		} else if (this.check_type() == "SRL_Line") {
 			return(this.getMaxX.SRL_Line.apply( this, arguments ));
 		}
-	}
+	};
 
 	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
@@ -130,7 +132,7 @@ function Overloads() {
 		} else if (this.check_type() == "SRL_Line") {
 			return(this.getMaxY.SRL_Line.apply( this, arguments ));
 		}
-	}
+	};
 
 	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
@@ -144,7 +146,7 @@ function Overloads() {
 		} else if (this.check_type() == "SRL_Line") {
 			return(this.distance.SRL_Line.apply( this, arguments ));
 		}
-	}
+	};
 
 	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
@@ -158,7 +160,7 @@ function Overloads() {
 		} else if (this.check_type() == "SRL_Shape") {
 			return(this.getSize.SRL_Shape.apply( this, arguments ));
 		}
-	}
+	};
 
 	/**
 	 * Takes the original object's type and returns the overloaded function associated with that object
@@ -178,7 +180,7 @@ function Overloads() {
 			throw 'No such method error: SRL_Line does not have method "getSubObjectById"';
 		}
 		return(this.getSubObjectById.SRL_Object.apply( this, arguments ));
-	}
+	};
 
 	this.removeSubObjectById = function () {
 		if (this.check_type() == "SRL_Stroke") {
@@ -191,7 +193,7 @@ function Overloads() {
 			throw 'No such method error: SRL_Line does not have method "removeSubObjectById"';
 		}
 		return (this.removeSubObjectById.SRL_Object.apply( this, arguments ));
-	}
+	};
 
 	this.removeSubObject = function () {
 		if (this.check_type() == "SRL_Stroke") {
@@ -204,7 +206,7 @@ function Overloads() {
 			throw 'No such method error: SRL_Line does not have method "removeSubObject"';
 		}
 		return(this.removeSubObject.SRL_Object.apply( this, arguments ));
-	}
+	};
 
 	this.getSubObjectAtIndex = function() {
 		if (this.check_type() == "SRL_Stroke") {
@@ -217,7 +219,7 @@ function Overloads() {
 			throw 'No such method error: SRL_Line does not have method "removeSubObject"';
 		}
 		return (this.getSubObjectAtIndex.SRL_Object.apply( this, arguments ));
-	}
+	};
 
 	this.removeSubObjectAtIndex = function(index) {
 		if (this.check_type() == "SRL_Stroke") {
@@ -230,7 +232,7 @@ function Overloads() {
 			throw 'No such method error: SRL_Line does not have method "removeSubObject"';
 		}
 		return(this.removeSubObjectAtIndex.SRL_Object.apply( this, arguments ));
-	}
+	};
 };
 
 /*******************************
@@ -247,15 +249,15 @@ function Overloads() {
 function SRL_Sketch() {
 	this.Inherits(Overloads); // super call
 
-	var objectList = [];
-	var objectIdMap = [];
+	var objectList = new Array();
+	var objectIdMap = new Array();
 	var boundingBox = new SRL_BoundingBox();
-
 	var objectMap = {};
+
 	this.addObject = function(srlObject) {
 		objectList.push(srlObject);
 		objectIdMap[srlObject.getId()] = srlObject;
-	}
+	};
 
 	this.addSubObject = this.addObject; // backwards comaptiablity
 
@@ -268,7 +270,7 @@ function SRL_Sketch() {
 			delete objectMap[result.getId()];
 		}
 		return result;
-	}
+	};
 
 	/**
 	 * Given an objectId, remove the object. (Slower than if you already have an instance of the object)
@@ -277,26 +279,26 @@ function SRL_Sketch() {
 		var object = this.getSubObjectById(objectId);
 		this.removeSubObject(object);
 		return object;
-	}
+	};
 
 	this.getList = function() {
 		return objectList;
-	}
+	};
 
 	/**
 	 * Returns the object based off of its id.
 	 */
 	this.getSubObjectById = function(objectId) {
 		return objectIdMap[objectId];
-	}
+	};
 
 	this.getSubObjectAtIndex = function(index) {
 		return objectList[index];
-	}
+	};
 
 	this.removeSubObjectAtIndex = function(index) {
 		this.removeSubObject(objectList[index]);
-	}
+	};
 
 	/**
 	 * Returns the object that is a result of the given IdChain
@@ -310,7 +312,7 @@ function SRL_Sketch() {
 			returnShape = returnShape.getSubObjectById(idList[i]);
 		}
 		return returnShape;
-	}
+	};
 
 	/**
 	 * Removes an object by the given IdChain.
@@ -340,7 +342,18 @@ function SRL_Sketch() {
 		}
 		var returnShape = parentShape.removeSubObjectById(idList[idList.length - 1]);
 		return returnShape;
-	}
+	};
+
+	/**
+	 * Resets the sketch to its starting state.
+	 * 
+	 */
+	this.resetSketch = function() {
+		objectList = [];
+		objectIdMap = [];
+		boundingBox = new SRL_BoundingBox();
+		objectMap = {};
+	};
 }
 
 
@@ -362,7 +375,7 @@ function SRL_Object() {
 	/**
 	 * Each object has a unique ID associated with it.
 	 */
-	var id = generateUUID(); // = guid();
+	var id = generateUUID();
 
 	/**
 	 * The name of the object, such as "triangle1"
@@ -402,6 +415,7 @@ function SRL_Object() {
 	 * The bounding box is the farthest left, right, top and bottom points in this shape;
 	 */
 	var boundingBox = new SRL_BoundingBox();
+
 	/**
 	 * Adds a subobject to this object. 
 	 * This usually happens during recognition, when a new object
@@ -413,7 +427,7 @@ function SRL_Object() {
 			boundingBox.addSubObject(subObject);
 			m_subObjects.push(subObject);
 		}
-	}
+	};
 
 	/**
 	 * Goes through every object in this list of objects. (Brute force).
@@ -421,13 +435,14 @@ function SRL_Object() {
 	 * @return the object if it exist, returns false otherwise.
 	 */
 	this.getSubObjectById = function(objectId) {
-		for (object in m_subObjects) {
+		for (var i = 0; i < m_subObjects.length; i++) {
+			var object = m_subObjects[i];
 			if (object.getId == objectId) {
 				return object;
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Goes through every object in this list of objects. (Brute force).
@@ -441,14 +456,14 @@ function SRL_Object() {
 				return m_subObjects.removeObjectAtIndex(i);
 			}
 		}
-	}
+	};
 
 	/**
 	 * Given an object, remove this instance of the object.
 	 */
 	this.removeSubObject = function(srlObject) {
 		return m_subObjects.removeObject(srlObject);
-	}
+	};
 
 	/**
 	 * Gets the list of subobjects
@@ -456,7 +471,7 @@ function SRL_Object() {
 	 */
 	this.getSubObjects = function() {
 		return m_subObjects;
-	}
+	};
 
 	/**
 	 * Gets a list of all of the objects that make up this object.
@@ -473,7 +488,7 @@ function SRL_Object() {
 			}
 		}
 		return completeList;
-	}
+	};
 
 	/**
 	 * add an interpretation for an object
@@ -483,28 +498,28 @@ function SRL_Object() {
 	 */
 	this.addInterpretation = function(interpretation, confidence, complexity) {
 		m_interpretations.push(new SRL_Interpretation(interpretation, confidence, complexity));
-	}
+	};
 
 	/**
 	 * @return the list of interpretations for this shape.
 	 */
 	this.getInterpretations = function() {
 		return m_interpretations;
-	}
+	};
 
 	/**
 	 * sets unique UUID for an object
 	 */
 	this.setId = function(newId) {
 		id = newId;
-	}
+	};
 
 	/**
 	 * @return unique UUID for an object
 	 */
 	this.getId = function() {
 		return id;
-	}
+	};
 
 	/**
 	 * An object can have a name, such as "triangle1". 
@@ -512,15 +527,15 @@ function SRL_Object() {
 	 */
 	this.getName = function() {
 		return name;
-	}
+	};
 
 	/**
 	 * An object can have a name, such as "triangle1". 
 	 * @param name object name
 	 */
-	this.setName = function(name) {
-		name = name;
-	}
+	this.setName = function(objectName) {
+		name = objectName;
+	};
 
 	/**
 	 * Gets the time associated with the object. 
@@ -529,7 +544,7 @@ function SRL_Object() {
 	 */
 	this.getTime = function() {
 		return time;
-	}
+	};
 
 	/**
 	 * Sets the time the object was created. This probably should 
@@ -542,7 +557,7 @@ function SRL_Object() {
 		} else {
 			time = null;
 		}
-	}
+	};
 
 	/**
 	 * An object can be created by a user 
@@ -554,7 +569,8 @@ function SRL_Object() {
 	 */
 	this.isUserCreated = function() {
 		return isUserCreated;
-	}
+	};
+
 	/**
 	 * An object can be created by a user 
 	 * (like drawing a shape, or speaking a phrase)
@@ -562,9 +578,9 @@ function SRL_Object() {
 	 * (like a recognition of a higher level shape)
 	 * @param isUserCreated true if the user created the shape, else false
 	 */
-	this.setUserCreated = function(isUserCreated) {
-		isUserCreated = isUserCreated;
-	}
+	this.setUserCreated = function(isUserCreatedObject) {
+		isUserCreated = isUserCreatedObject;
+	};
 	
 	/**
 	 * Gets the bounding box of the object.
@@ -572,35 +588,35 @@ function SRL_Object() {
 	 */
 	this.getBoundingBox = function() {
 		return boundingBox;
-	}
+	};
 
 	/**
 	 * returns the minimum x value in an object
 	 */
 	this.getMinX = function() {
 		return boundingBox.getLeft();//minx;
-	}
+	};
 
 	/**
 	 * return minimum y value in an object
 	 */
 	this.getMinY = function() {
 		return boundingBox.getTop();//miny;
-	}
+	};
 
 	/**
 	 * return maximum x value in an object
 	 */
 	this.getMaxX = function() {
 		return boundingBox.getRight();//maxx;
-	}
+	};
 
 	/**
 	 * return maximum x value in an object
 	 */
 	this.getMaxY = function() {
 		return boundingBox.getBottom();
-	}
+	};
 };
 
 /**
@@ -648,14 +664,15 @@ function SRL_Shape() {
 	 */
 	this.getCenterX = function(){
 		return (getMinX() + getMaxX())/2.0;
-	}
+	};
+
 	/**
 	 * Returns the center y of a shape
 	 * @return center y of a shape
 	 */
 	this.getCenterY = function(){
 		return (this.getMinY() + this.getMaxY())/2.0;
-	}
+	};
 
 	/**
 	 * Returns the width of the object
@@ -663,14 +680,15 @@ function SRL_Shape() {
 	 */
 	this.getWidth = function(){
 		return this.getBoundingBox().getWidth();//getMaxX() - getMinX();
-	}
+	};
+
 	/**
 	 * Returns the height of the object
 	 * @return the height of the object
 	 */
 	this.getHeight = function(){
 		return this.bondingBox().getHeight();//getMaxY() - getMinY();
-	}
+	};
 	
 	/**
 	 * Returns the length times the height
@@ -679,7 +697,8 @@ function SRL_Shape() {
 	 */
 	this.getArea.SRL_Shape = function(){
 		return getHeight() * getWidth();
-	}
+	};
+
 	/**
 	 * This returns the length of the diagonal of the bounding box. 
 	 * This might be a better measure of perceptual size than area
@@ -687,8 +706,8 @@ function SRL_Shape() {
 	 */
 	this.getLengthOfDiagonal = function(){
 		return Math.sqrt(getHeight() * getHeight() + getWidth() * getWidth());
-	}
-	
+	};
+
 	/**
 	 * This function just returns the same thing as the length of the diagonal
 	 * as it is a good measure of size.
@@ -696,15 +715,15 @@ function SRL_Shape() {
 	 */
 	this.getSize = function(){
 		return getLengthOfDiagonal();
-	}
-	
+	};
+
 	/**
 	 * Returns the angle of the diagonal of the bounding box of the shape
 	 * @return angle of the diagonal of the bounding box of the shape
 	 */
 	this.getBoundingBoxDiagonalAngle = function() {
 		return Math.atan(getHeight()/getWidth());
-	}
+	};
 };
 
 /**
@@ -731,13 +750,13 @@ function SRL_Stroke(startPoint) {
 	 * Adding another point to the stroke
 	 * @param point
 	 */
-	this.addPoint = function(point){
+	this.addPoint = function(point) {
 		if (point instanceof SRL_Point) {
 			points.push(point);
 			this.getBoundingBox().addPoint(point);
 			intersector.addPoint(point, points.length-1);
 		}
-	}
+	};
 
 	/**
 	 * Constructor setting the initial point in the stroke
@@ -754,11 +773,11 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getPoints = function() {
 		return points;
-	}
+	};
 
 	this.finish = function() {
 		intersector.finish();
-	}
+	};
 
 	/**
 	 * Get the i'th point in the stroke 
@@ -773,7 +792,7 @@ function SRL_Stroke(startPoint) {
 			}
 			return points[i];
 		}
-	}
+	};
 
 	/**
 	 * Goes through every object in this list of objects. (Brute force).
@@ -787,7 +806,7 @@ function SRL_Stroke(startPoint) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Goes through every object in this list of objects. (Brute force).
@@ -801,14 +820,14 @@ function SRL_Stroke(startPoint) {
 				return points.removeObjectAtIndex(i);
 			}
 		}
-	}
+	};
 
 	/**
 	 * Given an object, remove this instance of the object.
 	 */
 	this.removeSubObject = function(srlObject) {
 		return points.removeObject(srlObject);
-	}
+	};
 
 	/**
 	 * Gets the list of subobjects
@@ -816,7 +835,7 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getSubObjects = function(){
 		return points;
-	}
+	};
 
 	/**
 	 * Gets the number of points in the stroke
@@ -824,7 +843,7 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getNumPoints = function(){
 		return points.length;
-	}
+	};
 
 	/**
 	 * Returns the first point in the stroke.
@@ -836,7 +855,7 @@ function SRL_Stroke(startPoint) {
 			return null;
 		}
 		return points[0];
-	}
+	};
 
 	/**
 	 * Returns the last point in the stroke
@@ -848,11 +867,11 @@ function SRL_Stroke(startPoint) {
 			return null;
 		}
 		return points[points.length-1];
-	}
+	};
 
 	this.getStrokeIntersector = function() {
 		return intersector;
-	}
+	};
 	
 	/** returns the minimum x value in a stroke
 	 * return minimum x value in a stroke
@@ -867,7 +886,7 @@ function SRL_Stroke(startPoint) {
 		}
 		*/
 		return boundingBox.getLeft();//minx;
-	}
+	};
 
 	/** returns the minimum y value in a stroke
 	 * return minimum y value in a stroke
@@ -882,7 +901,7 @@ function SRL_Stroke(startPoint) {
 		}
 		*/
 		return boundingBox.getTop();//miny;
-	}
+	};
 
 	/** returns the maximum x value in a stroke
 	 * return maximum x value in a stroke
@@ -898,7 +917,7 @@ function SRL_Stroke(startPoint) {
 		}
 		*/
 		return boundingBox.getRight();//maxx;
-	}
+	};
 
 	/** returns the maximum x value in a stroke
 	 * return maximum x value in a stroke
@@ -913,7 +932,7 @@ function SRL_Stroke(startPoint) {
 		}
 		*/
 		return boundingBox.getBottom();//maxy;
-	}
+	};
 
 	/**
 	 * Return the cosine of the starting angle of the stroke
@@ -948,7 +967,7 @@ function SRL_Stroke(startPoint) {
 		} else {
 			throw ".getStartAngleCosine needs an int argument";
 		}
-	}
+	};
 
 	/**
 	 * Return the sine of the starting angle of the stroke
@@ -961,8 +980,8 @@ function SRL_Stroke(startPoint) {
 	 */
 	this.getStartAngleSine = function(secondPoint) {
 		if (typeof secondPoint === "number") {
-			if(this.getNumPoints() <= 1) return Number.NaN;
-			if(this.getNumPoints() <= secondPoint){
+			if (this.getNumPoints() <= 1) return Number.NaN;
+			if (this.getNumPoints() <= secondPoint) {
 				secondPoint = this.getNumPoints() - 1;
 			}
 
@@ -981,7 +1000,7 @@ function SRL_Stroke(startPoint) {
 			var hypotenuse = Math.sqrt(sectionWidth * sectionWidth + sectionHeight * sectionHeight);
 			return sectionHeight / hypotenuse;
 		}
-	}
+	};
 
 	/**
 	 * Return the Euclidean distance from the starting point 
@@ -997,7 +1016,7 @@ function SRL_Stroke(startPoint) {
 		xn = this.getLastPoint().getX();
 		yn = this.getLastPoint().getY();
 		return Math.sqrt(Math.pow(xn-x0,2)+Math.pow(yn-y0,2));
-	}
+	};
 
 	/**
 	 * Return the cosine of the angle between the start and end point
@@ -1009,7 +1028,7 @@ function SRL_Stroke(startPoint) {
 			return Number.NaN;
 		var xDistance = this.getLastPoint().getX() - this.getFirstPoint().getX();
 		return xDistance/this.getEuclideanDistance();
-	}
+	};
 
 	/**
 	 * Return the cosine of the angle between the start and end point
@@ -1021,7 +1040,7 @@ function SRL_Stroke(startPoint) {
 			return Number.NaN;
 		var yDistance = this.getLastPoint().getY() - this.getFirstPoint().getY();
 		return yDistance/this.getEuclideanDistance();
-	}
+	};
 
 	/**
 	 * Returns the length of the stroke, 
@@ -1037,7 +1056,7 @@ function SRL_Stroke(startPoint) {
 			sum += Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2));
 		}
 		return sum;
-	}
+	};
 
 	/**
 	 * Return the total stroke time
@@ -1049,7 +1068,7 @@ function SRL_Stroke(startPoint) {
 		if (this.getPoints().length == 0)
 			return Number.NaN;
 		//return this.getLastPoint().getTime()-this.getFirstPoint().getTime();
-	}
+	};
 
 	/**
 	 * Auxiliary method used to return a list containing all points
@@ -1071,7 +1090,7 @@ function SRL_Stroke(startPoint) {
 			points.push(points[i]);
 		}
 		return points;
-	}
+	};
 
 	/**
 	 * Auxiliary method used to return a list containing all points
@@ -1091,7 +1110,7 @@ function SRL_Stroke(startPoint) {
 				p.push(this.getPoint(i+1));
 		}
 		return p;
-	}
+	};
 
 	/**
 	 * Return the maximum stroke speed reached
@@ -1115,7 +1134,7 @@ function SRL_Stroke(startPoint) {
 				max = speed;
 		}
 		return max;
-	}
+	};
 
 	/**
 	 * Calculates the rotation from point startP to two points further.
@@ -1137,7 +1156,7 @@ function SRL_Stroke(startPoint) {
 		} else {
 			throw 'and error occured! (probably because the argument was not a number)';
 		}
-	}
+	};
 
 	/**
 	 * Return the total rotation of the stroke from start to end points
@@ -1159,7 +1178,7 @@ function SRL_Stroke(startPoint) {
 		    sum += rot;
 		}
 		return sum;
-	}
+	};
 
 	/**
 	 * Return the absolute rotation of the stroke from start to end points
@@ -1181,7 +1200,7 @@ function SRL_Stroke(startPoint) {
 		    sum += Math.abs(rot);
 		}
 		return sum;
-	}
+	};
 
 	/**
 	 * Return the squared rotation of the stroke from start to end points
@@ -1203,13 +1222,13 @@ function SRL_Stroke(startPoint) {
 		    sum += rot * rot;
 		}
 		return sum;
-	}
+	};
 
 	this.temp_print = function() {
 		for (var i=0; i<points.length; i++) {
 			points[i].temp_print();
 		}
-	}
+	};
 };
 
 /**
@@ -1266,35 +1285,35 @@ function SRL_Point(x, y) {
 	 */
 	this.getPressure = function() {
 		return pressure;
-	}
+	};
 
 	/**
 	 * Points can have pressure depending on the input device
 	 * @param pressure
 	 */
-	this.setPressure = function(pressure) {
+	this.setPressure = function(pointPressure) {
 		if (typeof pressure === "number") {
-			pressure = pressure;
+			pressure = pointPressure;
 		} else {
 			throw "argument of .setPressure must be a 'number'";
 		}
-	}
+	};
 
 	/**
 	 * Points can have pressure depending on the input device
 	 * @param pressure
 	 */
-	this.setSize = function(size) {
+	this.setSize = function(pointSize) {
 		if (typeof size === "number") {
-			size = size;
+			size = pointSize;
 		} else {
 			throw "argument of .setPressure must be a 'number'";
 		}
-	}
+	};
 
 	this.getSize = function() {
 		return size;
-	}
+	};
 
 	/**
 	 * Updates the location of the point
@@ -1311,7 +1330,7 @@ function SRL_Point(x, y) {
 		} else {
 			throw "arguments of .setP must be 'number'";
 		}
-	}
+	};
 
 	/**
 	 * Creates a point with the initial points at x,y
@@ -1331,7 +1350,7 @@ function SRL_Point(x, y) {
 	 */
 	this.getX = function() {
 		return m_xList[m_currentElement];
-	}
+	};
 
 	/**
 	 * Get the current y value of the point
@@ -1339,7 +1358,7 @@ function SRL_Point(x, y) {
 	 */
 	this.getY = function() {
 		return m_yList[m_currentElement];
-	}
+	};
 
 	this.setSpeed = function(point) {
 		if (point instanceof SRL_Point) {
@@ -1351,11 +1370,11 @@ function SRL_Point(x, y) {
 			speed = distance / timeDiff;
 			return true;
 		}
-	}
+	};
 
 	this.getSpeed = function() {
 		return speed;
-	}
+	};
 
 	this.distance.SRL_Point = function(arg1, arg2, arg3, arg4) {
 		/**
@@ -1396,7 +1415,7 @@ function SRL_Point(x, y) {
 		} else {
 			throw "arguments of .distance are wrong";
 		}
-	}
+	};
 
 	/**
 	 * Delete the entire point history and 
@@ -1412,7 +1431,7 @@ function SRL_Point(x, y) {
 		} else {
 			throw "arguments of .setP must be 'number'";
 		}
-	}
+	};
 
 	/**
 	 * Remove last point update
@@ -1427,7 +1446,7 @@ function SRL_Point(x, y) {
 		m_yList.pop();
 		m_currentElement -= 1;
 		return this;
-	}
+	};
 
 	/**
 	 * Get the original value of the point
@@ -1438,7 +1457,7 @@ function SRL_Point(x, y) {
 			m_currentElement = 0;
 		}
 		return this;
-	}
+	};
 
 	/**
 	 * Get the x value for the first point in the history
@@ -1449,7 +1468,7 @@ function SRL_Point(x, y) {
 			return Number.NaN;
 		}
 		return m_xList[0];
-	}
+	};
 
 	/**
 	 * Get the y value for the first point in the history
@@ -1460,7 +1479,7 @@ function SRL_Point(x, y) {
 			return Number.NaN;
 		}
 		return m_yList[0];
-	}
+	};
 
 	/**
 	 * Just returns the x value with is obviously the same as the min
@@ -1468,7 +1487,7 @@ function SRL_Point(x, y) {
 	 */
 	this.getMinX.SRL_Point = function() {
 		return this.getX();
-	}
+	};
 
 	/**
 	 * Just returns the y value with is obviously the same as the min
@@ -1476,7 +1495,7 @@ function SRL_Point(x, y) {
 	 */
 	this.getMinY.SRL_Point = function() {
 		return this.getY();
-	}
+	};
 
 	/**
 	 * Just returns the x value with is obviously the same as the max
@@ -1484,7 +1503,7 @@ function SRL_Point(x, y) {
 	 */
 	this.getMaxX.SRL_Point = function() {
 		return this.getX();
-	}
+	};
 
 	/**
 	 * Just returns the y value with is obviously the same as the max
@@ -1492,8 +1511,8 @@ function SRL_Point(x, y) {
 	 */
 	this.getMaxY.SRL_Point = function() {
 		return this.getY();
-	}
-	
+	};
+
 	this.test_functions = function() {
 		console.log("testing .getPressure");
 		console.log(this.getPressure());
@@ -1518,7 +1537,7 @@ function SRL_Point(x, y) {
 		this.setP(2,5);
 		this.temp_print();
 
-	}
+	};
 
 	this.temp_print = function(){
 		console.log("printing m_xList");
@@ -1527,7 +1546,7 @@ function SRL_Point(x, y) {
 		console.log(m_yList);
 		console.log("printing m_currentElement");
 		console.log(m_currentElement);
-	}
+	};
 };
 
 /**
@@ -1560,7 +1579,7 @@ function SRL_Interpretation(label, confidence, complexity) {
  **************************************************************
  */
 function SRL_BoundingBox() {
-	var internalLeft, internalRight, internalTop, internalBottom;
+	var internalLeft = 0, internalRight = 0, internalTop = 0, internalBottom = 0;
 	var internalX, internalY, internalWidth, internalHeight;
 
 	var firstCoordinate = true;
@@ -1587,19 +1606,19 @@ function SRL_BoundingBox() {
 		internalTop = Math.min(newY,	internalTop);
 		internalBottom = Math.max(newY, internalBottom);
 		sync();
-	}
+	};
 
 	this.setIndexes = function(firstI, lastI) {
 		firstIndex = firstI;
 		lastIndex = lastI;
-	}
+	};
 
 	/**
 	 * @see SRL_BoundingBox#containsCoordinate(x,y)
 	 */
 	this.containsPoint = function(point) {
 		return this.containsCoordinate(point.getX(), point.getY());
-	}
+	};
 
 	/**
 	 * Returns true if the bounding box contains the given point, false otherwise.
@@ -1609,7 +1628,7 @@ function SRL_BoundingBox() {
 	this.containsCoordinate = function(checkX, checkY) {
 		return internalLeft <= checkX && checkX <= internalRight &&
 				internalTop <= checkY && checkY <= internalBottom;
-	}
+	};
 
 	this.union = function(other) {
 		var extremes = other.getExtremeValues();
@@ -1624,7 +1643,7 @@ function SRL_BoundingBox() {
 		internalTop = Math.min(extremes.top, internalTop);
 		internalBottom = Math.max(extremes.bottom, internalBottom);
 		sync();
-	}
+	};
 
 	/**
 	 * Moves every egdge of the bounding box away from the center by this many pixels.
@@ -1635,8 +1654,8 @@ function SRL_BoundingBox() {
 		internalTop -= pixels;
 		internalBottom += pixels;
 		sync();
-	}
-	
+	};
+
 	/**
 	 * Makes the rectangle coordinates the same as the extreme coordinates.
 	 */
@@ -1651,7 +1670,7 @@ function SRL_BoundingBox() {
 		console.log('combing ');
 		console.log(subObject);
 		this.union(subObject.getBoundingBox());
-	}
+	};
 
 	/**
 	 * Returns the extreme values that make up this {@code SRL_BoundingBox}.
@@ -1664,8 +1683,8 @@ function SRL_BoundingBox() {
 			right : internalRight,
 			top : internalTop,
 			bottom : internalBottom
-		}
-	}
+		};
+	};
 
 	/**
 	 * Returns the extreme values that make up this {@code SRL_BoundingBox}.
@@ -1678,16 +1697,16 @@ function SRL_BoundingBox() {
 			y : internalY,
 			width : internalWidth,
 			height : internalHeight
-		}
-	}
+		};
+	};
 
 	this.getArea = function() {
 		return internalWidth * internalHeight;
-	}
+	};
 
 	this.toString = function() {
 		return "SRL_BoundingBox: (" + internalX + ', ' + internalY + ') Width: ' + internalWidth + ' Height: ' + internalHeight; 
-	}
+	};
 
 }
 
@@ -1706,7 +1725,7 @@ function SRL_BoundingBox() {
 /**
  * Handles the intersection of a stroke or a shape.
  */
-function SRL_IntersectionHandler(parentObject) {
+function SRL_IntersectionHandler(parentObjectHandler) {
 // FIXME: change this to a layered level so that there are no more than 10 boxes to be checked at a time.  (yay)
 
 	/**
@@ -1726,7 +1745,7 @@ function SRL_IntersectionHandler(parentObject) {
 	const MAX_POINTS = 50;
 	const MAX_AREA = 100;
 	const EXPANDING_CONSTANT = 3;
-	var parentObject = parentObject;
+	var parentObject = parentObjectHandler;
 
 	/**
 	 * Adds the point and makes sure that every bounding box maintains a certain size and number of points.
@@ -1746,7 +1765,7 @@ function SRL_IntersectionHandler(parentObject) {
 			currentBoundsBackup.addPoint(point);
 		}
 		currentBounds.addPoint(point);
-	}
+	};
 
 	/**
 	 * Tells the handler that we are no longer adding any more items and to finish off the list.
@@ -1756,36 +1775,38 @@ function SRL_IntersectionHandler(parentObject) {
 			currentBounds.scale(EXPANDING_CONSTANT);
 			subBounds.push(currentBounds);
 		}
-	}
+	};
 	
 	this.addSubObject = function addSubObject(object, index) {
 		subBounds.add(object.getBoundingBox());
 		object.getBoundingBox().setIndexes(index, index);
-	}
+	};
 
 	this.isIntersecting = function(x,y) {
 		if (!parentObject.getBoundingBox().containsCoordinate(x,y)) {
 			return false;
 		}
 
-		for(var i = 0; i < subBounds.length; i++) {
+		for (var i = 0; i < subBounds.length; i++) {
 			var box = subBounds[i];
 			if (box.containsCoordinate(x,y)) {
 				return true; // fixme: add a queue so that all of the items are checked in the queue at once.
 			}
 		}
-	}
+	};
 
 	function isIntersectingStroke(x,y) {
+		throw "isIntersectingStroke is not yet implemented";
 	}
 
 	function isIntersectingShape(x,y) {
+		throw "isIntersectingShape is not yet implemented";
 	}
 
 	this.getSubBounds = function() {
 		return subBounds;
-	}
-	
+	};
+
 	//checking!
 	//check every boudning box.  have a queue for every intersection.  If an intersection is closer than X choose than one instead.
 }
