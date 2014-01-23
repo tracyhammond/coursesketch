@@ -49,7 +49,7 @@ function parseUpdateList(list, level, currentIndex) {
 	for (var i = 0; i < size; i++) {
 		var object = list[i]; // this is a single update
 		html += '<div class="update">';
-		html += createUpdate(object, i == (currentIndex -1)); // create a view of an update
+		html += createUpdate(object, i == (currentIndex - 1)); // create a view of an update
 		html +='</div>';
 	}
 	return html;
