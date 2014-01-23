@@ -31,14 +31,13 @@ public class ManyTestAssignments {
 			testBuilder.setLatePolicy(LatePolicy.POLICY1);
 			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
 			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1414126800000L).getTime())));
+			Date d = new Date();
+			d.setYear(2014-1900);
+			d.setMonth(1);
+			d.setDate(21);
+			d.setHours(0);
+			testBuilder.setDueDate(RequestConverter.getProtoFromMilliseconds(d.getTime()));
 			SrlPermission.Builder permissions = SrlPermission.newBuilder();
-			permissions.addAdminPermission("larry");
-	
-			permissions.addModeratorPermission("raniero");
-			permissions.addModeratorPermission("manoj");
-	
-			permissions.addUserPermission("vijay");
-			permissions.addUserPermission("matt");
 	
 			testBuilder.setAccessPermission(permissions.build());
 			System.out.println(testBuilder.toString());
@@ -47,7 +46,7 @@ public class ManyTestAssignments {
 				System.out.println("INSERTING ASSIGNMENT");
 				String assignmentId = null;
 				try {
-					assignmentId = Institution.mongoInsertAssignment("david", testBuilder.buildPartial());
+					assignmentId = Institution.mongoInsertAssignment("0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332", testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {

@@ -25,8 +25,16 @@
 				scope.getElementById("totalNumber").innerHTML = "out of " + totalNumber;
 			}
 			// TODO: change this to strip out bad HTML code
-			scope.getElementById("problemPanel").innerHTML = parent.problemNavigator.getProblemText();
+			scope.getElementById("problemPanel").innerHTML = '<p>' + parent.problemNavigator.getProblemText() + '</p>';
 		});
+
+		window.onresize = function() {
+			var navWidth = document.getElementById("navPanel").offsetWidth;
+			var navHeight = document.getElementById("navPanel").offsetHeight;
+			var textWidth = document.getElementById("panelWrapper").offsetWidth - navWidth;
+			document.getElementById("problemPanel").style.width = (textWidth - 15) +"px";
+			document.getElementById("problemPanel").style.height = (navHeight -15) +"px";
+		}
 	</script>
 </head>
 <body onload = "parent.loadNav(this);">
@@ -60,7 +68,7 @@
 			</div>
 		</div>
 		</div>
-		<div id = "problemPanel" style = "display: inline-block;">
+		<div id = "problemPanel" style = "display:inline-block; overflow-y:scroll;">
 			Text problem Text text text
 		</div>
 	</div>

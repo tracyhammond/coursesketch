@@ -79,6 +79,7 @@
 				button.setAttribute("id", "button"+id);
 				button.onclick = function() {
 					registerClass(id);
+					window.location.href = 'html/student/course_management.html';
 				}
 				button.textContent = "Register";
 				button.style.position = "absolute";
@@ -90,7 +91,6 @@
 				button.style.top = element.offsetHeight/2 + element.offsetTop + "px";
 				//localDoc.appendChild(button);
 				localDoc.getElementById("registerButton").appendChild(button);
-				
 				$("#" + id).animate({
 	                marginLeft: moveAmount,
 	            	}, 300, function () {
@@ -115,7 +115,7 @@
                 marginLeft: "0px",
             	}, 300, function () {
             		localDoc.getElementById("registerButton").removeChild(localDoc.getElementById("button" + id));
-            });	
+            });
 		}
 	</script>
 	<style>

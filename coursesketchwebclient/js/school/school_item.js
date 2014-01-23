@@ -142,15 +142,15 @@ function SchoolItemBuilder() {
 		for (var i = 0; i< this.dataList.length; i++) {
 			var srlSchoolItem = this.dataList[i];
 			var type = findType(srlSchoolItem); // We establish the type that it is.
-			html+='<li ' + (this.centerInDiv?'class = "child_center"':'') + '>';
+			html += '<li ' + (this.centerInDiv?'class = "child_center"':'') + '>';
 			if (this.isSimpleList) {
 				html += this.createSimpleSchoolItem(srlSchoolItem);
 			} else {
-				html += this.createFancySchoolItem(srlSchoolItem, currentDate, type);
+				html += this.createFancySchoolItem(srlSchoolItem, currentDate, type, i);
 			}
-			html+='</li>';
+			html += '</li>';
 		}
-		html+='</ul>';
+		html += '</ul>';
 		return html;
 	};
 
@@ -171,28 +171,29 @@ function SchoolItemBuilder() {
 	/**
 	 * Returns the HTML for a school_item based off of the specified school builder
 	 */
-	this.createFancySchoolItem = function createFancySchoolItem(srlSchoolItem, currentDate, type) {
+	this.createFancySchoolItem = function createFancySchoolItem(srlSchoolItem, currentDate, type, index) {
 		// Required Items
 		var html = '';
-		
-		//<div class = "school_item hoverbox";
-							//objctId
-		html+='	<div id = "' + srlSchoolItem.id + '"' + this.createBoxClass(this.showBox,this.entireBoxClicked);
-															// objectid
-		html+= this.addClickFunction(this.entireBoxClicked, srlSchoolItem.id) + '>\n';
-		
-		html+= this.createCompletionStatus(srlSchoolItem);
 
-		html+='		<div class="text">\n';
-		html+=			this.writeTextData(srlSchoolItem, currentDate, type);
-		html+='	</div>\n';
+		//objctId
+		html += '	<div id = "' + srlSchoolItem.id + '"' + this.createBoxClass(this.showBox,this.entireBoxClicked);
+		html += 'data-item_number="' + index + '"'; // the number of the school item
+
+		html += this.addClickFunction(this.entireBoxClicked, srlSchoolItem.id) + '>\n';
+
+		html += this.createCompletionStatus(srlSchoolItem);
+
+		html += '		<div class="text">\n';
+		html +=	this.writeTextData(srlSchoolItem, currentDate, type);
+		html += '	</div>\n';
+
 		if (this.showImage && srlSchoolItem.imageUrl) {
-															// remove link
-			html+= this.replaceLink(this.imageClicked, srlSchoolItem);
-									// image link
-			html+='<img src="images/' + srlSchoolItem.imageUrl + '" width="128" height="128"></a>\n';
+			// remove link
+			html += this.replaceLink(this.imageClicked, srlSchoolItem);
+			// image link
+			html += '<img src="images/' + srlSchoolItem.imageUrl + '" width="128" height="128"></a>\n';
 		}
-		html+='</div>\n';
+		html += '</div>\n';
 		return html;
 	};	
 

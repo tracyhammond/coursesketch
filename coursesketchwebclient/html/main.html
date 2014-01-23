@@ -11,6 +11,7 @@
     <script type="text/javascript" src="js/connection/advance_data_listener.js"></script>
 
     <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/utils/externalLibraries/polyfill.js"></script>
    
     <script type="text/javascript" src="js/persistant_data/database.js"></script>
     <script type="text/javascript" src="js/persistant_data/course_sketch_data_manager.js"></script>
@@ -93,14 +94,17 @@
 	  		var dataManager = false;
 
 	  		function redirectContent(url, title) {
-	  			document.getElementById('iframeContent').src = url;
+	  			var iframe = document.getElementById('iframeContent');
+	  			var docWindow = iframe.documentWindow || iframe.contentDocument;
+	  			docWindow.location.replace(url); // it allows the url to change without adding an event to the history!
+
+	  			//document.getElementById('iframeContent').src = url;
 	  			redirector.setRedirect(url);
 
 	  			if (title) {
 	  				headerManager.changeText(title);
 	  			}
 	  		}
-	  		redirectContent = redirectContent.bind(this);
 	</script>
 
 	<style>

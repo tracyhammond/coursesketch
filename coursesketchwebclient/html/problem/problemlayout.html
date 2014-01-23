@@ -15,7 +15,8 @@
 		}
 	</script>
 	<script>
-		var problemNavigator = new schoolNavigator(parent.dataManager.getState("CURRENT_ASSIGNMENT"),parent.dataManager, false);
+		var problemNavigator = new schoolNavigator(parent.dataManager.getState("CURRENT_ASSIGNMENT"), parent.dataManager, false,
+				parseInt(parent.dataManager.getState("CURRENT_QUESTION_INDEX")));
 		connection.setAnswerCheckingListener(function(event, msg) {
 			problemNavigator.executeEvent('feedback', [event, msg]);
 		});
@@ -40,6 +41,7 @@
 		*/
 		scriptScope.loadTool = function(callerScope) {
 			callerScope.document.getElementById("panelWrapper").onresize = function() {
+				console.log("resizing tool panel");
 				var width = this.offsetWidth + 10;
 				var height = this.offsetHeight + 10;
 				scriptScope.document.getElementById('toolHolder').style.width = width +'px';
@@ -73,7 +75,10 @@
 		}
 	})(this);
 	function onLoad() {
-		problemNavigator.refresh();
+		problemNavigator.setUiLoaded(true);
+		if (problemNavigator.isDataLoaded()) {
+			problemNavigator.refresh();
+		}
 		window.onresize();
 	}
 	</script>

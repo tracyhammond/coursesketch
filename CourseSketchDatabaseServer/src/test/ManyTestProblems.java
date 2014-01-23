@@ -69,13 +69,12 @@ public class ManyTestProblems {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
-			permissions2.addAdminPermission("larry");
 			permissions2.addUserPermission(courseId);
 			bankBuilder.setAccessPermission(permissions2.build());
 			bankBuilder.setQuestionType(QuestionType.SKETCH);
 			String resultantId = null;
 			try {
-				resultantId = Institution.mongoInsertBankProblem("david", bankBuilder.buildPartial());
+				resultantId = Institution.mongoInsertBankProblem("0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332", bankBuilder.buildPartial());
 			} catch (AuthenticationException e1) {
 				e1.printStackTrace();
 			}
@@ -102,7 +101,7 @@ public class ManyTestProblems {
 			// testing inserting course
 				System.out.println("INSERTING PROBLEM");
 				try {
-					Institution.mongoInsertCourseProblem("david", testBuilder.buildPartial());
+					Institution.mongoInsertCourseProblem("0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332", testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {

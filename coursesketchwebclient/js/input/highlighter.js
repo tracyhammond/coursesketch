@@ -1,3 +1,8 @@
+/**
+*Colorizes ('highlights') a currently selected/pinpointed sketch component blue ("#0000FF")
+*/
+
+
 function Highlighter(externalInputListener, externalSketchContainer, highlightedCallback, graphics) {
 	var inputListener = externalInputListener;
 	var sketchContainer = externalSketchContainer;

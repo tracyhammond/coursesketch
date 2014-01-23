@@ -3287,30 +3287,30 @@ public final class Commands {
   public interface MarkerOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required string id = 1;
+    // required .protobuf.srl.commands.Marker.MarkerType type = 1;
     /**
-     * <code>required string id = 1;</code>
-     */
-    boolean hasId();
-    /**
-     * <code>required string id = 1;</code>
-     */
-    java.lang.String getId();
-    /**
-     * <code>required string id = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getIdBytes();
-
-    // required .protobuf.srl.commands.Marker.MarkerType type = 2;
-    /**
-     * <code>required .protobuf.srl.commands.Marker.MarkerType type = 2;</code>
+     * <code>required .protobuf.srl.commands.Marker.MarkerType type = 1;</code>
      */
     boolean hasType();
     /**
-     * <code>required .protobuf.srl.commands.Marker.MarkerType type = 2;</code>
+     * <code>required .protobuf.srl.commands.Marker.MarkerType type = 1;</code>
      */
     protobuf.srl.commands.Commands.Marker.MarkerType getType();
+
+    // optional string otherData = 2;
+    /**
+     * <code>optional string otherData = 2;</code>
+     */
+    boolean hasOtherData();
+    /**
+     * <code>optional string otherData = 2;</code>
+     */
+    java.lang.String getOtherData();
+    /**
+     * <code>optional string otherData = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getOtherDataBytes();
   }
   /**
    * Protobuf type {@code protobuf.srl.commands.Marker}
@@ -3370,20 +3370,20 @@ public final class Commands {
               }
               break;
             }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              id_ = input.readBytes();
-              break;
-            }
-            case 16: {
+            case 8: {
               int rawValue = input.readEnum();
               protobuf.srl.commands.Commands.Marker.MarkerType value = protobuf.srl.commands.Commands.Marker.MarkerType.valueOf(rawValue);
               if (value == null) {
-                unknownFields.mergeVarintField(2, rawValue);
+                unknownFields.mergeVarintField(1, rawValue);
               } else {
-                bitField0_ |= 0x00000002;
+                bitField0_ |= 0x00000001;
                 type_ = value;
               }
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              otherData_ = input.readBytes();
               break;
             }
           }
@@ -3443,9 +3443,17 @@ public final class Commands {
        */
       SAVE(2, 2),
       /**
-       * <code>LOAD = 3;</code>
+       * <code>SPLIT = 3;</code>
        */
-      LOAD(3, 3),
+      SPLIT(3, 3),
+      /**
+       * <code>CLEAR = 4;</code>
+       *
+       * <pre>
+       * To be supported later
+       * </pre>
+       */
+      CLEAR(4, 4),
       ;
 
       /**
@@ -3461,9 +3469,17 @@ public final class Commands {
        */
       public static final int SAVE_VALUE = 2;
       /**
-       * <code>LOAD = 3;</code>
+       * <code>SPLIT = 3;</code>
        */
-      public static final int LOAD_VALUE = 3;
+      public static final int SPLIT_VALUE = 3;
+      /**
+       * <code>CLEAR = 4;</code>
+       *
+       * <pre>
+       * To be supported later
+       * </pre>
+       */
+      public static final int CLEAR_VALUE = 4;
 
 
       public final int getNumber() { return value; }
@@ -3473,7 +3489,8 @@ public final class Commands {
           case 0: return SUBMISSION;
           case 1: return FEEDBACK;
           case 2: return SAVE;
-          case 3: return LOAD;
+          case 3: return SPLIT;
+          case 4: return CLEAR;
           default: return null;
         }
       }
@@ -3526,20 +3543,36 @@ public final class Commands {
     }
 
     private int bitField0_;
-    // required string id = 1;
-    public static final int ID_FIELD_NUMBER = 1;
-    private java.lang.Object id_;
+    // required .protobuf.srl.commands.Marker.MarkerType type = 1;
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private protobuf.srl.commands.Commands.Marker.MarkerType type_;
     /**
-     * <code>required string id = 1;</code>
+     * <code>required .protobuf.srl.commands.Marker.MarkerType type = 1;</code>
      */
-    public boolean hasId() {
+    public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string id = 1;</code>
+     * <code>required .protobuf.srl.commands.Marker.MarkerType type = 1;</code>
      */
-    public java.lang.String getId() {
-      java.lang.Object ref = id_;
+    public protobuf.srl.commands.Commands.Marker.MarkerType getType() {
+      return type_;
+    }
+
+    // optional string otherData = 2;
+    public static final int OTHERDATA_FIELD_NUMBER = 2;
+    private java.lang.Object otherData_;
+    /**
+     * <code>optional string otherData = 2;</code>
+     */
+    public boolean hasOtherData() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string otherData = 2;</code>
+     */
+    public java.lang.String getOtherData() {
+      java.lang.Object ref = otherData_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -3547,57 +3580,37 @@ public final class Commands {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          id_ = s;
+          otherData_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string id = 1;</code>
+     * <code>optional string otherData = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getIdBytes() {
-      java.lang.Object ref = id_;
+        getOtherDataBytes() {
+      java.lang.Object ref = otherData_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        id_ = b;
+        otherData_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    // required .protobuf.srl.commands.Marker.MarkerType type = 2;
-    public static final int TYPE_FIELD_NUMBER = 2;
-    private protobuf.srl.commands.Commands.Marker.MarkerType type_;
-    /**
-     * <code>required .protobuf.srl.commands.Marker.MarkerType type = 2;</code>
-     */
-    public boolean hasType() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required .protobuf.srl.commands.Marker.MarkerType type = 2;</code>
-     */
-    public protobuf.srl.commands.Commands.Marker.MarkerType getType() {
-      return type_;
-    }
-
     private void initFields() {
-      id_ = "";
       type_ = protobuf.srl.commands.Commands.Marker.MarkerType.SUBMISSION;
+      otherData_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       if (!hasType()) {
         memoizedIsInitialized = 0;
         return false;
@@ -3610,10 +3623,10 @@ public final class Commands {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getIdBytes());
+        output.writeEnum(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, type_.getNumber());
+        output.writeBytes(2, getOtherDataBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -3626,11 +3639,11 @@ public final class Commands {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getIdBytes());
+          .computeEnumSize(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, type_.getNumber());
+          .computeBytesSize(2, getOtherDataBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3755,9 +3768,9 @@ public final class Commands {
 
       public Builder clear() {
         super.clear();
-        id_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
         type_ = protobuf.srl.commands.Commands.Marker.MarkerType.SUBMISSION;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        otherData_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
@@ -3790,11 +3803,11 @@ public final class Commands {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.id_ = id_;
+        result.type_ = type_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.type_ = type_;
+        result.otherData_ = otherData_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3811,23 +3824,19 @@ public final class Commands {
 
       public Builder mergeFrom(protobuf.srl.commands.Commands.Marker other) {
         if (other == protobuf.srl.commands.Commands.Marker.getDefaultInstance()) return this;
-        if (other.hasId()) {
-          bitField0_ |= 0x00000001;
-          id_ = other.id_;
-          onChanged();
-        }
         if (other.hasType()) {
           setType(other.getType());
+        }
+        if (other.hasOtherData()) {
+          bitField0_ |= 0x00000002;
+          otherData_ = other.otherData_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (!hasId()) {
-          
-          return false;
-        }
         if (!hasType()) {
           
           return false;
@@ -3854,112 +3863,112 @@ public final class Commands {
       }
       private int bitField0_;
 
-      // required string id = 1;
-      private java.lang.Object id_ = "";
+      // required .protobuf.srl.commands.Marker.MarkerType type = 1;
+      private protobuf.srl.commands.Commands.Marker.MarkerType type_ = protobuf.srl.commands.Commands.Marker.MarkerType.SUBMISSION;
       /**
-       * <code>required string id = 1;</code>
+       * <code>required .protobuf.srl.commands.Marker.MarkerType type = 1;</code>
        */
-      public boolean hasId() {
+      public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>required .protobuf.srl.commands.Marker.MarkerType type = 1;</code>
        */
-      public java.lang.String getId() {
-        java.lang.Object ref = id_;
+      public protobuf.srl.commands.Commands.Marker.MarkerType getType() {
+        return type_;
+      }
+      /**
+       * <code>required .protobuf.srl.commands.Marker.MarkerType type = 1;</code>
+       */
+      public Builder setType(protobuf.srl.commands.Commands.Marker.MarkerType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .protobuf.srl.commands.Marker.MarkerType type = 1;</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = protobuf.srl.commands.Commands.Marker.MarkerType.SUBMISSION;
+        onChanged();
+        return this;
+      }
+
+      // optional string otherData = 2;
+      private java.lang.Object otherData_ = "";
+      /**
+       * <code>optional string otherData = 2;</code>
+       */
+      public boolean hasOtherData() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string otherData = 2;</code>
+       */
+      public java.lang.String getOtherData() {
+        java.lang.Object ref = otherData_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          id_ = s;
+          otherData_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional string otherData = 2;</code>
        */
       public com.google.protobuf.ByteString
-          getIdBytes() {
-        java.lang.Object ref = id_;
+          getOtherDataBytes() {
+        java.lang.Object ref = otherData_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          id_ = b;
+          otherData_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional string otherData = 2;</code>
        */
-      public Builder setId(
+      public Builder setOtherData(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000001;
-        id_ = value;
+  bitField0_ |= 0x00000002;
+        otherData_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional string otherData = 2;</code>
        */
-      public Builder clearId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        id_ = getDefaultInstance().getId();
+      public Builder clearOtherData() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        otherData_ = getDefaultInstance().getOtherData();
         onChanged();
         return this;
       }
       /**
-       * <code>required string id = 1;</code>
+       * <code>optional string otherData = 2;</code>
        */
-      public Builder setIdBytes(
+      public Builder setOtherDataBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000001;
-        id_ = value;
-        onChanged();
-        return this;
-      }
-
-      // required .protobuf.srl.commands.Marker.MarkerType type = 2;
-      private protobuf.srl.commands.Commands.Marker.MarkerType type_ = protobuf.srl.commands.Commands.Marker.MarkerType.SUBMISSION;
-      /**
-       * <code>required .protobuf.srl.commands.Marker.MarkerType type = 2;</code>
-       */
-      public boolean hasType() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>required .protobuf.srl.commands.Marker.MarkerType type = 2;</code>
-       */
-      public protobuf.srl.commands.Commands.Marker.MarkerType getType() {
-        return type_;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.Marker.MarkerType type = 2;</code>
-       */
-      public Builder setType(protobuf.srl.commands.Commands.Marker.MarkerType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000002;
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required .protobuf.srl.commands.Marker.MarkerType type = 2;</code>
-       */
-      public Builder clearType() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        type_ = protobuf.srl.commands.Commands.Marker.MarkerType.SUBMISSION;
+  bitField0_ |= 0x00000002;
+        otherData_ = value;
         onChanged();
         return this;
       }
@@ -7193,30 +7202,30 @@ public final class Commands {
       "ommand\0227\n\013commandType\030\001 \002(\0162\".protobuf.s" +
       "rl.commands.CommandType\022\025\n\risUserCreated" +
       "\030\002 \002(\010\022\023\n\013commandData\030\003 \001(\014\022\021\n\tcommandId" +
-      "\030\004 \001(\t\"\032\n\007IdChain\022\017\n\007idChain\030\001 \003(\t\"\214\001\n\006M",
-      "arker\022\n\n\002id\030\001 \002(\t\0226\n\004type\030\002 \002(\0162(.protob" +
-      "uf.srl.commands.Marker.MarkerType\">\n\nMar" +
-      "kerType\022\016\n\nSUBMISSION\020\000\022\014\n\010FEEDBACK\020\001\022\010\n" +
-      "\004SAVE\020\002\022\010\n\004LOAD\020\003\"\241\001\n\022ActionPackageShape" +
-      "\0226\n\016oldContainerId\030\001 \001(\0132\036.protobuf.srl." +
-      "commands.IdChain\0226\n\016newContainerId\030\002 \001(\013" +
-      "2\036.protobuf.srl.commands.IdChain\022\033\n\023shap" +
-      "esToBeContained\030\003 \003(\t\"d\n\031ActionForceInte" +
-      "rpretation\022\026\n\016interpretation\030\001 \002(\014\022/\n\007sh" +
-      "apeId\030\002 \002(\0132\036.protobuf.srl.commands.IdCh",
-      "ain\"s\n\022ActionAddAttribtue\022/\n\007shapeId\030\001 \002" +
-      "(\0132\036.protobuf.srl.commands.IdChain\022\024\n\014at" +
-      "tributeKey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014" +
-      "\"v\n\025ActionRemoveAttribtue\022/\n\007shapeId\030\001 \002" +
-      "(\0132\036.protobuf.srl.commands.IdChain\022\024\n\014at" +
-      "tributeKey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014" +
-      "*\365\001\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_" +
-      "SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\021\n\rREMOVE_OBJ" +
-      "ECT\020\003\022\024\n\020ASSIGN_ATTRIBUTE\020\004\022\024\n\020REMOVE_AT" +
-      "TRIBUTE\020\005\022\n\n\006MARKER\020\006\022\030\n\024FORCE_INTERPRET",
-      "ATION\020\n\022\010\n\004UNDO\020\013\022\010\n\004REDO\020\014\022\013\n\007REWRITE\020\r" +
-      "\022\017\n\013CLEAR_STACK\020\016\022\r\n\tOPEN_SYNC\020\017\022\016\n\nCLOS" +
-      "E_SYNC\020\020"
+      "\030\004 \001(\t\"\032\n\007IdChain\022\017\n\007idChain\030\001 \003(\t\"\237\001\n\006M",
+      "arker\0226\n\004type\030\001 \002(\0162(.protobuf.srl.comma" +
+      "nds.Marker.MarkerType\022\021\n\totherData\030\002 \001(\t" +
+      "\"J\n\nMarkerType\022\016\n\nSUBMISSION\020\000\022\014\n\010FEEDBA" +
+      "CK\020\001\022\010\n\004SAVE\020\002\022\t\n\005SPLIT\020\003\022\t\n\005CLEAR\020\004\"\241\001\n" +
+      "\022ActionPackageShape\0226\n\016oldContainerId\030\001 " +
+      "\001(\0132\036.protobuf.srl.commands.IdChain\0226\n\016n" +
+      "ewContainerId\030\002 \001(\0132\036.protobuf.srl.comma" +
+      "nds.IdChain\022\033\n\023shapesToBeContained\030\003 \003(\t" +
+      "\"d\n\031ActionForceInterpretation\022\026\n\016interpr" +
+      "etation\030\001 \002(\014\022/\n\007shapeId\030\002 \002(\0132\036.protobu",
+      "f.srl.commands.IdChain\"s\n\022ActionAddAttri" +
+      "btue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.srl.com" +
+      "mands.IdChain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016a" +
+      "ttributeValue\030\003 \002(\014\"v\n\025ActionRemoveAttri" +
+      "btue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.srl.com" +
+      "mands.IdChain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016a" +
+      "ttributeValue\030\003 \002(\014*\365\001\n\013CommandType\022\016\n\nA" +
+      "DD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPACKAGE_SH" +
+      "APE\020\002\022\021\n\rREMOVE_OBJECT\020\003\022\024\n\020ASSIGN_ATTRI" +
+      "BUTE\020\004\022\024\n\020REMOVE_ATTRIBUTE\020\005\022\n\n\006MARKER\020\006",
+      "\022\030\n\024FORCE_INTERPRETATION\020\n\022\010\n\004UNDO\020\013\022\010\n\004" +
+      "REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n\013CLEAR_STACK\020\016\022\r\n\t" +
+      "OPEN_SYNC\020\017\022\016\n\nCLOSE_SYNC\020\020"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7252,7 +7261,7 @@ public final class Commands {
           internal_static_protobuf_srl_commands_Marker_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_commands_Marker_descriptor,
-              new java.lang.String[] { "Id", "Type", });
+              new java.lang.String[] { "Type", "OtherData", });
           internal_static_protobuf_srl_commands_ActionPackageShape_descriptor =
             getDescriptor().getMessageTypes().get(5);
           internal_static_protobuf_srl_commands_ActionPackageShape_fieldAccessorTable = new

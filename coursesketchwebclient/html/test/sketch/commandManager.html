@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<base href="../../">
+<base href="../../../">
     <title>Drawing!</title>
   	<link rel="stylesheet" href="css/utility/columns.css">
 	<link rel="stylesheet" href="css/SRL/SRL_SketchViewer.css">
@@ -23,7 +23,7 @@
 	<script type="text/javascript" src="js/connection/connection_library.js"></script>
 	<script type="text/javascript" src="js/connection/submission.js"></script>
 	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
-	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+	<script type="text/javascript" src="js/sketching/updatemanager.js"></script>
 	<!-- DEBUG -->
 	<script type="text/javascript" src="js/test/Command_Viewer.js"></script>
 
@@ -47,7 +47,7 @@
 			sketch = new SRL_Sketch();
 			sketch.canvasContext = canvasContext;
 			sketch.clearCanvas = clearCanvas;
-			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+			drawingCreator = new drawingInputCreator(input, callback, canvasContext);
 			highlighter = new Highlighter(input,sketch,callback,canvasContext);
 			createStuff();
 			initializeServer();
@@ -66,7 +66,8 @@
 
 	    function initializeServer() {
 	    	var wsUri = "goldberglinux02.tamu.edu:8888"; // our serve
-	    	serverConnection = new Connection(wsUri,false);
+	    	serverConnection = new Connection(wsUri, false, false);
+	    	/*
 	    	serverConnection.setOnCloseListener(function(evt) {
 				var reconnect = false;
 				if (evt.code == CONNECTION_LOST) {
@@ -83,11 +84,13 @@
 					intervalVariable = setInterval(function() {console.log("RECONNECTING!");createWebSocket();}, 3000); 
 				}
 			});
+	    	*/
 
 	    	serverConnection.setOnOpenListener(function(evt) {
 			});
-			commandManager = new UpdateManager(sketch, serverConnection, ProtoSrlUpdate,
-					ProtoSrlCommand, ProtoSrlCommandType, ProtoUpdateCommand);
+			commandManager = new UpdateManager(sketch, serverConnection, ProtoUpdateCommandBuilder, function(exception) {
+				alert(exception);
+			});
 			serverConnection.setRecognitionListener(function(evt, message) {
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
 					var data = message.otherData;
@@ -137,7 +140,7 @@
 	    	firstCommand.commandData = shape.sendToProtobuf(this).toArrayBuffer();
 	    	firstCommand.decodedData = shape;
 	    	var secondCommand = createBaseCommand(ProtoSrlCommandType.PACKAGE_SHAPE, false);
-	    	var packageShape = new ProtoUpdateCommand.ActionPackageShape();
+	    	var packageShape = new ProtoUpdateCommandBuilder.ActionPackageShape();
 	    	var list = sketch.getList();
 	    	var idList = [];
 	    	for (var i = 0; i < list.length; i ++) {
@@ -181,7 +184,10 @@
 	    function createViewer() {
 	    	createSketchViewer(sketch.getList(), sketchOutput);
 	    	if (commandManager) {
-		    	createCommandViewer(commandManager.getUpdates(), updateOutput);
+	    		commandManager.getUpdateList(function(updateList) {
+	    			createCommandViewer(updateList, updateOutput, commandManager.getCurrentPointer());
+	    		});
+		    	
 	    	}
 	    }
 
@@ -208,6 +214,9 @@
 	<button onclick = "packageShapes();">packageSketch</button>
 	<button onclick = "removeFirst();">removeFirst</button>
 	<button onclick = "submitAction();">submit</button>
+	<button onclick = "commandManager.undoAction();">undo</button>
+	<button onclick = "commandManager.redoAction();">redo</button>
+	<button onclick = "createViewer();">refresh</button>
 	<div id = "PercentBar">0%</div>
 	<div id = "sketch_output" style = "height:400px;position:relative; overflow:scroll;border:1px;border-style:solid;"></div>
 	<canvas id="drawingCanvas" width="700" height="600" style="top:0px; left:0px; width: 700; height: 600; background:#FFFFFF;float:left;"></canvas>

@@ -7,6 +7,7 @@ import com.google.protobuf.ByteString;
 import srl.core.sketch.Shape;
 import srl.core.sketch.Sketch;
 import srl.core.sketch.Interpretation;
+import srl.recognition.IRecognitionResult;
 
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.sketch.Sketch.SrlInterpretation;
@@ -20,7 +21,7 @@ import protobuf.srl.sketch.Sketch.SrlShape;
  *
  */
 public class AddShape extends Command {
-	private Shape data;
+	protected Shape data;
 	
 	public AddShape(SrlShape input){
 		type = CommandType.ADD_SHAPE;
@@ -31,8 +32,13 @@ public class AddShape extends Command {
 		//FIXME set the time to match client load time
 	}
 	
-	public AddShape(Shape input){
-		data = input;
+	public AddShape(IRecognitionResult input){
+		data = new Shape();
+		
+		input.sortNBestList();
+		for(Shape s: input.getNBestList()){
+			data.addInterpretation(s.getInterpretation());
+		}
 	}
 
 	@Override

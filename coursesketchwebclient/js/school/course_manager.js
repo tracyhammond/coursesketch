@@ -56,7 +56,9 @@ function assignmentClickerFunction(id) {
 
 function problemClickerFunction(id) {
 	if (problemSelectionManager.isItemSelected(id)) {
-		// do the parent majigger thingy
+		var element = document.getElementById(id);
+		var itemNumber = element.dataset.item_number;
+		parent.dataManager.addState("CURRENT_QUESTION_INDEX", itemNumber);
 		var assignment = parent.dataManager.getCourseProblem(id, function(problem) {
 			parent.dataManager.addState("CURRENT_ASSIGNMENT", problem.assignmentId);
 			parent.dataManager.addState("CURRENT_QUESTION", id);

@@ -1,11 +1,13 @@
 package response;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import protobuf.srl.commands.Commands.ActionPackageShape;
 import protobuf.srl.commands.Commands.IdChain;
 import protobuf.srl.commands.Commands.SrlCommand;
 import protobuf.srl.commands.Commands.SrlUpdate;
+import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 
@@ -24,6 +26,7 @@ public class Response {
 	 */
 	public Response(){
 		m_syncList = new UpdateList();
+		m_drawspace = new Sketch();
 		m_recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
 	}
 	
@@ -33,6 +36,7 @@ public class Response {
 	 */
 	public Response(PaleoConfig domain){
 		m_syncList = new UpdateList();
+		m_drawspace = new Sketch();
 		m_recognizer = new PaleoSketchRecognizer(domain);
 	}
 	
@@ -52,7 +56,11 @@ public class Response {
 		
 		//perform recognition
 		Update actions = new Update();
-		IRecognitionResult result = m_recognizer.recognize(m_syncList.back().getStroke());
+		actions.add(new AddShape(m_recognizer.recognize(m_syncList.back().getStroke())));
+		
+		List<String> ids = new LinkedList<String>();
+		ids.add(m_syncList.back().getStroke().getId().toString());
+		actions.add(new PackageShape(null, m_syncList.back().getShape(), ids));
 		
 		actions.setTime(System.currentTimeMillis());
 		m_syncList.add(actions);
@@ -61,12 +69,22 @@ public class Response {
 		return repackage(actions);
 	}
 	
+	public static Sketch viewTest(SrlUpdateList updates) throws Exception {
+		Sketch returnSketch = new Sketch();
+		UpdateList list = new UpdateList();
+		for(SrlUpdate u : updates.getListList()) {
+			list.add(parseUpdate(u));
+			list.executeLast(returnSketch);
+		}
+		return returnSketch;
+	}
+	
 	/**
 	 * Parses a Protobuf type update into a usable commands
 	 * @param protobuf.srl.commands.Commands.Update
 	 * @throws Exception Unsupported Command
 	 */
-	private Update parseUpdate(SrlUpdate call) throws Exception{
+	private static Update parseUpdate(SrlUpdate call) throws Exception{
 		System.out.println("Number of commands " + call.getCommandsCount());
 		Update up = new Update(call.getTime());
 		
@@ -99,7 +117,7 @@ public class Response {
 	 * @return SrlUpdate
 	 * @throws Exception Unsupported Command
 	 */
-	private SrlUpdate repackage(Update u) throws Exception{
+	private static SrlUpdate repackage(Update u) throws Exception{
 		SrlUpdate.Builder updateBuilder = SrlUpdate.newBuilder();
 		
 		updateBuilder.setTime(u.getTime());

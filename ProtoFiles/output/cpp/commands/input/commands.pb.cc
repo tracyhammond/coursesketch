@@ -129,8 +129,8 @@ void protobuf_AssignDesc_input_2fcommands_2eproto() {
       sizeof(IdChain));
   Marker_descriptor_ = file->message_type(4);
   static const int Marker_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Marker, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Marker, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Marker, otherdata_),
   };
   Marker_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -283,30 +283,30 @@ void protobuf_AddDesc_input_2fcommands_2eproto() {
     "ommand\0227\n\013commandType\030\001 \002(\0162\".protobuf.s"
     "rl.commands.CommandType\022\025\n\risUserCreated"
     "\030\002 \002(\010\022\023\n\013commandData\030\003 \001(\014\022\021\n\tcommandId"
-    "\030\004 \001(\t\"\032\n\007IdChain\022\017\n\007idChain\030\001 \003(\t\"\214\001\n\006M"
-    "arker\022\n\n\002id\030\001 \002(\t\0226\n\004type\030\002 \002(\0162(.protob"
-    "uf.srl.commands.Marker.MarkerType\">\n\nMar"
-    "kerType\022\016\n\nSUBMISSION\020\000\022\014\n\010FEEDBACK\020\001\022\010\n"
-    "\004SAVE\020\002\022\010\n\004LOAD\020\003\"\241\001\n\022ActionPackageShape"
-    "\0226\n\016oldContainerId\030\001 \001(\0132\036.protobuf.srl."
-    "commands.IdChain\0226\n\016newContainerId\030\002 \001(\013"
-    "2\036.protobuf.srl.commands.IdChain\022\033\n\023shap"
-    "esToBeContained\030\003 \003(\t\"d\n\031ActionForceInte"
-    "rpretation\022\026\n\016interpretation\030\001 \002(\014\022/\n\007sh"
-    "apeId\030\002 \002(\0132\036.protobuf.srl.commands.IdCh"
-    "ain\"s\n\022ActionAddAttribtue\022/\n\007shapeId\030\001 \002"
-    "(\0132\036.protobuf.srl.commands.IdChain\022\024\n\014at"
-    "tributeKey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014"
-    "\"v\n\025ActionRemoveAttribtue\022/\n\007shapeId\030\001 \002"
-    "(\0132\036.protobuf.srl.commands.IdChain\022\024\n\014at"
-    "tributeKey\030\002 \002(\t\022\026\n\016attributeValue\030\003 \002(\014"
-    "*\365\001\n\013CommandType\022\016\n\nADD_STROKE\020\000\022\r\n\tADD_"
-    "SHAPE\020\001\022\021\n\rPACKAGE_SHAPE\020\002\022\021\n\rREMOVE_OBJ"
-    "ECT\020\003\022\024\n\020ASSIGN_ATTRIBUTE\020\004\022\024\n\020REMOVE_AT"
-    "TRIBUTE\020\005\022\n\n\006MARKER\020\006\022\030\n\024FORCE_INTERPRET"
-    "ATION\020\n\022\010\n\004UNDO\020\013\022\010\n\004REDO\020\014\022\013\n\007REWRITE\020\r"
-    "\022\017\n\013CLEAR_STACK\020\016\022\r\n\tOPEN_SYNC\020\017\022\016\n\nCLOS"
-    "E_SYNC\020\020", 1288);
+    "\030\004 \001(\t\"\032\n\007IdChain\022\017\n\007idChain\030\001 \003(\t\"\237\001\n\006M"
+    "arker\0226\n\004type\030\001 \002(\0162(.protobuf.srl.comma"
+    "nds.Marker.MarkerType\022\021\n\totherData\030\002 \001(\t"
+    "\"J\n\nMarkerType\022\016\n\nSUBMISSION\020\000\022\014\n\010FEEDBA"
+    "CK\020\001\022\010\n\004SAVE\020\002\022\t\n\005SPLIT\020\003\022\t\n\005CLEAR\020\004\"\241\001\n"
+    "\022ActionPackageShape\0226\n\016oldContainerId\030\001 "
+    "\001(\0132\036.protobuf.srl.commands.IdChain\0226\n\016n"
+    "ewContainerId\030\002 \001(\0132\036.protobuf.srl.comma"
+    "nds.IdChain\022\033\n\023shapesToBeContained\030\003 \003(\t"
+    "\"d\n\031ActionForceInterpretation\022\026\n\016interpr"
+    "etation\030\001 \002(\014\022/\n\007shapeId\030\002 \002(\0132\036.protobu"
+    "f.srl.commands.IdChain\"s\n\022ActionAddAttri"
+    "btue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.srl.com"
+    "mands.IdChain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016a"
+    "ttributeValue\030\003 \002(\014\"v\n\025ActionRemoveAttri"
+    "btue\022/\n\007shapeId\030\001 \002(\0132\036.protobuf.srl.com"
+    "mands.IdChain\022\024\n\014attributeKey\030\002 \002(\t\022\026\n\016a"
+    "ttributeValue\030\003 \002(\014*\365\001\n\013CommandType\022\016\n\nA"
+    "DD_STROKE\020\000\022\r\n\tADD_SHAPE\020\001\022\021\n\rPACKAGE_SH"
+    "APE\020\002\022\021\n\rREMOVE_OBJECT\020\003\022\024\n\020ASSIGN_ATTRI"
+    "BUTE\020\004\022\024\n\020REMOVE_ATTRIBUTE\020\005\022\n\n\006MARKER\020\006"
+    "\022\030\n\024FORCE_INTERPRETATION\020\n\022\010\n\004UNDO\020\013\022\010\n\004"
+    "REDO\020\014\022\013\n\007REWRITE\020\r\022\017\n\013CLEAR_STACK\020\016\022\r\n\t"
+    "OPEN_SYNC\020\017\022\016\n\nCLOSE_SYNC\020\020", 1307);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/commands.proto", &protobuf_RegisterTypes);
   SrlUpdateList::default_instance_ = new SrlUpdateList();
@@ -1499,6 +1499,7 @@ bool Marker_MarkerType_IsValid(int value) {
     case 1:
     case 2:
     case 3:
+    case 4:
       return true;
     default:
       return false;
@@ -1509,14 +1510,15 @@ bool Marker_MarkerType_IsValid(int value) {
 const Marker_MarkerType Marker::SUBMISSION;
 const Marker_MarkerType Marker::FEEDBACK;
 const Marker_MarkerType Marker::SAVE;
-const Marker_MarkerType Marker::LOAD;
+const Marker_MarkerType Marker::SPLIT;
+const Marker_MarkerType Marker::CLEAR;
 const Marker_MarkerType Marker::MarkerType_MIN;
 const Marker_MarkerType Marker::MarkerType_MAX;
 const int Marker::MarkerType_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
-const int Marker::kIdFieldNumber;
 const int Marker::kTypeFieldNumber;
+const int Marker::kOtherDataFieldNumber;
 #endif  // !_MSC_VER
 
 Marker::Marker()
@@ -1535,8 +1537,8 @@ Marker::Marker(const Marker& from)
 
 void Marker::SharedCtor() {
   _cached_size_ = 0;
-  id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   type_ = 0;
+  otherdata_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1545,8 +1547,8 @@ Marker::~Marker() {
 }
 
 void Marker::SharedDtor() {
-  if (id_ != &::google::protobuf::internal::kEmptyString) {
-    delete id_;
+  if (otherdata_ != &::google::protobuf::internal::kEmptyString) {
+    delete otherdata_;
   }
   if (this != default_instance_) {
   }
@@ -1575,12 +1577,12 @@ Marker* Marker::New() const {
 
 void Marker::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_id()) {
-      if (id_ != &::google::protobuf::internal::kEmptyString) {
-        id_->clear();
+    type_ = 0;
+    if (has_otherdata()) {
+      if (otherdata_ != &::google::protobuf::internal::kEmptyString) {
+        otherdata_->clear();
       }
     }
-    type_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1592,27 +1594,10 @@ bool Marker::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string id = 1;
+      // required .protobuf.srl.commands.Marker.MarkerType type = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_id()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->id().data(), this->id().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(16)) goto parse_type;
-        break;
-      }
-
-      // required .protobuf.srl.commands.Marker.MarkerType type = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_type:
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
@@ -1620,8 +1605,25 @@ bool Marker::MergePartialFromCodedStream(
           if (::protobuf::srl::commands::Marker_MarkerType_IsValid(value)) {
             set_type(static_cast< ::protobuf::srl::commands::Marker_MarkerType >(value));
           } else {
-            mutable_unknown_fields()->AddVarint(2, value);
+            mutable_unknown_fields()->AddVarint(1, value);
           }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_otherData;
+        break;
+      }
+
+      // optional string otherData = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_otherData:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_otherdata()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->otherdata().data(), this->otherdata().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -1647,19 +1649,19 @@ bool Marker::MergePartialFromCodedStream(
 
 void Marker::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string id = 1;
-  if (has_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->id().data(), this->id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->id(), output);
-  }
-
-  // required .protobuf.srl.commands.Marker.MarkerType type = 2;
+  // required .protobuf.srl.commands.Marker.MarkerType type = 1;
   if (has_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      2, this->type(), output);
+      1, this->type(), output);
+  }
+
+  // optional string otherData = 2;
+  if (has_otherdata()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->otherdata().data(), this->otherdata().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->otherdata(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1670,20 +1672,20 @@ void Marker::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Marker::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string id = 1;
-  if (has_id()) {
+  // required .protobuf.srl.commands.Marker.MarkerType type = 1;
+  if (has_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->type(), target);
+  }
+
+  // optional string otherData = 2;
+  if (has_otherdata()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->id().data(), this->id().length(),
+      this->otherdata().data(), this->otherdata().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->id(), target);
-  }
-
-  // required .protobuf.srl.commands.Marker.MarkerType type = 2;
-  if (has_type()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      2, this->type(), target);
+        2, this->otherdata(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1697,17 +1699,17 @@ int Marker::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string id = 1;
-    if (has_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->id());
-    }
-
-    // required .protobuf.srl.commands.Marker.MarkerType type = 2;
+    // required .protobuf.srl.commands.Marker.MarkerType type = 1;
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // optional string otherData = 2;
+    if (has_otherdata()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->otherdata());
     }
 
   }
@@ -1737,11 +1739,11 @@ void Marker::MergeFrom(const ::google::protobuf::Message& from) {
 void Marker::MergeFrom(const Marker& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_id()) {
-      set_id(from.id());
-    }
     if (from.has_type()) {
       set_type(from.type());
+    }
+    if (from.has_otherdata()) {
+      set_otherdata(from.otherdata());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1760,15 +1762,15 @@ void Marker::CopyFrom(const Marker& from) {
 }
 
 bool Marker::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
 void Marker::Swap(Marker* other) {
   if (other != this) {
-    std::swap(id_, other->id_);
     std::swap(type_, other->type_);
+    std::swap(otherdata_, other->otherdata_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
