@@ -30,6 +30,21 @@ public class PackageShape extends Command {
 		newContainer = input.getNewContainerId();
 		contained = input.getShapesToBeContainedList();
 	}
+	
+	public PackageShape(SContainer from, SContainer to, List<String> moving){
+		if(from == null)
+			oldContainer = null;
+		else{
+			IdChainBuilder
+		}
+		if(to == null)
+			newContainer = null;
+		else{
+			
+		}
+		
+		contained = moving;
+	}
 
 	@Override
 	public ByteString toByteString() {

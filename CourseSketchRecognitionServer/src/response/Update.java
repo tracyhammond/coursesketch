@@ -6,6 +6,7 @@ import java.util.List;
 
 import protobuf.srl.commands.Commands.CommandType;
 
+import srl.core.sketch.Shape;
 import srl.core.sketch.Sketch;
 import srl.core.sketch.Stroke;
 
@@ -20,6 +21,7 @@ public class Update implements Iterable<Command>{
 	private LinkedList<Command> data;
 	private long time;
 	private AddStroke stroke;
+	private AddShape shape;
 	
 	/**
 	 * Default constructor
@@ -46,6 +48,8 @@ public class Update implements Iterable<Command>{
 		data.add(c);
 		if(c.getType() == CommandType.ADD_STROKE)
 			stroke = (AddStroke)c;
+		else if(c.getType() == CommandType.ADD_SHAPE)
+			shape = (AddShape)c;
 	}
 	
 	/**
@@ -53,6 +57,13 @@ public class Update implements Iterable<Command>{
 	 */
 	public Stroke getStroke(){
 		return stroke.data;
+	}
+	
+	/**
+	 * @return Stroke of any AddStroke command in this update
+	 */
+	public Shape getShape(){
+		return shape.data;
 	}
 	
 	/**
@@ -77,6 +88,13 @@ public class Update implements Iterable<Command>{
 	 */
 	public Command getCommand(int index){
 		return data.get(index);
+	}
+	
+	/**
+	 * @return size of Update
+	 */
+	public int size(){
+		return data.size();
 	}
 	
 	/**
