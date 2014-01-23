@@ -66,6 +66,14 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	};
 
 	/**
+	 * Generates a marker that can be used for marking things
+	 */
+	function createMarker(userCreated, markerType, otherData) {
+		var marker = new ProtoCommandBuilder.Marker(markerType, otherData);
+		return new ProtoCommandBuilder.SrlCommand(ProtoCommandBuilder.CommandType.MARKER, false, marker.toArrayBuffer(), generateUUID());
+	}
+
+	/**
 	 * Tries to quickly empty the local queue.
 	 *
 	 * Ensures that even with the rapid addition of updates there are no executions that overlap.
@@ -102,14 +110,6 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	}
 
 	/**
-	 * Generates a marker that can be used for marking things
-	 */
-	this.createMarker = function(userCreated, markerType, otherData) {
-		var marker = new ProtoCommandBuilder.Marker(markerType, otherData);
-		return new ProtoCommandBuilder.SrlCommand(ProtoCommandBuilder.CommandType.MARKER, false, marker.toArrayBuffer(), generateUUID());
-	};
-
-	/**
 	 * Executes an update.
 	 *
 	 * Does special handling with redo and undo
@@ -117,48 +117,51 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	function executeUpdate(update) {
 		var command = update.getCommands()[0].commandType;
 		if (inRedoUndoMode) {
-			if ((command != ProtoCommandBuilder.CommandType.REDO && command != ProtoCommandBuilder.CommandType.UNDO) && netCount != 0) {
+			if ((command != ProtoCommandBuilder.CommandType.REDO && command != ProtoCommandBuilder.CommandType.UNDO)) {
 				// we do a bunch of changing then we call the executeUpdate method again
 				var splitDifference = updateList.length - currentUpdateIndex;
 
 				// creates and inserts the first marker [update] -> [marker] -> [unreachable update]
-				var startingMarker = this.createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, splitDifference);
+				var startingMarker = createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, splitDifference);
 				updateList.splice(currentUpdateIndex, 0, serverConnection.createUpdateFromCommands([startingMarker]));
 
 				// creates and inserts the second marker [unreachable update (probably undo or redo)] -> [marker] -> [index out of range]
-				var endingMarker = this.createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, 0-splitDifference);
+				var endingMarker = createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, 0-splitDifference);
 				updateList.push(serverConnection.createUpdateFromCommands([endingMarker]));
 
 				// reset the information
 				inRedoUndoMode = false;
-				currentUpdateIndex = updateList.length - 1;
+				netCount = 0;
+				currentUpdateIndex = updateList.length;
 				return executeUpdate(update);
 			}
 		}
-		updateList.push(update);
 		console.log(updateList.length);
 		if (command == ProtoCommandBuilder.CommandType.REDO) {
 			if (netCount >= 0) {
 				throw "Can't Redo Anymore";
 			}
+			updateList.push(update);
 			netCount += 1;
 			var redraw = redoUpdate(updateList[currentUpdateIndex]);
 			currentUpdateIndex += 1;
 			return redraw;
 		} else if (command == ProtoCommandBuilder.CommandType.UNDO) {
-			console.log("UNDOING AN ACTION!");
+			if (currentUpdateIndex <= 0) {
+				throw "Can't Undo Anymore";
+			}
 			if (!inRedoUndoMode) {
 				netCount = 0;
 				inRedoUndoMode = true;
 			}
 			netCount -= 1;
-			if (currentUpdateIndex == 0) {
-				throw "Can't Undo Anymore";
-			}
-			var redraw = undoUpdate(updateList[currentUpdateIndex]);
+			updateList.push(update);
+			var redraw = undoUpdate(updateList[currentUpdateIndex - 1]);
 			currentUpdateIndex -= 1;
 			return redraw;
 		} else {
+			// A normal update
+			updateList.push(update);
 			var redraw = redoUpdate(update);
 			currentUpdateIndex += 1;
 			return redraw;
@@ -173,7 +176,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		if (command.commandType == ProtoCommandBuilder.CommandType.MARKER) {
 			var marker = ProtoCommandBuilder.Marker.decode(command.commandData);
 			if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SPLIT) {
-				currentUpdateIndex += parseInt(marker.otherData);
+				currentUpdateIndex += parseInt(marker.otherData) + 1;
 			}
 			return false;
 		} else {
@@ -190,7 +193,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		if (command.commandType == ProtoCommandBuilder.CommandType.MARKER) {
 			var marker = ProtoCommandBuilder.Marker.decode(command.commandData);
 			if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SPLIT) {
-				currentUpdateIndex += parseInt(marker.otherData);
+				currentUpdateIndex += parseInt(marker.otherData) - 1;
 			}
 			return false;
 		} else {
@@ -248,7 +251,8 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 
 	this.getCurrentPointer = function() {
 		return currentUpdateIndex;
-	}
+	};
+
 	/**
 	 * This clears any current updates and replaces the list with a new list.
 	 */
@@ -388,6 +392,8 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 					return 'CLEAR_STACK';
 				case this.CommandType.SYNC:
 					return 'SYNC';
+				case this.CommandType.MARKER:
+					return 'MARKER';
 			}
 			return "NO_NAME # is: " +this.getCommandType();
 		};
@@ -452,7 +458,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 						var stroke = decodeCommandData(this.commandData, parent.ProtoSrlStroke);
 						this.decodedData = SRL_Stroke.createFromProtobuf(stroke);
 					}
-					sketch.removeSubObjectByIdChain([this.decodedData.id]);
+					sketch.removeSubObjectById(this.decodedData.getId());
 					redraw = true;
 				break;
 				case this.CommandType.ADD_SHAPE:
@@ -460,6 +466,8 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 						var shape = decodeCommandData(this.commandData, parent.ProtoSrlShape);
 						this.decodedData = SRL_Shape.createFromProtobuf(shape);
 					}
+					sketch.removeSubObjectById(this.decodedData.getId());
+					redraw = true;
 					sketch.addObject(this.decodedData);
 				break;
 				case this.CommandType.REMOVE_OBJECT:
@@ -468,14 +476,18 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 						var idChain = decodeCommandData(this.commandData, parent.IdChain);
 						this.decodedData[0] = idChain;
 					}
-					this.decodedData[1] = sketch.removeSubObjectByIdChain(this.decodedData[0].idChain);
+					//sketch.addObject(this.decodedData);
+					//this.decodedData[1];
+					throw "REMOVE_OBJECT undo not supported";
 					redraw = true;
 				break;
 				case this.CommandType.PACKAGE_SHAPE:
 					if (isUndefined(this.decodedData) || (!this.decodedData)) {
 						this.decodedData = decodeCommandData(this.commandData, Action.ActionPackageShape);
 					}
-					this.decodedData.redo();
+					console.log(this.decodedData);
+					alert(this.decodedData.undo);
+					this.decodedData.undo();
 				break;
 			}
 			return redraw;
@@ -506,7 +518,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		 *
 		 * This is a reverse of the process used in redo.
 		 */
-		Action.ActionPackageShape.undo = function() {
+		Action.ActionPackageShape.prototype.undo = function() {
 			var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 			var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 
@@ -514,7 +526,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 				return; // done moving to same place.
 
 			for (shapeId in this.shapesToBeContained) {
-				var object = oldContainingObject.removeObjectById(shapeId);
+				var object = oldContainingObject.removeSubObjectById(shapeId);
 				if (newContainerId) {
 					newContainingObject.addSubObject(object);
 				} else {
@@ -522,5 +534,6 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 				}
 			}
 		};
+
 	})(ProtoCommandBuilder.SrlUpdate, ProtoCommandBuilder.SrlCommand, ProtoCommandBuilder);
 }
