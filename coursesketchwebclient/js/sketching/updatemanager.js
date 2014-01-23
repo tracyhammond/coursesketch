@@ -23,6 +23,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 
 	var inRedoUndoMode = false;
 	var netCount = 0; // this is equal to undo - redo
+	var initializing = false; // when we are initializing we are ignoring the markers
 
 	/*
 	 * Holds the entire list of updates
@@ -93,8 +94,8 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 						}, 10);
 					}
 				} catch(exception) {
-					console.log(exception.stack);
 					executionLock = false;
+					console.log(exception.stack);
 					if (onError) onError(exception);
 				}
 				executionLock = false;
@@ -106,6 +107,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			}
 		} else {
 			queueEmpty = true;
+			initializing = false;
 		}
 	}
 
@@ -256,7 +258,9 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	/**
 	 * This clears any current updates and replaces the list with a new list.
 	 */
+
 	this.setUpdateList = function(list) {
+		initializing = true;
 		this.clearUpdates(false);
 		var index = 0;
 		var maxIndex = list.length;
@@ -270,6 +274,14 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 				clearInterval(intervalHolder);
 			}
 		}, 20);
+	};
+
+	this.setUpdateListFast = function(list) {
+		initializing = true;
+		this.clearUpdates(false);
+		for (var index = 0; index <list.length; index ++) {
+			localScope.addUpdate(list[index], false, true);
+		}
 	};
 
 	/**
@@ -486,7 +498,6 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 						this.decodedData = decodeCommandData(this.commandData, Action.ActionPackageShape);
 					}
 					console.log(this.decodedData);
-					alert(this.decodedData.undo);
 					this.decodedData.undo();
 				break;
 			}
