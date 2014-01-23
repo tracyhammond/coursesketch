@@ -47,7 +47,6 @@
 
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoUpdateCommandBuilder, function(exception) {
 				alert(exception);
-				alert("ERROR");	
 			});
 			serverConnection.setRecognitionListener(function(evt, message) {
 				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
@@ -83,6 +82,14 @@
 			
 			parent.problemNavigator.addEventMapping("clear", function() {
 				commandManager.clearUpdates(true);
+			});
+			
+			parent.problemNavigator.addEventMapping("undo", function() {
+				commandManager.undoAction();
+			});
+			
+			parent.problemNavigator.addEventMapping("redo", function() {
+				commandManager.redoAction();
 			});
 
 			var feedbackFunction = function(args) {
