@@ -80,7 +80,7 @@ SRL_Stroke.prototype.drawStroke = function drawStroke(graphics, forcedColor) {
 	if (this.strokeWidth) {
 		graphics.lineWidth = strokeWidth;
 	} else {
-		graphics.lineWidth = 5;
+		graphics.lineWidth = 2;
 	}
 
 	var length = this.getNumPoints();
