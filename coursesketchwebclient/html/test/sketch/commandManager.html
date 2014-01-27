@@ -29,6 +29,7 @@
 
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
+    	var step = 0;
 		var drawingCreator = false;
 		var sketch = false;
 		var canvasContext = false;
@@ -65,7 +66,7 @@
 		}
 
 	    function initializeServer() {
-	    	var wsUri = "goldberglinux02.tamu.edu:8888"; // our serve
+	    	var wsUri = "localhost:8888"; // our serve
 	    	serverConnection = new Connection(wsUri, false, false);
 	    	/*
 	    	serverConnection.setOnCloseListener(function(evt) {
@@ -191,6 +192,20 @@
 	    	}
 	    }
 
+	    function reload() {
+	    	step = 0;
+	    	commandManager.getCleanUpdateList(function(updateList) {
+    			commandManager.setUpdateList(updateList);
+    			createViewer();
+    		});
+	    }
+
+	    function stepThrough() {
+	    	commandManager.stepThroughUpdates(step, step+1);
+	    	step++;
+	    	createViewer();
+	    }
+	    
 	    function submitAction() {
 	    	submitUpdateList(serverConnection, commandManager.getUpdates(), ProtoSrlCommandType, Request.MessageType.RECOGNITION,displayBar,updateBar,finishBar);
 	    }
@@ -217,6 +232,8 @@
 	<button onclick = "commandManager.undoAction();">undo</button>
 	<button onclick = "commandManager.redoAction();">redo</button>
 	<button onclick = "createViewer();">refresh</button>
+	<button onclick = "reload();">reload</button>
+	<button onclick = "stepThrough();">step</button>
 	<div id = "PercentBar">0%</div>
 	<div id = "sketch_output" style = "height:400px;position:relative; overflow:scroll;border:1px;border-style:solid;"></div>
 	<canvas id="drawingCanvas" width="700" height="600" style="top:0px; left:0px; width: 700; height: 600; background:#FFFFFF;float:left;"></canvas>
