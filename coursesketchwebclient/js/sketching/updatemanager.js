@@ -2,6 +2,9 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	var serverConnection = connection;
 	var sketch = inputSketch;
 	var currentUpdateIndex = 0; // holds a state of updates (for undoing and redoing)
+	var currentEndingIndex = 0; // holds the pointer to the end of the list (only really used with markers)
+	var skippingMarkerMode = false; // if a marker is executed with an index larger than what we have then we wait.
+	var amountToSkip = 0;
 	var localScope = this;
 
 	/*
@@ -23,7 +26,6 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 
 	var inRedoUndoMode = false;
 	var netCount = 0; // this is equal to undo - redo
-	var initializing = false; // when we are initializing we are ignoring the markers
 
 	/*
 	 * Holds the entire list of updates
@@ -39,10 +41,9 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	 */
 	this.addUpdate = function(update, fromRemote) {
 		queuedLocalUpdates.push(update);
-		console.log("adding an update: " + queuedLocalUpdates.length);
-		if (!queueEmpty) {
-			emptyLocalQueue();
-		}
+		//console.log("adding an update: " + queuedLocalUpdates.length);
+		emptyLocalQueue();
+
 		if (isUndefined(fromRemote) || !fromRemote) {
 			// we send to the remote server
 			queuedServerUpdates.push(update);
@@ -67,13 +68,23 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	};
 
 	/**
+	 * Decodes the data and perserves the bytebuffer for later use
+	 */
+	function decodeCommandData(commandData, proto) {
+		try {commandData.mark();} catch(exception) {}
+		var decoded = proto.decode(commandData);
+		try {commandData.reset();} catch(exception) {}
+		return decoded;
+	}
+	
+	/**
 	 * Generates a marker that can be used for marking things
 	 */
 	function createMarker(userCreated, markerType, otherData) {
 		var marker = new ProtoCommandBuilder.Marker(markerType, otherData);
 		return new ProtoCommandBuilder.SrlCommand(ProtoCommandBuilder.CommandType.MARKER, false, marker.toArrayBuffer(), generateUUID());
 	}
-
+ 
 	/**
 	 * Tries to quickly empty the local queue.
 	 *
@@ -81,8 +92,6 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	 */
 	function emptyLocalQueue() {
 		if (queuedLocalUpdates.length > 0) {
-			console.log("emptying the queue");
-			queueEmpty = false;
 			if (!executionLock) {
 				executionLock = true;
 				var nextUpdate = queuedLocalUpdates.removeObjectByIndex(0);
@@ -99,6 +108,9 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 					if (onError) onError(exception);
 				}
 				executionLock = false;
+				setTimeout(function() {
+					emptyLocalQueue();
+				}, 10);
 			} else {
 				// we wait and try again when the executionLock is gone
 				setTimeout(function() {
@@ -106,8 +118,6 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 				}, 10);
 			}
 		} else {
-			queueEmpty = true;
-			initializing = false;
 		}
 	}
 
@@ -118,6 +128,14 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	 */
 	function executeUpdate(update) {
 		var command = update.getCommands()[0].commandType;
+		if (skippingMarkerMode) {
+			updateList.push(update);
+			amountToSkip -= 1;
+			if (amountToSkip <= 0) {
+				skippingMarkerMode = false;
+			}
+			return;
+		}
 		if (inRedoUndoMode) {
 			if ((command != ProtoCommandBuilder.CommandType.REDO && command != ProtoCommandBuilder.CommandType.UNDO)) {
 				// we do a bunch of changing then we call the executeUpdate method again
@@ -128,7 +146,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 				updateList.splice(currentUpdateIndex, 0, serverConnection.createUpdateFromCommands([startingMarker]));
 
 				// creates and inserts the second marker [unreachable update (probably undo or redo)] -> [marker] -> [index out of range]
-				var endingMarker = createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, 0-splitDifference);
+				var endingMarker = createMarker(false, ProtoCommandBuilder.Marker.MarkerType.SPLIT, 0 - splitDifference);
 				updateList.push(serverConnection.createUpdateFromCommands([endingMarker]));
 
 				// reset the information
@@ -138,12 +156,12 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 				return executeUpdate(update);
 			}
 		}
-		console.log(updateList.length);
 		if (command == ProtoCommandBuilder.CommandType.REDO) {
 			if (netCount >= 0) {
 				throw "Can't Redo Anymore";
 			}
 			updateList.push(update);
+			currentEndingIndex += 1;
 			netCount += 1;
 			var redraw = redoUpdate(updateList[currentUpdateIndex]);
 			currentUpdateIndex += 1;
@@ -158,11 +176,13 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			}
 			netCount -= 1;
 			updateList.push(update);
+			currentEndingIndex += 1;
 			var redraw = undoUpdate(updateList[currentUpdateIndex - 1]);
 			currentUpdateIndex -= 1;
 			return redraw;
 		} else {
 			// A normal update
+			currentEndingIndex += 1;
 			updateList.push(update);
 			var redraw = redoUpdate(update);
 			currentUpdateIndex += 1;
@@ -176,9 +196,14 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	function redoUpdate(update) {
 		var command = update.getCommands()[0];
 		if (command.commandType == ProtoCommandBuilder.CommandType.MARKER) {
-			var marker = ProtoCommandBuilder.Marker.decode(command.commandData);
+			var marker = decodeCommandData(command.commandData, ProtoCommandBuilder.Marker);
 			if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SPLIT) {
+				var tempIndex = currentUpdateIndex;
 				currentUpdateIndex += parseInt(marker.otherData) + 1;
+				if (currentUpdateIndex > updateList.length) {
+					amountToSkip = parseInt(marker.otherData) + 1;
+					skippingMarkerMode = true;
+				}
 			}
 			return false;
 		} else {
@@ -193,7 +218,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		console.log("UNDOING AN UPDATE!" + update);
 		var command = update.getCommands()[0];
 		if (command.commandType == ProtoCommandBuilder.CommandType.MARKER) {
-			var marker = ProtoCommandBuilder.Marker.decode(command.commandData);
+			var marker = decodeCommandData(command.commandData, ProtoCommandBuilder.Marker);
 			if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SPLIT) {
 				currentUpdateIndex += parseInt(marker.otherData) - 1;
 			}
@@ -276,14 +301,6 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		}, 20);
 	};
 
-	this.setUpdateListFast = function(list) {
-		initializing = true;
-		this.clearUpdates(false);
-		for (var index = 0; index <list.length; index ++) {
-			localScope.addUpdate(list[index], false, true);
-		}
-	};
-
 	/**
 	 * Clears the current updates.
 	 *
@@ -292,6 +309,8 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	this.clearUpdates = function(redraw) {
 		currentUpdateIndex = 0;
 		updateList.length = 0;
+		inRedoUndoMode = false;
+		skippingMarkerMode = false;
 		sketch.resetSketch();
 		if (redraw) {
 			sketch.drawEntireSketch();
@@ -324,22 +343,6 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	 * Each method is a prototype of the command or the update
 	 *****************************************/
 	(function(ProtoSrlUpdate, ProtoSrlCommand, Action) {
-		/**
-		 * Decodes the data and perserves the bytebuffer for later use
-		 */
-		function decodeCommandData(commandData, proto) {
-			try {
-				commandData.mark();
-			} catch(exception) {
-				
-			}
-			var decoded = proto.decode(commandData);
-			try {
-				commandData.reset();
-			} catch(exception) {
-			}
-			return decoded;
-		}
 
 		/**
 		 * Redo the commands in a certain order.
