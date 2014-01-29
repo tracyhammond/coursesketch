@@ -1,11 +1,11 @@
 package database.user;
 
+import static database.StringConstants.DATABASE;
+
 import java.util.ArrayList;
 
 import protobuf.srl.school.School.SrlUser;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
@@ -19,7 +19,7 @@ public final class UserClient {
 	private UserClient(String url) {
 		try {
 			MongoClient mongoClient = new MongoClient(url);
-			db = mongoClient.getDB("institution");
+			db = mongoClient.getDB(DATABASE);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -43,7 +43,11 @@ public final class UserClient {
 	public UserClient(boolean testOnly) {
 		try {
 			MongoClient mongoClient = new MongoClient("localhost");
-			db = mongoClient.getDB("test");
+			if (testOnly) {
+				db = mongoClient.getDB("test");
+			} else {
+				db = mongoClient.getDB(DATABASE);
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

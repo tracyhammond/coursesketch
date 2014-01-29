@@ -40,16 +40,32 @@ public class DatabaseClient {
 		//this("localhost");
 	}
 
-	public static void main(String[] args) throws Exception {
-
-	}
-
 	public static DatabaseClient getInstance() {
 		if(instance==null)
 			instance = new DatabaseClient();
 		return instance;
 	}
 
+
+	/**
+	 * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database
+	 * @param testOnly
+	 */
+	public DatabaseClient(boolean testOnly) {
+		try {
+			MongoClient mongoClient = new MongoClient("localhost");
+			if (testOnly) {
+				db = mongoClient.getDB("test");
+			} else {
+				db = mongoClient.getDB("login");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		instance = this;
+	}
+	
+	
 	public static final String saveSolution(SrlSolution solution) {
 		DBCollection new_user = getInstance().db.getCollection(SOLUTION_COLLECTION);
 		BasicDBObject query = new BasicDBObject(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())

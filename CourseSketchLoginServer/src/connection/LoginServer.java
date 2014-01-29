@@ -189,7 +189,7 @@ public class LoginServer extends WebSocketServer {
 
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
-				new DatabaseClient(true); // makes the database point locally
+				new DatabaseClient(false); // makes the database point locally
 			}
 		}
 

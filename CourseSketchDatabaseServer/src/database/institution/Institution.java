@@ -65,7 +65,11 @@ public final class Institution {
 	public Institution(boolean testOnly) {
 		try {
 			MongoClient mongoClient = new MongoClient("localhost");
-			db = mongoClient.getDB("test");
+			if (testOnly) {
+				db = mongoClient.getDB("test");
+			} else {
+				db = mongoClient.getDB(DATABASE);
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

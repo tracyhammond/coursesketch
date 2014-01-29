@@ -85,8 +85,8 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
 				connectLocal = true;
-				new Institution(true); // makes the database point locally
-				new UserClient(true); // makes the database point locally
+				new Institution(false); // makes the database point locally
+				new UserClient(false); // makes the database point locally
 			}
 		}
 

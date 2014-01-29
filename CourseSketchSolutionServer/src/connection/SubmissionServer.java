@@ -166,6 +166,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
 				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
+				new DatabaseClient(false); // makes the database point locally
 			}
 		}
 
