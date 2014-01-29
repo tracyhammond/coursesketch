@@ -8,12 +8,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import multiConnection.MultiConnectionManager;
 import multiConnection.MultiConnectionState;
 import multiConnection.MultiInternalConnectionServer;
 
@@ -27,7 +26,6 @@ import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
-import protobuf.srl.submission.Submission.SrlSolution;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -37,18 +35,19 @@ import com.google.protobuf.InvalidProtocolBufferException;
  * This is a backend server that is only connected by other servers
  */
 public class AnswerCheckerServer extends MultiInternalConnectionServer {
-	
+
 	List<WebSocket> connections = new LinkedList<WebSocket>();
-	AnswerConnectionManager internalConnections = new AnswerConnectionManager(this);
+	AnswerConnectionManager internalConnections;
 	// has some sort of client!
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public AnswerCheckerServer( int port ) throws UnknownHostException {
-		this( new InetSocketAddress( port ) );
+	public AnswerCheckerServer(int port, boolean connectLocally) {
+		this( new InetSocketAddress( port ), connectLocally );
 	}
 
-	public AnswerCheckerServer( InetSocketAddress address ) {
+	public AnswerCheckerServer( InetSocketAddress address, boolean connectLocally ) {
 		super( address );
+		internalConnections = new AnswerConnectionManager(this, connectLocally);
 		//internalConnections.createAndAddConnection(this, false, 9000, SolutionConnection.class);
 	}
 
@@ -63,7 +62,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 		internalConnections.dropAllConnection(false, true);
 		internalConnections.connectServers(this);
 	}
-	
+
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		//System.out.println("Receiving message...");
@@ -119,12 +118,19 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Answer Server: Version 0.0.1");
 		WebSocketImpl.DEBUG = false;
+		boolean connectLocal = true;
+		if (args.length == 1) {
+			if (args[0].equals("local")) {
+				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
+			}
+		}
+
 		int port = 8884; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
-		AnswerCheckerServer s = new AnswerCheckerServer( port );
+		AnswerCheckerServer s = new AnswerCheckerServer( port, connectLocal );
 		s.start();
 		System.out.println( "Answer Server started on port: " + s.getPort() );
 

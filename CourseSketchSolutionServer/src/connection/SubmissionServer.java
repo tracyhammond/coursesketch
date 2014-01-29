@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import multiConnection.ConnectionException;
@@ -44,14 +43,15 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public SubmissionServer( int port ) throws UnknownHostException {
-		this( new InetSocketAddress( port ) );
+	public SubmissionServer(int port, boolean connectLocally) {
+		this( new InetSocketAddress( port ), connectLocally );
 	}
 
-	public SubmissionServer( InetSocketAddress address ) {
+	public SubmissionServer( InetSocketAddress address, boolean connectLocally ) {
 		super( address );
+		this.connectLocally = connectLocally;
 	}
-	
+
 	public void reconnect() {
 		internalConnections.dropAllConnection(true, false);
 		try {
@@ -66,10 +66,6 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
 		String sessionInfo = req.getSessionInfo();
-		if (req == null) {
-			System.out.println("protobuf error");
-			return;
-		}
 
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			try {
@@ -165,12 +161,20 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Submission Server: Version 0.0.2.gopher");
 		WebSocketImpl.DEBUG = false;
+
+		boolean connectLocal = true;
+		if (args.length == 1) {
+			if (args[0].equals("local")) {
+				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
+			}
+		}
+
 		int port = 8883; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
-		SubmissionServer s = new SubmissionServer( port );
+		SubmissionServer s = new SubmissionServer( port, connectLocal );
 		s.start();
 		s.reconnect();
 		System.out.println( "Submission Server started on port: " + s.getPort() );
