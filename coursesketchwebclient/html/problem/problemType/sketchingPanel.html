@@ -97,12 +97,34 @@
 				event = args[0];
 				msg = args[1];
 				if (msg.responseText) {
+					alert(msg.requestType);
 					alert(msg.responseText);
 				} else {
 					alert("GETTING FEEDBACK!");
 				}
 			};
 			parent.problemNavigator.addEventMapping("feedback", feedbackFunction);
+
+			// is called upon a successfuly submission.
+			parent.problemNavigator.addEventMapping("submission", function(args) {
+				event = args[0];
+				msg = args[1];
+				parent.problemNavigator.getDataManager().getSubmission(parent.problemNavigator.getCurrentProblemId(), function(submission) {
+		    		if (isUndefined(submission)) {
+		    			alert("Something went wrong and the submission Id was not related correctly.");
+		    			return;
+		    		} else {
+		    			alert("Id: " + msg.getResponseText());
+		    		}
+		    		if (msg.getResponseText()) {
+						submission.setId(msg.getResponseText());
+						// save it with the new id.
+						parent.problemNavigator.getDataManager().setSubmission(parent.problemNavigator.getCurrentProblemId(), submission, function() {
+							console.log("submission saved");
+						});
+		    		}
+		    	});
+			});
 
 			window.addEventListener("beforeunload", function( e ) {
 				parent.problemNavigator.removeEventMapping("submit", submitFunction);

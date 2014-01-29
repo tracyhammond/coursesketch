@@ -57,7 +57,7 @@ public class DatabaseClient {
 			if (testOnly) {
 				db = mongoClient.getDB("test");
 			} else {
-				db = mongoClient.getDB("login");
+				db = mongoClient.getDB("submissions");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
