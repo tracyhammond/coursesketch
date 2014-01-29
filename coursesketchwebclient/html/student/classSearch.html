@@ -31,6 +31,7 @@
 		var courseProtoMap = {};
 		var schoolSet = SchoolBuilder.SrlSchool;
 		var schoolItemBuilder = new SchoolItemBuilder();
+		var setTimeVar;
 		(function() {
 			schoolItemBuilder.setWidth('large').centerItem(true);
 			schoolItemBuilder.showImage = false; // till we have images actually working!
@@ -57,11 +58,13 @@
 		});
 		
 		parent.dataListener.setErrorListener(function(msg){
-			localDoc.getElementById("loadingIcon").innerHTML = '<h1>error loading data</h1> <p>' + msg.getResponseText() + '</p>';
+		    localDoc.getElementById("loadingIcon").innerHTML = '<h1>error loading data</h1> <p>' + msg.getResponseText() + '</p>';
+		    clearTimeout(setTimeVar);
 		});
 
 		parent.dataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.REGISTER, function(evt, item) {
-			alert("User is already registered for this course");
+		    alert("User is already registered for this course");
+		    clearTimeout(setTimeVar);
 		});
 
 		function courseClickerFunction(id) {
@@ -78,8 +81,8 @@
 				var button = localDoc.createElement('button');
 				button.setAttribute("id", "button"+id);
 				button.onclick = function() {
-					registerClass(id);
-					window.location.href = 'html/student/course_management.html';
+				    registerClass(id);
+				    setTimeVar = setTimeout(function () { alert("Your have successfully registered") }, 3000);
 				}
 				button.textContent = "Register";
 				button.style.position = "absolute";
