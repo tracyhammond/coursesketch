@@ -235,6 +235,7 @@ input[type="password"] {
         border-top: 1px solid #CFD5D9;
         padding: 15px 0;
 }
+
 .button a {
         background: url(http://cssdeck.com/uploads/media/items/8/8bcLQqF.png) 0 -112px no-repeat;
         color: #7E7E7E;
@@ -247,7 +248,7 @@ input[type="password"] {
         -o-transition: all 0.3s ease;
         transition: all 0.3s ease;
 }
-.button a:hover {
+.button:hover a {
         background-position: 0 -135px;
         color: #00aeef;
 }
