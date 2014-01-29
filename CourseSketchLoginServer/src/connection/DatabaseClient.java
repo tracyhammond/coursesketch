@@ -46,7 +46,11 @@ public class DatabaseClient {
 	public DatabaseClient(boolean testOnly) {
 		try {
 			MongoClient mongoClient = new MongoClient("localhost");
-			db = mongoClient.getDB("test");
+			if (testOnly) {
+				db = mongoClient.getDB("test");
+			} else {
+				db = mongoClient.getDB("login");
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
