@@ -33,7 +33,7 @@
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
 			canvasContext = input.canvasContext;
-			
+
 			// creating a new sketch
 			sketch = new SRL_Sketch();
 			sketch.canvasContext = canvasContext;
@@ -79,15 +79,15 @@
 				});
 			};
 			parent.problemNavigator.addEventMapping("submit", submitFunction);
-			
+
 			parent.problemNavigator.addEventMapping("clear", function() {
 				commandManager.clearUpdates(true);
 			});
-			
+
 			parent.problemNavigator.addEventMapping("undo", function() {
 				commandManager.undoAction();
 			});
-			
+
 			parent.problemNavigator.addEventMapping("redo", function() {
 				commandManager.redoAction();
 			});
