@@ -31,12 +31,11 @@ public class UpdateHandler {
 					instance.setSubmissionTime(req.getMessageTime());
 					instance.setUserId(req.getServersideId());
 					return false;
-				} else {
-					SrlSolution solution = SrlSolution.parseFrom(req.getOtherData());
-					instance.setSolution(solution);
-					return false;
-					// if this is the first submission it will contain stuff regarding that submission
 				}
+				SrlSolution solution = SrlSolution.parseFrom(req.getOtherData());
+				instance.setSolution(solution);
+				return false;
+				// if this is the first submission it will contain stuff regarding that submission
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -58,10 +57,13 @@ public class UpdateHandler {
 			}
 		}
 		if (updates == null) {
-			//return false;
 			throw new Exception("Mismatched Message Exception");
 		}
 		return sessionToInstance.get(req.getSessionInfo()).addRequest(updates);
+	}
+
+	public void clearSubmission(String sessionKey) {
+		sessionToInstance.remove(sessionKey);
 	}
 
 	public boolean hasSubmissionId(String sessionInfo) {

@@ -163,11 +163,15 @@ public class ProxyServer extends MultiInternalConnectionServer {
 
 	private static Request createBadConnectionResponse(Request req, Class<? extends WrapperConnection> connectionType) {
 		Request.Builder response = Request.newBuilder();
-		response.setRequestType(req.getRequestType());
-		response.setResponseText("A server with connection type: " + connectionType.getSimpleName() +" Is not connected correctly");
+		if (req == null) {
+			response.setRequestType(Request.MessageType.ERROR);
+		} else {
+			response.setRequestType(req.getRequestType());
+		}
+		response.setResponseText("A server with connection type: " + connectionType.getSimpleName() + " Is not connected correctly");
 		return response.build();
 	}
-	
+
 	/**
 	 * Returns a number that should be unique.
 	 */
@@ -179,6 +183,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public int getCurrentConnectionNumber() {
 		return super.connectionToId.size();
 	}
+
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Proxy Server: Version 1.0.2.lemur");
 		WebSocketImpl.DEBUG = true;

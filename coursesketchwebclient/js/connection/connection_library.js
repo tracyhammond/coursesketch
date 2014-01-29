@@ -11,6 +11,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	var onLogin = false;
 	var onRecognition = false;
 	var onAnswerChecker = false;
+	var onSubmission = false;
 	var onSchoolData = false;
 	var onError;
 
@@ -56,12 +57,21 @@ function Connection(uri, encrypted, attemptReconnect) {
 			        } else if (msg.requestType == Request.MessageType.RECOGNITION && onRecognition) {
 			        	console.log("getting from recognition");
 			        	onRecognition(evt, msg);
-			        } else if (msg.requestType == Request.MessageType.SUBMISSION && onAnswerChecker) {
+			        } else if (msg.requestType == Request.MessageType.SUBMISSION && onSubmission) {
+			        	console.log("getting from submission");
+			        	onSubmission(evt, msg);
+			        } else if (msg.requestType == Request.MessageType.FEEDBACK && onAnswerChecker) {
 			        	console.log("getting from answer checker");
 			        	onAnswerChecker(evt, msg);
 			        } else if (msg.requestType == Request.MessageType.DATA_REQUEST && onSchoolData) {
 			        	console.log("getting from school data");
 			        	onSchoolData(evt, msg);
+			        } else if (msg.requestType == Request.MessageType.ERROR) {
+			        	console.log(msg.getResponseText());
+			        	if (onError) {
+			        		onError(evt, msg.getResponseText());
+			        	}
+			        	alert("ERROR: " + msg.getResponseText());
 			        } else if (onRequest)
 			        	onRequest(evt, msg);
 			    } catch (err) {
@@ -120,9 +130,13 @@ function Connection(uri, encrypted, attemptReconnect) {
 		onAnswerChecker = listener;
 	};
 
+	this.setSubmissionListener = function(listener) {
+		onSubmission = listener;
+	};
+
 	this.setSchoolDataListener = function(listener) {
 		onSchoolData = listener;
-	}
+	};
 
 	this.setOnOpenListener = function(listener) {
 		onOpen = listener;

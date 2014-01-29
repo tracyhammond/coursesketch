@@ -115,12 +115,17 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 							internalConnections.send(build.build(), "", DataConnection.class);
 						}
 					}
+					updateHandler.clearSubmission(req.getSessionInfo());
 				} 
 				//ItemResult 
-			} catch (InvalidProtocolBufferException e) {
-				e.printStackTrace();
 			} catch (Exception e) {
+				Request.Builder build = Request.newBuilder();
+				build.setRequestType(Request.MessageType.ERROR);
+				build.setResponseText(e.getMessage());
+				build.setSessionInfo(req.getSessionInfo());
+				conn.send(build.build().toByteArray());
 				e.printStackTrace();
+				updateHandler.clearSubmission(req.getSessionInfo());
 			}
 		}
 
@@ -159,7 +164,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Submission Server: Version 0.0.2.gopher");
+		System.out.println("Submission Server: Version 0.0.2.hippo");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = true;
