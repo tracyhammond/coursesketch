@@ -54,6 +54,27 @@ function ShapeSelection(externalInputListener, externalSketchContainer, highligh
 		}
 	});
 
+/**/
+	/**
+		$(document).ready(function() {
+			$("object").click(function() {
+				object.setIsHighlighted(true);
+				object.setHighlightColorHex("#FF0000");
+				pastObject = object;
+				sketch.drawEntireSketch();
+			});
+		});
+		if (hex == #0000FF && 'onclick') {
+			object.setIsHighlighted(true);
+			object.setHighlightColorHex("#FF0000");
+			pastObject = object;
+			sketch.drawEntireSketch();
+		}
+		
+		
+	*/
+/**/
+	
 	SRL_Sketch.prototype.getIntersectingObject = function(x,y) {
 		var list = this.getList();
 		// make this use threading so that everything does not freeze.
