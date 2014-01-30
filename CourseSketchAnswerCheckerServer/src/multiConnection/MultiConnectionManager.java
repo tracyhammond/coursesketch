@@ -16,7 +16,7 @@ import protobuf.srl.request.Message.Request;
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class MultiConnectionManager {
 
-	protected boolean connectionType = CONNECT_LOCALLY;
+	protected boolean connectLocally = CONNECT_LOCALLY;
 	public static final boolean CONNECT_LOCALLY = true;
 	public static final boolean CONNECT_REMOTE = false;
 	HashMap<Class<?>, ArrayList<WrapperConnection>> connections
@@ -34,7 +34,7 @@ public class MultiConnectionManager {
 	 * @param man this is the manager that will then hold the connection
 	 * @param isLocal if the connection that is being created is local or remote
 	 * @param port the port that this connection is created at.  (Has to be unique to this computer)
-	 * @param connectionType the class that will be made (should be a subclass of WrapperConnection)
+	 * @param connectLocally the class that will be made (should be a subclass of WrapperConnection)
 	 * @return a completed {@link WrapperConnection}
 	 * @throws ConnectionException if a connection has failed to be made.
 	 */
@@ -87,11 +87,17 @@ public class MultiConnectionManager {
 	}
 
 	/**
-	 * Adds a connection to a list with the given connectionType.
+	 * Does nothing by default.  Can be overwritten to make life easier.
+	 * @param parent
+	 */
+	public void connectServers(MultiInternalConnectionServer parent) {}
+	
+	/**
+	 * Adds a connection to a list with the given connectLocally.
 	 *
 	 * @param connection the connection to be added
-	 * @param connectionType the type to differentiate connections by
-	 * @throws {@link NullPointerException} if connection is null or connectionType is null
+	 * @param connectLocally the type to differentiate connections by
+	 * @throws {@link NullPointerException} if connection is null or connectLocally is null
 	 */
 	public void addConnection(WrapperConnection connection, Class<? extends WrapperConnection> connectionType) {
 		if (connection == null) {
@@ -118,7 +124,7 @@ public class MultiConnectionManager {
 	/**
 	 * Returns a connection that we believe to be the best connection at this time.
 	 *
-	 * @param connectionType
+	 * @param connectLocally
 	 * @return a valid connection.
 	 */
 	public WrapperConnection getBestConnection(Class<? extends WrapperConnection> connectionType){

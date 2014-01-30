@@ -11,11 +11,8 @@ import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
@@ -23,17 +20,9 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
-
-import protobuf.srl.commands.Commands.SrlCommand;
-import protobuf.srl.commands.Commands.CommandType;
-import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
-import protobuf.srl.sketch.Sketch.SrlShape;
-import protobuf.srl.sketch.Sketch.SrlStroke;
 
 /**
  * A simple WebSocketServer implementation.
@@ -197,6 +186,13 @@ public class LoginServer extends WebSocketServer {
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Login Server: Version 1.0.2.gopher");
 		WebSocketImpl.DEBUG = true;
+
+		if (args.length == 1) {
+			if (args[0].equals("local")) {
+				new DatabaseClient(false); // makes the database point locally
+			}
+		}
+
 		int port = 8886; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
