@@ -239,7 +239,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			} else if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SUBMISSION) {
 				if (currentUpdateIndex > lastSubmissionPointer) {
 					lastSubmissionPointer = currentUpdateIndex;
-					console.log("Updated submission pointer: " + lastSubmissionPointer);
+					//console.log("Updated submission pointer: " + lastSubmissionPointer);
 				}
 			} else if (marker.type == ProtoCommandBuilder.Marker.MarkerType.CLEAR) {
 				clearSketch(true);
@@ -260,6 +260,8 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			var marker = decodeCommandData(command.commandData, ProtoCommandBuilder.Marker);
 			if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SPLIT) {
 				currentUpdateIndex += parseInt(marker.otherData) - 1;
+			} else {
+				throw "You can't undo that (something went wrong)";
 			}
 			return false;
 		} else {

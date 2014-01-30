@@ -27,9 +27,10 @@
 		var Long = false;
 		var commandManager = false;
 		var highlighter = false;
+		var localSubmissionId = false;
 
 	    function initializeInput() {
-	    	var localSubmissionId = false;
+	    	
 	    	
 	    	var ProtoSubmissionBuilder = parent.ProtoSubmissionBuilder;
 			var input = new inputListener();
@@ -73,6 +74,7 @@
 					experiment.submission.id = localSubmissionId;
 				} else {
 					experiment.submission.id = "NO_ID";
+					alert(localSubmissionId);
 				}
 
 				commandManager.getUpdateList(function(updateList) {
@@ -88,7 +90,7 @@
 
 					// sets the submission id.
 					if (localSubmissionId !== false) {
-						submission.setId(localSubmissionId);
+						localSubmission.setId(localSubmissionId);
 					}
 					var listContainer = new ProtoUpdateCommandBuilder.SrlUpdateList();
 					listContainer.setList(updateList);
@@ -135,7 +137,7 @@
 		    			alert("Something went wrong and the submission Id was not related correctly.");
 		    			return;
 		    		} else {
-		    			alert("Id: " + msg.getResponseText());
+		    			console.log("submission was related with this id: " + msg.getResponseText());
 		    		}
 		    		if (msg.getResponseText()) {
 						submission.setId(msg.getResponseText());
