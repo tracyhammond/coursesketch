@@ -97,8 +97,15 @@ public class DatabaseClient {
 		return corsor.get(SELF_ID).toString();
 	}
 
-	public static void updateSubmission(String resultantId, ByteString updateList) throws Exception {
-		throw new Exception("Not supported yet!");
+	public static void updateExperiment(String resultantId, ByteString updateList, long submissionTime) {
+		System.out.println("Updating experiment!!!!!!");
+		DBRef myDbRef = new DBRef(getInstance().db, EXPERIMENT_COLLECTION, new ObjectId(resultantId));
+		DBObject corsor = myDbRef.fetch();
+		DBCollection courses = getInstance().db.getCollection(EXPERIMENT_COLLECTION);
+		DBObject updateObj = new BasicDBObject(UPDATELIST, updateList);
+		DBObject updateObj2 = new BasicDBObject(SUBMISSION_TIME, submissionTime);
+		courses.update(corsor, new BasicDBObject ("$set", updateObj).append("$set", updateObj2));
+		//courses.update(corsor, new BasicDBObject );
 	}
 
 	public static SrlExperiment getExperiment(String itemId) {
@@ -113,5 +120,13 @@ public class DatabaseClient {
 		sub.setUpdateList(ByteString.copyFrom((byte[])corsor.get(UPDATELIST)));
 		build.setSubmission(sub.build());
 		return build.build();
+	}
+
+	public static void updateSolution(String resultantId, ByteString updateList) {
+		DBRef myDbRef = new DBRef(getInstance().db, EXPERIMENT_COLLECTION, new ObjectId(resultantId));
+		DBObject corsor = myDbRef.fetch();
+		DBCollection courses = getInstance().db.getCollection(COURSE_COLLECTION);
+		DBObject updateObj = new BasicDBObject(UPDATELIST, updateList);
+		courses.update(corsor, new BasicDBObject ("$set", updateObj));
 	}
 }
