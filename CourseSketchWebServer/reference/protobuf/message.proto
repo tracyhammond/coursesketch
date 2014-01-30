@@ -19,7 +19,9 @@ message Request {
         RECOGNITION = 5;
 		LOADING = 6; // this is for when the client is loading.
 		SUBMISSION = 7; // sent to both servers at the same time. (Answer checking and database)
-		CLOSE = 8; // sent to tell the server to close the connection rs
+		FEEDBACK = 8; // answer checking feedback!
+		CLOSE = 9; // sent to tell the server to close the connection rs
+		ERROR = 10;
     }
 }
 

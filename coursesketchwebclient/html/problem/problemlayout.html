@@ -20,6 +20,9 @@
 		connection.setAnswerCheckingListener(function(event, msg) {
 			problemNavigator.executeEvent('feedback', [event, msg]);
 		});
+		connection.setSubmissionListener(function(event, msg) {
+			problemNavigator.executeEvent('submission', [event, msg]);
+		});
 	</script>
 	<script>
 	(function(scriptScope) {

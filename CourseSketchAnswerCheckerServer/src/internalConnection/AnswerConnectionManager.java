@@ -6,10 +6,9 @@ import multiConnection.MultiInternalConnectionServer;
 
 public class AnswerConnectionManager extends MultiConnectionManager {
 
-	private boolean connectLocally = CONNECT_REMOTE;
-	
-	public AnswerConnectionManager(MultiInternalConnectionServer parent) {
+	public AnswerConnectionManager(MultiInternalConnectionServer parent, boolean connectLocally) {
 		super(parent);
+		this.connectLocally = connectLocally;
 	}
 
 	public void connectServers(MultiInternalConnectionServer parent) {

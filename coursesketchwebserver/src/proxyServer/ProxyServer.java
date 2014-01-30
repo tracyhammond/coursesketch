@@ -41,20 +41,23 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
 	public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
-	
+
 	private TimeManager timeManager = new TimeManager();
-	
-	//private ExampleClient login = connectLogin(this, connectionType);
-	private ProxyConnectionManager serverManager = new ProxyConnectionManager(this, MultiConnectionManager.CONNECT_REMOTE);
+
+	private ProxyConnectionManager serverManager;
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public ProxyServer(int port) {
-		this( new InetSocketAddress( port ) );
+	public ProxyServer(int port, boolean connectLocally) {
+		this( new InetSocketAddress( port ), connectLocally );
 	}
 
-	public ProxyServer(InetSocketAddress address) {
+	public ProxyServer(InetSocketAddress address, boolean connectLocally) {
 		super(address);
+
+		serverManager = new ProxyConnectionManager(this, connectLocally);
+
 		timeManager.setExpiredListiner(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				idToConnection.get(e.getActionCommand()).close();		
@@ -67,6 +70,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		serverManager.connectServers(this);
 	}
 
+	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 		super.onOpen(conn, handshake);
 		System.out.println("Recieving connection " + connectionToId.size());
@@ -79,6 +83,15 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
+
+		if (req == null) {
+			conn.send(createBadConnectionResponse(req, WrapperConnection.class).toByteArray());
+			System.out.println("protobuf error");
+			//this.
+			// we need to somehow send an error to the client here
+			return;
+		}
+
 		if (req.getRequestType().equals(Request.MessageType.CLOSE)) {
 			System.out.println("CLOSE THE SERVER FROM THE CLIENT");
 			conn.close(STATE_CLIENT_CLOSE, CLIENT_CLOSE_MESSAGE);
@@ -86,12 +99,6 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		}
 		LoginConnectionState state = (LoginConnectionState) connectionToId.get(conn);
 
-		if (req == null) {
-			System.out.println("protobuf error");
-			//this.
-			// we need to somehow send an error to the client here
-			return;
-		}
 		//DO NOT FORGET ABOUT THIS
 		if (state.isPending()) {
 			//conn.send(pending);
@@ -156,11 +163,15 @@ public class ProxyServer extends MultiInternalConnectionServer {
 
 	private static Request createBadConnectionResponse(Request req, Class<? extends WrapperConnection> connectionType) {
 		Request.Builder response = Request.newBuilder();
-		response.setRequestType(req.getRequestType());
-		response.setResponseText("A server with connection type: " + connectionType.getSimpleName() +" Is not connected correctly");
+		if (req == null) {
+			response.setRequestType(Request.MessageType.ERROR);
+		} else {
+			response.setRequestType(req.getRequestType());
+		}
+		response.setResponseText("A server with connection type: " + connectionType.getSimpleName() + " Is not connected correctly");
 		return response.build();
 	}
-	
+
 	/**
 	 * Returns a number that should be unique.
 	 */
@@ -172,15 +183,23 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public int getCurrentConnectionNumber() {
 		return super.connectionToId.size();
 	}
+
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Proxy Server: Version 1.0.2.lemur");
 		WebSocketImpl.DEBUG = true;
+		boolean connectLocal = true;
+		if (args.length == 1) {
+			if (args[0].equals("local")) {
+				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
+			}
+		}
+
 		int port = 8888; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
-		ProxyServer s = new ProxyServer( port );
+		ProxyServer s = new ProxyServer( port, connectLocal );
 		s.start();
 		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
 
