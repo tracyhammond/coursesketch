@@ -352,7 +352,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 		var buffer = update.toArrayBuffer();
 		request.setOtherData(buffer);
 		return request;
-	}
+	};
 
 	this.createBaseCommand = function(commandType, userCreated) {
     	var command = new ProtoSrlCommand();
@@ -363,7 +363,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 		command.isUserCreated = userCreated;
 		command.commandId = generateUUID(); // unique ID
 		return command;
-    }
+    };
 }
 var Long = false;
 

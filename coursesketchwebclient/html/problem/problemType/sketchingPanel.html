@@ -29,6 +29,8 @@
 		var highlighter = false;
 
 	    function initializeInput() {
+	    	var localSubmissionId = false;
+	    	
 	    	var ProtoSubmissionBuilder = parent.ProtoSubmissionBuilder;
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
@@ -57,13 +59,25 @@
 			});
 
 			var submitFunction = function() {
+				if (commandManager.isLastUpdateSubmission()) {
+					alert("you have no work to submit since the last submission");
+					return;
+				}
+				var markerCommand = commandManager.createMarker(true, parent.ProtoUpdateCommandBuilder.Marker.MarkerType.SUBMISSION, "");
+				commandManager.addUpdate(commandManager.createUpdateFromCommands([markerCommand]));
 				// submits your work to the server.
 				var experiment = new ProtoSubmissionBuilder.SrlExperiment();
 				experiment.submission = new ProtoSubmissionBuilder.SrlSubmission();
 				parent.problemNavigator.setSubmissionInformation(experiment, true);
+				if (localSubmissionId !== false) {
+					experiment.submission.id = localSubmissionId;
+				} else {
+					experiment.submission.id = "NO_ID";
+				}
+
 				commandManager.getUpdateList(function(updateList) {
-					if(updateList.length == 0) {
-						alert("you have nothing submited");
+					if (updateList.length == 0) {
+						alert("you have no work to submit");
 						return;
 					}
 					submitUpdateList(serverConnection, updateList, [ProtoUpdateCommandBuilder, ProtoSubmissionBuilder], experiment,
@@ -71,6 +85,11 @@
 
 					// submis the work locally
 					var localSubmission = new ProtoSubmissionBuilder.SrlSubmission();
+
+					// sets the submission id.
+					if (localSubmissionId !== false) {
+						submission.setId(localSubmissionId);
+					}
 					var listContainer = new ProtoUpdateCommandBuilder.SrlUpdateList();
 					listContainer.setList(updateList);
 					localSubmission.setUpdateList(listContainer.toArrayBuffer());
@@ -81,7 +100,9 @@
 			parent.problemNavigator.addEventMapping("submit", submitFunction);
 
 			parent.problemNavigator.addEventMapping("clear", function() {
-				commandManager.clearUpdates(true);
+				var clearCommand = commandManager.createMarker(true, parent.ProtoUpdateCommandBuilder.Marker.MarkerType.CLEAR, "");
+				var update = commandManager.createUpdateFromCommands([clearCommand]);
+				commandManager.addUpdate(update, false);
 			});
 
 			parent.problemNavigator.addEventMapping("undo", function() {
@@ -118,6 +139,7 @@
 		    		}
 		    		if (msg.getResponseText()) {
 						submission.setId(msg.getResponseText());
+						localSubmissionId = msg.getResponseText();
 						// save it with the new id.
 						parent.problemNavigator.getDataManager().setSubmission(parent.problemNavigator.getCurrentProblemId(), submission, function() {
 							console.log("submission saved");
@@ -142,6 +164,9 @@
 	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(submission.getUpdateList());
 	    		console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
+	    		localSubmissionId = submission.getId();
+	    		console.log(submission);
+	    		console.log("Loading submission with id " + localSubmissionId);
 	    	});
 	    }
 
@@ -154,7 +179,7 @@
 	    Creates an update that is added to the update manager, given a stroke.
 	    */
 	    function addUpdateFromStroke(stroke) {
-	    	var command = serverConnection.createBaseCommand(ProtoSrlCommandType.ADD_STROKE, true);
+	    	var command = commandManager.createBaseCommand(ProtoSrlCommandType.ADD_STROKE, true);
 			// then finish him!
 			command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
 			command.decodedData = stroke;
