@@ -92,7 +92,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 							DatabaseClient.updateSubmission(resultantId, updateHandler.getExperiment(sessionInfo).getSubmission().getUpdateList());
 							return;
 						}
-						System.out.println("Saving experiment");
+						System.out.println("Saving experiment without an id");
 						resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
 						if (resultantId != null) {
 							SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));

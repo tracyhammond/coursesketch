@@ -212,8 +212,8 @@ public class UpdateHandler {
 			submission = experiment;
 			hasId = experiment.getSubmission().hasId();
 			id = experiment.getSubmission().getId();
-			if (id == null || id.equals("" ) || id.equals(experiment.getCourseId()) ||
-					id.equals(experiment.getAssignmentId()) || id.equals(experiment.getProblemId()) || id.equals(experiment.getUserId())) {
+			if (id == null || id.equals("" ) || id.equals("NO_ID")) {
+				System.out.println("ID IS NULL? " + id);
 				hasId = false;
 				id = null;
 			}
@@ -272,7 +272,7 @@ public class UpdateHandler {
 		}
 		
 		public boolean hasId() {
-			return false; // need to fix this
+			return hasId; // need to fix this
 		}
 		
 		String getId() {

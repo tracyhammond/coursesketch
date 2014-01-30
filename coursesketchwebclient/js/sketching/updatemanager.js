@@ -6,6 +6,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	var skippingMarkerMode = false; // if a marker is executed with an index larger than what we have then we wait.
 	var amountToSkip = 0;
 	var localScope = this;
+	var lastSubmissionPointer = 0;
 
 	/*
 	 * Holds the list of updates that are waiting to be sent to the server.
@@ -76,15 +77,46 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		try {commandData.reset();} catch(exception) {}
 		return decoded;
 	}
-	
+
 	/**
-	 * Generates a marker that can be used for marking things
+	 * Clears the current updates.
+	 *
+	 */
+	this.clearUpdates = function clearUpdates(redraw) {
+		currentUpdateIndex = 0;
+		updateList.length = 0;
+		lastSubmissionPointer = 0;
+		inRedoUndoMode = false;
+		skippingMarkerMode = false;
+		this.clearSketch(redraw);
+	};
+
+	/**
+	 * Clears the sketch but does not clear any updates.
+	 */
+	function clearSketch(redraw) {
+		sketch.resetSketch();
+		if (redraw) {
+			sketch.drawEntireSketch();
+		}
+	};
+	this.clearSketch = clearSketch;
+
+	/**
+	 * Generates a marker that can be used for marking things.
+	 *
+	 * Returns the result as a Command.
 	 */
 	function createMarker(userCreated, markerType, otherData) {
 		var marker = new ProtoCommandBuilder.Marker(markerType, otherData);
 		return new ProtoCommandBuilder.SrlCommand(ProtoCommandBuilder.CommandType.MARKER, false, marker.toArrayBuffer(), generateUUID());
 	}
- 
+	this.createMarker = createMarker;
+
+	this.createBaseCommand = serverConnection.createBaseCommand;
+
+	this.createUpdateFromCommands = serverConnection.createUpdateFromCommands;
+
 	/**
 	 * Tries to quickly empty the local queue.
 	 *
@@ -204,6 +236,13 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 					amountToSkip = parseInt(marker.otherData) + 1;
 					skippingMarkerMode = true;
 				}
+			} else if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SUBMISSION) {
+				if (currentUpdateIndex > lastSubmissionPointer) {
+					lastSubmissionPointer = currentUpdateIndex;
+					console.log("Updated submission pointer: " + lastSubmissionPointer);
+				}
+			} else if (marker.type == ProtoCommandBuilder.Marker.MarkerType.CLEAR) {
+				clearSketch(true);
 			}
 			return false;
 		} else {
@@ -276,6 +315,28 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		return updateList;
 	};
 
+	/**
+	 * Returns true IFF a submission marker is the last item that was submitted.
+	 */
+	this.isLastUpdateSubmission = function() {
+		if (updateList.length <= 0) {
+			return false;
+		}
+		var update = updateList[updateList.length -1];
+		var commandList = update.getCommands();
+		if (commandList.length <= 0) {
+			return false;
+		}
+		var currentCommand = commandList[0];
+		if (currentCommand.commandType == ProtoCommandBuilder.CommandType.MARKER) {
+			var marker = decodeCommandData(currentCommand.commandData, ProtoCommandBuilder.Marker);
+			if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SUBMISSION) {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	this.getCurrentPointer = function() {
 		return currentUpdateIndex;
 	};
@@ -299,22 +360,6 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 				clearInterval(intervalHolder);
 			}
 		}, 20);
-	};
-
-	/**
-	 * Clears the current updates.
-	 *
-	 * TODO: have it create a clear update marker.
-	 */
-	this.clearUpdates = function(redraw) {
-		currentUpdateIndex = 0;
-		updateList.length = 0;
-		inRedoUndoMode = false;
-		skippingMarkerMode = false;
-		sketch.resetSketch();
-		if (redraw) {
-			sketch.drawEntireSketch();
-		}
 	};
 
 	/**
@@ -507,6 +552,29 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			return redraw;
 		};
 
+		/****
+		 * MARKER SPECIFIC UPDATES.
+		 ***/
+
+		/**
+		 * returns the human readable name of the given marker type
+		 */
+		Action.Marker.prototype.getCommandTypeName = function() {
+			switch(this.getType()) {
+				case this.MarkerType.SUBMISSION:
+					return 'SUBMISSION';
+				case this.CommandType.FEEDBACK:
+					return 'FEEDBACK';
+				case this.CommandType.SAVE:
+					return 'SAVE';
+				case this.CommandType.SPLIT:
+					return 'SPLIT';
+				case this.CommandType.CLEAR:
+					return 'CLEAR';
+			}
+			return "NO_NAME # is: " +this.getCommandType();
+		};
+		
 		/*********
 		 * Specific commands and their actions.
 		 *******/
