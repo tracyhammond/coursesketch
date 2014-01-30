@@ -76,7 +76,8 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 					if (updateHandler.isSolution(sessionInfo)) {
 						if (updateHandler.hasSubmissionId(sessionInfo)) {
 							resultantId = updateHandler.getSubmissionId(sessionInfo);
-							DatabaseClient.updateSubmission(resultantId, updateHandler.getSolution(sessionInfo).getSubmission().getUpdateList());
+							DatabaseClient.updateSolution(resultantId, updateHandler.getSolution(sessionInfo).getSubmission().getUpdateList());
+							updateHandler.clearSubmission(req.getSessionInfo());
 							return;
 						}
 						resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
@@ -89,7 +90,9 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 						if (updateHandler.hasSubmissionId(sessionInfo)) {
 							resultantId = updateHandler.getSubmissionId(sessionInfo);
 							System.out.println("I already have an Id " + updateHandler.getSubmissionId(sessionInfo));
-							DatabaseClient.updateSubmission(resultantId, updateHandler.getExperiment(sessionInfo).getSubmission().getUpdateList());
+							SrlExperiment exp = updateHandler.getExperiment(sessionInfo);
+							DatabaseClient.updateExperiment(resultantId, exp.getSubmission().getUpdateList(), exp.getSubmission().getSubmissionTime());
+							updateHandler.clearSubmission(req.getSessionInfo());
 							return;
 						}
 						System.out.println("Saving experiment without an id");
