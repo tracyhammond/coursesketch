@@ -54,8 +54,6 @@
 		});
 	}
 
-	
-	
 	function Redirector(scope) {
 		var scope = scope;
 		var activeState = false;
@@ -82,30 +80,6 @@
 			return addedSlashes;
 		}
 
-		/*
-		// TODO: add this functionality for hash changes!
-		this.addState = function appendState(string state) {
-			if (!activeState) {
-				activeState = true;
-				
-				return;
-			}
-			
-			window.location.hash
-		}
-		
-		this.getState = function() {
-			
-		}
-		
-		this.removeState = function addState() {
-			
-		}
-
-		this.replaceState = function addState() {
-			
-		}
-		*/
 		this.moveWindow = function(url) {
 			document.getElementById('iframeContent').src = url;
 		}
