@@ -22,6 +22,7 @@ message Request {
 		FEEDBACK = 8; // answer checking feedback!
 		CLOSE = 9; // sent to tell the server to close the connection rs
 		ERROR = 10;
+		TIME = 11;
     }
 }
 

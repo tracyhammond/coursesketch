@@ -117,21 +117,21 @@ void protobuf_AddDesc_input_2fmessage_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023input/message.proto\022\024protobuf.srl.requ"
-    "est\"\242\003\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
+    "est\"\254\003\n\007Request\022E\n\013requestType\030\001 \002(\0162).p"
     "rotobuf.srl.request.Request.MessageType:"
     "\005LOGIN\0225\n\005login\030\002 \001(\0132&.protobuf.srl.req"
     "uest.LoginInformation\022\021\n\totherData\030\003 \001(\014"
     "\022\024\n\014responseText\030\004 \001(\t\022\023\n\013sessionInfo\030\005 "
     "\001(\t\022\024\n\014serversideId\030\006 \001(\t\022\023\n\013messageTime"
-    "\030\007 \001(\003\"\257\001\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DAT"
+    "\030\007 \001(\003\"\271\001\n\013MessageType\022\t\n\005LOGIN\020\000\022\020\n\014DAT"
     "A_REQUEST\020\001\022\017\n\013DATA_INSERT\020\002\022\017\n\013DATA_UPD"
     "ATE\020\003\022\017\n\013DATA_REMOVE\020\004\022\017\n\013RECOGNITION\020\005\022"
     "\013\n\007LOADING\020\006\022\016\n\nSUBMISSION\020\007\022\014\n\010FEEDBACK"
-    "\020\010\022\t\n\005CLOSE\020\t\022\t\n\005ERROR\020\n\"\226\001\n\020LoginInform"
-    "ation\022\020\n\010username\030\001 \002(\t\022\020\n\010password\030\002 \001("
-    "\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isInstructor\030\004 "
-    "\001(\010\022\025\n\risRegistering\030\005 \001(\010\022\r\n\005email\030\006 \001("
-    "\t\022\016\n\006userId\030\007 \001(\t", 617);
+    "\020\010\022\t\n\005CLOSE\020\t\022\t\n\005ERROR\020\n\022\010\n\004TIME\020\013\"\226\001\n\020L"
+    "oginInformation\022\020\n\010username\030\001 \002(\t\022\020\n\010pas"
+    "sword\030\002 \001(\t\022\022\n\nisLoggedIn\030\003 \001(\010\022\024\n\014isIns"
+    "tructor\030\004 \001(\010\022\025\n\risRegistering\030\005 \001(\010\022\r\n\005"
+    "email\030\006 \001(\t\022\016\n\006userId\030\007 \001(\t", 627);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/message.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -167,6 +167,7 @@ bool Request_MessageType_IsValid(int value) {
     case 8:
     case 9:
     case 10:
+    case 11:
       return true;
     default:
       return false;
@@ -185,6 +186,7 @@ const Request_MessageType Request::SUBMISSION;
 const Request_MessageType Request::FEEDBACK;
 const Request_MessageType Request::CLOSE;
 const Request_MessageType Request::ERROR;
+const Request_MessageType Request::TIME;
 const Request_MessageType Request::MessageType_MIN;
 const Request_MessageType Request::MessageType_MAX;
 const int Request::MessageType_ARRAYSIZE;
