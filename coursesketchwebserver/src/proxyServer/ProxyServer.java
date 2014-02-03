@@ -10,10 +10,22 @@ import internalConnections.RecognitionConnection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 import multiConnection.MultiConnectionManager;
 import multiConnection.MultiInternalConnectionServer;
@@ -23,6 +35,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -184,7 +197,8 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		return super.connectionToId.size();
 	}
 
-	public static void main( String[] args ) throws InterruptedException , IOException {
+	public static void main( String[] args ) throws InterruptedException, IOException, KeyStoreException, NoSuchAlgorithmException,
+			CertificateException, UnrecoverableKeyException, KeyManagementException {
 		System.out.println("Proxy Server: Version 1.0.2.lemur");
 		WebSocketImpl.DEBUG = true;
 		boolean connectLocal = true;
@@ -194,12 +208,35 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			}
 		}
 
-		int port = 8888; // 843 flash policy port
+		int port = 7888; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {
 		}
 		ProxyServer s = new ProxyServer( port, connectLocal );
+		if (!connectLocal) {
+			// load up the key store
+			String STORETYPE = "JKS";
+			String KEYSTORE = "keystore.key";
+			String STOREPASSWORD = "password";
+			String KEYPASSWORD = "password";
+
+			KeyStore ks = KeyStore.getInstance( STORETYPE );
+			File kf = new File( KEYSTORE );
+			ks.load( new FileInputStream( kf ), STOREPASSWORD.toCharArray() );
+
+			KeyManagerFactory kmf = KeyManagerFactory.getInstance( "SunX509" );
+			kmf.init( ks, KEYPASSWORD.toCharArray() );
+			TrustManagerFactory tmf = TrustManagerFactory.getInstance( "SunX509" );
+			tmf.init( ks );
+
+			SSLContext sslContext = null;
+			sslContext = SSLContext.getInstance( "TLS" );
+			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
+
+			s.setWebSocketFactory( new DefaultSSLWebSocketServerFactory( sslContext ) );
+
+		}
 		s.start();
 		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
 
