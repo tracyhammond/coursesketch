@@ -201,7 +201,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			CertificateException, UnrecoverableKeyException, KeyManagementException {
 		System.out.println("Proxy Server: Version 1.0.2.lemur");
 		WebSocketImpl.DEBUG = true;
-		boolean connectLocal = true;
+		boolean connectLocal = false;
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
 				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
@@ -216,17 +216,17 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		ProxyServer s = new ProxyServer( port, connectLocal );
 		if (!connectLocal) {
 			// load up the key store
-			String STORETYPE = "JKS";
-			String KEYSTORE = "keystore.key";
+			String STORETYPE = "PED";
+			String KEYSTORE = "private/srl01.tamu.edu.key";
 			String STOREPASSWORD = "password";
 			String KEYPASSWORD = "password";
 
 			KeyStore ks = KeyStore.getInstance( STORETYPE );
 			File kf = new File( KEYSTORE );
-			ks.load( new FileInputStream( kf ), STOREPASSWORD.toCharArray() );
+			ks.load( new FileInputStream( kf ), /*STOREPASSWORD.toCharArray()*/ null ); // setting null password
 
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance( "SunX509" );
-			kmf.init( ks, KEYPASSWORD.toCharArray() );
+			kmf.init( ks, /*KEYPASSWORD.toCharArray()*/ null );
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance( "SunX509" );
 			tmf.init( ks );
 

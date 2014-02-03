@@ -118,7 +118,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Answer Server: Version 0.0.1");
 		WebSocketImpl.DEBUG = false;
-		boolean connectLocal = true;
+		boolean connectLocal = false;
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
 				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;

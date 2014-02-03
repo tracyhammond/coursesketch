@@ -170,7 +170,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		System.out.println("Submission Server: Version 0.0.2.hippo");
 		WebSocketImpl.DEBUG = false;
 
-		boolean connectLocal = true;
+		boolean connectLocal = false;
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
 				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
