@@ -26,14 +26,14 @@
 			for (var i=0; i<touchlist.length; i++){ // loop through all touch points currently in contact with surface
 			//do something with each Touch object (point)
 			//detects and returns number of points being made contact with
-			if (i<=4){
+			if (i<=3){
 				statusdiv.innerHTML = 'Status: touchstart<br /> Contact = ' + i + ' points'
 				} else {
 					statusdiv.innerHTML = 'Please remove some fingers!'
 				}
-
+			
 			}
-		}, false)
+			
 			
 		/*box1.addEventListener('touchstart', function(e){
 			var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
