@@ -33,7 +33,7 @@ function SchoolItemBuilder() {
 
 		//custom text.
 		this.noItemMessage = false;
-	}
+	};
 
 	this.resetValues();
 
@@ -212,7 +212,9 @@ function SchoolItemBuilder() {
 		if (type == 'Assignment' && this.showDate) {
 			var dueDate = srlSchoolItem.dueDate;
 			if (dueDate) {
-				html+='		<h1>' + getFormattedDateTime(dueDate) + '</h1>\n';
+				console.log("server date");
+				console.log(dueDate);
+				html+='		<h1>' + getFormattedDateTime(new Date(dueDate.millisecond.toNumber())) + '</h1>\n';
 			}
 		}
 /*		if (type == 'Assignment' && this.showItemSubTitle) {
@@ -342,5 +344,6 @@ function getFormattedDate(currentDate, dueDate) {
 */
 
 function getFormattedDateTime(dateTime) {
-	return (dateTime.month + "/" + dateTime.day + "/" + dateTime.year);
+	console.log(dateTime);
+	return ((dateTime.getMonth() +1) + "/" + dateTime.getDate() + "/" + dateTime.getFullYear());
 }

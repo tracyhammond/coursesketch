@@ -91,6 +91,9 @@ public class DataRequestHandler {
 							}
 							break;
 						}
+						case EXPERIMENT: {
+							
+						}
 						default: {
 						}
 						/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
