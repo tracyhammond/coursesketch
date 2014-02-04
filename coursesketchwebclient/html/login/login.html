@@ -22,7 +22,7 @@
             function formSubmit() {
 				function sendLogin(arg1, arg2) {
 					if (!parent.connected) {
-						alert("The server has not yet opened a connection, please be patient");
+						alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using \n the newest version of chrome. If you are still unable to login please email \n server@coursesketch.com with your device, and web browser");
 						return;
 					}
 	  				var request = new Request(parent.Request.MessageType.LOGIN);
@@ -102,7 +102,7 @@
                     </div>
                 </form>
             </div>
-            <div class="button" onclick="window.location='html/login/register.html'">
+			<div class="button" onclick="window.location='html/login/register.html'">
             	<a href="html/login/register.html">Register</a>
             </div>
           </section>
