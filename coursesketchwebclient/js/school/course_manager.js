@@ -37,6 +37,14 @@ function assignmentClickerFunction(id) {
 	problemSelectionManager.clearAllSelectedItems();
 	clearLists(1);
 	parent.dataManager.getAllProblemsFromAssignment(id, function(problemList) {
+		for (var i = 0; i < problemList.length; i++) {
+			var q = problemList[i].description;
+			if (isUndefined(q) || q == "") {
+				var prob = problemList[i];
+				var text = prob.getProblemInfo().getQuestionText();
+				problemList[i].setDescription(text);
+			}
+		}
 		var builder = new SchoolItemBuilder();
 		builder.setList(problemList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
