@@ -464,8 +464,3 @@ function clickSelectionManager() {
 		return this.selectedItems.indexOf(id) > -1;
 	};
 }
-
-function getFormattedDateTime(dateTime) {
-	console.log(dateTime);
-	return ((dateTime.getMonth() +1) + "/" + dateTime.getDate() + "/" + dateTime.getFullYear());
-}
