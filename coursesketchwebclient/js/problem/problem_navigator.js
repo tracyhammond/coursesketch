@@ -20,15 +20,15 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 
 	this.goToProblem = function goToProblem(index) {
 		changeProblem(index)
-	}
+	};
 
 	this.gotoNext = function() {
 		changeProblem(currentIndex + 1);
-	}
+	};
 
 	this.gotoPrevious = function() {
 		changeProblem(currentIndex - 1);
-	}
+	};
 
 	if (!isUndefined(preferredIndex)) {
 		currentIndex = preferredIndex;
@@ -36,15 +36,15 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 
 	this.refresh = function() {
 		changeProblem(currentIndex);
-	}
+	};
 
 	this.isDataLoaded = function() {
 		return dataLoaded;
-	}
+	};
 
 	this.setUiLoaded = function(value) {
 		uiLoaded = value;
-	}
+	};
 
 	function getProblemInfo() {
 		return currentProblem.problemInfo;
@@ -52,7 +52,7 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 
 	this.getDataManager = function() {
 		return dataManager;
-	}
+	};
 
 	/**
 	 * Scopes the index for the callbackList.
@@ -83,42 +83,42 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 
 	this.addCallback = function(callback) {
 		callbackList.push(callback);
-	}
+	};
 
 	/**
 	 * Returns true if there is a previous problem that can be navigated to.
 	 */
 	this.hasPrevious = function() {
 		return loop || currentIndex > 0;
-	}
+	};
 
 	/**
 	 * Returns true if there is a next problem that can be navigated to.
 	 */
 	this.hasNext = function() {
 		return loop || currentIndex < problemList.length;
-	}
+	};
 
 	/**
 	 * Returns the current problem number in a human readable format
 	 */
 	this.getCurrentNumber = function() {
 		return currentIndex + 1;
-	}
+	};
 
 	/**
 	 * Returns the current problem number in a human readable format
 	 */
 	this.getLength = function() {
 		return problemList.length;
-	}
+	};
 
 	/**
 	 * Returns the problem text of the current problem.
 	 */
 	this.getProblemText = function() {
 		return getProblemInfo().questionText;
-	}
+	};
 
 	this.setSubmissionInformation = function(submission, isExperiment) {
 		if (isExperiment) {
@@ -126,14 +126,14 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 			submission.assignmentId = currentProblem.assignmentId;
 			submission.problemId = currentProblem.id;
 		}
-	}
+	};
 
 	/**
 	 * Returns the Id of the current problem.
 	 */
 	this.getCurrentProblemId = function() {
 		return currentProblem.id;
-	}
+	};
 
 	/**
 	 * Returns the type of the base problem.
@@ -154,7 +154,7 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 		if (type == 4) {
 			return "CHECK_BOX";
 		}
-	}
+	};
 
 	this.reloadProblems = function() {
 		dataLoaded = false;
@@ -171,7 +171,7 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 		dataManager.getAssignment(assignmentId, function(assignment) {
 			currentAssignment = assignment;
 		});
-	}
+	};
 	this.reloadProblems();
 
 	this.addEventMapping = function(key, funct) {
@@ -182,14 +182,14 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 		} else {
 			eventMappingCallback[key].push(funct);
 		}
-	}
+	};
 
 	this.removeEventMapping = function(key, funct) {
 		if (isUndefined(eventMappingCallback[key])) {
 			return;
 		}
 		removeObjectFromArray(eventMappingCallback[key], funct);
-	}
+	};
 
 	/**
 	 * Attempts to execute all of the events.
@@ -209,7 +209,7 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 				}, 10);
 			})(list[i], arguments);
 		}
-	}
+	};
 
 	this.SUBMIT_EVENT = "submit";
 	this.COMPLETED_PROBLEM_EVENT = "completion";
