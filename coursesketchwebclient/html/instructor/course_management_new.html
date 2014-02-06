@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="../../">
+    <title>Course Management</title>
+   	<link rel="stylesheet" href="css/school/school_item.css">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+	<link rel="stylesheet" href="css/courseSketch2.css">
+	<link rel="stylesheet" href="css/utility/externalLibraries/tooltip.css">
+	<script>
+		parent.copyParentUtilityFunctions(this);
+		parent.copyParentProtos(this);
+	</script>
+	<script type="text/javascript" src="js/utils/externalLibraries/tooltip.js"></script>
+	<script type="text/javascript" src="js/school/school_item.js"></script>
+	<script type="text/javascript" src="js/school/course_manager.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+    	var localScope = this;
+		parent.dataListener.setErrorListener(function(msg) {
+			alert("Unable able to load data: " + msg.getResponseText());
+		});
+  		parent.addScopedLoadEvent(window,
+				function()
+				{
+		  			var loadCourses = function(courseList) {
+							console.log(courseList);
+							localScope.showCourses(courseList);
+					};
+					if (parent.dataManager.isDatabaseReady()) {
+						parent.dataManager.getAllCourses(loadCourses);
+					} else {
+						var intervalVar = setInterval(function() {
+							if (parent.dataManager.isDatabaseReady()) {
+								clearInterval(intervalVar);
+								parent.dataManager.getAllCourses(loadCourses);
+							}
+						}, 100);
+					}
+  					
+
+					var loader = new parent.DynamicFileLoader();
+					loader.sope = document;
+					loader.loadFile("js/utils/popup.js",'js');
+
+					/**
+		  				Ensures that all of the columns reach to the bottom of the space they have 
+		  			*/
+			  		function manageColumnHeight() {
+			  			var maxHeight = parent.contentHeight;
+			  			var element = document.getElementById("column1");
+			  			var location = element.offsetTop;
+			  			for (var i = 1; i <= 4; i++) {
+			  				document.getElementById("column"+i).style.height = (maxHeight - location - 5)+"px";
+			  			}
+			  		}
+
+					manageColumnHeight();
+					window.onresize = function() {manageColumnHeight();};
+					
+					/*
+					for(var i = 1; i <= 4; i++) {
+		  				document.getElementById("column"+i).style.width = (311)+"px";
+		  			}
+					*/
+				}
+			);
+	  		function popupLatePolicy() {
+	  			var popupId = 'togglePopup1';
+	  			var builder = new PopupBoxBuilder();
+	  			builder.setBody(true,'html/course_managment_frames/late_policy.html');
+	  			builder.setHeader(true,'Late Policy Information');
+	  			builder.setFooter(true,'<button onclick = "togglePopup(\'' + popupId + '\')">close</button>');
+	  			builder.setBodyHeight('500px');
+	  			builder.build('popupDiv', popupId);
+	  			builder.togglePopup(popupId);
+	  		}
+	</script>
+	<style>
+		html, body {
+		    margin: 0px;
+		    padding: 0px;
+		    border: 0px;
+		    width: 100%;
+		    height: 100%;
+		}
+	</style>
+</head>
+<body>
+   	<div class = "wide_centre">
+    	<div style="width:100%; float:left;">
+	    	<div class="col-group4">
+	    		<div>
+	    			<h2 style = "text-align:center">Courses</h2>
+		    		<div id="column1" class = "centre faded_column" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
+		    			<button class = "myButton2 centre" onclick = "parent.redirectContent('html/student/classSearch.html','Search for classes');">Find New Course</button>
+				    	<div id="class_list_column" class="school_div">
+			    		</div>
+			    	</div>
+		    	</div>
+		    	<div>
+		    		<h2 style = "text-align:center">Assignments</h2>
+			    	<div id="column2" class = "centre faded_column" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
+				    	<div id="assignment_list_column" class="school_div">
+				    	Please click on the previous column
+						</div>
+					</div>
+				</div>
+				<div>
+					<h2 style = "text-align:center">Problems</h2>
+					<div id="column3" class = "centre faded_column" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
+						<div id="problem_list_column" class="school_div">
+					    	Please click on the previous column
+						</div>
+					</div>
+				</div>
+				<div>
+		    		<h2 style = "text-align:center">Lectures</h2>
+			    	<div id="column4" class = "centre faded_column" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
+				    	<div id="lecture_list_column" class="school_div">
+				    	Please click on the previous column
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- PopupDiv -->
+	<div id="popupDiv">
+	</div>
+
+</body>
+</html>
