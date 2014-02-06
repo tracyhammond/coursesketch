@@ -43,7 +43,7 @@
 	text-shadow: 0px -1px 1px #666;
 }
 
-.school_item h1 {
+.school_item h1, .school_item h4 {
 	color: #376C9F;
 	text-shadow: 1px 1px 1px #699DCF;
 }
@@ -104,10 +104,12 @@
 }
 
 /**
-	Edit Button Hiding
+EditButton Hiding
 */
+
+/*
 .school_item h3 span {
-		display:none;
+	display:none;
 }
 .school_item h3:hover span {
 	display:inline;
@@ -125,6 +127,17 @@
 }
 .school_item a:hover span {
 	display:inline;
+}
+
+*/
+
+.date h4 {
+	margin-bottom: 0px;
+}
+
+.date .subDate {
+	display:inline-block;
+	margin-right: .75em;
 }
 
 .editButton {

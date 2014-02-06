@@ -2,10 +2,10 @@ this.showCourses = function showCourses(courseList) {
 	var builder = new SchoolItemBuilder();
 	builder.setList(courseList).setWidth('medium').centerItem(true);
 	builder.showImage = false;
-	builder.setOnBoxClick('courseClickerFunction');
+	builder.setBoxClickFunction(courseClickerFunction);
 	builder.build('class_list_column');
 	clearLists(2);
-}
+};
 
 function courseClickerFunction(id) {
 	clearLists(2);
@@ -18,7 +18,7 @@ function courseClickerFunction(id) {
 		builder.setList(assignmentList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
 		builder.setEmptyListMessage('There are no assignments for this course!');
-		builder.setOnBoxClick('assignmentClickerFunction');
+		builder.setBoxClickFunction(assignmentClickerFunction);
 		builder.build('assignment_list_column');
 		/*
 		try {
@@ -41,7 +41,7 @@ function assignmentClickerFunction(id) {
 		builder.setList(problemList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
 		builder.setEmptyListMessage('There are no problems for this assignment!');
-		builder.setOnBoxClick('problemClickerFunction');
+		builder.setBoxClickFunction(problemClickerFunction);
 		builder.build('problem_list_column');
 		/*
 		try {
