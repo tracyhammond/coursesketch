@@ -37,7 +37,7 @@ if (isUndefined(Function.prototype.Inherits)) {
 		this.prototype =
 			new parent();
 		this.prototype.constructor = this;
-	}
+	};
 }
 
 /**
@@ -51,7 +51,7 @@ if (isUndefined(Object.prototype.Inherits)) {
 		else {
 			parent.call( this );
 		}
-	}
+	};
 }
 
 /**
@@ -199,7 +199,7 @@ if (isUndefined(replaceAll)) {
 if (isUndefined(String.prototype.replaceAt)) {
 	String.prototype.replaceAt = function(index, string) {
 	    return this.substr(0, index) + character + this.substr(index+character.length);
-	}
+	};
 }
 /**
  **************************************************************
@@ -384,9 +384,49 @@ function addScopedLoadEvent(scope, func) {
         oldonload();
       }
       func();
-    }
+    };
   }
 }
+
+/**
+ **************************************************************
+ * Date Functions
+ * @author gigemjt
+ **************************************************************
+ */
+if (isUndefined(make2Digits)) {
+	function make2Digits(num) {
+		return ("0" + Number(num)).slice(-2);
+	}
+}
+
+if (isUndefined(getMillitaryFormattedDateTime)) {
+	function getMillitaryFormattedDateTime(dateTime) {
+		var date = make2Digits(dateTime.getMonth() +1) + "-" + make2Digits(dateTime.getDate()) + "-" + dateTime.getFullYear();
+		var time = make2Digits(dateTime.getHours()) + ":" + make2Digits(dateTime.getMinutes());
+		return  date + ' ' + time;
+	}
+}
+
+if (isUndefined(getFormattedDateTime)) {
+	function getFormattedDateTime(dateTime) {
+		var date = make2Digits(dateTime.getMonth() +1) + "-" + make2Digits(dateTime.getDate()) + "-" + dateTime.getFullYear();
+		var hours = dateTime.getHours();
+		var timeType = "AM";
+		if (dateTime.getHours() > 12) {
+			hours -= 12;
+		}
+		if (dateTime.getHours() >= 12) {
+			timeType = "PM";
+		}
+		if (dateTime.getHours() == 0) {
+			hours = 12;
+		}
+		var time = make2Digits(hours) + ":" + make2Digits(dateTime.getMinutes()) + timeType;
+		return  date + ' ' + time;
+	}
+}
+
 
 /**
  **************************************************************
@@ -455,6 +495,10 @@ if (isUndefined(copyParentUtilityFunctions)) {
 		copyParentValues(scope, 'fillHeight');
 		copyParentValues(scope, 'fillScreen');
 		
+		copyParentValues(scope, 'make2Digits');
+		copyParentValues(scope, 'getMillitaryFormattedDateTime');
+		copyParentValues(scope, 'getFormattedDateTime');
+
 		copyParentValues(scope, 'addScopedLoadEvent');
 	}
 }
