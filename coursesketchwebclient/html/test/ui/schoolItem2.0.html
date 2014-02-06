@@ -24,7 +24,7 @@
 		addLoadEvent(function () {
 			
 			var builders = new SchoolItemBuilder();
-			builders.setEmptyListMessage("EMPTY MESSAGE!").setInstructorCard(false);
+			builders.setEmptyListMessage("EMPTY MESSAGE!").setInstructorCard(true);
 			builders.setListTitle("TITLE ME").setList(getMapAsList(user_assignments));
 			builders.setBoxClickFunction(function(id) {
 				alert(id);

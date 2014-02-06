@@ -58,6 +58,9 @@ public class StringConstants {
 	public static final String LATE_POLICY = "LatePolicy";
 	public static final String PROBLEM_LIST = "ProblemList";
 
+	// course problem specific
+	public static final String PROBLEM_NUMBER = "ProblemNumber";
+	
 	//solution specific
 	public static final String ALLOWED_IN_PROBLEMBANK = "AllowedInProblemBank";
 	public static final String IS_PRACTICE_PROBLEM = "PracticeProblem";

@@ -338,6 +338,28 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		}
 		return false;
 	};
+	
+	/**
+	 * Returns true IFF a submission marker is the last item that was submitted.
+	 */
+	this.isValidForSubmission = function() {
+		if (updateList.length <= 0) {
+			return false;
+		}
+		var update = updateList[updateList.length -1];
+		var commandList = update.getCommands();
+		if (commandList.length <= 0) {
+			return true;
+		}
+		var currentCommand = commandList[0];
+		if (currentCommand.commandType == ProtoCommandBuilder.CommandType.MARKER) {
+			var marker = decodeCommandData(currentCommand.commandData, ProtoCommandBuilder.Marker);
+			if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SUBMISSION) {
+				return false;
+			}
+		}
+		return true;
+	};
 
 	this.getCurrentPointer = function() {
 		return currentUpdateIndex;

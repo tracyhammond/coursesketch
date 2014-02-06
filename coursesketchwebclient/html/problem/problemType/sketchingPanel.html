@@ -60,7 +60,7 @@
 			});
 
 			var submitFunction = function() {
-				if (commandManager.isLastUpdateSubmission()) {
+				if (!commandManager.isValidForSubmission()) {
 					alert("you have no work to submit since the last submission");
 					return;
 				}
