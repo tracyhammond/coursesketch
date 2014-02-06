@@ -19,9 +19,11 @@
 	    width: 100%;
 	    height: 100%;
 	}
+
 	body {
 		background: #DCDDDF;
 	}
+
 	</style>
 	<script>
 	var connection = false;
@@ -29,6 +31,8 @@
 	function createWebSocket() {
 		console.log("connecting");
 		var wsUri = "srl01.tamu.edu:8888"; // our server
+		//var wsUri = "srl01.tamu.edu:7888"; // our server
+		//var wsUri = "echo.websocket.org";
 		//var wsUri = "localhost:8888"; // local server
 		connection = new Connection(wsUri, false, true);
 

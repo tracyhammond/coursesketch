@@ -199,7 +199,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 
 	public static void main( String[] args ) throws InterruptedException, IOException, KeyStoreException, NoSuchAlgorithmException,
 			CertificateException, UnrecoverableKeyException, KeyManagementException {
-		System.out.println("Proxy Server: Version 1.0.2.lemur");
+		System.out.println("Proxy Server: Version 1.0.2.porcupine");
 		WebSocketImpl.DEBUG = true;
 		boolean connectLocal = false;
 		if (args.length == 1) {
@@ -216,26 +216,25 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		ProxyServer s = new ProxyServer( port, connectLocal );
 		if (!connectLocal) {
 			// load up the key store
-			String STORETYPE = "PED";
-			String KEYSTORE = "private/srl01.tamu.edu.key";
-			String STOREPASSWORD = "password";
-			String KEYPASSWORD = "password";
+			String STORETYPE = "JKS";
+			//String KEYSTORE = "private/srl01.tamu.edu.key";
+			String KEYSTORE = "srl01_tamu_edu.jks";
+			String STOREPASSWORD = "Challeng3";
+			String KEYPASSWORD = "Challeng3";
 
 			KeyStore ks = KeyStore.getInstance( STORETYPE );
 			File kf = new File( KEYSTORE );
-			ks.load( new FileInputStream( kf ), /*STOREPASSWORD.toCharArray()*/ null ); // setting null password
+			ks.load( new FileInputStream( kf ), STOREPASSWORD.toCharArray() ); // setting null password
 
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance( "SunX509" );
-			kmf.init( ks, /*KEYPASSWORD.toCharArray()*/ null );
+			kmf.init( ks, KEYPASSWORD.toCharArray() );
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance( "SunX509" );
 			tmf.init( ks );
 
 			SSLContext sslContext = null;
-			sslContext = SSLContext.getInstance( "TLS" );
+			sslContext = SSLContext.getInstance( "TSL" );
 			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
-
 			s.setWebSocketFactory( new DefaultSSLWebSocketServerFactory( sslContext ) );
-
 		}
 		s.start();
 		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
