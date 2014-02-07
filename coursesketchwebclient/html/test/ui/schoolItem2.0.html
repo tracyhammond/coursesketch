@@ -16,7 +16,7 @@
 
   	<script type="text/javascript" src="js/connection/connection_library.js"></script>
 
-	<script type="text/javascript" src="js/school/schoolitem.js"></script>
+	<script type="text/javascript" src="js/school/schoolItem.js"></script>
 	<script type="text/javascript" src="js/test/localTestData.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
@@ -25,7 +25,7 @@
 			
 			var builders = new SchoolItemBuilder();
 			builders.setEmptyListMessage("EMPTY MESSAGE!").setInstructorCard(true);
-			builders.setListTitle("TITLE ME").setList(getMapAsList(user_assignments));
+			builders.setListTitle("TITLE ME").setList(getMapAsList(user_courses));
 			builders.setBoxClickFunction(function(id) {
 				alert(id);
 			});

@@ -24,9 +24,14 @@ addLoadEvent( function() {
 		course1.description = "Physics is Phun";
 		
 	var course2 = new SrlCourse();
-		course1.id = "Course_02";
+		course2.id = "Course_02";
 		course2.name = "Chemistry";
-		course2.description = "Chemistry makes things explode";
+		course2.description = "The course provides the mathematical foundations from discrete mathematics for analyzing computer algorithms," +
+			" for both correctness and performance; introduction to models of computation, including finite state machines and Turing machines." +
+			" At the end of the course, students will understand the basic principles of logic, proofs and sets." +
+			" They will be able to apply results from discrete mathematics to analysis of algorithms." +
+			" They will be able to produce proofs by induction and apply counting techniques." +
+			" They will have a basic understanding of models of computation.";
 	
 	var course3 = new SrlCourse();
 		course1.id = "Course_03";
