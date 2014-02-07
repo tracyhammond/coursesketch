@@ -243,10 +243,41 @@ function SchoolItemBuilder() {
 		div.setAttribute('class', 'description');
 		var nameElement = document.createElement('p');
 		nameElement.setAttribute('class', this.width);
-		nameElement.textContent = srlSchoolItem.description;
+		div.appendChild(nameElement);
+
+		var text = srlSchoolItem.description;
+		var cutPoint = 140;
+		if (text != null && text.length > cutPoint) {
+			var shortText = text.substring(0, cutPoint) + '...';
+			nameElement.textContent = shortText;
+			var expandButton = document.createElement('p');
+			expandButton.setAttribute('class', 'expand');
+			var click = false;
+			expandButton.onclick = function(event) {
+				event.stopPropagation();
+				click = ! click;
+				if (click) {
+					expandButton.setAttribute('class', 'contract');
+
+					// expand
+					nameElement.textContent = text;
+					localScope.addEditCapabilities(nameElement, srlSchoolItem.id, 'description');
+				} else {
+					expandButton.setAttribute('class', 'expand');
+
+					// contract
+					nameElement.textContent = shortText;
+					localScope.addEditCapabilities(nameElement, srlSchoolItem.id, 'description');
+				}
+			};
+			div.appendChild(expandButton);
+		} else {
+			nameElement.textContent = text;
+		}
+		
 		this.addEditCapabilities(nameElement, srlSchoolItem.id, 'description');
 
-		div.appendChild(nameElement);
+		
 		return div;
 	};
 
@@ -398,7 +429,7 @@ function SchoolItemBuilder() {
 			specifiedElement.removeChild(oldElement);
 			newElement.src = oldElement.value;
 			return;
-		} else if(specificId == "date") {
+		} else if (specificId == "date") {
 			var text = this.cut(this.cut(newElement.innerHTML, '<span')[0], ':')[0]; // gets the left hand of the date text
 			result = text + ': ' + oldElement.value;
 		}
