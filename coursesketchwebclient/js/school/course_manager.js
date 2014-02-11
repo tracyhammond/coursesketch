@@ -149,7 +149,7 @@ function manageHeight() {
 function replaceIframe(src) {
 	var toReplace = document.getElementById('editable_unit');
 	if (src && toReplace && toReplace != null) {
-		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" width = 100% ' +
+		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src +'" width = 100% ' +
 		'sanbox = "allow-same-origin allow-scripts"' +
 		'seamless = "seamless" onload="manageHeight()">';
 	} else {
@@ -160,10 +160,8 @@ function replaceIframe(src) {
 
 function addNewCourse() { // Functionality to allow for adding of courses by instructors
 	
-	
-	<textarea rows="4" cols="12">
-		Please enter your courses description right here! 
-	</textarea>
+	var courseEdit = document.getElementById('addNewCourse');
+	courseEdit.innerHTML = '<textarea rows="4" cols="12">Please enter your courses description right here! </textarea>';
 
 
 
