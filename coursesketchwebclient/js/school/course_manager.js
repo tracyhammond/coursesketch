@@ -158,6 +158,17 @@ function replaceIframe(src) {
 	}
 }
 
+function addNewCourse() { // Functionality to allow for adding of courses by instructors
+	
+	
+	<textarea rows="4" cols="12">
+		Please enter your courses description right here! 
+	</textarea>
+
+
+
+}
+
 var courseSelectionManager = new clickSelectionManager();
 var assignmentSelectionManager = new clickSelectionManager();
 var problemSelectionManager = new clickSelectionManager();
