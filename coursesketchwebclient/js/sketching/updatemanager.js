@@ -340,7 +340,8 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 	};
 	
 	/**
-	 * Returns true IFF a submission marker is the last item that was submitted.
+	 * Returns the opposite of isLastUpdateSubmission, except in the case where
+	 * updateList.length() is non-positive.
 	 */
 	this.isValidForSubmission = function() {
 		if (updateList.length <= 0) {
