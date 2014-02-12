@@ -18,14 +18,14 @@ import srl.recognition.paleo.PaleoSketchRecognizer;
 
 public class Response {
 	private PaleoSketchRecognizer m_recognizer;
-	private UpdateList m_syncList;
+	private UpdateDeque m_syncDeque;
 	private Sketch m_drawspace;
 	
 	/**
 	 * Default constructor that initializes the recognizer with all primitives on
 	 */
 	public Response(){
-		m_syncList = new UpdateList();
+		m_syncDeque = new UpdateDeque();
 		m_drawspace = new Sketch();
 		m_recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
 	}
@@ -35,7 +35,7 @@ public class Response {
 	 * @param domain
 	 */
 	public Response(PaleoConfig domain){
-		m_syncList = new UpdateList();
+		m_syncDeque = new UpdateDeque();
 		m_drawspace = new Sketch();
 		m_recognizer = new PaleoSketchRecognizer(domain);
 	}
@@ -48,23 +48,22 @@ public class Response {
 	 * @throws Exception Unsupported Command
 	 */
 	public SrlUpdate recognize(SrlUpdate call) throws Exception{
-		m_syncList.add(parseUpdate(call));
-		m_syncList.executeLast(m_drawspace);
-		
-		if(m_syncList.back().getStroke() == null)
+		m_syncDeque.add(parseUpdate(call));
+		m_syncDeque.executeLast(m_drawspace);
+		if(m_syncDeque.front().getStroke() == null)
 			return null;
 		
 		//perform recognition
 		Update actions = new Update();
-		actions.add(new AddShape(m_recognizer.recognize(m_syncList.back().getStroke())));
+		actions.add(new AddShape(m_recognizer.recognize(m_syncDeque.front().getStroke())));
 		
 		List<String> ids = new LinkedList<String>();
-		ids.add(m_syncList.back().getStroke().getId().toString());
-		actions.add(new PackageShape(null, m_syncList.back().getShape(), ids));
+		ids.add(m_syncDeque.front().getStroke().getId().toString());
+		actions.add(new PackageShape(null, m_syncDeque.front().getShape(), ids));
 		
 		actions.setTime(System.currentTimeMillis());
-		m_syncList.add(actions);
-		m_syncList.executeLast(m_drawspace);
+		m_syncDeque.add(actions);
+		m_syncDeque.executeLast(m_drawspace);
 		
 		return repackage(actions);
 	}
@@ -102,6 +101,9 @@ public class Response {
 				break;
 			case REMOVE_OBJECT:
 				com = new RemoveObject(IdChain.parseFrom(c.getCommandData()));
+				break;
+			case UNDO:
+				//PARSEME
 				break;
 			default:
 				throw new Exception("Unsupported command: "+c.getCommandType());
