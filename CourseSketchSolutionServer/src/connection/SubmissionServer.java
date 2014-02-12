@@ -14,13 +14,12 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 
-import protobuf.srl.commands.Commands.SrlUpdate;
-import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
@@ -67,6 +66,10 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		Request req = Decoder.parseRequest(buffer);
 		String sessionInfo = req.getSessionInfo();
 
+		/**
+		 * Attempts to save the submission, which can be either a solution or an experiment.
+		 * If it is an insertion and not an update then it will send the key to the database
+		 */
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			try {
 				String resultantId = null;
@@ -74,12 +77,6 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 					System.out.println("Update is finished building!");
 					ByteString data = null;
 					if (updateHandler.isSolution(sessionInfo)) {
-						if (updateHandler.hasSubmissionId(sessionInfo)) {
-							resultantId = updateHandler.getSubmissionId(sessionInfo);
-							DatabaseClient.updateSolution(resultantId, updateHandler.getSolution(sessionInfo).getSubmission().getUpdateList());
-							updateHandler.clearSubmission(req.getSessionInfo());
-							return;
-						}
 						resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
 						if (resultantId != null) {
 							SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
@@ -87,15 +84,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 							data = builder.build().toByteString();
 						}
 					} else {
-						if (updateHandler.hasSubmissionId(sessionInfo)) {
-							resultantId = updateHandler.getSubmissionId(sessionInfo);
-							System.out.println("I already have an Id " + updateHandler.getSubmissionId(sessionInfo));
-							SrlExperiment exp = updateHandler.getExperiment(sessionInfo);
-							DatabaseClient.updateExperiment(resultantId, exp.getSubmission().getUpdateList(), exp.getSubmission().getSubmissionTime());
-							updateHandler.clearSubmission(req.getSessionInfo());
-							return;
-						}
-						System.out.println("Saving experiment without an id");
+						System.out.println("Saving experiment");
 						resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
 						if (resultantId != null) {
 							SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
@@ -143,12 +132,19 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 						SrlExperiment experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
 						ItemSend.Builder send = ItemSend.newBuilder();
 						send.setQuery(ItemQuery.EXPERIMENT);
+						resultReq.setOtherData(experiment.toByteString());
+						resultReq.setRequestType(MessageType.DATA_REQUEST);
+						/*
 						SrlUpdateList list = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
 						for(SrlUpdate update: list.getListList()) {
 							send.setData(update.toByteString());
 							resultReq.setOtherData(send.build().toByteString());
 							conn.send(resultReq.build().toByteArray());
 						}
+						*/
+
+						// sending it as a single item right now!
+						conn.send(experiment.toByteArray());
 					}
 				}
 			} catch (InvalidProtocolBufferException e) {

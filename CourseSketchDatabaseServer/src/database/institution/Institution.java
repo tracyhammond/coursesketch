@@ -326,4 +326,13 @@ public final class Institution {
 			e.printStackTrace();
 		}
 	}
+
+	public static void mongoGetExperimentAsUser(String userId, String problemId, String sessionInfo) {
+		try {
+			SubmissionManager.mongoGetExperiment(getInstance().db, userId, problemId, sessionInfo);
+			return;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

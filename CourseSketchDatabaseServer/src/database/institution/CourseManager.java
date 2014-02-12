@@ -200,11 +200,23 @@ public class CourseManager {
 		
 		ArrayList<SrlCourse> resultList = new ArrayList<SrlCourse>();
 
+		// checks for all public courses.
 		DBObject publicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.PUBLIC.getNumber()); // the value for a public course
 		DBCursor cursor = courseTable.find(publicCheck);
-		System.out.println(cursor);
-		System.out.println(cursor.hasNext());
-		System.out.println(cursor.count());
+		while (cursor.hasNext()) {
+			SrlCourse.Builder build = SrlCourse.newBuilder();
+			DBObject foundCourse = cursor.next();
+			build.setId(foundCourse.get(SELF_ID).toString());
+			build.setDescription(foundCourse.get(DESCRIPTION).toString());
+			build.setName(foundCourse.get(NAME).toString());
+			build.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(ACCESS_DATE)).longValue()));
+			build.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(CLOSE_DATE)).longValue()));
+			resultList.add(build.build());
+		}
+
+		// checks for all super public courses.
+		DBObject superPublicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.SUPER_PUBLIC.getNumber()); // the value for a superpublic course
+		cursor = courseTable.find(superPublicCheck);
 		while (cursor.hasNext()) {
 			SrlCourse.Builder build = SrlCourse.newBuilder();
 			DBObject foundCourse = cursor.next();
