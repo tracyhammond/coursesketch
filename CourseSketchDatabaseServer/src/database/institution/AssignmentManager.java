@@ -8,6 +8,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 
 import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.School.SrlAssignment.LatePolicy;
 import protobuf.srl.school.School.SrlPermission;
 
 import com.mongodb.BasicDBObject;
@@ -34,20 +35,27 @@ public class AssignmentManager
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 		BasicDBObject query = new BasicDBObject(COURSE_ID,assignment.getCourseId())
-										 .append(NAME,assignment.getName())
-										 .append(ASSIGNMENT_TYPE,assignment.getType().getNumber()) 
-										 .append(ASSIGNMENT_OTHER_TYPE,assignment.getOther())
-										 .append(DESCRIPTION,assignment.getDescription())
-										 .append(ASSIGNMENT_RESOURCES,assignment.getLinksList())
-										 .append(LATE_POLICY, assignment.getLatePolicy().getNumber())
-										 .append(GRADE_WEIGHT,assignment.getGradeWeight())
-										 .append(ACCESS_DATE, assignment.getAccessDate().getMillisecond())
-										 .append(DUE_DATE, assignment.getDueDate().getMillisecond())
-										 .append(CLOSE_DATE,assignment.getCloseDate().getMillisecond())
-										 .append(IMAGE, assignment.getImageUrl())
-										 .append(ADMIN, assignment.getAccessPermission().getAdminPermissionList())
-										 .append(MOD,assignment.getAccessPermission().getModeratorPermissionList())
-										 .append(USERS, assignment.getAccessPermission().getUserPermissionList());
+				.append(NAME,assignment.getName())
+				.append(ASSIGNMENT_TYPE,assignment.getType().getNumber()) 
+				.append(ASSIGNMENT_OTHER_TYPE,assignment.getOther())
+				.append(DESCRIPTION,assignment.getDescription())
+				.append(ASSIGNMENT_RESOURCES,assignment.getLinksList())
+				.append(GRADE_WEIGHT,assignment.getGradeWeight())
+				.append(ACCESS_DATE, assignment.getAccessDate().getMillisecond())
+				.append(DUE_DATE, assignment.getDueDate().getMillisecond())
+				.append(CLOSE_DATE,assignment.getCloseDate().getMillisecond())
+				.append(IMAGE, assignment.getImageUrl())
+				.append(ADMIN, assignment.getAccessPermission().getAdminPermissionList())
+				.append(MOD,assignment.getAccessPermission().getModeratorPermissionList())
+				.append(USERS, assignment.getAccessPermission().getUserPermissionList());
+		if (assignment.hasLatePolicy()) {
+			query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType())
+					.append(LATE_POLICY_RATE, assignment.getLatePolicy().getRate())
+					.append(LATE_POLICY_SUBTRACTION_TYPE, assignment.getLatePolicy().getSubtractionType());
+			if (assignment.getLatePolicy().getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
+				query.append(LATE_POLICY_TIME_FRAME_TYPE, assignment.getLatePolicy().getTimeFrameType());
+			}
+		}
 		if (assignment.getProblemListList() != null) {
 			query.append(PROBLEM_LIST, assignment.getProblemListList());
 		}
@@ -101,9 +109,20 @@ public class AssignmentManager
 		exactAssignment.setOther((String)corsor.get(ASSIGNMENT_OTHER_TYPE));
 		exactAssignment.setDescription((String)corsor.get(DESCRIPTION));
 		exactAssignment.addAllLinks((List)corsor.get(ASSIGNMENT_RESOURCES));
-		exactAssignment.setLatePolicy(SrlAssignment.LatePolicy.valueOf((Integer)corsor.get(LATE_POLICY)));
 		exactAssignment.setGradeWeight((String)corsor.get(GRADE_WEIGHT));
 
+		try {
+			LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
+			latePolicy.setFunctionType(SrlAssignment.LatePolicy.FunctionType.valueOf((Integer)corsor.get(LATE_POLICY_FUNCTION_TYPE)));
+			latePolicy.setRate(Float.parseFloat(""+corsor.get(LATE_POLICY_RATE))); // safety cast to string then parse to float
+			latePolicy.setSubtractionType((Boolean)corsor.get(LATE_POLICY_SUBTRACTION_TYPE));
+			if (latePolicy.getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
+				latePolicy.setTimeFrameType(SrlAssignment.LatePolicy.TimeFrame.valueOf((Integer)corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		try {
 			exactAssignment.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(ACCESS_DATE)).longValue()));
 			exactAssignment.setDueDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(DUE_DATE)).longValue()));
@@ -172,8 +191,8 @@ public class AssignmentManager
 				courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.hasLatePolicy()) {
-				updateObj = new BasicDBObject(LATE_POLICY, assignment.getLatePolicy().getNumber());
-				courses.update(corsor, new BasicDBObject ("$set", updateObj));
+			//	updateObj = new BasicDBObject(LATE_POLICY, assignment.getLatePolicy().getNumber());
+			//	courses.update(corsor, new BasicDBObject ("$set", updateObj));
 			}
 			if (assignment.hasGradeWeight()) {
 				updateObj = new BasicDBObject(GRADE_WEIGHT, assignment.getGradeWeight());
