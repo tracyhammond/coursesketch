@@ -39,6 +39,7 @@ void protobuf_ShutdownFile_input_2fschool_2eproto();
 class SrlSchool;
 class SrlCourse;
 class SrlAssignment;
+class SrlAssignment_LatePolicy;
 class SrlProblem;
 class SrlBankProblem;
 class DateTime;
@@ -70,6 +71,46 @@ inline bool SrlCourse_Accessibility_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<SrlCourse_Accessibility>(
     SrlCourse_Accessibility_descriptor(), name, value);
 }
+enum SrlAssignment_LatePolicy_FunctionType {
+  SrlAssignment_LatePolicy_FunctionType_WINDOW_FUNCTION = 1,
+  SrlAssignment_LatePolicy_FunctionType_LINE = 2,
+  SrlAssignment_LatePolicy_FunctionType_EXPONENTIAL = 3
+};
+bool SrlAssignment_LatePolicy_FunctionType_IsValid(int value);
+const SrlAssignment_LatePolicy_FunctionType SrlAssignment_LatePolicy_FunctionType_FunctionType_MIN = SrlAssignment_LatePolicy_FunctionType_WINDOW_FUNCTION;
+const SrlAssignment_LatePolicy_FunctionType SrlAssignment_LatePolicy_FunctionType_FunctionType_MAX = SrlAssignment_LatePolicy_FunctionType_EXPONENTIAL;
+const int SrlAssignment_LatePolicy_FunctionType_FunctionType_ARRAYSIZE = SrlAssignment_LatePolicy_FunctionType_FunctionType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* SrlAssignment_LatePolicy_FunctionType_descriptor();
+inline const ::std::string& SrlAssignment_LatePolicy_FunctionType_Name(SrlAssignment_LatePolicy_FunctionType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    SrlAssignment_LatePolicy_FunctionType_descriptor(), value);
+}
+inline bool SrlAssignment_LatePolicy_FunctionType_Parse(
+    const ::std::string& name, SrlAssignment_LatePolicy_FunctionType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SrlAssignment_LatePolicy_FunctionType>(
+    SrlAssignment_LatePolicy_FunctionType_descriptor(), name, value);
+}
+enum SrlAssignment_LatePolicy_TimeFrame {
+  SrlAssignment_LatePolicy_TimeFrame_DAY = 1,
+  SrlAssignment_LatePolicy_TimeFrame_HOUR = 2,
+  SrlAssignment_LatePolicy_TimeFrame_MINUTE = 3
+};
+bool SrlAssignment_LatePolicy_TimeFrame_IsValid(int value);
+const SrlAssignment_LatePolicy_TimeFrame SrlAssignment_LatePolicy_TimeFrame_TimeFrame_MIN = SrlAssignment_LatePolicy_TimeFrame_DAY;
+const SrlAssignment_LatePolicy_TimeFrame SrlAssignment_LatePolicy_TimeFrame_TimeFrame_MAX = SrlAssignment_LatePolicy_TimeFrame_MINUTE;
+const int SrlAssignment_LatePolicy_TimeFrame_TimeFrame_ARRAYSIZE = SrlAssignment_LatePolicy_TimeFrame_TimeFrame_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* SrlAssignment_LatePolicy_TimeFrame_descriptor();
+inline const ::std::string& SrlAssignment_LatePolicy_TimeFrame_Name(SrlAssignment_LatePolicy_TimeFrame value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    SrlAssignment_LatePolicy_TimeFrame_descriptor(), value);
+}
+inline bool SrlAssignment_LatePolicy_TimeFrame_Parse(
+    const ::std::string& name, SrlAssignment_LatePolicy_TimeFrame* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SrlAssignment_LatePolicy_TimeFrame>(
+    SrlAssignment_LatePolicy_TimeFrame_descriptor(), name, value);
+}
 enum SrlAssignment_AssignmentType {
   SrlAssignment_AssignmentType_HOMEWORK = 1,
   SrlAssignment_AssignmentType_QUIZ = 2,
@@ -92,26 +133,6 @@ inline bool SrlAssignment_AssignmentType_Parse(
     const ::std::string& name, SrlAssignment_AssignmentType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<SrlAssignment_AssignmentType>(
     SrlAssignment_AssignmentType_descriptor(), name, value);
-}
-enum SrlAssignment_LatePolicy {
-  SrlAssignment_LatePolicy_POLICY1 = 1,
-  SrlAssignment_LatePolicy_POLICY2 = 2,
-  SrlAssignment_LatePolicy_POLICY3 = 3
-};
-bool SrlAssignment_LatePolicy_IsValid(int value);
-const SrlAssignment_LatePolicy SrlAssignment_LatePolicy_LatePolicy_MIN = SrlAssignment_LatePolicy_POLICY1;
-const SrlAssignment_LatePolicy SrlAssignment_LatePolicy_LatePolicy_MAX = SrlAssignment_LatePolicy_POLICY3;
-const int SrlAssignment_LatePolicy_LatePolicy_ARRAYSIZE = SrlAssignment_LatePolicy_LatePolicy_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* SrlAssignment_LatePolicy_descriptor();
-inline const ::std::string& SrlAssignment_LatePolicy_Name(SrlAssignment_LatePolicy value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    SrlAssignment_LatePolicy_descriptor(), value);
-}
-inline bool SrlAssignment_LatePolicy_Parse(
-    const ::std::string& name, SrlAssignment_LatePolicy* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<SrlAssignment_LatePolicy>(
-    SrlAssignment_LatePolicy_descriptor(), name, value);
 }
 enum SrlBankProblem_QuestionType {
   SrlBankProblem_QuestionType_SKETCH = 1,
@@ -541,6 +562,168 @@ class SrlCourse : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class SrlAssignment_LatePolicy : public ::google::protobuf::Message {
+ public:
+  SrlAssignment_LatePolicy();
+  virtual ~SrlAssignment_LatePolicy();
+
+  SrlAssignment_LatePolicy(const SrlAssignment_LatePolicy& from);
+
+  inline SrlAssignment_LatePolicy& operator=(const SrlAssignment_LatePolicy& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlAssignment_LatePolicy& default_instance();
+
+  void Swap(SrlAssignment_LatePolicy* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlAssignment_LatePolicy* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlAssignment_LatePolicy& from);
+  void MergeFrom(const SrlAssignment_LatePolicy& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef SrlAssignment_LatePolicy_FunctionType FunctionType;
+  static const FunctionType WINDOW_FUNCTION = SrlAssignment_LatePolicy_FunctionType_WINDOW_FUNCTION;
+  static const FunctionType LINE = SrlAssignment_LatePolicy_FunctionType_LINE;
+  static const FunctionType EXPONENTIAL = SrlAssignment_LatePolicy_FunctionType_EXPONENTIAL;
+  static inline bool FunctionType_IsValid(int value) {
+    return SrlAssignment_LatePolicy_FunctionType_IsValid(value);
+  }
+  static const FunctionType FunctionType_MIN =
+    SrlAssignment_LatePolicy_FunctionType_FunctionType_MIN;
+  static const FunctionType FunctionType_MAX =
+    SrlAssignment_LatePolicy_FunctionType_FunctionType_MAX;
+  static const int FunctionType_ARRAYSIZE =
+    SrlAssignment_LatePolicy_FunctionType_FunctionType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  FunctionType_descriptor() {
+    return SrlAssignment_LatePolicy_FunctionType_descriptor();
+  }
+  static inline const ::std::string& FunctionType_Name(FunctionType value) {
+    return SrlAssignment_LatePolicy_FunctionType_Name(value);
+  }
+  static inline bool FunctionType_Parse(const ::std::string& name,
+      FunctionType* value) {
+    return SrlAssignment_LatePolicy_FunctionType_Parse(name, value);
+  }
+
+  typedef SrlAssignment_LatePolicy_TimeFrame TimeFrame;
+  static const TimeFrame DAY = SrlAssignment_LatePolicy_TimeFrame_DAY;
+  static const TimeFrame HOUR = SrlAssignment_LatePolicy_TimeFrame_HOUR;
+  static const TimeFrame MINUTE = SrlAssignment_LatePolicy_TimeFrame_MINUTE;
+  static inline bool TimeFrame_IsValid(int value) {
+    return SrlAssignment_LatePolicy_TimeFrame_IsValid(value);
+  }
+  static const TimeFrame TimeFrame_MIN =
+    SrlAssignment_LatePolicy_TimeFrame_TimeFrame_MIN;
+  static const TimeFrame TimeFrame_MAX =
+    SrlAssignment_LatePolicy_TimeFrame_TimeFrame_MAX;
+  static const int TimeFrame_ARRAYSIZE =
+    SrlAssignment_LatePolicy_TimeFrame_TimeFrame_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  TimeFrame_descriptor() {
+    return SrlAssignment_LatePolicy_TimeFrame_descriptor();
+  }
+  static inline const ::std::string& TimeFrame_Name(TimeFrame value) {
+    return SrlAssignment_LatePolicy_TimeFrame_Name(value);
+  }
+  static inline bool TimeFrame_Parse(const ::std::string& name,
+      TimeFrame* value) {
+    return SrlAssignment_LatePolicy_TimeFrame_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];
+  inline bool has_functiontype() const;
+  inline void clear_functiontype();
+  static const int kFunctionTypeFieldNumber = 1;
+  inline ::protobuf::srl::school::SrlAssignment_LatePolicy_FunctionType functiontype() const;
+  inline void set_functiontype(::protobuf::srl::school::SrlAssignment_LatePolicy_FunctionType value);
+
+  // optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];
+  inline bool has_timeframetype() const;
+  inline void clear_timeframetype();
+  static const int kTimeFrameTypeFieldNumber = 2;
+  inline ::protobuf::srl::school::SrlAssignment_LatePolicy_TimeFrame timeframetype() const;
+  inline void set_timeframetype(::protobuf::srl::school::SrlAssignment_LatePolicy_TimeFrame value);
+
+  // optional float rate = 3;
+  inline bool has_rate() const;
+  inline void clear_rate();
+  static const int kRateFieldNumber = 3;
+  inline float rate() const;
+  inline void set_rate(float value);
+
+  // optional bool subtractionType = 4;
+  inline bool has_subtractiontype() const;
+  inline void clear_subtractiontype();
+  static const int kSubtractionTypeFieldNumber = 4;
+  inline bool subtractiontype() const;
+  inline void set_subtractiontype(bool value);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlAssignment.LatePolicy)
+ private:
+  inline void set_has_functiontype();
+  inline void clear_has_functiontype();
+  inline void set_has_timeframetype();
+  inline void clear_has_timeframetype();
+  inline void set_has_rate();
+  inline void clear_has_rate();
+  inline void set_has_subtractiontype();
+  inline void clear_has_subtractiontype();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int functiontype_;
+  int timeframetype_;
+  float rate_;
+  bool subtractiontype_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fschool_2eproto();
+  friend void protobuf_AssignDesc_input_2fschool_2eproto();
+  friend void protobuf_ShutdownFile_input_2fschool_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlAssignment_LatePolicy* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class SrlAssignment : public ::google::protobuf::Message {
  public:
   SrlAssignment();
@@ -593,6 +776,8 @@ class SrlAssignment : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef SrlAssignment_LatePolicy LatePolicy;
+
   typedef SrlAssignment_AssignmentType AssignmentType;
   static const AssignmentType HOMEWORK = SrlAssignment_AssignmentType_HOMEWORK;
   static const AssignmentType QUIZ = SrlAssignment_AssignmentType_QUIZ;
@@ -619,31 +804,6 @@ class SrlAssignment : public ::google::protobuf::Message {
   static inline bool AssignmentType_Parse(const ::std::string& name,
       AssignmentType* value) {
     return SrlAssignment_AssignmentType_Parse(name, value);
-  }
-
-  typedef SrlAssignment_LatePolicy LatePolicy;
-  static const LatePolicy POLICY1 = SrlAssignment_LatePolicy_POLICY1;
-  static const LatePolicy POLICY2 = SrlAssignment_LatePolicy_POLICY2;
-  static const LatePolicy POLICY3 = SrlAssignment_LatePolicy_POLICY3;
-  static inline bool LatePolicy_IsValid(int value) {
-    return SrlAssignment_LatePolicy_IsValid(value);
-  }
-  static const LatePolicy LatePolicy_MIN =
-    SrlAssignment_LatePolicy_LatePolicy_MIN;
-  static const LatePolicy LatePolicy_MAX =
-    SrlAssignment_LatePolicy_LatePolicy_MAX;
-  static const int LatePolicy_ARRAYSIZE =
-    SrlAssignment_LatePolicy_LatePolicy_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  LatePolicy_descriptor() {
-    return SrlAssignment_LatePolicy_descriptor();
-  }
-  static inline const ::std::string& LatePolicy_Name(LatePolicy value) {
-    return SrlAssignment_LatePolicy_Name(value);
-  }
-  static inline bool LatePolicy_Parse(const ::std::string& name,
-      LatePolicy* value) {
-    return SrlAssignment_LatePolicy_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
@@ -731,12 +891,14 @@ class SrlAssignment : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& links() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_links();
 
-  // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
+  // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
   inline bool has_latepolicy() const;
   inline void clear_latepolicy();
   static const int kLatePolicyFieldNumber = 8;
-  inline ::protobuf::srl::school::SrlAssignment_LatePolicy latepolicy() const;
-  inline void set_latepolicy(::protobuf::srl::school::SrlAssignment_LatePolicy value);
+  inline const ::protobuf::srl::school::SrlAssignment_LatePolicy& latepolicy() const;
+  inline ::protobuf::srl::school::SrlAssignment_LatePolicy* mutable_latepolicy();
+  inline ::protobuf::srl::school::SrlAssignment_LatePolicy* release_latepolicy();
+  inline void set_allocated_latepolicy(::protobuf::srl::school::SrlAssignment_LatePolicy* latepolicy);
 
   // optional string gradeWeight = 9;
   inline bool has_gradeweight() const;
@@ -870,9 +1032,10 @@ class SrlAssignment : public ::google::protobuf::Message {
   ::std::string* name_;
   ::std::string* other_;
   ::std::string* description_;
-  int type_;
-  int latepolicy_;
   ::google::protobuf::RepeatedPtrField< ::std::string> links_;
+  int type_;
+  float grade_;
+  ::protobuf::srl::school::SrlAssignment_LatePolicy* latepolicy_;
   ::std::string* gradeweight_;
   ::protobuf::srl::school::DateTime* accessdate_;
   ::protobuf::srl::school::DateTime* duedate_;
@@ -881,7 +1044,6 @@ class SrlAssignment : public ::google::protobuf::Message {
   ::std::string* imageurl_;
   ::google::protobuf::RepeatedPtrField< ::std::string> problemlist_;
   ::protobuf::srl::school::SrlPermission* accesspermission_;
-  float grade_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(17 + 31) / 32];
@@ -2861,6 +3023,100 @@ SrlCourse::mutable_assignmentlist() {
 
 // -------------------------------------------------------------------
 
+// SrlAssignment_LatePolicy
+
+// required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];
+inline bool SrlAssignment_LatePolicy::has_functiontype() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SrlAssignment_LatePolicy::set_has_functiontype() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SrlAssignment_LatePolicy::clear_has_functiontype() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SrlAssignment_LatePolicy::clear_functiontype() {
+  functiontype_ = 1;
+  clear_has_functiontype();
+}
+inline ::protobuf::srl::school::SrlAssignment_LatePolicy_FunctionType SrlAssignment_LatePolicy::functiontype() const {
+  return static_cast< ::protobuf::srl::school::SrlAssignment_LatePolicy_FunctionType >(functiontype_);
+}
+inline void SrlAssignment_LatePolicy::set_functiontype(::protobuf::srl::school::SrlAssignment_LatePolicy_FunctionType value) {
+  assert(::protobuf::srl::school::SrlAssignment_LatePolicy_FunctionType_IsValid(value));
+  set_has_functiontype();
+  functiontype_ = value;
+}
+
+// optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];
+inline bool SrlAssignment_LatePolicy::has_timeframetype() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SrlAssignment_LatePolicy::set_has_timeframetype() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SrlAssignment_LatePolicy::clear_has_timeframetype() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SrlAssignment_LatePolicy::clear_timeframetype() {
+  timeframetype_ = 1;
+  clear_has_timeframetype();
+}
+inline ::protobuf::srl::school::SrlAssignment_LatePolicy_TimeFrame SrlAssignment_LatePolicy::timeframetype() const {
+  return static_cast< ::protobuf::srl::school::SrlAssignment_LatePolicy_TimeFrame >(timeframetype_);
+}
+inline void SrlAssignment_LatePolicy::set_timeframetype(::protobuf::srl::school::SrlAssignment_LatePolicy_TimeFrame value) {
+  assert(::protobuf::srl::school::SrlAssignment_LatePolicy_TimeFrame_IsValid(value));
+  set_has_timeframetype();
+  timeframetype_ = value;
+}
+
+// optional float rate = 3;
+inline bool SrlAssignment_LatePolicy::has_rate() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SrlAssignment_LatePolicy::set_has_rate() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SrlAssignment_LatePolicy::clear_has_rate() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SrlAssignment_LatePolicy::clear_rate() {
+  rate_ = 0;
+  clear_has_rate();
+}
+inline float SrlAssignment_LatePolicy::rate() const {
+  return rate_;
+}
+inline void SrlAssignment_LatePolicy::set_rate(float value) {
+  set_has_rate();
+  rate_ = value;
+}
+
+// optional bool subtractionType = 4;
+inline bool SrlAssignment_LatePolicy::has_subtractiontype() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SrlAssignment_LatePolicy::set_has_subtractiontype() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SrlAssignment_LatePolicy::clear_has_subtractiontype() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SrlAssignment_LatePolicy::clear_subtractiontype() {
+  subtractiontype_ = false;
+  clear_has_subtractiontype();
+}
+inline bool SrlAssignment_LatePolicy::subtractiontype() const {
+  return subtractiontype_;
+}
+inline void SrlAssignment_LatePolicy::set_subtractiontype(bool value) {
+  set_has_subtractiontype();
+  subtractiontype_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // SrlAssignment
 
 // required string courseId = 1;
@@ -3280,7 +3536,7 @@ SrlAssignment::mutable_links() {
   return &links_;
 }
 
-// optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
+// optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
 inline bool SrlAssignment::has_latepolicy() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
@@ -3291,16 +3547,31 @@ inline void SrlAssignment::clear_has_latepolicy() {
   _has_bits_[0] &= ~0x00000080u;
 }
 inline void SrlAssignment::clear_latepolicy() {
-  latepolicy_ = 1;
+  if (latepolicy_ != NULL) latepolicy_->::protobuf::srl::school::SrlAssignment_LatePolicy::Clear();
   clear_has_latepolicy();
 }
-inline ::protobuf::srl::school::SrlAssignment_LatePolicy SrlAssignment::latepolicy() const {
-  return static_cast< ::protobuf::srl::school::SrlAssignment_LatePolicy >(latepolicy_);
+inline const ::protobuf::srl::school::SrlAssignment_LatePolicy& SrlAssignment::latepolicy() const {
+  return latepolicy_ != NULL ? *latepolicy_ : *default_instance_->latepolicy_;
 }
-inline void SrlAssignment::set_latepolicy(::protobuf::srl::school::SrlAssignment_LatePolicy value) {
-  assert(::protobuf::srl::school::SrlAssignment_LatePolicy_IsValid(value));
+inline ::protobuf::srl::school::SrlAssignment_LatePolicy* SrlAssignment::mutable_latepolicy() {
   set_has_latepolicy();
-  latepolicy_ = value;
+  if (latepolicy_ == NULL) latepolicy_ = new ::protobuf::srl::school::SrlAssignment_LatePolicy;
+  return latepolicy_;
+}
+inline ::protobuf::srl::school::SrlAssignment_LatePolicy* SrlAssignment::release_latepolicy() {
+  clear_has_latepolicy();
+  ::protobuf::srl::school::SrlAssignment_LatePolicy* temp = latepolicy_;
+  latepolicy_ = NULL;
+  return temp;
+}
+inline void SrlAssignment::set_allocated_latepolicy(::protobuf::srl::school::SrlAssignment_LatePolicy* latepolicy) {
+  delete latepolicy_;
+  latepolicy_ = latepolicy;
+  if (latepolicy) {
+    set_has_latepolicy();
+  } else {
+    clear_has_latepolicy();
+  }
 }
 
 // optional string gradeWeight = 9;
@@ -6148,12 +6419,16 @@ inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlCour
   return ::protobuf::srl::school::SrlCourse_Accessibility_descriptor();
 }
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlAssignment_AssignmentType>() {
-  return ::protobuf::srl::school::SrlAssignment_AssignmentType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlAssignment_LatePolicy_FunctionType>() {
+  return ::protobuf::srl::school::SrlAssignment_LatePolicy_FunctionType_descriptor();
 }
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlAssignment_LatePolicy>() {
-  return ::protobuf::srl::school::SrlAssignment_LatePolicy_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlAssignment_LatePolicy_TimeFrame>() {
+  return ::protobuf::srl::school::SrlAssignment_LatePolicy_TimeFrame_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlAssignment_AssignmentType>() {
+  return ::protobuf::srl::school::SrlAssignment_AssignmentType_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::school::SrlBankProblem_QuestionType>() {
