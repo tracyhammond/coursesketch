@@ -118,18 +118,32 @@ public class ManyTestProblems {
 				+ "you may use any of the 8 basic rules of inference. <br>"
 				+ "(\u223C A \u2228 \u223C B) \u2283 \u223C G, \u223C A \u2283 (F \u2283 G), (A \u2283 D) \u2219 \u223C D \u2215 \u2234 \u223C F",
 				/*
-					Chapter 8 Problem 4 a, k, m, n, o, p
+					Chapter 8 Problem 4 a, b, c
 				*/
-				"Construct proofs for the following, using "
-				+ ""
-				+ "", 
+				"Construct proofs for the following, "
+				+ "using the 8 basic rules from Unit 7 plus D.N., Com., Assoc., and Dup. <br>"
+				+ "(A \u2228 B) \u2283 \u223C C, D \u2283 (C \u2228 C), (F \u2219 (E \u2219 D)) \u2215 \u2234 \u223C (A \u2228 B)", 
+				"Construct proofs for the following, "
+				+ "using the 8 basic rules from Unit 7 plus D.N., Com., Assoc., and Dup. <br>"
+				+ "(B \u2219 A) \u2283 (Y \u2219 X), C \u2283 (A \u2219 B) \u2215 \u2234 C \u2283 (X \u2219 Y)",
+				"Construct proofs for the following, "
+				+ "using the 8 basic rules from Unit 7 plus D.N., Com., Assoc., and Dup. <br>"
+				+ "\u223C (S \u2219 T) \u2283 W, W \u2283 \u223C (A \u2228 B), A \u2215 \u2234 S",
 				/*
-					Chapter 8 Problem 6 a, b, c
+					Chapter 8 Problem 6 a, k, m, n, o, p
 				*/
-				""
-				+ ""
-				+ "",
-				
+				"Construct proofs for the following, using any of the rules."
+				+ "A \u2283 B, B \u2283 \u223C C, C \u2228 D, \u223C D \u2215 \u2234 \u223C A	",
+				"Construct proofs for the following, using any of the rules."
+				+ "(P \u2219 G) \u2283 R, (R \u2219 S) \u2283 T, P \u2219 S, G \u2228 R \u2215 \u2234 R \u2228 T",
+				"Construct proofs for the following, using any of the rules."
+				+ "(F \u2219 \u223C G) \u2228 (T \u2219 \u223C W), W \u2219 H, \u223C (F \u2283 G) \u2283 (H \u2283 S) \u2215 \u2234 \u223C S",
+				"Construct proofs for the following, using any of the rules."
+				+ "(A \u2228 B) \u2283 (C \u2228 D), A \u2283 \u223C C, \u223C (F \u2219 \u223C A), F \u2215 \u2234 D",
+				"Construct proofs for the following, using any of the rules."
+				+ "B \u2283 (C \u2283 E), E \u2283 \u223C (J \u2228 H), \u223C S, J \u2228 S \u2215 \u2234 B \u2283 \u223C C",
+				"Construct proofs for the following, using any of the rules."
+				+ "A \u2283 \u223C B, \u223C C \u2283 B, \u223C A \u2283 \u223C C \u2215 \u2234 A \u2261 C",
 				/*
 					Chapter 9 Problem 4 b, d, e
 				*/
