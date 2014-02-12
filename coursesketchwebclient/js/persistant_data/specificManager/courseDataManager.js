@@ -48,10 +48,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 					courseCallback(course);
 				});
 				// creates a request that is then sent to the server
-				var dataSend = new QueryBuilder.DataRequest();
-				dataSend.items = new Array();
-				dataSend.items.push(new QueryBuilder.ItemRequest([courseId], QueryBuilder.ItemQuery.COURSE));
-				serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
+				sendDataRequest(QueryBuilder.ItemQuery.COURSE, [courseId]);
 			} else if (result.data == nonExistantValue) {
 				// the server holds this special value then it means the server does not have the value
 				courseCallback(nonExistantValue);
