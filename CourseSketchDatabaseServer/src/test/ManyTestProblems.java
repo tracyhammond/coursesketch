@@ -28,35 +28,30 @@ public class ManyTestProblems {
 				"blah blah blah"};
 		*/
 		String[] questionText = new String[] {
-				"Please draw a picture of yourself",
-				"Prove that the square root of 3 is irrational.",
-				"Suppose that Smartphone A has 256MBRAM and 32GB ROM, and the resolution of its camera is 8 MP; Smartphone B has 288 MB RAM and 64 GB ROM,"
-				+ " and the resolution of its camera is 4 MP;"
-				+ " and Smartphone C has 128 MB RAM and 32 GB ROM, and the resolution of its camera is 5 MP."
-				+ " Determine the truth value of the following proposition. Show your work (using a truth table). <br>" +
-				"\"Smartphone A has more RAM than Smartphone B if and only if Smartphone B has more RAM than Smartphone A.\"",
-				"Let p and q be the propositions “The election is decided” and \"The votes have been counted,\" respectively. Express the following compound proposition as an English sentence: ~q ∨ (~p ∧ q)",
+				/*
+					Problem 6 a, d, f
+				*/
+				"For the following argument, construct a proof of the conclusion from the premises, " 
+				+ "using only the rules of M.P., M.T., and H.S. (Please be sure to justify every step): <br>" 
+				+ "(T \u2228 W) \u2283 A, (C \u2283 \u223C B), (A \u2283 C), \u223C \u223C B \u2215 \u2234 \u223C  (T \u2228 W)",
 				
-				"Let p, q, and r be the propositions<br>" +
-				"p :You get an A on the final exam.<br>" +
-				"q :You do every exercise in this book.<br>" +
-				"r :You get an A in this class.<br>" +
-				"Write the following statement in terms of p,q,r. \"You will get an A in this class if and only if you either" +
-				"do every exercise in this book or you get an A on the final.\"",
+				"For the following argument, construct a proof of the conclusion from the premises, " 
+				+ "using only the rules of M.P., M.T., and H.S. (Please be sure to justify every step): <br>" 
+				+ "(\u223C S \u2283 \u223C T), B \u2283 (X \u2228 Y), (\u223C T \u2283 B), \u223C S \u2215 \u2234 X \u2228 Y",
 				
-				"Write this statement in the form of if p, then q. \"A sufficient condition for the warranty to be good is that you bought the computer less than a year ago.\"",
-				
-				"Construct a truth table for (p ↔ q) ⊕ (p ↔~q)",
-				
-				"Construct a truth table for (p AND q) AND ~(p OR q)",
-				
-				"Evaluate this using bit operators <br>" +
-				 "(1 1011 XOR 0 1010) AND (1 0001 OR 1 1011)",
-
-				 "p: John is happy = .6, q: Alex is happy = .7, r: Samantha is happy = .2<br>" +
-				 "Evaluate the value of this statement using fuzzy logic.   Either John and Alex are happy, or Samantha isn't.",
+				"For the following argument, construct a proof of the conclusion from the premises, " 
+				+ "using only the rules of M.P., M.T., and H.S. (Please be sure to justify every step): <br>" 
+				+ "(A \u2219 B) \u2283 (C \u2228 D), (B \u2219 A) \u2283 (A \u2219 B), (C \u2228 D) \u2283 (D \u2228 C) \u2215 \u2234 (B \u2219 A) \u2283 (D \u2228 C)",
+				/*
+					Problem 7 a
+				*/
+				"Construct proofs for the following, using only the rules for the conditional and conjunction. <br>"
+				+ "(C \u2219 D) \u2283 \u223C F, (A \u2283 C) \u2219 (B \u2283 D), (A \u2219 B) \u2215 \u2234 \u223C F",
+				/*
+					Problem 8 a, b, c, d, e, f, g, h, i, j, k, l, n
+				*/
 				 
-				 "Create a combinatorial circuit that is equivalent to p --> q"
+				 
 				};
 		QuestionType[] questionType = new QuestionType[] {
 				QuestionType.CHECK_BOX,

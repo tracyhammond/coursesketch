@@ -12,17 +12,9 @@ import database.institution.Institution;
 
 public class ManyTestAssignments {
 	public static void testAssignments(String courseId) {
-		String[] name = new String[]{"Assignment1", "Assignment2", "Assignment3", "Assignmen4", "Assignment5"};
-		String[] descsription = new String[]{"This is first assignment is to get you used to the system and find out how it works",
-				
-				"This is the second assignment",
-				
-				"This is the last assignment",
-				
-				"Wait i added this assignment",
-						
-				"blah blah blah"};
-		for(int k = 0; k < 1; k ++) {
+		String[] name = new String[]{"Assignment1", "Assignment2", "Assignment3", "Assignment4", "Assignment5"};
+		String[] descsription = new String[]{"This is the Third Assignment"};
+		for(int k = 0; k == 3; k ++) {
 			SrlAssignment.Builder testBuilder = SrlAssignment.newBuilder();
 			testBuilder.setName(name[k]);
 			testBuilder.setCourseId(courseId);
@@ -30,7 +22,7 @@ public class ManyTestAssignments {
 			testBuilder.setGradeWeight("50%");
 			testBuilder.setLatePolicy(LatePolicy.POLICY1);
 			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
-			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1414126800000L).getTime())));
+			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1392703199000L).getTime())));
 			Date d = new Date();
 			d.setYear(2014-1900);
 			d.setMonth(1);
