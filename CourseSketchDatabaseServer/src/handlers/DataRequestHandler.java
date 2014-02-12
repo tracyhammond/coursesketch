@@ -27,11 +27,11 @@ import database.institution.Institution;
 public class DataRequestHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
 	public static String NO_COURSE_MESSAGE = "You do not have any courses associated with this account";
-	
-	public static void handleRequest(Request req, WebSocket conn) {
+
+	public static void handleRequest(Request req, WebSocket conn, String sessionId) {
 		try {
 			System.out.println("Receiving DATA Request...");
-			
+
 			String userId = req.getServersideId();
 			DataRequest request = DataRequest.parseFrom(req.getOtherData());
 			if (userId == null) {
@@ -39,7 +39,7 @@ public class DataRequestHandler {
 			}
 			ArrayList<ItemResult> results = new ArrayList<ItemResult> ();
 
-			for(int p=0; p<request.getItemsList().size(); p++) {
+			for (int p=0; p<request.getItemsList().size(); p++) {
 				ItemRequest itrequest = request.getItemsList().get(p);
 				try {
 					System.out.println("looking at query " + itrequest.getQuery().name());
@@ -91,8 +91,15 @@ public class DataRequestHandler {
 							}
 							break;
 						}
+
 						case EXPERIMENT: {
-							
+							// need to get the submission ID?
+
+							// we send it the CourseProblemId and the userId and we get the submission Id
+							//Institution.mongoGetExperiment(assignementID, userId)
+							if (!itrequest.hasAdvanceQuery()) {
+								Institution.mongoGetExperimentAsUser(userId, itrequest.getItemId(0), req.getSessionInfo() + sessionId);
+							}
 						}
 						default: {
 						}
@@ -170,7 +177,7 @@ public class DataRequestHandler {
 	}
 
 	private static Request buildRequest(ArrayList<ItemResult> results, String message, Request req) {
-		
+
 		DataResult.Builder dataResult = null;
 		if (results!= null && results.size() >0) {
 			dataResult = DataResult.newBuilder();
@@ -180,7 +187,6 @@ public class DataRequestHandler {
 		Request.Builder dataReq = Request.newBuilder();
 		dataReq.setRequestType(MessageType.DATA_REQUEST);
 		dataReq.setSessionInfo(req.getSessionInfo());
-		dataReq.setOtherData(dataResult.build().toByteString());
 		dataReq.setResponseText(message);
 		if (dataResult!= null) {
 			dataReq.setOtherData(dataResult.build().toByteString());

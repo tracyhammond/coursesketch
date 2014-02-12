@@ -208,7 +208,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			}
 		}
 
-		int port = 7888; // 843 flash policy port
+		int port = 8888; // 843 flash policy port
 		try {
 			port = Integer.parseInt( args[ 0 ] );
 		} catch ( Exception ex ) {

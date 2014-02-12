@@ -4,16 +4,38 @@ import static database.StringConstants.*;
 
 import org.bson.types.ObjectId;
 
+import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.ItemQuery;
+import protobuf.srl.query.Data.ItemRequest;
+import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.MongoClient;
+
+import connection.SolutionConnection;
+import database.institution.Institution;
 
 
 public class SubmissionManager 
 {
-	
+	private static SubmissionManager instance;
+	private SolutionConnection solutionConnection;
+
+	public SubmissionManager(SolutionConnection connection) {
+		if (instance == null) {
+			this.solutionConnection = connection;
+		}
+	}
+
+	private static SubmissionManager getInstance() {
+		return instance;
+	}
+
 	/**
 	 * Inserts a submission into the database.
 	 *
@@ -47,15 +69,28 @@ public class SubmissionManager
 	}
 
 	/**
-	 * 
 	 * @param submissionId
 	 * @param userId
 	 * @param problemId
+	 * @return the submission id
 	 */
-	public static void mongoGetSubmission(DB dbs, String userId, String problemId, String sessionId) {
-
+	public static void mongoGetExperiment(DB dbs, String userId, String problemId, String sessionInfo) {
+		Request.Builder r = Request.newBuilder();
+		r.setSessionInfo(sessionInfo);
+		r.setRequestType(MessageType.DATA_REQUEST);
+		ItemRequest.Builder build = ItemRequest.newBuilder();
+		build.setQuery(ItemQuery.EXPERIMENT);
+		DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
+		DBObject corsor = myDbRef.fetch();
+		String sketchId = "" + corsor.get(userId);
+		System.out.println("SketchId " + sketchId);
+		build.addItemId(sketchId);
+		DataRequest.Builder data = DataRequest.newBuilder();
+		data.addItems(build);
+		r.setOtherData(data.build().toByteString());
+		
 	}
-	
+
 	//need to be able to get a single submission
 	// be able to get all of the submissions
 	// if you are trying to get your submission you just need your userId

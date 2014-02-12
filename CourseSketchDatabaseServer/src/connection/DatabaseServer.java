@@ -58,7 +58,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 			System.out.println("Submitting submission id");
 			Institution.mongoInsertSubmission(req);
 		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-			DataRequestHandler.handleRequest(req, conn);
+			DataRequestHandler.handleRequest(req, conn, super.connectionToId.get(conn).getKey());
 		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
 			DataInsertHandler.handleData(req, conn);
 		}
@@ -77,8 +77,9 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 			e.printStackTrace();
 		}
 	}
+
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Database Server: Version 1.0.2.mouse");
+		System.out.println("Database Server: Version 1.0.2.newt");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = false;
