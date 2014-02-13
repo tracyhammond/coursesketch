@@ -2,11 +2,16 @@ package database.institution;
 
 import static database.StringConstants.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import protobuf.srl.school.School.DateTime;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlPermission.Builder;
@@ -227,6 +232,24 @@ public class CourseManager {
 			build.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(CLOSE_DATE)).longValue()));
 			resultList.add(build.build());
 		}
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection conn;	
+			conn = DriverManager.getConnection("jdbc:mysql://srl03.tamu.edu/problembank?" +
+			                               "user=srl&password=sketchrec");
+			Statement stmt = conn.createStatement() ;
+			String query = "select * from CourseInfo where id=3;" ;
+			ResultSet rs = stmt.executeQuery(query) ;
+			SrlCourse.Builder build = SrlCourse.newBuilder();
+			build.setId("3");
+			build.setDescription(rs.getString("Description"));
+			build.setName(rs.getString("Name"));
+			//build.setAccessDate(new DateTime());
+			
+				//	RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(ACCESS_DATE)).longValue()));
+		//build.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(CLOSE_DATE)).longValue()));
+//ADD THIS!				resultList.add(build.build());
+		} catch (Exception e){}
 		return resultList;
 	}
 
