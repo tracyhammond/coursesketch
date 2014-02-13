@@ -42,14 +42,18 @@ public class WrapperConnection extends WebSocketClient {
 		getConnectionFromState(state).send(buffer);
 	}
 
+	/**
+	 * For fragments This is ignored right now.
+	 * @param fragment
+	 */
 	public void onFragment( Framedata fragment ) {
 		System.out.println( "received fragment: " + new String( fragment.getPayloadData().array() ) );
 	}
 
 	@Override
 	public void onClose( int code, String reason, boolean remote ) {
-		// The codecodes are documented in class org.java_websocket.framing.CloseFrame
-		System.out.println( "Connection closed by " + ( remote ? "remote peer" : "us" ) );
+		// The code are documented in class org.java_websocket.framing.CloseFrame
+		System.out.println("Connection closed by " + ( remote ? "remote peer" : "us" ) +" with code: " + code + " because of: " + reason);
 	}
 
 	@Override
