@@ -13,11 +13,14 @@ import java.nio.ByteBuffer;
 
 import multiConnection.ConnectionException;
 import multiConnection.MultiConnectionManager;
+import multiConnection.MultiConnectionState;
 import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
+import org.java_websocket.handshake.ClientHandshake;
+import org.joda.time.DateTime;
 
 import protobuf.srl.request.Message.Request;
 import database.institution.Institution;
@@ -44,6 +47,14 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 
 	@Override
+	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
+		super.onOpen(conn, handshake);
+		System.out.println("Sending Time");
+		System.out.println("Time:"+DateTime.now().getMillis());
+		conn.send(TimeManager.serverSendTimeToClient().toByteArray());
+	}
+	
+	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
@@ -61,6 +72,9 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 			DataRequestHandler.handleRequest(req, conn);
 		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
 			DataInsertHandler.handleData(req, conn);
+		} else if (req.getRequestType() == Request.MessageType.TIME) {
+			Request rsp = TimeManager.decodeRequest(req);
+			if (rsp != null) conn.send(rsp.toByteArray());
 		}
 		System.out.println("Finished looking at query");
 	}
