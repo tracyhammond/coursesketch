@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="libs/protobuf-2.5.0.jar"/>
 	<classpathentry kind="lib" path="libs/mongo-java-driver-2.11.3.jar"/>
 	<classpathentry kind="lib" path="libs/multiConnection.jar"/>
+	<classpathentry kind="lib" path="libs/mysql-connector-java-5.1.29-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
