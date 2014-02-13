@@ -12,9 +12,9 @@ import database.institution.Institution;
 
 public class ManyTestAssignments {
 	public static void testAssignments(String courseId) {
-		String[] name = new String[]{"Assignment1", "Assignment2", "Assignment3", "Assignment4", "Assignment5"};
+		String[] name = new String[]{"Assignment3"};
 		String[] descsription = new String[]{"This is the Third Assignment"};
-		for(int k = 0; k == 3; k ++) {
+		for (int k = 0; k < 1; k ++) {
 			SrlAssignment.Builder testBuilder = SrlAssignment.newBuilder();
 			testBuilder.setName(name[k]);
 			testBuilder.setCourseId(courseId);
@@ -30,7 +30,7 @@ public class ManyTestAssignments {
 			d.setHours(0);
 			testBuilder.setDueDate(RequestConverter.getProtoFromMilliseconds(d.getTime()));
 			SrlPermission.Builder permissions = SrlPermission.newBuilder();
-	
+
 			testBuilder.setAccessPermission(permissions.build());
 			System.out.println(testBuilder.toString());
 	
@@ -48,5 +48,10 @@ public class ManyTestAssignments {
 				System.out.println(courseId);
 				ManyTestProblems.testProblems(courseId, assignmentId);
 		}
+	}
+
+	public static void main(String args[]) {
+		System.out.println("Running program");
+		testAssignments("52d55a580364615fe8a4496c");
 	}
 }
