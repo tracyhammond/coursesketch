@@ -29,7 +29,6 @@ public class DataConnection extends WrapperConnection {
 	 */
 	@Override
 	public void onMessage(ByteBuffer buffer) {
-		
 		Request req = Decoder.parseRequest(buffer);
 		
 		if (req.getRequestType() == Request.MessageType.TIME) {

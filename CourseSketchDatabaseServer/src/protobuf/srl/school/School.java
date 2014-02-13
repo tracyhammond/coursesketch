@@ -2366,7 +2366,7 @@ public final class School {
        * <code>SUPER_PUBLIC = 0;</code>
        *
        * <pre>
-       * no registration is needed for this course
+       * no registration check is needed for this course.  (you do still have to register)
        * </pre>
        */
       SUPER_PUBLIC(0, 0),
@@ -2408,7 +2408,7 @@ public final class School {
        * <code>SUPER_PUBLIC = 0;</code>
        *
        * <pre>
-       * no registration is needed for this course
+       * no registration check is needed for this course.  (you do still have to register)
        * </pre>
        */
       public static final int SUPER_PUBLIC_VALUE = 0;
@@ -4717,15 +4717,19 @@ public final class School {
     com.google.protobuf.ByteString
         getLinksBytes(int index);
 
-    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
+    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
      */
     boolean hasLatePolicy();
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
      */
     protobuf.srl.school.School.SrlAssignment.LatePolicy getLatePolicy();
+    /**
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+     */
+    protobuf.srl.school.School.SrlAssignment.LatePolicyOrBuilder getLatePolicyOrBuilder();
 
     // optional string gradeWeight = 9;
     /**
@@ -5008,15 +5012,17 @@ public final class School {
               links_.add(input.readBytes());
               break;
             }
-            case 64: {
-              int rawValue = input.readEnum();
-              protobuf.srl.school.School.SrlAssignment.LatePolicy value = protobuf.srl.school.School.SrlAssignment.LatePolicy.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(8, rawValue);
-              } else {
-                bitField0_ |= 0x00000040;
-                latePolicy_ = value;
+            case 66: {
+              protobuf.srl.school.School.SrlAssignment.LatePolicy.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000040) == 0x00000040)) {
+                subBuilder = latePolicy_.toBuilder();
               }
+              latePolicy_ = input.readMessage(protobuf.srl.school.School.SrlAssignment.LatePolicy.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(latePolicy_);
+                latePolicy_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000040;
               break;
             }
             case 74: {
@@ -5278,99 +5284,851 @@ public final class School {
       // @@protoc_insertion_point(enum_scope:protobuf.srl.school.SrlAssignment.AssignmentType)
     }
 
+    public interface LatePolicyOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];
+      /**
+       * <code>required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];</code>
+       */
+      boolean hasFunctionType();
+      /**
+       * <code>required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];</code>
+       */
+      protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType getFunctionType();
+
+      // optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];
+      /**
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];</code>
+       */
+      boolean hasTimeFrameType();
+      /**
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];</code>
+       */
+      protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame getTimeFrameType();
+
+      // optional float rate = 3;
+      /**
+       * <code>optional float rate = 3;</code>
+       */
+      boolean hasRate();
+      /**
+       * <code>optional float rate = 3;</code>
+       */
+      float getRate();
+
+      // optional bool subtractionType = 4;
+      /**
+       * <code>optional bool subtractionType = 4;</code>
+       */
+      boolean hasSubtractionType();
+      /**
+       * <code>optional bool subtractionType = 4;</code>
+       */
+      boolean getSubtractionType();
+    }
     /**
-     * Protobuf enum {@code protobuf.srl.school.SrlAssignment.LatePolicy}
-     *
-     * <pre>
-     * Needs to be improved
-     * </pre>
+     * Protobuf type {@code protobuf.srl.school.SrlAssignment.LatePolicy}
      */
-    public enum LatePolicy
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>POLICY1 = 1;</code>
-       */
-      POLICY1(0, 1),
-      /**
-       * <code>POLICY2 = 2;</code>
-       */
-      POLICY2(1, 2),
-      /**
-       * <code>POLICY3 = 3;</code>
-       */
-      POLICY3(2, 3),
-      ;
+    public static final class LatePolicy extends
+        com.google.protobuf.GeneratedMessage
+        implements LatePolicyOrBuilder {
+      // Use LatePolicy.newBuilder() to construct.
+      private LatePolicy(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private LatePolicy(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-      /**
-       * <code>POLICY1 = 1;</code>
-       */
-      public static final int POLICY1_VALUE = 1;
-      /**
-       * <code>POLICY2 = 2;</code>
-       */
-      public static final int POLICY2_VALUE = 2;
-      /**
-       * <code>POLICY3 = 3;</code>
-       */
-      public static final int POLICY3_VALUE = 3;
-
-
-      public final int getNumber() { return value; }
-
-      public static LatePolicy valueOf(int value) {
-        switch (value) {
-          case 1: return POLICY1;
-          case 2: return POLICY2;
-          case 3: return POLICY3;
-          default: return null;
-        }
+      private static final LatePolicy defaultInstance;
+      public static LatePolicy getDefaultInstance() {
+        return defaultInstance;
       }
 
-      public static com.google.protobuf.Internal.EnumLiteMap<LatePolicy>
-          internalGetValueMap() {
-        return internalValueMap;
+      public LatePolicy getDefaultInstanceForType() {
+        return defaultInstance;
       }
-      private static com.google.protobuf.Internal.EnumLiteMap<LatePolicy>
-          internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<LatePolicy>() {
-              public LatePolicy findValueByNumber(int number) {
-                return LatePolicy.valueOf(number);
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private LatePolicy(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
               }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(index);
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return protobuf.srl.school.School.SrlAssignment.getDescriptor().getEnumTypes().get(1);
-      }
-
-      private static final LatePolicy[] VALUES = values();
-
-      public static LatePolicy valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+              case 8: {
+                int rawValue = input.readEnum();
+                protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType value = protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType.valueOf(rawValue);
+                if (value == null) {
+                  unknownFields.mergeVarintField(1, rawValue);
+                } else {
+                  bitField0_ |= 0x00000001;
+                  functionType_ = value;
+                }
+                break;
+              }
+              case 16: {
+                int rawValue = input.readEnum();
+                protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame value = protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame.valueOf(rawValue);
+                if (value == null) {
+                  unknownFields.mergeVarintField(2, rawValue);
+                } else {
+                  bitField0_ |= 0x00000002;
+                  timeFrameType_ = value;
+                }
+                break;
+              }
+              case 29: {
+                bitField0_ |= 0x00000004;
+                rate_ = input.readFloat();
+                break;
+              }
+              case 32: {
+                bitField0_ |= 0x00000008;
+                subtractionType_ = input.readBool();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
         }
-        return VALUES[desc.getIndex()];
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_descriptor;
       }
 
-      private final int index;
-      private final int value;
-
-      private LatePolicy(int index, int value) {
-        this.index = index;
-        this.value = value;
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.school.School.SrlAssignment.LatePolicy.class, protobuf.srl.school.School.SrlAssignment.LatePolicy.Builder.class);
       }
 
-      // @@protoc_insertion_point(enum_scope:protobuf.srl.school.SrlAssignment.LatePolicy)
+      public static com.google.protobuf.Parser<LatePolicy> PARSER =
+          new com.google.protobuf.AbstractParser<LatePolicy>() {
+        public LatePolicy parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new LatePolicy(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<LatePolicy> getParserForType() {
+        return PARSER;
+      }
+
+      /**
+       * Protobuf enum {@code protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType}
+       */
+      public enum FunctionType
+          implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>WINDOW_FUNCTION = 1;</code>
+         */
+        WINDOW_FUNCTION(0, 1),
+        /**
+         * <code>LINE = 2;</code>
+         */
+        LINE(1, 2),
+        /**
+         * <code>EXPONENTIAL = 3;</code>
+         */
+        EXPONENTIAL(2, 3),
+        ;
+
+        /**
+         * <code>WINDOW_FUNCTION = 1;</code>
+         */
+        public static final int WINDOW_FUNCTION_VALUE = 1;
+        /**
+         * <code>LINE = 2;</code>
+         */
+        public static final int LINE_VALUE = 2;
+        /**
+         * <code>EXPONENTIAL = 3;</code>
+         */
+        public static final int EXPONENTIAL_VALUE = 3;
+
+
+        public final int getNumber() { return value; }
+
+        public static FunctionType valueOf(int value) {
+          switch (value) {
+            case 1: return WINDOW_FUNCTION;
+            case 2: return LINE;
+            case 3: return EXPONENTIAL;
+            default: return null;
+          }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<FunctionType>
+            internalGetValueMap() {
+          return internalValueMap;
+        }
+        private static com.google.protobuf.Internal.EnumLiteMap<FunctionType>
+            internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<FunctionType>() {
+                public FunctionType findValueByNumber(int number) {
+                  return FunctionType.valueOf(number);
+                }
+              };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+            getValueDescriptor() {
+          return getDescriptor().getValues().get(index);
+        }
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptorForType() {
+          return getDescriptor();
+        }
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptor() {
+          return protobuf.srl.school.School.SrlAssignment.LatePolicy.getDescriptor().getEnumTypes().get(0);
+        }
+
+        private static final FunctionType[] VALUES = values();
+
+        public static FunctionType valueOf(
+            com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+          if (desc.getType() != getDescriptor()) {
+            throw new java.lang.IllegalArgumentException(
+              "EnumValueDescriptor is not for this type.");
+          }
+          return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private FunctionType(int index, int value) {
+          this.index = index;
+          this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType)
+      }
+
+      /**
+       * Protobuf enum {@code protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame}
+       */
+      public enum TimeFrame
+          implements com.google.protobuf.ProtocolMessageEnum {
+        /**
+         * <code>DAY = 1;</code>
+         */
+        DAY(0, 1),
+        /**
+         * <code>HOUR = 2;</code>
+         */
+        HOUR(1, 2),
+        /**
+         * <code>MINUTE = 3;</code>
+         */
+        MINUTE(2, 3),
+        ;
+
+        /**
+         * <code>DAY = 1;</code>
+         */
+        public static final int DAY_VALUE = 1;
+        /**
+         * <code>HOUR = 2;</code>
+         */
+        public static final int HOUR_VALUE = 2;
+        /**
+         * <code>MINUTE = 3;</code>
+         */
+        public static final int MINUTE_VALUE = 3;
+
+
+        public final int getNumber() { return value; }
+
+        public static TimeFrame valueOf(int value) {
+          switch (value) {
+            case 1: return DAY;
+            case 2: return HOUR;
+            case 3: return MINUTE;
+            default: return null;
+          }
+        }
+
+        public static com.google.protobuf.Internal.EnumLiteMap<TimeFrame>
+            internalGetValueMap() {
+          return internalValueMap;
+        }
+        private static com.google.protobuf.Internal.EnumLiteMap<TimeFrame>
+            internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<TimeFrame>() {
+                public TimeFrame findValueByNumber(int number) {
+                  return TimeFrame.valueOf(number);
+                }
+              };
+
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+            getValueDescriptor() {
+          return getDescriptor().getValues().get(index);
+        }
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptorForType() {
+          return getDescriptor();
+        }
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptor() {
+          return protobuf.srl.school.School.SrlAssignment.LatePolicy.getDescriptor().getEnumTypes().get(1);
+        }
+
+        private static final TimeFrame[] VALUES = values();
+
+        public static TimeFrame valueOf(
+            com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+          if (desc.getType() != getDescriptor()) {
+            throw new java.lang.IllegalArgumentException(
+              "EnumValueDescriptor is not for this type.");
+          }
+          return VALUES[desc.getIndex()];
+        }
+
+        private final int index;
+        private final int value;
+
+        private TimeFrame(int index, int value) {
+          this.index = index;
+          this.value = value;
+        }
+
+        // @@protoc_insertion_point(enum_scope:protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame)
+      }
+
+      private int bitField0_;
+      // required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];
+      public static final int FUNCTIONTYPE_FIELD_NUMBER = 1;
+      private protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType functionType_;
+      /**
+       * <code>required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];</code>
+       */
+      public boolean hasFunctionType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];</code>
+       */
+      public protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType getFunctionType() {
+        return functionType_;
+      }
+
+      // optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];
+      public static final int TIMEFRAMETYPE_FIELD_NUMBER = 2;
+      private protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame timeFrameType_;
+      /**
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];</code>
+       */
+      public boolean hasTimeFrameType() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];</code>
+       */
+      public protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame getTimeFrameType() {
+        return timeFrameType_;
+      }
+
+      // optional float rate = 3;
+      public static final int RATE_FIELD_NUMBER = 3;
+      private float rate_;
+      /**
+       * <code>optional float rate = 3;</code>
+       */
+      public boolean hasRate() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional float rate = 3;</code>
+       */
+      public float getRate() {
+        return rate_;
+      }
+
+      // optional bool subtractionType = 4;
+      public static final int SUBTRACTIONTYPE_FIELD_NUMBER = 4;
+      private boolean subtractionType_;
+      /**
+       * <code>optional bool subtractionType = 4;</code>
+       */
+      public boolean hasSubtractionType() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional bool subtractionType = 4;</code>
+       */
+      public boolean getSubtractionType() {
+        return subtractionType_;
+      }
+
+      private void initFields() {
+        functionType_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType.WINDOW_FUNCTION;
+        timeFrameType_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame.DAY;
+        rate_ = 0F;
+        subtractionType_ = false;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        if (!hasFunctionType()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeEnum(1, functionType_.getNumber());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeEnum(2, timeFrameType_.getNumber());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeFloat(3, rate_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          output.writeBool(4, subtractionType_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeEnumSize(1, functionType_.getNumber());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeEnumSize(2, timeFrameType_.getNumber());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeFloatSize(3, rate_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(4, subtractionType_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static protobuf.srl.school.School.SrlAssignment.LatePolicy parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(protobuf.srl.school.School.SrlAssignment.LatePolicy prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code protobuf.srl.school.SrlAssignment.LatePolicy}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements protobuf.srl.school.School.SrlAssignment.LatePolicyOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  protobuf.srl.school.School.SrlAssignment.LatePolicy.class, protobuf.srl.school.School.SrlAssignment.LatePolicy.Builder.class);
+        }
+
+        // Construct using protobuf.srl.school.School.SrlAssignment.LatePolicy.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          functionType_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType.WINDOW_FUNCTION;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          timeFrameType_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame.DAY;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          rate_ = 0F;
+          bitField0_ = (bitField0_ & ~0x00000004);
+          subtractionType_ = false;
+          bitField0_ = (bitField0_ & ~0x00000008);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_descriptor;
+        }
+
+        public protobuf.srl.school.School.SrlAssignment.LatePolicy getDefaultInstanceForType() {
+          return protobuf.srl.school.School.SrlAssignment.LatePolicy.getDefaultInstance();
+        }
+
+        public protobuf.srl.school.School.SrlAssignment.LatePolicy build() {
+          protobuf.srl.school.School.SrlAssignment.LatePolicy result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public protobuf.srl.school.School.SrlAssignment.LatePolicy buildPartial() {
+          protobuf.srl.school.School.SrlAssignment.LatePolicy result = new protobuf.srl.school.School.SrlAssignment.LatePolicy(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.functionType_ = functionType_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.timeFrameType_ = timeFrameType_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          result.rate_ = rate_;
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          result.subtractionType_ = subtractionType_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof protobuf.srl.school.School.SrlAssignment.LatePolicy) {
+            return mergeFrom((protobuf.srl.school.School.SrlAssignment.LatePolicy)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(protobuf.srl.school.School.SrlAssignment.LatePolicy other) {
+          if (other == protobuf.srl.school.School.SrlAssignment.LatePolicy.getDefaultInstance()) return this;
+          if (other.hasFunctionType()) {
+            setFunctionType(other.getFunctionType());
+          }
+          if (other.hasTimeFrameType()) {
+            setTimeFrameType(other.getTimeFrameType());
+          }
+          if (other.hasRate()) {
+            setRate(other.getRate());
+          }
+          if (other.hasSubtractionType()) {
+            setSubtractionType(other.getSubtractionType());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasFunctionType()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          protobuf.srl.school.School.SrlAssignment.LatePolicy parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (protobuf.srl.school.School.SrlAssignment.LatePolicy) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];
+        private protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType functionType_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType.WINDOW_FUNCTION;
+        /**
+         * <code>required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];</code>
+         */
+        public boolean hasFunctionType() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];</code>
+         */
+        public protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType getFunctionType() {
+          return functionType_;
+        }
+        /**
+         * <code>required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];</code>
+         */
+        public Builder setFunctionType(protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType value) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000001;
+          functionType_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required .protobuf.srl.school.SrlAssignment.LatePolicy.FunctionType functionType = 1 [default = WINDOW_FUNCTION];</code>
+         */
+        public Builder clearFunctionType() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          functionType_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.FunctionType.WINDOW_FUNCTION;
+          onChanged();
+          return this;
+        }
+
+        // optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];
+        private protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame timeFrameType_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame.DAY;
+        /**
+         * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];</code>
+         */
+        public boolean hasTimeFrameType() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];</code>
+         */
+        public protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame getTimeFrameType() {
+          return timeFrameType_;
+        }
+        /**
+         * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];</code>
+         */
+        public Builder setTimeFrameType(protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame value) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
+          timeFrameType_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy.TimeFrame timeFrameType = 2 [default = DAY];</code>
+         */
+        public Builder clearTimeFrameType() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          timeFrameType_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.TimeFrame.DAY;
+          onChanged();
+          return this;
+        }
+
+        // optional float rate = 3;
+        private float rate_ ;
+        /**
+         * <code>optional float rate = 3;</code>
+         */
+        public boolean hasRate() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>optional float rate = 3;</code>
+         */
+        public float getRate() {
+          return rate_;
+        }
+        /**
+         * <code>optional float rate = 3;</code>
+         */
+        public Builder setRate(float value) {
+          bitField0_ |= 0x00000004;
+          rate_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional float rate = 3;</code>
+         */
+        public Builder clearRate() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          rate_ = 0F;
+          onChanged();
+          return this;
+        }
+
+        // optional bool subtractionType = 4;
+        private boolean subtractionType_ ;
+        /**
+         * <code>optional bool subtractionType = 4;</code>
+         */
+        public boolean hasSubtractionType() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        /**
+         * <code>optional bool subtractionType = 4;</code>
+         */
+        public boolean getSubtractionType() {
+          return subtractionType_;
+        }
+        /**
+         * <code>optional bool subtractionType = 4;</code>
+         */
+        public Builder setSubtractionType(boolean value) {
+          bitField0_ |= 0x00000008;
+          subtractionType_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional bool subtractionType = 4;</code>
+         */
+        public Builder clearSubtractionType() {
+          bitField0_ = (bitField0_ & ~0x00000008);
+          subtractionType_ = false;
+          onChanged();
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlAssignment.LatePolicy)
+      }
+
+      static {
+        defaultInstance = new LatePolicy(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlAssignment.LatePolicy)
     }
 
     private int bitField0_;
@@ -5687,19 +6445,25 @@ public final class School {
       return links_.getByteString(index);
     }
 
-    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
+    // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
     public static final int LATEPOLICY_FIELD_NUMBER = 8;
     private protobuf.srl.school.School.SrlAssignment.LatePolicy latePolicy_;
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
      */
     public boolean hasLatePolicy() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
-     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
      */
     public protobuf.srl.school.School.SrlAssignment.LatePolicy getLatePolicy() {
+      return latePolicy_;
+    }
+    /**
+     * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+     */
+    public protobuf.srl.school.School.SrlAssignment.LatePolicyOrBuilder getLatePolicyOrBuilder() {
       return latePolicy_;
     }
 
@@ -6009,7 +6773,7 @@ public final class School {
       other_ = "";
       description_ = "";
       links_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.POLICY1;
+      latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.getDefaultInstance();
       gradeWeight_ = "";
       grade_ = 0F;
       accessDate_ = protobuf.srl.school.School.DateTime.getDefaultInstance();
@@ -6032,6 +6796,12 @@ public final class School {
       if (!hasId()) {
         memoizedIsInitialized = 0;
         return false;
+      }
+      if (hasLatePolicy()) {
+        if (!getLatePolicy().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -6062,7 +6832,7 @@ public final class School {
         output.writeBytes(7, links_.getByteString(i));
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeEnum(8, latePolicy_.getNumber());
+        output.writeMessage(8, latePolicy_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         output.writeBytes(9, getGradeWeightBytes());
@@ -6135,7 +6905,7 @@ public final class School {
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(8, latePolicy_.getNumber());
+          .computeMessageSize(8, latePolicy_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
@@ -6286,6 +7056,7 @@ public final class School {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getLatePolicyFieldBuilder();
           getAccessDateFieldBuilder();
           getDueDateFieldBuilder();
           getCloseDateFieldBuilder();
@@ -6313,7 +7084,11 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000020);
         links_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000040);
-        latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.POLICY1;
+        if (latePolicyBuilder_ == null) {
+          latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.getDefaultInstance();
+        } else {
+          latePolicyBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000080);
         gradeWeight_ = "";
         bitField0_ = (bitField0_ & ~0x00000100);
@@ -6414,7 +7189,11 @@ public final class School {
         if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
           to_bitField0_ |= 0x00000040;
         }
-        result.latePolicy_ = latePolicy_;
+        if (latePolicyBuilder_ == null) {
+          result.latePolicy_ = latePolicy_;
+        } else {
+          result.latePolicy_ = latePolicyBuilder_.build();
+        }
         if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
           to_bitField0_ |= 0x00000080;
         }
@@ -6528,7 +7307,7 @@ public final class School {
           onChanged();
         }
         if (other.hasLatePolicy()) {
-          setLatePolicy(other.getLatePolicy());
+          mergeLatePolicy(other.getLatePolicy());
         }
         if (other.hasGradeWeight()) {
           bitField0_ |= 0x00000100;
@@ -6580,6 +7359,12 @@ public final class School {
         if (!hasId()) {
           
           return false;
+        }
+        if (hasLatePolicy()) {
+          if (!getLatePolicy().isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -7210,40 +7995,121 @@ public final class School {
         return this;
       }
 
-      // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];
-      private protobuf.srl.school.School.SrlAssignment.LatePolicy latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.POLICY1;
+      // optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;
+      private protobuf.srl.school.School.SrlAssignment.LatePolicy latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.school.School.SrlAssignment.LatePolicy, protobuf.srl.school.School.SrlAssignment.LatePolicy.Builder, protobuf.srl.school.School.SrlAssignment.LatePolicyOrBuilder> latePolicyBuilder_;
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
        */
       public boolean hasLatePolicy() {
         return ((bitField0_ & 0x00000080) == 0x00000080);
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
        */
       public protobuf.srl.school.School.SrlAssignment.LatePolicy getLatePolicy() {
-        return latePolicy_;
+        if (latePolicyBuilder_ == null) {
+          return latePolicy_;
+        } else {
+          return latePolicyBuilder_.getMessage();
+        }
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
        */
       public Builder setLatePolicy(protobuf.srl.school.School.SrlAssignment.LatePolicy value) {
-        if (value == null) {
-          throw new NullPointerException();
+        if (latePolicyBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          latePolicy_ = value;
+          onChanged();
+        } else {
+          latePolicyBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000080;
-        latePolicy_ = value;
-        onChanged();
         return this;
       }
       /**
-       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8 [default = POLICY1];</code>
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+       */
+      public Builder setLatePolicy(
+          protobuf.srl.school.School.SrlAssignment.LatePolicy.Builder builderForValue) {
+        if (latePolicyBuilder_ == null) {
+          latePolicy_ = builderForValue.build();
+          onChanged();
+        } else {
+          latePolicyBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000080;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+       */
+      public Builder mergeLatePolicy(protobuf.srl.school.School.SrlAssignment.LatePolicy value) {
+        if (latePolicyBuilder_ == null) {
+          if (((bitField0_ & 0x00000080) == 0x00000080) &&
+              latePolicy_ != protobuf.srl.school.School.SrlAssignment.LatePolicy.getDefaultInstance()) {
+            latePolicy_ =
+              protobuf.srl.school.School.SrlAssignment.LatePolicy.newBuilder(latePolicy_).mergeFrom(value).buildPartial();
+          } else {
+            latePolicy_ = value;
+          }
+          onChanged();
+        } else {
+          latePolicyBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000080;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
        */
       public Builder clearLatePolicy() {
+        if (latePolicyBuilder_ == null) {
+          latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.getDefaultInstance();
+          onChanged();
+        } else {
+          latePolicyBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000080);
-        latePolicy_ = protobuf.srl.school.School.SrlAssignment.LatePolicy.POLICY1;
-        onChanged();
         return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+       */
+      public protobuf.srl.school.School.SrlAssignment.LatePolicy.Builder getLatePolicyBuilder() {
+        bitField0_ |= 0x00000080;
+        onChanged();
+        return getLatePolicyFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+       */
+      public protobuf.srl.school.School.SrlAssignment.LatePolicyOrBuilder getLatePolicyOrBuilder() {
+        if (latePolicyBuilder_ != null) {
+          return latePolicyBuilder_.getMessageOrBuilder();
+        } else {
+          return latePolicy_;
+        }
+      }
+      /**
+       * <code>optional .protobuf.srl.school.SrlAssignment.LatePolicy latePolicy = 8;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.school.School.SrlAssignment.LatePolicy, protobuf.srl.school.School.SrlAssignment.LatePolicy.Builder, protobuf.srl.school.School.SrlAssignment.LatePolicyOrBuilder> 
+          getLatePolicyFieldBuilder() {
+        if (latePolicyBuilder_ == null) {
+          latePolicyBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protobuf.srl.school.School.SrlAssignment.LatePolicy, protobuf.srl.school.School.SrlAssignment.LatePolicy.Builder, protobuf.srl.school.School.SrlAssignment.LatePolicyOrBuilder>(
+                  latePolicy_,
+                  getParentForChildren(),
+                  isClean());
+          latePolicy_ = null;
+        }
+        return latePolicyBuilder_;
       }
 
       // optional string gradeWeight = 9;
@@ -18406,6 +19272,11 @@ public final class School {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_school_SrlAssignment_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_school_SrlProblem_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -18473,60 +19344,67 @@ public final class School {
       "tobuf.srl.school.State\022\026\n\016assignmentList" +
       "\030\014 \003(\t\"a\n\rAccessibility\022\020\n\014SUPER_PUBLIC\020" +
       "\000\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\026\n\022PROTECTE" +
-      "D_NOSEARCH\020\003\022\013\n\007PRIVATE\020\004\"\327\005\n\rSrlAssignm",
+      "D_NOSEARCH\020\003\022\013\n\007PRIVATE\020\004\"\363\007\n\rSrlAssignm",
       "ent\022\020\n\010courseId\030\001 \002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004nam" +
       "e\030\003 \001(\t\022I\n\004type\030\004 \001(\01621.protobuf.srl.sch" +
       "ool.SrlAssignment.AssignmentType:\010HOMEWO" +
       "RK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001(\t\022\r" +
-      "\n\005links\030\007 \003(\t\022J\n\nlatePolicy\030\010 \001(\0162-.prot" +
+      "\n\005links\030\007 \003(\t\022A\n\nlatePolicy\030\010 \001(\0132-.prot" +
       "obuf.srl.school.SrlAssignment.LatePolicy" +
-      ":\007POLICY1\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005grade\030" +
-      "\n \001(\002\0221\n\naccessDate\030\013 \001(\0132\035.protobuf.srl" +
-      ".school.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.prot" +
-      "obuf.srl.school.DateTime\0220\n\tcloseDate\030\r ",
-      "\001(\0132\035.protobuf.srl.school.DateTime\022)\n\005st" +
-      "ate\030\016 \001(\0132\032.protobuf.srl.school.State\022\020\n" +
-      "\010imageUrl\030\017 \001(\t\022\023\n\013problemList\030\020 \003(\t\022<\n\020" +
-      "accessPermission\030\021 \001(\0132\".protobuf.srl.sc" +
-      "hool.SrlPermission\"R\n\016AssignmentType\022\014\n\010" +
-      "HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM\020\004\022" +
-      "\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"3\n\nLatePolicy\022\013\n\007" +
-      "POLICY1\020\001\022\013\n\007POLICY2\020\002\022\013\n\007POLICY3\020\003\"\330\002\n\n" +
-      "SrlProblem\022\n\n\002id\030\001 \002(\t\022\020\n\010courseId\030\002 \001(\t" +
-      "\022\024\n\014assignmentId\030\003 \001(\t\022\025\n\rproblemBankId\030",
-      "\004 \001(\t\022\014\n\004name\030\005 \001(\t\022\023\n\013description\030\006 \001(\t" +
-      "\0228\n\013problemInfo\030\007 \001(\0132#.protobuf.srl.sch" +
-      "ool.SrlBankProblem\022\023\n\013gradeWeight\030\010 \001(\t\022" +
-      "\r\n\005grade\030\t \001(\002\022)\n\005state\030\n \001(\0132\032.protobuf" +
-      ".srl.school.State\022<\n\020accessPermission\030\013 " +
-      "\001(\0132\".protobuf.srl.school.SrlPermission\022" +
-      "\025\n\rproblemNumber\030\014 \001(\005\"\374\002\n\016SrlBankProble" +
-      "m\022\n\n\002id\030\001 \002(\t\022\024\n\014questionText\030\002 \001(\t\022N\n\014q" +
-      "uestionType\030\003 \001(\01620.protobuf.srl.school." +
-      "SrlBankProblem.QuestionType:\006SKETCH\022\r\n\005i",
-      "mage\030\004 \001(\t\022\022\n\nsolutionId\030\005 \001(\t\022\023\n\013course" +
-      "Topic\030\006 \001(\t\022\020\n\010subTopic\030\007 \001(\t\022\016\n\006source\030" +
-      "\010 \001(\t\022\025\n\rotherKeywords\030\t \003(\t\022<\n\020accessPe" +
-      "rmission\030\n \001(\0132\".protobuf.srl.school.Srl" +
-      "Permission\"I\n\014QuestionType\022\n\n\006SKETCH\020\001\022\017" +
-      "\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCHECK_" +
-      "BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005month" +
-      "\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n\006min" +
-      "ute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millisecond" +
-      "\030\007 \001(\004\"\"\n\021DomainInformation\022\r\n\005stuff\030\001 \001",
-      "(\t\"c\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\naccess" +
-      "ible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007started\030\004" +
-      " \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n\007SrlUser\022\020\n\010u" +
-      "sername\030\001 \002(\t\022\r\n\005email\030\002 \001(\t\022\022\n\ncourseLi" +
-      "st\030\003 \003(\t\022\026\n\016schoolIdentity\030\004 \001(\t\022\021\n\tfirs" +
-      "tName\030\005 \001(\t\022\020\n\010lastName\030\006 \001(\t\022\020\n\010passwor" +
-      "d\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022\017\n\007g" +
-      "roupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t\022\r\n\005admin" +
-      "\030\004 \003(\t\"]\n\rSrlPermission\022\027\n\017adminPermissi" +
-      "on\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003(\t\022\026\n",
-      "\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n\005ADM" +
-      "IN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASSISTA" +
-      "NT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
+      "\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005grade\030\n \001(\002\0221\n\n" +
+      "accessDate\030\013 \001(\0132\035.protobuf.srl.school.D" +
+      "ateTime\022.\n\007dueDate\030\014 \001(\0132\035.protobuf.srl." +
+      "school.DateTime\0220\n\tcloseDate\030\r \001(\0132\035.pro",
+      "tobuf.srl.school.DateTime\022)\n\005state\030\016 \001(\013" +
+      "2\032.protobuf.srl.school.State\022\020\n\010imageUrl" +
+      "\030\017 \001(\t\022\023\n\013problemList\030\020 \003(\t\022<\n\020accessPer" +
+      "mission\030\021 \001(\0132\".protobuf.srl.school.SrlP" +
+      "ermission\032\327\002\n\nLatePolicy\022a\n\014functionType" +
+      "\030\001 \002(\0162:.protobuf.srl.school.SrlAssignme" +
+      "nt.LatePolicy.FunctionType:\017WINDOW_FUNCT" +
+      "ION\022S\n\rtimeFrameType\030\002 \001(\01627.protobuf.sr" +
+      "l.school.SrlAssignment.LatePolicy.TimeFr" +
+      "ame:\003DAY\022\014\n\004rate\030\003 \001(\002\022\027\n\017subtractionTyp",
+      "e\030\004 \001(\010\">\n\014FunctionType\022\023\n\017WINDOW_FUNCTI" +
+      "ON\020\001\022\010\n\004LINE\020\002\022\017\n\013EXPONENTIAL\020\003\"*\n\tTimeF" +
+      "rame\022\007\n\003DAY\020\001\022\010\n\004HOUR\020\002\022\n\n\006MINUTE\020\003\"R\n\016A" +
+      "ssignmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n" +
+      "\003LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"" +
+      "\330\002\n\nSrlProblem\022\n\n\002id\030\001 \002(\t\022\020\n\010courseId\030\002" +
+      " \001(\t\022\024\n\014assignmentId\030\003 \001(\t\022\025\n\rproblemBan" +
+      "kId\030\004 \001(\t\022\014\n\004name\030\005 \001(\t\022\023\n\013description\030\006" +
+      " \001(\t\0228\n\013problemInfo\030\007 \001(\0132#.protobuf.srl" +
+      ".school.SrlBankProblem\022\023\n\013gradeWeight\030\010 ",
+      "\001(\t\022\r\n\005grade\030\t \001(\002\022)\n\005state\030\n \001(\0132\032.prot" +
+      "obuf.srl.school.State\022<\n\020accessPermissio" +
+      "n\030\013 \001(\0132\".protobuf.srl.school.SrlPermiss" +
+      "ion\022\025\n\rproblemNumber\030\014 \001(\005\"\374\002\n\016SrlBankPr" +
+      "oblem\022\n\n\002id\030\001 \002(\t\022\024\n\014questionText\030\002 \001(\t\022" +
+      "N\n\014questionType\030\003 \001(\01620.protobuf.srl.sch" +
+      "ool.SrlBankProblem.QuestionType:\006SKETCH\022" +
+      "\r\n\005image\030\004 \001(\t\022\022\n\nsolutionId\030\005 \001(\t\022\023\n\013co" +
+      "urseTopic\030\006 \001(\t\022\020\n\010subTopic\030\007 \001(\t\022\016\n\006sou" +
+      "rce\030\010 \001(\t\022\025\n\rotherKeywords\030\t \003(\t\022<\n\020acce",
+      "ssPermission\030\n \001(\0132\".protobuf.srl.school" +
+      ".SrlPermission\"I\n\014QuestionType\022\n\n\006SKETCH" +
+      "\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCH" +
+      "ECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005m" +
+      "onth\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n" +
+      "\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millise" +
+      "cond\030\007 \001(\004\"\"\n\021DomainInformation\022\r\n\005stuff" +
+      "\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\nac" +
+      "cessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007start" +
+      "ed\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n\007SrlUser\022",
+      "\020\n\010username\030\001 \002(\t\022\r\n\005email\030\002 \001(\t\022\022\n\ncour" +
+      "seList\030\003 \003(\t\022\026\n\016schoolIdentity\030\004 \001(\t\022\021\n\t" +
+      "firstName\030\005 \001(\t\022\020\n\010lastName\030\006 \001(\t\022\020\n\010pas" +
+      "sword\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022" +
+      "\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t\022\r\n\005a" +
+      "dmin\030\004 \003(\t\"]\n\rSrlPermission\022\027\n\017adminPerm" +
+      "ission\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003(" +
+      "\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n" +
+      "\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASS" +
+      "ISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -18551,6 +19429,12 @@ public final class School {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlAssignment_descriptor,
               new java.lang.String[] { "CourseId", "Id", "Name", "Type", "Other", "Description", "Links", "LatePolicy", "GradeWeight", "Grade", "AccessDate", "DueDate", "CloseDate", "State", "ImageUrl", "ProblemList", "AccessPermission", });
+          internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_descriptor =
+            internal_static_protobuf_srl_school_SrlAssignment_descriptor.getNestedTypes().get(0);
+          internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_school_SrlAssignment_LatePolicy_descriptor,
+              new java.lang.String[] { "FunctionType", "TimeFrameType", "Rate", "SubtractionType", });
           internal_static_protobuf_srl_school_SrlProblem_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_protobuf_srl_school_SrlProblem_fieldAccessorTable = new

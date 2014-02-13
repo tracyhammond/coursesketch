@@ -14,13 +14,15 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 
-import protobuf.srl.commands.Commands.SrlUpdate;
-import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.DataResult;
+import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
+import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
@@ -52,6 +54,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		this.connectLocally = connectLocally;
 	}
 
+	@Override
 	public void reconnect() {
 		internalConnections.dropAllConnection(true, false);
 		try {
@@ -67,6 +70,10 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		Request req = Decoder.parseRequest(buffer);
 		String sessionInfo = req.getSessionInfo();
 
+		/**
+		 * Attempts to save the submission, which can be either a solution or an experiment.
+		 * If it is an insertion and not an update then it will send the key to the database
+		 */
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			try {
 				String resultantId = null;
@@ -74,12 +81,6 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 					System.out.println("Update is finished building!");
 					ByteString data = null;
 					if (updateHandler.isSolution(sessionInfo)) {
-						if (updateHandler.hasSubmissionId(sessionInfo)) {
-							resultantId = updateHandler.getSubmissionId(sessionInfo);
-							DatabaseClient.updateSolution(resultantId, updateHandler.getSolution(sessionInfo).getSubmission().getUpdateList());
-							updateHandler.clearSubmission(req.getSessionInfo());
-							return;
-						}
 						resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
 						if (resultantId != null) {
 							SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
@@ -87,15 +88,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 							data = builder.build().toByteString();
 						}
 					} else {
-						if (updateHandler.hasSubmissionId(sessionInfo)) {
-							resultantId = updateHandler.getSubmissionId(sessionInfo);
-							System.out.println("I already have an Id " + updateHandler.getSubmissionId(sessionInfo));
-							SrlExperiment exp = updateHandler.getExperiment(sessionInfo);
-							DatabaseClient.updateExperiment(resultantId, exp.getSubmission().getUpdateList(), exp.getSubmission().getSubmissionTime());
-							updateHandler.clearSubmission(req.getSessionInfo());
-							return;
-						}
-						System.out.println("Saving experiment without an id");
+						System.out.println("Saving experiment");
 						resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
 						if (resultantId != null) {
 							SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
@@ -133,6 +126,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		}
 
 		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
+			System.out.println("Parsing data request!");
 			DataRequest dataReq;
 			try {
 				dataReq = DataRequest.parseFrom(req.getOtherData());
@@ -140,37 +134,40 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 				resultReq.clearOtherData();
 				for(ItemRequest itemReq: dataReq.getItemsList()) {
 					if (itemReq.getQuery() == ItemQuery.EXPERIMENT) {
+						System.out.println("attempting to get an experiment!");
 						SrlExperiment experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
-						ItemSend.Builder send = ItemSend.newBuilder();
+
+						DataResult.Builder builder = DataResult.newBuilder();
+						ItemResult.Builder send = ItemResult.newBuilder();
 						send.setQuery(ItemQuery.EXPERIMENT);
+						send.setData(experiment.toByteString());
+						builder.addResults(send);
+
+						resultReq.setOtherData(builder.build().toByteString());
+						resultReq.setRequestType(MessageType.DATA_REQUEST);
+						conn.send(resultReq.build().toByteArray());
+
+						/*
 						SrlUpdateList list = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
 						for(SrlUpdate update: list.getListList()) {
 							send.setData(update.toByteString());
 							resultReq.setOtherData(send.build().toByteString());
 							conn.send(resultReq.build().toByteArray());
 						}
+						*/
 					}
 				}
 			} catch (InvalidProtocolBufferException e) {
 				e.printStackTrace();
 			}
-			//SrlSolution solution = storage.getSolution();// something we send in.
-			//Request.Builder build = Request.newBuilder(req);
-			//build.setOtherData(solution.toByteString());
-			//conn.send(build.build().toByteArray());
 		}
-		// CODE GOES HERE
 	}
 
-	public void onFragment( WebSocket conn, Framedata fragment ) {
-		//System.out.println( "received fragment: " + fragment );
-	}
-
-	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Submission Server: Version 0.0.2.hippo");
+	public static void main( String[] args ) throws IOException {
+		System.out.println("Submission Server: Version 0.0.2.iguana");
 		WebSocketImpl.DEBUG = false;
 
-		boolean connectLocal = true;
+		boolean connectLocal = false;
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
 				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
@@ -191,16 +188,10 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();
-			if( in.equals( "exit" ) ) {
-				s.stop();
-				break;
-			} else if( in.equals( "restart" ) ) {
-				s.stop();
-				s.start();
-				break;
-			} else if( in.equals( "reconnect" ) ) {
-				s.reconnect();
-				break;
+			try {
+				s.parseCommand(in, sysin);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

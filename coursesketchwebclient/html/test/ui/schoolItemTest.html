@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<base href="../../">
+	<base href="../../../">
     <title>Welcome!</title>
     <link rel="stylesheet" href="css/jquery/jquery.mobile-1.0rc2.min.css">
    	<link rel="stylesheet" href="css/school/school_item.css">
@@ -11,7 +11,7 @@
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
 	  		addLoadEvent(function () {
-						var builders = new schoolItemBuilder();
+						var builders = new SchoolItemBuilder();
 						builders.setList(upcomming_assignments);
 						builders.setTitle('SHOW ALL');
 						builders.setWidth('large');
@@ -112,7 +112,7 @@
 					<ul class="school_list">
 					<li>
 						<div id="Assignment_Truss_1_ID" class="school_item ">
-							<span class="school_item_state construction_tape"></span>
+							<span class="school_item_state not_open"></span>
 							<div class="text">
 								<div class="title">
 									<h3 class="name">Truss Assignment1

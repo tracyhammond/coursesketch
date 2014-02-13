@@ -69,7 +69,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 			System.out.println("Submitting submission id");
 			Institution.mongoInsertSubmission(req);
 		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-			DataRequestHandler.handleRequest(req, conn);
+			DataRequestHandler.handleRequest(req, conn, super.connectionToId.get(conn).getKey(), internalConnections);
 		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
 			DataInsertHandler.handleData(req, conn);
 		} else if (req.getRequestType() == Request.MessageType.TIME) {
@@ -83,16 +83,18 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		//System.out.println( "received fragment: " + fragment );
 	}
 
+	@Override
 	public void reconnect() {
 		internalConnections.dropAllConnection(true, false);
 		try {
-			internalConnections.createAndAddConnection(this, connectLocally, "srl02.tamu.edu", 8883, SolutionConnection.class);
+			internalConnections.createAndAddConnection(this, connectLocally, "srl02.tamu.edu", 8883, SubmissionConnection.class);
 		} catch (ConnectionException e) {
 			e.printStackTrace();
 		}
 	}
+
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Database Server: Version 1.0.2.mouse");
+		System.out.println("Database Server: Version 1.0.2.octopus");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = false;
@@ -117,15 +119,10 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();
-			if( in.equals( "exit" ) ) {
-				s.stop();
-				break;
-			} else if( in.equals( "restart" ) ) {
-				s.stop();
-				s.start();
-				break;
-			} else if( in.equals("reconnect")) {
-				s.reconnect();
+			try {
+				s.parseCommand(in, sysin);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

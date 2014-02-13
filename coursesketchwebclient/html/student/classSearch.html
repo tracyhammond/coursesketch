@@ -6,7 +6,7 @@
    	<link rel="stylesheet" href="css/school/school_item.css">
   	<link rel="stylesheet" href="css/utility/columns.css">
 	<link rel="stylesheet" href="css/courseSketch2.css">
-	<script type="text/javascript" src="js/school/school_item.js"></script>
+	<script type="text/javascript" src="js/school/schoolItem.js"></script>
 	<script type="text/javascript" src="js/jquery/jquery-2.0.3.min.js"></script>
 	<script>
 		try {
@@ -35,7 +35,7 @@
 		(function() {
 			schoolItemBuilder.setWidth('large').centerItem(true);
 			schoolItemBuilder.showImage = false; // till we have images actually working!
-			schoolItemBuilder.setOnBoxClick('courseClickerFunction');
+			schoolItemBuilder.setBoxClickFunction(courseClickerFunction);
 		})();
 
 		parent.dataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE_SEARCH, function(evt, item) {

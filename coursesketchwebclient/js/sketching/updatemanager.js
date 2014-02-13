@@ -338,6 +338,29 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		}
 		return false;
 	};
+	
+	/**
+	 * Returns the opposite of isLastUpdateSubmission, except in the case where
+	 * updateList.length() is non-positive.
+	 */
+	this.isValidForSubmission = function() {
+		if (updateList.length <= 0) {
+			return false;
+		}
+		var update = updateList[updateList.length -1];
+		var commandList = update.getCommands();
+		if (commandList.length <= 0) {
+			return true;
+		}
+		var currentCommand = commandList[0];
+		if (currentCommand.commandType == ProtoCommandBuilder.CommandType.MARKER) {
+			var marker = decodeCommandData(currentCommand.commandData, ProtoCommandBuilder.Marker);
+			if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SUBMISSION) {
+				return false;
+			}
+		}
+		return true;
+	};
 
 	this.getCurrentPointer = function() {
 		return currentUpdateIndex;

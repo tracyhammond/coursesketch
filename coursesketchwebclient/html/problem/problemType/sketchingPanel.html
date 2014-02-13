@@ -63,6 +63,9 @@
 				if (commandManager.isLastUpdateSubmission()) {
 					alert("you have no work to submit since the last submission");
 					return;
+				} else if (!commandManager.isValidForSubmission()) {
+					alert("you have no work to submit");
+					return;
 				}
 				var markerCommand = commandManager.createMarker(true, parent.ProtoUpdateCommandBuilder.Marker.MarkerType.SUBMISSION, "");
 				commandManager.addUpdate(commandManager.createUpdateFromCommands([markerCommand]));
@@ -74,12 +77,11 @@
 					experiment.submission.id = localSubmissionId;
 				} else {
 					experiment.submission.id = "NO_ID";
-					alert(localSubmissionId);
 				}
 
 				commandManager.getUpdateList(function(updateList) {
 					if (updateList.length == 0) {
-						alert("you have no work to submit");
+						alert("something bad happened");
 						return;
 					}
 					submitUpdateList(serverConnection, updateList, [ProtoUpdateCommandBuilder, ProtoSubmissionBuilder], experiment,

@@ -2,10 +2,10 @@ this.showCourses = function showCourses(courseList) {
 	var builder = new SchoolItemBuilder();
 	builder.setList(courseList).setWidth('medium').centerItem(true);
 	builder.showImage = false;
-	builder.setOnBoxClick('courseClickerFunction');
+	builder.setBoxClickFunction(courseClickerFunction);
 	builder.build('class_list_column');
 	clearLists(2);
-}
+};
 
 function courseClickerFunction(id) {
 	clearLists(2);
@@ -18,7 +18,7 @@ function courseClickerFunction(id) {
 		builder.setList(assignmentList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
 		builder.setEmptyListMessage('There are no assignments for this course!');
-		builder.setOnBoxClick('assignmentClickerFunction');
+		builder.setBoxClickFunction(assignmentClickerFunction);
 		builder.build('assignment_list_column');
 		/*
 		try {
@@ -37,11 +37,19 @@ function assignmentClickerFunction(id) {
 	problemSelectionManager.clearAllSelectedItems();
 	clearLists(1);
 	parent.dataManager.getAllProblemsFromAssignment(id, function(problemList) {
+		for (var i = 0; i < problemList.length; i++) {
+			var q = problemList[i].description;
+			if (isUndefined(q) || q == "") {
+				var prob = problemList[i];
+				var text = prob.getProblemInfo().getQuestionText();
+				problemList[i].setDescription(text);
+			}
+		}
 		var builder = new SchoolItemBuilder();
 		builder.setList(problemList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
 		builder.setEmptyListMessage('There are no problems for this assignment!');
-		builder.setOnBoxClick('problemClickerFunction');
+		builder.setBoxClickFunction(problemClickerFunction);
 		builder.build('problem_list_column');
 		/*
 		try {
@@ -141,13 +149,22 @@ function manageHeight() {
 function replaceIframe(src) {
 	var toReplace = document.getElementById('editable_unit');
 	if (src && toReplace && toReplace != null) {
-		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src+'" width = 100% ' +
+		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src +'" width = 100% ' +
 		'sanbox = "allow-same-origin allow-scripts"' +
 		'seamless = "seamless" onload="manageHeight()">';
 	} else {
 		toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
 		'<h2 style = "text-align:center">Click an item to edit</h2>';
 	}
+}
+
+function addNewCourse() { // Functionality to allow for adding of courses by instructors
+	
+	var courseEdit = document.getElementById('addNewCourse');
+	courseEdit.innerHTML = '<textarea rows="4" cols="12">Please enter your courses description right here! </textarea>';
+
+
+
 }
 
 var courseSelectionManager = new clickSelectionManager();

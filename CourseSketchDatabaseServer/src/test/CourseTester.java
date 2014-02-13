@@ -19,24 +19,10 @@ public class CourseTester {
 	public static String testCourses(DB dbs) throws AuthenticationException, DatabaseAccessException {
 		SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
 		SrlCourse.Builder testBuilder1 = SrlCourse.newBuilder();
-		testBuilder.setAccess(SrlCourse.Accessibility.PUBLIC);
+		testBuilder.setAccess(SrlCourse.Accessibility.SUPER_PUBLIC);
 		testBuilder.setSemester("FALL");
-		testBuilder.setName("Discrete Mathematics");
-		testBuilder.setDescription("mathematcs that do discrete things!");
-		testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
-		testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() + 1000000).getTime())));
-		SrlPermission.Builder permissions = SrlPermission.newBuilder();
-		permissions.addAdminPermission("larry");
-
-		permissions.addModeratorPermission("raniero");
-		permissions.addModeratorPermission("manoj");
-
-		permissions.addUserPermission("vijay");
-		permissions.addUserPermission("matt");
-
-		testBuilder.setAccessPermission(permissions.build());
-		System.out.println(testBuilder.toString());
-
+		testBuilder.setName("CourseSketch 101");
+		testBuilder.setDescription("Hi Welcome to CourseSketch you have automatically been enrolled in this tutorial To expand the description of a class click the down arrow.");
 		// testing inserting course
 			System.out.println("INSERTING COURSE");
 			String courseId = Institution.mongoInsertCourse("david", testBuilder.buildPartial());

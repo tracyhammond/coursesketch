@@ -23,7 +23,7 @@ message SrlCourse {
 	repeated string assignmentList = 12;
 
 	enum Accessibility {
-		SUPER_PUBLIC = 0; // no registration is needed for this course
+		SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
 		PUBLIC = 1; //Any student can access course without approval.
 		PROTECTED = 2; //Any student can request access for course and public information it is searchable, requires instructor approval
 		PROTECTED_NOSEARCH = 3; //No students can see course without a special link, it is not searchable, requires instructor approval
@@ -39,7 +39,7 @@ message SrlAssignment {
 	optional string other = 5; // Name of an Instructor-defined assignment type
 	optional string description = 6;
 	repeated string links = 7; // external links/resources. Field needs improvement.
-	optional LatePolicy latePolicy = 8 [default=POLICY1]; 
+	optional LatePolicy latePolicy = 8;
 	optional string gradeWeight = 9; // Percentage of Assignment Category's total grade
 	optional float grade = 10; // Calculated grade for whole Assignment
 	optional DateTime accessDate = 11; // Date that a student can access/view/begin an assignment
@@ -59,10 +59,23 @@ message SrlAssignment {
 		OTHER = 6; // Allows instructors to create unique assignment types
 	}
 
-	enum LatePolicy { // Needs to be improved
-		POLICY1 = 1;
-		POLICY2 = 2;
-		POLICY3 = 3;
+	message LatePolicy {
+		required FunctionType functionType = 1 [default = WINDOW_FUNCTION];
+		optional TimeFrame timeFrameType = 2 [default = DAY];
+		optional float rate = 3;
+		optional bool subtractionType = 4;
+
+		enum FunctionType {
+			WINDOW_FUNCTION = 1;
+			LINE = 2;
+			EXPONENTIAL = 3;
+		}
+
+		enum TimeFrame {
+			DAY = 1;
+			HOUR = 2;
+			MINUTE = 3;
+		}
 	}
 }
 

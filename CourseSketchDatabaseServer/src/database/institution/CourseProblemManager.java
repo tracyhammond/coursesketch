@@ -39,7 +39,8 @@ public class CourseProblemManager
 				.append(MOD, problem.getAccessPermission().getModeratorPermissionList())
 				.append(USERS, problem.getAccessPermission().getUserPermissionList())
 				.append(NAME, problem.getName())
-				.append(DESCRIPTION, problem.getDescription());
+				.append(DESCRIPTION, problem.getDescription())
+				.append(PROBLEM_NUMBER, problem.getProblemNumber());
 		new_user.insert(query);
 		DBObject corsor = new_user.findOne(query);
 
