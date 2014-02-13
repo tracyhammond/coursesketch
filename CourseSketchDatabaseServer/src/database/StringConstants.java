@@ -55,9 +55,15 @@ public class StringConstants {
 	public static final String ASSIGNMENT_TYPE = "AssignmentType";
 	public static final String ASSIGNMENT_OTHER_TYPE = "OtherType";
 	public static final String ASSIGNMENT_RESOURCES = "Resources";
-	public static final String LATE_POLICY = "LatePolicy";
+	public static final String LATE_POLICY_FUNCTION_TYPE = "LatePolicyFunctionType";
+	public static final String LATE_POLICY_TIME_FRAME_TYPE = "LatePolicyTimeFrameType";
+	public static final String LATE_POLICY_SUBTRACTION_TYPE = "LatePolicySubtractionType";
+	public static final String LATE_POLICY_RATE = "LatePolicyRate";
 	public static final String PROBLEM_LIST = "ProblemList";
 
+	// course problem specific
+	public static final String PROBLEM_NUMBER = "ProblemNumber";
+	
 	//solution specific
 	public static final String ALLOWED_IN_PROBLEMBANK = "AllowedInProblemBank";
 	public static final String IS_PRACTICE_PROBLEM = "PracticeProblem";

@@ -23,28 +23,27 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 	function getSubmission(problemId, submissionCallback) {
 		database.getFromSubmissions(problemId, function(e, request, result) {
 			if (isUndefined(result) || isUndefined(result.data)) {
+				
+				//console.log("LOADING FROM DATABASE!");
 				submissionCallback(undefined);
 				return;
 				// the listener from the server of the request
 				// it stores the course locally then cals the callback with the course
-				/*
-				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE, function(evt, item) {
-					var school = SchoolBuilder.SrlSchool.decode(item.data);
+				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.EXPERIMENT, function(evt, item) {
+					alert(experiment);
+					var experiment = SubmissionBuilder.SrlExperiment.decode(item.data);
+					alert(experiment);
 					var course = school.courses[0];
 					if (isUndefined(course)) {
 						userCourses[courseId] = nonExistantValue;
 						courseCallback(nonExistantValue);
 						return;
 					}
-					localScope.setCourse(course);
-					courseCallback(course);
+					localScope.setSubmission(course);
+					submissionCallback(course);
 				});
 				// creates a request that is then sent to the server
-				var dataSend = new QueryBuilder.DataRequest();
-				dataSend.items = new Array();
-				dataSend.items.push(new QueryBuilder.ItemRequest([courseId], QueryBuilder.ItemQuery.COURSE));
-				serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
-				*/
+				sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId]);
 			} else if (result.data == nonExistantValue) {
 				// the server holds this special value then it means the server does not have the value
 				submissionCallback(nonExistantValue);

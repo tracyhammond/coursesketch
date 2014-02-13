@@ -58,7 +58,8 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 		return new AnswerConnectionState(Encoder.nextID().toString());
 	}
 
-	public void reConnect() {
+	@Override
+	public void reconnect() {
 		internalConnections.dropAllConnection(false, true);
 		internalConnections.connectServers(this);
 	}
@@ -118,7 +119,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		System.out.println("Answer Server: Version 0.0.1");
 		WebSocketImpl.DEBUG = false;
-		boolean connectLocal = true;
+		boolean connectLocal = false;
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
 				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
@@ -135,21 +136,15 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 		System.out.println( "Answer Server started on port: " + s.getPort() );
 
 		System.out.println("Connecting to servers...");
-		s.reConnect();
+		s.reconnect();
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();
-			if( in.equals( "exit" ) ) {
-				s.stop();
-				break;
-			} else if( in.equals( "restart" ) ) {
-				s.stop();
-				s.start();
-				break;
-			} else if( in.equals( "reconnect")) {
-				System.out.println("Attempting to recoonect");
-				s.reConnect();
+			try {
+				s.parseCommand(in, sysin);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

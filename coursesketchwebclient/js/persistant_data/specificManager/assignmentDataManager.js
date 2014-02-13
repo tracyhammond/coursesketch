@@ -35,8 +35,13 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 				assignmentCallback(nonExistantValue);
 			} else {
 				// gets the data from the database and calls the callback
-				var bytes = ByteBuffer.decode64(result.data);
-				assignmentCallback(SrlAssignment.decode(bytes));
+				try{
+					var bytes = ByteBuffer.decode64(result.data);
+					assignmentCallback(SrlAssignment.decode(bytes));
+				} catch(exception) {
+					console.error(exception);
+					assignmentCallback(undefined);
+				}
 			}
 		});
 	}

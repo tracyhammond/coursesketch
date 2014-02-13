@@ -10,10 +10,22 @@ import internalConnections.RecognitionConnection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 import multiConnection.MultiConnectionManager;
 import multiConnection.MultiInternalConnectionServer;
@@ -24,6 +36,7 @@ import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.joda.time.DateTime;
+import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -66,7 +79,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		});
 	}
 
-	public void reConnect() {
+	public void reconnect() {
 		serverManager.dropAllConnection(false, true);
 		serverManager.connectServers(this);
 	}
@@ -185,11 +198,22 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public int getCurrentConnectionNumber() {
 		return super.connectionToId.size();
 	}
-
-	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Proxy Server: Version 1.0.2.lemur");
+	
+	@Override
+	public boolean parseCommand(String command, BufferedReader sysin) throws Exception {
+		if (super.parseCommand(command, sysin)) return true;
+		if (command.equals("connectionNumber")) {
+			System.out.println(this.getCurrentConnectionNumber());
+			return true;
+		}
+		return false;
+	}
+ 
+	public static void main( String[] args ) throws InterruptedException, IOException, KeyStoreException, NoSuchAlgorithmException,
+			CertificateException, UnrecoverableKeyException, KeyManagementException {
+		System.out.println("Proxy Server: Version 1.0.2.quail");
 		WebSocketImpl.DEBUG = true;
-		boolean connectLocal = true;
+		boolean connectLocal = false;
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
 				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
@@ -202,33 +226,45 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		} catch ( Exception ex ) {
 		}
 		ProxyServer s = new ProxyServer( port, connectLocal );
+		if (!connectLocal) {
+			// load up the key store
+			String STORETYPE = "JKS";
+			//String KEYSTORE = "private/srl01.tamu.edu.key";
+			String KEYSTORE = "srl01_tamu_edu.jks";
+			String STOREPASSWORD = "Challeng3";
+			String KEYPASSWORD = "Challeng3";
+
+			KeyStore ks = KeyStore.getInstance( STORETYPE );
+			File kf = new File( KEYSTORE );
+			ks.load( new FileInputStream( kf ), STOREPASSWORD.toCharArray() ); // setting null password
+
+			KeyManagerFactory kmf = KeyManagerFactory.getInstance( "SunX509" );
+			kmf.init( ks, KEYPASSWORD.toCharArray() );
+			TrustManagerFactory tmf = TrustManagerFactory.getInstance( "SunX509" );
+			tmf.init( ks );
+
+			SSLContext sslContext = null;
+			sslContext = SSLContext.getInstance( "TSL" );
+			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
+			s.setWebSocketFactory( new DefaultSSLWebSocketServerFactory( sslContext ) );
+		}
 		s.start();
 		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
 
 		System.out.println("Connecting to servers...");
-		s.reConnect();
+		s.reconnect();
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();
-			if( in.equals( "exit" ) ) {
-				System.out.println("Closing down server");
-				s.stop();
-				s.serverManager.dropAllConnection(true, true);
-				break;
-			} else if( in.equals( "restart" ) ) {
-				s.stop();
-				s.start();
-				break;
-			} else if( in.equals( "reconnect")) {
-				System.out.println("Attempting to recoonect");
-				s.reConnect();
-			} else if(in.equals("connectionNumber")) {
-				System.out.println(s.getCurrentConnectionNumber());
+			try {
+				s.parseCommand(in, sysin);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
-		System.out.println("Closing down server! Forcefully");
-		System.exit(0);
+		//System.out.println("Closing down server! Forcefully");
+		//System.exit(0);
 	}
 
 	@Override
