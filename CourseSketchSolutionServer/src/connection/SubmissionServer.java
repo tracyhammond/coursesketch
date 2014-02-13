@@ -15,8 +15,11 @@ import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 
 import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.DataResult;
+import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
+import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -51,6 +54,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		this.connectLocally = connectLocally;
 	}
 
+	@Override
 	public void reconnect() {
 		internalConnections.dropAllConnection(true, false);
 		try {
@@ -122,6 +126,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		}
 
 		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
+			System.out.println("Parsing data request!");
 			DataRequest dataReq;
 			try {
 				dataReq = DataRequest.parseFrom(req.getOtherData());
@@ -129,11 +134,19 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 				resultReq.clearOtherData();
 				for(ItemRequest itemReq: dataReq.getItemsList()) {
 					if (itemReq.getQuery() == ItemQuery.EXPERIMENT) {
+						System.out.println("attempting to get an experiment!");
 						SrlExperiment experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
-						ItemSend.Builder send = ItemSend.newBuilder();
+
+						DataResult.Builder builder = DataResult.newBuilder();
+						ItemResult.Builder send = ItemResult.newBuilder();
 						send.setQuery(ItemQuery.EXPERIMENT);
-						resultReq.setOtherData(experiment.toByteString());
+						send.setData(experiment.toByteString());
+						builder.addResults(send);
+
+						resultReq.setOtherData(builder.build().toByteString());
 						resultReq.setRequestType(MessageType.DATA_REQUEST);
+						conn.send(resultReq.build().toByteArray());
+
 						/*
 						SrlUpdateList list = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
 						for(SrlUpdate update: list.getListList()) {
@@ -142,28 +155,16 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 							conn.send(resultReq.build().toByteArray());
 						}
 						*/
-
-						// sending it as a single item right now!
-						conn.send(experiment.toByteArray());
 					}
 				}
 			} catch (InvalidProtocolBufferException e) {
 				e.printStackTrace();
 			}
-			//SrlSolution solution = storage.getSolution();// something we send in.
-			//Request.Builder build = Request.newBuilder(req);
-			//build.setOtherData(solution.toByteString());
-			//conn.send(build.build().toByteArray());
 		}
-		// CODE GOES HERE
 	}
 
-	public void onFragment( WebSocket conn, Framedata fragment ) {
-		//System.out.println( "received fragment: " + fragment );
-	}
-
-	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Submission Server: Version 0.0.2.hippo");
+	public static void main( String[] args ) throws IOException {
+		System.out.println("Submission Server: Version 0.0.2.iguana");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = false;
@@ -187,16 +188,10 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();
-			if( in.equals( "exit" ) ) {
-				s.stop();
-				break;
-			} else if( in.equals( "restart" ) ) {
-				s.stop();
-				s.start();
-				break;
-			} else if( in.equals( "reconnect" ) ) {
-				s.reconnect();
-				break;
+			try {
+				s.parseCommand(in, sysin);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

@@ -58,7 +58,8 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 		return new AnswerConnectionState(Encoder.nextID().toString());
 	}
 
-	public void reConnect() {
+	@Override
+	public void reconnect() {
 		internalConnections.dropAllConnection(false, true);
 		internalConnections.connectServers(this);
 	}
@@ -135,21 +136,15 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 		System.out.println( "Answer Server started on port: " + s.getPort() );
 
 		System.out.println("Connecting to servers...");
-		s.reConnect();
+		s.reconnect();
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();
-			if( in.equals( "exit" ) ) {
-				s.stop();
-				break;
-			} else if( in.equals( "restart" ) ) {
-				s.stop();
-				s.start();
-				break;
-			} else if( in.equals( "reconnect")) {
-				System.out.println("Attempting to recoonect");
-				s.reConnect();
+			try {
+				s.parseCommand(in, sysin);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
