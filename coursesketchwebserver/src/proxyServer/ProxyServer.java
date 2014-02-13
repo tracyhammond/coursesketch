@@ -23,6 +23,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
+import org.joda.time.DateTime;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -42,7 +43,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
 	public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
 
-	private TimeManager timeManager = new TimeManager();
+	private SocketManager socketManager = new SocketManager();
 
 	private ProxyConnectionManager serverManager;
 
@@ -56,7 +57,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 
 		serverManager = new ProxyConnectionManager(this, connectLocally);
 
-		timeManager.setExpiredListiner(new ActionListener() {
+		socketManager.setExpiredListiner(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
@@ -73,6 +74,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 		super.onOpen(conn, handshake);
+		
 		System.out.println("Recieving connection " + connectionToId.size());
 	}
 
