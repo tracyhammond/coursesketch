@@ -78,7 +78,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		});
 	}
 
-	public void reConnect() {
+	public void reconnect() {
 		serverManager.dropAllConnection(false, true);
 		serverManager.connectServers(this);
 	}
@@ -196,10 +196,20 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public int getCurrentConnectionNumber() {
 		return super.connectionToId.size();
 	}
-
+	
+	@Override
+	public boolean parseCommand(String command, BufferedReader sysin) throws Exception {
+		if (super.parseCommand(command, sysin)) return true;
+		if (command.equals("connectionNumber")) {
+			System.out.println(this.getCurrentConnectionNumber());
+			return true;
+		}
+		return false;
+	}
+ 
 	public static void main( String[] args ) throws InterruptedException, IOException, KeyStoreException, NoSuchAlgorithmException,
 			CertificateException, UnrecoverableKeyException, KeyManagementException {
-		System.out.println("Proxy Server: Version 1.0.2.porcupine");
+		System.out.println("Proxy Server: Version 1.0.2.quail");
 		WebSocketImpl.DEBUG = true;
 		boolean connectLocal = false;
 		if (args.length == 1) {
@@ -240,29 +250,19 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
 
 		System.out.println("Connecting to servers...");
-		s.reConnect();
+		s.reconnect();
 
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while ( true ) {
 			String in = sysin.readLine();
-			if( in.equals( "exit" ) ) {
-				System.out.println("Closing down server");
-				s.stop();
-				s.serverManager.dropAllConnection(true, true);
-				break;
-			} else if( in.equals( "restart" ) ) {
-				s.stop();
-				s.start();
-				break;
-			} else if( in.equals( "reconnect")) {
-				System.out.println("Attempting to recoonect");
-				s.reConnect();
-			} else if(in.equals("connectionNumber")) {
-				System.out.println(s.getCurrentConnectionNumber());
+			try {
+				s.parseCommand(in, sysin);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
-		System.out.println("Closing down server! Forcefully");
-		System.exit(0);
+		//System.out.println("Closing down server! Forcefully");
+		//System.exit(0);
 	}
 
 	@Override

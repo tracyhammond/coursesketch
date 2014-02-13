@@ -3,6 +3,8 @@ package handlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import multiConnection.MultiConnectionManager;
+
 import org.java_websocket.WebSocket;
 
 import protobuf.srl.query.Data.DataRequest;
@@ -28,7 +30,7 @@ public class DataRequestHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
 	public static String NO_COURSE_MESSAGE = "You do not have any courses associated with this account";
 
-	public static void handleRequest(Request req, WebSocket conn, String sessionId) {
+	public static void handleRequest(Request req, WebSocket conn, String sessionId, MultiConnectionManager internalConnections) {
 		try {
 			System.out.println("Receiving DATA Request...");
 
@@ -98,8 +100,10 @@ public class DataRequestHandler {
 							// we send it the CourseProblemId and the userId and we get the submission Id
 							//Institution.mongoGetExperiment(assignementID, userId)
 							if (!itrequest.hasAdvanceQuery()) {
-								Institution.mongoGetExperimentAsUser(userId, itrequest.getItemId(0), req.getSessionInfo() + sessionId);
+								System.out.println("Trying to retrieve an experiemnt from a user!");
+								Institution.mongoGetExperimentAsUser(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections);
 							}
+							break;
 						}
 						default: {
 						}
@@ -178,9 +182,8 @@ public class DataRequestHandler {
 
 	private static Request buildRequest(ArrayList<ItemResult> results, String message, Request req) {
 
-		DataResult.Builder dataResult = null;
+		DataResult.Builder dataResult = DataResult.newBuilder();
 		if (results!= null && results.size() >0) {
-			dataResult = DataResult.newBuilder();
 			dataResult.addAllResults(results);
 		}
 

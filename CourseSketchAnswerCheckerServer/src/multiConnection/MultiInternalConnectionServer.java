@@ -98,7 +98,12 @@ public abstract class MultiInternalConnectionServer extends WebSocketServer {
 	 */
 	public boolean parseCommand(String command, BufferedReader sysin) throws Exception {
 		if (command.equals( "exit" )) {
-			this.stop();
+			System.out.println("Are you sure you want to exit? [y/n]");
+			if (sysin.readLine().equalsIgnoreCase("y")) {
+				this.stop();
+				// TODO: prompt for confirmation!
+				System.exit(0);
+			}
 			return true;
 		} else if (command.equals("restart")) {
 			throw new Exception("This command is not yet supported");
@@ -108,7 +113,7 @@ public abstract class MultiInternalConnectionServer extends WebSocketServer {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Overwritten to prevent clutter in the clients!
 	 */

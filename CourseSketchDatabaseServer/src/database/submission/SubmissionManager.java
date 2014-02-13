@@ -1,8 +1,10 @@
 package database.submission;
 
 import static database.StringConstants.*;
+import multiConnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
+import org.java_websocket.WebSocket;
 
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
@@ -17,16 +19,16 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 
-import connection.SolutionConnection;
+import connection.SubmissionConnection;
 import database.institution.Institution;
 
 
 public class SubmissionManager 
 {
 	private static SubmissionManager instance;
-	private SolutionConnection solutionConnection;
+	private SubmissionConnection solutionConnection;
 
-	public SubmissionManager(SolutionConnection connection) {
+	public SubmissionManager(SubmissionConnection connection) {
 		if (instance == null) {
 			this.solutionConnection = connection;
 		}
@@ -74,7 +76,7 @@ public class SubmissionManager
 	 * @param problemId
 	 * @return the submission id
 	 */
-	public static void mongoGetExperiment(DB dbs, String userId, String problemId, String sessionInfo) {
+	public static void mongoGetExperiment(DB dbs, String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections) {
 		Request.Builder r = Request.newBuilder();
 		r.setSessionInfo(sessionInfo);
 		r.setRequestType(MessageType.DATA_REQUEST);
@@ -88,7 +90,8 @@ public class SubmissionManager
 		DataRequest.Builder data = DataRequest.newBuilder();
 		data.addItems(build);
 		r.setOtherData(data.build().toByteString());
-		
+		System.out.println("Sending command " + r.build());
+		internalConnections.send(r.build(), null, SubmissionConnection.class);
 	}
 
 	//need to be able to get a single submission

@@ -58,6 +58,8 @@ public class DatabaseClient {
 	}
 
 	public void setUpIndexes() {
+		System.out.println("Setting up an index");
+		System.out.println("Experiment Index command: " + new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
 		db.getCollection(EXPERIMENT_COLLECTION).ensureIndex(new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
 		db.getCollection(SOLUTION_COLLECTION).ensureIndex(new BasicDBObject(PROBLEM_BANK_ID, 1).append("unique", true));
 	}
@@ -101,6 +103,7 @@ public class DatabaseClient {
 			DBObject updateObj = new BasicDBObject(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray());
 			courses.update(corsor, new BasicDBObject ("$set", updateObj));
 		} else {
+			System.out.println("No existing submissions found");
 			DBCollection new_user = getInstance().db.getCollection(SOLUTION_COLLECTION);
 
 			BasicDBObject query = new BasicDBObject(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
@@ -128,8 +131,10 @@ public class DatabaseClient {
 
 		BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
 		.append(USER_ID, experiment.getUserId());
+		System.out.println("Searching for existing solutions " + findQuery);
 		DBCursor c = experiments.find(findQuery).sort(new BasicDBObject(SUBMISSION_TIME, -1));
-		
+		System.out.println("Do we have the next cursos " + c.hasNext());
+		System.out.println("Number of solutions found" + c.count());
 		DBObject corsor = null;
 		if (c.count() > 0) {
 			corsor = c.next();
@@ -156,6 +161,7 @@ public class DatabaseClient {
 	}
 
 	public static SrlExperiment getExperiment(String itemId) {
+		System.out.println("Fetching experiment");
 		DBRef myDbRef = new DBRef(getInstance().db, EXPERIMENT_COLLECTION, new ObjectId(itemId));
 		DBObject corsor = myDbRef.fetch();
 		SrlExperiment.Builder build = SrlExperiment.newBuilder();
@@ -166,6 +172,7 @@ public class DatabaseClient {
 		SrlSubmission.Builder sub = SrlSubmission.newBuilder();
 		sub.setUpdateList(ByteString.copyFrom((byte[])corsor.get(UPDATELIST)));
 		build.setSubmission(sub.build());
+		System.out.println("RESULT: " + build.build());
 		return build.build();
 	}
 

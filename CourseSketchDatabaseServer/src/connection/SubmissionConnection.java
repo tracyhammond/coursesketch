@@ -1,7 +1,11 @@
 package connection;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URI;
 import java.nio.ByteBuffer;
+
+import javax.swing.Timer;
 
 import multiConnection.MultiConnectionState;
 import multiConnection.MultiInternalConnectionServer;
@@ -14,9 +18,9 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
-public class SolutionConnection extends WrapperConnection {
+public class SubmissionConnection extends WrapperConnection {
 
-	public SolutionConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
+	public SubmissionConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
 		super( serverUri, draft, parent );
 	}
 
@@ -26,6 +30,7 @@ public class SolutionConnection extends WrapperConnection {
 	@Override
 	public void onMessage(ByteBuffer buffer) {
 		Request req = MultiInternalConnectionServer.Decoder.parseRequest(buffer); // this contains the solution
+		System.out.println("Got a response from the submission server!");
 		System.out.println(req.getSessionInfo());
 		String[] sessionInfo = req.getSessionInfo().split("\\+");
 		System.out.println(sessionInfo[1]);
@@ -40,6 +45,23 @@ public class SolutionConnection extends WrapperConnection {
 				System.err.println("SOCKET IS NULL");
 			}
 			getConnectionFromState(state).send(builder.build().toByteArray());
+		}
+	}
+
+	@Override
+	public void onClose( int code, String reason, boolean remote ) {
+		super.onClose(code, reason, remote);
+		System.out.println("Attempting to reconnect");
+		if (remote && false) {
+			// TODO: create the connection so e do not have to type reconnect on our computer 
+			Timer t = new Timer(5000, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					System.out.println("Attempting to reconnect to servers");
+					parentServer.reconnect();
+				}
+			});
+			t.start();
 		}
 	}
 }

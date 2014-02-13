@@ -111,16 +111,18 @@ public class AssignmentManager
 		exactAssignment.addAllLinks((List)corsor.get(ASSIGNMENT_RESOURCES));
 		exactAssignment.setGradeWeight((String)corsor.get(GRADE_WEIGHT));
 
-		try {
-			LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
-			latePolicy.setFunctionType(SrlAssignment.LatePolicy.FunctionType.valueOf((Integer)corsor.get(LATE_POLICY_FUNCTION_TYPE)));
-			latePolicy.setRate(Float.parseFloat(""+corsor.get(LATE_POLICY_RATE))); // safety cast to string then parse to float
-			latePolicy.setSubtractionType((Boolean)corsor.get(LATE_POLICY_SUBTRACTION_TYPE));
-			if (latePolicy.getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
-				latePolicy.setTimeFrameType(SrlAssignment.LatePolicy.TimeFrame.valueOf((Integer)corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
+		if (isAdmin || isMod) { 
+			try {
+				LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
+				latePolicy.setFunctionType(SrlAssignment.LatePolicy.FunctionType.valueOf((Integer)corsor.get(LATE_POLICY_FUNCTION_TYPE)));
+				latePolicy.setRate(Float.parseFloat(""+corsor.get(LATE_POLICY_RATE))); // safety cast to string then parse to float
+				latePolicy.setSubtractionType((Boolean)corsor.get(LATE_POLICY_SUBTRACTION_TYPE));
+				if (latePolicy.getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
+					latePolicy.setTimeFrameType(SrlAssignment.LatePolicy.TimeFrame.valueOf((Integer)corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
 			}
-		} catch(Exception e) {
-			e.printStackTrace();
 		}
 		
 		try {

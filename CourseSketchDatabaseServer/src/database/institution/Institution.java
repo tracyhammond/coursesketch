@@ -8,7 +8,10 @@ import static database.StringConstants.USER_LIST;
 import java.util.ArrayList;
 import java.util.List;
 
+import multiConnection.MultiConnectionManager;
+
 import org.bson.types.ObjectId;
+import org.java_websocket.WebSocket;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
@@ -327,9 +330,10 @@ public final class Institution {
 		}
 	}
 
-	public static void mongoGetExperimentAsUser(String userId, String problemId, String sessionInfo) {
+	public static void mongoGetExperimentAsUser(String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections) {
 		try {
-			SubmissionManager.mongoGetExperiment(getInstance().db, userId, problemId, sessionInfo);
+			System.out.println("Getting experiment for user: " + userId +" problem: " + problemId);
+			SubmissionManager.mongoGetExperiment(getInstance().db, userId, problemId, sessionInfo, internalConnections);
 			return;
 		} catch(Exception e) {
 			e.printStackTrace();

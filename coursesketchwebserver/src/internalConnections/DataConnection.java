@@ -26,8 +26,10 @@ public class DataConnection extends WrapperConnection {
 	 */
 	@Override
 	public void onMessage(ByteBuffer buffer) {
-		MultiConnectionState state = getStateFromId(MultiInternalConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
+		Request req = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
+		MultiConnectionState state = getStateFromId(req.getSessionInfo());
 
+		System.out.println(" session info for return: " + req.getSessionInfo());
 		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
 		Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
 		getConnectionFromState(state).send(result.toByteArray());
