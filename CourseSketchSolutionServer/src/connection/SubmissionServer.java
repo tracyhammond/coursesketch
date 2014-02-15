@@ -12,15 +12,12 @@ import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
-import org.java_websocket.framing.Framedata;
 
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
-import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
-import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
@@ -135,12 +132,23 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 				for(ItemRequest itemReq: dataReq.getItemsList()) {
 					if (itemReq.getQuery() == ItemQuery.EXPERIMENT) {
 						System.out.println("attempting to get an experiment!");
-						SrlExperiment experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
-
+						SrlExperiment experiment = null;
+						String errorMessage = "";
+						try {
+							experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
+						} catch (Exception e) {
+							errorMessage = e.getMessage();
+							e.printStackTrace();
+						}
 						DataResult.Builder builder = DataResult.newBuilder();
 						ItemResult.Builder send = ItemResult.newBuilder();
 						send.setQuery(ItemQuery.EXPERIMENT);
-						send.setData(experiment.toByteString());
+
+						if (experiment != null) {
+							send.setData(experiment.toByteString());
+						} else {
+							//error stuff
+						}
 						builder.addResults(send);
 
 						resultReq.setOtherData(builder.build().toByteString());
@@ -164,7 +172,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws IOException {
-		System.out.println("Submission Server: Version 0.0.2.iguana");
+		System.out.println("Submission Server: Version 0.0.1");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = false;

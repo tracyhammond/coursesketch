@@ -22,25 +22,20 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 	 */
 	function getSubmission(problemId, submissionCallback) {
 		database.getFromSubmissions(problemId, function(e, request, result) {
-			if (isUndefined(result) || isUndefined(result.data)) {
-				
-				//console.log("LOADING FROM DATABASE!");
-				submissionCallback(undefined);
-				return;
+			if (isUndefined(result) || isUndefined(result.data) || true) {
+
+				console.log("LOADING FROM DATABASE!");
+
+				//submissionCallback(undefined);
+				//return;
+
 				// the listener from the server of the request
 				// it stores the course locally then cals the callback with the course
 				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.EXPERIMENT, function(evt, item) {
-					alert(experiment);
 					var experiment = SubmissionBuilder.SrlExperiment.decode(item.data);
-					alert(experiment);
-					var course = school.courses[0];
-					if (isUndefined(course)) {
-						userCourses[courseId] = nonExistantValue;
-						courseCallback(nonExistantValue);
-						return;
-					}
-					localScope.setSubmission(course);
-					submissionCallback(course);
+					var sub = experiment.submission;
+					localScope.setSubmission(problemId, sub);
+					submissionCallback(sub);
 				});
 				// creates a request that is then sent to the server
 				sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId]);

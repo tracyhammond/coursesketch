@@ -35,7 +35,6 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
-import org.joda.time.DateTime;
 import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 
 import protobuf.srl.request.Message.Request;
@@ -48,6 +47,7 @@ import protobuf.srl.request.Message.Request.MessageType;
  */
 public class ProxyServer extends MultiInternalConnectionServer {
 
+	@SuppressWarnings("hiding")
 	public static final int MAX_CONNECTIONS = 60; // sets see if this works!
 
 	public static final int STATE_INVALID_LOGIN = 4002;
@@ -79,6 +79,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		});
 	}
 
+	@Override
 	public void reconnect() {
 		serverManager.dropAllConnection(false, true);
 		serverManager.connectServers(this);
@@ -198,7 +199,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	public int getCurrentConnectionNumber() {
 		return super.connectionToId.size();
 	}
-	
+
 	@Override
 	public boolean parseCommand(String command, BufferedReader sysin) throws Exception {
 		if (super.parseCommand(command, sysin)) return true;
@@ -209,14 +210,17 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		return false;
 	}
  
-	public static void main( String[] args ) throws InterruptedException, IOException, KeyStoreException, NoSuchAlgorithmException,
+	public static void main( String[] args ) throws IOException, KeyStoreException, NoSuchAlgorithmException,
 			CertificateException, UnrecoverableKeyException, KeyManagementException {
-		System.out.println("Proxy Server: Version 1.0.2.quail");
+		System.out.println("Proxy Server: Version 1.0.3");
 		WebSocketImpl.DEBUG = true;
 		boolean connectLocal = false;
+		boolean ssl = false;
 		if (args.length == 1) {
 			if (args[0].equals("local")) {
 				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
+			} else if (args[0].equals("ssl")) {
+				ssl = true;
 			}
 		}
 
@@ -226,7 +230,7 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		} catch ( Exception ex ) {
 		}
 		ProxyServer s = new ProxyServer( port, connectLocal );
-		if (!connectLocal) {
+		if (!connectLocal && ssl) {
 			// load up the key store
 			String STORETYPE = "JKS";
 			//String KEYSTORE = "private/srl01.tamu.edu.key";
