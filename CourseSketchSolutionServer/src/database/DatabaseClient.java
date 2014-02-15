@@ -90,7 +90,7 @@ public class DatabaseClient {
 	 * @return
 	 */
 	public static final String saveSolution(SrlSolution solution) {
-		System.out.println("saving the experiment!");
+		System.out.println("\n\n\nsaving the experiment!");
 		DBCollection solutions = getInstance().db.getCollection(SOLUTION_COLLECTION);
 
 		BasicDBObject findQuery = new BasicDBObject(PROBLEM_BANK_ID, solution.getProblemBankId());
@@ -137,12 +137,19 @@ public class DatabaseClient {
 		System.out.println("Number of solutions found" + c.count());
 		DBObject corsor = null;
 		if (c.count() > 0) {
+			System.out.println("UPDATING AN EXPERIMENT!!!!!!!!");
 			corsor = c.next();
 			c.close();
 			DBCollection courses = getInstance().db.getCollection(EXPERIMENT_COLLECTION);
+			
+			// TODO: figure out how to update a document with a single command
+			
 			DBObject updateObj = new BasicDBObject(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray());
 			DBObject updateObj2 = new BasicDBObject(SUBMISSION_TIME, experiment.getSubmission().getSubmissionTime());
-			courses.update(corsor, new BasicDBObject ("$set", updateObj).append("$set", updateObj2));
+			BasicDBObject updateQueryPart2 = new BasicDBObject("$set", updateObj);
+			BasicDBObject updateQuery2Part2 = new BasicDBObject("$set", updateObj2);
+			courses.update(corsor, updateQueryPart2);
+			courses.update(corsor, updateQuery2Part2);
 		} else {
 			c.close();
 			BasicDBObject query = new BasicDBObject(COURSE_ID, experiment.getCourseId())
@@ -160,10 +167,20 @@ public class DatabaseClient {
 		return corsor.get(SELF_ID).toString();
 	}
 
+	/**
+	 * Gets the experiment by its id and sends all of the important information associated with it
+	 * @param itemId
+	 * @return
+	 */
 	public static SrlExperiment getExperiment(String itemId) {
 		System.out.println("Fetching experiment");
 		DBRef myDbRef = new DBRef(getInstance().db, EXPERIMENT_COLLECTION, new ObjectId(itemId));
 		DBObject corsor = myDbRef.fetch();
+
+		if (corsor == null) {
+			return null;
+		}
+
 		SrlExperiment.Builder build = SrlExperiment.newBuilder();
 		build.setAssignmentId(corsor.get(ASSIGNMENT_ID).toString());
 		build.setUserId(corsor.get(USER_ID).toString());

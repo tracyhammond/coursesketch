@@ -27,11 +27,9 @@
 		var Long = false;
 		var commandManager = false;
 		var highlighter = false;
-		var localSubmissionId = false;
 
 	    function initializeInput() {
-	    	
-	    	
+
 	    	var ProtoSubmissionBuilder = parent.ProtoSubmissionBuilder;
 			var input = new inputListener();
 			input.initializeCanvas("drawingCanvas");
@@ -73,11 +71,6 @@
 				var experiment = new ProtoSubmissionBuilder.SrlExperiment();
 				experiment.submission = new ProtoSubmissionBuilder.SrlSubmission();
 				parent.problemNavigator.setSubmissionInformation(experiment, true);
-				if (localSubmissionId !== false) {
-					experiment.submission.id = localSubmissionId;
-				} else {
-					experiment.submission.id = "NO_ID";
-				}
 
 				commandManager.getUpdateList(function(updateList) {
 					if (updateList.length == 0) {
@@ -90,10 +83,6 @@
 					// submis the work locally
 					var localSubmission = new ProtoSubmissionBuilder.SrlSubmission();
 
-					// sets the submission id.
-					if (localSubmissionId !== false) {
-						localSubmission.setId(localSubmissionId);
-					}
 					var listContainer = new ProtoUpdateCommandBuilder.SrlUpdateList();
 					listContainer.setList(updateList);
 					localSubmission.setUpdateList(listContainer.toArrayBuffer());
@@ -132,24 +121,7 @@
 
 			// is called upon a successfuly submission.
 			parent.problemNavigator.addEventMapping("submission", function(args) {
-				event = args[0];
-				msg = args[1];
-				parent.problemNavigator.getDataManager().getSubmission(parent.problemNavigator.getCurrentProblemId(), function(submission) {
-		    		if (isUndefined(submission)) {
-		    			alert("Something went wrong and the submission Id was not related correctly.");
-		    			return;
-		    		} else {
-		    			console.log("submission was related with this id: " + msg.getResponseText());
-		    		}
-		    		if (msg.getResponseText()) {
-						submission.setId(msg.getResponseText());
-						localSubmissionId = msg.getResponseText();
-						// save it with the new id.
-						parent.problemNavigator.getDataManager().setSubmission(parent.problemNavigator.getCurrentProblemId(), submission, function() {
-							console.log("submission saved");
-						});
-		    		}
-		    	});
+				console.log("SUBMISSION SCUESSFUL!");
 			});
 
 			window.addEventListener("beforeunload", function( e ) {
@@ -168,9 +140,7 @@
 	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(submission.getUpdateList());
 	    		console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
-	    		localSubmissionId = submission.getId();
 	    		console.log(submission);
-	    		console.log("Loading submission with id " + localSubmissionId);
 	    	});
 	    }
 

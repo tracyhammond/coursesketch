@@ -35,7 +35,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 
 	private boolean connectLocally = MultiConnectionManager.CONNECT_REMOTE;
 	UpdateHandler updateHandler = new UpdateHandler();
-	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
+	MultiConnectionManager internalConnections = new DatabaseConnectionManager(this);
 
 	public DatabaseServer(int port, boolean connectLocally) {
 		this( new InetSocketAddress( port ), connectLocally );
@@ -94,7 +94,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Database Server: Version 1.0.2.octopus");
+		System.out.println("Database Server: Version 1.0.3");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = false;

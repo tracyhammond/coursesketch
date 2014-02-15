@@ -18,7 +18,6 @@ import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
-import org.java_websocket.framing.Framedata;
 
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.query.Data.ItemQuery;
@@ -54,6 +53,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 	/**
 	 * Returns a number that should be unique.
 	 */
+	@Override
 	public AnswerConnectionState getUniqueState() {
 		return new AnswerConnectionState(Encoder.nextID().toString());
 	}
@@ -80,7 +80,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 			if (req.getResponseText().equals("student")) {
 				MultiConnectionState state = connectionToId.get(conn);
 				try {
-					SrlUpdate update = SrlUpdate.parseFrom(req.getOtherData());
+					SrlUpdate.parseFrom(req.getOtherData());
 					System.out.println("Parsing as an update");
 					internalConnections.send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class);
 					return;
@@ -104,7 +104,6 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 					itemRequest.setQuery(ItemQuery.SOLUTION);
 					itemRequest.addItemId(student.getProblemId());  // FIXME: this needs to change probably to make this work
 					//internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(), state.getKey(), SolutionConnection.class);
-					return;
 				}
 			} else {
 				internalConnections.send(req, req.getSessionInfo(), SolutionConnection.class);
@@ -112,11 +111,7 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 		}
 	}
 
-	public void onFragment( WebSocket conn, Framedata fragment ) {
-		//System.out.println( "received fragment: " + fragment );
-	}
-
-	public static void main( String[] args ) throws InterruptedException , IOException {
+	public static void main( String[] args ) throws IOException {
 		System.out.println("Answer Server: Version 0.0.1");
 		WebSocketImpl.DEBUG = false;
 		boolean connectLocal = false;

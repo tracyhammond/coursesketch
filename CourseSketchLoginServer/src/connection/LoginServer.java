@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
-import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
@@ -46,7 +45,7 @@ public class LoginServer extends WebSocketServer {
 	List<WebSocket> connections = new LinkedList<WebSocket>();
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public LoginServer( int port ) throws UnknownHostException {
+	public LoginServer( int port ) {
 		this( new InetSocketAddress( port ) );
 	}
 
@@ -110,10 +109,6 @@ public class LoginServer extends WebSocketServer {
 			e.printStackTrace();
 			conn.send(createLoginResponse(req, false, e.getMessage(), false, null).toByteArray());
 		}
-	}
-	
-	public void onFragment( WebSocket conn, Framedata fragment ) {
-		//System.out.println( "received fragment: " + fragment );
 	}
 
 	@Override
@@ -184,7 +179,7 @@ public class LoginServer extends WebSocketServer {
 	}
 
 	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Login Server: Version 1.0.2.gopher");
+		System.out.println("Login Server: Version 1.0.3");
 		WebSocketImpl.DEBUG = true;
 
 		if (args.length == 1) {
