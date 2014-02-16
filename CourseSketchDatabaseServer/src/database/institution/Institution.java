@@ -11,7 +11,6 @@ import java.util.List;
 import multiConnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
-import org.java_websocket.WebSocket;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
@@ -23,6 +22,7 @@ import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -99,8 +99,9 @@ public final class Institution {
 	/**
 	 * Returns a list of problems given a list of Ids for the course problems.
 	 * @throws AuthenticationException
+	 * @throws DatabaseAccessException 
 	 */
-	public static ArrayList<SrlProblem> mongoGetCourseProblem(List<String> problemID,String userId) throws AuthenticationException {
+	public static ArrayList<SrlProblem> mongoGetCourseProblem(List<String> problemID,String userId) throws AuthenticationException, DatabaseAccessException {
 		long currentTime = System.currentTimeMillis();
 		ArrayList<SrlProblem> allCourses = new ArrayList<SrlProblem>();
 		for(int index = 0; index < problemID.size(); index ++) {
@@ -108,6 +109,9 @@ public final class Institution {
 				allCourses.add(CourseProblemManager.mongoGetCourseProblem(getInstance().db, problemID.get(index), userId, currentTime));
 			} catch (DatabaseAccessException e) {
 				e.printStackTrace();
+				if (!e.isRecoverable()) {
+					throw e;
+				}
 			} catch (AuthenticationException e) {
 				if (e.getType() != AuthenticationException.INVALID_DATE) {
 					throw e;
@@ -131,6 +135,9 @@ public final class Institution {
 						userId, currentTime));
 			} catch (DatabaseAccessException e) {
 				e.printStackTrace();
+				if (!e.isRecoverable()) {
+					throw e;
+				}
 			} catch (AuthenticationException e) {
 				if (e.getType() != AuthenticationException.INVALID_DATE) {
 					throw e;
@@ -309,8 +316,9 @@ public final class Institution {
 	/**
 	 * A message sent from the submission server that allows the insertion of the message
 	 * @param req
+	 * @throws DatabaseAccessException 
 	 */
-	public static void mongoInsertSubmission(Request req) {
+	public static void mongoInsertSubmission(Request req) throws DatabaseAccessException {
 		try {
 			SrlExperiment exp = SrlExperiment.parseFrom(req.getOtherData());
 			SubmissionManager.mongoInsertSubmission(getInstance().db, exp.getProblemId(), req.getServersideId(), exp.getSubmission().getId(), true);
@@ -321,10 +329,10 @@ public final class Institution {
 		try {
 			// TODO: change how this process works for instructors!
 			SrlSolution exp = SrlSolution.parseFrom(req.getOtherData());
-			throw new Exception("Instructors need to be authenticated first!");
+			throw new DatabaseAccessException("Instructors need to be authenticated first!");
 			//SubmissionManager.mongoInsertSubmission(getInstance().db, exp.getProblemBankId(), exp.getProblemBankId(), exp.getSubmission().getId(), false);
 			//return;
-		} catch(Exception e) {
+		} catch(InvalidProtocolBufferException e) {
 			e.printStackTrace();
 		}
 	}
