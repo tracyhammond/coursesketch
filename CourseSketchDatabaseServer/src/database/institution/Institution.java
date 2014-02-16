@@ -131,7 +131,6 @@ public final class Institution {
 						userId, currentTime));
 			} catch (DatabaseAccessException e) {
 				e.printStackTrace();
-				throw e;
 			} catch (AuthenticationException e) {
 				if (e.getType() != AuthenticationException.INVALID_DATE) {
 					throw e;

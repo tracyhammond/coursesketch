@@ -3541,6 +3541,51 @@ public final class Data {
      * <code>optional bytes data = 3;</code>
      */
     com.google.protobuf.ByteString getData();
+
+    // optional bool noData = 4;
+    /**
+     * <code>optional bool noData = 4;</code>
+     *
+     * <pre>
+     * if there is no data to return then this flag is set to true.
+     * </pre>
+     */
+    boolean hasNoData();
+    /**
+     * <code>optional bool noData = 4;</code>
+     *
+     * <pre>
+     * if there is no data to return then this flag is set to true.
+     * </pre>
+     */
+    boolean getNoData();
+
+    // optional string errorMessage = 5;
+    /**
+     * <code>optional string errorMessage = 5;</code>
+     *
+     * <pre>
+     * if noData is true then this may contain why.
+     * </pre>
+     */
+    boolean hasErrorMessage();
+    /**
+     * <code>optional string errorMessage = 5;</code>
+     *
+     * <pre>
+     * if noData is true then this may contain why.
+     * </pre>
+     */
+    java.lang.String getErrorMessage();
+    /**
+     * <code>optional string errorMessage = 5;</code>
+     *
+     * <pre>
+     * if noData is true then this may contain why.
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getErrorMessageBytes();
   }
   /**
    * Protobuf type {@code protobuf.srl.query.ItemResult}
@@ -3612,6 +3657,16 @@ public final class Data {
             case 26: {
               bitField0_ |= 0x00000004;
               data_ = input.readBytes();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              noData_ = input.readBool();
+              break;
+            }
+            case 42: {
+              bitField0_ |= 0x00000010;
+              errorMessage_ = input.readBytes();
               break;
             }
           }
@@ -3729,10 +3784,91 @@ public final class Data {
       return data_;
     }
 
+    // optional bool noData = 4;
+    public static final int NODATA_FIELD_NUMBER = 4;
+    private boolean noData_;
+    /**
+     * <code>optional bool noData = 4;</code>
+     *
+     * <pre>
+     * if there is no data to return then this flag is set to true.
+     * </pre>
+     */
+    public boolean hasNoData() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional bool noData = 4;</code>
+     *
+     * <pre>
+     * if there is no data to return then this flag is set to true.
+     * </pre>
+     */
+    public boolean getNoData() {
+      return noData_;
+    }
+
+    // optional string errorMessage = 5;
+    public static final int ERRORMESSAGE_FIELD_NUMBER = 5;
+    private java.lang.Object errorMessage_;
+    /**
+     * <code>optional string errorMessage = 5;</code>
+     *
+     * <pre>
+     * if noData is true then this may contain why.
+     * </pre>
+     */
+    public boolean hasErrorMessage() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional string errorMessage = 5;</code>
+     *
+     * <pre>
+     * if noData is true then this may contain why.
+     * </pre>
+     */
+    public java.lang.String getErrorMessage() {
+      java.lang.Object ref = errorMessage_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          errorMessage_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string errorMessage = 5;</code>
+     *
+     * <pre>
+     * if noData is true then this may contain why.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getErrorMessageBytes() {
+      java.lang.Object ref = errorMessage_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        errorMessage_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
       returnText_ = "";
       data_ = com.google.protobuf.ByteString.EMPTY;
+      noData_ = false;
+      errorMessage_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3755,6 +3891,12 @@ public final class Data {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, data_);
       }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBool(4, noData_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(5, getErrorMessageBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -3775,6 +3917,14 @@ public final class Data {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, data_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(4, noData_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, getErrorMessageBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3898,6 +4048,10 @@ public final class Data {
         bitField0_ = (bitField0_ & ~0x00000002);
         data_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
+        noData_ = false;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        errorMessage_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -3938,6 +4092,14 @@ public final class Data {
           to_bitField0_ |= 0x00000004;
         }
         result.data_ = data_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.noData_ = noData_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.errorMessage_ = errorMessage_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3964,6 +4126,14 @@ public final class Data {
         }
         if (other.hasData()) {
           setData(other.getData());
+        }
+        if (other.hasNoData()) {
+          setNoData(other.getNoData());
+        }
+        if (other.hasErrorMessage()) {
+          bitField0_ |= 0x00000010;
+          errorMessage_ = other.errorMessage_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -4134,6 +4304,153 @@ public final class Data {
       public Builder clearData() {
         bitField0_ = (bitField0_ & ~0x00000004);
         data_ = getDefaultInstance().getData();
+        onChanged();
+        return this;
+      }
+
+      // optional bool noData = 4;
+      private boolean noData_ ;
+      /**
+       * <code>optional bool noData = 4;</code>
+       *
+       * <pre>
+       * if there is no data to return then this flag is set to true.
+       * </pre>
+       */
+      public boolean hasNoData() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional bool noData = 4;</code>
+       *
+       * <pre>
+       * if there is no data to return then this flag is set to true.
+       * </pre>
+       */
+      public boolean getNoData() {
+        return noData_;
+      }
+      /**
+       * <code>optional bool noData = 4;</code>
+       *
+       * <pre>
+       * if there is no data to return then this flag is set to true.
+       * </pre>
+       */
+      public Builder setNoData(boolean value) {
+        bitField0_ |= 0x00000008;
+        noData_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool noData = 4;</code>
+       *
+       * <pre>
+       * if there is no data to return then this flag is set to true.
+       * </pre>
+       */
+      public Builder clearNoData() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        noData_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional string errorMessage = 5;
+      private java.lang.Object errorMessage_ = "";
+      /**
+       * <code>optional string errorMessage = 5;</code>
+       *
+       * <pre>
+       * if noData is true then this may contain why.
+       * </pre>
+       */
+      public boolean hasErrorMessage() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string errorMessage = 5;</code>
+       *
+       * <pre>
+       * if noData is true then this may contain why.
+       * </pre>
+       */
+      public java.lang.String getErrorMessage() {
+        java.lang.Object ref = errorMessage_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          errorMessage_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string errorMessage = 5;</code>
+       *
+       * <pre>
+       * if noData is true then this may contain why.
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getErrorMessageBytes() {
+        java.lang.Object ref = errorMessage_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          errorMessage_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string errorMessage = 5;</code>
+       *
+       * <pre>
+       * if noData is true then this may contain why.
+       * </pre>
+       */
+      public Builder setErrorMessage(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        errorMessage_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string errorMessage = 5;</code>
+       *
+       * <pre>
+       * if noData is true then this may contain why.
+       * </pre>
+       */
+      public Builder clearErrorMessage() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        errorMessage_ = getDefaultInstance().getErrorMessage();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string errorMessage = 5;</code>
+       *
+       * <pre>
+       * if noData is true then this may contain why.
+       * </pre>
+       */
+      public Builder setErrorMessageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        errorMessage_ = value;
         onChanged();
         return this;
       }
@@ -4709,17 +5026,18 @@ public final class Data {
       "rl.query.ItemSend\"F\n\010ItemSend\022,\n\005query\030\001" +
       " \001(\0162\035.protobuf.srl.query.ItemQuery\022\014\n\004d" +
       "ata\030\003 \001(\014\"=\n\nDataResult\022/\n\007results\030\001 \003(\013" +
-      "2\036.protobuf.srl.query.ItemResult\"\\\n\nItem",
-      "Result\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.que" +
-      "ry.ItemQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004data" +
-      "\030\003 \001(\014\"\026\n\006IdList\022\014\n\004list\030\001 \003(\t*\375\001\n\tItemQ" +
-      "uery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\n" +
-      "ASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK" +
-      "_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE" +
-      "\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPER" +
-      "IMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017" +
-      "\n\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013COURSE_" +
-      "LIST\020\r"
+      "2\036.protobuf.srl.query.ItemResult\"\202\001\n\nIte",
+      "mResult\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.qu" +
+      "ery.ItemQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004dat" +
+      "a\030\003 \001(\014\022\016\n\006noData\030\004 \001(\010\022\024\n\014errorMessage\030" +
+      "\005 \001(\t\"\026\n\006IdList\022\014\n\004list\030\001 \003(\t*\375\001\n\tItemQu" +
+      "ery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\nA" +
+      "SSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_" +
+      "PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020" +
+      "\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERI" +
+      "MENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n" +
+      "\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013COURSE_L",
+      "IST\020\r"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4761,7 +5079,7 @@ public final class Data {
           internal_static_protobuf_srl_query_ItemResult_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ItemResult_descriptor,
-              new java.lang.String[] { "Query", "ReturnText", "Data", });
+              new java.lang.String[] { "Query", "ReturnText", "Data", "NoData", "ErrorMessage", });
           internal_static_protobuf_srl_query_IdList_descriptor =
             getDescriptor().getMessageTypes().get(6);
           internal_static_protobuf_srl_query_IdList_fieldAccessorTable = new

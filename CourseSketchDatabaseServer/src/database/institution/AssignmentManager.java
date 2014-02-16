@@ -73,7 +73,7 @@ public class AssignmentManager
 		DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
 		DBObject corsor = myDbRef.fetch();
 		if (corsor == null) {
-			throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId);
+			throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
 		}
 
 		ArrayList adminList = (ArrayList<Object>)corsor.get(ADMIN);

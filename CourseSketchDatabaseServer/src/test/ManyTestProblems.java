@@ -261,8 +261,8 @@ public class ManyTestProblems {
 				+ "(p \u2283 q) \u2283 ((p \u2283 (q \u2283 r)) \u2283 (p \u2283 r))",
 				"Construct the proof(s) for the following theorem(s):"
 				+ "(p \u2283 q) \u2283 ((p \u2283 \u223C q) \u2283 \u223C p)"
-				};
 				*/
+				};
 		QuestionType[] questionType = new QuestionType[] {
 				QuestionType.CHECK_BOX,
 				QuestionType.FREE_RESP,

@@ -14,7 +14,7 @@ import java.util.List;
  * @author hammond
  * @copyright Tracy Hammond, Sketch Recognition Lab, Texas A&M University
  */
-public class MySQLTest {
+public class MySQLTest_AK3 {
 
 	/**
 	 * @param args
