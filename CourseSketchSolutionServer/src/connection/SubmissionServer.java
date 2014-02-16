@@ -147,6 +147,8 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 						if (experiment != null) {
 							send.setData(experiment.toByteString());
 						} else {
+							send.setNoData(true);
+							send.setErrorMessage(errorMessage);
 							//error stuff
 						}
 						builder.addResults(send);

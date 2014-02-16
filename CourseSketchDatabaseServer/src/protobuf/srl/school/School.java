@@ -5320,10 +5320,18 @@ public final class School {
       // optional bool subtractionType = 4;
       /**
        * <code>optional bool subtractionType = 4;</code>
+       *
+       * <pre>
+       * true is cap score, false is off user grade.
+       * </pre>
        */
       boolean hasSubtractionType();
       /**
        * <code>optional bool subtractionType = 4;</code>
+       *
+       * <pre>
+       * true is cap score, false is off user grade.
+       * </pre>
        */
       boolean getSubtractionType();
     }
@@ -5685,12 +5693,20 @@ public final class School {
       private boolean subtractionType_;
       /**
        * <code>optional bool subtractionType = 4;</code>
+       *
+       * <pre>
+       * true is cap score, false is off user grade.
+       * </pre>
        */
       public boolean hasSubtractionType() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
        * <code>optional bool subtractionType = 4;</code>
+       *
+       * <pre>
+       * true is cap score, false is off user grade.
+       * </pre>
        */
       public boolean getSubtractionType() {
         return subtractionType_;
@@ -6091,18 +6107,30 @@ public final class School {
         private boolean subtractionType_ ;
         /**
          * <code>optional bool subtractionType = 4;</code>
+         *
+         * <pre>
+         * true is cap score, false is off user grade.
+         * </pre>
          */
         public boolean hasSubtractionType() {
           return ((bitField0_ & 0x00000008) == 0x00000008);
         }
         /**
          * <code>optional bool subtractionType = 4;</code>
+         *
+         * <pre>
+         * true is cap score, false is off user grade.
+         * </pre>
          */
         public boolean getSubtractionType() {
           return subtractionType_;
         }
         /**
          * <code>optional bool subtractionType = 4;</code>
+         *
+         * <pre>
+         * true is cap score, false is off user grade.
+         * </pre>
          */
         public Builder setSubtractionType(boolean value) {
           bitField0_ |= 0x00000008;
@@ -6112,6 +6140,10 @@ public final class School {
         }
         /**
          * <code>optional bool subtractionType = 4;</code>
+         *
+         * <pre>
+         * true is cap score, false is off user grade.
+         * </pre>
          */
         public Builder clearSubtractionType() {
           bitField0_ = (bitField0_ & ~0x00000008);

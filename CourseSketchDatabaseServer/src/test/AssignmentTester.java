@@ -39,7 +39,7 @@ public class AssignmentTester {
 		*/
 		permissions.addUserPermission("saby");
 		permissions.addUserPermission("stephanie");
-		testBuilder.setLatePolicy(LatePolicy.POLICY1);
+		//testBuilder.setLatePolicy(LatePolicy.POLICY1);
 		
 		testBuilder.setAccessPermission(permissions.build());
 		System.out.println(testBuilder.toString());
