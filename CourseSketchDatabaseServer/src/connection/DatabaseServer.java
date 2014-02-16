@@ -23,6 +23,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.joda.time.DateTime;
 
 import protobuf.srl.request.Message.Request;
+import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
 
@@ -53,7 +54,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		System.out.println("Time:"+DateTime.now().getMillis());
 		conn.send(TimeManager.serverSendTimeToClient().toByteArray());
 	}
-	
+
 	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		System.out.println("Receiving message...");
@@ -67,7 +68,12 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		}
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			System.out.println("Submitting submission id");
-			Institution.mongoInsertSubmission(req);
+			try {
+				Institution.mongoInsertSubmission(req);
+			} catch (DatabaseAccessException e) {
+				e.printStackTrace();
+				System.out.println("THIS NEEDS TO BE SENT TO THE CLIENT!");
+			}
 		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
 			DataRequestHandler.handleRequest(req, conn, super.connectionToId.get(conn).getKey(), internalConnections);
 		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
