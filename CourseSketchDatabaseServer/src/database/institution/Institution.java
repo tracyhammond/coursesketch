@@ -309,7 +309,7 @@ public final class Institution {
 		return true;
 	}
 
-	public static final ArrayList<SrlCourse> getUserCourses(String userId) throws AuthenticationException {
+	public static final ArrayList<SrlCourse> getUserCourses(String userId) throws AuthenticationException, DatabaseAccessException {
 		return Institution.mongoGetCourses(UserClient.getUserCourses(userId), userId);
 	}
 

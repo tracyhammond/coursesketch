@@ -26,8 +26,7 @@ public final class UserClient {
 	}
 
 	private UserClient() {
-		//this("goldberglinux.tamu.edu");
-		this("localhost");
+		this("goldberglinux.tamu.edu");
 	}
 
 	private static UserClient getInstance() {
@@ -63,7 +62,7 @@ public final class UserClient {
 		UserManager.addCourseToUser(getInstance().db, userId, courseId);
 	}
 
-	public static ArrayList<String> getUserCourses(String userId) {
+	public static ArrayList<String> getUserCourses(String userId) throws DatabaseAccessException {
 		return UserManager.getUserCourses(getInstance().db, userId);
 	}
 }
