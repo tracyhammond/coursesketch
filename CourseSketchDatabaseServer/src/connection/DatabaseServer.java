@@ -8,17 +8,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import multiConnection.ConnectionException;
 import multiConnection.MultiConnectionManager;
-import multiConnection.MultiConnectionState;
 import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
-import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.joda.time.DateTime;
 
@@ -62,7 +59,6 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 
 		if (req == null) {
 			System.out.println("protobuf error");
-			//this.
 			// we need to somehow send an error to the client here
 			return;
 		}
@@ -85,10 +81,6 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		System.out.println("Finished looking at query");
 	}
 
-	public void onFragment( WebSocket conn, Framedata fragment ) {
-		//System.out.println( "received fragment: " + fragment );
-	}
-
 	@Override
 	public void reconnect() {
 		internalConnections.dropAllConnection(true, false);
@@ -99,7 +91,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		}
 	}
 
-	public static void main( String[] args ) throws InterruptedException , IOException {
+	public static void main( String[] args ) throws IOException {
 		System.out.println("Database Server: Version 1.0.3");
 		WebSocketImpl.DEBUG = false;
 
