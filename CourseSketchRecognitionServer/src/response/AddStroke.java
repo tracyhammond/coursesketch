@@ -7,7 +7,6 @@ import com.google.protobuf.ByteString;
 import srl.core.sketch.Point;
 import srl.core.sketch.Sketch;
 import srl.core.sketch.Stroke;
-
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 import protobuf.srl.sketch.Sketch.SrlPoint;
@@ -22,6 +21,7 @@ public class AddStroke extends Command {
 	protected Stroke data;
 	
 	public AddStroke(SrlStroke input){
+		id = UUID.fromString(input.getId());
 		type = CommandType.ADD_STROKE;
 		
 		data = new Stroke();
@@ -59,5 +59,9 @@ public class AddStroke extends Command {
 	 */
 	public void execute(Sketch s) {
 		s.add(data);
+	}
+	@Override
+	public void undo(Sketch s){
+		s.remove(data);
 	}
 }

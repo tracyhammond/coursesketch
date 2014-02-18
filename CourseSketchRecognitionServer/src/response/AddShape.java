@@ -24,6 +24,7 @@ public class AddShape extends Command {
 	protected Shape data;
 	
 	public AddShape(SrlShape input){
+		id = UUID.fromString(input.getId());
 		type = CommandType.ADD_SHAPE;
 		
 		data = new Shape();
@@ -62,5 +63,9 @@ public class AddShape extends Command {
 	@Override
 	public void execute(Sketch s) {
 		s.add(data);
+	}
+	@Override
+	public void undo(Sketch s){
+		s.remove(data);
 	}
 }

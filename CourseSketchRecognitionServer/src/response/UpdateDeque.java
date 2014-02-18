@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.Deque;
 import java.util.List;
 
+import protobuf.srl.commands.Commands.CommandType;
+
 import srl.core.sketch.Sketch;
 
 /**
@@ -86,7 +88,22 @@ public class UpdateDeque implements Iterable<Update>{
 	 * @param index
 	 */
 	public void execute(Sketch s,int index){
-		((LinkedList<Update>) syncDeque).get(index).execute(s);
+		Update update = ((LinkedList<Update>) syncDeque).get(index);
+		Command command = update.getCommandList().get(0);
+		if(command != null && command.getType() == CommandType.UNDO){
+			syncDeque.removeFirst(); //Get rid of this undo command
+			Update undoThese = syncDeque.removeFirst();
+			undoDeque.addFirst(undoThese);
+			undoThese.undo(s);
+		} else if (command != null && command.getType() == CommandType.REDO){
+			syncDeque.removeFirst();//Get rid of this redo command
+			Update redoThese = undoDeque.removeFirst();
+			syncDeque.addFirst(redoThese);
+			redoThese.execute(s);
+		} else {
+			undoDeque.clear();
+			update.execute(s);
+		}
 	}
 	
 	/**

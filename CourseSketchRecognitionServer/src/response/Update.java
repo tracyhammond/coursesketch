@@ -23,6 +23,7 @@ public class Update implements Iterable<Command>{
 	private AddStroke stroke;
 	private AddShape shape;
 	
+	
 	/**
 	 * Default constructor
 	 */
@@ -111,6 +112,16 @@ public class Update implements Iterable<Command>{
 	public void execute(Sketch s){
 		for(Command c: data){
 			c.execute(s);
+		}
+	}
+	
+	/**
+	 * Undo all commands from this update on this sketch
+	 * @param s PaleoSketch Sketch
+	 */
+	public void undo(Sketch s){
+		for(Command c: data){
+			c.undo(s);
 		}
 	}
 

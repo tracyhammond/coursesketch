@@ -1,9 +1,10 @@
 package response;
 
+import java.util.UUID;
+
 import com.google.protobuf.ByteString;
 
 import protobuf.srl.commands.Commands.CommandType;
-
 import srl.core.sketch.Sketch;
 
 /**
@@ -19,6 +20,7 @@ import srl.core.sketch.Sketch;
 
 public abstract class Command {
 	protected CommandType type;
+	protected UUID id = null;
 	
 	/**
 	 * Returns the command type, one of
@@ -43,4 +45,16 @@ public abstract class Command {
 	 * @param s PaleoSketch Sketch
 	 */
 	public abstract void execute(Sketch s);
+	/**
+	 * undo as singular command, intended to be called in sequence for every Update
+	 * @param s PaleoSketch Sketch
+	 */
+	public abstract void undo(Sketch s);
+	/**
+	 * Returns ID
+	 * @return UUID
+	 */
+	public UUID getId(){
+		return id;
+	}
 }

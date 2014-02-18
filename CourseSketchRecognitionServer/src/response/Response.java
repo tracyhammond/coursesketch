@@ -103,7 +103,10 @@ public class Response {
 				com = new RemoveObject(IdChain.parseFrom(c.getCommandData()));
 				break;
 			case UNDO:
-				//PARSEME
+				com = new UndoObject();
+				break;
+			case REDO:
+				com = new RedoObject();
 				break;
 			default:
 				throw new Exception("Unsupported command: "+c.getCommandType());

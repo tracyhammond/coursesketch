@@ -9,6 +9,7 @@ import com.google.protobuf.ByteString;
 import protobuf.srl.commands.Commands.ActionPackageShape;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.IdChain;
+import srl.core.sketch.SComponent;
 import srl.core.sketch.SContainer;
 import srl.core.sketch.Sketch;
 
@@ -47,10 +48,12 @@ public class PackageShape extends Command {
 	 * @return IdChain
 	 */
 	private IdChain forgeChain(SContainer top){
-		// FIXME this is not implemented
 		List<String> chain = new LinkedList<String>();
-				
+		for(SComponent component : top.getRecursiveSubcomponents()){
+			chain.add(component.getId().toString());
+		}
 		IdChain.Builder builder = IdChain.newBuilder();
+		builder.addAllIdChain(chain);
 		return builder.build();
 	}
 	
@@ -71,7 +74,6 @@ public class PackageShape extends Command {
 	 * from [OldContainer] and puts them in the [NewContainer]
 	 */
 	public void execute(Sketch s) {
-		// TODO these casts feel risky. Lets make sure they work!
 		SContainer from;
 		if(oldContainer == null)
 			from = s;
@@ -89,6 +91,26 @@ public class PackageShape extends Command {
 		
 		for(String id : contained){
 			to.add(from.remove(UUID.fromString(id)));
+		}
+	}
+	public void undo(Sketch s){
+		SContainer from;
+		if(oldContainer == null)
+			from = s;
+		else
+			from = (SContainer) s.get(UUID.fromString(oldContainer.getIdChain(oldContainer.getIdChainCount()-1)));
+		
+		SContainer to;
+		if(newContainer == null)
+			to = s;
+		else
+			to = (SContainer) s.get(UUID.fromString(newContainer.getIdChain(newContainer.getIdChainCount()-1)));
+		
+		if(from == to)
+			return;
+		
+		for(String id : contained){
+			from.add(to.remove(UUID.fromString(id)));
 		}
 	}
 }
