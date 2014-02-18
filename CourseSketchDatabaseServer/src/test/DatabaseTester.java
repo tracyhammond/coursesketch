@@ -15,27 +15,25 @@ import database.institution.Institution;
 import database.user.UserClient;
 
 public class DatabaseTester {
-	public static void main(String args[]) throws UnknownHostException, AuthenticationException {
-		MongoClient mongoClient = new MongoClient("localhost");
+	public static void main(String args[]) throws AuthenticationException {
 		//MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
-		DB db = mongoClient.getDB("test");
 		new Institution(true);
 		new UserClient(true);
-		deleteCollections(db);
+		//deleteCollections(db);
 		try {
-			String returnId = CourseTester.testCourses(db);
+			String returnId = CourseTester.testCourses();
 			System.out.println("Inserting assignment into course! " + returnId);
-			String assignmentId = AssignmentTester.testAssignments(db, returnId);
+			String assignmentId = AssignmentTester.testAssignments(returnId);
 			System.out.println("Inserting second assignment into course! " + returnId);
-			String assignmentId2 = AssignmentTester.testAssignments(db, returnId);
+			String assignmentId2 = AssignmentTester.testAssignments(returnId);
 			System.out.println("Creating bank problem");
-			String bankId1 = BankProblemTester.testBankProblems(db, returnId);
+			String bankId1 = BankProblemTester.testBankProblems(returnId);
 			System.out.println("Creating bank problem2");
-			String bankId2 = BankProblemTester.testBankProblems(db, returnId);
+			String bankId2 = BankProblemTester.testBankProblems(returnId);
 			System.out.println("Creating course problem");
-			CourseProblemTester.testCourseProblems(db, returnId, assignmentId, bankId1);
+			CourseProblemTester.testCourseProblems(returnId, assignmentId, bankId1);
 			System.out.println("Creating course problem2");
-			CourseProblemTester.testCourseProblems(db, returnId, assignmentId2, bankId2);
+			CourseProblemTester.testCourseProblems(returnId, assignmentId2, bankId2);
 			
 			System.out.println("Test Users");
 			UserTester.testUsers(returnId);

@@ -17,7 +17,7 @@ import database.institution.Institution;
 
 public class AssignmentTester {
 
-	public static String testAssignments(DB dbs, String courseId) throws AuthenticationException, DatabaseAccessException {
+	public static String testAssignments(String courseId) throws AuthenticationException, DatabaseAccessException {
 		SrlAssignment.Builder testBuilder = SrlAssignment.newBuilder();
 		testBuilder.setCourseId(courseId);
 		testBuilder.setName("Raising Puppies");
@@ -58,7 +58,7 @@ public class AssignmentTester {
 		catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate mongo get assignment");
 		}
-
+		/*
 		System.out.println("GETTING ASSIGNMENTS AS ADMIN");
 		SrlAssignment builder = AssignmentManager.mongoGetAssignment(dbs, assignmentId, "david", System.currentTimeMillis());
 		//System.out.println(builder.toString());
@@ -107,6 +107,7 @@ public class AssignmentTester {
 
 		System.out.println("GETTING UPDATED COURSE AS ADMIN");
 		SrlAssignment postUpdate = AssignmentManager.mongoGetAssignment(dbs, assignmentId, "david", System.currentTimeMillis());
+		*/
 		return assignmentId;
 	}
 	
