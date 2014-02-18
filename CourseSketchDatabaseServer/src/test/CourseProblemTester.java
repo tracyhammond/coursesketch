@@ -12,7 +12,7 @@ import database.institution.Institution;
 
 public class CourseProblemTester {
 
-	public static String testCourseProblems(DB dbs, String courseId, String assignmentId, String problemBankId) throws AuthenticationException, DatabaseAccessException {
+	public static String testCourseProblems(String courseId, String assignmentId, String problemBankId) throws AuthenticationException, DatabaseAccessException {
 		SrlProblem.Builder testBuilder = SrlProblem.newBuilder();
 		testBuilder.setCourseId(courseId);
 		testBuilder.setAssignmentId(assignmentId);
@@ -53,7 +53,7 @@ public class CourseProblemTester {
 		catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate mongo get assignment");
 		}
-
+		/*
 		System.out.println("GETTING PROBLEMS AS ADMIN");
 		SrlProblem builder = CourseProblemManager.mongoGetCourseProblem(dbs, problemId, "david", System.currentTimeMillis());
 		System.out.println(builder.toString());
@@ -102,6 +102,7 @@ public class CourseProblemTester {
 
 		System.out.println("GETTING UPDATED COURSE AS ADMIN");
 		SrlProblem postUpdate = CourseProblemManager.mongoGetCourseProblem(dbs, problemId, "david", System.currentTimeMillis());
+		*/
 		return problemId;
 	}
 
