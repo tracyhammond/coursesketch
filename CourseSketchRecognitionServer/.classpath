@@ -11,7 +11,6 @@
 	<classpathentry kind="lib" path="libs/slf4j-api-1.6.4.jar"/>
 	<classpathentry kind="lib" path="libs/websocketsource.jar"/>
 	<classpathentry kind="lib" path="libs/sr-recognition01.jar"/>
-	<classpathentry kind="src" path="/coursesketchwebserver"/>
 	<classpathentry kind="lib" path="libs/weka.jar"/>
 	<classpathentry kind="lib" path="libs/java_websocket.jar"/>
 	<classpathentry kind="lib" path="libs/PaleoNNTrainer.jar"/>
