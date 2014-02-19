@@ -39,39 +39,55 @@ function addScopedLoadEvent(scope, func) {
  */
 function DynamicFileLoader() {
 	this.scope = document;
-	this.loadFile = function loadFile(filename, filetype, callBack) {
-		var fileref = this.createFile(filename, filetype, callBack);
-
+	/**
+	 * Dynamically loads a file with a filename, filetype and an onload function.
+	 *
+	 * @param filename The url of where the file is located.
+	 * @param filetype The only supported file types are 'js' and 'css'.
+	 * @param onload Called when the file is loaded.
+	 */
+	this.loadFile = function loadFile(filename, filetype, onload) {
+		var fileref = this.createFile(filename, filetype, onload);
 		if (fileref) {
 			this.scope.getElementsByTagName("head")[0].appendChild(fileref);
 		}
 	};
 
-	this.createFile = function createFile(filename, filetype, callBack) {
-		if(callBack && typeof callBack !== 'function') {
-			throw 'Not a valid callBack';  
+	/**
+	 * creates a file reference with a filename, filetype and an onload event.
+	 *
+	 * @param filename The url of where the file is located.
+	 * @param filetype The only supported file types are 'js' and 'css'.
+	 * @param onload Called when the file is loaded.
+	 */
+	this.createFile = function createFile(filename, filetype, onload) {
+		if (onload && typeof onload !== 'function') {
+			throw 'Not a valid callBack for file: ' + filename + ' type is ' + (typeof onload);  
 		}
 		var fileref = false;
-		if (filetype=="js"){ //if filename is a external JavaScript file
-			fileref=this.scope.createElement('script');
+		if (filetype == "js"){ //if filename is a external JavaScript file
+			fileref = this.scope.createElement('script');
 			fileref.setAttribute("type","text/javascript");
 			fileref.setAttribute("src", filename);
 		}
-		else if (filetype=="css"){ //if filename is an external CSS file
-			fileref=this.scope.createElement("link");
+		else if (filetype == "css"){ //if filename is an external CSS file
+			fileref = this.scope.createElement("link");
 			fileref.setAttribute("rel", "stylesheet");
 			fileref.setAttribute("type", "text/css");
 			fileref.setAttribute("href", filename);
 		}
 
-		if(fileref && callBack) {
-			fileref.onload = callBack;
+		if (fileref && onload) {
+			fileref.onload = onload;
 		}
 		return fileref;
 	};
 
 	/**
-	 * Removes the given javascript file.
+	 * Removes the given file.
+	 *
+	 * @param filename The url of where the file is located that you want removed you only need the ending part of the name.
+	 * @param filetype The type of file you want removed. The only supported file types are 'js' and 'css'.
 	 */
 	this.removeFile = function removefile(filename, filetype){
 		var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none"; //determine element type to create nodelist from
@@ -85,16 +101,19 @@ function DynamicFileLoader() {
 	};
 
 	/**
-	 * Replaces the old filename with the new filename.
-	 * They must be the same filetype.
+	 * Removes the given file and replaces it with a new file
+	 *
+	 * @param filename The url of where the file is located that you want removed you only need the ending part of the name.
+	 * @param filetype The type of file you want removed. The only supported file types are 'js' and 'css'.
+	 * @param onload Called when the file is loaded.
 	 */
-	this.replaceFile = function replaceFile(oldfilename, newfilename, filetype){
+	this.replaceFile = function replaceFile(oldfilename, newfilename, filetype, onload) {
 		var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none"; //determine element type to create nodelist using
 		var targetattr=(filetype=="js")? "src" : (filetype=="css")? "href" : "none"; //determine corresponding attribute to test for
 		var allsuspects=this.scope.getElementsByTagName(targetelement);
 		for (var i=allsuspects.length; i>=0; i--){ //search backwards within nodelist for matching elements to remove
 			if (allsuspects[i] && allsuspects[i].getAttribute(targetattr)!=null && allsuspects[i].getAttribute(targetattr).indexOf(oldfilename)!=-1){
-				var newelement=createjscssfile(newfilename, filetype);
+				var newelement = this.createFile(newfilename, filetype, onload);
 				allsuspects[i].parentNode.replaceChild(newelement, allsuspects[i]);
 			}
 		}
@@ -102,8 +121,10 @@ function DynamicFileLoader() {
 }
 
 var loader = new DynamicFileLoader();
+/*
 loader.loadFile("css/jquery/jquery.mobile-1.0rc2.min.css",'css');
 loader.loadFile("css/main.css",'css');
+*/
 
 /*
 
