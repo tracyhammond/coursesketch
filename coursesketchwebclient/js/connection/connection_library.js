@@ -5,15 +5,16 @@
  */
 function Connection(uri, encrypted, attemptReconnect) {
 
-	var onOpen;
-	var onClose;
+	var connected = false;
+	var onOpen = false;
+	var onClose = false;
 	var onRequest = false;
 	var onLogin = false;
 	var onRecognition = false;
 	var onAnswerChecker = false;
 	var onSubmission = false;
 	var onSchoolData = false;
-	var onError;
+	var onError = false;
 
 	var websocket;
 	var wsUri = (encrypted?'wss://' : 'ws://') + uri;
@@ -25,6 +26,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 			websocket = new WebSocket(wsUri);
 			websocket.binaryType = "arraybuffer"; // We are talking binary
 			websocket.onopen = function(evt) {
+				connected = true;
 				if (onOpen)
 					onOpen(evt);
 				if (timeoutVariable) {
@@ -34,6 +36,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 			};
 
 			websocket.onclose = function(evt) {
+				connected = false;
 				websocket.close();
 				if (onClose) {
 					onClose(evt, attemptReconnect);
@@ -97,12 +100,15 @@ function Connection(uri, encrypted, attemptReconnect) {
 	}
 
 	this.reconnect = function() {
-		console.log(websocket);
 		websocket.close();
 
 		createWebSocket();
-	}
-	
+	};
+
+	this.isConnected = function() {
+		return connected;
+	};
+
 	/**
 	 * Sets the listeners for the different functions:
 	 * 
