@@ -1,16 +1,17 @@
+function swipeCheck() {
+	if(!is_touch) {
+		disable_menu_swiping();
+	}
+}
+
 function placeMenu(isInstructor) {
 	var menuElement = document.getElementById('menuBar');
 	if(menuElement) {
 		menuElement.innerHTML = getMenu(isInstructor);
 		var loader = new DynamicFileLoader();
+		console.log(swipeCheck);
 		loader.loadFile('js/menu/sliding_menu.js', 'js', swipeCheck);
 		loader.loadFile('css/menu/menu.css', 'css', false);
-	}
-}
-
-function swipeCheck() {
-	if(!is_touch) {
-		disable_menu_swiping();
 	}
 }
 
