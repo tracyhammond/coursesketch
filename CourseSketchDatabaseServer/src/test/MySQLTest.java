@@ -28,32 +28,58 @@ public class MySQLTest {
 				conn = DriverManager.getConnection("jdbc:mysql://srl03.tamu.edu/problembank?" +
 				                               "user=srl&password=sketchrec");
 
-			Statement stmt = conn.createStatement() ;
-			//String query = "select * from AssignmentProblemList;" ;
-			String query = "select * from AssignmentProblemList where assignmentId=1;" ;
-			ResultSet rs = stmt.executeQuery(query) ;
-			List<Integer> problemIds = new ArrayList<Integer>();
-			while ( rs.next() ) {
-				System.out.println("increment");
+			Statement stmt = conn.createStatement();
+			// course -> assignments -> problems
+			String query2 = "select * from CourseInfo";
+			ResultSet courses = stmt.executeQuery(query2);
+
+			List<Integer> courseIds = new ArrayList<Integer>();
+			List<String> names = new ArrayList<String>();
+			while (courses.next()) {
 //				int numColumns = rs.getMetaData().getColumnCount();
-				int problemId = rs.getInt("problemId");				
-				System.out.println(problemId);
-				problemIds.add(problemId);
+				courseIds.add(courses.getInt("id"));
+				names.add(courses.getString("ShortTitle"));
 			}
-			rs.close();
-			for (int problemId: problemIds){
-//				for ( int i = 1 ; i <= numColumns ; i++ ) {
-					//System.out.println( "COLUMN " + i + " = " + rs.getObject(i) );
-				String query2 = "select * from Problems where id=" + problemId ;
-				ResultSet rs2 = stmt.executeQuery(query2) ;
-				while ( rs2.next() ) {
-					System.out.println("test");
-					System.out.println(rs2.getString("questiontext") + "\n");
-				}	
+			courses.close();
+
+			for (int i = 0; i < courseIds.size(); ++i) {
+				System.out.println("The course called \"" 
+						+ names.get(i) 
+						+ "\" has the following assignments:");
+
+				String assignmentQuery = "select * from CourseInfo where id="
+						+ courseIds.get(i);
+
+				ResultSet assignments = stmt.executeQuery(assignmentQuery);
+				List<Integer> assignmentIds = new ArrayList<Integer>();
+				while (assignments.next()) {
+					int assignmentId = assignments.getInt("id");
+					assignmentIds.add(assignmentId);
+				}
+				assignments.close();
+
+				for (int as : assignmentIds) {
+					System.out.println("Assignment " + as + ":");
+					String problemQuery = "select * from AssignmentProblemList where assignmentId="
+							+ as;
+					ResultSet problems = stmt.executeQuery(problemQuery);
+					List<Integer> problemIds = new ArrayList<Integer>();
+					while (problems.next()) {
+						int problemId = problems.getInt("problemId");
+						problemIds.add(problemId);
+					}
+					problems.close();
+
+					for (int ps : problemIds) {
+						System.out.println("Problem " + ps + ":");
+						String statementQuery = "select * from Problems where id="+ps;
+						ResultSet statements = stmt.executeQuery(statementQuery);
+						while (statements.next()) {
+							System.out.println(statements.getString("questiontext"));
+						}
+					}
+				}
 			}
-		//	System.out.println(rs.first());			
-			//	rs2.close();
-			
 		System.out.println("done");
 		
 			} catch (InstantiationException e) {
