@@ -6,8 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 
-import org.bson.types.ObjectId;
-
 import protobuf.srl.school.School.SrlUser;
 
 import com.mongodb.BasicDBObject;
@@ -33,11 +31,15 @@ public class UserManager {
 	 * Returns the list of courses that a users has registered for
 	 * @param userId
 	 * @return
+	 * @throws DatabaseAccessException 
 	 */
-	public static ArrayList<String> getUserCourses(DB dbs, String userId) {
+	public static ArrayList<String> getUserCourses(DB dbs, String userId) throws DatabaseAccessException {
 		DBCollection users = dbs.getCollection(USER_COLLECTION);
 		BasicDBObject query = new BasicDBObject(SELF_ID, userId);
 		DBObject cursor = users.findOne(query);
+		if (cursor == null) {
+			throw new DatabaseAccessException("Can not find a user with that id", false);
+		}
 		return (ArrayList) cursor.get(COURSE_LIST);
 	}
 

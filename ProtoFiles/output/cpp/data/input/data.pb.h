@@ -629,6 +629,25 @@ class ItemResult : public ::google::protobuf::Message {
   inline ::std::string* release_data();
   inline void set_allocated_data(::std::string* data);
 
+  // optional bool noData = 4;
+  inline bool has_nodata() const;
+  inline void clear_nodata();
+  static const int kNoDataFieldNumber = 4;
+  inline bool nodata() const;
+  inline void set_nodata(bool value);
+
+  // optional string errorMessage = 5;
+  inline bool has_errormessage() const;
+  inline void clear_errormessage();
+  static const int kErrorMessageFieldNumber = 5;
+  inline const ::std::string& errormessage() const;
+  inline void set_errormessage(const ::std::string& value);
+  inline void set_errormessage(const char* value);
+  inline void set_errormessage(const char* value, size_t size);
+  inline ::std::string* mutable_errormessage();
+  inline ::std::string* release_errormessage();
+  inline void set_allocated_errormessage(::std::string* errormessage);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemResult)
  private:
   inline void set_has_query();
@@ -637,15 +656,21 @@ class ItemResult : public ::google::protobuf::Message {
   inline void clear_has_returntext();
   inline void set_has_data();
   inline void clear_has_data();
+  inline void set_has_nodata();
+  inline void clear_has_nodata();
+  inline void set_has_errormessage();
+  inline void clear_has_errormessage();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* returntext_;
-  ::std::string* data_;
   int query_;
+  bool nodata_;
+  ::std::string* data_;
+  ::std::string* errormessage_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -1235,6 +1260,98 @@ inline void ItemResult::set_allocated_data(::std::string* data) {
   } else {
     clear_has_data();
     data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bool noData = 4;
+inline bool ItemResult::has_nodata() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ItemResult::set_has_nodata() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ItemResult::clear_has_nodata() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ItemResult::clear_nodata() {
+  nodata_ = false;
+  clear_has_nodata();
+}
+inline bool ItemResult::nodata() const {
+  return nodata_;
+}
+inline void ItemResult::set_nodata(bool value) {
+  set_has_nodata();
+  nodata_ = value;
+}
+
+// optional string errorMessage = 5;
+inline bool ItemResult::has_errormessage() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ItemResult::set_has_errormessage() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ItemResult::clear_has_errormessage() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ItemResult::clear_errormessage() {
+  if (errormessage_ != &::google::protobuf::internal::kEmptyString) {
+    errormessage_->clear();
+  }
+  clear_has_errormessage();
+}
+inline const ::std::string& ItemResult::errormessage() const {
+  return *errormessage_;
+}
+inline void ItemResult::set_errormessage(const ::std::string& value) {
+  set_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::kEmptyString) {
+    errormessage_ = new ::std::string;
+  }
+  errormessage_->assign(value);
+}
+inline void ItemResult::set_errormessage(const char* value) {
+  set_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::kEmptyString) {
+    errormessage_ = new ::std::string;
+  }
+  errormessage_->assign(value);
+}
+inline void ItemResult::set_errormessage(const char* value, size_t size) {
+  set_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::kEmptyString) {
+    errormessage_ = new ::std::string;
+  }
+  errormessage_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ItemResult::mutable_errormessage() {
+  set_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::kEmptyString) {
+    errormessage_ = new ::std::string;
+  }
+  return errormessage_;
+}
+inline ::std::string* ItemResult::release_errormessage() {
+  clear_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = errormessage_;
+    errormessage_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ItemResult::set_allocated_errormessage(::std::string* errormessage) {
+  if (errormessage_ != &::google::protobuf::internal::kEmptyString) {
+    delete errormessage_;
+  }
+  if (errormessage) {
+    set_has_errormessage();
+    errormessage_ = errormessage;
+  } else {
+    clear_has_errormessage();
+    errormessage_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

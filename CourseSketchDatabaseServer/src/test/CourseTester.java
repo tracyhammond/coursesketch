@@ -16,7 +16,7 @@ import database.institution.Institution;
 
 public class CourseTester {
 
-	public static String testCourses(DB dbs) throws AuthenticationException, DatabaseAccessException {
+	public static String testCourses() throws AuthenticationException, DatabaseAccessException {
 		SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
 		SrlCourse.Builder testBuilder1 = SrlCourse.newBuilder();
 		testBuilder.setAccess(SrlCourse.Accessibility.SUPER_PUBLIC);
@@ -46,7 +46,7 @@ public class CourseTester {
 			} catch(AuthenticationException e) {
 				System.out.println("Succesfully failed to authenticate mongo get course");
 			}
-
+		/*
 		// testing updating course
 		try {
 			System.out.println("UPDATING COURSE AS NO ONE");
@@ -75,7 +75,7 @@ public class CourseTester {
 		System.out.println("UPDATING COURSE AS ADMIN");
 		testBuilder1.setDescription("I HAVE A DIFFERENT DESCRIPTION NOW");
 		boolean updated = CourseManager.mongoUpdateCourse(dbs, courseId, "larry", testBuilder1.buildPartial());
-
+		*/
 		return courseId;
 	}
 	

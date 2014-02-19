@@ -15,8 +15,8 @@ import database.institution.Institution;
 public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId) {
 		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16", "Problem17", 
-		"Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
-		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39"};
+		"Problem18", "Problem19"/*, "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
+		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39"*/};
 		//10 is fuzzy logic
 		/*
 		String[] descsription = new String[]{"This is the first problem",
@@ -31,10 +31,67 @@ public class ManyTestProblems {
 				"blah blah blah"};
 		*/
 		String[] questionText = new String[] {
+				"List the members of the set: <br>"
+				+"[x | x is a positive integer less than 4]",//1
+				
+				"Are the two sets equal: <br>"
+				+"{{1}}, {1,{1}}?",//2
+				
+				"Are the following two subsets equal? <br>"
+				+"{1,3,3,3,5,5,5,5,5,5}, {5,3,1}",//3
+				
+				"Is the following statement true or false: <br>"
+				+"{x} is an element of the set {x}",//4
+				
+				"Is two an element of the following set: <br>"
+				+"{2,{2}}",//5
+				
+				"Is two an element of the following set: <br>"
+				+"{{2},{{2}}}",//6
+				
+				"Use a Venn diagram to illustrate the subset of odd integers " 
+				+"in the set of all positive integers not exceeding 10.",//7
+				
+				"Let A = {a,d} and B = {x,y,z}. "
+				+"Find A x B",//8
+				
+				"State if the following statement is true or false: <br>"
+				+"{0} is an element of the set {0}",//9
+				
+				"State if the following statement is true or false: <br>"
+				+"x is an element of the set {x}",//10
+				
+				"What is the powerset of the following set: <br>"
+				+"{a}",//11
+				
+				"Let A = {a,b,c,d,e} and B = {a,b,c,d}. "
+				+"Find A union B.",//12
+				
+				"Let A = {a,b,c,d,e} and B = {a,b,c,d}. "
+				+"Find A intersect B.",//13
+				
+				"Let A = {a,b,c,d,e} and B = {a,b,c,d}. "
+				+"Find A - B.",//14
+				
+				"Let A = {a,b,c,d,e} and B = {a,b,c,d}. "
+				+"Find B - A .",//15
+				
+				"Prove the identity laws in table 1 (without those laws) "
+				+"by showing that A union the null set is A. ",//16
+				
+				"Prove the identity laws in table 1 (without those laws) "
+				+"by showing that A intersected with the universe set is A. ",//17
+				
+				"Using the laws, show that (A - B) - C is a subset of A - C.",//18
+				
+				"Let A, B, C be sets. "
+				+"Show that (A - B) - C = (A - C) - (B - C)."//19
+					
+		
 				/*
-					Chapter 7 Problem 6 a, d, f
+					Chapter 7 Problem 6 b, d, f
 				*/
-				"For the following argument(s), construct a proof of the conclusion from the premises, " 
+				/*"For the following argument(s), construct a proof of the conclusion from the premises, " 
 				+ "using only the rules of M.P., M.T., and H.S. (Please be sure to justify every step): <br>" 
 				+ "(T \u2228 W) \u2283 A, (C \u2283 \u223C B), (A \u2283 C), \u223C \u223C B \u2215 \u2234 \u223C  (T \u2228 W)",
 				
@@ -44,15 +101,18 @@ public class ManyTestProblems {
 				
 				"For the following argument(s), construct a proof of the conclusion from the premises, " 
 				+ "using only the rules of M.P., M.T., and H.S. (Please be sure to justify every step): <br>" 
-				+ "(A \u2219 B) \u2283 (C \u2228 D), (B \u2219 A) \u2283 (A \u2219 B), (C \u2228 D) \u2283 (D \u2228 C) \u2215 \u2234 (B \u2219 A) \u2283 (D \u2228 C)",
+				+ "(A \u2219 B) \u2283 (C \u2228 D), (B \u2219 A) \u2283 (A \u2219 B), (C \u2228 D) \u2283 (D \u2228 C) \u2215 \u2234 (B \u2219 A) \u2283 (D \u2228 C)",*/
 				/*
 					Chapter 7 Problem 7 a
 				*/
+				/*
 				"Construct proofs for the following, using only the rules for the conditional and conjunction. <br>"
 				+ "(C \u2219 D) \u2283 \u223C F, (A \u2283 C) \u2219 (B \u2283 D), (A \u2219 B) \u2215 \u2234 \u223C F",
+				*/
 				/*
 					Chapter 7 Problem 8 a, b, c, d, e, f, g, h, i, j, k, l, n
 				*/
+				/*
 				 "For the following argument(s), construct a proof of the conclusion from the given premises, "
 				 + "and justify every step that is not a premise; " 
 				 + "you may use any of the 8 basic rules of inference. <br>"
@@ -117,9 +177,11 @@ public class ManyTestProblems {
 				+ "and justify every step that is not a premise; " 
 				+ "you may use any of the 8 basic rules of inference. <br>"
 				+ "(\u223C A \u2228 \u223C B) \u2283 \u223C G, \u223C A \u2283 (F \u2283 G), (A \u2283 D) \u2219 \u223C D \u2215 \u2234 \u223C F",
+				*/
 				/*
 					Chapter 8 Problem 4 a, b, c
 				*/
+				/*
 				"Construct proofs for the following, "
 				+ "using the 8 basic rules from Unit 7 plus D.N., Com., Assoc., and Dup. <br>"
 				+ "(A \u2228 B) \u2283 \u223C C, D \u2283 (C \u2228 C), (F \u2219 (E \u2219 D)) \u2215 \u2234 \u223C (A \u2228 B)", 
@@ -129,9 +191,11 @@ public class ManyTestProblems {
 				"Construct proofs for the following, "
 				+ "using the 8 basic rules from Unit 7 plus D.N., Com., Assoc., and Dup. <br>"
 				+ "\u223C (S \u2219 T) \u2283 W, W \u2283 \u223C (A \u2228 B), A \u2215 \u2234 S",
+				*/
 				/*
 					Chapter 8 Problem 6 a, k, m, n, o, p
 				*/
+				/*
 				"Construct proofs for the following, using any of the rules."
 				+ "A \u2283 B, B \u2283 \u223C C, C \u2228 D, \u223C D \u2215 \u2234 \u223C A	",
 				"Construct proofs for the following, using any of the rules."
@@ -144,9 +208,11 @@ public class ManyTestProblems {
 				+ "B \u2283 (C \u2283 E), E \u2283 \u223C (J \u2228 H), \u223C S, J \u2228 S \u2215 \u2234 B \u2283 \u223C C",
 				"Construct proofs for the following, using any of the rules."
 				+ "A \u2283 \u223C B, \u223C C \u2283 B, \u223C A \u2283 \u223C C \u2215 \u2234 A \u2261 C",
+				*/
 				/*
 					Chapter 9 Problem 4 b, d, e
 				*/
+				/*
 				"Construct proofs for the following, "
 				+ "using the rule of C.P. plus the rules from Units 7 & 8: <br>"
 				+ "(\u223C A \u2228 \u223C B) \u2283 \u223C C \u2215 \u2234 C \u2283 A", 
@@ -156,9 +222,11 @@ public class ManyTestProblems {
 				"Construct proofs for the following, "
 				+ "using the rule of C.P. plus the rules from Units 7 & 8: <br>"
 				+ "P \u2283 Q, (P \u2219 Q) \u2283 R, P \u2283 (R \u2283 S), (R \u2219 S) \u2283 T \u2215 \u2234 P \u2283 T", 
+				*/
 				/*
 					Chapter 9 Problem 5 b, d, f
 				*/
+				/*
 				"Construct proofs for the following, "
 				+ "using the rule of I.P. plus the rules from Units 7 & 8: <br>"
 				+ "A \u2219 \u223C B \u2215 \u2234 \u223C (A \u2261 B)",
@@ -168,15 +236,19 @@ public class ManyTestProblems {
 				"Construct proofs for the following, "
 				+ "using the rule of I.P. plus the rules from Units 7 & 8: <br>"
 				+ "W \u2283 X, (W \u2283 Y) \u2283 (Z \u2228 X), \u223C Z \u2215 \u2234 X",
+				*/
 				/*
 					Chapter 9 Problem 6 b
 				*/
+				/*
 				"Construct proofs for the following, "
 				+ "using any rules from Units 7-9: <br>"
 				+ "A \u2283 (B \u2283 C), (C \u2219 D) \u2283 E, F \u2283 \u223C (D \u2283 E) \u2215 \u2234 A \u2283 (B \u2283 \u223C F)",
+				*/
 				/*
 					Chapter 9 Problem 7 b, c, g, h, i, j
 				*/
+				/*
 				"Construct the proof(s) for the following theorem(s):"
 				+ "(p \u2283 (p \u2219 q)) \u2228 (q \u2283 (p \u2219 q))",
 				"Construct the proof(s) for the following theorem(s):"
@@ -189,6 +261,7 @@ public class ManyTestProblems {
 				+ "(p \u2283 q) \u2283 ((p \u2283 (q \u2283 r)) \u2283 (p \u2283 r))",
 				"Construct the proof(s) for the following theorem(s):"
 				+ "(p \u2283 q) \u2283 ((p \u2283 \u223C q) \u2283 \u223C p)"
+				*/
 				};
 		QuestionType[] questionType = new QuestionType[] {
 				QuestionType.CHECK_BOX,
@@ -197,7 +270,7 @@ public class ManyTestProblems {
 				QuestionType.SKETCH,
 				QuestionType.SKETCH
 		};
-		for(int k = 0; k < 39; k ++) {
+		for(int k = 0; k < 19/*39*/; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
