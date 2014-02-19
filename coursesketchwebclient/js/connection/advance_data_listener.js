@@ -41,8 +41,13 @@ function AdvanceDataListener(connection, Request, query, defListener) {
 	function decode(evt, msg, messageType) {
 		var localMap = requestMap[messageType];
 		try {
+			try {
+				msg.otherData.mark();
+			} catch(exception) {
+				console.log(exception);
+			}
 			var dataList = QueryBuilder.DataResult.decode(msg.otherData).results;
-			for(var i = 0; i < dataList.length; i++) {
+			for (var i = 0; i < dataList.length; i++) {
 				//console.log("Decoding listener");
 				var item = dataList[i];
 				var func = localMap[item.query];

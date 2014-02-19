@@ -140,7 +140,7 @@ function SchoolItemBuilder() {
 	};
 
 	/**
-	 * Builds up a school item that is fullly customizable
+	 * Builds up a school item that is fully customizable
 	 */
 	this.createFancySchoolItem = function createFancySchoolItem(srlSchoolItem, currentDate, type, index) {
 		// Required Items

@@ -11,3 +11,4 @@ Non_Commit/
 .~lock*
 
 *.yaml
+*.db

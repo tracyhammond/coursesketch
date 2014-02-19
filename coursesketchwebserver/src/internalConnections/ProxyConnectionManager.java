@@ -9,16 +9,14 @@ import multiConnection.WrapperConnection;
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class ProxyConnectionManager extends MultiConnectionManager {
 
-	private boolean connectLocally;
-
 	public ProxyConnectionManager(MultiInternalConnectionServer parent, boolean connectType) {
 		super(parent);
 		connectLocally = connectType;
 	}
 
+	@Override
 	public void connectServers(MultiInternalConnectionServer serv) {
 		//System.out.println("Open Recognition...");
-		//createAndAddConnection(serv, connectLocally, "srl03.tamu.edu", 8887, RecognitionConnection.class);
 		System.out.println("Open Login...");
 		try {
 			createAndAddConnection(serv, connectLocally, "srl02.tamu.edu", 8886, LoginConnection.class);

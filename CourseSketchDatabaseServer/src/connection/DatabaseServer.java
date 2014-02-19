@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import multiConnection.ConnectionException;
@@ -17,9 +16,11 @@ import multiConnection.MultiInternalConnectionServer;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
-import org.java_websocket.framing.Framedata;
+import org.java_websocket.handshake.ClientHandshake;
+import org.joda.time.DateTime;
 
 import protobuf.srl.request.Message.Request;
+import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
 
@@ -32,7 +33,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 
 	private boolean connectLocally = MultiConnectionManager.CONNECT_REMOTE;
 	UpdateHandler updateHandler = new UpdateHandler();
-	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
+	MultiConnectionManager internalConnections = new DatabaseConnectionManager(this);
 
 	public DatabaseServer(int port, boolean connectLocally) {
 		this( new InetSocketAddress( port ), connectLocally );
@@ -44,29 +45,40 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 
 	@Override
+	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
+		super.onOpen(conn, handshake);
+		System.out.println("Sending Time");
+		System.out.println("Time:"+DateTime.now().getMillis());
+		conn.send(TimeManager.serverSendTimeToClient().toByteArray());
+	}
+
+	@Override
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
 
 		if (req == null) {
 			System.out.println("protobuf error");
-			//this.
 			// we need to somehow send an error to the client here
 			return;
 		}
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			System.out.println("Submitting submission id");
-			Institution.mongoInsertSubmission(req);
+			try {
+				Institution.mongoInsertSubmission(req);
+			} catch (DatabaseAccessException e) {
+				e.printStackTrace();
+				System.out.println("THIS NEEDS TO BE SENT TO THE CLIENT!");
+			}
 		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
 			DataRequestHandler.handleRequest(req, conn, super.connectionToId.get(conn).getKey(), internalConnections);
 		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
 			DataInsertHandler.handleData(req, conn);
+		} else if (req.getRequestType() == Request.MessageType.TIME) {
+			Request rsp = TimeManager.decodeRequest(req);
+			if (rsp != null) conn.send(rsp.toByteArray());
 		}
 		System.out.println("Finished looking at query");
-	}
-
-	public void onFragment( WebSocket conn, Framedata fragment ) {
-		//System.out.println( "received fragment: " + fragment );
 	}
 
 	@Override
@@ -79,8 +91,8 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 		}
 	}
 
-	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Database Server: Version 1.0.2.octopus");
+	public static void main( String[] args ) throws IOException {
+		System.out.println("Database Server: Version 1.0.3");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = false;

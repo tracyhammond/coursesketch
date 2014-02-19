@@ -33,6 +33,8 @@ message ItemResult {
 	optional ItemQuery query = 1;
 	optional string returnText = 2;
 	optional bytes data = 3;
+	optional bool noData = 4; // if there is no data to return then this flag is set to true.
+	optional string errorMessage = 5; // if noData is true then this may contain why.
 }
 
 enum ItemQuery {

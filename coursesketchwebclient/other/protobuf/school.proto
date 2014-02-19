@@ -63,7 +63,7 @@ message SrlAssignment {
 		required FunctionType functionType = 1 [default = WINDOW_FUNCTION];
 		optional TimeFrame timeFrameType = 2 [default = DAY];
 		optional float rate = 3;
-		optional bool subtractionType = 4;
+		optional bool subtractionType = 4; // true is cap score, false is off user grade.
 
 		enum FunctionType {
 			WINDOW_FUNCTION = 1;

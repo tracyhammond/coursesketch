@@ -1,62 +1,72 @@
 package proxyServer;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import org.joda.time.DateTime;
+
+import protobuf.srl.request.Message.Request;
 
 public class TimeManager {
-	public static final int EXPERATION_TIME= 1800000;
-
-	private Queue<ProxyConnectionState> userTimeManager = new LinkedList<ProxyConnectionState>();	
-	private ActionListener expiredListener;
-
-	public TimeManager() {
-		new Thread() {
-			public void run() {
-				while(true) {
-					if (userTimeManager.isEmpty())
-						try {
-							Thread.sleep(180000);
-						}catch(InterruptedException e) {}
-					
-					while(userTimeManager.peek().getTimeSinceLastActive() >= EXPERATION_TIME) {
-						ProxyConnectionState removedUser = userTimeManager.poll();
-						if (expiredListener != null) {
-							expiredListener.actionPerformed(new ActionEvent(this, 0, removedUser.getKey()));
-						}
-						// call listener in proxy 
-					}
-					try {
-						Thread.sleep(120000);
-					}catch(InterruptedException e) {}
-				}
-			}
-		};
+	
+	private final static String SEND_TIME_TO_CLIENT_MSG = "1";
+	private final static String CLIENT_REQUEST_LATENCY_MSG = "2";
+	private final static String SEND_LATENCY_TO_CLIENT_MSG = "3";
+	
+	private static long latency = 0;
+	private static long timeDifferance = 0;
+	private static long totalTimeDifferance = 0;
+	
+	public static long getSystemTime() {
+		return DateTime.now().getMillis() + totalTimeDifferance;
 	}
 	
-	public void updateManager(ProxyConnectionState userID) {
-		for(int i = 0; i < userTimeManager.size(); i++) {
-			if (((LinkedList<ProxyConnectionState>) userTimeManager).get(i).getUserId() == userID.getUserId()) {
-				userTimeManager.remove(i);
-				userTimeManager.add(userID);
-			}
+	public static Request serverSendTimeToClient() {
+		
+		Request.Builder req = Request.newBuilder();
+		req.setRequestType(Request.MessageType.TIME);
+		req.setMessageTime(getSystemTime());
+		req.setResponseText(SEND_TIME_TO_CLIENT_MSG); // Server sending client 'true' time
+		return req.build();
+	}
+	
+	public static Request clientReciveTimeDiff(Request req) {
+		long startCounter = getSystemTime();
+		System.out.println("Proxy Recived Time");
+		timeDifferance = req.getMessageTime() - getSystemTime();
+		System.out.println("server time:"+req.getMessageTime());
+		System.out.println("proxy time:"+DateTime.now().getMillis());
+		Request.Builder rsp = Request.newBuilder();
+		rsp.setRequestType(Request.MessageType.TIME);
+		rsp.setMessageTime(req.getMessageTime()+(getSystemTime()-startCounter));
+		rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
+		
+		return rsp.build();
+	}
+	
+	public static Request decodeRequest(Request req) {
+		if (req.getResponseText().equals(SEND_TIME_TO_CLIENT_MSG)){ //client
+			return clientReciveTimeDiff(req);
+		} else if (req.getResponseText().equals(CLIENT_REQUEST_LATENCY_MSG)) { //server
+			return serverSendLatencyToClient(req);
+		} else if (req.getResponseText().equals(SEND_LATENCY_TO_CLIENT_MSG)) { //client
+			return clientReciveLatency(req);
 		}
-		
+		return null;
 	}
 	
-	public void deleteManager(ProxyConnectionState userID) {
-		userTimeManager.remove(userID);
+	public static Request serverSendLatencyToClient(Request req) {
+		long latency = getSystemTime()-req.getMessageTime();
 		
+		Request.Builder rsp = Request.newBuilder();
+		
+		rsp.setRequestType(Request.MessageType.TIME);
+		rsp.setMessageTime(latency/2);
+		rsp.setResponseText(SEND_LATENCY_TO_CLIENT_MSG); 
+		return rsp.build();
 	}
 	
-	public void addToManager(ProxyConnectionState userID) {
-		userTimeManager.add(userID);
-		
-	}
-	
-	public void setExpiredListiner(ActionListener experation) {
-		expiredListener = experation;
+	public static Request clientReciveLatency(Request req) {
+		latency = req.getMessageTime();
+		totalTimeDifferance=timeDifferance+latency;
+		System.out.println("Proxy Recived Time\nTotal Time:"+totalTimeDifferance);
+		return null;
 	}
 }

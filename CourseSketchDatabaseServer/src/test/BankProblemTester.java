@@ -11,10 +11,11 @@ import com.mongodb.DB;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.institution.BankProblemManager;
+import database.institution.Institution;
 
 public class BankProblemTester {
 
-	public static String testBankProblems(DB dbs, String courseId) throws AuthenticationException {
+	public static String testBankProblems(String courseId) throws AuthenticationException {
 		SrlBankProblem.Builder testBuilder = SrlBankProblem.newBuilder();
 		testBuilder.setQuestionType(QuestionType.SKETCH);
 		testBuilder.setQuestionText("genetically engineered puppies that potty train themselves!");
@@ -35,12 +36,13 @@ public class BankProblemTester {
 		String problemId = null;
 		try{
 			System.out.println("Admin");
-			problemId = BankProblemManager.mongoInsertBankProblem(dbs, testBuilder.buildPartial());
+			problemId = Institution.mongoInsertBankProblem("david", testBuilder.buildPartial());
 		}
 		catch(AuthenticationException e) {
 			System.out.println("Succesfully failed to authenticate mongo get assignment");
 		}
 
+		/*
 		System.out.println("GETTING Problem AS ADMIN");
 		SrlBankProblem builder = BankProblemManager.mongoGetBankProblem(dbs, problemId, "david");
 		System.out.println(builder.toString());
@@ -75,7 +77,7 @@ public class BankProblemTester {
 		SrlBankProblem.Builder updateBuilder = SrlBankProblem.newBuilder();
 		updateBuilder.setQuestionText("I HAVE A DIFFERENT DESCRIPTION NOW");
 		boolean updated = BankProblemManager.mongoUpdateBankProblem(dbs, problemId, "larry", updateBuilder.buildPartial());
-
+		*/
 		return problemId;
 	}
 }
