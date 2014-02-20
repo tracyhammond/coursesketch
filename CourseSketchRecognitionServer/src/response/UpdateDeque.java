@@ -3,7 +3,6 @@ package response;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Deque;
-import java.util.List;
 
 import protobuf.srl.commands.Commands.CommandType;
 
@@ -89,21 +88,23 @@ public class UpdateDeque implements Iterable<Update>{
 	 */
 	public void execute(Sketch s,int index){
 		Update update = ((LinkedList<Update>) syncDeque).get(index);
-		Command command = update.getCommandList().get(0);
-		if(command != null && command.getType() == CommandType.UNDO){
-			syncDeque.removeFirst(); //Get rid of this undo command
-			Update undoThese = syncDeque.removeFirst();
-			undoDeque.addFirst(undoThese);
-			undoThese.undo(s);
-		} else if (command != null && command.getType() == CommandType.REDO){
-			syncDeque.removeFirst();//Get rid of this redo command
-			Update redoThese = undoDeque.removeFirst();
-			syncDeque.addFirst(redoThese);
-			redoThese.execute(s);
-		} else {
-			undoDeque.clear();
+		if( update.getCommandList().size() != 0 ){
+			Command command = update.getCommandList().get(0);
+			if(command != null && command.getType() == CommandType.UNDO){
+				syncDeque.removeFirst(); //Get rid of this undo command
+				Update undoThese = syncDeque.removeFirst();
+				undoDeque.addFirst(undoThese);
+				undoThese.undo(s);
+			} else if (command != null && command.getType() == CommandType.REDO){
+				syncDeque.removeFirst();//Get rid of this redo command
+				Update redoThese = undoDeque.removeFirst();
+				syncDeque.addFirst(redoThese);
+				redoThese.execute(s);
+			} else {
 			update.execute(s);
+			}
 		}
+		
 	}
 	
 	/**
@@ -111,7 +112,7 @@ public class UpdateDeque implements Iterable<Update>{
 	 * @param s PaleoSketch Sketch
 	 */
 	public void executeLast(Sketch s){
-		syncDeque.peekFirst().execute(s);
+		execute(s, 0);
 	}
 	
 	/**
@@ -120,8 +121,8 @@ public class UpdateDeque implements Iterable<Update>{
 	 * @param s PaleoSketch Sketch
 	 */
 	public void executeAll(Sketch s){
-		for(Update up: syncDeque){
-			up.execute(s);
+		for(int i = syncDeque.size()-1; i >= 0; i--){
+			execute(s,i);
 		}
 	}
 

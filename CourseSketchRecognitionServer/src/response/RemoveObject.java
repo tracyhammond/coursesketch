@@ -20,7 +20,7 @@ public class RemoveObject extends Command {
 	private SComponent scomponent = null;
 	
 	public RemoveObject(IdChain input){
-		id = UUID.fromString(data.getIdChain(data.getIdChainCount()-1))
+		id = UUID.fromString(data.getIdChain(data.getIdChainCount()-1));
 		type = CommandType.REMOVE_OBJECT;
 		
 		data = input;

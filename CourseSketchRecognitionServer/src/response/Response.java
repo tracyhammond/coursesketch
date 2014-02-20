@@ -12,7 +12,6 @@ import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 
 import srl.core.sketch.Sketch;
-import srl.recognition.IRecognitionResult;
 import srl.recognition.paleo.PaleoConfig;
 import srl.recognition.paleo.PaleoSketchRecognizer;
 
@@ -70,7 +69,7 @@ public class Response {
 	
 	public static Sketch viewTest(SrlUpdateList updates) throws Exception {
 		Sketch returnSketch = new Sketch();
-		UpdateList list = new UpdateList();
+		UpdateDeque list = new UpdateDeque();
 		for(SrlUpdate u : updates.getListList()) {
 			list.add(parseUpdate(u));
 			list.executeLast(returnSketch);
@@ -108,10 +107,15 @@ public class Response {
 			case REDO:
 				com = new RedoObject();
 				break;
+			case MARKER:
+				com = null;
+				break;
 			default:
 				throw new Exception("Unsupported command: "+c.getCommandType());
 			}
-			up.add(com);
+			if(com != null){
+				up.add(com);
+			}
 		}
 		return up;
 	}
