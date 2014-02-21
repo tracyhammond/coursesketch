@@ -15,7 +15,7 @@ import database.institution.Institution;
 public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId) {
 		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16", "Problem17", 
-		"Problem18", "Problem19"/*, "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
+		"Problem18", "Problem19", "Problem20", "Problem21", "Problem22"/*, "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
 		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39"*/};
 		//10 is fuzzy logic
 		/*
@@ -31,7 +31,79 @@ public class ManyTestProblems {
 				"blah blah blah"};
 		*/
 		String[] questionText = new String[] {
-				"List the members of the set: <br>"
+				/*
+					Assignment 5
+				*/
+				"Given that the domain = codomain = {a,b,c,d}. " 
+				+"Is the following function one-to-one? "
+				+"f(a)=b, f(b) = a, f(c) = c, f(d) = d ",
+				
+				"Given that the domain=codomain = {a,b,c,d}. "
+				+"Is the following function one-to-one? "
+				+"f(a)=b, f(b) = b, f(c) = d, f(d) = c",
+				
+				"Given that the domain=codomain = {a,b,c,d}. "
+				+"Is the following function one-to-one? "
+				+"f(a)=d, f(b) = b, f(c) = c, f(d) = d",
+				
+				"Is the following function from Z to Z one-to one: "
+				+"f(n) = n-1",
+				
+				"Is the following function from Z to Z one-to one: "
+				+"f(n) = n\u00B3",
+				
+				"Is the following function from Z to Z one-to one: "
+				+"f(n) = n\u00B2 + 1",
+				
+				"Is the following function from Z to Z one-to one: f(n) =  "
+				+"f(n) = \u2308n/2\u2309",
+				
+				"Determine whether f: Z x Z \u2192 Z is onto if: "
+				+"f(m,n) = m + n",
+				
+				"Determine whether f: Z x Z \u2192 Z is onto if: "
+				+"f(m,n) = m\u00B2 + n\u00B2",
+				
+				"Determine whether f: Z x Z \u2192 Z is onto if: "
+				+"f(m,n) = m",
+				
+				"Determine whether f: Z x Z \u2192 Z is onto if: "
+				+"f(m,n) = |n|",
+				
+				"Determine whether f: Z x Z \u2192 Z is onto if: "
+				+"f(m,n) = m - n",
+				
+				"Determine whether the following function from R to R is a bijection: "
+				+"f(x) = -3x + 4",
+				
+				"Determine whether the following function from R to R is a bijection: "
+				+"f(x) = -3x\u00B2 + 7",
+				
+				"Determine whether the following function from R to R is a bijection: "
+				+"f(x) = (x + 1)/(x + 2)",
+				
+				"Determine whether the following function from R to R is a bijection: "
+				+"f(x) = x\u00B5 + 1",
+				
+				"Find f \u2218 g where f(x) = x\u00B2 + 1 and g(x) = x + 2 are functions from R to R.",
+				
+				"Find g \u2218 f where f(x) = x\u00B2 + 1 and g(x) = x + 2 are functions from R to R.",
+				
+				"Draw a graph of the function: f(x) = 1-n\u00B2 ",
+				
+				"Draw a graph of the function: f(x) = \u230A2x\u230B",
+				
+				"Draw a graph of the function: "
+				+"f(x) = \u2308x\u2309 + \u230Ax/2\u230B",
+				
+				"Let x be a real number, show that "
+				+"\u230A3x\u230B = \u230Ax\u230B + \u230Ax + 1/3\u230B + \u230Ax + 2/3\u230B",
+								
+				
+				/*
+					Assignment 4
+				*/
+				/*"List the members of the set: <br>"
 				+"[x | x is a positive integer less than 4]",//1
 				
 				"Are the two sets equal: <br>"
@@ -85,9 +157,8 @@ public class ManyTestProblems {
 				"Using the laws, show that (A - B) - C is a subset of A - C.",//18
 				
 				"Let A, B, C be sets. "
-				+"Show that (A - B) - C = (A - C) - (B - C)."//19
+				+"Show that (A - B) - C = (A - C) - (B - C)."//19*/
 					
-		
 				/*
 					Chapter 7 Problem 6 b, d, f
 				*/
@@ -270,7 +341,7 @@ public class ManyTestProblems {
 				QuestionType.SKETCH,
 				QuestionType.SKETCH
 		};
-		for(int k = 0; k < 19/*39*/; k ++) {
+		for(int k = 0; k < 22/*19*//*39*/; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
