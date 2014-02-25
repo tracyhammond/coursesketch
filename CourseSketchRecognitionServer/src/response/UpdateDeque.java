@@ -86,7 +86,8 @@ public class UpdateDeque implements Iterable<Update>{
 	 */
 	public void execute(Sketch s,int index) {
 		Update update = ((LinkedList<Update>) syncDeque).get(index);
-		if (update.getCommandList().size() != 0) {
+		boolean undo = true;
+		if (undo && update.getCommandList().size() != 0) {
 			Command command = update.getCommandList().get(0);
 			if (command != null && command.getType() == CommandType.UNDO) {
 				syncDeque.removeFirst(); //Get rid of this undo command
@@ -99,10 +100,14 @@ public class UpdateDeque implements Iterable<Update>{
 				syncDeque.addFirst(redoThese);
 				redoThese.execute(s);
 			} else {
-				undoDeque.clear(s); //Prevent redo on any action other than undo or redo
+				undoDeque.clear(); //Prevent redo on any action other than undo or redo
 				update.execute(s);
 			}
 		}
+		else {
+			update.execute(s);
+		}
+		
 	}
 	
 	/**
