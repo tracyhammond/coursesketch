@@ -31,6 +31,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SrlExperiment_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SrlExperiment_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SrlChecksum_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SrlChecksum_reflection_ = NULL;
 
 }  // namespace
 
@@ -96,6 +99,22 @@ void protobuf_AssignDesc_input_2fsubmission_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SrlExperiment));
+  SrlChecksum_descriptor_ = file->message_type(3);
+  static const int SrlChecksum_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlChecksum, firstbits_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlChecksum, secondbits_),
+  };
+  SrlChecksum_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SrlChecksum_descriptor_,
+      SrlChecksum::default_instance_,
+      SrlChecksum_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlChecksum, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlChecksum, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SrlChecksum));
 }
 
 namespace {
@@ -114,6 +133,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     SrlSolution_descriptor_, &SrlSolution::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SrlExperiment_descriptor_, &SrlExperiment::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SrlChecksum_descriptor_, &SrlChecksum::default_instance());
 }
 
 }  // namespace
@@ -125,6 +146,8 @@ void protobuf_ShutdownFile_input_2fsubmission_2eproto() {
   delete SrlSolution_reflection_;
   delete SrlExperiment::default_instance_;
   delete SrlExperiment_reflection_;
+  delete SrlChecksum::default_instance_;
+  delete SrlChecksum_reflection_;
 }
 
 void protobuf_AddDesc_input_2fsubmission_2eproto() {
@@ -145,15 +168,18 @@ void protobuf_AddDesc_input_2fsubmission_2eproto() {
     "seId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tprob"
     "lemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022:\n\nsubmissio"
     "n\030\006 \001(\0132&.protobuf.srl.submission.SrlSub"
-    "mission", 447);
+    "mission\"4\n\013SrlChecksum\022\021\n\tfirstBits\030\001 \002("
+    "\003\022\022\n\nsecondBits\030\002 \002(\003", 501);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/submission.proto", &protobuf_RegisterTypes);
   SrlSubmission::default_instance_ = new SrlSubmission();
   SrlSolution::default_instance_ = new SrlSolution();
   SrlExperiment::default_instance_ = new SrlExperiment();
+  SrlChecksum::default_instance_ = new SrlChecksum();
   SrlSubmission::default_instance_->InitAsDefaultInstance();
   SrlSolution::default_instance_->InitAsDefaultInstance();
   SrlExperiment::default_instance_->InitAsDefaultInstance();
+  SrlChecksum::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_input_2fsubmission_2eproto);
 }
 
@@ -1308,6 +1334,255 @@ void SrlExperiment::Swap(SrlExperiment* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = SrlExperiment_descriptor_;
   metadata.reflection = SrlExperiment_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SrlChecksum::kFirstBitsFieldNumber;
+const int SrlChecksum::kSecondBitsFieldNumber;
+#endif  // !_MSC_VER
+
+SrlChecksum::SrlChecksum()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SrlChecksum::InitAsDefaultInstance() {
+}
+
+SrlChecksum::SrlChecksum(const SrlChecksum& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SrlChecksum::SharedCtor() {
+  _cached_size_ = 0;
+  firstbits_ = GOOGLE_LONGLONG(0);
+  secondbits_ = GOOGLE_LONGLONG(0);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SrlChecksum::~SrlChecksum() {
+  SharedDtor();
+}
+
+void SrlChecksum::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SrlChecksum::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SrlChecksum::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SrlChecksum_descriptor_;
+}
+
+const SrlChecksum& SrlChecksum::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_input_2fsubmission_2eproto();
+  return *default_instance_;
+}
+
+SrlChecksum* SrlChecksum::default_instance_ = NULL;
+
+SrlChecksum* SrlChecksum::New() const {
+  return new SrlChecksum;
+}
+
+void SrlChecksum::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    firstbits_ = GOOGLE_LONGLONG(0);
+    secondbits_ = GOOGLE_LONGLONG(0);
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SrlChecksum::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required int64 firstBits = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &firstbits_)));
+          set_has_firstbits();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_secondBits;
+        break;
+      }
+
+      // required int64 secondBits = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_secondBits:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &secondbits_)));
+          set_has_secondbits();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SrlChecksum::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required int64 firstBits = 1;
+  if (has_firstbits()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->firstbits(), output);
+  }
+
+  // required int64 secondBits = 2;
+  if (has_secondbits()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->secondbits(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SrlChecksum::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required int64 firstBits = 1;
+  if (has_firstbits()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->firstbits(), target);
+  }
+
+  // required int64 secondBits = 2;
+  if (has_secondbits()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(2, this->secondbits(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SrlChecksum::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required int64 firstBits = 1;
+    if (has_firstbits()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int64Size(
+          this->firstbits());
+    }
+
+    // required int64 secondBits = 2;
+    if (has_secondbits()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int64Size(
+          this->secondbits());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SrlChecksum::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SrlChecksum* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SrlChecksum*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SrlChecksum::MergeFrom(const SrlChecksum& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_firstbits()) {
+      set_firstbits(from.firstbits());
+    }
+    if (from.has_secondbits()) {
+      set_secondbits(from.secondbits());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SrlChecksum::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SrlChecksum::CopyFrom(const SrlChecksum& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SrlChecksum::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+
+  return true;
+}
+
+void SrlChecksum::Swap(SrlChecksum* other) {
+  if (other != this) {
+    std::swap(firstbits_, other->firstbits_);
+    std::swap(secondbits_, other->secondbits_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SrlChecksum::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SrlChecksum_descriptor_;
+  metadata.reflection = SrlChecksum_reflection_;
   return metadata;
 }
 

@@ -65,6 +65,11 @@
 					alert("you have no work to submit");
 					return;
 				}
+				if (!serverConnection.isConnected()) {
+					alert("You can not submit while disconnected from the server");
+					//TODO: change this to (you can only save locally while disconnected from the server)
+					return;
+				}
 				var markerCommand = commandManager.createMarker(true, parent.ProtoUpdateCommandBuilder.Marker.MarkerType.SUBMISSION, "");
 				commandManager.addUpdate(commandManager.createUpdateFromCommands([markerCommand]));
 				// submits your work to the server.

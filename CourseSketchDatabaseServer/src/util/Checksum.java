@@ -68,6 +68,17 @@ public class Checksum {
 		long result = ((long)size)<<(64 - log2(size)) | totalTime;
 		System.out.println("the total \t" + Long.toBinaryString(result));
 		System.out.println("the total \t" + Long.toBinaryString(-1));
+
+		SrlChecksum.Builder build1 = SrlChecksum.newBuilder();
+		SrlChecksum.Builder build2 = SrlChecksum.newBuilder();
+		build1.setFirstBits(0);
+		build1.setSecondBits(0);
+
+		build2.setFirstBits(0);
+		build2.setSecondBits(0);
+		System.out.println("equal: " + build1.build().equals(build2.build()));
+		build2.setFirstBits(1);
+		System.out.println("not equal: " + (!build1.build().equals(build2.build())));
 	}
 
 	public static int log2(int value) {

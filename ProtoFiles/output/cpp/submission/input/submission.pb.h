@@ -38,6 +38,7 @@ void protobuf_ShutdownFile_input_2fsubmission_2eproto();
 class SrlSubmission;
 class SrlSolution;
 class SrlExperiment;
+class SrlChecksum;
 
 // ===================================================================
 
@@ -428,6 +429,98 @@ class SrlExperiment : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SrlExperiment* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SrlChecksum : public ::google::protobuf::Message {
+ public:
+  SrlChecksum();
+  virtual ~SrlChecksum();
+
+  SrlChecksum(const SrlChecksum& from);
+
+  inline SrlChecksum& operator=(const SrlChecksum& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlChecksum& default_instance();
+
+  void Swap(SrlChecksum* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlChecksum* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlChecksum& from);
+  void MergeFrom(const SrlChecksum& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int64 firstBits = 1;
+  inline bool has_firstbits() const;
+  inline void clear_firstbits();
+  static const int kFirstBitsFieldNumber = 1;
+  inline ::google::protobuf::int64 firstbits() const;
+  inline void set_firstbits(::google::protobuf::int64 value);
+
+  // required int64 secondBits = 2;
+  inline bool has_secondbits() const;
+  inline void clear_secondbits();
+  static const int kSecondBitsFieldNumber = 2;
+  inline ::google::protobuf::int64 secondbits() const;
+  inline void set_secondbits(::google::protobuf::int64 value);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlChecksum)
+ private:
+  inline void set_has_firstbits();
+  inline void clear_has_firstbits();
+  inline void set_has_secondbits();
+  inline void clear_has_secondbits();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int64 firstbits_;
+  ::google::protobuf::int64 secondbits_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fsubmission_2eproto();
+  friend void protobuf_AssignDesc_input_2fsubmission_2eproto();
+  friend void protobuf_ShutdownFile_input_2fsubmission_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlChecksum* default_instance_;
 };
 // ===================================================================
 
@@ -1144,6 +1237,54 @@ inline void SrlExperiment::set_allocated_submission(::protobuf::srl::submission:
   } else {
     clear_has_submission();
   }
+}
+
+// -------------------------------------------------------------------
+
+// SrlChecksum
+
+// required int64 firstBits = 1;
+inline bool SrlChecksum::has_firstbits() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SrlChecksum::set_has_firstbits() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SrlChecksum::clear_has_firstbits() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SrlChecksum::clear_firstbits() {
+  firstbits_ = GOOGLE_LONGLONG(0);
+  clear_has_firstbits();
+}
+inline ::google::protobuf::int64 SrlChecksum::firstbits() const {
+  return firstbits_;
+}
+inline void SrlChecksum::set_firstbits(::google::protobuf::int64 value) {
+  set_has_firstbits();
+  firstbits_ = value;
+}
+
+// required int64 secondBits = 2;
+inline bool SrlChecksum::has_secondbits() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SrlChecksum::set_has_secondbits() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SrlChecksum::clear_has_secondbits() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SrlChecksum::clear_secondbits() {
+  secondbits_ = GOOGLE_LONGLONG(0);
+  clear_has_secondbits();
+}
+inline ::google::protobuf::int64 SrlChecksum::secondbits() const {
+  return secondbits_;
+}
+inline void SrlChecksum::set_secondbits(::google::protobuf::int64 value) {
+  set_has_secondbits();
+  secondbits_ = value;
 }
 
 

@@ -2814,6 +2814,571 @@ public final class Submission {
     // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlExperiment)
   }
 
+  public interface SrlChecksumOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required int64 firstBits = 1;
+    /**
+     * <code>required int64 firstBits = 1;</code>
+     *
+     * <pre>
+     * size and id of each command
+     * </pre>
+     */
+    boolean hasFirstBits();
+    /**
+     * <code>required int64 firstBits = 1;</code>
+     *
+     * <pre>
+     * size and id of each command
+     * </pre>
+     */
+    long getFirstBits();
+
+    // required int64 secondBits = 2;
+    /**
+     * <code>required int64 secondBits = 2;</code>
+     *
+     * <pre>
+     * summation of times
+     * </pre>
+     */
+    boolean hasSecondBits();
+    /**
+     * <code>required int64 secondBits = 2;</code>
+     *
+     * <pre>
+     * summation of times
+     * </pre>
+     */
+    long getSecondBits();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.submission.SrlChecksum}
+   *
+   * <pre>
+   * the checksum contains 4 sets of longs
+   * </pre>
+   */
+  public static final class SrlChecksum extends
+      com.google.protobuf.GeneratedMessage
+      implements SrlChecksumOrBuilder {
+    // Use SrlChecksum.newBuilder() to construct.
+    private SrlChecksum(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SrlChecksum(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SrlChecksum defaultInstance;
+    public static SrlChecksum getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SrlChecksum getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SrlChecksum(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              firstBits_ = input.readInt64();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              secondBits_ = input.readInt64();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlChecksum_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlChecksum_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.submission.Submission.SrlChecksum.class, protobuf.srl.submission.Submission.SrlChecksum.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SrlChecksum> PARSER =
+        new com.google.protobuf.AbstractParser<SrlChecksum>() {
+      public SrlChecksum parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SrlChecksum(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SrlChecksum> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required int64 firstBits = 1;
+    public static final int FIRSTBITS_FIELD_NUMBER = 1;
+    private long firstBits_;
+    /**
+     * <code>required int64 firstBits = 1;</code>
+     *
+     * <pre>
+     * size and id of each command
+     * </pre>
+     */
+    public boolean hasFirstBits() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required int64 firstBits = 1;</code>
+     *
+     * <pre>
+     * size and id of each command
+     * </pre>
+     */
+    public long getFirstBits() {
+      return firstBits_;
+    }
+
+    // required int64 secondBits = 2;
+    public static final int SECONDBITS_FIELD_NUMBER = 2;
+    private long secondBits_;
+    /**
+     * <code>required int64 secondBits = 2;</code>
+     *
+     * <pre>
+     * summation of times
+     * </pre>
+     */
+    public boolean hasSecondBits() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required int64 secondBits = 2;</code>
+     *
+     * <pre>
+     * summation of times
+     * </pre>
+     */
+    public long getSecondBits() {
+      return secondBits_;
+    }
+
+    private void initFields() {
+      firstBits_ = 0L;
+      secondBits_ = 0L;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasFirstBits()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasSecondBits()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt64(1, firstBits_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt64(2, secondBits_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, firstBits_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, secondBits_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.submission.Submission.SrlChecksum parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.submission.Submission.SrlChecksum parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.submission.Submission.SrlChecksum parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.submission.Submission.SrlChecksum parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.submission.Submission.SrlChecksum parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.submission.Submission.SrlChecksum parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.submission.Submission.SrlChecksum parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.submission.Submission.SrlChecksum parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.submission.Submission.SrlChecksum parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.submission.Submission.SrlChecksum parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.submission.Submission.SrlChecksum prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.submission.SrlChecksum}
+     *
+     * <pre>
+     * the checksum contains 4 sets of longs
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.submission.Submission.SrlChecksumOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlChecksum_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlChecksum_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.submission.Submission.SrlChecksum.class, protobuf.srl.submission.Submission.SrlChecksum.Builder.class);
+      }
+
+      // Construct using protobuf.srl.submission.Submission.SrlChecksum.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        firstBits_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        secondBits_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlChecksum_descriptor;
+      }
+
+      public protobuf.srl.submission.Submission.SrlChecksum getDefaultInstanceForType() {
+        return protobuf.srl.submission.Submission.SrlChecksum.getDefaultInstance();
+      }
+
+      public protobuf.srl.submission.Submission.SrlChecksum build() {
+        protobuf.srl.submission.Submission.SrlChecksum result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.submission.Submission.SrlChecksum buildPartial() {
+        protobuf.srl.submission.Submission.SrlChecksum result = new protobuf.srl.submission.Submission.SrlChecksum(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.firstBits_ = firstBits_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.secondBits_ = secondBits_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.submission.Submission.SrlChecksum) {
+          return mergeFrom((protobuf.srl.submission.Submission.SrlChecksum)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.submission.Submission.SrlChecksum other) {
+        if (other == protobuf.srl.submission.Submission.SrlChecksum.getDefaultInstance()) return this;
+        if (other.hasFirstBits()) {
+          setFirstBits(other.getFirstBits());
+        }
+        if (other.hasSecondBits()) {
+          setSecondBits(other.getSecondBits());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasFirstBits()) {
+          
+          return false;
+        }
+        if (!hasSecondBits()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.submission.Submission.SrlChecksum parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.submission.Submission.SrlChecksum) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required int64 firstBits = 1;
+      private long firstBits_ ;
+      /**
+       * <code>required int64 firstBits = 1;</code>
+       *
+       * <pre>
+       * size and id of each command
+       * </pre>
+       */
+      public boolean hasFirstBits() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required int64 firstBits = 1;</code>
+       *
+       * <pre>
+       * size and id of each command
+       * </pre>
+       */
+      public long getFirstBits() {
+        return firstBits_;
+      }
+      /**
+       * <code>required int64 firstBits = 1;</code>
+       *
+       * <pre>
+       * size and id of each command
+       * </pre>
+       */
+      public Builder setFirstBits(long value) {
+        bitField0_ |= 0x00000001;
+        firstBits_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int64 firstBits = 1;</code>
+       *
+       * <pre>
+       * size and id of each command
+       * </pre>
+       */
+      public Builder clearFirstBits() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        firstBits_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // required int64 secondBits = 2;
+      private long secondBits_ ;
+      /**
+       * <code>required int64 secondBits = 2;</code>
+       *
+       * <pre>
+       * summation of times
+       * </pre>
+       */
+      public boolean hasSecondBits() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required int64 secondBits = 2;</code>
+       *
+       * <pre>
+       * summation of times
+       * </pre>
+       */
+      public long getSecondBits() {
+        return secondBits_;
+      }
+      /**
+       * <code>required int64 secondBits = 2;</code>
+       *
+       * <pre>
+       * summation of times
+       * </pre>
+       */
+      public Builder setSecondBits(long value) {
+        bitField0_ |= 0x00000002;
+        secondBits_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int64 secondBits = 2;</code>
+       *
+       * <pre>
+       * summation of times
+       * </pre>
+       */
+      public Builder clearSecondBits() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        secondBits_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.submission.SrlChecksum)
+    }
+
+    static {
+      defaultInstance = new SrlChecksum(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlChecksum)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_submission_SrlSubmission_descriptor;
   private static
@@ -2829,6 +3394,11 @@ public final class Submission {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_submission_SrlExperiment_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_submission_SrlChecksum_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_submission_SrlChecksum_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2849,7 +3419,8 @@ public final class Submission {
       "seId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tprob" +
       "lemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022:\n\nsubmissio",
       "n\030\006 \001(\0132&.protobuf.srl.submission.SrlSub" +
-      "mission"
+      "mission\"4\n\013SrlChecksum\022\021\n\tfirstBits\030\001 \002(" +
+      "\003\022\022\n\nsecondBits\030\002 \002(\003"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2874,6 +3445,12 @@ public final class Submission {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_submission_SrlExperiment_descriptor,
               new java.lang.String[] { "CourseId", "AssignmentId", "ProblemId", "UserId", "Submission", });
+          internal_static_protobuf_srl_submission_SrlChecksum_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_protobuf_srl_submission_SrlChecksum_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_submission_SrlChecksum_descriptor,
+              new java.lang.String[] { "FirstBits", "SecondBits", });
           return null;
         }
       };

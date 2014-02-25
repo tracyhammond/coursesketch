@@ -321,7 +321,7 @@ public final class Institution {
 	public static void mongoInsertSubmission(Request req) throws DatabaseAccessException {
 		try {
 			SrlExperiment exp = SrlExperiment.parseFrom(req.getOtherData());
-			SubmissionManager.mongoInsertSubmission(getInstance().db, exp.getProblemId(), req.getServersideId(), exp.getSubmission().getId(), true);
+			mongoInsertSubmission(exp.getProblemId(), req.getServersideId(), exp.getSubmission().getId(), true);
 			return;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -330,11 +330,20 @@ public final class Institution {
 			// TODO: change how this process works for instructors!
 			SrlSolution exp = SrlSolution.parseFrom(req.getOtherData());
 			throw new DatabaseAccessException("Instructors need to be authenticated first!");
-			//SubmissionManager.mongoInsertSubmission(getInstance().db, exp.getProblemBankId(), exp.getProblemBankId(), exp.getSubmission().getId(), false);
+			//SubmissionManager.mongoInsertSubmission(exp.getProblemBankId(), exp.getProblemBankId(), exp.getSubmission().getId(), false);
 			//return;
 		} catch(InvalidProtocolBufferException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * A message sent from the submission server that allows the insertion of the message
+	 * @param req
+	 * @throws DatabaseAccessException 
+	 */
+	public static void mongoInsertSubmission(String problemId, String userId, String submissionId, boolean experiment) throws DatabaseAccessException {
+		SubmissionManager.mongoInsertSubmission(getInstance().db, problemId, userId, submissionId, experiment);
 	}
 
 	public static void mongoGetExperimentAsUser(String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections) {
