@@ -124,7 +124,7 @@ public class AssignmentManager
 				e.printStackTrace();
 			}
 		}
-		
+
 		try {
 			exactAssignment.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(ACCESS_DATE)).longValue()));
 			exactAssignment.setDueDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(DUE_DATE)).longValue()));

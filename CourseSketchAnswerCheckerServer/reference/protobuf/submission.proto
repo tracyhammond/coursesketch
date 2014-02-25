@@ -25,3 +25,9 @@ message SrlExperiment {
 	optional string userId = 5; // student Id
 	optional SrlSubmission submission = 6;
 }
+
+// the checksum contains 4 sets of longs
+message SrlChecksum {
+	required int64 firstBits = 1; // size and id of each command
+	required int64 secondBits = 2; // summation of times
+}
