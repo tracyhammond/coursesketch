@@ -12,7 +12,7 @@ import srl.core.sketch.Sketch;
  */
 public class RedoObject extends Command {
 	
-	public RedoObject(){
+	public RedoObject() {
 		type = CommandType.REDO;
 		//FIXME set the time to match client load time
 	}

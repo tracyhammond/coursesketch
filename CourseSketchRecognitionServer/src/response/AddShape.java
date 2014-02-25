@@ -65,7 +65,7 @@ public class AddShape extends Command {
 		s.add(data);
 	}
 	@Override
-	public void undo(Sketch s){
+	public void undo(Sketch s) {
 		s.remove(data);
 	}
 }

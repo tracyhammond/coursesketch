@@ -89,11 +89,11 @@ public class PackageShape extends Command {
 		if(from == to)
 			return;
 		
-		for(String id : contained){
+		for(String id : contained) {
 			to.add(from.remove(UUID.fromString(id)));
 		}
 	}
-	public void undo(Sketch s){
+	public void undo(Sketch s) {
 		SContainer from;
 		if(oldContainer == null)
 			from = s;
@@ -109,7 +109,7 @@ public class PackageShape extends Command {
 		if(from == to)
 			return;
 		
-		for(String id : contained){
+		for(String id : contained) {
 			from.add(to.remove(UUID.fromString(id)));
 		}
 	}

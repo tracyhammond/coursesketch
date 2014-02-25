@@ -17,7 +17,6 @@ import srl.core.sketch.Sketch;
  *
  */
 public class UpdateDeque implements Iterable<Update>{
-	//LinkedList<Update> syncList;
 	Deque<Update> syncDeque;
 	Deque<Update> undoDeque;
 	
@@ -25,7 +24,6 @@ public class UpdateDeque implements Iterable<Update>{
 	 * Default constructor to make a list with an empty history
 	 */
 	public UpdateDeque(){
-		//syncList = new LinkedList<Update>();
 		syncDeque = new LinkedList<Update>();
 		undoDeque = new LinkedList<Update>();
 	}
@@ -86,25 +84,25 @@ public class UpdateDeque implements Iterable<Update>{
 	 * @param s PaleoSketch Sketch
 	 * @param index
 	 */
-	public void execute(Sketch s,int index){
+	public void execute(Sketch s,int index) {
 		Update update = ((LinkedList<Update>) syncDeque).get(index);
-		if( update.getCommandList().size() != 0 ){
+		if (update.getCommandList().size() != 0) {
 			Command command = update.getCommandList().get(0);
-			if(command != null && command.getType() == CommandType.UNDO){
+			if (command != null && command.getType() == CommandType.UNDO) {
 				syncDeque.removeFirst(); //Get rid of this undo command
 				Update undoThese = syncDeque.removeFirst();
 				undoDeque.addFirst(undoThese);
 				undoThese.undo(s);
-			} else if (command != null && command.getType() == CommandType.REDO){
+			} else if (command != null && command.getType() == CommandType.REDO) {
 				syncDeque.removeFirst();//Get rid of this redo command
 				Update redoThese = undoDeque.removeFirst();
 				syncDeque.addFirst(redoThese);
 				redoThese.execute(s);
 			} else {
-			update.execute(s);
+				undoDeque.clear(s); //Prevent redo on any action other than undo or redo
+				update.execute(s);
 			}
 		}
-		
 	}
 	
 	/**
