@@ -74,6 +74,8 @@ public class Response {
 			list.add(parseUpdate(u));
 			list.executeLast(returnSketch);
 		}
+		returnSketch = new Sketch();
+		list.executeAll(returnSketch);
 		return returnSketch;
 	}
 	

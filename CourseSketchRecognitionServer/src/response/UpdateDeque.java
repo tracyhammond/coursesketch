@@ -123,10 +123,11 @@ public class UpdateDeque implements Iterable<Update>{
 	 * an entire sketch from scratch
 	 * @param s PaleoSketch Sketch
 	 */
-	public void executeAll(Sketch s){
-		for(int i = syncDeque.size()-1; i >= 0; i--){
+	public void executeAll(Sketch s) {
+		for(int i = syncDeque.size()-1;i >=0; i --) {
 			execute(s,i);
 		}
+		
 	}
 
 	@Override

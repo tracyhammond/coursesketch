@@ -85,7 +85,6 @@ public class Paleotest {
             
     		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
     		
-            
             for (Stroke m_stroke : tester.getStrokes()) {
             	scount++;
            		IRecognitionResult result = recognizer.recognize(m_stroke);
