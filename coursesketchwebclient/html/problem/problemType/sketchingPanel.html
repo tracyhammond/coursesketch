@@ -127,6 +127,8 @@
 			// is called upon a successfuly submission.
 			parent.problemNavigator.addEventMapping("submission", function(args) {
 				console.log("SUBMISSION SCUESSFUL!");
+				alert("done submitting problem number " + parent.problemNavigator.getCurrentNumber());
+				
 			});
 
 			window.addEventListener("beforeunload", function( e ) {
@@ -176,7 +178,7 @@
 	    	document.getElementById("PercentBar").innerHTML = "" + (index/total) * 100 + "% total: "+total;
  	    }
 	    function finishBar() {
-	    	alert("done submitting problem number " + parent.problemNavigator.getCurrentNumber());
+	    	console.log("all items sent to the server");
 	    }
 	</script>
 	<script type="text/javascript">

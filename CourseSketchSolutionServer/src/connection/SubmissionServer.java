@@ -93,15 +93,16 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 							data = builder.build().toByteString();
 						}
 					}
+					Request.Builder build = Request.newBuilder(req);
+					build.setResponseText("Submission Succesful!");
+					build.clearOtherData();
+					build.setSessionInfo(req.getSessionInfo());
+					System.out.println(req.getSessionInfo());
+					// sends the response back to the answer checker which can then send it back to the client.
+					conn.send(build.build().toByteArray());
 					if (resultantId != null) {
 						// it can be null if this solution has already been stored
-						Request.Builder build = Request.newBuilder(req);
-						build.setResponseText(resultantId);
-						build.clearOtherData();
-						build.setSessionInfo(req.getSessionInfo());
-						System.out.println(req.getSessionInfo());
-						// sends the response back to the answer checker which can then send it back to the client.
-						conn.send(build.build().toByteArray());
+
 						if (data != null) {
 							// passes the data to the database for connecting
 							build.setOtherData(data);
