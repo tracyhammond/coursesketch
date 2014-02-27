@@ -90,14 +90,14 @@ public class UpdateDeque implements Iterable<Update>{
 		if (undo && update.getCommandList().size() != 0) {
 			Command command = update.getCommandList().get(0);
 			if (command != null && command.getType() == CommandType.UNDO) {
-				syncDeque.removeFirst(); //Get rid of this undo command
-				Update undoThese = syncDeque.removeFirst();
+				((LinkedList<Update>) syncDeque).remove(index);
+				Update undoThese = ((LinkedList<Update>) syncDeque).remove(index);
 				undoDeque.addFirst(undoThese);
 				undoThese.undo(s);
 			} else if (command != null && command.getType() == CommandType.REDO) {
-				syncDeque.removeFirst();//Get rid of this redo command
+				((LinkedList<Update>) syncDeque).remove(index);
 				Update redoThese = undoDeque.removeFirst();
-				syncDeque.addFirst(redoThese);
+				((LinkedList<Update>)syncDeque).add(index,redoThese);
 				redoThese.execute(s);
 			} else {
 				undoDeque.clear(); //Prevent redo on any action other than undo or redo

@@ -72,9 +72,9 @@ public class Response {
 		UpdateDeque list = new UpdateDeque();
 		for(SrlUpdate u : updates.getListList()) {
 			list.add(parseUpdate(u));
-			list.executeLast(returnSketch);
+			//list.executeLast(returnSketch);
 		}
-		returnSketch = new Sketch();
+		//returnSketch = new Sketch();
 		list.executeAll(returnSketch);
 		return returnSketch;
 	}
