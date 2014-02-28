@@ -82,7 +82,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 		userCourses[course.id] = undefined; // removing it from the local map
 	};
 	parent.deleteCourse = deleteCourse;
-	
+
 	function setCourseIdList(idList) {
 		userCourseId = idList;
 		database.putInCourses(COURSE_LIST, idList); // no call back needed!
@@ -148,6 +148,33 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 		}
 	};
 	parent.getAllCourses = getAllCourses;
+
+	/**
+	 * Inserts a course into the database.  This course must not exist.
+	 *
+	 * If there is a problem courseCallback is called with an error code
+	 * TODO: create error code.
+	 * @param course
+	 * @param courseCallback
+	 */
+	function insertCourse(course, courseCallback) {
+		setCourse(course); // sets the course into the local database;
+		if (courseCallback) courseCallback(course);
+	}
+	parent.insertCourse = insertCourse;
+
+	/**
+	 * Updates an existing course into the database.  This course must already exist.
+	 *
+	 * If there is a problem courseCallback is called with an error code
+	 * TODO: create error code.
+	 * @param course
+	 * @param courseCallback
+	 */
+	function updateCourse(course, courseCallback) {
+		setCourse(course); // overrides the course into the local database;
+		if (courseCallback) courseCallback(course);
+	}
 
 	/*
 	 * gets the id's of all of the courses in the user's local client.
