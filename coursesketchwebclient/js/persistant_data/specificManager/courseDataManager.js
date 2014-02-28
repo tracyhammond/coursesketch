@@ -5,7 +5,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 	var userHasCourses = true;
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
-	var sendDataRequest = sendData;
+	var sendDataRequest = sendData.sendDataRequest;
 	var Request = builders[0];
 	var QueryBuilder = builders[1];
 	var SchoolBuilder = builders[2];
@@ -160,6 +160,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 	function insertCourse(course, courseCallback) {
 		setCourse(course); // sets the course into the local database;
 		if (courseCallback) courseCallback(course);
+
+		sendData.sendDataInsert(QueryBuilder.ItemQuery.COURSE, Itcourse.toArrayBuffer());
 	}
 	parent.insertCourse = insertCourse;
 
@@ -174,6 +176,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 	function updateCourse(course, courseCallback) {
 		setCourse(course); // overrides the course into the local database;
 		if (courseCallback) courseCallback(course);
+
+		sendData.sendDataUpdate(QueryBuilder.ItemQuery.COURSE, Itcourse.toArrayBuffer());
 	}
 
 	/*

@@ -32,6 +32,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var assignmentManager;
 	var courseProblemManager;
 	var submissionManager;
+	
+	var dataSender = new Object();
 
 	/*
 	 * END OF VARIABLE SETTING
@@ -87,11 +89,25 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		database.open();
 	})();
 
-	function sendDataRequest(queryType, idList) {
+	dataSender.sendDataRequest = function sendDataRequest(queryType, idList) {
 		var dataSend = new QueryBuilder.DataRequest();
 		dataSend.items = new Array();
-		dataSend.items.push(new QueryBuilder.ItemRequest(idList, queryType));
+		dataSend.items.push(new QueryBuilder.ItemRequest(queryType, idList));
 		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
+	}
+
+	dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
+		var dataSend = new QueryBuilder.DataSend();
+		dataSend.items = new Array();
+		dataSend.items.push(new QueryBuilder.ItemSend(queryType, data));
+		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
+	}
+
+	dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
+		var dataSend = new QueryBuilder.DataSend();
+		dataSend.items = new Array();
+		dataSend.items.push(new QueryBuilder.ItemRequest(queryType, data));
+		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
 	}
 
 	this.emptySchoolData = function() {
@@ -100,14 +116,14 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 
 	this.start = function() {
 		// creates a manager for just courses.
-		courseManager = new CourseDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		assignmentManager = new AssignmentDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		courseProblemManager = new CourseProblemDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		submissionManager = new SubmissionDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
+		courseManager = new CourseDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		assignmentManager = new AssignmentDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		courseProblemManager = new CourseProblemDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		submissionManager = new SubmissionDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
 		console.log("database is ready for use! with user: " + userId);
 		databaseFinishedLoading = true;
 	}
-	
+
 	/**
 	 * retrieves all the assignments for a given course.
 	 *
@@ -122,7 +138,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			getAssignments(course.assignmentList, assignmentCallback);
 		});
 	}
-	
+
 	/**
 	 * retrieves all the assignments for a given course.
 	 *
