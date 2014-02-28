@@ -1,6 +1,9 @@
 this.showCourses = function showCourses(courseList) {
 	var builder = new SchoolItemBuilder();
 	builder.setList(courseList).setWidth('medium').centerItem(true);
+	if (parent.dataManager.getState("isInstructor")) {
+		builder.setInstructorCard(true);
+	}
 	builder.showImage = false;
 	builder.setBoxClickFunction(courseClickerFunction);
 	builder.build('class_list_column');
@@ -20,14 +23,15 @@ function courseClickerFunction(id) {
 		builder.setEmptyListMessage('There are no assignments for this course!');
 		builder.setBoxClickFunction(assignmentClickerFunction);
 		builder.build('assignment_list_column');
-		/*
-		try {
-			replaceIframe('html/instructor/course_managment_frames/edit_course.html');
-		} catch(exception) {
-			
+		alert(parent.dataManager.getState("isInstructor"));
+		if (parent.dataManager.getState("isInstructor")) {
+			try {
+				replaceIframe('html/instructor/course_managment_frames/edit_course.html');
+			} catch(exception) {
+				
+			}
+			showButton('assignment_button');
 		}
-		showButton('assignment_button');
-		*/
 	});
 }
 
@@ -51,14 +55,14 @@ function assignmentClickerFunction(id) {
 		builder.setEmptyListMessage('There are no problems for this assignment!');
 		builder.setBoxClickFunction(problemClickerFunction);
 		builder.build('problem_list_column');
-		/*
-		try {
-			replaceIframe('html/instructor/course_managment_frames/edit_assignment.html');
-		} catch(exception) {
-			
+		if (parent.dataManager.getState("isInstructor")) {
+			try {
+				replaceIframe('html/instructor/course_managment_frames/edit_assignment.html');
+			} catch(exception) {
+				
+			}
+			showButton('problem_button');
 		}
-		showButton('problem_button');
-		*/
 	});
 }
 
@@ -71,7 +75,12 @@ function problemClickerFunction(id) {
 			parent.dataManager.addState("CURRENT_ASSIGNMENT", problem.assignmentId);
 			parent.dataManager.addState("CURRENT_QUESTION", id);
 			// change source to the problem page! and load problem
-			parent.redirectContent("html/problem/problemlayout.html","title!");
+			if (parent.dataManager.getState("isInstructor")) {
+				// solution editor page!
+				parent.redirectContent("html/problem/problemlayout.html", "");
+			} else {
+				parent.redirectContent("html/problem/problemlayout.html", "Starting Problem");
+			}
 		});
 	}
 	else {
@@ -79,7 +88,12 @@ function problemClickerFunction(id) {
 		var myOpenTip = new Opentip(element, { target: element, tipJoint: "bottom" });
 		myOpenTip.prepareToShow(); // Shows the tooltip after the given delays. This could get interrupted
 
-		myOpenTip.setContent("Click again to open up a problem"); // Updates Opentips content
+		if (parent.dataManager.getState("isInstructor")) {
+			myOpenTip.setContent("Click again to edit the solution"); // Updates Opentips content
+		} else {
+			myOpenTip.setContent("Click again to open up a problem"); // Updates Opentips content
+		}
+		
 		var pastToolTip = problemSelectionManager['currentToolTip'];
 		if (pastToolTip) {
 			pastToolTip.deactivate();
@@ -87,10 +101,15 @@ function problemClickerFunction(id) {
 		problemSelectionManager['currentToolTip'] = myOpenTip;
 		changeSelection(id, problemSelectionManager);
 	}
-	
-	/*
-	replaceIframe('html/instructor/course_managment_frames/edit_problem.html');
-	*/
+
+	if (parent.dataManager.getState("isInstructor")) {
+		try {
+			replaceIframe('html/instructor/course_managment_frames/edit_problem.html');
+		} catch(exception) {
+			
+		}
+		showButton('problem_button');
+	}
 }
 
 function showButton(id) {

@@ -162,7 +162,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	 */
 	this.getCurrentId = function() {
 		return localUserId;
-	}
+	};
 }
 var nonExistantValue = "NONEXISTANT_VALUE";
 var CURRENT_QUESTION = "CURRENT_QUESTION";

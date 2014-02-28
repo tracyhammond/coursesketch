@@ -133,9 +133,14 @@
 
 			window.addEventListener("beforeunload", function( e ) {
 				parent.problemNavigator.removeEventMapping("submit", submitFunction);
-				parent.problemNavigator.removeEventMapping("feedback", feedbackFunction); 
+				parent.problemNavigator.removeEventMapping("feedback", feedbackFunction);
+				/*
+				if (!commandManager.isLastUpdateSubmission()) {
+					return "You have unsaved work.";
+				}
+				*/
 			});
-			
+
 			loadUpdateList();
 		}
 
