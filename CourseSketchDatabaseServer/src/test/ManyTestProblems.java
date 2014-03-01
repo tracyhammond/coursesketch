@@ -14,9 +14,9 @@ import database.institution.Institution;
 
 public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId) {
-		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16", "Problem17", 
-		"Problem18", "Problem19", "Problem20", "Problem21", "Problem22"/*, "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
-		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39"*/};
+		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16", 
+		"Problem17", "Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
+		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41", "Problem42"/*, "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49"*/};
 		//10 is fuzzy logic
 		/*
 		String[] descsription = new String[]{"This is the first problem",
@@ -31,9 +31,57 @@ public class ManyTestProblems {
 				"blah blah blah"};
 		*/
 		String[] questionText = new String[] {
+				
+				/*
+					Assignment 6
+				*/
+				"2.4.2a: What is the term a<sub>8</sub> of the sequence {a<sub>n</sub>} if a<sub>n</sub> = 2n-1?",
+				"2.4.2b: What is the term a<sub>8</sub> of the sequence {a<sub>n</sub>} if a<sub>n</sub> = 7?",
+				"2.4.2c: What is the term a<sub>8</sub> of the sequence {a<sub>n</sub>} if a<sub>n</sub> = 1+(-1)<sup>n</sup>?",
+				"2.4.2d: What is the term a<sub>8</sub> of the sequence {a<sub>n</sub>} if a<sub>n</sub> = -(-2)<sup>n</sup>?",
+				"2.4.4a: What are the terms a<sub>0</sub>,a<sub>1</sub>,a<sub>2</sub>,and a<sub>3</sub> of the sequence {a<sub>n</sub>} where a<sub>n</sub> = (-2)<sup>n</sup>?",
+				"2.4.4b: What are the terms a<sub>0</sub>,a<sub>1</sub>,a<sub>2</sub>,and a<sub>3</sub> of the sequence {a<sub>n</sub>} where a<sub>n</sub> = 3?",
+				"2.4.4c: What are the terms a<sub>0</sub>,a<sub>1</sub>,a<sub>2</sub>,and a<sub>3</sub> of the sequence {a<sub>n</sub>} where a<sub>n</sub> = 7+4<sup>n</sup>?",
+				"2.4.4d: What are the terms a<sub>0</sub>,a<sub>1</sub>,a<sub>2</sub>,and a<sub>3</sub> of the sequence {a<sub>n</sub>} where a<sub>n</sub> = 2<sup>n</sup>+(-2)<sup>n</sup>?",
+				"2.4.10a: Find the first six terms of the sequence defined by each of these recurrence relations and initial conditions. a<sub>n</sub>=-2, a<sub>n-1</sub>a<sub>0</sub>=-1",
+				"2.4.10b: Find the first six terms of the sequence defined by each of these recurrence relations and initial conditions. a<sub>n-1</sub>-a<sub>n-2</sub>, a<sub>0</sub>=2, a<sub>1</sub>=-1",
+				"2.4.10c: Find the first six terms of the sequence defined by each of these recurrence relations and initial conditions. 3a<sub>n-1</sub><sup>2</sup>, a<sub>0</sub>=1",
+				"2.4.12a: Show that the sequence {a<sub>n</sub>} is a solution of the recurrence relation a<sub>n</sub>=-3a<sub>n-1</sub>+4a<sub>n-2</sub> if a<sub>n</sub> = 0",
+				"2.4.12b: Show that the sequence {a<sub>n</sub>} is a solution of the recurrence relation a<sub>n</sub>=-3a<sub>n-1</sub>+4a<sub>n-2</sub> if a<sub>n</sub> = 1",
+				"2.4.12c: Show that the sequence {a<sub>n</sub>} is a solution of the recurrence relation a<sub>n</sub>=-3a<sub>n-1</sub>+4a<sub>n-2</sub> if a<sub>n</sub> = (-4)<sup>n</sup>",
+				"2.4.12d: Show that the sequence {a<sub>n</sub>} is a solution of the recurrence relation a<sub>n</sub>=-3a<sub>n-1</sub>+4a<sub>n-2</sub> if a<sub>n</sub> = 2(-4)<sup>n</sup>+3",
+				"2.4.16a: Find the solution to each of these recurrence relations with the given initial conditions: a<sub>n</sub> = -a<sub>n-1</sub>, a<sub>0</sub>=5",
+				"2.4.16b: Find the solution to each of these recurrence relations with the given initial conditions: a<sub>n</sub> = a<sub>n-1</sub>+2, a<sub>0</sub>=3",
+				"2.4.16c: Find the solution to each of these recurrence relations with the given initial conditions: a<sub>n</sub> = a<sub>n-1</sub>-n, a<sub>0</sub>=4",
+				"2.4.16d: Find the solution to each of these recurrence relations with the given initial conditions: a<sub>n</sub> = 2a<sub>n-1</sub>-3, a<sub>0</sub>=-1",
+				"2.4.16e: Find the solution to each of these recurrence relations with the given initial conditions: a<sub>n</sub> = (n+1)a<sub>n-1</sub>, a<sub>0</sub>=2",
+				"2.4.16f: Find the solution to each of these recurrence relations with the given initial conditions: a<sub>n</sub> = 2na<sub>n-1</sub>, a<sub>0</sub>=3",
+				"2.4.16g: Find the solution to each of these recurrence relations with the given initial conditions: a<sub>n</sub> =-a<sub>n-1</sub>+n-1, a<sub>0</sub>=7",
+				"2.4.26a: For each of these lists of integers, provide a simple formula or rule that generates the terms of an integer sequence that begins with the given list. Assuming that your formula or  rule is correct, determine the next three terms of the sequence. 3,6,11,18,27,38,51,66,83,102,...",
+				"2.4.26b: For each of these lists of integers, provide a simple formula or rule that generates the terms of an integer sequence that begins with the given list. Assuming that your formula or  rule is correct, determine the next three terms of the sequence.7,11,15,19,23,27,31,35,39,43,...",
+				"2.4.26c: For each of these lists of integers, provide a simple formula or rule that generates the terms of an integer sequence that begins with the given list. Assuming that your formula or  rule is correct, determine the next three terms of the sequence. 1,10,11,100,101,110,111,1000,1001,1010,1011,...",
+				"2.4.26d: For each of these lists of integers, provide a simple formula or rule that generates the terms of an integer sequence that begins with the given list. Assuming that your formula or  rule is correct, determine the next three terms of the sequence. 1,2,2,2,3,3,3,3,3,5,5,5,5,5,...",
+				"2.4.26e: For each of these lists of integers, provide a simple formula or rule that generates the terms of an integer sequence that begins with the given list. Assuming that your formula or  rule is correct, determine the next three terms of the sequence.0,2,8,26,80,242,728,2186,6560,19682,...",
+				"2.4.26f: For each of these lists of integers, provide a simple formula or rule that generates the terms of an integer sequence that begins with the given list. Assuming that your formula or  rule is correct, determine the next three terms of the sequence. 1,3,15,105,945,10395,135135,2027025,34459425,...", 
+				"2.4.26g: For each of these lists of integers, provide a simple formula or rule that generates the terms of an integer sequence that begins with the given list. Assuming that your formula or  rule is correct, determine the next three terms of the sequence.1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,...",
+				"2.4.26h: For each of these lists of integers, provide a simple formula or rule that generates the terms of an integer sequence that begins with the given list. Assuming that your formula or  rule is correct, determine the next three terms of the sequence.2,4,16,256,65536,4294967296,...",
+				"2.4.30a: What are the values of these sums, where S = {1,3,5,7}? \u2211<sub>j \u220A S</sub>j ",
+				"2.4.30b: What are the values of these sums, where S = {1,3,5,7}? \u2211<sub>j \u220A S</sub>j<sup>2</sup>",
+				"2.4.30c: What are the values of these sums, where S = {1,3,5,7}? \u2211<sub>j \u220A S</sub>1/j",
+				"2.4.30d: What are the values of these sums, where S = {1,3,5,7}? \u2211<sub>j \u220A S</sub>1",
+				"2.4.32a: Find the value of each of these sums \u2211<sub>j=0</sub> 1+(-1)<sup>j</sup>",
+				"2.4.32b: Find the value of each of these sums \u2211<sub>j=0</sub> 3<sup>j</sup>-2<sup>j</sup>",
+				"2.4.32c: Find the value of each of these sums \u2211<sub>j=0</sub> 2*3<sup>j</sup>+3*2<sup>j</sup>",
+				"2.4.32d: Find the value of each of these sums \u2211<sub>j=0</sub> 2<sup>j+1</sup>-2<sup>j</sup>",
+				"2.4.34a: Compute each of these double sums. \u2211<sub>i=1</sub><sup>3</sup>\u2211<sub>j=1</sub><sup>2</sup> (i-j)",
+				"2.4.34b: Compute each of these double sums. \u2211<sub>i=0</sub><sup>3</sup>\u2211<sub>j=0</sub><sup>2</sup> (3i+2j)",
+				"2.4.34c: Compute each of these double sums. \u2211<sub>i=1</sub><sup>3</sup>\u2211<sub>j=0</sub><sup>2</sup> j",
+				"2.4.34d: Compute each of these double sums. \u2211<sub>i=0</sub><sup>2/sup>\u2211<sub>j=0</sub><sup>3</sup>  i<sup>2</sup>j<sup>3</sup>"
+				
+				/*
 				/*
 					Assignment 5
-				*/
+				/*
 				"Given that the domain = codomain = {a,b,c,d}. " 
 				+"Is the following function one-to-one? "
 				+"f(a)=b, f(b) = a, f(c) = c, f(d) = d ",
@@ -98,7 +146,7 @@ public class ManyTestProblems {
 				
 				"Let x be a real number, show that "
 				+"\u230A3x\u230B = \u230Ax\u230B + \u230Ax + 1/3\u230B + \u230Ax + 2/3\u230B",
-								
+				*/		
 				
 				/*
 					Assignment 4
@@ -341,7 +389,7 @@ public class ManyTestProblems {
 				QuestionType.SKETCH,
 				QuestionType.SKETCH
 		};
-		for(int k = 0; k < 22/*19*//*39*/; k ++) {
+		for(int k = 0; k < 42/*22*//*19*//*39*/; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
