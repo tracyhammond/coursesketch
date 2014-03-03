@@ -17,6 +17,7 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import database.DatabaseAccessException;
+import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
@@ -110,7 +111,8 @@ public class CourseProblemManager
 
 	}
 
-	public static boolean mongoUpdateCourseProblem(DB dbs, String problemId, String userId, SrlProblem problem) throws AuthenticationException {
+	public static boolean mongoUpdateCourseProblem(DB dbs, String problemId, String userId, SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
+		boolean update = false;
 		DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
 		DBObject corsor = myDbRef.fetch();
 
@@ -129,9 +131,11 @@ public class CourseProblemManager
 		if (isAdmin || isMod) {
 			if (problem.hasGradeWeight()) {
 				updated.append("$set", new BasicDBObject(GRADE_WEIGHT, problem.getGradeWeight()));
+				update = true;
 			}
 			if (problem.hasProblemBankId()) {
 				updated.append("$set", new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId()));
+				update = true;
 			}
 			// Optimization: have something to do with pulling values of an
 			// array and pushing values to an array
@@ -150,6 +154,15 @@ public class CourseProblemManager
 					updated.append("$set", new BasicDBObject(USERS, permissions.getUserPermissionList()));
 				}
 			}
+		}
+		if(update == true)
+		{
+			String[] users = (String[]) corsor.get(USERS);
+			for(int i = 0;i < users.length;i++)
+			{
+				UserUpdateHandler.InsertUpdates(dbs, users[i], problemId, "COURSEPROBLEM");
+			}
+			
 		}
 		return true;
 	}
