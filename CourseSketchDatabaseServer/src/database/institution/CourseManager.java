@@ -26,6 +26,7 @@ import com.mongodb.DBRef;
 
 import database.DatabaseAccessException;
 import database.RequestConverter;
+import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 
@@ -103,7 +104,8 @@ public class CourseManager {
 
 	}
 
-	public static boolean mongoUpdateCourse(DB dbs, String courseID, String userId, SrlCourse course) throws AuthenticationException {
+	public static boolean mongoUpdateCourse(DB dbs, String courseID, String userId, SrlCourse course) throws AuthenticationException, DatabaseAccessException {
+		boolean update = false;
 		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseID));
 		DBObject corsor = myDbRef.fetch();
 		DBObject updateObj = null;
@@ -124,36 +126,41 @@ public class CourseManager {
 			if (course.hasSemester()) {
 				updateObj = new BasicDBObject(COURSE_SEMESTER, course.getSemester());
 				courses.update(corsor, new BasicDBObject("$set", updateObj));
+				update = true;
 			}
 			if (course.hasAccessDate()) {
 
 				updateObj = new BasicDBObject(ACCESS_DATE, course.getAccessDate().getMillisecond());
 				courses.update(corsor, new BasicDBObject("$set", updateObj));
-
+				update = true;
 			}
 			// Optimization: have something to do with pulling values of an
 			// array and pushing values to an array
 			if (course.hasCloseDate()) {
 				updateObj = new BasicDBObject(CLOSE_DATE, course.getCloseDate().getMillisecond());
 				courses.update(corsor, new BasicDBObject("$set", updateObj));
+				update = true;
 			}
 
 			if (course.hasImageUrl()) {
 				updateObj = new BasicDBObject(IMAGE, course.getImageUrl());
 				courses.update(corsor, new BasicDBObject("$set", updateObj));
+				update = true;
 			}
 			if (course.hasDescription()) {
 				updateObj = new BasicDBObject(DESCRIPTION, course.getDescription());
 				courses.update(corsor, new BasicDBObject("$set", updateObj));
+				update = true;
 			}
 			if (course.hasName()) {
 				updateObj = new BasicDBObject(NAME, course.getName());
 				courses.update(corsor, new BasicDBObject("$set", updateObj));
+				update = true;
 			}
 			if (course.hasAccess()) {
 				updateObj = new BasicDBObject(COURSE_ACCESS, course.getAccess().getNumber());
 				courses.update(corsor, new BasicDBObject("$set", updateObj));
-
+				update = true;
 			}
 			// Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (course.hasAccessPermission()) {
@@ -177,10 +184,22 @@ public class CourseManager {
 			if (course.getAssignmentListList() != null) {
 				updateObj = new BasicDBObject(ASSIGNMENT_LIST, course.getAssignmentListList());
 				courses.update(corsor, new BasicDBObject("$set", updateObj));
+				update = true;
 			}
 		}
 		// courses.update(corsor, new BasicDBObject ("$set",updateObj));
 
+		// get user list
+		// send updates 
+		if(update == true)
+		{
+			String[] users = (String[]) corsor.get(USERS);
+			for(int i = 0;i < users.length;i++)
+			{
+				UserUpdateHandler.InsertUpdates(dbs, users[i], courseID, "COURSE");
+			}
+			
+		}
 		return true;
 
 	}
@@ -198,6 +217,7 @@ public class CourseManager {
 		updateObj = new BasicDBObject(ASSIGNMENT_LIST, assignmentId);
 		courses.update(corsor, new BasicDBObject ("$addToSet",updateObj));
 		return true;
+		
 	}
 
 	public static ArrayList<SrlCourse> mongoGetAllPublicCourses(DB dbs) {
@@ -233,19 +253,23 @@ public class CourseManager {
 			resultList.add(build.build());
 		}
 		try {
+			System.out.println("SQL attempt");
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			Connection conn;	
 			conn = DriverManager.getConnection("jdbc:mysql://srl03.tamu.edu/problembank?" +
 			                               "user=srl&password=sketchrec");
 			Statement stmt = conn.createStatement() ;
-			String query = "select * from CourseInfo where id=3;" ;
+			System.out.println("SQL connected");
+			String query = "select * from CourseInfo where id=2" ;
 			ResultSet rs = stmt.executeQuery(query) ;
+			System.out.println("SQL selected");
 			SrlCourse.Builder build = SrlCourse.newBuilder();
 			build.setId("3");
 			build.setDescription(rs.getString("Description"));
 			build.setName(rs.getString("Name"));
+			System.out.println(rs.getString("Name"));
 			//build.setAccessDate(new DateTime());
-			
+			System.out.println("SQL worked");
 				//	RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(ACCESS_DATE)).longValue()));
 		//build.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(CLOSE_DATE)).longValue()));
 //ADD THIS!				resultList.add(build.build());

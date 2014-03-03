@@ -15,6 +15,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import database.DatabaseAccessException;
+import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 
@@ -80,8 +82,9 @@ public class BankProblemManager
 
 	}
 
-	public static boolean mongoUpdateBankProblem(DB dbs, String problemBankId,String userId, SrlBankProblem problem) throws AuthenticationException
+	public static boolean mongoUpdateBankProblem(DB dbs, String problemBankId,String userId, SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException
 	{
+		boolean update = false;
 		DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
 		DBObject corsor = myDbRef.fetch();
 
@@ -100,28 +103,36 @@ public class BankProblemManager
 		{
 			if (problem.hasQuestionText()) {
 				updated.append("$set", new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()));
+				update = true;
 			}
 			if (problem.hasImage()) {
 				updated.append("$set", new BasicDBObject(IMAGE, problem.getImage()));
+				update = true;
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (problem.hasSolutionId()) {
 				updated.append("$set", new BasicDBObject(SOLUTION_ID, problem.getSolutionId()));
+				update = true;
 			}
 			if (problem.hasCourseTopic()) {
 				updated.append("$set", new BasicDBObject(COURSE_TOPIC, problem.getCourseTopic()));
+				update = true;
 			}
 			if (problem.hasSubTopic()) {
 				updated.append("$set", new BasicDBObject(SUB_TOPIC, problem.getSubTopic()));
+				update = true;
 			}
 			if (problem.hasSource()) {
 				updated.append("$set", new BasicDBObject(SOURCE, problem.getSource()));
+				update = true;
 			}
 			if (problem.hasQuestionType()) {
 				updated.append("$set", new BasicDBObject(QUESTION_TYPE, problem.getQuestionType().getNumber()));
+				update = true;
 			}
 			if (problem.getOtherKeywordsCount() > 0) {
 				updated.append("$set", new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
+				update = true;
 			}
 		//Optimization: have something to do with pulling values of an array and pushing values to an array
 			if (problem.hasAccessPermission()) {
@@ -139,6 +150,17 @@ public class BankProblemManager
 				}
 			}
 		}
+		
+		if(update == true)
+		{
+			String[] users = (String[]) corsor.get(USERS);
+			for(int i = 0;i < users.length;i++)
+			{
+				UserUpdateHandler.InsertUpdates(dbs, users[i], problemBankId, "PROBLEM");
+			}
+			
+		}
+		
 		return true;
 		
 	}

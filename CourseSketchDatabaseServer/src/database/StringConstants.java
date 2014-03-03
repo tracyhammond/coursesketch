@@ -88,6 +88,10 @@ public class StringConstants {
 	public static final String EMAIL = "Email";
 	public static final String SCHOOL_IDENTIFICATION = "UIN";
 	public static final String CREDENTIALS = "Credentials";
+	public static final String UPDATE = "Update";
+	public static final String CLASSIFICATION = "Classification";
+	public static final String UPDATEID = "UpdateId";
+	public static final String TIME = "Time";
 	
 	// user group specific
 	public static final String USER_LIST = "UserList";
