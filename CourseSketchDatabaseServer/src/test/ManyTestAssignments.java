@@ -22,7 +22,7 @@ public class ManyTestAssignments {
 			testBuilder.setGradeWeight("50%");
 			//testBuilder.setLatePolicy(LatePolicy.POLICY1);
 			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
-			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1393912799000L/*1393480799000L*//*1392875999000L*//*1392703199000L*/).getTime())));
+			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1394085599000L/*1393480799000L*//*1392875999000L*//*1392703199000L*/).getTime())));
 			Date d = new Date();
 			d.setYear(2014-1900);
 			d.setMonth(1);
