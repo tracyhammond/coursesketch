@@ -13,7 +13,7 @@ import database.institution.Institution;
 public class ManyTestAssignments {
 	public static void testAssignments(String courseId) {
 		String[] name = new String[]{"Assignment6"};		/*"Assignment5"*//*"Assignment4"*//*"Assignment3"*/
-		String[] descsription = new String[]{"Due Monday 3/3/2014 at midnight. This is the sixth assignment."/*"Due Wednesday 2/26/2014 at midnight. This is the Fifth Assignment"*//*"This is the Fourth Assignment"*//*"This is the Third Assignment"*/};
+		String[] descsription = new String[]{"Due Wednesday 3/5/2014 at midnight. This is the sixth assignment."/*"Due Wednesday 2/26/2014 at midnight. This is the Fifth Assignment"*//*"This is the Fourth Assignment"*//*"This is the Third Assignment"*/};
 		for (int k = 0; k < 1; k ++) {
 			SrlAssignment.Builder testBuilder = SrlAssignment.newBuilder();
 			testBuilder.setName(name[k]);
