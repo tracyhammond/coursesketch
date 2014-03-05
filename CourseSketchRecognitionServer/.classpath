@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="libs/weka.jar"/>
 	<classpathentry kind="lib" path="libs/java_websocket.jar"/>
 	<classpathentry kind="lib" path="libs/PaleoNNTrainer.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sloth"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

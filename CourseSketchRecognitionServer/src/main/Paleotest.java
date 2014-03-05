@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import srl.core.sketch.Point;
 import srl.core.sketch.Sketch;
 import protobuf.srl.commands.Commands.SrlUpdateList;
 import response.Response;
@@ -21,6 +22,9 @@ import srl.core.sketch.*;
 import srl.recognition.IRecognitionResult;
 import srl.recognition.paleo.PaleoConfig;
 import srl.recognition.paleo.PaleoSketchRecognizer;
+
+import org.openawt.geom.PathIterator;
+
 
 //import java.awt.Canvas;
 import java.awt.Graphics;
@@ -30,6 +34,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import org.openawt.svg.SVGShape;
 
 public class Paleotest {
         public static void main(String[] args) throws IOException, FileNotFoundException, Exception {
@@ -89,6 +95,28 @@ public class Paleotest {
             	scount++;
            		IRecognitionResult result = recognizer.recognize(m_stroke);
            		System.out.println(result.getBestShape().getInterpretation().label);
+           		List<Point> points = m_stroke.getPoints();
+           		boolean cont = true;
+           		for(Shape x : result.getNBestList() ) {
+           			String label = x.getInterpretation().label;
+           			if(cont && label == "Curve" || label == "Arc" ) {
+           				System.out.println("CURVE BEAUT TYPE?::!::" + x.getBeautifiedShape().getShape());
+           				org.openawt.Shape shape = x.getBeautifiedShape().getShape();
+           				PathIterator path = shape.getPathIterator(null,0.1);
+           				points.clear();
+           				float[] coords = new float[2];
+           				while(!path.isDone()) {
+           					path.currentSegment(coords);
+           					points.add(new Point(coords[0],coords[1]));
+           					path.next();
+           					System.out.println("SUPER SECRET INTERP PT ACTIVATE!");
+           				}
+           				
+           			}
+           			cont = false;
+           		}
+           		
+           		
              	for (Point p : m_stroke.getPoints()) {
             		if (p.getX() < xmin) xmin = (int)p.getX();
             		if (p.getX() > xmax) xmax = (int)p.getX();
