@@ -33,3 +33,6 @@ handlers:
 
 - url: /other
   static_dir: other
+
+- url: /polymer
+  static_dir: polymer
