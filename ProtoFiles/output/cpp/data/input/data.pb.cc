@@ -74,8 +74,8 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       sizeof(DataRequest));
   ItemRequest_descriptor_ = file->message_type(1);
   static const int ItemRequest_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemRequest, itemid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemRequest, query_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemRequest, itemid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemRequest, advancequery_),
   };
   ItemRequest_reflection_ =
@@ -246,9 +246,9 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\020input/data.proto\022\022protobuf.srl.query\"="
     "\n\013DataRequest\022.\n\005items\030\003 \003(\0132\037.protobuf."
-    "srl.query.ItemRequest\"a\n\013ItemRequest\022\016\n\006"
-    "itemId\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.s"
-    "rl.query.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014"
+    "srl.query.ItemRequest\"a\n\013ItemRequest\022,\n\005"
+    "query\030\001 \002(\0162\035.protobuf.srl.query.ItemQue"
+    "ry\022\016\n\006itemId\030\002 \003(\t\022\024\n\014advanceQuery\030\003 \001(\014"
     "\"7\n\010DataSend\022+\n\005items\030\003 \003(\0132\034.protobuf.s"
     "rl.query.ItemSend\"F\n\010ItemSend\022,\n\005query\030\001"
     " \001(\0162\035.protobuf.srl.query.ItemQuery\022\014\n\004d"
@@ -505,6 +505,9 @@ void DataRequest::CopyFrom(const DataRequest& from) {
 
 bool DataRequest::IsInitialized() const {
 
+  for (int i = 0; i < items_size(); i++) {
+    if (!this->items(i).IsInitialized()) return false;
+  }
   return true;
 }
 
@@ -529,8 +532,8 @@ void DataRequest::Swap(DataRequest* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int ItemRequest::kItemIdFieldNumber;
 const int ItemRequest::kQueryFieldNumber;
+const int ItemRequest::kItemIdFieldNumber;
 const int ItemRequest::kAdvanceQueryFieldNumber;
 #endif  // !_MSC_VER
 
@@ -589,7 +592,7 @@ ItemRequest* ItemRequest::New() const {
 }
 
 void ItemRequest::Clear() {
-  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     query_ = -1;
     if (has_advancequery()) {
       if (advancequery_ != &::google::protobuf::internal::kEmptyString) {
@@ -608,8 +611,28 @@ bool ItemRequest::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated string itemId = 1;
+      // required .protobuf.srl.query.ItemQuery query = 1;
       case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::protobuf::srl::query::ItemQuery_IsValid(value)) {
+            set_query(static_cast< ::protobuf::srl::query::ItemQuery >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_itemId;
+        break;
+      }
+
+      // repeated string itemId = 2;
+      case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_itemId:
@@ -622,28 +645,7 @@ bool ItemRequest::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(10)) goto parse_itemId;
-        if (input->ExpectTag(16)) goto parse_query;
-        break;
-      }
-
-      // optional .protobuf.srl.query.ItemQuery query = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_query:
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::protobuf::srl::query::ItemQuery_IsValid(value)) {
-            set_query(static_cast< ::protobuf::srl::query::ItemQuery >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(2, value);
-          }
-        } else {
-          goto handle_uninterpreted;
-        }
+        if (input->ExpectTag(18)) goto parse_itemId;
         if (input->ExpectTag(26)) goto parse_advanceQuery;
         break;
       }
@@ -680,19 +682,19 @@ bool ItemRequest::MergePartialFromCodedStream(
 
 void ItemRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated string itemId = 1;
+  // required .protobuf.srl.query.ItemQuery query = 1;
+  if (has_query()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->query(), output);
+  }
+
+  // repeated string itemId = 2;
   for (int i = 0; i < this->itemid_size(); i++) {
   ::google::protobuf::internal::WireFormat::VerifyUTF8String(
     this->itemid(i).data(), this->itemid(i).length(),
     ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->itemid(i), output);
-  }
-
-  // optional .protobuf.srl.query.ItemQuery query = 2;
-  if (has_query()) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      2, this->query(), output);
+      2, this->itemid(i), output);
   }
 
   // optional bytes advanceQuery = 3;
@@ -709,19 +711,19 @@ void ItemRequest::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ItemRequest::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated string itemId = 1;
+  // required .protobuf.srl.query.ItemQuery query = 1;
+  if (has_query()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->query(), target);
+  }
+
+  // repeated string itemId = 2;
   for (int i = 0; i < this->itemid_size(); i++) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->itemid(i).data(), this->itemid(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteStringToArray(1, this->itemid(i), target);
-  }
-
-  // optional .protobuf.srl.query.ItemQuery query = 2;
-  if (has_query()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      2, this->query(), target);
+      WriteStringToArray(2, this->itemid(i), target);
   }
 
   // optional bytes advanceQuery = 3;
@@ -741,8 +743,8 @@ void ItemRequest::SerializeWithCachedSizes(
 int ItemRequest::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // optional .protobuf.srl.query.ItemQuery query = 2;
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required .protobuf.srl.query.ItemQuery query = 1;
     if (has_query()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->query());
@@ -756,7 +758,7 @@ int ItemRequest::ByteSize() const {
     }
 
   }
-  // repeated string itemId = 1;
+  // repeated string itemId = 2;
   total_size += 1 * this->itemid_size();
   for (int i = 0; i < this->itemid_size(); i++) {
     total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -789,7 +791,7 @@ void ItemRequest::MergeFrom(const ::google::protobuf::Message& from) {
 void ItemRequest::MergeFrom(const ItemRequest& from) {
   GOOGLE_CHECK_NE(&from, this);
   itemid_.MergeFrom(from.itemid_);
-  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_query()) {
       set_query(from.query());
     }
@@ -813,14 +815,15 @@ void ItemRequest::CopyFrom(const ItemRequest& from) {
 }
 
 bool ItemRequest::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
 void ItemRequest::Swap(ItemRequest* other) {
   if (other != this) {
-    itemid_.Swap(&other->itemid_);
     std::swap(query_, other->query_);
+    itemid_.Swap(&other->itemid_);
     std::swap(advancequery_, other->advancequery_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

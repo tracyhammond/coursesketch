@@ -92,11 +92,14 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
 		var dataSend = new QueryBuilder.DataRequest();
 		dataSend.items = new Array();
-		if (isUndefined(advanceQuery)) {
-			dataSend.items.push(new QueryBuilder.ItemRequest(queryType, idList));
-		} else {
-			dataSend.items.push(new QueryBuilder.ItemRequest(queryType, idList, advanceQuery));
+		var itemRequest = new QueryBuilder.ItemRequest(queryType);
+		if (!isUndefined(idList)) {
+			itemRequest.setItemId(idList);
 		}
+		if (!isUndefined(advanceQuery)) {
+			itemRequest.setAdvanceQuery(advanceQuery);
+		}
+		dataSend.items.push(itemRequest);
 		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
 	}
 
@@ -159,7 +162,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	}
 
 	this.pollUpdates = function() {
-		sendDataRequest
+		sendDataRequest(QueryBuilder.ItemQuery.UPDATE);
 	};
 
 	/**
