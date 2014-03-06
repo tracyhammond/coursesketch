@@ -13,8 +13,10 @@ public final class Commands {
    *
    * <pre>
    **
-   * These are attempted to be ordered by the most common occurence
-   * but are grouped by what make sense
+   * These are attempted to be ordered by the most common occurrence
+   * but are grouped by what make sense.
+   *
+   * Changing the value of a command will invalidate all current checksums and cause a version issue with stored updateList
    * </pre>
    */
   public enum CommandType
