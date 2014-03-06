@@ -51,6 +51,26 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 	};
 	parent.getSubmission = getSubmission;
 
+	function getAllExperiments(problemId, submissionCallback) {
+		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.EXPERIMENT, function(evt, item) {
+			if (isUndefined(item.data)) {
+				submissionCallback("Undefined");
+				return;
+			}
+			var list;
+			try {
+				list = SubmissionBuilder.SrlExperimentList.decode(item.data);
+			} catch(exception) {
+				return;
+			}
+			submissionCallback(list.experiments);
+		});
+
+		// creates a request that is then sent to the server
+		var advanceQuery = new QueryBuilder.ExperimentReview(false, true);
+		sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId], advanceQuery);
+	}
+
 	/**
 	 * @param submission the submission that is being added
 	 * @param id the id to which this submission is being added.

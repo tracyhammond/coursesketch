@@ -53,6 +53,7 @@ enum ItemQuery {
 	BANK_SEARCH = 11;
 	REGISTER = 12; // userId = 0 courseId = 1
 	COURSE_LIST = 13; // returns a list of Ids
+	UPDATE = 14; // polls the database for any updates/changes that have happened.
 }
 
 /**
@@ -60,4 +61,9 @@ enum ItemQuery {
  */
 message IdList {
 	repeated string list = 1;
+}
+
+message ExperimentReview {
+	optional bool allowEditing = 1;
+	optional bool showUserNames = 2;
 }

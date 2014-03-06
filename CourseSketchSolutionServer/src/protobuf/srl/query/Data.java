@@ -85,6 +85,14 @@ public final class Data {
      * </pre>
      */
     COURSE_LIST(14, 13),
+    /**
+     * <code>UPDATE = 14;</code>
+     *
+     * <pre>
+     * polls the database for any updates/changes that have happened.
+     * </pre>
+     */
+    UPDATE(15, 14),
     ;
 
     /**
@@ -159,6 +167,14 @@ public final class Data {
      * </pre>
      */
     public static final int COURSE_LIST_VALUE = 13;
+    /**
+     * <code>UPDATE = 14;</code>
+     *
+     * <pre>
+     * polls the database for any updates/changes that have happened.
+     * </pre>
+     */
+    public static final int UPDATE_VALUE = 14;
 
 
     public final int getNumber() { return value; }
@@ -180,6 +196,7 @@ public final class Data {
         case 11: return BANK_SEARCH;
         case 12: return REGISTER;
         case 13: return COURSE_LIST;
+        case 14: return UPDATE;
         default: return null;
       }
     }
@@ -4973,6 +4990,483 @@ public final class Data {
     // @@protoc_insertion_point(class_scope:protobuf.srl.query.IdList)
   }
 
+  public interface ExperimentReviewOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bool allowEditing = 1;
+    /**
+     * <code>optional bool allowEditing = 1;</code>
+     */
+    boolean hasAllowEditing();
+    /**
+     * <code>optional bool allowEditing = 1;</code>
+     */
+    boolean getAllowEditing();
+
+    // optional bool showUserNames = 2;
+    /**
+     * <code>optional bool showUserNames = 2;</code>
+     */
+    boolean hasShowUserNames();
+    /**
+     * <code>optional bool showUserNames = 2;</code>
+     */
+    boolean getShowUserNames();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.query.ExperimentReview}
+   */
+  public static final class ExperimentReview extends
+      com.google.protobuf.GeneratedMessage
+      implements ExperimentReviewOrBuilder {
+    // Use ExperimentReview.newBuilder() to construct.
+    private ExperimentReview(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private ExperimentReview(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final ExperimentReview defaultInstance;
+    public static ExperimentReview getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ExperimentReview getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ExperimentReview(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              allowEditing_ = input.readBool();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              showUserNames_ = input.readBool();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ExperimentReview_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ExperimentReview_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.query.Data.ExperimentReview.class, protobuf.srl.query.Data.ExperimentReview.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<ExperimentReview> PARSER =
+        new com.google.protobuf.AbstractParser<ExperimentReview>() {
+      public ExperimentReview parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ExperimentReview(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ExperimentReview> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bool allowEditing = 1;
+    public static final int ALLOWEDITING_FIELD_NUMBER = 1;
+    private boolean allowEditing_;
+    /**
+     * <code>optional bool allowEditing = 1;</code>
+     */
+    public boolean hasAllowEditing() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bool allowEditing = 1;</code>
+     */
+    public boolean getAllowEditing() {
+      return allowEditing_;
+    }
+
+    // optional bool showUserNames = 2;
+    public static final int SHOWUSERNAMES_FIELD_NUMBER = 2;
+    private boolean showUserNames_;
+    /**
+     * <code>optional bool showUserNames = 2;</code>
+     */
+    public boolean hasShowUserNames() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional bool showUserNames = 2;</code>
+     */
+    public boolean getShowUserNames() {
+      return showUserNames_;
+    }
+
+    private void initFields() {
+      allowEditing_ = false;
+      showUserNames_ = false;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBool(1, allowEditing_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBool(2, showUserNames_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, allowEditing_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(2, showUserNames_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.query.Data.ExperimentReview parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.ExperimentReview parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ExperimentReview parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.query.Data.ExperimentReview parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ExperimentReview parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.ExperimentReview parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ExperimentReview parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.query.Data.ExperimentReview parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.query.Data.ExperimentReview parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.query.Data.ExperimentReview parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.query.Data.ExperimentReview prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.query.ExperimentReview}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.query.Data.ExperimentReviewOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ExperimentReview_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ExperimentReview_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.query.Data.ExperimentReview.class, protobuf.srl.query.Data.ExperimentReview.Builder.class);
+      }
+
+      // Construct using protobuf.srl.query.Data.ExperimentReview.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        allowEditing_ = false;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        showUserNames_ = false;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.query.Data.internal_static_protobuf_srl_query_ExperimentReview_descriptor;
+      }
+
+      public protobuf.srl.query.Data.ExperimentReview getDefaultInstanceForType() {
+        return protobuf.srl.query.Data.ExperimentReview.getDefaultInstance();
+      }
+
+      public protobuf.srl.query.Data.ExperimentReview build() {
+        protobuf.srl.query.Data.ExperimentReview result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.query.Data.ExperimentReview buildPartial() {
+        protobuf.srl.query.Data.ExperimentReview result = new protobuf.srl.query.Data.ExperimentReview(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.allowEditing_ = allowEditing_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.showUserNames_ = showUserNames_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.query.Data.ExperimentReview) {
+          return mergeFrom((protobuf.srl.query.Data.ExperimentReview)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.query.Data.ExperimentReview other) {
+        if (other == protobuf.srl.query.Data.ExperimentReview.getDefaultInstance()) return this;
+        if (other.hasAllowEditing()) {
+          setAllowEditing(other.getAllowEditing());
+        }
+        if (other.hasShowUserNames()) {
+          setShowUserNames(other.getShowUserNames());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.query.Data.ExperimentReview parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.query.Data.ExperimentReview) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bool allowEditing = 1;
+      private boolean allowEditing_ ;
+      /**
+       * <code>optional bool allowEditing = 1;</code>
+       */
+      public boolean hasAllowEditing() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bool allowEditing = 1;</code>
+       */
+      public boolean getAllowEditing() {
+        return allowEditing_;
+      }
+      /**
+       * <code>optional bool allowEditing = 1;</code>
+       */
+      public Builder setAllowEditing(boolean value) {
+        bitField0_ |= 0x00000001;
+        allowEditing_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool allowEditing = 1;</code>
+       */
+      public Builder clearAllowEditing() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        allowEditing_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional bool showUserNames = 2;
+      private boolean showUserNames_ ;
+      /**
+       * <code>optional bool showUserNames = 2;</code>
+       */
+      public boolean hasShowUserNames() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bool showUserNames = 2;</code>
+       */
+      public boolean getShowUserNames() {
+        return showUserNames_;
+      }
+      /**
+       * <code>optional bool showUserNames = 2;</code>
+       */
+      public Builder setShowUserNames(boolean value) {
+        bitField0_ |= 0x00000002;
+        showUserNames_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool showUserNames = 2;</code>
+       */
+      public Builder clearShowUserNames() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        showUserNames_ = false;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.query.ExperimentReview)
+    }
+
+    static {
+      defaultInstance = new ExperimentReview(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.query.ExperimentReview)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_query_DataRequest_descriptor;
   private static
@@ -5008,6 +5502,11 @@ public final class Data {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_query_IdList_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_query_ExperimentReview_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_query_ExperimentReview_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -5030,14 +5529,16 @@ public final class Data {
       "mResult\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.qu" +
       "ery.ItemQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004dat" +
       "a\030\003 \001(\014\022\016\n\006noData\030\004 \001(\010\022\024\n\014errorMessage\030" +
-      "\005 \001(\t\"\026\n\006IdList\022\014\n\004list\030\001 \003(\t*\375\001\n\tItemQu" +
-      "ery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\nA" +
-      "SSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020\n\014BANK_" +
-      "PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS_GRADE\020" +
-      "\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERI" +
-      "MENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n" +
-      "\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013COURSE_L",
-      "IST\020\r"
+      "\005 \001(\t\"\026\n\006IdList\022\014\n\004list\030\001 \003(\t\"?\n\020Experim" +
+      "entReview\022\024\n\014allowEditing\030\001 \001(\010\022\025\n\rshowU" +
+      "serNames\030\002 \001(\010*\211\002\n\tItemQuery\022\022\n\005ERROR\020\377\377" +
+      "\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016" +
+      "COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUS" +
+      "ERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020" +
+      "\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOO",
+      "L\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022" +
+      "\014\n\010REGISTER\020\014\022\017\n\013COURSE_LIST\020\r\022\n\n\006UPDATE" +
+      "\020\016"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5086,6 +5587,12 @@ public final class Data {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_IdList_descriptor,
               new java.lang.String[] { "List", });
+          internal_static_protobuf_srl_query_ExperimentReview_descriptor =
+            getDescriptor().getMessageTypes().get(7);
+          internal_static_protobuf_srl_query_ExperimentReview_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_query_ExperimentReview_descriptor,
+              new java.lang.String[] { "AllowEditing", "ShowUserNames", });
           return null;
         }
       };

@@ -43,6 +43,7 @@ class ItemSend;
 class DataResult;
 class ItemResult;
 class IdList;
+class ExperimentReview;
 
 enum ItemQuery {
   ERROR = -1,
@@ -59,11 +60,12 @@ enum ItemQuery {
   COURSE_SEARCH = 10,
   BANK_SEARCH = 11,
   REGISTER = 12,
-  COURSE_LIST = 13
+  COURSE_LIST = 13,
+  UPDATE = 14
 };
 bool ItemQuery_IsValid(int value);
 const ItemQuery ItemQuery_MIN = ERROR;
-const ItemQuery ItemQuery_MAX = COURSE_LIST;
+const ItemQuery ItemQuery_MAX = UPDATE;
 const int ItemQuery_ARRAYSIZE = ItemQuery_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ItemQuery_descriptor();
@@ -768,6 +770,98 @@ class IdList : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static IdList* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class ExperimentReview : public ::google::protobuf::Message {
+ public:
+  ExperimentReview();
+  virtual ~ExperimentReview();
+
+  ExperimentReview(const ExperimentReview& from);
+
+  inline ExperimentReview& operator=(const ExperimentReview& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ExperimentReview& default_instance();
+
+  void Swap(ExperimentReview* other);
+
+  // implements Message ----------------------------------------------
+
+  ExperimentReview* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ExperimentReview& from);
+  void MergeFrom(const ExperimentReview& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool allowEditing = 1;
+  inline bool has_allowediting() const;
+  inline void clear_allowediting();
+  static const int kAllowEditingFieldNumber = 1;
+  inline bool allowediting() const;
+  inline void set_allowediting(bool value);
+
+  // optional bool showUserNames = 2;
+  inline bool has_showusernames() const;
+  inline void clear_showusernames();
+  static const int kShowUserNamesFieldNumber = 2;
+  inline bool showusernames() const;
+  inline void set_showusernames(bool value);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.ExperimentReview)
+ private:
+  inline void set_has_allowediting();
+  inline void clear_has_allowediting();
+  inline void set_has_showusernames();
+  inline void clear_has_showusernames();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  bool allowediting_;
+  bool showusernames_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fdata_2eproto();
+  friend void protobuf_AssignDesc_input_2fdata_2eproto();
+  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
+
+  void InitAsDefaultInstance();
+  static ExperimentReview* default_instance_;
+};
 // ===================================================================
 
 
@@ -1401,6 +1495,54 @@ IdList::list() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 IdList::mutable_list() {
   return &list_;
+}
+
+// -------------------------------------------------------------------
+
+// ExperimentReview
+
+// optional bool allowEditing = 1;
+inline bool ExperimentReview::has_allowediting() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ExperimentReview::set_has_allowediting() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ExperimentReview::clear_has_allowediting() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ExperimentReview::clear_allowediting() {
+  allowediting_ = false;
+  clear_has_allowediting();
+}
+inline bool ExperimentReview::allowediting() const {
+  return allowediting_;
+}
+inline void ExperimentReview::set_allowediting(bool value) {
+  set_has_allowediting();
+  allowediting_ = value;
+}
+
+// optional bool showUserNames = 2;
+inline bool ExperimentReview::has_showusernames() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ExperimentReview::set_has_showusernames() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ExperimentReview::clear_has_showusernames() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ExperimentReview::clear_showusernames() {
+  showusernames_ = false;
+  clear_has_showusernames();
+}
+inline bool ExperimentReview::showusernames() const {
+  return showusernames_;
+}
+inline void ExperimentReview::set_showusernames(bool value) {
+  set_has_showusernames();
+  showusernames_ = value;
 }
 
 

@@ -89,10 +89,14 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		database.open();
 	})();
 
-	dataSender.sendDataRequest = function sendDataRequest(queryType, idList) {
+	dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
 		var dataSend = new QueryBuilder.DataRequest();
 		dataSend.items = new Array();
-		dataSend.items.push(new QueryBuilder.ItemRequest(queryType, idList));
+		if (isUndefined(advanceQuery)) {
+			dataSend.items.push(new QueryBuilder.ItemRequest(queryType, idList));
+		} else {
+			dataSend.items.push(new QueryBuilder.ItemRequest(queryType, idList, advanceQuery));
+		}
 		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
 	}
 
@@ -153,6 +157,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			getCourseProblems(assignment.problemList, problemCallback);
 		});
 	}
+
+	this.pollUpdates = function() {
+		sendDataRequest
+	};
 
 	/**
 	 * Adds the ability to set and remove state objects (for the use of transitioning from one page to the next!)
