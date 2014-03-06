@@ -5,8 +5,8 @@ message DataRequest {
 }
 
 message ItemRequest {
-	repeated string itemId = 1; // to pull multiple of the same item
-	optional ItemQuery query = 2;
+	required ItemQuery query = 1;
+	repeated string itemId = 2; // to pull multiple of the same item
 	optional bytes advanceQuery = 3;
 }
 

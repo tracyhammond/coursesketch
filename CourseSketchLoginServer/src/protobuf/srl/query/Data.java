@@ -421,6 +421,12 @@ public final class Data {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      for (int i = 0; i < getItemsCount(); i++) {
+        if (!getItems(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -649,6 +655,12 @@ public final class Data {
       }
 
       public final boolean isInitialized() {
+        for (int i = 0; i < getItemsCount(); i++) {
+          if (!getItems(i).isInitialized()) {
+            
+            return false;
+          }
+        }
         return true;
       }
 
@@ -925,9 +937,19 @@ public final class Data {
   public interface ItemRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // repeated string itemId = 1;
+    // required .protobuf.srl.query.ItemQuery query = 1;
     /**
-     * <code>repeated string itemId = 1;</code>
+     * <code>required .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    boolean hasQuery();
+    /**
+     * <code>required .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    protobuf.srl.query.Data.ItemQuery getQuery();
+
+    // repeated string itemId = 2;
+    /**
+     * <code>repeated string itemId = 2;</code>
      *
      * <pre>
      * to pull multiple of the same item
@@ -936,7 +958,7 @@ public final class Data {
     java.util.List<java.lang.String>
     getItemIdList();
     /**
-     * <code>repeated string itemId = 1;</code>
+     * <code>repeated string itemId = 2;</code>
      *
      * <pre>
      * to pull multiple of the same item
@@ -944,7 +966,7 @@ public final class Data {
      */
     int getItemIdCount();
     /**
-     * <code>repeated string itemId = 1;</code>
+     * <code>repeated string itemId = 2;</code>
      *
      * <pre>
      * to pull multiple of the same item
@@ -952,7 +974,7 @@ public final class Data {
      */
     java.lang.String getItemId(int index);
     /**
-     * <code>repeated string itemId = 1;</code>
+     * <code>repeated string itemId = 2;</code>
      *
      * <pre>
      * to pull multiple of the same item
@@ -960,16 +982,6 @@ public final class Data {
      */
     com.google.protobuf.ByteString
         getItemIdBytes(int index);
-
-    // optional .protobuf.srl.query.ItemQuery query = 2;
-    /**
-     * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
-     */
-    boolean hasQuery();
-    /**
-     * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
-     */
-    protobuf.srl.query.Data.ItemQuery getQuery();
 
     // optional bytes advanceQuery = 3;
     /**
@@ -1032,23 +1044,23 @@ public final class Data {
               }
               break;
             }
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                itemId_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              itemId_.add(input.readBytes());
-              break;
-            }
-            case 16: {
+            case 8: {
               int rawValue = input.readEnum();
               protobuf.srl.query.Data.ItemQuery value = protobuf.srl.query.Data.ItemQuery.valueOf(rawValue);
               if (value == null) {
-                unknownFields.mergeVarintField(2, rawValue);
+                unknownFields.mergeVarintField(1, rawValue);
               } else {
                 bitField0_ |= 0x00000001;
                 query_ = value;
               }
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                itemId_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              itemId_.add(input.readBytes());
               break;
             }
             case 26: {
@@ -1064,7 +1076,7 @@ public final class Data {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
           itemId_ = new com.google.protobuf.UnmodifiableLazyStringList(itemId_);
         }
         this.unknownFields = unknownFields.build();
@@ -1099,11 +1111,27 @@ public final class Data {
     }
 
     private int bitField0_;
-    // repeated string itemId = 1;
-    public static final int ITEMID_FIELD_NUMBER = 1;
+    // required .protobuf.srl.query.ItemQuery query = 1;
+    public static final int QUERY_FIELD_NUMBER = 1;
+    private protobuf.srl.query.Data.ItemQuery query_;
+    /**
+     * <code>required .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    public boolean hasQuery() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .protobuf.srl.query.ItemQuery query = 1;</code>
+     */
+    public protobuf.srl.query.Data.ItemQuery getQuery() {
+      return query_;
+    }
+
+    // repeated string itemId = 2;
+    public static final int ITEMID_FIELD_NUMBER = 2;
     private com.google.protobuf.LazyStringList itemId_;
     /**
-     * <code>repeated string itemId = 1;</code>
+     * <code>repeated string itemId = 2;</code>
      *
      * <pre>
      * to pull multiple of the same item
@@ -1114,7 +1142,7 @@ public final class Data {
       return itemId_;
     }
     /**
-     * <code>repeated string itemId = 1;</code>
+     * <code>repeated string itemId = 2;</code>
      *
      * <pre>
      * to pull multiple of the same item
@@ -1124,7 +1152,7 @@ public final class Data {
       return itemId_.size();
     }
     /**
-     * <code>repeated string itemId = 1;</code>
+     * <code>repeated string itemId = 2;</code>
      *
      * <pre>
      * to pull multiple of the same item
@@ -1134,7 +1162,7 @@ public final class Data {
       return itemId_.get(index);
     }
     /**
-     * <code>repeated string itemId = 1;</code>
+     * <code>repeated string itemId = 2;</code>
      *
      * <pre>
      * to pull multiple of the same item
@@ -1143,22 +1171,6 @@ public final class Data {
     public com.google.protobuf.ByteString
         getItemIdBytes(int index) {
       return itemId_.getByteString(index);
-    }
-
-    // optional .protobuf.srl.query.ItemQuery query = 2;
-    public static final int QUERY_FIELD_NUMBER = 2;
-    private protobuf.srl.query.Data.ItemQuery query_;
-    /**
-     * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
-     */
-    public boolean hasQuery() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
-     */
-    public protobuf.srl.query.Data.ItemQuery getQuery() {
-      return query_;
     }
 
     // optional bytes advanceQuery = 3;
@@ -1178,8 +1190,8 @@ public final class Data {
     }
 
     private void initFields() {
-      itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
+      itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       advanceQuery_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
@@ -1187,6 +1199,10 @@ public final class Data {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (!hasQuery()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1194,11 +1210,11 @@ public final class Data {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      for (int i = 0; i < itemId_.size(); i++) {
-        output.writeBytes(1, itemId_.getByteString(i));
-      }
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(2, query_.getNumber());
+        output.writeEnum(1, query_.getNumber());
+      }
+      for (int i = 0; i < itemId_.size(); i++) {
+        output.writeBytes(2, itemId_.getByteString(i));
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(3, advanceQuery_);
@@ -1212,6 +1228,10 @@ public final class Data {
       if (size != -1) return size;
 
       size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, query_.getNumber());
+      }
       {
         int dataSize = 0;
         for (int i = 0; i < itemId_.size(); i++) {
@@ -1220,10 +1240,6 @@ public final class Data {
         }
         size += dataSize;
         size += 1 * getItemIdList().size();
-      }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, query_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1345,9 +1361,9 @@ public final class Data {
 
       public Builder clear() {
         super.clear();
-        itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
         query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000002);
         advanceQuery_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -1379,16 +1395,16 @@ public final class Data {
         protobuf.srl.query.Data.ItemRequest result = new protobuf.srl.query.Data.ItemRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          itemId_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              itemId_);
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.itemId_ = itemId_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
         result.query_ = query_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          itemId_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              itemId_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.itemId_ = itemId_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000002;
         }
@@ -1409,18 +1425,18 @@ public final class Data {
 
       public Builder mergeFrom(protobuf.srl.query.Data.ItemRequest other) {
         if (other == protobuf.srl.query.Data.ItemRequest.getDefaultInstance()) return this;
+        if (other.hasQuery()) {
+          setQuery(other.getQuery());
+        }
         if (!other.itemId_.isEmpty()) {
           if (itemId_.isEmpty()) {
             itemId_ = other.itemId_;
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = (bitField0_ & ~0x00000002);
           } else {
             ensureItemIdIsMutable();
             itemId_.addAll(other.itemId_);
           }
           onChanged();
-        }
-        if (other.hasQuery()) {
-          setQuery(other.getQuery());
         }
         if (other.hasAdvanceQuery()) {
           setAdvanceQuery(other.getAdvanceQuery());
@@ -1430,6 +1446,10 @@ public final class Data {
       }
 
       public final boolean isInitialized() {
+        if (!hasQuery()) {
+          
+          return false;
+        }
         return true;
       }
 
@@ -1452,16 +1472,52 @@ public final class Data {
       }
       private int bitField0_;
 
-      // repeated string itemId = 1;
+      // required .protobuf.srl.query.ItemQuery query = 1;
+      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
+      /**
+       * <code>required .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public boolean hasQuery() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public protobuf.srl.query.Data.ItemQuery getQuery() {
+        return query_;
+      }
+      /**
+       * <code>required .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public Builder setQuery(protobuf.srl.query.Data.ItemQuery value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        query_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .protobuf.srl.query.ItemQuery query = 1;</code>
+       */
+      public Builder clearQuery() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
+        onChanged();
+        return this;
+      }
+
+      // repeated string itemId = 2;
       private com.google.protobuf.LazyStringList itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureItemIdIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
           itemId_ = new com.google.protobuf.LazyStringArrayList(itemId_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000002;
          }
       }
       /**
-       * <code>repeated string itemId = 1;</code>
+       * <code>repeated string itemId = 2;</code>
        *
        * <pre>
        * to pull multiple of the same item
@@ -1472,7 +1528,7 @@ public final class Data {
         return java.util.Collections.unmodifiableList(itemId_);
       }
       /**
-       * <code>repeated string itemId = 1;</code>
+       * <code>repeated string itemId = 2;</code>
        *
        * <pre>
        * to pull multiple of the same item
@@ -1482,7 +1538,7 @@ public final class Data {
         return itemId_.size();
       }
       /**
-       * <code>repeated string itemId = 1;</code>
+       * <code>repeated string itemId = 2;</code>
        *
        * <pre>
        * to pull multiple of the same item
@@ -1492,7 +1548,7 @@ public final class Data {
         return itemId_.get(index);
       }
       /**
-       * <code>repeated string itemId = 1;</code>
+       * <code>repeated string itemId = 2;</code>
        *
        * <pre>
        * to pull multiple of the same item
@@ -1503,7 +1559,7 @@ public final class Data {
         return itemId_.getByteString(index);
       }
       /**
-       * <code>repeated string itemId = 1;</code>
+       * <code>repeated string itemId = 2;</code>
        *
        * <pre>
        * to pull multiple of the same item
@@ -1520,7 +1576,7 @@ public final class Data {
         return this;
       }
       /**
-       * <code>repeated string itemId = 1;</code>
+       * <code>repeated string itemId = 2;</code>
        *
        * <pre>
        * to pull multiple of the same item
@@ -1537,7 +1593,7 @@ public final class Data {
         return this;
       }
       /**
-       * <code>repeated string itemId = 1;</code>
+       * <code>repeated string itemId = 2;</code>
        *
        * <pre>
        * to pull multiple of the same item
@@ -1551,7 +1607,7 @@ public final class Data {
         return this;
       }
       /**
-       * <code>repeated string itemId = 1;</code>
+       * <code>repeated string itemId = 2;</code>
        *
        * <pre>
        * to pull multiple of the same item
@@ -1559,12 +1615,12 @@ public final class Data {
        */
       public Builder clearItemId() {
         itemId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string itemId = 1;</code>
+       * <code>repeated string itemId = 2;</code>
        *
        * <pre>
        * to pull multiple of the same item
@@ -1577,42 +1633,6 @@ public final class Data {
   }
   ensureItemIdIsMutable();
         itemId_.add(value);
-        onChanged();
-        return this;
-      }
-
-      // optional .protobuf.srl.query.ItemQuery query = 2;
-      private protobuf.srl.query.Data.ItemQuery query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
-      /**
-       * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
-       */
-      public boolean hasQuery() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
-       */
-      public protobuf.srl.query.Data.ItemQuery getQuery() {
-        return query_;
-      }
-      /**
-       * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
-       */
-      public Builder setQuery(protobuf.srl.query.Data.ItemQuery value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000002;
-        query_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional .protobuf.srl.query.ItemQuery query = 2;</code>
-       */
-      public Builder clearQuery() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
         onChanged();
         return this;
       }
@@ -5518,9 +5538,9 @@ public final class Data {
     java.lang.String[] descriptorData = {
       "\n\020input/data.proto\022\022protobuf.srl.query\"=" +
       "\n\013DataRequest\022.\n\005items\030\003 \003(\0132\037.protobuf." +
-      "srl.query.ItemRequest\"a\n\013ItemRequest\022\016\n\006" +
-      "itemId\030\001 \003(\t\022,\n\005query\030\002 \001(\0162\035.protobuf.s" +
-      "rl.query.ItemQuery\022\024\n\014advanceQuery\030\003 \001(\014" +
+      "srl.query.ItemRequest\"a\n\013ItemRequest\022,\n\005" +
+      "query\030\001 \002(\0162\035.protobuf.srl.query.ItemQue" +
+      "ry\022\016\n\006itemId\030\002 \003(\t\022\024\n\014advanceQuery\030\003 \001(\014" +
       "\"7\n\010DataSend\022+\n\005items\030\003 \003(\0132\034.protobuf.s" +
       "rl.query.ItemSend\"F\n\010ItemSend\022,\n\005query\030\001" +
       " \001(\0162\035.protobuf.srl.query.ItemQuery\022\014\n\004d" +
@@ -5556,7 +5576,7 @@ public final class Data {
           internal_static_protobuf_srl_query_ItemRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ItemRequest_descriptor,
-              new java.lang.String[] { "ItemId", "Query", "AdvanceQuery", });
+              new java.lang.String[] { "Query", "ItemId", "AdvanceQuery", });
           internal_static_protobuf_srl_query_DataSend_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_protobuf_srl_query_DataSend_fieldAccessorTable = new

@@ -219,10 +219,17 @@ class ItemRequest : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated string itemId = 1;
+  // required .protobuf.srl.query.ItemQuery query = 1;
+  inline bool has_query() const;
+  inline void clear_query();
+  static const int kQueryFieldNumber = 1;
+  inline ::protobuf::srl::query::ItemQuery query() const;
+  inline void set_query(::protobuf::srl::query::ItemQuery value);
+
+  // repeated string itemId = 2;
   inline int itemid_size() const;
   inline void clear_itemid();
-  static const int kItemIdFieldNumber = 1;
+  static const int kItemIdFieldNumber = 2;
   inline const ::std::string& itemid(int index) const;
   inline ::std::string* mutable_itemid(int index);
   inline void set_itemid(int index, const ::std::string& value);
@@ -234,13 +241,6 @@ class ItemRequest : public ::google::protobuf::Message {
   inline void add_itemid(const char* value, size_t size);
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& itemid() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_itemid();
-
-  // optional .protobuf.srl.query.ItemQuery query = 2;
-  inline bool has_query() const;
-  inline void clear_query();
-  static const int kQueryFieldNumber = 2;
-  inline ::protobuf::srl::query::ItemQuery query() const;
-  inline void set_query(::protobuf::srl::query::ItemQuery value);
 
   // optional bytes advanceQuery = 3;
   inline bool has_advancequery() const;
@@ -898,7 +898,30 @@ DataRequest::mutable_items() {
 
 // ItemRequest
 
-// repeated string itemId = 1;
+// required .protobuf.srl.query.ItemQuery query = 1;
+inline bool ItemRequest::has_query() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ItemRequest::set_has_query() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ItemRequest::clear_has_query() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ItemRequest::clear_query() {
+  query_ = -1;
+  clear_has_query();
+}
+inline ::protobuf::srl::query::ItemQuery ItemRequest::query() const {
+  return static_cast< ::protobuf::srl::query::ItemQuery >(query_);
+}
+inline void ItemRequest::set_query(::protobuf::srl::query::ItemQuery value) {
+  assert(::protobuf::srl::query::ItemQuery_IsValid(value));
+  set_has_query();
+  query_ = value;
+}
+
+// repeated string itemId = 2;
 inline int ItemRequest::itemid_size() const {
   return itemid_.size();
 }
@@ -940,29 +963,6 @@ ItemRequest::itemid() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 ItemRequest::mutable_itemid() {
   return &itemid_;
-}
-
-// optional .protobuf.srl.query.ItemQuery query = 2;
-inline bool ItemRequest::has_query() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void ItemRequest::set_has_query() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void ItemRequest::clear_has_query() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void ItemRequest::clear_query() {
-  query_ = -1;
-  clear_has_query();
-}
-inline ::protobuf::srl::query::ItemQuery ItemRequest::query() const {
-  return static_cast< ::protobuf::srl::query::ItemQuery >(query_);
-}
-inline void ItemRequest::set_query(::protobuf::srl::query::ItemQuery value) {
-  assert(::protobuf::srl::query::ItemQuery_IsValid(value));
-  set_has_query();
-  query_ = value;
 }
 
 // optional bytes advanceQuery = 3;
