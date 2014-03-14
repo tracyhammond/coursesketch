@@ -18,7 +18,7 @@ public class UpdateTester {
 		// TODO Auto-generated method stub
 		//UpdateManager.mongoInsertUpdate(db, "52fd23b28159fa94ce381552", "1243",16, "assignment");
 		//UpdateManager.mongoDeleteUpdate(db, "52fd23b28159fa94ce381552", "1243",121233, "assignment");
-		UpdateManager.mongoGetUpdate(db, "52fd23b28159fa94ce381552");
+		//UpdateManager.mongoGetUpdate(db, "52fd23b28159fa94ce381552");
 	}
 
 }

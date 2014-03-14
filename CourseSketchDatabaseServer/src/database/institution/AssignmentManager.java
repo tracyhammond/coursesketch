@@ -262,7 +262,7 @@ public class AssignmentManager
 			String[] users = (String[]) corsor.get(USERS);
 			for(int i = 0;i < users.length;i++)
 			{
-				UserUpdateHandler.InsertUpdates(dbs, users[i], assignmentId, "ASSIGNMENT");
+				UserUpdateHandler.InsertUpdates(dbs, users[i], assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
 			}
 			
 		}
