@@ -25,6 +25,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import database.auth.AuthenticationException;
 import database.institution.Institution;
+import database.user.UserClient;
 
 public class DataRequestHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
@@ -93,7 +94,6 @@ public class DataRequestHandler {
 							}
 							break;
 						}
-
 						case EXPERIMENT: {
 							// need to get the submission ID?
 
@@ -105,33 +105,12 @@ public class DataRequestHandler {
 							}
 							break;
 						}
+						case UPDATE: {
+							SrlSchool updates = UserClient.mongoGetReleventUpdates(userId, 0); // for now get all updates!
+							results.add(buildResult(updates.toByteString(), ItemQuery.UPDATE));
+						}
 						default: {
 						}
-						/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case CLASS_GRADE: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case USER_INFO: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case SOLUTION: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case EXPERIMENT: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;*/
 					}
 				} catch(AuthenticationException e) {
 					if (e.getType() == AuthenticationException.INVALID_DATE) {

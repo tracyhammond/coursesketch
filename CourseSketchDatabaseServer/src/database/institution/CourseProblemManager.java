@@ -160,7 +160,7 @@ public class CourseProblemManager
 			String[] users = (String[]) corsor.get(USERS);
 			for(int i = 0;i < users.length;i++)
 			{
-				UserUpdateHandler.InsertUpdates(dbs, users[i], problemId, "COURSEPROBLEM");
+				UserUpdateHandler.InsertUpdates(dbs, users[i], problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
 			}
 			
 		}
