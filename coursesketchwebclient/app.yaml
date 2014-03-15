@@ -21,6 +21,7 @@ handlers:
 
 - url: /html
   static_dir: html
+  application_readable: true
 
 - url: /js
   static_dir: js
