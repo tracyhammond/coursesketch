@@ -16,7 +16,7 @@ public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId) {
 		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16", 
 		"Problem17", "Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
-		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41", "Problem42"/*, "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49"*/};
+		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41", "Problem42", "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49", "Problem50", "Problem51", "Problem52"};
 		//10 is fuzzy logic
 		/*
 		String[] descsription = new String[]{"This is the first problem",
@@ -33,9 +33,67 @@ public class ManyTestProblems {
 		String[] questionText = new String[] {
 				
 				/*
+					Assignment 7
+				*/
+				
+					"2.5.2a: Determine whether each of these sets is finite, countably infinite, or uncountable. For those that are countably infinite, exhibit a one to one correspondence between the set of positive integers and that set. The integers greater than 10. ",
+					"2.2.5b: Determine whether each of these sets is finite, countably infinite, or uncountable. For those that are countably infinite, exhibit a one to one correspondence between the set of positive integers and that set. the odd negative integers. ",
+					"2.5.2c: Determine whether each of these sets is finite, countably infinite, or uncountable. For those that are countably infinite, exhibit a one to one correspondence between the set of positive integers and that set. the integers with absolute value less than 1,000,000. ",
+					"2.5.4a: Determine whether each of these sets is countable. For those that are countably infinite, exhibit a one to one correspondence between a set of positive integers and that set. integers not divisible by 3. ",
+					"2.5.4b: Determine whether each of these sets is countable. For those that are countably infinite, exhibit a one to one correspondence between a set of positive integers and that set. integers divisible by 5 but not by 7. ",
+					"2.5.4c: Determine whether each of these sets is countable. For those that are countably infinite, exhibit a one to one correspondence between a set of positive integers and that set. the real numbers with decimal representation consisting of all 1’s. ",
+					"2.5.6: Suppose the the Hilbert’s Grand hotel is fully occupied, but the hotel closes all the even numbered rooms for maintenance .show that all guests can remain in the hotel. ",
+					"2.6.8: Show that a countably infinite number of guests arriving at the Hilbert’s fully occupied Grand Hotel can be given rooms without evicting current guests. ",
+					"2.5.22: Suppose that A is a countable set. Show that the set B is also countable if there is an onto function f from A to B. ",
+					"2.5.28: Show that the set Z\u207A X Z\u207A is countable. ",
+					"2.6.2a: Find A+B. A={1,0,4;-1,2,2;0,-2,-3} B={-1,3,5;2,2,-3;2,-3,0} ",
+					"2.6.2b: Find A+B A={-1,0,5,6;-4,-3,5,-2} B={-3,9,-3,4;0,-2,-1,2} ",
+					"2.6.4a: Find the product AB A={1,0,1;0,-1,-1;-1,1,0}  B={0,1,-1;1,-1,0;-1,0,1} ",
+					"2.6.4b: Find the product AB A={1,-3,0;1,2,2;2,1,-1} B={1,-1,2,3;-1,0,3,-1;-3,-2,0,2} ",
+					"2.6.4c: Find the Product AB A={0-1;72;-4-3} B={4,-1,2,3,0;-2,0,3,4,1} ",
+					"2.6.6: Find the A matrix such that {1,3,2;2,1,1;4,0,3}A={7,1,3;1,0,3;-1,-3,7} ",
+					"2.6.10a: let A be a 3x4 matrix and B be a 4x5 matrix and C be a 4x4 matrix. Determine which of the following products are defined and find the size of those that are defined. AB ",
+					"2.6.10b: let A be a 3x4 matrix and B be a 4x5 matrix and C be a 4x4 matrix. Determine which of the following products are defined and find the size of those that are defined. BA ",
+					"2.6.10c: let A be a 3x4 matrix and B be a 4x5 matrix and C be a 4x4 matrix. Determine which of the following products are defined and find the size of those that are defined. AC ",
+					"2.6.20a: Let A={-1,2;1,3}. Find A inverse.  ",
+					"2.6.20b: Let A={-1,2;1,3}. Find A cubed.  ",
+					"2.6.20c: Let A={-1,2;1,3} Find A inverse cubed (A inverse) cubed.  ",
+					"2.6.26a: Let A={1,1;0,1} and B={0,1;1,0}. Find A \u2228 B. ",
+					"2.6.26b: Let A={1,1;0,1} and B={0,1;1,0}. Find A \u2227 B. ",
+					"2.6.26c: Let A={1,1;0,1} and B={0,1;1,0}. Find A \u2299 B. ",
+					"3.1.4: Describe an algorithm that takes as input a lists of n integers and produces as output the largest difference obtained by subtracting an integer in the list from the one following it. ",
+					"3.1.16: Describe an algorithm for finding the smallest integer in a finite sequence of natural order. ",
+					"3.1.18: Describe an algorithm that locates the last occurrence of the smallest element in a finite list of integers, where the integers in the list are not necessarily distinct. ",
+					"3.1.30: Devise an algorithm that finds modes. Recall that a list of integers is nondecreasing if  each term of the list is at least as large as the preceding term. ",
+					"3.1.34: Use bubble sort to sort  6,2,3,1,5,4 showing the lists obtained at each step. ",
+					"3.1.38: Use insertion sort to sort 6,2,3,1,5,4 showing the lists obtained at each step. ",
+					"3.1: Use selection sort to sort 6,2,3,1,5,4 showing the lists obtained at each step. ",
+					"3.1.52a: Use the greedy algorithm to make change using quarters, dimes, nickels, and pennies for: .87 ",
+					"3.1.52b: Use the greedy algorithm to make change using quarters, dimes, nickels, and pennies for: .49 ",
+					"3.1.52c: Use the greedy algorithm to make change using quarters, dimes, nickels, and pennies for: .99 ",
+					"3.1.52d: Use the greedy algorithm to make change using quarters, dimes, nickels, and pennies for: .33 ",
+					"3.2.2a: Determine whether  each of these  functions is O(x^2) 17x+11 ",
+					"3.2.2b: Determine whether  each of these  functions is O(x^2) x^2+1000 ",
+					"3.2.2c: Determine whether  each of these  functions is O(x^2) xlogx ",
+					"3.2.2d: Determine whether  each of these  functions is O(x^2) x^4/2 ",
+					"3.2.2e: Determine whether  each of these  functions is O(x^2) 2^x ",
+					"3.2.2f: Determine whether  each of these  functions is O(x^2) Floor(x)*Ceiling(x) ",
+					"3.2.8a: Find the  least integer n such that f(x) is O(x^n) for each of these functions: 2X^3 + X^2logX ",
+					"3.2.8b: Find the  least integer n such that f(x) is O(x^n) for each of these functions: 23X^3 + (logX)^4 ",
+					"3.2.8c: Find the  least integer n such that f(x) is O(x^n) for each of these functions: 2(x^4 + X^2+1)/(X^4 + 1) ",
+					"3.2.8d: Find the  least integer n such that f(x) is O(x^n) for each of these functions: 2(X^3 + 5logX)/(X^4 + 1) ",
+					"3.2.14a: Determine whether  X^3 is O(g(x)) for each of these functions:  X^2 ",
+					"3.2.14b: Determine whether  X^3 is O(g(x)) for each of these functions:  X^3 ",
+					"3.2.14c: Determine whether  X^3 is O(g(x)) for each of these functions:  X^2 + X^3 ",
+					"3.2.14d: Determine whether  X^3 is O(g(x)) for each of these functions:  X^2 + X^4 ",
+					"3.2.14e: Determine whether  X^3 is O(g(x)) for each of these functions:  3^X ",
+					"3.2.14f: Determine whether  X^3 is O(g(x)) for each of these functions:  (X^3)/2 "
+
+				
+				/*
 					Assignment 6
 				*/
-				"2.4.2a: What is the term a\u2088 of the sequence {a\u207F} if a\u207F = 2n-1?",
+				/*"2.4.2a: What is the term a\u2088 of the sequence {a\u207F} if a\u207F = 2n-1?",
 				"2.4.2b: What is the term a\u2088 of the sequence {a\u207F} if a\u207F = 7?",
 				"2.4.2c: What is the term a\u2088 of the sequence {a\u207F} if a\u207F = 1+(-1)\u207F?",
 				"2.4.2d: What is the term a\u2088 of the sequence {a\u207F} if a\u207F = -(-2)\u207F?",
@@ -77,7 +135,7 @@ public class ManyTestProblems {
 				"2.4.34b: Compute each of these double sums. \u2211<sub>i=0</sub><sup>3</sup>\u2211\u2C7C\u208C\u2080\u00B2 (3i+2j)",
 				"2.4.34c: Compute each of these double sums. \u2211<sub>i=1</sub><sup>3</sup>\u2211\u2C7C\u208C\u2080\u00B2 j",
 				"2.4.34d: Compute each of these double sums. \u2211<sub>i=0</sub><sup>2/sup>\u2211\u2C7C\u208C\u2080<sup>3</sup>  i\u00B2j<sup>3</sup>"
-				
+				*/
 				/*
 				/*
 					Assignment 5
@@ -389,7 +447,7 @@ public class ManyTestProblems {
 				QuestionType.SKETCH,
 				QuestionType.SKETCH
 		};
-		for(int k = 0; k < 42/*22*//*19*//*39*/; k ++) {
+		for(int k = 0; k < 52/*42*//*22*//*19*//*39*/; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
@@ -431,7 +489,7 @@ public class ManyTestProblems {
 				} catch (DatabaseAccessException e) {
 					e.printStackTrace();
 				}
-				System.out.println("INSERTING PROBLEM SUCCESSFULT");
+				System.out.println("INSERTING PROBLEM SUCCESSFUL"); /*SUCCESSFULT*/
 		}
 	}
 }
