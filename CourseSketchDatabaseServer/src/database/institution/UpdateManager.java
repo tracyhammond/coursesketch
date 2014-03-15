@@ -54,8 +54,7 @@ public class UpdateManager
 	 * @throws AuthenticationException
 	 * @throws DatabaseAccessException
 	 */
-	public static BasicDBList mongoGetUpdate(DB dbs, String userId, long time) throws AuthenticationException, DatabaseAccessException
-	{
+	public static BasicDBList mongoGetUpdate(DB dbs, String userId, long time) throws AuthenticationException, DatabaseAccessException {
 		DBRef myDbRef = new DBRef(dbs, "CourseSketchUsers", new ObjectId(userId));
 		DBObject corsor = myDbRef.fetch();
 
@@ -65,7 +64,7 @@ public class UpdateManager
 		}
 		BasicDBList resultList = new BasicDBList();
 		int size = updateList.size();
-		for (int i = 0; i < size; i ++) {
+		for (int i = 0; i < size; i++) {
 			long difference = ((Long) ((BasicBSONObject) updateList.get(i)).get(TIME)) - time;
 			if (difference >= 0) {
 				resultList.add(updateList.get(i));
