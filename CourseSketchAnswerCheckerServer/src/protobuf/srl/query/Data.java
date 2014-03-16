@@ -3623,6 +3623,24 @@ public final class Data {
      */
     com.google.protobuf.ByteString
         getErrorMessageBytes();
+
+    // optional bytes advanceQuery = 6;
+    /**
+     * <code>optional bytes advanceQuery = 6;</code>
+     *
+     * <pre>
+     * if additional items need to be queried.
+     * </pre>
+     */
+    boolean hasAdvanceQuery();
+    /**
+     * <code>optional bytes advanceQuery = 6;</code>
+     *
+     * <pre>
+     * if additional items need to be queried.
+     * </pre>
+     */
+    com.google.protobuf.ByteString getAdvanceQuery();
   }
   /**
    * Protobuf type {@code protobuf.srl.query.ItemResult}
@@ -3704,6 +3722,11 @@ public final class Data {
             case 42: {
               bitField0_ |= 0x00000010;
               errorMessage_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000020;
+              advanceQuery_ = input.readBytes();
               break;
             }
           }
@@ -3900,12 +3923,37 @@ public final class Data {
       }
     }
 
+    // optional bytes advanceQuery = 6;
+    public static final int ADVANCEQUERY_FIELD_NUMBER = 6;
+    private com.google.protobuf.ByteString advanceQuery_;
+    /**
+     * <code>optional bytes advanceQuery = 6;</code>
+     *
+     * <pre>
+     * if additional items need to be queried.
+     * </pre>
+     */
+    public boolean hasAdvanceQuery() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional bytes advanceQuery = 6;</code>
+     *
+     * <pre>
+     * if additional items need to be queried.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString getAdvanceQuery() {
+      return advanceQuery_;
+    }
+
     private void initFields() {
       query_ = protobuf.srl.query.Data.ItemQuery.ERROR;
       returnText_ = "";
       data_ = com.google.protobuf.ByteString.EMPTY;
       noData_ = false;
       errorMessage_ = "";
+      advanceQuery_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3933,6 +3981,9 @@ public final class Data {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(5, getErrorMessageBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, advanceQuery_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -3962,6 +4013,10 @@ public final class Data {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, getErrorMessageBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, advanceQuery_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4089,6 +4144,8 @@ public final class Data {
         bitField0_ = (bitField0_ & ~0x00000008);
         errorMessage_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
+        advanceQuery_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -4137,6 +4194,10 @@ public final class Data {
           to_bitField0_ |= 0x00000010;
         }
         result.errorMessage_ = errorMessage_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.advanceQuery_ = advanceQuery_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4171,6 +4232,9 @@ public final class Data {
           bitField0_ |= 0x00000010;
           errorMessage_ = other.errorMessage_;
           onChanged();
+        }
+        if (other.hasAdvanceQuery()) {
+          setAdvanceQuery(other.getAdvanceQuery());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -4488,6 +4552,58 @@ public final class Data {
   }
   bitField0_ |= 0x00000010;
         errorMessage_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional bytes advanceQuery = 6;
+      private com.google.protobuf.ByteString advanceQuery_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes advanceQuery = 6;</code>
+       *
+       * <pre>
+       * if additional items need to be queried.
+       * </pre>
+       */
+      public boolean hasAdvanceQuery() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional bytes advanceQuery = 6;</code>
+       *
+       * <pre>
+       * if additional items need to be queried.
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getAdvanceQuery() {
+        return advanceQuery_;
+      }
+      /**
+       * <code>optional bytes advanceQuery = 6;</code>
+       *
+       * <pre>
+       * if additional items need to be queried.
+       * </pre>
+       */
+      public Builder setAdvanceQuery(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        advanceQuery_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes advanceQuery = 6;</code>
+       *
+       * <pre>
+       * if additional items need to be queried.
+       * </pre>
+       */
+      public Builder clearAdvanceQuery() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        advanceQuery_ = getDefaultInstance().getAdvanceQuery();
         onChanged();
         return this;
       }
@@ -5545,20 +5661,20 @@ public final class Data {
       "rl.query.ItemSend\"F\n\010ItemSend\022,\n\005query\030\001" +
       " \001(\0162\035.protobuf.srl.query.ItemQuery\022\014\n\004d" +
       "ata\030\003 \001(\014\"=\n\nDataResult\022/\n\007results\030\001 \003(\013" +
-      "2\036.protobuf.srl.query.ItemResult\"\202\001\n\nIte",
+      "2\036.protobuf.srl.query.ItemResult\"\230\001\n\nIte",
       "mResult\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.qu" +
       "ery.ItemQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004dat" +
       "a\030\003 \001(\014\022\016\n\006noData\030\004 \001(\010\022\024\n\014errorMessage\030" +
-      "\005 \001(\t\"\026\n\006IdList\022\014\n\004list\030\001 \003(\t\"?\n\020Experim" +
-      "entReview\022\024\n\014allowEditing\030\001 \001(\010\022\025\n\rshowU" +
-      "serNames\030\002 \001(\010*\211\002\n\tItemQuery\022\022\n\005ERROR\020\377\377" +
-      "\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016" +
-      "COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUS" +
-      "ERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020" +
-      "\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOO",
-      "L\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022" +
-      "\014\n\010REGISTER\020\014\022\017\n\013COURSE_LIST\020\r\022\n\n\006UPDATE" +
-      "\020\016"
+      "\005 \001(\t\022\024\n\014advanceQuery\030\006 \001(\014\"\026\n\006IdList\022\014\n" +
+      "\004list\030\001 \003(\t\"?\n\020ExperimentReview\022\024\n\014allow" +
+      "Editing\030\001 \001(\010\022\025\n\rshowUserNames\030\002 \001(\010*\211\002\n" +
+      "\tItemQuery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE" +
+      "\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020" +
+      "\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS" +
+      "_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n",
+      "\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEAR" +
+      "CH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013C" +
+      "OURSE_LIST\020\r\022\n\n\006UPDATE\020\016"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5600,7 +5716,7 @@ public final class Data {
           internal_static_protobuf_srl_query_ItemResult_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ItemResult_descriptor,
-              new java.lang.String[] { "Query", "ReturnText", "Data", "NoData", "ErrorMessage", });
+              new java.lang.String[] { "Query", "ReturnText", "Data", "NoData", "ErrorMessage", "AdvanceQuery", });
           internal_static_protobuf_srl_query_IdList_descriptor =
             getDescriptor().getMessageTypes().get(6);
           internal_static_protobuf_srl_query_IdList_fieldAccessorTable = new

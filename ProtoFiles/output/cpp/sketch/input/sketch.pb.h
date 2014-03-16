@@ -43,6 +43,7 @@ class SrlStroke;
 class SrlPoint;
 class SrlInterpretation;
 class SrlBoundingBox;
+class SrlAttributes;
 
 enum SrlObject_ObjectType {
   SrlObject_ObjectType_SHAPE = 0,
@@ -965,6 +966,112 @@ class SrlBoundingBox : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SrlBoundingBox* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SrlAttributes : public ::google::protobuf::Message {
+ public:
+  SrlAttributes();
+  virtual ~SrlAttributes();
+
+  SrlAttributes(const SrlAttributes& from);
+
+  inline SrlAttributes& operator=(const SrlAttributes& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlAttributes& default_instance();
+
+  void Swap(SrlAttributes* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlAttributes* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlAttributes& from);
+  void MergeFrom(const SrlAttributes& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated string keys = 1;
+  inline int keys_size() const;
+  inline void clear_keys();
+  static const int kKeysFieldNumber = 1;
+  inline const ::std::string& keys(int index) const;
+  inline ::std::string* mutable_keys(int index);
+  inline void set_keys(int index, const ::std::string& value);
+  inline void set_keys(int index, const char* value);
+  inline void set_keys(int index, const char* value, size_t size);
+  inline ::std::string* add_keys();
+  inline void add_keys(const ::std::string& value);
+  inline void add_keys(const char* value);
+  inline void add_keys(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& keys() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_keys();
+
+  // repeated string values = 2;
+  inline int values_size() const;
+  inline void clear_values();
+  static const int kValuesFieldNumber = 2;
+  inline const ::std::string& values(int index) const;
+  inline ::std::string* mutable_values(int index);
+  inline void set_values(int index, const ::std::string& value);
+  inline void set_values(int index, const char* value);
+  inline void set_values(int index, const char* value, size_t size);
+  inline ::std::string* add_values();
+  inline void add_values(const ::std::string& value);
+  inline void add_values(const char* value);
+  inline void add_values(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& values() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_values();
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlAttributes)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::std::string> keys_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> values_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fsketch_2eproto();
+  friend void protobuf_AssignDesc_input_2fsketch_2eproto();
+  friend void protobuf_ShutdownFile_input_2fsketch_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlAttributes* default_instance_;
 };
 // ===================================================================
 
@@ -2154,6 +2261,98 @@ inline double SrlBoundingBox::height() const {
 inline void SrlBoundingBox::set_height(double value) {
   set_has_height();
   height_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SrlAttributes
+
+// repeated string keys = 1;
+inline int SrlAttributes::keys_size() const {
+  return keys_.size();
+}
+inline void SrlAttributes::clear_keys() {
+  keys_.Clear();
+}
+inline const ::std::string& SrlAttributes::keys(int index) const {
+  return keys_.Get(index);
+}
+inline ::std::string* SrlAttributes::mutable_keys(int index) {
+  return keys_.Mutable(index);
+}
+inline void SrlAttributes::set_keys(int index, const ::std::string& value) {
+  keys_.Mutable(index)->assign(value);
+}
+inline void SrlAttributes::set_keys(int index, const char* value) {
+  keys_.Mutable(index)->assign(value);
+}
+inline void SrlAttributes::set_keys(int index, const char* value, size_t size) {
+  keys_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlAttributes::add_keys() {
+  return keys_.Add();
+}
+inline void SrlAttributes::add_keys(const ::std::string& value) {
+  keys_.Add()->assign(value);
+}
+inline void SrlAttributes::add_keys(const char* value) {
+  keys_.Add()->assign(value);
+}
+inline void SrlAttributes::add_keys(const char* value, size_t size) {
+  keys_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SrlAttributes::keys() const {
+  return keys_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SrlAttributes::mutable_keys() {
+  return &keys_;
+}
+
+// repeated string values = 2;
+inline int SrlAttributes::values_size() const {
+  return values_.size();
+}
+inline void SrlAttributes::clear_values() {
+  values_.Clear();
+}
+inline const ::std::string& SrlAttributes::values(int index) const {
+  return values_.Get(index);
+}
+inline ::std::string* SrlAttributes::mutable_values(int index) {
+  return values_.Mutable(index);
+}
+inline void SrlAttributes::set_values(int index, const ::std::string& value) {
+  values_.Mutable(index)->assign(value);
+}
+inline void SrlAttributes::set_values(int index, const char* value) {
+  values_.Mutable(index)->assign(value);
+}
+inline void SrlAttributes::set_values(int index, const char* value, size_t size) {
+  values_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SrlAttributes::add_values() {
+  return values_.Add();
+}
+inline void SrlAttributes::add_values(const ::std::string& value) {
+  values_.Add()->assign(value);
+}
+inline void SrlAttributes::add_values(const char* value) {
+  values_.Add()->assign(value);
+}
+inline void SrlAttributes::add_values(const char* value, size_t size) {
+  values_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SrlAttributes::values() const {
+  return values_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SrlAttributes::mutable_values() {
+  return &values_;
 }
 
 

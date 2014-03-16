@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/data.proto',
   package='protobuf.srl.query',
-  serialized_pb='\n\x10input/data.proto\x12\x12protobuf.srl.query\"=\n\x0b\x44\x61taRequest\x12.\n\x05items\x18\x03 \x03(\x0b\x32\x1f.protobuf.srl.query.ItemRequest\"a\n\x0bItemRequest\x12,\n\x05query\x18\x01 \x02(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x0e\n\x06itemId\x18\x02 \x03(\t\x12\x14\n\x0c\x61\x64vanceQuery\x18\x03 \x01(\x0c\"7\n\x08\x44\x61taSend\x12+\n\x05items\x18\x03 \x03(\x0b\x32\x1c.protobuf.srl.query.ItemSend\"F\n\x08ItemSend\x12,\n\x05query\x18\x01 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"=\n\nDataResult\x12/\n\x07results\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.query.ItemResult\"\x82\x01\n\nItemResult\x12,\n\x05query\x18\x01 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x12\n\nreturnText\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\x12\x0e\n\x06noData\x18\x04 \x01(\x08\x12\x14\n\x0c\x65rrorMessage\x18\x05 \x01(\t\"\x16\n\x06IdList\x12\x0c\n\x04list\x18\x01 \x03(\t\"?\n\x10\x45xperimentReview\x12\x14\n\x0c\x61llowEditing\x18\x01 \x01(\x08\x12\x15\n\rshowUserNames\x18\x02 \x01(\x08*\x89\x02\n\tItemQuery\x12\x12\n\x05\x45RROR\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\n\n\x06\x43OURSE\x10\x00\x12\x0e\n\nASSIGNMENT\x10\x01\x12\x12\n\x0e\x43OURSE_PROBLEM\x10\x02\x12\x10\n\x0c\x42\x41NK_PROBLEM\x10\x03\x12\r\n\tUSERGROUP\x10\x04\x12\x0f\n\x0b\x43LASS_GRADE\x10\x05\x12\r\n\tUSER_INFO\x10\x06\x12\x0c\n\x08SOLUTION\x10\x07\x12\x0e\n\nEXPERIMENT\x10\x08\x12\n\n\x06SCHOOL\x10\t\x12\x11\n\rCOURSE_SEARCH\x10\n\x12\x0f\n\x0b\x42\x41NK_SEARCH\x10\x0b\x12\x0c\n\x08REGISTER\x10\x0c\x12\x0f\n\x0b\x43OURSE_LIST\x10\r\x12\n\n\x06UPDATE\x10\x0e')
+  serialized_pb='\n\x10input/data.proto\x12\x12protobuf.srl.query\"=\n\x0b\x44\x61taRequest\x12.\n\x05items\x18\x03 \x03(\x0b\x32\x1f.protobuf.srl.query.ItemRequest\"a\n\x0bItemRequest\x12,\n\x05query\x18\x01 \x02(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x0e\n\x06itemId\x18\x02 \x03(\t\x12\x14\n\x0c\x61\x64vanceQuery\x18\x03 \x01(\x0c\"7\n\x08\x44\x61taSend\x12+\n\x05items\x18\x03 \x03(\x0b\x32\x1c.protobuf.srl.query.ItemSend\"F\n\x08ItemSend\x12,\n\x05query\x18\x01 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"=\n\nDataResult\x12/\n\x07results\x18\x01 \x03(\x0b\x32\x1e.protobuf.srl.query.ItemResult\"\x98\x01\n\nItemResult\x12,\n\x05query\x18\x01 \x01(\x0e\x32\x1d.protobuf.srl.query.ItemQuery\x12\x12\n\nreturnText\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\x12\x0e\n\x06noData\x18\x04 \x01(\x08\x12\x14\n\x0c\x65rrorMessage\x18\x05 \x01(\t\x12\x14\n\x0c\x61\x64vanceQuery\x18\x06 \x01(\x0c\"\x16\n\x06IdList\x12\x0c\n\x04list\x18\x01 \x03(\t\"?\n\x10\x45xperimentReview\x12\x14\n\x0c\x61llowEditing\x18\x01 \x01(\x08\x12\x15\n\rshowUserNames\x18\x02 \x01(\x08*\x89\x02\n\tItemQuery\x12\x12\n\x05\x45RROR\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\n\n\x06\x43OURSE\x10\x00\x12\x0e\n\nASSIGNMENT\x10\x01\x12\x12\n\x0e\x43OURSE_PROBLEM\x10\x02\x12\x10\n\x0c\x42\x41NK_PROBLEM\x10\x03\x12\r\n\tUSERGROUP\x10\x04\x12\x0f\n\x0b\x43LASS_GRADE\x10\x05\x12\r\n\tUSER_INFO\x10\x06\x12\x0c\n\x08SOLUTION\x10\x07\x12\x0e\n\nEXPERIMENT\x10\x08\x12\n\n\x06SCHOOL\x10\t\x12\x11\n\rCOURSE_SEARCH\x10\n\x12\x0f\n\x0b\x42\x41NK_SEARCH\x10\x0b\x12\x0c\n\x08REGISTER\x10\x0c\x12\x0f\n\x0b\x43OURSE_LIST\x10\r\x12\n\n\x06UPDATE\x10\x0e')
 
 _ITEMQUERY = _descriptor.EnumDescriptor(
   name='ItemQuery',
@@ -89,8 +89,8 @@ _ITEMQUERY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=617,
-  serialized_end=882,
+  serialized_start=639,
+  serialized_end=904,
 )
 
 ItemQuery = enum_type_wrapper.EnumTypeWrapper(_ITEMQUERY)
@@ -316,6 +316,13 @@ _ITEMRESULT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='advanceQuery', full_name='protobuf.srl.query.ItemResult.advanceQuery', index=5,
+      number=6, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value="",
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -326,7 +333,7 @@ _ITEMRESULT = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=395,
-  serialized_end=525,
+  serialized_end=547,
 )
 
 
@@ -353,8 +360,8 @@ _IDLIST = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=527,
-  serialized_end=549,
+  serialized_start=549,
+  serialized_end=571,
 )
 
 
@@ -388,8 +395,8 @@ _EXPERIMENTREVIEW = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=551,
-  serialized_end=614,
+  serialized_start=573,
+  serialized_end=636,
 )
 
 _DATAREQUEST.fields_by_name['items'].message_type = _ITEMREQUEST
