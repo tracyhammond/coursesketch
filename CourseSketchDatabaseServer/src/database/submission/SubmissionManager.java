@@ -1,17 +1,22 @@
 package database.submission;
 
 import static database.StringConstants.*;
+
+import java.util.ArrayList;
+
 import multiConnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
 import org.java_websocket.WebSocket;
 
 import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 
+import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -20,6 +25,9 @@ import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 
 import connection.SubmissionConnection;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
 import database.institution.Institution;
 
 
@@ -87,6 +95,50 @@ public class SubmissionManager
 		String sketchId = "" + corsor.get(userId);
 		System.out.println("SketchId " + sketchId);
 		build.addItemId(sketchId);
+		DataRequest.Builder data = DataRequest.newBuilder();
+		data.addItems(build);
+		r.setOtherData(data.build().toByteString());
+		System.out.println("Sending command " + r.build());
+		internalConnections.send(r.build(), null, SubmissionConnection.class);
+	}
+
+	/**
+	 * Builds a request to the server for every single sketch in a single problem.
+	 * @param submissionId
+	 * @param userId
+	 * @param problemId
+	 * @return the submission id
+	 * @throws DatabaseAccessException
+	 * @throws AuthenticationException
+	 */
+	public static void mongoGetAllExperimentsAsInstructor(DB dbs, String userId, String problemId, String sessionInfo,
+			MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException {
+		DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
+		if (problem == null) {
+			throw new DatabaseAccessException("Problem was not found with the following ID " + problemId);
+		}
+		ArrayList adminList = (ArrayList<Object>) problem.get(ADMIN); // convert to ArrayList<String>
+		ArrayList modList = (ArrayList<Object>) problem.get(MOD); // convert to ArrayList<String>
+		boolean isAdmin = false, isMod = false;
+		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
+		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
+		if (!isAdmin && !isMod) {
+			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+		}
+
+		Request.Builder r = Request.newBuilder();
+		r.setSessionInfo(sessionInfo);
+		r.setRequestType(MessageType.DATA_REQUEST);
+		ItemRequest.Builder build = ItemRequest.newBuilder();
+		build.setQuery(ItemQuery.EXPERIMENT);
+		DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
+		DBObject corsor = myDbRef.fetch();
+		for (String key: corsor.keySet()) {
+			String sketchId = "" + corsor.get(key);
+			System.out.println("SketchId " + sketchId);
+			build.addItemId(sketchId);
+		}
+		build.setAdvanceQuery(review);
 		DataRequest.Builder data = DataRequest.newBuilder();
 		data.addItems(build);
 		r.setOtherData(data.build().toByteString());

@@ -9,6 +9,7 @@ import org.java_websocket.WebSocket;
 
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
+import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
@@ -102,6 +103,9 @@ public class DataRequestHandler {
 							if (!itrequest.hasAdvanceQuery()) {
 								System.out.println("Trying to retrieve an experiemnt from a user!");
 								Institution.mongoGetExperimentAsUser(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections);
+							} else {
+								ExperimentReview reveille = ExperimentReview.parseFrom(itrequest.getAdvanceQuery());
+								Institution.mongoGetExperimentAsInstructor(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections, itrequest.getAdvanceQuery());
 							}
 							break;
 						}

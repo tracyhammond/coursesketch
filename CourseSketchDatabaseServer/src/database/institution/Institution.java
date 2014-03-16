@@ -1,9 +1,6 @@
 package database.institution;
 
-import static database.StringConstants.DATABASE;
-import static database.StringConstants.GROUP_PREFIX;
-import static database.StringConstants.USER_GROUP_COLLECTION;
-import static database.StringConstants.USER_LIST;
+import static database.StringConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +9,7 @@ import multiConnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
 
+import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -22,6 +20,7 @@ import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -350,6 +349,15 @@ public final class Institution {
 		try {
 			System.out.println("Getting experiment for user: " + userId +" problem: " + problemId);
 			SubmissionManager.mongoGetExperiment(getInstance().db, userId, problemId, sessionInfo, internalConnections);
+			return;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void mongoGetExperimentAsInstructor(String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections, ByteString review) {
+		try {
+			SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().db, userId, problemId, sessionInfo, internalConnections, review);
 			return;
 		} catch(Exception e) {
 			e.printStackTrace();

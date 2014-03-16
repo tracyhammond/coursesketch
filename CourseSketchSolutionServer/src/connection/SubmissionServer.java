@@ -1,5 +1,7 @@
 package connection;
 
+import handlers.SubmissionRequestHandler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,7 +40,7 @@ import database.UpdateHandler;
 public class SubmissionServer extends MultiInternalConnectionServer {
 
 	private boolean connectLocally = MultiConnectionManager.CONNECT_REMOTE;
-	UpdateHandler updateHandler = new UpdateHandler();
+	
 	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
@@ -72,54 +74,9 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 		 * If it is an insertion and not an update then it will send the key to the database
 		 */
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
-			try {
-				String resultantId = null;
-				if (updateHandler.addRequest(req)) {
-					System.out.println("Update is finished building!");
-					ByteString data = null;
-					if (updateHandler.isSolution(sessionInfo)) {
-						resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
-						if (resultantId != null) {
-							SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
-							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
-							data = builder.build().toByteString();
-						}
-					} else {
-						System.out.println("Saving experiment");
-						resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
-						if (resultantId != null) {
-							SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
-							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
-							data = builder.build().toByteString();
-						}
-					}
-					Request.Builder build = Request.newBuilder(req);
-					build.setResponseText("Submission Succesful!");
-					build.clearOtherData();
-					build.setSessionInfo(req.getSessionInfo());
-					System.out.println(req.getSessionInfo());
-					// sends the response back to the answer checker which can then send it back to the client.
-					conn.send(build.build().toByteArray());
-					if (resultantId != null) {
-						// it can be null if this solution has already been stored
-
-						if (data != null) {
-							// passes the data to the database for connecting
-							build.setOtherData(data);
-							internalConnections.send(build.build(), "", DataConnection.class);
-						}
-					}
-					updateHandler.clearSubmission(req.getSessionInfo());
-				} 
-				//ItemResult 
-			} catch (Exception e) {
-				Request.Builder build = Request.newBuilder();
-				build.setRequestType(Request.MessageType.ERROR);
-				build.setResponseText(e.getMessage());
-				build.setSessionInfo(req.getSessionInfo());
-				conn.send(build.build().toByteArray());
-				e.printStackTrace();
-				updateHandler.clearSubmission(req.getSessionInfo());
+			Request result = SubmissionRequestHandler.HandleRequest(req, sessionInfo, internalConnections);
+			if (result != null) {
+				conn.send(result.toByteArray());
 			}
 		}
 
@@ -130,7 +87,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 				dataReq = DataRequest.parseFrom(req.getOtherData());
 				Request.Builder resultReq = Request.newBuilder(req);
 				resultReq.clearOtherData();
-				for(ItemRequest itemReq: dataReq.getItemsList()) {
+				for( ItemRequest itemReq: dataReq.getItemsList()) {
 					if (itemReq.getQuery() == ItemQuery.EXPERIMENT) {
 						System.out.println("attempting to get an experiment!");
 						SrlExperiment experiment = null;
