@@ -650,6 +650,18 @@ class ItemResult : public ::google::protobuf::Message {
   inline ::std::string* release_errormessage();
   inline void set_allocated_errormessage(::std::string* errormessage);
 
+  // optional bytes advanceQuery = 6;
+  inline bool has_advancequery() const;
+  inline void clear_advancequery();
+  static const int kAdvanceQueryFieldNumber = 6;
+  inline const ::std::string& advancequery() const;
+  inline void set_advancequery(const ::std::string& value);
+  inline void set_advancequery(const char* value);
+  inline void set_advancequery(const void* value, size_t size);
+  inline ::std::string* mutable_advancequery();
+  inline ::std::string* release_advancequery();
+  inline void set_allocated_advancequery(::std::string* advancequery);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemResult)
  private:
   inline void set_has_query();
@@ -662,6 +674,8 @@ class ItemResult : public ::google::protobuf::Message {
   inline void clear_has_nodata();
   inline void set_has_errormessage();
   inline void clear_has_errormessage();
+  inline void set_has_advancequery();
+  inline void clear_has_advancequery();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -670,9 +684,10 @@ class ItemResult : public ::google::protobuf::Message {
   bool nodata_;
   ::std::string* data_;
   ::std::string* errormessage_;
+  ::std::string* advancequery_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -1446,6 +1461,76 @@ inline void ItemResult::set_allocated_errormessage(::std::string* errormessage) 
   } else {
     clear_has_errormessage();
     errormessage_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional bytes advanceQuery = 6;
+inline bool ItemResult::has_advancequery() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ItemResult::set_has_advancequery() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ItemResult::clear_has_advancequery() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ItemResult::clear_advancequery() {
+  if (advancequery_ != &::google::protobuf::internal::kEmptyString) {
+    advancequery_->clear();
+  }
+  clear_has_advancequery();
+}
+inline const ::std::string& ItemResult::advancequery() const {
+  return *advancequery_;
+}
+inline void ItemResult::set_advancequery(const ::std::string& value) {
+  set_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    advancequery_ = new ::std::string;
+  }
+  advancequery_->assign(value);
+}
+inline void ItemResult::set_advancequery(const char* value) {
+  set_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    advancequery_ = new ::std::string;
+  }
+  advancequery_->assign(value);
+}
+inline void ItemResult::set_advancequery(const void* value, size_t size) {
+  set_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    advancequery_ = new ::std::string;
+  }
+  advancequery_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ItemResult::mutable_advancequery() {
+  set_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    advancequery_ = new ::std::string;
+  }
+  return advancequery_;
+}
+inline ::std::string* ItemResult::release_advancequery() {
+  clear_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = advancequery_;
+    advancequery_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ItemResult::set_allocated_advancequery(::std::string* advancequery) {
+  if (advancequery_ != &::google::protobuf::internal::kEmptyString) {
+    delete advancequery_;
+  }
+  if (advancequery) {
+    set_has_advancequery();
+    advancequery_ = advancequery;
+  } else {
+    clear_has_advancequery();
+    advancequery_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

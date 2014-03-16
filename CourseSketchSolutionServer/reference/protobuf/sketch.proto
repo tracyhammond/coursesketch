@@ -17,6 +17,8 @@ message SrlObject {
 		LINE = 3; // not supported at this time.
 	}
 	required bytes object = 2;
+	// TODO: add attributes field (named protoAttributes)
+	// it was put in the object and not the shape and stroke because both use it and this saves on code space.
 }
 
 message SrlShape {
@@ -24,9 +26,9 @@ message SrlShape {
 	required uint64 time = 2;
 	optional string name = 3;
 	optional bool isUserCreated = 4;
-	repeated SrlInterpretation interpretations= 5;
+	repeated SrlInterpretation interpretations = 5;
 	repeated SrlObject subComponents = 6;
-	optional SrlBoundingBox boundingbox= 7;
+	optional SrlBoundingBox boundingbox = 7;
 }
 
 message SrlStroke {
@@ -63,4 +65,9 @@ message SrlBoundingBox {
 	required double y = 2;
 	required double width = 3;
 	required double height = 4;
+}
+
+message SrlAttributes {
+	repeated string keys = 1;
+	repeated string values = 2;
 }

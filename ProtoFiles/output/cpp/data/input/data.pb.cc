@@ -136,12 +136,13 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DataResult));
   ItemResult_descriptor_ = file->message_type(5);
-  static const int ItemResult_offsets_[5] = {
+  static const int ItemResult_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemResult, query_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemResult, returntext_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemResult, data_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemResult, nodata_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemResult, errormessage_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemResult, advancequery_),
   };
   ItemResult_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -253,20 +254,20 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
     "rl.query.ItemSend\"F\n\010ItemSend\022,\n\005query\030\001"
     " \001(\0162\035.protobuf.srl.query.ItemQuery\022\014\n\004d"
     "ata\030\003 \001(\014\"=\n\nDataResult\022/\n\007results\030\001 \003(\013"
-    "2\036.protobuf.srl.query.ItemResult\"\202\001\n\nIte"
+    "2\036.protobuf.srl.query.ItemResult\"\230\001\n\nIte"
     "mResult\022,\n\005query\030\001 \001(\0162\035.protobuf.srl.qu"
     "ery.ItemQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004dat"
     "a\030\003 \001(\014\022\016\n\006noData\030\004 \001(\010\022\024\n\014errorMessage\030"
-    "\005 \001(\t\"\026\n\006IdList\022\014\n\004list\030\001 \003(\t\"\?\n\020Experim"
-    "entReview\022\024\n\014allowEditing\030\001 \001(\010\022\025\n\rshowU"
-    "serNames\030\002 \001(\010*\211\002\n\tItemQuery\022\022\n\005ERROR\020\377\377"
-    "\377\377\377\377\377\377\377\001\022\n\n\006COURSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016"
-    "COURSE_PROBLEM\020\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUS"
-    "ERGROUP\020\004\022\017\n\013CLASS_GRADE\020\005\022\r\n\tUSER_INFO\020"
-    "\006\022\014\n\010SOLUTION\020\007\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOO"
-    "L\020\t\022\021\n\rCOURSE_SEARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022"
-    "\014\n\010REGISTER\020\014\022\017\n\013COURSE_LIST\020\r\022\n\n\006UPDATE"
-    "\020\016", 882);
+    "\005 \001(\t\022\024\n\014advanceQuery\030\006 \001(\014\"\026\n\006IdList\022\014\n"
+    "\004list\030\001 \003(\t\"\?\n\020ExperimentReview\022\024\n\014allow"
+    "Editing\030\001 \001(\010\022\025\n\rshowUserNames\030\002 \001(\010*\211\002\n"
+    "\tItemQuery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE"
+    "\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020"
+    "\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS"
+    "_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n"
+    "\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEAR"
+    "CH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013C"
+    "OURSE_LIST\020\r\022\n\n\006UPDATE\020\016", 904);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/data.proto", &protobuf_RegisterTypes);
   DataRequest::default_instance_ = new DataRequest();
@@ -1516,6 +1517,7 @@ const int ItemResult::kReturnTextFieldNumber;
 const int ItemResult::kDataFieldNumber;
 const int ItemResult::kNoDataFieldNumber;
 const int ItemResult::kErrorMessageFieldNumber;
+const int ItemResult::kAdvanceQueryFieldNumber;
 #endif  // !_MSC_VER
 
 ItemResult::ItemResult()
@@ -1539,6 +1541,7 @@ void ItemResult::SharedCtor() {
   data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   nodata_ = false;
   errormessage_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  advancequery_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1555,6 +1558,9 @@ void ItemResult::SharedDtor() {
   }
   if (errormessage_ != &::google::protobuf::internal::kEmptyString) {
     delete errormessage_;
+  }
+  if (advancequery_ != &::google::protobuf::internal::kEmptyString) {
+    delete advancequery_;
   }
   if (this != default_instance_) {
   }
@@ -1598,6 +1604,11 @@ void ItemResult::Clear() {
     if (has_errormessage()) {
       if (errormessage_ != &::google::protobuf::internal::kEmptyString) {
         errormessage_->clear();
+      }
+    }
+    if (has_advancequery()) {
+      if (advancequery_ != &::google::protobuf::internal::kEmptyString) {
+        advancequery_->clear();
       }
     }
   }
@@ -1691,6 +1702,20 @@ bool ItemResult::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(50)) goto parse_advanceQuery;
+        break;
+      }
+
+      // optional bytes advanceQuery = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_advanceQuery:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_advancequery()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1748,6 +1773,12 @@ void ItemResult::SerializeWithCachedSizes(
       5, this->errormessage(), output);
   }
 
+  // optional bytes advanceQuery = 6;
+  if (has_advancequery()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      6, this->advancequery(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1794,6 +1825,13 @@ void ItemResult::SerializeWithCachedSizes(
         5, this->errormessage(), target);
   }
 
+  // optional bytes advanceQuery = 6;
+  if (has_advancequery()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        6, this->advancequery(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1835,6 +1873,13 @@ int ItemResult::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->errormessage());
+    }
+
+    // optional bytes advanceQuery = 6;
+    if (has_advancequery()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->advancequery());
     }
 
   }
@@ -1879,6 +1924,9 @@ void ItemResult::MergeFrom(const ItemResult& from) {
     if (from.has_errormessage()) {
       set_errormessage(from.errormessage());
     }
+    if (from.has_advancequery()) {
+      set_advancequery(from.advancequery());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1907,6 +1955,7 @@ void ItemResult::Swap(ItemResult* other) {
     std::swap(data_, other->data_);
     std::swap(nodata_, other->nodata_);
     std::swap(errormessage_, other->errormessage_);
+    std::swap(advancequery_, other->advancequery_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
