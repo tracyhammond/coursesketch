@@ -9,7 +9,6 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlExperimentList;
-import protobuf.srl.submission.Submission.SrlExperimentList.Builder;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -78,15 +77,6 @@ public class DataRequestHandler {
 			//error stuff
 		}
 		return send.build();
-
-		/*
-		SrlUpdateList list = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
-		for(SrlUpdate update: list.getListList()) {
-			send.setData(update.toByteString());
-			resultReq.setOtherData(send.build().toByteString());
-			conn.send(resultReq.build().toByteArray());
-		}
-		*/
 	}
 
 	private static ItemResult getExperimentsForInstructor(ItemRequest itemReq) {
@@ -106,6 +96,7 @@ public class DataRequestHandler {
 		send.setQuery(ItemQuery.EXPERIMENT);
 		send.setData(experiments.build().toByteString());
 		send.setErrorMessage(errorMessage);
+		send.setAdvanceQuery(itemReq.getAdvanceQuery());
 		return send.build();
 	}
 }

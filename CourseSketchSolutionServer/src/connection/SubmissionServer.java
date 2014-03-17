@@ -1,5 +1,6 @@
 package connection;
 
+import handlers.DataRequestHandler;
 import handlers.SubmissionRequestHandler;
 
 import java.io.BufferedReader;
@@ -67,66 +68,22 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
-		String sessionInfo = req.getSessionInfo();
 
 		/**
 		 * Attempts to save the submission, which can be either a solution or an experiment.
 		 * If it is an insertion and not an update then it will send the key to the database
 		 */
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
-			Request result = SubmissionRequestHandler.HandleRequest(req, sessionInfo, internalConnections);
+			Request result = SubmissionRequestHandler.handleRequest(req, internalConnections);
 			if (result != null) {
 				conn.send(result.toByteArray());
 			}
 		}
 
 		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-			System.out.println("Parsing data request!");
-			DataRequest dataReq;
-			try {
-				dataReq = DataRequest.parseFrom(req.getOtherData());
-				Request.Builder resultReq = Request.newBuilder(req);
-				resultReq.clearOtherData();
-				for( ItemRequest itemReq: dataReq.getItemsList()) {
-					if (itemReq.getQuery() == ItemQuery.EXPERIMENT) {
-						System.out.println("attempting to get an experiment!");
-						SrlExperiment experiment = null;
-						String errorMessage = "";
-						try {
-							experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
-						} catch (Exception e) {
-							errorMessage = e.getMessage();
-							e.printStackTrace();
-						}
-						DataResult.Builder builder = DataResult.newBuilder();
-						ItemResult.Builder send = ItemResult.newBuilder();
-						send.setQuery(ItemQuery.EXPERIMENT);
-
-						if (experiment != null) {
-							send.setData(experiment.toByteString());
-						} else {
-							send.setNoData(true);
-							send.setErrorMessage(errorMessage);
-							//error stuff
-						}
-						builder.addResults(send);
-
-						resultReq.setOtherData(builder.build().toByteString());
-						resultReq.setRequestType(MessageType.DATA_REQUEST);
-						conn.send(resultReq.build().toByteArray());
-
-						/*
-						SrlUpdateList list = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
-						for(SrlUpdate update: list.getListList()) {
-							send.setData(update.toByteString());
-							resultReq.setOtherData(send.build().toByteString());
-							conn.send(resultReq.build().toByteArray());
-						}
-						*/
-					}
-				}
-			} catch (InvalidProtocolBufferException e) {
-				e.printStackTrace();
+			Request result = DataRequestHandler.handleRequest(req);
+			if (result != null) {
+				conn.send(result.toByteArray());
 			}
 		}
 	}
