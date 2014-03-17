@@ -15,7 +15,8 @@ import database.UpdateHandler;
 public class SubmissionRequestHandler {
 	
 	private static final UpdateHandler updateHandler = new UpdateHandler();
-	public static Request handleRequest(Request req, String sessionInfo, MultiConnectionManager internalConnections) {
+	public static Request handleRequest(Request req, MultiConnectionManager internalConnections) {
+		final String sessionInfo = req.getSessionInfo();
 		try {
 			String resultantId = null;
 			if (updateHandler.addRequest(req)) {
@@ -41,7 +42,7 @@ public class SubmissionRequestHandler {
 				build.setResponseText("Submission Succesful!");
 				build.clearOtherData();
 				build.setSessionInfo(sessionInfo);
-				System.out.println(req.getSessionInfo());
+				System.out.println(sessionInfo);
 				if (resultantId != null) {
 					// it can be null if this solution has already been stored
 					if (data != null) {
@@ -50,7 +51,7 @@ public class SubmissionRequestHandler {
 						internalConnections.send(build.build(), "", DataConnection.class);
 					}
 				}
-				updateHandler.clearSubmission(req.getSessionInfo());
+				updateHandler.clearSubmission(sessionInfo);
 				// sends the response back to the answer checker which can then send it back to the client.
 				return build.build();
 			} 
@@ -60,7 +61,7 @@ public class SubmissionRequestHandler {
 			Request.Builder build = Request.newBuilder();
 			build.setRequestType(Request.MessageType.ERROR);
 			build.setResponseText(e.getMessage());
-			build.setSessionInfo(req.getSessionInfo());
+			build.setSessionInfo(sessionInfo);
 			e.printStackTrace();
 			return build.build();
 		}
