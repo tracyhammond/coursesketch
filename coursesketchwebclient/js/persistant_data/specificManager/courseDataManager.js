@@ -184,16 +184,20 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 	/**
 	 * Updates an existing course into the database.  This course must already exist.
 	 *
-	 * If there is a problem courseCallback is called with an error code
+	 * If there is a problem, courseCallback is called with an error code
 	 * TODO: create error code.
 	 * @param course
 	 * @param courseCallback
+	 * @param serverCallback the people next to me on the bus are really annoying
 	 */
-	function updateCourse(course, courseCallback) {
+	function updateCourse(course, courseCallback, serverCallback) {
 		setCourse(course); // overrides the course into the local database;
 		if (courseCallback) courseCallback(course);
 
 		sendData.sendDataUpdate(QueryBuilder.ItemQuery.COURSE, Itcourse.toArrayBuffer());
+		advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, QueryBuilder.ItemQuery.COURSE, function(evt, item) {
+			serverCallback(item); // we do not need to make server changes we just need to make sure it was successful.
+		});
 	}
 
 	/*

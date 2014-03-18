@@ -171,8 +171,9 @@ public final class Institution {
 	 * @param userId The credentials used to authenticate the insertion
 	 * @param assignment The object being inserted 
 	 * @return The Id of the object that was inserted
+	 * @throws DatabaseAccessException 
 	 */
-	public static String mongoInsertCourse(String userId, SrlCourse course) {
+	public static String mongoInsertCourse(String userId, SrlCourse course) throws DatabaseAccessException {
 		
 		// Creates the default permissions for the courses.
 		SrlPermission permission = null;
@@ -215,6 +216,10 @@ public final class Institution {
 
 		// links the course to the group!
 		CourseManager.mongoInsertDefaultGroupId(getInstance().db, resultId, userGroupId, modGroupId, adminGroupId);
+		
+		// adds the course to the users list
+		Institution.putUserInCourse(userId, resultId);
+		
 		return resultId;
 	}
 
