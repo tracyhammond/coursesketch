@@ -10,7 +10,7 @@
 function AdvanceDataListener(connection, Request, query, defListener) {
 	var requestMap = {};
 	requestMap[Request.MessageType.DATA_REQUEST] = {};
-	requestMap[Request.MessageType.DATA_SENDING] = {};
+	requestMap[Request.MessageType.DATA_INSERT] = {};
 	requestMap[Request.MessageType.DATA_UPDATE] = {};
 
 	var myScope = this;

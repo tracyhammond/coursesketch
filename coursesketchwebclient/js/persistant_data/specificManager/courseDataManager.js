@@ -143,7 +143,6 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 					}
 				});
 			}
-
 			// we ask the program for the list of courses by id then we compare and update!
 		}
 	};
@@ -152,16 +151,33 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 	/**
 	 * Inserts a course into the database.  This course must not exist.
 	 *
-	 * If there is a problem courseCallback is called with an error code
-	 * TODO: create error code.
+	 * If there is a problem courseCallback is called with an error code.
+	 * TODO: create error code and call courseCallback.
+	 * 
 	 * @param course
-	 * @param courseCallback
+	 * @param courseCallback is called after the insertion of course into the local database. (this can be used for instant refresh)
+	 * @param serverCallback serverCallback is called after the insertion of course into the server and the return of the server with the correct courseId
 	 */
-	function insertCourse(course, courseCallback) {
+	function insertCourse(course, courseCallback, serverCallback) {
+		var courseId = generateUUID();
+		course.id = courseId;
 		setCourse(course); // sets the course into the local database;
-		if (courseCallback) courseCallback(course);
+		if (courseCallback) courseCallback(course); // temp for now!
 
 		sendData.sendDataInsert(QueryBuilder.ItemQuery.COURSE, Itcourse.toArrayBuffer());
+		advanceDataListener.setListener(Request.MessageType.DATA_INSERT, QueryBuilder.ItemQuery.COURSE, function(evt, item) {
+			var resultArray = item.getResponseText().split(":");
+			var oldId = resultArray[1];
+			var newId = resultArray[0];
+			// we want to get the current course in the local database in case it has changed while the server was processing.
+			getCourse(oldId, function(course2) {
+				deleteCourse(oldId);
+				course2.id = newId;
+				setCourse(course2, function() {
+					serverCallback(course2);
+				});
+			});
+		});
 	}
 	parent.insertCourse = insertCourse;
 
