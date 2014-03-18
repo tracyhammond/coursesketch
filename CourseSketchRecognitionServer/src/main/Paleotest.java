@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -26,8 +27,9 @@ import srl.recognition.paleo.PaleoSketchRecognizer;
 import org.openawt.geom.PathIterator;
 
 //import java.awt.Canvas;
-
 public class Paleotest {
+    static int pxmax = 1024;
+    static int pymax = 768;
         public static void main(String[] args) throws IOException, FileNotFoundException, Exception {
 
 // From Here Block1 Starts =========================================================>        	
@@ -35,7 +37,8 @@ public class Paleotest {
             
           JFrame frmMain = new JFrame();
           frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-          frmMain.setSize(1024, 768);
+
+          frmMain.setSize(pxmax, pymax);
 
           //Canvas cnvs = new Canvas();
           //cnvs.setSize(400, 400);
@@ -61,6 +64,7 @@ public class Paleotest {
         	           		System.out.println(result.getBestShape().getInterpretation().label);
         	           		List<Point> points = m_stroke.getPoints();
         	           		boolean cont = true;
+        	           		/*
         	           		for(Shape x : result.getNBestList() ) {
         	           			String label = x.getInterpretation().label;
         	           			if(cont && label == "Curve" || label == "Arc" ) {
@@ -79,9 +83,49 @@ public class Paleotest {
         	           			}
         	           			cont = false;
         	           		}
-        	           		
-        	           		
-        	             	for (Point p : m_stroke.getPoints()) {
+        	           		*/
+        	           		if(cont == true && points.size() > 10) {
+        	           			for(int q = 0; q < 8; q++) {
+        			           		//Subdivide
+        			           		List<Point> points2 = new ArrayList<Point>(points);
+        			           		points.clear();
+        			           		for(int i = 0; i+1 < points2.size(); i ++){
+        			           			Point p1 = points2.get(i);
+        			           			Point p2 = points2.get(i+1);
+        			           			points.add(p1);
+        			           			points.add(new Point((p1.x+p2.x)/2,(p1.y+p2.y)/2));
+        			           		}
+        			           		points.add(points2.get(points2.size()-1));
+        			           		
+        			           		//Apply fake sinc4 .25 .5 1 .5 .25
+        			           		points2 = new ArrayList<Point>(points);
+        			           		points.clear();
+        			           		points.add(points2.get(0));
+        			           		for(int i = 1; i+1 < points2.size(); i++){
+        			           			Point p1 = new Point();
+        			           			if(i >= 2 && i+2 < points2.size()) {
+        			           				p1.x = (points2.get(i-2).x/4 + points2.get(i-1).x/2 + points2.get(i).x + points2.get(i+1).x/2 + points2.get(i+2).x/4)/2.5;
+        			           				p1.y = (points2.get(i-2).y/4 + points2.get(i-1).y/2 + points2.get(i).y + points2.get(i+1).y/2 + points2.get(i+2).y/4)/2.5;
+        			           			}
+        			           			else {
+        				           			p1.x = (points2.get(i-1).x/2 + points2.get(i).x + points2.get(i+1).x/2)/2;
+        				           			p1.y = (points2.get(i-1).y/2 + points2.get(i).y + points2.get(i+1).y/2)/2;
+        			           			}
+        			           			points.add(p1);
+        			           		}
+        			           		points.add(points2.get(points2.size()-1));
+        			           		
+        			           		//Discard points
+        			           		/*
+        			           		if(q > 4){
+        			           			for(int i = (q%2==0)?1:2; i+1 < points.size(); i++) {
+        			           				points.remove(i);
+        			           			}
+        			           		}
+        			           		*/
+        	           			}
+        	           		}
+        	             	for (Point p : points) {
         	            		if (p.getX() < xmin) xmin = (int)p.getX();
         	            		if (p.getX() > xmax) xmax = (int)p.getX();
         	            		if (p.getY() < ymin) ymin = (int)p.getY();
@@ -100,8 +144,8 @@ public class Paleotest {
         	            		/*System.out.println("S:(" + s.getX() + "," + s.getY() + ")  P:(" + p.getX() + "," + p.getY() + ")" + 
         	            	"      " + "SN:(" + (int)((s.getX() - xmin + 50) * 500 / x_range) + "," + (int)((s.getY() - ymin + 0) * 500 / y_range)
         	            	+ ")  PN:(" + (int)((p.getX() - xmin + 50) * 500 / x_range) + "," + (int)((p.getY() - ymin + 50) * 500 / y_range) + ")");*/
-        	            		g.drawLine((int)((p.getX() - xmin + 50) * 500 / x_range), (int)((p.getY() - ymin + 50) * 500 / y_range),
-        	            		(int)((s.getX() - xmin + 50) * 500 / x_range), (int)((s.getY() - ymin + 50) * 500 / y_range));
+        	            		g.drawLine((int)((p.getX() - xmin) * (pxmax-20) / x_range + 10), (int)((p.getY() - ymin) * (pymax-40) / y_range + 10),
+        	            		(int)((s.getX() - xmin) * (pxmax-20) / x_range + 10), (int)((s.getY() - ymin) * (pymax-40) / y_range + 10));
         	            		s = p;
 //        	            		Or just use large canvas and original points, no normalization and relocation
 //        	            		g.drawLine((int)p.getX(), (int)p.getY(), (int)s.getX(), (int)s.getY());
