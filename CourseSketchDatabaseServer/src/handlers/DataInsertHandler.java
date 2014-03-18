@@ -49,20 +49,20 @@ public class DataInsertHandler {
 			}
 			ArrayList<ItemResult> results = new ArrayList<ItemResult> ();
 
-			for(int p=0; p<request.getItemsList().size(); p++) {
+			for (int p=0; p<request.getItemsList().size(); p++) {
 				ItemSend itemSet = request.getItemsList().get(p);
 				try {
 					switch (itemSet.getQuery()) {
 						case COURSE: {
 							try {
-							SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
-							String resultId = Institution.mongoInsertCourse(userId, course);
-							results.add(buildResult(resultId + " : " + course.getId(), itemSet.getQuery()));
+								SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
+								String resultId = Institution.mongoInsertCourse(userId, course);
+								results.add(buildResult(resultId + " : " + course.getId(), itemSet.getQuery()));
 							} catch(DatabaseAccessException e) {
 								// unable to register user for course
 								ItemResult.Builder build = ItemResult.newBuilder();
 								build.setQuery(itemSet.getQuery());
-								results.add(buildResult(build.build().toByteString(),"Unable to register user for course: " + e.getMessage(), ItemQuery.ERROR));
+								results.add(buildResult(build.build().toByteString(), "Unable to register user for course: " + e.getMessage(), ItemQuery.ERROR));
 							}
 						} break;
 						case ASSIGNMENT: {

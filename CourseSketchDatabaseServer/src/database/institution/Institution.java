@@ -174,7 +174,7 @@ public final class Institution {
 	 * @throws DatabaseAccessException 
 	 */
 	public static String mongoInsertCourse(String userId, SrlCourse course) throws DatabaseAccessException {
-		
+
 		// Creates the default permissions for the courses.
 		SrlPermission permission = null;
 		if (course.hasAccessPermission()) {
@@ -218,8 +218,13 @@ public final class Institution {
 		CourseManager.mongoInsertDefaultGroupId(getInstance().db, resultId, userGroupId, modGroupId, adminGroupId);
 		
 		// adds the course to the users list
-		Institution.putUserInCourse(userId, resultId);
-		
+		boolean success = Institution.putUserInCourse(userId, resultId);
+		if (!success) {
+			throw new DatabaseAccessException("No success: ", false);
+		}
+
+		// TODO: try to undo what has been done!  (and more error handling!)
+
 		return resultId;
 	}
 
