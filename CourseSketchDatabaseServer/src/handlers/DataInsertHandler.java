@@ -8,6 +8,7 @@ import org.java_websocket.WebSocket;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.user.UserClient;
@@ -53,9 +54,16 @@ public class DataInsertHandler {
 				try {
 					switch (itemSet.getQuery()) {
 						case COURSE: {
+							try {
 							SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
 							String resultId = Institution.mongoInsertCourse(userId, course);
 							results.add(buildResult(resultId + " : " + course.getId(), itemSet.getQuery()));
+							} catch(DatabaseAccessException e) {
+								// unable to register user for course
+								ItemResult.Builder build = ItemResult.newBuilder();
+								build.setQuery(itemSet.getQuery());
+								results.add(buildResult(build.build().toByteString(),"Unable to register user for course: " + e.getMessage(), ItemQuery.ERROR));
+							}
 						} break;
 						case ASSIGNMENT: {
 							SrlAssignment assignment = SrlAssignment.parseFrom(itemSet.getData());
