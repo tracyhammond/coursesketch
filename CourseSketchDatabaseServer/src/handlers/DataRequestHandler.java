@@ -47,7 +47,7 @@ public class DataRequestHandler {
 				ItemRequest itrequest = request.getItemsList().get(p);
 				try {
 					System.out.println("looking at query " + itrequest.getQuery().name());
-					switch(itrequest.getQuery()) {
+					switch (itrequest.getQuery()) {
 						case COURSE: {
 							List<SrlCourse> courseLoop = Institution.mongoGetCourses(itrequest.getItemIdList(), userId);
 							SrlSchool.Builder courseSchool = SrlSchool.newBuilder();
