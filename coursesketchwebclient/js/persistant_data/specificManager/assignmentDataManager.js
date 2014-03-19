@@ -1,7 +1,6 @@
 function AssignmentDataManager(parent, advanceDataListener, parentDatabase, sendData, builders, buffer) {
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
-	var sendDataRequest = sendData;
 	var Request = builders[0];
 	var QueryBuilder = builders[1];
 	var SchoolBuilder = builders[2];
@@ -102,7 +101,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 								assignmentCallback(assignmentList);
 							});
 							// creates a request that is then sent to the server
-							sendDataRequest(QueryBuilder.ItemQuery.ASSIGNMENT, leftOverId);
+							sendData.sendDataRequest(QueryBuilder.ItemQuery.ASSIGNMENT, leftOverId);
 						}
 
 						// this calls actually before the response from the server is received!

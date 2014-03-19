@@ -15,6 +15,9 @@ function courseClickerFunction(id) {
 	changeSelection(id, courseSelectionManager);
 	assignmentSelectionManager.clearAllSelectedItems();
 	problemSelectionManager.clearAllSelectedItems();
+
+	console.log("LOADING THE ASSIGNMENTS TO DISPLAY!");
+
 	//we get the list from the id.
 	parent.dataManager.getAllAssignmentsFromCourse(id, function(assignmentList) {
 		var builder = new SchoolItemBuilder();
@@ -23,7 +26,6 @@ function courseClickerFunction(id) {
 		builder.setEmptyListMessage('There are no assignments for this course!');
 		builder.setBoxClickFunction(assignmentClickerFunction);
 		builder.build('assignment_list_column');
-		alert(parent.dataManager.getState("isInstructor"));
 		if (parent.dataManager.getState("isInstructor")) {
 			try {
 				replaceIframe('html/instructor/course_managment_frames/edit_course.html');

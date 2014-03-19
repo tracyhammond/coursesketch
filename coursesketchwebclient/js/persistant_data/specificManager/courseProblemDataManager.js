@@ -1,7 +1,6 @@
 function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, sendData, builders, buffer) {
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
-	var sendDataRequest = sendData;
 	var Request = builders[0];
 	var QueryBuilder = builders[1];
 	var SchoolBuilder = builders[2];
@@ -98,7 +97,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 								courseProblemCallback(courseProblemList);
 							});
 							// creates a request that is then sent to the server
-							sendDataRequest(QueryBuilder.ItemQuery.COURSE_PROBLEM, leftOverId);
+							sendData.sendDataRequest(QueryBuilder.ItemQuery.COURSE_PROBLEM, leftOverId);
 						}
 
 						// this calls actually before the response from the server is received!

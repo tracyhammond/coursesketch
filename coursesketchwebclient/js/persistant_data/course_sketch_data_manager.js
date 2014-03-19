@@ -100,6 +100,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			itemRequest.setAdvanceQuery(advanceQuery);
 		}
 		dataSend.items.push(itemRequest);
+		console.log("SENDING QUERY!");
+		console.log(dataSend);
 		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
 	}
 
@@ -141,6 +143,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		this.getCourse(courseId, function(course) {
 			if (isUndefined(course)) {
 				throw "Course not defined";
+			}
+			if (course.assignmentList.length <= 0) {
+				assignmentCallback([]);
 			}
 			getAssignments(course.assignmentList, assignmentCallback);
 		});
