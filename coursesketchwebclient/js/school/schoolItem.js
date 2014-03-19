@@ -78,7 +78,7 @@ function SchoolItemBuilder() {
 		hostElement.innerHTML = '';
 		
 		// if there is no list add the empty message and then exit
-		if (!this.list) {
+		if (!this.list || this.list.length <= 0) {
 			var message = 'There are no items in this list!';
 			if (this.emptyListMessage) {
 				message = '' + this.emptyListMessage;

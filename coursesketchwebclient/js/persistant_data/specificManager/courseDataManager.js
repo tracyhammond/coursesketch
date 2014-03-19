@@ -106,11 +106,12 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 			var school = SchoolBuilder.SrlSchool.decode(item.data);
 			var courseList = school.courses;
 			var idList = [];
-			for(var i = 0; i < courseList.length; i++) {
+			for (var i = 0; i < courseList.length; i++) {
 				var course = courseList[i];
 				localScope.setCourse(course); // no callback is needed
 				idList.push(course.id);
 			}
+			console.log(courseList);
 			courseCallback(courseList);
 			setCourseIdList(idList);
 		});
@@ -129,7 +130,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 				console.log("Course data!!!!!!!");
 			});
 			*/
-			
+
 			// ask server for course list
 			sendDataRequest(QueryBuilder.ItemQuery.SCHOOL, [""]);
 

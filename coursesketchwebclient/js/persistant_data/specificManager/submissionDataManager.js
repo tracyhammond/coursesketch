@@ -4,7 +4,6 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 	var userHasCourses = true;
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
-	var sendDataRequest = sendData;
 	var Request = builders[0];
 	var QueryBuilder = builders[1];
 	var SubmissionBuilder = builders[2];
@@ -38,7 +37,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 					submissionCallback(sub);
 				});
 				// creates a request that is then sent to the server
-				sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId]);
+				sendData.sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId]);
 			} else if (result.data == nonExistantValue) {
 				// the server holds this special value then it means the server does not have the value
 				submissionCallback(nonExistantValue);
@@ -68,7 +67,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 
 		// creates a request that is then sent to the server
 		var advanceQuery = new QueryBuilder.ExperimentReview(false, true);
-		sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId], advanceQuery);
+		sendData.sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId], advanceQuery);
 	}
 
 	/**
