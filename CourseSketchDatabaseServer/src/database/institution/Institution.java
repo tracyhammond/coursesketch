@@ -216,7 +216,7 @@ public final class Institution {
 		CourseManager.mongoInsertDefaultGroupId(getInstance().db, resultId, userGroupId, modGroupId, adminGroupId);
 
 		// adds the course to the users list
-		boolean success = Institution.putUserInCourse(userId, resultId);
+		boolean success = Institution.putUserInCourse(resultId, userId);
 		if (!success) {
 			throw new DatabaseAccessException("No success: ", false);
 		}
