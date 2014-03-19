@@ -122,7 +122,7 @@ public class AssignmentManager
 					latePolicy.setTimeFrameType(SrlAssignment.LatePolicy.TimeFrame.valueOf((Integer)corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
 				}
 			} catch(Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 
@@ -131,7 +131,7 @@ public class AssignmentManager
 			exactAssignment.setDueDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(DUE_DATE)).longValue()));
 			exactAssignment.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(CLOSE_DATE)).longValue()));
 		}catch(Exception e ){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		exactAssignment.setImageUrl((String)corsor.get(IMAGE));
