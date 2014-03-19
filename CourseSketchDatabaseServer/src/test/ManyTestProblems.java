@@ -13,7 +13,7 @@ import database.auth.AuthenticationException;
 import database.institution.Institution;
 
 public class ManyTestProblems {
-	public static void testProblems(String courseId, String assignmentId) {
+	public static void testProblems(String courseId, String assignmentId, String mastId) {
 		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16", 
 		"Problem17", "Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
 		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41", "Problem42", "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49", "Problem50", "Problem51", "Problem52"};
@@ -456,7 +456,7 @@ public class ManyTestProblems {
 			bankBuilder.setQuestionType(QuestionType.SKETCH);
 			String resultantId = null;
 			try {
-				resultantId = Institution.mongoInsertBankProblem("0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332", bankBuilder.buildPartial());
+				resultantId = Institution.mongoInsertBankProblem(mastId, bankBuilder.buildPartial()); // "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332"
 			} catch (AuthenticationException e1) {
 				e1.printStackTrace();
 			}
@@ -483,7 +483,7 @@ public class ManyTestProblems {
 			// testing inserting course
 				System.out.println("INSERTING PROBLEM");
 				try {
-					Institution.mongoInsertCourseProblem("0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332", testBuilder.buildPartial());
+					Institution.mongoInsertCourseProblem(mastId, testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {
