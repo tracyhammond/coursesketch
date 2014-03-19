@@ -126,16 +126,27 @@ public class AssignmentManager
 			}
 		}
 
+		boolean ignoreDates = false;
 		try {
 			exactAssignment.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(ACCESS_DATE)).longValue()));
 			exactAssignment.setDueDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(DUE_DATE)).longValue()));
 			exactAssignment.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(CLOSE_DATE)).longValue()));
 		}catch(Exception e ){
+			ignoreDates = true;
 			//e.printStackTrace();
 		}
 
 		exactAssignment.setImageUrl((String)corsor.get(IMAGE));
-		exactAssignment.addAllProblemList((List)corsor.get(PROBLEM_LIST));
+
+		// if you are a user, the course must be open to view the assignments
+		if (isAdmin || isMod || (isUsers && ignoreDates || Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate()))) {
+			if (corsor.get(PROBLEM_LIST) != null) {
+				exactAssignment.addAllProblemList((List)corsor.get(PROBLEM_LIST));
+			}
+		} else if ((isUsers && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate()))){
+			System.err.println("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
+			System.err.println(exactAssignment.getAccessDate() + " < " + checkTime + " < " + exactAssignment.getCloseDate());
+		}
 
 		SrlPermission.Builder permissions = SrlPermission.newBuilder();
 		if (isAdmin) 

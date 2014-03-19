@@ -29,6 +29,7 @@ import database.RequestConverter;
 import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import database.auth.Authenticator.AuthType;
 
 public class CourseManager {
 	static String mongoInsertCourse(DB dbs, SrlCourse course) {
@@ -54,6 +55,7 @@ public class CourseManager {
 		if (corsor == null) {
 			throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
 		}
+
 		ArrayList adminList = (ArrayList<Object>) corsor.get(ADMIN); // convert to ArrayList<String>
 		ArrayList modList = (ArrayList<Object>) corsor.get(MOD); // convert to ArrayList<String>
 		ArrayList usersList = (ArrayList<Object>) corsor.get(USERS); // convert to ArrayList<String>
@@ -82,12 +84,17 @@ public class CourseManager {
 		if (corsor.get(IMAGE) != null) {
 			exactCourse.setImageUrl((String) corsor.get(IMAGE));
 		}
-		// if you are a user the course must be open to view the assignments
+
+		// if you are a user, the course must be open to view the assignments
 		if (isAdmin || isMod || (isUsers && Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
 			if (corsor.get(ASSIGNMENT_LIST) != null) {
 				exactCourse.addAllAssignmentList((List) corsor.get(ASSIGNMENT_LIST));
 			}
+		} else if ((isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))){
+			System.err.println("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
+			System.err.println(exactCourse.getAccessDate() + " < " + checkTime + " < " + exactCourse.getCloseDate());
 		}
+
 		if (isAdmin) {
 			try {
 				exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) corsor.get(COURSE_ACCESS))); // admin
