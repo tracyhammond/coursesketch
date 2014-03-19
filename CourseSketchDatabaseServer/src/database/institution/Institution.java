@@ -9,7 +9,6 @@ import multiConnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
 
-import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -147,7 +146,6 @@ public final class Institution {
 	}
 
 	public static ArrayList<SrlBankProblem> mongoGetProblem(List<String> problemID,String userId) throws AuthenticationException {
-		long currentTime = System.currentTimeMillis();
 		ArrayList<SrlBankProblem> allProblems = new ArrayList<SrlBankProblem>();
 		for (int problem = problemID.size() - 1; problem >= 0; problem--) {
 			allProblems.add(BankProblemManager.mongoGetBankProblem(getInstance().db, problemID.get(problem), userId));
@@ -216,7 +214,7 @@ public final class Institution {
 
 		// links the course to the group!
 		CourseManager.mongoInsertDefaultGroupId(getInstance().db, resultId, userGroupId, modGroupId, adminGroupId);
-		
+
 		// adds the course to the users list
 		boolean success = Institution.putUserInCourse(userId, resultId);
 		if (!success) {

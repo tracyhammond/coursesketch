@@ -2,55 +2,35 @@ package grade;
 //import srl.core.sketch.*;
 import static database.StringConstants.COURSE_PROBLEM_ID;
 
-import java.awt.Graphics;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.JFileChooser;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-import srl.core.sketch.Sketch;
-import srl.core.sketch.Point;
-import srl.core.sketch.Stroke;
 import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
-import response.Response;
-import srl.recognition.IRecognitionResult;
-import srl.recognition.paleo.PaleoConfig;
-import srl.recognition.paleo.PaleoSketchRecognizer;
+import protobuf.srl.submission.Submission.SrlExperiment;
+import protobuf.srl.submission.Submission.SrlSubmission;
 
+import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-/*
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.institution.Institution;
-import srl.core.sketch.Point;
-import srl.core.sketch.Sketch;
-import protobuf.srl.commands.Commands.SrlUpdateList;
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlProblem;
-import response.Response;
-import srl.core.sketch.*;
-import srl.recognition.IRecognitionResult;
-import srl.recognition.paleo.PaleoConfig;
-import srl.recognition.paleo.PaleoSketchRecognizer;
-*/
-
 
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
@@ -58,215 +38,313 @@ import database.institution.Institution;
 
 //import java.awt.Canvas;
 public class Grader {
-    static int pxmax = 1024;
-    static int pymax = 768;
+	final static NavigationHolder courseNavigation = new NavigationHolder();
+	final static NavigationHolder assignmentNavigation = new NavigationHolder();
+	final static NavigationHolder problemNavigation = new NavigationHolder();
+	final static NavigationHolder sketchNavigation = new NavigationHolder();
+	final static NavigationDisplay display = new NavigationDisplay();
+	final static SketchPanel sketchDisplay = new SketchPanel(); 
 
-    public static void show(String[] args) throws IOException, FileNotFoundException, Exception {
-            
-          JFrame frmMain = new JFrame();
-          frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public static void main(String[] args) throws Exception {
+    	ActionListener navigator = createRefreshListener();
+    	makeGui(navigator);
+    }
 
-          frmMain.setSize(pxmax, pymax);
+    public static ActionListener createRefreshListener() throws AuthenticationException, UnknownHostException {
+    	ArrayList<String> courseId = new ArrayList<String>();
+    	courseId.add("52d55a580364615fe8a4496c");
 
-          //Canvas cnvs = new Canvas();
-          //cnvs.setSize(400, 400);
-          final TestSketchHolder holder = new TestSketchHolder();
-          JPanel panel = new JPanel() {
+    	final String mastId = "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332";
+    	final ArrayList<SrlCourse> courses = Institution.mongoGetCourses(courseId, mastId);
+    	courseNavigation.size = courses.size();
+    	
+    	MongoClient client = new MongoClient("goldberglinux.tamu.edu");
+    	final DBCollection experiments = client.getDB("submissions").getCollection("Experiments");
+    	final DBCollection users = client.getDB("login").getCollection("CourseSketchUsers");
+    	
+    	return new ActionListener() {
+    		SrlCourse currentCourse;
+    		SrlAssignment currentAssignment;
+    		SrlProblem currentProblem;
+    		SrlExperiment currentExperiment;
 
-        	  @Override
-        	  public void paint(Graphics g) {
-        		  Sketch tester = holder.tester;
-        		  if (tester!= null) {
-        			  Integer xmin = Integer.MAX_VALUE;
-        	            Integer xmax = Integer.MIN_VALUE;
-        	            Integer ymin = Integer.MAX_VALUE;
-        	            Integer ymax = Integer.MIN_VALUE;
-        	            int pcount = 0;
-        	            int scount = 0;
-        	            
-        	    		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
-        	    		
-        	            for (Stroke m_stroke : tester.getStrokes()) {
-        	            	scount++;
-        	           		IRecognitionResult result = recognizer.recognize(m_stroke);
-        	           		System.out.println(result.getBestShape().getInterpretation().label);
-        	           		List<Point> points = m_stroke.getPoints();
-        	           		boolean cont = true;
-        	           		/*
-        	           		for(Shape x : result.getNBestList() ) {
-        	           			String label = x.getInterpretation().label;
-        	           			if(cont && label == "Curve" || label == "Arc" ) {
-        	           				System.out.println("CURVE BEAUT TYPE?::!::" + x.getBeautifiedShape().getShape());
-        	           				org.openawt.Shape shape = x.getBeautifiedShape().getShape();
-        	           				PathIterator path = shape.getPathIterator(null,0.1);
-        	           				points.clear();
-        	           				float[] coords = new float[2];
-        	           				while(!path.isDone()) {
-        	           					path.currentSegment(coords);
-        	           					points.add(new Point(coords[0],coords[1]));
-        	           					path.next();
-        	           					System.out.println("SUPER SECRET INTERP PT ACTIVATE!");
-        	           				}
-        	           				
-        	           			}
-        	           			cont = false;
-        	           		}
-        	           		*/
-
-        	           		if(cont == true && points.size() > 10) {
-        	           			for(int q = 0; q < 8; q++) {
-        			           		//Subdivide
-        			           		List<Point> points2 = new ArrayList<Point>(points);
-        			           		points.clear();
-        			           		for(int i = 0; i+1 < points2.size(); i ++){
-        			           			Point p1 = points2.get(i);
-        			           			Point p2 = points2.get(i+1);
-        			           			points.add(p1);
-        			           			points.add(new Point((p1.x+p2.x)/2,(p1.y+p2.y)/2));
-        			           		}
-        			           		points.add(points2.get(points2.size()-1));
-        			           		
-        			           		//Apply fake sinc4 .25 .5 1 .5 .25
-        			           		points2 = new ArrayList<Point>(points);
-        			           		points.clear();
-        			           		points.add(points2.get(0));
-        			           		for(int i = 1; i+1 < points2.size(); i++){
-        			           			Point p1 = new Point();
-        			           			if(i >= 2 && i+2 < points2.size()) {
-        			           				p1.x = (points2.get(i-2).x/4 + points2.get(i-1).x/2 + points2.get(i).x + points2.get(i+1).x/2 + points2.get(i+2).x/4)/2.5;
-        			           				p1.y = (points2.get(i-2).y/4 + points2.get(i-1).y/2 + points2.get(i).y + points2.get(i+1).y/2 + points2.get(i+2).y/4)/2.5;
-        			           			}
-        			           			else {
-        				           			p1.x = (points2.get(i-1).x/2 + points2.get(i).x + points2.get(i+1).x/2)/2;
-        				           			p1.y = (points2.get(i-1).y/2 + points2.get(i).y + points2.get(i+1).y/2)/2;
-        			           			}
-        			           			points.add(p1);
-        			           		}
-        			           		points.add(points2.get(points2.size()-1));
-        			           		
-        			           		//Discard points
-        			           		/*
-        			           		if(q > 4){
-        			           			for(int i = (q%2==0)?1:2; i+1 < points.size(); i++) {
-        			           				points.remove(i);
-        			           			}
-        			           		}
-        			           		*/
-        	           			}
-        	           		}
-        	             	for (Point p : points) {
-        	            		if (p.getX() < xmin) xmin = (int)p.getX();
-        	            		if (p.getX() > xmax) xmax = (int)p.getX();
-        	            		if (p.getY() < ymin) ymin = (int)p.getY();
-        	            		if (p.getY() > ymax) ymax = (int)p.getY();
-        	            		pcount++;
-        	            	}
-        	            }
-        	            
-        	            int x_range = xmax - xmin;
-        	            int y_range = ymax - ymin;
-        	            
-        	            for (Stroke m_stroke : tester.getStrokes()) {
-        	            	List<Point> pl = m_stroke.getPoints();
-        	            	Point s = pl.remove(0);
-        	            	for (Point p : pl) {
-        	            		/*System.out.println("S:(" + s.getX() + "," + s.getY() + ")  P:(" + p.getX() + "," + p.getY() + ")" + 
-        	            	"      " + "SN:(" + (int)((s.getX() - xmin + 50) * 500 / x_range) + "," + (int)((s.getY() - ymin + 0) * 500 / y_range)
-        	            	+ ")  PN:(" + (int)((p.getX() - xmin + 50) * 500 / x_range) + "," + (int)((p.getY() - ymin + 50) * 500 / y_range) + ")");*/
-        	            		g.drawLine((int)((p.getX() - xmin) * (pxmax-20) / x_range + 10), (int)((p.getY() - ymin) * (pymax-40) / y_range + 10),
-        	            		(int)((s.getX() - xmin) * (pxmax-20) / x_range + 10), (int)((s.getY() - ymin) * (pymax-40) / y_range + 10));
-        	            		s = p;
-//        	            		Or just use large canvas and original points, no normalization and relocation
-//        	            		g.drawLine((int)p.getX(), (int)p.getY(), (int)s.getX(), (int)s.getY());
-//        	                    		s = p;
-        	            	}
-        	            }
-        	    		super.paintComponents(g);
-        		  }
-        	  }
-          };
-          panel.setSize(1024, 768);
-          //frmMain.add(cnvs);
-          frmMain.add(panel);
-          frmMain.setVisible(true);
-
-                JFileChooser chooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Binary files", "dat");
-            chooser.setFileFilter(filter);
-            int returnVal = chooser.showOpenDialog(null);
-            if(returnVal == JFileChooser.APPROVE_OPTION) {
-               System.out.println("You chose to open this file: " +
-                    chooser.getSelectedFile().getName());
-            } else {
-                    return;
-            }
-            File datafile = new File(chooser.getSelectedFile(), "");
-            
-            BufferedInputStream instream = new BufferedInputStream(new FileInputStream(datafile));
-            SrlUpdateList updates = SrlUpdateList.parseFrom(instream);
-            instream.close();
-            
-            System.out.println(updates.getListCount());
-            
-            holder.tester = Response.viewTest(updates);
-            panel.repaint();
-            
-// From Here Block2 Starts =========================================================>    
-            //get the boundary, used for normalization
-            
-    		//System.out.println("Number of Points  contained in the file: " + pcount);
-    		//System.out.println("Number of Strokes contained in the file: " + scount);
-
-    		//System.out.println("Xmin: " + xmin + "Xmax: " + xmax + "Xrange: " + x_range);
-    		//System.out.println("Ymin: " + ymin + "Ymax: " + ymax + "Yrange: " + y_range);
-// From Here Block2 Ends =========================================================>    
-        }
-
-    static DBCollection trash;
-	static DBCollection experiments;
-	public static void main(String args[]) throws UnknownHostException, AuthenticationException, DatabaseAccessException, InterruptedException {		
-		System.out.println("Starting program");
-		String mastId = "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332";
-		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
-		DB sub = mongoClient.getDB("submissions");
-		DBCollection exp = sub.getCollection("Experiments");
-		experiments = exp;
-		trash = sub.getCollection("Trash");
-		ArrayList<String> couresId = new ArrayList<String>();
-		couresId.add("52d55a580364615fe8a4496c");
-		ArrayList<SrlCourse> courses = Institution.mongoGetCourses(couresId, mastId);
-		final IntegerHolder k = new IntegerHolder();
-		final IntegerHolder q = new IntegerHolder();
-		final IntegerHolder r = new IntegerHolder();
-		for (k.value = 0; k.value < courses.size(); k.value++) {
-			String courseId = courses.get(k.value).getId();
-			System.out.println(courses.get(k.value).getAssignmentListList());
-			ArrayList<SrlAssignment> assignments = Institution.mongoGetAssignment(courses.get(k.value).getAssignmentListList(), mastId);
-			System.out.println("number of assignments found: " + assignments.size());
-			
-			for (q.value = 0; q.value < assignments.size(); q.value++) { // 3rd and 4th are fine (which are 0 and 1)
-				String assignmentId = assignments.get(q.value).getId();
-				System.out.println("\n\nLooking at assignment " + assignments.get(q.value).getName() + " " + assignmentId);
-				ArrayList<SrlProblem> problems =  Institution.mongoGetCourseProblem(assignments.get(q.value).getProblemListList(), mastId);
-				System.out.println("number of problems found: " + problems.size());
-
-				for (r.value = 0; r.value < problems.size(); r.value++) {
-					System.out.println("\n\nLooking at problem " +  problems.get(r.value).getName() + " " + problems.get(r.value).getId());
-					BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, problems.get(r.value).getId());
-					gradeProblem(exp.find(findQuery), courses.get(k.value), assignments.get(q.value), problems.get(r.value));
+    		ArrayList<SrlAssignment> currentAssignments = new ArrayList<SrlAssignment>();
+    		ArrayList<SrlProblem> currentProblems = new ArrayList<SrlProblem>();
+    		ArrayList<SrlExperiment> currentExperiments  = new ArrayList<SrlExperiment>();
+    		@Override
+			public void actionPerformed(ActionEvent arg0) {
+    			// we assume that all values are correct.
+    			if (courseNavigation.changed) {
+    				// we need to change everything
+    				try {
+						changeCourse();
+    				} catch (Exception e) {
+						e.printStackTrace();
+					}
+    				courseNavigation.changed = false;
+    			} else if (assignmentNavigation.changed) {
+    				try {
+						changeAssignment();
+    				} catch (Exception e) {
+						e.printStackTrace();
+					}
+    				assignmentNavigation.changed = false;
+    			}  else if (problemNavigation.changed) {
+    				try {
+						changeProblem();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+    				problemNavigation.changed = false;
+    			}  else if (sketchNavigation.changed) {
+    				try {
+    					changeSketch();
+    				} catch (Exception e) {
+						e.printStackTrace();
+					}
+    				sketchNavigation.changed = false;
+    			}
+    			System.out.println("Done changing now setting values");
+    			// set values for displaying to gui frame
+    			display.courseName = currentCourse.getName();
+    			display.assignmentName = currentAssignment.getName();
+    			display.problemName = currentProblem.getName();
+    			display.problemText = currentProblem.getProblemInfo().getQuestionText();
+    			display.dueDate = currentAssignment.getDueDate().getMillisecond();
+    			if (currentExperiment != null) {
+	    			display.submissionTime = currentExperiment.getSubmission().getSubmissionTime();
+	    			if (display.submissionTime < display.dueDate) {
+	    				display.late = false;
+	    			}
+    			} else {
+    				display.late = true;
+    			}
+    			// display sketch!
+    			try {
+					sketchDisplay.setSketch(SrlUpdateList.parseFrom(currentExperiment.getSubmission().getUpdateList()));
+				} catch (InvalidProtocolBufferException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			}
-		}
+    		}
+
+    		private void changeCourse() throws AuthenticationException, DatabaseAccessException {
+    			System.out.println("Changing Course");
+    			currentCourse = courses.get(courseNavigation.value);
+    			String courseId = currentCourse.getId();
+    			currentAssignments = Institution.mongoGetAssignment(currentCourse.getAssignmentListList(), mastId);
+    			assignmentNavigation.size = currentAssignments.size();
+    			assignmentNavigation.value = 0;
+    			changeAssignment();
+    		}
+
+    		private void changeAssignment() throws AuthenticationException, DatabaseAccessException {
+    			System.out.println("Changing Assignment");
+    			currentAssignment = currentAssignments.get(assignmentNavigation.value);
+    			currentProblems =  Institution.mongoGetCourseProblem(currentAssignment.getProblemListList(), mastId);
+    			problemNavigation.value = 0;
+    			problemNavigation.size = currentProblems.size();
+    			changeProblem();
+    		}
+
+    		private void changeProblem() throws AuthenticationException, DatabaseAccessException {
+    			System.out.println("Changing Problem");
+    			currentProblem = currentProblems.get(problemNavigation.value);
+    			currentProblems =  Institution.mongoGetCourseProblem(currentAssignment.getProblemListList(), mastId);
+    			BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, currentProblem.getId());
+    			DBCursor dbCursor = experiments.find(findQuery);
+    			currentExperiments = new ArrayList<SrlExperiment>();
+    			while (dbCursor.hasNext()) {
+    				DBObject obj = dbCursor.next();
+    				//UserId
+    				//time
+    				Object result = obj.get(database.StringConstants.USER_ID);
+    				if (result != null && !result.equals("")) {
+    					String userId = (String) result;
+    					SrlExperiment.Builder nextExperiment = SrlExperiment.newBuilder();
+    					nextExperiment.setAssignmentId(currentAssignment.getId());
+    					nextExperiment.setCourseId(currentCourse.getId());
+    					nextExperiment.setProblemId(currentProblem.getId());
+    					nextExperiment.setUserId(userId);
+
+    					SrlSubmission.Builder build = SrlSubmission.newBuilder();
+    					build.setSubmissionTime((Long) obj.get("time"));
+    					build.setId(obj.get(database.StringConstants.SELF_ID).toString());
+    					byte[] byteArray = (byte[])obj.get("UpdateList");
+    					build.setUpdateList(ByteString.copyFrom(byteArray));
+    					nextExperiment.setSubmission(build);
+
+    					currentExperiments.add(nextExperiment.build());
+    				}
+    			}
+    			sketchNavigation.size = currentExperiments.size();
+				sketchNavigation.value = 0;
+    			changeSketch();
+    		}
+
+    		private void changeSketch() {
+    			System.out.println("Changing Sketch");
+    			try {
+	    			currentExperiment = currentExperiments.get(sketchNavigation.value);
+	    			display.studentUserName = "" + users.find(new BasicDBObject("ServerId", currentExperiment.getUserId())).next().get("UserName");
+    			} catch(Exception e) {
+    				currentExperiment = null;
+    				display.studentUserName = "No Sketches";
+    			}
+    		}
+
+    	};
+    }
+
+    public static void makeGui(final ActionListener refresh) {
+    	JFrame frame = new JFrame();
+    	frame.setVisible(false);
+    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	
+    	JPanel totalPanel = new JPanel();
+
+    	final JPanel displayPanel = new JPanel();
+    	final JLabel courseNumbers = new JLabel("Course 0 out of 0");
+    	final JLabel courseName = new JLabel("Course:");
+    	final JLabel assignmentNumbers = new JLabel("Assignmetn 0 out of 0");
+    	final JLabel assignmentName  = new JLabel("Assignment:");
+    	final JLabel problemNumbers = new JLabel("Problem 0 out of 0");
+    	final JLabel problemName  = new JLabel("Problem:");
+    	final JLabel problemText = new JLabel("Text:");
+    	final JLabel sketchNumbers = new JLabel("Sketch 0 out of 0");
+    	final JLabel studentUserName = new JLabel("UserName:");
+    	final JLabel dueDate = new JLabel("DueDate:");
+    	final JLabel submissionTime = new JLabel("Submission:");
+    	final JLabel late = new JLabel("Late:");
+
+    	displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.Y_AXIS));
+    	displayPanel.add(courseNumbers);
+    	displayPanel.add(courseName);
+    	displayPanel.add(assignmentNumbers);
+    	displayPanel.add(assignmentName);
+    	displayPanel.add(dueDate);
+    	displayPanel.add(problemNumbers);
+    	displayPanel.add(problemName);
+    	displayPanel.add(problemText);
+    	displayPanel.add(sketchNumbers);
+    	displayPanel.add(studentUserName);
+    	displayPanel.add(submissionTime);
+    	displayPanel.add(late);
+
+    	
+    	ActionListener result = new ActionListener() {
+    		@Override
+    		public void actionPerformed(ActionEvent e) {
+    			try {
+    				refresh.actionPerformed(e);
+    			} catch(Exception e2) {
+    				e2.printStackTrace();
+    			}
+    			courseName.setText("Course: " + display.courseName);
+    			assignmentName.setText("Assignment: " + display.assignmentName);
+    			dueDate.setText("Due Date: " + display.dueDate);
+    			problemName.setText("Problem: " + display.problemName);
+    			problemText.setText(display.problemText);
+    			studentUserName.setText("UserName: " + display.studentUserName);
+    			submissionTime.setText("Submission Time: " + display.submissionTime);
+    			if (display.late) {
+    				late.setText("LATE");
+    				late.setForeground(new Color(255, 0, 0));
+    			} else {
+    				late.setText("ON-TIME");
+    				late.setForeground(new Color(0, 255, 0));
+    			}
+
+    			courseNumbers.setText("Course " + (courseNavigation.value + 1) + " out of " + courseNavigation.size);
+    			assignmentNumbers.setText("Assignment " + (assignmentNavigation.value + 1) + " out of " + assignmentNavigation.size);
+    			problemNumbers.setText("Problem " + (problemNavigation.value + 1) + " out of " + problemNavigation.size);
+    			sketchNumbers.setText("Sketch " + (sketchNavigation.value + 1) + " out of " + sketchNavigation.size);
+    		}
+    	};
+
+    	JPanel buttonPanel = new JPanel();
+    	buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+    	buttonPanel.add(makeButton(courseNavigation, "Navigate Course", result));
+    	buttonPanel.add(makeButton(assignmentNavigation, "Navigate Assignment", result));
+    	buttonPanel.add(makeButton(problemNavigation, "Navigate Problem", result));
+    	buttonPanel.add(makeButton(sketchNavigation, "Navigate Student", result));
+
+    	totalPanel.setLayout(new BoxLayout(totalPanel, BoxLayout.Y_AXIS));
+    	totalPanel.add(displayPanel);
+    	totalPanel.add(buttonPanel);
+    	
+    	frame.add(totalPanel);
+    	frame.pack();
+    	frame.setVisible(true);
+    }
+
+    public static JPanel makeButton(final NavigationHolder hold, String text, final ActionListener refresh) {
+    	JPanel panel = new JPanel();
+    	JButton left = new JButton();
+    	left.setText("Previous");
+    	left.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			if (hold.value <= 0) {
+    				hold.value = hold.size - 1;
+    			} else {
+    				hold.value -= 1;
+    			}
+    			hold.changed = true;
+    			refresh.actionPerformed(e);
+    		}
+    	});
+
+    	JButton right = new JButton();
+    	right.setText("Next");
+    	right.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			if (hold.value >= hold.size) {
+    				hold.value = 0;
+    			} else {
+    				hold.value += 1;
+    			}
+    			hold.changed = true;
+    			refresh.actionPerformed(e);
+    		}
+    	});
+
+    	JButton reset = new JButton();
+    	reset.setText("Reset");
+    	reset.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			hold.value = 0;
+    			hold.changed = true;
+    			refresh.actionPerformed(e);
+    		}
+    	});
+    	
+    	panel.add(new JLabel(text));
+    	panel.add(left);
+    	panel.add(right);
+    	panel.add(reset);
+
+    	return panel;
+    }
+
+
+    static class NavigationHolder {
+		public int value;
+		public int size;
+		public boolean changed;
 	}
-	private static void gradeProblem(DBCursor find, SrlCourse srlCourse, SrlAssignment srlAssignment, SrlProblem srlProblem) {
+
+	static class NavigationDisplay {
+		public String courseName;
+		public String assignmentName;
+		public String problemName;
+		public String problemText;
+		public String studentUserName;
+		public long dueDate;
+		public long submissionTime;
+		public boolean late;
 	}
 }
 
-class TestSketchHolder {
-	public Sketch tester;
-}
 
-class IntegerHolder {
-	public int value;
-}
+
