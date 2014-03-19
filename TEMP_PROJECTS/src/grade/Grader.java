@@ -5,8 +5,6 @@ import static database.StringConstants.COURSE_PROBLEM_ID;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
@@ -15,8 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
-import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
@@ -24,9 +22,7 @@ import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSubmission;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -121,9 +117,7 @@ public class Grader {
     			}
     			// display sketch!
     			try {
-					sketchDisplay.setSketch(SrlUpdateList.parseFrom(currentExperiment.getSubmission().getUpdateList()));
-				} catch (InvalidProtocolBufferException e) {
-					e.printStackTrace();
+				//	sketchDisplay.setSketch(SrlUpdateList.parseFrom(currentExperiment.getSubmission().getUpdateList()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -155,6 +149,7 @@ public class Grader {
     			BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, currentProblem.getId());
     			DBCursor dbCursor = experiments.find(findQuery);
     			currentExperiments = new ArrayList<SrlExperiment>();
+    			System.out.println("Looking at " + dbCursor.count() + " Sketches");
     			while (dbCursor.hasNext()) {
     				DBObject obj = dbCursor.next();
     				//UserId
@@ -211,12 +206,17 @@ public class Grader {
     	final JLabel assignmentName  = new JLabel("Assignment:");
     	final JLabel problemNumbers = new JLabel("Problem 0 out of 0");
     	final JLabel problemName  = new JLabel("Problem:");
-    	final JLabel problemText = new JLabel("Text:");
+    	final JTextArea problemText = new JTextArea("Question Text:");
     	final JLabel sketchNumbers = new JLabel("Sketch 0 out of 0");
     	final JLabel studentUserName = new JLabel("UserName:");
     	final JLabel dueDate = new JLabel("DueDate:");
     	final JLabel submissionTime = new JLabel("Submission:");
     	final JLabel late = new JLabel("Late:");
+
+    	problemText.setEditable(false);
+    	problemText.setColumns(50);
+    	problemText.setRows(4);
+    	problemText.setLineWrap(true);
 
     	displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.Y_AXIS));
     	displayPanel.add(courseNumbers);
@@ -245,7 +245,7 @@ public class Grader {
     			assignmentName.setText("Assignment: " + display.assignmentName);
     			dueDate.setText("Due Date: " + display.dueDate);
     			problemName.setText("Problem: " + display.problemName);
-    			problemText.setText(display.problemText);
+    			problemText.setText("Question Text: " + display.problemText);
     			studentUserName.setText("UserName: " + display.studentUserName);
     			submissionTime.setText("Submission Time: " + display.submissionTime);
     			if (display.late) {
