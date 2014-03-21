@@ -145,7 +145,7 @@ public class AssignmentManager
 			}
 		} else if ((isUsers && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate()))){
 			System.err.println("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-			System.err.println(exactAssignment.getAccessDate() + " < " + checkTime + " < " + exactAssignment.getCloseDate());
+			System.err.println(exactAssignment.getAccessDate().getMillisecond() + " < " + checkTime + " < " + exactAssignment.getCloseDate().getMillisecond());
 		}
 
 		SrlPermission.Builder permissions = SrlPermission.newBuilder();

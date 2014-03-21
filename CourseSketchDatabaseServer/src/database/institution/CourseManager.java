@@ -92,7 +92,7 @@ public class CourseManager {
 			}
 		} else if ((isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))){
 			System.err.println("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-			System.err.println(exactCourse.getAccessDate() + " < " + checkTime + " < " + exactCourse.getCloseDate());
+			System.err.println(exactCourse.getAccessDate().getMillisecond() + " < " + checkTime + " < " + exactCourse.getCloseDate().getMillisecond());
 		}
 
 		if (isAdmin) {
