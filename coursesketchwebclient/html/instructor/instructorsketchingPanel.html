@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<base href="../../../">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+  	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+ 
+	<script type="text/javascript" src="js/input/touch_event.js"></script>
+
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/input/sketching.js"></script>
+
+	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
+	<script type="text/javascript" src="js/sketching/updatemanager.js"></script>
+	<script type="text/javascript" src="js/connection/submission.js"></script>
+	<script type="text/javascript" src="js/input/highlighter.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+    	parent.copyParentUtilityFunctions(this);
+    	parent.copyParentProtos(this);
+
+		var serverConnection = parent.connection;
+		var ByteBuffer = parent.ByteBuffer;
+		var drawingCreator = false;
+		var sketch = false;
+		var canvasContext = false;
+		var Long = false;
+		var commandManager = false;
+		var highlighter = false;
+		var sketchList = new Array();
+
+	    function initializeInput() {
+
+	    	var ProtoSubmissionBuilder = parent.ProtoSubmissionBuilder;
+			var input = new inputListener();
+			input.initializeCanvas("drawingCanvas");
+			canvasContext = input.canvasContext;
+
+			// creating a new sketch
+			sketch = new SRL_Sketch();
+			sketch.canvasContext = canvasContext;
+			sketch.clearCanvas = input.clearCanvas;
+
+			//creating the drawing creator which submits strokes to the sketch
+			drawingCreator = new drawingInputCreator(input, callback, canvasContext);
+
+			// creating the highligheter which changes the color of strokes when they are highlighted
+			highlighter = new Highlighter(input, sketch, callback, canvasContext);
+
+			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoUpdateCommandBuilder, function(exception) {
+				alert(exception);
+			});
+			serverConnection.setRecognitionListener(function(evt, message) {
+				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
+					var data = message.otherData;
+					var update = parent.ProtoSrlUpdate.decode(data);
+					commandManager.addUpdate(update, true);
+				}
+			});
+
+			var submitFunction = function() {
+				if (commandManager.isLastUpdateSubmission()) {
+					alert("you have no work to submit since the last submission");
+					return;
+				} else if (!commandManager.isValidForSubmission()) {
+					alert("you have no work to submit");
+					return;
+				}
+				if (!serverConnection.isConnected()) {
+					alert("You can not submit while disconnected from the server");
+					//TODO: change this to (you can only save locally while disconnected from the server)
+					return;
+				}
+				var markerCommand = commandManager.createMarker(true, parent.ProtoUpdateCommandBuilder.Marker.MarkerType.SUBMISSION, "");
+				commandManager.addUpdate(commandManager.createUpdateFromCommands([markerCommand]));
+				// submits your work to the server.
+				var experiment = new ProtoSubmissionBuilder.SrlExperiment();
+				experiment.submission = new ProtoSubmissionBuilder.SrlSubmission();
+				parent.problemNavigator.setSubmissionInformation(experiment, true);
+
+				commandManager.getUpdateList(function(updateList) {
+					if (updateList.length == 0) {
+						alert("something bad happened");
+						return;
+					}
+					submitUpdateList(serverConnection, updateList, [ProtoUpdateCommandBuilder, ProtoSubmissionBuilder], experiment,
+							Request.MessageType.SUBMISSION, displayBar, updateBar, finishBar);
+
+					// submis the work locally
+					var localSubmission = new ProtoSubmissionBuilder.SrlSubmission();
+
+					var listContainer = new ProtoUpdateCommandBuilder.SrlUpdateList();
+					listContainer.setList(updateList);
+					localSubmission.setUpdateList(listContainer.toArrayBuffer());
+					console.log(updateList); // contains the entire update list
+					parent.problemNavigator.getDataManager().setSubmission(parent.problemNavigator.getCurrentProblemId(), localSubmission);
+				});
+			};
+			parent.problemNavigator.addEventMapping("submit", submitFunction);
+
+			parent.problemNavigator.addEventMapping("clear", function() {
+				var clearCommand = commandManager.createMarker(true, parent.ProtoUpdateCommandBuilder.Marker.MarkerType.CLEAR, "");
+				var update = commandManager.createUpdateFromCommands([clearCommand]);
+				commandManager.addUpdate(update, false);
+			});
+
+			parent.problemNavigator.addEventMapping("undo", function() {
+				commandManager.undoAction();
+			});
+
+			parent.problemNavigator.addEventMapping("redo", function() {
+				commandManager.redoAction();
+			});
+			
+			parent.problemNavigator.addEventMapping("next_sketch",function() {
+				
+			});
+			
+			parent.problemNavigator.addEventMapping("prev_sketch", function() {
+				
+			});
+
+
+			var feedbackFunction = function(args) {
+				console.log(args);
+				event = args[0];
+				msg = args[1];
+				if (msg.responseText) {
+					alert(msg.requestType);
+					alert(msg.responseText);
+				} else {
+					alert("GETTING FEEDBACK!");
+				}
+			};
+			parent.problemNavigator.addEventMapping("feedback", feedbackFunction);
+
+			// is called upon a successfuly submission.
+			parent.problemNavigator.addEventMapping("submission", function(args) {
+				console.log("SUBMISSION SCUESSFUL!");
+				alert("done submitting problem number " + parent.problemNavigator.getCurrentNumber());
+				
+			});
+
+			window.addEventListener("beforeunload", function( e ) {
+				parent.problemNavigator.removeEventMapping("submit", submitFunction);
+				parent.problemNavigator.removeEventMapping("feedback", feedbackFunction);
+				/*
+				if (!commandManager.isLastUpdateSubmission()) {
+					return "You have unsaved work.";
+				}
+				*/
+			});
+
+			loadUpdateList();
+		}
+
+	    function loadUpdateList() {
+	    	parent.problemNavigator.getDataManager().getAllExperiments(parent.problemNavigator.getCurrentProblemId(), function(sketchList[0]) {
+	    		if (isUndefined(submission)) {
+	    			return;
+	    		}
+	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(submission.getUpdateList());
+	    		console.log(updateList);
+	    		commandManager.setUpdateList(updateList.getList());
+	    		console.log(submission);
+	    	});
+	    }
+
+	    function callback(stroke) {
+			/*stroke.draw(canvasContext);
+			addUpdateFromStroke(stroke)*/;
+		}
+
+	    /**
+	    Creates an update that is added to the update manager, given a stroke.
+	    */
+	    function addUpdateFromStroke(stroke) {
+	    	var command = commandManager.createBaseCommand(ProtoSrlCommandType.ADD_STROKE, true);
+			// then finish him!
+			command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
+			command.decodedData = stroke;
+			console.log(command.commandData);
+			var array = new Array();
+			array.push(command);
+			var update = serverConnection.createUpdateFromCommands(array);
+			commandManager.addUpdate(update, false);
+	    }
+
+	    function displayBar() {
+	    	document.getElementById("PercentBar").style = "display:block;position:absolute;left:20px;top:20px;"
+	    }
+	    function updateBar(index, total) {
+	    	document.getElementById("PercentBar").innerHTML = "" + (index/total) * 100 + "% total: "+total;
+ 	    }
+	    function finishBar() {
+	    	console.log("all items sent to the server");
+	    }
+	</script>
+	<script type="text/javascript">
+		(function(scope){
+			addScopedLoadEvent(scope.window, function() {
+				initializeInput();
+				fillScreen(scope, 'drawingCanvas');
+				sketch.drawEntireSketch();
+	  		});
+
+			scope.window.onresize = function() {
+				scope.fillScreen(scope, 'drawingCanvas');
+				sketch.drawEntireSketch();
+			}
+		})(this);
+	</script>
+	<style>
+	html, body {
+	    margin: 0px;
+	    padding: 0px;
+	    border: 0px;
+	}
+	</style>
+</head>
+<body>
+	<div id = "PercentBar">0%</div>
+	<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
+</body>

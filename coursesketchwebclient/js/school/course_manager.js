@@ -79,7 +79,7 @@ function problemClickerFunction(id) {
 			// change source to the problem page! and load problem
 			if (parent.dataManager.getState("isInstructor")) {
 				// solution editor page!
-				parent.redirectContent("html/problem/problemlayout.html", "");
+				parent.redirectContent("html/instructor/instructorproblemlayout.html", "");
 			} else {
 				parent.redirectContent("html/problem/problemlayout.html", "Starting Problem");
 			}

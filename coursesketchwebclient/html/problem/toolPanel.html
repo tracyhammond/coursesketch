@@ -31,6 +31,14 @@
 					eventFunction("clear");
 				}, resizeParent);
 				// add sketching tools
+				if (parent.problemNavigator.getDataManager().getState("isInstructor")) {
+					createButton("images/toolbar/Next_Sketch.svg", function () {
+						eventFunction("next_sketch");
+						});
+					createButton("images/toolbar/Previous_Sketch.svg", function() {
+						eventFunction("prev_sketch");
+						});
+				}
 			}  else if (type == "MULT_CHOICE") {
 				// add mult choice tools
 			}   else if (type == "FREE_RESP") {
