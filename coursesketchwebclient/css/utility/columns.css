@@ -85,3 +85,19 @@ Specifically for a 4 group column
 		color-stop(1, #CCCCCC)
 	);
 }
+
+.gradient_faded_column_instructor {
+	background-image: linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	background-image: -o-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	background-image: -moz-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	background-image: -webkit-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	background-image: -ms-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #DDDDDD),
+		color-stop(1, #A9D0F5)
+	);
+}
