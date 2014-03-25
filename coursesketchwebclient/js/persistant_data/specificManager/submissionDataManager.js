@@ -62,6 +62,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 			} catch(exception) {
 				return;
 			}
+			console.log(list.experiments);
 			submissionCallback(list.experiments);
 		});
 
