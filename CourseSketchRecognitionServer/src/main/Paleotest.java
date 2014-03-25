@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -24,176 +25,243 @@ import srl.recognition.IRecognitionResult;
 import srl.recognition.paleo.PaleoConfig;
 import srl.recognition.paleo.PaleoSketchRecognizer;
 
-import org.openawt.geom.PathIterator;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
 
 //import java.awt.Canvas;
 public class Paleotest {
-    static int pxmax = 1024;
-    static int pymax = 768;
-        public static void main(String[] args) throws IOException, FileNotFoundException, Exception {
+	static int pxmax = 1024;
+	static int pymax = 768;
 
-// From Here Block1 Starts =========================================================>        	
-        	//          DemoDrawing.DemoDrawing(tester);
-            
-          JFrame frmMain = new JFrame();
-          frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public static void main(String[] args) throws IOException, FileNotFoundException, Exception {
 
-          frmMain.setSize(pxmax, pymax);
+		// From Here Block1 Starts
+		// =========================================================>
+		// DemoDrawing.DemoDrawing(tester);
 
-          //Canvas cnvs = new Canvas();
-          //cnvs.setSize(400, 400);
-          final TestSketchHolder holder = new TestSketchHolder();
-          JPanel panel = new JPanel() {
+		JFrame frmMain = new JFrame();
+		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        	  @Override
-        	  public void paint(Graphics g) {
-        		  Sketch tester = holder.tester;
-        		  if (tester!= null) {
-        			  Integer xmin = Integer.MAX_VALUE;
-        	            Integer xmax = Integer.MIN_VALUE;
-        	            Integer ymin = Integer.MAX_VALUE;
-        	            Integer ymax = Integer.MIN_VALUE;
-        	            int pcount = 0;
-        	            int scount = 0;
-        	            
-        	    		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
-        	    		
-        	            for (Stroke m_stroke : tester.getStrokes()) {
-        	            	scount++;
-        	           		IRecognitionResult result = recognizer.recognize(m_stroke);
-        	           		System.out.println(result.getBestShape().getInterpretation().label);
-        	           		List<Point> points = m_stroke.getPoints();
-        	           		boolean cont = true;
-        	           		/*
-        	           		for(Shape x : result.getNBestList() ) {
-        	           			String label = x.getInterpretation().label;
-        	           			if(cont && label == "Curve" || label == "Arc" ) {
-        	           				System.out.println("CURVE BEAUT TYPE?::!::" + x.getBeautifiedShape().getShape());
-        	           				org.openawt.Shape shape = x.getBeautifiedShape().getShape();
-        	           				PathIterator path = shape.getPathIterator(null,0.1);
-        	           				points.clear();
-        	           				float[] coords = new float[2];
-        	           				while(!path.isDone()) {
-        	           					path.currentSegment(coords);
-        	           					points.add(new Point(coords[0],coords[1]));
-        	           					path.next();
-        	           					System.out.println("SUPER SECRET INTERP PT ACTIVATE!");
-        	           				}
-        	           				
-        	           			}
-        	           			cont = false;
-        	           		}
-        	           		*/
-        	           		if(cont == true && points.size() > 10) {
-        	           			for(int q = 0; q < 8; q++) {
-        			           		//Subdivide
-        			           		List<Point> points2 = new ArrayList<Point>(points);
-        			           		points.clear();
-        			           		for(int i = 0; i+1 < points2.size(); i ++){
-        			           			Point p1 = points2.get(i);
-        			           			Point p2 = points2.get(i+1);
-        			           			points.add(p1);
-        			           			points.add(new Point((p1.x+p2.x)/2,(p1.y+p2.y)/2));
-        			           		}
-        			           		points.add(points2.get(points2.size()-1));
-        			           		
-        			           		//Apply fake sinc4 .25 .5 1 .5 .25
-        			           		points2 = new ArrayList<Point>(points);
-        			           		points.clear();
-        			           		points.add(points2.get(0));
-        			           		for(int i = 1; i+1 < points2.size(); i++){
-        			           			Point p1 = new Point();
-        			           			if(i >= 2 && i+2 < points2.size()) {
-        			           				p1.x = (points2.get(i-2).x/4 + points2.get(i-1).x/2 + points2.get(i).x + points2.get(i+1).x/2 + points2.get(i+2).x/4)/2.5;
-        			           				p1.y = (points2.get(i-2).y/4 + points2.get(i-1).y/2 + points2.get(i).y + points2.get(i+1).y/2 + points2.get(i+2).y/4)/2.5;
-        			           			}
-        			           			else {
-        				           			p1.x = (points2.get(i-1).x/2 + points2.get(i).x + points2.get(i+1).x/2)/2;
-        				           			p1.y = (points2.get(i-1).y/2 + points2.get(i).y + points2.get(i+1).y/2)/2;
-        			           			}
-        			           			points.add(p1);
-        			           		}
-        			           		points.add(points2.get(points2.size()-1));
-        			           		
-        			           		//Discard points
-        			           		/*
-        			           		if(q > 4){
-        			           			for(int i = (q%2==0)?1:2; i+1 < points.size(); i++) {
-        			           				points.remove(i);
-        			           			}
-        			           		}
-        			           		*/
-        	           			}
-        	           		}
-        	             	for (Point p : points) {
-        	            		if (p.getX() < xmin) xmin = (int)p.getX();
-        	            		if (p.getX() > xmax) xmax = (int)p.getX();
-        	            		if (p.getY() < ymin) ymin = (int)p.getY();
-        	            		if (p.getY() > ymax) ymax = (int)p.getY();
-        	            		pcount++;
-        	            	}
-        	            }
-        	            
-        	            int x_range = xmax - xmin;
-        	            int y_range = ymax - ymin;
-        	            
-        	            for (Stroke m_stroke : tester.getStrokes()) {
-        	            	List<Point> pl = m_stroke.getPoints();
-        	            	Point s = pl.remove(0);
-        	            	for (Point p : pl) {
-        	            		/*System.out.println("S:(" + s.getX() + "," + s.getY() + ")  P:(" + p.getX() + "," + p.getY() + ")" + 
-        	            	"      " + "SN:(" + (int)((s.getX() - xmin + 50) * 500 / x_range) + "," + (int)((s.getY() - ymin + 0) * 500 / y_range)
-        	            	+ ")  PN:(" + (int)((p.getX() - xmin + 50) * 500 / x_range) + "," + (int)((p.getY() - ymin + 50) * 500 / y_range) + ")");*/
-        	            		g.drawLine((int)((p.getX() - xmin) * (pxmax-20) / x_range + 10), (int)((p.getY() - ymin) * (pymax-40) / y_range + 10),
-        	            		(int)((s.getX() - xmin) * (pxmax-20) / x_range + 10), (int)((s.getY() - ymin) * (pymax-40) / y_range + 10));
-        	            		s = p;
-//        	            		Or just use large canvas and original points, no normalization and relocation
-//        	            		g.drawLine((int)p.getX(), (int)p.getY(), (int)s.getX(), (int)s.getY());
-//        	                    		s = p;
-        	            	}
-        	            }
-        	    		super.paintComponents(g);
-        		  }
-        	  }
-          };
-          panel.setSize(1024, 768);
-          //frmMain.add(cnvs);
-          frmMain.add(panel);
-          frmMain.setVisible(true);
-// From Here Block1 Ends =========================================================>
-        	
-                JFileChooser chooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Binary files", "dat");
-            chooser.setFileFilter(filter);
-            int returnVal = chooser.showOpenDialog(null);
-            if(returnVal == JFileChooser.APPROVE_OPTION) {
-               System.out.println("You chose to open this file: " +
-                    chooser.getSelectedFile().getName());
-            } else {
-                    return;
-            }
-            File datafile = new File(chooser.getSelectedFile(), "");
-            
-            BufferedInputStream instream = new BufferedInputStream(new FileInputStream(datafile));
-            SrlUpdateList updates = SrlUpdateList.parseFrom(instream);
-            instream.close();
-            
-            System.out.println(updates.getListCount());
-            
-            holder.tester = Response.viewTest(updates);
-            panel.repaint();
-            
-// From Here Block2 Starts =========================================================>    
-            //get the boundary, used for normalization
-            
-    		//System.out.println("Number of Points  contained in the file: " + pcount);
-    		//System.out.println("Number of Strokes contained in the file: " + scount);
+		frmMain.setSize(pxmax, pymax);
 
-    		//System.out.println("Xmin: " + xmin + "Xmax: " + xmax + "Xrange: " + x_range);
-    		//System.out.println("Ymin: " + ymin + "Ymax: " + ymax + "Yrange: " + y_range);
-// From Here Block2 Ends =========================================================>    
-        }
+		// Canvas cnvs = new Canvas();
+		// cnvs.setSize(400, 400);
+		final TestSketchHolder holder = new TestSketchHolder();
+		JPanel panel = new JPanel() {
+
+			private static final long serialVersionUID = -3271766505513485833L;
+
+			@Override
+			public void paint(Graphics g) {
+				Sketch tester = holder.tester;
+				if (tester != null) {
+					Integer xmin = Integer.MAX_VALUE;
+					Integer xmax = Integer.MIN_VALUE;
+					Integer ymin = Integer.MAX_VALUE;
+					Integer ymax = Integer.MIN_VALUE;
+					int pcount = 0;
+					int scount = 0;
+
+					PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(
+							PaleoConfig.allOn());
+
+					for (Stroke m_stroke : tester.getStrokes()) {
+						scount++;
+						IRecognitionResult result = recognizer.recognize(m_stroke);
+						System.out.println(result.getBestShape().getInterpretation().label);
+						List<Point> points = m_stroke.getPoints();
+						boolean cont = true;
+						/*
+						 * for(Shape x : result.getNBestList() ) { String label
+						 * = x.getInterpretation().label; if(cont && label ==
+						 * "Curve" || label == "Arc" ) {
+						 * System.out.println("CURVE BEAUT TYPE?::!::" +
+						 * x.getBeautifiedShape().getShape()); org.openawt.Shape
+						 * shape = x.getBeautifiedShape().getShape();
+						 * PathIterator path = shape.getPathIterator(null,0.1);
+						 * points.clear(); float[] coords = new float[2];
+						 * while(!path.isDone()) { path.currentSegment(coords);
+						 * points.add(new Point(coords[0],coords[1]));
+						 * path.next();
+						 * System.out.println("SUPER SECRET INTERP PT ACTIVATE!"
+						 * ); }
+						 * 
+						 * } cont = false; }
+						 */
+						if (cont == true && points.size() > 10) {
+							for (int q = 0; q < 4; q++) {
+								// Subdivide
+								List<Point> points2 = new ArrayList<Point>(points);
+								points.clear();
+								for (int i = 0; i + 1 < points2.size(); i++) {
+									Point p1 = points2.get(i);
+									Point p2 = points2.get(i + 1);
+									points.add(p1);
+									points.add(new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2));
+								}
+								points.add(points2.get(points2.size() - 1));
+
+								// Apply fake sinc4 .25 .5 1 .5 .25
+								points2 = new ArrayList<Point>(points);
+								points.clear();
+								points.add(points2.get(0));
+								for (int i = 1; i + 1 < points2.size(); i++) {
+									Point p1 = new Point();
+									/*
+									int width = Math.min(i, points2.size() - 2 - i);
+									p1.x = points2.get(i).x;
+									p1.y = points2.get(i).y;
+									int total = 1;
+									int weight = 1;
+									for(int k = 1; k < width && k < 3;k ++) {
+										total += weight;
+										weight /= 2;
+										Point pa = points2.get(points2.size() - k);
+										Point pb = points2.get(points2.size() + k);
+										p1.x += (pa.x + pb.x)*weight;
+										p1.y += (pa.y + pb.y)*weight;
+									}
+									p1.x = p1.x/total;
+									p1.y = p1.y/total;
+									*/
+									
+									if (i >= 2 && i + 2 < points2.size()) {
+										p1.x = (points2.get(i - 2).x / 4 + points2.get(i - 1).x / 2
+												+ points2.get(i).x + points2.get(i + 1).x / 2 + points2
+												.get(i + 2).x / 4) / 2.5;
+										p1.y = (points2.get(i - 2).y / 4 + points2.get(i - 1).y / 2
+												+ points2.get(i).y + points2.get(i + 1).y / 2 + points2
+												.get(i + 2).y / 4) / 2.5;
+									} else {
+										p1.x = (points2.get(i - 1).x / 2 + points2.get(i).x + points2
+												.get(i + 1).x / 2) / 2;
+										p1.y = (points2.get(i - 1).y / 2 + points2.get(i).y + points2
+												.get(i + 1).y / 2) / 2;
+									}
+									
+									points.add(p1);
+								}
+								points.add(points2.get(points2.size() - 1));
+
+								// Discard points
+								/*
+								 * if(q > 4){ for(int i = (q%2==0)?1:2; i+1 <
+								 * points.size(); i++) { points.remove(i); } }
+								 */
+							}
+						}
+						for (Point p : points) {
+							if (p.getX() < xmin)
+								xmin = (int) p.getX();
+							if (p.getX() > xmax)
+								xmax = (int) p.getX();
+							if (p.getY() < ymin)
+								ymin = (int) p.getY();
+							if (p.getY() > ymax)
+								ymax = (int) p.getY();
+							pcount++;
+						}
+					}
+
+					int x_range = xmax - xmin;
+					int y_range = ymax - ymin;
+
+					for (Stroke m_stroke : tester.getStrokes()) {
+						List<Point> pl = m_stroke.getPoints();
+						Point s = pl.remove(0);
+						for (Point p : pl) {
+							/*
+							 * System.out.println("S:(" + s.getX() + "," +
+							 * s.getY() + ")  P:(" + p.getX() + "," + p.getY() +
+							 * ")" + "      " + "SN:(" + (int)((s.getX() - xmin
+							 * + 50) * 500 / x_range) + "," + (int)((s.getY() -
+							 * ymin + 0) * 500 / y_range) + ")  PN:(" +
+							 * (int)((p.getX() - xmin + 50) * 500 / x_range) +
+							 * "," + (int)((p.getY() - ymin + 50) * 500 /
+							 * y_range) + ")");
+							 */
+							g.drawLine((int) ((p.getX() - xmin) * (pxmax - 20) / x_range + 10),
+									(int) ((p.getY() - ymin) * (pymax - 40) / y_range + 10),
+									(int) ((s.getX() - xmin) * (pxmax - 20) / x_range + 10),
+									(int) ((s.getY() - ymin) * (pymax - 40) / y_range + 10));
+							s = p;
+							// Or just use large canvas and original points, no
+							// normalization and relocation
+							// g.drawLine((int)p.getX(), (int)p.getY(),
+							// (int)s.getX(), (int)s.getY());
+							// s = p;
+						}
+					}
+					System.out.println("Scount: " + scount);
+					System.out.println("Pcount: " + pcount);
+					super.paintComponents(g);
+				}
+			}
+		};
+		panel.setSize(pxmax, pymax);
+		// frmMain.add(cnvs);
+		frmMain.add(panel);
+		frmMain.setVisible(true);
+		// From Here Block1 Ends
+		// =========================================================>
+		 
+		// New and improved network stream getter
+		System.out.println("Give me the number of the submission you want from the server, on any exception reverts to file dialog: ");
+		SrlUpdateList updates;
+		try {
+			Scanner s = new Scanner(System.in);
+			int i = Integer.parseInt(s.next());
+			MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
+			DB db = mongoClient.getDB("submissions");
+			DBCollection collection = db.getCollection("Experiments");
+			DBCursor cursor = collection.find().skip(i);
+			int numbers = cursor.count();
+			System.out.println("Number of submissions: " + numbers);
+			DBObject object = cursor.next();
+			Object obj = object.get("UpdateList");
+			byte[] bytes = (byte[]) obj;
+
+			updates = SrlUpdateList.parseFrom(bytes);
+			mongoClient.close();
+		} catch (Exception e) {
+			JFileChooser chooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Binary files", "dat");
+			chooser.setFileFilter(filter);
+			int returnVal = chooser.showOpenDialog(null);
+			if(returnVal == JFileChooser.APPROVE_OPTION) {
+				System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName());
+			} else { return; }
+			File datafile = new File(chooser.getSelectedFile(), "");
+
+			BufferedInputStream instream = new BufferedInputStream(new FileInputStream(datafile));
+			updates = SrlUpdateList.parseFrom(instream);
+		}
+		
+
+		System.out.println(updates.getListCount());
+
+		holder.tester = Response.viewTest(updates);
+		panel.repaint();
+
+		// From Here Block2 Starts
+		// =========================================================>
+		// get the boundary, used for normalization
+
+		// System.out.println("Number of Points  contained in the file: " +
+		// pcount);
+		// System.out.println("Number of Strokes contained in the file: " +
+		// scount);
+
+		// System.out.println("Xmin: " + xmin + "Xmax: " + xmax + "Xrange: " +
+		// x_range);
+		// System.out.println("Ymin: " + ymin + "Ymax: " + ymax + "Yrange: " +
+		// y_range);
+		// From Here Block2 Ends
+		// =========================================================>
+	}
 
 }
 

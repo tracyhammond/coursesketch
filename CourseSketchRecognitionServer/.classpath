@@ -14,5 +14,9 @@
 	<classpathentry kind="lib" path="libs/weka.jar"/>
 	<classpathentry kind="lib" path="libs/java_websocket.jar"/>
 	<classpathentry kind="lib" path="libs/PaleoNNTrainer.jar"/>
+	<classpathentry kind="lib" path="libs/mongo-2.10.1.jar"/>
+	<classpathentry kind="lib" path="libs/mongo-java-driver-2.11.3.jar"/>
+	<classpathentry kind="lib" path="libs/multiConnection.jar"/>
+	<classpathentry kind="lib" path="libs/mysql-connector-java-5.1.29-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
