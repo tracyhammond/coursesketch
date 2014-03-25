@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.School.State;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -90,6 +91,32 @@ public class CourseProblemManager
 				throw new AuthenticationException(AuthenticationException.INVALID_DATE);
 			}
 		}
+
+		// states
+		State.Builder stateBuilder = State.newBuilder();
+
+		// TODO: add this to all fields!
+		// A course is only publishable after a certain criteria is met
+		if (corsor.containsField(PUBLISHED)) {
+			try {
+				boolean published = (Boolean)corsor.get(PUBLISHED);
+				if (published) {
+					stateBuilder.setPublished(true);
+				} else {
+					if (!isAdmin || !isMod) {
+						throw new DatabaseAccessException("The specific course is not published yet", true);
+					} else {
+						stateBuilder.setPublished(false);
+					}
+				}
+			} catch(Exception e) {
+				
+			}
+		}
+
+		/*if (corsor.get(IMAGE) != null) {
+			exactProblem.setImageUrl((String) corsor.get(IMAGE));
+		}*/
 
 		// problem manager get problem from bank (as a user!)
 		SrlBankProblem problemBank = BankProblemManager.mongoGetBankProblem(dbs, (String) corsor.get(PROBLEM_BANK_ID),
