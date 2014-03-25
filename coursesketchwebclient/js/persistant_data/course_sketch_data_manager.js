@@ -97,7 +97,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			itemRequest.setItemId(idList);
 		}
 		if (!isUndefined(advanceQuery)) {
-			itemRequest.setAdvanceQuery(advanceQuery);
+			itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
 		}
 		dataSend.items.push(itemRequest);
 		console.log("SENDING QUERY!");

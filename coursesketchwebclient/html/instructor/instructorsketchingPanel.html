@@ -156,11 +156,12 @@
 
 	    function loadUpdateList() {
 	    	parent.problemNavigator.getDataManager().getAllExperiments(parent.problemNavigator.getCurrentProblemId(), function(sketchList) {
+	    		console.log(sketchList[0]);
 	    		if (isUndefined(sketchList[0])) {
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[0].getUpdateList());
+	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[0].getSubmission().getUpdateList());
 	    		console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
 	    		console.log(submission);
