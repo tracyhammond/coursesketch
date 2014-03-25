@@ -35,6 +35,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	
 	var dataSender = new Object();
 
+	this.getCurrentTime = connection.getCurrentTime;
 	/*
 	 * END OF VARIABLE SETTING
 	 */

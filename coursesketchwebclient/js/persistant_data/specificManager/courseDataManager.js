@@ -13,6 +13,53 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 	var ByteBuffer = buffer;
 
 	/**
+	 * Looks at the course and gives it some state if the state values do not exist.
+	 */
+	function stateCallback(course, courseCallback) {
+		var state = course.getState();
+		var updateCourse = false;
+		if (isUndefined(state) || state == null) {
+			state = new SchoolBuilder.State();
+			updateCourse = true;
+		}
+		try {
+			// do state stuff
+			var access = course.getAccessDate().getMillisecond();
+			var close = course.getCloseDate().getMillisecond();
+			var current = parent.getCurrentTime();
+			if (isUndefined(state.accessible)) {
+				if (current.lessThan(access) || current.greaterThan(close)) {
+					state.accessible = false;
+				} else {
+					state.accessible = true;
+				}
+				updateCourse = true;
+			}
+
+			if (isUndefined(state.pastDue)) {
+				if (current.greaterThan(close)) {
+					state.pastDue = true;
+				} else {
+					state.pastDue = false;
+				}
+				updateCourse = true;
+			}
+		} catch(exception) {
+			console.log(exception);
+		}
+
+		// so we do not have to perform this again!
+		if (updateCourse) {
+			course.sate = state;
+			setCourse(course);
+		}
+
+		if (courseCallback) {
+			courseCallback(course);
+		}
+	}
+	
+	/**
 	 * Returns a course with the given couresId will ask the server if it does not exist locally
 	 *
 	 * If the server is pulled and the course still does not exist the Id is set with nonExistantValue
@@ -29,7 +76,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 				return;
 			}
 			var bytes = ByteBuffer.decode64(userCourses[courseId]);
-			courseCallback(SrlCourse.decode(bytes));
+			stateCallback(SrlCourse.decode(bytes), courseCallback);
 			return;
 		}
 		database.getFromCourses(courseId, function(e, request, result) {
@@ -45,7 +92,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 						return;
 					}
 					localScope.setCourse(course);
-					courseCallback(course);
+					stateCallback(course, courseCallback);
 				});
 				// creates a request that is then sent to the server
 				sendDataRequest(QueryBuilder.ItemQuery.COURSE, [courseId]);
@@ -57,7 +104,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 				// gets the data from the database and calls the callback
 				userCourses[courseId] = result.data;
 				var bytes = ByteBuffer.decode64(result.data);
-				courseCallback(SrlCourse.decode(bytes));
+				stateCallback(SrlCourse.decode(bytes), courseCallback);
 			}
 		});
 	};

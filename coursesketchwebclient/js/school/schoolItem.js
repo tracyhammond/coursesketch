@@ -21,7 +21,7 @@ function SchoolItemBuilder() {
 		this.showBox = true; // if we want the card to be boxed shape
 		this.showDescription = true; // true to show the description
 		this.showDate = true; // true to show the show date
-		this.showState = false; //changed from this.showCompletionStatus
+		this.showState = true; //changed from this.showCompletionStatus
 		this.limitSize = false; // this will limit the description of the card to a certain height and add an expanding button
 
 		// function
@@ -153,7 +153,7 @@ function SchoolItemBuilder() {
 
 		this.addClickFunction(box, this.boxClickFunction, srlSchoolItem.id);
 
-		this.setBoxState(srlSchoolItem);
+		this.setBoxState(box, srlSchoolItem);
 
 		// add the text component
 		box.appendChild(this.writeTextData(srlSchoolItem, currentDate, type));
@@ -305,7 +305,7 @@ function SchoolItemBuilder() {
 	/**
 	 * Sets the state if it exist and if showState is true.
 	 */
-	this.setBoxState = function(srlSchoolItem) {
+	this.setBoxState = function(box, srlSchoolItem) {
 		if (!this.showState) {
 			return;
 		}
@@ -313,19 +313,21 @@ function SchoolItemBuilder() {
 		var span = document.createElement('span');
 		var classType = 'school_item_state ';
 		if (itemState != null && ! isUndefined(itemState)) {
+			console.log(srlSchoolItem);
+			console.log(itemState);
 			// TODO: add state for an assignment that has been graded.
-			if (!completionStatus.accessible && completionStatus.pastDue) {
+			if (!itemState.accessible && itemState.pastDue) {
 				classType += 'assignment_closed';
-			} else if (completionStatus.completed) {
+			} else if (itemState.completed) {
 				classType += 'completed';
-			} else if (completionStatus.started) {
+			} else if (itemState.started) {
 				classType += 'in_progress';
-			} else if (!completionStatus.accessible) {
+			} else if (!itemState.accessible) {
 				classType += 'not_open';
 			}
 			span.setAttribute('class', classType);
 		}
-		return html;
+		box.appendChild(span);
 	};
 
 	/**
