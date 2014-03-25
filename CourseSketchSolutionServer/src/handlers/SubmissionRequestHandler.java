@@ -60,7 +60,9 @@ public class SubmissionRequestHandler {
 			updateHandler.clearSubmission(sessionInfo);
 			Request.Builder build = Request.newBuilder();
 			build.setRequestType(Request.MessageType.ERROR);
-			build.setResponseText(e.getMessage());
+			if (e.getMessage() != null) {
+				build.setResponseText(e.getMessage());
+			}
 			build.setSessionInfo(sessionInfo);
 			e.printStackTrace();
 			return build.build();
