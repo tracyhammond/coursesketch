@@ -69,6 +69,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 		var advanceQuery = new QueryBuilder.ExperimentReview(false, true);
 		sendData.sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId], advanceQuery);
 	}
+	parent.getAllExperiments = getAllExperiments;
 
 	/**
 	 * @param submission the submission that is being added
