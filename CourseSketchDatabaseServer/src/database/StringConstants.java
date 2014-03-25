@@ -28,6 +28,7 @@ public class StringConstants {
 	public static final String NAME = "Name";
 	public static final String DESCRIPTION = "Description";
 	public static final String IMAGE = "Image";
+	public static final String PUBLISHED = "Published";
 
 	// date
 	public static final String ACCESS_DATE = "AccessDate";

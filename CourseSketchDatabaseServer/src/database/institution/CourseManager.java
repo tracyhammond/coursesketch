@@ -14,6 +14,7 @@ import org.bson.types.ObjectId;
 import protobuf.srl.school.School.DateTime;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.school.School.State;
 import protobuf.srl.school.School.SrlPermission.Builder;
 import protobuf.srl.school.School.SrlProblem;
 
@@ -74,26 +75,60 @@ public class CourseManager {
 		if (corsor.get(COURSE_SEMESTER) != null) {
 			exactCourse.setSemester((String) corsor.get(COURSE_SEMESTER));
 		}
+
+		// TODO: delete this!
+		boolean ignoreDates = false;
 		try {
 			exactCourse.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(ACCESS_DATE)).longValue()));
 			exactCourse.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(CLOSE_DATE)).longValue()));
 		} catch (Exception e) {
+			ignoreDates = true;
 			e.printStackTrace();
 		}
 		exactCourse.setId(courseId);
+
+		// states
+		State.Builder stateBuilder = State.newBuilder();
+		if (!ignoreDates && exactCourse.getCloseDate().getMillisecond() > checkTime) {
+			stateBuilder.setPastDue(true);
+		}
+
+		// TODO: add this to all fields!
+		// A course is only publishable after a certain criteria is met
+		if (corsor.containsField(PUBLISHED)) {
+			try {
+				boolean published = (Boolean)corsor.get(PUBLISHED);
+				if (published) {
+					stateBuilder.setPublished(true);
+				} else {
+					if (!isAdmin || !isMod) {
+						throw new DatabaseAccessException("The specific course is not published yet", true);
+					} else {
+						stateBuilder.setPublished(false);
+					}
+				}
+			} catch(Exception e) {
+				
+			}
+		}
+
 		if (corsor.get(IMAGE) != null) {
 			exactCourse.setImageUrl((String) corsor.get(IMAGE));
 		}
 
 		// if you are a user, the course must be open to view the assignments
-		if (isAdmin || isMod || (isUsers && Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
+		if (isAdmin || isMod || (isUsers && (ignoreDates || Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate())))) {
 			if (corsor.get(ASSIGNMENT_LIST) != null) {
 				exactCourse.addAllAssignmentList((List) corsor.get(ASSIGNMENT_LIST));
 			}
-		} else if ((isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))){
+			stateBuilder.setAccessible(true);
+		} else if ((isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
 			System.err.println("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
 			System.err.println(exactCourse.getAccessDate().getMillisecond() + " < " + checkTime + " < " + exactCourse.getCloseDate().getMillisecond());
+			stateBuilder.setAccessible(false);
 		}
+
+		exactCourse.setState(stateBuilder);
 
 		if (isAdmin) {
 			try {
