@@ -81,7 +81,7 @@ function problemClickerFunction(id) {
 				// solution editor page!
 				parent.redirectContent("html/instructor/instructorproblemlayout.html", "");
 			} else {
-				parent.redirectContent("html/problem/problemlayout.html", "Starting Problem");
+				parent.redirectContent("html/student/problemlayout.html", "Starting Problem");
 			}
 		});
 	}
