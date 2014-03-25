@@ -101,7 +101,6 @@ function Connection(uri, encrypted, attemptReconnect) {
 
 	this.reconnect = function() {
 		websocket.close();
-
 		createWebSocket();
 	};
 
@@ -197,8 +196,15 @@ function Connection(uri, encrypted, attemptReconnect) {
 		websocket.close();
 	};
 
-	function protobufSetup(postLoadedFunction) {		
-		var barrierCount = 0;
+	/**
+	 * Gets the current time as a long that is the same as the server time!
+	 */
+	this.getCurrentTime = function() {
+		var longVersion = Long.fromString("" + createTimeStamp());
+		return longVersion;
+	};
+
+	function protobufSetup(postLoadedFunction) {
 		var postFunction = postLoadedFunction;
 		function load1() {
 			initializeBuf();
@@ -225,14 +231,13 @@ function Connection(uri, encrypted, attemptReconnect) {
 			if (!Long) {
 				Long = dcodeIO.Long;
 			}
-			
 		}
 
 		function buildDataQuery() {
 			var builder = ProtoBuf.protoFromFile(protobufDirectory + "data.proto");
 			QueryBuilder = builder.build("protobuf").srl.query;
 		}
-		
+
 		function buildSchool() {
 			var builder = ProtoBuf.protoFromFile(protobufDirectory + "school.proto");
 			SchoolBuilder = builder.build("protobuf").srl.school;
@@ -286,32 +291,10 @@ function Connection(uri, encrypted, attemptReconnect) {
 				ProtoSubmissionBuilder = builder.build("protobuf").srl.submission;
 			}
 		}
-		/*
-		function testRepeated() {
-			console.log("WORKING");
-	        var builder = ProtoBuf.protoFromFile(protobufDirectory+"/test.proto");
-	        var root = builder.build("protobuf");
-	        Outer = root.Outer;
-	        Inner = root.Inner;
-	        var inners = new Array();
-
-	        // Array of repeated messages
-	        inners.push(new Inner("a"), new Inner("b"), new Inner("c"));
-	        var outer = new Outer();
-	        outer.setInners(inners);
-
-	        // Array of repeated message objects
-	        inners = new Array();
-	        inners.push({ str: 'a' }, { str: 'b' }, { str: 'c' });
-	        console.log("WORKING");
-	        outer.setInners(inners); // Converts
-	        console.log("FINISHED WORKING");
-		}
-		*/
 		load1();
 	}
 
-	if(!(filesLoaded && builder && ProtoBuf && Request)) {
+	if (!(filesLoaded && builder && ProtoBuf && Request)) {
 		new protobufSetup(createWebSocket.bind(this));
 	}
 
@@ -320,7 +303,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 */
 	this.createRequestFromCommands = function(commands, requestType) {
 		return this.createRequestFromUpdate(this.createUpdateFromCommands(commands), requestType);
-	}
+	};
 
 	/**
 	 * Given a protobuf Command array an Update is created.
@@ -336,7 +319,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 		update.setTime(longVersion);
 		update.setUpdateId(generateUUID());
 		return update;
-	}
+	};
 
 	/**
 	 * Given a protobuf object compile it to other data and return a request
@@ -347,7 +330,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 		var buffer = data.toArrayBuffer();
 		request.setOtherData(buffer);
 		return request;
-	}
+	};
 
 	/**
 	 * Given an Update a Request is created.
