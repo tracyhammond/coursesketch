@@ -1,6 +1,6 @@
 package database.institution;
 
-import static database.StringConstants.*;
+import static util.StringConstants.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -95,9 +95,9 @@ public class CourseManager {
 
 		// TODO: add this to all fields!
 		// A course is only publishable after a certain criteria is met
-		if (corsor.containsField(PUBLISHED)) {
+		if (corsor.containsField(STATE_PUBLISHED)) {
 			try {
-				boolean published = (Boolean)corsor.get(PUBLISHED);
+				boolean published = (Boolean)corsor.get(STATE_PUBLISHED);
 				if (published) {
 					stateBuilder.setPublished(true);
 				} else {

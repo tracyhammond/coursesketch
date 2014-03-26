@@ -1,6 +1,6 @@
 package database.institution;
 
-import static database.StringConstants.*;
+import static util.StringConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;

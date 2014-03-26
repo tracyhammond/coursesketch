@@ -27,6 +27,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 			var access = course.getAccessDate().getMillisecond();
 			var close = course.getCloseDate().getMillisecond();
 			var current = parent.getCurrentTime();
+			alert(access.toString() + " < " + current.toString() + " < " + close.toString());
 			if (isUndefined(state.accessible)) {
 				if (current.lessThan(access) || current.greaterThan(close)) {
 					state.accessible = false;

@@ -1,6 +1,6 @@
 package test;
 
-import static database.StringConstants.COURSE_PROBLEM_ID;
+import static util.StringConstants.COURSE_PROBLEM_ID;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class RemoveDuplicates {
 			DBObject obj = dbCursor.next();
 			//UserId
 			//time
-			Object result = obj.get(database.StringConstants.USER_ID);
+			Object result = obj.get(util.StringConstants.USER_ID);
 			if (result != null && !result.equals("")) {
 				String userId = (String) result;
 				SrlExperiment.Builder nextExperiment = SrlExperiment.newBuilder();
@@ -88,7 +88,7 @@ public class RemoveDuplicates {
 
 				SrlSubmission.Builder build = SrlSubmission.newBuilder();
 				build.setSubmissionTime((Long) obj.get("time"));
-				build.setId(obj.get(database.StringConstants.SELF_ID).toString());
+				build.setId(obj.get(util.StringConstants.SELF_ID).toString());
 				byte[] byteArray = (byte[])obj.get("UpdateList");
 				build.setUpdateList(ByteString.copyFrom(byteArray));
 
@@ -168,7 +168,7 @@ public class RemoveDuplicates {
 
 	private static void removeSketch(String id, SrlExperiment build, boolean putInTrash) {
 		if (putInTrash) {
-			DBObject obj = new BasicDBObject(database.StringConstants.SELF_ID, new ObjectId(id)).append("result", build.toByteArray());
+			DBObject obj = new BasicDBObject(util.StringConstants.SELF_ID, new ObjectId(id)).append("result", build.toByteArray());
 			trash.insert(obj);
 		}
 		//DBObject removeObj = new BasicDBObject(database.StringConstants.SELF_ID, new ObjectId(id));

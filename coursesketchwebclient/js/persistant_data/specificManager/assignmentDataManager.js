@@ -25,6 +25,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 			var current = parent.getCurrentTime();
 			if (isUndefined(state.accessible)) {
 				if (current.lessThan(access) || current.greaterThan(close)) {
+					alert("Not accessable!");
 					state.accessible = false;
 				} else {
 					state.accessible = true;
