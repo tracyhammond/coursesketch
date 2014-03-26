@@ -40,5 +40,7 @@ public class StateManager {
 
 	public static void setState(DB dbs, String userId, String type, String id, State state) {
 		// TODO: finish this!
+		// what might be good is to retrieve the old state... compare given values
+		// set new updated state. (overriding old state)
 	}
 }
