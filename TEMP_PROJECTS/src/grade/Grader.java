@@ -1,6 +1,6 @@
 package grade;
 //import srl.core.sketch.*;
-import static database.StringConstants.COURSE_PROBLEM_ID;
+import static util.StringConstants.COURSE_PROBLEM_ID;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -154,7 +154,7 @@ public class Grader {
     				DBObject obj = dbCursor.next();
     				//UserId
     				//time
-    				Object result = obj.get(database.StringConstants.USER_ID);
+    				Object result = obj.get(util.StringConstants.USER_ID);
     				if (result != null && !result.equals("")) {
     					String userId = (String) result;
     					SrlExperiment.Builder nextExperiment = SrlExperiment.newBuilder();
@@ -165,7 +165,7 @@ public class Grader {
 
     					SrlSubmission.Builder build = SrlSubmission.newBuilder();
     					build.setSubmissionTime((Long) obj.get("time"));
-    					build.setId(obj.get(database.StringConstants.SELF_ID).toString());
+    					build.setId(obj.get(util.StringConstants.SELF_ID).toString());
     					byte[] byteArray = (byte[])obj.get("UpdateList");
     					build.setUpdateList(ByteString.copyFrom(byteArray));
     					nextExperiment.setSubmission(build);

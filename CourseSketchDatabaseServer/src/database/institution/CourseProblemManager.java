@@ -1,6 +1,6 @@
 package database.institution;
 
-import static database.StringConstants.*;
+import static util.StringConstants.*;
 
 import java.util.ArrayList;
 
@@ -97,9 +97,9 @@ public class CourseProblemManager
 
 		// TODO: add this to all fields!
 		// A course is only publishable after a certain criteria is met
-		if (corsor.containsField(PUBLISHED)) {
+		if (corsor.containsField(STATE_PUBLISHED)) {
 			try {
-				boolean published = (Boolean)corsor.get(PUBLISHED);
+				boolean published = (Boolean)corsor.get(STATE_PUBLISHED);
 				if (published) {
 					stateBuilder.setPublished(true);
 				} else {

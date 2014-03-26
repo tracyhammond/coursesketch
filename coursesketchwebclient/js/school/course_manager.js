@@ -148,7 +148,6 @@ function changeSelection(id, selectionManager) {
 	selectionManager.addSelectedItem(id);
 }
 
-
 function manageHeight() {
 	var iframe = document.getElementById('edit_frame_id');
 	var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
