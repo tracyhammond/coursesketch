@@ -1,6 +1,7 @@
 package main;
 
 //import srl.core.sketch.*;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -137,13 +138,41 @@ public class Paleotest {
 				int pcount = 0;
 				int scount = 0;
 
-				PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(
-						PaleoConfig.allOn());
+
+//				PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(
+//						PaleoConfig.allOn());
+				PaleoConfig config = new PaleoConfig();//.basicPrimsOnly();
+				List<PaleoConfig.Option> options = new ArrayList<PaleoConfig.Option>();
+//				options.add(PaleoConfig.Option.Line);
+//				options.add(PaleoConfig.Option.Arc);
+				options.add(PaleoConfig.Option.Ellipse);
+				options.add(PaleoConfig.Option.Circle);
+				options.add(PaleoConfig.Option.Curve);
+				options.add(PaleoConfig.Option.Helix);
+				options.add(PaleoConfig.Option.Spiral);
+				options.add(PaleoConfig.Option.Arrow);
+				options.add(PaleoConfig.Option.Complex);
+//				options.add(PaleoConfig.Option.Polyline);
+				options.add(PaleoConfig.Option.Polygon);
+				options.add(PaleoConfig.Option.Rectangle);
+				
+				options.add(PaleoConfig.Option.Square);
+				options.add(PaleoConfig.Option.Diamond);
+
+				options.add(PaleoConfig.Option.Dot);
+				options.add(PaleoConfig.Option.Wave);
+				options.add(PaleoConfig.Option.Gull);
+				options.add(PaleoConfig.Option.Blob);
+				options.add(PaleoConfig.Option.Infinity);
+
+				config.disableOptions(options);
+				PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(config);
 
 				for (Stroke m_stroke : tester.getStrokes()) {
 					scount++;
 					IRecognitionResult result = recognizer.recognize(m_stroke);
-					System.out.println(result.getBestShape().getInterpretation().label);
+					//System.out.println(result.getBestShape().getInterpretation().label);
+					System.out.println(result.getBestShape());
 					List<Point> points = m_stroke.getPoints();
 					boolean cont = true;
 					/*
@@ -242,6 +271,18 @@ public class Paleotest {
 
 				for (Stroke m_stroke : tester.getStrokes()) {
 					List<Point> pl = m_stroke.getPoints();
+					g.setColor(Color.BLACK);
+					if ((recognizer.recognize(m_stroke).getBestShape()) != null) {
+						if ((recognizer.recognize(m_stroke).getBestShape().getInterpretation().label).equals("Line")) {
+							g.setColor(Color.RED);
+						}
+						if ((recognizer.recognize(m_stroke).getBestShape().getInterpretation().label).equals("Arc")) {
+							g.setColor(Color.BLUE);
+						}
+//						if ((recognizer.recognize(m_stroke).getBestShape().getInterpretation().label).equals("Polyline")) {
+//							g.setColor(Color.RED);
+//						}
+					}
 					Point s = pl.remove(0);
 					for (Point p : pl) {
 						/*
@@ -254,6 +295,7 @@ public class Paleotest {
 						 * "," + (int)((p.getY() - ymin + 50) * 500 /
 						 * y_range) + ")");
 						 */
+						
 						g.drawLine((int) ((p.getX() - xmin) * (pxmax - 20) / x_range + 10),
 								(int) ((p.getY() - ymin) * (pymax - 40) / y_range + 10),
 								(int) ((s.getX() - xmin) * (pxmax - 20) / x_range + 10),
