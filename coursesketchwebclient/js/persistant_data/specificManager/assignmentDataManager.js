@@ -23,9 +23,8 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 			var close = assignment.getCloseDate().getMillisecond();
 			var due = assignment.getDueDate().getMillisecond();
 			var current = parent.getCurrentTime();
-			if (isUndefined(state.accessible)) {
+			if (isUndefined(state.accessible) || state.accessible == null) {
 				if (current.lessThan(access) || current.greaterThan(close)) {
-					alert("Not accessable!");
 					state.accessible = false;
 				} else {
 					state.accessible = true;
@@ -33,7 +32,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 				updateAssignment = true;
 			}
 
-			if (isUndefined(state.pastDue)) {
+			if (isUndefined(state.pastDue) || state.pastDue == null) {
 				if (current.greaterThan(due)) {
 					state.pastDue = true;
 				} else {
