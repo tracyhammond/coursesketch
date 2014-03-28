@@ -27,8 +27,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 			var access = course.getAccessDate().getMillisecond();
 			var close = course.getCloseDate().getMillisecond();
 			var current = parent.getCurrentTime();
-			alert(access.toString() + " < " + current.toString() + " < " + close.toString());
-			if (isUndefined(state.accessible)) {
+			if (isUndefined(state.accessible) || state.accessible == null) {
 				if (current.lessThan(access) || current.greaterThan(close)) {
 					state.accessible = false;
 				} else {
@@ -37,7 +36,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 				updateCourse = true;
 			}
 
-			if (isUndefined(state.pastDue)) {
+			if (isUndefined(state.pastDue) || state.pastDue == null) {
 				if (current.greaterThan(close)) {
 					state.pastDue = true;
 				} else {
