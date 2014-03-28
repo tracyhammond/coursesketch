@@ -1,3 +1,22 @@
+function inializeCourseManagment() {
+	var loadCourses = function(courseList) {
+		console.log(courseList);
+		localScope.showCourses(courseList);
+	};
+	if (parent.dataManager.isDatabaseReady()) {
+		parent.dataManager.pollUpdates(function () {
+			parent.dataManager.getAllCourses(loadCourses);
+		});
+	} else {
+		var intervalVar = setInterval(function() {
+			if (parent.dataManager.isDatabaseReady()) {
+				clearInterval(intervalVar);
+				parent.dataManager.getAllCourses(loadCourses);
+			}
+		}, 100);
+	}
+}
+
 this.showCourses = function showCourses(courseList) {
 	var builder = new SchoolItemBuilder();
 	builder.setList(courseList).setWidth('medium').centerItem(true);
