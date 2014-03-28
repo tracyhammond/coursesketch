@@ -14,7 +14,7 @@
 var is_touch = 'ontouchstart' in document.documentElement;
 
 /*
- * Ironically check to see if a function that checks to see if object are undefined is undefined
+ * Ironically check to see if a function that checks to see if objects are undefined is undefined
  */
 if (typeof isUndefined === 'undefined') {
 	function isUndefined(object) {
@@ -52,6 +52,24 @@ if (isUndefined(Object.prototype.Inherits)) {
 			parent.call( this );
 		}
 	};
+}
+
+/**
+ **************************************************************
+ * Object Functions
+ * @author gigemjt
+ **************************************************************
+ */
+if (isUndefined(makeValueReadOnly)) {
+	function makeValueReadOnly(obj, property, value) {
+		if (typeof property != "string") {
+			throw "property argument must be a string";
+		}
+		Object.defineProperty(obj, property, {
+		    value: value,
+		    writable: false
+		});
+	}
 }
 
 /**
@@ -471,6 +489,8 @@ if (isUndefined(copyParentUtilityFunctions)) {
 		copyParentValues(scope, 'isFunction');
 		copyParentValues(scope, 'copyParentValues', true);
 		copyParentValues(scope, 'copyParentUtilityFunctions', true);
+		
+		copyParentValues(scope, 'makeValueReadOnly');
 
 		copyParentValues(scope, 'replaceAll');
 

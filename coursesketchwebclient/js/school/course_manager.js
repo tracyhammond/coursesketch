@@ -1,5 +1,14 @@
+var waitingIcon = (function() {
+	var manage = new WaitScreenManager();
+	return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
+})();
+
 function inializeCourseManagment() {
+	document.getElementById('class_list_column').appendChild(waitingIcon);
+	waitingIcon.startWaiting();
+
 	var loadCourses = function(courseList) {
+		waitingIcon.finishWaiting();
 		console.log(courseList);
 		localScope.showCourses(courseList);
 	};
@@ -11,7 +20,9 @@ function inializeCourseManagment() {
 		var intervalVar = setInterval(function() {
 			if (parent.dataManager.isDatabaseReady()) {
 				clearInterval(intervalVar);
-				parent.dataManager.getAllCourses(loadCourses);
+				parent.dataManager.pollUpdates(function () {
+					parent.dataManager.getAllCourses(loadCourses);
+				});
 			}
 		}, 100);
 	}
@@ -31,11 +42,14 @@ this.showCourses = function showCourses(courseList) {
 
 function courseClickerFunction(id) {
 	clearLists(2);
+
 	changeSelection(id, courseSelectionManager);
 	assignmentSelectionManager.clearAllSelectedItems();
 	problemSelectionManager.clearAllSelectedItems();
 
-	console.log("LOADING THE ASSIGNMENTS TO DISPLAY!");
+	// waiting icon
+	document.getElementById('assignment_list_column').appendChild(waitingIcon);
+	waitingIcon.startWaiting();
 
 	//we get the list from the id.
 	parent.dataManager.getAllAssignmentsFromCourse(id, function(assignmentList) {
@@ -44,6 +58,7 @@ function courseClickerFunction(id) {
 		builder.showImage = false;
 		builder.setEmptyListMessage('There are no assignments for this course!');
 		builder.setBoxClickFunction(assignmentClickerFunction);
+		waitingIcon.finishWaiting(); // stops the waitingIcon
 		builder.build('assignment_list_column');
 		if (parent.dataManager.getState("isInstructor")) {
 			try {
@@ -61,6 +76,11 @@ function assignmentClickerFunction(id) {
 	changeSelection(id, assignmentSelectionManager);
 	problemSelectionManager.clearAllSelectedItems();
 	clearLists(1);
+
+	// waiting icon
+	document.getElementById('problem_list_column').appendChild(waitingIcon);
+	waitingIcon.startWaiting();
+
 	parent.dataManager.getAllProblemsFromAssignment(id, function(problemList) {
 		for (var i = 0; i < problemList.length; i++) {
 			var q = problemList[i].description;
@@ -75,6 +95,7 @@ function assignmentClickerFunction(id) {
 		builder.showImage = false;
 		builder.setEmptyListMessage('There are no problems for this assignment!');
 		builder.setBoxClickFunction(problemClickerFunction);
+		waitingIcon.finishWaiting(); // stops the waiting icon
 		builder.build('problem_list_column');
 		if (parent.dataManager.getState("isInstructor")) {
 			try {
