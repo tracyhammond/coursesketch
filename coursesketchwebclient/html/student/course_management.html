@@ -23,6 +23,8 @@
   		parent.addScopedLoadEvent(window,
 				function()
 				{
+  					inializeCourseManagment();
+  					/*
 		  			var loadCourses = function(courseList) {
 							console.log(courseList);
 							localScope.showCourses(courseList);
@@ -37,7 +39,7 @@
 							}
 						}, 100);
 					}
-
+					*/
 					var loader = new parent.DynamicFileLoader();
 					loader.sope = document;
 					loader.loadFile("js/utils/popup.js",'js');

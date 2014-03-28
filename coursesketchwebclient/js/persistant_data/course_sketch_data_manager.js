@@ -15,7 +15,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var stateMachine = {};
 	var databaseFinishedLoading = false;
 
-	var useable = false;
 	var version = 3;
 	var dataListener = advanceDataListener;
 
@@ -48,12 +47,11 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	this.isDatabaseReady = function() {
 		return databaseFinishedLoading;
 	}
-	
+
 	/**
 	 * After the lower level database has been completely setup the higher level specific databases can be called.
 	 */
 	var initalizedFunction = function() {
-		useable = true;
 		if (!localScope.start) {
 			var intervalVar = setInterval(function() {
 				if (localScope.start) {
@@ -126,10 +124,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 
 	this.start = function() {
 		// creates a manager for just courses.
-		courseManager = new CourseDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		assignmentManager = new AssignmentDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		courseProblemManager = new CourseProblemDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		submissionManager = new SubmissionDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
+		/*courseManager = */new CourseDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		/*assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		/*courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		/*submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
 		console.log("database is ready for use! with user: " + userId);
 		databaseFinishedLoading = true;
 	}
@@ -167,8 +165,41 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		});
 	}
 
-	this.pollUpdates = function() {
-		sendDataRequest(QueryBuilder.ItemQuery.UPDATE);
+	/**
+	 * Polls the server for updates, after all items 
+	 */
+	this.pollUpdates = function(callback) {
+		dataSender.sendDataRequest(QueryBuilder.ItemQuery.UPDATE);
+		var functionCalled = false;
+		var timeout = setTimeout(function() {
+			if (!functionCalled && callback) {
+				functionCalled = true;
+				callback();
+			}
+		}, 5000);
+		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.UPDATE, function(evt, item) {
+			clearTimeout(timeout);
+			var school = SchoolBuilder.SrlSchool.decode(item.data);
+			var courseList = school.courses;
+			for (var i = 0; i < courseList.length; i ++) {
+				this.setCourse(courseList[i]);
+			}
+
+			var assignmentList = school.assignments;
+			for (var i = 0; i < assignmentList.length; i ++) {
+				this.setAssignment(assignmentList[i]);
+			}
+
+			var problemList = school.problems;
+			for (var i = 0; i < problemList.length; i ++) {
+				this.setCourseProblem(problemList[i]);
+			}
+
+			if (!functionCalled && callback) {
+				functionCalled = true;
+				callback();
+			};
+		});
 	};
 
 	/**

@@ -24,21 +24,7 @@
   		parent.addScopedLoadEvent(window,
 				function()
 				{
-		  			var loadCourses = function(courseList) {
-							console.log(courseList);
-							localScope.showCourses(courseList);
-					};
-					if (parent.dataManager.isDatabaseReady()) {
-						parent.dataManager.getAllCourses(loadCourses);
-					} else {
-						var intervalVar = setInterval(function() {
-							if (parent.dataManager.isDatabaseReady()) {
-								clearInterval(intervalVar);
-								parent.dataManager.getAllCourses(loadCourses);
-							}
-						}, 100);
-					}
-
+  					inializeCourseManagment();
 					var loader = new parent.DynamicFileLoader();
 					loader.sope = document;
 					loader.loadFile("js/utils/popup.js",'js');
