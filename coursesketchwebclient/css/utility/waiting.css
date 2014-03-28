@@ -8,3 +8,11 @@
 	display:block;
     margin : auto;
 }
+
+.outerWaitingIcon {
+	position:relative;
+}
+
+.waitingIconText {
+	text-align:center;
+}

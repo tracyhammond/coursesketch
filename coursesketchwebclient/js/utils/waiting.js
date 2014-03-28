@@ -11,6 +11,7 @@ function WaitScreenManager() {
 		this.total = false; // creates a step function
 		this.exitAtTotal = false; // when the percent bar reaches 100% then it will close itself (this is a boolean value)
 		this.exitAtTotalCallback = false; // if exitAtTotal
+		this.waitIconText = false; // sets text for the waiting icon
 	};
 
 	this.resetValues();
@@ -52,9 +53,9 @@ function WaitScreenManager() {
 		var element = document.createElement("div");
 		element.setAttribute("class", "waitingBox");
 		if (this.waitType == this.TYPE_PERCENT) {
-			buildPercent(element);
+			this.buildPercent(element);
 		} else if (this.waitType == this.TYPE_WIOD) {
-			buildWaitIcon(element);
+			this.buildWaitIcon(element);
 		}
 
 		element.startWaiting = function() {
@@ -73,9 +74,9 @@ function WaitScreenManager() {
 			}
 		};
 		return element;
-	}
+	};
 
-	function buildPercent(element) {
+	this.buildPercent = function buildPercent(element) {
 		var outer = document.createElement("outerDiv");
 		outer.setAttribute("class", "outerPercent");
 		var bar = document.createElement("innerDiv");
@@ -100,16 +101,26 @@ function WaitScreenManager() {
 				};
 			})(this.total);
 		}
-	}
-	
-	function buildWaitIcon(element) {
-		var outer = document.createElement("img");
-		outer.setAttribute("class", "waitingIcon");
+	};
+
+	this.buildWaitIcon = function buildWaitIcon(element) {
+		var outer = document.createElement('div');
+		outer.setAttribute("class", "outerWaitingIcon");
+
+		var img = document.createElement("img");
+		img.setAttribute("class", "waitingIcon");
 		if (this.customIcon) {
-			outer.src = customIcon;
+			img.src = customIcon;
 		} else {
-			outer.src = "images/loading/000000_large_loader.gif";
+			img.src = "images/loading/000000_large_loader.gif";
+		}
+		outer.appendChild(img);
+		if (this.waitIconText) {
+			var text = document.createElement("h1");
+			text.textContent = this.waitIconText;
+			text.setAttribute("class", "waitingIconText");
+			outer.appendChild(text);
 		}
 		element.appendChild(outer);
-	}
+	};
 }

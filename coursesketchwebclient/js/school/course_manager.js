@@ -1,5 +1,6 @@
 var waitingIcon = (function() {
 	var manage = new WaitScreenManager();
+	manage.waitIconText = "loading data";
 	return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
 })();
 
