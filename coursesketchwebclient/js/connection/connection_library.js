@@ -53,7 +53,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 				try {
 			        // Decode the Request
 			        var msg = Request.decode(evt.data);
-			        console.log("request decoded succesfully ");
+			        //console.log("request decoded succesfully ");
 			        if (msg.requestType == Request.MessageType.LOGIN && onLogin) {
 			        	console.log("getting from login");
 			        	onLogin(evt, msg);

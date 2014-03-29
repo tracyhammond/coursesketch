@@ -99,8 +99,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
 		}
 		dataSend.items.push(itemRequest);
-		console.log("SENDING QUERY!");
-		console.log(dataSend);
 		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
 	}
 

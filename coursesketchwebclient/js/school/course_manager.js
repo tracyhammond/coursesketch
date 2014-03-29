@@ -9,8 +9,9 @@ function inializeCourseManagment() {
 	waitingIcon.startWaiting();
 
 	var loadCourses = function(courseList) {
-		waitingIcon.finishWaiting();
-		console.log(courseList);
+		try {
+			waitingIcon.finishWaiting();
+		} catch(exception) {}
 		localScope.showCourses(courseList);
 	};
 	if (parent.dataManager.isDatabaseReady()) {
@@ -41,10 +42,10 @@ this.showCourses = function showCourses(courseList) {
 	clearLists(2);
 };
 
-function courseClickerFunction(id) {
+function courseClickerFunction(course) {
 	clearLists(2);
 
-	changeSelection(id, courseSelectionManager);
+	changeSelection(course.id, courseSelectionManager);
 	assignmentSelectionManager.clearAllSelectedItems();
 	problemSelectionManager.clearAllSelectedItems();
 
@@ -52,8 +53,8 @@ function courseClickerFunction(id) {
 	document.getElementById('assignment_list_column').appendChild(waitingIcon);
 	waitingIcon.startWaiting();
 
-	//we get the list from the id.
-	parent.dataManager.getAllAssignmentsFromCourse(id, function(assignmentList) {
+	//we can make this faster becuase we have the list of assignments
+	parent.dataManager.getAssignments(course.assignmentList, function(assignmentList) {
 		var builder = new SchoolItemBuilder();
 		builder.setList(assignmentList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
@@ -72,9 +73,9 @@ function courseClickerFunction(id) {
 	});
 }
 
-function assignmentClickerFunction(id) {
+function assignmentClickerFunction(assignment) {
 	// clears the problems
-	changeSelection(id, assignmentSelectionManager);
+	changeSelection(assignment.id, assignmentSelectionManager);
 	problemSelectionManager.clearAllSelectedItems();
 	clearLists(1);
 
@@ -82,7 +83,7 @@ function assignmentClickerFunction(id) {
 	document.getElementById('problem_list_column').appendChild(waitingIcon);
 	waitingIcon.startWaiting();
 
-	parent.dataManager.getAllProblemsFromAssignment(id, function(problemList) {
+	parent.dataManager.getCourseProblems(assignment.problemList, function(problemList) {
 		for (var i = 0; i < problemList.length; i++) {
 			var q = problemList[i].description;
 			if (isUndefined(q) || q == "") {
@@ -109,22 +110,21 @@ function assignmentClickerFunction(id) {
 	});
 }
 
-function problemClickerFunction(id) {
+function problemClickerFunction(problem) {
+	var id = problem.id;
 	if (problemSelectionManager.isItemSelected(id)) {
 		var element = document.getElementById(id);
 		var itemNumber = element.dataset.item_number;
 		parent.dataManager.addState("CURRENT_QUESTION_INDEX", itemNumber);
-		var assignment = parent.dataManager.getCourseProblem(id, function(problem) {
-			parent.dataManager.addState("CURRENT_ASSIGNMENT", problem.assignmentId);
-			parent.dataManager.addState("CURRENT_QUESTION", id);
-			// change source to the problem page! and load problem
-			if (parent.dataManager.getState("isInstructor")) {
-				// solution editor page!
-				parent.redirectContent("html/instructor/instructorproblemlayout.html", "");
-			} else {
-				parent.redirectContent("html/student/problemlayout.html", "Starting Problem");
-			}
-		});
+		parent.dataManager.addState("CURRENT_ASSIGNMENT", problem.assignmentId);
+		parent.dataManager.addState("CURRENT_QUESTION", id);
+		// change source to the problem page! and load problem
+		if (parent.dataManager.getState("isInstructor")) {
+			// solution editor page!
+			parent.redirectContent("html/instructor/instructorproblemlayout.html", "");
+		} else {
+			parent.redirectContent("html/student/problemlayout.html", "Starting Problem");
+		}
 	}
 	else {
 		var element = document.getElementById(id);
@@ -136,7 +136,7 @@ function problemClickerFunction(id) {
 		} else {
 			myOpenTip.setContent("Click again to open up a problem"); // Updates Opentips content
 		}
-		
+
 		var pastToolTip = problemSelectionManager['currentToolTip'];
 		if (pastToolTip) {
 			pastToolTip.deactivate();

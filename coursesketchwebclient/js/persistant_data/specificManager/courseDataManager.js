@@ -158,25 +158,18 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 				localScope.setCourse(course); // no callback is needed
 				idList.push(course.id);
 			}
-			console.log(courseList);
 			courseCallback(courseList);
 			setCourseIdList(idList);
 		});
 		if (userCourseId.length == 0 && userHasCourses) {
 			sendDataRequest(QueryBuilder.ItemQuery.SCHOOL, [""]);
-			console.log("course list from server polled!");
+		//	console.log("course list from server polled!");
 		} else {
 			// This calls the server for updates then creates a list from the local data to appear fast
 			// then updates list after server polling and comparing the two list.
-			console.log("course list from local place polled!");
+		//	console.log("course list from local place polled!");
 			var barrier = userCourseId.length;
 			var courseList = [];
-			// need to create an update function!
-			/*
-			advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE_LIST, function(evt, item) {
-				console.log("Course data!!!!!!!");
-			});
-			*/
 
 			// ask server for course list
 			sendDataRequest(QueryBuilder.ItemQuery.SCHOOL, [""]);
