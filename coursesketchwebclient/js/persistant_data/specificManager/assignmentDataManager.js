@@ -142,7 +142,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 		for (var i = 0; i < userAssignmentId.length; i++) {
 			var assignmentIdLoop = userAssignmentId[i];
 			// the purpose of this function is purely to scope the assignmentId so that it changes
-			function loopContainer(assignmentId) {
+			(function(assignmentId) {
 				getAssignmentLocal(assignmentId, function(assignment) {
 					if (!isUndefined(assignment)) {
 						assignmentList.push(assignment);
@@ -158,6 +158,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 								var assignment = school.assignments[0];
 								if (isUndefined(assignment)) {
 									assignmentCallback(nonExistantValue);
+									advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.ASSIGNMENT);
 									return;
 								}
 								for (var i = 0; i < school.assignments.length; i++) {
@@ -165,6 +166,8 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 									assignmentList.push(school.assignments[i]);
 								}
 								stateCallbackList(assignmentList, assignmentCallback);
+								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.ASSIGNMENT);
+								userAssignmentId = null;
 							});
 							// creates a request that is then sent to the server
 							sendData.sendDataRequest(QueryBuilder.ItemQuery.ASSIGNMENT, leftOverId);
@@ -176,8 +179,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 						}
 					}// end of if(barrier == 0)
 				});// end of getting local assignment
-			} // end of loopContainer
-			loopContainer(assignmentIdLoop);
+			})(assignmentIdLoop); // end of loopContainer
 		}// end of loop
 	};
 	parent.getAssignments = getAssignments;
