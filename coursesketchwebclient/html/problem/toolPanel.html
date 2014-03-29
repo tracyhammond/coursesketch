@@ -11,6 +11,12 @@
 		}
 
 		parent.problemNavigator.addCallback(function(nav) {
+
+			// clear certain events
+			nav.clearAllMappings("submit");
+			nav.clearAllMappings("undo");
+			nav.clearAllMappings("redo");
+
 			var eventFunction = nav.executeEvent;
 			var type = nav.getPoblemType();
 
@@ -27,6 +33,7 @@
 			}
 
 			if (type == "SKETCH") {
+				nav.clearAllMappings("clear");
 				createButton("images/toolbar/clear_button.svg", function() {
 					eventFunction("clear");
 				}, resizeParent);

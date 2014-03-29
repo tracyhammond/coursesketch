@@ -89,10 +89,12 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 					if (isUndefined(course)) {
 						userCourses[courseId] = nonExistantValue;
 						courseCallback(nonExistantValue);
+						advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE);
 						return;
 					}
 					localScope.setCourse(course);
 					stateCallback(course, courseCallback);
+					advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE);
 				});
 				// creates a request that is then sent to the server
 				sendDataRequest(QueryBuilder.ItemQuery.COURSE, [courseId]);
@@ -148,6 +150,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 				userHasCourses = false;
 				console.log(item.returnText);
 				alert(item.returnText);
+				advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.SCHOOL);
 				return;
 			}
 			var school = SchoolBuilder.SrlSchool.decode(item.data);
@@ -160,6 +163,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 			}
 			courseCallback(courseList);
 			setCourseIdList(idList);
+			advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.SCHOOL);
 		});
 		if (userCourseId.length == 0 && userHasCourses) {
 			sendDataRequest(QueryBuilder.ItemQuery.SCHOOL, [""]);

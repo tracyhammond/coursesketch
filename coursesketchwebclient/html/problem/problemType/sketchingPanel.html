@@ -101,7 +101,7 @@
 				    	element.finishWaiting();
 				    	//console.log("all items sent to the server");
 				    }
-					
+
 					submitUpdateList(serverConnection, updateList, [ProtoUpdateCommandBuilder, ProtoSubmissionBuilder], experiment,
 							Request.MessageType.SUBMISSION, displayBar, updateBar, finishBar);
 
@@ -154,13 +154,15 @@
 			window.addEventListener("beforeunload", function( e ) {
 				parent.problemNavigator.removeEventMapping("submit", submitFunction);
 				parent.problemNavigator.removeEventMapping("feedback", feedbackFunction);
-				/*
-				if (!commandManager.isLastUpdateSubmission()) {
-					return "You have unsaved work.";
-				}
-				*/
 				commandManager.setUpdateList([]);
-				commandManager = null;
+				commandManager = undefined;
+				serverConnection = undefined;
+				var ByteBuffer = undefined;
+				var drawingCreator = undefined;
+				var sketch = undefined;
+				var canvasContext = undefined;
+				var Long = undefined;
+				var highlighter = undefined;
 			});
 
 			loadUpdateList();

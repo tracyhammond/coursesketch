@@ -184,11 +184,18 @@ function schoolNavigator(assignmentId, dataManagerR, loop, preferredIndex) {
 		}
 	};
 
+	/**
+	 * Attempts to remove the event from the current event map.
+	 */
 	this.removeEventMapping = function(key, funct) {
 		if (isUndefined(eventMappingCallback[key])) {
 			return;
 		}
 		removeObjectFromArray(eventMappingCallback[key], funct);
+	};
+
+	this.clearAllMappings = function(key) {
+		eventMappingCallback[key] = undefined;
 	};
 
 	/**

@@ -34,6 +34,17 @@ function AdvanceDataListener(connection, Request, query, defListener) {
 	};
 
 	/**
+	 * Removes the function associated with the listener
+	 */
+	this.removeListener = function(messageType, queryType) {
+		var localMap = requestMap[messageType];
+		//console.log("Adding listener");
+		//console.log(messageType);
+		//console.log(queryType);
+		localMap[queryType] = undefined;
+	};
+
+	/**
 	 * Gets the message type and the query type and finds the correct listener.
 	 *
 	 * if the correct type does not exist then the defaultListener is called instead.

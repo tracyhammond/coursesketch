@@ -93,6 +93,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 								var courseProblem = school.problems[0];
 								if (isUndefined(courseProblem)) {
 									courseProblemCallback(nonExistantValue);
+									advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE_PROBLEM);
 									return;
 								}
 								for (var i = 0; i < school.problems.length; i++) {
@@ -100,6 +101,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 									courseProblemList.push(school.problems[i]);
 								}
 								courseProblemCallback(courseProblemList);
+								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE_PROBLEM);
 							});
 							// creates a request that is then sent to the server
 							sendData.sendDataRequest(QueryBuilder.ItemQuery.COURSE_PROBLEM, leftOverId);
