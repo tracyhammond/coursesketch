@@ -16,6 +16,8 @@
 	<script type="text/javascript" src="js/input/highlighter.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
+    	var sketchList = new Array();
+		var sketchList2 = sketchList;
     	parent.copyParentUtilityFunctions(this);
     	parent.copyParentProtos(this);
 
@@ -27,8 +29,6 @@
 		var Long = false;
 		var commandManager = false;
 		var highlighter = false;
-		var sketchList = new Array();
-
 	    function initializeInput() {
 
 	    	var ProtoSubmissionBuilder = parent.ProtoSubmissionBuilder;
@@ -111,13 +111,33 @@
 			parent.problemNavigator.addEventMapping("redo", function() {
 				commandManager.redoAction();
 			});
-			
+			var placeholder=0;
+
 			parent.problemNavigator.addEventMapping("next_sketch",function() {
-				
+				console.log(sketchList2[placeholder]);
+	    		if (isUndefined(sketchList2[placeholder])) {
+	    			alert("EMPTY SKETCH!");
+	    			return;
+	    		}
+	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList2[placeholder].getSubmission().getUpdateList());
+	    		console.log(updateList);
+	    		++placeholder;
 			});
 			
 			parent.problemNavigator.addEventMapping("prev_sketch", function() {
-				
+				console.log(sketchList2);
+	    		if (isUndefined(sketchList2[placeholder])) {
+	    			alert("EMPTY SKETCH!");
+	    			return;
+	    		}
+	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList2[placeholder].getSubmission().getUpdateList());
+	    		console.log(updateList);
+	    		if(placeholder > 0){
+	    			--placeholder;
+	    			}
+	    		if(placeholder = 0){
+	    			alert("This is the beggining of the list of sketches.")
+	    		}
 			});
 
 
@@ -155,13 +175,13 @@
 		}
 
 	    function loadUpdateList() {
-	    	parent.problemNavigator.getDataManager().getAllExperiments(parent.problemNavigator.getCurrentProblemId(), function(sketchList) {
-	    		console.log(sketchList[0]);
-	    		if (isUndefined(sketchList[0])) {
+	    	parent.problemNavigator.getDataManager().getAllExperiments(parent.problemNavigator.getCurrentProblemId(), function(sketchList2) {
+	    		console.log(sketchList2[0]);
+	    		if (isUndefined(sketchList2[0])) {
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[0].getSubmission().getUpdateList());
+	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList2[0].getSubmission().getUpdateList());
 	    		console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
 	    	});
