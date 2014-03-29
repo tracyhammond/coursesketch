@@ -35,6 +35,9 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 					var sub = experiment.submission;
 					localScope.setSubmission(problemId, sub);
 					submissionCallback(sub);
+					sub = null;
+					experiment = null;
+					advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.EXPERIMENT, null);
 				});
 				// creates a request that is then sent to the server
 				sendData.sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId]);
@@ -45,6 +48,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 				// gets the data from the database and calls the callback
 				var bytes = ByteBuffer.decode64(result.data);
 				submissionCallback(SubmissionBuilder.SrlSubmission.decode(bytes));
+				bytes = null;
 			}
 		});
 	};
@@ -64,6 +68,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 			}
 			console.log(list.experiments);
 			submissionCallback(list.experiments);
+			list = null;
 		});
 
 		// creates a request that is then sent to the server

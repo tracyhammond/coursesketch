@@ -139,7 +139,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		var getAssignments = this.getAssignments;
 		this.getCourse(courseId, function(course) {
 			if (isUndefined(course)) {
-				throw "Course not defined";
+				throw new Error("Course not defined");
 			}
 			if (course.assignmentList.length <= 0) {
 				assignmentCallback([]);
@@ -157,7 +157,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		var getCourseProblems = this.getCourseProblems;
 		this.getAssignment(assignmentId, function(assignment) {
 			if (isUndefined(assignment)) {
-				throw "Assignment not defined";
+				throw new Error("Assignment not defined");
 			}
 			getCourseProblems(assignment.problemList, problemCallback);
 		});

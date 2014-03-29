@@ -62,7 +62,7 @@ function DynamicFileLoader() {
 	 */
 	this.createFile = function createFile(filename, filetype, onload) {
 		if (onload && typeof onload !== 'function') {
-			throw 'Not a valid callBack for file: ' + filename + ' type is ' + (typeof onload);  
+			throw new Error('Not a valid callBack for file: ' + filename + ' type is ' + (typeof onload));  
 		}
 		var fileref = false;
 		if (filetype == "js"){ //if filename is a external JavaScript file

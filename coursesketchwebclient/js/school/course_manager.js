@@ -9,9 +9,9 @@ function inializeCourseManagment() {
 	waitingIcon.startWaiting();
 
 	var loadCourses = function(courseList) {
-		try {
+		if (waitingIcon.isRunning()) {
 			waitingIcon.finishWaiting();
-		} catch(exception) {}
+		}
 		localScope.showCourses(courseList);
 	};
 	if (parent.dataManager.isDatabaseReady()) {

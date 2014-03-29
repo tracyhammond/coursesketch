@@ -63,7 +63,7 @@ if (isUndefined(Object.prototype.Inherits)) {
 if (isUndefined(makeValueReadOnly)) {
 	function makeValueReadOnly(obj, property, value) {
 		if (typeof property != "string") {
-			throw "property argument must be a string";
+			throw new Error("property argument must be a string");
 		}
 		Object.defineProperty(obj, property, {
 		    value: value,
@@ -92,7 +92,7 @@ if (isUndefined(Array.prototype.removeObject)) {
 			this.splice(index, 1);
 			return result;
 		}
-		throw "attempt to remove invalid object";
+		throw new Error("attempt to remove invalid object");
 	};
 }
 
@@ -104,7 +104,7 @@ if (isUndefined(removeObjectFromArray)) {
 			array.splice(index, 1);
 			return result;
 		}
-		throw "attempt to remove invalid object";
+		throw new Error("attempt to remove invalid object");
 	};
 }
 
@@ -120,7 +120,7 @@ if (isUndefined(Array.prototype.removeObjectByIndex)) {
 			this.splice(index, 1);
 			return result;
 		}
-		throw "attempt to remove at invalid index";
+		throw new Error("attempt to remove at invalid index");
 	};
 }
 
