@@ -128,6 +128,12 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 		 * 
 		 * #6 the function pattern terminates.
 		 */
+
+		// standard preventative checking
+		if (isUndefined(userAssignmentId) || userAssignmentId == null || userAssignmentId.length == 0) {
+			assignmentCallback(nonExistantValue);
+		}
+
 		var barrier = userAssignmentId.length;
 		var assignmentList = [];
 		var leftOverId = [];

@@ -63,6 +63,12 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 		 *
 		 * #6 the function pattern terminates.
 		 */
+
+		// standard preventative checking
+		if (isUndefined(userCourseProblemId) || userCourseProblemId == null || userCourseProblemId.length == 0) {
+			courseProblemCallback(nonExistantValue);
+		}
+
 		var barrier = userCourseProblemId.length;
 		var courseProblemList = [];
 		var leftOverId = [];

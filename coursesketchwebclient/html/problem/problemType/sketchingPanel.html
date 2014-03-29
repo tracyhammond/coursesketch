@@ -111,7 +111,7 @@
 					var listContainer = new ProtoUpdateCommandBuilder.SrlUpdateList();
 					listContainer.setList(updateList);
 					localSubmission.setUpdateList(listContainer.toArrayBuffer());
-					console.log(updateList); // contains the entire update list
+					//console.log(updateList); // contains the entire update list
 					parent.problemNavigator.getDataManager().setSubmission(parent.problemNavigator.getCurrentProblemId(), localSubmission);
 				});
 			};
@@ -170,12 +170,12 @@
 	    			return;
 	    		}
 	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(submission.getUpdateList());
-	    		console.log(updateList);
+	    		//console.log(updateList);
 	    		var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
 	    		document.getElementById("PercentBar").appendChild(element);
 	    		element.startWaiting();
 	    		commandManager.setUpdateList(updateList.getList(), element);
-	    		console.log(submission);
+	    		//console.log(submission);
 	    	});
 	    }
 

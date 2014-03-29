@@ -25,7 +25,7 @@ function SchoolItemBuilder() {
 		this.limitSize = false; // this will limit the description of the card to a certain height and add an expanding button
 
 		// function
-		this.boxClickFunction = false;
+		this.boxClickFunction = false; // calls a function with the entire schoolItem object
 		this.endEditFunction = false; // when in instructor mode this can be used to edit the box. and the item is saved
 
 		//custom text for an empty list.
@@ -151,7 +151,7 @@ function SchoolItemBuilder() {
 
 		box.setAttribute('data-item_number', index);
 
-		this.addClickFunction(box, this.boxClickFunction, srlSchoolItem.id);
+		this.addClickFunction(box, this.boxClickFunction, srlSchoolItem);
 
 		this.setBoxState(box, srlSchoolItem);
 
@@ -313,8 +313,6 @@ function SchoolItemBuilder() {
 		var span = document.createElement('span');
 		var classType = 'school_item_state ';
 		if (itemState != null && ! isUndefined(itemState)) {
-			console.log(srlSchoolItem);
-			console.log(itemState);
 			// TODO: add state for an assignment that has been graded.
 			if (!itemState.accessible && itemState.pastDue) {
 				classType += 'assignment_closed';
@@ -365,10 +363,10 @@ function SchoolItemBuilder() {
 	/**
 	 * Adds an onclick function to the element if the function exists, does nothing otherwise.
 	 */
-	this.addClickFunction = function addClickFunction(element, functionToAdd, id) {
+	this.addClickFunction = function addClickFunction(element, functionToAdd, srlSchoolItem) {
 		if (functionToAdd) {
 			element.addEventListener('click',function() {
-				functionToAdd(id);
+				functionToAdd(srlSchoolItem);
 			},false);
 			// GET THE ONCLICK LISTENTER TO DO THE CLICKING THING CORRECTLY!
 		}
