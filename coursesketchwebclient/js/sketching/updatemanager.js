@@ -368,9 +368,11 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 
 	/**
 	 * This clears any current updates and replaces the list with a new list.
+	 *
+	 * @param list The list that is will be added to the sketch
+	 * @parem percentBar The bar that will show these updates, it must already be added where it needs to be added.
 	 */
-
-	this.setUpdateList = function(list) {
+	this.setUpdateList = function(list, percentBar) {
 		initializing = true;
 		this.clearUpdates(false);
 		var index = 0;
@@ -378,11 +380,18 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		var intervalHolder = setInterval(function() {
 			var startIndex = index;
 			while (index < maxIndex && index - startIndex < 1) {
+				if (percentBar) {
+					percentBar.updatePercentBar(index, maxIndex);
+				}
 				localScope.addUpdate(list[index], false, true);
 				index++;
 			}
 			if (index >= maxIndex) {
 				clearInterval(intervalHolder);
+				if (percentBar) {
+					percentBar.updatePercentBar(1, 1);
+					percentBar.finishWaiting(300);
+				}
 			}
 		}, 20);
 	};

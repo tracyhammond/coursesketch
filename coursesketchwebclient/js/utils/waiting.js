@@ -66,31 +66,39 @@ function WaitScreenManager() {
 			}
 		};
 
-		element.finishWaiting = function() {
-			if (element.parentNode) {
-				element.parentNode.removeChild(this);
-			}  else {
-				throw "Element must be added before it can finish waiting";
+		element.finishWaiting = function(delay) {
+			var node = this;
+			function remove() {
+				if (element.parentNode) {
+					element.parentNode.removeChild(node);
+				}  else {
+					throw "Element must be added before it can finish waiting";
+				}
+			}
+			if (delay) {
+				setTimeout(remove, delay);
+			} else {
+				remove();
 			}
 		};
 		return element;
 	};
 
 	this.buildPercent = function buildPercent(element) {
-		var outer = document.createElement("outerDiv");
+		var outer = document.createElement("div");
 		outer.setAttribute("class", "outerPercent");
-		var bar = document.createElement("innerDiv");
-		outer.setAttribute("class", "innerPercent");
-		bar.style.display = "inline";
+		var bar = document.createElement("div");
+		bar.setAttribute("class", "innerPercent");
 		bar.style.height = "100%";
 		bar.style.minHeight = "10px";
 		bar.style.width = "0%";
-		out.appendChild(bar);
-		out.style.height = "100%";
+		outer.appendChild(bar);
+		outer.style.height = "100%";
 
 		element.appendChild(outer);
 		element.updatePercentBar = function(current, total) {
-			
+			var percent = current / total * 100;
+			bar.style.width = percent + "%";
 		};
 		if (this.total) {
 			(function(total) {
@@ -124,3 +132,8 @@ function WaitScreenManager() {
 		element.appendChild(outer);
 	};
 }
+
+makeValueReadOnly(WaitScreenManager, 'TYPE_PERCENT', 0);
+makeValueReadOnly(WaitScreenManager, 'TYPE_WIOD', 1); // waiting icon of death
+makeValueReadOnly(WaitScreenManager, 'TYPE_WAITING_ICON_OF_DEATH', 1); // waiting circle of death
+makeValueReadOnly(WaitScreenManager, 'TYPE_WAITING_ICON', 1); // waiting icon
