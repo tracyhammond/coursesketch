@@ -50,6 +50,7 @@ function WaitScreenManager() {
 	 * finishWaiting: removes the bar from the screen. (must already be added to the parent)
 	 */
 	this.build = function build() {
+		var running = false;
 		var element = document.createElement("div");
 		element.setAttribute("class", "waitingBox");
 		if (this.waitType == this.TYPE_PERCENT) {
@@ -59,20 +60,25 @@ function WaitScreenManager() {
 		}
 
 		element.startWaiting = function() {
+			running = true;
 			if (element.parentNode) {
 				element.style.display = "initial"; // default 
 			} else {
-				throw "Element must be added before it can start waiting";
+				throw new Error("Element must be added before it can start waiting");
 			}
 		};
 
 		element.finishWaiting = function(delay) {
+			if (!running) {
+				throw new Error("You can only call this while running");
+			}
+			running = false;
 			var node = this;
 			function remove() {
 				if (element.parentNode) {
 					element.parentNode.removeChild(node);
 				}  else {
-					throw "Element must be added before it can finish waiting";
+					throw new Error("Element must be added before it can finish waiting");
 				}
 			}
 			if (delay) {
@@ -80,6 +86,10 @@ function WaitScreenManager() {
 			} else {
 				remove();
 			}
+		};
+
+		element.isRunning = function() {
+			return running;
 		};
 		return element;
 	};

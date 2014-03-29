@@ -159,22 +159,30 @@
 					return "You have unsaved work.";
 				}
 				*/
+				commandManager.setUpdateList([]);
+				commandManager = null;
 			});
 
 			loadUpdateList();
 		}
 
 	    function loadUpdateList() {
+	    	var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
+	    	document.getElementById("PercentBar").appendChild(element);
+    		element.startWaiting();
+
 	    	parent.problemNavigator.getDataManager().getSubmission(parent.problemNavigator.getCurrentProblemId(), function(submission) {
 	    		if (isUndefined(submission)) {
+	    			if (element.isRunning()) {
+	    				element.finishWaiting();
+	    			}
 	    			return;
 	    		}
 	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(submission.getUpdateList());
 	    		//console.log(updateList);
-	    		var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
-	    		document.getElementById("PercentBar").appendChild(element);
-	    		element.startWaiting();
 	    		commandManager.setUpdateList(updateList.getList(), element);
+	    		updateList = null;
+	    		element = null;
 	    		//console.log(submission);
 	    	});
 	    }

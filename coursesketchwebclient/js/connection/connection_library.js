@@ -311,7 +311,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	this.createUpdateFromCommands = function(commands) {
 		if (!isArray(commands)) {
 			console.error(commands);
-			throw 'Invalid Type Error: Input is not an Array';
+			throw new Error('Invalid Type Error: Input is not an Array');
 		}
 		var update = new ProtoSrlUpdate();
 		update.setCommands(commands);

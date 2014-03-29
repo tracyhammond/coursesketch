@@ -82,7 +82,7 @@ function inputListener() {
 	};
 
 	this.getThickness = function getThickness(speed, size, pressure, index, lastStroke, type) {
-		throw "Thickness not implemented exception";
+		throw Error("Thickness not implemented exception");
 	};
 
 	/*******************
