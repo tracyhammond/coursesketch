@@ -17,7 +17,6 @@
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
     	var sketchList = new Array();
-		var sketchList2 = sketchList;
     	parent.copyParentUtilityFunctions(this);
     	parent.copyParentProtos(this);
 
@@ -114,23 +113,23 @@
 			var placeholder=0;
 
 			parent.problemNavigator.addEventMapping("next_sketch",function() {
-				console.log(sketchList2[placeholder]);
-	    		if (isUndefined(sketchList2[placeholder])) {
+				console.log(sketchList[placeholder]);
+	    		if (isUndefined(sketchList[placeholder])) {
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList2[placeholder].getSubmission().getUpdateList());
+	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[placeholder].getSubmission().getUpdateList());
 	    		console.log(updateList);
 	    		++placeholder;
 			});
 			
 			parent.problemNavigator.addEventMapping("prev_sketch", function() {
-				console.log(sketchList2);
-	    		if (isUndefined(sketchList2[placeholder])) {
+				console.log(sketchList);
+	    		if (isUndefined(sketchList[placeholder])) {
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList2[placeholder].getSubmission().getUpdateList());
+	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[placeholder].getSubmission().getUpdateList());
 	    		console.log(updateList);
 	    		if(placeholder > 0){
 	    			--placeholder;
@@ -176,6 +175,7 @@
 
 	    function loadUpdateList() {
 	    	parent.problemNavigator.getDataManager().getAllExperiments(parent.problemNavigator.getCurrentProblemId(), function(sketchList2) {
+	    		sketchList = sketchList2;
 	    		console.log(sketchList2[0]);
 	    		if (isUndefined(sketchList2[0])) {
 	    			alert("EMPTY SKETCH!");
