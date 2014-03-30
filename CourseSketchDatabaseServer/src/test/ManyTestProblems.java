@@ -16,7 +16,7 @@ public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {
 		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16", 
 		"Problem17", "Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
-		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41", "Problem42", "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49", "Problem50", "Problem51", "Problem52"};
+		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41" /*, "Problem42", "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49", "Problem50", "Problem51", "Problem52"*/};
 		//10 is fuzzy logic
 		/*
 		String[] descsription = new String[]{"This is the first problem",
@@ -33,9 +33,105 @@ public class ManyTestProblems {
 		String[] questionText = new String[] {
 				
 				/*
+					Assignment 8
+				*/
+
+					"5.1.4a: Let P(n) be the statement that 1 <sup>3</sup> + 2<sup>3</sup> + ... + n <sup>3</sup> = (n(n+1)/2) <sup>2</sup> for the positive integer n. Fill in the corresponding steps: (Basis)",
+
+					"5.1.4b: Let P(n) be the statement that 1 <sup>3</sup> + 2<sup>3</sup> + ... + n <sup>3</sup> = (n(n+1)/2) <sup>2</sup> for the positive integer n. Fill in the corresponding steps: (Want to Show) ",
+	
+					"5.1.4c: Let P(n) be the statement that 1 <sup>3</sup> + 2<sup>3</sup> + ... + n <sup>3</sup> = (n(n+1)/2) <sup>2</sup> for the positive integer n. Fill in the corresponding steps: (Assume)",
+	
+					"5.1.4d: Let P(n) be the statement that 1 <sup>3</sup> +2 <sup>3</sup> + ... + n <sup>3</sup> = (n(n+1)/2) <sup>2</sup> for the positive integer n. Fill in the corresponding steps: (Induction)",
+	
+	
+					"5.1.6a: Prove that 1*1!+2*2!+...+n*n!= (n+1)!-1 whenever n is a positive integer. Fill in the corresponding steps: (Basis) ",
+
+					"5.1.6b: Prove that 1*1!+2*2!+...+n*n!= (n+1)!-1 whenever n is a positive integer. Fill in the corresponding steps: (Want to Show) ",
+	
+					"5.1.6c: Prove that 1*1!+2*2!+...+n*n!= (n+1)!-1 whenever n is a positive integer. Fill in the corresponding steps: (Assume)",
+	
+					"5.1.6d: Prove that 1*1!+2*2!+...+n*n!= (n+1)!-1 whenever n is a positive integer. Fill in the corresponding steps: (Induction)",
+	
+	
+					"5.1.8a: Prove that 2-2*7+2*7 <sup>2</sup> -…+2(-7) <sup>n</sup> = (1-(-7) <sup>n+1</sup> )/4 whenever n is a nonnegative integer. Fill in the corresponding steps: (Basis) ",
+
+					"5.1.8b: Prove that 2-2*7+2*7 <sup>2</sup> -…+2(-7) <sup>n</sup> = (1-(-7) <sup>n+1</sup> )/4 whenever n is a nonnegative integer. Fill in the corresponding steps: (Want to Show) ",
+	
+					"5.1.8c: Prove that 2-2*7+2*7 <sup>2</sup> -…+2(-7) <sup>n</sup> = (1-(-7) <sup>n+1</sup> )/4 whenever n is a nonnegative integer. Fill in the corresponding steps: (Assume)",
+					
+					"5.1.8d: Prove that 2-2*7+2*7 <sup>2</sup> -…+2(-7) <sup>n</sup> = (1-(-7) <sup>n+1</sup> )/4 whenever n is a nonnegative integer. Fill in the corresponding steps: (Induction)",
+	
+	
+					"5.1.10a: Find the formula for 1/(1*2)+1/(2*3)+...+1/(n(n+1)) then fill  prove the formula by filling in the following steps: (Find the Formula) ",
+	
+					"5.1.10b: Find the formula for 1/(1*2)+1/(2*3)+...+1/(n(n+1)) then fill  prove the formula by filling in the following steps: (Basis) ",
+
+					"5.1.10c: Find the formula for 1/(1*2)+1/(2*3)+...+1/(n(n+1)) then fill  prove the formula by filling in the following steps: (Want to Show) ",
+	
+					"5.1.10d: Find the formula for 1/(1*2)+1/(2*3)+...+1/(n(n+1)) then fill  prove the formula by filling in the following steps: (Assume)",
+	
+					"5.1.10e: Find the formula for 1/(1*2)+1/(2*3)+...+1/(n(n+1)) then fill  prove the formula by filling in the following steps: (Induction)",
+	
+	
+					"5.1.12a: Prove that &Sigma; <sub>j=0</sub> <sup>n</sup> (-1/2) <sup>j</sup> = (2 <sup>n+1</sup> +(-1) <sup>n</sup> )/(3*2 <sup>n</sup> ) whenever n is a nonnegative integer by filling in the following steps: (Basis) ",
+
+					"5.1.12b: Prove that &Sigma; <sub>j=0</sub> <sup>n</sup> (-1/2) <sup>j</sup> = (2 <sup>n+1</sup> +(-1) <sup>n</sup> )/(3*2 <sup>n</sup> ) whenever n is a nonnegative integer by filling in the following steps: (Want to Show) ",
+	
+					"5.1.12c: Prove that &Sigma; <sub>j=0</sub> <sup>n</sup> (-1/2) <sup>j</sup> = (2 <sup>n+1</sup> +(-1) <sup>n</sup> )/(3*2 <sup>n</sup> ) whenever n is a nonnegative integer by filling in the following steps: (Assume)",
+	
+					"5.1.12d: Prove that &Sigma; <sub>j=0</sub> <sup>n</sup> (-1/2) <sup>j</sup> = (2 <sup>n+1</sup> +(-1) <sup>n</sup> )/(3*2 <sup>n</sup> ) whenever n is a nonnegative integer by filling in the following steps: (Induction)",
+	
+	
+					"5.1.14a: Prove that for every positive integer n. &Sigma; <sup>n</sup> <sub>(k=1)</sub> k2 <sup>k</sup> = (n-1) 2 <sup>n+1</sup> +2 by filling in the following steps: (Basis) ",
+
+					"5.1.14b: Prove that for every positive integer n. &Sigma; <sup>n</sup> <sub>(k=1)</sub> k2 <sup>k</sup> = (n-1) 2 <sup>n+1</sup> +2 by filling in the following steps: (Want to Show) ",
+	
+					"5.1.14c: Prove that for every positive integer n. &Sigma; <sup>n</sup> <sub>(k=1)</sub> k2 <sup>k</sup> = (n-1) 2 <sup>n+1</sup> +2 by filling in the following steps: (Assume)",
+	
+					"5.1.14d: Prove that for every positive integer n. &Sigma; <sup>n</sup> <sub>(k=1)</sub> k2 <sup>k</sup> = (n-1) 2 <sup>n+1</sup> +2 by filling in the following steps: (Induction)",
+	
+	
+					"5.1.16a: Prove that for every positive integer n, 1*2*3+2*3*4+…+n(n+1)(n+2) = (n(n+1)(n+2)(n+3))/4, by filling in the following steps: (Basis) ",
+
+					"5.1.16b: Prove that for every positive integer n, 1*2*3+2*3*4+…+n(n+1)(n+2) = (n(n+1)(n+2)(n+3))/4, by filling in the following steps: (Want to Show) ",
+	
+					"5.1.16c: Prove that for every positive integer n, 1*2*3+2*3*4+…+n(n+1)(n+2) = (n(n+1)(n+2)(n+3))/4, by filling in the following steps: (Assume)",
+	
+					"5.1.16d: Prove that for every positive integer n, 1*2*3+2*3*4+…+n(n+1)(n+2) =(n(n+1)(n+2)(n+3))/4, by filling in the following steps: (Induction)",
+	
+
+					"5.1.20a: Prove that 3 <sup>n</sup> <n! if n is an integer greater then 6, n>6, by filling in the following steps: (Basis) ",
+
+					"5.1.20b: Prove that 3 <sup>n</sup> <n! if n is an integer greater then 6, n>6, by filling in the following steps: (Want to Show) ",
+					
+					"5.1.20c: Prove that 3 <sup>n</sup> <n! if n is an integer greater then 6, n>6, by filling in the following steps: (Assume)",
+	
+					"5.1.20d: Prove that 3 <sup>n</sup> <n! if n is an integer greater then 6, n>6, by filling in the following steps: (Induction)",
+	
+	
+					"5.1.32a: Prove that 3 divides n <sup>3</sup> +2n whenever n is a positive integer by filling in the following steps: (Basis) ",
+
+					"5.1.32b: Prove that 3 divides n <sup>3</sup> +2n whenever n is a positive integer by filling in the following steps: (Want to Show) ",
+	
+					"5.1.32c: Prove that 3 divides n <sup>3</sup> +2n whenever n is a positive integer by filling in the following steps: (Assume)",
+	
+					"5.1.32d: Prove that 3 divides n <sup>3</sup> +2n whenever n is a positive integer by filling in the following steps: (Induction)",
+	
+	
+					"5.1.36a: Prove that 21 divides 4 <sup>n+1</sup> +5 <sup>2n-1</sup> whenever n is a positive integer by filling in the following steps: (Basis) ",
+
+					"5.1.36b: Prove that 21 divides 4 <sup>n+1</sup> +5 <sup>2n-1</sup> whenever n is a positive integer by filling in the following steps: (Want to Show) ",
+	
+					"5.1.36c: Prove that 21 divides 4 <sup>n+1</sup> +5 <sup>2n-1</sup> whenever n is a positive integer by filling in the following steps: (Assume)",
+	 
+					"5.1.36d: Prove that 21 divides 4 <sup>n+1</sup> +5 <sup>2n-1</sup> whenever n is a positive integer by filling in the following steps: (Induction)",
+	
+				
+				/*
 					Assignment 7
 				*/
-				
+				/*
 					"2.5.2a: Determine whether each of these sets is finite, countably infinite, or uncountable. For those that are countably infinite, exhibit a one to one correspondence between the set of positive integers and that set. The integers greater than 10. ",
 					"2.2.5b: Determine whether each of these sets is finite, countably infinite, or uncountable. For those that are countably infinite, exhibit a one to one correspondence between the set of positive integers and that set. the odd negative integers. ",
 					"2.5.2c: Determine whether each of these sets is finite, countably infinite, or uncountable. For those that are countably infinite, exhibit a one to one correspondence between the set of positive integers and that set. the integers with absolute value less than 1,000,000. ",
@@ -88,7 +184,7 @@ public class ManyTestProblems {
 					"3.2.14d: Determine whether  X^3 is O(g(x)) for each of these functions:  X^2 + X^4 ",
 					"3.2.14e: Determine whether  X^3 is O(g(x)) for each of these functions:  3^X ",
 					"3.2.14f: Determine whether  X^3 is O(g(x)) for each of these functions:  (X^3)/2 "
-
+				*/
 				
 				/*
 					Assignment 6
@@ -447,7 +543,7 @@ public class ManyTestProblems {
 				QuestionType.SKETCH,
 				QuestionType.SKETCH
 		};
-		for(int k = 0; k < 52/*42*//*22*//*19*//*39*/; k ++) {
+		for(int k = 0; k < 41 /*52*//*42*//*22*//*19*//*39*/; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
