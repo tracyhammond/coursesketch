@@ -120,17 +120,19 @@
 	    		}
 	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[placeholder].getSubmission().getUpdateList());
 	    		console.log(updateList);
+	    		commandManager.setUpdateList(updateList.getList());
 	    		++placeholder;
 			});
 			
 			parent.problemNavigator.addEventMapping("prev_sketch", function() {
-				console.log(sketchList);
+				console.log(sketchList[placeholder]);
 	    		if (isUndefined(sketchList[placeholder])) {
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
 	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[placeholder].getSubmission().getUpdateList());
 	    		console.log(updateList);
+	    		commandManager.setUpdateList(updateList.getList());
 	    		if(placeholder > 0){
 	    			--placeholder;
 	    			}
