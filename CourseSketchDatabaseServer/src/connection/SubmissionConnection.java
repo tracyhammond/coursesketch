@@ -34,8 +34,7 @@ import protobuf.srl.submission.Submission.SrlExperimentList;
 public class SubmissionConnection extends WrapperConnection {
 
 	private DB TEMP_BAD_DB; // going against all styles with these variables to make them go away as quickly as possible!
-	
-	
+
 	public SubmissionConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
 		super( serverUri, draft, parent );
 		try {

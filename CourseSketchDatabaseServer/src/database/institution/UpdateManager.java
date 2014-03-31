@@ -2,14 +2,10 @@ package database.institution;
 
 import static util.StringConstants.*;
 
-import java.util.ArrayList;
 
 import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
 
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlSchool;
-import protobuf.srl.school.School.SrlUser;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -18,12 +14,10 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.BasicDBList;
 
-import connection.TimeManager;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 
-public class UpdateManager 
-{
+public class UpdateManager {
 	public static void mongoInsertUpdate(DB dbs, String userId, String ID, long Time, String classification) throws AuthenticationException,
 			DatabaseAccessException {
 		// pull the item and delete it from the list
@@ -47,6 +41,7 @@ public class UpdateManager
 	 * Returns all updates that are after a certain time.
 	 *
 	 * if the given time is <= 0 than the entire list is returned.
+	 * If there are no updates an empty list is returned
 	 * @param dbs
 	 * @param userId
 	 * @param time
@@ -55,10 +50,14 @@ public class UpdateManager
 	 * @throws DatabaseAccessException
 	 */
 	public static BasicDBList mongoGetUpdate(DB dbs, String userId, long time) throws AuthenticationException, DatabaseAccessException {
-		DBRef myDbRef = new DBRef(dbs, "CourseSketchUsers", new ObjectId(userId));
-		DBObject corsor = myDbRef.fetch();
+		//DBRef myDbRef = new DBRef(dbs, "Users", new ObjectId(userId));
+		//DBObject corsor = myDbRef.fetch();
+		DBObject corsor = dbs.getCollection("Users").find(new BasicDBObject("_id", userId)).next();
 
 		BasicDBList updateList = (BasicDBList) corsor.get(UPDATE);
+		if (updateList == null) {
+			return new BasicDBList();
+		}
 		if (time <= 0) {
 			return updateList;
 		}
