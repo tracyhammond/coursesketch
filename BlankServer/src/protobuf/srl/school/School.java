@@ -3,6 +3,7 @@
 
 package protobuf.srl.school;
 
+@SuppressWarnings("unused")
 public final class School {
   private School() {}
   public static void registerAllExtensions(

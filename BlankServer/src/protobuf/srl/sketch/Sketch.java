@@ -3,6 +3,7 @@
 
 package protobuf.srl.sketch;
 
+@SuppressWarnings("unused")
 public final class Sketch {
   private Sketch() {}
   public static void registerAllExtensions(

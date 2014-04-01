@@ -359,6 +359,7 @@ public final class Test {
 
       public protobuf.Test.Outer buildPartial() {
         protobuf.Test.Outer result = new protobuf.Test.Outer(this);
+        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (innersBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {

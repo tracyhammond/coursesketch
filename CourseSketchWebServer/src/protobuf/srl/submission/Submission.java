@@ -3724,6 +3724,7 @@ public final class Submission {
 
       public protobuf.srl.submission.Submission.SrlExperimentList buildPartial() {
         protobuf.srl.submission.Submission.SrlExperimentList result = new protobuf.srl.submission.Submission.SrlExperimentList(this);
+        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (experimentsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {

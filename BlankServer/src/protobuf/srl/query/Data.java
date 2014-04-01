@@ -3,6 +3,7 @@
 
 package protobuf.srl.query;
 
+@SuppressWarnings("unused")
 public final class Data {
   private Data() {}
   public static void registerAllExtensions(
