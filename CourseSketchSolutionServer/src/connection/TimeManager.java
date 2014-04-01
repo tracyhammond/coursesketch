@@ -1,7 +1,4 @@
-package proxyServer;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+package connection;
 
 import org.joda.time.DateTime;
 
@@ -16,18 +13,12 @@ public class TimeManager {
 	private static long latency = 0;
 	private static long timeDifferance = 0;
 	private static long totalTimeDifferance = 0;
-	static ActionListener listen;
-	
-	public static void setListener(ActionListener list) {
-		listen = list;
-	}
 	
 	public static long getSystemTime() {
 		return DateTime.now().getMillis() + totalTimeDifferance;
 	}
 	
 	public static Request serverSendTimeToClient() {
-		
 		Request.Builder req = Request.newBuilder();
 		req.setRequestType(Request.MessageType.TIME);
 		req.setMessageTime(getSystemTime());
@@ -37,10 +28,10 @@ public class TimeManager {
 	
 	public static Request clientReciveTimeDiff(Request req) {
 		long startCounter = getSystemTime();
-		System.out.println("Proxy Recived Time");
+		System.out.println("sub Recived Time");
 		timeDifferance = req.getMessageTime() - getSystemTime();
 		System.out.println("server time:"+req.getMessageTime());
-		System.out.println("proxy time:"+DateTime.now().getMillis());
+		System.out.println("sub time:"+DateTime.now().getMillis());
 		Request.Builder rsp = Request.newBuilder();
 		rsp.setRequestType(Request.MessageType.TIME);
 		rsp.setMessageTime(req.getMessageTime()+(getSystemTime()-startCounter));
@@ -74,10 +65,7 @@ public class TimeManager {
 	public static Request clientReciveLatency(Request req) {
 		latency = req.getMessageTime();
 		totalTimeDifferance=timeDifferance+latency;
-		if (listen != null) {
-			listen.actionPerformed(new ActionEvent(req, 0, null));
-		}
-		System.out.println("Proxy Recived Time\nTotal Time:"+totalTimeDifferance);
+		System.out.println("sub Recived Time\nTotal Time:"+totalTimeDifferance);
 		return null;
 	}
 }

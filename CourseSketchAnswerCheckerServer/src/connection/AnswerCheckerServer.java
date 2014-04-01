@@ -75,6 +75,11 @@ public class AnswerCheckerServer extends MultiInternalConnectionServer {
 			// we need to somehow send an error to the client here
 			return;
 		}
+		if (req.getRequestType()==Request.MessageType.TIME) {
+			Request rsp = TimeManager.decodeRequest(req);
+			if (rsp != null) conn.send(rsp.toByteArray());
+			return;
+		}
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			// then we submit!
 			if (req.getResponseText().equals("student")) {

@@ -5,6 +5,7 @@ package connection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Authenticator.RequestorType;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -85,6 +86,13 @@ public class LoginServer extends WebSocketServer {
 		try {
 			//This is assuming user is logged in
 			//conn.send(createLoginResponse(req, true));
+			
+			if (req.getRequestType()==Request.MessageType.TIME) {
+				Request rsp = TimeManager.decodeRequest(req);
+				if (rsp != null) conn.send(rsp.toByteArray());
+				return;
+			}
+			
 			
 			if (req.getLogin().getIsRegistering()) {
 				boolean successfulRegistration = registerUser(req.getLogin().getUsername(), req.getLogin().getPassword(), req.getLogin().getEmail(), req.getLogin().getIsInstructor());

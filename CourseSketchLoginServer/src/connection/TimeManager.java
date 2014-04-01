@@ -1,4 +1,4 @@
-package proxyServer;
+package connection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,10 +37,10 @@ public class TimeManager {
 	
 	public static Request clientReciveTimeDiff(Request req) {
 		long startCounter = getSystemTime();
-		System.out.println("Proxy Recived Time");
+		System.out.println("login Recived Time");
 		timeDifferance = req.getMessageTime() - getSystemTime();
-		System.out.println("server time:"+req.getMessageTime());
-		System.out.println("proxy time:"+DateTime.now().getMillis());
+		System.out.println("proxy time:"+req.getMessageTime());
+		System.out.println("login time:"+DateTime.now().getMillis());
 		Request.Builder rsp = Request.newBuilder();
 		rsp.setRequestType(Request.MessageType.TIME);
 		rsp.setMessageTime(req.getMessageTime()+(getSystemTime()-startCounter));
@@ -75,9 +75,9 @@ public class TimeManager {
 		latency = req.getMessageTime();
 		totalTimeDifferance=timeDifferance+latency;
 		if (listen != null) {
-			listen.actionPerformed(new ActionEvent(req, 0, null));
+			listen.actionPerformed(new ActionEvent(null, 0, null));
 		}
-		System.out.println("Proxy Recived Time\nTotal Time:"+totalTimeDifferance);
+		System.out.println("login Recived Time\nTotal Time:"+totalTimeDifferance);
 		return null;
 	}
 }
