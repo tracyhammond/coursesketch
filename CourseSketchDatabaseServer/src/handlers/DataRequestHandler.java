@@ -110,7 +110,12 @@ public class DataRequestHandler {
 							break;
 						}
 						case UPDATE: {
-							SrlSchool updates = UserClient.mongoGetReleventUpdates(userId, 0); // for now get all updates!
+							long lastRequestTime = 0;
+							if (itrequest.getItemIdCount() > 0) {
+								lastRequestTime = Long.parseLong(itrequest.getItemId(0));
+							}
+							System.out.println("Last request time! " + lastRequestTime);
+							SrlSchool updates = UserClient.mongoGetReleventUpdates(userId, lastRequestTime); // for now get all updates!
 							results.add(buildResult(updates.toByteString(), ItemQuery.UPDATE));
 						}
 						default: {
