@@ -15,6 +15,7 @@ import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlUser;
+import proxyServer.TimeManager;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
@@ -26,11 +27,21 @@ public class LoginConnection extends WrapperConnection {
 
 	public void onMessage(ByteBuffer buffer) {
 		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
+		if (r.getRequestType() == Request.MessageType.TIME) {
+			
+			Request rsp = TimeManager.decodeRequest(r);
+			if (rsp != null) {
+				this.parentManager.send(rsp, r.getSessionInfo(), LoginConnection.class);
+			}
+			return;
+		}
 		LoginConnectionState state = (LoginConnectionState) getStateFromId(r.getSessionInfo());
 		if (r.getLogin().getIsLoggedIn()) {
 			state.logIn(r.getLogin().getIsInstructor(), r.getServersideId());
 		}
-
+		
+		
+		
 		Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
 		getConnectionFromState(state).send(result.toByteArray());
 

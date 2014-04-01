@@ -37,6 +37,7 @@ import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 
+import proxyServer.TimeManager;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 
@@ -63,11 +64,19 @@ public class ProxyServer extends MultiInternalConnectionServer {
 	static int numberOfConnections = Integer.MIN_VALUE;
 	public ProxyServer(int port, boolean connectLocally) {
 		this( new InetSocketAddress( port ), connectLocally );
+		
 	}
 
 	public ProxyServer(InetSocketAddress address, boolean connectLocally) {
 		super(address);
-
+		ActionListener listener = new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				serverManager.send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
+				serverManager.send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
+				//serverManager.send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
+			}
+		};
+		TimeManager.setListener(listener);
 		serverManager = new ProxyConnectionManager(this, connectLocally);
 
 		socketManager.setExpiredListiner(new ActionListener() {

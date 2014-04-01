@@ -17,6 +17,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import protobuf.srl.request.Message.Request;
 import proxyServer.ProxyServer;
+import proxyServer.TimeManager;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
@@ -36,6 +37,14 @@ public class AnswerConnection extends WrapperConnection {
 		MultiConnectionState state = getStateFromId(MultiInternalConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
 
 		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
+		if (r.getRequestType() == Request.MessageType.TIME) {
+			
+			Request rsp = TimeManager.decodeRequest(r);
+			if (rsp != null) {
+				this.parentManager.send(rsp, r.getSessionInfo(), AnswerConnection.class);
+			}
+			return;
+		}
 		Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
 		getConnectionFromState(state).send(result.toByteArray());
 	}
