@@ -178,19 +178,20 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.UPDATE, function(evt, item) {
 			clearTimeout(timeout);
 			var school = SchoolBuilder.SrlSchool.decode(item.data);
+			console.log(school);
 			var courseList = school.courses;
 			for (var i = 0; i < courseList.length; i ++) {
-				this.setCourse(courseList[i]);
+				localScope.setCourse(courseList[i]);
 			}
 
 			var assignmentList = school.assignments;
 			for (var i = 0; i < assignmentList.length; i ++) {
-				this.setAssignment(assignmentList[i]);
+				localScope.setAssignment(assignmentList[i]);
 			}
 
 			var problemList = school.problems;
 			for (var i = 0; i < problemList.length; i ++) {
-				this.setCourseProblem(problemList[i]);
+				localScope.setCourseProblem(problemList[i]);
 			}
 
 			if (!functionCalled && callback) {

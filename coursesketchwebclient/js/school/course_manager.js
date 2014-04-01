@@ -97,7 +97,9 @@ function assignmentClickerFunction(assignment) {
 		builder.showImage = false;
 		builder.setEmptyListMessage('There are no problems for this assignment!');
 		builder.setBoxClickFunction(problemClickerFunction);
-		waitingIcon.finishWaiting(); // stops the waiting icon
+		if (waitingIcon.isRunning()) {
+			waitingIcon.finishWaiting(); // stops the waiting icon
+		}
 		builder.build('problem_list_column');
 		if (parent.dataManager.getState("isInstructor")) {
 			try {

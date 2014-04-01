@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.BasicBSONObject;
+import org.bson.types.ObjectId;
 
 import protobuf.srl.school.School.SrlSchool;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 import connection.TimeManager;
 import database.auth.AuthenticationException;
@@ -37,7 +40,61 @@ public class UserUpdateHandler {
 		}
 	}
 
-	public static void InsertUpdates(DB db, String userId, String id, String classification) throws AuthenticationException, DatabaseAccessException {
+	/**
+	 * Inserts updates for a group of uses
+	 * @param db
+	 * @param users
+	 * @param id
+	 * @param classification
+	 */
+	public static void InsertUpdates(DB db, String[] users, String id, String classification) {
+		if (users == null) {
+			System.err.println("There are no users for this school item");
+			return;
+		}
+		for (int i = 0; i < users.length;i++) {
+			try {
+				UpdateManager.mongoInsertUpdate(db, users[i], id, TimeManager.getSystemTime(), classification);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Inserts updates for a group of users.
+	 *
+	 * This method will recursively search for all users to insert into the update list
+	 * @param db
+	 * @param users
+	 * @param id
+	 * @param classification
+	 */
+	public static void InsertUpdates(DB db, List<String> users, String id, String classification) {
+		if (users == null) {
+			System.err.println("There are no users for this school item");
+			return;
+		}
+
+		for (String group : users) {
+			if (group.startsWith(GROUP_PREFIX)) {
+				DBRef myDbRef = new DBRef(db, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
+				DBObject corsor = myDbRef.fetch();
+				ArrayList list = (ArrayList)corsor.get(USER_LIST);
+				InsertUpdates(db, list, id, classification);
+			} else {
+				try {
+					UpdateManager.mongoInsertUpdate(db, group, id, TimeManager.getSystemTime(), classification);
+				} catch (AuthenticationException e) {
+					e.printStackTrace();
+				} catch (DatabaseAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void InsertUpdate(DB db, String userId, String id, String classification) throws AuthenticationException, DatabaseAccessException {
 		UpdateManager.mongoInsertUpdate(db, userId, id, TimeManager.getSystemTime(), classification);
 	}
 

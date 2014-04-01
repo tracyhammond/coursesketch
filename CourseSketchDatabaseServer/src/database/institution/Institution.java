@@ -76,7 +76,13 @@ public final class Institution {
 		}
 		instance = this;
 	}
-	
+
+	public void setUpIndexes() {
+		System.out.println("Setting up the indexes");
+		db.getCollection(USER_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
+		db.getCollection(UPDATE_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
+	}
+
 	/**
 	 * Returns a list of courses given a list of Ids for the courses
 	 * @throws AuthenticationException

@@ -146,9 +146,9 @@ public class CourseManager {
 
 	}
 
-	public static boolean mongoUpdateCourse(DB dbs, String courseID, String userId, SrlCourse course) throws AuthenticationException, DatabaseAccessException {
+	public static boolean mongoUpdateCourse(DB dbs, String courseId, String userId, SrlCourse course) throws AuthenticationException, DatabaseAccessException {
 		boolean update = false;
-		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseID));
+		DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
 		DBObject corsor = myDbRef.fetch();
 		DBObject updateObj = null;
 		DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
@@ -233,14 +233,8 @@ public class CourseManager {
 
 		// get user list
 		// send updates 
-		if(update == true)
-		{
-			String[] users = (String[]) corsor.get(USERS);
-			for(int i = 0;i < users.length;i++)
-			{
-				UserUpdateHandler.InsertUpdates(dbs, users[i], courseID, "COURSE");
-			}
-			
+		if (update == true) {
+			UserUpdateHandler.InsertUpdates(dbs, ((List)corsor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
 		}
 		return true;
 
@@ -258,6 +252,8 @@ public class CourseManager {
 		DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
 		updateObj = new BasicDBObject(ASSIGNMENT_LIST, assignmentId);
 		courses.update(corsor, new BasicDBObject ("$addToSet",updateObj));
+
+		UserUpdateHandler.InsertUpdates(dbs, ((List)corsor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
 		return true;
 		
 	}

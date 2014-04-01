@@ -3,6 +3,7 @@ package database.institution;
 import static util.StringConstants.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 
@@ -138,7 +139,8 @@ public class CourseProblemManager
 
 	}
 
-	public static boolean mongoUpdateCourseProblem(DB dbs, String problemId, String userId, SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
+	public static boolean mongoUpdateCourseProblem(DB dbs, String problemId, String userId, SrlProblem problem) throws AuthenticationException,
+			DatabaseAccessException {
 		boolean update = false;
 		DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
 		DBObject corsor = myDbRef.fetch();
@@ -182,14 +184,8 @@ public class CourseProblemManager
 				}
 			}
 		}
-		if(update == true)
-		{
-			String[] users = (String[]) corsor.get(USERS);
-			for(int i = 0;i < users.length;i++)
-			{
-				UserUpdateHandler.InsertUpdates(dbs, users[i], problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
-			}
-			
+		if(update == true) {
+			UserUpdateHandler.InsertUpdates(dbs, ((List)corsor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
 		}
 		return true;
 	}
