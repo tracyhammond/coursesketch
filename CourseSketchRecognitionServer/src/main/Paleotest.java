@@ -5,9 +5,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -15,11 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import srl.core.sketch.Point;
 import srl.core.sketch.Sketch;
 import protobuf.srl.commands.Commands.SrlUpdateList;

@@ -972,7 +972,8 @@ public final class Sketch {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -4754,7 +4755,8 @@ public final class Sketch {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -5854,7 +5856,8 @@ public final class Sketch {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -6513,7 +6516,8 @@ public final class Sketch {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -7518,7 +7522,8 @@ public final class Sketch {
 
       public protobuf.srl.sketch.Sketch.SrlAttributes buildPartial() {
         protobuf.srl.sketch.Sketch.SrlAttributes result = new protobuf.srl.sketch.Sketch.SrlAttributes(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           keys_ = new com.google.protobuf.UnmodifiableLazyStringList(
               keys_);

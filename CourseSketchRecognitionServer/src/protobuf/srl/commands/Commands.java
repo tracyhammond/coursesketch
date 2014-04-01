@@ -645,7 +645,8 @@ public final class Commands {
 
       public protobuf.srl.commands.Commands.SrlUpdateList buildPartial() {
         protobuf.srl.commands.Commands.SrlUpdateList result = new protobuf.srl.commands.Commands.SrlUpdateList(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (listBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             list_ = java.util.Collections.unmodifiableList(list_);
@@ -2112,7 +2113,8 @@ public final class Commands {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -3123,7 +3125,8 @@ public final class Commands {
 
       public protobuf.srl.commands.Commands.IdChain buildPartial() {
         protobuf.srl.commands.Commands.IdChain result = new protobuf.srl.commands.Commands.IdChain(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           idChain_ = new com.google.protobuf.UnmodifiableLazyStringList(
               idChain_);
@@ -3354,7 +3357,8 @@ public final class Commands {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -5021,7 +5025,8 @@ public final class Commands {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -5653,7 +5658,8 @@ public final class Commands {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -6437,7 +6443,8 @@ public final class Commands {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {

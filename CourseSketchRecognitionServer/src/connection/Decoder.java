@@ -59,6 +59,8 @@ public class Decoder {
 					result = ActionPackageShape.parseFrom(command.getCommandData());
 					break;
 				// etc...
+			default:
+				break;
 			}
 			return result;
 		} catch (InvalidProtocolBufferException e) {

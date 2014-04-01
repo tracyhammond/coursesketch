@@ -755,7 +755,8 @@ public final class School {
 
       public protobuf.srl.school.School.SrlSchool buildPartial() {
         protobuf.srl.school.School.SrlSchool result = new protobuf.srl.school.School.SrlSchool(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (coursesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             courses_ = java.util.Collections.unmodifiableList(courses_);
@@ -5368,7 +5369,8 @@ public final class School {
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         initFields();
-        int mutable_bitField0_ = 0;
+        @SuppressWarnings("unused")
+		int mutable_bitField0_ = 0;
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
             com.google.protobuf.UnknownFieldSet.newBuilder();
         try {
@@ -9429,7 +9431,8 @@ public final class School {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -13683,7 +13686,8 @@ public final class School {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -14542,7 +14546,8 @@ public final class School {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -15110,7 +15115,8 @@ public final class School {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -19020,7 +19026,8 @@ public final class School {
 
       public protobuf.srl.school.School.SrlPermission buildPartial() {
         protobuf.srl.school.School.SrlPermission result = new protobuf.srl.school.School.SrlPermission(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           adminPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(
               adminPermission_);

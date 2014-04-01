@@ -110,7 +110,8 @@ public final class Submission {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -887,7 +888,8 @@ public final class Submission {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1753,7 +1755,8 @@ public final class Submission {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -2890,7 +2893,8 @@ public final class Submission {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -3724,7 +3728,8 @@ public final class Submission {
 
       public protobuf.srl.submission.Submission.SrlExperimentList buildPartial() {
         protobuf.srl.submission.Submission.SrlExperimentList result = new protobuf.srl.submission.Submission.SrlExperimentList(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (experimentsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             experiments_ = java.util.Collections.unmodifiableList(experiments_);

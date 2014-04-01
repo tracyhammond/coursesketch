@@ -599,7 +599,8 @@ public final class Data {
 
       public protobuf.srl.query.Data.DataRequest buildPartial() {
         protobuf.srl.query.Data.DataRequest result = new protobuf.srl.query.Data.DataRequest(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (itemsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             items_ = java.util.Collections.unmodifiableList(items_);
@@ -2039,7 +2040,8 @@ public final class Data {
 
       public protobuf.srl.query.Data.DataSend buildPartial() {
         protobuf.srl.query.Data.DataSend result = new protobuf.srl.query.Data.DataSend(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (itemsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             items_ = java.util.Collections.unmodifiableList(items_);
@@ -2424,7 +2426,8 @@ public final class Data {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -3212,7 +3215,8 @@ public final class Data {
 
       public protobuf.srl.query.Data.DataResult buildPartial() {
         protobuf.srl.query.Data.DataResult result = new protobuf.srl.query.Data.DataResult(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (resultsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             results_ = java.util.Collections.unmodifiableList(results_);
@@ -3675,7 +3679,8 @@ public final class Data {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -4963,7 +4968,8 @@ public final class Data {
 
       public protobuf.srl.query.Data.IdList buildPartial() {
         protobuf.srl.query.Data.IdList result = new protobuf.srl.query.Data.IdList(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           list_ = new com.google.protobuf.UnmodifiableLazyStringList(
               list_);
@@ -5182,7 +5188,8 @@ public final class Data {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
