@@ -156,7 +156,7 @@ public class BankProblemManager
 			String[] users = (String[]) corsor.get(USERS);
 			for(int i = 0;i < users.length;i++)
 			{
-				UserUpdateHandler.InsertUpdates(dbs, users[i], problemBankId, "PROBLEM");
+				UserUpdateHandler.InsertUpdate(dbs, users[i], problemBankId, "PROBLEM");
 			}
 			
 		}

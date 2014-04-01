@@ -51,8 +51,10 @@ public class ManyTestAssignments {
 	}
 
 	public static void main(String args[]) {
+		
 		System.out.println("Running program");
 		testAssignments("52d55a580364615fe8a4496c", "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332");
+
 	}
 }
 // 0b7ac244-b785-6961-9347-7621abeada88-277aa353914b7c5f

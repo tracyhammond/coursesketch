@@ -22,6 +22,7 @@ public class StringConstants {
 	public static final String EXPERIMENT_COLLECTION = "Experiments";
 	public static final String STATE_COLLECTION = "UserStates";
 	public static final String GRADE_COLLECTION = "problem_submissions";
+	public static final String UPDATE_COLLECTION = "User_Updates";
 	public static final String DATABASE = "institution";
 
 	// meta fields
