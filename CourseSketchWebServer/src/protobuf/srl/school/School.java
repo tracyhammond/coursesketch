@@ -755,6 +755,7 @@ public final class School {
 
       public protobuf.srl.school.School.SrlSchool buildPartial() {
         protobuf.srl.school.School.SrlSchool result = new protobuf.srl.school.School.SrlSchool(this);
+        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (coursesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -5363,6 +5364,7 @@ public final class School {
           getUnknownFields() {
         return this.unknownFields;
       }
+      @SuppressWarnings("unused")
       private LatePolicy(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -19020,6 +19022,7 @@ public final class School {
 
       public protobuf.srl.school.School.SrlPermission buildPartial() {
         protobuf.srl.school.School.SrlPermission result = new protobuf.srl.school.School.SrlPermission(this);
+        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           adminPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(
