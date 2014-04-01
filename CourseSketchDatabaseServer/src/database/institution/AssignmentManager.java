@@ -18,7 +18,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import connection.TimeManager;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.UserUpdateHandler;
@@ -26,15 +25,13 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
 
-public class AssignmentManager 
-{
+public class AssignmentManager {
 	public static String mongoInsertAssignment(DB dbs, String userId, SrlAssignment assignment) throws AuthenticationException,
 		DatabaseAccessException {
 		DBCollection new_user = dbs.getCollection("Assignments");
 		AuthType auth = new AuthType();
 		auth.checkAdminOrMod = true;
-		if (!Authenticator.mognoIsAuthenticated(dbs, COURSE_COLLECTION, assignment.getCourseId(), userId, 0, auth))
-		{
+		if (!Authenticator.mognoIsAuthenticated(dbs, COURSE_COLLECTION, assignment.getCourseId(), userId, 0, auth)) {
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 		BasicDBObject query = new BasicDBObject(COURSE_ID,assignment.getCourseId())
@@ -87,7 +84,7 @@ public class AssignmentManager
 		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
 		isUsers = Authenticator.checkAuthentication(dbs, userId, usersList);
 
-		if(!isAdmin && !isMod && !isUsers) {
+		if (!isAdmin && !isMod && !isUsers) {
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 

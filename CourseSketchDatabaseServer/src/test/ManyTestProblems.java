@@ -11,6 +11,7 @@ import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
+import database.user.UserClient;
 
 public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {
@@ -564,16 +565,11 @@ public class ManyTestProblems {
 			testBuilder.setAssignmentId(assignmentId);
 			testBuilder.setCourseId(courseId);
 			testBuilder.setProblemBankId(resultantId);
+			/*
 			SrlPermission.Builder permissions = SrlPermission.newBuilder();
-			permissions.addAdminPermission("larry");
-	
-			permissions.addModeratorPermission("raniero");
-			permissions.addModeratorPermission("manoj");
-	
-			permissions.addUserPermission("vijay");
-			permissions.addUserPermission("matt");
-	
+
 			testBuilder.setAccessPermission(permissions.build());
+			*/
 			System.out.println(testBuilder.toString());
 	
 			// testing inserting course
@@ -588,4 +584,9 @@ public class ManyTestProblems {
 				System.out.println("INSERTING PROBLEM SUCCESSFUL"); /*SUCCESSFULT*/
 		}
 	}
-}
+
+	public static void main(String args[]) {
+		new Institution(false); // makes the database point locally
+		new UserClient(false); // makes the database point locally
+	}
+ }
