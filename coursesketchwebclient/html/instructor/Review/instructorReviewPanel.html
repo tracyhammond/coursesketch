@@ -113,20 +113,20 @@
 			var placeholder = 0;
 
 			parent.problemNavigator.addEventMapping("next_sketch",function() {
-				console.log(sketchList[placeholder]);
+				//console.log(sketchList[placeholder]);
 				++ placeholder;
 	    		if (isUndefined(sketchList[placeholder])) {
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[placeholder].getSubmission().getUpdateList());
-	    		console.log(updateList);
+	    		var updateList = decodeProtobuf(sketchList[placeholder].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
+	    		//console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
 	    		
 			});
 			
 			parent.problemNavigator.addEventMapping("prev_sketch", function() {
-				console.log(sketchList[placeholder]);
+				//console.log(sketchList[placeholder]);
 				if(placeholder > 0){
 	    			placeholder -= 1;
 	    			}
@@ -139,7 +139,7 @@
 	    			return;
 	    		}
 	    		var updateList = decodeProtobuf(sketchList[placeholder].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
-	    		console.log(updateList);
+	    		//console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
 			});
 
@@ -185,7 +185,7 @@
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList2[0].getSubmission().getUpdateList());
+	    		var updateList = decodeProtobuf(sketchList2[0].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
 	    		console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
 	    	});
