@@ -327,7 +327,6 @@ public class Grader {
     	return panel;
     }
 
-
     static class NavigationHolder {
 		public int value;
 		public int size;

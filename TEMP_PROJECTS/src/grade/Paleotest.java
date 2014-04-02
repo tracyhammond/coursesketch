@@ -2,6 +2,8 @@ package grade;
 
 //import srl.core.sketch.*;
 
+import grade.Grader.NavigationHolder;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -56,6 +58,12 @@ public class Paleotest {
 	static JPanel panel;
 	static final TestSketchHolder holder = new TestSketchHolder();
 	static final ActionListener updateGui = makeGui();
+	
+	final static NavigationHolder courseNavigation = new NavigationHolder();
+	final static NavigationHolder assignmentNavigation = new NavigationHolder();
+	final static NavigationHolder problemNavigation = new NavigationHolder();
+	final static NavigationHolder sketchNavigation = new NavigationHolder();
+	
 	static SrlUpdateList fetchUpdates(int i) {
 		SrlUpdateList updates = null;
 
@@ -154,6 +162,9 @@ public class Paleotest {
 		display.assignmentName = currentAssignment.getName();
 		display.problemName = currentProblem.getName();
 		display.problemText = currentProblem.getProblemInfo().getQuestionText();
+
+		
+		
 	}
 
 	public static void main(String[] args) throws IOException, FileNotFoundException, Exception {
@@ -481,16 +492,16 @@ public class Paleotest {
     	displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.Y_AXIS));
     	displayPanel.add(courseNumbers);
     	displayPanel.add(courseName);
-    	displayPanel.add(assignmentNumbers);
+    	//displayPanel.add(assignmentNumbers);
     	displayPanel.add(assignmentName);
     	displayPanel.add(dueDate);
-    	displayPanel.add(problemNumbers);
+    	//displayPanel.add(problemNumbers);
     	displayPanel.add(problemName);
     	displayPanel.add(problemText);
-    	displayPanel.add(sketchNumbers);
+    	//displayPanel.add(sketchNumbers);
     	displayPanel.add(studentUserName);
-    	displayPanel.add(submissionTime);
-    	displayPanel.add(late);
+    	//displayPanel.add(submissionTime);
+    	//displayPanel.add(late);
 
     	ActionListener result = new ActionListener() {
     		@Override
