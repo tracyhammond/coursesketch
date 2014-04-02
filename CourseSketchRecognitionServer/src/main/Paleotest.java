@@ -1,8 +1,11 @@
 package main;
 
 //import srl.core.sketch.*;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
@@ -12,8 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import srl.core.sketch.Point;
 import srl.core.sketch.Sketch;
 import protobuf.srl.commands.Commands.SrlUpdateList;
@@ -41,6 +48,7 @@ public class Paleotest {
 	static JFrame frmMain = new JFrame();
 	static JPanel panel;
 	static final TestSketchHolder holder = new TestSketchHolder();
+	static final ActionListener updateGui = makeGui();
 	static SrlUpdateList fetchUpdates(int i) {
 		SrlUpdateList updates = null;
 
@@ -67,12 +75,18 @@ public class Paleotest {
 		//DBCursor lcursor = lcollection.findOne().containsField("{\"ServerId\":"+uid+"\"}");
 		BasicDBObject query = new BasicDBObject("ServerId",uid);
 		DBCursor lcursor = lcollection.find(query);
-		if(lcursor.hasNext()){
+		display.studentUserName = lcursor.next().get("UserName").toString();
+		if (lcursor.hasNext()) {
 			frmMain.setTitle("SUBMISSION#: " + current + " USER:"+lcursor.next().get("UserName").toString());
 		}
+
+		updateDisplay(mongoClient.getDB("Institution"), object.get("CourseProblemId").toString());
+
+		updateGui.actionPerformed(new ActionEvent(updateGui, 0, "")); // updates the gui
 		//frmMain.setTitle("USER:<" + uid.toString() + ">");
-		byte[] bytes = (byte[]) obj;
+
 		try {
+			byte[] bytes = (byte[]) obj;
 			updates = SrlUpdateList.parseFrom(bytes);
 		} catch (InvalidProtocolBufferException e) {
 			System.out.println("Couldn't parse updates!");
@@ -104,7 +118,16 @@ public class Paleotest {
 		}
 		*/
 	}
-	
+
+	/**
+	 * Uses the problem Id to look up the problem
+	 * @param db
+	 * @param problemId
+	 */
+	private static void updateDisplay(DB db, String problemId) {
+		
+	}
+
 	public static void main(String[] args) throws IOException, FileNotFoundException, Exception {
 
 		// From Here Block1 Starts
@@ -395,8 +418,94 @@ public class Paleotest {
 		// From Here Block2 Ends
 		// =========================================================>
 	}
+	
+	// DAVID CODE
+
+	final static NavigationDisplay display = new NavigationDisplay();
+
+	public static ActionListener makeGui() {
+    	JFrame frame = new JFrame();
+    	frame.setVisible(false);
+    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    	JPanel totalPanel = new JPanel();
+
+    	final JPanel displayPanel = new JPanel();
+    	final JLabel courseNumbers = new JLabel("Course 0 out of 0");
+    	final JLabel courseName = new JLabel("Course:");
+    	final JLabel assignmentNumbers = new JLabel("Assignmetn 0 out of 0");
+    	final JLabel assignmentName  = new JLabel("Assignment:");
+    	final JLabel problemNumbers = new JLabel("Problem 0 out of 0");
+    	final JLabel problemName  = new JLabel("Problem:");
+    	final JTextArea problemText = new JTextArea("Question Text:");
+    	final JLabel sketchNumbers = new JLabel("Sketch 0 out of 0");
+    	final JLabel studentUserName = new JLabel("UserName:");
+    	final JLabel dueDate = new JLabel("DueDate:");
+    	final JLabel submissionTime = new JLabel("Submission:");
+    	final JLabel late = new JLabel("Late:");
+
+    	problemText.setEditable(false);
+    	problemText.setColumns(50);
+    	problemText.setRows(4);
+    	problemText.setLineWrap(true);
+
+    	displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.Y_AXIS));
+    	displayPanel.add(courseNumbers);
+    	displayPanel.add(courseName);
+    	displayPanel.add(assignmentNumbers);
+    	displayPanel.add(assignmentName);
+    	displayPanel.add(dueDate);
+    	displayPanel.add(problemNumbers);
+    	displayPanel.add(problemName);
+    	displayPanel.add(problemText);
+    	displayPanel.add(sketchNumbers);
+    	displayPanel.add(studentUserName);
+    	displayPanel.add(submissionTime);
+    	displayPanel.add(late);
+
+    	ActionListener result = new ActionListener() {
+    		@Override
+    		public void actionPerformed(ActionEvent e) {
+    			courseName.setText("Course: " + display.courseName);
+    			assignmentName.setText("Assignment: " + display.assignmentName);
+    			dueDate.setText("Due Date: " + display.dueDate);
+    			problemName.setText("Problem: " + display.problemName);
+    			problemText.setText("Question Text: " + display.problemText);
+    			studentUserName.setText("UserName: " + display.studentUserName);
+    			submissionTime.setText("Submission Time: " + display.submissionTime);
+    			if (display.late) {
+    				late.setText("LATE");
+    				late.setForeground(new Color(255, 0, 0));
+    			} else {
+    				late.setText("ON-TIME");
+    				late.setForeground(new Color(0, 255, 0));
+    			}
+    		}
+    	};
+
+    	totalPanel.setLayout(new BoxLayout(totalPanel, BoxLayout.Y_AXIS));
+    	totalPanel.add(displayPanel);
+
+    	frame.add(totalPanel);
+    	frame.pack();
+    	frame.setVisible(true);
+    	
+    	return result;
+    }
+	
 }
 
 class TestSketchHolder {
 	public Sketch tester;
+}
+
+class NavigationDisplay {
+	public String courseName;
+	public String assignmentName;
+	public String problemName;
+	public String problemText;
+	public String studentUserName;
+	public long dueDate;
+	public long submissionTime;
+	public boolean late;
 }

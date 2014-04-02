@@ -145,7 +145,7 @@ public class Grader {
     		private void changeProblem() throws AuthenticationException, DatabaseAccessException {
     			System.out.println("Changing Problem");
     			currentProblem = currentProblems.get(problemNavigation.value);
-    			currentProblems =  Institution.mongoGetCourseProblem(currentAssignment.getProblemListList(), mastId);
+    			//currentProblems =  Institution.mongoGetCourseProblem(currentAssignment.getProblemListList(), mastId);
     			BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, currentProblem.getId());
     			DBCursor dbCursor = experiments.find(findQuery);
     			currentExperiments = new ArrayList<SrlExperiment>();
