@@ -20,6 +20,7 @@ import java.util.Scanner;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -379,11 +380,14 @@ public class Paleotest {
 		// From Here Block1 Ends
 		// =========================================================>
 		 
-		// New and improved network stream getter
+		// Newerer and improved network stream getter
+		current = Integer.parseInt(JOptionPane.showInputDialog("INPUT NUMBER"));
+		/*
 		Scanner s = new Scanner(System.in);
 		System.out.println("INPUT NUMBER!");
 		current = s.nextInt();
 		s.close();
+		*/
 		SrlUpdateList updates = fetchUpdates(current);
 		
 		holder.tester = Response.viewTest(updates);
