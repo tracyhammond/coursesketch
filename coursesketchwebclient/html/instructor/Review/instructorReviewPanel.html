@@ -110,35 +110,37 @@
 			parent.problemNavigator.addEventMapping("redo", function() {
 				commandManager.redoAction();
 			});
-			var placeholder=1;
+			var placeholder = 0;
 
 			parent.problemNavigator.addEventMapping("next_sketch",function() {
-				console.log(sketchList[placeholder]);
+				//console.log(sketchList[placeholder]);
+				++ placeholder;
 	    		if (isUndefined(sketchList[placeholder])) {
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[placeholder].getSubmission().getUpdateList());
-	    		console.log(updateList);
+	    		var updateList = decodeProtobuf(sketchList[placeholder].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
+	    		//console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
-	    		++placeholder;
+	    		
 			});
 			
 			parent.problemNavigator.addEventMapping("prev_sketch", function() {
-				console.log(sketchList[placeholder]);
+				//console.log(sketchList[placeholder]);
+				if(placeholder > 0){
+	    			placeholder -= 1;
+	    			}
+	    		else if(placeholder <= 0){
+	    			alert("This is the beggining of the list of sketches.");
+	    			return;
+	    		}
 	    		if (isUndefined(sketchList[placeholder])) {
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList[placeholder].getSubmission().getUpdateList());
-	    		console.log(updateList);
+	    		var updateList = decodeProtobuf(sketchList[placeholder].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
+	    		//console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
-	    		if(placeholder > 0){
-	    			--placeholder;
-	    			}
-	    		if(placeholder = 0){
-	    			alert("This is the beggining of the list of sketches.")
-	    		}
 			});
 
 
@@ -183,7 +185,7 @@
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(sketchList2[0].getSubmission().getUpdateList());
+	    		var updateList = decodeProtobuf(sketchList2[0].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
 	    		console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
 	    	});
@@ -243,5 +245,8 @@
 </head>
 <body>
 	<div id = "PercentBar">0%</div>
+	<div id = "Student User" style="background:#C0C0C0;">
+		Display_User();
+	</div>
 	<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
 </body>
