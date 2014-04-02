@@ -172,7 +172,7 @@ public class Paleotest {
 
 		private static final long serialVersionUID = -3271766505513485833L;
 
-	@Override
+		@Override
 		public void paint(Graphics g) {
 			Sketch tester = holder.tester;
 			if (tester != null) {
@@ -360,6 +360,8 @@ public class Paleotest {
 		}
 		};
 		panel.setSize(pxmax, pymax);
+		panel.setBackground(Color.white);
+		panel.setOpaque(true);
 		// frmMain.add(cnvs);
 		frmMain.add(panel);
 		frmMain.setVisible(true);
