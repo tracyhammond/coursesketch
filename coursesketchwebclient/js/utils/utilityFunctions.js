@@ -269,6 +269,28 @@ if (isUndefined(convertHexToRgb)) {
 
 /**
  **************************************************************
+ * Protobuf Utility functions
+ * @author gigemjt
+ **************************************************************
+ */
+
+ 	/**
+	 * Decodes the data and perserves the bytebuffer for later use
+	 * @param data the data to decode.
+	 * @param proto what you are using to decode.
+	 * @return decoded protobuf object.
+	 */
+	 if (isUndefined(decodeProtobuf)) {
+	function decodeProtobuf(data, proto) {
+		try {data.mark();} catch(exception) {}
+		var decoded = proto.decode(commandData);
+		try {data.reset();} catch(exception) {}
+		return decoded;
+	}
+	}
+
+/**
+ **************************************************************
  * Placement utility Functions
  * @author gigemjt
  **************************************************************
@@ -506,6 +528,8 @@ if (isUndefined(copyParentUtilityFunctions)) {
 		copyParentValues(scope, 'convertRGBtoHex');
 
 		copyParentValues(scope, 'printProperties');
+
+		copyParentValues(scope, 'decodeProtobuf');
 
 		copyParentValues(scope, 'setHeightToContent');
 		copyParentValues(scope, 'setWidthToContent');
