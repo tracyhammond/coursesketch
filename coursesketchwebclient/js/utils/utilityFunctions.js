@@ -283,7 +283,7 @@ if (isUndefined(convertHexToRgb)) {
 	 if (isUndefined(decodeProtobuf)) {
 	function decodeProtobuf(data, proto) {
 		try {data.mark();} catch(exception) {}
-		var decoded = proto.decode(commandData);
+		var decoded = proto.decode(data);
 		try {data.reset();} catch(exception) {}
 		return decoded;
 	}
