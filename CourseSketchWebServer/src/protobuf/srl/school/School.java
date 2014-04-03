@@ -755,6 +755,7 @@ public final class School {
 
       public protobuf.srl.school.School.SrlSchool buildPartial() {
         protobuf.srl.school.School.SrlSchool result = new protobuf.srl.school.School.SrlSchool(this);
+        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (coursesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -5363,6 +5364,7 @@ public final class School {
           getUnknownFields() {
         return this.unknownFields;
       }
+      @SuppressWarnings("unused")
       private LatePolicy(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -15058,6 +15060,24 @@ public final class School {
      * </pre>
      */
     boolean getCompleted();
+
+    // optional bool graded = 6;
+    /**
+     * <code>optional bool graded = 6;</code>
+     *
+     * <pre>
+     * Instructor has finished grading the school item
+     * </pre>
+     */
+    boolean hasGraded();
+    /**
+     * <code>optional bool graded = 6;</code>
+     *
+     * <pre>
+     * Instructor has finished grading the school item
+     * </pre>
+     */
+    boolean getGraded();
   }
   /**
    * Protobuf type {@code protobuf.srl.school.State}
@@ -15133,6 +15153,11 @@ public final class School {
             case 40: {
               bitField0_ |= 0x00000010;
               completed_ = input.readBool();
+              break;
+            }
+            case 48: {
+              bitField0_ |= 0x00000020;
+              graded_ = input.readBool();
               break;
             }
           }
@@ -15295,12 +15320,37 @@ public final class School {
       return completed_;
     }
 
+    // optional bool graded = 6;
+    public static final int GRADED_FIELD_NUMBER = 6;
+    private boolean graded_;
+    /**
+     * <code>optional bool graded = 6;</code>
+     *
+     * <pre>
+     * Instructor has finished grading the school item
+     * </pre>
+     */
+    public boolean hasGraded() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional bool graded = 6;</code>
+     *
+     * <pre>
+     * Instructor has finished grading the school item
+     * </pre>
+     */
+    public boolean getGraded() {
+      return graded_;
+    }
+
     private void initFields() {
       published_ = false;
       accessible_ = false;
       pastDue_ = false;
       started_ = false;
       completed_ = false;
+      graded_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -15328,6 +15378,9 @@ public final class School {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBool(5, completed_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBool(6, graded_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -15357,6 +15410,10 @@ public final class School {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(5, completed_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(6, graded_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -15484,6 +15541,8 @@ public final class School {
         bitField0_ = (bitField0_ & ~0x00000008);
         completed_ = false;
         bitField0_ = (bitField0_ & ~0x00000010);
+        graded_ = false;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -15532,6 +15591,10 @@ public final class School {
           to_bitField0_ |= 0x00000010;
         }
         result.completed_ = completed_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.graded_ = graded_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -15562,6 +15625,9 @@ public final class School {
         }
         if (other.hasCompleted()) {
           setCompleted(other.getCompleted());
+        }
+        if (other.hasGraded()) {
+          setGraded(other.getGraded());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -15831,6 +15897,55 @@ public final class School {
       public Builder clearCompleted() {
         bitField0_ = (bitField0_ & ~0x00000010);
         completed_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional bool graded = 6;
+      private boolean graded_ ;
+      /**
+       * <code>optional bool graded = 6;</code>
+       *
+       * <pre>
+       * Instructor has finished grading the school item
+       * </pre>
+       */
+      public boolean hasGraded() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional bool graded = 6;</code>
+       *
+       * <pre>
+       * Instructor has finished grading the school item
+       * </pre>
+       */
+      public boolean getGraded() {
+        return graded_;
+      }
+      /**
+       * <code>optional bool graded = 6;</code>
+       *
+       * <pre>
+       * Instructor has finished grading the school item
+       * </pre>
+       */
+      public Builder setGraded(boolean value) {
+        bitField0_ |= 0x00000020;
+        graded_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool graded = 6;</code>
+       *
+       * <pre>
+       * Instructor has finished grading the school item
+       * </pre>
+       */
+      public Builder clearGraded() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        graded_ = false;
         onChanged();
         return this;
       }
@@ -18907,6 +19022,7 @@ public final class School {
 
       public protobuf.srl.school.School.SrlPermission buildPartial() {
         protobuf.srl.school.School.SrlPermission result = new protobuf.srl.school.School.SrlPermission(this);
+        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           adminPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(
@@ -19424,19 +19540,20 @@ public final class School {
       "onth\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n" +
       "\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millise" +
       "cond\030\007 \001(\004\"\"\n\021DomainInformation\022\r\n\005stuff" +
-      "\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\nac" +
+      "\030\001 \001(\t\"s\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\nac" +
       "cessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007start" +
-      "ed\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n\007SrlUser\022",
-      "\020\n\010username\030\001 \002(\t\022\r\n\005email\030\002 \001(\t\022\022\n\ncour" +
-      "seList\030\003 \003(\t\022\026\n\016schoolIdentity\030\004 \001(\t\022\021\n\t" +
-      "firstName\030\005 \001(\t\022\020\n\010lastName\030\006 \001(\t\022\020\n\010pas" +
-      "sword\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022" +
-      "\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t\022\r\n\005a" +
-      "dmin\030\004 \003(\t\"]\n\rSrlPermission\022\027\n\017adminPerm" +
-      "ission\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003(" +
-      "\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n" +
-      "\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASS" +
-      "ISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005"
+      "ed\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\022\016\n\006graded\030\006 ",
+      "\001(\010\"\215\001\n\007SrlUser\022\020\n\010username\030\001 \002(\t\022\r\n\005ema" +
+      "il\030\002 \001(\t\022\022\n\ncourseList\030\003 \003(\t\022\026\n\016schoolId" +
+      "entity\030\004 \001(\t\022\021\n\tfirstName\030\005 \001(\t\022\020\n\010lastN" +
+      "ame\030\006 \001(\t\022\020\n\010password\030\007 \001(\t\"M\n\010SrlGroup\022" +
+      "\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgrou" +
+      "pName\030\003 \001(\t\022\r\n\005admin\030\004 \003(\t\"]\n\rSrlPermiss" +
+      "ion\022\027\n\017adminPermission\030\001 \003(\t\022\033\n\023moderato" +
+      "rPermission\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(" +
+      "\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002" +
+      "\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n",
+      "\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -19496,7 +19613,7 @@ public final class School {
           internal_static_protobuf_srl_school_State_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_State_descriptor,
-              new java.lang.String[] { "Published", "Accessible", "PastDue", "Started", "Completed", });
+              new java.lang.String[] { "Published", "Accessible", "PastDue", "Started", "Completed", "Graded", });
           internal_static_protobuf_srl_school_SrlUser_descriptor =
             getDescriptor().getMessageTypes().get(8);
           internal_static_protobuf_srl_school_SrlUser_fieldAccessorTable = new

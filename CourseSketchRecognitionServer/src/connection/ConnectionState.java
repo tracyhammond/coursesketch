@@ -4,7 +4,6 @@ public class ConnectionState {
 
 	private int key;
 	private boolean isLoggedIn = false; 
-	private int previousMessageType = 0;
 	private int loginTries = 0;
 	
 	public ConnectionState(int key) {

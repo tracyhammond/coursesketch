@@ -9,14 +9,14 @@
  * @param byteBuffer The static instance that is used for encoding and decoding data.
  */
 function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilder, query, request, byteBuffer, long) {
-	const COURSE_LIST = "COURSE_LIST";
+	var COURSE_LIST = "COURSE_LIST";
+	var LAST_UPDATE_TIME = "LAST_UPDATE_TIME";
 	var localScope = this;
 	var localUserId = userId;
 	var stateMachine = {};
 	var databaseFinishedLoading = false;
 
-	var useable = false;
-	var version = 3;
+	var version = 4;
 	var dataListener = advanceDataListener;
 
 	var ByteBuffer = byteBuffer;
@@ -33,6 +33,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var courseProblemManager;
 	var submissionManager;
 
+	var dataSender = new Object();
+
+	this.getCurrentTime = connection.getCurrentTime;
 	/*
 	 * END OF VARIABLE SETTING
 	 */
@@ -45,12 +48,11 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	this.isDatabaseReady = function() {
 		return databaseFinishedLoading;
 	}
-	
+
 	/**
 	 * After the lower level database has been completely setup the higher level specific databases can be called.
 	 */
 	var initalizedFunction = function() {
-		useable = true;
 		if (!localScope.start) {
 			var intervalVar = setInterval(function() {
 				if (localScope.start) {
@@ -63,36 +65,54 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			localScope.start();
 		}
 	};
-	
+
 	var database = new protoDatabase(localUserId, version, initalizedFunction);
 
-	var addFunction = function(store, objectId, objectToAdd) {
-		return store.put({"id" : objectId, "data" : objectToAdd});
-	}
-
-	var courseTable = database.createTable("Courses","id", addFunction);
-	var assignmentTable = database.createTable("Assignments","id", addFunction);
-	var problemTable = database.createTable("CourseProblems","id", addFunction);
-	var bankProblemTable = database.createTable("BankProblems","id", addFunction);
-	var submissionTable = database.createTable("Submissions","id", addFunction);
-
 	(function() {
+
+		var addFunction = function(store, objectId, objectToAdd) {
+			return store.put({"id" : objectId, "data" : objectToAdd});
+		};
+
 		var tables = new Array();
-		tables.push(courseTable);
-		tables.push(assignmentTable);
-		tables.push(problemTable);
-		tables.push(bankProblemTable);
-		tables.push(submissionTable);
+		tables.push(database.createTable("Courses","id", addFunction));
+		tables.push(database.createTable("Assignments","id", addFunction));
+		tables.push(database.createTable("CourseProblems","id", addFunction));
+		tables.push(database.createTable("BankProblems","id", addFunction));
+		tables.push(database.createTable("Submissions","id", addFunction));
+		tables.push(database.createTable("Other","id", addFunction));
+
 		database.setTables(tables);
 		database.open();
 	})();
 
-	function sendDataRequest(queryType, idList) {
+	dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
 		var dataSend = new QueryBuilder.DataRequest();
 		dataSend.items = new Array();
-		dataSend.items.push(new QueryBuilder.ItemRequest(idList, queryType));
+		var itemRequest = new QueryBuilder.ItemRequest(queryType);
+		if (!isUndefined(idList)) {
+			itemRequest.setItemId(idList);
+		}
+		if (!isUndefined(advanceQuery)) {
+			itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
+		}
+		dataSend.items.push(itemRequest);
 		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
-	}
+	};
+
+	dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
+		var dataSend = new QueryBuilder.DataSend();
+		dataSend.items = new Array();
+		dataSend.items.push(new QueryBuilder.ItemSend(queryType, data));
+		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
+	};
+
+	dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
+		var dataSend = new QueryBuilder.DataSend();
+		dataSend.items = new Array();
+		dataSend.items.push(new QueryBuilder.ItemRequest(queryType, data));
+		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
+	};
 
 	this.emptySchoolData = function() {
 		database.emptySelf();
@@ -100,14 +120,14 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 
 	this.start = function() {
 		// creates a manager for just courses.
-		courseManager = new CourseDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		assignmentManager = new AssignmentDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		courseProblemManager = new CourseProblemDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		submissionManager = new SubmissionDataManager(this, dataListener, database, sendDataRequest, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
+		/*courseManager = */new CourseDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		/*assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		/*courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
+		/*submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
 		console.log("database is ready for use! with user: " + userId);
 		databaseFinishedLoading = true;
-	}
-	
+	};
+
 	/**
 	 * retrieves all the assignments for a given course.
 	 *
@@ -117,12 +137,15 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		var getAssignments = this.getAssignments;
 		this.getCourse(courseId, function(course) {
 			if (isUndefined(course)) {
-				throw "Course not defined";
+				throw new Error("Course not defined");
+			}
+			if (course.assignmentList.length <= 0) {
+				assignmentCallback([]);
 			}
 			getAssignments(course.assignmentList, assignmentCallback);
 		});
-	}
-	
+	};
+
 	/**
 	 * retrieves all the assignments for a given course.
 	 *
@@ -132,11 +155,58 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		var getCourseProblems = this.getCourseProblems;
 		this.getAssignment(assignmentId, function(assignment) {
 			if (isUndefined(assignment)) {
-				throw "Assignment not defined";
+				throw new Error("Assignment not defined");
 			}
 			getCourseProblems(assignment.problemList, problemCallback);
 		});
-	}
+	};
+
+	/**
+	 * Polls the server for updates, after all items 
+	 */
+	this.pollUpdates = function(callback) {
+		database.getFromOther(LAST_UPDATE_TIME, function (e, request, result) {
+			if ( isUndefined(result) || isUndefined(result.data)) {
+				dataSender.sendDataRequest(QueryBuilder.ItemQuery.UPDATE);
+			} else {
+				var lastTime = result.data;
+				alert(lastTime);
+				dataSender.sendDataRequest(QueryBuilder.ItemQuery.UPDATE, [lastTime]);
+			}
+		});
+		var functionCalled = false;
+		var timeout = setTimeout(function() {
+			if (!functionCalled && callback) {
+				functionCalled = true;
+				callback();
+			}
+		}, 5000);
+		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.UPDATE, function(evt, item) {
+			database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString()); // to store for later recall
+			clearTimeout(timeout);
+			var school = SchoolBuilder.SrlSchool.decode(item.data);
+			console.log(school);
+			var courseList = school.courses;
+			for (var i = 0; i < courseList.length; i ++) {
+				localScope.setCourse(courseList[i]);
+			}
+
+			var assignmentList = school.assignments;
+			for (var i = 0; i < assignmentList.length; i ++) {
+				localScope.setAssignment(assignmentList[i]);
+			}
+
+			var problemList = school.problems;
+			for (var i = 0; i < problemList.length; i ++) {
+				localScope.setCourseProblem(problemList[i]);
+			}
+
+			if (!functionCalled && callback) {
+				functionCalled = true;
+				callback();
+			};
+		});
+	};
 
 	/**
 	 * Adds the ability to set and remove state objects (for the use of transitioning from one page to the next!)
@@ -162,7 +232,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	 */
 	this.getCurrentId = function() {
 		return localUserId;
-	}
+	};
 }
 var nonExistantValue = "NONEXISTANT_VALUE";
 var CURRENT_QUESTION = "CURRENT_QUESTION";

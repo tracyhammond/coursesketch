@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <base href="../../../">
-  	<link rel="stylesheet" href="css/utility/columns.css">
+  	
   	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
  
 	<script type="text/javascript" src="js/input/touch_event.js"></script>
@@ -14,6 +14,11 @@
 	<script type="text/javascript" src="js/sketching/updatemanager.js"></script>
 	<script type="text/javascript" src="js/connection/submission.js"></script>
 	<script type="text/javascript" src="js/input/highlighter.js"></script>
+	
+	<script type="text/javascript" src="js/utils/waiting.js"></script>
+	
+	<link rel="stylesheet" href="css/utility/columns.css">
+	<link rel="stylesheet" href="css/utility/waiting.css">
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
     	parent.copyParentUtilityFunctions(this);
@@ -82,6 +87,21 @@
 						alert("something bad happened");
 						return;
 					}
+
+					var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
+				    function displayBar() {
+				    	document.getElementById("PercentBar").appendChild(element);
+				    	element.startWaiting();
+				    }
+				    function updateBar(index, total) {
+				    	element.updatePercentBar(index, total);
+				    	//document.getElementById("PercentBar").innerHTML = "" + (index/total) * 100 + "% total: "+total;
+			 	    }
+				    function finishBar() {
+				    	element.finishWaiting();
+				    	//console.log("all items sent to the server");
+				    }
+
 					submitUpdateList(serverConnection, updateList, [ProtoUpdateCommandBuilder, ProtoSubmissionBuilder], experiment,
 							Request.MessageType.SUBMISSION, displayBar, updateBar, finishBar);
 
@@ -91,7 +111,7 @@
 					var listContainer = new ProtoUpdateCommandBuilder.SrlUpdateList();
 					listContainer.setList(updateList);
 					localSubmission.setUpdateList(listContainer.toArrayBuffer());
-					console.log(updateList); // contains the entire update list
+					//console.log(updateList); // contains the entire update list
 					parent.problemNavigator.getDataManager().setSubmission(parent.problemNavigator.getCurrentProblemId(), localSubmission);
 				});
 			};
@@ -127,25 +147,45 @@
 			// is called upon a successfuly submission.
 			parent.problemNavigator.addEventMapping("submission", function(args) {
 				console.log("SUBMISSION SCUESSFUL!");
+				alert("done submitting problem number " + parent.problemNavigator.getCurrentNumber());
+				
 			});
 
 			window.addEventListener("beforeunload", function( e ) {
 				parent.problemNavigator.removeEventMapping("submit", submitFunction);
-				parent.problemNavigator.removeEventMapping("feedback", feedbackFunction); 
+				parent.problemNavigator.removeEventMapping("feedback", feedbackFunction);
+				commandManager.setUpdateList([]);
+				commandManager = undefined;
+				serverConnection = undefined;
+				var ByteBuffer = undefined;
+				var drawingCreator = undefined;
+				var sketch = undefined;
+				var canvasContext = undefined;
+				var Long = undefined;
+				var highlighter = undefined;
 			});
-			
+
 			loadUpdateList();
 		}
 
 	    function loadUpdateList() {
+	    	var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
+	    	document.getElementById("PercentBar").appendChild(element);
+    		element.startWaiting();
+
 	    	parent.problemNavigator.getDataManager().getSubmission(parent.problemNavigator.getCurrentProblemId(), function(submission) {
 	    		if (isUndefined(submission)) {
+	    			if (element.isRunning()) {
+	    				element.finishWaiting();
+	    			}
 	    			return;
 	    		}
 	    		var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(submission.getUpdateList());
-	    		console.log(updateList);
-	    		commandManager.setUpdateList(updateList.getList());
-	    		console.log(submission);
+	    		//console.log(updateList);
+	    		commandManager.setUpdateList(updateList.getList(), element);
+	    		updateList = null;
+	    		element = null;
+	    		//console.log(submission);
 	    	});
 	    }
 
@@ -168,16 +208,6 @@
 			var update = serverConnection.createUpdateFromCommands(array);
 			commandManager.addUpdate(update, false);
 	    }
-
-	    function displayBar() {
-	    	document.getElementById("PercentBar").style = "display:block;position:absolute;left:20px;top:20px;"
-	    }
-	    function updateBar(index, total) {
-	    	document.getElementById("PercentBar").innerHTML = "" + (index/total) * 100 + "% total: "+total;
- 	    }
-	    function finishBar() {
-	    	alert("done submitting problem number " + parent.problemNavigator.getCurrentNumber());
-	    }
 	</script>
 	<script type="text/javascript">
 		(function(scope){
@@ -190,7 +220,7 @@
 			scope.window.onresize = function() {
 				scope.fillScreen(scope, 'drawingCanvas');
 				sketch.drawEntireSketch();
-			}
+			};
 		})(this);
 	</script>
 	<style>
@@ -202,6 +232,6 @@
 	</style>
 </head>
 <body>
-	<div id = "PercentBar">0%</div>
+	<div id = "PercentBar"></div>
 	<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
 </body>

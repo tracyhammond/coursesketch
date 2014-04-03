@@ -3,6 +3,7 @@
 
 package protobuf.srl.sketch;
 
+@SuppressWarnings("unused")
 public final class Sketch {
   private Sketch() {}
   public static void registerAllExtensions(
@@ -917,10 +918,20 @@ public final class Sketch {
     // required bytes object = 2;
     /**
      * <code>required bytes object = 2;</code>
+     *
+     * <pre>
+     * TODO: add attributes field (named protoAttributes)
+     * it was put in the object and not the shape and stroke because both use it and this saves on code space.
+     * </pre>
      */
     boolean hasObject();
     /**
      * <code>required bytes object = 2;</code>
+     *
+     * <pre>
+     * TODO: add attributes field (named protoAttributes)
+     * it was put in the object and not the shape and stroke because both use it and this saves on code space.
+     * </pre>
      */
     com.google.protobuf.ByteString getObject();
   }
@@ -1165,12 +1176,22 @@ public final class Sketch {
     private com.google.protobuf.ByteString object_;
     /**
      * <code>required bytes object = 2;</code>
+     *
+     * <pre>
+     * TODO: add attributes field (named protoAttributes)
+     * it was put in the object and not the shape and stroke because both use it and this saves on code space.
+     * </pre>
      */
     public boolean hasObject() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>required bytes object = 2;</code>
+     *
+     * <pre>
+     * TODO: add attributes field (named protoAttributes)
+     * it was put in the object and not the shape and stroke because both use it and this saves on code space.
+     * </pre>
      */
     public com.google.protobuf.ByteString getObject() {
       return object_;
@@ -1481,18 +1502,33 @@ public final class Sketch {
       private com.google.protobuf.ByteString object_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <code>required bytes object = 2;</code>
+       *
+       * <pre>
+       * TODO: add attributes field (named protoAttributes)
+       * it was put in the object and not the shape and stroke because both use it and this saves on code space.
+       * </pre>
        */
       public boolean hasObject() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>required bytes object = 2;</code>
+       *
+       * <pre>
+       * TODO: add attributes field (named protoAttributes)
+       * it was put in the object and not the shape and stroke because both use it and this saves on code space.
+       * </pre>
        */
       public com.google.protobuf.ByteString getObject() {
         return object_;
       }
       /**
        * <code>required bytes object = 2;</code>
+       *
+       * <pre>
+       * TODO: add attributes field (named protoAttributes)
+       * it was put in the object and not the shape and stroke because both use it and this saves on code space.
+       * </pre>
        */
       public Builder setObject(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -1505,6 +1541,11 @@ public final class Sketch {
       }
       /**
        * <code>required bytes object = 2;</code>
+       *
+       * <pre>
+       * TODO: add attributes field (named protoAttributes)
+       * it was put in the object and not the shape and stroke because both use it and this saves on code space.
+       * </pre>
        */
       public Builder clearObject() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -7068,6 +7109,688 @@ public final class Sketch {
     // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlBoundingBox)
   }
 
+  public interface SrlAttributesOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // repeated string keys = 1;
+    /**
+     * <code>repeated string keys = 1;</code>
+     */
+    java.util.List<java.lang.String>
+    getKeysList();
+    /**
+     * <code>repeated string keys = 1;</code>
+     */
+    int getKeysCount();
+    /**
+     * <code>repeated string keys = 1;</code>
+     */
+    java.lang.String getKeys(int index);
+    /**
+     * <code>repeated string keys = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getKeysBytes(int index);
+
+    // repeated string values = 2;
+    /**
+     * <code>repeated string values = 2;</code>
+     */
+    java.util.List<java.lang.String>
+    getValuesList();
+    /**
+     * <code>repeated string values = 2;</code>
+     */
+    int getValuesCount();
+    /**
+     * <code>repeated string values = 2;</code>
+     */
+    java.lang.String getValues(int index);
+    /**
+     * <code>repeated string values = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getValuesBytes(int index);
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.sketch.SrlAttributes}
+   */
+  public static final class SrlAttributes extends
+      com.google.protobuf.GeneratedMessage
+      implements SrlAttributesOrBuilder {
+    // Use SrlAttributes.newBuilder() to construct.
+    private SrlAttributes(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SrlAttributes(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SrlAttributes defaultInstance;
+    public static SrlAttributes getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SrlAttributes getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SrlAttributes(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                keys_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              keys_.add(input.readBytes());
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                values_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              values_.add(input.readBytes());
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          keys_ = new com.google.protobuf.UnmodifiableLazyStringList(keys_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          values_ = new com.google.protobuf.UnmodifiableLazyStringList(values_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SrlAttributes_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SrlAttributes_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.sketch.Sketch.SrlAttributes.class, protobuf.srl.sketch.Sketch.SrlAttributes.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SrlAttributes> PARSER =
+        new com.google.protobuf.AbstractParser<SrlAttributes>() {
+      public SrlAttributes parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SrlAttributes(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SrlAttributes> getParserForType() {
+      return PARSER;
+    }
+
+    // repeated string keys = 1;
+    public static final int KEYS_FIELD_NUMBER = 1;
+    private com.google.protobuf.LazyStringList keys_;
+    /**
+     * <code>repeated string keys = 1;</code>
+     */
+    public java.util.List<java.lang.String>
+        getKeysList() {
+      return keys_;
+    }
+    /**
+     * <code>repeated string keys = 1;</code>
+     */
+    public int getKeysCount() {
+      return keys_.size();
+    }
+    /**
+     * <code>repeated string keys = 1;</code>
+     */
+    public java.lang.String getKeys(int index) {
+      return keys_.get(index);
+    }
+    /**
+     * <code>repeated string keys = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getKeysBytes(int index) {
+      return keys_.getByteString(index);
+    }
+
+    // repeated string values = 2;
+    public static final int VALUES_FIELD_NUMBER = 2;
+    private com.google.protobuf.LazyStringList values_;
+    /**
+     * <code>repeated string values = 2;</code>
+     */
+    public java.util.List<java.lang.String>
+        getValuesList() {
+      return values_;
+    }
+    /**
+     * <code>repeated string values = 2;</code>
+     */
+    public int getValuesCount() {
+      return values_.size();
+    }
+    /**
+     * <code>repeated string values = 2;</code>
+     */
+    public java.lang.String getValues(int index) {
+      return values_.get(index);
+    }
+    /**
+     * <code>repeated string values = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValuesBytes(int index) {
+      return values_.getByteString(index);
+    }
+
+    private void initFields() {
+      keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      values_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < keys_.size(); i++) {
+        output.writeBytes(1, keys_.getByteString(i));
+      }
+      for (int i = 0; i < values_.size(); i++) {
+        output.writeBytes(2, values_.getByteString(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < keys_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(keys_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getKeysList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < values_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(values_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getValuesList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.sketch.Sketch.SrlAttributes parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.sketch.Sketch.SrlAttributes prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.sketch.SrlAttributes}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.sketch.Sketch.SrlAttributesOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SrlAttributes_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SrlAttributes_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.sketch.Sketch.SrlAttributes.class, protobuf.srl.sketch.Sketch.SrlAttributes.Builder.class);
+      }
+
+      // Construct using protobuf.srl.sketch.Sketch.SrlAttributes.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        values_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.sketch.Sketch.internal_static_protobuf_srl_sketch_SrlAttributes_descriptor;
+      }
+
+      public protobuf.srl.sketch.Sketch.SrlAttributes getDefaultInstanceForType() {
+        return protobuf.srl.sketch.Sketch.SrlAttributes.getDefaultInstance();
+      }
+
+      public protobuf.srl.sketch.Sketch.SrlAttributes build() {
+        protobuf.srl.sketch.Sketch.SrlAttributes result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.sketch.Sketch.SrlAttributes buildPartial() {
+        protobuf.srl.sketch.Sketch.SrlAttributes result = new protobuf.srl.sketch.Sketch.SrlAttributes(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          keys_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              keys_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.keys_ = keys_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          values_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              values_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.values_ = values_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.sketch.Sketch.SrlAttributes) {
+          return mergeFrom((protobuf.srl.sketch.Sketch.SrlAttributes)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.sketch.Sketch.SrlAttributes other) {
+        if (other == protobuf.srl.sketch.Sketch.SrlAttributes.getDefaultInstance()) return this;
+        if (!other.keys_.isEmpty()) {
+          if (keys_.isEmpty()) {
+            keys_ = other.keys_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureKeysIsMutable();
+            keys_.addAll(other.keys_);
+          }
+          onChanged();
+        }
+        if (!other.values_.isEmpty()) {
+          if (values_.isEmpty()) {
+            values_ = other.values_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureValuesIsMutable();
+            values_.addAll(other.values_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.sketch.Sketch.SrlAttributes parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.sketch.Sketch.SrlAttributes) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // repeated string keys = 1;
+      private com.google.protobuf.LazyStringList keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureKeysIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          keys_ = new com.google.protobuf.LazyStringArrayList(keys_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated string keys = 1;</code>
+       */
+      public java.util.List<java.lang.String>
+          getKeysList() {
+        return java.util.Collections.unmodifiableList(keys_);
+      }
+      /**
+       * <code>repeated string keys = 1;</code>
+       */
+      public int getKeysCount() {
+        return keys_.size();
+      }
+      /**
+       * <code>repeated string keys = 1;</code>
+       */
+      public java.lang.String getKeys(int index) {
+        return keys_.get(index);
+      }
+      /**
+       * <code>repeated string keys = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getKeysBytes(int index) {
+        return keys_.getByteString(index);
+      }
+      /**
+       * <code>repeated string keys = 1;</code>
+       */
+      public Builder setKeys(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureKeysIsMutable();
+        keys_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string keys = 1;</code>
+       */
+      public Builder addKeys(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureKeysIsMutable();
+        keys_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string keys = 1;</code>
+       */
+      public Builder addAllKeys(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureKeysIsMutable();
+        super.addAll(values, keys_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string keys = 1;</code>
+       */
+      public Builder clearKeys() {
+        keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string keys = 1;</code>
+       */
+      public Builder addKeysBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureKeysIsMutable();
+        keys_.add(value);
+        onChanged();
+        return this;
+      }
+
+      // repeated string values = 2;
+      private com.google.protobuf.LazyStringList values_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureValuesIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          values_ = new com.google.protobuf.LazyStringArrayList(values_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      /**
+       * <code>repeated string values = 2;</code>
+       */
+      public java.util.List<java.lang.String>
+          getValuesList() {
+        return java.util.Collections.unmodifiableList(values_);
+      }
+      /**
+       * <code>repeated string values = 2;</code>
+       */
+      public int getValuesCount() {
+        return values_.size();
+      }
+      /**
+       * <code>repeated string values = 2;</code>
+       */
+      public java.lang.String getValues(int index) {
+        return values_.get(index);
+      }
+      /**
+       * <code>repeated string values = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValuesBytes(int index) {
+        return values_.getByteString(index);
+      }
+      /**
+       * <code>repeated string values = 2;</code>
+       */
+      public Builder setValues(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureValuesIsMutable();
+        values_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string values = 2;</code>
+       */
+      public Builder addValues(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureValuesIsMutable();
+        values_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string values = 2;</code>
+       */
+      public Builder addAllValues(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureValuesIsMutable();
+        super.addAll(values, values_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string values = 2;</code>
+       */
+      public Builder clearValues() {
+        values_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string values = 2;</code>
+       */
+      public Builder addValuesBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureValuesIsMutable();
+        values_.add(value);
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.sketch.SrlAttributes)
+    }
+
+    static {
+      defaultInstance = new SrlAttributes(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.sketch.SrlAttributes)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_sketch_SrlSketch_descriptor;
   private static
@@ -7103,6 +7826,11 @@ public final class Sketch {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_sketch_SrlBoundingBox_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_sketch_SrlAttributes_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_sketch_SrlAttributes_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -7135,7 +7863,8 @@ public final class Sketch {
       "J\n\021SrlInterpretation\022\r\n\005label\030\001 \002(\t\022\022\n\nc" +
       "onfidence\030\002 \002(\001\022\022\n\ncomplexity\030\003 \001(\001\"E\n\016S" +
       "rlBoundingBox\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\r\n\005w" +
-      "idth\030\003 \002(\001\022\016\n\006height\030\004 \002(\001"
+      "idth\030\003 \002(\001\022\016\n\006height\030\004 \002(\001\"-\n\rSrlAttribu" +
+      "tes\022\014\n\004keys\030\001 \003(\t\022\016\n\006values\030\002 \003(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7184,6 +7913,12 @@ public final class Sketch {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_sketch_SrlBoundingBox_descriptor,
               new java.lang.String[] { "X", "Y", "Width", "Height", });
+          internal_static_protobuf_srl_sketch_SrlAttributes_descriptor =
+            getDescriptor().getMessageTypes().get(7);
+          internal_static_protobuf_srl_sketch_SrlAttributes_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_sketch_SrlAttributes_descriptor,
+              new java.lang.String[] { "Keys", "Values", });
           return null;
         }
       };

@@ -134,6 +134,7 @@ message State {
 	optional bool pastDue = 3; // Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
 	optional bool started = 4; // Student has viewed or begun the school item
 	optional bool completed = 5; // Student has saved/submitted work on all parts of school item
+	optional bool graded = 6; // Instructor has finished grading the school item
 }
 
 message SrlUser {

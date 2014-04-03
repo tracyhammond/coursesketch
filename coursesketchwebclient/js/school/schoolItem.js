@@ -21,11 +21,11 @@ function SchoolItemBuilder() {
 		this.showBox = true; // if we want the card to be boxed shape
 		this.showDescription = true; // true to show the description
 		this.showDate = true; // true to show the show date
-		this.showState = false; //changed from this.showCompletionStatus
+		this.showState = true; //changed from this.showCompletionStatus
 		this.limitSize = false; // this will limit the description of the card to a certain height and add an expanding button
 
 		// function
-		this.boxClickFunction = false;
+		this.boxClickFunction = false; // calls a function with the entire schoolItem object
 		this.endEditFunction = false; // when in instructor mode this can be used to edit the box. and the item is saved
 
 		//custom text for an empty list.
@@ -78,7 +78,7 @@ function SchoolItemBuilder() {
 		hostElement.innerHTML = '';
 		
 		// if there is no list add the empty message and then exit
-		if (!this.list) {
+		if (!this.list || this.list.length <= 0) {
 			var message = 'There are no items in this list!';
 			if (this.emptyListMessage) {
 				message = '' + this.emptyListMessage;
@@ -151,9 +151,9 @@ function SchoolItemBuilder() {
 
 		box.setAttribute('data-item_number', index);
 
-		this.addClickFunction(box, this.boxClickFunction, srlSchoolItem.id);
+		this.addClickFunction(box, this.boxClickFunction, srlSchoolItem);
 
-		this.setBoxState(srlSchoolItem);
+		this.setBoxState(box, srlSchoolItem);
 
 		// add the text component
 		box.appendChild(this.writeTextData(srlSchoolItem, currentDate, type));
@@ -305,7 +305,7 @@ function SchoolItemBuilder() {
 	/**
 	 * Sets the state if it exist and if showState is true.
 	 */
-	this.setBoxState = function(srlSchoolItem) {
+	this.setBoxState = function(box, srlSchoolItem) {
 		if (!this.showState) {
 			return;
 		}
@@ -314,18 +314,18 @@ function SchoolItemBuilder() {
 		var classType = 'school_item_state ';
 		if (itemState != null && ! isUndefined(itemState)) {
 			// TODO: add state for an assignment that has been graded.
-			if (!completionStatus.accessible && completionStatus.pastDue) {
+			if (!itemState.accessible && itemState.pastDue) {
 				classType += 'assignment_closed';
-			} else if (completionStatus.completed) {
+			} else if (itemState.completed) {
 				classType += 'completed';
-			} else if (completionStatus.started) {
+			} else if (itemState.started) {
 				classType += 'in_progress';
-			} else if (!completionStatus.accessible) {
+			} else if (!itemState.accessible) {
 				classType += 'not_open';
 			}
 			span.setAttribute('class', classType);
 		}
-		return html;
+		box.appendChild(span);
 	};
 
 	/**
@@ -363,10 +363,10 @@ function SchoolItemBuilder() {
 	/**
 	 * Adds an onclick function to the element if the function exists, does nothing otherwise.
 	 */
-	this.addClickFunction = function addClickFunction(element, functionToAdd, id) {
+	this.addClickFunction = function addClickFunction(element, functionToAdd, srlSchoolItem) {
 		if (functionToAdd) {
 			element.addEventListener('click',function() {
-				functionToAdd(id);
+				functionToAdd(srlSchoolItem);
 			},false);
 			// GET THE ONCLICK LISTENTER TO DO THE CLICKING THING CORRECTLY!
 		}

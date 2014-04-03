@@ -8,7 +8,6 @@ import multiConnection.WrapperConnection;
 
 import org.java_websocket.drafts.Draft;
 
-import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemSend;

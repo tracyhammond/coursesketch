@@ -1,14 +1,16 @@
 package database.institution;
 
-import static database.StringConstants.*;
+import static util.StringConstants.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.School.State;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -17,6 +19,7 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import database.DatabaseAccessException;
+import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
@@ -90,6 +93,32 @@ public class CourseProblemManager
 			}
 		}
 
+		// states
+		State.Builder stateBuilder = State.newBuilder();
+
+		// TODO: add this to all fields!
+		// A course is only publishable after a certain criteria is met
+		if (corsor.containsField(STATE_PUBLISHED)) {
+			try {
+				boolean published = (Boolean)corsor.get(STATE_PUBLISHED);
+				if (published) {
+					stateBuilder.setPublished(true);
+				} else {
+					if (!isAdmin || !isMod) {
+						throw new DatabaseAccessException("The specific course is not published yet", true);
+					} else {
+						stateBuilder.setPublished(false);
+					}
+				}
+			} catch(Exception e) {
+				
+			}
+		}
+
+		/*if (corsor.get(IMAGE) != null) {
+			exactProblem.setImageUrl((String) corsor.get(IMAGE));
+		}*/
+
 		// problem manager get problem from bank (as a user!)
 		SrlBankProblem problemBank = BankProblemManager.mongoGetBankProblem(dbs, (String) corsor.get(PROBLEM_BANK_ID),
 				(String) exactProblem.getCourseId()); // problem bank look up
@@ -110,7 +139,9 @@ public class CourseProblemManager
 
 	}
 
-	public static boolean mongoUpdateCourseProblem(DB dbs, String problemId, String userId, SrlProblem problem) throws AuthenticationException {
+	public static boolean mongoUpdateCourseProblem(DB dbs, String problemId, String userId, SrlProblem problem) throws AuthenticationException,
+			DatabaseAccessException {
+		boolean update = false;
 		DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
 		DBObject corsor = myDbRef.fetch();
 
@@ -129,9 +160,11 @@ public class CourseProblemManager
 		if (isAdmin || isMod) {
 			if (problem.hasGradeWeight()) {
 				updated.append("$set", new BasicDBObject(GRADE_WEIGHT, problem.getGradeWeight()));
+				update = true;
 			}
 			if (problem.hasProblemBankId()) {
 				updated.append("$set", new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId()));
+				update = true;
 			}
 			// Optimization: have something to do with pulling values of an
 			// array and pushing values to an array
@@ -150,6 +183,9 @@ public class CourseProblemManager
 					updated.append("$set", new BasicDBObject(USERS, permissions.getUserPermissionList()));
 				}
 			}
+		}
+		if(update == true) {
+			UserUpdateHandler.InsertUpdates(dbs, ((List)corsor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
 		}
 		return true;
 	}

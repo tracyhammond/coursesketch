@@ -12,7 +12,7 @@ import srl.core.sketch.Sketch;
  */
 public class UndoObject extends Command {
 	
-	public UndoObject(){
+	public UndoObject() {
 		type = CommandType.UNDO;
 		//FIXME set the time to match client load time
 	}

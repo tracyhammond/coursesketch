@@ -34,6 +34,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SrlChecksum_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SrlChecksum_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SrlExperimentList_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SrlExperimentList_reflection_ = NULL;
 
 }  // namespace
 
@@ -115,6 +118,21 @@ void protobuf_AssignDesc_input_2fsubmission_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SrlChecksum));
+  SrlExperimentList_descriptor_ = file->message_type(4);
+  static const int SrlExperimentList_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlExperimentList, experiments_),
+  };
+  SrlExperimentList_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SrlExperimentList_descriptor_,
+      SrlExperimentList::default_instance_,
+      SrlExperimentList_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlExperimentList, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlExperimentList, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SrlExperimentList));
 }
 
 namespace {
@@ -135,6 +153,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     SrlExperiment_descriptor_, &SrlExperiment::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SrlChecksum_descriptor_, &SrlChecksum::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SrlExperimentList_descriptor_, &SrlExperimentList::default_instance());
 }
 
 }  // namespace
@@ -148,6 +168,8 @@ void protobuf_ShutdownFile_input_2fsubmission_2eproto() {
   delete SrlExperiment_reflection_;
   delete SrlChecksum::default_instance_;
   delete SrlChecksum_reflection_;
+  delete SrlExperimentList::default_instance_;
+  delete SrlExperimentList_reflection_;
 }
 
 void protobuf_AddDesc_input_2fsubmission_2eproto() {
@@ -169,17 +191,21 @@ void protobuf_AddDesc_input_2fsubmission_2eproto() {
     "lemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022:\n\nsubmissio"
     "n\030\006 \001(\0132&.protobuf.srl.submission.SrlSub"
     "mission\"4\n\013SrlChecksum\022\021\n\tfirstBits\030\001 \002("
-    "\003\022\022\n\nsecondBits\030\002 \002(\003", 501);
+    "\003\022\022\n\nsecondBits\030\002 \002(\003\"P\n\021SrlExperimentLi"
+    "st\022;\n\013experiments\030\001 \003(\0132&.protobuf.srl.s"
+    "ubmission.SrlExperiment", 583);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/submission.proto", &protobuf_RegisterTypes);
   SrlSubmission::default_instance_ = new SrlSubmission();
   SrlSolution::default_instance_ = new SrlSolution();
   SrlExperiment::default_instance_ = new SrlExperiment();
   SrlChecksum::default_instance_ = new SrlChecksum();
+  SrlExperimentList::default_instance_ = new SrlExperimentList();
   SrlSubmission::default_instance_->InitAsDefaultInstance();
   SrlSolution::default_instance_->InitAsDefaultInstance();
   SrlExperiment::default_instance_->InitAsDefaultInstance();
   SrlChecksum::default_instance_->InitAsDefaultInstance();
+  SrlExperimentList::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_input_2fsubmission_2eproto);
 }
 
@@ -1583,6 +1609,209 @@ void SrlChecksum::Swap(SrlChecksum* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = SrlChecksum_descriptor_;
   metadata.reflection = SrlChecksum_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SrlExperimentList::kExperimentsFieldNumber;
+#endif  // !_MSC_VER
+
+SrlExperimentList::SrlExperimentList()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SrlExperimentList::InitAsDefaultInstance() {
+}
+
+SrlExperimentList::SrlExperimentList(const SrlExperimentList& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SrlExperimentList::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SrlExperimentList::~SrlExperimentList() {
+  SharedDtor();
+}
+
+void SrlExperimentList::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SrlExperimentList::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SrlExperimentList::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SrlExperimentList_descriptor_;
+}
+
+const SrlExperimentList& SrlExperimentList::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_input_2fsubmission_2eproto();
+  return *default_instance_;
+}
+
+SrlExperimentList* SrlExperimentList::default_instance_ = NULL;
+
+SrlExperimentList* SrlExperimentList::New() const {
+  return new SrlExperimentList;
+}
+
+void SrlExperimentList::Clear() {
+  experiments_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SrlExperimentList::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .protobuf.srl.submission.SrlExperiment experiments = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_experiments:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_experiments()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(10)) goto parse_experiments;
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SrlExperimentList::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // repeated .protobuf.srl.submission.SrlExperiment experiments = 1;
+  for (int i = 0; i < this->experiments_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->experiments(i), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SrlExperimentList::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // repeated .protobuf.srl.submission.SrlExperiment experiments = 1;
+  for (int i = 0; i < this->experiments_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->experiments(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SrlExperimentList::ByteSize() const {
+  int total_size = 0;
+
+  // repeated .protobuf.srl.submission.SrlExperiment experiments = 1;
+  total_size += 1 * this->experiments_size();
+  for (int i = 0; i < this->experiments_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->experiments(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SrlExperimentList::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SrlExperimentList* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SrlExperimentList*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SrlExperimentList::MergeFrom(const SrlExperimentList& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  experiments_.MergeFrom(from.experiments_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SrlExperimentList::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SrlExperimentList::CopyFrom(const SrlExperimentList& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SrlExperimentList::IsInitialized() const {
+
+  return true;
+}
+
+void SrlExperimentList::Swap(SrlExperimentList* other) {
+  if (other != this) {
+    experiments_.Swap(&other->experiments_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SrlExperimentList::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SrlExperimentList_descriptor_;
+  metadata.reflection = SrlExperimentList_reflection_;
   return metadata;
 }
 

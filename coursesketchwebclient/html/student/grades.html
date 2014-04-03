@@ -1,10 +1,128 @@
 <!DOCTYPE html>
 <html>
-<body>
 
-<h1>student.grades.html</h1>
+	<head>
+	<base href="../../">
+		<script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+		<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+		<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
 
-<p>page under construction</p>
+	  	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
+	    <script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
 
-</body>
-</html> 
+		<script type="text/javascript" src="js/connection/connection_library.js"></script>
+
+		<script type="text/javascript" src="js/test/localTestData.js"></script>
+
+		<script type='text/javascript'>
+		</script>
+		<script type='text/javascript'>
+			var c = new Connection('echowebsocket.org', true, false);
+			c.setOnCloseListener(function() {});
+			var classNames = new Array();
+			var hwNames = new Array();     // TWO-DIMENSIONAL
+			var grades = new Array();      // TWO-DIMENSIONAL
+			var overall = new Array();
+
+			function getData() {
+				var assignments = getMapAsList(user_assignments);
+				var courses = getMapAsList(user_courses);
+				var problems = getMapAsList(user_problems);
+				var classIds = new Array();
+				var hwIds = new Array();
+
+				console.log(user_courses);
+				for(var i=0; i<courses.length; ++i) {
+					hwNames[i] = new Array();
+					hwIds[i] = new Array();
+					grades[i] = new Array();
+
+					if(!isUndefined(courses[i].name) && courses[i].name != null) {
+						classNames[i] = courses[i].name;
+					} else {
+						classNames[i] = courses[i].id;
+					}
+					classIds[i] = courses[i].id;
+					overall[i] = -1;
+				}
+
+				for(var i=0; i<assignments.length; ++i) {
+					var ind = classIds.indexOf(assignments[i].courseId);
+					console.log(ind);
+					if(!isUndefined(assignments[i].name) && assignments[i].name != null) {
+						var x = assignments[i];
+						var y = x.name;
+						hwNames[ind].push(y);//[i] = y;
+					} else {
+						hwNames[ind].push(assignments[i].id);
+					}
+					hwIds[ind][i] = assignments[i].id; // needed when adding individual problem grade show
+
+					// grade stuff goes here
+					// if not defined, put a default value of -1
+					if(!isUndefined(assignments[i].grade) && assignments[i].grade != null) {
+						grades[ind].push(assignments[i].grade);
+					} else {
+						grades[ind].push(-1);
+					}
+				}
+
+				// and then stuff for problems
+			}
+
+			function setup() {
+				getData();
+
+				var aggregateHtml = document.createElement("button");
+				aggregateHtml.setAttribute("name","grades");
+				aggregateHtml.setAttribute("id","aggregate");
+				aggregateHtml.setAttribute("onclick","submit(0);");
+				aggregateHtml.innerText = "aggregate";
+				document.getElementById("tabs").appendChild(aggregateHtml);
+				for(var i=0; i<classNames.length; ++i) {
+					var classHtml = document.createElement("button");
+					classHtml.setAttribute("name","grades");
+					classHtml.setAttribute("id",classNames[i]);
+					(function(index) {
+                		classHtml.onclick = function() {
+							submit(index + 1);
+						};
+					})(i);
+					classHtml.innerText = classNames[i];
+					document.getElementById("tabs").appendChild(classHtml);
+				}
+			}
+
+			function submit(i) {
+				var str = "";
+				if (i==0) {
+					for(var j=0; j<overall.length; ++j) {
+						if(j!=0) str += ", ";
+						str += (classNames[j] + ": " + overall[j].toString());
+					}
+				} else {
+					--i;
+					str += (classNames[i] + " Overall Grade: " + overall[i].toString());
+					for(var j=0; j<hwNames[i].length; ++j) {
+						str += "<br>";
+						str += (hwNames[i][j] + ": " + grades[i][j].toString());
+					}
+				}
+				document.getElementById("content").innerHTML = str;
+			}
+			
+			addLoadEvent( function() {
+				setup();
+			});
+		</script>
+	</base>
+	</head>
+
+	<body>
+	<div id="tabs">
+	</div>
+	<div id ="content">
+	</div>
+		<p id="student"></p>
+	</body>
+</html>

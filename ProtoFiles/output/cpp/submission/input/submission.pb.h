@@ -39,6 +39,7 @@ class SrlSubmission;
 class SrlSolution;
 class SrlExperiment;
 class SrlChecksum;
+class SrlExperimentList;
 
 // ===================================================================
 
@@ -521,6 +522,91 @@ class SrlChecksum : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SrlChecksum* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SrlExperimentList : public ::google::protobuf::Message {
+ public:
+  SrlExperimentList();
+  virtual ~SrlExperimentList();
+
+  SrlExperimentList(const SrlExperimentList& from);
+
+  inline SrlExperimentList& operator=(const SrlExperimentList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SrlExperimentList& default_instance();
+
+  void Swap(SrlExperimentList* other);
+
+  // implements Message ----------------------------------------------
+
+  SrlExperimentList* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SrlExperimentList& from);
+  void MergeFrom(const SrlExperimentList& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .protobuf.srl.submission.SrlExperiment experiments = 1;
+  inline int experiments_size() const;
+  inline void clear_experiments();
+  static const int kExperimentsFieldNumber = 1;
+  inline const ::protobuf::srl::submission::SrlExperiment& experiments(int index) const;
+  inline ::protobuf::srl::submission::SrlExperiment* mutable_experiments(int index);
+  inline ::protobuf::srl::submission::SrlExperiment* add_experiments();
+  inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::submission::SrlExperiment >&
+      experiments() const;
+  inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::submission::SrlExperiment >*
+      mutable_experiments();
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlExperimentList)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::protobuf::srl::submission::SrlExperiment > experiments_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fsubmission_2eproto();
+  friend void protobuf_AssignDesc_input_2fsubmission_2eproto();
+  friend void protobuf_ShutdownFile_input_2fsubmission_2eproto();
+
+  void InitAsDefaultInstance();
+  static SrlExperimentList* default_instance_;
 };
 // ===================================================================
 
@@ -1285,6 +1371,35 @@ inline ::google::protobuf::int64 SrlChecksum::secondbits() const {
 inline void SrlChecksum::set_secondbits(::google::protobuf::int64 value) {
   set_has_secondbits();
   secondbits_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SrlExperimentList
+
+// repeated .protobuf.srl.submission.SrlExperiment experiments = 1;
+inline int SrlExperimentList::experiments_size() const {
+  return experiments_.size();
+}
+inline void SrlExperimentList::clear_experiments() {
+  experiments_.Clear();
+}
+inline const ::protobuf::srl::submission::SrlExperiment& SrlExperimentList::experiments(int index) const {
+  return experiments_.Get(index);
+}
+inline ::protobuf::srl::submission::SrlExperiment* SrlExperimentList::mutable_experiments(int index) {
+  return experiments_.Mutable(index);
+}
+inline ::protobuf::srl::submission::SrlExperiment* SrlExperimentList::add_experiments() {
+  return experiments_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::protobuf::srl::submission::SrlExperiment >&
+SrlExperimentList::experiments() const {
+  return experiments_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::protobuf::srl::submission::SrlExperiment >*
+SrlExperimentList::mutable_experiments() {
+  return &experiments_;
 }
 
 

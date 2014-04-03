@@ -259,12 +259,13 @@ void protobuf_AssignDesc_input_2fschool_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DomainInformation));
   State_descriptor_ = file->message_type(7);
-  static const int State_offsets_[5] = {
+  static const int State_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, published_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, accessible_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, pastdue_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, started_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, completed_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, graded_),
   };
   State_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -475,19 +476,20 @@ void protobuf_AddDesc_input_2fschool_2eproto() {
     "onth\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n"
     "\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millise"
     "cond\030\007 \001(\004\"\"\n\021DomainInformation\022\r\n\005stuff"
-    "\030\001 \001(\t\"c\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\nac"
+    "\030\001 \001(\t\"s\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\nac"
     "cessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007start"
-    "ed\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\"\215\001\n\007SrlUser\022"
-    "\020\n\010username\030\001 \002(\t\022\r\n\005email\030\002 \001(\t\022\022\n\ncour"
-    "seList\030\003 \003(\t\022\026\n\016schoolIdentity\030\004 \001(\t\022\021\n\t"
-    "firstName\030\005 \001(\t\022\020\n\010lastName\030\006 \001(\t\022\020\n\010pas"
-    "sword\030\007 \001(\t\"M\n\010SrlGroup\022\016\n\006userId\030\001 \003(\t\022"
-    "\017\n\007groupId\030\002 \002(\t\022\021\n\tgroupName\030\003 \001(\t\022\r\n\005a"
-    "dmin\030\004 \003(\t\"]\n\rSrlPermission\022\027\n\017adminPerm"
-    "ission\030\001 \003(\t\022\033\n\023moderatorPermission\030\002 \003("
-    "\t\022\026\n\016userPermission\030\003 \003(\t*U\n\010UserType\022\t\n"
-    "\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002\022\026\n\022TEACHING_ASS"
-    "ISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n\005GUEST\020\005", 3192);
+    "ed\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\022\016\n\006graded\030\006 "
+    "\001(\010\"\215\001\n\007SrlUser\022\020\n\010username\030\001 \002(\t\022\r\n\005ema"
+    "il\030\002 \001(\t\022\022\n\ncourseList\030\003 \003(\t\022\026\n\016schoolId"
+    "entity\030\004 \001(\t\022\021\n\tfirstName\030\005 \001(\t\022\020\n\010lastN"
+    "ame\030\006 \001(\t\022\020\n\010password\030\007 \001(\t\"M\n\010SrlGroup\022"
+    "\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgrou"
+    "pName\030\003 \001(\t\022\r\n\005admin\030\004 \003(\t\"]\n\rSrlPermiss"
+    "ion\022\027\n\017adminPermission\030\001 \003(\t\022\033\n\023moderato"
+    "rPermission\030\002 \003(\t\022\026\n\016userPermission\030\003 \003("
+    "\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002"
+    "\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n"
+    "\005GUEST\020\005", 3208);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/school.proto", &protobuf_RegisterTypes);
   SrlSchool::default_instance_ = new SrlSchool();
@@ -5329,6 +5331,7 @@ const int State::kAccessibleFieldNumber;
 const int State::kPastDueFieldNumber;
 const int State::kStartedFieldNumber;
 const int State::kCompletedFieldNumber;
+const int State::kGradedFieldNumber;
 #endif  // !_MSC_VER
 
 State::State()
@@ -5352,6 +5355,7 @@ void State::SharedCtor() {
   pastdue_ = false;
   started_ = false;
   completed_ = false;
+  graded_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -5392,6 +5396,7 @@ void State::Clear() {
     pastdue_ = false;
     started_ = false;
     completed_ = false;
+    graded_ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -5478,6 +5483,22 @@ bool State::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(48)) goto parse_graded;
+        break;
+      }
+
+      // optional bool graded = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_graded:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &graded_)));
+          set_has_graded();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -5525,6 +5546,11 @@ void State::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->completed(), output);
   }
 
+  // optional bool graded = 6;
+  if (has_graded()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->graded(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -5556,6 +5582,11 @@ void State::SerializeWithCachedSizes(
   // optional bool completed = 5;
   if (has_completed()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->completed(), target);
+  }
+
+  // optional bool graded = 6;
+  if (has_graded()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->graded(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -5591,6 +5622,11 @@ int State::ByteSize() const {
 
     // optional bool completed = 5;
     if (has_completed()) {
+      total_size += 1 + 1;
+    }
+
+    // optional bool graded = 6;
+    if (has_graded()) {
       total_size += 1 + 1;
     }
 
@@ -5636,6 +5672,9 @@ void State::MergeFrom(const State& from) {
     if (from.has_completed()) {
       set_completed(from.completed());
     }
+    if (from.has_graded()) {
+      set_graded(from.graded());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -5664,6 +5703,7 @@ void State::Swap(State* other) {
     std::swap(pastdue_, other->pastdue_);
     std::swap(started_, other->started_);
     std::swap(completed_, other->completed_);
+    std::swap(graded_, other->graded_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

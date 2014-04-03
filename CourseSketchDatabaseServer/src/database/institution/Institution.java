@@ -1,9 +1,6 @@
 package database.institution;
 
-import static database.StringConstants.DATABASE;
-import static database.StringConstants.GROUP_PREFIX;
-import static database.StringConstants.USER_GROUP_COLLECTION;
-import static database.StringConstants.USER_LIST;
+import static util.StringConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +19,7 @@ import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -78,7 +76,13 @@ public final class Institution {
 		}
 		instance = this;
 	}
-	
+
+	public void setUpIndexes() {
+		System.out.println("Setting up the indexes");
+		db.getCollection(USER_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
+		db.getCollection(UPDATE_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
+	}
+
 	/**
 	 * Returns a list of courses given a list of Ids for the courses
 	 * @throws AuthenticationException
@@ -148,7 +152,6 @@ public final class Institution {
 	}
 
 	public static ArrayList<SrlBankProblem> mongoGetProblem(List<String> problemID,String userId) throws AuthenticationException {
-		long currentTime = System.currentTimeMillis();
 		ArrayList<SrlBankProblem> allProblems = new ArrayList<SrlBankProblem>();
 		for (int problem = problemID.size() - 1; problem >= 0; problem--) {
 			allProblems.add(BankProblemManager.mongoGetBankProblem(getInstance().db, problemID.get(problem), userId));
@@ -172,9 +175,10 @@ public final class Institution {
 	 * @param userId The credentials used to authenticate the insertion
 	 * @param assignment The object being inserted 
 	 * @return The Id of the object that was inserted
+	 * @throws DatabaseAccessException 
 	 */
-	public static String mongoInsertCourse(String userId, SrlCourse course) {
-		
+	public static String mongoInsertCourse(String userId, SrlCourse course) throws DatabaseAccessException {
+
 		// Creates the default permissions for the courses.
 		SrlPermission permission = null;
 		if (course.hasAccessPermission()) {
@@ -216,6 +220,15 @@ public final class Institution {
 
 		// links the course to the group!
 		CourseManager.mongoInsertDefaultGroupId(getInstance().db, resultId, userGroupId, modGroupId, adminGroupId);
+
+		// adds the course to the users list
+		boolean success = Institution.putUserInCourse(resultId, userId);
+		if (!success) {
+			throw new DatabaseAccessException("No success: ", false);
+		}
+
+		// TODO: try to undo what has been done!  (and more error handling!)
+
 		return resultId;
 	}
 
@@ -350,6 +363,15 @@ public final class Institution {
 		try {
 			System.out.println("Getting experiment for user: " + userId +" problem: " + problemId);
 			SubmissionManager.mongoGetExperiment(getInstance().db, userId, problemId, sessionInfo, internalConnections);
+			return;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void mongoGetExperimentAsInstructor(String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections, ByteString review) {
+		try {
+			SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().db, userId, problemId, sessionInfo, internalConnections, review);
 			return;
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -65,6 +65,7 @@
 						dataManager = new SchoolDataManager(connection.userId, dataListener, connection, SchoolBuilder, QueryBuilder,
 								Request, parent.dcodeIO.ByteBuffer);
 						connection.userId = undefined;
+						dataManager.addState("isInstructor", connection.isInstructor);
 					}
 				);
 	  		/**

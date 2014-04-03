@@ -1,5 +1,8 @@
 package connection;
 
+import handlers.DataRequestHandler;
+import handlers.SubmissionRequestHandler;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,7 +41,7 @@ import database.UpdateHandler;
 public class SubmissionServer extends MultiInternalConnectionServer {
 
 	private boolean connectLocally = MultiConnectionManager.CONNECT_REMOTE;
-	UpdateHandler updateHandler = new UpdateHandler();
+	
 	MultiConnectionManager internalConnections = new MultiConnectionManager(this);
 
 	static int numberOfConnections = Integer.MIN_VALUE;
@@ -65,110 +68,22 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	public void onMessage(WebSocket conn, ByteBuffer buffer) {
 		System.out.println("Receiving message...");
 		Request req = Decoder.parseRequest(buffer);
-		String sessionInfo = req.getSessionInfo();
 
 		/**
 		 * Attempts to save the submission, which can be either a solution or an experiment.
 		 * If it is an insertion and not an update then it will send the key to the database
 		 */
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
-			try {
-				String resultantId = null;
-				if (updateHandler.addRequest(req)) {
-					System.out.println("Update is finished building!");
-					ByteString data = null;
-					if (updateHandler.isSolution(sessionInfo)) {
-						resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
-						if (resultantId != null) {
-							SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
-							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
-							data = builder.build().toByteString();
-						}
-					} else {
-						System.out.println("Saving experiment");
-						resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
-						if (resultantId != null) {
-							SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
-							builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
-							data = builder.build().toByteString();
-						}
-					}
-					if (resultantId != null) {
-						// it can be null if this solution has already been stored
-						Request.Builder build = Request.newBuilder(req);
-						build.setResponseText(resultantId);
-						build.clearOtherData();
-						build.setSessionInfo(req.getSessionInfo());
-						System.out.println(req.getSessionInfo());
-						// sends the response back to the answer checker which can then send it back to the client.
-						conn.send(build.build().toByteArray());
-						if (data != null) {
-							// passes the data to the database for connecting
-							build.setOtherData(data);
-							internalConnections.send(build.build(), "", DataConnection.class);
-						}
-					}
-					updateHandler.clearSubmission(req.getSessionInfo());
-				} 
-				//ItemResult 
-			} catch (Exception e) {
-				Request.Builder build = Request.newBuilder();
-				build.setRequestType(Request.MessageType.ERROR);
-				build.setResponseText(e.getMessage());
-				build.setSessionInfo(req.getSessionInfo());
-				conn.send(build.build().toByteArray());
-				e.printStackTrace();
-				updateHandler.clearSubmission(req.getSessionInfo());
+			Request result = SubmissionRequestHandler.handleRequest(req, internalConnections);
+			if (result != null) {
+				conn.send(result.toByteArray());
 			}
 		}
 
 		if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-			System.out.println("Parsing data request!");
-			DataRequest dataReq;
-			try {
-				dataReq = DataRequest.parseFrom(req.getOtherData());
-				Request.Builder resultReq = Request.newBuilder(req);
-				resultReq.clearOtherData();
-				for(ItemRequest itemReq: dataReq.getItemsList()) {
-					if (itemReq.getQuery() == ItemQuery.EXPERIMENT) {
-						System.out.println("attempting to get an experiment!");
-						SrlExperiment experiment = null;
-						String errorMessage = "";
-						try {
-							experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
-						} catch (Exception e) {
-							errorMessage = e.getMessage();
-							e.printStackTrace();
-						}
-						DataResult.Builder builder = DataResult.newBuilder();
-						ItemResult.Builder send = ItemResult.newBuilder();
-						send.setQuery(ItemQuery.EXPERIMENT);
-
-						if (experiment != null) {
-							send.setData(experiment.toByteString());
-						} else {
-							send.setNoData(true);
-							send.setErrorMessage(errorMessage);
-							//error stuff
-						}
-						builder.addResults(send);
-
-						resultReq.setOtherData(builder.build().toByteString());
-						resultReq.setRequestType(MessageType.DATA_REQUEST);
-						conn.send(resultReq.build().toByteArray());
-
-						/*
-						SrlUpdateList list = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
-						for(SrlUpdate update: list.getListList()) {
-							send.setData(update.toByteString());
-							resultReq.setOtherData(send.build().toByteString());
-							conn.send(resultReq.build().toByteArray());
-						}
-						*/
-					}
-				}
-			} catch (InvalidProtocolBufferException e) {
-				e.printStackTrace();
+			Request result = DataRequestHandler.handleRequest(req);
+			if (result != null) {
+				conn.send(result.toByteArray());
 			}
 		}
 		

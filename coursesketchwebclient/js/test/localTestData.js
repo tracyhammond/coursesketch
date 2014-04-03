@@ -34,7 +34,7 @@ addLoadEvent( function() {
 			" They will have a basic understanding of models of computation.";
 	
 	var course3 = new SrlCourse();
-		course1.id = "Course_03";
+		course3.id = "Course_03";
 		//empty course
 	
 	//Test Assignments
@@ -57,8 +57,8 @@ addLoadEvent( function() {
 		assignment1.imageURL = "test/truss_thumb.png";
 
 	var assignment2 = new SrlAssignment();
-		assignment1.courseId = "Course_01";
-		assignment1.id = "Assignment_002";
+		assignment2.courseId = "Course_01";
+		assignment2.id = "Assignment_002";
 		assignment2.name = "Truss HW2";
 		assignment2.description = "I'm making a note here, HUGE SUCCESS";
 		assignment2.state = new SchoolBuilder.State(true, true, false, true, true);

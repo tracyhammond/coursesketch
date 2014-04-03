@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="../../">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+  	<link rel="stylesheet" href="css/problem/problem_layout.css">
+
+	<script type="text/javascript" src="js/problem/problem_navigator.js"></script>
+	<script type="text/javascript">
+		var connection;
+		if (parent) {
+			parent.copyParentUtilityFunctions(this);
+			parent.copyParentProtos(this);
+			connection = parent.connection;
+		}
+	</script>
+	<script>
+		var problemNavigator = new schoolNavigator(parent.dataManager.getState("CURRENT_ASSIGNMENT"), parent.dataManager, false,
+				parseInt(parent.dataManager.getState("CURRENT_QUESTION_INDEX")));
+		connection.setAnswerCheckingListener(function(event, msg) {
+			problemNavigator.executeEvent('feedback', [event, msg]);
+		});
+		connection.setSubmissionListener(function(event, msg) {
+			problemNavigator.executeEvent('submission', [event, msg]);
+		});
+	</script>
+	<script>
+	(function(scriptScope) {
+		/**
+		* Resizes the height of the navbar based on the height of the content
+		*/
+		scriptScope.loadNav = function(callerScope) {
+			callerScope.document.getElementById("panelWrapper").onresize = function() {
+				if (this.offsetHeight > 100) {
+					scriptScope.setHeightToContent(scriptScope, "nav_iframe", "panelWrapper", 5);
+				}
+			};
+			callerScope.document.getElementById("panelWrapper").onresize();
+		}
+		/**
+		* Resizes the width of the toolbar based on the width of the content.
+		*
+		* Also moves the content so that it is positioned at the right side	
+		*/
+		scriptScope.loadTool = function(callerScope) {
+			callerScope.document.getElementById("panelWrapper").onresize = function() {
+				console.log("resizing tool panel");
+				var width = this.offsetWidth + 10;
+				var height = this.offsetHeight + 10;
+				scriptScope.document.getElementById('toolHolder').style.width = width +'px';
+				scriptScope.document.getElementById('toolHolder').style.height = height +'px';
+				scriptScope.document.getElementById('toolHolder').style.right = '5px';
+				scriptScope.setWidthToContent(scriptScope, "tool_iframe", "panelWrapper", 5);
+				scriptScope.setHeightToContent(scriptScope, "tool_iframe", "panelWrapper", 5);
+				
+			};
+			callerScope.document.getElementById("panelWrapper").onresize();
+		}
+		problemNavigator.addCallback(function (nav) {
+			var type = nav.getPoblemType();
+			var panelLoc = "default";
+			// type may change to be an int or an enum comparison.
+			if (type == "SKETCH") {
+				panelLoc = "sketching";
+			}  else if (type == "MULT_CHOICE") {
+				panelLoc = "multipleChoice"
+			}   else if (type == "FREE_RESP") {
+				panelLoc = "essay";
+			}
+			scriptScope.document.getElementById('problem_iframe').src = "/html/problem/problemType/" + panelLoc + "Panel.html";
+			fillHeight(scriptScope, 'problem_iframe');
+		});
+		scriptScope.window.onresize = function() {
+			fillHeight(scriptScope, 'problem_iframe');
+			var navBar = scriptScope.document.getElementById('nav_iframe');
+			var displacement = navBar.offsetHeight;
+			scriptScope.document.getElementById('toolHolder').style.top = displacement+'px';
+		}
+	})(this);
+	function onLoad() {
+		problemNavigator.setUiLoaded(true);
+		if (problemNavigator.isDataLoaded()) {
+			problemNavigator.refresh();
+		}
+		window.onresize();
+	}
+	</script>
+</head>
+<body onload="onLoad();">
+	<!-- include navigation panel here! -->
+	<iframe id = "nav_iframe" src= "/html/problem/navigationPanel.html" scrolling="no" frameborder="0" width=100% style = "width:100%;" height = 100px;></iframe>
+
+	<!-- include problem panel here! -->
+	<iframe id = "problem_iframe" src = "/html/problem/problemType/defaultPanel.html" frameborder="0" width=100% height=100% style ="width:100%;height:100%;"></iframe>
+
+	<!-- include problem panel here! -->
+	<div id = "toolHolder" style = "position:absolute; right:5px; top:5px;">
+	<iframe id = "tool_iframe" src = "/html/problem/toolPanel.html" scrolling="no" frameborder="0" width=100% height=100% style ="width:100%;height:100%;" ></iframe>
+	</div>
+</body>
+</html>

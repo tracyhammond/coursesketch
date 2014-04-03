@@ -110,7 +110,8 @@ public final class Submission {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -887,7 +888,8 @@ public final class Submission {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1680,7 +1682,7 @@ public final class Submission {
      * <code>optional string userId = 5;</code>
      *
      * <pre>
-     * student Id
+     * student Id  (this can sometimes be the username for displaying purposes
      * </pre>
      */
     boolean hasUserId();
@@ -1688,7 +1690,7 @@ public final class Submission {
      * <code>optional string userId = 5;</code>
      *
      * <pre>
-     * student Id
+     * student Id  (this can sometimes be the username for displaying purposes
      * </pre>
      */
     java.lang.String getUserId();
@@ -1696,7 +1698,7 @@ public final class Submission {
      * <code>optional string userId = 5;</code>
      *
      * <pre>
-     * student Id
+     * student Id  (this can sometimes be the username for displaying purposes
      * </pre>
      */
     com.google.protobuf.ByteString
@@ -1753,7 +1755,8 @@ public final class Submission {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1980,7 +1983,7 @@ public final class Submission {
      * <code>optional string userId = 5;</code>
      *
      * <pre>
-     * student Id
+     * student Id  (this can sometimes be the username for displaying purposes
      * </pre>
      */
     public boolean hasUserId() {
@@ -1990,7 +1993,7 @@ public final class Submission {
      * <code>optional string userId = 5;</code>
      *
      * <pre>
-     * student Id
+     * student Id  (this can sometimes be the username for displaying purposes
      * </pre>
      */
     public java.lang.String getUserId() {
@@ -2011,7 +2014,7 @@ public final class Submission {
      * <code>optional string userId = 5;</code>
      *
      * <pre>
-     * student Id
+     * student Id  (this can sometimes be the username for displaying purposes
      * </pre>
      */
     public com.google.protobuf.ByteString
@@ -2594,7 +2597,7 @@ public final class Submission {
        * <code>optional string userId = 5;</code>
        *
        * <pre>
-       * student Id
+       * student Id  (this can sometimes be the username for displaying purposes
        * </pre>
        */
       public boolean hasUserId() {
@@ -2604,7 +2607,7 @@ public final class Submission {
        * <code>optional string userId = 5;</code>
        *
        * <pre>
-       * student Id
+       * student Id  (this can sometimes be the username for displaying purposes
        * </pre>
        */
       public java.lang.String getUserId() {
@@ -2622,7 +2625,7 @@ public final class Submission {
        * <code>optional string userId = 5;</code>
        *
        * <pre>
-       * student Id
+       * student Id  (this can sometimes be the username for displaying purposes
        * </pre>
        */
       public com.google.protobuf.ByteString
@@ -2642,7 +2645,7 @@ public final class Submission {
        * <code>optional string userId = 5;</code>
        *
        * <pre>
-       * student Id
+       * student Id  (this can sometimes be the username for displaying purposes
        * </pre>
        */
       public Builder setUserId(
@@ -2659,7 +2662,7 @@ public final class Submission {
        * <code>optional string userId = 5;</code>
        *
        * <pre>
-       * student Id
+       * student Id  (this can sometimes be the username for displaying purposes
        * </pre>
        */
       public Builder clearUserId() {
@@ -2672,7 +2675,7 @@ public final class Submission {
        * <code>optional string userId = 5;</code>
        *
        * <pre>
-       * student Id
+       * student Id  (this can sometimes be the username for displaying purposes
        * </pre>
        */
       public Builder setUserIdBytes(
@@ -2890,7 +2893,8 @@ public final class Submission {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -3379,6 +3383,681 @@ public final class Submission {
     // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlChecksum)
   }
 
+  public interface SrlExperimentListOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // repeated .protobuf.srl.submission.SrlExperiment experiments = 1;
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    java.util.List<protobuf.srl.submission.Submission.SrlExperiment> 
+        getExperimentsList();
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    protobuf.srl.submission.Submission.SrlExperiment getExperiments(int index);
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    int getExperimentsCount();
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    java.util.List<? extends protobuf.srl.submission.Submission.SrlExperimentOrBuilder> 
+        getExperimentsOrBuilderList();
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    protobuf.srl.submission.Submission.SrlExperimentOrBuilder getExperimentsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.submission.SrlExperimentList}
+   */
+  public static final class SrlExperimentList extends
+      com.google.protobuf.GeneratedMessage
+      implements SrlExperimentListOrBuilder {
+    // Use SrlExperimentList.newBuilder() to construct.
+    private SrlExperimentList(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SrlExperimentList(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SrlExperimentList defaultInstance;
+    public static SrlExperimentList getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SrlExperimentList getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SrlExperimentList(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                experiments_ = new java.util.ArrayList<protobuf.srl.submission.Submission.SrlExperiment>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              experiments_.add(input.readMessage(protobuf.srl.submission.Submission.SrlExperiment.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          experiments_ = java.util.Collections.unmodifiableList(experiments_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlExperimentList_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlExperimentList_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.submission.Submission.SrlExperimentList.class, protobuf.srl.submission.Submission.SrlExperimentList.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SrlExperimentList> PARSER =
+        new com.google.protobuf.AbstractParser<SrlExperimentList>() {
+      public SrlExperimentList parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SrlExperimentList(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SrlExperimentList> getParserForType() {
+      return PARSER;
+    }
+
+    // repeated .protobuf.srl.submission.SrlExperiment experiments = 1;
+    public static final int EXPERIMENTS_FIELD_NUMBER = 1;
+    private java.util.List<protobuf.srl.submission.Submission.SrlExperiment> experiments_;
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    public java.util.List<protobuf.srl.submission.Submission.SrlExperiment> getExperimentsList() {
+      return experiments_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    public java.util.List<? extends protobuf.srl.submission.Submission.SrlExperimentOrBuilder> 
+        getExperimentsOrBuilderList() {
+      return experiments_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    public int getExperimentsCount() {
+      return experiments_.size();
+    }
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    public protobuf.srl.submission.Submission.SrlExperiment getExperiments(int index) {
+      return experiments_.get(index);
+    }
+    /**
+     * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+     */
+    public protobuf.srl.submission.Submission.SrlExperimentOrBuilder getExperimentsOrBuilder(
+        int index) {
+      return experiments_.get(index);
+    }
+
+    private void initFields() {
+      experiments_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < experiments_.size(); i++) {
+        output.writeMessage(1, experiments_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < experiments_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, experiments_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.submission.Submission.SrlExperimentList parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.submission.Submission.SrlExperimentList prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.submission.SrlExperimentList}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.submission.Submission.SrlExperimentListOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlExperimentList_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlExperimentList_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.submission.Submission.SrlExperimentList.class, protobuf.srl.submission.Submission.SrlExperimentList.Builder.class);
+      }
+
+      // Construct using protobuf.srl.submission.Submission.SrlExperimentList.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getExperimentsFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (experimentsBuilder_ == null) {
+          experiments_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          experimentsBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.submission.Submission.internal_static_protobuf_srl_submission_SrlExperimentList_descriptor;
+      }
+
+      public protobuf.srl.submission.Submission.SrlExperimentList getDefaultInstanceForType() {
+        return protobuf.srl.submission.Submission.SrlExperimentList.getDefaultInstance();
+      }
+
+      public protobuf.srl.submission.Submission.SrlExperimentList build() {
+        protobuf.srl.submission.Submission.SrlExperimentList result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.submission.Submission.SrlExperimentList buildPartial() {
+        protobuf.srl.submission.Submission.SrlExperimentList result = new protobuf.srl.submission.Submission.SrlExperimentList(this);
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
+        if (experimentsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            experiments_ = java.util.Collections.unmodifiableList(experiments_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.experiments_ = experiments_;
+        } else {
+          result.experiments_ = experimentsBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.submission.Submission.SrlExperimentList) {
+          return mergeFrom((protobuf.srl.submission.Submission.SrlExperimentList)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.submission.Submission.SrlExperimentList other) {
+        if (other == protobuf.srl.submission.Submission.SrlExperimentList.getDefaultInstance()) return this;
+        if (experimentsBuilder_ == null) {
+          if (!other.experiments_.isEmpty()) {
+            if (experiments_.isEmpty()) {
+              experiments_ = other.experiments_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureExperimentsIsMutable();
+              experiments_.addAll(other.experiments_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.experiments_.isEmpty()) {
+            if (experimentsBuilder_.isEmpty()) {
+              experimentsBuilder_.dispose();
+              experimentsBuilder_ = null;
+              experiments_ = other.experiments_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              experimentsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getExperimentsFieldBuilder() : null;
+            } else {
+              experimentsBuilder_.addAllMessages(other.experiments_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.submission.Submission.SrlExperimentList parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.submission.Submission.SrlExperimentList) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // repeated .protobuf.srl.submission.SrlExperiment experiments = 1;
+      private java.util.List<protobuf.srl.submission.Submission.SrlExperiment> experiments_ =
+        java.util.Collections.emptyList();
+      private void ensureExperimentsIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          experiments_ = new java.util.ArrayList<protobuf.srl.submission.Submission.SrlExperiment>(experiments_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.submission.Submission.SrlExperiment, protobuf.srl.submission.Submission.SrlExperiment.Builder, protobuf.srl.submission.Submission.SrlExperimentOrBuilder> experimentsBuilder_;
+
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public java.util.List<protobuf.srl.submission.Submission.SrlExperiment> getExperimentsList() {
+        if (experimentsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(experiments_);
+        } else {
+          return experimentsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public int getExperimentsCount() {
+        if (experimentsBuilder_ == null) {
+          return experiments_.size();
+        } else {
+          return experimentsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public protobuf.srl.submission.Submission.SrlExperiment getExperiments(int index) {
+        if (experimentsBuilder_ == null) {
+          return experiments_.get(index);
+        } else {
+          return experimentsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public Builder setExperiments(
+          int index, protobuf.srl.submission.Submission.SrlExperiment value) {
+        if (experimentsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureExperimentsIsMutable();
+          experiments_.set(index, value);
+          onChanged();
+        } else {
+          experimentsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public Builder setExperiments(
+          int index, protobuf.srl.submission.Submission.SrlExperiment.Builder builderForValue) {
+        if (experimentsBuilder_ == null) {
+          ensureExperimentsIsMutable();
+          experiments_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          experimentsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public Builder addExperiments(protobuf.srl.submission.Submission.SrlExperiment value) {
+        if (experimentsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureExperimentsIsMutable();
+          experiments_.add(value);
+          onChanged();
+        } else {
+          experimentsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public Builder addExperiments(
+          int index, protobuf.srl.submission.Submission.SrlExperiment value) {
+        if (experimentsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureExperimentsIsMutable();
+          experiments_.add(index, value);
+          onChanged();
+        } else {
+          experimentsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public Builder addExperiments(
+          protobuf.srl.submission.Submission.SrlExperiment.Builder builderForValue) {
+        if (experimentsBuilder_ == null) {
+          ensureExperimentsIsMutable();
+          experiments_.add(builderForValue.build());
+          onChanged();
+        } else {
+          experimentsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public Builder addExperiments(
+          int index, protobuf.srl.submission.Submission.SrlExperiment.Builder builderForValue) {
+        if (experimentsBuilder_ == null) {
+          ensureExperimentsIsMutable();
+          experiments_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          experimentsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public Builder addAllExperiments(
+          java.lang.Iterable<? extends protobuf.srl.submission.Submission.SrlExperiment> values) {
+        if (experimentsBuilder_ == null) {
+          ensureExperimentsIsMutable();
+          super.addAll(values, experiments_);
+          onChanged();
+        } else {
+          experimentsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public Builder clearExperiments() {
+        if (experimentsBuilder_ == null) {
+          experiments_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          experimentsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public Builder removeExperiments(int index) {
+        if (experimentsBuilder_ == null) {
+          ensureExperimentsIsMutable();
+          experiments_.remove(index);
+          onChanged();
+        } else {
+          experimentsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public protobuf.srl.submission.Submission.SrlExperiment.Builder getExperimentsBuilder(
+          int index) {
+        return getExperimentsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public protobuf.srl.submission.Submission.SrlExperimentOrBuilder getExperimentsOrBuilder(
+          int index) {
+        if (experimentsBuilder_ == null) {
+          return experiments_.get(index);  } else {
+          return experimentsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public java.util.List<? extends protobuf.srl.submission.Submission.SrlExperimentOrBuilder> 
+           getExperimentsOrBuilderList() {
+        if (experimentsBuilder_ != null) {
+          return experimentsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(experiments_);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public protobuf.srl.submission.Submission.SrlExperiment.Builder addExperimentsBuilder() {
+        return getExperimentsFieldBuilder().addBuilder(
+            protobuf.srl.submission.Submission.SrlExperiment.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public protobuf.srl.submission.Submission.SrlExperiment.Builder addExperimentsBuilder(
+          int index) {
+        return getExperimentsFieldBuilder().addBuilder(
+            index, protobuf.srl.submission.Submission.SrlExperiment.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.submission.SrlExperiment experiments = 1;</code>
+       */
+      public java.util.List<protobuf.srl.submission.Submission.SrlExperiment.Builder> 
+           getExperimentsBuilderList() {
+        return getExperimentsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.submission.Submission.SrlExperiment, protobuf.srl.submission.Submission.SrlExperiment.Builder, protobuf.srl.submission.Submission.SrlExperimentOrBuilder> 
+          getExperimentsFieldBuilder() {
+        if (experimentsBuilder_ == null) {
+          experimentsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              protobuf.srl.submission.Submission.SrlExperiment, protobuf.srl.submission.Submission.SrlExperiment.Builder, protobuf.srl.submission.Submission.SrlExperimentOrBuilder>(
+                  experiments_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          experiments_ = null;
+        }
+        return experimentsBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.submission.SrlExperimentList)
+    }
+
+    static {
+      defaultInstance = new SrlExperimentList(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlExperimentList)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_submission_SrlSubmission_descriptor;
   private static
@@ -3399,6 +4078,11 @@ public final class Submission {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_submission_SrlChecksum_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_submission_SrlExperimentList_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_submission_SrlExperimentList_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -3420,7 +4104,9 @@ public final class Submission {
       "lemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022:\n\nsubmissio",
       "n\030\006 \001(\0132&.protobuf.srl.submission.SrlSub" +
       "mission\"4\n\013SrlChecksum\022\021\n\tfirstBits\030\001 \002(" +
-      "\003\022\022\n\nsecondBits\030\002 \002(\003"
+      "\003\022\022\n\nsecondBits\030\002 \002(\003\"P\n\021SrlExperimentLi" +
+      "st\022;\n\013experiments\030\001 \003(\0132&.protobuf.srl.s" +
+      "ubmission.SrlExperiment"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3451,6 +4137,12 @@ public final class Submission {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_submission_SrlChecksum_descriptor,
               new java.lang.String[] { "FirstBits", "SecondBits", });
+          internal_static_protobuf_srl_submission_SrlExperimentList_descriptor =
+            getDescriptor().getMessageTypes().get(4);
+          internal_static_protobuf_srl_submission_SrlExperimentList_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_submission_SrlExperimentList_descriptor,
+              new java.lang.String[] { "Experiments", });
           return null;
         }
       };

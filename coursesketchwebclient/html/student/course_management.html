@@ -7,11 +7,13 @@
   	<link rel="stylesheet" href="css/utility/columns.css">
 	<link rel="stylesheet" href="css/courseSketch2.css">
 	<link rel="stylesheet" href="css/utility/externalLibraries/tooltip.css">
+	<link rel="stylesheet" href="css/utility/waiting.css">
 	<script>
 		parent.copyParentUtilityFunctions(this);
 		parent.copyParentProtos(this);
 	</script>
 	<script type="text/javascript" src="js/utils/externalLibraries/tooltip.js"></script>
+	<script type="text/javascript" src="js/utils/waiting.js"></script>
 	<script type="text/javascript" src="js/school/schoolItem.js"></script>
 	<script type="text/javascript" src="js/school/course_manager.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
@@ -23,21 +25,7 @@
   		parent.addScopedLoadEvent(window,
 				function()
 				{
-		  			var loadCourses = function(courseList) {
-							console.log(courseList);
-							localScope.showCourses(courseList);
-					};
-					if (parent.dataManager.isDatabaseReady()) {
-						parent.dataManager.getAllCourses(loadCourses);
-					} else {
-						var intervalVar = setInterval(function() {
-							if (parent.dataManager.isDatabaseReady()) {
-								clearInterval(intervalVar);
-								parent.dataManager.getAllCourses(loadCourses);
-							}
-						}, 100);
-					}
-
+  					inializeCourseManagment();
 					var loader = new parent.DynamicFileLoader();
 					loader.sope = document;
 					loader.loadFile("js/utils/popup.js",'js');
@@ -91,7 +79,7 @@
 	    	<div class="col-group4">
 	    		<div>
 	    			<h2 style = "text-align:center">Courses</h2>
-		    		<div id="column1" class = "centre faded_column" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
+		    		<div id="column1" class = "centre faded_column gradient_faded_column_student" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
 		    			<button class = "myButton2 centre" onclick = "parent.redirectContent('html/student/classSearch.html','Search for classes');">Find New Course</button>
 				    	<div id="class_list_column" class="school_div">
 			    		</div>
@@ -99,7 +87,7 @@
 		    	</div>
 		    	<div>
 		    		<h2 style = "text-align:center">Assignments</h2>
-			    	<div id="column2" class = "centre faded_column" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
+			    	<div id="column2" class = "centre faded_column gradient_faded_column_student" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
 				    	<div id="assignment_list_column" class="school_div">
 				    	Please click on the previous column
 						</div>
@@ -107,7 +95,7 @@
 				</div>
 				<div>
 					<h2 style = "text-align:center">Problems</h2>
-					<div id="column3" class = "centre faded_column" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
+					<div id="column3" class = "centre faded_column gradient_faded_column_student" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
 						<div id="problem_list_column" class="school_div">
 					    	Please click on the previous column
 						</div>
@@ -115,7 +103,7 @@
 				</div>
 				<div>
 		    		<h2 style = "text-align:center">Lectures</h2>
-			    	<div id="column4" class = "centre faded_column" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
+			    	<div id="column4" class = "centre faded_column gradient_faded_column_student" style = "overflow-y: scroll;overflow-x: hidden; padding-top: 5px;">
 				    	<div id="lecture_list_column" class="school_div">
 				    	Please click on the previous column
 						</div>

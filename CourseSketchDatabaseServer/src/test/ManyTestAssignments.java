@@ -11,9 +11,9 @@ import database.auth.AuthenticationException;
 import database.institution.Institution;
 
 public class ManyTestAssignments {
-	public static void testAssignments(String courseId) {
-		String[] name = new String[]{"Assignment5"};		/*"Assignment4"*//*"Assignment3"*/
-		String[] descsription = new String[]{"Due Wednesday 2/26/2014 at midnight. This is the Fifth Assignment"/*"This is the Fourth Assignment"*//*"This is the Third Assignment"*/};
+	public static void testAssignments(String courseId, String mastId) {
+		String[] name = new String[]{"Assignment8"};		/*Assignment7*//*Assignment6*//*"Assignment5"*//*"Assignment4"*//*"Assignment3"*/
+		String[] descsription = new String[]{"Due Friday 04/04/2014 at midnight. This is the seventh assignment."/*"Due Wednesday 2/26/2014 at midnight. This is the Fifth Assignment"*//*"This is the Fourth Assignment"*//*"This is the Third Assignment"*/};
 		for (int k = 0; k < 1; k ++) {
 			SrlAssignment.Builder testBuilder = SrlAssignment.newBuilder();
 			testBuilder.setName(name[k]);
@@ -22,7 +22,7 @@ public class ManyTestAssignments {
 			testBuilder.setGradeWeight("50%");
 			//testBuilder.setLatePolicy(LatePolicy.POLICY1);
 			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
-			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1393480799000L/*1392875999000L*//*1392703199000L*/).getTime())));
+			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1396673999000L/*1395291599000L*//*1394085599000L*//*1393480799000L*//*1392875999000L*//*1392703199000L*/).getTime())));
 			Date d = new Date();
 			d.setYear(2014-1900);
 			d.setMonth(1);
@@ -38,20 +38,23 @@ public class ManyTestAssignments {
 				System.out.println("INSERTING ASSIGNMENT");
 				String assignmentId = null;
 				try {
-					assignmentId = Institution.mongoInsertAssignment("0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332", testBuilder.buildPartial());
+					assignmentId = Institution.mongoInsertAssignment(mastId, testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {
 					e.printStackTrace();
 				}
-				System.out.println("INSERTING ASSIGNMENT SUCCESSFULT");
+				System.out.println("INSERTING ASSIGNMENT SUCCESSFUL"); /*SUCCESSFULT*/
 				System.out.println(courseId);
-				ManyTestProblems.testProblems(courseId, assignmentId);
+				ManyTestProblems.testProblems(courseId, assignmentId, mastId);
 		}
 	}
 
 	public static void main(String args[]) {
+		
 		System.out.println("Running program");
-		testAssignments("52d55a580364615fe8a4496c");
+		testAssignments("52d55a580364615fe8a4496c", "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332");
+
 	}
 }
+// 0b7ac244-b785-6961-9347-7621abeada88-277aa353914b7c5f
