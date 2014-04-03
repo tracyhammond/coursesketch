@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -369,7 +368,7 @@ public class Paleotest {
 				}
 				System.out.println("Scount: " + scount);
 				System.out.println("Pcount: " + pcount);
-				super.paintComponents(g);
+				paintComponents(g);
 			}
 		}
 		};
@@ -390,10 +389,13 @@ public class Paleotest {
 		current = s.nextInt();
 		s.close();
 		*/
+		
 		SrlUpdateList updates = fetchUpdates(current);
 		
 		holder.tester = Response.viewTest(updates);
-		panel.repaint();
+		
+		//panel.repaint();
+		frmMain.repaint();
 		KeyListener kl = new KeyListener() {
 
 			@Override
@@ -404,8 +406,6 @@ public class Paleotest {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-				// TODO Auto-generated method stub
 				int keyCode = e.getKeyCode();
 				System.out.println(e.toString());
 				boolean change = false;
@@ -424,16 +424,16 @@ public class Paleotest {
 					System.out.println("KeyEvent.VK_RIGHT");
 					break;
 				}
-				if(change) {
+				if(change) {					
 					SrlUpdateList updates = fetchUpdates(current);
 					
 					try {
 						holder.tester = Response.viewTest(updates);
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					panel.repaint();
+					//panel.repaint();
+					frmMain.repaint();
 				}
 			}
 
