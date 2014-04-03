@@ -60,6 +60,7 @@ public class Paleotest {
 	static JPanel panel;
 	static final TestSketchHolder holder = new TestSketchHolder();
 	static final ActionListener updateGui = makeGui();
+	static boolean respond = true;
 	
 	final static NavigationHolder courseNavigation = new NavigationHolder();
 	final static NavigationHolder assignmentNavigation = new NavigationHolder();
@@ -251,67 +252,67 @@ public class Paleotest {
 					 * } cont = false; }
 					 */
 					
-//					if (cont == true && points.size() > 10) {
-//						for (int q = 0; q < 3; q++) {
-//							// Subdivide
-//							List<Point> points2 = new ArrayList<Point>(points);
-//							points.clear();
-//							for (int i = 0; i + 1 < points2.size(); i++) {
-//								Point p1 = points2.get(i);
-//								Point p2 = points2.get(i + 1);
-//								points.add(p1);
-//								points.add(new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2));
-//							}
-//							points.add(points2.get(points2.size() - 1));
-//
-//							// Apply fake sinc4 .25 .5 1 .5 .25
-//							points2 = new ArrayList<Point>(points);
-//							points.clear();
-//							points.add(points2.get(0));
-//							for (int i = 1; i + 1 < points2.size(); i++) {
-//								Point p1 = new Point(points2.get(i).x,points2.get(i).y);
-//								/*
-//								//Unfinished fake sinc
-//								int width = Math.min(i, points2.size() - 2 - i);
-//								int total = 1;
-//								int weight = 1;
-//								for(int k = 1; (k <= width) && (i-k >= 0) && (i+k < points2.size() - 1);k ++) {
-//									total += weight;
-//									weight = weight / 2;
-//									Point pa = points2.get(i - k);
-//									Point pb = points2.get(i + k);
-//									p1.x += pa.x * weight + pb.x*weight;
-//									p1.y += pa.y * weight + pb.y*weight;
-//								}
-//								p1.x = p1.x/total;
-//								p1.y = p1.y/total;
-//								*/
-//								
-//								if (i >= 2 && i + 2 < points2.size()) {
-//									p1.x = (points2.get(i - 2).x / 4 + points2.get(i - 1).x / 2
-//											+ points2.get(i).x + points2.get(i + 1).x / 2 + points2
-//											.get(i + 2).x / 4) / 2.5;
-//									p1.y = (points2.get(i - 2).y / 4 + points2.get(i - 1).y / 2
-//											+ points2.get(i).y + points2.get(i + 1).y / 2 + points2
-//											.get(i + 2).y / 4) / 2.5;
-//								} else {
-//									p1.x = (points2.get(i - 1).x / 2 + points2.get(i).x + points2
-//											.get(i + 1).x / 2) / 2;
-//									p1.y = (points2.get(i - 1).y / 2 + points2.get(i).y + points2
-//											.get(i + 1).y / 2) / 2;
-//								}
-//								
-//								points.add(p1);
-//							}
-//							points.add(points2.get(points2.size() - 1));
-//
-//							// Discard points
-//							/*
-//							 * if(q > 4){ for(int i = (q%2==0)?1:2; i+1 <
-//							 * points.size(); i++) { points.remove(i); } }
-//							 */
-//						}
-//					}
+					if (cont == true && points.size() > 10) {
+						for (int q = 0; q < 3; q++) {
+							// Subdivide
+							List<Point> points2 = new ArrayList<Point>(points);
+							points.clear();
+							for (int i = 0; i + 1 < points2.size(); i++) {
+								Point p1 = points2.get(i);
+								Point p2 = points2.get(i + 1);
+								points.add(p1);
+								points.add(new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2));
+							}
+							points.add(points2.get(points2.size() - 1));
+
+							// Apply fake sinc4 .25 .5 1 .5 .25
+							points2 = new ArrayList<Point>(points);
+							points.clear();
+							points.add(points2.get(0));
+							for (int i = 1; i + 1 < points2.size(); i++) {
+								Point p1 = new Point(points2.get(i).x,points2.get(i).y);
+								/*
+								//Unfinished fake sinc
+								int width = Math.min(i, points2.size() - 2 - i);
+								int total = 1;
+								int weight = 1;
+								for(int k = 1; (k <= width) && (i-k >= 0) && (i+k < points2.size() - 1);k ++) {
+									total += weight;
+									weight = weight / 2;
+									Point pa = points2.get(i - k);
+									Point pb = points2.get(i + k);
+									p1.x += pa.x * weight + pb.x*weight;
+									p1.y += pa.y * weight + pb.y*weight;
+								}
+								p1.x = p1.x/total;
+								p1.y = p1.y/total;
+								*/
+								
+								if (i >= 2 && i + 2 < points2.size()) {
+									p1.x = (points2.get(i - 2).x / 4 + points2.get(i - 1).x / 2
+											+ points2.get(i).x + points2.get(i + 1).x / 2 + points2
+											.get(i + 2).x / 4) / 2.5;
+									p1.y = (points2.get(i - 2).y / 4 + points2.get(i - 1).y / 2
+											+ points2.get(i).y + points2.get(i + 1).y / 2 + points2
+											.get(i + 2).y / 4) / 2.5;
+								} else {
+									p1.x = (points2.get(i - 1).x / 2 + points2.get(i).x + points2
+											.get(i + 1).x / 2) / 2;
+									p1.y = (points2.get(i - 1).y / 2 + points2.get(i).y + points2
+											.get(i + 1).y / 2) / 2;
+								}
+								
+								points.add(p1);
+							}
+							points.add(points2.get(points2.size() - 1));
+
+							// Discard points
+							/*
+							 * if(q > 4){ for(int i = (q%2==0)?1:2; i+1 <
+							 * points.size(); i++) { points.remove(i); } }
+							 */
+						}
+					}
 					
 					for (Point p : points) {
 						if (p.getX() < xmin)
@@ -404,9 +405,11 @@ public class Paleotest {
 //		}
 //		current++;
 		updates = fetchUpdates(current);
-		
-		holder.tester = Response.viewTest(updates);
-		
+		try {
+			holder.tester = Response.viewTest(updates);
+		} catch (Exception e1) {
+			System.out.println("EMPTY SUBMISSION!!!!");
+		}
 		//panel.repaint();
 		frmMain.repaint();
 		KeyListener kl = new KeyListener() {
@@ -419,8 +422,9 @@ public class Paleotest {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
+				if(!respond)return;
+				respond = false;
 				int keyCode = e.getKeyCode();
-				System.out.println(e.toString());
 				boolean change = false;
 				boolean accremental = true;
 				switch( keyCode ){
@@ -457,6 +461,7 @@ public class Paleotest {
 					break;
 				}
 				if(change) {
+					respond = false;
 					SrlUpdateList updates = fetchUpdates(current);
 //					while (!display.assignmentName.equals(String.format("Assignment%d", assignmentNo)) || 
 //							   !display.problemName.equals(String.format("Problem%d", problemNo))) {
@@ -467,11 +472,13 @@ public class Paleotest {
 					try {
 						holder.tester = Response.viewTest(updates);
 					} catch (Exception e1) {
-						e1.printStackTrace();
+						System.out.println("EMPTY SUBMISSION!!!!");
 					}
 					//panel.repaint();
 					frmMain.repaint();
+					
 				}
+				respond = true;
 			}
 
 			@Override
