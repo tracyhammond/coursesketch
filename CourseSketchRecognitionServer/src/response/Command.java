@@ -20,6 +20,7 @@ import srl.core.sketch.Sketch;
 
 public abstract class Command {
 	protected CommandType type;
+	protected protobuf.srl.commands.Commands.Marker.MarkerType markerType = null;
 	protected UUID id = null;
 	
 	/**
@@ -32,6 +33,10 @@ public abstract class Command {
 	 */
 	public CommandType getType(){
 		return type;
+	}
+	
+	public protobuf.srl.commands.Commands.Marker.MarkerType getMarkerType() {
+		return markerType;
 	}
 	
 	/**

@@ -5,12 +5,12 @@ import java.util.List;
 
 import protobuf.srl.commands.Commands.ActionPackageShape;
 import protobuf.srl.commands.Commands.IdChain;
+import protobuf.srl.commands.Commands.Marker;
 import protobuf.srl.commands.Commands.SrlCommand;
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
-
 import srl.core.sketch.Sketch;
 import srl.recognition.paleo.PaleoConfig;
 import srl.recognition.paleo.PaleoSketchRecognizer;
@@ -89,7 +89,7 @@ public class Response {
 		Update up = new Update(call.getTime());
 		
 		for(SrlCommand c: call.getCommandsList()){
-			Command com;
+			Command com = null;
 			switch(c.getCommandType()){
 			case ADD_STROKE:
 				com = new AddStroke(SrlStroke.parseFrom(c.getCommandData()));
@@ -110,7 +110,24 @@ public class Response {
 				com = new RedoObject();
 				break;
 			case MARKER:
-				com = null;
+				if((Marker.parseFrom(c.getCommandData())).getType() == protobuf.srl.commands.Commands.Marker.MarkerType.CLEAR){
+					com = new ClearObject();
+				};
+				
+				break;
+			case ASSIGN_ATTRIBUTE:
+				break;
+			case CLEAR_STACK:
+				break;
+			case CLOSE_SYNC:
+				break;
+			case FORCE_INTERPRETATION:
+				break;
+			case OPEN_SYNC:
+				break;
+			case REMOVE_ATTRIBUTE:
+				break;
+			case REWRITE:
 				break;
 			default:
 				throw new Exception("Unsupported command: "+c.getCommandType());

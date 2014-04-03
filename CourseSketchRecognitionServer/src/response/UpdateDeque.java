@@ -99,6 +99,13 @@ public class UpdateDeque implements Iterable<Update>{
 				Update redoThese = undoDeque.removeFirst();
 				((LinkedList<Update>)syncDeque).add(index,redoThese);
 				redoThese.execute(s);
+			} else if (command != null && command.getType() == CommandType.MARKER && command.getMarkerType() == protobuf.srl.commands.Commands.Marker.MarkerType.CLEAR) {
+				//Clear sketch
+				for(Update upd:syncDeque) {
+					upd.undo(s);
+				}
+				syncDeque.clear();
+				undoDeque.clear();
 			} else {
 				undoDeque.clear(); //Prevent redo on any action other than undo or redo
 				update.execute(s);
