@@ -206,7 +206,7 @@ public class Paleotest {
 //				options.add(PaleoConfig.Option.Arc);
 				options.add(PaleoConfig.Option.Ellipse);
 				options.add(PaleoConfig.Option.Circle);
-				options.add(PaleoConfig.Option.Curve);
+//				options.add(PaleoConfig.Option.Curve);
 				options.add(PaleoConfig.Option.Helix);
 				options.add(PaleoConfig.Option.Spiral);
 				options.add(PaleoConfig.Option.Arrow);
@@ -340,9 +340,9 @@ public class Paleotest {
 						if ((recognizer.recognize(m_stroke).getBestShape().getInterpretation().label).equals("Arc")) {
 							g.setColor(Color.BLUE);
 						}
-//						if ((recognizer.recognize(m_stroke).getBestShape().getInterpretation().label).equals("Polyline")) {
-//							g.setColor(Color.RED);
-//						}
+						if ((recognizer.recognize(m_stroke).getBestShape().getInterpretation().label).equals("Curve")) {
+							g.setColor(Color.GREEN);
+						}
 					}
 					Point s = pl.remove(0);
 					for (Point p : pl) {

@@ -14,7 +14,6 @@
 	<classpathentry kind="lib" path="libs/weka.jar"/>
 	<classpathentry kind="lib" path="libs/java_websocket.jar"/>
 	<classpathentry kind="lib" path="libs/PaleoNNTrainer.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Sr UI Swing"/>
 	<classpathentry kind="lib" path="/CourseSketchProxyServer/libs/joda-time-2.3.jar"/>
 	<classpathentry kind="lib" path="libs/mongo-2.10.1.jar"/>
 	<classpathentry kind="lib" path="libs/mongo-java-driver-2.11.3.jar"/>
