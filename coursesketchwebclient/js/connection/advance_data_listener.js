@@ -10,17 +10,17 @@
 function AdvanceDataListener(connection, Request, query, defListener) {
 	var requestMap = {};
 	requestMap[Request.MessageType.DATA_REQUEST] = {};
-	requestMap[Request.MessageType.DATA_SENDING] = {};
+	requestMap[Request.MessageType.DATA_INSERT] = {};
 	requestMap[Request.MessageType.DATA_UPDATE] = {};
 
 	var myScope = this;
-	var defaultListener = defListener;
-	var errorListener;
+	var defaultListener = defListener || false;
+	var errorListener = false;
 	var QueryBuilder = query;
 	
 	this.setErrorListener = function(func) {
 		errorListener = func;
-	}
+	};
 	
 	/**
 	 * Sets
@@ -31,7 +31,18 @@ function AdvanceDataListener(connection, Request, query, defListener) {
 		//console.log(messageType);
 		//console.log(queryType);
 		localMap[queryType] = func;
-	}
+	};
+
+	/**
+	 * Removes the function associated with the listener
+	 */
+	this.removeListener = function(messageType, queryType) {
+		var localMap = requestMap[messageType];
+		//console.log("Adding listener");
+		//console.log(messageType);
+		//console.log(queryType);
+		localMap[queryType] = undefined;
+	};
 
 	/**
 	 * Gets the message type and the query type and finds the correct listener.

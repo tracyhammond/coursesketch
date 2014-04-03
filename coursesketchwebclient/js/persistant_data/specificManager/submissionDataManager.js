@@ -4,7 +4,6 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 	var userHasCourses = true;
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
-	var sendDataRequest = sendData;
 	var Request = builders[0];
 	var QueryBuilder = builders[1];
 	var SubmissionBuilder = builders[2];
@@ -24,11 +23,6 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 		database.getFromSubmissions(problemId, function(e, request, result) {
 			if (isUndefined(result) || isUndefined(result.data) || true) {
 
-				console.log("LOADING FROM DATABASE!");
-
-				//submissionCallback(undefined);
-				//return;
-
 				// the listener from the server of the request
 				// it stores the course locally then cals the callback with the course
 				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.EXPERIMENT, function(evt, item) {
@@ -36,9 +30,12 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 					var sub = experiment.submission;
 					localScope.setSubmission(problemId, sub);
 					submissionCallback(sub);
+					sub = undefined;
+					experiment = undefined;
+					advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.EXPERIMENT);
 				});
 				// creates a request that is then sent to the server
-				sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId]);
+				sendData.sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId]);
 			} else if (result.data == nonExistantValue) {
 				// the server holds this special value then it means the server does not have the value
 				submissionCallback(nonExistantValue);
@@ -46,10 +43,34 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 				// gets the data from the database and calls the callback
 				var bytes = ByteBuffer.decode64(result.data);
 				submissionCallback(SubmissionBuilder.SrlSubmission.decode(bytes));
+				bytes = null;
 			}
 		});
 	};
 	parent.getSubmission = getSubmission;
+
+	function getAllExperiments(problemId, submissionCallback) {
+		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.EXPERIMENT, function(evt, item) {
+			if (isUndefined(item.data)) {
+				submissionCallback("Undefined");
+				return;
+			}
+			var list;
+			try {
+				list = SubmissionBuilder.SrlExperimentList.decode(item.data);
+			} catch(exception) {
+				return;
+			}
+			console.log(list.experiments);
+			submissionCallback(list.experiments);
+			list = null;
+		});
+
+		// creates a request that is then sent to the server
+		var advanceQuery = new QueryBuilder.ExperimentReview(false, true);
+		sendData.sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId], advanceQuery);
+	}
+	parent.getAllExperiments = getAllExperiments;
 
 	/**
 	 * @param submission the submission that is being added

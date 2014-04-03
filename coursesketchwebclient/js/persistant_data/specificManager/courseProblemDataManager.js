@@ -1,7 +1,6 @@
 function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, sendData, builders, buffer) {
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
-	var sendDataRequest = sendData;
 	var Request = builders[0];
 	var QueryBuilder = builders[1];
 	var SchoolBuilder = builders[2];
@@ -50,20 +49,26 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 		/*
 		 * So what happens here might be a bit confusing to some new people so let me explain it.
 		 * #1 there is a loop that goes through every item in the userCourseProblemId (which is a list of courseProblem ids)
-		 * 
+		 *
 		 * #2 there is a function declaration inside the loop the reason for this is so that the courseProblemId is not overwritten
 		 * when the callback is called.
-		 * 
+		 *
 		 * #3 we call getCourseProblemLocal which then calls a callback about if it got an courseProblem or not if it didnt we add the id to a
 		 * list of Id we need to get from the server
-		 * 
+		 *
 		 * #4 after the entire list has been gone through (which terminates in the callback with barrier = 0)
 		 * if there are any that need to be pulled from the server then that happens
-		 * 
+		 *
 		 * #5 after talking to the server we get a response with a list of courseProblems, these are combined with the local courseProblems then the orignal callback is called.
-		 * 
+		 *
 		 * #6 the function pattern terminates.
 		 */
+
+		// standard preventative checking
+		if (isUndefined(userCourseProblemId) || userCourseProblemId == null || userCourseProblemId.length == 0) {
+			courseProblemCallback(nonExistantValue);
+		}
+
 		var barrier = userCourseProblemId.length;
 		var courseProblemList = [];
 		var leftOverId = [];
@@ -81,7 +86,6 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 					}	
 					barrier -= 1;
 					if (barrier == 0) {
-
 						// after the entire list has been gone through pull the leftovers from the server
 						if (leftOverId.length >= 1) {
 							advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE_PROBLEM, function(evt, item) {
@@ -89,16 +93,18 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 								var courseProblem = school.problems[0];
 								if (isUndefined(courseProblem)) {
 									courseProblemCallback(nonExistantValue);
+									advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE_PROBLEM);
 									return;
 								}
-								for(var i = 0; i < school.problems.length; i++) {
+								for (var i = 0; i < school.problems.length; i++) {
 									localScope.setCourseProblem(school.problems[i]);
 									courseProblemList.push(school.problems[i]);
 								}
 								courseProblemCallback(courseProblemList);
+								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE_PROBLEM);
 							});
 							// creates a request that is then sent to the server
-							sendDataRequest(QueryBuilder.ItemQuery.COURSE_PROBLEM, leftOverId);
+							sendData.sendDataRequest(QueryBuilder.ItemQuery.COURSE_PROBLEM, leftOverId);
 						}
 
 						// this calls actually before the response from the server is received!

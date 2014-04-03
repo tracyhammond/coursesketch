@@ -1,4 +1,4 @@
-package database;
+package util;
 
 public class StringConstants {
 	// Id
@@ -20,14 +20,18 @@ public class StringConstants {
 	public static final String USER_COLLECTION = "Users";
 	public static final String SOLUTION_COLLECTION = "Solutions";
 	public static final String EXPERIMENT_COLLECTION = "Experiments";
-	public static final String STATE_COLLECTION = "problem_submissions";
+	public static final String STATE_COLLECTION = "UserStates";
 	public static final String GRADE_COLLECTION = "problem_submissions";
+	public static final String UPDATE_COLLECTION = "User_Updates";
 	public static final String DATABASE = "institution";
-	
+
 	// meta fields
 	public static final String NAME = "Name";
 	public static final String DESCRIPTION = "Description";
 	public static final String IMAGE = "Image";
+	public static final String COURSE = "Course";
+	public static final String ASSIGNMENT = "Assignment";
+	public static final String COURSE_PROBLEM = "CourseProblem";
 
 	// date
 	public static final String ACCESS_DATE = "AccessDate";
@@ -80,6 +84,12 @@ public class StringConstants {
 	public static final String QUESTION_TYPE = "QuestionType";
 	public static final String KEYWORDS = "OtherKeywords";
 
+	// state specific
+	public static final String STATE_PUBLISHED = "Published"; // Instructor has finished construction of school item
+	public static final String STATE_STARTED = "Started"; // Has been made the school item available to be viewed and worked on
+	public static final String STATE_COMPLETED = "Completed"; // Has been made the school item available to be viewed and worked on
+	public static final String STATE_GRADED = "Graded"; // Has been made the school item available to be viewed and worked on
+
 	// user specific
 	public static final String COURSE_LIST = "CourseList";
 	public static final String FIRST_NAME = "FirstName";
@@ -88,6 +98,10 @@ public class StringConstants {
 	public static final String EMAIL = "Email";
 	public static final String SCHOOL_IDENTIFICATION = "UIN";
 	public static final String CREDENTIALS = "Credentials";
+	public static final String UPDATE = "Update";
+	public static final String CLASSIFICATION = "Classification";
+	public static final String UPDATEID = "UpdateId";
+	public static final String TIME = "Time";
 	
 	// user group specific
 	public static final String USER_LIST = "UserList";

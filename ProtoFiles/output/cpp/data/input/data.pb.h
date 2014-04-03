@@ -43,6 +43,7 @@ class ItemSend;
 class DataResult;
 class ItemResult;
 class IdList;
+class ExperimentReview;
 
 enum ItemQuery {
   ERROR = -1,
@@ -59,11 +60,12 @@ enum ItemQuery {
   COURSE_SEARCH = 10,
   BANK_SEARCH = 11,
   REGISTER = 12,
-  COURSE_LIST = 13
+  COURSE_LIST = 13,
+  UPDATE = 14
 };
 bool ItemQuery_IsValid(int value);
 const ItemQuery ItemQuery_MIN = ERROR;
-const ItemQuery ItemQuery_MAX = COURSE_LIST;
+const ItemQuery ItemQuery_MAX = UPDATE;
 const int ItemQuery_ARRAYSIZE = ItemQuery_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ItemQuery_descriptor();
@@ -217,10 +219,17 @@ class ItemRequest : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated string itemId = 1;
+  // required .protobuf.srl.query.ItemQuery query = 1;
+  inline bool has_query() const;
+  inline void clear_query();
+  static const int kQueryFieldNumber = 1;
+  inline ::protobuf::srl::query::ItemQuery query() const;
+  inline void set_query(::protobuf::srl::query::ItemQuery value);
+
+  // repeated string itemId = 2;
   inline int itemid_size() const;
   inline void clear_itemid();
-  static const int kItemIdFieldNumber = 1;
+  static const int kItemIdFieldNumber = 2;
   inline const ::std::string& itemid(int index) const;
   inline ::std::string* mutable_itemid(int index);
   inline void set_itemid(int index, const ::std::string& value);
@@ -232,13 +241,6 @@ class ItemRequest : public ::google::protobuf::Message {
   inline void add_itemid(const char* value, size_t size);
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& itemid() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_itemid();
-
-  // optional .protobuf.srl.query.ItemQuery query = 2;
-  inline bool has_query() const;
-  inline void clear_query();
-  static const int kQueryFieldNumber = 2;
-  inline ::protobuf::srl::query::ItemQuery query() const;
-  inline void set_query(::protobuf::srl::query::ItemQuery value);
 
   // optional bytes advanceQuery = 3;
   inline bool has_advancequery() const;
@@ -648,6 +650,18 @@ class ItemResult : public ::google::protobuf::Message {
   inline ::std::string* release_errormessage();
   inline void set_allocated_errormessage(::std::string* errormessage);
 
+  // optional bytes advanceQuery = 6;
+  inline bool has_advancequery() const;
+  inline void clear_advancequery();
+  static const int kAdvanceQueryFieldNumber = 6;
+  inline const ::std::string& advancequery() const;
+  inline void set_advancequery(const ::std::string& value);
+  inline void set_advancequery(const char* value);
+  inline void set_advancequery(const void* value, size_t size);
+  inline ::std::string* mutable_advancequery();
+  inline ::std::string* release_advancequery();
+  inline void set_allocated_advancequery(::std::string* advancequery);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.query.ItemResult)
  private:
   inline void set_has_query();
@@ -660,6 +674,8 @@ class ItemResult : public ::google::protobuf::Message {
   inline void clear_has_nodata();
   inline void set_has_errormessage();
   inline void clear_has_errormessage();
+  inline void set_has_advancequery();
+  inline void clear_has_advancequery();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -668,9 +684,10 @@ class ItemResult : public ::google::protobuf::Message {
   bool nodata_;
   ::std::string* data_;
   ::std::string* errormessage_;
+  ::std::string* advancequery_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -768,6 +785,98 @@ class IdList : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static IdList* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class ExperimentReview : public ::google::protobuf::Message {
+ public:
+  ExperimentReview();
+  virtual ~ExperimentReview();
+
+  ExperimentReview(const ExperimentReview& from);
+
+  inline ExperimentReview& operator=(const ExperimentReview& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ExperimentReview& default_instance();
+
+  void Swap(ExperimentReview* other);
+
+  // implements Message ----------------------------------------------
+
+  ExperimentReview* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ExperimentReview& from);
+  void MergeFrom(const ExperimentReview& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool allowEditing = 1;
+  inline bool has_allowediting() const;
+  inline void clear_allowediting();
+  static const int kAllowEditingFieldNumber = 1;
+  inline bool allowediting() const;
+  inline void set_allowediting(bool value);
+
+  // optional bool showUserNames = 2;
+  inline bool has_showusernames() const;
+  inline void clear_showusernames();
+  static const int kShowUserNamesFieldNumber = 2;
+  inline bool showusernames() const;
+  inline void set_showusernames(bool value);
+
+  // @@protoc_insertion_point(class_scope:protobuf.srl.query.ExperimentReview)
+ private:
+  inline void set_has_allowediting();
+  inline void clear_has_allowediting();
+  inline void set_has_showusernames();
+  inline void clear_has_showusernames();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  bool allowediting_;
+  bool showusernames_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_input_2fdata_2eproto();
+  friend void protobuf_AssignDesc_input_2fdata_2eproto();
+  friend void protobuf_ShutdownFile_input_2fdata_2eproto();
+
+  void InitAsDefaultInstance();
+  static ExperimentReview* default_instance_;
+};
 // ===================================================================
 
 
@@ -804,7 +913,30 @@ DataRequest::mutable_items() {
 
 // ItemRequest
 
-// repeated string itemId = 1;
+// required .protobuf.srl.query.ItemQuery query = 1;
+inline bool ItemRequest::has_query() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ItemRequest::set_has_query() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ItemRequest::clear_has_query() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ItemRequest::clear_query() {
+  query_ = -1;
+  clear_has_query();
+}
+inline ::protobuf::srl::query::ItemQuery ItemRequest::query() const {
+  return static_cast< ::protobuf::srl::query::ItemQuery >(query_);
+}
+inline void ItemRequest::set_query(::protobuf::srl::query::ItemQuery value) {
+  assert(::protobuf::srl::query::ItemQuery_IsValid(value));
+  set_has_query();
+  query_ = value;
+}
+
+// repeated string itemId = 2;
 inline int ItemRequest::itemid_size() const {
   return itemid_.size();
 }
@@ -846,29 +978,6 @@ ItemRequest::itemid() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 ItemRequest::mutable_itemid() {
   return &itemid_;
-}
-
-// optional .protobuf.srl.query.ItemQuery query = 2;
-inline bool ItemRequest::has_query() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void ItemRequest::set_has_query() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void ItemRequest::clear_has_query() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void ItemRequest::clear_query() {
-  query_ = -1;
-  clear_has_query();
-}
-inline ::protobuf::srl::query::ItemQuery ItemRequest::query() const {
-  return static_cast< ::protobuf::srl::query::ItemQuery >(query_);
-}
-inline void ItemRequest::set_query(::protobuf::srl::query::ItemQuery value) {
-  assert(::protobuf::srl::query::ItemQuery_IsValid(value));
-  set_has_query();
-  query_ = value;
 }
 
 // optional bytes advanceQuery = 3;
@@ -1355,6 +1464,76 @@ inline void ItemResult::set_allocated_errormessage(::std::string* errormessage) 
   }
 }
 
+// optional bytes advanceQuery = 6;
+inline bool ItemResult::has_advancequery() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ItemResult::set_has_advancequery() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ItemResult::clear_has_advancequery() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ItemResult::clear_advancequery() {
+  if (advancequery_ != &::google::protobuf::internal::kEmptyString) {
+    advancequery_->clear();
+  }
+  clear_has_advancequery();
+}
+inline const ::std::string& ItemResult::advancequery() const {
+  return *advancequery_;
+}
+inline void ItemResult::set_advancequery(const ::std::string& value) {
+  set_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    advancequery_ = new ::std::string;
+  }
+  advancequery_->assign(value);
+}
+inline void ItemResult::set_advancequery(const char* value) {
+  set_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    advancequery_ = new ::std::string;
+  }
+  advancequery_->assign(value);
+}
+inline void ItemResult::set_advancequery(const void* value, size_t size) {
+  set_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    advancequery_ = new ::std::string;
+  }
+  advancequery_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ItemResult::mutable_advancequery() {
+  set_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    advancequery_ = new ::std::string;
+  }
+  return advancequery_;
+}
+inline ::std::string* ItemResult::release_advancequery() {
+  clear_has_advancequery();
+  if (advancequery_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = advancequery_;
+    advancequery_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ItemResult::set_allocated_advancequery(::std::string* advancequery) {
+  if (advancequery_ != &::google::protobuf::internal::kEmptyString) {
+    delete advancequery_;
+  }
+  if (advancequery) {
+    set_has_advancequery();
+    advancequery_ = advancequery;
+  } else {
+    clear_has_advancequery();
+    advancequery_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // IdList
@@ -1401,6 +1580,54 @@ IdList::list() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 IdList::mutable_list() {
   return &list_;
+}
+
+// -------------------------------------------------------------------
+
+// ExperimentReview
+
+// optional bool allowEditing = 1;
+inline bool ExperimentReview::has_allowediting() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ExperimentReview::set_has_allowediting() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ExperimentReview::clear_has_allowediting() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ExperimentReview::clear_allowediting() {
+  allowediting_ = false;
+  clear_has_allowediting();
+}
+inline bool ExperimentReview::allowediting() const {
+  return allowediting_;
+}
+inline void ExperimentReview::set_allowediting(bool value) {
+  set_has_allowediting();
+  allowediting_ = value;
+}
+
+// optional bool showUserNames = 2;
+inline bool ExperimentReview::has_showusernames() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ExperimentReview::set_has_showusernames() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ExperimentReview::clear_has_showusernames() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ExperimentReview::clear_showusernames() {
+  showusernames_ = false;
+  clear_has_showusernames();
+}
+inline bool ExperimentReview::showusernames() const {
+  return showusernames_;
+}
+inline void ExperimentReview::set_showusernames(bool value) {
+  set_has_showusernames();
+  showusernames_ = value;
 }
 
 

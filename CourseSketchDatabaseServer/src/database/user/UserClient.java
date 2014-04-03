@@ -1,16 +1,18 @@
 package database.user;
 
-import static database.StringConstants.DATABASE;
+import static util.StringConstants.DATABASE;
 
 import java.util.ArrayList;
 
+import protobuf.srl.school.School.SrlSchool;
 import protobuf.srl.school.School.SrlUser;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
-
+import database.UserUpdateHandler;
+import database.auth.AuthenticationException;
 
 public final class UserClient {
 	private static UserClient instance;
@@ -64,5 +66,9 @@ public final class UserClient {
 
 	public static ArrayList<String> getUserCourses(String userId) throws DatabaseAccessException {
 		return UserManager.getUserCourses(getInstance().db, userId);
+	}
+
+	public static SrlSchool mongoGetReleventUpdates(String userId, long time) throws AuthenticationException, DatabaseAccessException {
+		return UserUpdateHandler.mongoGetAllRelevantUpdates(getInstance().db, userId, time);
 	}
 }

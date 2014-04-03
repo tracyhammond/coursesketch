@@ -44,6 +44,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SrlBoundingBox_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SrlBoundingBox_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SrlAttributes_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SrlAttributes_reflection_ = NULL;
 
 }  // namespace
 
@@ -184,6 +187,22 @@ void protobuf_AssignDesc_input_2fsketch_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SrlBoundingBox));
+  SrlAttributes_descriptor_ = file->message_type(7);
+  static const int SrlAttributes_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAttributes, keys_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAttributes, values_),
+  };
+  SrlAttributes_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SrlAttributes_descriptor_,
+      SrlAttributes::default_instance_,
+      SrlAttributes_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAttributes, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlAttributes, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SrlAttributes));
 }
 
 namespace {
@@ -210,6 +229,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     SrlInterpretation_descriptor_, &SrlInterpretation::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SrlBoundingBox_descriptor_, &SrlBoundingBox::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SrlAttributes_descriptor_, &SrlAttributes::default_instance());
 }
 
 }  // namespace
@@ -229,6 +250,8 @@ void protobuf_ShutdownFile_input_2fsketch_2eproto() {
   delete SrlInterpretation_reflection_;
   delete SrlBoundingBox::default_instance_;
   delete SrlBoundingBox_reflection_;
+  delete SrlAttributes::default_instance_;
+  delete SrlAttributes_reflection_;
 }
 
 void protobuf_AddDesc_input_2fsketch_2eproto() {
@@ -261,7 +284,8 @@ void protobuf_AddDesc_input_2fsketch_2eproto() {
     "J\n\021SrlInterpretation\022\r\n\005label\030\001 \002(\t\022\022\n\nc"
     "onfidence\030\002 \002(\001\022\022\n\ncomplexity\030\003 \001(\001\"E\n\016S"
     "rlBoundingBox\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001\022\r\n\005w"
-    "idth\030\003 \002(\001\022\016\n\006height\030\004 \002(\001", 946);
+    "idth\030\003 \002(\001\022\016\n\006height\030\004 \002(\001\"-\n\rSrlAttribu"
+    "tes\022\014\n\004keys\030\001 \003(\t\022\016\n\006values\030\002 \003(\t", 993);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/sketch.proto", &protobuf_RegisterTypes);
   SrlSketch::default_instance_ = new SrlSketch();
@@ -271,6 +295,7 @@ void protobuf_AddDesc_input_2fsketch_2eproto() {
   SrlPoint::default_instance_ = new SrlPoint();
   SrlInterpretation::default_instance_ = new SrlInterpretation();
   SrlBoundingBox::default_instance_ = new SrlBoundingBox();
+  SrlAttributes::default_instance_ = new SrlAttributes();
   SrlSketch::default_instance_->InitAsDefaultInstance();
   SrlObject::default_instance_->InitAsDefaultInstance();
   SrlShape::default_instance_->InitAsDefaultInstance();
@@ -278,6 +303,7 @@ void protobuf_AddDesc_input_2fsketch_2eproto() {
   SrlPoint::default_instance_->InitAsDefaultInstance();
   SrlInterpretation::default_instance_->InitAsDefaultInstance();
   SrlBoundingBox::default_instance_->InitAsDefaultInstance();
+  SrlAttributes::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_input_2fsketch_2eproto);
 }
 
@@ -2885,6 +2911,265 @@ void SrlBoundingBox::Swap(SrlBoundingBox* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = SrlBoundingBox_descriptor_;
   metadata.reflection = SrlBoundingBox_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SrlAttributes::kKeysFieldNumber;
+const int SrlAttributes::kValuesFieldNumber;
+#endif  // !_MSC_VER
+
+SrlAttributes::SrlAttributes()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SrlAttributes::InitAsDefaultInstance() {
+}
+
+SrlAttributes::SrlAttributes(const SrlAttributes& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SrlAttributes::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SrlAttributes::~SrlAttributes() {
+  SharedDtor();
+}
+
+void SrlAttributes::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SrlAttributes::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SrlAttributes::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SrlAttributes_descriptor_;
+}
+
+const SrlAttributes& SrlAttributes::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_input_2fsketch_2eproto();
+  return *default_instance_;
+}
+
+SrlAttributes* SrlAttributes::default_instance_ = NULL;
+
+SrlAttributes* SrlAttributes::New() const {
+  return new SrlAttributes;
+}
+
+void SrlAttributes::Clear() {
+  keys_.Clear();
+  values_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SrlAttributes::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated string keys = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_keys:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_keys()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->keys(this->keys_size() - 1).data(),
+            this->keys(this->keys_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(10)) goto parse_keys;
+        if (input->ExpectTag(18)) goto parse_values;
+        break;
+      }
+
+      // repeated string values = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_values:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_values()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->values(this->values_size() - 1).data(),
+            this->values(this->values_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_values;
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SrlAttributes::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // repeated string keys = 1;
+  for (int i = 0; i < this->keys_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->keys(i).data(), this->keys(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->keys(i), output);
+  }
+
+  // repeated string values = 2;
+  for (int i = 0; i < this->values_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->values(i).data(), this->values(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->values(i), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SrlAttributes::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // repeated string keys = 1;
+  for (int i = 0; i < this->keys_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->keys(i).data(), this->keys(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(1, this->keys(i), target);
+  }
+
+  // repeated string values = 2;
+  for (int i = 0; i < this->values_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->values(i).data(), this->values(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(2, this->values(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SrlAttributes::ByteSize() const {
+  int total_size = 0;
+
+  // repeated string keys = 1;
+  total_size += 1 * this->keys_size();
+  for (int i = 0; i < this->keys_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->keys(i));
+  }
+
+  // repeated string values = 2;
+  total_size += 1 * this->values_size();
+  for (int i = 0; i < this->values_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->values(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SrlAttributes::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SrlAttributes* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SrlAttributes*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SrlAttributes::MergeFrom(const SrlAttributes& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  keys_.MergeFrom(from.keys_);
+  values_.MergeFrom(from.values_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SrlAttributes::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SrlAttributes::CopyFrom(const SrlAttributes& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SrlAttributes::IsInitialized() const {
+
+  return true;
+}
+
+void SrlAttributes::Swap(SrlAttributes* other) {
+  if (other != this) {
+    keys_.Swap(&other->keys_);
+    values_.Swap(&other->values_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SrlAttributes::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SrlAttributes_descriptor_;
+  metadata.reflection = SrlAttributes_reflection_;
   return metadata;
 }
 

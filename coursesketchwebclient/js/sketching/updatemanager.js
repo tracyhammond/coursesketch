@@ -190,7 +190,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		}
 		if (command == ProtoCommandBuilder.CommandType.REDO) {
 			if (netCount >= 0) {
-				throw "Can't Redo Anymore";
+				throw new Error("Can't Redo Anymore");
 			}
 			updateList.push(update);
 			currentEndingIndex += 1;
@@ -200,7 +200,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			return redraw;
 		} else if (command == ProtoCommandBuilder.CommandType.UNDO) {
 			if (currentUpdateIndex <= 0) {
-				throw "Can't Undo Anymore";
+				throw new Error("Can't Undo Anymore");
 			}
 			if (!inRedoUndoMode) {
 				netCount = 0;
@@ -261,7 +261,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 			if (marker.type == ProtoCommandBuilder.Marker.MarkerType.SPLIT) {
 				currentUpdateIndex += parseInt(marker.otherData) - 1;
 			} else {
-				throw "You can't undo that (something went wrong)";
+				throw new "You can't undo that (something went wrong)";
 			}
 			return false;
 		} else {
@@ -368,9 +368,11 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 
 	/**
 	 * This clears any current updates and replaces the list with a new list.
+	 *
+	 * @param list The list that is will be added to the sketch
+	 * @parem percentBar The bar that will show these updates, it must already be added where it needs to be added.
 	 */
-
-	this.setUpdateList = function(list) {
+	this.setUpdateList = function(list, percentBar) {
 		initializing = true;
 		this.clearUpdates(false);
 		var index = 0;
@@ -378,11 +380,18 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 		var intervalHolder = setInterval(function() {
 			var startIndex = index;
 			while (index < maxIndex && index - startIndex < 1) {
+				if (percentBar) {
+					percentBar.updatePercentBar(index, maxIndex);
+				}
 				localScope.addUpdate(list[index], false, true);
 				index++;
 			}
 			if (index >= maxIndex) {
 				clearInterval(intervalHolder);
+				if (percentBar && percentBar.isRunning()) {
+					percentBar.updatePercentBar(1, 1);
+					percentBar.finishWaiting(300);
+				}
 			}
 		}, 20);
 	};
@@ -563,7 +572,7 @@ function UpdateManager(inputSketch, connection, ProtoCommandBuilder, onError) {
 					}
 					//sketch.addObject(this.decodedData);
 					//this.decodedData[1];
-					throw "REMOVE_OBJECT undo not supported";
+					throw new "REMOVE_OBJECT undo not supported";
 					redraw = true;
 				break;
 				case this.CommandType.PACKAGE_SHAPE:

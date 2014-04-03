@@ -30,4 +30,8 @@ public class LoginConnectionState extends MultiConnectionState {
 	public int getTries() {
 		return loginTries;
 	}
+	
+	public boolean getIsInstructor() {
+		return isInstructor;
+	}
 }

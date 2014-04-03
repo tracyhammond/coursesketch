@@ -5,8 +5,8 @@ message DataRequest {
 }
 
 message ItemRequest {
-	repeated string itemId = 1; // to pull multiple of the same item
-	optional ItemQuery query = 2;
+	required ItemQuery query = 1;
+	repeated string itemId = 2; // to pull multiple of the same item
 	optional bytes advanceQuery = 3;
 }
 
@@ -35,6 +35,7 @@ message ItemResult {
 	optional bytes data = 3;
 	optional bool noData = 4; // if there is no data to return then this flag is set to true.
 	optional string errorMessage = 5; // if noData is true then this may contain why.
+	optional bytes advanceQuery = 6; // if additional items need to be queried.
 }
 
 enum ItemQuery {
@@ -53,6 +54,7 @@ enum ItemQuery {
 	BANK_SEARCH = 11;
 	REGISTER = 12; // userId = 0 courseId = 1
 	COURSE_LIST = 13; // returns a list of Ids
+	UPDATE = 14; // polls the database for any updates/changes that have happened.
 }
 
 /**
@@ -60,4 +62,9 @@ enum ItemQuery {
  */
 message IdList {
 	repeated string list = 1;
+}
+
+message ExperimentReview {
+	optional bool allowEditing = 1;
+	optional bool showUserNames = 2;
 }

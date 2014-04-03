@@ -9,6 +9,7 @@ import org.java_websocket.WebSocket;
 
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
+import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
@@ -25,6 +26,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import database.auth.AuthenticationException;
 import database.institution.Institution;
+import database.user.UserClient;
 
 public class DataRequestHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
@@ -45,7 +47,7 @@ public class DataRequestHandler {
 				ItemRequest itrequest = request.getItemsList().get(p);
 				try {
 					System.out.println("looking at query " + itrequest.getQuery().name());
-					switch(itrequest.getQuery()) {
+					switch (itrequest.getQuery()) {
 						case COURSE: {
 							List<SrlCourse> courseLoop = Institution.mongoGetCourses(itrequest.getItemIdList(), userId);
 							SrlSchool.Builder courseSchool = SrlSchool.newBuilder();
@@ -93,7 +95,6 @@ public class DataRequestHandler {
 							}
 							break;
 						}
-
 						case EXPERIMENT: {
 							// need to get the submission ID?
 
@@ -102,36 +103,23 @@ public class DataRequestHandler {
 							if (!itrequest.hasAdvanceQuery()) {
 								System.out.println("Trying to retrieve an experiemnt from a user!");
 								Institution.mongoGetExperimentAsUser(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections);
+							} else {
+								ExperimentReview reveille = ExperimentReview.parseFrom(itrequest.getAdvanceQuery());
+								Institution.mongoGetExperimentAsInstructor(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections, itrequest.getAdvanceQuery());
 							}
 							break;
 						}
+						case UPDATE: {
+							long lastRequestTime = 0;
+							if (itrequest.getItemIdCount() > 0) {
+								lastRequestTime = Long.parseLong(itrequest.getItemId(0));
+							}
+							System.out.println("Last request time! " + lastRequestTime);
+							SrlSchool updates = UserClient.mongoGetReleventUpdates(userId, lastRequestTime); // for now get all updates!
+							results.add(buildResult(updates.toByteString(), ItemQuery.UPDATE));
+						}
 						default: {
 						}
-						/*case USERGROUP: ArrayList<UserGroupBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case CLASS_GRADE: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case USER_INFO: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case SOLUTION: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;
-						case EXPERIMENT: ArrayList<AssignmentBuilder> assignmentLoop = Institution.mongoGetAssignment((ArrayList)itrequest.getItemIdList(), request.getUserId());
-									for(AssignmentBuilder loopCourse: assignmentLoop){
-										finalSchool.addAssignments(RequestConverter.convertAssignmentToProtobuf(loopCourse));
-									}
-									break;*/
 					}
 				} catch(AuthenticationException e) {
 					if (e.getType() == AuthenticationException.INVALID_DATE) {

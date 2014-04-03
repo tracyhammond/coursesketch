@@ -5,7 +5,11 @@
 	<classpathentry kind="lib" path="libs/java_websocket.jar"/>
 	<classpathentry kind="lib" path="libs/websocketsource.jar"/>
 	<classpathentry kind="lib" path="libs/protobuf-2.5.0.jar"/>
-	<classpathentry kind="lib" path="libs/mongo-java-driver-2.11.3.jar"/>
+	<classpathentry kind="lib" path="libs/mongo-java-driver-2.11.3.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://api.mongodb.org/java/2.11.3/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="libs/multiConnection.jar"/>
 	<classpathentry kind="lib" path="/CourseSketchProxyServer/libs/joda-time-2.3.jar"/>
 	<classpathentry kind="lib" path="libs/mysql-connector-java-5.1.29-bin.jar"/>

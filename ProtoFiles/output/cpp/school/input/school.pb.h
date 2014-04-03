@@ -1850,6 +1850,13 @@ class State : public ::google::protobuf::Message {
   inline bool completed() const;
   inline void set_completed(bool value);
 
+  // optional bool graded = 6;
+  inline bool has_graded() const;
+  inline void clear_graded();
+  static const int kGradedFieldNumber = 6;
+  inline bool graded() const;
+  inline void set_graded(bool value);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.school.State)
  private:
   inline void set_has_published();
@@ -1862,6 +1869,8 @@ class State : public ::google::protobuf::Message {
   inline void clear_has_started();
   inline void set_has_completed();
   inline void clear_has_completed();
+  inline void set_has_graded();
+  inline void clear_has_graded();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1870,9 +1879,10 @@ class State : public ::google::protobuf::Message {
   bool pastdue_;
   bool started_;
   bool completed_;
+  bool graded_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fschool_2eproto();
   friend void protobuf_AssignDesc_input_2fschool_2eproto();
@@ -5565,6 +5575,28 @@ inline bool State::completed() const {
 inline void State::set_completed(bool value) {
   set_has_completed();
   completed_ = value;
+}
+
+// optional bool graded = 6;
+inline bool State::has_graded() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void State::set_has_graded() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void State::clear_has_graded() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void State::clear_graded() {
+  graded_ = false;
+  clear_has_graded();
+}
+inline bool State::graded() const {
+  return graded_;
+}
+inline void State::set_graded(bool value) {
+  set_has_graded();
+  graded_ = value;
 }
 
 // -------------------------------------------------------------------

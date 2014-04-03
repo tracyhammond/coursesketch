@@ -152,6 +152,7 @@ public final class Message {
         getUnknownFields() {
       return this.unknownFields;
     }
+    @SuppressWarnings("unused")
     private Request(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1671,6 +1672,7 @@ public final class Message {
         getUnknownFields() {
       return this.unknownFields;
     }
+    @SuppressWarnings("unused")
     private LoginInformation(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)

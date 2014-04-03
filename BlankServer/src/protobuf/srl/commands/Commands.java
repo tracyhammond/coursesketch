@@ -3,6 +3,7 @@
 
 package protobuf.srl.commands;
 
+@SuppressWarnings("unused")
 public final class Commands {
   private Commands() {}
   public static void registerAllExtensions(
@@ -13,8 +14,10 @@ public final class Commands {
    *
    * <pre>
    **
-   * These are attempted to be ordered by the most common occurence
-   * but are grouped by what make sense
+   * These are attempted to be ordered by the most common occurrence
+   * but are grouped by what make sense.
+   *
+   * Changing the value of a command will invalidate all current checksums and cause a version issue with stored updateList
    * </pre>
    */
   public enum CommandType
@@ -643,7 +646,7 @@ public final class Commands {
 
       public protobuf.srl.commands.Commands.SrlUpdateList buildPartial() {
         protobuf.srl.commands.Commands.SrlUpdateList result = new protobuf.srl.commands.Commands.SrlUpdateList(this);
-        int from_bitField0_ = bitField0_;
+		int from_bitField0_ = bitField0_;
         if (listBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             list_ = java.util.Collections.unmodifiableList(list_);
