@@ -85,7 +85,7 @@ public class Response {
 	 * @throws Exception Unsupported Command
 	 */
 	private static Update parseUpdate(SrlUpdate call) throws Exception{
-		System.out.println("Number of commands " + call.getCommandsCount());
+		//System.out.println("Number of commands " + call.getCommandsCount());
 		Update up = new Update(call.getTime());
 		
 		for(SrlCommand c: call.getCommandsList()){
