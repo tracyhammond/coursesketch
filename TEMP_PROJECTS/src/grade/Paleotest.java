@@ -52,6 +52,8 @@ public class Paleotest {
 	static int pxmax = 1024;
 	static int pymax = 768;
 	static int current = 1776;
+	static int problemNo = 0;
+	static int assignmentNo = 0;
 	//If true use remote server
 	static boolean mode = true;
 	static JFrame frmMain = new JFrame();
@@ -78,7 +80,7 @@ public class Paleotest {
 		DBCollection collection = db.getCollection("Experiments");
 		DBCursor cursor = collection.find().skip(i);
 		int numbers = cursor.count();
-		System.out.println("Number of submissions: " + numbers);
+//		System.out.println("Number of submissions: " + numbers + " current: " + i);
 		DBObject object = cursor.next();
 		Object obj = object.get("UpdateList");
 		//Object aid = object.get("AssignmentId");
@@ -228,7 +230,7 @@ public class Paleotest {
 					scount++;
 					IRecognitionResult result = recognizer.recognize(m_stroke);
 					//System.out.println(result.getBestShape().getInterpretation().label);
-					System.out.println(result.getBestShape());
+//					System.out.println(result.getBestShape());
 					List<Point> points = m_stroke.getPoints();
 					boolean cont = true;
 					/*
@@ -354,20 +356,20 @@ public class Paleotest {
 						 * y_range) + ")");
 						 */
 						
-						g.drawLine((int) ((p.getX() - xmin) * (pxmax - 20) / x_range + 10),
-								(int) ((p.getY() - ymin) * (pymax - 40) / y_range + 10),
-								(int) ((s.getX() - xmin) * (pxmax - 20) / x_range + 10),
-								(int) ((s.getY() - ymin) * (pymax - 40) / y_range + 10));
-						s = p;
+//						g.drawLine((int) ((p.getX() - xmin) * (pxmax - 20) / x_range + 10),
+//								(int) ((p.getY() - ymin) * (pymax - 40) / y_range + 10),
+//								(int) ((s.getX() - xmin) * (pxmax - 20) / x_range + 10),
+//								(int) ((s.getY() - ymin) * (pymax - 40) / y_range + 10));
+//						s = p;
 						// Or just use large canvas and original points, no
 						// normalization and relocation
-//						 g.drawLine((int)p.getX(), (int)p.getY(),
-//						 (int)s.getX(), (int)s.getY());
-//						 s = p;
+						 g.drawLine((int)p.getX(), (int)p.getY(),
+						 (int)s.getX(), (int)s.getY());
+						 s = p;
 					}
 				}
-				System.out.println("Scount: " + scount);
-				System.out.println("Pcount: " + pcount);
+//				System.out.println("Scount: " + scount);
+//				System.out.println("Pcount: " + pcount);
 				paintComponents(g);
 			}
 		}
@@ -382,7 +384,11 @@ public class Paleotest {
 		// =========================================================>
 		 
 		// Newerer and improved network stream getter
-		current = Integer.parseInt(JOptionPane.showInputDialog("INPUT NUMBER"));
+		assignmentNo = Integer.parseInt(JOptionPane.showInputDialog("INPUT Assignment NUMBER"));
+		problemNo = Integer.parseInt(JOptionPane.showInputDialog("INPUT Problem NUMBER"));
+		
+		current = Integer.parseInt(JOptionPane.showInputDialog("INPUT SKIP NUMBER"));
+		
 		/*
 		Scanner s = new Scanner(System.in);
 		System.out.println("INPUT NUMBER!");
@@ -391,6 +397,11 @@ public class Paleotest {
 		*/
 		
 		SrlUpdateList updates = fetchUpdates(current);
+		while (!display.assignmentName.equals(String.format("Assignment%d", assignmentNo)) || 
+			   !display.problemName.equals(String.format("Problem%d", problemNo))) {
+			current++;
+			updates = fetchUpdates(current);
+		}
 		
 		holder.tester = Response.viewTest(updates);
 		
@@ -409,24 +420,48 @@ public class Paleotest {
 				int keyCode = e.getKeyCode();
 				System.out.println(e.toString());
 				boolean change = false;
+				boolean accremental = true;
 				switch( keyCode ){
 				case KeyEvent.VK_KP_LEFT:
 				case KeyEvent.VK_LEFT:
 					current -= 1;
 					current = (current <= 1)?1:current;
 					change = true;
+					accremental = false;
 					System.out.println("KeyEvent.VK_LEFT");
 					break;
 				case KeyEvent.VK_KP_RIGHT:
 				case KeyEvent.VK_RIGHT:
 					current += 1;
 					change = true;
+					accremental = true;
 					System.out.println("KeyEvent.VK_RIGHT");
 					break;
+				case KeyEvent.VK_KP_UP:
+				case KeyEvent.VK_UP:
+					current += 1;
+					problemNo--;
+					accremental = true;
+					change = true;
+					System.out.println("KeyEvent.VK_UP");
+					break;
+				case KeyEvent.VK_KP_DOWN:
+				case KeyEvent.VK_DOWN:
+					current += 1;
+					problemNo++;
+					accremental = true;
+					change = true;
+					System.out.println("KeyEvent.VK_UP");
+					break;
 				}
-				if(change) {					
+				if(change) {
 					SrlUpdateList updates = fetchUpdates(current);
-					
+					while (!display.assignmentName.equals(String.format("Assignment%d", assignmentNo)) || 
+							   !display.problemName.equals(String.format("Problem%d", problemNo))) {
+						if (accremental) current++;
+						else current--;
+						updates = fetchUpdates(current);
+					}
 					try {
 						holder.tester = Response.viewTest(updates);
 					} catch (Exception e1) {
