@@ -129,6 +129,6 @@ public class SubmissionConnection extends WrapperConnection {
 		if (item.hasErrorMessage()) {
 			result.setErrorMessage(item.getErrorMessage());
 		}
-		return result;
+		return result.build();
 	}
 }
