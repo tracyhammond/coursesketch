@@ -3,7 +3,6 @@ package connection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import javax.swing.Timer;
@@ -21,6 +20,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 
+import database.user.UserClient;
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
@@ -33,15 +33,8 @@ import protobuf.srl.submission.Submission.SrlExperimentList;
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class SubmissionConnection extends WrapperConnection {
 
-	private DB TEMP_BAD_DB; // going against all styles with these variables to make them go away as quickly as possible!
-
 	public SubmissionConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
 		super( serverUri, draft, parent );
-		try {
-			TEMP_BAD_DB = new MongoClient("goldberglinux.tamu.edu").getDB("login");
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -65,6 +58,7 @@ public class SubmissionConnection extends WrapperConnection {
 						// we might have to do a lot of work here!
 						ExperimentReview rev = ExperimentReview.parseFrom(item.getAdvanceQuery());
 						if (rev.getShowUserNames()) {
+							System.err.println("Attempting to change out usernames!");
 							mapExperimentsToUser(item);
 						}
 					}
@@ -105,13 +99,13 @@ public class SubmissionConnection extends WrapperConnection {
 	 * @return
 	 * @throws InvalidProtocolBufferException 
 	 */
-	private final ItemResult mapExperimentsToUser(ItemResult item) throws InvalidProtocolBufferException {
+	private static final ItemResult mapExperimentsToUser(ItemResult item) throws InvalidProtocolBufferException {
 		SrlExperimentList list = SrlExperimentList.parseFrom(item.getData());
 		SrlExperimentList.Builder mappedList = SrlExperimentList.newBuilder();
 		ItemResult.Builder result = ItemResult.newBuilder();
 		for (SrlExperiment ment : list.getExperimentsList()) {
 			// TODO: get rid of this code in the loop! this is bad security!
-			DBCursor BAD_MAPPING_CURSOR = TEMP_BAD_DB.getCollection("CourseSketchUsers").find(new BasicDBObject("ServerId" , ment.getUserId()));
+			DBCursor BAD_MAPPING_CURSOR = UserClient.getDB().getDB("login").getCollection("CourseSketchUsers").find(new BasicDBObject("ServerId" , ment.getUserId()));
 			String userName = "" + BAD_MAPPING_CURSOR.next().get("UserName");
 			SrlExperiment.Builder withUserName = ment.toBuilder();
 			withUserName.setUserId(userName); // ID IS REPLACED WITH HUMAN READABLE USERNAME!

@@ -17,10 +17,12 @@ import database.auth.AuthenticationException;
 public final class UserClient {
 	private static UserClient instance;
 	private DB db;
+	private MongoClient DUMB_CLIENT = null;
 
 	private UserClient(String url) {
 		try {
 			MongoClient mongoClient = new MongoClient(url);
+			DUMB_CLIENT = mongoClient;
 			db = mongoClient.getDB(DATABASE);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -70,5 +72,13 @@ public final class UserClient {
 
 	public static SrlSchool mongoGetReleventUpdates(String userId, long time) throws AuthenticationException, DatabaseAccessException {
 		return UserUpdateHandler.mongoGetAllRelevantUpdates(getInstance().db, userId, time);
+	}
+
+	/**
+	 * TODO: DELETE THIS CODE AS SOON AS GRADES ARE WORKING!
+	 * @return
+	 */
+	public static MongoClient getDB() {
+		return getInstance().DUMB_CLIENT;
 	}
 }
