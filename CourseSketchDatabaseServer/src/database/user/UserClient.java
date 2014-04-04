@@ -46,6 +46,7 @@ public final class UserClient {
 	public UserClient(boolean testOnly) {
 		try {
 			MongoClient mongoClient = new MongoClient("localhost");
+			DUMB_CLIENT = mongoClient;
 			if (testOnly) {
 				db = mongoClient.getDB("test");
 			} else {
