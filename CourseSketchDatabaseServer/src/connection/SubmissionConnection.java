@@ -51,16 +51,20 @@ public class SubmissionConnection extends WrapperConnection {
 		MultiConnectionState state = getStateFromId(sessionInfo[1]);
 		System.out.println(state);
 		if (req.getRequestType() == MessageType.DATA_REQUEST) {
+			DataResult.Builder result2 = DataResult.newBuilder();
 			// pass up the Id to the client
 			try {
+
 				DataResult result = DataResult.parseFrom(req.getOtherData());
+				result2.clearResults();
 				for (ItemResult item: result.getResultsList()) {
 					if (item.hasAdvanceQuery() && item.getQuery() == ItemQuery.EXPERIMENT) {
 						// we might have to do a lot of work here!
 						ExperimentReview rev = ExperimentReview.parseFrom(item.getAdvanceQuery());
 						if (rev.getShowUserNames()) {
 							System.err.println("Attempting to change out usernames!");
-							mapExperimentsToUser(item);
+							ItemResult returnResult = mapExperimentsToUser(item);
+							result2.addResults(returnResult);
 						}
 					}
 				}
@@ -70,6 +74,7 @@ public class SubmissionConnection extends WrapperConnection {
 			Request.Builder builder = Request.newBuilder(req);
 			builder.setSessionInfo(sessionInfo[0]);
 			WebSocket connection = getConnectionFromState(state);
+			builder.setOtherData(result2.build().toByteString());
 			if (connection == null) {
 				System.err.println("SOCKET IS NULL");
 			}
