@@ -64,7 +64,7 @@ public class SubmissionConnection extends WrapperConnection {
 					}
 				}
 			}catch (Exception e) {
-				
+				e.printStackTrace();
 			}
 			Request.Builder builder = Request.newBuilder(req);
 			builder.setSessionInfo(sessionInfo[0]);
@@ -107,6 +107,7 @@ public class SubmissionConnection extends WrapperConnection {
 			// TODO: get rid of this code in the loop! this is bad security!
 			DBCursor BAD_MAPPING_CURSOR = UserClient.getDB().getDB("login").getCollection("CourseSketchUsers").find(new BasicDBObject("ServerId" , ment.getUserId()));
 			String userName = "" + BAD_MAPPING_CURSOR.next().get("UserName");
+			System.out.println("New user name " + userName);
 			SrlExperiment.Builder withUserName = ment.toBuilder();
 			withUserName.setUserId(userName); // ID IS REPLACED WITH HUMAN READABLE USERNAME!
 			mappedList.addExperiments(withUserName);
