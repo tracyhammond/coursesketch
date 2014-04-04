@@ -17,6 +17,7 @@ import org.java_websocket.drafts.Draft;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 
@@ -104,8 +105,14 @@ public class SubmissionConnection extends WrapperConnection {
 		SrlExperimentList.Builder mappedList = SrlExperimentList.newBuilder();
 		ItemResult.Builder result = ItemResult.newBuilder();
 		for (SrlExperiment ment : list.getExperimentsList()) {
+			if (ment.getUserId() == null) {
+				System.err.println("USER ID IS NULL?");
+				continue;
+			}
 			// TODO: get rid of this code in the loop! this is bad security!
-			DBCursor BAD_MAPPING_CURSOR = UserClient.getDB().getDB("login").getCollection("CourseSketchUsers").find(new BasicDBObject("ServerId" , ment.getUserId()));
+			DB db= UserClient.getDB().getDB("login");
+			DBCollection col = db.getCollection("CourseSketchUsers");
+			DBCursor BAD_MAPPING_CURSOR = col.find(new BasicDBObject("ServerId" , ment.getUserId()));
 			String userName = "" + BAD_MAPPING_CURSOR.next().get("UserName");
 			System.out.println("New user name " + userName);
 			SrlExperiment.Builder withUserName = ment.toBuilder();
