@@ -67,7 +67,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 		});
 
 		// creates a request that is then sent to the server
-		var advanceQuery = new QueryBuilder.ExperimentReview(false, true);
+		var advanceQuery = new QueryBuilder.ExperimentReview(true, true);
 		sendData.sendDataRequest(QueryBuilder.ItemQuery.EXPERIMENT, [problemId], advanceQuery);
 	}
 	parent.getAllExperiments = getAllExperiments;
