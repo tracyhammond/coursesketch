@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="js/input/highlighter.js"></script>
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
+    	var documentScope = document;
     	var sketchList = new Array();
     	parent.copyParentUtilityFunctions(this);
     	parent.copyParentProtos(this);
@@ -28,6 +29,11 @@
 		var Long = false;
 		var commandManager = false;
 		var highlighter = false;
+		var placeholder = 0;
+			
+			function getstudent() {
+	    	documentScope.getElementById("StudentUser").innerHTML = sketchList[placeholder].getUserId(); 
+	    }
 	    function initializeInput() {
 
 	    	var ProtoSubmissionBuilder = parent.ProtoSubmissionBuilder;
@@ -110,7 +116,7 @@
 			parent.problemNavigator.addEventMapping("redo", function() {
 				commandManager.redoAction();
 			});
-			var placeholder = 0;
+
 
 			parent.problemNavigator.addEventMapping("next_sketch",function() {
 				//console.log(sketchList[placeholder]);
@@ -122,6 +128,7 @@
 	    		var updateList = decodeProtobuf(sketchList[placeholder].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
 	    		//console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
+	    		getstudent();
 	    		
 			});
 			
@@ -141,6 +148,7 @@
 	    		var updateList = decodeProtobuf(sketchList[placeholder].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
 	    		//console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
+	    		getstudent();
 			});
 
 
@@ -178,14 +186,16 @@
 		}
 
 	    function loadUpdateList() {
+
 	    	parent.problemNavigator.getDataManager().getAllExperiments(parent.problemNavigator.getCurrentProblemId(), function(sketchList2) {
 	    		sketchList = sketchList2;
-	    		console.log(sketchList2[0]);
-	    		if (isUndefined(sketchList2[0])) {
+	    		getstudent();
+	    		console.log(sketchList[placeholder]);
+	    		if (isUndefined(sketchList[placeholder])) {
 	    			alert("EMPTY SKETCH!");
 	    			return;
 	    		}
-	    		var updateList = decodeProtobuf(sketchList2[0].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
+	    		var updateList = decodeProtobuf(sketchList[placeholder].getSubmission().getUpdateList(),ProtoUpdateCommandBuilder.SrlUpdateList);
 	    		console.log(updateList);
 	    		commandManager.setUpdateList(updateList.getList());
 	    	});
@@ -245,8 +255,8 @@
 </head>
 <body>
 	<div id = "PercentBar">0%</div>
-	<div id = "Student User" style="background:#C0C0C0;">
-		Display_User();
+	<div id = "StudentUser" style="background:#C0C0C0;">
+		user
 	</div>
 	<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
 </body>
