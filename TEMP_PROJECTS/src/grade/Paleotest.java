@@ -85,7 +85,7 @@ public class Paleotest {
 		DBObject object = cursor.next();
 		Object obj = object.get("UpdateList");
 		//Object aid = object.get("AssignmentId");
-		//Object cpid = object.get("CourseProblemId");
+		Object cpid = object.get("CourseProblemId");
 		Object uid = object.get("UserId");
 		DB ldb = mongoClient.getDB("login");
 		DBCollection lcollection = ldb.getCollection("CourseSketchUsers");
@@ -96,7 +96,7 @@ public class Paleotest {
 		if (lcursor.hasNext()) {
 			DBObject result = lcursor.next();
 			display.studentUserName = result.get("UserName").toString();
-			frmMain.setTitle("SUBMISSION#: " + current + " USER:"+result.get("UserName").toString());
+			frmMain.setTitle("Submission" + current + parseProblemId(cpid.toString()) + " USER:"+result.get("UserName").toString());
 		}
 
 		try {
@@ -155,6 +155,22 @@ public class Paleotest {
 	 * @throws DatabaseAccessException 
 	 * @throws AuthenticationException 
 	 */
+	private static String parseProblemId(String problemId) {
+		String details = new String();
+		final String mastId = "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332";
+		try {
+		SrlProblem currentProblem =  Institution.mongoGetCourseProblem(toStringArray(problemId), mastId).get(0);
+		SrlAssignment currentAssignment = Institution.mongoGetAssignment(toStringArray(currentProblem.getAssignmentId()), mastId).get(0);
+		SrlCourse currentCourse = Institution.mongoGetCourses(toStringArray(currentProblem.getCourseId()), mastId).get(0);
+		//details += "Course: " + currentCourse.getName().toString();
+		details += " " + currentAssignment.getName().toString();
+		details += " " + currentProblem.getName().toString();
+		}
+		catch (Exception e) {
+			
+		}
+		return details;
+	}
 	private static void updateDisplay(DB db, String problemId) throws AuthenticationException, DatabaseAccessException {
 		final String mastId = "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332";
 		SrlProblem currentProblem =  Institution.mongoGetCourseProblem(toStringArray(problemId), mastId).get(0);
