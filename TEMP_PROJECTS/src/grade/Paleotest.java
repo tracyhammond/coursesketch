@@ -409,6 +409,7 @@ public class Paleotest {
 			holder.tester = Response.viewTest(updates);
 		} catch (Exception e1) {
 			System.out.println("EMPTY SUBMISSION!!!!");
+			holder.tester = null;
 		}
 		//panel.repaint();
 		frmMain.repaint();
@@ -473,6 +474,7 @@ public class Paleotest {
 						holder.tester = Response.viewTest(updates);
 					} catch (Exception e1) {
 						System.out.println("EMPTY SUBMISSION!!!!");
+						holder.tester = null;
 					}
 					//panel.repaint();
 					frmMain.repaint();
