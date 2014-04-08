@@ -67,4 +67,12 @@ public class TimeManager {
 		
 		return null;
 	}
+	
+	private static long DatetoMill(DateTime dt) {
+		return dt.getMillis();
+	}
+	
+	private static DateTime MilltoDate(long mils) {
+		return new DateTime(mils);
+	}
 }
