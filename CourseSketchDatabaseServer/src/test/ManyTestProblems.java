@@ -16,8 +16,8 @@ import database.user.UserClient;
 public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {
 		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16", 
-		"Problem17", "Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
-		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41" /*, "Problem42", "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49", "Problem50", "Problem51", "Problem52"*/};
+		"Problem17", "Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29"/*, "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
+		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41" , "Problem42", "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49", "Problem50", "Problem51", "Problem52"*/};
 		//10 is fuzzy logic
 		/*
 		String[] descsription = new String[]{"This is the first problem",
@@ -34,8 +34,71 @@ public class ManyTestProblems {
 		String[] questionText = new String[] {
 				
 				/*
+					Assignment 9
+				*/
+				
+				"6.3.6a: Find the value of C(5,1)",
+				
+				"6.3.6c: Find the value of C(8,4)",
+				
+				"6.3.6e: Find the value of C(8,0)",
+				
+				"6.3.5a: Find the value of P(5,1)",
+				
+				"6.3.5c: Find the value of P(8,4)",
+				
+				"6.3.5e: Find the value of P(8,0)",
+				
+				"6.3.18a: A coin is flipped eight times where each flip comes up either heads or tails. How many possible outcomes are there total?",
+				
+				"6.3.18b: A coin is flipped eight times where each flip comes up either heads or tails. How many possible outcomes contain exactly three heads?",
+				
+				"6.3.18c: A coin is flipped eight times where each flip comes up either heads or tails. How many possible outcomes contains at least three heads?",
+				
+				"6.3.18d: A coin is flipped eight times where each flip comes up either heads or tails. How many possible outcomes contains the same number of heads and tails?",
+				
+				"6.3.20a: How many bit strings of length 10 have exactly three 0s?",
+				
+				"6.3.20b: How many bit strings of length 10 have more 0s then 1s?",
+				
+				"6.3.20c: How many bit strings of length 10 have at least seven 1s?",
+				
+				"6.3.20d: How many bit strings of length 10 have at least three 1s?",
+				
+				"6.3.22a: How many permutations of the letters ABCDEFGH contain the string BCD?",
+				
+				"6.3.22c: How many permutations of the letters ABCDEFGH contain the strings BA and GF?",
+				
+				"6.3.22e: How many permutations of the letters ABCDEFGH contain the strings ABC and CDE?",
+				
+				"6.3.26a: Thirteen people on a softball team show up for a game, how many ways are there to choose 10 players to take the field?",
+				
+				"6.3.26b: Thirteen people on a softball team show up for a game, how many ways are there to assign the 10 positions by selecting players from the 13 people who show up?",
+
+				"6.3.26c: Thirteen people on a softball team show up for a game, of the 13 people who show up three are women. How many ways are there to choose 10 players to take the field if at least one of these players must be a woman?", 
+
+				"6 supplementary material 22a: Find n if P(n,2) = 110",
+
+				"6 supplementary material 22b: Find n if P(n,n) = 5040",
+
+				"6 supplementary material 22c: Find n if P(n,4) = 12[P(n,2)]",
+
+				"4.2.4a: Convert the binary expression to a decimal expansion." + "(11011) base 2",
+
+				"4.4.20: Use the construction in the proof of the Chinese remainder theorem to find all the solutions to the system of congruences." + "x=2(mod 3) x=1(mod 4) x=3(mod 5).",
+
+				"4.5.28a: Find the check digits a15 that follows each of these initial 14 digit of an airline ticket identification number." + "10237424413392",
+				
+				"4.6.4a: Decrypt the message that was encrypted using the Caesar cipher." + "EOXH MHDQV",
+
+				"4.6.4b: Decrypt the message that was encrypted using the Caesar cipher." + "WHVW WRGDB",
+
+				"4.6.4c: Decrypt the message that was encrypted using the Caesar cipher." + "HDW GLP VXP",
+				
+				/*
 					Assignment 8
 				*/
+				/*
 
 					"5.1.4a: Let P(n) be the statement that 1 <sup>3</sup> + 2<sup>3</sup> + ... + n <sup>3</sup> = (n(n+1)/2) <sup>2</sup> for the positive integer n. Fill in the corresponding steps: (Basis)",
 
@@ -127,7 +190,7 @@ public class ManyTestProblems {
 					"5.1.36c: Prove that 21 divides 4 <sup>n+1</sup> +5 <sup>2n-1</sup> whenever n is a positive integer by filling in the following steps: (Assume)",
 	 
 					"5.1.36d: Prove that 21 divides 4 <sup>n+1</sup> +5 <sup>2n-1</sup> whenever n is a positive integer by filling in the following steps: (Induction)",
-	
+					*/
 				
 				/*
 					Assignment 7
@@ -544,7 +607,7 @@ public class ManyTestProblems {
 				QuestionType.SKETCH,
 				QuestionType.SKETCH
 		};
-		for(int k = 0; k < 41 /*52*//*42*//*22*//*19*//*39*/; k ++) {
+		for(int k = 0; k < 29 /*41*/ /*52*//*42*//*22*//*19*//*39*/; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();

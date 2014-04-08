@@ -67,7 +67,8 @@
 		    clearTimeout(setTimeVar);
 		});
 
-		function courseClickerFunction(id) {
+		function courseClickerFunction(course) {
+			var id = course.id;
 			var element = localDoc.getElementById(id);
 			var width = element.offsetWidth/2;
 			var moveAmount = width + "px";

@@ -118,13 +118,13 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 		 * #2 there is a function declaration inside the loop the reason for this is so that the assignmentId is not overwritten
 		 * when the callback is called.
 		 * 
-		 * #3 we call getAssignmentLocal which then calls a callback about if it got an assignment or not if it didnt we add the id to a
+		 * #3 we call getAssignmentLocal which then calls a callback about if it got an assignment or not if it didn't we add the id to a
 		 * list of Id we need to get from the server
 		 * 
 		 * #4 after the entire list has been gone through (which terminates in the callback with barrier = 0)
 		 * if there are any that need to be pulled from the server then that happens
 		 * 
-		 * #5 after talking to the server we get a response with a list of assignments, these are combined with the local assignments then the orignal callback is called.
+		 * #5 after talking to the server we get a response with a list of assignments, these are combined with the local assignments then the original callback is called.
 		 * 
 		 * #6 the function pattern terminates.
 		 */

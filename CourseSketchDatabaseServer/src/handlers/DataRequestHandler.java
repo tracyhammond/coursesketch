@@ -104,7 +104,6 @@ public class DataRequestHandler {
 								System.out.println("Trying to retrieve an experiemnt from a user!");
 								Institution.mongoGetExperimentAsUser(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections);
 							} else {
-								ExperimentReview reveille = ExperimentReview.parseFrom(itrequest.getAdvanceQuery());
 								Institution.mongoGetExperimentAsInstructor(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections, itrequest.getAdvanceQuery());
 							}
 							break;
