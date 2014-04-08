@@ -39,8 +39,8 @@ public class TimeManager {
 		long startCounter = getSystemTime();
 		System.out.println("Proxy Recived Time");
 		timeDifferance = req.getMessageTime() - getSystemTime();
-		System.out.println("server time:"+req.getMessageTime());
-		System.out.println("proxy time:"+DateTime.now().getMillis());
+		System.out.println("server time:"+MilltoDate(req.getMessageTime()));
+		System.out.println("proxy time:"+MilltoDate(DateTime.now().getMillis()));
 		Request.Builder rsp = Request.newBuilder();
 		rsp.setRequestType(Request.MessageType.TIME);
 		rsp.setMessageTime(req.getMessageTime()+(getSystemTime()-startCounter));
@@ -77,7 +77,15 @@ public class TimeManager {
 		if (listen != null) {
 			listen.actionPerformed(new ActionEvent(req, 0, null));
 		}
-		System.out.println("Proxy Recived Time\nTotal Time:"+totalTimeDifferance);
+		System.out.println("Proxy Recived Time\nTotal Time Diff:"+totalTimeDifferance);
 		return null;
+	}
+	
+	private static long DatetoMill(DateTime dt) {
+		return dt.getMillis();
+	}
+	
+	private static DateTime MilltoDate(long mils) {
+		return new DateTime(mils);
 	}
 }

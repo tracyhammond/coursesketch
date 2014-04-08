@@ -30,8 +30,8 @@ public class TimeManager {
 		long startCounter = getSystemTime();
 		System.out.println("sub Recived Time");
 		timeDifferance = req.getMessageTime() - getSystemTime();
-		System.out.println("server time:"+req.getMessageTime());
-		System.out.println("sub time:"+DateTime.now().getMillis());
+		System.out.println("database time:"+MilltoDate(req.getMessageTime()));
+		System.out.println("submission time:"+MilltoDate(DateTime.now().getMillis()));
 		Request.Builder rsp = Request.newBuilder();
 		rsp.setRequestType(Request.MessageType.TIME);
 		rsp.setMessageTime(req.getMessageTime()+(getSystemTime()-startCounter));
@@ -65,7 +65,15 @@ public class TimeManager {
 	public static Request clientReciveLatency(Request req) {
 		latency = req.getMessageTime();
 		totalTimeDifferance=timeDifferance+latency;
-		System.out.println("sub Recived Time\nTotal Time:"+totalTimeDifferance);
+		System.out.println("sub Recived Time\nTotal Time Diff:"+totalTimeDifferance);
 		return null;
+	}
+	
+	private static long DatetoMill(DateTime dt) {
+		return dt.getMillis();
+	}
+	
+	private static DateTime MilltoDate(long mils) {
+		return new DateTime(mils);
 	}
 }
