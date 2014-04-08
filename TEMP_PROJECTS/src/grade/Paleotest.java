@@ -31,7 +31,7 @@ import response.Response;
 import srl.core.sketch.Point;
 import srl.core.sketch.Sketch;
 import srl.core.sketch.Stroke;
-import srl.recognition.IRecognitionResult;
+//import srl.recognition.IRecognitionResult;
 import srl.recognition.paleo.PaleoConfig;
 import srl.recognition.paleo.PaleoSketchRecognizer;
 
@@ -161,7 +161,7 @@ public class Paleotest {
 		try {
 		SrlProblem currentProblem =  Institution.mongoGetCourseProblem(toStringArray(problemId), mastId).get(0);
 		SrlAssignment currentAssignment = Institution.mongoGetAssignment(toStringArray(currentProblem.getAssignmentId()), mastId).get(0);
-		SrlCourse currentCourse = Institution.mongoGetCourses(toStringArray(currentProblem.getCourseId()), mastId).get(0);
+		//SrlCourse currentCourse = Institution.mongoGetCourses(toStringArray(currentProblem.getCourseId()), mastId).get(0);
 		//details += "Course: " + currentCourse.getName().toString();
 		details += " " + currentAssignment.getName().toString();
 		details += " " + currentProblem.getName().toString();
@@ -210,8 +210,8 @@ public class Paleotest {
 				Integer xmax = Integer.MIN_VALUE;
 				Integer ymin = Integer.MAX_VALUE;
 				Integer ymax = Integer.MIN_VALUE;
-				int pcount = 0;
-				int scount = 0;
+				//int pcount = 0;
+				//int scount = 0;
 
 
 //				PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(
@@ -244,8 +244,8 @@ public class Paleotest {
 				PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(config);
 
 				for (Stroke m_stroke : tester.getStrokes()) {
-					scount++;
-					IRecognitionResult result = recognizer.recognize(m_stroke);
+					//scount++;
+					//IRecognitionResult result = recognizer.recognize(m_stroke);
 					//System.out.println(result.getBestShape().getInterpretation().label);
 //					System.out.println(result.getBestShape());
 					List<Point> points = m_stroke.getPoints();
@@ -339,7 +339,7 @@ public class Paleotest {
 							ymin = (int) p.getY();
 						if (p.getY() > ymax)
 							ymax = (int) p.getY();
-						pcount++;
+						//pcount++;
 					}
 				}
 
@@ -443,28 +443,28 @@ public class Paleotest {
 				respond = false;
 				int keyCode = e.getKeyCode();
 				boolean change = false;
-				boolean accremental = true;
+				//boolean accremental = true;
 				switch( keyCode ){
 				case KeyEvent.VK_KP_LEFT:
 				case KeyEvent.VK_LEFT:
 					current -= 1;
 					current = (current <= 1)?1:current;
 					change = true;
-					accremental = false;
+					//accremental = false;
 					System.out.println("KeyEvent.VK_LEFT");
 					break;
 				case KeyEvent.VK_KP_RIGHT:
 				case KeyEvent.VK_RIGHT:
 					current += 1;
 					change = true;
-					accremental = true;
+					//accremental = true;
 					System.out.println("KeyEvent.VK_RIGHT");
 					break;
 				case KeyEvent.VK_KP_UP:
 				case KeyEvent.VK_UP:
 					current += 1;
 //					problemNo--;
-					accremental = true;
+					//accremental = true;
 					change = true;
 					System.out.println("KeyEvent.VK_UP");
 					break;
@@ -472,7 +472,7 @@ public class Paleotest {
 				case KeyEvent.VK_DOWN:
 					current += 1;
 //					problemNo++;
-					accremental = true;
+					//accremental = true;
 					change = true;
 					System.out.println("KeyEvent.VK_UP");
 					break;
@@ -541,12 +541,12 @@ public class Paleotest {
     	final JPanel displayPanel = new JPanel();
     	final JLabel courseNumbers = new JLabel("Course 0 out of 0");
     	final JLabel courseName = new JLabel("Course:");
-    	final JLabel assignmentNumbers = new JLabel("Assignmetn 0 out of 0");
+    	//final JLabel assignmentNumbers = new JLabel("Assignmetn 0 out of 0");
     	final JLabel assignmentName  = new JLabel("Assignment:");
-    	final JLabel problemNumbers = new JLabel("Problem 0 out of 0");
+    	//final JLabel problemNumbers = new JLabel("Problem 0 out of 0");
     	final JLabel problemName  = new JLabel("Problem:");
     	final JTextArea problemText = new JTextArea("Question Text:");
-    	final JLabel sketchNumbers = new JLabel("Sketch 0 out of 0");
+    	//final JLabel sketchNumbers = new JLabel("Sketch 0 out of 0");
     	final JLabel studentUserName = new JLabel("UserName:");
     	final JLabel dueDate = new JLabel("DueDate:");
     	final JLabel submissionTime = new JLabel("Submission:");
