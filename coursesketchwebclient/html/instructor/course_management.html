@@ -16,6 +16,8 @@
 	<script type="text/javascript" src="js/utils/waiting.js"></script>
 	<script type="text/javascript" src="js/school/schoolItem.js"></script>
 	<script type="text/javascript" src="js/school/course_manager.js"></script>
+	<script type="text/javascript" src="js/persistant_data/specificManager/courseDataManager.js"></script>
+
 	<!--<script type="text/javascript" src="js/persistant_data/specificManager/assignmentDataManager.js"></script> -->
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
     <script type="text/javascript">
@@ -64,6 +66,26 @@
 	  			builder.togglePopup(popupId);
 	  		}
 	</script>
+	<script type="text/javascript">
+	var newCourse = document.getElementById("courseTitle");
+	var newCourseTitle = newCourse.value;
+	
+	var startDate = document.getElementById("date1");
+	var dateLive = startDate.value;
+	
+	var endDate = document.getElementById("date2");
+	var dateLive2 = endDate.value;
+
+	var descript = document.getElementById("courseDesc");
+	var newDesc = descript.value;
+	
+	function newCourseAlert(){
+	
+	alert(dateLive);
+	
+	}
+	
+	</script>
 	<style>
 		html, body {
 		    margin: 0px;
@@ -84,34 +106,17 @@
 	    			<h2 style = "text-align:center">Courses</h2>
 		    		<div id="column1" class = "semi_wide_centre faded_column gradient_faded_column_instructor" style = "overflow:hidden; padding-top: 5px;">
 		    			
-						<!--EXPERIMENTAL CODE-->
-						
-						<!--<script>
-							function testCourseAdder(){
-								
-								/*var user_assignments = {};
-								var user_courses = {};*/
-								
-								var course_title;
-								var course_desc; 
-							
-							
-								alert("Hello World!");
-						
-							}
-						
-						</script>-->
-						
-						<!--EXPERIMENTAL CODE-->
 						
 						<button class = "myButton2 centre" onclick = "addNewCourse()">Add New Course</button>	<!--testCourseAdder()-->
-							<p id="newCourseForm">
+							<!--<p id="newCourseForm">
 								<!--<input id="newCourseTitle" type="text" name="newCourseTitle">
 									<p id="addNewCourse_title"></p>
 								<input id="newCourseDesc" type="text" name="newCourseDesc">
 									<p id="addNewCourse_desc"></p>
-								<input type="submit" value="Submit">-->
-							</p>
+								<input type="submit" value="Submit">
+							</p>-->
+							
+		
 				    	<div id="class_list_column" class="school_div">
 			    		</div>
 			    	</div>

@@ -126,7 +126,7 @@ public class Grader {
     		private void changeCourse() throws AuthenticationException, DatabaseAccessException {
     			System.out.println("Changing Course");
     			currentCourse = courses.get(courseNavigation.value);
-    			String courseId = currentCourse.getId();
+    			//String courseId = currentCourse.getId();
     			currentAssignments = Institution.mongoGetAssignment(currentCourse.getAssignmentListList(), mastId);
     			assignmentNavigation.size = currentAssignments.size();
     			assignmentNavigation.value = 0;

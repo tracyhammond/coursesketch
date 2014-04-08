@@ -62,9 +62,11 @@ public class SketchPanel {
 
         //Canvas cnvs = new Canvas();
         //cnvs.setSize(400, 400);
-        final TestSketchHolder holder = new TestSketchHolder();
+        //final TestSketchHolder holder = new TestSketchHolder();
         sketchPanel = new JPanel() {
-      	  @Override
+      	private static final long serialVersionUID = 99678L;
+
+		@Override
       	  public void paint(Graphics g) {
       		  Sketch tester = holder.tester;
       		  if (tester!= null) {
@@ -72,13 +74,13 @@ public class SketchPanel {
       	            Integer xmax = Integer.MIN_VALUE;
       	            Integer ymin = Integer.MAX_VALUE;
       	            Integer ymax = Integer.MIN_VALUE;
-      	            int pcount = 0;
-      	            int scount = 0;
+      	            //int pcount = 0;
+      	            //int scount = 0;
       	            
       	    		PaleoSketchRecognizer recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
       	    		
       	            for (Stroke m_stroke : tester.getStrokes()) {
-      	            	scount++;
+      	            	//scount++;
       	           		IRecognitionResult result = recognizer.recognize(m_stroke);
       	           		System.out.println(result.getBestShape().getInterpretation().label);
       	           		List<Point> points = m_stroke.getPoints();
@@ -150,7 +152,7 @@ public class SketchPanel {
       	            		if (p.getX() > xmax) xmax = (int)p.getX();
       	            		if (p.getY() < ymin) ymin = (int)p.getY();
       	            		if (p.getY() > ymax) ymax = (int)p.getY();
-      	            		pcount++;
+      	            		//pcount++;
       	            	}
       	            }
       	            

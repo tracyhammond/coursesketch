@@ -227,7 +227,18 @@ function replaceIframe(src) {
 
 function addNewCourse() { // Functionality to allow for adding of courses by instructors
 	var course = new SrlCourse();
+	//course.id = "Course_01";
+	course.name = "Physics";
+	course.semester = "Should be in format: '_F13' (_F = Fall, Sp = Spring, Su = Summer) ";
+	//course.accessDate = "mm/dd/yyyy";
+	//course.closeDate = "mm/dd/yyyy";
+	//course.description = "Physics is Phun";
+	
+	/**course.id = 
+	course.name = **/
 	showCourses([course]);
+	/**alert("Hello! I am an alert box!!");
+	document.getElementById("demo");**/
 }
 
 var courseSelectionManager = new clickSelectionManager();
