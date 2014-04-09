@@ -241,6 +241,8 @@ function Connection(uri, encrypted, attemptReconnect) {
 		function buildSchool() {
 			var builder = ProtoBuf.protoFromFile(protobufDirectory + "school.proto");
 			SchoolBuilder = builder.build("protobuf").srl.school;
+			if (!SrlUser)
+				SrlUser = SchoolBuilder.SrlUser;
 			if (!SrlCourse)
 				SrlCourse = SchoolBuilder.SrlCourse;
 			if (!SrlAssignment)
@@ -365,6 +367,7 @@ var LoginInformation = false;
 /**
  * school related protobufs.
  */
+var SrlUser = false;
 var SrlCourse = false;
 var SrlAssignment = false;
 var SrlProblem = false;

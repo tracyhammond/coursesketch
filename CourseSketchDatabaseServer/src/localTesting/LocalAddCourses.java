@@ -1,14 +1,15 @@
-package test;
+package localTesting;
 
 import javax.swing.JOptionPane;
 
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlPermission;
+import test.ManyTestAssignments;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
 
-public class ManyTestCourses {
+public class LocalAddCourses {
 	public static void testCourses(String instructionID) throws DatabaseAccessException {
 		String[] name = new String[]{"CourseSketch 101"};
 		String[] descsription = new String[]{"Hi Welcome to CourseSketch, you have automatically been enrolled in this tutorial."
@@ -36,7 +37,7 @@ public class ManyTestCourses {
 	public static void main(String[] args) throws DatabaseAccessException {
 		new Institution(false); // makes the database point locally
 		new UserClient(false); // makes the database point locally
-		String id = JOptionPane.showInputDialog("Insert your the Id of the person inserting the class");
+		String id = JOptionPane.showInputDialog("Insert the Id of the person inserting the class");
 		//0b7ac244-b785-6961-9347-7621abeada88-277aa353914b7c5f
 		testCourses(id);
 	}

@@ -55,6 +55,10 @@ function courseClickerFunction(course) {
 
 	//we can make this faster becuase we have the list of assignments
 	parent.dataManager.getAssignments(course.assignmentList, function(assignmentList) {
+		console.log(assignmentList);
+		if (assignmentList == "NONEXISTANT_VALUE") {
+			assignmentList = [];
+		}
 		var builder = new SchoolItemBuilder();
 		builder.setList(assignmentList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
