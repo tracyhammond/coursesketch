@@ -33,6 +33,8 @@ public class GradeHere extends JFrame {
 
 	private boolean userSelect = false;
 	private Submissions submissions = new Submissions();
+	
+	private Sketch tester = null;
 
 	public static void main(String[] args) {
 		GradeHere g = new GradeHere();
@@ -80,6 +82,10 @@ public class GradeHere extends JFrame {
 		usernameList.removeAllItems();
 		assignmentList.removeAllItems();
 		problemList.removeAllItems();
+		usernameList.addItem(SELECTITEM);
+		assignmentList.addItem(SELECTITEM);
+		problemList.addItem(SELECTITEM);
+		
 		JFileChooser chooser = new JFileChooser();
 		chooser.showOpenDialog(null);
 		File folder = chooser.getCurrentDirectory();
@@ -93,10 +99,6 @@ public class GradeHere extends JFrame {
 			String[] splits = filenameShort.split("_");
 			submissions.addSubmission(new SubmissionInfo(splits, dir + filename));
 		}
-
-		usernameList.addItem(SELECTITEM);
-		assignmentList.addItem(SELECTITEM);
-		problemList.addItem(SELECTITEM);
 
 		Set<String> usernames = submissions.getUsernames("", "");
 		Set<String> assignments = submissions.getAssignemtns("", "");
@@ -116,50 +118,16 @@ public class GradeHere extends JFrame {
 	private void UpdateSketch(String filename) {
 		try {
 			StatusLabel.setText("Current Open:" + filename);
-			
 			sketchPanel.removeAll();
 			Graphics g = sketchPanel.getGraphics();
-			sketchPanel.paint(g);
+			sketchPanel.update(g);
 			
 			BufferedInputStream instream = new BufferedInputStream(new FileInputStream(filename));
 			SrlUpdateList updates = SrlUpdateList.parseFrom(instream);
             instream.close();
             
-            Sketch tester = Response.viewTest(updates);
-            
-            Integer xmin = Integer.MAX_VALUE;
-            Integer xmax = Integer.MIN_VALUE;
-            Integer ymin = Integer.MAX_VALUE;
-            Integer ymax = Integer.MIN_VALUE;       
-            
-            
-            for (srl.core.sketch.Stroke m_stroke : tester.getStrokes()) {
-            	for (srl.core.sketch.Point p : m_stroke.getPoints()) {
-            		if (p.getX() < xmin) xmin = (int)p.getX();
-            		if (p.getX() > xmax) xmax = (int)p.getX();
-            		if (p.getY() < ymin) ymin = (int)p.getY();
-            		if (p.getY() > ymax) ymax = (int)p.getY();
-            	}
-            }
-            
-            int x_range = xmax - xmin + 200;
-            int y_range = ymax - ymin + 150;
-            
-            for (srl.core.sketch.Stroke m_stroke : tester.getStrokes()) {
-            	List<srl.core.sketch.Point> pl = m_stroke.getPoints();
-            	srl.core.sketch.Point s = pl.remove(0);
-				for (srl.core.sketch.Point p : pl) {
-					g.drawLine((int) ((p.getX() - xmin + 100) * 900 / x_range + 40), (int) ((p.getY()
-							- ymin + 75) * 400 / y_range + 40),
-							(int) ((s.getX() - xmin + 100) * 900 / x_range + 40),
-							(int) ((s.getY() - ymin + 75) * 400 / y_range + 40));
-					s = p;
-//            		Or just use large canvas and original points, no normalization and relocation
-//            		g.drawLine((int)p.getX(), (int)p.getY(), (int)s.getX(), (int)s.getY());
-//                    		s = p;
-            	}
-            }
-    		sketchPanel.paintComponents(g);
+            tester = Response.viewTest(updates);
+            sketchPanel.repaint();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -308,7 +276,62 @@ public class GradeHere extends JFrame {
 		// //GEN-BEGIN:initComponents
 		// Generated using JFormDesigner Evaluation license - Zhengliang Yin
 		userNameLabel = new JLabel();
-		sketchPanel = new JPanel();
+//		sketchPanel = new JPanel();
+		//TODO
+		sketchPanel = new JPanel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 2323634512753971535L;
+
+			@Override
+			public void paint(Graphics g) {
+				super.paint(g);
+				if (tester == null) return;
+				else {
+					// TODO
+					Integer xmin = Integer.MAX_VALUE;
+					Integer xmax = Integer.MIN_VALUE;
+					Integer ymin = Integer.MAX_VALUE;
+					Integer ymax = Integer.MIN_VALUE;
+
+					for (srl.core.sketch.Stroke m_stroke : tester.getStrokes()) {
+						for (srl.core.sketch.Point p : m_stroke.getPoints()) {
+							if (p.getX() < xmin)
+								xmin = (int) p.getX();
+							if (p.getX() > xmax)
+								xmax = (int) p.getX();
+							if (p.getY() < ymin)
+								ymin = (int) p.getY();
+							if (p.getY() > ymax)
+								ymax = (int) p.getY();
+						}
+					}
+
+					int x_range = xmax - xmin + 200;
+					int y_range = ymax - ymin + 150;
+
+					for (srl.core.sketch.Stroke m_stroke : tester.getStrokes()) {
+						List<srl.core.sketch.Point> pl = m_stroke.getPoints();
+						srl.core.sketch.Point s = pl.remove(0);
+						for (srl.core.sketch.Point p : pl) {
+							g.drawLine((int) ((p.getX() - xmin + 100) * 900 / x_range + 40),
+									(int) ((p.getY() - ymin + 75) * 400 / y_range + 40),
+									(int) ((s.getX() - xmin + 100) * 900 / x_range + 40),
+									(int) ((s.getY() - ymin + 75) * 400 / y_range + 40));
+							s = p;
+							// Or just use large canvas and original points, no
+							// normalization and relocation
+							// g.drawLine((int)p.getX(), (int)p.getY(),
+							// (int)s.getX(), (int)s.getY());
+							// s = p;
+						}
+					}
+					//sketchPanel.paintComponents(g);
+					tester = null;
+				}
+			}
+		};
 		assignmentLabel = new JLabel();
 		problemLabel = new JLabel();
 		prev = new JButton();
