@@ -170,7 +170,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 				dataSender.sendDataRequest(QueryBuilder.ItemQuery.UPDATE);
 			} else {
 				var lastTime = result.data;
-				alert(lastTime);
 				dataSender.sendDataRequest(QueryBuilder.ItemQuery.UPDATE, [lastTime]);
 			}
 		});
