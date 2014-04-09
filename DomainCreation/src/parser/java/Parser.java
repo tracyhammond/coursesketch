@@ -37,9 +37,6 @@ public class Parser {
     	
     }
 
-    
-
-	
 	public static void innerBracket (BufferedReader reader) throws IOException
 	{
 		

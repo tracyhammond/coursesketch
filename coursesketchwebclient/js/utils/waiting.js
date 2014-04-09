@@ -12,6 +12,8 @@ function WaitScreenManager() {
 		this.exitAtTotal = false; // when the percent bar reaches 100% then it will close itself (this is a boolean value)
 		this.exitAtTotalCallback = false; // if exitAtTotal
 		this.waitIconText = false; // sets text for the waiting icon
+		this.haveOverlay = false; // if overlay is true then the overlay element must be set upon building
+		this.overlayElement = false;
 	};
 
 	this.resetValues();
@@ -118,6 +120,11 @@ function WaitScreenManager() {
 					element.updatePercentBar(elementStepCounter, total);
 				};
 			})(this.total);
+		}
+	};
+	
+	this.buildOverlay = function(element) {
+		element.startOverlay = function() {
 		}
 	};
 
