@@ -13,3 +13,5 @@ Non_Commit/
 *.yaml
 *.db
 .metadata/*
+*.classpath
+*.classpath
