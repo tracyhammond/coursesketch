@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CourseSketchDatabaseServer"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/CourseSketchRecognitionServer"/>
 	<classpathentry kind="lib" path="/CourseSketchDatabaseServer/libs/mongo-java-driver-2.11.3.jar"/>
 	<classpathentry kind="lib" path="/CourseSketchDatabaseServer/libs/protobuf-2.5.0.jar"/>
 	<classpathentry kind="lib" path="/CourseSketchRecognitionServer/libs/sr-core01.jar"/>
