@@ -55,16 +55,22 @@ function courseClickerFunction(course) {
 
 	//we can make this faster becuase we have the list of assignments
 	parent.dataManager.getAssignments(course.assignmentList, function(assignmentList) {
-		console.log(assignmentList);
+		var builder = new SchoolItemBuilder();
+		builder.setEmptyListMessage('There are no assignments for this course!');
 		if (assignmentList == "NONEXISTANT_VALUE") {
+			if (!course.getState().accessible) {
+				builder.setEmptyListMessage('This course is currently not avialable. Please contact the instructor to let you view the assignments');
+			}
 			assignmentList = [];
 		}
-		var builder = new SchoolItemBuilder();
+
 		builder.setList(assignmentList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
-		builder.setEmptyListMessage('There are no assignments for this course!');
+		
 		builder.setBoxClickFunction(assignmentClickerFunction);
-		waitingIcon.finishWaiting(); // stops the waitingIcon
+		if (waitingIcon.isRunning()) {
+			waitingIcon.finishWaiting(); // stops the waiting icon
+		}
 		builder.build('assignment_list_column');
 		if (parent.dataManager.getState("isInstructor")) {
 			try {
@@ -86,20 +92,31 @@ function assignmentClickerFunction(assignment) {
 	// waiting icon
 	document.getElementById('problem_list_column').appendChild(waitingIcon);
 	waitingIcon.startWaiting();
-
+	console.log(assignment.problemList);
 	parent.dataManager.getCourseProblems(assignment.problemList, function(problemList) {
+		var builder = new SchoolItemBuilder();
+		builder.setEmptyListMessage('There are no problems for this assignment!');
+		if (problemList == "NONEXISTANT_VALUE") {
+			problemList = [];
+			if (!assignment.getState().accessible) {
+				builder.setEmptyListMessage('This assignment is currently not avialable. Please contact the instructor to let you view the problems');
+			}
+		}
 		for (var i = 0; i < problemList.length; i++) {
 			var q = problemList[i].description;
 			if (isUndefined(q) || q == "") {
 				var prob = problemList[i];
-				var text = prob.getProblemInfo().getQuestionText();
-				problemList[i].setDescription(text);
+				var problem = prob.problemInfo;
+				if (!isUndefined(prob.problemInfo)) {
+					var text = prob.getProblemInfo().getQuestionText();
+					problemList[i].setDescription(text);
+				} else {
+					problemList[i].setDescription("No Description or question text");
+				}
 			}
 		}
-		var builder = new SchoolItemBuilder();
 		builder.setList(problemList).setWidth('medium').centerItem(true);
 		builder.showImage = false;
-		builder.setEmptyListMessage('There are no problems for this assignment!');
 		builder.setBoxClickFunction(problemClickerFunction);
 		if (waitingIcon.isRunning()) {
 			waitingIcon.finishWaiting(); // stops the waiting icon
