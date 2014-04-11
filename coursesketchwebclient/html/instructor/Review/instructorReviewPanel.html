@@ -86,12 +86,12 @@
 
 			parent.problemNavigator.addEventMapping("next_sketch",function() {
 				//console.log(sketchList[placeholder]);
-				
-				if (placehold >= sketchList.length) {
+
+				if (placeholder >= sketchList.length) {
 					alert("reached the end of the sketches");
 					return;
 				}
-				
+
 				++ placeholder;
 	    		if (isUndefined(sketchList[placeholder])) {
 	    			alert("EMPTY SKETCH!");
@@ -105,7 +105,7 @@
 	    		commandManager.setUpdateList(updateList.getList(), element);
 
 	    		getstudent();
-	    		
+
 			});
 			
 			parent.problemNavigator.addEventMapping("prev_sketch", function() {
