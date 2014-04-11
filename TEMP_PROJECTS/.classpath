@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/CourseSketchRecognitionServer/libs/sr-core01.jar"/>
 	<classpathentry kind="lib" path="/CourseSketchRecognitionServer/libs/sr-recognition01.jar"/>
 	<classpathentry kind="lib" path="/CourseSketchRecognitionServer/libs/jackson-all-1.9.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CourseSketchRecognitionServer"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

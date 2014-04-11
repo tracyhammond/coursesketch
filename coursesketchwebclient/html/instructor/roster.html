@@ -1,10 +1,70 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+<base href="../../">
+
+	<script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
+
+  	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+
+	<script type="text/javascript" src="js/connection/connection_library.js"></script>
+
+	<script type="text/javascript" src="js/test/localTestDataInstructor.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="css/login/introForms.css" />
+
+	<script type='text/javascript'>
+	</script>
+	<script type='text/javascript'>
+		var c = new Connection('echowebsocket.org', true, false);
+		c.setOnCloseListener(function() {});
+
+		function submit(className) {
+			document.getElementById("content").innerHTML = "";
+			var students = getMapAsList(user_students);
+			for(var i=0; i<students.length; ++i)
+				for(var j=0; j<students[i].courseList.length; ++j) {
+					if(students[i].courseList[j] == className.id)
+						document.getElementById("content").innerHTML 
+								+= (students[i].username + '\n');
+				}
+		}
+
+		function setup() {
+			var classes = getMapAsList(user_courses);
+			for(var i=0; i<classes.length; ++i) {
+				var classHtml = document.createElement("button");
+				classHtml.setAttribute("name", "classes");
+				classHtml.setAttribute("id", classes[i].id);
+				if(isUndefined(classes[i].name) || classes[i].name == null)
+					classHtml.innerText = classes[i].id;
+				else classHtml.innerText = classes[i].name;
+
+				(function(asdf) {
+					classHtml.onclick = function() {submit(asdf);}
+				})(classes[i]);
+				document.getElementById("tabs").appendChild(classHtml);
+			}
+		}
+		
+		addLoadEvent( function() {
+			setup();
+		});
+	</script>
+
+</base>
+</head>
+
 <body>
 
-<h1>instructor.roster.html</h1>
+<div id="tabs"></div>
+<div id="content"></div>
 
-<p>page under construction</p>
+<p>Hi!</p>
 
 </body>
 </html> 
