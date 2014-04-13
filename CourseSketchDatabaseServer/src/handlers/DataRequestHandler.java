@@ -102,7 +102,11 @@ public class DataRequestHandler {
 							//Institution.mongoGetExperiment(assignementID, userId)
 							if (!itrequest.hasAdvanceQuery()) {
 								System.out.println("Trying to retrieve an experiemnt from a user!");
+								try {
 								Institution.mongoGetExperimentAsUser(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections);
+								} catch(Exception e) {
+									results.add(buildResult(null, e.getLocalizedMessage(), ItemQuery.EXPERIMENT));
+								}
 							} else {
 								Institution.mongoGetExperimentAsInstructor(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections, itrequest.getAdvanceQuery());
 							}
@@ -159,6 +163,13 @@ public class DataRequestHandler {
 		return result.build();
 	}
 
+	/**
+	 * builds a result to be sent to the student
+	 * @param data
+	 * @param text
+	 * @param type
+	 * @return
+	 */
 	private static ItemResult buildResult(ByteString data, String text, ItemQuery type) {
 		ItemResult.Builder result = ItemResult.newBuilder();
 		result.setData(data);

@@ -189,7 +189,7 @@ public class DatabaseClient {
 		SrlSubmission.Builder sub = SrlSubmission.newBuilder();
 		sub.setUpdateList(ByteString.copyFrom((byte[])corsor.get(UPDATELIST)));
 		build.setSubmission(sub.build());
-		System.out.println("RESULT: " + build.build());
+		System.out.println("Experiment succesfully fetched");
 		return build.build();
 	}
 

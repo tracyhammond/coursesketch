@@ -359,13 +359,19 @@ public final class Institution {
 		SubmissionManager.mongoInsertSubmission(getInstance().db, problemId, userId, submissionId, experiment);
 	}
 
-	public static void mongoGetExperimentAsUser(String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections) {
+	public static void mongoGetExperimentAsUser(String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections)
+			throws DatabaseAccessException {
 		try {
 			System.out.println("Getting experiment for user: " + userId +" problem: " + problemId);
 			SubmissionManager.mongoGetExperiment(getInstance().db, userId, problemId, sessionInfo, internalConnections);
 			return;
-		} catch(Exception e) {
+		} catch(DatabaseAccessException e) {
+			if (e instanceof DatabaseAccessException) {
+				throw e;
+			}
 			e.printStackTrace();
+		} catch (Exception e) {
+			
 		}
 	}
 	
