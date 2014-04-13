@@ -53,7 +53,7 @@ function courseClickerFunction(course) {
 	document.getElementById('assignment_list_column').appendChild(waitingIcon);
 	waitingIcon.startWaiting();
 
-	//we can make this faster becuase we have the list of assignments
+	//we can make this faster because we have the list of assignments
 	parent.dataManager.getAssignments(course.assignmentList, function(assignmentList) {
 		var builder = new SchoolItemBuilder();
 		builder.setEmptyListMessage('There are no assignments for this course!');
@@ -82,6 +82,7 @@ function courseClickerFunction(course) {
 		}
 	});
 }
+	parent.dataManager.insertCourse
 
 function assignmentClickerFunction(assignment) {
 	// clears the problems
@@ -246,14 +247,18 @@ function addNewCourse() { // Functionality to allow for adding of courses by ins
 	var course = new SrlCourse();
 	//course.id = "Course_01";
 	course.name = "Physics";
-	course.semester = "Should be in format: '_F13' (_F = Fall, Sp = Spring, Su = Summer) ";
+	course.description = "Physics is Phun";
+	//course.semester = "Should be in format: '_F13' (_F = Fall, Sp = Spring, Su = Summer) ";
 	//course.accessDate = "mm/dd/yyyy";
 	//course.closeDate = "mm/dd/yyyy";
-	//course.description = "Physics is Phun";
+	var newCourse = insertCourse(course);
 	
 	/**course.id = 
 	course.name = **/
 	showCourses([course]);
+	insertCourse([course]);
+	//var newCourse = insertCourse(course);
+
 	/**alert("Hello! I am an alert box!!");
 	document.getElementById("demo");**/
 }
