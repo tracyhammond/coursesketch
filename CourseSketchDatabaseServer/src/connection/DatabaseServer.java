@@ -90,7 +90,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws IOException {
-		System.out.println("Database Server: Version 1.1.1.beaver");
+		System.out.println("Database Server: Version 1.1.1.cat");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = false;

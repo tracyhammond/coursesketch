@@ -90,7 +90,7 @@ public class SubmissionServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws IOException {
-		System.out.println("Submission Server: Version 0.0.1");
+		System.out.println("Submission Server: Version 0.1.1.ant");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = false;
