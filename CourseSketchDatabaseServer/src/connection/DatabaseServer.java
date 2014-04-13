@@ -2,7 +2,6 @@ package connection;
 
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
-import handlers.UpdateHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +31,6 @@ import database.user.UserClient;
 public class DatabaseServer extends MultiInternalConnectionServer {
 
 	private boolean connectLocally = MultiConnectionManager.CONNECT_REMOTE;
-	UpdateHandler updateHandler = new UpdateHandler();
 	MultiConnectionManager internalConnections = new DatabaseConnectionManager(this);
 
 	public DatabaseServer(int port, boolean connectLocally) {
@@ -92,7 +90,7 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 	}
 
 	public static void main( String[] args ) throws IOException {
-		System.out.println("Database Server: Version 1.0.3");
+		System.out.println("Database Server: Version 1.1.1.beaver");
 		WebSocketImpl.DEBUG = false;
 
 		boolean connectLocal = false;

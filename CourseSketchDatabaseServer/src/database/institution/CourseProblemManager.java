@@ -53,6 +53,18 @@ public class CourseProblemManager
 		return corsor.get(SELF_ID).toString();
 	}
 
+	/**
+	 * Returns an SrlProblem given the problemId
+	 *
+	 * If a problem is not within a valid date an exception is thrown.
+	 * @param dbs
+	 * @param problemId
+	 * @param userId
+	 * @param checkTime
+	 * @return
+	 * @throws AuthenticationException
+	 * @throws DatabaseAccessException
+	 */
 	public static SrlProblem mongoGetCourseProblem(DB dbs, String problemId, String userId, long checkTime) throws AuthenticationException,
 			DatabaseAccessException {
 		DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));

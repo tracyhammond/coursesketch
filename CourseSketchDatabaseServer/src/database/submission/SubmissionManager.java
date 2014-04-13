@@ -83,8 +83,9 @@ public class SubmissionManager
 	 * @param userId
 	 * @param problemId
 	 * @return the submission id
+	 * @throws DatabaseAccessException 
 	 */
-	public static void mongoGetExperiment(DB dbs, String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections) {
+	public static void mongoGetExperiment(DB dbs, String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections) throws DatabaseAccessException {
 		Request.Builder r = Request.newBuilder();
 		r.setSessionInfo(sessionInfo);
 		r.setRequestType(MessageType.DATA_REQUEST);
@@ -94,6 +95,9 @@ public class SubmissionManager
 		DBObject corsor = myDbRef.fetch();
 		String sketchId = "" + corsor.get(userId);
 		System.out.println("SketchId " + sketchId);
+		if ("null".equals(sketchId)) {
+			throw new DatabaseAccessException("The student has not submitted anything for this problem");
+		}
 		build.addItemId(sketchId);
 		DataRequest.Builder data = DataRequest.newBuilder();
 		data.addItems(build);

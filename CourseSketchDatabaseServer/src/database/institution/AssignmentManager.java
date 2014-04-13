@@ -169,6 +169,13 @@ public class AssignmentManager {
 			if (corsor.get(PROBLEM_LIST) != null) {
 				exactAssignment.addAllProblemList((List)corsor.get(PROBLEM_LIST));
 			}
+
+			if (isAdmin || isMod) {
+				System.out.println("User is an admin or mod for this course and is acting like one " + userId);
+			} else {
+				System.out.println("User is weakling for this course and is acting like one " + userId);
+			}
+
 			stateBuilder.setAccessible(true);
 		} else if ((isUsers && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate()))) {
 			stateBuilder.setAccessible(false);
