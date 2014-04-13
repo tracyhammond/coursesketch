@@ -54,7 +54,6 @@ public class SubmissionConnection extends WrapperConnection {
 			DataResult.Builder result2 = DataResult.newBuilder();
 			// pass up the Id to the client
 			try {
-
 				DataResult result = DataResult.parseFrom(req.getOtherData());
 				result2.clearResults();
 				for (ItemResult item: result.getResultsList()) {
@@ -66,9 +65,11 @@ public class SubmissionConnection extends WrapperConnection {
 							ItemResult returnResult = mapExperimentsToUser(item);
 							result2.addResults(returnResult);
 						}
+					} else {
+						result2.addResults(item); 
 					}
 				}
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			Request.Builder builder = Request.newBuilder(req);
