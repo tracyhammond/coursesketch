@@ -16,7 +16,7 @@ import database.user.UserClient;
 public class ManyTestProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {
 		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16", 
-		"Problem17", "Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29"/*, "Problem30", "Problem31", "Problem32", "Problem33", "Problem34", 
+		"Problem17", "Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32"/*, "Problem33", "Problem34", 
 		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41" , "Problem42", "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49", "Problem50", "Problem51", "Problem52"*/};
 		//10 is fuzzy logic
 		/*
@@ -36,7 +36,75 @@ public class ManyTestProblems {
 				/*
 					Assignment 9
 				*/
+				"7.1.12: what is the probability that a 5 card poker hand contains exactly one ace?",
 				
+				"7.1.16: what is the probability that a 5 card poker hand contains a flush (5 cards same suite)?",
+				
+				"7.1.18: what is the probability that a five card poker hand contains a straight flush (5 cards same suite consecutive order)?",
+				
+				"7.1.28: In superlottery, a player selects 7 numbers out of the first 80 positive integers. What is the probability that a person wins the grand prize by picking 7 numbers that are among the 11 numbers selected at random by a computer?",
+				
+				"7.1.36: which is more likely: rolling a total of 8 when two dice are rolled or rolling a total of 8 when three dice are rolled?",
+				
+				"7.1.38a: Two events E<sub>1</sub> and E<sub>2</sub> are called independent if P(E<sub>1</sub> /u2229 E<sub>2</sub>) = P(E<sub>1</sub>)P(E<sub>2</sub>). For each of the following pairs of events, which are subsets of the set of all possible outcomes when a coin is tossed three times, determine whether or not they are independent. E<sub>1</sub>: tails comes up when the coin is tossed the first time; E<sub>2</sub>: heads comes up when the coin is tossed the second time.",
+				
+				"7.1.38b: Two events E<sub>1</sub> and E<sub>2</sub> are called independent if P(E<sub>1</sub> /u2229 E<sub>2</sub>) = P(E<sub>1</sub>)P(E<sub>2</sub>). For each of the following pairs of events, which are subsets of the set of all possible outcomes when a coin is tossed three times, determine whether or not they are independent. E<sub>1</sub>: the first coin comes up tails; E<sub>2</sub>: two, and not three, heads come up in a row.",
+				
+				"7.1.38c: Two events E<sub>1</sub> and E<sub>2</sub> are called independent if P(E<sub>1</sub> /u2229 E<sub>2</sub>) = P(E<sub>1</sub>)P(E<sub>2</sub>). For each of the following pairs of events, which are subsets of the set of all possible outcomes when a coin is tossed three times, determine whether or not they are independent. E<sub>1</sub>: the second coin comes up tails; E<sub>2</sub>: two, and not three, heads come up in a row.",
+				
+				"7.1.40: Suppose that instead of the three doors, there are four doors in the Monty Hall puzzle. What is the probability that you win by not changing once the host, who knows what is behind each door, opens a losing door? What is the probability that you win by changing the door you select to one of the two remaining doors among the three that you did not select?",
+				
+				"7.2.8a: What is the probability of these events when we randomly select a permutation of {1, 2, ..., n} where n is greater than or equal to 4? 1 precedes 2",
+				
+				"7.2.8b: What is the probability of these events when we randomly select a permutation of {1, 2, ..., n} where n is greater than or equal to 4? 2 precedes 1",
+				
+				"7.2.8c: what is the probability of these events when we randomly select a permutation of {1, 2, ..., n} where n is greater than or equal to 4? 1 immediately precedes 2",
+				
+				"7.2.10a: What is the probability of these events when we randomly select a permutation of the 26 lower case letters of the English alphabet? The first 13 letters of the permutation are in alphabetical order.",
+				
+				"7.2.10b: What is the probability of these events when we randomly select a permutation of the 26 lower case letters of the English alphabet? a is the first letter of the permutation and z is the last letter.",
+				
+				"7.2.10c: What is the probability of these events when we randomly select a permutation of the 26 lower case letters of the English alphabet? a and z are next to each other in the permutation.",
+				
+				"7.2.10d: What is the probability of these events when we randomly select a permutation of the 26 lower case letters of the English alphabet? a and b are not next to each other in the permutation.",
+				
+				"7.2.10e: What is the probability of these events when we randomly select a permutation of the 26 lower case letters of the English alphabet? a and z are separate by at least 23 letters in the permutation.",
+				
+				"7.2.10f: What is the probability of these events when we randomly select a permutation of the 26 lower case letters of the English alphabet? z precedes both a and b in the permutation.",
+				
+				"7.2.18a: Assume the year has 366 days and all birthdays are equally likely. What is the probability that two people chosen at random were born on the same day of the week.",
+				
+				"7.2.18b: Assume the year has 366 days and all birthdays are equally likely. What is the probability that in a group of n people chosen at random, there are at least two born on the same day of the week?",
+				
+				"7.2.18c: Assume the year has 366 days and all birthdays are equally likely. How many people chosen at random are needed to make the probability greater than ½ that there are at least 2 people born on the same day of the week?",
+				
+				"7.2.20: Find the smallest number of people you need to choose at random so that the probability that at least one of them has a birthday today exceeds ½.",
+				
+				"7.2.24: What is the conditional probability that exactly four heads appear when a fair coin is flipped five times, given that the first flip came up tails?",
+				
+				"7.2.28a: Assume that the probability a child is a boy is 0.51 and that the sexes of children born into a family are independent. What is the probability that a family of 5 children have exactly 3 boys?",
+				
+				"7.2.28b: Assume that the probability a child is a boy is 0.51 and that the sexes of children born into a family are independent. What is the probability that a family of 5 children have at least 1 boy?",
+				
+				"7.2.28c: Assume that the probability a child is a boy is 0.51 and that the sexes of children born into a family are independent. What is the probability that a family of 5 children have at least one girl?",
+				
+				"7.2.28d: Assume that the probability a child is a boy is 0.51 and that the sexes of children born into a family are independent. What is the probability that a family of 5 children have all children of the same sex?",
+				
+				"7.2.30a: Find the probability that a randomly generated bit string of length 10 does not contain a 0 if bits are independent and if a 0 bit and a 1 bit are equally likely.",
+				
+				"7.2.30b: Find the probability that a randomly generated bit string of length 10 does not contain a 0 if bits are independent and if the probability that a bit is a 1 is 0.6.",
+				
+				"7.2.30c: Find the probability that a randomly generated bit string of length 10 does not contain a 0 if bits are independent and if the probability the <em>i</em>th bit is a 1 is 1/2<sup>t</sup> for i = 1, 2, 3, ... 10.",
+				
+				"7.3.2: Suppose that E and F are events in a sample space and P(E) = 2/3, P(F) = 3/4, and P(F|E) = 5/8. Find P(E|F).",
+				
+				"7.3.6: When a test for steroids is given to a soccer player, 98% of the players taking steroids test positive and 12% of the players not taking steroids test positive. Suppose that 5% of soccer players take steroids. What is the probability that a soccer player who tests positive takes steroids? ",
+				
+				
+				/*
+					Assignment 9
+				*/
+				/*
 				"6.3.6a: Find the value of C(5,1)",
 				
 				"6.3.6c: Find the value of C(8,4)",
@@ -94,7 +162,7 @@ public class ManyTestProblems {
 				"4.6.4b: Decrypt the message that was encrypted using the Caesar cipher." + "WHVW WRGDB",
 
 				"4.6.4c: Decrypt the message that was encrypted using the Caesar cipher." + "HDW GLP VXP",
-				
+				*/
 				/*
 					Assignment 8
 				*/
@@ -607,7 +675,7 @@ public class ManyTestProblems {
 				QuestionType.SKETCH,
 				QuestionType.SKETCH
 		};
-		for(int k = 0; k < 29 /*41*/ /*52*//*42*//*22*//*19*//*39*/; k ++) {
+		for(int k = 0; k < 32/*29*/ /*41*/ /*52*//*42*//*22*//*19*//*39*/; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
