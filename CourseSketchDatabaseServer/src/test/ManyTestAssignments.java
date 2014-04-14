@@ -51,9 +51,9 @@ public class ManyTestAssignments {
 	}
 
 	public static void main(String args[]) {
-		
+
 		System.out.println("Running program");
-		testAssignments("52d55a580364615fe8a4496c", "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332");
+		testAssignments("52d55a580364615fe8a4496c", "2fb06e65-beeb-4e6a-8012-0d4361b08921-778f1adeecac4e86");
 
 	}
 }
