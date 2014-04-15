@@ -10,7 +10,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 
-import jettyMultiConnection.CourseSketchServlet;
+import jettyMultiConnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -19,10 +19,10 @@ import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-public class MultiConnectionRunner {
+public class GeneralConnectionRunner {
 
 	public static void main(String[] args) throws Exception {
-		MultiConnectionRunner runner = new MultiConnectionRunner();
+		GeneralConnectionRunner runner = new GeneralConnectionRunner();
 		try {
 			runner.loadConfigurations();
 			runner.createServer();
@@ -35,9 +35,9 @@ public class MultiConnectionRunner {
 		}
 	}
 
-	final private MultiConnectionRunner localInstance = this;
+	final private GeneralConnectionRunner localInstance = this;
 	private Server server;
-	private CourseSketchServlet servletInstance;
+	private GeneralConnectionServlet servletInstance;
 
 	// these should be changed based on 
 	private int port = 8888;
@@ -62,7 +62,7 @@ public class MultiConnectionRunner {
 		/*
 		ServletContextHandler servletHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		servletHandler.setContextPath("/coursesketch");
-		servletHandler.addServlet(new ServletHolder(new CourseSketchServlet()),"/");
+		servletHandler.addServlet(new ServletHolder(new GeneralConnectionServlet()),"/");
 		*/
 		ServletHandler servletHandler = new ServletHandler();
 
@@ -93,16 +93,16 @@ public class MultiConnectionRunner {
 	}
 
 	/**
-	 * Returns a new instance of a {@link CourseSketchServlet}.
+	 * Returns a new instance of a {@link GeneralConnectionServlet}.
 	 *
-	 * Override this method if you want to return a subclass of CourseSketchServlet
+	 * Override this method if you want to return a subclass of GeneralConnectionServlet
 	 */
-	public CourseSketchServlet getServlet() {
+	public GeneralConnectionServlet getServlet() {
 		boolean secure = false;
 		if (!secure) {
 			System.err.println("Running an insecure server");
 		}
-		return new CourseSketchServlet(timeoutTime, secure);
+		return new GeneralConnectionServlet(timeoutTime, secure);
 	}
 
 	/**

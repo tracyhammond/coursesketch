@@ -1,4 +1,4 @@
-package multiConnection;
+package tallNateConnection;
 
 
 import java.lang.reflect.Constructor;
@@ -34,8 +34,8 @@ public class MultiConnectionManager {
 	 * @param man this is the manager that will then hold the connection
 	 * @param isLocal if the connection that is being created is local or remote
 	 * @param port the port that this connection is created at.  (Has to be unique to this computer)
-	 * @param connectLocally the class that will be made (should be a subclass of WrapperConnection)
-	 * @return a completed {@link WrapperConnection}
+	 * @param connectLocally the class that will be made (should be a subclass of ConnectionWrapper)
+	 * @return a completed {@link ConnectionWrapper}
 	 * @throws ConnectionException if a connection has failed to be made.
 	 */
 	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
@@ -59,7 +59,7 @@ public class MultiConnectionManager {
 		// In case of error do this!
 		//c.setParent(serv);
 		if (c == null) {
-			throw new ConnectionException("failed to create WrapperConnection");
+			throw new ConnectionException("failed to create ConnectionWrapper");
 		}
 		return c;
 	}
@@ -78,8 +78,8 @@ public class MultiConnectionManager {
 	/**
 	 * Creates and then adds a connection to the {@link MultiConnectionManager}.
 	 *
-	 * @see #createConnection(MultiInternalConnectionServer, boolean, String, int, Class)
-	 * @see #addConnection(WrapperConnection, Class) 
+	 * @see #createConnection(GeneralConnectionServer, boolean, String, int, Class)
+	 * @see #addConnection(ConnectionWrapper, Class) 
 	 */
 	public void createAndAddConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
 		WrapperConnection connection = createConnection(serv, isLocal, remoteAdress, port, connectionType);
@@ -143,7 +143,7 @@ public class MultiConnectionManager {
 	 */
 	public void dropAllConnection(boolean clearTypes, boolean debugPrint) {
 		synchronized(connections) {
-			//<?  extends WrapperConnection> // for safe keeping
+			//<?  extends ConnectionWrapper> // for safe keeping
 			for(Class<?> conKey:connections.keySet()) {
 				for(WrapperConnection connection: connections.get(conKey)) {
 					if (debugPrint) {

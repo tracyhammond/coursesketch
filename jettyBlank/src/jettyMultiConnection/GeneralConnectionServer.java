@@ -4,9 +4,6 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.UUID;
 
-import multiConnection.MultiConnectionState;
-import multiConnection.WrapperConnection;
-
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -15,11 +12,13 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.Request;
+import tallNateConnection.MultiConnectionState;
+import tallNateConnection.WrapperConnection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
 @WebSocket() // 30 minutes
-public class MultiInternalConnectionServer {
+public class GeneralConnectionServer {
 
 	public static final int MAX_CONNECTIONS = 80;
 	public static final int STATE_SERVER_FULL = 4001;
@@ -31,9 +30,9 @@ public class MultiInternalConnectionServer {
 	protected HashMap<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
 	protected HashMap<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
 	protected HashMap<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
-	protected CourseSketchServlet parentServer = null;
+	protected GeneralConnectionServlet parentServer = null;
 
-	public MultiInternalConnectionServer(CourseSketchServlet parent) {
+	public GeneralConnectionServer(GeneralConnectionServlet parent) {
 		parentServer = parent;
     }
 
@@ -154,7 +153,7 @@ public class MultiInternalConnectionServer {
 	 * Returns a new connection with an id.
 	 *
 	 * This can be overwritten to make a more advance connection.
-	 * This is only called in {@link MultiInternalConnectionServer#onOpen(Session)}
+	 * This is only called in {@link GeneralConnectionServer#onOpen(Session)}
 	 */
 	@SuppressWarnings("static-method")
 	public MultiConnectionState getUniqueState() {

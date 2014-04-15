@@ -17,14 +17,14 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 @SuppressWarnings("serial")
 @WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/" })
-public class CourseSketchServlet extends WebSocketServlet {
+public class GeneralConnectionServlet extends WebSocketServlet {
 
-	protected MultiInternalConnectionServer sock = createServerSocket();
+	protected GeneralConnectionServer sock = createServerSocket();
 	protected MultiConnectionManager manager = createConnectionManager();
 	private long timeoutTime = 0;
 	private boolean secure;
 
-    public CourseSketchServlet(long timeoutTime, boolean secure) {
+    public GeneralConnectionServlet(long timeoutTime, boolean secure) {
     	this.timeoutTime = timeoutTime;
     	this.secure = secure;
 	}
@@ -59,15 +59,15 @@ public class CourseSketchServlet extends WebSocketServlet {
     }
 
     /**
-     * Override this method to create a subclass of MultiInternalConnectionServer
+     * Override this method to create a subclass of GeneralConnectionServer
      * @return
      */
-    public MultiInternalConnectionServer createServerSocket() {
-    	return new MultiInternalConnectionServer(this);
+    public GeneralConnectionServer createServerSocket() {
+    	return new GeneralConnectionServer(this);
     }
 
     /**
-     * Override this method to create a subclass of the MultiInternalConnectionServer
+     * Override this method to create a subclass of the GeneralConnectionServer
      * @return
      */
     private MultiConnectionManager createConnectionManager() {

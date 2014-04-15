@@ -9,19 +9,18 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_10;
 
 import protobuf.srl.request.Message.Request;
-import multiConnection.ConnectionException;
 
 public class MultiConnectionManager {
 
 	protected boolean connectLocally = CONNECT_LOCALLY;
 	public static final boolean CONNECT_LOCALLY = true;
 	public static final boolean CONNECT_REMOTE = false;
-	HashMap<Class<?>, ArrayList<WrapperConnection>> connections
-		= new HashMap<Class<?>, ArrayList<WrapperConnection>> ();
+	HashMap<Class<?>, ArrayList<ConnectionWrapper>> connections
+		= new HashMap<Class<?>, ArrayList<ConnectionWrapper>> ();
 	
-	protected MultiInternalConnectionServer parent; // TODO: CHANGE THIS
+	protected GeneralConnectionServer parent; // TODO: CHANGE THIS
 
-	public MultiConnectionManager(MultiInternalConnectionServer parent) {
+	public MultiConnectionManager(GeneralConnectionServer parent) {
 		this.parent = parent;
 	}
 
@@ -33,13 +32,13 @@ public class MultiConnectionManager {
 	 * @param man this is the manager that will then hold the connection
 	 * @param isLocal if the connection that is being created is local or remote
 	 * @param port the port that this connection is created at.  (Has to be unique to this computer)
-	 * @param connectLocally the class that will be made (should be a subclass of WrapperConnection)
-	 * @return a completed {@link WrapperConnection}
+	 * @param connectLocally the class that will be made (should be a subclass of ConnectionWrapper)
+	 * @return a completed {@link ConnectionWrapper}
 	 * @throws ConnectionException if a connection has failed to be made.
 	 */
-	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port,
-			boolean isSecure, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
-		WrapperConnection c = null;
+	public static ConnectionWrapper createConnection(GeneralConnectionServer serv, boolean isLocal, String remoteAdress, int port,
+			boolean isSecure, Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
+		ConnectionWrapper c = null;
 		if (serv == null) {
 			throw new ConnectionException("Can't create connection with a null parent server");
 		}
@@ -52,8 +51,8 @@ public class MultiConnectionManager {
 		String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress +":"+ port);
 
 		try {
-			Constructor construct = connectionType.getConstructor(URI.class, Draft.class, MultiInternalConnectionServer.class);
-			c = (WrapperConnection) construct.newInstance( new URI( location ), new Draft_10() , serv);
+			Constructor construct = connectionType.getConstructor(URI.class, Draft.class, GeneralConnectionServer.class);
+			c = (ConnectionWrapper) construct.newInstance( new URI( location ), new Draft_10() , serv);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -63,7 +62,7 @@ public class MultiConnectionManager {
 		// In case of error do this!
 		//c.setParent(serv);
 		if (c == null) {
-			throw new ConnectionException("failed to create WrapperConnection");
+			throw new ConnectionException("failed to create ConnectionWrapper");
 		}
 		return c;
 	}
@@ -75,19 +74,19 @@ public class MultiConnectionManager {
 	 * @param sessionID The session Id of the request.
 	 * @param connectionNumber the location of where to find the location.
 	 */
-	public void send(Request req, String sessionID, Class<? extends WrapperConnection> connectionType) {
-		Request packagedRequest = MultiInternalConnectionServer.Encoder.requestIDBuilder(req, sessionID);		//Attach the existing request with the UserID
+	public void send(Request req, String sessionID, Class<? extends ConnectionWrapper> connectionType) {
+		Request packagedRequest = GeneralConnectionServer.Encoder.requestIDBuilder(req, sessionID);		//Attach the existing request with the UserID
 		getBestConnection(connectionType).send(packagedRequest.toByteArray());
 	}
 
 	/**
 	 * Creates and then adds a connection to the {@link MultiConnectionManager}.
 	 *
-	 * @see #createConnection(MultiInternalConnectionServer, boolean, String, int, Class)
-	 * @see #addConnection(WrapperConnection, Class) 
+	 * @see #createConnection(GeneralConnectionServer, boolean, String, int, Class)
+	 * @see #addConnection(ConnectionWrapper, Class) 
 	 */
-	public void createAndAddConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port, boolean isSecure, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
-		WrapperConnection connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
+	public void createAndAddConnection(GeneralConnectionServer serv, boolean isLocal, String remoteAdress, int port, boolean isSecure, Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
+		ConnectionWrapper connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
 		addConnection(connection, connectionType);
 	}
 
@@ -96,7 +95,7 @@ public class MultiConnectionManager {
 	 * Does nothing by default.  Can be overwritten to make life easier.
 	 * @param parent
 	 */
-	public void connectServers(MultiInternalConnectionServer parent) {}
+	public void connectServers(GeneralConnectionServer parent) {}
 	
 	/**
 	 * Adds a connection to a list with the given connectLocally.
@@ -105,7 +104,7 @@ public class MultiConnectionManager {
 	 * @param connectLocally the type to differentiate connections by
 	 * @throws {@link NullPointerException} if connection is null or connectLocally is null
 	 */
-	public void addConnection(WrapperConnection connection, Class<? extends WrapperConnection> connectionType) {
+	public void addConnection(ConnectionWrapper connection, Class<? extends ConnectionWrapper> connectionType) {
 		if (connection == null) {
 			throw new NullPointerException("can not add null connection");
 		}
@@ -116,9 +115,9 @@ public class MultiConnectionManager {
 
 		connection.parentManager = this;
 		
-		ArrayList<WrapperConnection> cons = connections.get(connectionType);
+		ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
 		if (cons == null) {
-			cons = new ArrayList<WrapperConnection>();
+			cons = new ArrayList<ConnectionWrapper>();
 			cons.add(connection);
 			connections.put(connectionType, cons);
 			System.out.println("creating a new connectionList for: " + connectionType + " with list: " + connections.get(connectionType));
@@ -133,9 +132,9 @@ public class MultiConnectionManager {
 	 * @param connectLocally
 	 * @return a valid connection.
 	 */
-	public WrapperConnection getBestConnection(Class<? extends WrapperConnection> connectionType){
+	public ConnectionWrapper getBestConnection(Class<? extends ConnectionWrapper> connectionType){
 		System.out.println("getting Connection from type: " + connectionType);
-		ArrayList<WrapperConnection> cons = connections.get(connectionType);
+		ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
 		if (cons == null) {
 			throw new NullPointerException("ConnectionType: "+ connectionType.getName() +" does not exist in this manager");
 		}
@@ -149,9 +148,9 @@ public class MultiConnectionManager {
 	 */
 	public void dropAllConnection(boolean clearTypes, boolean debugPrint) {
 		synchronized(connections) {
-			//<?  extends WrapperConnection> // for safe keeping
+			//<?  extends ConnectionWrapper> // for safe keeping
 			for(Class<?> conKey:connections.keySet()) {
-				for(WrapperConnection connection: connections.get(conKey)) {
+				for(ConnectionWrapper connection: connections.get(conKey)) {
 					if (debugPrint) {
 						System.out.println(connection.getURI());
 					}
