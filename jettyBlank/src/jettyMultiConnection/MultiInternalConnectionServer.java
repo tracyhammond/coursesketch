@@ -3,11 +3,8 @@ package jettyMultiConnection;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 
-import jettyMultiConnection.MainServlet.Encoder;
 import multiConnection.MultiConnectionState;
-import multiConnection.MultiInternalConnectionServer;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -22,7 +19,8 @@ import protobuf.srl.request.Message.Request;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 @WebSocket(maxIdleTime = 30 * 60 * 60) // 30 minutes
-public class ServerSocket {
+public class MultiInternalConnectionServer {
+	
 	public static final int MAX_CONNECTIONS = 80;
 	public static final int STATE_SERVER_FULL = 4001;
 	static final String FULL_SERVER_MESSAGE = "Sorry, the BLANK server is full";
@@ -30,16 +28,23 @@ public class ServerSocket {
 	protected HashMap<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
 	protected HashMap<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
 	protected HashMap<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
-
-	private final CountDownLatch closeLatch;
-
-	public ServerSocket() {
-    	this.closeLatch = new CountDownLatch(1);
+	protected MainServlet parentServer = null;
+	
+	public MultiInternalConnectionServer(MainServlet parent) {
+		parentServer = parent;
     }
 
     @OnWebSocketClose
-    public void onClose(Session session, int statusCode, String reason) {
-    	session.close();
+    public void onClose(Session conn, int statusCode, String reason) {
+    	System.out.println( conn + " has disconnected from The Server." +
+				(true ? "The connection was closed remotely" : "we closed the connection")); // TODO: find out how to see if the connection is closed by us or them.
+		MultiConnectionState id = connectionToId.remove(conn);
+		if (id != null) {
+			idToConnection.remove(id);
+			idToState.remove(id.getKey());
+		} else {
+			System.err.println("Connection Id can not be found");
+		}
     }
 
     /**
@@ -47,7 +52,7 @@ public class ServerSocket {
      * @param conn
      */
     @OnWebSocketConnect
-    public void onConnect(Session conn) {
+    public void onOpen(Session conn) {
     	if (connectionToId.size() >= MAX_CONNECTIONS) {
 			// Return negatative state.
 			System.out.println("FULL SERVER"); // send message to someone?
@@ -66,19 +71,35 @@ public class ServerSocket {
 
     @OnWebSocketError
     public void onError(Session session, Throwable cause) {
-    	
+    	System.err.println(cause);
     }
-    
+
     @OnWebSocketMessage
-    public void onMessage(Session session, byte[] data, int offset, int length) {
+    public final void onMessage(Session session, byte[] data, int offset, int length) {
     	onMessage(session, ByteBuffer.wrap(data));
     }
 
     /**
-	 * A blank binary onMessage called every time data is sent
+	 * A blank binary onMessage called every time data is sent.
 	 */
     public void onMessage(Session session, ByteBuffer buffer) {
 	}
+
+    final void stop() {
+    	for (Session sesh : connectionToId.keySet()) {
+    		sesh.close();
+    	}
+    	connectionToId.clear();
+    	idToConnection.clear();
+    	idToState.clear();
+    }
+
+    /**
+     * Available for people to call
+     */
+    public void onStop() {
+
+    }
 
     /**
 	 * Returns a new connection with an id.
@@ -86,6 +107,7 @@ public class ServerSocket {
 	 * This can be overwritten to make a more advance connection.
 	 * This is only called in {@link MultiInternalConnectionServer#onOpen(WebSocket, ClientHandshake)}
 	 */
+	@SuppressWarnings("static-method")
 	public MultiConnectionState getUniqueState() {
 		return new MultiConnectionState(Encoder.nextID().toString());
 	}
@@ -97,7 +119,7 @@ public class ServerSocket {
 	protected HashMap<MultiConnectionState, Session> getIdToConnection() {
 		return idToConnection;
 	}
-	
+
 	public static final class Decoder {
 		/**
 		 * Returns a {@link Request} as it is parsed from the ByteBuffer.
@@ -153,5 +175,6 @@ public class ServerSocket {
 			return new UUID(counter, System.nanoTime() | 0x8000000000000000L);
 		}
 	}
+
 
 }
