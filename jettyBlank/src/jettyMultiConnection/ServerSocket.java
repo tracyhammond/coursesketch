@@ -1,58 +1,86 @@
-package multiConnection;
+package jettyMultiConnection;
 
-import java.io.BufferedReader;
-import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
-import org.java_websocket.WebSocket;
+import jettyMultiConnection.MainServlet.Encoder;
+import multiConnection.MultiConnectionState;
+import multiConnection.MultiInternalConnectionServer;
+
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
 
 import protobuf.srl.request.Message.Request;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public abstract class MultiInternalConnectionServer extends WebSocketServer {
+@WebSocket(maxIdleTime = 30 * 60 * 60) // 30 minutes
+public class ServerSocket {
 	public static final int MAX_CONNECTIONS = 80;
 	public static final int STATE_SERVER_FULL = 4001;
 	static final String FULL_SERVER_MESSAGE = "Sorry, the BLANK server is full";
 
-	protected HashMap<WebSocket, MultiConnectionState> connectionToId = new HashMap<WebSocket, MultiConnectionState>();
-	protected HashMap<MultiConnectionState, WebSocket> idToConnection = new HashMap<MultiConnectionState, WebSocket>();
+	protected HashMap<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
+	protected HashMap<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
 	protected HashMap<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
 
-	public MultiInternalConnectionServer( InetSocketAddress address ) {
-		super( address );
-	}
+	private final CountDownLatch closeLatch;
 
-	public MultiInternalConnectionServer( int port ) {
-		this( new InetSocketAddress( port ) );
-	}
+	public ServerSocket() {
+    	this.closeLatch = new CountDownLatch(1);
+    }
 
-	/**
-	 * When a new websocket connects to the server this is called.
-	 *
-	 * This method adds a connection to a list so that it can be recalled later if needed.
-	 */
-	@Override
-	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		if (connectionToId.size() >= MAX_CONNECTIONS) {
+    @OnWebSocketClose
+    public void onClose(Session session, int statusCode, String reason) {
+    	session.close();
+    }
+
+    /**
+     * Called every time the connection is formed.
+     * @param conn
+     */
+    @OnWebSocketConnect
+    public void onConnect(Session conn) {
+    	if (connectionToId.size() >= MAX_CONNECTIONS) {
 			// Return negatative state.
-			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
 			System.out.println("FULL SERVER"); // send message to someone?
-			return;
+			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
 		}
+
 		MultiConnectionState id = getUniqueState();
 		connectionToId.put(conn, id);
 		getIdToConnection().put(id, conn);
 		System.out.println("Session Key " + id.getKey());
 		getIdToState().put(id.getKey(), id);
 		System.out.println("ID ASSIGNED");
+
+		System.out.println("Recieving connection " + connectionToId.size());
+    }
+
+    @OnWebSocketError
+    public void onError(Session session, Throwable cause) {
+    	
+    }
+    
+    @OnWebSocketMessage
+    public void onMessage(Session session, byte[] data, int offset, int length) {
+    	onMessage(session, ByteBuffer.wrap(data));
+    }
+
+    /**
+	 * A blank binary onMessage called every time data is sent
+	 */
+    public void onMessage(Session session, ByteBuffer buffer) {
 	}
 
-	/**
+    /**
 	 * Returns a new connection with an id.
 	 *
 	 * This can be overwritten to make a more advance connection.
@@ -62,72 +90,14 @@ public abstract class MultiInternalConnectionServer extends WebSocketServer {
 		return new MultiConnectionState(Encoder.nextID().toString());
 	}
 
-	/**
-	 * Removes the connections and id from the map
-	 */
-	@Override
-	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
-		System.out.println( conn + " has disconnected from The Server." +
-				(remote ? "The connection was closed remotely" : "we closed the connection"));
-		MultiConnectionState id = connectionToId.remove(conn);
-		if (id != null) {
-			idToConnection.remove(id);
-			idToState.remove(id.getKey());
-		} else {
-			System.out.println("Connection Id can not be found");
-		}
-	}
-
-	/**
-	 * This is called when the reconnect command is executed.
-	 *
-	 * By default this command does nothing.
-	 */
-	public abstract void reconnect();
-
-	/**
-	 * Handles commands that can be used to perform certain functionality.
-	 *
-	 * This method can and in some cases should be overwritten.
-	 * We <b>strongly</b> suggest that you call super first then check to see if it is true and then call your overwritten method.
-	 * @param command The command that is parsed to provide functionality.
-	 * @param sysin Used if additional input is needed for the command.
-	 * @return true if the command is an accepted command and is used by the server
-	 * @throws Exception 
-	 */
-	public boolean parseCommand(String command, BufferedReader sysin) throws Exception {
-		if (command.equals( "exit" )) {
-			System.out.println("Are you sure you want to exit? [y/n]");
-			if (sysin.readLine().equalsIgnoreCase("y")) {
-				this.stop();
-				// TODO: prompt for confirmation!
-				System.exit(0);
-			}
-			return true;
-		} else if (command.equals("restart")) {
-			throw new Exception("This command is not yet supported");
-		} else if (command.equals("reconnect")) {
-			this.reconnect();
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Overwritten to prevent clutter in the clients!
-	 */
-	@Override
-	public void onMessage( WebSocket conn, String message ) {
-	}
-
 	protected HashMap<String, MultiConnectionState> getIdToState() {
 		return idToState;
 	}
 
-	protected HashMap<MultiConnectionState, WebSocket> getIdToConnection() {
+	protected HashMap<MultiConnectionState, Session> getIdToConnection() {
 		return idToConnection;
 	}
-
+	
 	public static final class Decoder {
 		/**
 		 * Returns a {@link Request} as it is parsed from the ByteBuffer.
@@ -183,4 +153,5 @@ public abstract class MultiInternalConnectionServer extends WebSocketServer {
 			return new UUID(counter, System.nanoTime() | 0x8000000000000000L);
 		}
 	}
+
 }
