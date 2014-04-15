@@ -18,7 +18,7 @@ import protobuf.srl.request.Message.Request;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-@WebSocket(maxIdleTime = 30 * 60 * 60) // 30 minutes
+@WebSocket() // 30 minutes
 public class MultiInternalConnectionServer {
 	
 	public static final int MAX_CONNECTIONS = 80;
@@ -83,6 +83,7 @@ public class MultiInternalConnectionServer {
 	 * A blank binary onMessage called every time data is sent.
 	 */
     public void onMessage(Session session, ByteBuffer buffer) {
+    	session.getRemote().sendBytesByFuture(buffer);
 	}
 
     final void stop() {
@@ -105,7 +106,7 @@ public class MultiInternalConnectionServer {
 	 * Returns a new connection with an id.
 	 *
 	 * This can be overwritten to make a more advance connection.
-	 * This is only called in {@link MultiInternalConnectionServer#onOpen(WebSocket, ClientHandshake)}
+	 * This is only called in {@link MultiInternalConnectionServer#onOpen(Session)}
 	 */
 	@SuppressWarnings("static-method")
 	public MultiConnectionState getUniqueState() {
@@ -120,6 +121,13 @@ public class MultiInternalConnectionServer {
 		return idToConnection;
 	}
 
+	/**
+	 * Returns the {@link MultiConnectionManager} or subclass so it can be used in this instance.
+	 */
+    protected MultiConnectionManager getConnectionManager() {
+    	return parentServer.manager;
+    }
+	
 	public static final class Decoder {
 		/**
 		 * Returns a {@link Request} as it is parsed from the ByteBuffer.
