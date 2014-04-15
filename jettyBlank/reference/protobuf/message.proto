@@ -1,0 +1,37 @@
+package protobuf.srl.request;
+
+// Always sent and is filled out properly.
+message Request {
+	required MessageType requestType = 1 [default=LOGIN];
+	optional LoginInformation login = 2;
+    optional bytes otherData = 3;
+	optional string responseText = 4;
+	optional string sessionInfo = 5; // This may be separated out more.
+	optional string serversideId = 6;
+	optional int64 messageTime = 7; // this is the time that the message is received by the server
+
+    enum MessageType {
+		LOGIN = 0;
+        DATA_REQUEST = 1;
+        DATA_INSERT = 2;
+        DATA_UPDATE = 3;
+        DATA_REMOVE = 4;
+        RECOGNITION = 5;
+		LOADING = 6; // this is for when the client is loading.
+		SUBMISSION = 7; // sent to both servers at the same time. (Answer checking and database)
+		FEEDBACK = 8; // answer checking feedback!
+		CLOSE = 9; // sent to tell the server to close the connection rs
+		ERROR = 10;
+		TIME = 11;
+    }
+}
+
+message LoginInformation {
+	required string username = 1;
+    optional string password = 2;
+    optional bool isLoggedIn = 3;
+    optional bool isInstructor = 4;
+	optional bool isRegistering = 5;
+	optional string email = 6;
+	optional string userId = 7;
+}
