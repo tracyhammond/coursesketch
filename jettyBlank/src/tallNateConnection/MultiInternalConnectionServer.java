@@ -1,4 +1,4 @@
-package multiConnection;
+package tallNateConnection;
 
 import java.io.BufferedReader;
 import java.net.InetSocketAddress;
@@ -56,7 +56,7 @@ public abstract class MultiInternalConnectionServer extends WebSocketServer {
 	 * Returns a new connection with an id.
 	 *
 	 * This can be overwritten to make a more advance connection.
-	 * This is only called in {@link MultiInternalConnectionServer#onOpen(WebSocket, ClientHandshake)}
+	 * This is only called in {@link GeneralConnectionServer#onOpen(WebSocket, ClientHandshake)}
 	 */
 	public MultiConnectionState getUniqueState() {
 		return new MultiConnectionState(Encoder.nextID().toString());

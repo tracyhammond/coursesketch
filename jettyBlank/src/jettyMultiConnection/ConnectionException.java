@@ -1,4 +1,4 @@
-package multiConnection;
+package jettyMultiConnection;
 
 public class ConnectionException extends Exception {
 

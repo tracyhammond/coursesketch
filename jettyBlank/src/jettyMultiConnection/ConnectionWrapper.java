@@ -5,9 +5,6 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import multiConnection.ConnectionException;
-import multiConnection.MultiConnectionState;
-
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -16,13 +13,16 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 
+import tallNateConnection.ConnectionException;
+import tallNateConnection.MultiConnectionState;
+
 /**
  * Basic Echo Client Socket
  */
 @WebSocket(maxIdleTime = 30 * 60 * 60) // 30 minutes
-public class WrapperConnection {
+public class ConnectionWrapper {
 
-	protected MultiInternalConnectionServer parentServer;
+	protected GeneralConnectionServer parentServer;
 	protected MultiConnectionManager parentManager;
 	private final CountDownLatch closeLatch;
 
@@ -34,7 +34,7 @@ public class WrapperConnection {
         return this.closeLatch.await(duration, unit);
     }
 
-	public WrapperConnection(URI destination) {
+	public ConnectionWrapper(URI destination) {
     	this.closeLatch = new CountDownLatch(1);
     }
 
@@ -83,7 +83,7 @@ public class WrapperConnection {
 	 * Accepts messages and sends the request to the correct server and holds minimum client state.
 	 */
     public void onMessage(ByteBuffer buffer) {
-    	MultiConnectionState state = getStateFromId(MultiInternalConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
+    	MultiConnectionState state = getStateFromId(GeneralConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
     	session.getRemote().sendBytesByFuture(buffer);
 		getConnectionFromState(state).getRemote().sendBytesByFuture(buffer);
 	}
