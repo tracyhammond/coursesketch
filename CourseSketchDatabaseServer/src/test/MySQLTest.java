@@ -81,7 +81,21 @@ public class MySQLTest {
 				}
 			}
 		System.out.println("done");
-		
+
+		Connection connG;	
+		connG = DriverManager.getConnection("jdbc:mysql://srl03.tamu.edu/grades?" +
+		                    "user=srl&password=sketchrec");
+		Statement gradeStmt = connG.createStatement();
+		// course -> assignments -> problems
+		String gradeQ = "select * from problem_grades";
+		ResultSet grades = gradeStmt.executeQuery(gradeQ);
+
+		while (grades.next()) {
+//			int numColumns = rs.getMetaData().getColumnCount();
+			System.out.println(grades.getString("comment"));
+		}
+		grades.close();
+
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 		e.printStackTrace();
