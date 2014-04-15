@@ -1,19 +1,16 @@
-package multiConnection;
-
+package jettyMultiConnection;
 
 import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_10;
 
 import protobuf.srl.request.Message.Request;
+import multiConnection.ConnectionException;
 
-
-/** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 public class MultiConnectionManager {
 
 	protected boolean connectLocally = CONNECT_LOCALLY;
@@ -21,11 +18,13 @@ public class MultiConnectionManager {
 	public static final boolean CONNECT_REMOTE = false;
 	HashMap<Class<?>, ArrayList<WrapperConnection>> connections
 		= new HashMap<Class<?>, ArrayList<WrapperConnection>> ();
+	
+	protected MultiInternalConnectionServer parent; // TODO: CHANGE THIS
 
-	protected MultiInternalConnectionServer parent;
 	public MultiConnectionManager(MultiInternalConnectionServer parent) {
 		this.parent = parent;
 	}
+
 
 	/**
 	 * Creates a connection given the different information.
@@ -38,7 +37,8 @@ public class MultiConnectionManager {
 	 * @return a completed {@link WrapperConnection}
 	 * @throws ConnectionException if a connection has failed to be made.
 	 */
-	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
+	public static WrapperConnection createConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port,
+			boolean isSecure, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
 		WrapperConnection c = null;
 		if (serv == null) {
 			throw new ConnectionException("Can't create connection with a null parent server");
@@ -46,15 +46,19 @@ public class MultiConnectionManager {
 		if (remoteAdress == null && !isLocal) {
 			throw new ConnectionException("Attempting to connect to null address");
 		}
-		String location = isLocal ? "ws://localhost:" + port : "ws://" + remoteAdress +":"+ port;
+		
+		String start = isSecure ? "wss://" : "ws://";
+		
+		String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress +":"+ port);
+
 		try {
 			Constructor construct = connectionType.getConstructor(URI.class, Draft.class, MultiInternalConnectionServer.class);
-			c = (WrapperConnection) construct.newInstance( new URI( location ), serv);
+			c = (WrapperConnection) construct.newInstance( new URI( location ), new Draft_10() , serv);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
+		}
 		if (c != null) {
-			c.connect();
+
 		}
 		// In case of error do this!
 		//c.setParent(serv);
@@ -63,6 +67,7 @@ public class MultiConnectionManager {
 		}
 		return c;
 	}
+
 
 	/**
 	 * Sends a request with the id and the connection at the given index.
@@ -81,10 +86,11 @@ public class MultiConnectionManager {
 	 * @see #createConnection(MultiInternalConnectionServer, boolean, String, int, Class)
 	 * @see #addConnection(WrapperConnection, Class) 
 	 */
-	public void createAndAddConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
-		WrapperConnection connection = createConnection(serv, isLocal, remoteAdress, port, connectionType);
+	public void createAndAddConnection(MultiInternalConnectionServer serv, boolean isLocal, String remoteAdress, int port, boolean isSecure, Class<? extends WrapperConnection> connectionType) throws ConnectionException {
+		WrapperConnection connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
 		addConnection(connection, connectionType);
 	}
+
 
 	/**
 	 * Does nothing by default.  Can be overwritten to make life easier.
