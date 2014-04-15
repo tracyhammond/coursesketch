@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import multiConnection.ConnectionException;
 import multiConnection.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -27,6 +28,7 @@ public class WrapperConnection {
 
     private Session session;
     private URI destination;
+    private boolean connected = false;
 
     public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
         return this.closeLatch.await(duration, unit);
@@ -41,9 +43,10 @@ public class WrapperConnection {
 		try {
 			client.start();
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
-			client.connect((Object)this, destination, request);
+			client.connect(this, destination, request);
 			System.out.printf("Connecting to : %s%n", destination);
 			this.awaitClose(5, TimeUnit.SECONDS);
+			connected = true;
 			} catch (Throwable t) {
 				t.printStackTrace();
 				throw t;
@@ -60,6 +63,7 @@ public class WrapperConnection {
     public void onClose(int statusCode, String reason) {
         System.out.printf("Connection closed: %d - %s%n", statusCode, reason);
         this.session = null;
+        connected = false;
         this.closeLatch.countDown();
     }
 
@@ -134,5 +138,9 @@ public class WrapperConnection {
 	 */
 	public URI getURI() {
 		return destination.normalize();
+	}
+
+	public boolean isConnected() {
+		return connected;
 	}
 }

@@ -11,8 +11,8 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/socket" })
-public class MainServlet extends WebSocketServlet {
+@WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/" })
+public class CourseSketchServlet extends WebSocketServlet {
 
 	protected MultiInternalConnectionServer sock = createServerSocket();
 
