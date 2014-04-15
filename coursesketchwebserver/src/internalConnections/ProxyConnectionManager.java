@@ -50,6 +50,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 
 	public void send(Request req, String sessionId, Class<? extends WrapperConnection> connectionType, String userId) {
 		Request.Builder builder = Request.newBuilder(req);
+		builder.clearServersideId();
 		builder.setServersideId(userId);
 		super.send(builder.build(), sessionId, connectionType);
 	}

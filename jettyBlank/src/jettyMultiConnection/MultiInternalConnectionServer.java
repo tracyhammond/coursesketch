@@ -28,9 +28,9 @@ public class MultiInternalConnectionServer {
 	protected HashMap<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
 	protected HashMap<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
 	protected HashMap<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
-	protected MainServlet parentServer = null;
+	protected CourseSketchServlet parentServer = null;
 	
-	public MultiInternalConnectionServer(MainServlet parent) {
+	public MultiInternalConnectionServer(CourseSketchServlet parent) {
 		parentServer = parent;
     }
 
