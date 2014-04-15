@@ -1,29 +1,26 @@
 package internalConnections;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import multiConnection.MultiConnectionState;
-import multiConnection.MultiInternalConnectionServer;
-import multiConnection.WrapperConnection;
-import multiConnection.MultiInternalConnectionServer.Decoder;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import org.java_websocket.drafts.Draft;
-
-import proxyServer.TimeManager;
+import jettyMultiConnection.ConnectionWrapper;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.MultiConnectionState;
 import protobuf.srl.request.Message.Request;
+import connection.TimeManager;
 
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
-public class DataConnection extends WrapperConnection {
-	
-	public DataConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		super( serverUri, draft, parent);
+@WebSocket()
+public class DataConnection extends ConnectionWrapper {
+
+	public DataConnection(URI destination, GeneralConnectionServer parent) {
+		super(destination, parent);
 	}
-	
+
 	/**
 	 * Accepts messages and sends the request to the correct server and holds minimum client state.
 	 *
@@ -31,21 +28,21 @@ public class DataConnection extends WrapperConnection {
 	 */
 	@Override
 	public void onMessage(ByteBuffer buffer) {
-		Request req = Decoder.parseRequest(buffer);
-		
+		Request req = GeneralConnectionServer.Decoder.parseRequest(buffer);
+
 		if (req.getRequestType() == Request.MessageType.TIME) {
-			
+
 			Request rsp = TimeManager.decodeRequest(req);
 			if (rsp != null) {
 				this.parentManager.send(rsp, req.getSessionInfo(), DataConnection.class);
 			}
 		}
 		else {
-			MultiConnectionState state = getStateFromId(MultiInternalConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
-	
-			Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
+			MultiConnectionState state = getStateFromId(GeneralConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
+
+			Request r = GeneralConnectionServer.Decoder.parseRequest(buffer);
 			Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
-			getConnectionFromState(state).send(result.toByteArray());
+			GeneralConnectionServer.send(getConnectionFromState(state), result);
 		}
 	}
 }

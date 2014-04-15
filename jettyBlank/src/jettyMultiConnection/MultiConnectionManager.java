@@ -13,6 +13,7 @@ import protobuf.srl.request.Message.Request;
 public class MultiConnectionManager {
 
 	protected boolean connectLocally = CONNECT_LOCALLY;
+	protected boolean secure = false;
 	public static final boolean CONNECT_LOCALLY = true;
 	public static final boolean CONNECT_REMOTE = false;
 	HashMap<Class<?>, ArrayList<ConnectionWrapper>> connections
@@ -20,10 +21,11 @@ public class MultiConnectionManager {
 	
 	protected GeneralConnectionServer parent; // TODO: CHANGE THIS
 
-	public MultiConnectionManager(GeneralConnectionServer parent) {
+	public MultiConnectionManager(GeneralConnectionServer parent, boolean connectType, boolean secure) {
 		this.parent = parent;
+		this.connectLocally = connectType;
+		this.secure = secure;
 	}
-
 
 	/**
 	 * Creates a connection given the different information.
@@ -49,15 +51,19 @@ public class MultiConnectionManager {
 		String start = isSecure ? "wss://" : "ws://";
 		
 		String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress +":"+ port);
-
+		System.out.println("Creating a client connecting to: " + location);
 		try {
-			Constructor construct = connectionType.getConstructor(URI.class, Draft.class, GeneralConnectionServer.class);
-			c = (ConnectionWrapper) construct.newInstance( new URI( location ), new Draft_10() , serv);
+			Constructor construct = connectionType.getConstructor(URI.class, GeneralConnectionServer.class);
+			c = (ConnectionWrapper) construct.newInstance( new URI( location ), serv);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (c != null) {
-
+			try {
+				c.connect();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 		}
 		// In case of error do this!
 		//c.setParent(serv);

@@ -13,13 +13,10 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 
-import tallNateConnection.ConnectionException;
-import tallNateConnection.MultiConnectionState;
-
 /**
  * Basic Echo Client Socket
  */
-@WebSocket(maxIdleTime = 30 * 60 * 60) // 30 minutes
+@WebSocket()
 public class ConnectionWrapper {
 
 	protected GeneralConnectionServer parentServer;
@@ -34,8 +31,10 @@ public class ConnectionWrapper {
         return this.closeLatch.await(duration, unit);
     }
 
-	public ConnectionWrapper(URI destination) {
+	public ConnectionWrapper(URI destination, GeneralConnectionServer parentServer) {
     	this.closeLatch = new CountDownLatch(1);
+    	this.parentServer = parentServer;
+    	this.destination = destination;
     }
 
 	public void connect() throws Throwable {
@@ -43,19 +42,15 @@ public class ConnectionWrapper {
 		try {
 			client.start();
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
+			System.out.println("Connecting to: " + destination);
 			client.connect(this, destination, request);
 			System.out.printf("Connecting to : %s%n", destination);
-			this.awaitClose(5, TimeUnit.SECONDS);
+			//this.awaitClose(5, TimeUnit.SECONDS);
 			connected = true;
 			} catch (Throwable t) {
 				t.printStackTrace();
+				client.stop();
 				throw t;
-			} finally {
-				try {
-					client.stop();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 	}
 	
