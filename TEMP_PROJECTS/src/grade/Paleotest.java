@@ -2,6 +2,7 @@ package grade;
 
 //import srl.core.sketch.*;
 
+import org.bson.types.ObjectId;
 import grade.Grader.NavigationHolder;
 
 import java.awt.Color;
@@ -80,11 +81,17 @@ public class Paleotest {
 		DB db = mongoClient.getDB("submissions");
 		DBCollection collection = db.getCollection("Experiments");
 		DBCursor cursor = collection.find().skip(i);
+		/*pull by experiment's _id
+		BasicDBObject query1 = new BasicDBObject("_id",new ObjectId("534d7989e4b03d869a6c2bad"));
+		DBCursor cursor = collection.find(query1);
+		*/
 		int numbers = cursor.count();
 		System.out.println("Number of submissions: " + numbers + " current: " + i);
 		DBObject object = cursor.next();
 		Object obj = object.get("UpdateList");
-		//Object aid = object.get("AssignmentId");
+		//Object obj = null;
+		Object _id = object.get("_id");
+		System.out.println("###############################\n"+_id);
 		Object cpid = object.get("CourseProblemId");
 		Object uid = object.get("UserId");
 		DB ldb = mongoClient.getDB("login");
@@ -96,7 +103,7 @@ public class Paleotest {
 		if (lcursor.hasNext()) {
 			DBObject result = lcursor.next();
 			display.studentUserName = result.get("UserName").toString();
-			frmMain.setTitle("Submission" + current + parseProblemId(cpid.toString()) + " USER:"+result.get("UserName").toString());
+			frmMain.setTitle("SUBMISSION ID:"+ _id +" Submission" + current + parseProblemId(cpid.toString()) + " USER:"+result.get("UserName").toString());
 		}
 
 		try {
