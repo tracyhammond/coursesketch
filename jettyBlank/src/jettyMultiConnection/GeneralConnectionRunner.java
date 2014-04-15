@@ -9,6 +9,7 @@ package jettyMultiConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import jettyMultiConnection.GeneralConnectionServlet;
 
@@ -24,11 +25,7 @@ public class GeneralConnectionRunner {
 	public static void main(String[] args) throws Exception {
 		GeneralConnectionRunner runner = new GeneralConnectionRunner();
 		try {
-			runner.loadConfigurations();
-			runner.createServer();
-			runner.addServletHandlers();
-			runner.startInput();
-			runner.startServer();
+			runner.runAll();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,11 +37,20 @@ public class GeneralConnectionRunner {
 	private GeneralConnectionServlet servletInstance;
 
 	// these should be changed based on 
-	private int port = 8888;
-	private long timeoutTime;
-	private boolean acceptInput = true;
+	protected int port = 8888;
+	protected long timeoutTime;
+	protected boolean acceptInput = true;
 	private boolean production;
+	protected boolean local = true;
 
+	public void runAll() throws Exception {
+		this.loadConfigurations();
+		this.createServer();
+		this.addServletHandlers();
+		this.startInput();
+		this.startServer();
+	}
+	
 	public void loadConfigurations() {
 		
 	}
@@ -55,6 +61,7 @@ public class GeneralConnectionRunner {
 	 */
 	public void createServer() throws Exception {
 		server = new Server(port);
+		System.out.println("Server has been created on port: " + port);
 	}
 
 	public void addServletHandlers() {
@@ -66,7 +73,8 @@ public class GeneralConnectionRunner {
 		*/
 		ServletHandler servletHandler = new ServletHandler();
 
-		servletInstance = getServlet();
+		System.out.println("Creating a new servlet");
+		servletInstance = getServlet(timeoutTime, false, local); // TODO: change this to true!
 
 		servletHandler.addServletWithMapping(new ServletHolder(servletInstance),"/*");
 		stats.setHandler(servletHandler);
@@ -78,11 +86,11 @@ public class GeneralConnectionRunner {
 	}
 
 	public void startServer() {
-		
 		Thread d = new Thread() {
 			public void run() {
 				try {
 				server.start();
+				servletInstance.reconnect();
 				server.join();
 				} catch(Exception e) {
 					e.printStackTrace();
@@ -97,12 +105,11 @@ public class GeneralConnectionRunner {
 	 *
 	 * Override this method if you want to return a subclass of GeneralConnectionServlet
 	 */
-	public GeneralConnectionServlet getServlet() {
-		boolean secure = false;
+	public GeneralConnectionServlet getServlet(long timeOut, boolean secure, boolean local) {
 		if (!secure) {
 			System.err.println("Running an insecure server");
 		}
-		return new GeneralConnectionServlet(timeoutTime, secure);
+		return new GeneralConnectionServlet(timeOut, secure, local);
 	}
 
 	/**

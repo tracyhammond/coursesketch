@@ -1,6 +1,6 @@
 package internalConnections;
 
-import multiConnection.MultiConnectionState;
+import jettyMultiConnection.MultiConnectionState;
 
 public class LoginConnectionState extends MultiConnectionState {
 

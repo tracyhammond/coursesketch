@@ -3,8 +3,6 @@
 	<classpathentry excluding="main/example/" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/protobuf-2.5.0.jar"/>
-	<classpathentry kind="lib" path="libs/websocketsource.jar"/>
-	<classpathentry kind="lib" path="libs/multiConnection.jar"/>
-	<classpathentry kind="lib" path="libs/joda-time-2.3.jar"/>
+	<classpathentry kind="lib" path="/CourseSketchLoginServer/libs/GeneralConnection2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
