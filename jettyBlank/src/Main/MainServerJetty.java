@@ -1,5 +1,11 @@
 package Main;
 
+/*
+ * Jetty server information
+ * https://www.eclipse.org/jetty/documentation/current/embedded-examples.html#d0e18352
+ * 
+ */
+
 import java.net.UnknownHostException;
 
 import jettyMultiConnection.CourseSketchServlet;
@@ -8,8 +14,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlet.ServletHandler;
 
 
 
@@ -33,16 +38,22 @@ public class MainServerJetty {
 		
 		Server server = new Server(8888);
 		StatisticsHandler stats = new StatisticsHandler();
-		
+		/*
 		ServletContextHandler servletHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		servletHandler.setContextPath("/coursesketch");
 		servletHandler.addServlet(new ServletHolder(new CourseSketchServlet()),"/");
-		
+		*/
+		ServletHandler servletHandler = new ServletHandler();
+		servletHandler.addServletWithMapping(CourseSketchServlet.class, "/*");
 		stats.setHandler(servletHandler);
+		
 		HandlerList handlers = new HandlerList();
 		handlers.setHandlers(new Handler[]{stats});
 		
 		server.setHandler(handlers);
+		
+		
+		
 		
 		server.start();
 		server.join();
