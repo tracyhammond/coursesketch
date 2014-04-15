@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import multiConnection.MultiConnectionState;
+import multiConnection.WrapperConnection;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -12,7 +13,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
 
 import protobuf.srl.request.Message.Request;
 
@@ -20,16 +20,19 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 @WebSocket() // 30 minutes
 public class MultiInternalConnectionServer {
-	
+
 	public static final int MAX_CONNECTIONS = 80;
 	public static final int STATE_SERVER_FULL = 4001;
 	static final String FULL_SERVER_MESSAGE = "Sorry, the BLANK server is full";
+
+	public static final int STATE_CLIENT_CLOSE = 4003;
+	public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
 
 	protected HashMap<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
 	protected HashMap<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
 	protected HashMap<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
 	protected CourseSketchServlet parentServer = null;
-	
+
 	public MultiInternalConnectionServer(CourseSketchServlet parent) {
 		parentServer = parent;
     }
@@ -82,10 +85,55 @@ public class MultiInternalConnectionServer {
     /**
 	 * A blank binary onMessage called every time data is sent.
 	 */
-    public void onMessage(Session session, ByteBuffer buffer) {
-    	session.getRemote().sendBytesByFuture(buffer);
+    protected final void onMessage(Session session, ByteBuffer buffer) {
+    	Request req = Decoder.parseRequest(buffer);
+		if (req == null) {
+			send(session, createBadConnectionResponse(req, WrapperConnection.class));
+			System.out.println("protobuf error");
+			//this.
+			// we need to somehow send an error to the client here
+			return;
+		}
+
+		if (req.getRequestType().equals(Request.MessageType.CLOSE)) {
+			System.out.println("CLOSE THE SERVER FROM THE CLIENT");
+			session.close(STATE_CLIENT_CLOSE, CLIENT_CLOSE_MESSAGE);
+			return;
+		}
+
+		onMessage(session, req);
 	}
 
+    /**
+     * Takes a request and allows overriding so that subclass servers can handle messages
+     * @param session the session object that created the message
+     * @param req the message itself
+     */
+    protected void onMessage(Session session, Request req) {}
+
+    /**
+     * A helper method for sending data given a session.
+     * @param session
+     * @param req
+     */
+    protected static void send(Session session, Request req) {
+    	session.getRemote().sendBytesByFuture(ByteBuffer.wrap(req.toByteArray()));
+    }
+
+    protected static Request createBadConnectionResponse(Request req, Class<? extends WrapperConnection> connectionType) {
+		Request.Builder response = Request.newBuilder();
+		if (req == null) {
+			response.setRequestType(Request.MessageType.ERROR);
+		} else {
+			response.setRequestType(req.getRequestType());
+		}
+		response.setResponseText("A server with connection type: " + connectionType.getSimpleName() + " Is not connected correctly");
+		return response.build();
+	}
+
+    /**
+     * Cleans out the server.
+     */
     final void stop() {
     	for (Session sesh : connectionToId.keySet()) {
     		sesh.close();
