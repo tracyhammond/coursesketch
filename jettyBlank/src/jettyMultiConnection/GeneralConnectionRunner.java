@@ -43,18 +43,45 @@ public class GeneralConnectionRunner {
 	private boolean production;
 	protected boolean local = true;
 
-	public void runAll() throws Exception {
+	/**
+	 * Runs the entire startup process including input
+	 * @throws Exception
+	 */
+	protected final void runAll() throws Exception {
+		this.runMost();
+		this.startInput();
+	}
+
+	/**
+	 * Runs the majority of the startup proccess.
+	 *
+	 * Does not handle accepting Input
+	 */
+	protected final void runMost() throws Exception {
 		this.loadConfigurations();
+		if (local) {
+			this.executeLocalEnviroment();
+		} else {
+			this.executeRemoveEnviroment();
+		}
 		this.createServer();
 		this.addServletHandlers();
-		this.startInput();
+		
 		this.startServer();
 	}
-	
+
 	public void loadConfigurations() {
 		
 	}
 
+	public void executeLocalEnviroment() {
+		
+	}
+
+	public void executeRemoveEnviroment() {
+		
+	}
+	
 	/**
 	 * Sets up a Jetty embedded server. Uses HTTPS over port 12102 and a key certificate.
 	 * @throws Exception 
@@ -137,11 +164,9 @@ public class GeneralConnectionRunner {
 				this.stop();
 				System.out.println("sleeping for 1s");
 				Thread.sleep(1000);
-				this.loadConfigurations();
-				this.createServer();
-				this.addServletHandlers();
-				this.startServer();
+				this.runMost();
 			}
+			return true;
 		} else if (command.equals("reconnect")) {
 			servletInstance.reconnect();
 			return true;
@@ -153,10 +178,7 @@ public class GeneralConnectionRunner {
 			return true;
 		}  else if (command.equals("start")) {
 			if (this.server == null || !this.server.isRunning()) {
-				this.loadConfigurations();
-				this.createServer();
-				this.addServletHandlers();
-				this.startServer();
+				this.runMost();
 			} else {
 				System.out.println("you can not start the server because it is already running.");
 			}
