@@ -28,6 +28,7 @@ public class MySQLTest {
 				conn = DriverManager.getConnection("jdbc:mysql://srl03.tamu.edu/problembank?" +
 				                               "user=srl&password=sketchrec");
 
+
 			Statement stmt = conn.createStatement();
 			// course -> assignments -> problems
 			String query2 = "select * from CourseInfo";
@@ -81,7 +82,26 @@ public class MySQLTest {
 				}
 			}
 		System.out.println("done");
+
+		Connection connG;	
+		connG = DriverManager.getConnection("jdbc:mysql://srl03.tamu.edu/grades?" +
+		                    "user=srl&password=sketchrec");
 		
+		Statement stmt2 = connG.createStatement();
+		String query3 = "UPDATE problem_grades SET grade=7.777 where date_graded='2014-04-08'";
+		stmt2.execute(query3);
+		
+		Statement gradeStmt = connG.createStatement();
+		// course -> assignments -> problems
+		String gradeQ = "select * from problem_grades";
+		ResultSet grades = gradeStmt.executeQuery(gradeQ);
+
+		while (grades.next()) {
+//			int numColumns = rs.getMetaData().getColumnCount();
+			System.out.println(grades.getString("comment"));
+		}
+		grades.close();
+
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 		e.printStackTrace();
