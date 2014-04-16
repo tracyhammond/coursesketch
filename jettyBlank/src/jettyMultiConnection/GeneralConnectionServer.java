@@ -234,4 +234,9 @@ public class GeneralConnectionServer {
 	}
 
 
+	public int getCurrentConnectionNumber() {
+		return connectionToId.size();
+	}
+
+
 }

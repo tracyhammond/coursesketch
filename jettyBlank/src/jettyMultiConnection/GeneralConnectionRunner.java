@@ -42,6 +42,7 @@ public class GeneralConnectionRunner {
 	protected boolean acceptInput = true;
 	private boolean production;
 	protected boolean local = true;
+	protected boolean isLogging = false;
 
 	/**
 	 * Runs the entire startup process including input
@@ -149,7 +150,7 @@ public class GeneralConnectionRunner {
 	 * @return true if the command is an accepted command and is used by the server
 	 * @throws Exception 
 	 */
-	public boolean parseCommand(String command, BufferedReader sysin) throws Exception {
+	public final boolean parseCommand(String command, BufferedReader sysin) throws Exception {
 		if (command.equals( "exit" )) {
 			System.out.println("Are you sure you want to exit? [y/n]");
 			if (sysin.readLine().equalsIgnoreCase("y")) {
@@ -182,6 +183,19 @@ public class GeneralConnectionRunner {
 			} else {
 				System.out.println("you can not start the server because it is already running.");
 			}
+			return true;
+		}
+		return parseUtilityCommand(command, sysin);
+	}
+
+	// TODO: add a command manager of some sort.
+	public boolean parseUtilityCommand(String command, BufferedReader sysin) throws Exception {
+		if (command.equals("toggle logging")) {
+			System.out.println("Turning loggin " + (isLogging ? "Off" : "On"));
+			isLogging = ! isLogging;
+			return true;
+		} if (command.equals("connectionNumber")) {
+			System.out.println(servletInstance.getCurrentConnectionNumber());
 			return true;
 		}
 		return false;

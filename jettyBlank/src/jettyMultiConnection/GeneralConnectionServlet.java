@@ -97,4 +97,8 @@ public class GeneralConnectionServlet extends WebSocketServlet {
 			manager.connectServers(connectionServer);
 		}
 	}
+
+	public int getCurrentConnectionNumber() {
+		return connectionServer.getCurrentConnectionNumber();
+	}
 }
