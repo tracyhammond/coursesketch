@@ -9,32 +9,14 @@ import internalConnections.RecognitionConnection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.GeneralConnectionServlet;
+import jettyMultiConnection.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.GeneralConnectionServlet;
-import jettyMultiConnection.MultiConnectionManager;
-import jettyMultiConnection.MultiConnectionState;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import connection.TimeManager;
@@ -51,10 +33,8 @@ public class ProxyServer extends GeneralConnectionServer {
 	public static final int MAX_CONNECTIONS = 60; // sets see if this works!
 
 	public static final int STATE_INVALID_LOGIN = 4002;
-	public static final int STATE_CLIENT_CLOSE = 4003;
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
-	public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
 
 	private SocketManager socketManager = new SocketManager();
 
@@ -64,9 +44,9 @@ public class ProxyServer extends GeneralConnectionServer {
 		super(parent);
 		ActionListener listener = new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-			//	serverManager.send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
-			//	serverManager.send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
-				//serverManager.send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
+				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
+				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
+				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
 			}
 		};
 		TimeManager.setTimeEstablishedListener(listener);
@@ -144,7 +124,6 @@ public class ProxyServer extends GeneralConnectionServer {
 		}
 	}
 
-	
 	/**
 	 * Returns a number that should be unique.
 	 */
@@ -153,7 +132,7 @@ public class ProxyServer extends GeneralConnectionServer {
 		return new ProxyConnectionState(Encoder.nextID().toString());
 	}
 
-	public int getCurrentConnectionNumber() {
-		return super.connectionToId.size();
-	}
+	public String getName() {
+    	return "Proxy Socket";
+    }
 }

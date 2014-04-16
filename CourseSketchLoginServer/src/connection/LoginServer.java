@@ -140,4 +140,8 @@ public final class LoginServer extends GeneralConnectionServer {
 		// Build and send.
 		return requestBuilder.build();
 	}
+
+	public String getName() {
+    	return "Login Socket";
+    }
 }
