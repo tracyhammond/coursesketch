@@ -36,8 +36,7 @@ public class GeneralConnectionServer {
 
     @OnWebSocketClose
     public void onClose(Session conn, int statusCode, String reason) {
-    	System.out.println( conn + " has disconnected from The Server." +
-				(true ? "The connection was closed remotely" : "we closed the connection")); // TODO: find out how to see if the connection is closed by us or them.
+    	System.out.println( conn + " has disconnected from The Server." + statusCode + "with reason : " + reason); // TODO: find out how to see if the connection is closed by us or them.
 		MultiConnectionState id = connectionToId.remove(conn);
 		if (id != null) {
 			idToConnection.remove(id);
@@ -69,12 +68,14 @@ public class GeneralConnectionServer {
 		System.out.println("Recieving connection " + connectionToId.size());
     }
 
-    @OnWebSocketError
+    @SuppressWarnings("static-method")
+	@OnWebSocketError
     public void onError(Session session, Throwable cause) {
-    	System.err.println(cause);
+    	System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
     }
 
-    @OnWebSocketMessage
+    @SuppressWarnings("unused")
+	@OnWebSocketMessage
     public void onMessage(Session session, byte[] data, int offset, int length) {
     	onMessage(session, ByteBuffer.wrap(data));
     }
@@ -102,11 +103,16 @@ public class GeneralConnectionServer {
 	}
 
     /**
-     * Takes a request and allows overriding so that subclass servers can handle messages
+     * Takes a request and allows overriding so that subclass servers can handle messages.
+     *
+     * By default it is an echo server, basically it echos what it receives.
      * @param session the session object that created the message
      * @param req the message itself
      */
-    protected void onMessage(Session session, Request req) {}
+	@SuppressWarnings("static-method")
+	protected void onMessage(Session session, Request req) {
+		send(session, req);
+	}
 
     /**
      * A helper method for sending data given a session.
@@ -148,7 +154,8 @@ public class GeneralConnectionServer {
 
     }
 
-    public String getName() {
+    @SuppressWarnings("static-method")
+	public String getName() {
     	return "General Socket";
     }
     /**

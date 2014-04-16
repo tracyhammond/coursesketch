@@ -5,9 +5,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_10;
-
 import protobuf.srl.request.Message.Request;
 
 public class MultiConnectionManager {
@@ -53,6 +50,7 @@ public class MultiConnectionManager {
 		String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress +":"+ port);
 		System.out.println("Creating a client connecting to: " + location);
 		try {
+			@SuppressWarnings("rawtypes")
 			Constructor construct = connectionType.getConstructor(URI.class, GeneralConnectionServer.class);
 			c = (ConnectionWrapper) construct.newInstance( new URI( location ), serv);
 		} catch (Exception e) {
@@ -101,6 +99,7 @@ public class MultiConnectionManager {
 	 * Does nothing by default.  Can be overwritten to make life easier.
 	 * @param parent
 	 */
+	@SuppressWarnings("unused")
 	public void connectServers(GeneralConnectionServer parent) {}
 	
 	/**

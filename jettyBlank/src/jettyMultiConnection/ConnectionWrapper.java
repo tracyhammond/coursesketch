@@ -69,8 +69,9 @@ public class ConnectionWrapper {
         System.out.println( "Open Wrapper Connection" );
     }
 
-    @OnWebSocketMessage
-    public final void onMessage(Session session, byte[] data, int offset, int length) {
+    @SuppressWarnings("unused")
+	@OnWebSocketMessage
+    public final void onMessage(byte[] data, int offset, int length) {
     	onMessage(ByteBuffer.wrap(data));
     }
 
