@@ -9,7 +9,6 @@ package jettyMultiConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
-import java.util.Enumeration;
 
 import jettyMultiConnection.GeneralConnectionServlet;
 
@@ -40,7 +39,7 @@ public class GeneralConnectionRunner {
 	protected int port = 8888;
 	protected long timeoutTime;
 	protected boolean acceptInput = true;
-	private boolean production;
+	private boolean production = false;
 	protected boolean local = true;
 	protected boolean isLogging = false;
 
@@ -115,6 +114,7 @@ public class GeneralConnectionRunner {
 
 	public void startServer() {
 		Thread d = new Thread() {
+			@Override
 			public void run() {
 				try {
 				server.start();
@@ -134,7 +134,7 @@ public class GeneralConnectionRunner {
 	 * Override this method if you want to return a subclass of GeneralConnectionServlet
 	 */
 	public GeneralConnectionServlet getServlet(long timeOut, boolean secure, boolean local) {
-		if (!secure) {
+		if (!secure && production) {
 			System.err.println("Running an insecure server");
 		}
 		return new GeneralConnectionServlet(timeOut, secure, local);
@@ -191,6 +191,13 @@ public class GeneralConnectionRunner {
 	// TODO: add a command manager of some sort.
 	public boolean parseUtilityCommand(String command, BufferedReader sysin) throws Exception {
 		if (command.equals("toggle logging")) {
+			if (isLogging) {
+				System.out.println("Are you sure you want to turn loggin off? [y/n]");
+				if (!sysin.readLine().equalsIgnoreCase("y")) {
+					System.out.println("action canceled");
+					return true;
+				}
+			}
 			System.out.println("Turning loggin " + (isLogging ? "Off" : "On"));
 			isLogging = ! isLogging;
 			return true;
@@ -203,6 +210,7 @@ public class GeneralConnectionRunner {
 
 	public void startInput() {
 		Thread d = new Thread() {
+			@Override
 			public void run() {
 				try {
 					BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );

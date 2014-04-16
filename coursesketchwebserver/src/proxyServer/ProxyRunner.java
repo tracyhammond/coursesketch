@@ -15,6 +15,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
 
 	public ProxyRunner() {
 		super.port = 8888;
+		super.timeoutTime = 30 * 60 * 1000; // 30 minutes * 60 seconds * 1000 milliseconds
 	}
 
 	@Override

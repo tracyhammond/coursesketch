@@ -36,13 +36,12 @@ public class ProxyServer extends GeneralConnectionServer {
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
 
-	private SocketManager socketManager = new SocketManager();
-
 	static int numberOfConnections = Integer.MIN_VALUE;
 
 	public ProxyServer(GeneralConnectionServlet parent) {
 		super(parent);
 		ActionListener listener = new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
 				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
@@ -50,14 +49,6 @@ public class ProxyServer extends GeneralConnectionServer {
 			}
 		};
 		TimeManager.setTimeEstablishedListener(listener);
-
-		socketManager.setExpiredListiner(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				idToConnection.get(e.getActionCommand()).close();		
-			}
-		});
 	}
 
 	/**

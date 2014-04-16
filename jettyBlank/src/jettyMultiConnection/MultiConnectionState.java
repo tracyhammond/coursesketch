@@ -9,6 +9,7 @@ public class MultiConnectionState {
 		this.key = key;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if(!(obj instanceof MultiConnectionState)) {
 		return false;
@@ -16,6 +17,7 @@ public class MultiConnectionState {
 		return ((MultiConnectionState)obj).key == this.key;
 	}
 
+	@Override
 	public int hashCode() {
 		return key.hashCode();
 	}
