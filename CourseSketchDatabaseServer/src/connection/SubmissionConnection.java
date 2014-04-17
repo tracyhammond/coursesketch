@@ -7,21 +7,13 @@ import java.nio.ByteBuffer;
 
 import javax.swing.Timer;
 
-import multiConnection.MultiConnectionState;
-import multiConnection.MultiInternalConnectionServer;
-import multiConnection.WrapperConnection;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.MultiConnectionState;
+import jettyMultiConnection.ConnectionWrapper;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.drafts.Draft;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.MongoClient;
-
-import database.user.UserClient;
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
@@ -31,11 +23,20 @@ import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlExperimentList;
 
-/** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
-public class SubmissionConnection extends WrapperConnection {
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 
-	public SubmissionConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		super( serverUri, draft, parent );
+import database.user.UserClient;
+
+/** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
+@WebSocket()
+public class SubmissionConnection extends ConnectionWrapper {
+
+	public SubmissionConnection(URI destination, GeneralConnectionServer parentServer) {
+		super(destination, parentServer);
 	}
 
 	/**
@@ -43,7 +44,7 @@ public class SubmissionConnection extends WrapperConnection {
 	 */
 	@Override
 	public void onMessage(ByteBuffer buffer) {
-		Request req = MultiInternalConnectionServer.Decoder.parseRequest(buffer); // this contains the solution
+		Request req = GeneralConnectionServer.Decoder.parseRequest(buffer); // this contains the solution
 		System.out.println("Got a response from the submission server!");
 		System.out.println(req.getSessionInfo());
 		String[] sessionInfo = req.getSessionInfo().split("\\+");
@@ -74,29 +75,12 @@ public class SubmissionConnection extends WrapperConnection {
 			}
 			Request.Builder builder = Request.newBuilder(req);
 			builder.setSessionInfo(sessionInfo[0]);
-			WebSocket connection = getConnectionFromState(state);
+			Session connection = getConnectionFromState(state);
 			builder.setOtherData(result2.build().toByteString());
 			if (connection == null) {
 				System.err.println("SOCKET IS NULL");
 			}
-			getConnectionFromState(state).send(builder.build().toByteArray());
-		}
-	}
-
-	@Override
-	public void onClose( int code, String reason, boolean remote ) {
-		super.onClose(code, reason, remote);
-		System.out.println("Attempting to reconnect");
-		if (remote && false) {
-			// TODO: create the connection so e do not have to type reconnect on our computer 
-			Timer t = new Timer(5000, new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					System.out.println("Attempting to reconnect to servers");
-					parentServer.reconnect();
-				}
-			});
-			t.start();
+			GeneralConnectionServer.send(getConnectionFromState(state), builder.build());
 		}
 	}
 

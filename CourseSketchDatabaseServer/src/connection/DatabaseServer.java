@@ -9,57 +9,40 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
-import multiConnection.ConnectionException;
-import multiConnection.MultiConnectionManager;
-import multiConnection.MultiInternalConnectionServer;
+import jettyMultiConnection.ConnectionException;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.GeneralConnectionServer.Decoder;
+import jettyMultiConnection.GeneralConnectionServlet;
+import jettyMultiConnection.MultiConnectionManager;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.WebSocketImpl;
-import org.java_websocket.handshake.ClientHandshake;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.joda.time.DateTime;
 
 import protobuf.srl.request.Message.Request;
 import database.DatabaseAccessException;
 import database.institution.Institution;
-import database.user.UserClient;
 
 /**
  * A simple WebSocketServer implementation.
  *
  * Contains simple proxy information that is sent to other servers.
  */
-public class DatabaseServer extends MultiInternalConnectionServer {
+@WebSocket()
+public class DatabaseServer extends GeneralConnectionServer {
 
-	private boolean connectLocally = MultiConnectionManager.CONNECT_REMOTE;
-	MultiConnectionManager internalConnections = new DatabaseConnectionManager(this);
-
-	public DatabaseServer(int port, boolean connectLocally) {
-		this( new InetSocketAddress( port ), connectLocally );
-	}
-
-	public DatabaseServer( InetSocketAddress address, boolean connectLocally ) {
-		super( address );
-		this.connectLocally = connectLocally;
+	public DatabaseServer(GeneralConnectionServlet parent) {
+		super(parent);
 	}
 
 	@Override
-	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		super.onOpen(conn, handshake);
-		System.out.println("Sending Time");
-		System.out.println("Time:"+DateTime.now().getMillis());
-		conn.send(TimeManager.serverSendTimeToClient().toByteArray());
+	public void onOpen(Session conn) {
+		super.onOpen(conn);
+		send(conn, TimeManager.serverSendTimeToClient());
 	}
 
 	@Override
-	public void onMessage(WebSocket conn, ByteBuffer buffer) {
-		System.out.println("Receiving message...");
-		Request req = Decoder.parseRequest(buffer);
-
-		if (req == null) {
-			System.out.println("protobuf error");
-			// we need to somehow send an error to the client here
-			return;
-		}
+	public void onMessage(Session conn, Request req) {
 		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
 			System.out.println("Submitting submission id");
 			try {
@@ -69,64 +52,15 @@ public class DatabaseServer extends MultiInternalConnectionServer {
 				System.out.println("THIS NEEDS TO BE SENT TO THE CLIENT!");
 			}
 		} else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-			DataRequestHandler.handleRequest(req, conn, super.connectionToId.get(conn).getKey(), internalConnections);
+			DataRequestHandler.handleRequest(req, conn, super.connectionToId.get(conn).getKey(), getConnectionManager());
 		} else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
 			DataInsertHandler.handleData(req, conn);
 		} else if (req.getRequestType() == Request.MessageType.TIME) {
 			Request rsp = TimeManager.decodeRequest(req);
-			if (rsp != null) conn.send(rsp.toByteArray());
+			if (rsp != null) {
+				send(conn, rsp);
+			}
 		}
 		System.out.println("Finished looking at query");
-	}
-
-	@Override
-	public void reconnect() {
-		internalConnections.dropAllConnection(true, false);
-		try {
-			internalConnections.createAndAddConnection(this, connectLocally, "srl02.tamu.edu", 8883, SubmissionConnection.class);
-		} catch (ConnectionException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void main( String[] args ) throws IOException {
-		System.out.println("Database Server: Version 1.1.1.cat");
-		WebSocketImpl.DEBUG = false;
-
-		boolean connectLocal = false;
-		if (args.length == 1) {
-			if (args[0].equals("local")) {
-				connectLocal = true;
-				new Institution(false); // makes the database point locally
-				new UserClient(false); // makes the database point locally
-			}
-		}
-
-		int port = 8885; // 843 flash policy port
-		try {
-			port = Integer.parseInt( args[ 0 ] );
-		} catch ( Exception ex ) {
-		}
-		DatabaseServer s = new DatabaseServer( port, connectLocal);
-		s.start();
-		s.reconnect();
-		System.out.println( "Database Server started on port: " + s.getPort() );
-
-		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
-		while ( true ) {
-			String in = sysin.readLine();
-			try {
-				s.parseCommand(in, sysin);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	@Override
-	public void onError( WebSocket conn, Exception ex ) {
-		ex.printStackTrace();
-		if( conn != null ) {
-			// some errors like port binding failed may not be assignable to a specific websocket
-		}
 	}
 }

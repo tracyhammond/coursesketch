@@ -22,7 +22,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 public class GeneralConnectionRunner {
 
 	public static void main(String[] args) throws Exception {
-		GeneralConnectionRunner runner = new GeneralConnectionRunner();
+		GeneralConnectionRunner runner = new GeneralConnectionRunner(args);
 		try {
 			runner.runAll();
 		} catch (UnknownHostException e) {
@@ -31,11 +31,16 @@ public class GeneralConnectionRunner {
 		}
 	}
 
+	protected GeneralConnectionRunner(String[] args) {
+		this.args = args;
+	}
+
 	final private GeneralConnectionRunner localInstance = this;
 	private Server server;
 	private GeneralConnectionServlet servletInstance;
 
-	// these should be changed based on 
+	// these should be changed based on the properties
+	protected final String[] args;
 	protected int port = 8888;
 	protected long timeoutTime;
 	protected boolean acceptInput = true;

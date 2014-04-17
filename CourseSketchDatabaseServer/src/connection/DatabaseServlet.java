@@ -1,20 +1,19 @@
-package proxyServer;
+package connection;
 
-import internalConnections.ProxyConnectionManager;
 import jettyMultiConnection.GeneralConnectionServer;
 import jettyMultiConnection.GeneralConnectionServlet;
 import jettyMultiConnection.MultiConnectionManager;
 
 @SuppressWarnings("serial")
-public final class ProxyServlet extends GeneralConnectionServlet {
+public class DatabaseServlet extends GeneralConnectionServlet {
 
-	public ProxyServlet(long timeoutTime, boolean secure, boolean connectLocally) {
+	public DatabaseServlet(long timeoutTime, boolean secure, boolean connectLocally) {
 		super(timeoutTime, secure, connectLocally);
 	}
 
 	@Override
 	public final GeneralConnectionServer createServerSocket() {
-    	return new ProxyServer(this);
+    	return new DatabaseServer(this);
     }
 
 	/**
@@ -22,6 +21,6 @@ public final class ProxyServlet extends GeneralConnectionServlet {
 	 */
 	@Override
 	protected final MultiConnectionManager createConnectionManager(boolean connectLocally, boolean secure) {
-		return new ProxyConnectionManager(connectionServer, connectLocally, secure);
+		return new DatabaseConnectionManager(connectionServer, connectLocally, secure);
 	}
 }
