@@ -19,20 +19,25 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 @WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/" })
 public class GeneralConnectionServlet extends WebSocketServlet {
 
-	protected GeneralConnectionServer sock = createServerSocket();
-	protected MultiConnectionManager manager = createConnectionManager();
+	protected GeneralConnectionServer connectionServer;
+	protected MultiConnectionManager manager;
 	private long timeoutTime = 0;
 	private boolean secure;
 
-    public GeneralConnectionServlet(long timeoutTime, boolean secure) {
+    public GeneralConnectionServlet(long timeoutTime, boolean secure, boolean connectLocally) {
     	this.timeoutTime = timeoutTime;
     	this.secure = secure;
+    	System.out.println("Creating a new connectionServer");
+    	connectionServer = createServerSocket();
+    	System.out.println("Creating a new connectionManager");
+    	manager = createConnectionManager(connectLocally, secure);
 	}
 
 	@Override
     public void configure(WebSocketServletFactory factory) {
     	System.out.println("Configuring servlet");
     	if (timeoutTime > 0) {
+    		System.out.println("Adding a timeout to the socket: " + timeoutTime);
     		factory.getPolicy().setIdleTimeout(timeoutTime);
     	}
         factory.setCreator(new SocketCreator());
@@ -44,34 +49,40 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     	 */
 		@Override
 		public final Object createWebSocket(ServletUpgradeRequest arg0, ServletUpgradeResponse arg1) {
-			System.out.println("We are updating our servlet (well we are trying)");
+			System.out.println("Recieved Upgrade request");
 			if (secure && !arg0.isSecure()) {
+				System.out.println("Refusing an insecure connection");
 				return null;
 			}
-			return sock;
+			System.out.println("Returning a websocket with name " + connectionServer.getName());
+			return connectionServer;
 		}
     	
     }
 
     public void stop() {
     	System.out.println("Stopping socket");
-    	sock.stop();
+    	connectionServer.stop();
+    	if (manager != null) {
+    		manager.dropAllConnection(true, false);
+    	}
     }
 
     /**
      * Override this method to create a subclass of GeneralConnectionServer
      * @return
      */
-    public GeneralConnectionServer createServerSocket() {
+    protected GeneralConnectionServer createServerSocket() {
     	return new GeneralConnectionServer(this);
     }
 
     /**
      * Override this method to create a subclass of the GeneralConnectionServer
+     * @param connectLocally 
      * @return
      */
-    private MultiConnectionManager createConnectionManager() {
-		return new MultiConnectionManager(sock);
+    protected MultiConnectionManager createConnectionManager(boolean connectLocally, boolean secure) {
+		return new MultiConnectionManager(connectionServer, connectLocally, secure);
 	}
 
     /**
@@ -80,7 +91,14 @@ public class GeneralConnectionServlet extends WebSocketServlet {
 	 * By default this command does nothing.
 	 */
 	public void reconnect() {
-		manager.dropAllConnection(true, false);
-		manager.connectServers(sock);
+		System.out.println("Reconnecting");
+		if (manager != null) {
+			manager.dropAllConnection(true, false);
+			manager.connectServers(connectionServer);
+		}
+	}
+
+	public int getCurrentConnectionNumber() {
+		return connectionServer.getCurrentConnectionNumber();
 	}
 }

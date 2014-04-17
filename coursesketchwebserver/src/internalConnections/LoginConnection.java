@@ -3,29 +3,29 @@ package internalConnections;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import multiConnection.MultiInternalConnectionServer;
-import multiConnection.WrapperConnection;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import org.java_websocket.drafts.Draft;
-
+import jettyMultiConnection.ConnectionWrapper;
+import jettyMultiConnection.GeneralConnectionServer;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlUser;
-import proxyServer.TimeManager;
+import connection.TimeManager;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
-public class LoginConnection extends WrapperConnection {
+@WebSocket()
+public class LoginConnection extends ConnectionWrapper {
 
-	public LoginConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		super( serverUri, draft, parent);
+	public LoginConnection(URI destination, GeneralConnectionServer parent) {
+		super(destination, parent);
 	}
 
 	public void onMessage(ByteBuffer buffer) {
-		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
+		Request r = GeneralConnectionServer.Decoder.parseRequest(buffer);
 		if (r.getRequestType() == Request.MessageType.TIME) {
 			
 			Request rsp = TimeManager.decodeRequest(r);
@@ -38,11 +38,9 @@ public class LoginConnection extends WrapperConnection {
 		if (r.getLogin().getIsLoggedIn()) {
 			state.logIn(r.getLogin().getIsInstructor(), r.getServersideId());
 		}
-		
-		
-		
+
 		Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
-		getConnectionFromState(state).send(result.toByteArray());
+		GeneralConnectionServer.send(getConnectionFromState(state), result);
 
 		if (r.getLogin().getIsRegistering() && r.getLogin().getIsLoggedIn()) {
 			// extra steps that we need to do

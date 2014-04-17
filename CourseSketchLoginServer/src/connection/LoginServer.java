@@ -1,39 +1,40 @@
 package connection;
 
-//import internalConnections.LoginConnectionState;
+// import internalConnections.LoginConnectionState;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Authenticator.RequestorType;
-import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.WebSocketImpl;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.GeneralConnectionServlet;
+
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import database.DatabaseClient;
 
 /**
  * A simple WebSocketServer implementation.
- *
+ * 
  * Contains simple proxy information that is sent to other servers.
  */
-public class LoginServer extends WebSocketServer {
+@WebSocket()
+public final class LoginServer extends GeneralConnectionServer {
 
+	public LoginServer(GeneralConnectionServlet parent) {
+		super(parent);
+	}
+
+	@SuppressWarnings("hiding")
 	public static final int MAX_CONNECTIONS = 20;
-	public static final int STATE_SERVER_FULL = 4001;
-	static final String FULL_SERVER_MESSAGE = "Sorry, the RECOGNITION server is full";
 
 	public static final String INCORRECT_LOGIN_MESSAGE = "Incorrect username or password";
 	public static final String INCORRECT_LOGIN_TYPE_MESSAGE = "You do not have the ability to login as that type!";
@@ -42,121 +43,74 @@ public class LoginServer extends WebSocketServer {
 	public static final String LOGIN_ERROR_MESSAGE = "An Error Occured While Logging in: Wrong Message Type.";
 	public static final String REGISTRATION_ERROR_MESSAGE = "Could not Register: User name is already taken";
 
-	
-	List<WebSocket> connections = new LinkedList<WebSocket>();
-
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public LoginServer( int port ) {
-		this( new InetSocketAddress( port ) );
-	}
-
-	public LoginServer( InetSocketAddress address ) {
-		super( address );
-	}
 
 	@Override
-	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		System.out.println("Open Login Connection now...");
-		if (connections.size() >= MAX_CONNECTIONS) {
-			// Return negatative state.
-			conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
-			System.out.println("FULL SERVER"); // send message to someone?
-			return;
-		}
-		//ConnectionState id = getUniqueId();
-		connections.add(conn);
-		System.out.println("ID ASSIGNED");
-	}
-
-	@Override
-	public void onClose(WebSocket conn, int code, String reason, boolean remote ) {
-		System.out.println( conn + " has disconnected from Recognition.");
-		connections.remove(conn);
-	}
-
-	@Override
-	public void onMessage( WebSocket conn, String message ) {
-	}
-
-	//Encrypt user id with session ID (e-user ID)
-	
-	@Override
-	public void onMessage(WebSocket conn, ByteBuffer buffer) {
-		Request req = Decoder.parseRequest(buffer);
+	public void onMessage(Session conn, Request req) {
 		try {
-			//This is assuming user is logged in
-			//conn.send(createLoginResponse(req, true));
-			
-			if (req.getRequestType()==Request.MessageType.TIME) {
+			// This is assuming user is logged in
+			// conn.send(createLoginResponse(req, true));
+
+			if (req.getRequestType() == Request.MessageType.TIME) {
 				Request rsp = TimeManager.decodeRequest(req);
-				if (rsp != null) conn.send(rsp.toByteArray());
+				if (rsp != null) {
+					send(conn, rsp);
+				}
 				return;
 			}
-			
-			
+
 			if (req.getLogin().getIsRegistering()) {
-				boolean successfulRegistration = registerUser(req.getLogin().getUsername(), req.getLogin().getPassword(), req.getLogin().getEmail(), req.getLogin().getIsInstructor());
-				if(!successfulRegistration){
-					conn.send(createLoginResponse(req, false, REGISTRATION_ERROR_MESSAGE, false, null).toByteArray());
+				boolean successfulRegistration = registerUser(req.getLogin().getUsername(), req.getLogin().getPassword(), req.getLogin().getEmail(),
+						req.getLogin().getIsInstructor());
+				if (!successfulRegistration) {
+					send(conn, createLoginResponse(req, false, REGISTRATION_ERROR_MESSAGE, false, null));
 					return;
 				}
 			}
 			String userLoggedIn = checkUserLogin(req.getLogin().getUsername(), req.getLogin().getPassword());
 			if (userLoggedIn != null) {
-				String[] ids= userLoggedIn.split(":");
+				String[] ids = userLoggedIn.split(":");
 				if (ids.length == 2) {
 					boolean isInstructor = checkUserInstructor(req.getLogin().getUsername());
-				 	//return if database is an instructor
-					conn.send(createLoginResponse(req, true, CORRECT_LOGIN_MESSAGE, isInstructor, ids).toByteArray());
+					// return if database is an instructor
+					send(conn, createLoginResponse(req, true, CORRECT_LOGIN_MESSAGE, isInstructor, ids));
 					return;
 				}
 			}
-			conn.send(createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false, null).toByteArray());
-		}
-		catch (Exception e) {
+			send(conn, createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE, false, null));
+		} catch (Exception e) {
 			e.printStackTrace();
-			conn.send(createLoginResponse(req, false, e.getMessage(), false, null).toByteArray());
+			send(conn, createLoginResponse(req, false, e.getMessage(), false, null));
 		}
 	}
 
-	@Override
-	public void onError( WebSocket conn, Exception ex ) {
-		ex.printStackTrace();
-		if( conn != null ) {
-			// some errors like port binding failed may not be assignable to a specific websocket
-		}
-	}
-
-	private static String checkUserLogin(String user, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, UnknownHostException
-	{
+	private static String checkUserLogin(String user, String password) throws NoSuchAlgorithmException, InvalidKeySpecException,
+			UnknownHostException {
 		System.out.println("About to identify the user!");
-		String result = DatabaseClient.mongoIdentify(user,password);
+		String result = DatabaseClient.mongoIdentify(user, password);
 		return result;
 	}
 
-	private static boolean checkUserInstructor(String user)
-	{
+	private static boolean checkUserInstructor(String user) {
 		System.out.println("About to check if user is an instructor!");
 		if (DatabaseClient.mongoIsInstructor(user))
 			return true;
 		return false;
 	}
-	
-	private static boolean registerUser(String user, String password,String email,boolean isInstructor) throws InvalidKeySpecException, GeneralSecurityException{
-		if (DatabaseClient.MongoAddUser(user, password, email, isInstructor)){
+
+	private static boolean registerUser(String user, String password, String email, boolean isInstructor) throws InvalidKeySpecException,
+			GeneralSecurityException {
+		if (DatabaseClient.MongoAddUser(user, password, email, isInstructor)) {
 			return true;
 		}
 		return false;
 	}
 
-	public List<WebSocket> getConnections(){
-		return connections;
-	}
-
 	/**
 	 * Creates a {@link Request} to return on login request.
 	 */
-	/* package-private */private static Request createLoginResponse(Request req, boolean success, String message, boolean instructorIntent, String[] ids) {
+	private static Request createLoginResponse(Request req, boolean success, String message, boolean instructorIntent,
+			String[] ids) {
 		Request.Builder requestBuilder = Request.newBuilder();
 		requestBuilder.setRequestType(MessageType.LOGIN);
 		requestBuilder.setResponseText(message);
@@ -171,7 +125,8 @@ public class LoginServer extends WebSocketServer {
 		loginBuilder.setIsLoggedIn(success);
 		loginBuilder.setIsInstructor(instructorIntent);
 		if (success) {
-			loginBuilder.setIsRegistering(req.getLogin().getIsRegistering()); // The reason for this is so the the proxy can continue to register user!
+			// The reason for this is so the proxy can continue to register user
+			loginBuilder.setIsRegistering(req.getLogin().getIsRegistering());
 			if (loginBuilder.getIsRegistering()) {
 				loginBuilder.setEmail(req.getLogin().getEmail());
 			}
@@ -186,36 +141,7 @@ public class LoginServer extends WebSocketServer {
 		return requestBuilder.build();
 	}
 
-	public static void main( String[] args ) throws InterruptedException , IOException {
-		System.out.println("Login Server: Version 1.0.3");
-		WebSocketImpl.DEBUG = true;
-
-		if (args.length == 1) {
-			if (args[0].equals("local")) {
-				new DatabaseClient(false); // makes the database point locally
-			}
-		}
-
-		int port = 8886; // 843 flash policy port
-		try {
-			port = Integer.parseInt( args[ 0 ] );
-		} catch ( Exception ex ) {
-		}
-		LoginServer s = new LoginServer( port );
-		s.start();
-		System.out.println( "Login Server started on port: " + s.getPort() );
-
-		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
-		while ( true ) {
-			String in = sysin.readLine();
-			if( in.equals( "exit" ) ) {
-				s.stop();
-				break;
-			} else if( in.equals( "restart" ) ) {
-				s.stop();
-				s.start();
-				break;
-			}
-		}
-	}
+	public String getName() {
+    	return "Login Socket";
+    }
 }

@@ -3,21 +3,21 @@ package internalConnections;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import multiConnection.MultiConnectionState;
-import multiConnection.MultiInternalConnectionServer;
-import multiConnection.WrapperConnection;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import org.java_websocket.drafts.Draft;
+import jettyMultiConnection.ConnectionWrapper;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.MultiConnectionState;
 import protobuf.srl.request.Message.Request;
-import proxyServer.ProxyServer;
-import proxyServer.TimeManager;
+import connection.TimeManager;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
-public class AnswerConnection extends WrapperConnection {
+@WebSocket()
+public class AnswerConnection extends ConnectionWrapper {
 
-	public AnswerConnection(URI serverUri, Draft draft, MultiInternalConnectionServer parentServer) {
-		super(serverUri, draft, parentServer);
+	public AnswerConnection(URI destination, GeneralConnectionServer parent) {
+		super(destination, parent);
 	}
 
 	/**
@@ -27,9 +27,9 @@ public class AnswerConnection extends WrapperConnection {
 	 */
 	@Override
 	public void onMessage(ByteBuffer buffer) {
-		MultiConnectionState state = getStateFromId(MultiInternalConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
+		MultiConnectionState state = getStateFromId(GeneralConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
 
-		Request r = MultiInternalConnectionServer.Decoder.parseRequest(buffer);
+		Request r = GeneralConnectionServer.Decoder.parseRequest(buffer);
 		if (r.getRequestType() == Request.MessageType.TIME) {
 			
 			Request rsp = TimeManager.decodeRequest(r);
@@ -39,7 +39,7 @@ public class AnswerConnection extends WrapperConnection {
 			return;
 		}
 		Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
-		getConnectionFromState(state).send(result.toByteArray());
+		GeneralConnectionServer.send(getConnectionFromState(state), result);
 	}
 
 	/*

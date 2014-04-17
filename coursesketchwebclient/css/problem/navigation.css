@@ -23,6 +23,11 @@ html, body, div, span, p {
 	padding-bottom:2px;
 }
 
+div.grade_comment{
+	position:fixed;
+	right:1px;
+}
+
 #navPanel {
 
 	width: 100px;

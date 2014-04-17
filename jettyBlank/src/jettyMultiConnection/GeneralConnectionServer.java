@@ -12,12 +12,10 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.Request;
-import tallNateConnection.MultiConnectionState;
-import tallNateConnection.WrapperConnection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-@WebSocket() // 30 minutes
+@WebSocket()
 public class GeneralConnectionServer {
 
 	public static final int MAX_CONNECTIONS = 80;
@@ -38,8 +36,7 @@ public class GeneralConnectionServer {
 
     @OnWebSocketClose
     public void onClose(Session conn, int statusCode, String reason) {
-    	System.out.println( conn + " has disconnected from The Server." +
-				(true ? "The connection was closed remotely" : "we closed the connection")); // TODO: find out how to see if the connection is closed by us or them.
+    	System.out.println( conn + " has disconnected from The Server." + statusCode + "with reason : " + reason); // TODO: find out how to see if the connection is closed by us or them.
 		MultiConnectionState id = connectionToId.remove(conn);
 		if (id != null) {
 			idToConnection.remove(id);
@@ -71,13 +68,15 @@ public class GeneralConnectionServer {
 		System.out.println("Recieving connection " + connectionToId.size());
     }
 
-    @OnWebSocketError
+    @SuppressWarnings("static-method")
+	@OnWebSocketError
     public void onError(Session session, Throwable cause) {
-    	System.err.println(cause);
+    	System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
     }
 
-    @OnWebSocketMessage
-    public final void onMessage(Session session, byte[] data, int offset, int length) {
+    @SuppressWarnings("unused")
+	@OnWebSocketMessage
+    public void onMessage(Session session, byte[] data, int offset, int length) {
     	onMessage(session, ByteBuffer.wrap(data));
     }
 
@@ -87,7 +86,7 @@ public class GeneralConnectionServer {
     protected final void onMessage(Session session, ByteBuffer buffer) {
     	Request req = Decoder.parseRequest(buffer);
 		if (req == null) {
-			send(session, createBadConnectionResponse(req, WrapperConnection.class));
+			send(session, createBadConnectionResponse(req, ConnectionWrapper.class));
 			System.out.println("protobuf error");
 			//this.
 			// we need to somehow send an error to the client here
@@ -104,22 +103,27 @@ public class GeneralConnectionServer {
 	}
 
     /**
-     * Takes a request and allows overriding so that subclass servers can handle messages
+     * Takes a request and allows overriding so that subclass servers can handle messages.
+     *
+     * By default it is an echo server, basically it echos what it receives.
      * @param session the session object that created the message
      * @param req the message itself
      */
-    protected void onMessage(Session session, Request req) {}
+	@SuppressWarnings("static-method")
+	protected void onMessage(Session session, Request req) {
+		send(session, req);
+	}
 
     /**
      * A helper method for sending data given a session.
      * @param session
      * @param req
      */
-    protected static void send(Session session, Request req) {
+    public static void send(Session session, Request req) {
     	session.getRemote().sendBytesByFuture(ByteBuffer.wrap(req.toByteArray()));
     }
 
-    protected static Request createBadConnectionResponse(Request req, Class<? extends WrapperConnection> connectionType) {
+    protected static Request createBadConnectionResponse(Request req, Class<? extends ConnectionWrapper> connectionType) {
 		Request.Builder response = Request.newBuilder();
 		if (req == null) {
 			response.setRequestType(Request.MessageType.ERROR);
@@ -140,6 +144,7 @@ public class GeneralConnectionServer {
     	connectionToId.clear();
     	idToConnection.clear();
     	idToState.clear();
+    	onStop();
     }
 
     /**
@@ -149,6 +154,10 @@ public class GeneralConnectionServer {
 
     }
 
+    @SuppressWarnings("static-method")
+	public String getName() {
+    	return "General Socket";
+    }
     /**
 	 * Returns a new connection with an id.
 	 *
@@ -232,4 +241,7 @@ public class GeneralConnectionServer {
 	}
 
 
+	public int getCurrentConnectionNumber() {
+		return connectionToId.size();
+	}
 }
