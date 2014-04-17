@@ -151,6 +151,9 @@ public class GeneralConnectionRunner {
 	 * @throws Exception 
 	 */
 	public final boolean parseCommand(String command, BufferedReader sysin) throws Exception {
+		if (command == null) {
+			return true;
+		}
 		if (command.equals( "exit" )) {
 			System.out.println("Are you sure you want to exit? [y/n]");
 			if (sysin.readLine().equalsIgnoreCase("y")) {

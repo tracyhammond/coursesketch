@@ -271,8 +271,18 @@ function addNewCourse() { // Functionality to allow for adding of courses by ins
 	//course.semester = "Should be in format: '_F13' (_F = Fall, Sp = Spring, Su = Summer) ";
 	//course.accessDate = "mm/dd/yyyy";
 	//course.closeDate = "mm/dd/yyyy";
-	var newCourse = insertCourse(course);
-	
+	parent.dataManager.getAllCourses(function(courseList) {
+		var firstCourse = undefined;
+		parent.dataManager.insertCourse(course, function(course) {
+			firstCourse = course;
+			courseList.push(course);
+			showCourses(courseList);
+		}, function(course) {
+			// do something else here!
+			alert("Course added to database");
+		});
+	});
+
 	/**course.id = 
 	course.name = **/
 	showCourses([course]);

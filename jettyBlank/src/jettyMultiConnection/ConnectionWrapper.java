@@ -75,6 +75,12 @@ public class ConnectionWrapper {
     	onMessage(ByteBuffer.wrap(data));
     }
 
+    @SuppressWarnings("static-method")
+   	@OnWebSocketError
+   	public void onError(Session session, Throwable cause) {
+    	System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
+	}
+
     /**
 	 * Accepts messages and sends the request to the correct server and holds minimum client state.
 	 */
