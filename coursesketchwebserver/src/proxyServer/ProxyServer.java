@@ -72,7 +72,7 @@ public class ProxyServer extends GeneralConnectionServer {
 			System.out.println("Request type is " + req.getRequestType().name());
 			try {
 				this.getConnectionManager().send(req, sessionID, LoginConnection.class);
-			} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
+			} catch(Exception e) {
 				send(conn, createBadConnectionResponse(req, LoginConnection.class));
 			}
 		} else {
@@ -85,7 +85,7 @@ public class ProxyServer extends GeneralConnectionServer {
 				String sessionID = state.getKey();
 				try {
 					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, RecognitionConnection.class); // no userId is sent for security reasons.
-				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
+				} catch(Exception e) {
 					send(conn, createBadConnectionResponse(req, RecognitionConnection.class));
 				}
 				return;
@@ -95,7 +95,7 @@ public class ProxyServer extends GeneralConnectionServer {
 				String sessionID = state.getKey();
 				try {
 					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
-				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
+				} catch(Exception e) {
 					send(conn, createBadConnectionResponse(req, AnswerConnection.class));
 				}
 				return;
@@ -106,7 +106,7 @@ public class ProxyServer extends GeneralConnectionServer {
 				String sessionID = state.getKey();
 				try {
 					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
-				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
+				} catch(Exception e) {
 					send(conn, createBadConnectionResponse(req, DataConnection.class));
 				}
 				return;
