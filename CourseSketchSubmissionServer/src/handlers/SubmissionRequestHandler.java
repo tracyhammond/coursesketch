@@ -1,6 +1,6 @@
 package handlers;
 
-import multiConnection.MultiConnectionManager;
+import jettyMultiConnection.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;

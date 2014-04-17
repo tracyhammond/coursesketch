@@ -7,7 +7,7 @@ SERVERLIST[0]="CourseSketchDatabaseServer"
 SERVERLIST[1]="coursesketchwebserver"
 SERVERLIST[2]="CourseSketchRecognitionServer"
 SERVERLIST[3]="BlankServer"
-SERVERLIST[4]="CourseSketchSolutionServer"
+SERVERLIST[4]="CourseSketchSubmissionServer"
 SERVERLIST[5]="CourseSketchAnswerCheckerServer"
 SERVERLIST[6]="CourseSketchLoginServer"
 

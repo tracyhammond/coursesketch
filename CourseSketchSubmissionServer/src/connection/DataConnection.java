@@ -3,23 +3,24 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import multiConnection.MultiConnectionState;
-import multiConnection.MultiInternalConnectionServer;
-import multiConnection.WrapperConnection;
-import multiConnection.MultiInternalConnectionServer.Decoder;
+import jettyMultiConnection.ConnectionException;
+import jettyMultiConnection.ConnectionWrapper;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.GeneralConnectionServer.Decoder;
 
-import org.java_websocket.drafts.Draft;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.Request;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
-public class DataConnection extends WrapperConnection {
-	
-	public DataConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		super( serverUri, draft, parent);
+@WebSocket()
+public class DataConnection extends ConnectionWrapper {
+
+	public DataConnection(URI destination, GeneralConnectionServer parentServer) {
+		super(destination, parentServer);
 	}
-	
+
 	/**
 	 * Accepts messages and sends the request to the correct server and holds minimum client state.
 	 *
@@ -32,7 +33,11 @@ public class DataConnection extends WrapperConnection {
 		if (req.getRequestType() == Request.MessageType.TIME) {
 			Request rsp = TimeManager.decodeRequest(req);
 			if (rsp != null) {
-				this.parentManager.send(rsp, req.getSessionInfo(), DataConnection.class);
+				try {
+					this.parentManager.send(rsp, req.getSessionInfo(), DataConnection.class);
+				} catch (ConnectionException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
