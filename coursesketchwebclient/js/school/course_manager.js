@@ -4,6 +4,9 @@ var waitingIcon = (function() {
 	return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
 })();
 
+var loader = new parent.DynamicFileLoader(this.document);
+loader.sope = document;
+
 function inializeCourseManagment() {
 	document.getElementById('class_list_column').appendChild(waitingIcon);
 	waitingIcon.startWaiting();
@@ -74,7 +77,7 @@ function courseClickerFunction(course) {
 		builder.build('assignment_list_column');
 		if (parent.dataManager.getState("isInstructor")) {
 			try {
-				replaceIframe('html/instructor/course_managment_frames/edit_course.html');
+				replaceEditContent('html/instructor/course_managment_frames/edit_course.html');
 			} catch(exception) {
 				
 			}
@@ -82,7 +85,6 @@ function courseClickerFunction(course) {
 		}
 	});
 }
-	parent.dataManager.insertCourse
 
 function assignmentClickerFunction(assignment) {
 	// clears the problems
@@ -93,7 +95,6 @@ function assignmentClickerFunction(assignment) {
 	// waiting icon
 	document.getElementById('problem_list_column').appendChild(waitingIcon);
 	waitingIcon.startWaiting();
-	console.log(assignment.problemList);
 	parent.dataManager.getCourseProblems(assignment.problemList, function(problemList) {
 		var builder = new SchoolItemBuilder();
 		builder.setEmptyListMessage('There are no problems for this assignment!');
@@ -125,7 +126,7 @@ function assignmentClickerFunction(assignment) {
 		builder.build('problem_list_column');
 		if (parent.dataManager.getState("isInstructor")) {
 			try {
-				replaceIframe('html/instructor/course_managment_frames/edit_assignment.html');
+				replaceEditContent('html/instructor/course_managment_frames/edit_assignment.html');
 			} catch(exception) {
 				
 			}
@@ -171,7 +172,7 @@ function problemClickerFunction(problem) {
 
 	if (parent.dataManager.getState("isInstructor")) {
 		try {
-			replaceIframe('html/instructor/course_managment_frames/edit_problem.html');
+			replaceEditContent('html/instructor/course_managment_frames/edit_problem.html');
 		} catch(exception) {
 			
 		}
@@ -196,12 +197,12 @@ function hideButton(id) {
 function clearLists(number) {
 	var builder = new SchoolItemBuilder();
 	
-	if(number>0) {
+	if (number>0) {
 		hideButton('problem_button');
 		builder.setEmptyListMessage('Please select an assignment to see the list of problems.');
 		builder.build('problem_list_column');
 	}
-	if(number>1) {
+	if (number>1) {
 		hideButton('assignment_button');
 		builder.setEmptyListMessage('Please select a course to see the list of assignments.');
 		builder.build('assignment_list_column');
@@ -217,7 +218,7 @@ function manageHeight() {
 	var iframe = document.getElementById('edit_frame_id');
 	var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
 	// Gets the visual height.
-	if(innerDoc) {
+	if (innerDoc) {
 		var iFrameElement = innerDoc.getElementById('iframeBody') || innerDoc.getElementsByTagName('body')[0];
 		if(!iFrameElement) {
 			return;
@@ -231,15 +232,35 @@ function manageHeight() {
 	Given the source this will create an iframe that will manage its own height.
 	TODO: make this more general.
 */
-function replaceIframe(src) {
-	var toReplace = document.getElementById('editable_unit');
-	if (src && toReplace && toReplace != null) {
-		toReplace.innerHTML =  '<Iframe id="edit_frame_id" src="'+ src +'" width = 100% ' +
-		'sanbox = "allow-same-origin allow-scripts"' +
-		'seamless = "seamless" onload="manageHeight()">';
-	} else {
+function replaceEditContent(src) {
+
+	function onload(event) {
+		console.log(event);
+		var toReplace = document.getElementById('editable_unit');
+		removeAllChildren(toReplace);
+		var link = event.srcElement;
+		var content = link.import.querySelector("#iframeBody");
+		console.log(content);
+		if (src && content) {
+			toReplace.appendChild(content.cloneNode(true));
+		} else {
+			toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
+			'<h2 style = "text-align:center">Click an item to edit</h2>';
+		}
+	}
+
+	function onerror(event) {
+		var toReplace = document.getElementById('editable_unit');
+		removeAllChildren(toReplace);
 		toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
 		'<h2 style = "text-align:center">Click an item to edit</h2>';
+	}
+
+	try {
+		loader.replaceFile(false, src, "html", onload, onerror, 'editable_import', 'editable_import');
+	} catch(exception) {
+		//console.log(exception.stack);
+		loader.loadFile(src, "html", onload, onerror, 'editable_import');
 	}
 }
 
