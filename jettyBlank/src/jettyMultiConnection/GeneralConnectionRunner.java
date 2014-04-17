@@ -24,11 +24,7 @@ public class GeneralConnectionRunner {
 	public static void main(String[] args) throws Exception {
 		GeneralConnectionRunner runner = new GeneralConnectionRunner();
 		try {
-			runner.loadConfigurations();
-			runner.createServer();
-			runner.addServletHandlers();
-			runner.startInput();
-			runner.startServer();
+			runner.runAll();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,21 +36,59 @@ public class GeneralConnectionRunner {
 	private GeneralConnectionServlet servletInstance;
 
 	// these should be changed based on 
-	private int port = 8888;
-	private long timeoutTime;
-	private boolean acceptInput = true;
-	private boolean production;
+	protected int port = 8888;
+	protected long timeoutTime;
+	protected boolean acceptInput = true;
+	private boolean production = false;
+	protected boolean local = true;
+	protected boolean isLogging = false;
+
+	/**
+	 * Runs the entire startup process including input
+	 * @throws Exception
+	 */
+	protected final void runAll() throws Exception {
+		this.runMost();
+		this.startInput();
+	}
+
+	/**
+	 * Runs the majority of the startup proccess.
+	 *
+	 * Does not handle accepting Input
+	 */
+	protected final void runMost() throws Exception {
+		this.loadConfigurations();
+		if (local) {
+			this.executeLocalEnviroment();
+		} else {
+			this.executeRemoveEnviroment();
+		}
+		this.createServer();
+		this.addServletHandlers();
+		
+		this.startServer();
+	}
 
 	public void loadConfigurations() {
 		
 	}
 
+	public void executeLocalEnviroment() {
+		
+	}
+
+	public void executeRemoveEnviroment() {
+		
+	}
+	
 	/**
 	 * Sets up a Jetty embedded server. Uses HTTPS over port 12102 and a key certificate.
 	 * @throws Exception 
 	 */
 	public void createServer() throws Exception {
 		server = new Server(port);
+		System.out.println("Server has been created on port: " + port);
 	}
 
 	public void addServletHandlers() {
@@ -66,7 +100,8 @@ public class GeneralConnectionRunner {
 		*/
 		ServletHandler servletHandler = new ServletHandler();
 
-		servletInstance = getServlet();
+		System.out.println("Creating a new servlet");
+		servletInstance = getServlet(timeoutTime, false, local); // TODO: change this to true!
 
 		servletHandler.addServletWithMapping(new ServletHolder(servletInstance),"/*");
 		stats.setHandler(servletHandler);
@@ -78,11 +113,12 @@ public class GeneralConnectionRunner {
 	}
 
 	public void startServer() {
-		
 		Thread d = new Thread() {
+			@Override
 			public void run() {
 				try {
 				server.start();
+				servletInstance.reconnect();
 				server.join();
 				} catch(Exception e) {
 					e.printStackTrace();
@@ -97,12 +133,11 @@ public class GeneralConnectionRunner {
 	 *
 	 * Override this method if you want to return a subclass of GeneralConnectionServlet
 	 */
-	public GeneralConnectionServlet getServlet() {
-		boolean secure = false;
-		if (!secure) {
+	public GeneralConnectionServlet getServlet(long timeOut, boolean secure, boolean local) {
+		if (!secure && production) {
 			System.err.println("Running an insecure server");
 		}
-		return new GeneralConnectionServlet(timeoutTime, secure);
+		return new GeneralConnectionServlet(timeOut, secure, local);
 	}
 
 	/**
@@ -115,7 +150,7 @@ public class GeneralConnectionRunner {
 	 * @return true if the command is an accepted command and is used by the server
 	 * @throws Exception 
 	 */
-	public boolean parseCommand(String command, BufferedReader sysin) throws Exception {
+	public final boolean parseCommand(String command, BufferedReader sysin) throws Exception {
 		if (command.equals( "exit" )) {
 			System.out.println("Are you sure you want to exit? [y/n]");
 			if (sysin.readLine().equalsIgnoreCase("y")) {
@@ -130,11 +165,9 @@ public class GeneralConnectionRunner {
 				this.stop();
 				System.out.println("sleeping for 1s");
 				Thread.sleep(1000);
-				this.loadConfigurations();
-				this.createServer();
-				this.addServletHandlers();
-				this.startServer();
+				this.runMost();
 			}
+			return true;
 		} else if (command.equals("reconnect")) {
 			servletInstance.reconnect();
 			return true;
@@ -146,13 +179,30 @@ public class GeneralConnectionRunner {
 			return true;
 		}  else if (command.equals("start")) {
 			if (this.server == null || !this.server.isRunning()) {
-				this.loadConfigurations();
-				this.createServer();
-				this.addServletHandlers();
-				this.startServer();
+				this.runMost();
 			} else {
 				System.out.println("you can not start the server because it is already running.");
 			}
+			return true;
+		}
+		return parseUtilityCommand(command, sysin);
+	}
+
+	// TODO: add a command manager of some sort.
+	public boolean parseUtilityCommand(String command, BufferedReader sysin) throws Exception {
+		if (command.equals("toggle logging")) {
+			if (isLogging) {
+				System.out.println("Are you sure you want to turn loggin off? [y/n]");
+				if (!sysin.readLine().equalsIgnoreCase("y")) {
+					System.out.println("action canceled");
+					return true;
+				}
+			}
+			System.out.println("Turning loggin " + (isLogging ? "Off" : "On"));
+			isLogging = ! isLogging;
+			return true;
+		} if (command.equals("connectionNumber")) {
+			System.out.println(servletInstance.getCurrentConnectionNumber());
 			return true;
 		}
 		return false;
@@ -160,6 +210,7 @@ public class GeneralConnectionRunner {
 
 	public void startInput() {
 		Thread d = new Thread() {
+			@Override
 			public void run() {
 				try {
 					BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );

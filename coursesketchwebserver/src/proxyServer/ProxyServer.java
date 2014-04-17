@@ -9,119 +9,53 @@ import internalConnections.RecognitionConnection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.GeneralConnectionServlet;
+import jettyMultiConnection.MultiConnectionState;
 
-import multiConnection.MultiConnectionManager;
-import multiConnection.MultiInternalConnectionServer;
-import multiConnection.WrapperConnection;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.WebSocketImpl;
-import org.java_websocket.framing.Framedata;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
-
-import proxyServer.TimeManager;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import connection.TimeManager;
 
 /**
  * A simple WebSocketServer implementation.
  *
  * Contains simple proxy information that is sent to other servers.
  */
-public class ProxyServer extends MultiInternalConnectionServer {
+@WebSocket()
+public class ProxyServer extends GeneralConnectionServer {
 
 	@SuppressWarnings("hiding")
 	public static final int MAX_CONNECTIONS = 60; // sets see if this works!
 
 	public static final int STATE_INVALID_LOGIN = 4002;
-	public static final int STATE_CLIENT_CLOSE = 4003;
 	public static final int MAX_LOGIN_TRIES = 5;
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
-	public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
-
-	private SocketManager socketManager = new SocketManager();
-
-	private ProxyConnectionManager serverManager;
 
 	static int numberOfConnections = Integer.MIN_VALUE;
-	public ProxyServer(int port, boolean connectLocally) {
-		this( new InetSocketAddress( port ), connectLocally );
-		
-	}
 
-	public ProxyServer(InetSocketAddress address, boolean connectLocally) {
-		super(address);
+	public ProxyServer(GeneralConnectionServlet parent) {
+		super(parent);
 		ActionListener listener = new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				serverManager.send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
-				serverManager.send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
-				//serverManager.send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
+				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
+				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
+				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
 			}
 		};
-		TimeManager.setListener(listener);
-		serverManager = new ProxyConnectionManager(this, connectLocally);
-
-		socketManager.setExpiredListiner(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				idToConnection.get(e.getActionCommand()).close();		
-			}
-		});
-	}
-
-	@Override
-	public void reconnect() {
-		serverManager.dropAllConnection(false, true);
-		serverManager.connectServers(this);
-	}
-
-	@Override
-	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		super.onOpen(conn, handshake);
-		
-		System.out.println("Recieving connection " + connectionToId.size());
+		TimeManager.setTimeEstablishedListener(listener);
 	}
 
 	/**
 	 * Accepts messages and sends the request to the correct server and holds minimum client state.
 	 */
 	@Override
-	public void onMessage(WebSocket conn, ByteBuffer buffer) {
-		System.out.println("Receiving message...");
-		Request req = Decoder.parseRequest(buffer);
-
-		if (req == null) {
-			conn.send(createBadConnectionResponse(req, WrapperConnection.class).toByteArray());
-			System.out.println("protobuf error");
-			//this.
-			// we need to somehow send an error to the client here
-			return;
-		}
-
-		if (req.getRequestType().equals(Request.MessageType.CLOSE)) {
-			System.out.println("CLOSE THE SERVER FROM THE CLIENT");
-			conn.close(STATE_CLIENT_CLOSE, CLIENT_CLOSE_MESSAGE);
-			return;
-		}
+	public void onMessage(Session conn, Request req) {
 		LoginConnectionState state = (LoginConnectionState) connectionToId.get(conn);
 
 		//DO NOT FORGET ABOUT THIS
@@ -137,9 +71,9 @@ public class ProxyServer extends MultiInternalConnectionServer {
 			String sessionID = state.getKey();
 			System.out.println("Request type is " + req.getRequestType().name());
 			try {
-				serverManager.send(req, sessionID, LoginConnection.class);
+				this.getConnectionManager().send(req, sessionID, LoginConnection.class);
 			} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
-				conn.send(createBadConnectionResponse(req, LoginConnection.class).toByteArray());
+				send(conn, createBadConnectionResponse(req, LoginConnection.class));
 			}
 		} else {
 			if (state.getTries() > MAX_LOGIN_TRIES) {
@@ -150,9 +84,9 @@ public class ProxyServer extends MultiInternalConnectionServer {
 				System.out.println("REQUEST TYPE = RECOGNITION");
 				String sessionID = state.getKey();
 				try {
-					serverManager.send(req, sessionID, RecognitionConnection.class); // no userId is sent for security reasons.
+					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, RecognitionConnection.class); // no userId is sent for security reasons.
 				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
-					conn.send(createBadConnectionResponse(req, RecognitionConnection.class).toByteArray());
+					send(conn, createBadConnectionResponse(req, RecognitionConnection.class));
 				}
 				return;
 			}
@@ -160,9 +94,9 @@ public class ProxyServer extends MultiInternalConnectionServer {
 				System.out.println("REQUEST TYPE = SUBMISSION");
 				String sessionID = state.getKey();
 				try {
-					serverManager.send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
+					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
 				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
-					conn.send(createBadConnectionResponse(req, AnswerConnection.class).toByteArray());
+					send(conn, createBadConnectionResponse(req, AnswerConnection.class));
 				}
 				return;
 			}
@@ -171,9 +105,9 @@ public class ProxyServer extends MultiInternalConnectionServer {
 				System.out.println("REQUEST TYPE = DATA REQUEST");
 				String sessionID = state.getKey();
 				try {
-					serverManager.send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
+					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
 				} catch(org.java_websocket.exceptions.WebsocketNotConnectedException e) {
-					conn.send(createBadConnectionResponse(req, DataConnection.class).toByteArray());
+					send(conn, createBadConnectionResponse(req, DataConnection.class));
 				}
 				return;
 			}
@@ -181,111 +115,15 @@ public class ProxyServer extends MultiInternalConnectionServer {
 		}
 	}
 
-	@Override
-	public void onFragment( WebSocket conn, Framedata fragment ) {
-		//System.out.println( "received fragment: " + fragment );
-	}
-
-	private static Request createBadConnectionResponse(Request req, Class<? extends WrapperConnection> connectionType) {
-		Request.Builder response = Request.newBuilder();
-		if (req == null) {
-			response.setRequestType(Request.MessageType.ERROR);
-		} else {
-			response.setRequestType(req.getRequestType());
-		}
-		response.setResponseText("A server with connection type: " + connectionType.getSimpleName() + " Is not connected correctly");
-		return response.build();
-	}
-
 	/**
 	 * Returns a number that should be unique.
 	 */
 	@Override
-	public LoginConnectionState getUniqueState() {
+	public MultiConnectionState getUniqueState() {
 		return new ProxyConnectionState(Encoder.nextID().toString());
 	}
 
-	public int getCurrentConnectionNumber() {
-		return super.connectionToId.size();
-	}
-
-	@Override
-	public boolean parseCommand(String command, BufferedReader sysin) throws Exception {
-		if (super.parseCommand(command, sysin)) return true;
-		if (command.equals("connectionNumber")) {
-			System.out.println(this.getCurrentConnectionNumber());
-			return true;
-		}
-		return false;
-	}
- 
-	public static void main( String[] args ) throws IOException, KeyStoreException, NoSuchAlgorithmException,
-			CertificateException, UnrecoverableKeyException, KeyManagementException {
-		System.out.println("Proxy Server: Version 1.0.3");
-		WebSocketImpl.DEBUG = true;
-		boolean connectLocal = false;
-		boolean ssl = false;
-		if (args.length == 1) {
-			if (args[0].equals("local")) {
-				connectLocal = MultiConnectionManager.CONNECT_LOCALLY;
-			} else if (args[0].equals("ssl")) {
-				ssl = true;
-			}
-		}
-
-		int port = 8888; // 843 flash policy port
-		try {
-			port = Integer.parseInt( args[ 0 ] );
-		} catch ( Exception ex ) {
-		}
-		ProxyServer s = new ProxyServer( port, connectLocal );
-		if (!connectLocal && ssl) {
-			// load up the key store
-			String STORETYPE = "JKS";
-			//String KEYSTORE = "private/srl01.tamu.edu.key";
-			String KEYSTORE = "srl01_tamu_edu.jks";
-			String STOREPASSWORD = "Challeng3";
-			String KEYPASSWORD = "Challeng3";
-
-			KeyStore ks = KeyStore.getInstance( STORETYPE );
-			File kf = new File( KEYSTORE );
-			ks.load( new FileInputStream( kf ), STOREPASSWORD.toCharArray() ); // setting null password
-
-			KeyManagerFactory kmf = KeyManagerFactory.getInstance( "SunX509" );
-			kmf.init( ks, KEYPASSWORD.toCharArray() );
-			TrustManagerFactory tmf = TrustManagerFactory.getInstance( "SunX509" );
-			tmf.init( ks );
-
-			SSLContext sslContext = null;
-			sslContext = SSLContext.getInstance( "TSL" );
-			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
-			s.setWebSocketFactory( new DefaultSSLWebSocketServerFactory( sslContext ) );
-		}
-		s.start();
-		System.out.println( "Proxy Server Started. Port: " + s.getPort() );
-
-		System.out.println("Connecting to servers...");
-		s.reconnect();
-
-		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
-		while ( true ) {
-			String in = sysin.readLine();
-			try {
-				s.parseCommand(in, sysin);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		//System.out.println("Closing down server! Forcefully");
-		//System.exit(0);
-	}
-
-	@Override
-	public void onError( WebSocket conn, Exception ex ) {
-		ex.printStackTrace();
-		if( conn != null ) {
-			// some errors like port binding failed may not be assignable to a specific websocket
-		}
-	}
-	
+	public String getName() {
+    	return "Proxy Socket";
+    }
 }

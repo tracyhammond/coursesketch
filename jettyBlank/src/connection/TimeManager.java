@@ -81,6 +81,7 @@ public class TimeManager {
 		return null;
 	}
 
+	@SuppressWarnings("unused")
 	private static long DatetoMill(DateTime dt) {
 		return dt.getMillis();
 	}
