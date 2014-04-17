@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+import jettyMultiConnection.ConnectionException;
 import jettyMultiConnection.ConnectionWrapper;
 import jettyMultiConnection.GeneralConnectionServer;
 import protobuf.srl.query.Data.DataSend;
@@ -30,7 +31,11 @@ public class LoginConnection extends ConnectionWrapper {
 			
 			Request rsp = TimeManager.decodeRequest(r);
 			if (rsp != null) {
-				this.parentManager.send(rsp, r.getSessionInfo(), LoginConnection.class);
+				try {
+					this.parentManager.send(rsp, r.getSessionInfo(), LoginConnection.class);
+				} catch (ConnectionException e) {
+					e.printStackTrace();
+				}
 			}
 			return;
 		}
@@ -56,7 +61,11 @@ public class LoginConnection extends ConnectionWrapper {
 			itemSend.setData(user.build().toByteString());
 			dataSend.addItems(itemSend);
 			createUser.setOtherData(dataSend.build().toByteString());
-			this.parentManager.send(createUser.build(), r.getSessionInfo(), DataConnection.class);
+			try {
+				this.parentManager.send(createUser.build(), r.getSessionInfo(), DataConnection.class);
+			} catch (ConnectionException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

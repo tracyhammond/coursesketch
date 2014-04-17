@@ -1,19 +1,19 @@
 package internalConnection;
 
-import multiConnection.ConnectionException;
-import multiConnection.MultiConnectionManager;
-import multiConnection.MultiInternalConnectionServer;
+import jettyMultiConnection.ConnectionException;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.MultiConnectionManager;
 
 public class AnswerConnectionManager extends MultiConnectionManager {
 
-	public AnswerConnectionManager(MultiInternalConnectionServer parent, boolean connectLocally) {
-		super(parent);
-		this.connectLocally = connectLocally;
+	public AnswerConnectionManager(GeneralConnectionServer parent, boolean connectType, boolean secure) {
+		super(parent, connectType, secure);
 	}
 
-	public void connectServers(MultiInternalConnectionServer parent) {
+	@Override
+	public void connectServers(GeneralConnectionServer parent) {
 		try {
-			createAndAddConnection(parent, connectLocally, "srl02.tamu.edu", 8883, SolutionConnection.class);
+			createAndAddConnection(parent, connectLocally, "srl02.tamu.edu", 8883, secure, SolutionConnection.class);
 		} catch (ConnectionException e) {
 			e.printStackTrace();
 		}

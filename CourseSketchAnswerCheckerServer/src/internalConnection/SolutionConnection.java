@@ -3,12 +3,11 @@ package internalConnection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import multiConnection.MultiInternalConnectionServer;
-import multiConnection.WrapperConnection;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.drafts.Draft;
-
+import jettyMultiConnection.ConnectionWrapper;
+import jettyMultiConnection.GeneralConnectionServer;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
@@ -18,15 +17,16 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
-public class SolutionConnection extends WrapperConnection {
+@WebSocket()
+public class SolutionConnection extends ConnectionWrapper {
 
-	public SolutionConnection( URI serverUri , Draft draft , MultiInternalConnectionServer parent) {
-		super( serverUri, draft, parent);
+	public SolutionConnection(URI destination, GeneralConnectionServer parentServer) {
+		super(destination, parentServer);
 	}
 
 	@Override
 	public void onMessage(ByteBuffer buffer) {
-		Request req = MultiInternalConnectionServer.Decoder.parseRequest(buffer); // this contains the solution
+		Request req = GeneralConnectionServer.Decoder.parseRequest(buffer); // this contains the solution
 		System.out.println(req.getSessionInfo());
 		String[] sessionInfo = req.getSessionInfo().split("\\+");
 		System.out.println(sessionInfo[1]);
@@ -46,16 +46,16 @@ public class SolutionConnection extends WrapperConnection {
 			// we need to this at least
 			Request.Builder builder = Request.newBuilder(req);
 			builder.setSessionInfo(sessionInfo[0]);
-			getConnectionFromState(state).send(builder.build().toByteArray());
+			GeneralConnectionServer.send(getConnectionFromState(state), builder.build());
 		} else if (req.getRequestType() == MessageType.SUBMISSION) {
 			// pass up the Id to the client
 			Request.Builder builder = Request.newBuilder(req);
 			builder.setSessionInfo(sessionInfo[0]);
-			WebSocket connection = getConnectionFromState(state);
+			Session connection = getConnectionFromState(state);
 			if (connection == null) {
 				System.err.println("SOCKET IS NULL");
 			}
-			getConnectionFromState(state).send(builder.build().toByteArray());
+			GeneralConnectionServer.send(getConnectionFromState(state), builder.build());
 		}
 	}
 }

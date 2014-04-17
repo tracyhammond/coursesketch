@@ -10,6 +10,7 @@ import static util.StringConstants.SOLUTION_ID;
 
 import java.util.ArrayList;
 
+import jettyMultiConnection.ConnectionException;
 import jettyMultiConnection.GeneralConnectionServer;
 import jettyMultiConnection.MultiConnectionManager;
 
@@ -106,7 +107,11 @@ public class SubmissionManager
 		data.addItems(build);
 		r.setOtherData(data.build().toByteString());
 		System.out.println("Sending command " + r.build());
-		internalConnections.send(r.build(), null, SubmissionConnection.class);
+		try {
+			internalConnections.send(r.build(), null, SubmissionConnection.class);
+		} catch (ConnectionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -150,7 +155,11 @@ public class SubmissionManager
 		data.addItems(build);
 		r.setOtherData(data.build().toByteString());
 		System.out.println("Sending command " + r.build());
-		internalConnections.send(r.build(), null, SubmissionConnection.class);
+		try {
+			internalConnections.send(r.build(), null, SubmissionConnection.class);
+		} catch (ConnectionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	//need to be able to get a single submission

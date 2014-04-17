@@ -10,6 +10,7 @@ import internalConnections.RecognitionConnection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import jettyMultiConnection.ConnectionException;
 import jettyMultiConnection.GeneralConnectionServer;
 import jettyMultiConnection.GeneralConnectionServlet;
 import jettyMultiConnection.MultiConnectionState;
@@ -43,9 +44,23 @@ public class ProxyServer extends GeneralConnectionServer {
 		ActionListener listener = new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
-				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
-				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
+				try {
+					getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
+				} catch (ConnectionException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
+				} catch (ConnectionException e1) {
+					e1.printStackTrace();
+				}
+				/*
+				try {
+					getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
+				} catch (ConnectionException e1) {
+					e1.printStackTrace();
+				}
+				// */
 			}
 		};
 		TimeManager.setTimeEstablishedListener(listener);

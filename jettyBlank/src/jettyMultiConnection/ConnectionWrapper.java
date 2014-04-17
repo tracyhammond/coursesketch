@@ -43,18 +43,14 @@ public class ConnectionWrapper {
 		try {
 			client.start();
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
-			System.out.println("Connecting to: " + destination);
 			client.connect(this, destination, request);
-			System.out.printf("Connecting to : %s%n", destination);
-			//this.awaitClose(5, TimeUnit.SECONDS);
-			connected = true;
 			} catch (Throwable t) {
 				t.printStackTrace();
 				client.stop();
 				throw t;
 			}
 	}
-	
+
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         System.out.printf("Connection closed: %d - %s%n", statusCode, reason);
@@ -65,9 +61,9 @@ public class ConnectionWrapper {
 
     @OnWebSocketConnect
     public void onOpen(Session session) {
-        System.out.printf("Got connect: %s%n", session);
-        this.session = session;
-        System.out.println( "Open Wrapper Connection" );
+    	connected = true;
+    	this.session = session;
+        System.out.printf("Connection was succesful for: " + this.getClass());
     }
 
     @SuppressWarnings("unused")
@@ -79,7 +75,11 @@ public class ConnectionWrapper {
     @SuppressWarnings("static-method")
    	@OnWebSocketError
    	public void onError(Session session, Throwable cause) {
-    	System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
+    	if (session != null) {
+    		System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
+    	} else {
+    		System.out.println("Error: " + cause);
+    	}
 	}
 
     /**
@@ -114,16 +114,21 @@ public class ConnectionWrapper {
 	/**
 	 * Sends a binary message over the connection
 	 * @param buffer
+	 * @throws ConnectionException 
 	 */
-	public void send(ByteBuffer buffer) {
+	public void send(ByteBuffer buffer) throws ConnectionException {
+		if (!connected) {
+			throw new ConnectionException("Websocket not connected yet");
+		}
 		session.getRemote().sendBytesByFuture(buffer);
 	}
 
 	/**
 	 * Sends a binary message over the connection
 	 * @param bytes
+	 * @throws ConnectionException 
 	 */
-	public void send(byte[] bytes) {
+	public final void send(byte[] bytes) throws ConnectionException {
 		send(ByteBuffer.wrap(bytes));
 	}
 

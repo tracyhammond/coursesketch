@@ -1,5 +1,6 @@
 package internalConnections;
 
+import jettyMultiConnection.ConnectionException;
 import jettyMultiConnection.ConnectionWrapper;
 import jettyMultiConnection.GeneralConnectionServer;
 import jettyMultiConnection.MultiConnectionManager;
@@ -25,6 +26,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		System.out.println("Open Data...");
 		try {
 			createAndAddConnection(serv, connectLocally, "srl04.tamu.edu", 8885, secure, DataConnection.class);
@@ -32,6 +34,8 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.out.println("Open Answer...");
 		try {
 			createAndAddConnection(serv, connectLocally, "srl04.tamu.edu", 8884, secure, AnswerConnection.class);
 		} catch (Exception e) {
@@ -49,7 +53,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		return build.build();
 	}
 
-	public void send(Request req, String sessionId, Class<? extends ConnectionWrapper> connectionType, String userId) {
+	public void send(Request req, String sessionId, Class<? extends ConnectionWrapper> connectionType, String userId) throws ConnectionException {
 		Request.Builder builder = Request.newBuilder(req);
 		builder.clearServersideId();
 		builder.setServersideId(userId);
