@@ -32,6 +32,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var assignmentManager;
 	var courseProblemManager;
 	var submissionManager;
+	var gradeManager;
 
 	var dataSender = new Object();
 
@@ -56,7 +57,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		if (!localScope.start) {
 			var intervalVar = setInterval(function() {
 				if (localScope.start) {
-					console.log("Checking if higher database is truely ready!");
+					console.log("Checking if higher database is truly ready!");
 					clearInterval(intervalVar);
 					localScope.start();
 				}
@@ -80,6 +81,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		tables.push(database.createTable("CourseProblems","id", addFunction));
 		tables.push(database.createTable("BankProblems","id", addFunction));
 		tables.push(database.createTable("Submissions","id", addFunction));
+		tables.push(database.createTable("Grades","id", addFunction));
 		tables.push(database.createTable("Other","id", addFunction));
 
 		database.setTables(tables);
@@ -124,7 +126,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		/*assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 		/*courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 		/*submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
-		console.log("database is ready for use! with user: " + userId);
+		/*submissionManager = */new GradeManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
+
+		console.log("Database is ready for use! with user: " + userId);
 		databaseFinishedLoading = true;
 	};
 

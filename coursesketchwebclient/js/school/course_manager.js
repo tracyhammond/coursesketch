@@ -82,7 +82,7 @@ function courseClickerFunction(course) {
 		}
 	});
 }
-	parent.dataManager.insertCourse
+	/*parent.dataManager.insertCourse*/
 
 function assignmentClickerFunction(assignment) {
 	// clears the problems
