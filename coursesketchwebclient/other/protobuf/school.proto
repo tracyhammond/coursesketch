@@ -6,6 +6,7 @@ message SrlSchool {
 	repeated SrlAssignment assignments = 2;
 	repeated SrlProblem problems = 3;
 	repeated SrlBankProblem bankProblems = 4;
+	
 }
 
 message SrlCourse {
