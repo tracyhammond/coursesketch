@@ -24,6 +24,20 @@ if (typeof isUndefined === 'undefined') {
 
 /**
  **************************************************************
+ * Document Functions
+ * @author gigemjt
+ **************************************************************
+ */
+if (isUndefined(removeAllChildren)) {
+	function removeAllChildren(elementToClear) {
+		while (elementToClear.lastChild) {
+			elementToClear.removeChild(elementToClear.lastChild);
+		}
+	}
+}
+
+/**
+ **************************************************************
  * Inheritence Functions
  * @author gigemjt
  **************************************************************

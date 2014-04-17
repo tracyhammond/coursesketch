@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html> <!--class="ui-mobile"-->
-<head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<base href="../../">
+<head>
+	<base href="../../">
     <title>Course Management</title>
    	<link rel="stylesheet" href="css/school/school_item.css">
   	<link rel="stylesheet" href="css/utility/columns.css">
 	<link rel="stylesheet" href="css/courseSketch2.css">
 	<link rel="stylesheet" href="css/utility/externalLibraries/tooltip.css">
 	<link rel="stylesheet" href="css/utility/waiting.css">
+
+	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
 	<script>
-		parent.copyParentUtilityFunctions(this);
 		parent.copyParentProtos(this);
 	</script>
 	<script type="text/javascript" src="js/utils/externalLibraries/tooltip.js"></script>
 	<script type="text/javascript" src="js/utils/waiting.js"></script>
 	<script type="text/javascript" src="js/school/schoolItem.js"></script>
 	<script type="text/javascript" src="js/school/course_manager.js"></script>
-	<script type="text/javascript" src="js/persistant_data/specificManager/courseDataManager.js"></script>
 
 	<!--<script type="text/javascript" src="js/persistant_data/specificManager/assignmentDataManager.js"></script> -->
     <link rel="icon" type="image/ico" href="images/CSpencil.ico">
@@ -26,13 +26,8 @@
 			alert("Unable able to load data: " + msg.getResponseText());
 		});
   		parent.addScopedLoadEvent(window,
-				function()
-				{
+				function() {
   					inializeCourseManagment();
-					var loader = new parent.DynamicFileLoader();
-					loader.sope = document;
-					loader.loadFile("js/utils/popup.js",'js');
-
 					/**
 		  				Ensures that all of the columns reach to the bottom of the space they have 
 		  			*/
@@ -65,26 +60,6 @@
 	  			builder.build('popupDiv', popupId);
 	  			builder.togglePopup(popupId);
 	  		}
-	</script>
-	<script type="text/javascript">
-	var newCourse = document.getElementById("courseTitle");
-	var newCourseTitle = newCourse.value;
-	
-	var startDate = document.getElementById("date1");
-	var dateLive = startDate.value;
-	
-	var endDate = document.getElementById("date2");
-	var dateLive2 = endDate.value;
-
-	var descript = document.getElementById("courseDesc");
-	var newDesc = descript.value;
-	
-	function newCourseAlert(){
-	
-	alert(dateLive);
-	
-	}
-	
 	</script>
 	<style>
 		html, body {
