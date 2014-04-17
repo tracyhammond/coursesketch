@@ -77,10 +77,15 @@ public class MultiConnectionManager {
 	 * @param req The request to send.
 	 * @param sessionID The session Id of the request.
 	 * @param connectionNumber the location of where to find the location.
+	 * @throws ConnectionException 
 	 */
-	public void send(Request req, String sessionID, Class<? extends ConnectionWrapper> connectionType) {
+	public void send(Request req, String sessionID, Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
 		Request packagedRequest = GeneralConnectionServer.Encoder.requestIDBuilder(req, sessionID);		//Attach the existing request with the UserID
-		getBestConnection(connectionType).send(packagedRequest.toByteArray());
+		try {
+			getBestConnection(connectionType).send(packagedRequest.toByteArray());
+		} catch(NullPointerException e) {
+			throw new ConnectionException(e.getLocalizedMessage());
+		}
 	}
 
 	/**
@@ -144,7 +149,7 @@ public class MultiConnectionManager {
 	 * @param connectLocally
 	 * @return a valid connection.
 	 */
-	public ConnectionWrapper getBestConnection(Class<? extends ConnectionWrapper> connectionType){
+	public ConnectionWrapper getBestConnection(Class<? extends ConnectionWrapper> connectionType) {
 		System.out.println("getting Connection from type: " + connectionType);
 		ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
 		if (cons == null) {

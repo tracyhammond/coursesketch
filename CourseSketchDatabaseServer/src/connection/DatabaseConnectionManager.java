@@ -18,7 +18,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
 		System.out.println("TRYING TO RESEND THE THREAD! THROUGH A SEPCIAL METHOD!");
 		try {
 			super.send(req, sessionID, connectionType);
-		} catch (java.nio.channels.NotYetConnectedException e) {
+		} catch (ConnectionException e) {
 			reconnect();
 			new Thread() {
 				@Override

@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+import jettyMultiConnection.ConnectionException;
 import jettyMultiConnection.ConnectionWrapper;
 import jettyMultiConnection.GeneralConnectionServer;
 import jettyMultiConnection.MultiConnectionState;
@@ -34,7 +35,11 @@ public class AnswerConnection extends ConnectionWrapper {
 			
 			Request rsp = TimeManager.decodeRequest(r);
 			if (rsp != null) {
-				this.parentManager.send(rsp, r.getSessionInfo(), AnswerConnection.class);
+				try {
+					this.parentManager.send(rsp, r.getSessionInfo(), AnswerConnection.class);
+				} catch (ConnectionException e) {
+					e.printStackTrace();
+				}
 			}
 			return;
 		}

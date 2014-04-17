@@ -2,22 +2,11 @@ package connection;
 
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-
-import jettyMultiConnection.ConnectionException;
 import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.GeneralConnectionServer.Decoder;
 import jettyMultiConnection.GeneralConnectionServlet;
-import jettyMultiConnection.MultiConnectionManager;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.joda.time.DateTime;
 
 import protobuf.srl.request.Message.Request;
 import database.DatabaseAccessException;

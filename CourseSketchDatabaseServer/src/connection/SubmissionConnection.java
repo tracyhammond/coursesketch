@@ -1,11 +1,7 @@
 package connection;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.URI;
 import java.nio.ByteBuffer;
-
-import javax.swing.Timer;
 
 import jettyMultiConnection.GeneralConnectionServer;
 import jettyMultiConnection.MultiConnectionState;
