@@ -108,7 +108,6 @@ function assignmentClickerFunction(assignment) {
 			var q = problemList[i].description;
 			if (isUndefined(q) || q == "") {
 				var prob = problemList[i];
-				var problem = prob.problemInfo;
 				if (!isUndefined(prob.problemInfo)) {
 					var text = prob.getProblemInfo().getQuestionText();
 					problemList[i].setDescription(text);
