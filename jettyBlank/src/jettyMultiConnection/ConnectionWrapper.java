@@ -63,7 +63,7 @@ public class ConnectionWrapper {
     public void onOpen(Session session) {
     	connected = true;
     	this.session = session;
-        System.out.printf("Connection was succesful for: " + this.getClass());
+        System.out.printf("Connection was succesful for: " + this.getClass().getSimpleName());
     }
 
     @SuppressWarnings("unused")
@@ -133,11 +133,17 @@ public class ConnectionWrapper {
 	}
 
 	public void close() {
-		session.close();
+		System.out.println("Closing connection: " + this.getClass().getSimpleName());
+		if (session != null) {
+			session.close();
+		}
 	}
 
 	public void close(int statusCode, String args) {
-		session.close(statusCode, args);
+		System.out.println("Closing connection: " + this.getClass().getSimpleName());
+		if (session != null) {
+			session.close(statusCode, args);
+		}
 	}
 
 	/**
