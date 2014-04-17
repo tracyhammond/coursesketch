@@ -3,9 +3,10 @@ package handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import multiConnection.MultiConnectionManager;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.MultiConnectionManager;
 
-import org.java_websocket.WebSocket;
+import org.eclipse.jetty.websocket.api.Session;
 
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
@@ -32,7 +33,7 @@ public class DataRequestHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
 	public static String NO_COURSE_MESSAGE = "You do not have any courses associated with this account";
 
-	public static void handleRequest(Request req, WebSocket conn, String sessionId, MultiConnectionManager internalConnections) {
+	public static void handleRequest(Request req, Session conn, String sessionId, MultiConnectionManager internalConnections) {
 		try {
 			System.out.println("Receiving DATA Request...");
 
@@ -141,18 +142,18 @@ public class DataRequestHandler {
 					results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
 				}
 			}
-			conn.send(buildRequest(results, SUCCESS_MESSAGE, req).toByteArray());
+			GeneralConnectionServer.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
 		} catch (InvalidProtocolBufferException e) {
 			e.printStackTrace();
-			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());
+			GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
 		}
 		// decode request and pull correct information from database.institution (courses, assignments, ...) then repackage everything and send it out
 		catch (AuthenticationException e) {
 			e.printStackTrace();
-			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());
+			GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
 		} catch (Exception e) {
 			e.printStackTrace();
-			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());
+			GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
 		}
 	}
 

@@ -1,16 +1,21 @@
 package database.submission;
 
-import static util.StringConstants.*;
+import static util.StringConstants.ADMIN;
+import static util.StringConstants.COURSE_PROBLEM_COLLECTION;
+import static util.StringConstants.EXPERIMENT_COLLECTION;
+import static util.StringConstants.MOD;
+import static util.StringConstants.SELF_ID;
+import static util.StringConstants.SOLUTION_COLLECTION;
+import static util.StringConstants.SOLUTION_ID;
 
 import java.util.ArrayList;
 
-import multiConnection.MultiConnectionManager;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
-import org.java_websocket.WebSocket;
 
 import protobuf.srl.query.Data.DataRequest;
-import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
@@ -22,13 +27,11 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import com.mongodb.MongoClient;
 
 import connection.SubmissionConnection;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
-import database.institution.Institution;
 
 
 public class SubmissionManager 

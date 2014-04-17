@@ -94,6 +94,13 @@ public class MultiConnectionManager {
 		addConnection(connection, connectionType);
 	}
 
+	/**
+	 * Drops all of the connections then adds them all back
+	 */
+	protected void reconnect() {
+		this.dropAllConnection(true, false);
+		this.connectServers(parent);
+	}
 
 	/**
 	 * Does nothing by default.  Can be overwritten to make life easier.

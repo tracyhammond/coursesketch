@@ -1,11 +1,17 @@
 package database.institution;
 
-import static util.StringConstants.*;
+import static util.StringConstants.DATABASE;
+import static util.StringConstants.GROUP_PREFIX;
+import static util.StringConstants.SELF_ID;
+import static util.StringConstants.UPDATE_COLLECTION;
+import static util.StringConstants.USER_COLLECTION;
+import static util.StringConstants.USER_GROUP_COLLECTION;
+import static util.StringConstants.USER_LIST;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import multiConnection.MultiConnectionManager;
+import jettyMultiConnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
 

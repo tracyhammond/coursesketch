@@ -6,7 +6,7 @@ import jettyMultiConnection.GeneralConnectionServlet;
 
 public class LoginRunner extends GeneralConnectionRunner {
 	public static void main(String args[]) {
-		LoginRunner run = new LoginRunner();
+		LoginRunner run = new LoginRunner(args);
 		try {
 			run.runAll();
 		} catch (Exception e) {
@@ -14,7 +14,8 @@ public class LoginRunner extends GeneralConnectionRunner {
 		}
 	}
 
-	public LoginRunner() {
+	public LoginRunner(String args[]) {
+		super(args);
 		super.port = 8886;
 	}
 
