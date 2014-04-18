@@ -36,7 +36,7 @@ public class GeneralConnectionServer {
 
     @OnWebSocketClose
     public void onClose(Session conn, int statusCode, String reason) {
-    	System.out.println( conn + " has disconnected from The Server." + statusCode + "with reason : " + reason); // TODO: find out how to see if the connection is closed by us or them.
+    	System.out.println( conn.getRemoteAddress() + " has disconnected from The Server." + statusCode + "with reason : " + reason); // TODO: find out how to see if the connection is closed by us or them.
 		MultiConnectionState id = connectionToId.remove(conn);
 		if (id != null) {
 			idToConnection.remove(id);

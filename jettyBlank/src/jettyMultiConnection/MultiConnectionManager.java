@@ -150,7 +150,7 @@ public class MultiConnectionManager {
 	 * @return a valid connection.
 	 */
 	public ConnectionWrapper getBestConnection(Class<? extends ConnectionWrapper> connectionType) {
-		System.out.println("getting Connection from type: " + connectionType);
+		System.out.println("getting Connection: " + connectionType.getSimpleName());
 		ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
 		if (cons == null) {
 			throw new NullPointerException("ConnectionType: "+ connectionType.getName() +" does not exist in this manager");
