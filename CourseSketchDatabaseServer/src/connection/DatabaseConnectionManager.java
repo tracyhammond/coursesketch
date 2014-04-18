@@ -13,6 +13,9 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
 		super(parent, connectType, secure);
 	}
 
+	/**
+	 * Attempts to send the file via the specific connection type.  If it fails then it tries to reconnect and send again.
+	 */
 	@Override
 	public void send(final Request req,final  String sessionID,final Class<? extends ConnectionWrapper> connectionType) {
 		System.out.println("TRYING TO RESEND THE THREAD! THROUGH A SEPCIAL METHOD!");

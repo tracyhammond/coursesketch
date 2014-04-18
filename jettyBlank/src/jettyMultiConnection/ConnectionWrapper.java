@@ -20,26 +20,28 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 @WebSocket()
 public class ConnectionWrapper {
 
+	public static final int CLOSE_ABNORMAL = 1006;
+	public static final String CLOSE_EOF = "(EOF)*";
+	private static final int MAX_FAILED_STARTS = 5;
 	protected GeneralConnectionServer parentServer;
 	protected MultiConnectionManager parentManager;
-	private final CountDownLatch closeLatch;
 
+	private WebSocketClient client;
     private Session session;
     private URI destination;
     private boolean connected = false;
-
-    public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
-        return this.closeLatch.await(duration, unit);
-    }
+    private boolean EOFReached = false;
+    private boolean started = false;
+    private int failedStarts = 0;
 
 	public ConnectionWrapper(URI destination, GeneralConnectionServer parentServer) {
-    	this.closeLatch = new CountDownLatch(1);
     	this.parentServer = parentServer;
     	this.destination = destination;
+    	started = false;
     }
 
 	public void connect() throws Throwable {
-		WebSocketClient client = new WebSocketClient();
+		client = new WebSocketClient();
 		try {
 			client.start();
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
@@ -53,17 +55,22 @@ public class ConnectionWrapper {
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
+    	connected = false;
         System.out.printf("Connection closed: %d - %s%n", statusCode, reason);
+        if (statusCode == CLOSE_ABNORMAL && reason.matches(CLOSE_EOF) || EOFReached) {
+        	EOFReached = true;
+        }
         this.session = null;
-        connected = false;
-        this.closeLatch.countDown();
     }
 
     @OnWebSocketConnect
     public void onOpen(Session session) {
+    	failedStarts = 0;
+    	started = true;
+    	EOFReached = false;
     	connected = true;
     	this.session = session;
-        System.out.printf("Connection was succesful for: " + this.getClass().getSimpleName());
+        System.out.println("Connection was succesful for: " + this.getClass().getSimpleName());
     }
 
     @SuppressWarnings("unused")
@@ -75,6 +82,10 @@ public class ConnectionWrapper {
     @SuppressWarnings("static-method")
    	@OnWebSocketError
    	public void onError(Session session, Throwable cause) {
+    	if (cause instanceof java.io.EOFException || cause instanceof java.net.SocketTimeoutException) {
+    		EOFReached = true;
+    		System.out.println("This websocket timed out!");
+    	}
     	if (session != null) {
     		System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
     	} else {
@@ -110,17 +121,53 @@ public class ConnectionWrapper {
 		}
 		return parentServer.getIdToConnection().get(state);
 	}
-
+	
 	/**
 	 * Sends a binary message over the connection
 	 * @param buffer
 	 * @throws ConnectionException 
 	 */
-	public void send(ByteBuffer buffer) throws ConnectionException {
-		if (!connected) {
-			throw new ConnectionException("Websocket not connected yet");
+	public void send(final ByteBuffer buffer) throws ConnectionException {
+		if (connected) {
+			session.getRemote().sendBytesByFuture(buffer);
+		} else if (EOFReached && failedStarts < MAX_FAILED_STARTS) {
+			System.out.println("Trying to reconnect a websocket that ended because of a timeout");
+			failedStarts += 1;
+			// maybe try reconnecting here?
+			Thread d = new Thread() {
+				@Override
+				public void run() {
+					try {
+						connect();
+						Thread.sleep(1000);
+						send(buffer);
+					} catch (Throwable e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			d.start();
+		} else if (!started && failedStarts < MAX_FAILED_STARTS) {
+			System.out.println("Trying to wait on a websocket that has not connected yet");
+			failedStarts += 1;
+			Thread d = new Thread() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(1000);
+						send(buffer);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (ConnectionException e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			d.start();
+			
+		} else if (failedStarts >= MAX_FAILED_STARTS) {
+			throw new ConnectionException("Websocket faild to connect");
 		}
-		session.getRemote().sendBytesByFuture(buffer);
 	}
 
 	/**
