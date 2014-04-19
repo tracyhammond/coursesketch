@@ -22,7 +22,7 @@ public class ConnectionWrapper {
 
 	public static final int CLOSE_ABNORMAL = 1006;
 	public static final String CLOSE_EOF = "(EOF)*";
-	private static final int MAX_FAILED_STARTS = 5;
+	private static final int MAX_FAILED_STARTS = 10;
 	protected GeneralConnectionServer parentServer;
 	protected MultiConnectionManager parentManager;
 
@@ -129,9 +129,10 @@ public class ConnectionWrapper {
 	 */
 	public void send(final ByteBuffer buffer) throws ConnectionException {
 		if (connected) {
+			System.out.println("Sending message from: " + this.getClass().getSimpleName());
 			session.getRemote().sendBytesByFuture(buffer);
 		} else if (EOFReached && failedStarts < MAX_FAILED_STARTS) {
-			System.out.println("Trying to reconnect a websocket that ended because of a timeout");
+			System.out.println("Trying to reconnect " + this.getClass().getSimpleName() + ", a websocket, that ended because of a timeout");
 			failedStarts += 1;
 			// maybe try reconnecting here?
 			Thread d = new Thread() {
@@ -148,7 +149,7 @@ public class ConnectionWrapper {
 			};
 			d.start();
 		} else if (!started && failedStarts < MAX_FAILED_STARTS) {
-			System.out.println("Trying to wait on a websocket that has not connected yet");
+			System.out.println("Trying to wait on " + this.getClass().getSimpleName() + ", a websocket, that has not connected yet");
 			failedStarts += 1;
 			Thread d = new Thread() {
 				@Override
@@ -164,9 +165,9 @@ public class ConnectionWrapper {
 				}
 			};
 			d.start();
-			
-		} else if (failedStarts >= MAX_FAILED_STARTS) {
-			throw new ConnectionException("Websocket faild to connect");
+		} else { // failedStarts >= MAX_FAILED_STARTS
+			System.out.println(this.getClass().getSimpleName() + " failed to connect after multiple tries");
+			throw new ConnectionException("" + this.getClass().getSimpleName() + " failed to connect after multiple tries");
 		}
 	}
 
@@ -176,6 +177,7 @@ public class ConnectionWrapper {
 	 * @throws ConnectionException 
 	 */
 	public final void send(byte[] bytes) throws ConnectionException {
+		System.err.println("I MADE IT THIS FAR");
 		send(ByteBuffer.wrap(bytes));
 	}
 
