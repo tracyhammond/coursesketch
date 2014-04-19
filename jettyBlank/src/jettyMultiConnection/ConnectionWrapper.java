@@ -46,6 +46,10 @@ public class ConnectionWrapper {
     	started = false;
     }
 
+	protected void setFailedSocketListener(ActionListener listen) {
+		socketFailedListener = listen;
+	}
+	
 	public void connect() throws Throwable {
 		client = new WebSocketClient();
 		try {
@@ -94,9 +98,13 @@ public class ConnectionWrapper {
     		System.out.println("This websocket timed out!");
     	}
     	if (session != null) {
-    		System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
+    		System.err.println("Socket: " + this.getClass().getSimpleName() + "Session Error: " + cause);
     	} else {
-    		System.out.println("Error: " + cause);
+    		System.err.println("Socket: " + this.getClass().getSimpleName() + " Error: " + cause);
+    		if (cause instanceof java.net.ConnectException) {
+    			//nonExistantServer = true;
+    			// TODO: log this error
+    		}
     	}
 	}
 
@@ -144,12 +152,13 @@ public class ConnectionWrapper {
 				while (queuedMessages.size() > 0) {
 					session.getRemote().sendBytesByFuture(queuedMessages.remove(0));
 				}
+				queing = false;
 			}
 		} else if ((started || EOFReached) && failedStarts < MAX_FAILED_STARTS) {
-			System.out.println("Trying to reconnect " + this.getClass().getSimpleName() + ", a websocket, that ended because of a timeout");
+			System.err.println("Trying to reconnect " + this.getClass().getSimpleName() + ". It has ended because of a timeout");
 			if (!queing) {
-				System.out.println("Adding an exception to the queing");
 				failedStarts += 1;
+				System.err.println("attempt " + failedStarts +" out of " + MAX_FAILED_STARTS);
 				queing = true;
 				// maybe try reconnecting here?
 				Thread d = new Thread() {
@@ -167,13 +176,15 @@ public class ConnectionWrapper {
 				};
 				d.start();
 			} else {
-				System.out.println("Adding a queuedMessage");
+				System.err.println("Adding a queuedMessage");
 				queuedMessages.add(buffer);
 			}
 		} else if (failedStarts < MAX_FAILED_STARTS) { // connections has not been established yet
+			System.err.println("Trying to wait on " + this.getClass().getSimpleName() + ". It has not connected yet.");
 			if (!queing) {
 				queing = true;
-				System.out.println("Trying to wait on " + this.getClass().getSimpleName() + ", a websocket, that has not connected yet");
+				failedStarts += 1;
+				System.err.println("attempt " + failedStarts +" out of " + MAX_FAILED_STARTS);
 				Thread d = new Thread() {
 					@Override
 					public void run() {
@@ -190,15 +201,17 @@ public class ConnectionWrapper {
 				};
 				d.start();
 			} else {
-				System.out.println("Adding a queuedMessage");
+				System.err.println("Adding a queuedMessage");
 				queuedMessages.add(buffer);
 			}
-		} else if (failedStarts >= MAX_FAILED_STARTS){ // failedStarts >= MAX_FAILED_STARTS
+		} else if (failedStarts >= MAX_FAILED_STARTS) { // failedStarts >= MAX_FAILED_STARTS
 			queing = false;
 			System.out.println(failedStarts);
 			System.out.println(MAX_FAILED_STARTS);
-			System.out.println(this.getClass().getSimpleName() + " failed to connect after multiple tries");
-			socketFailedListener.actionPerformed(new ActionEvent(queuedMessages, 0, "FailedSockets"));
+			queuedMessages.add(buffer); // adds this version because it has not been added before
+			System.err.println(this.getClass().getSimpleName() + " failed to connect after multiple tries");
+			socketFailedListener.actionPerformed(new ActionEvent(queuedMessages, 0, this.getClass().getName()));
+			queuedMessages.clear(); // all messages are empty after the actions is finished
 			throw new ConnectionException("" + this.getClass().getSimpleName() + " failed to connect after multiple tries");
 		}
 	}
@@ -209,7 +222,6 @@ public class ConnectionWrapper {
 	 * @throws ConnectionException 
 	 */
 	public final void send(byte[] bytes) throws ConnectionException {
-		System.err.println("I MADE IT THIS FAR");
 		send(ByteBuffer.wrap(bytes));
 	}
 
