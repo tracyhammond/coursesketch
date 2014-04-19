@@ -84,6 +84,7 @@ public class MultiConnectionManager {
 		try {
 			getBestConnection(connectionType).send(packagedRequest.toByteArray());
 		} catch(NullPointerException e) {
+			System.out.println("Failed to get a local connection");
 			throw new ConnectionException(e.getLocalizedMessage());
 		}
 	}
@@ -150,11 +151,11 @@ public class MultiConnectionManager {
 	 * @return a valid connection.
 	 */
 	public ConnectionWrapper getBestConnection(Class<? extends ConnectionWrapper> connectionType) {
-		System.out.println("getting Connection: " + connectionType.getSimpleName());
 		ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
 		if (cons == null) {
 			throw new NullPointerException("ConnectionType: "+ connectionType.getName() +" does not exist in this manager");
 		}
+		System.out.println("getting Connection: " + connectionType.getSimpleName());
 		return cons.get(0); // lame best connection.
 	}
 

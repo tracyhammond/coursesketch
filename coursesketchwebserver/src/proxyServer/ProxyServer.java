@@ -111,6 +111,7 @@ public class ProxyServer extends GeneralConnectionServer {
 				try {
 					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
 				} catch(Exception e) {
+					e.printStackTrace();
 					send(conn, createBadConnectionResponse(req, AnswerConnection.class));
 				}
 				return;
@@ -122,6 +123,7 @@ public class ProxyServer extends GeneralConnectionServer {
 				try {
 					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
 				} catch(Exception e) {
+					e.printStackTrace();
 					send(conn, createBadConnectionResponse(req, DataConnection.class));
 				}
 				return;
