@@ -1,7 +1,10 @@
 package jettyMultiConnection;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +36,9 @@ public class ConnectionWrapper {
     private boolean EOFReached = false;
     private boolean started = false;
     private int failedStarts = 0;
+    private boolean queing = false;
+    ArrayList<ByteBuffer> queuedMessages = new ArrayList<ByteBuffer>();
+    ActionListener socketFailedListener;
 
 	public ConnectionWrapper(URI destination, GeneralConnectionServer parentServer) {
     	this.parentServer = parentServer;
@@ -69,6 +75,7 @@ public class ConnectionWrapper {
     	started = true;
     	EOFReached = false;
     	connected = true;
+    	queing = false;
     	this.session = session;
         System.out.println("Connection was succesful for: " + this.getClass().getSimpleName());
     }
@@ -123,7 +130,9 @@ public class ConnectionWrapper {
 	}
 	
 	/**
-	 * Sends a binary message over the connection
+	 * Sends a binary message over the connection.
+	 * 
+	 * If the connection fails then a reconnect is attempted.  If the attempt fails more than 10 times then an exception is thrown
 	 * @param buffer
 	 * @throws ConnectionException 
 	 */
@@ -131,42 +140,65 @@ public class ConnectionWrapper {
 		if (connected) {
 			System.out.println("Sending message from: " + this.getClass().getSimpleName());
 			session.getRemote().sendBytesByFuture(buffer);
-		} else if (EOFReached && failedStarts < MAX_FAILED_STARTS) {
+			if (queing) {
+				while (queuedMessages.size() > 0) {
+					session.getRemote().sendBytesByFuture(queuedMessages.remove(0));
+				}
+			}
+		} else if ((started || EOFReached) && failedStarts < MAX_FAILED_STARTS) {
 			System.out.println("Trying to reconnect " + this.getClass().getSimpleName() + ", a websocket, that ended because of a timeout");
-			failedStarts += 1;
-			// maybe try reconnecting here?
-			Thread d = new Thread() {
-				@Override
-				public void run() {
-					try {
-						connect();
-						Thread.sleep(1000);
-						send(buffer);
-					} catch (Throwable e) {
-						e.printStackTrace();
+			if (!queing) {
+				System.out.println("Adding an exception to the queing");
+				failedStarts += 1;
+				queing = true;
+				// maybe try reconnecting here?
+				Thread d = new Thread() {
+					@Override
+					public void run() {
+						try {
+							connect();
+							Thread.sleep(1000);
+							queing = false;
+							send(buffer);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			};
-			d.start();
-		} else if (!started && failedStarts < MAX_FAILED_STARTS) {
-			System.out.println("Trying to wait on " + this.getClass().getSimpleName() + ", a websocket, that has not connected yet");
-			failedStarts += 1;
-			Thread d = new Thread() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(1000);
-						send(buffer);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (ConnectionException e) {
-						e.printStackTrace();
+				};
+				d.start();
+			} else {
+				System.out.println("Adding a queuedMessage");
+				queuedMessages.add(buffer);
+			}
+		} else if (failedStarts < MAX_FAILED_STARTS) { // connections has not been established yet
+			if (!queing) {
+				queing = true;
+				System.out.println("Trying to wait on " + this.getClass().getSimpleName() + ", a websocket, that has not connected yet");
+				Thread d = new Thread() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(1000);
+							queing = false;
+							send(buffer);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (ConnectionException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			};
-			d.start();
-		} else { // failedStarts >= MAX_FAILED_STARTS
+				};
+				d.start();
+			} else {
+				System.out.println("Adding a queuedMessage");
+				queuedMessages.add(buffer);
+			}
+		} else if (failedStarts >= MAX_FAILED_STARTS){ // failedStarts >= MAX_FAILED_STARTS
+			queing = false;
+			System.out.println(failedStarts);
+			System.out.println(MAX_FAILED_STARTS);
 			System.out.println(this.getClass().getSimpleName() + " failed to connect after multiple tries");
+			socketFailedListener.actionPerformed(new ActionEvent(queuedMessages, 0, "FailedSockets"));
 			throw new ConnectionException("" + this.getClass().getSimpleName() + " failed to connect after multiple tries");
 		}
 	}
