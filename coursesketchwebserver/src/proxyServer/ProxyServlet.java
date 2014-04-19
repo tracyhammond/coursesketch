@@ -24,4 +24,10 @@ public final class ProxyServlet extends GeneralConnectionServlet {
 	protected final MultiConnectionManager createConnectionManager(boolean connectLocally, boolean secure) {
 		return new ProxyConnectionManager(connectionServer, connectLocally, secure);
 	}
+
+	@Override
+	public void reconnect() {
+		super.reconnect();
+		((ProxyServer) connectionServer).initializeListeners();
+	}
 }

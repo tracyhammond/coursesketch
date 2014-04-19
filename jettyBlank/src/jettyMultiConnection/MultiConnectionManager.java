@@ -1,5 +1,6 @@
 package jettyMultiConnection;
 
+import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.ArrayList;
@@ -98,6 +99,21 @@ public class MultiConnectionManager {
 	public void createAndAddConnection(GeneralConnectionServer serv, boolean isLocal, String remoteAdress, int port, boolean isSecure, Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
 		ConnectionWrapper connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
 		addConnection(connection, connectionType);
+	}
+
+	/**
+	 * Allows a server to set an action to occur when a socket is no longer able to send messages.
+	 * @param listen the source object will be a list of request and will also contain a string specifying the type of connection.
+	 * @param connectionType
+	 */
+	public void setFailedSocketListener(ActionListener listen, Class<? extends ConnectionWrapper> connectionType) {
+		ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
+		if (cons == null) {
+			throw new NullPointerException("ConnectionType: "+ connectionType.getName() +" does not exist in this manager");
+		}
+		for (ConnectionWrapper con : cons) {
+			con.setFailedSocketListener(listen);
+		}
 	}
 
 	/**
