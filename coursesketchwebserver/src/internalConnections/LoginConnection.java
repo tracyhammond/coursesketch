@@ -25,6 +25,7 @@ public class LoginConnection extends ConnectionWrapper {
 		super(destination, parent);
 	}
 
+	@Override
 	public void onMessage(ByteBuffer buffer) {
 		Request r = GeneralConnectionServer.Decoder.parseRequest(buffer);
 		if (r.getRequestType() == Request.MessageType.TIME) {
