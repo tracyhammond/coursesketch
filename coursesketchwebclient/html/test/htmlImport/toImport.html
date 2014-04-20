@@ -1,0 +1,22 @@
+<template id="editContent">
+
+<script>
+var docScope = document.currentScript.ownerDocument;
+alert(docScope);
+var grabLinks = docScope.querySelector('link');
+console.log("Grabbling");
+console.log(grabLinks);
+</script>
+<style>
+	.importClass {
+		height:50;
+		background-color:#FF00FF;
+	}
+</style>
+<style>@import url("css/test/testImport.css");</style>
+<div class = "commonClass">
+</div>
+<div class = "importClass">
+</div>
+<button onclick="getDocument()"></button>
+</template>
