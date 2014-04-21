@@ -252,6 +252,7 @@ function replaceEditContent(src, object) {
 			var shadow = toReplace.createShadowRoot();
 			var clone = document.importNode(importedData.content, true);
 			shadow.appendChild(clone);
+			contentManager.setHost(shadow);
 		} else {
 			toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
 			'<h2 style = "text-align:center">Click an item to edit</h2>';
