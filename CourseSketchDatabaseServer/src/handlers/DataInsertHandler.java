@@ -26,9 +26,11 @@ import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlGrade;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
 import protobuf.srl.school.School.SrlUser;
+
 
 /**
  * Handles data being added or edited.
@@ -81,6 +83,11 @@ public class DataInsertHandler {
 							SrlBankProblem problem = SrlBankProblem.parseFrom(itemSet.getData());
 							String resultId = Institution.mongoInsertBankProblem(userId, problem);
 							results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
+						} break;
+						case CLASS_GRADE: {
+							SrlGrade grade = SrlGrade.parseFrom(itemSet.getData());
+							String resultId = Institution.mongoInsertClassGrade(userId, grade);
+							results.add(buildResult(resultId + " : " + grade.getId(), itemSet.getQuery()));
 						} break;
 						case USER_INFO: {
 							UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), userId);
