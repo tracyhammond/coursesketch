@@ -32,6 +32,7 @@
 					var shadow = toReplace.createShadowRoot();
 					var clone = document.importNode(importedData.content, true);
 					shadow.appendChild(clone);
+					setHostValues(shadow);
 				} else {
 					toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
 					'<h2 style = "text-align:center">Click an item to edit</h2>';
@@ -54,11 +55,18 @@
 			}
 		}
 	</script>
-
+	<script>
+		function hosint() {
+			var host = document.getElementById('editable_unit');
+			alert(host);
+			setHostValues(host);
+		}
+	</script>
 </head>
 <body>
 	<div class="commonClass"></div>
-	<button onclick="importHTML('html/test/htmlImport/toImport.html');"></button>
+	<button onclick="importHTML('html/test/htmlImport/toImport.html');">import button</button>
+	<button onclick="hosint();">host button</button>
 	<div id="editable_unit"></div>
 </body>
 </html>

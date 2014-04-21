@@ -7,15 +7,80 @@
     </head>
     <body>
 		<h2 class = "title">Edit Course Content</h2>
-		<h3 id="uniqueIDHolder">Class ID: </h3>
-		<input id ="semester" type="text" placeholder="Semester">
-		<input id ="openDate" type="date">
-		<input id ="closeDate" type="date">
-		<input id ="admins" type="text" placeholder="List of admins separated by space">
-		<input id ="mods" type="text" placeholder="List of mods separated by space">
-		<input id ="users" type="text" placeholder="List of users separated by space">
-		<button onclick = "save();">SAVE</button>
+		<h3 id = "uniqueIDHolder">Class ID: </h3>
+		<input id = "semester" type="text" placeholder="Semester">
+		<input id = "openDate" type="date">
+		<input id = "closeDate" type="date">
+		<select id ="viewPermission">
+		<option value="open">Open</option><option value="public">Public</option>
+		<option value="protected">Protected</option><option value="private">Private</option></select>
+		<p id ="selectInfo"></p>
+		<button id = "publish">Publish</button>
+		<button id = "clone">Clone</button>
 	</body>
+	<script>
+		var contentManager = new function() {
+			console.log("Creating the contentManager");
+			var course;
+			var host;
+			var hostSet = false;
+			this.setHost = function(shadowHost) {
+				if (!hostSet) {
+					hostSet = true;
+					host = shadowHost;
+					setUpActions();
+				}
+			};
+
+			function changeViewOption(element, value) {
+				var textValue = host.getElementById("selectInfo");
+				if (value == "open") {
+					textValue.textContent = "When a class is open it means that no one needs to register to take it.<br>" +
+					"It can optionally have open and close dates but for an open class these typically don't exist.";
+				} else if (value == "public") {
+					textValue.textContent = "When a class is public it means that everyone can search the class and sign up for it.<br>"
+					"You can remove people from the class and this class must have an open and close date";
+				} else if (value == "protected") {
+					textValue.textContent = "When a class is protected it means that only people with a link/key can register for your class.<br>"
+						"This class is not searchable. This class must have an open and close date";
+				} else if (value == "private") {
+					textValue.textContent = "When a class is private it means that only people you have manually added to the course list can view it.<br>"
+						"This class is not searchable. This class must have an open and close date";
+				}
+			}
+
+			function setUpActions() {
+				console.log("Setting up actions for the shadow course");
+				document.getElementById("viewPermission").addEventListener("onchange", function(event) {
+					changeViewOption(this, this.value);
+				});
+			}
+			
+			/**
+			* Sets the course and all of the data that goes with it.
+			*/
+			this.setCourse = function(course) {
+				
+			};
+
+			this.getCourse = function() {
+				
+			};
+
+			/**
+			* information required before publishing:
+				CourseID
+				Name
+				Description
+				Open / Close date (unless it is super public)
+				Public/Procted/Private
+			*/
+			this.setPublishActionListener = function(event) {
+				var course = this.getCourse();
+				event(course);
+			}
+		};
+	</script>
 </template>
 <!-- 
 Must Show: 

@@ -1,12 +1,5 @@
 <template id="editContent">
 
-<script>
-var docScope = document.currentScript.ownerDocument;
-alert(docScope);
-var grabLinks = docScope.querySelector('link');
-console.log("Grabbling");
-console.log(grabLinks);
-</script>
 <style>
 	.importClass {
 		height:50;
@@ -16,7 +9,25 @@ console.log(grabLinks);
 <style>@import url("css/test/testImport.css");</style>
 <div class = "commonClass">
 </div>
-<div class = "importClass">
+<div class = "importClass" id = "subId">
 </div>
 <button onclick="getDocument()"></button>
+
+<script>
+
+function setHostValues(elementHost) {
+	alert(elementHost);
+	console.log(elementHost);
+	var subvalue = elementHost.getElementById("subId");
+	subvalue.innerHTML = "I AM INSIDE YOU!";
+	//console.log();
+}
+
+(function() {
+	var docScope = document.currentScript.ownerDocument;
+	console.log("loading doc data");
+	docScope.getElementById("editContent");
+	console.log(docScope.querySelector("#editContent"));
+})();
+</script>
 </template>
