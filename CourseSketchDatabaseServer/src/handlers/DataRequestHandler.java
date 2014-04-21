@@ -19,6 +19,7 @@ import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlGrade;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
 
@@ -75,6 +76,13 @@ public class DataRequestHandler {
 							SrlSchool.Builder bankproblemSchool = SrlSchool.newBuilder();
 							bankproblemSchool.addAllBankProblems(bankProblemLoop);
 							results.add(buildResult(bankproblemSchool.build().toByteString(),ItemQuery.BANK_PROBLEM));
+							break;
+						}
+						case CLASS_GRADE: {
+							List<SrlGrade> classGradeLoop = Institution.mongoGetGrade(itrequest.getItemIdList(), userId);
+							SrlSchool.Builder gradeSchool = SrlSchool.newBuilder();
+							gradeSchool.addAllGrades(classGradeLoop);
+							results.add(buildResult(gradeSchool.build().toByteString(),ItemQuery.CLASS_GRADE));
 							break;
 						}
 						case COURSE_SEARCH: {
