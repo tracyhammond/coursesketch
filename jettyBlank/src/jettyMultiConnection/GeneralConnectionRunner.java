@@ -33,6 +33,11 @@ public class GeneralConnectionRunner {
 
 	protected GeneralConnectionRunner(String[] args) {
 		this.args = args;
+		if (args.length >= 1 && args[0].equals("local")) {
+			local = true;
+		} else {
+			local = false;
+		}
 	}
 
 	final private GeneralConnectionRunner localInstance = this;
