@@ -3,7 +3,6 @@
 
 package protobuf.srl.submission;
 
-@SuppressWarnings("unused")
 public final class Submission {
   private Submission() {}
   public static void registerAllExtensions(

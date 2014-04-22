@@ -3,7 +3,6 @@
 
 package protobuf.srl.commands;
 
-@SuppressWarnings("unused")
 public final class Commands {
   private Commands() {}
   public static void registerAllExtensions(
@@ -646,7 +645,7 @@ public final class Commands {
 
       public protobuf.srl.commands.Commands.SrlUpdateList buildPartial() {
         protobuf.srl.commands.Commands.SrlUpdateList result = new protobuf.srl.commands.Commands.SrlUpdateList(this);
-		int from_bitField0_ = bitField0_;
+        int from_bitField0_ = bitField0_;
         if (listBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             list_ = java.util.Collections.unmodifiableList(list_);

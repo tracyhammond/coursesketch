@@ -599,7 +599,6 @@ public final class Data {
 
       public protobuf.srl.query.Data.DataRequest buildPartial() {
         protobuf.srl.query.Data.DataRequest result = new protobuf.srl.query.Data.DataRequest(this);
-        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (itemsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -2040,7 +2039,6 @@ public final class Data {
 
       public protobuf.srl.query.Data.DataSend buildPartial() {
         protobuf.srl.query.Data.DataSend result = new protobuf.srl.query.Data.DataSend(this);
-        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (itemsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -2421,7 +2419,6 @@ public final class Data {
         getUnknownFields() {
       return this.unknownFields;
     }
-    @SuppressWarnings("unused")
     private ItemSend(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3215,7 +3212,6 @@ public final class Data {
 
       public protobuf.srl.query.Data.DataResult buildPartial() {
         protobuf.srl.query.Data.DataResult result = new protobuf.srl.query.Data.DataResult(this);
-        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (resultsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -3674,7 +3670,6 @@ public final class Data {
         getUnknownFields() {
       return this.unknownFields;
     }
-    @SuppressWarnings("unused")
     private ItemResult(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4968,7 +4963,6 @@ public final class Data {
 
       public protobuf.srl.query.Data.IdList buildPartial() {
         protobuf.srl.query.Data.IdList result = new protobuf.srl.query.Data.IdList(this);
-        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           list_ = new com.google.protobuf.UnmodifiableLazyStringList(
@@ -5183,7 +5177,6 @@ public final class Data {
         getUnknownFields() {
       return this.unknownFields;
     }
-    @SuppressWarnings("unused")
     private ExperimentReview(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)

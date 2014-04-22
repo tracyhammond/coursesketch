@@ -7518,7 +7518,6 @@ public final class Sketch {
 
       public protobuf.srl.sketch.Sketch.SrlAttributes buildPartial() {
         protobuf.srl.sketch.Sketch.SrlAttributes result = new protobuf.srl.sketch.Sketch.SrlAttributes(this);
-        @SuppressWarnings("unused")
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           keys_ = new com.google.protobuf.UnmodifiableLazyStringList(
