@@ -12,8 +12,12 @@ import java.net.UnknownHostException;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
@@ -79,11 +83,24 @@ public class GeneralConnectionRunner {
 				cf.setTrustStorePassword(keystorePassword);
 				//cf.setCertAlias("nss324-o");
 				//cf.checkKeyStore();
+				SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(cf, org.eclipse.jetty.http.HttpVersion.HTTP_1_1.toString());
+
+			    HttpConfiguration config = new HttpConfiguration();
+			    config.setSecureScheme("https");
+			    config.setSecurePort(port);
+			    config.setOutputBufferSize(32786);
+			    config.setRequestHeaderSize(8192);
+			    config.setResponseHeaderSize(8192);
+			    HttpConfiguration sslConfiguration = new HttpConfiguration(config);
+			    sslConfiguration.addCustomizer(new SecureRequestCustomizer());
+			    HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(sslConfiguration);
+
+			    ServerConnector connector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
+			    connector.setPort(port);
+			    server.addConnector(connector);
 			
-			ServerConnector ssl_connector = new ServerConnector(server);
-			ssl_connector.setPort(port);
 			
-			server.setConnectors(new Connector[]{ssl_connector});
+			    server.setConnectors(new Connector[]{connector});
 	}
 
 	/**
