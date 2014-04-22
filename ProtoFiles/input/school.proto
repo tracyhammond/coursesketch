@@ -122,8 +122,6 @@ message SrlGrade {
 	required string problemId = 2;
 	required float grade = 3;
 	optional string comment = 4;
-	optional string assignmentId = 6;
-	optional SrlPermission accessPermission = 7;
 
 	//optional string subTopic = 7;
 	//optional string source = 8;

@@ -24,6 +24,7 @@
 			var course;
 			var host;
 			var hostSet = false;
+			var idToVariableMap = {}; // maps the Id of an element to a string that represents the va
 			this.setHost = function(shadowHost) {
 				if (!hostSet) {
 					hostSet = true;
@@ -56,6 +57,12 @@
 				});
 			}
 			
+			function updateCourse() {
+			}
+
+			function updateValues() {
+			}
+
 			/**
 			* Sets the course and all of the data that goes with it.
 			*/
@@ -64,7 +71,7 @@
 			};
 
 			this.getCourse = function() {
-				
+				updateCourse();
 			};
 
 			/**
@@ -79,6 +86,10 @@
 				var course = this.getCourse();
 				event(course);
 			}
+
+			idToVariableMap['semester'] = 'semester';
+			idToVariableMap['openDate'] = 'accessDate';
+			idToVariableMap['closeDate'] = 'closeDate';
 		};
 	</script>
 </template>

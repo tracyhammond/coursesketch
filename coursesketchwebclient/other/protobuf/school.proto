@@ -6,7 +6,9 @@ message SrlSchool {
 	repeated SrlAssignment assignments = 2;
 	repeated SrlProblem problems = 3;
 	repeated SrlBankProblem bankProblems = 4;
-	
+	repeated SrlGrade grades = 5;
+	//repeated SrlBankGrade bankGrades = 6; //????
+
 }
 
 message SrlCourse {
@@ -113,6 +115,18 @@ message SrlBankProblem {
 		FREE_RESP = 3;
 		CHECK_BOX = 4;	
 	}
+}
+
+message SrlGrade {
+	required string id = 1;
+	required string problemId = 2;
+	required float grade = 3;
+	optional string comment = 4;
+
+	//optional string subTopic = 7;
+	//optional string source = 8;
+	//repeated string otherKeywords = 9;
+
 }
 
 message DateTime { // Needs to be implemented with enums. Probably already exists elsewhere.
