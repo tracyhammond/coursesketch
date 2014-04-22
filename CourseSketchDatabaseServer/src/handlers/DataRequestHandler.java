@@ -78,6 +78,7 @@ public class DataRequestHandler {
 							results.add(buildResult(bankproblemSchool.build().toByteString(),ItemQuery.BANK_PROBLEM));
 							break;
 						}
+						/*
 						case CLASS_GRADE: {
 							List<SrlGrade> classGradeLoop = Institution.mongoGetGrade(itrequest.getItemIdList(), userId);
 							SrlSchool.Builder gradeSchool = SrlSchool.newBuilder();
@@ -85,6 +86,7 @@ public class DataRequestHandler {
 							results.add(buildResult(gradeSchool.build().toByteString(),ItemQuery.CLASS_GRADE));
 							break;
 						}
+						*/
 						case COURSE_SEARCH: {
 							List<SrlCourse> courseLoop = Institution.getAllPublicCourses();
 							System.out.println("Searching all public courses: " + courseLoop);

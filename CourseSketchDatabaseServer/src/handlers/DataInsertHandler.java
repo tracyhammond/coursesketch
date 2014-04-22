@@ -84,11 +84,13 @@ public class DataInsertHandler {
 							String resultId = Institution.mongoInsertBankProblem(userId, problem);
 							results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
 						} break;
+						/*
 						case CLASS_GRADE: {
 							SrlGrade grade = SrlGrade.parseFrom(itemSet.getData());
 							String resultId = Institution.mongoInsertClassGrade(userId, grade);
 							results.add(buildResult(resultId + " : " + grade.getId(), itemSet.getQuery()));
 						} break;
+						*/
 						case USER_INFO: {
 							UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), userId);
 						} break;
