@@ -10,14 +10,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 
-import jettyMultiConnection.GeneralConnectionServlet;
-
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 public class GeneralConnectionRunner {
 
@@ -54,6 +55,7 @@ public class GeneralConnectionRunner {
 	protected boolean isLogging = false;
 	protected boolean secure = false;
 	private String keystorePassword = "";
+	private String keystorePath = "";
 
 	/**
 	 * Runs the entire startup process including input
@@ -65,7 +67,23 @@ public class GeneralConnectionRunner {
 	}
 
 	private void configureSSL() {
-		
+			
+			SslContextFactory cf = new SslContextFactory();
+			
+			//Configure SSL
+
+				//Use the real certificate
+				System.out.println("Loaded real keystore");
+				cf.setKeyStorePath(keystorePath/*"srl01_tamu_edu.jks"*/);
+				cf.setTrustStorePath(keystorePath);
+				cf.setTrustStorePassword(keystorePassword);
+				//cf.setCertAlias("nss324-o");
+				//cf.checkKeyStore();
+			
+			ServerConnector ssl_connector = new ServerConnector(server);
+			ssl_connector.setPort(port);
+			
+			server.setConnectors(new Connector[]{ssl_connector});
 	}
 
 	/**
@@ -271,5 +289,9 @@ public class GeneralConnectionRunner {
 	 */
 	protected void setKeystorePassword(String pass) {
 		this.keystorePassword = pass;
+	}
+	
+	protected void setKeystorePath(String path) {
+		this.keystorePath = path;
 	}
 }
