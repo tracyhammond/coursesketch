@@ -52,6 +52,8 @@ public class GeneralConnectionRunner {
 	private boolean production = false;
 	protected boolean local = true;
 	protected boolean isLogging = false;
+	protected boolean secure = false;
+	private String keystorePassword = "";
 
 	/**
 	 * Runs the entire startup process including input
@@ -60,6 +62,10 @@ public class GeneralConnectionRunner {
 	protected final void runAll() throws Exception {
 		this.runMost();
 		this.startInput();
+	}
+
+	private void configureSSL() {
+		
 	}
 
 	/**
@@ -75,6 +81,11 @@ public class GeneralConnectionRunner {
 			this.executeRemoveEnviroment();
 		}
 		this.createServer();
+
+		if (secure) {
+			configureSSL();
+		}
+		
 		this.addServletHandlers();
 		
 		this.startServer();
@@ -252,5 +263,13 @@ public class GeneralConnectionRunner {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Sets the password for the ssl keystore
+	 * @param pass
+	 */
+	protected void setKeystorePassword(String pass) {
+		this.keystorePassword = pass;
 	}
 }
