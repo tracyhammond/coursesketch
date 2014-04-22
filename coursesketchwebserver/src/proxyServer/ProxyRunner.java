@@ -11,6 +11,14 @@ public class ProxyRunner extends GeneralConnectionRunner {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+
+	@Override
+	public final void executeRemoveEnviroment() {
+		secure = true;
+		setKeystorePassword("Challenge");
+		setKeystorePath("srl01_tamu_edu.jks");
 	}
 
 	public ProxyRunner(String args[]) {
