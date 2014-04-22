@@ -17,7 +17,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
 	@Override
 	public final void executeRemoveEnviroment() {
 		secure = true;
-		setKeystorePassword("Challenge");
+		setKeystorePassword("Challeng3");
 		setKeystorePath("srl01_tamu_edu.jks");
 	}
 
