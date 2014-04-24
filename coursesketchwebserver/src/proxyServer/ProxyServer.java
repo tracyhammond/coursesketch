@@ -9,6 +9,7 @@ import internalConnections.RecognitionConnection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 
 import jettyMultiConnection.GeneralConnectionServer;
 import jettyMultiConnection.GeneralConnectionServlet;
@@ -16,6 +17,8 @@ import jettyMultiConnection.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.joda.time.DateTime;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -46,11 +49,26 @@ public class ProxyServer extends GeneralConnectionServer {
 				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
 				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
 				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
+				Set<Session> conns=connectionToId.keySet();
+				for(Session conn:conns)
+				{	
+					send(conn, TimeManager.serverSendTimeToClient());
+				}
 			}
 		};
 		TimeManager.setTimeEstablishedListener(listener);
 	}
 
+	@Override
+	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
+		super.onOpen(conn, handshake);
+		Set<Session> conns=connectionToId.keySet();
+		for(Session clientconn:conns)
+		{	
+			send(clientconn, TimeManager.serverSendTimeToClient());
+		}
+	}
+	
 	/**
 	 * Accepts messages and sends the request to the correct server and holds minimum client state.
 	 */
