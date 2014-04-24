@@ -1,7 +1,7 @@
 package connection;
 
 import internalConnection.AnswerConnectionState;
-import internalConnection.SolutionConnection;
+import internalConnection.SubmissionConnection;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -49,7 +49,7 @@ public class AnswerCheckerServer extends GeneralConnectionServer {
 					SrlUpdate.parseFrom(req.getOtherData());
 					System.out.println("Parsing as an update");
 					try {
-						getConnectionManager().send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class);
+						getConnectionManager().send(req, req.getSessionInfo() + "+" + state.getKey(), SubmissionConnection.class);
 					} catch (ConnectionException e) {
 						e.printStackTrace();
 					}
@@ -65,7 +65,7 @@ public class AnswerCheckerServer extends GeneralConnectionServer {
 					((AnswerConnectionState) state).addPendingExperiment(req.getSessionInfo(), student);
 					System.out.println("Student exp " + student);
 					try {
-						getConnectionManager().send(req, req.getSessionInfo() + "+" + state.getKey(), SolutionConnection.class);
+						getConnectionManager().send(req, req.getSessionInfo() + "+" + state.getKey(), SubmissionConnection.class);
 					} catch (ConnectionException e1) {
 						e1.printStackTrace();
 					} // pass submission on
@@ -77,15 +77,23 @@ public class AnswerCheckerServer extends GeneralConnectionServer {
 					ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
 					itemRequest.setQuery(ItemQuery.SOLUTION);
 					itemRequest.addItemId(student.getProblemId());  // FIXME: this needs to change probably to make this work
-					//internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(), state.getKey(), SolutionConnection.class);
+					//internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(), state.getKey(), SubmissionConnection.class);
 				}
 			} else {
 				try {
-					getConnectionManager().send(req, req.getSessionInfo(), SolutionConnection.class);
+					getConnectionManager().send(req, req.getSessionInfo(), SubmissionConnection.class);
 				} catch (ConnectionException e) {
 					e.printStackTrace();
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns a number that should be unique.
+	 */
+	@Override
+	public MultiConnectionState getUniqueState() {
+		return new AnswerConnectionState(Encoder.nextID().toString());
 	}
 }

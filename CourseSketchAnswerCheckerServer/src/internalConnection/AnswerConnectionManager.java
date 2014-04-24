@@ -13,7 +13,7 @@ public class AnswerConnectionManager extends MultiConnectionManager {
 	@Override
 	public void connectServers(GeneralConnectionServer parent) {
 		try {
-			createAndAddConnection(parent, connectLocally, "srl02.tamu.edu", 8883, secure, SolutionConnection.class);
+			createAndAddConnection(parent, connectLocally, "srl02.tamu.edu", 8883, secure, SubmissionConnection.class);
 		} catch (ConnectionException e) {
 			e.printStackTrace();
 		}
