@@ -18,9 +18,9 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 @WebSocket()
-public class SolutionConnection extends ConnectionWrapper {
+public class SubmissionConnection extends ConnectionWrapper {
 
-	public SolutionConnection(URI destination, GeneralConnectionServer parentServer) {
+	public SubmissionConnection(URI destination, GeneralConnectionServer parentServer) {
 		super(destination, parentServer);
 	}
 
