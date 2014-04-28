@@ -15,7 +15,7 @@ import protobuf.srl.request.Message.Request;
  *
  * This is a backend server that is only connected by other servers
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
 public class SubmissionServer extends GeneralConnectionServer {
 
 	public SubmissionServer(GeneralConnectionServlet parent) {

@@ -10,7 +10,6 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
-import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
@@ -112,14 +111,19 @@ public class DataRequestHandler {
 							// we send it the CourseProblemId and the userId and we get the submission Id
 							//Institution.mongoGetExperiment(assignementID, userId)
 							if (!itrequest.hasAdvanceQuery()) {
-								System.out.println("Trying to retrieve an experiemnt from a user!");
-								try {
-								Institution.mongoGetExperimentAsUser(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections);
-								} catch(Exception e) {
-									results.add(buildResult(null, e.getLocalizedMessage(), ItemQuery.EXPERIMENT));
+								for (String itemId : itrequest.getItemIdList()) {
+									System.out.println("Trying to retrieve an experiemnt from a user!");
+									try {
+									Institution.mongoGetExperimentAsUser(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections);
+									} catch(Exception e) {
+										results.add(buildResult(null, e.getLocalizedMessage(), ItemQuery.EXPERIMENT));
+										break;
+									}
 								}
 							} else {
-								Institution.mongoGetExperimentAsInstructor(userId, itrequest.getItemId(0), req.getSessionInfo() + "+" + sessionId, internalConnections, itrequest.getAdvanceQuery());
+								for (String itemId : itrequest.getItemIdList()) {
+									Institution.mongoGetExperimentAsInstructor(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections, itrequest.getAdvanceQuery());
+								}
 							}
 							break;
 						}

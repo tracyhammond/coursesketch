@@ -32,7 +32,7 @@ import connection.TimeManager;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
 public class ProxyServer extends GeneralConnectionServer {
 
 	@SuppressWarnings("hiding")
