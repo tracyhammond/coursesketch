@@ -17,7 +17,7 @@ import database.institution.Institution;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
 public class DatabaseServer extends GeneralConnectionServer {
 
 	public DatabaseServer(GeneralConnectionServlet parent) {
