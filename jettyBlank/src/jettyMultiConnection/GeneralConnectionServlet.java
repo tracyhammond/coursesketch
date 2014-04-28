@@ -33,6 +33,9 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     	manager = createConnectionManager(connectLocally, secure);
 	}
 
+    /**
+     * If you want a different policy then you can overide the configure method
+     */
 	@Override
     public void configure(WebSocketServletFactory factory) {
     	System.out.println("Configuring servlet");
