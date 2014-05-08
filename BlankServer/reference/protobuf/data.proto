@@ -64,7 +64,19 @@ message IdList {
 	repeated string list = 1;
 }
 
+/**
+ * ExperimentReview is the advance query that is sent when an instructor is reviewing a students work.
+ *
+ * By default the work is sorted by problems
+ * When it is sorted by student (??? happens to determine the next student)
+ */
 message ExperimentReview {
 	optional bool allowEditing = 1;
 	optional bool showUserNames = 2;
+	optional SortType retrieveType = 3;
+	repeated string userName = 4; // this only works when the sort type == user
+	enum SortType {
+		USER = 1;
+		PROBELM = 2;
+	}
 }

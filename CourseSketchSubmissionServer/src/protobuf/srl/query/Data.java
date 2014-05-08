@@ -5148,9 +5148,63 @@ public final class Data {
      * <code>optional bool showUserNames = 2;</code>
      */
     boolean getShowUserNames();
+
+    // optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;
+    /**
+     * <code>optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;</code>
+     */
+    boolean hasRetrieveType();
+    /**
+     * <code>optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;</code>
+     */
+    protobuf.srl.query.Data.ExperimentReview.SortType getRetrieveType();
+
+    // repeated string userName = 4;
+    /**
+     * <code>repeated string userName = 4;</code>
+     *
+     * <pre>
+     * this only works when the sort type == user
+     * </pre>
+     */
+    java.util.List<java.lang.String>
+    getUserNameList();
+    /**
+     * <code>repeated string userName = 4;</code>
+     *
+     * <pre>
+     * this only works when the sort type == user
+     * </pre>
+     */
+    int getUserNameCount();
+    /**
+     * <code>repeated string userName = 4;</code>
+     *
+     * <pre>
+     * this only works when the sort type == user
+     * </pre>
+     */
+    java.lang.String getUserName(int index);
+    /**
+     * <code>repeated string userName = 4;</code>
+     *
+     * <pre>
+     * this only works when the sort type == user
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getUserNameBytes(int index);
   }
   /**
    * Protobuf type {@code protobuf.srl.query.ExperimentReview}
+   *
+   * <pre>
+   **
+   * ExperimentReview is the advance query that is sent when an instructor is reviewing a students work.
+   *
+   * By default the work is sorted by problems
+   * When it is sorted by student (??? happens to determine the next student)
+   * </pre>
    */
   public static final class ExperimentReview extends
       com.google.protobuf.GeneratedMessage
@@ -5210,6 +5264,25 @@ public final class Data {
               showUserNames_ = input.readBool();
               break;
             }
+            case 24: {
+              int rawValue = input.readEnum();
+              protobuf.srl.query.Data.ExperimentReview.SortType value = protobuf.srl.query.Data.ExperimentReview.SortType.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(3, rawValue);
+              } else {
+                bitField0_ |= 0x00000004;
+                retrieveType_ = value;
+              }
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                userName_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              userName_.add(input.readBytes());
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -5218,6 +5291,9 @@ public final class Data {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          userName_ = new com.google.protobuf.UnmodifiableLazyStringList(userName_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -5247,6 +5323,88 @@ public final class Data {
     @java.lang.Override
     public com.google.protobuf.Parser<ExperimentReview> getParserForType() {
       return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code protobuf.srl.query.ExperimentReview.SortType}
+     */
+    public enum SortType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>USER = 1;</code>
+       */
+      USER(0, 1),
+      /**
+       * <code>PROBELM = 2;</code>
+       */
+      PROBELM(1, 2),
+      ;
+
+      /**
+       * <code>USER = 1;</code>
+       */
+      public static final int USER_VALUE = 1;
+      /**
+       * <code>PROBELM = 2;</code>
+       */
+      public static final int PROBELM_VALUE = 2;
+
+
+      public final int getNumber() { return value; }
+
+      public static SortType valueOf(int value) {
+        switch (value) {
+          case 1: return USER;
+          case 2: return PROBELM;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<SortType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<SortType>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<SortType>() {
+              public SortType findValueByNumber(int number) {
+                return SortType.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return protobuf.srl.query.Data.ExperimentReview.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final SortType[] VALUES = values();
+
+      public static SortType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private SortType(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:protobuf.srl.query.ExperimentReview.SortType)
     }
 
     private int bitField0_;
@@ -5282,9 +5440,73 @@ public final class Data {
       return showUserNames_;
     }
 
+    // optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;
+    public static final int RETRIEVETYPE_FIELD_NUMBER = 3;
+    private protobuf.srl.query.Data.ExperimentReview.SortType retrieveType_;
+    /**
+     * <code>optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;</code>
+     */
+    public boolean hasRetrieveType() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;</code>
+     */
+    public protobuf.srl.query.Data.ExperimentReview.SortType getRetrieveType() {
+      return retrieveType_;
+    }
+
+    // repeated string userName = 4;
+    public static final int USERNAME_FIELD_NUMBER = 4;
+    private com.google.protobuf.LazyStringList userName_;
+    /**
+     * <code>repeated string userName = 4;</code>
+     *
+     * <pre>
+     * this only works when the sort type == user
+     * </pre>
+     */
+    public java.util.List<java.lang.String>
+        getUserNameList() {
+      return userName_;
+    }
+    /**
+     * <code>repeated string userName = 4;</code>
+     *
+     * <pre>
+     * this only works when the sort type == user
+     * </pre>
+     */
+    public int getUserNameCount() {
+      return userName_.size();
+    }
+    /**
+     * <code>repeated string userName = 4;</code>
+     *
+     * <pre>
+     * this only works when the sort type == user
+     * </pre>
+     */
+    public java.lang.String getUserName(int index) {
+      return userName_.get(index);
+    }
+    /**
+     * <code>repeated string userName = 4;</code>
+     *
+     * <pre>
+     * this only works when the sort type == user
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getUserNameBytes(int index) {
+      return userName_.getByteString(index);
+    }
+
     private void initFields() {
       allowEditing_ = false;
       showUserNames_ = false;
+      retrieveType_ = protobuf.srl.query.Data.ExperimentReview.SortType.USER;
+      userName_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -5304,6 +5526,12 @@ public final class Data {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBool(2, showUserNames_);
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeEnum(3, retrieveType_.getNumber());
+      }
+      for (int i = 0; i < userName_.size(); i++) {
+        output.writeBytes(4, userName_.getByteString(i));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -5320,6 +5548,19 @@ public final class Data {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(2, showUserNames_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(3, retrieveType_.getNumber());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < userName_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(userName_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getUserNameList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5401,6 +5642,14 @@ public final class Data {
     }
     /**
      * Protobuf type {@code protobuf.srl.query.ExperimentReview}
+     *
+     * <pre>
+     **
+     * ExperimentReview is the advance query that is sent when an instructor is reviewing a students work.
+     *
+     * By default the work is sorted by problems
+     * When it is sorted by student (??? happens to determine the next student)
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -5441,6 +5690,10 @@ public final class Data {
         bitField0_ = (bitField0_ & ~0x00000001);
         showUserNames_ = false;
         bitField0_ = (bitField0_ & ~0x00000002);
+        retrieveType_ = protobuf.srl.query.Data.ExperimentReview.SortType.USER;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        userName_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -5477,6 +5730,16 @@ public final class Data {
           to_bitField0_ |= 0x00000002;
         }
         result.showUserNames_ = showUserNames_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.retrieveType_ = retrieveType_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          userName_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              userName_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.userName_ = userName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5498,6 +5761,19 @@ public final class Data {
         }
         if (other.hasShowUserNames()) {
           setShowUserNames(other.getShowUserNames());
+        }
+        if (other.hasRetrieveType()) {
+          setRetrieveType(other.getRetrieveType());
+        }
+        if (!other.userName_.isEmpty()) {
+          if (userName_.isEmpty()) {
+            userName_ = other.userName_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureUserNameIsMutable();
+            userName_.addAll(other.userName_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -5592,6 +5868,171 @@ public final class Data {
         return this;
       }
 
+      // optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;
+      private protobuf.srl.query.Data.ExperimentReview.SortType retrieveType_ = protobuf.srl.query.Data.ExperimentReview.SortType.USER;
+      /**
+       * <code>optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;</code>
+       */
+      public boolean hasRetrieveType() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;</code>
+       */
+      public protobuf.srl.query.Data.ExperimentReview.SortType getRetrieveType() {
+        return retrieveType_;
+      }
+      /**
+       * <code>optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;</code>
+       */
+      public Builder setRetrieveType(protobuf.srl.query.Data.ExperimentReview.SortType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000004;
+        retrieveType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;</code>
+       */
+      public Builder clearRetrieveType() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        retrieveType_ = protobuf.srl.query.Data.ExperimentReview.SortType.USER;
+        onChanged();
+        return this;
+      }
+
+      // repeated string userName = 4;
+      private com.google.protobuf.LazyStringList userName_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureUserNameIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          userName_ = new com.google.protobuf.LazyStringArrayList(userName_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+      /**
+       * <code>repeated string userName = 4;</code>
+       *
+       * <pre>
+       * this only works when the sort type == user
+       * </pre>
+       */
+      public java.util.List<java.lang.String>
+          getUserNameList() {
+        return java.util.Collections.unmodifiableList(userName_);
+      }
+      /**
+       * <code>repeated string userName = 4;</code>
+       *
+       * <pre>
+       * this only works when the sort type == user
+       * </pre>
+       */
+      public int getUserNameCount() {
+        return userName_.size();
+      }
+      /**
+       * <code>repeated string userName = 4;</code>
+       *
+       * <pre>
+       * this only works when the sort type == user
+       * </pre>
+       */
+      public java.lang.String getUserName(int index) {
+        return userName_.get(index);
+      }
+      /**
+       * <code>repeated string userName = 4;</code>
+       *
+       * <pre>
+       * this only works when the sort type == user
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getUserNameBytes(int index) {
+        return userName_.getByteString(index);
+      }
+      /**
+       * <code>repeated string userName = 4;</code>
+       *
+       * <pre>
+       * this only works when the sort type == user
+       * </pre>
+       */
+      public Builder setUserName(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUserNameIsMutable();
+        userName_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string userName = 4;</code>
+       *
+       * <pre>
+       * this only works when the sort type == user
+       * </pre>
+       */
+      public Builder addUserName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUserNameIsMutable();
+        userName_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string userName = 4;</code>
+       *
+       * <pre>
+       * this only works when the sort type == user
+       * </pre>
+       */
+      public Builder addAllUserName(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureUserNameIsMutable();
+        super.addAll(values, userName_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string userName = 4;</code>
+       *
+       * <pre>
+       * this only works when the sort type == user
+       * </pre>
+       */
+      public Builder clearUserName() {
+        userName_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string userName = 4;</code>
+       *
+       * <pre>
+       * this only works when the sort type == user
+       * </pre>
+       */
+      public Builder addUserNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUserNameIsMutable();
+        userName_.add(value);
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:protobuf.srl.query.ExperimentReview)
     }
 
@@ -5666,15 +6107,18 @@ public final class Data {
       "ery.ItemQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004dat" +
       "a\030\003 \001(\014\022\016\n\006noData\030\004 \001(\010\022\024\n\014errorMessage\030" +
       "\005 \001(\t\022\024\n\014advanceQuery\030\006 \001(\014\"\026\n\006IdList\022\014\n" +
-      "\004list\030\001 \003(\t\"?\n\020ExperimentReview\022\024\n\014allow" +
-      "Editing\030\001 \001(\010\022\025\n\rshowUserNames\030\002 \001(\010*\211\002\n" +
-      "\tItemQuery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE" +
-      "\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020" +
-      "\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS" +
-      "_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n",
-      "\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEAR" +
-      "CH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013C" +
-      "OURSE_LIST\020\r\022\n\n\006UPDATE\020\016"
+      "\004list\030\001 \003(\t\"\271\001\n\020ExperimentReview\022\024\n\014allo" +
+      "wEditing\030\001 \001(\010\022\025\n\rshowUserNames\030\002 \001(\010\022C\n" +
+      "\014retrieveType\030\003 \001(\0162-.protobuf.srl.query" +
+      ".ExperimentReview.SortType\022\020\n\010userName\030\004" +
+      " \003(\t\"!\n\010SortType\022\010\n\004USER\020\001\022\013\n\007PROBELM\020\002*" +
+      "\211\002\n\tItemQuery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COU",
+      "RSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020" +
+      "\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CL" +
+      "ASS_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007" +
+      "\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_S" +
+      "EARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017" +
+      "\n\013COURSE_LIST\020\r\022\n\n\006UPDATE\020\016"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5728,7 +6172,7 @@ public final class Data {
           internal_static_protobuf_srl_query_ExperimentReview_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_query_ExperimentReview_descriptor,
-              new java.lang.String[] { "AllowEditing", "ShowUserNames", });
+              new java.lang.String[] { "AllowEditing", "ShowUserNames", "RetrieveType", "UserName", });
           return null;
         }
       };

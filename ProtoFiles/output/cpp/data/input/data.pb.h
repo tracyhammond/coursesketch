@@ -45,6 +45,25 @@ class ItemResult;
 class IdList;
 class ExperimentReview;
 
+enum ExperimentReview_SortType {
+  ExperimentReview_SortType_USER = 1,
+  ExperimentReview_SortType_PROBELM = 2
+};
+bool ExperimentReview_SortType_IsValid(int value);
+const ExperimentReview_SortType ExperimentReview_SortType_SortType_MIN = ExperimentReview_SortType_USER;
+const ExperimentReview_SortType ExperimentReview_SortType_SortType_MAX = ExperimentReview_SortType_PROBELM;
+const int ExperimentReview_SortType_SortType_ARRAYSIZE = ExperimentReview_SortType_SortType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ExperimentReview_SortType_descriptor();
+inline const ::std::string& ExperimentReview_SortType_Name(ExperimentReview_SortType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ExperimentReview_SortType_descriptor(), value);
+}
+inline bool ExperimentReview_SortType_Parse(
+    const ::std::string& name, ExperimentReview_SortType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ExperimentReview_SortType>(
+    ExperimentReview_SortType_descriptor(), name, value);
+}
 enum ItemQuery {
   ERROR = -1,
   COURSE = 0,
@@ -839,6 +858,30 @@ class ExperimentReview : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef ExperimentReview_SortType SortType;
+  static const SortType USER = ExperimentReview_SortType_USER;
+  static const SortType PROBELM = ExperimentReview_SortType_PROBELM;
+  static inline bool SortType_IsValid(int value) {
+    return ExperimentReview_SortType_IsValid(value);
+  }
+  static const SortType SortType_MIN =
+    ExperimentReview_SortType_SortType_MIN;
+  static const SortType SortType_MAX =
+    ExperimentReview_SortType_SortType_MAX;
+  static const int SortType_ARRAYSIZE =
+    ExperimentReview_SortType_SortType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  SortType_descriptor() {
+    return ExperimentReview_SortType_descriptor();
+  }
+  static inline const ::std::string& SortType_Name(SortType value) {
+    return ExperimentReview_SortType_Name(value);
+  }
+  static inline bool SortType_Parse(const ::std::string& name,
+      SortType* value) {
+    return ExperimentReview_SortType_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
   // optional bool allowEditing = 1;
@@ -855,20 +898,47 @@ class ExperimentReview : public ::google::protobuf::Message {
   inline bool showusernames() const;
   inline void set_showusernames(bool value);
 
+  // optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;
+  inline bool has_retrievetype() const;
+  inline void clear_retrievetype();
+  static const int kRetrieveTypeFieldNumber = 3;
+  inline ::protobuf::srl::query::ExperimentReview_SortType retrievetype() const;
+  inline void set_retrievetype(::protobuf::srl::query::ExperimentReview_SortType value);
+
+  // repeated string userName = 4;
+  inline int username_size() const;
+  inline void clear_username();
+  static const int kUserNameFieldNumber = 4;
+  inline const ::std::string& username(int index) const;
+  inline ::std::string* mutable_username(int index);
+  inline void set_username(int index, const ::std::string& value);
+  inline void set_username(int index, const char* value);
+  inline void set_username(int index, const char* value, size_t size);
+  inline ::std::string* add_username();
+  inline void add_username(const ::std::string& value);
+  inline void add_username(const char* value);
+  inline void add_username(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& username() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_username();
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.query.ExperimentReview)
  private:
   inline void set_has_allowediting();
   inline void clear_has_allowediting();
   inline void set_has_showusernames();
   inline void clear_has_showusernames();
+  inline void set_has_retrievetype();
+  inline void clear_has_retrievetype();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   bool allowediting_;
   bool showusernames_;
+  int retrievetype_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> username_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fdata_2eproto();
   friend void protobuf_AssignDesc_input_2fdata_2eproto();
@@ -1630,6 +1700,73 @@ inline void ExperimentReview::set_showusernames(bool value) {
   showusernames_ = value;
 }
 
+// optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;
+inline bool ExperimentReview::has_retrievetype() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ExperimentReview::set_has_retrievetype() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ExperimentReview::clear_has_retrievetype() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ExperimentReview::clear_retrievetype() {
+  retrievetype_ = 1;
+  clear_has_retrievetype();
+}
+inline ::protobuf::srl::query::ExperimentReview_SortType ExperimentReview::retrievetype() const {
+  return static_cast< ::protobuf::srl::query::ExperimentReview_SortType >(retrievetype_);
+}
+inline void ExperimentReview::set_retrievetype(::protobuf::srl::query::ExperimentReview_SortType value) {
+  assert(::protobuf::srl::query::ExperimentReview_SortType_IsValid(value));
+  set_has_retrievetype();
+  retrievetype_ = value;
+}
+
+// repeated string userName = 4;
+inline int ExperimentReview::username_size() const {
+  return username_.size();
+}
+inline void ExperimentReview::clear_username() {
+  username_.Clear();
+}
+inline const ::std::string& ExperimentReview::username(int index) const {
+  return username_.Get(index);
+}
+inline ::std::string* ExperimentReview::mutable_username(int index) {
+  return username_.Mutable(index);
+}
+inline void ExperimentReview::set_username(int index, const ::std::string& value) {
+  username_.Mutable(index)->assign(value);
+}
+inline void ExperimentReview::set_username(int index, const char* value) {
+  username_.Mutable(index)->assign(value);
+}
+inline void ExperimentReview::set_username(int index, const char* value, size_t size) {
+  username_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ExperimentReview::add_username() {
+  return username_.Add();
+}
+inline void ExperimentReview::add_username(const ::std::string& value) {
+  username_.Add()->assign(value);
+}
+inline void ExperimentReview::add_username(const char* value) {
+  username_.Add()->assign(value);
+}
+inline void ExperimentReview::add_username(const char* value, size_t size) {
+  username_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ExperimentReview::username() const {
+  return username_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+ExperimentReview::mutable_username() {
+  return &username_;
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -1641,6 +1778,10 @@ inline void ExperimentReview::set_showusernames(bool value) {
 namespace google {
 namespace protobuf {
 
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::query::ExperimentReview_SortType>() {
+  return ::protobuf::srl::query::ExperimentReview_SortType_descriptor();
+}
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::srl::query::ItemQuery>() {
   return ::protobuf::srl::query::ItemQuery_descriptor();

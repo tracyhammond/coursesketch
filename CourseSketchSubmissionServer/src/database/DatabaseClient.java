@@ -41,7 +41,7 @@ public class DatabaseClient {
 		}
 	}
 
-	private DatabaseClient() throws Exception{
+	private DatabaseClient() throws Exception {
 		this("goldberglinux.tamu.edu");
 		//this("localhost");
 	}
