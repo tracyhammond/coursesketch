@@ -41,6 +41,6 @@ public class SubmissionServer extends GeneralConnectionServer {
 				send(conn, result);
 			}
 		}
-		
+
 	}
 }

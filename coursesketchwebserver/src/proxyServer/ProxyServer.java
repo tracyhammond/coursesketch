@@ -106,6 +106,7 @@ public class ProxyServer extends GeneralConnectionServer {
 				try {
 					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, RecognitionConnection.class); // no userId is sent for security reasons.
 				} catch(Exception e) {
+					System.err.println("Recognition error!");
 					send(conn, createBadConnectionResponse(req, RecognitionConnection.class));
 				}
 				return;

@@ -35,6 +35,7 @@ public class ConnectionWrapper {
     private boolean connected = false;
     private boolean EOFReached = false;
     private boolean started = false;
+    private boolean refusedConnection = false;
     private int failedStarts = 0;
     private boolean queing = false;
     ArrayList<ByteBuffer> queuedMessages = new ArrayList<ByteBuffer>();
@@ -49,18 +50,18 @@ public class ConnectionWrapper {
 	protected void setFailedSocketListener(ActionListener listen) {
 		socketFailedListener = listen;
 	}
-	
+
 	public void connect() throws Throwable {
 		client = new WebSocketClient();
 		try {
 			client.start();
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
 			client.connect(this, destination, request);
-			} catch (Throwable t) {
-				t.printStackTrace();
-				client.stop();
-				throw t;
-			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			client.stop();
+			throw t;
+		}
 	}
 
     @OnWebSocketClose
@@ -90,7 +91,6 @@ public class ConnectionWrapper {
     	onMessage(ByteBuffer.wrap(data));
     }
 
-    @SuppressWarnings("static-method")
    	@OnWebSocketError
    	public void onError(Session session, Throwable cause) {
     	if (cause instanceof java.io.EOFException || cause instanceof java.net.SocketTimeoutException) {
@@ -102,6 +102,10 @@ public class ConnectionWrapper {
     	} else {
     		System.err.println("Socket: " + this.getClass().getSimpleName() + " Error: " + cause);
     		if (cause instanceof java.net.ConnectException) {
+    			if (cause.getMessage().trim().equalsIgnoreCase("Connection refused")) {
+    				//System.out.println("This error is caused by a server not being open yet!");
+    				refusedConnection = true;
+    			}
     			//nonExistantServer = true;
     			// TODO: log this error
     		}
@@ -154,8 +158,9 @@ public class ConnectionWrapper {
 				}
 				queing = false;
 			}
-		} else if ((started || EOFReached) && failedStarts < MAX_FAILED_STARTS) {
-			System.err.println("Trying to reconnect " + this.getClass().getSimpleName() + ". It has ended because of a timeout");
+		} else if ((started || EOFReached || refusedConnection) && failedStarts < MAX_FAILED_STARTS) {
+			String endReson = EOFReached || started ? "of a timeout" : refusedConnection ? "connection to the server was refused" : "We do not know why";
+			System.err.println("Trying to reconnect " + this.getClass().getSimpleName() + ". It has ended because " + endReson);
 			if (!queing) {
 				failedStarts += 1;
 				System.err.println("attempt " + failedStarts +" out of " + MAX_FAILED_STARTS);
