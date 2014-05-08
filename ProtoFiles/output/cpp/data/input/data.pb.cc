@@ -46,6 +46,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* ExperimentReview_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ExperimentReview_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* ExperimentReview_SortType_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* ItemQuery_descriptor_ = NULL;
 
 }  // namespace
@@ -171,9 +172,11 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(IdList));
   ExperimentReview_descriptor_ = file->message_type(7);
-  static const int ExperimentReview_offsets_[2] = {
+  static const int ExperimentReview_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExperimentReview, allowediting_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExperimentReview, showusernames_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExperimentReview, retrievetype_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExperimentReview, username_),
   };
   ExperimentReview_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -186,6 +189,7 @@ void protobuf_AssignDesc_input_2fdata_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ExperimentReview));
+  ExperimentReview_SortType_descriptor_ = ExperimentReview_descriptor_->enum_type(0);
   ItemQuery_descriptor_ = file->enum_type(0);
 }
 
@@ -259,15 +263,18 @@ void protobuf_AddDesc_input_2fdata_2eproto() {
     "ery.ItemQuery\022\022\n\nreturnText\030\002 \001(\t\022\014\n\004dat"
     "a\030\003 \001(\014\022\016\n\006noData\030\004 \001(\010\022\024\n\014errorMessage\030"
     "\005 \001(\t\022\024\n\014advanceQuery\030\006 \001(\014\"\026\n\006IdList\022\014\n"
-    "\004list\030\001 \003(\t\"\?\n\020ExperimentReview\022\024\n\014allow"
-    "Editing\030\001 \001(\010\022\025\n\rshowUserNames\030\002 \001(\010*\211\002\n"
-    "\tItemQuery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COURSE"
-    "\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020\002\022\020"
-    "\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CLASS"
-    "_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007\022\016\n"
-    "\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_SEAR"
-    "CH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017\n\013C"
-    "OURSE_LIST\020\r\022\n\n\006UPDATE\020\016", 904);
+    "\004list\030\001 \003(\t\"\271\001\n\020ExperimentReview\022\024\n\014allo"
+    "wEditing\030\001 \001(\010\022\025\n\rshowUserNames\030\002 \001(\010\022C\n"
+    "\014retrieveType\030\003 \001(\0162-.protobuf.srl.query"
+    ".ExperimentReview.SortType\022\020\n\010userName\030\004"
+    " \003(\t\"!\n\010SortType\022\010\n\004USER\020\001\022\013\n\007PROBELM\020\002*"
+    "\211\002\n\tItemQuery\022\022\n\005ERROR\020\377\377\377\377\377\377\377\377\377\001\022\n\n\006COU"
+    "RSE\020\000\022\016\n\nASSIGNMENT\020\001\022\022\n\016COURSE_PROBLEM\020"
+    "\002\022\020\n\014BANK_PROBLEM\020\003\022\r\n\tUSERGROUP\020\004\022\017\n\013CL"
+    "ASS_GRADE\020\005\022\r\n\tUSER_INFO\020\006\022\014\n\010SOLUTION\020\007"
+    "\022\016\n\nEXPERIMENT\020\010\022\n\n\006SCHOOL\020\t\022\021\n\rCOURSE_S"
+    "EARCH\020\n\022\017\n\013BANK_SEARCH\020\013\022\014\n\010REGISTER\020\014\022\017"
+    "\n\013COURSE_LIST\020\r\022\n\n\006UPDATE\020\016", 1027);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/data.proto", &protobuf_RegisterTypes);
   DataRequest::default_instance_ = new DataRequest();
@@ -2184,9 +2191,32 @@ void IdList::Swap(IdList* other) {
 
 // ===================================================================
 
+const ::google::protobuf::EnumDescriptor* ExperimentReview_SortType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ExperimentReview_SortType_descriptor_;
+}
+bool ExperimentReview_SortType_IsValid(int value) {
+  switch(value) {
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const ExperimentReview_SortType ExperimentReview::USER;
+const ExperimentReview_SortType ExperimentReview::PROBELM;
+const ExperimentReview_SortType ExperimentReview::SortType_MIN;
+const ExperimentReview_SortType ExperimentReview::SortType_MAX;
+const int ExperimentReview::SortType_ARRAYSIZE;
+#endif  // _MSC_VER
 #ifndef _MSC_VER
 const int ExperimentReview::kAllowEditingFieldNumber;
 const int ExperimentReview::kShowUserNamesFieldNumber;
+const int ExperimentReview::kRetrieveTypeFieldNumber;
+const int ExperimentReview::kUserNameFieldNumber;
 #endif  // !_MSC_VER
 
 ExperimentReview::ExperimentReview()
@@ -2207,6 +2237,7 @@ void ExperimentReview::SharedCtor() {
   _cached_size_ = 0;
   allowediting_ = false;
   showusernames_ = false;
+  retrievetype_ = 1;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2244,7 +2275,9 @@ void ExperimentReview::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     allowediting_ = false;
     showusernames_ = false;
+    retrievetype_ = 1;
   }
+  username_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -2282,6 +2315,46 @@ bool ExperimentReview::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(24)) goto parse_retrieveType;
+        break;
+      }
+
+      // optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_retrieveType:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::protobuf::srl::query::ExperimentReview_SortType_IsValid(value)) {
+            set_retrievetype(static_cast< ::protobuf::srl::query::ExperimentReview_SortType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(3, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_userName;
+        break;
+      }
+
+      // repeated string userName = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_userName:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_username()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->username(this->username_size() - 1).data(),
+            this->username(this->username_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_userName;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2314,6 +2387,21 @@ void ExperimentReview::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->showusernames(), output);
   }
 
+  // optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;
+  if (has_retrievetype()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      3, this->retrievetype(), output);
+  }
+
+  // repeated string userName = 4;
+  for (int i = 0; i < this->username_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->username(i).data(), this->username(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->username(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2330,6 +2418,21 @@ void ExperimentReview::SerializeWithCachedSizes(
   // optional bool showUserNames = 2;
   if (has_showusernames()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->showusernames(), target);
+  }
+
+  // optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;
+  if (has_retrievetype()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      3, this->retrievetype(), target);
+  }
+
+  // repeated string userName = 4;
+  for (int i = 0; i < this->username_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->username(i).data(), this->username(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(4, this->username(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2353,7 +2456,20 @@ int ExperimentReview::ByteSize() const {
       total_size += 1 + 1;
     }
 
+    // optional .protobuf.srl.query.ExperimentReview.SortType retrieveType = 3;
+    if (has_retrievetype()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->retrievetype());
+    }
+
   }
+  // repeated string userName = 4;
+  total_size += 1 * this->username_size();
+  for (int i = 0; i < this->username_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->username(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -2379,12 +2495,16 @@ void ExperimentReview::MergeFrom(const ::google::protobuf::Message& from) {
 
 void ExperimentReview::MergeFrom(const ExperimentReview& from) {
   GOOGLE_CHECK_NE(&from, this);
+  username_.MergeFrom(from.username_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_allowediting()) {
       set_allowediting(from.allowediting());
     }
     if (from.has_showusernames()) {
       set_showusernames(from.showusernames());
+    }
+    if (from.has_retrievetype()) {
+      set_retrievetype(from.retrievetype());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2411,6 +2531,8 @@ void ExperimentReview::Swap(ExperimentReview* other) {
   if (other != this) {
     std::swap(allowediting_, other->allowediting_);
     std::swap(showusernames_, other->showusernames_);
+    std::swap(retrievetype_, other->retrievetype_);
+    username_.Swap(&other->username_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
