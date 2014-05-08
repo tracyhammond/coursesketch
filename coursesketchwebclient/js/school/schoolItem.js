@@ -215,9 +215,20 @@ function SchoolItemBuilder() {
 		// I.E if it has not opened yet show that date and the due date
 		// if the due date has passed show the close date
 		// if the close date has passed 
-		var dueDate = srlSchoolItem.dueDate;
+
 		var div = document.createElement('div');
 		div.setAttribute('class', 'date');
+
+		var accessDate = srlSchoolItem.accessDate;
+		if (accessDate) {
+			var element = document.createElement('h4');
+			element.setAttribute('class', 'accessDate subDate');
+			element.textContent = 'Open: ' + getFormattedDateTime(new Date(accessDate.millisecond.toNumber()));
+			this.addEditCapabilities(element, srlSchoolItem.id, 'date', 'accessDate');
+			div.appendChild(element);
+		}
+
+		var dueDate = srlSchoolItem.dueDate;
 		if (dueDate) {
 			var element = document.createElement('h4');
 			element.setAttribute('class', 'dueDate subDate');
@@ -226,12 +237,16 @@ function SchoolItemBuilder() {
 			div.appendChild(element);
 		}
 
-		var accessDate = srlSchoolItem.accessDate;
-		if (accessDate) {
+		var closeDate = srlSchoolItem.closeDate;
+		var showCloseDate = true;
+		if (dueDate) {
+			showCloseDate = closeDate.millisecond.toNumber() != dueDate.millisecond.toNumber();
+		}
+		if (closeDate && showCloseDate) {
 			var element = document.createElement('h4');
-			element.setAttribute('class', 'accessDate subDate');
-			element.textContent = 'Open: ' + getFormattedDateTime(new Date(dueDate.millisecond.toNumber()));
-			this.addEditCapabilities(element, srlSchoolItem.id, 'date', 'accessDate');
+			element.setAttribute('class', 'closeDate subDate');
+			element.textContent = 'Close: ' + getFormattedDateTime(new Date(closeDate.millisecond.toNumber()));
+			this.addEditCapabilities(element, srlSchoolItem.id, 'date', 'closeDate');
 			div.appendChild(element);
 		}
 
