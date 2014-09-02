@@ -71,6 +71,20 @@ public final class Submission {
      * <code>optional int64 submissionTime = 4;</code>
      */
     long getSubmissionTime();
+
+    // optional .protobuf.srl.submission.SrlChecksum checksum = 5;
+    /**
+     * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+     */
+    boolean hasChecksum();
+    /**
+     * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+     */
+    protobuf.srl.submission.Submission.SrlChecksum getChecksum();
+    /**
+     * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+     */
+    protobuf.srl.submission.Submission.SrlChecksumOrBuilder getChecksumOrBuilder();
   }
   /**
    * Protobuf type {@code protobuf.srl.submission.SrlSubmission}
@@ -146,6 +160,19 @@ public final class Submission {
             case 32: {
               bitField0_ |= 0x00000008;
               submissionTime_ = input.readInt64();
+              break;
+            }
+            case 42: {
+              protobuf.srl.submission.Submission.SrlChecksum.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                subBuilder = checksum_.toBuilder();
+              }
+              checksum_ = input.readMessage(protobuf.srl.submission.Submission.SrlChecksum.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(checksum_);
+                checksum_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000010;
               break;
             }
           }
@@ -295,17 +322,46 @@ public final class Submission {
       return submissionTime_;
     }
 
+    // optional .protobuf.srl.submission.SrlChecksum checksum = 5;
+    public static final int CHECKSUM_FIELD_NUMBER = 5;
+    private protobuf.srl.submission.Submission.SrlChecksum checksum_;
+    /**
+     * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+     */
+    public boolean hasChecksum() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+     */
+    public protobuf.srl.submission.Submission.SrlChecksum getChecksum() {
+      return checksum_;
+    }
+    /**
+     * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+     */
+    public protobuf.srl.submission.Submission.SrlChecksumOrBuilder getChecksumOrBuilder() {
+      return checksum_;
+    }
+
     private void initFields() {
       id_ = "";
       updateList_ = com.google.protobuf.ByteString.EMPTY;
       sketch_ = com.google.protobuf.ByteString.EMPTY;
       submissionTime_ = 0L;
+      checksum_ = protobuf.srl.submission.Submission.SrlChecksum.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (hasChecksum()) {
+        if (!getChecksum().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -324,6 +380,9 @@ public final class Submission {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt64(4, submissionTime_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeMessage(5, checksum_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -349,6 +408,10 @@ public final class Submission {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(4, submissionTime_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, checksum_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -463,6 +526,7 @@ public final class Submission {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getChecksumFieldBuilder();
         }
       }
       private static Builder create() {
@@ -479,6 +543,12 @@ public final class Submission {
         bitField0_ = (bitField0_ & ~0x00000004);
         submissionTime_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000008);
+        if (checksumBuilder_ == null) {
+          checksum_ = protobuf.srl.submission.Submission.SrlChecksum.getDefaultInstance();
+        } else {
+          checksumBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -523,6 +593,14 @@ public final class Submission {
           to_bitField0_ |= 0x00000008;
         }
         result.submissionTime_ = submissionTime_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        if (checksumBuilder_ == null) {
+          result.checksum_ = checksum_;
+        } else {
+          result.checksum_ = checksumBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -553,11 +631,20 @@ public final class Submission {
         if (other.hasSubmissionTime()) {
           setSubmissionTime(other.getSubmissionTime());
         }
+        if (other.hasChecksum()) {
+          mergeChecksum(other.getChecksum());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
+        if (hasChecksum()) {
+          if (!getChecksum().isInitialized()) {
+            
+            return false;
+          }
+        }
         return true;
       }
 
@@ -789,6 +876,123 @@ public final class Submission {
         submissionTime_ = 0L;
         onChanged();
         return this;
+      }
+
+      // optional .protobuf.srl.submission.SrlChecksum checksum = 5;
+      private protobuf.srl.submission.Submission.SrlChecksum checksum_ = protobuf.srl.submission.Submission.SrlChecksum.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.submission.Submission.SrlChecksum, protobuf.srl.submission.Submission.SrlChecksum.Builder, protobuf.srl.submission.Submission.SrlChecksumOrBuilder> checksumBuilder_;
+      /**
+       * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+       */
+      public boolean hasChecksum() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+       */
+      public protobuf.srl.submission.Submission.SrlChecksum getChecksum() {
+        if (checksumBuilder_ == null) {
+          return checksum_;
+        } else {
+          return checksumBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+       */
+      public Builder setChecksum(protobuf.srl.submission.Submission.SrlChecksum value) {
+        if (checksumBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          checksum_ = value;
+          onChanged();
+        } else {
+          checksumBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+       */
+      public Builder setChecksum(
+          protobuf.srl.submission.Submission.SrlChecksum.Builder builderForValue) {
+        if (checksumBuilder_ == null) {
+          checksum_ = builderForValue.build();
+          onChanged();
+        } else {
+          checksumBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+       */
+      public Builder mergeChecksum(protobuf.srl.submission.Submission.SrlChecksum value) {
+        if (checksumBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+              checksum_ != protobuf.srl.submission.Submission.SrlChecksum.getDefaultInstance()) {
+            checksum_ =
+              protobuf.srl.submission.Submission.SrlChecksum.newBuilder(checksum_).mergeFrom(value).buildPartial();
+          } else {
+            checksum_ = value;
+          }
+          onChanged();
+        } else {
+          checksumBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+       */
+      public Builder clearChecksum() {
+        if (checksumBuilder_ == null) {
+          checksum_ = protobuf.srl.submission.Submission.SrlChecksum.getDefaultInstance();
+          onChanged();
+        } else {
+          checksumBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+      /**
+       * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+       */
+      public protobuf.srl.submission.Submission.SrlChecksum.Builder getChecksumBuilder() {
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return getChecksumFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+       */
+      public protobuf.srl.submission.Submission.SrlChecksumOrBuilder getChecksumOrBuilder() {
+        if (checksumBuilder_ != null) {
+          return checksumBuilder_.getMessageOrBuilder();
+        } else {
+          return checksum_;
+        }
+      }
+      /**
+       * <code>optional .protobuf.srl.submission.SrlChecksum checksum = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.srl.submission.Submission.SrlChecksum, protobuf.srl.submission.Submission.SrlChecksum.Builder, protobuf.srl.submission.Submission.SrlChecksumOrBuilder> 
+          getChecksumFieldBuilder() {
+        if (checksumBuilder_ == null) {
+          checksumBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protobuf.srl.submission.Submission.SrlChecksum, protobuf.srl.submission.Submission.SrlChecksum.Builder, protobuf.srl.submission.Submission.SrlChecksumOrBuilder>(
+                  checksum_,
+                  getParentForChildren(),
+                  isClean());
+          checksum_ = null;
+        }
+        return checksumBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:protobuf.srl.submission.SrlSubmission)
@@ -1081,6 +1285,12 @@ public final class Submission {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (hasSubmission()) {
+        if (!getSubmission().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1337,6 +1547,12 @@ public final class Submission {
       }
 
       public final boolean isInitialized() {
+        if (hasSubmission()) {
+          if (!getSubmission().isInitialized()) {
+            
+            return false;
+          }
+        }
         return true;
       }
 
@@ -2062,6 +2278,12 @@ public final class Submission {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (hasSubmission()) {
+        if (!getSubmission().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -2344,6 +2566,12 @@ public final class Submission {
       }
 
       public final boolean isInitialized() {
+        if (hasSubmission()) {
+          if (!getSubmission().isInitialized()) {
+            
+            return false;
+          }
+        }
         return true;
       }
 
@@ -3552,6 +3780,12 @@ public final class Submission {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      for (int i = 0; i < getExperimentsCount(); i++) {
+        if (!getExperiments(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -3780,6 +4014,12 @@ public final class Submission {
       }
 
       public final boolean isInitialized() {
+        for (int i = 0; i < getExperimentsCount(); i++) {
+          if (!getExperiments(i).isInitialized()) {
+            
+            return false;
+          }
+        }
         return true;
       }
 
@@ -4088,20 +4328,21 @@ public final class Submission {
   static {
     java.lang.String[] descriptorData = {
       "\n\026input/submission.proto\022\027protobuf.srl.s" +
-      "ubmission\"W\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022\022" +
-      "\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\022\026\n\016su" +
-      "bmissionTime\030\004 \001(\003\"\231\001\n\013SrlSolution\022\034\n\024al" +
-      "lowedInProblemBank\030\001 \001(\010\022\031\n\021isPracticePr" +
-      "oblem\030\002 \001(\010\022:\n\nsubmission\030\003 \001(\0132&.protob" +
-      "uf.srl.submission.SrlSubmission\022\025\n\rprobl" +
-      "emBankId\030\004 \001(\t\"\226\001\n\rSrlExperiment\022\020\n\010cour" +
-      "seId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tprob" +
-      "lemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022:\n\nsubmissio",
-      "n\030\006 \001(\0132&.protobuf.srl.submission.SrlSub" +
-      "mission\"4\n\013SrlChecksum\022\021\n\tfirstBits\030\001 \002(" +
-      "\003\022\022\n\nsecondBits\030\002 \002(\003\"P\n\021SrlExperimentLi" +
-      "st\022;\n\013experiments\030\001 \003(\0132&.protobuf.srl.s" +
-      "ubmission.SrlExperiment"
+      "ubmission\"\217\001\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022" +
+      "\022\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\022\026\n\016s" +
+      "ubmissionTime\030\004 \001(\003\0226\n\010checksum\030\005 \001(\0132$." +
+      "protobuf.srl.submission.SrlChecksum\"\231\001\n\013" +
+      "SrlSolution\022\034\n\024allowedInProblemBank\030\001 \001(" +
+      "\010\022\031\n\021isPracticeProblem\030\002 \001(\010\022:\n\nsubmissi" +
+      "on\030\003 \001(\0132&.protobuf.srl.submission.SrlSu" +
+      "bmission\022\025\n\rproblemBankId\030\004 \001(\t\"\226\001\n\rSrlE" +
+      "xperiment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignmen",
+      "tId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId\030\005" +
+      " \001(\t\022:\n\nsubmission\030\006 \001(\0132&.protobuf.srl." +
+      "submission.SrlSubmission\"4\n\013SrlChecksum\022" +
+      "\021\n\tfirstBits\030\001 \002(\003\022\022\n\nsecondBits\030\002 \002(\003\"P" +
+      "\n\021SrlExperimentList\022;\n\013experiments\030\001 \003(\013" +
+      "2&.protobuf.srl.submission.SrlExperiment"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4113,7 +4354,7 @@ public final class Submission {
           internal_static_protobuf_srl_submission_SrlSubmission_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_submission_SrlSubmission_descriptor,
-              new java.lang.String[] { "Id", "UpdateList", "Sketch", "SubmissionTime", });
+              new java.lang.String[] { "Id", "UpdateList", "Sketch", "SubmissionTime", "Checksum", });
           internal_static_protobuf_srl_submission_SrlSolution_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_submission_SrlSolution_fieldAccessorTable = new

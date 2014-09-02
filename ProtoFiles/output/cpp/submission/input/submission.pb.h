@@ -140,6 +140,15 @@ class SrlSubmission : public ::google::protobuf::Message {
   inline ::google::protobuf::int64 submissiontime() const;
   inline void set_submissiontime(::google::protobuf::int64 value);
 
+  // optional .protobuf.srl.submission.SrlChecksum checksum = 5;
+  inline bool has_checksum() const;
+  inline void clear_checksum();
+  static const int kChecksumFieldNumber = 5;
+  inline const ::protobuf::srl::submission::SrlChecksum& checksum() const;
+  inline ::protobuf::srl::submission::SrlChecksum* mutable_checksum();
+  inline ::protobuf::srl::submission::SrlChecksum* release_checksum();
+  inline void set_allocated_checksum(::protobuf::srl::submission::SrlChecksum* checksum);
+
   // @@protoc_insertion_point(class_scope:protobuf.srl.submission.SrlSubmission)
  private:
   inline void set_has_id();
@@ -150,6 +159,8 @@ class SrlSubmission : public ::google::protobuf::Message {
   inline void clear_has_sketch();
   inline void set_has_submissiontime();
   inline void clear_has_submissiontime();
+  inline void set_has_checksum();
+  inline void clear_has_checksum();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -157,9 +168,10 @@ class SrlSubmission : public ::google::protobuf::Message {
   ::std::string* updatelist_;
   ::std::string* sketch_;
   ::google::protobuf::int64 submissiontime_;
+  ::protobuf::srl::submission::SrlChecksum* checksum_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_input_2fsubmission_2eproto();
   friend void protobuf_AssignDesc_input_2fsubmission_2eproto();
@@ -845,6 +857,44 @@ inline ::google::protobuf::int64 SrlSubmission::submissiontime() const {
 inline void SrlSubmission::set_submissiontime(::google::protobuf::int64 value) {
   set_has_submissiontime();
   submissiontime_ = value;
+}
+
+// optional .protobuf.srl.submission.SrlChecksum checksum = 5;
+inline bool SrlSubmission::has_checksum() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SrlSubmission::set_has_checksum() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SrlSubmission::clear_has_checksum() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SrlSubmission::clear_checksum() {
+  if (checksum_ != NULL) checksum_->::protobuf::srl::submission::SrlChecksum::Clear();
+  clear_has_checksum();
+}
+inline const ::protobuf::srl::submission::SrlChecksum& SrlSubmission::checksum() const {
+  return checksum_ != NULL ? *checksum_ : *default_instance_->checksum_;
+}
+inline ::protobuf::srl::submission::SrlChecksum* SrlSubmission::mutable_checksum() {
+  set_has_checksum();
+  if (checksum_ == NULL) checksum_ = new ::protobuf::srl::submission::SrlChecksum;
+  return checksum_;
+}
+inline ::protobuf::srl::submission::SrlChecksum* SrlSubmission::release_checksum() {
+  clear_has_checksum();
+  ::protobuf::srl::submission::SrlChecksum* temp = checksum_;
+  checksum_ = NULL;
+  return temp;
+}
+inline void SrlSubmission::set_allocated_checksum(::protobuf::srl::submission::SrlChecksum* checksum) {
+  delete checksum_;
+  checksum_ = checksum;
+  if (checksum) {
+    set_has_checksum();
+  } else {
+    clear_has_checksum();
+  }
 }
 
 // -------------------------------------------------------------------

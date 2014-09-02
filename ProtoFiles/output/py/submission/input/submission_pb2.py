@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='input/submission.proto',
   package='protobuf.srl.submission',
-  serialized_pb='\n\x16input/submission.proto\x12\x17protobuf.srl.submission\"W\n\rSrlSubmission\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nupdateList\x18\x02 \x01(\x0c\x12\x0e\n\x06sketch\x18\x03 \x01(\x0c\x12\x16\n\x0esubmissionTime\x18\x04 \x01(\x03\"\x99\x01\n\x0bSrlSolution\x12\x1c\n\x14\x61llowedInProblemBank\x18\x01 \x01(\x08\x12\x19\n\x11isPracticeProblem\x18\x02 \x01(\x08\x12:\n\nsubmission\x18\x03 \x01(\x0b\x32&.protobuf.srl.submission.SrlSubmission\x12\x15\n\rproblemBankId\x18\x04 \x01(\t\"\x96\x01\n\rSrlExperiment\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\t\x12\x11\n\tproblemId\x18\x03 \x01(\t\x12\x0e\n\x06userId\x18\x05 \x01(\t\x12:\n\nsubmission\x18\x06 \x01(\x0b\x32&.protobuf.srl.submission.SrlSubmission\"4\n\x0bSrlChecksum\x12\x11\n\tfirstBits\x18\x01 \x02(\x03\x12\x12\n\nsecondBits\x18\x02 \x02(\x03\"P\n\x11SrlExperimentList\x12;\n\x0b\x65xperiments\x18\x01 \x03(\x0b\x32&.protobuf.srl.submission.SrlExperiment')
+  serialized_pb='\n\x16input/submission.proto\x12\x17protobuf.srl.submission\"\x8f\x01\n\rSrlSubmission\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nupdateList\x18\x02 \x01(\x0c\x12\x0e\n\x06sketch\x18\x03 \x01(\x0c\x12\x16\n\x0esubmissionTime\x18\x04 \x01(\x03\x12\x36\n\x08\x63hecksum\x18\x05 \x01(\x0b\x32$.protobuf.srl.submission.SrlChecksum\"\x99\x01\n\x0bSrlSolution\x12\x1c\n\x14\x61llowedInProblemBank\x18\x01 \x01(\x08\x12\x19\n\x11isPracticeProblem\x18\x02 \x01(\x08\x12:\n\nsubmission\x18\x03 \x01(\x0b\x32&.protobuf.srl.submission.SrlSubmission\x12\x15\n\rproblemBankId\x18\x04 \x01(\t\"\x96\x01\n\rSrlExperiment\x12\x10\n\x08\x63ourseId\x18\x01 \x01(\t\x12\x14\n\x0c\x61ssignmentId\x18\x02 \x01(\t\x12\x11\n\tproblemId\x18\x03 \x01(\t\x12\x0e\n\x06userId\x18\x05 \x01(\t\x12:\n\nsubmission\x18\x06 \x01(\x0b\x32&.protobuf.srl.submission.SrlSubmission\"4\n\x0bSrlChecksum\x12\x11\n\tfirstBits\x18\x01 \x02(\x03\x12\x12\n\nsecondBits\x18\x02 \x02(\x03\"P\n\x11SrlExperimentList\x12;\n\x0b\x65xperiments\x18\x01 \x03(\x0b\x32&.protobuf.srl.submission.SrlExperiment')
 
 
 
@@ -53,6 +53,13 @@ _SRLSUBMISSION = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='checksum', full_name='protobuf.srl.submission.SrlSubmission.checksum', index=4,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -62,8 +69,8 @@ _SRLSUBMISSION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=51,
-  serialized_end=138,
+  serialized_start=52,
+  serialized_end=195,
 )
 
 
@@ -111,8 +118,8 @@ _SRLSOLUTION = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=141,
-  serialized_end=294,
+  serialized_start=198,
+  serialized_end=351,
 )
 
 
@@ -167,8 +174,8 @@ _SRLEXPERIMENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=297,
-  serialized_end=447,
+  serialized_start=354,
+  serialized_end=504,
 )
 
 
@@ -202,8 +209,8 @@ _SRLCHECKSUM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=449,
-  serialized_end=501,
+  serialized_start=506,
+  serialized_end=558,
 )
 
 
@@ -230,10 +237,11 @@ _SRLEXPERIMENTLIST = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=503,
-  serialized_end=583,
+  serialized_start=560,
+  serialized_end=640,
 )
 
+_SRLSUBMISSION.fields_by_name['checksum'].message_type = _SRLCHECKSUM
 _SRLSOLUTION.fields_by_name['submission'].message_type = _SRLSUBMISSION
 _SRLEXPERIMENT.fields_by_name['submission'].message_type = _SRLSUBMISSION
 _SRLEXPERIMENTLIST.fields_by_name['experiments'].message_type = _SRLEXPERIMENT

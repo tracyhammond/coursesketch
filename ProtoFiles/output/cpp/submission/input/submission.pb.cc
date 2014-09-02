@@ -48,11 +48,12 @@ void protobuf_AssignDesc_input_2fsubmission_2eproto() {
       "input/submission.proto");
   GOOGLE_CHECK(file != NULL);
   SrlSubmission_descriptor_ = file->message_type(0);
-  static const int SrlSubmission_offsets_[4] = {
+  static const int SrlSubmission_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSubmission, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSubmission, updatelist_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSubmission, sketch_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSubmission, submissiontime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SrlSubmission, checksum_),
   };
   SrlSubmission_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -180,20 +181,21 @@ void protobuf_AddDesc_input_2fsubmission_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\026input/submission.proto\022\027protobuf.srl.s"
-    "ubmission\"W\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022\022"
-    "\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\022\026\n\016su"
-    "bmissionTime\030\004 \001(\003\"\231\001\n\013SrlSolution\022\034\n\024al"
-    "lowedInProblemBank\030\001 \001(\010\022\031\n\021isPracticePr"
-    "oblem\030\002 \001(\010\022:\n\nsubmission\030\003 \001(\0132&.protob"
-    "uf.srl.submission.SrlSubmission\022\025\n\rprobl"
-    "emBankId\030\004 \001(\t\"\226\001\n\rSrlExperiment\022\020\n\010cour"
-    "seId\030\001 \001(\t\022\024\n\014assignmentId\030\002 \001(\t\022\021\n\tprob"
-    "lemId\030\003 \001(\t\022\016\n\006userId\030\005 \001(\t\022:\n\nsubmissio"
-    "n\030\006 \001(\0132&.protobuf.srl.submission.SrlSub"
-    "mission\"4\n\013SrlChecksum\022\021\n\tfirstBits\030\001 \002("
-    "\003\022\022\n\nsecondBits\030\002 \002(\003\"P\n\021SrlExperimentLi"
-    "st\022;\n\013experiments\030\001 \003(\0132&.protobuf.srl.s"
-    "ubmission.SrlExperiment", 583);
+    "ubmission\"\217\001\n\rSrlSubmission\022\n\n\002id\030\001 \001(\t\022"
+    "\022\n\nupdateList\030\002 \001(\014\022\016\n\006sketch\030\003 \001(\014\022\026\n\016s"
+    "ubmissionTime\030\004 \001(\003\0226\n\010checksum\030\005 \001(\0132$."
+    "protobuf.srl.submission.SrlChecksum\"\231\001\n\013"
+    "SrlSolution\022\034\n\024allowedInProblemBank\030\001 \001("
+    "\010\022\031\n\021isPracticeProblem\030\002 \001(\010\022:\n\nsubmissi"
+    "on\030\003 \001(\0132&.protobuf.srl.submission.SrlSu"
+    "bmission\022\025\n\rproblemBankId\030\004 \001(\t\"\226\001\n\rSrlE"
+    "xperiment\022\020\n\010courseId\030\001 \001(\t\022\024\n\014assignmen"
+    "tId\030\002 \001(\t\022\021\n\tproblemId\030\003 \001(\t\022\016\n\006userId\030\005"
+    " \001(\t\022:\n\nsubmission\030\006 \001(\0132&.protobuf.srl."
+    "submission.SrlSubmission\"4\n\013SrlChecksum\022"
+    "\021\n\tfirstBits\030\001 \002(\003\022\022\n\nsecondBits\030\002 \002(\003\"P"
+    "\n\021SrlExperimentList\022;\n\013experiments\030\001 \003(\013"
+    "2&.protobuf.srl.submission.SrlExperiment", 640);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "input/submission.proto", &protobuf_RegisterTypes);
   SrlSubmission::default_instance_ = new SrlSubmission();
@@ -223,6 +225,7 @@ const int SrlSubmission::kIdFieldNumber;
 const int SrlSubmission::kUpdateListFieldNumber;
 const int SrlSubmission::kSketchFieldNumber;
 const int SrlSubmission::kSubmissionTimeFieldNumber;
+const int SrlSubmission::kChecksumFieldNumber;
 #endif  // !_MSC_VER
 
 SrlSubmission::SrlSubmission()
@@ -231,6 +234,7 @@ SrlSubmission::SrlSubmission()
 }
 
 void SrlSubmission::InitAsDefaultInstance() {
+  checksum_ = const_cast< ::protobuf::srl::submission::SrlChecksum*>(&::protobuf::srl::submission::SrlChecksum::default_instance());
 }
 
 SrlSubmission::SrlSubmission(const SrlSubmission& from)
@@ -245,6 +249,7 @@ void SrlSubmission::SharedCtor() {
   updatelist_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   sketch_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   submissiontime_ = GOOGLE_LONGLONG(0);
+  checksum_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -263,6 +268,7 @@ void SrlSubmission::SharedDtor() {
     delete sketch_;
   }
   if (this != default_instance_) {
+    delete checksum_;
   }
 }
 
@@ -305,6 +311,9 @@ void SrlSubmission::Clear() {
       }
     }
     submissiontime_ = GOOGLE_LONGLONG(0);
+    if (has_checksum()) {
+      if (checksum_ != NULL) checksum_->::protobuf::srl::submission::SrlChecksum::Clear();
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -372,6 +381,20 @@ bool SrlSubmission::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(42)) goto parse_checksum;
+        break;
+      }
+
+      // optional .protobuf.srl.submission.SrlChecksum checksum = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_checksum:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_checksum()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -420,6 +443,12 @@ void SrlSubmission::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(4, this->submissiontime(), output);
   }
 
+  // optional .protobuf.srl.submission.SrlChecksum checksum = 5;
+  if (has_checksum()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->checksum(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -455,6 +484,13 @@ void SrlSubmission::SerializeWithCachedSizes(
   // optional int64 submissionTime = 4;
   if (has_submissiontime()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(4, this->submissiontime(), target);
+  }
+
+  // optional .protobuf.srl.submission.SrlChecksum checksum = 5;
+  if (has_checksum()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        5, this->checksum(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -496,6 +532,13 @@ int SrlSubmission::ByteSize() const {
           this->submissiontime());
     }
 
+    // optional .protobuf.srl.submission.SrlChecksum checksum = 5;
+    if (has_checksum()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->checksum());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -535,6 +578,9 @@ void SrlSubmission::MergeFrom(const SrlSubmission& from) {
     if (from.has_submissiontime()) {
       set_submissiontime(from.submissiontime());
     }
+    if (from.has_checksum()) {
+      mutable_checksum()->::protobuf::srl::submission::SrlChecksum::MergeFrom(from.checksum());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -553,6 +599,9 @@ void SrlSubmission::CopyFrom(const SrlSubmission& from) {
 
 bool SrlSubmission::IsInitialized() const {
 
+  if (has_checksum()) {
+    if (!this->checksum().IsInitialized()) return false;
+  }
   return true;
 }
 
@@ -562,6 +611,7 @@ void SrlSubmission::Swap(SrlSubmission* other) {
     std::swap(updatelist_, other->updatelist_);
     std::swap(sketch_, other->sketch_);
     std::swap(submissiontime_, other->submissiontime_);
+    std::swap(checksum_, other->checksum_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -899,6 +949,9 @@ void SrlSolution::CopyFrom(const SrlSolution& from) {
 
 bool SrlSolution::IsInitialized() const {
 
+  if (has_submission()) {
+    if (!this->submission().IsInitialized()) return false;
+  }
   return true;
 }
 
@@ -1339,6 +1392,9 @@ void SrlExperiment::CopyFrom(const SrlExperiment& from) {
 
 bool SrlExperiment::IsInitialized() const {
 
+  if (has_submission()) {
+    if (!this->submission().IsInitialized()) return false;
+  }
   return true;
 }
 
@@ -1795,6 +1851,9 @@ void SrlExperimentList::CopyFrom(const SrlExperimentList& from) {
 
 bool SrlExperimentList::IsInitialized() const {
 
+  for (int i = 0; i < experiments_size(); i++) {
+    if (!this->experiments(i).IsInitialized()) return false;
+  }
   return true;
 }
 
