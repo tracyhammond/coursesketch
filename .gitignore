@@ -14,3 +14,5 @@ Non_Commit/
 *.db
 .metadata/*
 *.classpath
+.dgrproj
+.dgd/*.tmp
