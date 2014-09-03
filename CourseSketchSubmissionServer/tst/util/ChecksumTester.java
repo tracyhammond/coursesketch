@@ -30,6 +30,7 @@ public class ChecksumTester {
 
 	/**
 	 * Passes if the creation of a checksum does not fail.
+	 * 
 	 * @throws IOException
 	 */
 	@Test
@@ -40,6 +41,7 @@ public class ChecksumTester {
 
 	/**
 	 * Passes if the creation of a checksum does not fail.
+	 * 
 	 * @throws IOException
 	 */
 	@Test
@@ -52,7 +54,9 @@ public class ChecksumTester {
 	}
 
 	/**
-	 * Passes if the checksum list creates the same result as the comput checksum for each partial list
+	 * Passes if the checksum list creates the same result as the comput
+	 * checksum for each partial list
+	 * 
 	 * @throws IOException
 	 */
 	@Test
@@ -65,22 +69,68 @@ public class ChecksumTester {
 			List<SrlUpdate> partialList = completeList.subList(0, i);
 			System.out.println(partialList.size());
 			SrlChecksum completeSum = Checksum.computeChecksum(partialList);
-			System.out.println("Asserting for index " + i);
-			System.out.println(completeSum.toString());
-			System.out.println(completeSum.toString());
 			Assert.assertEquals(partialSums.get(i - 1), completeSum);
 		}
 	}
 
+	/**
+	 * Passes if the checksum list creates the same result as the comput
+	 * checksum for each partial list
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void testCheckSumListIsComplete() throws IOException {
+		SrlUpdateList defaultList = createListFromFile(DEFAULT_DRAWING);
+		List<SrlUpdate> completeList = defaultList.getListList();
+
+		List<SrlChecksum> partialSums = Checksum.computeListedChecksum(completeList);
+		SrlChecksum defaultSum = Checksum.computeChecksum(completeList);
+		Assert.assertEquals(defaultSum, partialSums.get(partialSums.size() - 1));
+	}
+
+	/**
+	 * Passes if the checksum list creates the same index as the list in its
+	 * proper location
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void testCheckSumIndexGrabberReturnsCorrectIndex() throws IOException {
+		SrlUpdateList defaultList = createListFromFile(DEFAULT_DRAWING);
+		List<SrlUpdate> completeList = defaultList.getListList();
+		final int halfIndex = completeList.size() / 2;
+		SrlChecksum halfSum = Checksum.computeChecksum(completeList.subList(0, halfIndex + 1));
+
+		final int resultIndex = Checksum.checksumIndex(completeList, halfSum);
+		Assert.assertEquals(halfIndex, resultIndex);
+	}
+
+	/**
+	 * Passes if the checksumIndex function returns -1 for an index that does not exist
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void testCheckSumIndexGrabberReturnsNegativeOne() throws IOException {
+		SrlUpdateList defaultList = createListFromFile(DEFAULT_DRAWING);
+		List<SrlUpdate> completeList = defaultList.getListList();
+
+		final int resultIndex = Checksum.checksumIndex(completeList, SrlChecksum.newBuilder().setFirstBits(0).setSecondBits(0).build());
+		Assert.assertEquals(-1, resultIndex);
+	}
+
 	/*
-	 * HELPER METHODS 
-	 **/
+	 * HELPER METHODS
+	 */
 	public static SrlUpdateList createListFromFile(final File f) throws IOException {
 		return SrlUpdateList.parseFrom(new FileInputStream(f));
 	}
 
 	/**
-	 * Should create an alternate form of the SrlUpdateList with only a single Id changed
+	 * Should create an alternate form of the SrlUpdateList with only a single
+	 * Id changed
+	 * 
 	 * @param list
 	 * @return
 	 */
