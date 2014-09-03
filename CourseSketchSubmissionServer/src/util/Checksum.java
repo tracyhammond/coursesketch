@@ -87,6 +87,27 @@ public class Checksum {
 		return listSummed;
 	}
 
+	/**
+	 * Returns the index for the given checksum in the list of updates.
+	 *
+	 * This will return the last index of the item in this list.
+	 * EX:
+	 * If the checksum matches the list with one one item in it (index zero) then it will return 0
+	 * If the checksum matches the entire list then it will return list.size() - 1
+	 * @param list
+	 * @param sum
+	 * @return the index if it is located or -1 if there is no match
+	 */
+	public static int checksumIndex(final List<SrlUpdate> list, SrlChecksum sum) {
+		List<SrlChecksum> sums = computeListedChecksum(list);
+		for (int i = 0; i < sums.size(); i++) {
+			if (sums.get(i).equals(sum)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	public static void main(String args[]) {
 		int size = 65535;
 		//System.out.println()
