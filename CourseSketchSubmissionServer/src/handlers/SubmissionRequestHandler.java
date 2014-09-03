@@ -23,7 +23,7 @@ public class SubmissionRequestHandler {
 				System.out.println("Update is finished building!");
 				ByteString data = null;
 				if (updateHandler.isSolution(sessionInfo)) {
-					resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo));
+					resultantId = DatabaseClient.saveSolution(updateHandler.getSolution(sessionInfo), DatabaseClient.getInstance());
 					if (resultantId != null) {
 						SrlSolution.Builder builder = SrlSolution.newBuilder(updateHandler.getSolution(sessionInfo));
 						builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
@@ -31,7 +31,7 @@ public class SubmissionRequestHandler {
 					}
 				} else {
 					System.out.println("Saving experiment");
-					resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo));
+					resultantId = DatabaseClient.saveExperiment(updateHandler.getExperiment(sessionInfo), DatabaseClient.getInstance());
 					if (resultantId != null) {
 						SrlExperiment.Builder builder = SrlExperiment.newBuilder(updateHandler.getExperiment(sessionInfo));
 						builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));

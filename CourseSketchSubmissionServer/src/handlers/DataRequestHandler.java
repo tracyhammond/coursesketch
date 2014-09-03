@@ -60,7 +60,7 @@ public class DataRequestHandler {
 		SrlExperiment experiment = null;
 		String errorMessage = "";
 		try {
-			experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
+			experiment = DatabaseClient.getExperiment(itemReq.getItemId(0), DatabaseClient.getInstance());
 		} catch (Exception e) {
 			errorMessage = e.getMessage();
 			e.printStackTrace();
@@ -85,7 +85,7 @@ public class DataRequestHandler {
 		String errorMessage = "";
 		for (String item : itemReq.getItemIdList()) {
 			try {
-				experiments.addExperiments(DatabaseClient.getExperiment(item));
+				experiments.addExperiments(DatabaseClient.getExperiment(item, DatabaseClient.getInstance()));
 			} catch (Exception e) {
 				errorMessage += e.getMessage();
 				e.printStackTrace();
