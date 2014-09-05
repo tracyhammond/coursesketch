@@ -13,7 +13,8 @@
 , {"id":"en2a5da3fc-3ff1-45c6-d865-d87e152ae8a6n703dc87c-a893-4876-c429-9f14abb31cb7", "source":"n2a5da3fc-3ff1-45c6-d865-d87e152ae8a6", "target":"n703dc87c-a893-4876-c429-9f14abb31cb7"}
 , {"id":"endab8a341-97fb-4a0e-bc56-6322bcb7134en585ea9b2-fc09-4567-9878-9bb828aff327", "source":"ndab8a341-97fb-4a0e-bc56-6322bcb7134e", "target":"n585ea9b2-fc09-4567-9878-9bb828aff327"}
 , {"id":"en1c9f7a0a-d3d4-4bd0-db4c-54681c023831n228ce5ad-1497-4c25-9813-e383877da0ff", "source":"n1c9f7a0a-d3d4-4bd0-db4c-54681c023831", "target":"n228ce5ad-1497-4c25-9813-e383877da0ff"}
-,{"id":"ena61bf930-0628-4748-833c-e66b436eb99fn0e16889d-6d0c-48e1-9c36-23a501eedc58","source":"na61bf930-0628-4748-833c-e66b436eb99f","target":"n0e16889d-6d0c-48e1-9c36-23a501eedc58"}], "nodes":[{"id":"n0", "isDynamic":false, "label":"CourseSketch", "actionType":"feature", "y":0.1, "size":2, "x":0.1}
+, {"id":"ena61bf930-0628-4748-833c-e66b436eb99fn0e16889d-6d0c-48e1-9c36-23a501eedc58", "source":"na61bf930-0628-4748-833c-e66b436eb99f", "target":"n0e16889d-6d0c-48e1-9c36-23a501eedc58"}
+,{"id":"enf130ad4e-02b1-4127-9ee1-7fceff7f084fneecdaa16-0fe8-4658-9346-d313a2e88f88","source":"nf130ad4e-02b1-4127-9ee1-7fceff7f084f","target":"neecdaa16-0fe8-4658-9346-d313a2e88f88"}], "nodes":[{"id":"n0", "isDynamic":false, "label":"CourseSketch", "actionType":"feature", "y":0.1, "size":2, "x":0.1}
 , {"id":"na61bf930-0628-4748-833c-e66b436eb99f", "parents":["n0"], "isDynamic":false, "label":"Sketching", "actionType":"feature", "y":0.2, "size":2, "x":0.2}
 , {"id":"n1c9f7a0a-d3d4-4bd0-db4c-54681c023831", "parents":["n0"], "isDynamic":false, "label":"Student", "actionType":"feature", "y":0.2, "size":2, "x":0.2}
 , {"id":"na896452a-079f-42e7-f920-d17dd8c91d87", "parents":["n0"], "isDynamic":false, "label":"Teacher", "actionType":"feature", "y":0.2, "size":2, "x":0.2}
@@ -29,4 +30,5 @@
 , {"id":"n703dc87c-a893-4876-c429-9f14abb31cb7", "parents":["n2a5da3fc-3ff1-45c6-d865-d87e152ae8a6"], "isDynamic":false, "label":"Question tagging", "actionType":"feature", "y":9.844103085373414, "size":2, "x":13.05049320448633}
 , {"id":"n585ea9b2-fc09-4567-9878-9bb828aff327", "parents":["ndab8a341-97fb-4a0e-bc56-6322bcb7134e"], "isDynamic":false, "label":"Config file", "actionType":"feature", "y":4.538837391175576, "size":2, "x":-8.809688679024184}
 , {"id":"n228ce5ad-1497-4c25-9813-e383877da0ff", "parents":["n1c9f7a0a-d3d4-4bd0-db4c-54681c023831"], "isDynamic":false, "label":"Notes", "actionType":"feature", "y":8.018314824680287, "size":2, "x":6.434898018587324}
-,{"id":"n0e16889d-6d0c-48e1-9c36-23a501eedc58","parents":["na61bf930-0628-4748-833c-e66b436eb99f"],"isDynamic":false,"label":"Storing sketches","actionType":"feature","y":0.2,"size":2,"x":10.2}]}
+, {"id":"n0e16889d-6d0c-48e1-9c36-23a501eedc58", "parents":["na61bf930-0628-4748-833c-e66b436eb99f"], "isDynamic":false, "label":"Storing sketches", "actionType":"feature", "y":0.2, "size":2, "x":10.2}
+,{"id":"neecdaa16-0fe8-4658-9346-d313a2e88f88","parents":["nf130ad4e-02b1-4127-9ee1-7fceff7f084f"],"isDynamic":false,"label":"Sketch Surface","actionType":"feature","y":-4.138837391175576,"size":2,"x":-8.809688679024184}]}

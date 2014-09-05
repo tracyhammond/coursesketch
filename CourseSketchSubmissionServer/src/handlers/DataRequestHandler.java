@@ -54,7 +54,7 @@ public class DataRequestHandler {
 			return build.build();
 		}
 	}
-	
+
 	private static ItemResult handleSingleExperiment(ItemRequest itemReq) {
 		System.out.println("attempting to get an experiment!");
 		SrlExperiment experiment = null;
@@ -65,7 +65,7 @@ public class DataRequestHandler {
 			errorMessage = e.getMessage();
 			e.printStackTrace();
 		}
-		
+
 		ItemResult.Builder send = ItemResult.newBuilder();
 		send.setQuery(ItemQuery.EXPERIMENT);
 
