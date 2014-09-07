@@ -10,6 +10,11 @@
 	<modules>
 	    <module>jettyBlank</module>
 	    <module>ProtoFiles</module>
+	    <module>CourseSketchDatabaseServer</module>
+	    <module>CourseSketchProxyServer</module>
+	    <module>CourseSketchSubmissionServer</module>
+	    <module>CourseSketchAnswerCheckerServer</module>
+	    <module>CourseSketchLoginServer</module>
 	</modules>
 
 	<reporting>
