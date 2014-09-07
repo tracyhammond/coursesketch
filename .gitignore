@@ -16,3 +16,5 @@ Non_Commit/
 *.classpath
 .dgrproj
 .dgd/*.tmp
+
+target/
