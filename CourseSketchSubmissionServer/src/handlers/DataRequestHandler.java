@@ -55,6 +55,13 @@ public class DataRequestHandler {
 		}
 	}
 
+	/**
+	 * Takes in an item request that grabs a single experiment.
+	 *
+	 * This request must contain an ID (for a student) and optionally an SRLChecksum
+	 * @param itemReq
+	 * @return
+	 */
 	private static ItemResult handleSingleExperiment(ItemRequest itemReq) {
 		System.out.println("attempting to get an experiment!");
 		SrlExperiment experiment = null;
@@ -79,6 +86,11 @@ public class DataRequestHandler {
 		return send.build();
 	}
 
+	/**
+	 * Grabs an experiment for the instructor.
+	 * @param itemReq
+	 * @return
+	 */
 	private static ItemResult getExperimentsForInstructor(ItemRequest itemReq) {
 		System.out.println("attempting to get an experiment!");
 		SrlExperimentList.Builder experiments = SrlExperimentList.newBuilder();
