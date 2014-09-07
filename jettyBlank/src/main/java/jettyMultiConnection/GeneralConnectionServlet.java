@@ -51,9 +51,9 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     	 * Creates the new websocket
     	 */
 		@Override
-		public final Object createWebSocket(ServletUpgradeRequest arg0, ServletUpgradeResponse arg1) {
+		public final Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
 			System.out.println("Recieved Upgrade request");
-			if (secure && !arg0.isSecure()) {
+			if (secure && !req.isSecure()) {
 				System.out.println("Refusing an insecure connection");
 				return null;
 			}
