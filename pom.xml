@@ -1,0 +1,128 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>CourseSketch</groupId>
+	<artifactId>CourseSketch-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>CourseSketch-parent</name>
+
+	<modules>
+		<module>ProtoFiles</module>
+		<module>jettyBlank</module>
+		<module>CourseSketchDatabaseServer</module>
+		<module>CourseSketchProxyServer</module>
+		<module>CourseSketchSubmissionServer</module>
+		<module>CourseSketchAnswerCheckerServer</module>
+		<module>CourseSketchLoginServer</module>
+	</modules>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.12.1</version>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<build>
+		<defaultGoal>clean install validate</defaultGoal>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.12.1</version>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<configuration>
+							<configLocation>checkstyle.xml</configLocation>
+							<encoding>UTF-8</encoding>
+							<consoleOutput>true</consoleOutput>
+							<failsOnError>true</failsOnError>
+							<linkXRef>false</linkXRef>
+						</configuration>
+						<goals>
+							<!-- <goal>check</goal> -->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<filters>
+						<filter>
+							<artifact>CourseSketch:ProtoFiles</artifact>
+							<includes>
+								<include>**</include>
+							</includes>
+						</filter>
+					</filters>
+					<!-- put your configurations here -->
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.jetty.aggregate</groupId>
+			<artifactId>jetty-all</artifactId>
+			<version>9.2.2.v20140723</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.12.3</version>
+		</dependency>
+
+		<!-- Project created dependencies -->
+		<dependency>
+			<groupId>CourseSketch</groupId>
+			<artifactId>ProtoFiles</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>CourseSketch</groupId>
+			<artifactId>BlankServer</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>
