@@ -18,3 +18,5 @@ Non_Commit/
 .dgd/*.tmp
 
 target/
+
+target/CourseSketch-parent-0.0.1-SNAPSHOT-shaded.pom
