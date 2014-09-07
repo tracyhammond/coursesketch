@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>CourseSketch-parent</artifactId>
+    <groupId>CourseSketch</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>CourseSketch</groupId>
+  <artifactId>ProtoFiles</artifactId>
+  <name>ProtoFiles</name>
+  <version>0.0.1-SNAPSHOT</version>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.google.protobuf.tools</groupId>
+        <artifactId>maven-protoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <checkStaleness>true</checkStaleness>
+          <staleMillis>10000</staleMillis>
+          <protocExecutable>/usr/local/bin/protoc</protocExecutable>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>dtrott</id>
+      <url>http://maven.davidtrott.com/repository</url>
+    </pluginRepository>
+  </pluginRepositories>
+</project>
+
