@@ -139,14 +139,17 @@ public class DatabaseClient {
 	 * Saves the experiment trying to make sure that there are no duplicates.
 	 *
 	 * First it searches to see if any experiments exist.  If they do then we sort them by submission time and overwrite them!
+	 *
+	 * TODO SECURITY CHECKS!
 	 * @param experiment
 	 * @return
+	 * @throws DatabaseException 
 	 */
-	public static final String saveExperiment(final SrlExperiment experiment, final DatabaseClient databaseClient) {
+	public static final String saveExperiment(final SrlExperiment experiment, final DatabaseClient databaseClient) throws DatabaseException {
 		System.out.println("saving the experiment!");
-		DBCollection experiments = databaseClient.getDB().getCollection(EXPERIMENT_COLLECTION);
+		final DBCollection experiments = databaseClient.getDB().getCollection(EXPERIMENT_COLLECTION);
 
-		BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
+		final BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
 		.append(USER_ID, experiment.getUserId());
 		System.out.println("Searching for existing solutions " + findQuery);
 		DBCursor c = experiments.find(findQuery).sort(new BasicDBObject(SUBMISSION_TIME, -1));
@@ -156,15 +159,33 @@ public class DatabaseClient {
 		if (c.count() > 0) {
 			System.out.println("UPDATING AN EXPERIMENT!!!!!!!!");
 			corsor = c.next();
-			c.close();
-			DBCollection courses = databaseClient.getDB().getCollection(EXPERIMENT_COLLECTION);
+
+			try {
+				SrlUpdateList databaseList = SrlUpdateList.parseFrom((byte[])corsor.get(UPDATELIST));
+				SrlUpdateList inputList = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
+
+				SrlUpdateList result;
+				result = completeListCheck(databaseList, inputList);
+				// This is a safe comparison as the method ensures the same object is returned and is not aliased.
+				if (result == databaseList) {
+					// We do a NO-OP and return success
+					return corsor.get(SELF_ID).toString();
+				}
+			} catch (InvalidProtocolBufferException e) {
+				// TODO: figure out how to handle this event...
+				e.printStackTrace();
+			} finally {
+				c.close();
+			}
+
+			final DBCollection courses = databaseClient.getDB().getCollection(EXPERIMENT_COLLECTION);
 
 			// TODO: figure out how to update a document with a single command
 
-			DBObject updateObj = new BasicDBObject(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray());
-			DBObject updateObj2 = new BasicDBObject(SUBMISSION_TIME, experiment.getSubmission().getSubmissionTime());
-			BasicDBObject updateQueryPart2 = new BasicDBObject("$set", updateObj);
-			BasicDBObject updateQuery2Part2 = new BasicDBObject("$set", updateObj2);
+			final DBObject updateObj = new BasicDBObject(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray());
+			final DBObject updateObj2 = new BasicDBObject(SUBMISSION_TIME, experiment.getSubmission().getSubmissionTime());
+			final BasicDBObject updateQueryPart2 = new BasicDBObject("$set", updateObj);
+			final BasicDBObject updateQuery2Part2 = new BasicDBObject("$set", updateObj2);
 			courses.update(corsor, updateQueryPart2);
 			courses.update(corsor, updateQuery2Part2);
 		} else {
@@ -212,32 +233,28 @@ public class DatabaseClient {
 	}
 
 	/**
-	 * Returns true if the checksum of the database is equal to the checksum of the given submission.
-	 * @param sub
-	 * @param databaseCheckSum
-	 * @return
+	 * Returns database object unmodified if the list are the same
+	 * If they are not the same but are compatibable a new object of the combined version is made
+	 * @throws DatabaseException 
 	 */
-	public static boolean checkCompleteCheckSum(SrlSubmission sub) {
-		try {
-			return Checksum.computeChecksum(SrlUpdateList.parseFrom(sub.getUpdateList()).getListList()).equals(sub.getChecksum());
-		} catch (InvalidProtocolBufferException e) {
-			e.printStackTrace();
+	public static SrlUpdateList completeListCheck(final SrlUpdateList database, final SrlUpdateList input) throws DatabaseException {
+		SrlChecksum databaseSum = Checksum.computeChecksum(database.getListList());
+		SrlChecksum inputSum = Checksum.computeChecksum(input.getListList());
+		if (databaseSum.equals(inputSum)) {
+			return database;
 		}
-		return false;
-	}
 
-	/**
-	 * Returns the index of the databaseChecksum in the given submission, returns -1 if the checksum does not exist
-	 * @param sub
-	 * @param databaseCheckSum
-	 * @return
-	 */
-	public int checkPreviousChecksum(SrlSubmission sub, SrlChecksum databaseCheckSum) {
-		try {
-			return Checksum.checksumIndex(SrlUpdateList.parseFrom(sub.getUpdateList()).getListList(), databaseCheckSum);
-		} catch (InvalidProtocolBufferException e) {
-			e.printStackTrace();
+		int newIndex = Checksum.checksumIndex(input.getListList(), databaseSum);
+		if (newIndex < 0) {
+			throw new DatabaseException("Input list is not compatible with previous data");
 		}
-		return -1;
+
+		SrlUpdateList.Builder combinedList = SrlUpdateList.newBuilder(database);
+		// The combined list should be safe as we can ensure that history is not changed as we use it to build the new list.
+		// and the checksum of the new combined data should match the complete list of the input data
+		// this is to safegaurd against a possible attack where they managed to figure out the checksum process
+		// and come up with a way to ensure equality with it not being equal (so changing history will still not be possible)
+		combinedList.addAllList(input.getListList().subList(newIndex + 1, input.getListCount()));
+		return combinedList.build();
 	}
 }
