@@ -1,9 +1,9 @@
 package connection;
 
+import multiconnection.GeneralConnectionServer;
+import multiconnection.GeneralConnectionServlet;
+import multiconnection.MultiConnectionManager;
 import internalConnection.AnswerConnectionManager;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.GeneralConnectionServlet;
-import jettyMultiConnection.MultiConnectionManager;
 
 @SuppressWarnings("serial")
 public class AnswerCheckerServlet extends GeneralConnectionServlet {

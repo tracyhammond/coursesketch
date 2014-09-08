@@ -1,9 +1,9 @@
 package internalConnections;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.MultiConnectionManager;
+import connection.ConnectionException;
+import multiconnection.ConnectionWrapper;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 
 

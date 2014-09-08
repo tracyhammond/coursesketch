@@ -1,4 +1,4 @@
-package jettyMultiConnection;
+package multiconnection;
 
 /*
  * Jetty server information

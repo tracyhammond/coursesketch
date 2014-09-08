@@ -1,4 +1,4 @@
-package jettyMultiConnection;
+package multiconnection;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
