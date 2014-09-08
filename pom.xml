@@ -24,8 +24,8 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>${checkstyleVersion}</version>
 				<configuration>
-					<configLocation>checkstyle.xml</configLocation>
-					<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+					<configLocation>${absoluteCheckstyleLocation}</configLocation>
+					<suppressionsLocation>${checkstyleSuppressionLocation}</suppressionsLocation>
 					<suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
 					<encoding>UTF-8</encoding>
 					<consoleOutput>true</consoleOutput>
@@ -87,8 +87,8 @@
 							<id>validate</id>
 							<phase>validate</phase>
 							<configuration>
-								<configLocation>checkstyle.xml</configLocation>
-								<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+								<configLocation>${absoluteCheckstyleLocation}</configLocation>
+								<suppressionsLocation>${checkstyleSuppressionLocation}</suppressionsLocation>
 								<suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
 								<encoding>UTF-8</encoding>
 								<consoleOutput>true</consoleOutput>
@@ -182,6 +182,9 @@
 		<testLevel>85</testLevel>
 		<minTestLevel>70</minTestLevel>
 		<averageTestLevel>90</averageTestLevel>
+		<checkstyleLocation>config/checkstyle.xml</checkstyleLocation>
+		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
+		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
 	</properties>
 
 	<dependencies>
