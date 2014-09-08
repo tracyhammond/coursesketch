@@ -3,11 +3,12 @@ package internalConnection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
+import multiconnection.ConnectionWrapper;
+import multiconnection.GeneralConnectionServer;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;

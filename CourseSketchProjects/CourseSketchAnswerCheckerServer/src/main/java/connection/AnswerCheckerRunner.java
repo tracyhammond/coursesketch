@@ -1,7 +1,7 @@
 package connection;
 
-import jettyMultiConnection.GeneralConnectionRunner;
-import jettyMultiConnection.GeneralConnectionServlet;
+import multiconnection.GeneralConnectionRunner;
+import multiconnection.GeneralConnectionServlet;
 
 public class AnswerCheckerRunner extends GeneralConnectionRunner {
 	public static void main(String args[]) {

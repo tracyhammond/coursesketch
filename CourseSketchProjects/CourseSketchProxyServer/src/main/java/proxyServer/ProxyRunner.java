@@ -1,7 +1,7 @@
 package proxyServer;
 
-import jettyMultiConnection.GeneralConnectionRunner;
-import jettyMultiConnection.GeneralConnectionServlet;
+import multiconnection.GeneralConnectionRunner;
+import multiconnection.GeneralConnectionServlet;
 
 public class ProxyRunner extends GeneralConnectionRunner {
 	public static void main(String args[]) {
