@@ -24,11 +24,11 @@ public class Checksum {
 	 * The first step:
 	 * <ul>
 	 * <li>The first 16 bits is the list size.</li>
-	 * <li>The following 48 bits is ·first command in an update % 2 ^ 48</li>
+	 * <li>The following 48 bits is first command in an update % 2 ^ 48</li>
 	 * </ul>
 	 * The second step:
 	 * <ul>
-	 * <li> · update.time % 2 ^ 63 - 1
+	 * <li>  update.time % 2 ^ 63 - 1
 	 * </ul>
 	 * @param list
 	 * @return
