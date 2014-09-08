@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<base href="../../">
+	
+	<script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
+
+  	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+
+	<script type="text/javascript" src="js/connection/connection_library.js"></script>
+
+	<script type="text/javascript" src="js/test/localTestDataInstructor.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="css/login/introForms.css" />
+
+	<script type='text/javascript'>
+	</script>
+	<script type='text/javascript'>
+		var c = new Connection('echowebsocket.org', true, false);
+		c.setOnCloseListener(function() {});
+		var classNames = new Array();
+		var hwNames = new Array();     // TWO-DIMENSIONAL
+		var grades = new Array();      // TWO-DIMENSIONAL
+		var overall = new Array();
+
+		function getData(studentInd) {
+			var assignments = getMapAsList(user_assignments);
+			var courses = getMapAsList(user_courses);
+			var problems = getMapAsList(user_problems);
+			var students = getMapAsList(user_students);
+			var classIds = new Array();
+			var hwIds = new Array();
+
+			console.log(user_courses);
+			var courseInd = 0;
+			for(var i=0; i<courses.length; ++i) {
+				// We don't want to anything if the student isn't in the course
+				var found = false;
+				var student_courses = students[studentInd].courseList;
+				console.log(student_courses.length);
+
+				for(var j=0; j<student_courses.length; ++j) {
+					console.log(courses[i].id + " " + student_courses[j]);
+					if(student_courses[j] == courses[i].id) {
+						console.log("OK!!!");
+						found=true;
+						break;
+					}
+				}
+				if(!found) continue;
+
+				hwNames[courseInd] = new Array();
+				hwIds[courseInd] = new Array();
+				grades[courseInd] = new Array();
+
+				if(!isUndefined(courses[i].name) && courses[i].name != null) {
+					classNames[courseInd] = courses[i].name;
+				} else {
+					classNames[courseInd] = courses[i].id;
+				}
+
+				classIds[courseInd] = courses[i].id;
+				overall[courseInd] = -1;
+				++courseInd;
+			}
+			console.log("classNames.length == " + classNames.length);
+
+			for(var i=0; i<assignments.length; ++i) {
+				// We don't want to anything if the student isn't in the course
+				var found = false;
+
+				for(var j=0; j<students[studentInd].courseList.length; ++j) {
+					if((students[studentInd].courseList)[j] == assignments[i].courseId) {
+						found=true;
+						break;
+					}
+				}
+				if(!found) continue;
+
+				var ind = classIds.indexOf(assignments[i].courseId);
+				console.log(ind);
+				if(!isUndefined(assignments[i].name) && assignments[i].name != null) {
+					var x = assignments[i];
+					var y = x.name;
+					hwNames[ind].push(y);//[i] = y;
+				} else {
+					hwNames[ind].push(assignments[i].id);
+				}
+				hwIds[ind][i] = assignments[i].id; // needed when adding individual problem grade show
+
+				// grade stuff goes here
+				// if not defined, put a default value of -1
+				if(!isUndefined(assignments[i].grade) && assignments[i].grade != null) {
+					grades[ind].push(assignments[i].grade);
+				} else {
+					grades[ind].push(-1);
+				}
+			}
+
+			// and then stuff for problems
+		}
+
+		function setupStudent(ind) {
+			document.getElementById("content").innerHTML = "";
+			getData(ind);
+
+			document.getElementById("tabs").innerHTML = "";
+			// dynamically create button(s)
+			// NOTE: classNames already contains ONLY the classes the student is
+			//       registered for
+			var aggregateHtml = document.createElement("button");
+			aggregateHtml.setAttribute("name","grades");
+			aggregateHtml.setAttribute("id","aggregate");
+			aggregateHtml.setAttribute("onclick","submit(0);");
+			aggregateHtml.innerText = "aggregate";
+			document.getElementById("tabs").appendChild(aggregateHtml);
+			for(var i=0; i<classNames.length; ++i) {
+				var classHtml = document.createElement("button");
+				classHtml.setAttribute("name","grades");
+				classHtml.setAttribute("id",classNames[i]);
+				(function(index) {
+               		classHtml.onclick = function() {
+						submit(index + 1);
+					};
+				})(i);
+				classHtml.innerText = classNames[i];
+				document.getElementById("tabs").appendChild(classHtml);
+			}
+		}
+		
+		function setup() {
+			// get all the students
+			var students = getMapAsList(user_students);
+			for(var i=0; i<students.length; ++i) {
+				var studentHtml = document.createElement("button");
+				studentHtml.setAttribute("name", "students");
+				studentHtml.setAttribute("id", students[i].username);
+				(function(ind) {
+					studentHtml.onclick = function() {
+						classNames.length = 0;
+						hwNames.length = 0;
+						grades.length = 0;
+						overall.length = 0;
+						setupStudent(ind);
+					};
+				})(i);
+				studentHtml.innerText = students[i].username;
+				document.getElementById("student").appendChild(studentHtml);
+			}
+		}
+		
+		function submit(i) {
+			var str = "";
+			if (i==0) {
+				for(var j=0; j<overall.length; ++j) {
+					if(j!=0) str += ", ";
+					str += (classNames[j] + ": " + overall[j].toString());
+				}
+			} else {
+				--i;
+				str += (classNames[i] + " Overall Grade: " + overall[i].toString());
+				for(var j=0; j<hwNames[i].length; ++j) {
+					str += "<br>";
+					str += (hwNames[i][j] + ": " + grades[i][j].toString());
+				}
+			}
+			document.getElementById("content").innerHTML = str;
+		}
+
+		
+		addLoadEvent( function() {
+			setup();
+		});
+	</script>	
+</base>
+</head>
+
+<body>
+
+<div id="student">
+</div>
+<div id="tabs">
+</div>
+<div id ="content">
+</div>
+	<p id="demo">Hi</p>
+
+</body>
+</html> 

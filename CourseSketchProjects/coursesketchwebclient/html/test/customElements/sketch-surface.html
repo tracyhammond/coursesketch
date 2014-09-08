@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<base href="../../../">
+<head>
+	<link rel="import" href="polymer/bower_components/polymer/polymer.html">
+
+	<script type="text/javascript" src="js/input/touch_event.js"></script>
+
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/input/sketching.js"></script>
+
+	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
+	<script type="text/javascript" src="js/sketching/updatemanager.js"></script>
+	<script type="text/javascript" src="js/connection/submission.js"></script>
+	<script type="text/javascript" src="js/input/highlighter.js"></script>
+</head>
+
+<polymer-element name="sketch-surface">
+  <template>
+    <span>I'm <b>proto-element</b>. Check out my prototype.</span>
+    <canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
+  </template>
+  <script>
+    Polymer('sketch-surface', {
+		ready: function() {
+		},
+		attached: function () {
+			this.input = new inputListener();
+			var item = document.getQuerySelector("#drawCanvas");
+			alert(item);
+			this.input.initializeCanvas("drawingCanvas");
+			this.canvasContext = input.canvasContext;
+			this.sketch = new SRL_Sketch();
+			this.sketch.canvasContext = canvasContext;
+			this.sketch.clearCanvas = input.clearCanvas;
+		},
+		created: function() {
+    		this.serverConnection = false;
+	    	this.ByteBuffer = false;
+			this.drawingCreator = false;
+			this.sketch = false;
+			this.canvasContext = false;
+			this.Long = false;
+			this.commandManager = false;
+			this.highlighter = false;
+			this.input = false;
+      	},
+    });
+  </script>
+</polymer-element>
+
+
+
+
+<polymer-element name="my-element" noscript>
+  <template>
+    <span>Hello from <b>my-element</b>. This is my Shadow DOM.</span>
+  </template>
+</polymer-element>
+
+<polymer-element name="proto-element">
+  <template>
+    <span>I'm <b>proto-element</b>. Check out my prototype.</span>
+  </template>
+  <script>
+    Polymer('proto-element', {
+      ready: function() {
+        console.log("IM READY!");
+        alert("ready");
+      }
+    });
+  </script>
+</polymer-element>

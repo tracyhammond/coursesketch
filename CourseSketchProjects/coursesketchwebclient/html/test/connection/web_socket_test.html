@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<head>
+	<base href="../../">
+	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/connection/connection_library.js"></script>
+</head>
+<body>
+	<title>WebSocket Test</title>
+	<script language="javascript" type="text/javascript">
+	//	var wsUri = "echo.websocket.org/"; // echo server
+		var wsUri = "goldberglinux.tamu.edu:8887"; // our server
+	//	var wsUri = "localhost:8887"; // local server
+		//var wsUri = "165.91.85.94";
+		var output;
+		var connection;
+
+		function init() {
+			output = document.getElementById("output"); testWebSocket();
+		}
+
+		function testWebSocket() {
+			connection = new connection(wsUri,false);
+			connection.setListeners(onOpen, onClose, onMessage, onError);
+		}
+
+		function onOpen(evt) {
+			writeToScreen("CONNECTED");
+			doSend("WebSocket rocks");
+		}
+		function onClose(evt) { writeToScreen("DISCONNECTED"); }
+		
+		function onMessage(evt, message) {
+			writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data +'</span>');
+			writeToScreen('<span style="color: blue;">RESPONSE: ' + message.text +'</span>');
+			connection.close();
+		}
+		
+		function onError(evt, error) { 
+			if (evt)
+				writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+			if (error)
+				writeToScreen('<span style="color: red;">PROTO ERROR:</span> ' + error);
+			connection.close();
+		}
+		
+		function doSend(message) {
+			writeToScreen("SENT: " + message);
+			connection.sendMessage(new Request(message));
+		}
+		
+		function writeToScreen(message) {
+			var pre = document.createElement("p");
+			pre.style.wordWrap = "break-word"; pre.innerHTML = message; output.appendChild(pre);
+		}
+
+		window.addEventListener("load", init, false);
+	</script>
+	<h2>WebSocket Test</h2>
+	<div id="output"></div>  
+</body>

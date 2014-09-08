@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="../">
+   	<link rel="stylesheet" href="css/school/school_item.css">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+	<link rel="stylesheet" href="css/courseSketch2.css">
+	<script type="text/javascript" src="js/school/school_item.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+		parent.addScopedLoadEvent(window,
+					function()
+					{
+						parent.redirector.setRedirect('html/home.html');
+				    	var loader = new parent.DynamicFileLoader();
+				    	loader.scope = document;
+						
+						var builder = new schoolItemBuilder();
+						builder.setTitle('Current Classes');
+						builder.setList(parent.user_courses);
+						builder.build('class_list_home');
+						
+						builder.setTitle('Uncompleted Assignments');
+						builder.setList(parent.upcomming_assignments);
+						builder.build('due_assignments');
+					}
+				);
+	</script>
+</head>
+<body>
+
+<!-- Menu Bar -->
+    <!-- Center Section -->
+    <div id="home">
+    	<div class = "centre">
+	    	<div  class="col-group2">
+	    		<div>
+			    	<div id="class_list_home" class="school_div">
+			    	</div>
+		    	</div>
+		    	<div>
+			    	<div id="due_assignments" class="school_div">
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>

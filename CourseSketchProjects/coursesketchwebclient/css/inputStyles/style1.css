@@ -1,0 +1,85 @@
+
+input[type="email"],
+input[type="text"],
+input[type="password"] {
+		/* Makes the box corners curved*/
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        -ms-border-radius: 3px;
+        -o-border-radius: 3px;
+        border-radius: 3px;
+
+		/* Inner shadow*/
+        -webkit-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+        -moz-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+        -ms-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+        -o-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+        box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+
+		/* when clicked the box transitions*/
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -ms-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+        
+        /* background color */
+        background: #eae7e7;
+        border: 1px solid #c8c8c8;
+        color: #777;
+        font: 13px Helvetica, Arial, sans-serif;
+        margin: 0 0 10px;
+        padding: 15px 10px 15px 40px;
+}
+input[type="email"]:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
+        -webkit-box-shadow: 0 0 2px #1c8ded inset;
+        -moz-box-shadow: 0 0 2px #1c8ded inset;
+        -ms-box-shadow: 0 0 2px #1c8ded inset;
+        -o-box-shadow: 0 0 2px #1c8ded inset;
+        box-shadow: 0 0 2px #1c8ded inset;
+        background-color: #fff;
+        border: 1px solid #1c8ded;
+        outline: none;
+}
+
+
+.styled-select select {
+   background: transparent;
+   width: 120%;
+   padding: 5px;
+   color: #777;
+   font: 13px Helvetica, Arial, sans-serif;
+   line-height: 1;
+   border: 0;
+   border-radius: 0;
+   height: 34px;
+   -webkit-appearance: none;
+}
+
+.styled-select {
+   overflow: hidden;
+
+   /* Makes the box corners curved*/
+   -webkit-border-radius: 3px;
+   -moz-border-radius: 3px;
+   -ms-border-radius: 3px;
+   -o-border-radius: 3px;
+   border-radius: 3px;
+
+	/* Inner shadow*/
+   -webkit-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+   -moz-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+   -ms-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+   -o-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+   box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+   
+   border: 1px solid #c8c8c8;
+
+   /* background color */
+   background: #eae7e7 url(../../images/menu/triangle_down_light.svg) no-repeat;
+   /*background-attachment:fixed;*/
+   background-size: 11px 11px;
+   background-position: 90%;
+}

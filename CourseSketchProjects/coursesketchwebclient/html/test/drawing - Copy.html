@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<base href="../../">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+  	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+ 
+	<script type="text/javascript" src="js/input/touch_event.js"></script>
+
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/input/sketching.js"></script>
+
+	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
+	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+    	parent.copyParentUtilityFunctions(this);
+    	parent.copyParentProtos(this);
+
+		var serverConnection = parent.connection;
+		var drawingCreator = false;
+		var sketch = false;
+		var canvasContext = false;
+		var Long = false;
+		var commandManager = false;
+
+    	function init() {
+    		parent.redirector.setRedirect('html/drawing/drawing.html');
+    		initializeInput();
+    		matchParent('drawingCanvas');
+    	}
+
+	    function initializeInput() {
+			var input = new inputListener();
+			input.initializeCanvas("drawingCanvas");
+			canvasContext = input.canvasContext;
+
+			sketch = new SRL_Sketch();
+			sketch.canvasContext = canvasContext;
+			drawingCreator = new drawingInputCreator(input, sketch, callback, canvasContext);
+			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoSrlUpdate,
+					parent.ProtoSrlCommand, parent.ProtoSrlCommandType, parent.ProtoUpdateCommand);
+			serverConnection.setRecognitionListener(function(evt, message) {
+				if (message.requestType == parent.Request.MessageType.RECOGNITION) {
+					var data = message.otherData;
+					var update = parent.ProtoSrlUpdate.decode(data);
+					commandManager.addUpdate(update, true);
+				}
+			});
+		}
+
+	    function callback(stroke) {
+			stroke.draw(canvasContext);
+			addUpdateFromStroke(stroke);
+		}
+
+	    /**
+	    Creates an update that is added to the update manager, given a stroke.
+	    */
+	    function addUpdateFromStroke(stroke) {
+	    	var command = serverConnection.createBaseCommand(ProtoSrlCommandType.ADD_STROKE, true);
+			// then finish him!
+			command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
+			command.decodedData = stroke;
+			var array = new Array();
+			array.push(command);
+			var update = serverConnection.createUpdateFromCommands(array);
+			commandManager.addUpdate(update, false);
+	    }
+	</script>
+	<script type="text/javascript">
+			parent.addScopedLoadEvent(window, function() {
+	  				matchParent('drawingCanvas');
+	  		});
+
+			window.onresize = function() {
+					matchParent('drawingCanvas');
+			}
+
+	  		function matchParent(id) {
+	  			var body = document.body,
+			    html = document.documentElement;
+				var height = window.innerHeight - 4;
+				var width = window.innerWidth - 4;
+				var element = document.getElementById(id);
+				element.height = height - element.offsetTop;
+				element.width = width  - element.offsetLeft;
+				element.style.width = element.width;
+				element.style.height = element.height;
+				sketch.drawEntireSketch();
+	  		}
+
+	</script>
+	<style>
+	html, body {
+	    margin: 0px;
+	    padding: 0px;
+	    border: 0px;
+	}
+	</style>
+</head>
+<body onload="init()">
+<div>Problem statement!</div>
+		<canvas id="drawingCanvas" width="800" height="600" style="top:0px; left:0px; width: 800; height: 100%; background:#FFFFFF;"></canvas>
+</body>
