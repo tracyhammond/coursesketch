@@ -40,6 +40,13 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
@@ -57,12 +64,16 @@
 						<phase>validate</phase>
 						<configuration>
 							<configLocation>checkstyle.xml</configLocation>
+							<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+							<suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
 							<encoding>UTF-8</encoding>
 							<consoleOutput>true</consoleOutput>
 							<failsOnError>true</failsOnError>
 							<linkXRef>false</linkXRef>
+							<exclude>**/CourseSketchProjects/**</exclude>
 						</configuration>
 						<goals>
+							<goal>checkstyle-aggregate</goal>
 							<goal>check</goal>
 						</goals>
 					</execution>
@@ -91,31 +102,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<filters>
-						<filter>
-							<artifact>CourseSketch:ProtoFiles</artifact>
-							<includes>
-								<include>protobuf/**</include>
-							</includes>
-						</filter>
-					</filters>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			 -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
+				<version>2.3</version> <configuration> <filters> <filter> <artifact>CourseSketch:ProtoFiles</artifact> 
+				<includes> <include>protobuf/**</include> </includes> </filter> </filters> 
+				</configuration> <executions> <execution> <phase>package</phase> <goals> 
+				<goal>shade</goal> </goals> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 
@@ -141,11 +132,13 @@
 			<artifactId>protobuf-java</artifactId>
 			<version>${protobufVersion}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>${jodaVersion}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
@@ -153,20 +146,33 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>${mockitoVersion}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
 			<version>${puppyVersion}</version>
 		</dependency>
+
+		<!-- Test dependencies -->
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${mockitoVersion}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junitVersion}</version>
+			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.fakemongo</groupId>
+			<artifactId>fongo</artifactId>
+			<version>1.5.5</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 </project>
