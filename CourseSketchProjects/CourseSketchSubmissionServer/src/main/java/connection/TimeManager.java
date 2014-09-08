@@ -42,11 +42,11 @@ public class TimeManager {
 	
 	public static Request decodeRequest(Request req) {
 		if (req.getResponseText().equals(SEND_TIME_TO_CLIENT_MSG)){ //client
-			return clientReciveTimeDiff(req);
+			return clientReceiveTimeDiff(req);
 		} else if (req.getResponseText().equals(CLIENT_REQUEST_LATENCY_MSG)) { //server
 			return serverSendLatencyToClient(req);
 		} else if (req.getResponseText().equals(SEND_LATENCY_TO_CLIENT_MSG)) { //client
-			return clientReciveLatency(req);
+			return clientReceiveLatency(req);
 		}
 		return null;
 	}
