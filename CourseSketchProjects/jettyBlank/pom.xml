@@ -12,6 +12,11 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
+	<properties>
+	    <!-- This may be removed and a later solution will need to be worked on -->
+	    <absoluteCheckstyleLocation>../../${checkstyleLocation}</absoluteCheckstyleLocation>
+	    <checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
