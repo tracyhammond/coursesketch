@@ -46,7 +46,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>${findbugVersion}</version>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
@@ -72,25 +72,6 @@
 							<exclude>protobf/srl/**/*.class</exclude>
 							<exclude>protobf/srl/**/*Test.class</exclude>
 						</excludes>
-					</instrumentation>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<instrumentation>
-						<ignores>
-							<ignore>protobuf.srl.*</ignore>
-						</ignores>
 					</instrumentation>
 					<check>
 						<branchRate>0</branchRate>
@@ -118,7 +99,7 @@
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>2.5.0</version>
+			<version>${protobufVersion}</version>
 		</dependency>
 	</dependencies>
 </project>
