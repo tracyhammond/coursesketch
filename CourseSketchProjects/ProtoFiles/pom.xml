@@ -5,6 +5,18 @@
 	<artifactId>ProtoFiles</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ProtoFiles</name>
+	<profiles>
+		<profile>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+			</activation>
+			<properties>
+				<protocLocation>C:\protoc-2.5.0-win\protoc.exe</protocLocation>
+			</properties>
+		</profile>
+	</profiles>
 
 	<parent>
 		<groupId>CourseSketch</groupId>
@@ -28,7 +40,7 @@
 				<configuration>
 					<checkStaleness>true</checkStaleness>
 					<staleMillis>10000</staleMillis>
-					<protocExecutable>/usr/local/bin/protoc</protocExecutable>
+					<protocExecutable>${protocLocation}</protocExecutable>
 				</configuration>
 				<executions>
 					<execution>
@@ -36,7 +48,7 @@
 						<configuration>
 							<checkStaleness>true</checkStaleness>
 							<staleMillis>10000</staleMillis>
-							<protocExecutable>/usr/local/bin/protoc</protocExecutable>
+							<protocExecutable>${protocLocation}</protocExecutable>
 						</configuration>
 						<goals>
 							<goal>compile</goal>
