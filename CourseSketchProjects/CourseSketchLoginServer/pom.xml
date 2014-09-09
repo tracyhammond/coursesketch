@@ -4,6 +4,7 @@
 	<groupId>CourseSketch</groupId>
 	<artifactId>LoginServer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>LoginServer</name>
 
 	<parent>

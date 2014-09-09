@@ -4,6 +4,7 @@
 	<groupId>CourseSketch</groupId>
 	<artifactId>ProxyServer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>ProxyServer</name>
 
 	<parent>
