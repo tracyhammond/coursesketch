@@ -48,13 +48,16 @@
 					textValue.textContent = "When a class is private it means that only people you have manually added to the course list can view it.<br>"
 						"This class is not searchable. This class must have an open and close date";
 				}
+				consle.log(textValue.textContent);
 			}
 
 			function setUpActions() {
 				console.log("Setting up actions for the shadow course");
-				document.getElementById("viewPermission").addEventListener("onchange", function(event) {
+				console.log(host);
+				host.getElementById("viewPermission").onchange = function(event) {
+					console.log("CHOWING DOWN ON PERMISSIONS");
 					changeViewOption(this, this.value);
-				});
+				};
 			}
 			
 			function updateCourse() {
@@ -90,6 +93,8 @@
 			idToVariableMap['semester'] = 'semester';
 			idToVariableMap['openDate'] = 'accessDate';
 			idToVariableMap['closeDate'] = 'closeDate';
+			idToVariableMap['viewPermission'] = 'access';
+			idToVariableMap['']
 		};
 	</script>
 </template>
