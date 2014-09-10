@@ -209,7 +209,7 @@ public class MultiConnectionManager {
      *
      * @param parentServer ignored by this implementation. Override to change functionality.
      */
-    @SuppressWarnings("unused")
+    // @SuppressWarnings("unused")
     public void connectServers(final GeneralConnectionServer parentServer) {
     }
 

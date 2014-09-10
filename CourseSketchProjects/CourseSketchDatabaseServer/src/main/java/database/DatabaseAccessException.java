@@ -2,7 +2,12 @@ package database;
 
 public class DatabaseAccessException extends Exception {
 
-	private boolean recoverable = false;
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -2942324631280650223L;
+    
+    private boolean recoverable = false;
 	public DatabaseAccessException(String string, boolean recoverable) {
 		super(string);
 		this.recoverable = recoverable;
