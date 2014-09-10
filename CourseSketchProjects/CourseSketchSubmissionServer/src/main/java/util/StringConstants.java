@@ -1,4 +1,4 @@
-package database;
+package util;
 
 public class StringConstants {
 	// Id
