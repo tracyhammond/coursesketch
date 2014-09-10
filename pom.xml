@@ -170,6 +170,7 @@
 	</build>
 
 	<properties>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jettyVersion>[9.2.2,)</jettyVersion> <!-- 9.2.2.v20140723 -->
 		<protobufVersion>[2.5.0,)</protobufVersion>
 		<jodaVersion>[2.1,)</jodaVersion>
