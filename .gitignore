@@ -18,5 +18,3 @@ Non_Commit/
 .dgd/*.tmp
 
 target/
-*.project
-.project
