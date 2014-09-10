@@ -185,6 +185,7 @@
 		<checkstyleLocation>config/checkstyle.xml</checkstyleLocation>
 		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<protocLocation>/usr/local/bin/protoc</protocLocation>
 	</properties>
 
 	<dependencies>
