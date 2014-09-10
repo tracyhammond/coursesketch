@@ -19,3 +19,4 @@ Non_Commit/
 
 target/
 *.project
+.project
