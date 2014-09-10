@@ -37,6 +37,7 @@
 			<plugin>
 				<groupId>com.google.protobuf.tools</groupId>
 				<artifactId>maven-protoc-plugin</artifactId>
+				<version>0.3.2</version>
 				<configuration>
 					<checkStaleness>true</checkStaleness>
 					<staleMillis>10000</staleMillis>
