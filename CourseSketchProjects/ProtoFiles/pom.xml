@@ -13,7 +13,7 @@
 				</os>
 			</activation>
 			<properties>
-				<protocLocation>C:\protoc-2.5.0-win\protoc.exe</protocLocation>
+				<protocLocation>${env.protoc}</protocLocation>
 			</properties>
 		</profile>
 	</profiles>
