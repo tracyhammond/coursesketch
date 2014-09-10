@@ -117,7 +117,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      *
      * @see multiconnection.MultiConnectionManager#connectServers(GeneralConnectionServer)
      */
-    public final void reconnect() {
+    public void reconnect() {
         System.out.println("Reconnecting");
         if (manager != null) {
             manager.dropAllConnection(true, false);

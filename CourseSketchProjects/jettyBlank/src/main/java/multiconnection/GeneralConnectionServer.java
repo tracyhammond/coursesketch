@@ -74,7 +74,7 @@ public class GeneralConnectionServer {
     	System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
     }
 
-    @SuppressWarnings("unused")
+    // @SuppressWarnings("unused")
 	@OnWebSocketMessage
     public void onMessage(Session session, byte[] data, int offset, int length) {
     	onMessage(session, ByteBuffer.wrap(data));

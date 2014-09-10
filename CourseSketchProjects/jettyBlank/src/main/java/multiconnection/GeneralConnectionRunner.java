@@ -53,13 +53,13 @@ public class GeneralConnectionRunner {
 
     // these should be changed based on the properties
     private final String[] args;
-    private int port = DEFAULT_PORT;
-    private long timeoutTime;
+    public int port = DEFAULT_PORT;
+    protected long timeoutTime;
     private boolean acceptInput = true;
     private boolean production = false;
     private boolean local = true;
     private boolean logging = false;
-    private boolean secure = false;
+    protected boolean secure = false;
     private String keystorePassword = "";
     private String keystorePath = "";
 
@@ -219,7 +219,7 @@ public class GeneralConnectionRunner {
      *
      * @return a new connection servlet for this server
      */
-    public final GeneralConnectionServlet getServlet(final long timeOut, final boolean isSecure,
+    public GeneralConnectionServlet getServlet(final long timeOut, final boolean isSecure,
             final boolean isLocal) {
         if (!isSecure && production) {
             System.err.println("Running an insecure server");
