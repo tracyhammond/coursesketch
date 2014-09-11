@@ -84,7 +84,7 @@ public final class TimeManager {
      */
     public static Request serverSendTimeToClient() {
 
-        Request.Builder req = Request.newBuilder();
+        final Request.Builder req = Request.newBuilder();
         req.setRequestType(Request.MessageType.TIME);
         req.setMessageTime(getSystemTime());
         // Server sending client  'true' time
@@ -139,7 +139,7 @@ public final class TimeManager {
     private static Request serverSendLatencyToClient(final Request req) {
         final long latency = getSystemTime() - req.getMessageTime();
 
-        Request.Builder rsp = Request.newBuilder();
+        final Request.Builder rsp = Request.newBuilder();
 
         rsp.setRequestType(Request.MessageType.TIME);
         rsp.setMessageTime(latency / 2);
@@ -153,7 +153,7 @@ public final class TimeManager {
      * @return null
      */
     private static Request clientReceiveLatency(final Request req) {
-        long latency = req.getMessageTime();
+        final long latency = req.getMessageTime();
         totalTimeDifference = timeDifference + latency;
         if (listen != null) {
             listen.actionPerformed(new ActionEvent(req, 0, null));

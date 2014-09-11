@@ -1,7 +1,7 @@
 package connection;
 
-import jettyMultiConnection.GeneralConnectionRunner;
-import jettyMultiConnection.GeneralConnectionServlet;
+import multiconnection.GeneralConnectionRunner;
+import multiconnection.GeneralConnectionServlet;
 import database.DatabaseClient;
 
 public class SubmissionRunner extends GeneralConnectionRunner {
