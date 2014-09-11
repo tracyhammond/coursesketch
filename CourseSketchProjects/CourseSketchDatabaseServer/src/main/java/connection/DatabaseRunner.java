@@ -1,9 +1,9 @@
 package connection;
 
+import multiconnection.GeneralConnectionRunner;
+import multiconnection.GeneralConnectionServlet;
 import database.institution.Institution;
 import database.user.UserClient;
-import jettyMultiConnection.GeneralConnectionRunner;
-import jettyMultiConnection.GeneralConnectionServlet;
 
 public class DatabaseRunner extends GeneralConnectionRunner {
 	public static void main(String args[]) {

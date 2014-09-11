@@ -1,8 +1,8 @@
 package connection;
 
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.GeneralConnectionServlet;
-import jettyMultiConnection.MultiConnectionManager;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.GeneralConnectionServlet;
+import multiconnection.MultiConnectionManager;
 
 @SuppressWarnings("serial")
 public final class LoginServlet extends GeneralConnectionServlet {

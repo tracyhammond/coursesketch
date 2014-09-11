@@ -7,8 +7,8 @@ import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.GeneralConnectionServlet;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;

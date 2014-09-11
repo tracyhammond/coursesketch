@@ -2,14 +2,13 @@ package connection;
 
 import internalConnection.AnswerConnectionState;
 import internalConnection.SubmissionConnection;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.GeneralConnectionServlet;
+import multiconnection.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.GeneralConnectionServlet;
-import jettyMultiConnection.MultiConnectionState;
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
