@@ -16,4 +16,12 @@ Non_Commit/
 *.classpath
 .dgrproj
 .dgd/*.tmp
+
 target/
+.project
+.settings
+.settings/
+*.project
+.checkstyle
+.pydevproject
+*.pydevproject
