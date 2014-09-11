@@ -23,4 +23,5 @@ target/
 .settings/
 *.project
 .checkstyle
-CourseSketchProjects/coursesketchwebclient/.project
+.pydevproject
+*.pydevproject
