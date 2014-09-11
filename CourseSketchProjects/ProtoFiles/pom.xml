@@ -13,7 +13,7 @@
 				</os>
 			</activation>
 			<properties>
-				<protocLocation>C:\protoc-2.5.0-win\protoc.exe</protocLocation>
+				<protocLocation>${env.protoc}</protocLocation>
 			</properties>
 		</profile>
 	</profiles>
@@ -37,6 +37,7 @@
 			<plugin>
 				<groupId>com.google.protobuf.tools</groupId>
 				<artifactId>maven-protoc-plugin</artifactId>
+				<version>0.1.10</version>
 				<configuration>
 					<checkStaleness>true</checkStaleness>
 					<staleMillis>10000</staleMillis>
