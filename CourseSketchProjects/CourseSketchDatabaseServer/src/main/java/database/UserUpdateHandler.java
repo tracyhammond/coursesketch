@@ -80,7 +80,7 @@ public class UserUpdateHandler {
 			if (group.startsWith(GROUP_PREFIX)) {
 				DBRef myDbRef = new DBRef(db, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
 				DBObject corsor = myDbRef.fetch();
-				ArrayList list = (ArrayList)corsor.get(USER_LIST);
+				ArrayList<String> list = (ArrayList<String>)corsor.get(USER_LIST);
 				InsertUpdates(db, list, id, classification);
 			} else {
 				try {

@@ -3,17 +3,18 @@ package internalConnections;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
+import multiconnection.ConnectionWrapper;
+import multiconnection.GeneralConnectionServer;
+
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlUser;
+import connection.ConnectionException;
 import connection.TimeManager;
 
 
