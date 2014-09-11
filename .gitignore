@@ -23,3 +23,5 @@ target/
 .settings/
 *.project
 .checkstyle
+.pydevproject
+*.pydevproject
