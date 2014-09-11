@@ -247,7 +247,7 @@ function Overloads() {
  */
 
 function SRL_Sketch() {
-	this.Inherits(Overloads); // super call
+	this.superConstructor();//(Overloads); // super call
 
 	var objectList = new Array();
 	var objectIdMap = new Array();
@@ -370,7 +370,8 @@ function SRL_Sketch() {
  *******************************
  */
 function SRL_Object() {
-	this.Inherits(Overloads);
+	//this.Inherits(Overloads);
+	this.superConstructor();
 
 	/**
 	 * Each object has a unique ID associated with it.
@@ -633,7 +634,8 @@ function SRL_Object() {
 
 function SRL_Shape() {
 
-	this.Inherits(SRL_Object);
+	//this.Inherits(SRL_Object);
+	this.superConstructor();
 	/**
 	 * Gets a list of all of the strokes that make up this object.
 	 * It searches recursively to get all of the strokes of this object.
@@ -739,7 +741,8 @@ function SRL_Shape() {
  */
 
 function SRL_Stroke(startPoint) {
-	this.Inherits(SRL_Shape);
+	//this.Inherits(SRL_Shape);
+	this.superConstructor();
 	/**
 	 * List of points in the stroke.
 	 */
@@ -1244,7 +1247,8 @@ function SRL_Stroke(startPoint) {
  */
 
 function SRL_Point(x, y) {
-	this.Inherits(SRL_Shape);
+	//this.Inherits(SRL_Shape);
+	this.superConstructor();
 
 	/**
 	 * Points can have pressure depending on the input device
