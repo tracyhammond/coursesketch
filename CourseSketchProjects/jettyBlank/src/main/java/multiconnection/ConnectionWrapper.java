@@ -85,7 +85,7 @@ public class ConnectionWrapper {
         System.out.println("Connection was succesful for: " + this.getClass().getSimpleName());
     }
 
-    @SuppressWarnings("unused")
+    // @SuppressWarnings("unused")
 	@OnWebSocketMessage
     public final void onMessage(byte[] data, int offset, int length) {
     	onMessage(ByteBuffer.wrap(data));
