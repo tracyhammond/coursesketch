@@ -3,7 +3,7 @@ package handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import jettyMultiConnection.GeneralConnectionServer;
+import multiconnection.GeneralConnectionServer;
 
 import org.eclipse.jetty.websocket.api.Session;
 

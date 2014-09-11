@@ -1,8 +1,7 @@
 package connection;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.MultiConnectionManager;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.MultiConnectionManager;
 
 public class SubmissionConnectionManager extends MultiConnectionManager {
 

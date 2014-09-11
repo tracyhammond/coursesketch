@@ -11,7 +11,7 @@ import static util.StringConstants.USER_LIST;
 import java.util.ArrayList;
 import java.util.List;
 
-import jettyMultiConnection.MultiConnectionManager;
+import multiconnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
 

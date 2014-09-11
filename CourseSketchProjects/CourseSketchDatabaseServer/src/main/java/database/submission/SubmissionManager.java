@@ -10,9 +10,8 @@ import static util.StringConstants.SOLUTION_ID;
 
 import java.util.ArrayList;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.MultiConnectionManager;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
 
@@ -29,6 +28,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import connection.ConnectionException;
 import connection.SubmissionConnection;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
