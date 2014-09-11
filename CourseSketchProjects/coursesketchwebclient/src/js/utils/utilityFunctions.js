@@ -44,6 +44,22 @@ if (isUndefined(removeAllChildren)) {
  */
 
 /**
+ * @Method
+ * sets up inheritance for objects
+ */
+if (isUndefined(superConstructor)) {
+	function superConstructor(subclass, parent) {
+		if (arguments.length > 1) {
+			parent.apply(subclass, Array.prototype.slice.call(arguments, 1));
+		}
+		else {
+			parent.call(subclass);
+		}
+	}
+}
+
+
+/**
  * A method of function that is used to do prototyping.
  */
 if (isUndefined(Function.prototype.Inherits)) {
@@ -51,20 +67,9 @@ if (isUndefined(Function.prototype.Inherits)) {
 		this.prototype =
 			new parent();
 		this.prototype.constructor = this;
-	};
-}
-
-/**
- * Sets up a method that is called in the constructor (like super in java)
- */
-if (isUndefined(Object.prototype.Inherits)) {
-	Object.prototype.Inherits = function(parent) {
-		if( arguments.length > 1 ) {
-			parent.apply( this, Array.prototype.slice.call( arguments, 1 ) );
-		}
-		else {
-			parent.call( this );
-		}
+		this.prototype.superConstructor = function() {
+			superConstructor(this, parent);
+		};
 	};
 }
 

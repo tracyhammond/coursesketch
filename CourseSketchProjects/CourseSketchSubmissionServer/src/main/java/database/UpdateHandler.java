@@ -52,12 +52,13 @@ public class UpdateHandler {
 					SrlUpdate update = SrlUpdate.parseFrom(req.getOtherData());
 					updates = SrlUpdateList.newBuilder().addList(update).build();
 				} catch(InvalidProtocolBufferException e) {
-					
+					e.printStackTrace();
 				}
 			}
 		}
 		if (updates == null) {
-			throw new Exception("Mismatched Message Exception");
+			System.out.println(req);
+			//throw new Exception("Mismatched Message Exception");
 		}
 		return sessionToInstance.get(req.getSessionInfo()).addRequest(updates);
 	}

@@ -55,12 +55,19 @@ public class DataRequestHandler {
 		}
 	}
 
+	/**
+	 * Takes in an item request that grabs a single experiment.
+	 *
+	 * This request must contain an ID (for a student) and optionally an SRLChecksum
+	 * @param itemReq
+	 * @return
+	 */
 	private static ItemResult handleSingleExperiment(ItemRequest itemReq) {
 		System.out.println("attempting to get an experiment!");
 		SrlExperiment experiment = null;
 		String errorMessage = "";
 		try {
-			experiment = DatabaseClient.getExperiment(itemReq.getItemId(0));
+			experiment = DatabaseClient.getExperiment(itemReq.getItemId(0), DatabaseClient.getInstance());
 		} catch (Exception e) {
 			errorMessage = e.getMessage();
 			e.printStackTrace();
@@ -79,13 +86,18 @@ public class DataRequestHandler {
 		return send.build();
 	}
 
+	/**
+	 * Grabs an experiment for the instructor.
+	 * @param itemReq
+	 * @return
+	 */
 	private static ItemResult getExperimentsForInstructor(ItemRequest itemReq) {
 		System.out.println("attempting to get an experiment!");
 		SrlExperimentList.Builder experiments = SrlExperimentList.newBuilder();
 		String errorMessage = "";
 		for (String item : itemReq.getItemIdList()) {
 			try {
-				experiments.addExperiments(DatabaseClient.getExperiment(item));
+				experiments.addExperiments(DatabaseClient.getExperiment(item, DatabaseClient.getInstance()));
 			} catch (Exception e) {
 				errorMessage += e.getMessage();
 				e.printStackTrace();
