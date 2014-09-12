@@ -118,7 +118,7 @@
 					<doCheck>true</doCheck>
 					<doUpdate>true</doUpdate>
 					<!-- the order of this format is to help with version sorting. -->
-					<format>{0,date,yyyy-MM-dd_HH:mm:ss}.{1}</format>
+					<format>{0,date,yyyy-MM-dd_HH-mm-ss}.{1}</format>
 					<items>
 						<item>timestamp</item>
 						<item>scmVersion</item>
