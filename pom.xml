@@ -66,6 +66,10 @@
 		<developerConnection>scm:git:git@github.com:${githubLocation}.git</developerConnection>
 	</scm>
 
+	<!-- possible plugins
+		https://code.google.com/p/maven-replacer-plugin/
+	 -->
+
 	<build>
 		<finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
 		<defaultGoal>clean install</defaultGoal>
