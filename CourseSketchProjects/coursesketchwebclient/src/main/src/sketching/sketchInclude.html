@@ -1,0 +1,38 @@
+<html>
+<head>
+<link id="sketchSurfaceImport" rel="import" href="sketchSurface.html">
+<script src="sketchSurface.js"></script>
+<script src="sketching.js"></script>
+<meta charset="UTF-8">
+<script>
+	(function() {
+		var importDoc = document.currentScript.ownerDocument; 
+		var link = importDoc.querySelector('#sketchSurfaceImport');
+		alert(link);
+
+		var template = link.import.querySelector('template');
+
+		alert(template);
+		var newElement = new sketchSurface();
+
+		newElement.createdCallback = function() {
+
+			// get template in import
+			//	var template = importDoc.querySelector('#'
+			//			+ SKETCHING_HANDLER.getSketchTemplateId());
+			alert(template);
+
+			// import template into
+			var clone = document.importNode(template.content, true);
+
+			var root = this.createShadowRoot();
+			root.appendChild(clone);
+		};
+
+		document.registerElement('sketch-surface', {
+			prototype : newElement
+		});
+	})();
+</script>
+</head>
+</html>

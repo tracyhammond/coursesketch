@@ -1,3 +1,4 @@
+/* depends on objectAndInheritance.js */
 
 /**
  *******************************

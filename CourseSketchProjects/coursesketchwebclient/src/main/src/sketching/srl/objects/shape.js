@@ -1,3 +1,4 @@
+/* depends on objectAndInheritance.js */
 
 /**
  *******************************
@@ -37,7 +38,7 @@ function SRL_Shape() {
 		}
 		//*/
 		return completeList;
-	}
+	};
 
 	/**
 	 * Returns the center x of a shape.
