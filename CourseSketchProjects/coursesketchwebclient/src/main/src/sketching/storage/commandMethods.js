@@ -51,7 +51,7 @@
                 return '' + type;
             }
         }
-        throw new PROTOBUF_UTIL.ProtobufException("The assigned type (" + commandType + ") is not a value for enum CommandType");
+        throw new ProtobufException("The assigned type (" + commandType + ") is not a value for enum CommandType");
     };
 
     ProtoSrlCommand.decodedData = false;
