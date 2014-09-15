@@ -14,15 +14,17 @@ ProtobufException.prototype = BaseException;
  *        protobuf object creator before it is created)
  */
 function ProtobufSetup() {
+
     var localScope = this;
     var PROTOBUF_PACKAGE = 'protobuf';
     var protobufDirectory = "/other/protobuf/";
 
     var objectList = new Array();
     var enumList = new Array();
+    var ready = false;
 
     /**
-     * @returns {ProtobufException} an instance of itself.
+     * @returns {ProtobufSetup} an instance of itself.
      */
     this.initializeBuf = function() {
 
@@ -32,13 +34,13 @@ function ProtobufSetup() {
         buildUpdateList();
         buildDataQuery();
         buildSubmissions();
+        ready = true;
         return localScope;
     };
 
     function buildMessage() {
         var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "message.proto");
         var requestPackage = builder.build(PROTOBUF_PACKAGE).srl.request;
-        console.log(requestPackage);
         assignValues(requestPackage);
     }
 
@@ -101,6 +103,14 @@ function ProtobufSetup() {
                         },
                         writable : false
                     });
+
+                    Object.defineProperty(localScope, "get" + objectName + "Class", {
+                        value : function() {
+                            // somehow change it to make this read only?
+                            return classType;
+                        },
+                        writable : false
+                    });
                 } else {
                     enumList.push(objectName);
                     Object.defineProperty(localScope, objectName, {
@@ -149,9 +159,7 @@ function ProtobufSetup() {
         var update = this.SrlUpdate();
         update.setCommands(commands);
         var n = createTimeStamp();
-        var longVersion = dcodeIO.Long.fromString("" + n);
-        console.log(longVersion);
-        update.setTime(longVersion);
+        update.setTime("" + n);
         update.setUpdateId(generateUUID());
         return update;
     };
@@ -165,6 +173,10 @@ function ProtobufSetup() {
      * @return {Request} used for all requesting needs
      */
     this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
+        if (!(update instanceof localScope.getSrlUpdateClass())) {
+            throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
+        }
+
         var request = this.Request();
         request.requestType = requestType;
         var buffer = update.toArrayBuffer();
@@ -197,7 +209,8 @@ function ProtobufSetup() {
      *          current protobuf objects.
      */
     this.getSupportedObjects = function getSupportedObjects() {
-        return objectList;//JSON.parse(JSON.stringify(objectList)); // why is this
+        return objectList;// JSON.parse(JSON.stringify(objectList)); // why is
+                            // this
         // always so fast?
     };
 
@@ -207,16 +220,16 @@ function ProtobufSetup() {
      *          current protobuf enums.
      */
     this.getSupportedEnums = function getSupportedObjects() {
-        return enumList;//JSON.parse(JSON.stringify(enumList)); // why is this
+        return enumList;// JSON.parse(JSON.stringify(enumList)); // why is this
         // always so fast?
     };
+
+    makeValueReadOnly(localScope, "ProtobufException", ProtobufException);
 };
 
 (function(scope) {
     if (!isUndefined(scope.PROTOBUF_UTIL)) {
         return;
     }
-    var localInstance =  new ProtobufSetup().initializeBuf();
-    PROTOBUF_UTIL = localInstance;
-    //makeValueReadOnly(scope, "PROTOBUF_UTIL", localInstance);
+    makeValueReadOnly(scope, "PROTOBUF_UTIL", new ProtobufSetup().initializeBuf());
 })(this);

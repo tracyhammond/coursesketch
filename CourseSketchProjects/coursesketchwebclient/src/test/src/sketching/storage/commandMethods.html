@@ -1,0 +1,226 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/utilities/includes/protobufInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/sketching/storage/commandMethods.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+        var minNumInList = 10;
+
+        QUnit.module("types");
+        test("names are correctly called with the type", function(assert) {
+            var type = "";
+            for (type in PROTOBUF_UTIL.CommandType) {
+                var command = PROTOBUF_UTIL.SrlCommand();
+                command.setCommandType(PROTOBUF_UTIL.CommandType[type]);
+                assert.equal(command.getCommandTypeName(), type);
+            }
+        });
+
+        test("an exception is thrown when type does not exist", function(assert) {
+            var command = PROTOBUF_UTIL.SrlCommand();
+            command.commandType = -1; // a type that does not exist
+            var spy = this.spy(command, "getCommandTypeName");
+
+            try {
+                console.log(command.getCommandTypeName());
+            } catch (exception) {
+                console.log(exception);
+            }
+            assert.ok(spy.threw("ProtobufException"));
+        });
+    </script>
+
+	<script>
+        QUnit.module("SrlUpdateList#redo()");
+        test("returns true when all subcompontents return true", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'redo');
+                stub.returns(true);
+                updateList.getCommands().push(srlCommand);
+            }
+
+            ok(updateList.redo(), "true if the method signifies redrawing");
+        });
+
+        test("only calls each item once", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            var listOfStubs = [];
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'redo');
+                stub.returns(true);
+                updateList.getCommands().push(srlCommand);
+                listOfStubs.push(stub);
+            }
+
+            updateList.redo()
+            for (var i = 0; i < listOfStubs.length; i++) {
+                ok(listOfStubs[i].calledOnce, "the stub should only be called once");
+            }
+
+        });
+
+        test("returns false when all subcompontents returns false", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'redo');
+                stub.returns(false);
+                updateList.getCommands().push(srlCommand);
+            }
+
+            ok(!updateList.redo(), "true if the method signifies redrawing");
+        });
+
+        test("returns true when at least one subcompontent returns true", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'redo');
+                stub.returns(false);
+                updateList.getCommands().push(srlCommand);
+            }
+
+            var srlCommand = PROTOBUF_UTIL.SrlCommand();
+            var stub = this.stub(srlCommand, 'redo');
+            stub.returns(true); // should make everything return false
+            updateList.getCommands().push(srlCommand);
+
+            ok(updateList.redo(), "true if the method signifies redrawing");
+        });
+
+        test("redo calls methods in forward order", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            var listOfStubs = [];
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'redo');
+                stub.returns(true);
+                updateList.getCommands().push(srlCommand);
+                listOfStubs.push(stub);
+            }
+
+            updateList.redo();
+
+            /*
+            	Checks that the methods are called one after each other but in forward order.
+             */
+            for (var i = 0; i < minNumInList - 1; i++) {
+                var firstStub = listOfStubs[i]; // 0
+                var secondStub = listOfStubs[i + 1]; // 1
+
+                ok(firstStub.calledBefore(secondStub), "first stub should be called after second Stub");
+            }
+        });
+    </script>
+	<script>
+        QUnit.module("SrlUpdateList#undo()");
+        test("returns true when all subcompontents return true", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'undo');
+                stub.returns(true);
+                updateList.getCommands().push(srlCommand);
+            }
+
+            ok(updateList.undo(), "true if the method signifies redrawing");
+        });
+
+        test("only calls each item once", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            var listOfStubs = [];
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'undo');
+                stub.returns(true);
+                updateList.getCommands().push(srlCommand);
+                listOfStubs.push(stub);
+            }
+
+            updateList.undo();
+            for (var i = 0; i < listOfStubs.length; i++) {
+                ok(listOfStubs[i].calledOnce, "the stub should only be called once");
+            }
+
+        });
+
+        test("returns false when all subcompontents returns false", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'undo');
+                stub.returns(false);
+                updateList.getCommands().push(srlCommand);
+            }
+
+            ok(!updateList.undo(), "true if the method signifies redrawing");
+        });
+
+        test("returns true when at least one subcompontent returns true", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'undo');
+                stub.returns(false);
+                updateList.getCommands().push(srlCommand);
+            }
+
+            var srlCommand = PROTOBUF_UTIL.SrlCommand();
+            var stub = this.stub(srlCommand, 'undo');
+            stub.returns(true); // should make everything return false
+            updateList.getCommands().push(srlCommand);
+
+            ok(updateList.undo(), "true if the method signifies redrawing");
+        });
+
+        test("undo calls methods in reverse order", function(assert) {
+            var updateList = PROTOBUF_UTIL.SrlUpdate();
+
+            var listOfStubs = [];
+            for (var i = 0; i < minNumInList; i++) {
+                var srlCommand = PROTOBUF_UTIL.SrlCommand();
+                var stub = this.stub(srlCommand, 'undo');
+                stub.returns(true);
+                updateList.getCommands().push(srlCommand);
+                listOfStubs.push(stub);
+            }
+
+            updateList.undo();
+
+            /*
+            	Checks that the methods are called one after each other but in reverse order.
+             */
+            for (var i = 0; i < minNumInList - 1; i++) {
+                var firstStub = listOfStubs[i]; // 0
+                var secondStub = listOfStubs[i + 1]; // 1
+
+                ok(firstStub.calledAfter(secondStub), "first stub should be called after second Stub");
+            }
+        });
+    </script>
+</body>
+</html>
