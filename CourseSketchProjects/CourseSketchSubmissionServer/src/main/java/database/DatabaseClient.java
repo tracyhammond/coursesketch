@@ -1,6 +1,6 @@
 package database;
 
-import static database.StringConstants.*;
+import static database.DatabaseStringConstants.*;
 
 import java.net.UnknownHostException;
 
