@@ -34,9 +34,8 @@
             var spy = this.spy(command, "getCommandTypeName");
 
             try {
-                console.log(command.getCommandTypeName());
+                command.getCommandTypeName();
             } catch (exception) {
-                console.log(exception);
             }
             assert.ok(spy.threw("ProtobufException"));
         });
@@ -220,6 +219,129 @@
 
                 ok(firstStub.calledAfter(secondStub), "first stub should be called after second Stub");
             }
+        });
+    </script>
+	<script>
+        QUnit.module("SrlCommand", {
+            specialFunction : function() {
+            }, // does nothing
+            setup : function() {
+                PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.MARKER, this.specialFunction);
+                PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.MARKER, this.specialFunction);
+            },
+            teardown : function() {
+                PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.MARKER);
+                PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.MARKER);
+                // clean up after each test
+            }
+        });
+
+        test("addRedoMethod Throws error if method already exists", function(assert) {
+            var spy = this.spy(PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod);
+            try {
+                spy(PROTOBUF_UTIL.CommandType.MARKER, function() {
+                });
+            } catch (exception) {
+
+            }
+            ok(spy.threw("CommandException"));
+        });
+
+        test("removeRedoMethod Throws error if method does not exist", function(assert) {
+            var spy = this.spy(PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod);
+            try {
+                spy(-1);
+            } catch (exception) {
+            }
+            ok(spy.threw("CommandException"));
+        });
+
+        test("addUndoMethod Throws error if method already exists", function(assert) {
+            var spy = this.spy(PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod);
+            try {
+                spy(PROTOBUF_UTIL.CommandType.MARKER, function() {
+                });
+            } catch (exception) {
+
+            }
+            ok(spy.threw("CommandException"));
+        });
+
+        test("removeUndoMethod Throws error if method does not exist", function(assert) {
+            var spy = this.spy(PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod);
+            try {
+                spy(-1);
+            } catch (exception) {
+            }
+            ok(spy.threw("CommandException"));
+        });
+
+        test("removeUndoMethod Throws error called with Undefined", function(assert) {
+            var spy = this.spy(PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod);
+            try {
+                spy(undefined);
+            } catch (exception) {
+            }
+            ok(spy.threw("CommandException"));
+        });
+
+        test("removeRedoMethod Throws error called with Undefined", function(assert) {
+            var spy = this.spy(PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod);
+            try {
+                spy(undefined);
+            } catch (exception) {
+            }
+            ok(spy.threw("CommandException"));
+        });
+
+        test("addRedoMethod Throws error called with Undefined", function(assert) {
+            var spy = this.spy(PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod);
+            try {
+                spy(undefined, function() {
+                });
+            } catch (exception) {
+            }
+            ok(spy.threw("CommandException"));
+        });
+
+        test("addRedoMethod Throws error called with Undefined", function(assert) {
+            var spy = this.spy(PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod);
+            try {
+                spy(undefined, function() {
+                });
+            } catch (exception) {
+            }
+            ok(spy.threw("CommandException"));
+        });
+    </script>
+	<script>
+        QUnit.module("SrlCommand Redo/Undo", {
+            teardown : function() {
+                try {
+                    PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.MARKER);
+                } catch (exception) {
+                }
+                try {
+                    PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.MARKER);
+                } catch (exception) {
+                }
+                // clean up after each test
+            }
+        });
+        test("tests that calling redo on a command works", function(assert) {
+            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.MARKER, false);
+            var spy = this.spy();
+            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.MARKER, spy);
+            command.redo();
+            ok(spy.calledOnce);
+        });
+
+        test("tests that calling undo on a command works", function(assert) {
+            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.MARKER, false);
+            var spy = this.spy();
+            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.MARKER, spy);
+            command.undo();
+            ok(spy.calledOnce);
         });
     </script>
 </body>

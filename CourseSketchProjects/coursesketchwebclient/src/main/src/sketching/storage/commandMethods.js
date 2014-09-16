@@ -3,6 +3,15 @@
  * /src/utilities/includes/protobufInclude.html
  */
 (function() {
+    function CommandException(message) {
+        this.name = "CommandException";
+        this.setMessage(message);
+        this.message = "";
+        this.htmlMessage = "";
+    }
+    ;
+    CommandException.prototype = BaseException;
+
     var ProtoSrlUpdate = Object.getPrototypeOf(PROTOBUF_UTIL.SrlUpdate());
     var ProtoSrlCommand = Object.getPrototypeOf(PROTOBUF_UTIL.SrlCommand());
 
@@ -46,20 +55,73 @@
      */
     ProtoSrlCommand.getCommandTypeName = function() {
         var commandType = this.getCommandType();
-        for (var type in PROTOBUF_UTIL.CommandType) {
+        for ( var type in PROTOBUF_UTIL.CommandType) {
             if (PROTOBUF_UTIL.CommandType[type] == commandType) {
                 return '' + type;
             }
         }
-        throw new ProtobufException("The assigned type (" + commandType + ") is not a value for enum CommandType");
+        throw new PROTOBUF_UTIL.ProtobufException("The assigned type (" + commandType + ") is not a value for enum CommandType");
     };
 
     ProtoSrlCommand.decodedData = false;
 
     ProtoSrlCommand.redo = function() {
+        return this["redo" + this.getCommandType()]();
     };
 
     ProtoSrlCommand.undo = function() {
+        return this["undo" + this.getCommandType()]();
     };
 
+    /**
+     * Allows one to dynamically add and remove methods to the command type.
+     */
+    PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod = function(commandType, func) {
+        if (isUndefined(commandType)) {
+            throw new CommandException("The input commandType can not be undefined");
+        }
+        if (!isUndefined(ProtoSrlCommand["redo" + commandType])) {
+            throw new CommandException("Method is already defined");
+        }
+        ProtoSrlCommand["redo" + commandType] = func;
+    };
+
+    /**
+     * Allows one to dynamically add and remove methods to the command type.
+     */
+    PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod = function(commandType) {
+        if (isUndefined(commandType)) {
+            throw new CommandException("The input commandType can not be undefined");
+        }
+        if (isUndefined(ProtoSrlCommand["redo" + commandType])) {
+            throw new CommandException("Method does not exist");
+        }
+        ProtoSrlCommand["redo" + commandType] = undefined;
+    };
+
+    /**
+     * Allows one to dynamically add and remove methods to the command type.
+     */
+    PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod = function(commandType, func) {
+        if (isUndefined(commandType)) {
+            throw new CommandException("The input commandType can not be undefined");
+        }
+        if (!isUndefined(ProtoSrlCommand["undo" + commandType])) {
+            throw new CommandException("Method is already defined");
+        }
+        ProtoSrlCommand["undo" + commandType] = func;
+    };
+
+    /**
+     * Allows one to dynamically add and remove methods to the command type.
+     */
+    PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod = function(commandType) {
+        if (isUndefined(commandType)) {
+            throw new CommandException("The input commandType can not be undefined");
+        }
+        if (isUndefined(ProtoSrlCommand["undo" + commandType])) {
+            throw new CommandException("Method does not exist");
+        }
+        ProtoSrlCommand["undo" + commandType] = undefined;
+    };
 })();
