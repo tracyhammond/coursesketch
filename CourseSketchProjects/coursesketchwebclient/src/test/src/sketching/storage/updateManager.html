@@ -1,0 +1,366 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/utilities/includes/protobufInclude.html">
+<script src="/src/sketching/storage/commandMethods.js"></script>
+
+<!-- file being tested. -->
+<script src="/src/sketching/storage/updatemanager.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+        QUnit.module("creation");
+        QUnit.test("creation of manager works", function(assert) {
+            var update = new UpdateManager(undefined, undefined);
+            assert.ok("no exceptions were thrown :)");
+        });
+    </script>
+	<script>
+        QUnit.module("misc Functions");
+        QUnit.test("createMarker returns correct value", function(assert) {
+            var update = new UpdateManager(undefined, undefined);
+            var otherData = "data";
+            var markerObject = update.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, otherData);
+            assert.ok(markerObject instanceof PROTOBUF_UTIL.getSrlCommandClass(), "testing that command is an object of the correct protobuf type");
+            assert.equal(markerObject.isUserCreated, true, "testing input for userCreated matches");
+            assert.equal(markerObject.getCommandType(), PROTOBUF_UTIL.CommandType.MARKER, "testing input for commandType matches");
+            assert.notEqual(markerObject.getCommandId(), null, "testing that the command Id is not null");
+
+            var markerData = PROTOBUF_UTIL.decodeProtobuf(markerObject.getCommandData(), PROTOBUF_UTIL.getMarkerClass());
+            assert.equal(markerData.type, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR);
+            assert.equal(markerData.otherData, otherData);
+        });
+    </script>
+	<script>
+        QUnit.module("addUpdateTest", {
+            sketch : {
+                resetSketch : function() {
+                },
+                drawEntireSketch : function() {
+                }
+            },
+        });
+        QUnit.asyncTest("testing adding an update Marker.CLEAR", function(assert) {
+
+            var timeout = window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var spy = this.stub(this.sketch, "resetSketch", function() {
+                clearTimeout(timeout);
+                QUnit.start();
+            });
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+            });
+            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, "clear the sketch!");
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            updateList.addUpdate(update);
+            assert.ok(spy.calledOnce, "spy is called once");
+
+        });
+
+        QUnit.asyncTest("testing adding an update ASSIGN_ATTRIBUTE (return false)", function(assert) {
+
+            var timeout = window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var stub = this.stub();
+            stub.returns(false); // we are not drawing.
+            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+            });
+            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            updateList.addUpdate(update);
+            assert.ok(stub.calledOnce, "spy is called once");
+            QUnit.start();
+            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+        });
+
+        QUnit.asyncTest("testing adding an update Marker.SUBMISSION And test the last update is submission", function(assert) {
+
+            window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+                QUnit.start();
+            });
+
+            assert.equal(updateList.isLastUpdateSubmission(), false, "there are no submissions before the marker submission is added");
+
+            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            updateList.addUpdate(update);
+
+            assert.equal(updateList.isLastUpdateSubmission(), true, "afer marker is added the submission is the last update");
+            QUnit.start();
+        });
+
+        QUnit.asyncTest("testing adding an update Marker.SUBMISSION after adding CLEAR And test the last update is submission", function(assert) {
+
+            window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+                QUnit.start();
+            });
+
+            assert.equal(updateList.isLastUpdateSubmission(), false, "there are no submissions before the marker submission is added");
+
+            var clearObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, "clear the sketch!");
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ clearObject ]);
+            updateList.addUpdate(update);
+
+            assert.equal(updateList.isLastUpdateSubmission(), false, "there are no submissions before the marker submission is added");
+
+            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            updateList.addUpdate(update);
+
+            assert.equal(updateList.isLastUpdateSubmission(), true, "afer marker is added the submission is the last update");
+            QUnit.start();
+        });
+    </script>
+
+	<script>
+        QUnit.module("clear data tests", {
+            sketch : {
+                resetSketch : function() {
+                },
+                drawEntireSketch : function() {
+                }
+            },
+        }); // basically a bunch of test about wether or not it is resetable.
+        QUnit.asyncTest("tests that the list is empty, and the submission pointer and current pointer is changed.", function(assert) {
+
+            window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+                QUnit.start();
+            });
+
+            var clearObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, "clear the sketch!");
+            var clearUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ clearObject ]);
+            updateList.addUpdate(clearUpdate);
+
+            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            updateList.addUpdate(update);
+
+            var list = updateList.getUpdateList();
+            assert.equal(list[0], clearUpdate, "first object added was a clear object");
+            assert.equal(list[1], update, "second object added was a submission object");
+
+            assert.equal(updateList.isLastUpdateSubmission(), true, "afer marker is added the submission is the last update");
+            assert.equal(updateList.getCurrentPointer(), 2, "there are two items in the list and the pointer should be 2");
+
+            updateList.clearUpdates(false);
+
+            assert.equal(updateList.isLastUpdateSubmission(), false, "afer clear there should not be a last update submission");
+            assert.equal(updateList.getCurrentPointer(), 0, "afer clear the pointer should be 0");
+            assert.deepEqual(updateList.getUpdateList(), [], "afer clear there should be an empty list");
+            QUnit.start();
+        });
+    </script>
+	<script>
+        QUnit.module("redo tests", {
+            sketch : {
+                resetSketch : function() {
+                },
+                drawEntireSketch : function() {
+                }
+            },
+        });
+        QUnit.asyncTest("trying to redo when you can't redo throws an error", function(assert) {
+            window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(error instanceof UndoRedoException, error);
+                QUnit.start();
+            });
+
+            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.REDO, false);
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            updateList.addUpdate(update);
+        });
+
+        QUnit.asyncTest("you can undo a marker (maybe it just skips over it?)", function(assert) {
+            window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+                QUnit.start();
+            });
+
+            var submissionObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+            var subUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ submissionObject ]);
+            updateList.addUpdate(subUpdate);
+
+            assert.equal(updateList.getCurrentPointer(), 1, "a single item means pointer is at 1");
+
+            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            updateList.addUpdate(update);
+
+            assert.equal(updateList.getCurrentPointer(), 0, "after undoing once the pointer should be at zero");
+            QUnit.start();
+        });
+
+        QUnit.asyncTest("a single undo", function(assert) {
+            window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+                QUnit.start();
+            });
+
+            var stub = this.stub();
+            stub.returns(false); // we are not drawing.
+            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            });
+            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
+            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            updateList.addUpdate(assignUpdate);
+
+            assert.equal(updateList.getCurrentPointer(), 1, "a single item means pointer is at 1");
+
+            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            updateList.addUpdate(update);
+
+            assert.equal(updateList.getCurrentPointer(), 0, "after undoing once the pointer should be at zero");
+            assert.ok(stub.calledOnce, "Undo method for the assign should be called once");
+
+            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            QUnit.start();
+        });
+
+        QUnit.asyncTest("double undo throws error", function(assert) {
+            expect(1);
+            window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(error instanceof UndoRedoException, error);
+                QUnit.start();
+
+            });
+
+            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            });
+            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            });
+            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            updateList.addUpdate(assignUpdate);
+
+            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            updateList.addUpdate(update);
+
+            var undoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
+            var undoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+            updateList.addUpdate(undoUpdate);
+
+            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+        });
+
+        QUnit.asyncTest("single undo throws error when list is empty", function(assert) {
+            window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(error instanceof UndoRedoException, error);
+                QUnit.start();
+
+            });
+
+            var undoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
+            var undoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+            updateList.addUpdate(undoUpdate);
+        });
+
+        QUnit.asyncTest("a single undo then redo", function(assert) {
+            window.setTimeout(function() {
+                assert.ok(false, "test timed out");
+                QUnit.start();
+            }, 1000);
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+                QUnit.start();
+            });
+
+            var undoStub = this.stub();
+            undoStub.returns(false); // we are not drawing.
+
+            var redoStub = this.stub();
+            redoStub.returns(false); // we are not drawing.
+            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
+            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
+            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            updateList.addUpdate(assignUpdate);
+
+            assert.equal(updateList.getCurrentPointer(), 1, "a single item means pointer is at 1");
+            assert.ok(redoStub.calledOnce, "Redo should be called once");
+
+            var undoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
+            var undoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+            updateList.addUpdate(undoUpdate);
+
+            assert.equal(updateList.getCurrentPointer(), 0, "after undoing once the pointer should be at zero");
+            assert.ok(undoStub.calledOnce, "Undo method for the assign should be called once");
+
+            var undoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.REDO, false);
+            var undoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+            updateList.addUpdate(undoUpdate);
+
+            assert.equal(updateList.getCurrentPointer(), 1, "after undoing once the pointer should be at zero");
+            assert.ok(redoStub.calledTwice, "redo method for the assign should be called a second time");
+
+            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            QUnit.start();
+        });
+    </script>
+</body>
