@@ -1,8 +1,6 @@
 package connection;
 
 import protobuf.srl.request.Message.LoginInformation;
-// import protobuf.srl.request.Message.Request;
-// import protobuf.srl.request.Message.Request.MessageType;
 
 public final class LoginChecker {
     /**
