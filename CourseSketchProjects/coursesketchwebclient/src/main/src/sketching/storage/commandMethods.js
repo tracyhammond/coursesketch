@@ -9,7 +9,7 @@
         this.message = "";
         this.htmlMessage = "";
     }
-    ;
+
     CommandException.prototype = BaseException;
 
     var ProtoSrlUpdate = Object.getPrototypeOf(PROTOBUF_UTIL.SrlUpdate());
