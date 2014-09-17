@@ -19,7 +19,6 @@
 	</properties>
 	<build>
 		<plugins>
-			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -32,7 +31,6 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 			</plugin>
-			-->
 		</plugins>
 	</build>
 
