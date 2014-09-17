@@ -1,8 +1,8 @@
 package internalConnection;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.MultiConnectionManager;
+import connection.ConnectionException;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.MultiConnectionManager;
 
 public class AnswerConnectionManager extends MultiConnectionManager {
 

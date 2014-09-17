@@ -1,7 +1,9 @@
 package connection;
 
 public class ConnectionState {
-
+/***
+ * testing first push
+ */
 	private String key;
 	private boolean isLoggedIn = false;
 	private boolean isInstructor = false; // flagged true if correct login and is instructor
