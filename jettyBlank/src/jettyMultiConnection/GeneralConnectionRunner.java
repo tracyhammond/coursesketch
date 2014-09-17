@@ -10,19 +10,24 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 
-import jettyMultiConnection.GeneralConnectionServlet;
-
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 public class GeneralConnectionRunner {
 
 	public static void main(String[] args) throws Exception {
-		GeneralConnectionRunner runner = new GeneralConnectionRunner();
+		GeneralConnectionRunner runner = new GeneralConnectionRunner(args);
 		try {
 			runner.runAll();
 		} catch (UnknownHostException e) {
@@ -31,17 +36,30 @@ public class GeneralConnectionRunner {
 		}
 	}
 
+	protected GeneralConnectionRunner(String[] args) {
+		this.args = args;
+		if (args.length >= 1 && args[0].equals("local")) {
+			local = true;
+		} else {
+			local = false;
+		}
+	}
+
 	final private GeneralConnectionRunner localInstance = this;
 	private Server server;
 	private GeneralConnectionServlet servletInstance;
 
-	// these should be changed based on 
+	// these should be changed based on the properties
+	protected final String[] args;
 	protected int port = 8888;
 	protected long timeoutTime;
 	protected boolean acceptInput = true;
 	private boolean production = false;
 	protected boolean local = true;
 	protected boolean isLogging = false;
+	protected boolean secure = false;
+	private String keystorePassword = "";
+	private String keystorePath = "";
 
 	/**
 	 * Runs the entire startup process including input
@@ -50,6 +68,39 @@ public class GeneralConnectionRunner {
 	protected final void runAll() throws Exception {
 		this.runMost();
 		this.startInput();
+	}
+
+	private void configureSSL() {
+			
+			SslContextFactory cf = new SslContextFactory();
+			
+			//Configure SSL
+
+				//Use the real certificate
+				System.out.println("Loaded real keystore");
+				cf.setKeyStorePath(keystorePath/*"srl01_tamu_edu.jks"*/);
+				cf.setTrustStorePath(keystorePath);
+				cf.setTrustStorePassword(keystorePassword);
+				//cf.setCertAlias("nss324-o");
+				//cf.checkKeyStore();
+				SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(cf, org.eclipse.jetty.http.HttpVersion.HTTP_1_1.toString());
+
+			    HttpConfiguration config = new HttpConfiguration();
+			    config.setSecureScheme("https");
+			    config.setSecurePort(port);
+			    config.setOutputBufferSize(32786);
+			    config.setRequestHeaderSize(8192);
+			    config.setResponseHeaderSize(8192);
+			    HttpConfiguration sslConfiguration = new HttpConfiguration(config);
+			    sslConfiguration.addCustomizer(new SecureRequestCustomizer());
+			    HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(sslConfiguration);
+
+			    ServerConnector connector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
+			    connector.setPort(port);
+			    server.addConnector(connector);
+			
+			
+			    server.setConnectors(new Connector[]{connector});
 	}
 
 	/**
@@ -65,6 +116,11 @@ public class GeneralConnectionRunner {
 			this.executeRemoveEnviroment();
 		}
 		this.createServer();
+
+		if (secure) {
+			configureSSL();
+		}
+		
 		this.addServletHandlers();
 		
 		this.startServer();
@@ -242,5 +298,17 @@ public class GeneralConnectionRunner {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Sets the password for the ssl keystore
+	 * @param pass
+	 */
+	protected void setKeystorePassword(String pass) {
+		this.keystorePassword = pass;
+	}
+	
+	protected void setKeystorePath(String path) {
+		this.keystorePath = path;
 	}
 }

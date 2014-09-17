@@ -3,7 +3,9 @@ package handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.java_websocket.WebSocket;
+import jettyMultiConnection.GeneralConnectionServer;
+
+import org.eclipse.jetty.websocket.api.Session;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -24,9 +26,11 @@ import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlGrade;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
 import protobuf.srl.school.School.SrlUser;
+
 
 /**
  * Handles data being added or edited.
@@ -38,7 +42,7 @@ import protobuf.srl.school.School.SrlUser;
 public class DataInsertHandler {
 	public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
 	
-	public static void handleData(Request req, WebSocket conn) {
+	public static void handleData(Request req, Session conn) {
 		try {
 			System.out.println("Receiving DATA SEND Request...");
 
@@ -80,6 +84,13 @@ public class DataInsertHandler {
 							String resultId = Institution.mongoInsertBankProblem(userId, problem);
 							results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
 						} break;
+						/*
+						case CLASS_GRADE: {
+							SrlGrade grade = SrlGrade.parseFrom(itemSet.getData());
+							String resultId = Institution.mongoInsertClassGrade(userId, grade);
+							results.add(buildResult(resultId + " : " + grade.getId(), itemSet.getQuery()));
+						} break;
+						*/
 						case USER_INFO: {
 							UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), userId);
 						} break;
@@ -131,20 +142,20 @@ public class DataInsertHandler {
 				}
 			}
 			if (results.size() > 0) {
-				conn.send(buildRequest(results, SUCCESS_MESSAGE, req).toByteArray());
+				GeneralConnectionServer.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
 			}
 			return;
 		} catch (InvalidProtocolBufferException e) {
 			e.printStackTrace();
-			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());
+			GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
 		}
 		// decode request and pull correct information from database.institution (courses, assignments, ...) then repackage everything and send it out
 		catch (AuthenticationException e) {
 			e.printStackTrace();
-			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());
+			GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
 		} catch (Exception e) {
 			e.printStackTrace();
-			conn.send(buildRequest(null, e.getMessage(), req).toByteArray());
+			GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
 		}
 	}
 

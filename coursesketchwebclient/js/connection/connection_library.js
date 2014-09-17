@@ -21,13 +21,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	var timeoutVariable = false;
 	var self = this;
 	
-	var totalTimeDifferance = Long.fromInt(0);
-	var timeDifferance = Long.fromInt(0);
-	var latency = Long.fromInt(0);
-	var SEND_TIME_TO_CLIENT_MSG = "1";
-	var CLIENT_REQUEST_LATENCY_MSG = "2";
-	var SEND_LATENCY_TO_CLIENT_MSG = "3";
-	
+	var totalTimeDifferance = 0;
 	
 	function createWebSocket() {
 		try {
@@ -64,9 +58,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 			        //console.log("request decoded succesfully ");
 					if (msg.requestType == Request.MessageType.TIME) {
 						console.log("getting from time");
-						var rsp = onTime(evt, msg)
-						if(rsp!=null)
-							this.sendRequest(rsp);
+			        	onTime(evt, msg);
 					} else if (msg.requestType == Request.MessageType.LOGIN && onLogin) {
 			        	console.log("getting from login");
 			        	onLogin(evt, msg);
@@ -213,7 +205,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 * Gets the current time as a long that is the same as the server time!
 	 */
 	this.getCurrentTime = function() {
-		var longVersion = Long.fromString("" + (createTimeStamp())).add(totalTimeDifferance);
+		var longVersion = Long.fromString("" + (createTimeStamp() + totalTimeDifferance));
 		return longVersion;
 	};
 
@@ -370,30 +362,9 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 	
 	function onTime(evt, msg) {
-		if (msg.getResponseText()==SEND_TIME_TO_CLIENT_MSG){ //client
-			return clientReciveTimeDiff(msg);
-		} else if (msg.getResponseText()==SEND_LATENCY_TO_CLIENT_MSG) { //client
-			return clientReciveLatency(msg);
-		}
-		return null;
+		
+		
 	};
-	
-	function clientReciveTimeDiff(req) {
-		var startCounter = this.getCurrentTime();
-		timeDifferance = Long.fromString(""+req.getMessageTime()).subtract(this.getCurrentTime());
-		var rsp = Request.newBuilder();
-		rsp.setRequestType(Request.MessageType.TIME);
-		rsp.setMessageTime(Long.fromString(""+req.getMessageTime()).add(this.getCurrentTime().subtract(startCounter)));
-		rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
-
-		return rsp.build();
-	}
-	
-	function clientReciveLatency(req) {
-		latency = Long.fromString(""+req.getMessageTime());
-		totalTimeDifferance=timeDifferance.add(latency);
-		return null;
-	}
 }
 var Long = false;
 
