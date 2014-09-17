@@ -66,6 +66,8 @@
 		<developerConnection>scm:git:git@github.com:${githubLocation}.git</developerConnection>
 	</scm>
 
+	<!-- possible plugins https://code.google.com/p/maven-replacer-plugin/ -->
+
 	<build>
 		<finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
 		<defaultGoal>clean install</defaultGoal>
@@ -113,7 +115,7 @@
 					</execution>
 				</executions>
 				<configuration>
-				    <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+					<getRevisionOnlyOnce>true</getRevisionOnlyOnce>
 					<shortRevisionLength>5</shortRevisionLength>
 					<doCheck>true</doCheck>
 					<doUpdate>true</doUpdate>
@@ -233,6 +235,23 @@
 						</execution>
 					</executions>
 				</plugin>
+				<!-- 
+				<plugin>
+					<groupId>com.github.klieber</groupId>
+					<artifactId>phantomjs-maven-plugin</artifactId>
+					<version>0.5-SNAPSHOT</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>install</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<version>1.9.7</version>
+					</configuration>
+				</plugin>
+				 -->
 			</plugins>
 		</pluginManagement>
 	</build>
