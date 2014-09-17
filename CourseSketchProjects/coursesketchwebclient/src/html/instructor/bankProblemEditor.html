@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="../../">
+    <title>Drawing!</title>
+	<link rel="stylesheet" href="css/school/school_item.css">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+	<link rel="stylesheet" href="css/courseSketch2.css">
+
+	<script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
+
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
+
+	<script type="text/javascript" src="js/input/touch_event.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Library.js"></script>
+	<script type="text/javascript" src="js/input/sketching.js"></script>
+	<script type="text/javascript" src="js/SRL/SRL_Graphics.js"></script>
+	<script type="text/javascript" src="js/input/highlighter.js"></script>
+	<!-- DEBUG -->
+	<script type="text/javascript" src="js/test/SRL_SketchViewer.js"></script>
+
+	<script type="text/javascript" src="js/connection/connection_library.js"></script>
+	<script type="text/javascript" src="js/connection/submission.js"></script>
+	<script type="text/javascript" src="js/connection/sketch_communication.js"></script>
+	<script type="text/javascript" src="js/connection/update_manager.js"></script>
+	<!-- DEBUG -->
+	<script type="text/javascript" src="js/test/Command_Viewer.js"></script>
+
+	<script type="text/javascript" src="js/persistant_data/class_data.js"></script>
+	<script type="text/javascript" src="js/school/school_item.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+    	var serverConnection = parent.serverConnection;
+    	parent.copyParentUtilityFunctions(this);
+  		parent.addScopedLoadEvent(window,
+				function()
+				{
+		  			var loader = new parent.DynamicFileLoader();
+					loader.sope = document;
+					loader.loadFile("js/utils/popup.js",'js');
+
+					/**
+		  				Ensures that all of the columns reach to the bottom of the space they have 
+		  			*/
+			  		function manageColumnHeight() {
+			  			var maxHeight = parent.contentHeight;
+			  			var element = document.getElementById("column1");
+			  			var location = element.offsetTop;
+			  			for(var i = 1; i <= 4; i++) {
+			  				document.getElementById("column"+i).style.height = (maxHeight - location - 5)+"px";
+			  			}
+			  		}
+
+					manageColumnHeight();
+					window.onresize = function() {manageColumnHeight();};
+				}
+			);
+	  		function createBankProblem() {
+	  			var popupId = 'togglePopup1';
+	  			var builder = new PopupBoxBuilder();
+	  			builder.setBody(true,'html/instructor/course_managment_frames/edit_bankProblem.html');
+	  			builder.setHeader(true,'Late Policy Information');
+	  			builder.setFooter(true,'<button onclick = "togglePopup(\'' + popupId + '\')">close</button>');
+	  			builder.setBodyHeight('500px');
+	  			builder.build('popupDiv', popupId);
+	  			builder.togglePopup(popupId);
+	  		}
+
+	  		function exportData(scope, type) {
+	  			if (type == 'bankProblem') {
+	  				exportBankProblem(scope);
+	  			}
+	  		}
+
+	  		function exportBankProblem(scope) {
+	  			var problem = new SrlBankProblem();
+	  			problem.id = generateUUID();
+	  			problem.description = scope.document.getElementById('questionText').value;
+	  			problem.semester = scope.document.getElementById('questionType').value;
+	  			var openDate = scope.document.getElementById('source').value;
+	  			var closeDate = scope.document.getElementById('courseTopic').value;
+	  			var permission = new SchoolBuilder.SrlPermission();
+	  			permission.adminPermission = scope.document.getElementById('admins').value.split(" ");
+	  			permission.userPermission = scope.document.getElementById('users').value.split(" ");
+	  			problem.accessPermission = permission;
+	  		}
+	</script>
+</head>

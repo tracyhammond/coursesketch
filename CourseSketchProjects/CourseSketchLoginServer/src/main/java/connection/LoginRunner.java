@@ -1,0 +1,35 @@
+package connection;
+
+import multiconnection.GeneralConnectionRunner;
+import multiconnection.GeneralConnectionServlet;
+import database.DatabaseClient;
+
+public class LoginRunner extends GeneralConnectionRunner {
+	public static void main(String args[]) {
+		LoginRunner run = new LoginRunner(args);
+		try {
+			run.runAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public LoginRunner(String args[]) {
+		super(args);
+		super.port = 8886;
+	}
+
+	/**
+	 * Makes the databases run locally
+	 */
+	@Override
+	public void executeLocalEnviroment() {
+		System.out.println("Setting the database to connect locally");
+		new DatabaseClient(false); // makes the database point locally
+	}
+
+	@Override
+	public final GeneralConnectionServlet getServlet(long time, boolean secure, boolean local) {
+		return new LoginServlet(time, secure, local);
+	}
+}

@@ -1,0 +1,154 @@
+<head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<base href="../../../">
+    <link rel="stylesheet" href="css/school/course_manager_info.css">
+    <link rel="stylesheet" href="css/utility/columns.css">
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script>
+    	var daysLate = 0;
+    	var hoursLate = 0;
+    	var minutesLate = 0;
+    	var subtractionType = "total";
+    	var policyType = 'exponential';
+    	var inputGrade = 100;
+    	var rate = 1;
+    	function updateValue() {
+    		document.getElementById('showLateTime').innerHTML = 'Days: ' + daysLate + ' Hours: '+ hoursLate + ' Minutes: ' +minutesLate;
+    		document.getElementById('showGrade').innerHTML = 'OutputGrade: ' + createValue(
+    				subtractionType == 'total', inputGrade, parseInt(minutesLate), parseInt(hoursLate), parseInt(daysLate),
+    				policyType, rate, .9998) + ' ' + hoursLate;
+    	}
+    	// option group #1
+    	// x% off of total (meaning you cap the score)
+    	// x% off of grade (meaning x% * your score)
+    	// option group #2  // constant rate
+    	// x% off each day
+    	// x% off each hour
+    	// option group #3 // exponential rate  (has a rate and an exponentRate)
+    	//					rate must be 0-1 exponentRate must be 0-1 exponentRate (but should be closer to .9999)
+    	// 
+    	/**
+    		Returns a grade for the given inputs.
+    		@param isOffMax if true then the percent off is applied to the max score (100)
+    		if falsed it is applied to the students grade
+    	*/
+		function createValue(isOffMax, studentGrade, minutesLate, hoursLate, daysLate, policyType, rate, exponentRate) {
+    		var percentOff = 0;
+    		var convertToSeconds = minutesLate * 60 + hoursLate * 60 * 60 + daysLate * 24 * 60 * 60;
+    		if (policyType == "eachDay") {
+    			percentOff = rate * daysLate;
+    		} else if(policyType == "eachHour") {
+    			var totalTime = hoursLate + (daysLate * 24);
+    			percentOff = rate * totalTime;
+    		} else if(policyType == "exponential") {
+    			percentOff = (1 - (rate * Math.pow(exponentRate, convertToSeconds/(60)))) * 100;
+    		}
+    		percentOff = percentOff / 100;
+    		if (isOffMax) {
+    			return Math.min (100 - percentOff * 100, studentGrade);
+    		} else {
+    			return studentGrade - studentGrade * percentOff;
+    		}
+    	}
+    	addLoadEvent(updateValue);
+
+    </script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+		function drawChart() {
+			var data = google.visualization.arrayToDataTable([
+				['Minutes', 'Policy1', 'Expenses'],
+				[0,  1000,      400],
+				[10,  1170,      460],
+				[20,  660,       1120],
+				[30,  1030,      540],
+				[60,  5000,      540]
+			]);
+			
+			var options = {
+				title: 'Company Performance'
+			};
+			
+			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+			chart.draw(data, options);
+		}
+    </script>
+</head>
+<body class = "wide_centre" style = "background: #D4D4D4">
+	<div style = "display:none">
+		<div>
+			<h2 style = "text-align:center">Late Policy</h2>
+			<div class = "rounded_shadow" style = "width: 100px; clear:right;">
+				<input type="range" class = "centre" name="time" min="1" max="60" value = "5" onchange = "changeValue(this.value);">
+			</div>
+			<div id="current_number">
+			5
+			</div>
+			<select onchange="updateLatePolicy()">
+				<option value = "days">Days</option>
+				<option value = "hours">Hours</option>
+				<option value = "minutes">Minutes</option>
+			</select>
+			</div>
+		</div>
+		<div id="chart_div" style="width: 100%; height: 300px;"></div>
+	</div>
+	<div>
+		<div>
+		<input type="radio" name="subtractionType" value="total" onclick = "subtractionType = this.value; updateValue();" checked>Cap Score<br>
+		<input type="radio" name="subtractionType" value="grade" onclick = "subtractionType = this.value; updateValue();">Take off of grade<br><br>
+		</div>
+		Days
+		<div class = "rounded_shadow" style = "width: 100px; clear:right;">
+			<input type="range" class = "centre" name="time" min="0" max="10" value = "0" onchange = "daysLate = this.value; updateValue();">
+		</div>
+		<br>
+		Hours
+		<div class = "rounded_shadow" style = "width: 100px; clear:right;">
+			<input type="range" class = "centre" name="time" min="0" max="23" value = "0" onchange = "hoursLate = this.value; updateValue();">
+		</div>
+		<br>
+		Minutes
+		<div class = "rounded_shadow" style = "width: 100px; clear:right;">
+			<input type="range" class = "centre" name="time" min="0" max="59" value = "0" onchange = "minutesLate = this.value; updateValue();">
+		</div>
+		<div id = "showLateTime" >
+		</div>
+		<br>
+		<div id = "showGrade" >
+		</div>
+	</div>
+</body>
+
+<!-- 
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2004',  1000,      400],
+          ['2005',  1170,      460],
+          ['2006',  660,       1120],
+          ['2007',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Company Performance'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>
+
+ -->

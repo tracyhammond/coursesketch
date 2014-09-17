@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<base href="../">
+    <title>Welcome!</title>
+    <script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
+    <script type="text/javascript" src="js/connection/connection_library.js"></script>
+    <script type="text/javascript" src="js/connection/advance_data_listener.js"></script>
+
+	<!-- <script type="text/javascript" src="js/utils/utilityFunctions.js"></script> -->
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+
+    <script type="text/javascript" src="js/persistant_data/database.js"></script>
+    <script type="text/javascript" src="js/persistant_data/course_sketch_data_manager.js"></script>
+	<script type="text/javascript" src="js/persistant_data/specificManager/courseDataManager.js"></script>
+	<script type="text/javascript" src="js/persistant_data/specificManager/assignmentDataManager.js"></script>
+	<script type="text/javascript" src="js/persistant_data/specificManager/courseProblemDataManager.js"></script>
+	<script type="text/javascript" src="js/persistant_data/specificManager/submissionDataManager.js"></script>
+
+    <script type="text/javascript" src="js/jquery/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="js/menu/sliding_menu.js"></script>
+	<script type="text/javascript" src="js/menu/header.js"></script>
+	<link rel="stylesheet" href="css/jquery/jquery.mobile-1.0rc2.min.css">
+	<link rel="stylesheet" href="css/main.css">
+
+	<script type="text/javascript">
+	try {
+		parent.copyParentUtilityFunctions(this);
+		parent.copyParentProtos(this);
+	} catch (exception) {
+		console.log(excpetion);
+	}
+	</script>
+    <script type="text/javascript" src="js/menu/add_menu.js"></script>
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <script type="text/javascript">
+	  		addLoadEvent(
+					function() {
+						connection = parent.connection;
+						parent.connection = false;
+						var body = document.body,
+					    html = document.documentElement;
+						var height = Math.min( body.scrollHeight, body.offsetHeight, 
+					                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+						var header = document.getElementById('header');
+						var headerHeight = Math.max(header.clientHeight, header.offsetHeight, header.scrollHeight) + header.offsetTop;
+						var iframeHeight = height - headerHeight;
+						var iframe = document.getElementById('iframeContent');
+						iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
+						contentHeight = iframe.height;
+						if (connection.isInstructor) {
+							redirectContent("html/instructor/course_management.html", "Welcome Instructor!");
+						} else {
+							redirectContent("html/student/course_management.html", "Welcome Student!");
+						}
+						placeMenu(connection.isInstructor);
+
+						dataListener = new AdvanceDataListener(connection, Request, QueryBuilder, function(evt, item) {
+							console.log("default listener");
+						});
+						dataManager = new SchoolDataManager(connection.userId, dataListener, connection, SchoolBuilder, QueryBuilder,
+								Request, parent.dcodeIO.ByteBuffer);
+						connection.userId = undefined;
+						dataManager.addState("isInstructor", connection.isInstructor);
+					}
+				);
+	  		/**
+	  		Resizes the iframe inside the window
+	  		*/
+	  		window.onresize = function() {
+	  			var body = document.body,
+			    html = document.documentElement;
+				var height = Math.min( body.scrollHeight, body.offsetHeight, 
+			                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+				var header = document.getElementById('header');
+				var headerHeight = Math.max(header.clientHeight, header.offsetHeight, header.scrollHeight) + header.offsetTop;
+				var iframeHeight = height - headerHeight;
+				var iframe = document.getElementById('iframeContent');
+				iframe.height = height - Math.max(iframe.offsetTop, headerHeight) - 2;
+				contentHeight = iframe.height;
+	  		}
+
+	  		function reloadContent() {
+	  			var value = redirector.getRedirect();
+	  			document.getElementById('iframeContent').src = value;
+	  		}
+	  		var connection = false;
+	  		var redirector = parent.redirector;
+	  		var contentHeight = 0;
+	  		var headerManager = new HeaderHandler();
+	  		var dataListener = false;
+	  		var dataManager = false;
+
+	  		function redirectContent(url, title) {
+	  			var iframe = document.getElementById('iframeContent');
+	  			var docWindow = iframe.documentWindow || iframe.contentDocument;
+	  			docWindow.location.replace(url); // it allows the url to change without adding an event to the history!
+
+	  			//document.getElementById('iframeContent').src = url;
+	  			redirector.setRedirect(url);
+
+	  			if (title) {
+	  				headerManager.changeText(title);
+	  			}
+	  		}
+	</script>
+
+	<style>
+	html, body {
+	    margin: 0px;
+	    padding: 0px;
+	    border: 0px;
+	    width: 100%;
+	    height: 100%;
+	}
+	</style>
+</head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<!-- Menu Bar -->
+	<div id="menuBar">
+	</div>
+
+	<div class="pages ui-page ui-page-active" id="Div1" style="margin-left: 0px;">
+    <!-- Section in the Header bar -->
+    <div id="header" data-role="header" class="ui-header ui-bar-a" role="banner">
+        <a class="showMenu ui-btn-left ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" data-theme="a"><span class="ui-btn-inner ui-btn-corner-all" aria-hidden="true"><span class="ui-btn-text">Menu</span></span></a>
+        <div onclick = "reloadContent();" style="position:fixed; right:20px;">refresh</div>
+        <h1 id="nameBlock" class="ui-title" tabindex="0" role="heading" aria-level="1">Welcome!</h1>
+    </div>
+    <!-- Center Section -->
+    <div id="content" class = "mainBackground">
+    	<iframe id="iframeContent" name="wrapper" src = "" height = "100%" width = "100%" frameborder="0">
+    	</iframe>
+	</div>
+</body>
+</html>

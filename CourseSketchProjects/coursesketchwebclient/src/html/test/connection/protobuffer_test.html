@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<head>
+	<base href="../../">
+    <script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    <script type="text/javascript" src="js/connection/protobuf.js"></script>
+<!--     <script type="text/javascript" src="js/connection/libraries/Long.min.js"></script> -->
+<!-- 	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script> -->
+<!-- 	<script type="text/javascript" src="js/connection/libraries/ProtoBuf.min.js"></script> -->
+    <script>
+    var utils;
+    
+    var personCreator = function() {
+    	alert('postRunning2 ' + utils);
+    	var result = utils.makeMessage("my message is yes");
+    	var buffer = utils.createBuffer(result);
+    }
+
+    addLoadEvent(function(){
+    	utils = new protobufUtils(personCreator);
+    });
+    </script>
+</head>
+<body>
+<title>Proto Test</title>
+<h2>WebSocket Test</h2>
+<div id="output"></div>  
+</body>

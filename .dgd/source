@@ -1,0 +1,3 @@
+[{"id":"f0e16889d-6d0c-48e1-9c36-23a501eedc58", "files":[{"extension":"", "directory":"\/ProtoFiles\/input\/", "name":"commands.proto"}
+]}
+,{"id":"f4823fc2c-9c66-4b10-dd50-b693900c2049","files":[{"extension":"java","directory":"\/CourseSketchSubmissionServer\/src\/database","name":"DatabaseClient.java"},{"extension":"java","directory":"\/CourseSketchSubmissionServer\/src\/util","name":"Checksum.java"}]}]
