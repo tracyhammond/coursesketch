@@ -1,4 +1,5 @@
 package protobuf.srl.commands;
+/* https://developers.google.com/protocol-buffers/docs/proto#oneof */
 
 message SrlUpdateList {
 	repeated SrlUpdate list = 1;
@@ -60,9 +61,11 @@ message IdChain {
 message Marker {
 	required MarkerType type = 1;
 	enum MarkerType {
-		SUBMISSION = 0;
-		FEEDBACK = 1;
-		SAVE = 2;
+		SUBMISSION = 0; // notes that the sketch was submitted at this point.
+		FEEDBACK = 1; // notes that the user recieved answer checking feedback at this point.
+		SAVE = 2; // notes that the sketch was saved at this point.
+		// when an undo / redo branch occurs this is the marker that signifies the split.
+		// additionally some special care needs to be done to check when saving the sketch that splits do not corrupt existing sketch data.
 		SPLIT = 3;
 		CLEAR = 4; // To be supported later
 	}
