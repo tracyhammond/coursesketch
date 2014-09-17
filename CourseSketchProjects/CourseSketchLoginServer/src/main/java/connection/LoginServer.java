@@ -1,7 +1,5 @@
 package connection;
 
-// import internalConnections.LoginConnectionState;
-
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
@@ -11,9 +9,6 @@ import multiconnection.GeneralConnectionServer;
 import multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
-// import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-// import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-// import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.LoginInformation;
