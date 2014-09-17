@@ -169,7 +169,6 @@ function UpdateManager(inputSketch, onError) {
                     }
                 } catch (exception) {
                     executionLock = false;
-                    console.log(exception.stack);
                     if (onError) onError(exception);
                 }
                 executionLock = false;
@@ -211,12 +210,12 @@ function UpdateManager(inputSketch, onError) {
 
                 // creates and inserts the first marker [update] -> [marker] ->
                 // [unreachable update]
-                var startingMarker = createMarker(false, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, splitDifference);
+                var startingMarker = localScope.createMarker(false, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, ""+splitDifference);
                 updateList.splice(currentUpdateIndex, 0, PROTOBUF_UTIL.createUpdateFromCommands([ startingMarker ]));
 
                 // creates and inserts the second marker [unreachable update
                 // (probably undo or redo)] -> [marker] -> [index out of range]
-                var endingMarker = createMarker(false, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, 0 - splitDifference);
+                var endingMarker = localScope.createMarker(false, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, ""+(0 - splitDifference));
                 updateList.push(PROTOBUF_UTIL.createUpdateFromCommands([ endingMarker ]));
 
                 // reset the information
@@ -282,8 +281,6 @@ function UpdateManager(inputSketch, onError) {
             } else if (marker.type == PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION) {
                 if (currentUpdateIndex > lastSubmissionPointer) {
                     lastSubmissionPointer = currentUpdateIndex;
-                    // console.log("Updated submission pointer: " +
-                    // lastSubmissionPointer);
                 }
             } else if (marker.type == PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR) {
                 localScope.clearSketch(true);
@@ -302,7 +299,7 @@ function UpdateManager(inputSketch, onError) {
      * @returns true if the sketch needs to be redrawn.
      */
     function undoUpdate(update) {
-        console.log("UNDOING AN UPDATE!" + update);
+
         var command = update.getCommands()[0];
         if (command.commandType == PROTOBUF_UTIL.CommandType.MARKER) {
             var marker = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getMarkerClass());
@@ -335,11 +332,11 @@ function UpdateManager(inputSketch, onError) {
             var startIndex = index;
             while (index < maxIndex && startIndex - index <= 5) {
                 var update = oldList[index];
-                var newUpdate = new ProtoSrlUpdate();
+                var newUpdate = PROTOBUF_UTIL.SrlUpdate();
                 var newCommandList = new Array();
                 for (var i = 0; i < update.commands.length; i++) {
                     var command = update.commands[i];
-                    var cleanCommand = new ProtoSrlCommand();
+                    var cleanCommand = PROTOBUF_UTIL.SrlCommand();
                     cleanCommand.commandType = command.commandType;
                     cleanCommand.isUserCreated = command.isUserCreated;
                     cleanCommand.commandData = command.commandData;
@@ -367,6 +364,13 @@ function UpdateManager(inputSketch, onError) {
             callback(updateList);
         }
         return updateList;
+    };
+
+    /**
+     * @returns the length of the current list.
+     */
+    this.getListLength = function() {
+        return updateList.length;
     };
 
     /**
@@ -400,19 +404,7 @@ function UpdateManager(inputSketch, onError) {
         if (updateList.length <= 0) {
             return false;
         }
-        var update = updateList[updateList.length - 1];
-        var commandList = update.getCommands();
-        if (commandList.length <= 0) {
-            return true;
-        }
-        var currentCommand = commandList[0];
-        if (currentCommand.commandType == PROTOBUF_UTIL.CommandType.MARKER) {
-            var marker = PROTOBUF_UTIL.decodeProtobuf(currentCommand.commandData, PROTOBUF_UTIL.getMarkerClass());
-            if (marker.type == PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION) {
-                return false;
-            }
-        }
-        return true;
+        return !this.isLastUpdateSubmission();
     };
 
     this.getCurrentPointer = function() {
@@ -424,8 +416,7 @@ function UpdateManager(inputSketch, onError) {
      * 
      * @param list
      *            The list that is will be added to the sketch
-     * @parem percentBar The bar that will show these updates, it must already
-     *        be added where it needs to be added.
+     * @param percentBar The bar that will show these updates.  It is called with how much is left to be completed.
      */
     this.setUpdateList = function(list, percentBar) {
         initializing = true;
@@ -453,19 +444,24 @@ function UpdateManager(inputSketch, onError) {
 
     /**
      * creates and adds a redo update to the stack.
+     * 
+     * @param userCreated
+     *            {boolean} true if the userCreated the command false otherwise.
      */
-    this.redoAction = function() {
-        var redoCommand = new ProtoSrlCommand(ProtoSrlCommandType.REDO, new Date().getTime());
+    this.redoAction = function(userCreated) {
+        var redoCommand = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.REDO, userCreated);
         var update = PROTOBUF_UTIL.createUpdateFromCommands([ redoCommand ]);
-        var tempIndex = currentUpdateIndex;
         this.addUpdate(update, false);
     };
 
     /**
      * creates and adds a redo update to the stack.
+     * 
+     * @param userCreated
+     *            {boolean} true if the userCreated the command false otherwise.
      */
-    this.undoAction = function() {
-        var undoCommand = new ProtoSrlCommand(ProtoSrlCommandType.UNDO, new Date().getTime());
+    this.undoAction = function(userCreated) {
+        var undoCommand = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, userCreated);
         var update = PROTOBUF_UTIL.createUpdateFromCommands([ undoCommand ]);
         var tempIndex = currentUpdateIndex;
         this.addUpdate(update, false);
@@ -607,7 +603,6 @@ function UpdateManager(inputSketch, onError) {
             if (isUndefined(this.decodedData) || (!this.decodedData)) {
                 this.decodedData = PROTOBUF_UTIL.decodeProtobuf(this.commandData, Action.ActionPackageShape);
             }
-            console.log(this.decodedData);
             this.decodedData.undo();
             return false;
         });
