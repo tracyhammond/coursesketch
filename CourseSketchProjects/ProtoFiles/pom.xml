@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>CourseSketch</groupId>
+	<artifactId>ProtoFiles</artifactId>
+	<version>0.0.1</version>
+	<name>ProtoFiles</name>
+	<profiles>
+		<profile>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+			</activation>
+			<properties>
+				<protocLocation>${env.protoc}</protocLocation>
+			</properties>
+		</profile>
+	</profiles>
+
+	<parent>
+		<groupId>CourseSketch</groupId>
+		<artifactId>CourseSketch-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../../</relativePath>
+	</parent>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>dtrott</id>
+			<url>http://maven.davidtrott.com/repository</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.google.protobuf.tools</groupId>
+				<artifactId>maven-protoc-plugin</artifactId>
+				<version>0.1.10</version>
+				<configuration>
+					<checkStaleness>true</checkStaleness>
+					<staleMillis>10000</staleMillis>
+					<protocExecutable>${protocLocation}</protocExecutable>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<configuration>
+							<checkStaleness>true</checkStaleness>
+							<staleMillis>10000</staleMillis>
+							<protocExecutable>${protocLocation}</protocExecutable>
+						</configuration>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>${protobufVersion}</version>
+		</dependency>
+	</dependencies>
+</project>
