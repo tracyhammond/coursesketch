@@ -9,6 +9,13 @@ function ProtobufException(message) {
 ProtobufException.prototype = BaseException;
 
 /**
+ * ************************************************************* Protobuf
+ * Utility functions
+ * 
+ * @author gigemjt *************************************************************
+ */
+
+/**
  * @Class Has utilities for protobufs and is a convient accessor to create new
  *        instances of protobuf files (and prevents the modification of a
  *        protobuf object creator before it is created)
@@ -21,7 +28,6 @@ function ProtobufSetup() {
 
     var objectList = new Array();
     var enumList = new Array();
-    var ready = false;
 
     /**
      * @returns {ProtobufSetup} an instance of itself.
@@ -34,7 +40,6 @@ function ProtobufSetup() {
         buildUpdateList();
         buildDataQuery();
         buildSubmissions();
-        ready = true;
         return localScope;
     };
 
@@ -143,10 +148,10 @@ function ProtobufSetup() {
 
     /**
      * Given a protobuf Command array an SrlUpdate is created.
-     * 
+     *
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
-     * 
+     *
      * @param commands
      *            {Array<SrlCommand>} a list of commands stored as an array.
      * @return {SrlUpdate}
@@ -209,8 +214,8 @@ function ProtobufSetup() {
      *          current protobuf objects.
      */
     this.getSupportedObjects = function getSupportedObjects() {
-        return objectList;// JSON.parse(JSON.stringify(objectList)); // why is
-                            // this
+        return JSON.parse(JSON.stringify(objectList)); // why is
+        // this
         // always so fast?
     };
 
@@ -220,10 +225,48 @@ function ProtobufSetup() {
      *          current protobuf enums.
      */
     this.getSupportedEnums = function getSupportedObjects() {
-        return enumList;// JSON.parse(JSON.stringify(enumList)); // why is this
+        return JSON.parse(JSON.stringify(enumList)); // why is this
         // always so fast?
     };
 
+    /**
+     * Decodes the data and perserves the bytebuffer for later use
+     *
+     * @param data
+     *            {ArrayBuffer} a compiled set of data in the protobuf object.
+     * @param proto
+     *            {ProtobufClass} The protobuf object that is being decoded.
+     *            This can be grabbed by using PROTOBUF_UTIL.get<objectName>Class();
+     * @param onError
+     *            {Function} A callback that is called when an error occurs
+     *            (optional). This will be called before the result is returned
+     *            and may be called up to two times.
+     * @return {ProyobufObject} decoded protobuf object.
+     */
+    this.decodeProtobuf = function(data, proto, onError) {
+        try {
+            data.mark();
+        } catch (exception) {
+            if (onError) {
+                onError(exception);
+            }
+        }
+        var decoded = proto.decode(data);
+        try {
+            data.reset();
+        } catch (exception) {
+            if (onError) {
+                onError(exception);
+            }
+        }
+        return decoded;
+    };
+
+    // makes all of the methods read only
+    for (obj in localScope) {
+        makeValueReadOnly(localScope, obj, localScope[obj]);
+    }
+    // making ProtobufException read only
     makeValueReadOnly(localScope, "ProtobufException", ProtobufException);
 };
 
