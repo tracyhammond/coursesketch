@@ -1,0 +1,33 @@
+<template id="editContent">
+
+<style>
+	.importClass {
+		height:50;
+		background-color:#FF00FF;
+	}
+</style>
+<style>@import url("css/test/testImport.css");</style>
+<div class = "commonClass">
+</div>
+<div class = "importClass" id = "subId">
+</div>
+<button onclick="getDocument()"></button>
+
+<script>
+
+function setHostValues(elementHost) {
+	alert(elementHost);
+	console.log(elementHost);
+	var subvalue = elementHost.getElementById("subId");
+	subvalue.innerHTML = "I AM INSIDE YOU!";
+	//console.log();
+}
+
+(function() {
+	var docScope = document.currentScript.ownerDocument;
+	console.log("loading doc data");
+	docScope.getElementById("editContent");
+	console.log(docScope.querySelector("#editContent"));
+})();
+</script>
+</template>

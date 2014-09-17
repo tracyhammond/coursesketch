@@ -1,5 +1,6 @@
 package jettyMultiConnection;
 
+import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.ArrayList;
@@ -77,10 +78,16 @@ public class MultiConnectionManager {
 	 * @param req The request to send.
 	 * @param sessionID The session Id of the request.
 	 * @param connectionNumber the location of where to find the location.
+	 * @throws ConnectionException 
 	 */
-	public void send(Request req, String sessionID, Class<? extends ConnectionWrapper> connectionType) {
+	public void send(Request req, String sessionID, Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
 		Request packagedRequest = GeneralConnectionServer.Encoder.requestIDBuilder(req, sessionID);		//Attach the existing request with the UserID
-		getBestConnection(connectionType).send(packagedRequest.toByteArray());
+		try {
+			getBestConnection(connectionType).send(packagedRequest.toByteArray());
+		} catch(NullPointerException e) {
+			System.out.println("Failed to get a local connection");
+			throw new ConnectionException(e.getLocalizedMessage());
+		}
 	}
 
 	/**
@@ -94,6 +101,28 @@ public class MultiConnectionManager {
 		addConnection(connection, connectionType);
 	}
 
+	/**
+	 * Allows a server to set an action to occur when a socket is no longer able to send messages.
+	 * @param listen the source object will be a list of request and will also contain a string specifying the type of connection.
+	 * @param connectionType
+	 */
+	public void setFailedSocketListener(ActionListener listen, Class<? extends ConnectionWrapper> connectionType) {
+		ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
+		if (cons == null) {
+			throw new NullPointerException("ConnectionType: "+ connectionType.getName() +" does not exist in this manager");
+		}
+		for (ConnectionWrapper con : cons) {
+			con.setFailedSocketListener(listen);
+		}
+	}
+
+	/**
+	 * Drops all of the connections then adds them all back
+	 */
+	protected void reconnect() {
+		this.dropAllConnection(true, false);
+		this.connectServers(parent);
+	}
 
 	/**
 	 * Does nothing by default.  Can be overwritten to make life easier.
@@ -137,12 +166,12 @@ public class MultiConnectionManager {
 	 * @param connectLocally
 	 * @return a valid connection.
 	 */
-	public ConnectionWrapper getBestConnection(Class<? extends ConnectionWrapper> connectionType){
-		System.out.println("getting Connection from type: " + connectionType);
+	public ConnectionWrapper getBestConnection(Class<? extends ConnectionWrapper> connectionType) {
 		ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
 		if (cons == null) {
 			throw new NullPointerException("ConnectionType: "+ connectionType.getName() +" does not exist in this manager");
 		}
+		System.out.println("getting Connection: " + connectionType.getSimpleName());
 		return cons.get(0); // lame best connection.
 	}
 

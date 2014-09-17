@@ -24,24 +24,10 @@ public final class ProxyServlet extends GeneralConnectionServlet {
 	protected final MultiConnectionManager createConnectionManager(boolean connectLocally, boolean secure) {
 		return new ProxyConnectionManager(connectionServer, connectLocally, secure);
 	}
-}
 
-/*
- * @Override
-213	 	
--	public boolean parseCommand(String command, BufferedReader sysin) throws Exception {
-214	 	
--		if (super.parseCommand(command, sysin)) return true;
-215	 	
--		if (command.equals("connectionNumber")) {
-216	 	
--			System.out.println(this.getCurrentConnectionNumber());
-217	 	
--			return true;
-218	 	
--		}
-219	 	
--		return false;
-220	 	
--	}
-*/
+	@Override
+	public void reconnect() {
+		super.reconnect();
+		((ProxyServer) connectionServer).initializeListeners();
+	}
+}

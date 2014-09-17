@@ -219,6 +219,51 @@ public final class School {
      */
     protobuf.srl.school.School.SrlBankProblemOrBuilder getBankProblemsOrBuilder(
         int index);
+
+    // repeated .protobuf.srl.school.SrlGrade grades = 5;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    java.util.List<protobuf.srl.school.School.SrlGrade> 
+        getGradesList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    protobuf.srl.school.School.SrlGrade getGrades(int index);
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    int getGradesCount();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    java.util.List<? extends protobuf.srl.school.School.SrlGradeOrBuilder> 
+        getGradesOrBuilderList();
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    protobuf.srl.school.School.SrlGradeOrBuilder getGradesOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code protobuf.srl.school.SrlSchool}
@@ -307,6 +352,14 @@ public final class School {
               bankProblems_.add(input.readMessage(protobuf.srl.school.School.SrlBankProblem.PARSER, extensionRegistry));
               break;
             }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                grades_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGrade>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              grades_.add(input.readMessage(protobuf.srl.school.School.SrlGrade.PARSER, extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -326,6 +379,9 @@ public final class School {
         }
         if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
           bankProblems_ = java.util.Collections.unmodifiableList(bankProblems_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          grades_ = java.util.Collections.unmodifiableList(grades_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -502,11 +558,68 @@ public final class School {
       return bankProblems_.get(index);
     }
 
+    // repeated .protobuf.srl.school.SrlGrade grades = 5;
+    public static final int GRADES_FIELD_NUMBER = 5;
+    private java.util.List<protobuf.srl.school.School.SrlGrade> grades_;
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    public java.util.List<protobuf.srl.school.School.SrlGrade> getGradesList() {
+      return grades_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    public java.util.List<? extends protobuf.srl.school.School.SrlGradeOrBuilder> 
+        getGradesOrBuilderList() {
+      return grades_;
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    public int getGradesCount() {
+      return grades_.size();
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    public protobuf.srl.school.School.SrlGrade getGrades(int index) {
+      return grades_.get(index);
+    }
+    /**
+     * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+     *
+     * <pre>
+     *repeated SrlBankGrade bankGrades = 6; //????
+     * </pre>
+     */
+    public protobuf.srl.school.School.SrlGradeOrBuilder getGradesOrBuilder(
+        int index) {
+      return grades_.get(index);
+    }
+
     private void initFields() {
       courses_ = java.util.Collections.emptyList();
       assignments_ = java.util.Collections.emptyList();
       problems_ = java.util.Collections.emptyList();
       bankProblems_ = java.util.Collections.emptyList();
+      grades_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -537,6 +650,12 @@ public final class School {
           return false;
         }
       }
+      for (int i = 0; i < getGradesCount(); i++) {
+        if (!getGrades(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -555,6 +674,9 @@ public final class School {
       }
       for (int i = 0; i < bankProblems_.size(); i++) {
         output.writeMessage(4, bankProblems_.get(i));
+      }
+      for (int i = 0; i < grades_.size(); i++) {
+        output.writeMessage(5, grades_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -580,6 +702,10 @@ public final class School {
       for (int i = 0; i < bankProblems_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, bankProblems_.get(i));
+      }
+      for (int i = 0; i < grades_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, grades_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -697,6 +823,7 @@ public final class School {
           getAssignmentsFieldBuilder();
           getProblemsFieldBuilder();
           getBankProblemsFieldBuilder();
+          getGradesFieldBuilder();
         }
       }
       private static Builder create() {
@@ -729,6 +856,12 @@ public final class School {
         } else {
           bankProblemsBuilder_.clear();
         }
+        if (gradesBuilder_ == null) {
+          grades_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          gradesBuilder_.clear();
+        }
         return this;
       }
 
@@ -755,8 +888,7 @@ public final class School {
 
       public protobuf.srl.school.School.SrlSchool buildPartial() {
         protobuf.srl.school.School.SrlSchool result = new protobuf.srl.school.School.SrlSchool(this);
-        @SuppressWarnings("unused")
-		int from_bitField0_ = bitField0_;
+        int from_bitField0_ = bitField0_;
         if (coursesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             courses_ = java.util.Collections.unmodifiableList(courses_);
@@ -792,6 +924,15 @@ public final class School {
           result.bankProblems_ = bankProblems_;
         } else {
           result.bankProblems_ = bankProblemsBuilder_.build();
+        }
+        if (gradesBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            grades_ = java.util.Collections.unmodifiableList(grades_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.grades_ = grades_;
+        } else {
+          result.grades_ = gradesBuilder_.build();
         }
         onBuilt();
         return result;
@@ -912,6 +1053,32 @@ public final class School {
             }
           }
         }
+        if (gradesBuilder_ == null) {
+          if (!other.grades_.isEmpty()) {
+            if (grades_.isEmpty()) {
+              grades_ = other.grades_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureGradesIsMutable();
+              grades_.addAll(other.grades_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.grades_.isEmpty()) {
+            if (gradesBuilder_.isEmpty()) {
+              gradesBuilder_.dispose();
+              gradesBuilder_ = null;
+              grades_ = other.grades_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              gradesBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getGradesFieldBuilder() : null;
+            } else {
+              gradesBuilder_.addAllMessages(other.grades_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -937,6 +1104,12 @@ public final class School {
         }
         for (int i = 0; i < getBankProblemsCount(); i++) {
           if (!getBankProblems(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getGradesCount(); i++) {
+          if (!getGrades(i).isInitialized()) {
             
             return false;
           }
@@ -1921,6 +2094,318 @@ public final class School {
           bankProblems_ = null;
         }
         return bankProblemsBuilder_;
+      }
+
+      // repeated .protobuf.srl.school.SrlGrade grades = 5;
+      private java.util.List<protobuf.srl.school.School.SrlGrade> grades_ =
+        java.util.Collections.emptyList();
+      private void ensureGradesIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          grades_ = new java.util.ArrayList<protobuf.srl.school.School.SrlGrade>(grades_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlGrade, protobuf.srl.school.School.SrlGrade.Builder, protobuf.srl.school.School.SrlGradeOrBuilder> gradesBuilder_;
+
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlGrade> getGradesList() {
+        if (gradesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(grades_);
+        } else {
+          return gradesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public int getGradesCount() {
+        if (gradesBuilder_ == null) {
+          return grades_.size();
+        } else {
+          return gradesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public protobuf.srl.school.School.SrlGrade getGrades(int index) {
+        if (gradesBuilder_ == null) {
+          return grades_.get(index);
+        } else {
+          return gradesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public Builder setGrades(
+          int index, protobuf.srl.school.School.SrlGrade value) {
+        if (gradesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureGradesIsMutable();
+          grades_.set(index, value);
+          onChanged();
+        } else {
+          gradesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public Builder setGrades(
+          int index, protobuf.srl.school.School.SrlGrade.Builder builderForValue) {
+        if (gradesBuilder_ == null) {
+          ensureGradesIsMutable();
+          grades_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          gradesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public Builder addGrades(protobuf.srl.school.School.SrlGrade value) {
+        if (gradesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureGradesIsMutable();
+          grades_.add(value);
+          onChanged();
+        } else {
+          gradesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public Builder addGrades(
+          int index, protobuf.srl.school.School.SrlGrade value) {
+        if (gradesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureGradesIsMutable();
+          grades_.add(index, value);
+          onChanged();
+        } else {
+          gradesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public Builder addGrades(
+          protobuf.srl.school.School.SrlGrade.Builder builderForValue) {
+        if (gradesBuilder_ == null) {
+          ensureGradesIsMutable();
+          grades_.add(builderForValue.build());
+          onChanged();
+        } else {
+          gradesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public Builder addGrades(
+          int index, protobuf.srl.school.School.SrlGrade.Builder builderForValue) {
+        if (gradesBuilder_ == null) {
+          ensureGradesIsMutable();
+          grades_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          gradesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public Builder addAllGrades(
+          java.lang.Iterable<? extends protobuf.srl.school.School.SrlGrade> values) {
+        if (gradesBuilder_ == null) {
+          ensureGradesIsMutable();
+          super.addAll(values, grades_);
+          onChanged();
+        } else {
+          gradesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public Builder clearGrades() {
+        if (gradesBuilder_ == null) {
+          grades_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+        } else {
+          gradesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public Builder removeGrades(int index) {
+        if (gradesBuilder_ == null) {
+          ensureGradesIsMutable();
+          grades_.remove(index);
+          onChanged();
+        } else {
+          gradesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public protobuf.srl.school.School.SrlGrade.Builder getGradesBuilder(
+          int index) {
+        return getGradesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public protobuf.srl.school.School.SrlGradeOrBuilder getGradesOrBuilder(
+          int index) {
+        if (gradesBuilder_ == null) {
+          return grades_.get(index);  } else {
+          return gradesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public java.util.List<? extends protobuf.srl.school.School.SrlGradeOrBuilder> 
+           getGradesOrBuilderList() {
+        if (gradesBuilder_ != null) {
+          return gradesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(grades_);
+        }
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public protobuf.srl.school.School.SrlGrade.Builder addGradesBuilder() {
+        return getGradesFieldBuilder().addBuilder(
+            protobuf.srl.school.School.SrlGrade.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public protobuf.srl.school.School.SrlGrade.Builder addGradesBuilder(
+          int index) {
+        return getGradesFieldBuilder().addBuilder(
+            index, protobuf.srl.school.School.SrlGrade.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protobuf.srl.school.SrlGrade grades = 5;</code>
+       *
+       * <pre>
+       *repeated SrlBankGrade bankGrades = 6; //????
+       * </pre>
+       */
+      public java.util.List<protobuf.srl.school.School.SrlGrade.Builder> 
+           getGradesBuilderList() {
+        return getGradesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          protobuf.srl.school.School.SrlGrade, protobuf.srl.school.School.SrlGrade.Builder, protobuf.srl.school.School.SrlGradeOrBuilder> 
+          getGradesFieldBuilder() {
+        if (gradesBuilder_ == null) {
+          gradesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              protobuf.srl.school.School.SrlGrade, protobuf.srl.school.School.SrlGrade.Builder, protobuf.srl.school.School.SrlGradeOrBuilder>(
+                  grades_,
+                  ((bitField0_ & 0x00000010) == 0x00000010),
+                  getParentForChildren(),
+                  isClean());
+          grades_ = null;
+        }
+        return gradesBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlSchool)
@@ -5369,8 +5854,7 @@ public final class School {
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         initFields();
-        @SuppressWarnings("unused")
-		int mutable_bitField0_ = 0;
+        int mutable_bitField0_ = 0;
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
             com.google.protobuf.UnknownFieldSet.newBuilder();
         try {
@@ -9431,8 +9915,7 @@ public final class School {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      @SuppressWarnings("unused")
-	int mutable_bitField0_ = 0;
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -13568,6 +14051,894 @@ public final class School {
     // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlBankProblem)
   }
 
+  public interface SrlGradeOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required string id = 1;
+    /**
+     * <code>required string id = 1;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>required string id = 1;</code>
+     */
+    java.lang.String getId();
+    /**
+     * <code>required string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
+
+    // required string problemId = 2;
+    /**
+     * <code>required string problemId = 2;</code>
+     */
+    boolean hasProblemId();
+    /**
+     * <code>required string problemId = 2;</code>
+     */
+    java.lang.String getProblemId();
+    /**
+     * <code>required string problemId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getProblemIdBytes();
+
+    // required float grade = 3;
+    /**
+     * <code>required float grade = 3;</code>
+     */
+    boolean hasGrade();
+    /**
+     * <code>required float grade = 3;</code>
+     */
+    float getGrade();
+
+    // optional string comment = 4;
+    /**
+     * <code>optional string comment = 4;</code>
+     */
+    boolean hasComment();
+    /**
+     * <code>optional string comment = 4;</code>
+     */
+    java.lang.String getComment();
+    /**
+     * <code>optional string comment = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getCommentBytes();
+  }
+  /**
+   * Protobuf type {@code protobuf.srl.school.SrlGrade}
+   */
+  public static final class SrlGrade extends
+      com.google.protobuf.GeneratedMessage
+      implements SrlGradeOrBuilder {
+    // Use SrlGrade.newBuilder() to construct.
+    private SrlGrade(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SrlGrade(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SrlGrade defaultInstance;
+    public static SrlGrade getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SrlGrade getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SrlGrade(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              id_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              problemId_ = input.readBytes();
+              break;
+            }
+            case 29: {
+              bitField0_ |= 0x00000004;
+              grade_ = input.readFloat();
+              break;
+            }
+            case 34: {
+              bitField0_ |= 0x00000008;
+              comment_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGrade_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGrade_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protobuf.srl.school.School.SrlGrade.class, protobuf.srl.school.School.SrlGrade.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SrlGrade> PARSER =
+        new com.google.protobuf.AbstractParser<SrlGrade>() {
+      public SrlGrade parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SrlGrade(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SrlGrade> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required string id = 1;
+    public static final int ID_FIELD_NUMBER = 1;
+    private java.lang.Object id_;
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          id_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // required string problemId = 2;
+    public static final int PROBLEMID_FIELD_NUMBER = 2;
+    private java.lang.Object problemId_;
+    /**
+     * <code>required string problemId = 2;</code>
+     */
+    public boolean hasProblemId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string problemId = 2;</code>
+     */
+    public java.lang.String getProblemId() {
+      java.lang.Object ref = problemId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          problemId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string problemId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getProblemIdBytes() {
+      java.lang.Object ref = problemId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        problemId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // required float grade = 3;
+    public static final int GRADE_FIELD_NUMBER = 3;
+    private float grade_;
+    /**
+     * <code>required float grade = 3;</code>
+     */
+    public boolean hasGrade() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required float grade = 3;</code>
+     */
+    public float getGrade() {
+      return grade_;
+    }
+
+    // optional string comment = 4;
+    public static final int COMMENT_FIELD_NUMBER = 4;
+    private java.lang.Object comment_;
+    /**
+     * <code>optional string comment = 4;</code>
+     */
+    public boolean hasComment() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string comment = 4;</code>
+     */
+    public java.lang.String getComment() {
+      java.lang.Object ref = comment_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          comment_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string comment = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCommentBytes() {
+      java.lang.Object ref = comment_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        comment_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private void initFields() {
+      id_ = "";
+      problemId_ = "";
+      grade_ = 0F;
+      comment_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasProblemId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasGrade()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getProblemIdBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeFloat(3, grade_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(4, getCommentBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getIdBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getProblemIdBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(3, grade_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, getCommentBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static protobuf.srl.school.School.SrlGrade parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.school.School.SrlGrade parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlGrade parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protobuf.srl.school.School.SrlGrade parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlGrade parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlGrade parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlGrade parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlGrade parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static protobuf.srl.school.School.SrlGrade parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static protobuf.srl.school.School.SrlGrade parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(protobuf.srl.school.School.SrlGrade prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protobuf.srl.school.SrlGrade}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements protobuf.srl.school.School.SrlGradeOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGrade_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGrade_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protobuf.srl.school.School.SrlGrade.class, protobuf.srl.school.School.SrlGrade.Builder.class);
+      }
+
+      // Construct using protobuf.srl.school.School.SrlGrade.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        id_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        problemId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        grade_ = 0F;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        comment_ = "";
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protobuf.srl.school.School.internal_static_protobuf_srl_school_SrlGrade_descriptor;
+      }
+
+      public protobuf.srl.school.School.SrlGrade getDefaultInstanceForType() {
+        return protobuf.srl.school.School.SrlGrade.getDefaultInstance();
+      }
+
+      public protobuf.srl.school.School.SrlGrade build() {
+        protobuf.srl.school.School.SrlGrade result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protobuf.srl.school.School.SrlGrade buildPartial() {
+        protobuf.srl.school.School.SrlGrade result = new protobuf.srl.school.School.SrlGrade(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.problemId_ = problemId_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.grade_ = grade_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.comment_ = comment_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protobuf.srl.school.School.SrlGrade) {
+          return mergeFrom((protobuf.srl.school.School.SrlGrade)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protobuf.srl.school.School.SrlGrade other) {
+        if (other == protobuf.srl.school.School.SrlGrade.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          bitField0_ |= 0x00000001;
+          id_ = other.id_;
+          onChanged();
+        }
+        if (other.hasProblemId()) {
+          bitField0_ |= 0x00000002;
+          problemId_ = other.problemId_;
+          onChanged();
+        }
+        if (other.hasGrade()) {
+          setGrade(other.getGrade());
+        }
+        if (other.hasComment()) {
+          bitField0_ |= 0x00000008;
+          comment_ = other.comment_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          
+          return false;
+        }
+        if (!hasProblemId()) {
+          
+          return false;
+        }
+        if (!hasGrade()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protobuf.srl.school.School.SrlGrade parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protobuf.srl.school.School.SrlGrade) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required string id = 1;
+      private java.lang.Object id_ = "";
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          id_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder clearId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+
+      // required string problemId = 2;
+      private java.lang.Object problemId_ = "";
+      /**
+       * <code>required string problemId = 2;</code>
+       */
+      public boolean hasProblemId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string problemId = 2;</code>
+       */
+      public java.lang.String getProblemId() {
+        java.lang.Object ref = problemId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          problemId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string problemId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getProblemIdBytes() {
+        java.lang.Object ref = problemId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          problemId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string problemId = 2;</code>
+       */
+      public Builder setProblemId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        problemId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string problemId = 2;</code>
+       */
+      public Builder clearProblemId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        problemId_ = getDefaultInstance().getProblemId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string problemId = 2;</code>
+       */
+      public Builder setProblemIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        problemId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // required float grade = 3;
+      private float grade_ ;
+      /**
+       * <code>required float grade = 3;</code>
+       */
+      public boolean hasGrade() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required float grade = 3;</code>
+       */
+      public float getGrade() {
+        return grade_;
+      }
+      /**
+       * <code>required float grade = 3;</code>
+       */
+      public Builder setGrade(float value) {
+        bitField0_ |= 0x00000004;
+        grade_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required float grade = 3;</code>
+       */
+      public Builder clearGrade() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        grade_ = 0F;
+        onChanged();
+        return this;
+      }
+
+      // optional string comment = 4;
+      private java.lang.Object comment_ = "";
+      /**
+       * <code>optional string comment = 4;</code>
+       */
+      public boolean hasComment() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional string comment = 4;</code>
+       */
+      public java.lang.String getComment() {
+        java.lang.Object ref = comment_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          comment_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string comment = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCommentBytes() {
+        java.lang.Object ref = comment_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          comment_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string comment = 4;</code>
+       */
+      public Builder setComment(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        comment_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string comment = 4;</code>
+       */
+      public Builder clearComment() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        comment_ = getDefaultInstance().getComment();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string comment = 4;</code>
+       */
+      public Builder setCommentBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        comment_ = value;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:protobuf.srl.school.SrlGrade)
+    }
+
+    static {
+      defaultInstance = new SrlGrade(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:protobuf.srl.school.SrlGrade)
+  }
+
   public interface DateTimeOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
@@ -13686,8 +15057,7 @@ public final class School {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      @SuppressWarnings("unused")
-	int mutable_bitField0_ = 0;
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -14546,8 +15916,7 @@ public final class School {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      @SuppressWarnings("unused")
-	int mutable_bitField0_ = 0;
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -15115,8 +16484,7 @@ public final class School {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
-      @SuppressWarnings("unused")
-	int mutable_bitField0_ = 0;
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -19026,8 +20394,7 @@ public final class School {
 
       public protobuf.srl.school.School.SrlPermission buildPartial() {
         protobuf.srl.school.School.SrlPermission result = new protobuf.srl.school.School.SrlPermission(this);
-        @SuppressWarnings("unused")
-		int from_bitField0_ = bitField0_;
+        int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           adminPermission_ = new com.google.protobuf.UnmodifiableLazyStringList(
               adminPermission_);
@@ -19439,6 +20806,11 @@ public final class School {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_protobuf_srl_school_SrlBankProblem_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_protobuf_srl_school_SrlGrade_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_protobuf_srl_school_SrlGrade_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_protobuf_srl_school_DateTime_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -19478,86 +20850,89 @@ public final class School {
   static {
     java.lang.String[] descriptorData = {
       "\n\022input/school.proto\022\023protobuf.srl.schoo" +
-      "l\"\343\001\n\tSrlSchool\022/\n\007courses\030\001 \003(\0132\036.proto" +
+      "l\"\222\002\n\tSrlSchool\022/\n\007courses\030\001 \003(\0132\036.proto" +
       "buf.srl.school.SrlCourse\0227\n\013assignments\030" +
       "\002 \003(\0132\".protobuf.srl.school.SrlAssignmen" +
       "t\0221\n\010problems\030\003 \003(\0132\037.protobuf.srl.schoo" +
       "l.SrlProblem\0229\n\014bankProblems\030\004 \003(\0132#.pro" +
-      "tobuf.srl.school.SrlBankProblem\"\377\003\n\tSrlC" +
-      "ourse\022\n\n\002id\030\001 \002(\t\022\014\n\004name\030\002 \001(\t\022<\n\020acces" +
-      "sPermission\030\003 \001(\0132\".protobuf.srl.school." +
-      "SrlPermission\022G\n\006access\030\004 \001(\0162,.protobuf",
-      ".srl.school.SrlCourse.Accessibility:\tPRO" +
-      "TECTED\022\023\n\013description\030\005 \001(\t\022\020\n\010semester\030" +
-      "\006 \001(\t\022\020\n\010imageUrl\030\007 \001(\t\022\r\n\005grade\030\010 \001(\002\0221" +
-      "\n\naccessDate\030\t \001(\0132\035.protobuf.srl.school" +
-      ".DateTime\0220\n\tcloseDate\030\n \001(\0132\035.protobuf." +
-      "srl.school.DateTime\022)\n\005state\030\013 \001(\0132\032.pro" +
-      "tobuf.srl.school.State\022\026\n\016assignmentList" +
-      "\030\014 \003(\t\"a\n\rAccessibility\022\020\n\014SUPER_PUBLIC\020" +
-      "\000\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\026\n\022PROTECTE" +
-      "D_NOSEARCH\020\003\022\013\n\007PRIVATE\020\004\"\363\007\n\rSrlAssignm",
-      "ent\022\020\n\010courseId\030\001 \002(\t\022\n\n\002id\030\002 \002(\t\022\014\n\004nam" +
-      "e\030\003 \001(\t\022I\n\004type\030\004 \001(\01621.protobuf.srl.sch" +
-      "ool.SrlAssignment.AssignmentType:\010HOMEWO" +
-      "RK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030\006 \001(\t\022\r" +
-      "\n\005links\030\007 \003(\t\022A\n\nlatePolicy\030\010 \001(\0132-.prot" +
-      "obuf.srl.school.SrlAssignment.LatePolicy" +
-      "\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005grade\030\n \001(\002\0221\n\n" +
-      "accessDate\030\013 \001(\0132\035.protobuf.srl.school.D" +
-      "ateTime\022.\n\007dueDate\030\014 \001(\0132\035.protobuf.srl." +
-      "school.DateTime\0220\n\tcloseDate\030\r \001(\0132\035.pro",
-      "tobuf.srl.school.DateTime\022)\n\005state\030\016 \001(\013" +
-      "2\032.protobuf.srl.school.State\022\020\n\010imageUrl" +
-      "\030\017 \001(\t\022\023\n\013problemList\030\020 \003(\t\022<\n\020accessPer" +
-      "mission\030\021 \001(\0132\".protobuf.srl.school.SrlP" +
-      "ermission\032\327\002\n\nLatePolicy\022a\n\014functionType" +
-      "\030\001 \002(\0162:.protobuf.srl.school.SrlAssignme" +
-      "nt.LatePolicy.FunctionType:\017WINDOW_FUNCT" +
-      "ION\022S\n\rtimeFrameType\030\002 \001(\01627.protobuf.sr" +
-      "l.school.SrlAssignment.LatePolicy.TimeFr" +
-      "ame:\003DAY\022\014\n\004rate\030\003 \001(\002\022\027\n\017subtractionTyp",
-      "e\030\004 \001(\010\">\n\014FunctionType\022\023\n\017WINDOW_FUNCTI" +
-      "ON\020\001\022\010\n\004LINE\020\002\022\017\n\013EXPONENTIAL\020\003\"*\n\tTimeF" +
-      "rame\022\007\n\003DAY\020\001\022\010\n\004HOUR\020\002\022\n\n\006MINUTE\020\003\"R\n\016A" +
-      "ssignmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QUIZ\020\002\022\007\n" +
-      "\003LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005OTHER\020\006\"" +
-      "\330\002\n\nSrlProblem\022\n\n\002id\030\001 \002(\t\022\020\n\010courseId\030\002" +
-      " \001(\t\022\024\n\014assignmentId\030\003 \001(\t\022\025\n\rproblemBan" +
-      "kId\030\004 \001(\t\022\014\n\004name\030\005 \001(\t\022\023\n\013description\030\006" +
-      " \001(\t\0228\n\013problemInfo\030\007 \001(\0132#.protobuf.srl" +
-      ".school.SrlBankProblem\022\023\n\013gradeWeight\030\010 ",
-      "\001(\t\022\r\n\005grade\030\t \001(\002\022)\n\005state\030\n \001(\0132\032.prot" +
-      "obuf.srl.school.State\022<\n\020accessPermissio" +
-      "n\030\013 \001(\0132\".protobuf.srl.school.SrlPermiss" +
-      "ion\022\025\n\rproblemNumber\030\014 \001(\005\"\374\002\n\016SrlBankPr" +
-      "oblem\022\n\n\002id\030\001 \002(\t\022\024\n\014questionText\030\002 \001(\t\022" +
-      "N\n\014questionType\030\003 \001(\01620.protobuf.srl.sch" +
-      "ool.SrlBankProblem.QuestionType:\006SKETCH\022" +
-      "\r\n\005image\030\004 \001(\t\022\022\n\nsolutionId\030\005 \001(\t\022\023\n\013co" +
-      "urseTopic\030\006 \001(\t\022\020\n\010subTopic\030\007 \001(\t\022\016\n\006sou" +
-      "rce\030\010 \001(\t\022\025\n\rotherKeywords\030\t \003(\t\022<\n\020acce",
-      "ssPermission\030\n \001(\0132\".protobuf.srl.school" +
-      ".SrlPermission\"I\n\014QuestionType\022\n\n\006SKETCH" +
-      "\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020\003\022\r\n\tCH" +
-      "ECK_BOX\020\004\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n\005m" +
-      "onth\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022\016\n" +
-      "\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013millise" +
-      "cond\030\007 \001(\004\"\"\n\021DomainInformation\022\r\n\005stuff" +
-      "\030\001 \001(\t\"s\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\nac" +
-      "cessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007start" +
-      "ed\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\022\016\n\006graded\030\006 ",
-      "\001(\010\"\215\001\n\007SrlUser\022\020\n\010username\030\001 \002(\t\022\r\n\005ema" +
-      "il\030\002 \001(\t\022\022\n\ncourseList\030\003 \003(\t\022\026\n\016schoolId" +
-      "entity\030\004 \001(\t\022\021\n\tfirstName\030\005 \001(\t\022\020\n\010lastN" +
-      "ame\030\006 \001(\t\022\020\n\010password\030\007 \001(\t\"M\n\010SrlGroup\022" +
-      "\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgrou" +
-      "pName\030\003 \001(\t\022\r\n\005admin\030\004 \003(\t\"]\n\rSrlPermiss" +
-      "ion\022\027\n\017adminPermission\030\001 \003(\t\022\033\n\023moderato" +
-      "rPermission\030\002 \003(\t\022\026\n\016userPermission\030\003 \003(" +
-      "\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR\020\002" +
-      "\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022\t\n",
-      "\005GUEST\020\005"
+      "tobuf.srl.school.SrlBankProblem\022-\n\006grade" +
+      "s\030\005 \003(\0132\035.protobuf.srl.school.SrlGrade\"\377" +
+      "\003\n\tSrlCourse\022\n\n\002id\030\001 \002(\t\022\014\n\004name\030\002 \001(\t\022<" +
+      "\n\020accessPermission\030\003 \001(\0132\".protobuf.srl.",
+      "school.SrlPermission\022G\n\006access\030\004 \001(\0162,.p" +
+      "rotobuf.srl.school.SrlCourse.Accessibili" +
+      "ty:\tPROTECTED\022\023\n\013description\030\005 \001(\t\022\020\n\010se" +
+      "mester\030\006 \001(\t\022\020\n\010imageUrl\030\007 \001(\t\022\r\n\005grade\030" +
+      "\010 \001(\002\0221\n\naccessDate\030\t \001(\0132\035.protobuf.srl" +
+      ".school.DateTime\0220\n\tcloseDate\030\n \001(\0132\035.pr" +
+      "otobuf.srl.school.DateTime\022)\n\005state\030\013 \001(" +
+      "\0132\032.protobuf.srl.school.State\022\026\n\016assignm" +
+      "entList\030\014 \003(\t\"a\n\rAccessibility\022\020\n\014SUPER_" +
+      "PUBLIC\020\000\022\n\n\006PUBLIC\020\001\022\r\n\tPROTECTED\020\002\022\026\n\022P",
+      "ROTECTED_NOSEARCH\020\003\022\013\n\007PRIVATE\020\004\"\363\007\n\rSrl" +
+      "Assignment\022\020\n\010courseId\030\001 \002(\t\022\n\n\002id\030\002 \002(\t" +
+      "\022\014\n\004name\030\003 \001(\t\022I\n\004type\030\004 \001(\01621.protobuf." +
+      "srl.school.SrlAssignment.AssignmentType:" +
+      "\010HOMEWORK\022\r\n\005other\030\005 \001(\t\022\023\n\013description\030" +
+      "\006 \001(\t\022\r\n\005links\030\007 \003(\t\022A\n\nlatePolicy\030\010 \001(\013" +
+      "2-.protobuf.srl.school.SrlAssignment.Lat" +
+      "ePolicy\022\023\n\013gradeWeight\030\t \001(\t\022\r\n\005grade\030\n " +
+      "\001(\002\0221\n\naccessDate\030\013 \001(\0132\035.protobuf.srl.s" +
+      "chool.DateTime\022.\n\007dueDate\030\014 \001(\0132\035.protob",
+      "uf.srl.school.DateTime\0220\n\tcloseDate\030\r \001(" +
+      "\0132\035.protobuf.srl.school.DateTime\022)\n\005stat" +
+      "e\030\016 \001(\0132\032.protobuf.srl.school.State\022\020\n\010i" +
+      "mageUrl\030\017 \001(\t\022\023\n\013problemList\030\020 \003(\t\022<\n\020ac" +
+      "cessPermission\030\021 \001(\0132\".protobuf.srl.scho" +
+      "ol.SrlPermission\032\327\002\n\nLatePolicy\022a\n\014funct" +
+      "ionType\030\001 \002(\0162:.protobuf.srl.school.SrlA" +
+      "ssignment.LatePolicy.FunctionType:\017WINDO" +
+      "W_FUNCTION\022S\n\rtimeFrameType\030\002 \001(\01627.prot" +
+      "obuf.srl.school.SrlAssignment.LatePolicy",
+      ".TimeFrame:\003DAY\022\014\n\004rate\030\003 \001(\002\022\027\n\017subtrac" +
+      "tionType\030\004 \001(\010\">\n\014FunctionType\022\023\n\017WINDOW" +
+      "_FUNCTION\020\001\022\010\n\004LINE\020\002\022\017\n\013EXPONENTIAL\020\003\"*" +
+      "\n\tTimeFrame\022\007\n\003DAY\020\001\022\010\n\004HOUR\020\002\022\n\n\006MINUTE" +
+      "\020\003\"R\n\016AssignmentType\022\014\n\010HOMEWORK\020\001\022\010\n\004QU" +
+      "IZ\020\002\022\007\n\003LAB\020\003\022\010\n\004EXAM\020\004\022\n\n\006SURVEY\020\005\022\t\n\005O" +
+      "THER\020\006\"\330\002\n\nSrlProblem\022\n\n\002id\030\001 \002(\t\022\020\n\010cou" +
+      "rseId\030\002 \001(\t\022\024\n\014assignmentId\030\003 \001(\t\022\025\n\rpro" +
+      "blemBankId\030\004 \001(\t\022\014\n\004name\030\005 \001(\t\022\023\n\013descri" +
+      "ption\030\006 \001(\t\0228\n\013problemInfo\030\007 \001(\0132#.proto",
+      "buf.srl.school.SrlBankProblem\022\023\n\013gradeWe" +
+      "ight\030\010 \001(\t\022\r\n\005grade\030\t \001(\002\022)\n\005state\030\n \001(\013" +
+      "2\032.protobuf.srl.school.State\022<\n\020accessPe" +
+      "rmission\030\013 \001(\0132\".protobuf.srl.school.Srl" +
+      "Permission\022\025\n\rproblemNumber\030\014 \001(\005\"\374\002\n\016Sr" +
+      "lBankProblem\022\n\n\002id\030\001 \002(\t\022\024\n\014questionText" +
+      "\030\002 \001(\t\022N\n\014questionType\030\003 \001(\01620.protobuf." +
+      "srl.school.SrlBankProblem.QuestionType:\006" +
+      "SKETCH\022\r\n\005image\030\004 \001(\t\022\022\n\nsolutionId\030\005 \001(" +
+      "\t\022\023\n\013courseTopic\030\006 \001(\t\022\020\n\010subTopic\030\007 \001(\t",
+      "\022\016\n\006source\030\010 \001(\t\022\025\n\rotherKeywords\030\t \003(\t\022" +
+      "<\n\020accessPermission\030\n \001(\0132\".protobuf.srl" +
+      ".school.SrlPermission\"I\n\014QuestionType\022\n\n" +
+      "\006SKETCH\020\001\022\017\n\013MULT_CHOICE\020\002\022\r\n\tFREE_RESP\020" +
+      "\003\022\r\n\tCHECK_BOX\020\004\"I\n\010SrlGrade\022\n\n\002id\030\001 \002(\t" +
+      "\022\021\n\tproblemId\030\002 \002(\t\022\r\n\005grade\030\003 \002(\002\022\017\n\007co" +
+      "mment\030\004 \001(\t\"w\n\010DateTime\022\014\n\004year\030\001 \001(\005\022\r\n" +
+      "\005month\030\002 \001(\005\022\013\n\003day\030\003 \001(\005\022\014\n\004hour\030\004 \001(\005\022" +
+      "\016\n\006minute\030\005 \001(\005\022\016\n\006second\030\006 \001(\005\022\023\n\013milli" +
+      "second\030\007 \001(\004\"\"\n\021DomainInformation\022\r\n\005stu",
+      "ff\030\001 \001(\t\"s\n\005State\022\021\n\tpublished\030\001 \001(\010\022\022\n\n" +
+      "accessible\030\002 \001(\010\022\017\n\007pastDue\030\003 \001(\010\022\017\n\007sta" +
+      "rted\030\004 \001(\010\022\021\n\tcompleted\030\005 \001(\010\022\016\n\006graded\030" +
+      "\006 \001(\010\"\215\001\n\007SrlUser\022\020\n\010username\030\001 \002(\t\022\r\n\005e" +
+      "mail\030\002 \001(\t\022\022\n\ncourseList\030\003 \003(\t\022\026\n\016school" +
+      "Identity\030\004 \001(\t\022\021\n\tfirstName\030\005 \001(\t\022\020\n\010las" +
+      "tName\030\006 \001(\t\022\020\n\010password\030\007 \001(\t\"M\n\010SrlGrou" +
+      "p\022\016\n\006userId\030\001 \003(\t\022\017\n\007groupId\030\002 \002(\t\022\021\n\tgr" +
+      "oupName\030\003 \001(\t\022\r\n\005admin\030\004 \003(\t\"]\n\rSrlPermi" +
+      "ssion\022\027\n\017adminPermission\030\001 \003(\t\022\033\n\023modera",
+      "torPermission\030\002 \003(\t\022\026\n\016userPermission\030\003 " +
+      "\003(\t*U\n\010UserType\022\t\n\005ADMIN\020\001\022\016\n\nINSTRUCTOR" +
+      "\020\002\022\026\n\022TEACHING_ASSISTANT\020\003\022\013\n\007STUDENT\020\004\022" +
+      "\t\n\005GUEST\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -19569,7 +20944,7 @@ public final class School {
           internal_static_protobuf_srl_school_SrlSchool_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlSchool_descriptor,
-              new java.lang.String[] { "Courses", "Assignments", "Problems", "BankProblems", });
+              new java.lang.String[] { "Courses", "Assignments", "Problems", "BankProblems", "Grades", });
           internal_static_protobuf_srl_school_SrlCourse_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_srl_school_SrlCourse_fieldAccessorTable = new
@@ -19600,38 +20975,44 @@ public final class School {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlBankProblem_descriptor,
               new java.lang.String[] { "Id", "QuestionText", "QuestionType", "Image", "SolutionId", "CourseTopic", "SubTopic", "Source", "OtherKeywords", "AccessPermission", });
-          internal_static_protobuf_srl_school_DateTime_descriptor =
+          internal_static_protobuf_srl_school_SrlGrade_descriptor =
             getDescriptor().getMessageTypes().get(5);
+          internal_static_protobuf_srl_school_SrlGrade_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_protobuf_srl_school_SrlGrade_descriptor,
+              new java.lang.String[] { "Id", "ProblemId", "Grade", "Comment", });
+          internal_static_protobuf_srl_school_DateTime_descriptor =
+            getDescriptor().getMessageTypes().get(6);
           internal_static_protobuf_srl_school_DateTime_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_DateTime_descriptor,
               new java.lang.String[] { "Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond", });
           internal_static_protobuf_srl_school_DomainInformation_descriptor =
-            getDescriptor().getMessageTypes().get(6);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_protobuf_srl_school_DomainInformation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_DomainInformation_descriptor,
               new java.lang.String[] { "Stuff", });
           internal_static_protobuf_srl_school_State_descriptor =
-            getDescriptor().getMessageTypes().get(7);
+            getDescriptor().getMessageTypes().get(8);
           internal_static_protobuf_srl_school_State_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_State_descriptor,
               new java.lang.String[] { "Published", "Accessible", "PastDue", "Started", "Completed", "Graded", });
           internal_static_protobuf_srl_school_SrlUser_descriptor =
-            getDescriptor().getMessageTypes().get(8);
+            getDescriptor().getMessageTypes().get(9);
           internal_static_protobuf_srl_school_SrlUser_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlUser_descriptor,
               new java.lang.String[] { "Username", "Email", "CourseList", "SchoolIdentity", "FirstName", "LastName", "Password", });
           internal_static_protobuf_srl_school_SrlGroup_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(10);
           internal_static_protobuf_srl_school_SrlGroup_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlGroup_descriptor,
               new java.lang.String[] { "UserId", "GroupId", "GroupName", "Admin", });
           internal_static_protobuf_srl_school_SrlPermission_descriptor =
-            getDescriptor().getMessageTypes().get(10);
+            getDescriptor().getMessageTypes().get(11);
           internal_static_protobuf_srl_school_SrlPermission_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_srl_school_SrlPermission_descriptor,

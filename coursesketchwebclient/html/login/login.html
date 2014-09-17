@@ -9,6 +9,9 @@
 		<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
         <script type="text/javascript" src="js/connection/connection_library.js"></script>
     	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    	<script type="text/javascript">
+    		var loader = new DynamicFileLoader(this);
+    	</script>
     	<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"
     	onerror = "loader.replaceFile('sha3.js', 'js/connection/libraries/crypto.js', 'js');"></script>
     	<link rel="stylesheet" href="css/utility/toggleswitch.css">

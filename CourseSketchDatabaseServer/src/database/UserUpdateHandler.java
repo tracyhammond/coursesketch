@@ -101,7 +101,9 @@ public class UserUpdateHandler {
 	/**
 	 * Retrieves all the updates for a given user and returns them as a
 	 * {@link SrlSchool} item.
-	 * 
+	 *
+	 * TODO: handle the case when an update is create for an assignment that does not exist.
+	 *
 	 * @param dbs
 	 *            The database to get the information from.
 	 * @param userId

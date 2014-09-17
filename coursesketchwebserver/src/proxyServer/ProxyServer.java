@@ -9,16 +9,25 @@ import internalConnections.RecognitionConnection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.Set;
 
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+
+
+
+import jettyMultiConnection.ConnectionException;
+import jettyMultiConnection.ConnectionWrapper;
 import jettyMultiConnection.GeneralConnectionServer;
 import jettyMultiConnection.GeneralConnectionServlet;
 import jettyMultiConnection.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
 import org.joda.time.DateTime;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
@@ -46,9 +55,24 @@ public class ProxyServer extends GeneralConnectionServer {
 		ActionListener listener = new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
-				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
-				getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
+
+				try {
+					getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
+				} catch (ConnectionException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerConnection.class);
+				} catch (ConnectionException e1) {
+					e1.printStackTrace();
+				}
+				/*
+				try {
+					getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, RecognitionConnection.class);
+				} catch (ConnectionException e1) {
+					e1.printStackTrace();
+				}
+				// */
 				Set<Session> conns=connectionToId.keySet();
 				for(Session conn:conns)
 				{	
@@ -60,13 +84,9 @@ public class ProxyServer extends GeneralConnectionServer {
 	}
 
 	@Override
-	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-		super.onOpen(conn, handshake);
-		Set<Session> conns=connectionToId.keySet();
-		for(Session clientconn:conns)
-		{	
-			send(clientconn, TimeManager.serverSendTimeToClient());
-		}
+	public void onOpen(Session conn) {
+		super.onOpen(conn);
+		send(conn, TimeManager.serverSendTimeToClient());
 	}
 	
 	/**
@@ -114,6 +134,7 @@ public class ProxyServer extends GeneralConnectionServer {
 				try {
 					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
 				} catch(Exception e) {
+					e.printStackTrace();
 					send(conn, createBadConnectionResponse(req, AnswerConnection.class));
 				}
 				return;
@@ -125,6 +146,7 @@ public class ProxyServer extends GeneralConnectionServer {
 				try {
 					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
 				} catch(Exception e) {
+					e.printStackTrace();
 					send(conn, createBadConnectionResponse(req, DataConnection.class));
 				}
 				return;
@@ -141,7 +163,40 @@ public class ProxyServer extends GeneralConnectionServer {
 		return new ProxyConnectionState(Encoder.nextID().toString());
 	}
 
+	@Override
 	public String getName() {
-    	return "Proxy Socket";
+    	return "Proxy";
     }
+
+	/**
+	 * Creates the listener that happens when the server fails to communicate to another websocket.
+	 *
+	 * This is typically the case
+	 */
+	public void initializeListeners() {
+		System.out.println("Creating the socket failed listeners for the server");
+		ActionListener listen = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.err.println("Looking at the failed messages");
+				ArrayList<ByteBuffer> failedMessages = (ArrayList<ByteBuffer>) e.getSource();
+				for (ByteBuffer message : failedMessages) {
+					try {
+						Request req = Request.parseFrom(message.array());
+						MultiConnectionState state = getIdToState().get(req.getSessionInfo());
+						Class<? extends ConnectionWrapper> classType = (Class<? extends ConnectionWrapper>) Class.forName(e.getActionCommand());
+						Request result = createBadConnectionResponse(req, classType);
+						send(getIdToConnection().get(state), result);
+					} catch (InvalidProtocolBufferException e1) {
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		};
+		this.getConnectionManager().setFailedSocketListener(listen, AnswerConnection.class);
+		this.getConnectionManager().setFailedSocketListener(listen, DataConnection.class);
+		this.getConnectionManager().setFailedSocketListener(listen, LoginConnection.class);
+	}
 }
