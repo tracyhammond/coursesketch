@@ -3,9 +3,9 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.MultiConnectionState;
-import jettyMultiConnection.ConnectionWrapper;
+import multiconnection.ConnectionWrapper;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;

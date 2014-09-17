@@ -1,9 +1,8 @@
 package connection;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.MultiConnectionManager;
+import multiconnection.ConnectionWrapper;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */

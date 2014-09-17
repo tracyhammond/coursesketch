@@ -3,17 +3,18 @@ package internalConnection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
+import multiconnection.ConnectionWrapper;
+import multiconnection.GeneralConnectionServer;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
-import protobuf.srl.submission.Submission.SrlExperiment;
-import protobuf.srl.submission.Submission.SrlSolution;
+// import protobuf.srl.submission.Submission.SrlExperiment;
+// import protobuf.srl.submission.Submission.SrlSolution;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+// simport com.google.protobuf.InvalidProtocolBufferException;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
@@ -33,13 +34,13 @@ public class SubmissionConnection extends ConnectionWrapper {
 		AnswerConnectionState state = (AnswerConnectionState) getStateFromId(sessionInfo[1]);
 		System.out.println(state);
 		if (req.getRequestType() == MessageType.DATA_REQUEST) {
-			SrlExperiment expr = state.getExperiment(sessionInfo[1]);
-			SrlSolution sol = null;
-			try {
+			// SrlExperiment expr = state.getExperiment(sessionInfo[1]);
+			// SrlSolution sol = null;
+			/*try {
 				sol = SrlSolution.parseFrom(req.getOtherData());
 			} catch (InvalidProtocolBufferException e) {
 				e.printStackTrace();
-			}
+			}*/
 			// FIXME: implement comparison.
 			// this could take a very very long time!
 
