@@ -1,0 +1,53 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/sketching/sketchInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/sketching/sketchSurface.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<div id="sketchLocationCreator"></div>
+
+	<script>
+        QUnit.module("sketchSurface");
+        QUnit.test("test creation", function(assert) {
+            expect(0);
+            var sketch = new SketchSurface();
+        });
+        QUnit.test("test getting an SrlSketch", function(assert) {
+            var sketch = new SketchSurface();
+            var srlSketch = sketch.getSrlSketch();
+            assert.ok(srlSketch instanceof SRL_Sketch);
+        });
+
+        QUnit.test("binding update list", function(assert) {
+            var sketch = new SketchSurface();
+            var srlSketch = sketch.bindToUpdateList({});
+            assert.throws(function() {
+                sketch.bindToUpdateList({});
+            });
+        });
+        
+        QUnit.module("tagCreation", {
+            tearDown: function() {
+                document.getElementById("sketchLocationCreator").innerHTML = "";
+            }
+        });
+        QUnit.test("tag creation", function(assert) {
+            var container = document.getElementById("sketchLocationCreator");
+            var oddity = document.createElement("sketch-surface");
+            container.appendChild(oddity);
+        });
+    </script>
+	<script>
+        
+    </script>
+</body>

@@ -515,7 +515,7 @@
 
             PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            
+
             var updateList = updateList.getUpdateList();
             console.log(updateList);
             assert.equal(6, updateList.length);
