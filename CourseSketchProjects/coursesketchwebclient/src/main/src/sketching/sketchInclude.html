@@ -1,38 +1,56 @@
 <html>
 <head>
-<link id="sketchSurfaceImport" rel="import" href="sketchSurface.html">
+<!-- Utilities -->
+<script src="/src/utilities/base.js"></script>
+<script src="/src/utilities/objectAndInheritance.js"></script>
+<link rel="import" href="/src/utilities/includes/protobufInclude.html">
+
+<!-- Srl library -->
+<link rel="import" href="srl/srlLibraryInclude.html">
+
+<!-- adapters -->
+<script src="adapters/sketchToProtobufAdapter.js"></script>
+
+<!-- input -->
+<script src="input/touch_event.js"></script>
+<script src="input/sketchingEventConverter.js"></script>
+
+<!-- sketch surface -->
+<link id="sketchSurfaceImport" rel="import"
+	href="/src/sketching/sketchSurface.html">
 <script src="sketchSurface.js"></script>
-<script src="sketching.js"></script>
+<script src="sketchSurfaceManager.js"></script>
 <meta charset="UTF-8">
 <script>
-	(function() {
-		var importDoc = document.currentScript.ownerDocument; 
-		var link = importDoc.querySelector('#sketchSurfaceImport');
-		alert(link);
+    var importDoc = document.currentScript.ownerDocument;
+    window.addEventListener('load', function() {
+        console.log("WHAT?");
 
-		var template = link.import.querySelector('template');
+        console.log(event);
+        var link = importDoc.querySelector('#sketchSurfaceImport');
+        console.log("LINK");
+        console.log(link);
+        var importStuff = link.import;
+        console.log("import");
+        console.log(importStuff);
+        var template = link.import.querySelector('template');
 
-		alert(template);
-		var newElement = new sketchSurface();
+        var newElement = new SketchSurface();
 
-		newElement.createdCallback = function() {
+        newElement.createdCallback = function() {
+            // import template into
+            var clone = document.importNode(template.content, true);
 
-			// get template in import
-			//	var template = importDoc.querySelector('#'
-			//			+ SKETCHING_HANDLER.getSketchTemplateId());
-			alert(template);
+            var root = this.createShadowRoot();
+            this.setRoot(root);
+            root.appendChild(clone);
+            this.initialize(InputListener, SketchEventConverter);
+        };
 
-			// import template into
-			var clone = document.importNode(template.content, true);
-
-			var root = this.createShadowRoot();
-			root.appendChild(clone);
-		};
-
-		document.registerElement('sketch-surface', {
-			prototype : newElement
-		});
-	})();
+        document.registerElement('sketch-surface', {
+            prototype : newElement
+        });
+    }, false);
 </script>
 </head>
 </html>
