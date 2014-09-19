@@ -27,10 +27,19 @@ UndoRedoException.prototype = new UpdateException();
  * @param onError
  *            {Function} A method that is called when an error occurs
  */
-function UpdateManager(inputSketch, onError) {
+function UpdateManager(inputSketch, onError, sketchManager) {
 
+    /**
+     * The current sketch object that is being used by the update list (this may
+     * switch multiple times)
+     */
     var sketch = inputSketch;
-    var currentSketchId = sketch.Id;
+
+    /**
+     * the id of the current sketch that is being used by the update list (this
+     * may switch multiple times)
+     */
+    var currentSketchId;
 
     /**
      * holds a state of updates (for undoing and redoing)
@@ -125,6 +134,17 @@ function UpdateManager(inputSketch, onError) {
     };
 
     /**
+     * Switches to a certain sketch with the given Id
+     */
+    function switchToSketch(id) {
+        if (isUndefined(sketchManager)) {
+            throw new UpdateException("Can not switch sketch with an invalid manager");
+        }
+        sketch = sketchManager.getSketch(id);
+        currentSketchId = id;
+    }
+
+    /**
      * Generates a marker that can be used for marking things.
      * 
      * Returns the result as a Command.
@@ -194,6 +214,10 @@ function UpdateManager(inputSketch, onError) {
      * @returns {boolean} true if the object needs to be redrawn.
      */
     function executeUpdate(update) {
+        update.sketchId = currentSketchId;
+        if (update.getCommands().length <= 0) {
+            throw new UpdateException("Can not execute an empty update.");
+        }
         var command = update.getCommands()[0].commandType;
         if (skippingMarkerMode) {
             updateList.push(update);
@@ -283,10 +307,21 @@ function UpdateManager(inputSketch, onError) {
                 if (currentUpdateIndex > lastSubmissionPointer) {
                     lastSubmissionPointer = currentUpdateIndex;
                 }
-            } else if (marker.type == PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR) {
-                localScope.clearSketch(true);
             }
             return false;
+        } else if (command.commandType == PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
+            command.decodedData = currentSketchId;
+            var id = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getIdChainClass()).idChain[0];
+            if (!isUndefined(sketch) && sketch.id != id && !isUndefined(sketchManager)) {
+                sketchManager.createSketch(id);
+            }
+            switchToSketch(id);
+            return true;
+        } else if (command.commandType == PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
+            command.decodedData = currentSketchId;
+            var id = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getIdChainClass()).idChain[0];
+            switchToSketch(id);
+            return true;
         }
         return update.redo();
     }
@@ -309,7 +344,17 @@ function UpdateManager(inputSketch, onError) {
             } else {
                 throw new UpdateException("You can't undo that (something went wrong)");
             }
-            return false;
+            return true;
+        } else if (command.commandType == PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
+            var id = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getIdChainClass()).idChain[0];
+            if (!isUndefined(sketchManager)) {
+                sketchManager.deleteSketch(id);
+            }
+            switchToSketch(command.decodedData);
+            return true;
+        } else if (command.commandType == PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
+            switchToSketch(command.decodedData);
+            return true;
         }
         return update.undo();
     }
@@ -384,9 +429,6 @@ function UpdateManager(inputSketch, onError) {
         }
         var update = updateList[updateList.length - 1];
         var commandList = update.getCommands();
-        if (commandList.length <= 0) {
-            return false;
-        }
         var currentCommand = commandList[0];
         if (currentCommand.commandType == PROTOBUF_UTIL.CommandType.MARKER) {
             var marker = PROTOBUF_UTIL.decodeProtobuf(currentCommand.commandData, PROTOBUF_UTIL.getMarkerClass());
@@ -422,7 +464,7 @@ function UpdateManager(inputSketch, onError) {
      *            much is left to be completed.
      */
     this.setUpdateList = function(list, percentBar) {
-        initializing = true;
+        var initializing = true;
         this.clearUpdates(false);
         var index = 0;
         var maxIndex = list.length;
@@ -469,5 +511,4 @@ function UpdateManager(inputSketch, onError) {
         var tempIndex = currentUpdateIndex;
         this.addUpdate(update, false);
     };
-
 }

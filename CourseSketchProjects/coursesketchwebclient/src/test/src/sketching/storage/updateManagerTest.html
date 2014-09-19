@@ -31,22 +31,20 @@
                 resetSketch : function() {
                 },
                 drawEntireSketch : function() {
-                }
+                },
             }
-        //beforeTest:(function () { clock = sinon.useFakeTimers(); });
-        //afterTest:(function () { clock.restore(); });
         });
         QUnit.test("createMarker returns correct value", function(assert) {
             var update = new UpdateManager(undefined, undefined);
             var otherData = "data";
-            var markerObject = update.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, otherData);
+            var markerObject = update.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, otherData);
             assert.ok(markerObject instanceof PROTOBUF_UTIL.getSrlCommandClass(), "testing that command is an object of the correct protobuf type");
             assert.equal(markerObject.isUserCreated, true, "testing input for userCreated matches");
             assert.equal(markerObject.getCommandType(), PROTOBUF_UTIL.CommandType.MARKER, "testing input for commandType matches");
             assert.notEqual(markerObject.getCommandId(), null, "testing that the command Id is not null");
 
             var markerData = PROTOBUF_UTIL.decodeProtobuf(markerObject.getCommandData(), PROTOBUF_UTIL.getMarkerClass());
-            assert.equal(markerData.type, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR);
+            assert.equal(markerData.type, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE);
             assert.equal(markerData.otherData, otherData);
         });
 
@@ -60,9 +58,9 @@
             PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
             for (var i = 0; i < MinListNumber; i++) {
-                var clearObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, "clear the sketch!");
-                var clearUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ clearObject ]);
-                updateList.addUpdate(clearUpdate);
+                var SAVEObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
+                var SAVEUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
+                updateList.addUpdate(SAVEUpdate);
 
                 var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
                 var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
@@ -93,17 +91,17 @@
             PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
         });
 
-        QUnit.asyncTest("setUpdateList creates the updates in the correct order", function(assert) {
+        QUnit.test("setUpdateList creates the updates in the correct order", function(assert) {
+            var clock = sinon.useFakeTimers();
             var updateList = new UpdateManager(this.sketch, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
             });
 
             var localUpdateList = new Array();
             for (var i = 0; i < MinListNumber; i++) {
-                var clearObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, "clear the sketch!");
-                var clearUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ clearObject ]);
-                localUpdateList.push(clearUpdate);
+                var SAVEObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
+                var SAVEUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
+                localUpdateList.push(SAVEUpdate);
 
                 var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
                 var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
@@ -114,21 +112,82 @@
                 localUpdateList.push(assignUpdate);
             }
 
+            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            });
+            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            });
+
+            updateList.setUpdateList(localUpdateList);
+            for (var i = 0; i < MinListNumber * 3; i++) {
+                clock.tick(20);
+            }
+
+            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            var listCallback = undefined;
+            var listOne = updateList.getUpdateList();
+            assert.deepEqual(listOne, localUpdateList);
+
             restoreRealTime();
+        });
+
+        QUnit.test("setUpdateList calls with the correct values", function(assert) {
+            var clock = sinon.useFakeTimers();
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+            });
+
+            var localUpdateList = new Array();
+            for (var i = 0; i < MinListNumber; i++) {
+                var SAVEObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
+                var SAVEUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
+                localUpdateList.push(SAVEUpdate);
+
+                var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+                var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+                localUpdateList.push(update);
+
+                var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+                var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+                localUpdateList.push(assignUpdate);
+            }
 
             PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
             PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
 
-            //updateList.setUpdateList(localUpdateList);
-
+            var percent = this.spy();
+            var finished = this.spy();
+            var bar = {
+                isRunning : function() {
+                    return true;
+                },
+                updatePercentBar : percent,
+                finishWaiting : finished
+            };
+            updateList.setUpdateList(localUpdateList, bar);
+            var total = MinListNumber * 3;
+            for (var i = 0; i < total; i++) {
+                clock.tick(20);
+                assert.ok(percent.calledWith(i, total));
+            }
+            assert.ok(percent.calledWith(1, 1));
             PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            var listCallback = undefined;
-            var listOne = updateList.getUpdateList();
-            //assert.deepEqual(listOne, localUpdateList);
 
+            assert.ok(finished.calledOnce, "the percent bar finishes");
+        });
+
+        QUnit.test("clear and draw sketch", function(assert) {
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+            });
+            var spy1 = this.spy(this.sketch, "resetSketch");
+            var spy2 = this.spy(this.sketch, "drawEntireSketch");
+            updateList.clearSketch(true);
+            assert.ok(spy1.calledOnce);
+            assert.ok(spy2.calledOnce);
         });
     </script>
 	<script>
@@ -202,26 +261,31 @@
                 drawEntireSketch : function() {
                 }
             },
+            sketchManager : {
+                getSketch : function() {
+                },
+                deleteSketch : function() {
+                },
+                createSketch : function() {
+                }
+            },
         });
 
-        QUnit.asyncTest("testing adding an update CLEAR (return false)", function(assert) {
-            var spy = this.stub(this.sketch, "resetSketch", function() {
-                QUnit.start();
-            });
+        QUnit.test("testing adding an empty update should throw an exception", function(assert) {
+
             var updateList = new UpdateManager(this.sketch, function(error) {
-                assert.ok(false, error);
+                assert.ok(error instanceof UpdateException, error);
             });
-            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, "clear the sketch!");
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
-            updateList.addUpdate(update);
-            assert.ok(spy.calledOnce, "spy is called once");
 
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([]);
+            updateList.addUpdate(update);
         });
 
-        QUnit.asyncTest("testing adding an update ASSIGN_ATTRIBUTE (return false)", function(assert) {
+        QUnit.test("testing adding an update ASSIGN_ATTRIBUTE (return false)", function(assert) {
 
             var stub = this.stub();
             stub.returns(false); // we are not drawing.
+
             PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
             var updateList = new UpdateManager(this.sketch, function(error) {
                 assert.ok(false, error);
@@ -230,21 +294,19 @@
             var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
             assert.ok(stub.calledOnce, "spy is called once");
-            QUnit.start();
             PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
         });
 
-        QUnit.asyncTest("testing adding an update Marker.SUBMISSION after adding CLEAR And test the last update is submission", function(assert) {
+        QUnit.test("testing adding an update Marker.SUBMISSION after adding SAVE And test the last update is submission", function(assert) {
 
             var updateList = new UpdateManager(this.sketch, function(error) {
                 assert.ok(false, error);
-                QUnit.start();
             });
 
             assert.equal(updateList.isLastUpdateSubmission(), false, "there are no submissions before the marker submission is added");
 
-            var clearObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, "clear the sketch!");
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ clearObject ]);
+            var SAVEObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
             updateList.addUpdate(update);
 
             assert.equal(updateList.isLastUpdateSubmission(), false, "there are no submissions before the marker submission is added");
@@ -254,12 +316,97 @@
             updateList.addUpdate(update);
 
             assert.equal(updateList.isLastUpdateSubmission(), true, "afer marker is added the submission is the last update");
-            QUnit.start();
+        });
+
+        QUnit.test("testing adding a Create sketch command", function(assert) {
+
+            var clock = sinon.useFakeTimers();
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+            }, this.sketchManager);
+
+            var spy = this.spy(this.sketchManager, "createSketch");
+            var stub = this.stub(this.sketchManager, "getSketch");
+
+            var spy2 = this.spy();
+            var secondSketch = {
+                drawEntireSketch : spy2,
+            };
+
+            stub.returns(secondSketch);
+
+            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var idChain = PROTOBUF_UTIL.IdChain();
+            var id = generateUUID();
+            idChain.idChain = [ id ];
+            command.setCommandData(idChain.toArrayBuffer());
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            updateList.addUpdate(update);
+
+            clock.tick(20);
+
+            assert.ok(spy.calledWith(id) && spy.calledOnce);
+            assert.ok(stub.calledWith(id) && stub.calledOnce);
+            assert.ok(spy2.calledOnce);
+        });
+
+        QUnit.test("testing adding a switch sketch command", function(assert) {
+
+            var clock = sinon.useFakeTimers();
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+            }, this.sketchManager);
+
+            var stub = this.stub(this.sketchManager, "getSketch");
+
+            var spy2 = this.spy();
+            var secondSketch = {
+                drawEntireSketch : spy2,
+            };
+
+            stub.returns(secondSketch);
+
+            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
+            var idChain = PROTOBUF_UTIL.IdChain();
+            var id = generateUUID();
+            idChain.idChain = [ id ];
+            command.setCommandData(idChain.toArrayBuffer());
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            updateList.addUpdate(update);
+
+            clock.tick(20);
+
+            assert.ok(stub.calledWith(id) && stub.calledOnce);
+            assert.ok(spy2.calledOnce);
+        });
+
+        QUnit.test("testing adding a switch sketch command undefined manager", function(assert) {
+
+            var clock = sinon.useFakeTimers();
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(error instanceof UpdateException, error);
+            });
+
+            var spy2 = this.spy();
+            var secondSketch = {
+                drawEntireSketch : spy2,
+            };
+
+            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
+            var idChain = PROTOBUF_UTIL.IdChain();
+            var id = generateUUID();
+            idChain.idChain = [ id ];
+            command.setCommandData(idChain.toArrayBuffer());
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            updateList.addUpdate(update);
         });
     </script>
 
 	<script>
-        QUnit.module("clear data tests", {
+        QUnit.module("CLEAR data tests", {
             sketch : {
                 resetSketch : function() {
                 },
@@ -274,16 +421,16 @@
                 QUnit.start();
             });
 
-            var clearObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.CLEAR, "clear the sketch!");
-            var clearUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ clearObject ]);
-            updateList.addUpdate(clearUpdate);
+            var saveObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "Save the sketch!");
+            var saveUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ saveObject ]);
+            updateList.addUpdate(saveUpdate);
 
             var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
             var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
 
             var list = updateList.getUpdateList();
-            assert.equal(list[0], clearUpdate, "first object added was a clear object");
+            assert.equal(list[0], saveUpdate, "first object added was a SAVE object");
             assert.equal(list[1], update, "second object added was a submission object");
 
             assert.equal(updateList.isLastUpdateSubmission(), true, "afer marker is added the submission is the last update");
@@ -291,18 +438,26 @@
 
             updateList.clearUpdates(false);
 
-            assert.equal(updateList.isLastUpdateSubmission(), false, "afer clear there should not be a last update submission");
-            assert.equal(updateList.getCurrentPointer(), 0, "afer clear the pointer should be 0");
-            assert.deepEqual(updateList.getUpdateList(), [], "afer clear there should be an empty list");
+            assert.equal(updateList.isLastUpdateSubmission(), false, "afer Clear there should not be a last update submission");
+            assert.equal(updateList.getCurrentPointer(), 0, "afer SAVE the pointer should be 0");
+            assert.deepEqual(updateList.getUpdateList(), [], "afer SAVE there should be an empty list");
             QUnit.start();
         });
     </script>
 	<script>
-        QUnit.module("redo tests", {
+        QUnit.module("undo and redo tests", {
             sketch : {
                 resetSketch : function() {
                 },
                 drawEntireSketch : function() {
+                }
+            },
+            sketchManager : {
+                getSketch : function() {
+                },
+                deleteSketch : function() {
+                },
+                createSketch : function() {
                 }
             },
         });
@@ -526,6 +681,84 @@
             assert.equal(updateList[4].commands[0].commandType, PROTOBUF_UTIL.CommandType.MARKER);
             assert.equal(updateList[5].commands[0].commandType, PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             QUnit.start();
+        });
+
+        QUnit.test("adding a Create sketch command then calling undo on it", function(assert) {
+
+            var clock = sinon.useFakeTimers();
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+            }, this.sketchManager);
+
+            var spy = this.spy(this.sketchManager, "createSketch");
+            var stub1 = this.stub(this.sketchManager, "getSketch");
+            var stub2 = this.stub(this.sketchManager, "deleteSketch");
+
+            var spy2 = this.spy();
+            var secondSketch = {
+                drawEntireSketch : spy2,
+            };
+
+            stub1.returns(secondSketch);
+
+            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var idChain = PROTOBUF_UTIL.IdChain();
+            var id = generateUUID();
+            idChain.idChain = [ id ];
+            command.setCommandData(idChain.toArrayBuffer());
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            updateList.addUpdate(update);
+
+            clock.tick(10);
+
+            assert.ok(spy.calledWith(id) && spy.calledOnce);
+            assert.ok(stub1.calledWith(id) && stub1.calledOnce);
+            assert.ok(spy2.calledOnce);
+
+            updateList.undoAction(true);
+            clock.tick(10);
+
+            assert.ok(stub1.calledWith(undefined) && stub1.calledTwice);
+            assert.ok(stub2.calledWith(id) && stub2.calledOnce);
+            assert.ok(spy2.calledTwice);
+        });
+
+        QUnit.test("adding a swtich sketch and then undoing that creation", function(assert) {
+
+            var clock = sinon.useFakeTimers();
+
+            var updateList = new UpdateManager(this.sketch, function(error) {
+                assert.ok(false, error);
+            }, this.sketchManager);
+
+            var stub = this.stub(this.sketchManager, "getSketch");
+
+            var spy2 = this.spy();
+            var secondSketch = {
+                drawEntireSketch : spy2,
+            };
+
+            stub.returns(secondSketch);
+
+            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
+            var idChain = PROTOBUF_UTIL.IdChain();
+            var id = generateUUID();
+            idChain.idChain = [ id ];
+            command.setCommandData(idChain.toArrayBuffer());
+            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            updateList.addUpdate(update);
+
+            clock.tick(10);
+
+            assert.ok(stub.calledWith(id) && stub.calledOnce);
+            assert.ok(spy2.calledOnce);
+
+            updateList.undoAction(false);
+            clock.tick(10);
+
+            assert.ok(stub.calledWith(undefined) && stub.calledTwice);
+            assert.ok(spy2.calledTwice);
         });
     </script>
 	<script>
