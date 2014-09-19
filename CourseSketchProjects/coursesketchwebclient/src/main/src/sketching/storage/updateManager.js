@@ -30,6 +30,7 @@ UndoRedoException.prototype = new UpdateException();
 function UpdateManager(inputSketch, onError) {
 
     var sketch = inputSketch;
+    var currentSketchId = sketch.Id;
 
     /**
      * holds a state of updates (for undoing and redoing)
