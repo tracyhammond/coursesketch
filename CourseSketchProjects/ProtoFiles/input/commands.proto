@@ -34,6 +34,9 @@ enum CommandType {
 	ASSIGN_ATTRIBUTE = 4;
 	REMOVE_ATTRIBUTE = 5;
 	MARKER = 6; //marker has a number and a MARKERTYPE
+	CLEAR = 7;
+	CREATE_SKETCH = 8; // this should have an IdChain which contains a single id
+	SWITCH_SKETCH = 9; // this should have an IdChain which contains a single id
 	FORCE_INTERPRETATION = 10;
 
 	// Stack Commands, They do not have any other data associated with it.
@@ -43,6 +46,8 @@ enum CommandType {
 	CLEAR_STACK = 14; // Clears the stack.
 	OPEN_SYNC = 15; // Tells this machine that it will recieve a list of Updates and to execute them and compare order
 	CLOSE_SYNC = 16; // Tells the machine that it is going back to normal mode.
+
+	// all other commands will appear after 16
 }
 
 /**
@@ -67,7 +72,6 @@ message Marker {
 		// when an undo / redo branch occurs this is the marker that signifies the split.
 		// additionally some special care needs to be done to check when saving the sketch that splits do not corrupt existing sketch data.
 		SPLIT = 3;
-		CLEAR = 4; // To be supported later
 	}
 	optional string otherData = 2;
 }
