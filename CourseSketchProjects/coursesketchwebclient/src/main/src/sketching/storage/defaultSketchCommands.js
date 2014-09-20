@@ -8,10 +8,24 @@
      * Every command will have a sketch Id that is added to it when being added
      * to the sketch surface
      */
-    PROTOBUF_UTIL.getSrlCommandClass().prototype.sketchId = undefined;
     PROTOBUF_UTIL.getSrlCommandClass().prototype.getLocalSketchSurface = function() {
         return SKETCHING_SURFACE_HANDLER.getSketchSurface(this.sketchId).getSrlSketch();
     };
+
+    /**
+     * TODO: THIS DOES NOT HAVE AN UNDO METHOD RIGHT NOW! UNDOING A CLEAR
+     * COMMAND CAN CAUSE SOME VERY AWKWARD RESULTS. But what this does is clear
+     * the sketch of any objects it contains.
+     * 
+     * @returns {boolean} true. This will always ask for the sketch to be
+     *          redrawn. TODO: change it so that it knows what sketch it is
+     *          associated with.
+     */
+    PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.CLEAR, function() {
+        var sketch = this.getLocalSketchSurface();
+        sketch.resetSketch();
+        return true;
+    });
 
     /**
      * Adds a stroke to this local sketch object.
@@ -176,7 +190,10 @@
 
     /**
      * Moves the shapes from the old container to the new container.
-     * @param sketch {SrlSketch} the sketch object that is being affected by these changes.
+     * 
+     * @param sketch
+     *            {SrlSketch} the sketch object that is being affected by these
+     *            changes.
      */
     PROTOBUF_UTIL.getActionPackageShapeClass().prototype.redo = function(sketch) {
         var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
@@ -196,7 +213,10 @@
      * Moves the shapes from the new container to the old container.
      * 
      * This is a reverse of the process used in redo.
-     * @param sketch {SrlSketch} the sketch object that is being affected by these changes.
+     * 
+     * @param sketch
+     *            {SrlSketch} the sketch object that is being affected by these
+     *            changes.
      */
     PROTOBUF_UTIL.getActionPackageShapeClass().prototype.undo = function(sketch) {
         var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());

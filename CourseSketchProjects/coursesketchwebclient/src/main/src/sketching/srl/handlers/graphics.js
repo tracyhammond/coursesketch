@@ -31,7 +31,8 @@ SRL_Object.prototype.color = false;
 /**
  * Must be a valid hex string.
  */
-SRL_Object.prototype.setColorHex = function(hex) {
+SRL_Object.prototype.setColorHex = function(inputHex) {
+    var hex = inputHex;
 	if (hex[0] != '#') {
 		hex = '#' + hex;
 	}
@@ -47,7 +48,8 @@ SRL_Object.prototype.getIsHighlighted = function() {
 };
 
 SRL_Object.prototype.highlightColor = false;
-SRL_Object.prototype.setHighlightColorHex = function(hex) {
+SRL_Object.prototype.setHighlightColorHex = function(inputHex) {
+    var hex = inputHex;
 	if (hex[0] != '#') {
 		hex = '#' + hex;
 	}
@@ -119,7 +121,8 @@ SRL_IntersectionHandler.prototype.drawBounds = function(graphics) {
  *
  * Does nothing by default.
  */
-SRL_Shape.prototype.drawShape = function drawShape(graphics, forcedColor) {
+SRL_Shape.prototype.drawShape = function drawShape(graphics, inputForcedColor) {
+    var forcedColor = inputForcedColor;
 
 	if (this.getIsHighlighted()) {
 		forcedColor = this.getHighlightColor();

@@ -15,6 +15,8 @@
     var ProtoSrlUpdate = Object.getPrototypeOf(PROTOBUF_UTIL.SrlUpdate());
     var ProtoSrlCommand = Object.getPrototypeOf(PROTOBUF_UTIL.SrlCommand());
 
+    PROTOBUF_UTIL.getSrlCommandClass().prototype.sketchId = undefined;
+    PROTOBUF_UTIL.getSrlUpdateClass().prototype.sketchId = undefined;
     /**
      * @Method Calls redo on an {@link SrlCommand} list in the order they are
      *         added to the list.
@@ -27,6 +29,7 @@
         var commandList = this.getCommands();
         var commandLength = commandList.length;
         for (var i = 0; i < commandLength; i++) {
+            commandList[i].sketchId = this.sketchId;
             if (commandList[i].redo() == true) redraw = true;
         }
         return redraw;
@@ -44,6 +47,7 @@
         var commandLength = commandList.length;
         var redraw = false;
         for (var i = commandLength - 1; i >= 0; i--) {
+            commandList[i].sketchId = this.sketchId;
             if (commandList[i].undo() == true) redraw = true;
         }
         return redraw;
