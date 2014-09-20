@@ -29,7 +29,7 @@
     </script>
     <script>
     QUnit.module("timing Test");
-    QUnit.asyncTest("testing how timing works", function(assert) {
+    QUnit.asyncTest("testing how timing works this test will fail", function(assert) {
         setTimeout(function() {
             assert.ok(true);
             QUnit.start();
@@ -42,11 +42,17 @@
             QUnit.start();
         }, 1000);
     });
-    QUnit.asyncTest("testing how timing works3", function(assert) {
+    QUnit.asyncTest("testing how timing works this test will fail", function(assert) {
         setTimeout(function() {
             assert.ok(true);
             QUnit.start();
         }, 1000);
+    });
+    
+    QUnit.test("how does fak timing work this sees if the sinon timers are the same as the other timers", function(assert) {
+        var localFunc = setTimeout;
+        this.clock = this.useFakeTimers();
+        assert.equal(localFunc, setTimeout);
     });
     </script>
 </body>
