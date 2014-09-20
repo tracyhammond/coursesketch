@@ -5,11 +5,13 @@
 <!-- test Library -->
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 
-<!-- files needed for testing -->
-<link rel="import" href="/src/sketching/sketchInclude.html">
-
 <!-- file being tested. -->
 <script src="/src/sketching/sketchSurface.js" data-cover></script>
+
+<!-- files needed for testing -->
+<link id="sketchInclude" rel="import"
+	href="/src/sketching/sketchInclude.html">
+
 </head>
 <body>
 	<div id="qunit"></div>
@@ -17,6 +19,11 @@
 	<div id="sketchLocationCreator"></div>
 
 	<script>
+        var link = document.querySelector('#sketchInclude');
+        var importStuff = link.import;
+        var link2 = importStuff.querySelector('#sketchSurfaceImport');
+        var template = link2.import.querySelector('template');
+
         QUnit.module("sketchSurface");
         QUnit.test("test creation", function(assert) {
             expect(0);
@@ -28,23 +35,81 @@
             assert.ok(srlSketch instanceof SRL_Sketch);
         });
 
-        QUnit.test("binding update list", function(assert) {
+        QUnit.test("binding update list throws exception if it already exist", function(assert) {
             var sketch = new SketchSurface();
-            var srlSketch = sketch.bindToUpdateList({});
+            sketch.bindToUpdateList(UpdateManager);
             assert.throws(function() {
-                sketch.bindToUpdateList({});
+                sketch.bindToUpdateList(UpdateManager);
             });
         });
-        
+
+        QUnit.test("binding update list can be done with an object instead of a class", function(assert) {
+            expect(0);
+            var sketch = new SketchSurface();
+            var obj = new UpdateManager();
+            sketch.bindToUpdateList(obj);
+        });
+
+        QUnit.test("#createSketch will create an event in updateList", function(assert) {
+            var sketch = new SketchSurface();
+            var obj = new UpdateManager();
+            var spy = this.spy(obj, "addUpdate");
+            sketch.bindToUpdateList(obj);
+
+            sketch.createSketchUpdate();
+            assert.ok(spy.calledOnce);
+        });
+
+        QUnit.test("#createSketch will create an event in updateList but only if it is empty", function(assert) {
+            var sketch = new SketchSurface();
+            var obj = new UpdateManager();
+            sketch.bindToUpdateList(obj);
+
+            assert.equal(obj.getListLength(), 0);
+            sketch.createSketchUpdate();
+            assert.equal(obj.getListLength(), 1);
+            sketch.createSketchUpdate();
+            // note that list size should not change!
+            assert.equal(obj.getListLength(), 1);
+        });
+
         QUnit.module("tagCreation", {
-            tearDown: function() {
+            teardown : function() {
                 document.getElementById("sketchLocationCreator").innerHTML = "";
             }
         });
+
         QUnit.test("tag creation", function(assert) {
+            expect(0);
             var container = document.getElementById("sketchLocationCreator");
+            console.log("ELEMENT CREATED");
             var oddity = document.createElement("sketch-surface");
             container.appendChild(oddity);
+        });
+
+        QUnit.test("tag creation #2 (basically starting from scratch)", function(assert) {
+            sketchSurface = new SketchSurface();
+
+            // lol hax
+            var element = document.createElement("sketch-surface");
+            var fakeRoot = element.createShadowRoot();
+
+            // basically stealing from another element.
+            // bad in real life but good for the test.
+            var clone = document.importNode(template.content, true);
+            fakeRoot.appendChild(clone);
+            sketchSurface.setRoot(fakeRoot);
+
+            sketchSurface.dataset = {};
+            console.log(sketchSurface);
+            var spy = this.spy(SKETCHING_SURFACE_HANDLER, "addElement");
+
+            sketchSurface.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
+
+            assert.ok(spy.calledOnce);
+            spy.restore();
+
+            sketchSurface.finalize();
         });
     </script>
 	<script>

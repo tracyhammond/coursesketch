@@ -313,7 +313,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
             command.decodedData = currentSketchId;
             var id = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getIdChainClass()).idChain[0];
             if (!isUndefined(sketch) && sketch.id != id && !isUndefined(sketchManager)) {
-                sketchManager.createSketch(id);
+                sketchManager.createSketch(id, this);
             }
             switchToSketch(id);
             return true;
