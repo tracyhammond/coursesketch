@@ -18,12 +18,16 @@
  * @Class
  */
 function SketchSurface() {
-    var sketch = new SRL_Sketch();
+    var localScope = this;
+    var sketch = undefined;
     var updateList = undefined;
     var localInputListener = undefined;
     var sketchEventConverter = undefined;
     var shadowRoot = undefined;
     var errorListener = undefined;
+    var eventListenerElement = undefined;
+    var sketchCanvas = undefined;
+    var bindUpdateListCalled = false;
 
     this.registerSketchInManager = function() {
         if (isUndefined(this.id)) {
@@ -75,20 +79,18 @@ function SketchSurface() {
     };
 
     this.bindToUpdateList = function(UpdateManagerClass) {
-        console.log("Creating update list");
-        console.log(updateList);
-        console.log(this.id);
+        if (bindUpdateListCalled === false) {
+            updateList = undefined;
+        }
+
         if (isUndefined(updateList)) {
             if (UpdateManagerClass instanceof UpdateManager) {
                 updateList = UpdateManagerClass;
             } else {
                 updateList = new UpdateManagerClass(sketch, errorListener, SKETCHING_SURFACE_HANDLER);
             }
-            // We define the surface to have a list.
-            this.dataset.existingList = "";
-            this.updateListTEMP = updateList;
+            bindUpdateListCalled = true;
         } else {
-            this.updateListTEMP = updateList;
             throw new Error("Update list is already defined");
         }
     };
@@ -125,22 +127,44 @@ function SketchSurface() {
         sketch.canvasContext = canvasContext;
         sketchEventConverter = new SketchEventConverter(localInputListener, addStrokeCallback, canvasContext);
 
-        canvasSize(canvas);
+        eventListenerElement = canvas;
+        sketchCanvas = canvas;
+
+        this.resizeSurface();
+    };
+
+    this.resizeSurface = function() {
+        sketchCanvas.height = $(sketchCanvas).height();
+        sketchCanvas.width = $(sketchCanvas).width();
+        sketch.drawEntireSketch();
+    };
+
+    this.makeResizeable = function() {
+        $(window).resize(localScope.resizeSurface);
     };
 
     /**
-     * 
+     * Initializes the sketch and resets all values.
      */
-    function canvasSize(canvas) {
-        canvas.height = $(canvas).height();
-        canvas.width = $(canvas).width();
-        $(window).resize(function() {
-            canvas.height = $(canvas).height();
-            canvas.width = $(canvas).width();
+    this.initializeSketch = function() {
+        updateList = undefined;
+        bindUpdateListCalled = false;
+        sketch = new SRL_Sketch();
+        eventListenerElement = undefined;
+        sketchCanvas = undefined;
+    };
 
-            sketch.drawEntireSketch();
-        });
-    }
+    this.getElementForEvents = function() {
+        return eventListenerElement;
+    };
+
+    this.getElementForDrawing = function() {
+        return eventListenerElement;
+    };
+
+    this.getUpdateList = function() {
+        return updateList;
+    };
 }
 
 SketchSurface.prototype = Object.create(HTMLElement.prototype);
@@ -148,38 +172,34 @@ SketchSurface.prototype = Object.create(HTMLElement.prototype);
 /**
  * @param document
  *            {document} The document in which the node is being imported to.
- * @param template
- *            {Element} an element representing a template tag, its content is
- *            imported and then added to this element.
+ * @param templateClone
+ *            {Element} an element representing the data inside tag, its content
+ *            has already been imported and then added to this element.
  */
-SketchSurface.prototype.initializeElement = function(document, template) {
-    var clone = document.importNode(template.content, true);
-
+SketchSurface.prototype.initializeElement = function(document, templateClone) {
     var root = this.createShadowRoot();
     this.setRoot(root);
-    root.appendChild(clone);
+    root.appendChild(templateClone);
 };
 
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchEventConverterClass, UpdateManagerClass) {
+    this.initializeSketch();
 
-    if (isUndefined(this.dataset.readOnly)) {
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.readOnly)) {
         this.initializeInput(InputListenerClass, SketchEventConverterClass);
     }
 
-    if (isUndefined(this.dataset.customId) || isUndefined(this.id) || this.id == null || this.id == "") {
-        console.log("CREATING ID");
-        console.log("[" + this.id + "]");
-        console.log("ID");
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.customId) || isUndefined(this.id) || this.id == null || this.id == "") {
         this.id = generateUUID();
     }
 
-    if (isUndefined(this.dataset.existingList)) {
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.existingList)) {
         this.bindToUpdateList(UpdateManagerClass);
     }
 
     this.registerSketchInManager();
 
-    if (isUndefined(this.dataset.existingList) && isUndefined(this.dataset.customId)) {
+    if (isUndefined(this.dataset) || (isUndefined(this.dataset.existingList) && isUndefined(this.dataset.customId))) {
         this.createSketchUpdate();
     }
 };

@@ -1,4 +1,5 @@
 // http://stackoverflow.com/a/6158050/2187510
+// example simulate(document.getElementById("btn"), "click", { pointerX: 123, pointerY: 321 })
 
 function extend(destination, source) {
     for ( var property in source)
@@ -8,7 +9,8 @@ function extend(destination, source) {
 
 eventMatchers = {
     'HTMLEvents' : /^(?:load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll)$/,
-    'MouseEvents' : /^(?:click|dblclick|mouse(?:down|up|over|move|out))$/
+    'MouseEvents' : /^(?:click|dblclick|mouse(?:down|up|over|move|out))$/,
+    'TouchEvents' : /^(?:touch(?:end|start|move))$/
 };
 
 /**
@@ -56,8 +58,12 @@ function simulate(element, eventName, inputOptions) {
         oEvent = document.createEvent(eventType);
         if (eventType == 'HTMLEvents') {
             oEvent.initEvent(eventName, options.bubbles, options.cancelable);
-        } else {
+        } else if (eventType == 'MouseEvents') {
             oEvent.initMouseEvent(eventName, options.bubbles, options.cancelable, document.defaultView, options.button, options.pointerX,
+                    options.pointerY, options.pointerX, options.pointerY, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey,
+                    options.button, element);
+        } else if (eventType == 'TouchEvents') {
+            oEvent.initTouchEvent(eventName, options.bubbles, options.cancelable, document.defaultView, options.button, options.pointerX,
                     options.pointerY, options.pointerX, options.pointerY, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey,
                     options.button, element);
         }

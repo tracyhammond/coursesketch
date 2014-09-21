@@ -21,7 +21,7 @@ function SketchSurfaceHandler() {
 
     /**
      * Returns a sketch with the specific ID
-     * 
+     *
      * @param id
      *            {String}
      * @returns {SRL_Sketch}
@@ -33,7 +33,7 @@ function SketchSurfaceHandler() {
     /**
      * Creates a new sketch. The sketch is invisible by default and has its
      * style set to none.
-     * 
+     *
      * @param id
      *            {String}
      * @param updateList
@@ -49,7 +49,7 @@ function SketchSurfaceHandler() {
                 // prevents infinite loops
             }
         } catch (exception) {
-
+            console.log("ISSUE!");
         }
         var element = document.createElement("sketch-surface");
         if (!isUndefined(updateList)) {
@@ -61,6 +61,7 @@ function SketchSurfaceHandler() {
             element.id = id;
         }
         sketchObjectList[id] = element;
+        element.initializeSketch();
         return element.getSrlSketch();
     };
 
@@ -94,15 +95,27 @@ function SketchSurfaceHandler() {
     };
 
     /**
-     * @param element {SketchSurface} adds an instance of SketchSurface to the sketch.
+     * @param element
+     *            {SketchSurface} adds an instance of SketchSurface to the
+     *            sketch.
      */
     this.addElement = function(element) {
-        if (!(getTypeName(element) === "sketch-surface" || element instanceof SketchSurface)) {
+        if (!(getTypeName(element) === "sketch-surface" || element instanceof SketchSurface || Object.getPrototypeOf(element) == SketchSurface)) {
             throw new Error("Added element is not an instance of SketchSurface: " + getTypeName(element));
         }
         if (isUndefined(element.id)) {
             throw new Error("Element Id must be defined");
         }
+        sketchObjectList[element.id] = element;
+    };
+
+    /**
+     * This is used to force the addition of adding an element (typically not a good idea)
+     * @param element
+     *            {SketchSurface} adds an instance of SketchSurface to the
+     *            sketch.
+     */
+    this.addElementForced = function(element) {
         sketchObjectList[element.id] = element;
     };
 
@@ -128,7 +141,7 @@ function SketchSurfaceHandler() {
      */
     this.getSketchIds = function() {
         var array = [];
-        for (var id in sketchObjectList) {
+        for ( var id in sketchObjectList) {
             array.push(id);
         }
         return array;
