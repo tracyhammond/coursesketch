@@ -41,17 +41,18 @@
 
         var newElement = new SketchSurface();
 
-        newElement.createdCallback = function() {
+        SketchSurface.prototype.createdCallback = function() {
             this.initializeElement(document, template);
         };
 
-        newElement.attachedCallback = function() {
+        SketchSurface.prototype.attachedCallback = function() {
             this.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
         };
 
-        newElement.detachedCallback = function() {
+        SketchSurface.prototype.detachedCallback = function() {
             this.finalize();
-        }
+        };
+
         document.registerElement('sketch-surface', {
             prototype : newElement
         });

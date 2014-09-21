@@ -33,8 +33,7 @@ function SketchSurface() {
     };
 
     /**
-     * Does some manual GC.
-     * TODO: unlink some circles manually.
+     * Does some manual GC. TODO: unlink some circles manually.
      */
     this.finalize = function() {
         updateList = undefined;
@@ -76,13 +75,20 @@ function SketchSurface() {
     };
 
     this.bindToUpdateList = function(UpdateManagerClass) {
+        console.log("Creating update list");
+        console.log(updateList);
+        console.log(this.id);
         if (isUndefined(updateList)) {
             if (UpdateManagerClass instanceof UpdateManager) {
                 updateList = UpdateManagerClass;
             } else {
                 updateList = new UpdateManagerClass(sketch, errorListener, SKETCHING_SURFACE_HANDLER);
             }
+            // We define the surface to have a list.
+            this.dataset.existingList = "";
+            this.updateListTEMP = updateList;
         } else {
+            this.updateListTEMP = updateList;
             throw new Error("Update list is already defined");
         }
     };
@@ -98,7 +104,7 @@ function SketchSurface() {
         stroke.draw(sketch.canvasContext);
 
         var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
-        // then finish him!
+
         command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
         command.decodedData = stroke;
         var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
@@ -120,14 +126,12 @@ function SketchSurface() {
         sketchEventConverter = new SketchEventConverter(localInputListener, addStrokeCallback, canvasContext);
 
         canvasSize(canvas);
-        console.log("CREATING SKETHOS!");
     };
 
     /**
      * 
      */
     function canvasSize(canvas) {
-        console.log(canvas);
         canvas.height = $(canvas).height();
         canvas.width = $(canvas).width();
         $(window).resize(function() {
@@ -162,7 +166,10 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchE
         this.initializeInput(InputListenerClass, SketchEventConverterClass);
     }
 
-    if (isUndefined(this.dataset.customId)) {
+    if (isUndefined(this.dataset.customId) || isUndefined(this.id) || this.id == null || this.id == "") {
+        console.log("CREATING ID");
+        console.log("[" + this.id + "]");
+        console.log("ID");
         this.id = generateUUID();
     }
 
