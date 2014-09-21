@@ -56,8 +56,10 @@ function SketchSurfaceHandler() {
             element.dataset.existingList = "";
             element.bindToUpdateList(updateList);
         }
-        element.dataset.customId = "";
-        element.id = id;
+        if (!isUndefined(id)) {
+            element.dataset.customId = "";
+            element.id = id;
+        }
         sketchObjectList[id] = element;
         return element.getSrlSketch();
     };
@@ -67,7 +69,7 @@ function SketchSurfaceHandler() {
      */
     this.deleteSketch = function(id) {
         sketchObjectList[id] = undefined;
-        var element = document.getElementById("element-id");
+        var element = document.getElementById(id);
         if (!isUndefined(element) && element != null) {
             // implicitly calls finalize on the specific element
             element.parentNode.removeChild(element);
@@ -77,10 +79,13 @@ function SketchSurfaceHandler() {
     /**
      * Initializes the list of sketches with the current element.
      * 
+     * This method should not need to be called because it should automatically
+     * register itself.
+     * 
      * @param element
      *            {Element}
      */
-    this.initialize = function(element) {
+    this.addFromElement = function(element) {
         var elements = element.querySelectorAll(SKETCH_TAG);
         for (var i = 0; i < elements.length; i++) {
             var element = elements[i];
@@ -88,15 +93,23 @@ function SketchSurfaceHandler() {
         }
     };
 
+    /**
+     * @param element {SketchSurface} adds an instance of SketchSurface to the sketch.
+     */
     this.addElement = function(element) {
-        if (!element instanceof SketchSurface) {
-            throw new Error("Place holder error please correct");
+        if (!(getTypeName(element) === "sketch-surface" || element instanceof SketchSurface)) {
+            throw new Error("Added element is not an instance of SketchSurface: " + getTypeName(element));
+        }
+        if (isUndefined(element.id)) {
+            throw new Error("Element Id must be defined");
         }
         sketchObjectList[element.id] = element;
     };
 
     /**
      * Resets this object so that it contains zero sketch objects.
+     * 
+     * NOTE: this does not delete any sketches from the dom.
      */
     this.reset = function() {
         sketchObjectList = {};
@@ -108,6 +121,17 @@ function SketchSurfaceHandler() {
 
     this.getSketchTemplateId = function() {
         return SKETCH_TEMPLATE;
+    };
+
+    /**
+     * @returns {Array}
+     */
+    this.getSketchIds = function() {
+        var array = [];
+        for (var id in sketchObjectList) {
+            array.push(id);
+        }
+        return array;
     };
 }
 
