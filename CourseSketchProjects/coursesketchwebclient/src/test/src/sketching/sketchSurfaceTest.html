@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Command Methods test</title>
+<title>Sketch Surface test</title>
 <!-- test Library -->
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 
@@ -31,6 +31,9 @@
         });
         QUnit.test("test getting an SrlSketch", function(assert) {
             var sketch = new SketchSurface();
+
+            sketch.initializeSketch();
+
             var srlSketch = sketch.getSrlSketch();
             assert.ok(srlSketch instanceof SRL_Sketch);
         });
@@ -82,7 +85,6 @@
         QUnit.test("tag creation", function(assert) {
             expect(0);
             var container = document.getElementById("sketchLocationCreator");
-            console.log("ELEMENT CREATED");
             var oddity = document.createElement("sketch-surface");
             container.appendChild(oddity);
         });
@@ -113,6 +115,126 @@
         });
     </script>
 	<script>
-        
+        QUnit.module("events", {
+            setup : function() {
+                this.elementSpy = sinon.spy(SKETCHING_SURFACE_HANDLER, "addElement");
+            },
+            teardown : function() {
+                document.getElementById("sketchLocationCreator").innerHTML = "";
+                this.elementSpy.restore();
+            }
+        });
+
+        QUnit.test("a stroke will be added to the sketch when drawing", function(assert) {
+            /** CREATING A SKETCH SURFACE ITEM (added to all test to make sure it happens in any order)***/
+            try {
+                var sketch = new SketchSurface();
+                var clone = document.importNode(template.content, true);
+
+                SketchSurface.prototype.createdCallback = function() {
+                    this.initializeElement(document, clone.cloneNode(true));
+                };
+
+                SketchSurface.prototype.attachedCallback = function() {
+                    this.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
+                };
+
+                document.registerElement('sketch-surface2', {
+                    prototype : sketch
+                });
+            } catch (exception) {
+
+            }
+            /** DONE CREATING A SKETCH SURFACE ITEM ***/
+
+            var sketchSurface = document.createElement("sketch-surface2");
+            sketchSurface.dataset.existingList = "";
+            var container = document.getElementById("sketchLocationCreator");
+
+            container.appendChild(sketchSurface);
+            SKETCHING_SURFACE_HANDLER.addElementForced(sketchSurface);
+
+            var updateList = new UpdateManager(sketchSurface.getSrlSketch(), function(error) {
+                assert.ok(false, error);
+            }, SKETCHING_SURFACE_HANDLER);
+
+            sketchSurface.bindToUpdateList(updateList);
+
+            sketchSurface.createSketchUpdate();
+
+            assert.equal(updateList.getListLength(), 1, "after creating the sketch the update list has a length of two");
+            var sketchStorage = sketchSurface.getSrlSketch();
+            assert.equal(sketchStorage.getList().length, 0, "the sketch should start out empty");
+
+            /** SKETCH SURFACE HAS BEEN SET UP SIMULATING EVENTS***/
+
+            var eventSurface = sketchSurface.getElementForEvents();
+
+            var eventSurfaceSize = sketchSurface.getBoundingClientRect();
+
+            simulate(eventSurface, "mousedown", {
+                pointerX : 15 + eventSurfaceSize.left,
+                pointerY : 15 + eventSurfaceSize.top
+            });
+            var totalMovement = 50;
+            for (var i = 0; i < totalMovement; i++) {
+                simulate(eventSurface, "mousemove", {
+                    pointerX : 15 + eventSurfaceSize.left,
+                    pointerY : 15 + i + eventSurfaceSize.top
+                });
+            }
+            simulate(eventSurface, "mouseup", {
+                pointerX : 15 + eventSurfaceSize.left,
+                pointerY : 15 + totalMovement + eventSurfaceSize.top
+            });
+
+            assert.equal(updateList.getListLength(), 2, "the update list now has updates in it");
+            assert.equal(sketchStorage.getList().length, 1, "the sketch now has a single item in it");
+            var stroke = sketchStorage.getList()[0];
+            assert.ok(stroke instanceof SRL_Stroke, "the sketch contains a single stroke");
+            console.log(stroke);
+        });
+
+        QUnit.test("canvas resizes correctly TODO: make better", function(assert) {
+            expect(0);
+            /** CREATING A SKETCH SURFACE ITEM (added to all test to make sure it happens in any order)***/
+            try {
+                var sketch = new SketchSurface();
+                var clone = document.importNode(template.content, true);
+
+                SketchSurface.prototype.createdCallback = function() {
+                    this.initializeElement(document, clone.cloneNode(true));
+                };
+
+                SketchSurface.prototype.attachedCallback = function() {
+                    this.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
+                };
+
+                document.registerElement('sketch-surface2', {
+                    prototype : sketch
+                });
+            } catch (exception) {
+
+            }
+            /** DONE CREATING A SKETCH SURFACE ITEM ***/
+
+            var sketchSurface = document.createElement("sketch-surface2");
+            var container = document.getElementById("sketchLocationCreator");
+            container.appendChild(sketchSurface);
+
+            var sketchSurfaceHeight = $(sketchSurface).height();
+            var sketchSurfaceWidth = $(sketchSurface).width();
+
+            var canvas = sketchSurface.getElementForDrawing();
+            var size = canvas.height;
+            
+            sketchSurface.makeResizeable();
+
+            $(sketchSurface).css("height", sketchSurfaceHeight / 2);
+            $(sketchSurface).css("width", sketchSurfaceWidth / 2);
+            simulate(window, "resize");
+
+            var size2 = canvas.height;
+        });
     </script>
 </body>

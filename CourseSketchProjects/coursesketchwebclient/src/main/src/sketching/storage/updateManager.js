@@ -140,8 +140,9 @@ function UpdateManager(inputSketch, onError, sketchManager) {
         if (isUndefined(sketchManager)) {
             throw new UpdateException("Can not switch sketch with an invalid manager");
         }
-        sketch = sketchManager.getSketch(id);
         currentSketchId = id;
+        sketch = sketchManager.getSketch(id);
+
     }
 
     /**

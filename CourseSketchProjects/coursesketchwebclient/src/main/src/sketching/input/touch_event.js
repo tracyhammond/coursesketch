@@ -46,8 +46,6 @@ function InputListener() {
 
         // Touch Specific ones
         element.addEventListener('touchend', function(event) {
-            console.log("TOUCH IS ENDING!!!!!!");
-            console.log(event);
             this.listenerScope.mouseUp(event);
         }, false);
         element.addEventListener('touchstart', function(event) {

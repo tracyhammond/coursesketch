@@ -9,7 +9,7 @@
      * to the sketch surface
      */
     PROTOBUF_UTIL.getSrlCommandClass().prototype.getLocalSketchSurface = function() {
-        return SKETCHING_SURFACE_HANDLER.getSketchSurface(this.sketchId).getSrlSketch();
+        return SKETCHING_SURFACE_HANDLER.getSketch(this.sketchId);
     };
 
     /**
@@ -236,4 +236,4 @@
         }
     };
 
-});// (PROTOBUF_UTIL.SrlUpdate, PROTOBUF_UTIL.SrlCommand, PROTOBUF_UTIL);
+})();// (PROTOBUF_UTIL.SrlUpdate, PROTOBUF_UTIL.SrlCommand, PROTOBUF_UTIL);

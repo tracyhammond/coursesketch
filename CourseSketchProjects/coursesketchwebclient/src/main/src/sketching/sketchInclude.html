@@ -38,11 +38,12 @@
 
         var link = importDoc.querySelector('#sketchSurfaceImport');
         var template = link.import.querySelector('template');
+        var clone = document.importNode(template.content, true);
 
         var newElement = new SketchSurface();
 
         SketchSurface.prototype.createdCallback = function() {
-            this.initializeElement(document, template);
+            this.initializeElement(document, clone.cloneNode(true));
         };
 
         SketchSurface.prototype.attachedCallback = function() {
