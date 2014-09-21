@@ -1,0 +1,141 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Sketch Surface Manager test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/sketching/sketchInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/sketching/sketchSurfaceManager.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<div id="sketchLocationCreator"></div>
+
+	<script>
+        QUnit.module("sketch surface manager", {
+            teardown : function() {
+                document.getElementById("sketchLocationCreator").innerHTML = "";
+                SKETCHING_SURFACE_HANDLER.reset();
+            }
+        });
+        test("creation", function(assert) {
+            expect(0);
+            var manager = new SketchSurfaceHandler();
+        });
+
+        test("sketch surface creation", function(assert) {
+            var manager = new SketchSurfaceHandler();
+            var sketch = manager.createSketch();
+            assert.ok(!isUndefined(sketch));
+        });
+
+        test("sketch surface creation with ID", function(assert) {
+            var manager = new SketchSurfaceHandler();
+            var id = "5"; // so unique much wow.
+            var sketch = manager.createSketch(id);
+            assert.ok(!isUndefined(sketch));
+
+            var sketch1 = manager.getSketch(id);
+            // sketch == sketch1 (shallow compare)
+            assert.equal(sketch, sketch1);
+
+            var sketch2 = manager.createSketch(id);
+
+            // sketch == sketch1 (shallow compare)
+            assert.equal(sketch, sketch2);
+        });
+
+        test("sketch surface grab correct ID's", function(assert) {
+            var manager = new SketchSurfaceHandler();
+            var id = "5"; // so unique much wow.
+            var sketch = manager.createSketch(id);
+
+            var array = manager.getSketchIds();
+            assert.equal(array.length, 1);
+            assert.equal(array[0], id);
+        });
+
+        test("sketch surface reset", function(assert) {
+            var manager = new SketchSurfaceHandler();
+            var id = "5"; // so unique much wow.
+            var sketch = manager.createSketch(id);
+
+            var array = manager.getSketchIds();
+            assert.equal(array.length, 1);
+            assert.equal(array[0], id);
+
+            manager.reset();
+            array = manager.getSketchIds();
+            assert.equal(array.length, 0);
+        });
+
+        test("add element throws exception when not correct type", function(assert) {
+            var manager = new SketchSurfaceHandler();
+            assert.throws(function() {
+                manager.addElement({});
+            });
+        });
+    </script>
+	<script>
+        QUnit.module("sketch surface manager", {
+            teardown : function() {
+                document.getElementById("sketchLocationCreator").innerHTML = "";
+                SKETCHING_SURFACE_HANDLER.reset();
+            }
+        });
+
+        test("add Element without Id throws an error", function(assert) {
+            var manager = new SketchSurfaceHandler();
+
+            var sketch = new SketchSurface();
+            assert.throws(function() {
+                manager.addElement(sketch);
+            });
+
+        });
+
+        test("delete sketch removes all children", function(assert) {
+            var manager = new SketchSurfaceHandler();
+
+            var sketchSurface = document.createElement("sketch-surface");
+            document.getElementById("sketchLocationCreator").appendChild(sketchSurface);
+
+            manager.addElement(sketchSurface);
+
+            manager.deleteSketch(sketchSurface.id);
+            assert.equal(document.getElementById("sketchLocationCreator").children.length, 0);
+        });
+
+        test("finds all sketch surfaces in a given element", function(assert) {
+            var manager = new SketchSurfaceHandler();
+
+            var parent = document.getElementById("sketchLocationCreator");
+
+            var sketchSurface = document.createElement("sketch-surface");
+            console.log("ADDING SURFACE 1 TO THE DOM");
+            parent.appendChild(sketchSurface);
+            console.log("TEMP MANAGER");
+            console.log(sketchSurface.updateListTEMP);
+            console.log("SURFACE 1 ID");
+            console.log(sketchSurface.id);
+
+            var sketchSurface2 = document.createElement("sketch-surface");
+            console.log("TEMP MANAGER");
+            console.log(sketchSurface2.updateListTEMP);
+
+            console.log("ADDING SURFACE TWO TO THE DOM");
+
+            parent.appendChild(sketchSurface2);
+
+            assert.equal(sketchSurface.updateListTEMP, sketchSurface2.updateListTEMP);
+            manager.addFromElement(parent);
+            assert.equal(manager.getSketchSurface(sketchSurface.id), sketchSurface);
+            assert.equal(manager.getSketchSurface(sketchSurface2.id), sketchSurface2);
+        });
+    </script>
+</body>
