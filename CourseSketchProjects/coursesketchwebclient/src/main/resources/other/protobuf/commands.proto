@@ -34,8 +34,8 @@ enum CommandType {
 	ASSIGN_ATTRIBUTE = 4;
 	REMOVE_ATTRIBUTE = 5;
 	MARKER = 6; //marker has a number and a MARKERTYPE
-	CLEAR = 7;
-	CREATE_SKETCH = 8; // this should have an IdChain which contains a single id
+	CLEAR = 7; // removes all data from the current sketch object
+	CREATE_SKETCH = 8; // this should have an IdChain which contains a single id.  This will also switch to the sketch immediately
 	SWITCH_SKETCH = 9; // this should have an IdChain which contains a single id
 	FORCE_INTERPRETATION = 10;
 
