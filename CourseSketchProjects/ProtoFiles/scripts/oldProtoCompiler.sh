@@ -13,8 +13,8 @@ SERVERLIST[6]="CourseSketchLoginServer"
 
 echo "clearing old directories"
 rm -rf output/  #deleting to replace it
-rm -rf ../coursesketchwebclient/other/protobuf/  #deleting
-mkdir -p ../coursesketchwebclient/other/protobuf/  #making
+rm -rf ../coursesketchwebclient/src/main/resources/other/protobuf/  #deleting
+mkdir -p ../coursesketchwebclient/src/main/resources/other/protobuf/  #making
 for server in "${SERVERLIST[@]}"; do
     echo "cleaning $server"
 	rm -rf ../$server/src/protobuf/  #deleting
