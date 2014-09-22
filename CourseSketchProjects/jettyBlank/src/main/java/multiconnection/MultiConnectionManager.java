@@ -237,7 +237,7 @@ public class MultiConnectionManager {
             throw new NullPointerException("can not add connection to null type");
         }
 
-        connection.parentManager = this;
+        connection.setParentManager(this);
 
         ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
