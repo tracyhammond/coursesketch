@@ -5,10 +5,10 @@
 	<name>AnswerCheckerServer</name>
 
 	<parent>
-	    <groupId>CourseSketch</groupId>
-	    <artifactId>CourseSketch-parent</artifactId>
-	    <version>0.0.1-SNAPSHOT</version>
-	    <relativePath>../../</relativePath>
+		<groupId>CourseSketch</groupId>
+		<artifactId>CourseSketch-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../../</relativePath>
 	</parent>
 
 	<properties>
@@ -29,6 +29,13 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

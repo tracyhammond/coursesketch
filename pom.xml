@@ -66,9 +66,7 @@
 		<developerConnection>scm:git:git@github.com:${githubLocation}.git</developerConnection>
 	</scm>
 
-	<!-- possible plugins
-		https://code.google.com/p/maven-replacer-plugin/
-	 -->
+	<!-- possible plugins https://code.google.com/p/maven-replacer-plugin/ -->
 
 	<build>
 		<finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
@@ -237,7 +235,23 @@
 						</execution>
 					</executions>
 				</plugin>
-				<!-- 
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.1</version>
+					<executions>
+						<execution>
+							<id>my-execution</id>
+							<phase>package</phase>
+							<goals>
+								<goal>java</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<mainClass>${mainClass}</mainClass>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>com.github.klieber</groupId>
 					<artifactId>phantomjs-maven-plugin</artifactId>
@@ -253,7 +267,6 @@
 						<version>1.9.7</version>
 					</configuration>
 				</plugin>
-				 -->
 			</plugins>
 		</pluginManagement>
 	</build>
