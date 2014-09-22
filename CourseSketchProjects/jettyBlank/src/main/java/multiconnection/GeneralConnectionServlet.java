@@ -93,7 +93,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
 
     /**
      * Override this method to create a subclass of GeneralConnectionServer.
-     *
+     * 
      * @return
      */
     protected GeneralConnectionServer createServerSocket() {
@@ -112,9 +112,9 @@ public class GeneralConnectionServlet extends WebSocketServlet {
 
     /**
      * This is called when the reconnect command is executed.
-     *
+     * 
      * By default this drops all connections and then calls
-     *
+     * 
      * @see multiconnection.MultiConnectionManager#connectServers(GeneralConnectionServer)
      */
     public void reconnect() {

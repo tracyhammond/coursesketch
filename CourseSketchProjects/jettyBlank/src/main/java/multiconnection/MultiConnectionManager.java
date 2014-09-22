@@ -11,8 +11,9 @@ import protobuf.srl.request.Message.Request;
 
 /**
  * A manager for holding all of the connections that were created.
+ * 
  * @author gigemjt
- *
+ * 
  */
 public class MultiConnectionManager {
 
@@ -28,20 +29,21 @@ public class MultiConnectionManager {
 
     /**
      * Determines whether the server is being connected locally.
-     *
+     * 
      * Can be overridden.
      */
     protected boolean connectLocally = CONNECT_LOCALLY;
 
     /**
      * Determines whether the server will be connecting securely.
-     *
+     * 
      * Can be overridden.
      */
     protected boolean secure = false;
 
     /**
-     * A map that contains a list of connections that are differentiated by a specific class.
+     * A map that contains a list of connections that are differentiated by a
+     * specific class.
      */
     HashMap<Class<?>, ArrayList<ConnectionWrapper>> connections = new HashMap<Class<?>, ArrayList<ConnectionWrapper>>();
 
@@ -52,7 +54,7 @@ public class MultiConnectionManager {
 
     /**
      * Creates a default {@link MultiConnectionManager}.
-     *
+     * 
      * @param parent
      *            The server that is using this object.
      * @param isLocal
@@ -69,7 +71,7 @@ public class MultiConnectionManager {
 
     /**
      * Creates a connection given the different information.
-     *
+     * 
      * @param serv
      *            The server that is connected to this connection manager.
      * @param isLocal
@@ -126,14 +128,15 @@ public class MultiConnectionManager {
 
     /**
      * Sends a request with the id and the connection at the given index.
-     *
+     * 
      * @param req
      *            The request to send.
      * @param sessionID
      *            The session Id of the request.
      * @param connectionType
      *            The type of connection being given
-     * @throws ConnectionException thrown if a connection failed to be found.
+     * @throws ConnectionException
+     *             thrown if a connection failed to be found.
      */
     public void send(final Request req, final String sessionID, final Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
         // Attach the existing request with the UserID
@@ -148,7 +151,7 @@ public class MultiConnectionManager {
 
     /**
      * Creates and then adds a connection to the {@link MultiConnectionManager}.
-     *
+     * 
      * @param serv
      *            The server that is connected to this connection manager.
      * @param isLocal
@@ -178,13 +181,13 @@ public class MultiConnectionManager {
     /**
      * Allows a server to set an action to occur when a socket is no longer able
      * to send messages.
-     *
+     * 
      * @param listen
      *            the source object will be a list of request and will also
      *            contain a string specifying the type of connection.
      * @param connectionType
      *            The type to bind the action to.
-     *
+     * 
      */
     public final void setFailedSocketListener(final ActionListener listen, final Class<? extends ConnectionWrapper> connectionType) {
         ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
@@ -206,8 +209,10 @@ public class MultiConnectionManager {
 
     /**
      * Does nothing by default. Can be overwritten to make life easier.
-     *
-     * @param parentServer ignored by this implementation. Override to change functionality.
+     * 
+     * @param parentServer
+     *            ignored by this implementation. Override to change
+     *            functionality.
      */
     // @SuppressWarnings("unused")
     public void connectServers(final GeneralConnectionServer parentServer) {
@@ -215,7 +220,7 @@ public class MultiConnectionManager {
 
     /**
      * Adds a connection to a list with the given connection Type.
-     *
+     * 
      * @param connection
      *            The connection to be added.
      * @param connectionType
@@ -248,8 +253,9 @@ public class MultiConnectionManager {
     /**
      * Returns a connection that we believe to be the best connection at this
      * time.
-     *
-     * @param connectionType The type of connection being requested.
+     * 
+     * @param connectionType
+     *            The type of connection being requested.
      * @return A valid connection.
      */
     public ConnectionWrapper getBestConnection(final Class<? extends ConnectionWrapper> connectionType) {
@@ -263,7 +269,7 @@ public class MultiConnectionManager {
 
     /**
      * Closes all connections and removes them from storage.
-     *
+     * 
      * @param clearTypes
      *            if true then the mapping will be completely cleared.
      * @param debugPrint
