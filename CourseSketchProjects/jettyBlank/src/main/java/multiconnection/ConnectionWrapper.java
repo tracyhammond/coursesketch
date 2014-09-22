@@ -451,4 +451,14 @@ public class ConnectionWrapper {
     protected final MultiConnectionManager getParentManager() {
         return parentManager;
     }
+
+    /**
+     * @param multiConnectionManager The Parent manager for this specific connection.
+     */
+    /* package-private */ final void setParentManager(final MultiConnectionManager multiConnectionManager) {
+        if (this.parentManager != null) {
+            throw new RuntimeException("This field is immutable and can only be set once.");
+        }
+        parentManager = multiConnectionManager;
+    }
 }
