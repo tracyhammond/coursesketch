@@ -11,9 +11,9 @@ import protobuf.srl.request.Message.Request;
 
 /**
  * A manager for holding all of the connections that were created.
- * 
+ *
  * @author gigemjt
- * 
+ *
  */
 public class MultiConnectionManager {
 
@@ -29,7 +29,7 @@ public class MultiConnectionManager {
 
     /**
      * Determines whether the server is being connected locally.
-     * 
+     *
      * Can be overridden.
      */
     protected boolean connectLocally = CONNECT_LOCALLY;
@@ -50,23 +50,23 @@ public class MultiConnectionManager {
     /**
      * The server that using this {@link MultiConnectionManager}.
      */
-    protected GeneralConnectionServer parent; // TODO: CHANGE THIS
+    private GeneralConnectionServer parent; // TODO: CHANGE THIS
 
     /**
      * Creates a default {@link MultiConnectionManager}.
-     * 
-     * @param parent
+     *
+     * @param iParent
      *            The server that is using this object.
-     * @param isLocal
+     * @param iIsLocal
      *            True if the connection should be for a local server instead of
      *            a remote server.
-     * @param secure
+     * @param iSecure
      *            True if the connections should be secure.
      */
-    public MultiConnectionManager(final GeneralConnectionServer parent, final boolean isLocal, final boolean secure) {
-        this.parent = parent;
-        this.connectLocally = isLocal;
-        this.secure = secure;
+    public MultiConnectionManager(final GeneralConnectionServer iParent, final boolean iIsLocal, final boolean iSecure) {
+        this.parent = iParent;
+        this.connectLocally = iIsLocal;
+        this.secure = iSecure;
     }
 
     /**
@@ -202,31 +202,31 @@ public class MultiConnectionManager {
     /**
      * Drops all of the connections then adds them all back.
      */
-    protected void reconnect() {
+    protected final void reconnect() {
         this.dropAllConnection(true, false);
         this.connectServers(parent);
     }
 
     /**
      * Does nothing by default. Can be overwritten to make life easier.
-     * 
+     *
      * @param parentServer
      *            ignored by this implementation. Override to change
      *            functionality.
      */
-    // @SuppressWarnings("unused")
     public void connectServers(final GeneralConnectionServer parentServer) {
     }
 
     /**
      * Adds a connection to a list with the given connection Type.
-     * 
+     *
+     * Throws a {@link NullPointerException} If connection is null or
+     * connectLocally is null.
+     *
      * @param connection
      *            The connection to be added.
      * @param connectionType
      *            The type to differentiate connections by.
-     * @throws {@link NullPointerException} If connection is null or
-     *         connectLocally is null.
      */
     public final void addConnection(final ConnectionWrapper connection, final Class<? extends ConnectionWrapper> connectionType) {
         if (connection == null) {
@@ -252,14 +252,14 @@ public class MultiConnectionManager {
 
     /**
      * Returns a connection that we believe to be the best connection at this
-     * time.
-     * 
+     * time. This can be overridden for a better server specific system.
+     *
      * @param connectionType
      *            The type of connection being requested.
      * @return A valid connection.
      */
     public ConnectionWrapper getBestConnection(final Class<? extends ConnectionWrapper> connectionType) {
-        ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
+        final ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
             throw new NullPointerException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
@@ -269,7 +269,7 @@ public class MultiConnectionManager {
 
     /**
      * Closes all connections and removes them from storage.
-     * 
+     *
      * @param clearTypes
      *            if true then the mapping will be completely cleared.
      * @param debugPrint
@@ -291,5 +291,12 @@ public class MultiConnectionManager {
                 connections.clear();
             }
         }
+    }
+
+    /**
+     * @return The parent server for this MultiConnectionManager.
+     */
+    protected final GeneralConnectionServer getParentServer() {
+        return parent;
     }
 }
