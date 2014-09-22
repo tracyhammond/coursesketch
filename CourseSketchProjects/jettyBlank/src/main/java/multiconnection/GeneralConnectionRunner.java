@@ -2,8 +2,8 @@ package multiconnection;
 
 /*
  * Jetty server information
- * https://www.eclipse.org/jetty/documentation/current/embedded-examples.html#d0e18352
- *
+ * https://www.eclipse.org/jetty/documentation/current/embedded
+ * -examples.html#d0e18352
  */
 
 import java.io.BufferedReader;
@@ -65,8 +65,9 @@ public class GeneralConnectionRunner {
 
     /**
      * Runs the entire startup process including input.
-     *
-     * @throws Exception when instatntating the server fails.
+     * 
+     * @throws Exception
+     *             when instatntating the server fails.
      */
     protected final void runAll() throws Exception {
         this.runMost();
@@ -90,8 +91,7 @@ public class GeneralConnectionRunner {
         cf.setTrustStorePassword(keystorePassword);
         // cf.setCertAlias("nss324-o");
         // cf.checkKeyStore();
-        SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(
-                cf, org.eclipse.jetty.http.HttpVersion.HTTP_1_1.toString());
+        SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(cf, org.eclipse.jetty.http.HttpVersion.HTTP_1_1.toString());
 
         HttpConfiguration config = new HttpConfiguration();
         config.setSecureScheme("https");
@@ -101,23 +101,22 @@ public class GeneralConnectionRunner {
         config.setResponseHeaderSize(DEFAULT_RESPONSE_HEADER_SIZE);
         HttpConfiguration sslConfiguration = new HttpConfiguration(config);
         sslConfiguration.addCustomizer(new SecureRequestCustomizer());
-        HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(
-                sslConfiguration);
+        HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(sslConfiguration);
 
-        ServerConnector connector = new ServerConnector(server,
-                sslConnectionFactory, httpConnectionFactory);
+        ServerConnector connector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
         connector.setPort(port);
         server.addConnector(connector);
 
-        server.setConnectors(new Connector[] {connector});
+        server.setConnectors(new Connector[] { connector });
     }
 
     /**
      * Runs the majority of the startup process.
-     *
+     * 
      * Does not handle accepting Input
-     *
-     * @throws Exception if there is an error instantiating the server
+     * 
+     * @throws Exception
+     *             if there is an error instantiating the server
      */
     protected final void runMost() throws Exception {
         this.loadConfigurations();
@@ -152,8 +151,9 @@ public class GeneralConnectionRunner {
     /**
      * Sets up a Jetty embedded server. Uses HTTPS over port 12102 and a key
      * certificate.
-     *
-     * @throws Exception if there is an error instantiating the server
+     * 
+     * @throws Exception
+     *             if there is an error instantiating the server
      */
     public final void createServer() throws Exception {
         server = new Server(port);
@@ -176,12 +176,11 @@ public class GeneralConnectionRunner {
         // TODO change this to true!
         servletInstance = getServlet(timeoutTime, false, local);
 
-        servletHandler.addServletWithMapping(
-                new ServletHolder(servletInstance), "/*");
+        servletHandler.addServletWithMapping(new ServletHolder(servletInstance), "/*");
         stats.setHandler(servletHandler);
 
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] {stats});
+        handlers.setHandlers(new Handler[] { stats });
 
         server.setHandler(handlers);
     }
@@ -204,10 +203,10 @@ public class GeneralConnectionRunner {
 
     /**
      * Returns a new instance of a {@link GeneralConnectionServlet}.
-     *
+     * 
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
-     *
+     * 
      * @param timeOut
      *            length of specified timeout, in miliseconds
      * @param isSecure
@@ -216,11 +215,10 @@ public class GeneralConnectionRunner {
      * @param isLocal
      *            <code>true</code> if the server is running locally,
      *            <code>false</code> otherwise
-     *
+     * 
      * @return a new connection servlet for this server
      */
-    public GeneralConnectionServlet getServlet(final long timeOut, final boolean isSecure,
-            final boolean isLocal) {
+    public GeneralConnectionServlet getServlet(final long timeOut, final boolean isSecure, final boolean isLocal) {
         if (!isSecure && production) {
             System.err.println("Running an insecure server");
         }
@@ -229,11 +227,11 @@ public class GeneralConnectionRunner {
 
     /**
      * Handles commands that can be used to perform certain functionality.
-     *
+     * 
      * This method can and in some cases should be overwritten. We
      * <b>strongly</b> suggest that you call super first then check to see if it
      * is true and then call your overwritten method.
-     *
+     * 
      * @param command
      *            The command that is parsed to provide functionality.
      * @param sysin
@@ -244,8 +242,7 @@ public class GeneralConnectionRunner {
      *             if an error with I/O or instantiating the server occurs, or
      *             the thread is interrupted
      */
-    public final boolean parseCommand(final String command,
-            final BufferedReader sysin) throws Exception {
+    public final boolean parseCommand(final String command, final BufferedReader sysin) throws Exception {
         final int waitDelay = 1000;
         if (command == null) {
             return true;
@@ -280,8 +277,7 @@ public class GeneralConnectionRunner {
             if (this.server == null || !this.server.isRunning()) {
                 this.runMost();
             } else {
-                System.out
-                        .println("you can not start the because it is already running.");
+                System.out.println("you can not start the because it is already running.");
             }
             return true;
         }
@@ -289,12 +285,10 @@ public class GeneralConnectionRunner {
     }
 
     // TODO add a command manager of some sort.
-    public final boolean parseUtilityCommand(final String command, final BufferedReader sysin)
-            throws Exception {
+    public final boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws Exception {
         if (command.equals("toggle logging")) {
             if (logging) {
-                System.out
-                        .println("Are you sure you want to turn loggin off? [y/n]");
+                System.out.println("Are you sure you want to turn loggin off? [y/n]");
                 if (!sysin.readLine().equalsIgnoreCase("y")) {
                     System.out.println("action canceled");
                     return true;
@@ -320,8 +314,7 @@ public class GeneralConnectionRunner {
             @Override
             public void run() {
                 try {
-                    BufferedReader sysin = new BufferedReader(
-                            new InputStreamReader(System.in));
+                    BufferedReader sysin = new BufferedReader(new InputStreamReader(System.in));
                     while (acceptInput) {
                         String in = sysin.readLine();
                         try {
@@ -351,8 +344,9 @@ public class GeneralConnectionRunner {
 
     /**
      * Sets the password for the SSL keystore.
-     *
-     * @param pass password to set for the keystore
+     * 
+     * @param pass
+     *            password to set for the keystore
      */
     protected final void setKeystorePassword(final String pass) {
         this.keystorePassword = pass;
