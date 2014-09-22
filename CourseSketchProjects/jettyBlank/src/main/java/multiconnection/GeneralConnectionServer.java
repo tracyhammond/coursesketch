@@ -15,6 +15,8 @@ import protobuf.srl.request.Message.Request;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import connection.TimeManager;
+
 @WebSocket()
 public class GeneralConnectionServer {
 
@@ -193,16 +195,23 @@ public class GeneralConnectionServer {
         return parentServer.manager;
     }
 
+    public int getCurrentConnectionNumber() {
+        return connectionToId.size();
+    }
+
+    /**
+     * Parses a request from the given ByteBuffer.
+     * @author gigemjt
+     *
+     */
     public static final class Decoder {
         /**
          * Returns a {@link Request} as it is parsed from the ByteBuffer.
-         * 
-         * Returns null if the ByteBuffer does not exist.
-         * 
-         * @param buffer
-         * @return
+         *
+         * @param buffer The message that is being deoced into a request.
+         * @return null if the ByteBuffer does not exist or a Request otherwise.
          */
-        public static Request parseRequest(ByteBuffer buffer) {
+        public static Request parseRequest(final ByteBuffer buffer) {
             try {
                 return Request.parseFrom(buffer.array());
             } catch (InvalidProtocolBufferException e) {
@@ -212,46 +221,82 @@ public class GeneralConnectionServer {
         }
     }
 
+    /**
+     * Encodes messages with important information.
+     * @author gigemjt
+     */
     public static final class Encoder {
+
+        /**
+         * This number represents the 4th version of UUID which is the one we use.
+         */
+        public static final long VERSION_4_UUID = 0x4000L;
+
+        /**
+         * How much we multiply the random number by.
+         */
+        private static final double RANDOM_MULT = 0x1000;
+
+        /**
+         * We use this number to increment the counter.
+         */
+        private static final long COUNTER_ADDITION = 0x10000L;
+
+        /**
+         * | with the nano time.  (not sure what it does)
+         */
+        private static final long MIN_NANO_TIME = 0x8000000000000000L;
+
         /**
          * counter will be incremented by 0x10000 for each new SComponent that
-         * is created counter is used as the most significant bits of the UUID
-         * 
+         * is created counter is used as the most significant bits of the UUID.
+         *
          * initialized to 0x4000 (the version -- 4: randomly generated UUID)
          * along with 3 bytes of randomness: Math.random()*0x1000 (0x0 - 0xFFF)
-         * 
+         *
          * the randomness further reduces the chances of collision between
          * multiple sketches created on multiple computers simultaneously
-         * 
+         *
          * (taken from SCComponent)
          */
-        public static long counter = 0x4000L | (long) (Math.random() * 0x1000);
+        private static long counter = VERSION_4_UUID | (long) (Math.random() * RANDOM_MULT);
 
         /**
          * Returns a {@link Request} that contains the sessionInfo and the time
          * that the message was sent.
-         * 
-         * Returns itself if the sessionInfo is null.
+         *
+         * @param req The message that is being rebuilt.
+         *
+         * @param sessionInfo The information about the session.
+         *
+         * @return itself if the sessionInfo is null.
          */
-        public static Request requestIDBuilder(Request req, String sessionInfo) {
-            if (sessionInfo == null)
+        public static Request requestIDBuilder(final Request req, final String sessionInfo) {
+            if (sessionInfo == null) {
                 return req;
-            Request.Builder breq = Request.newBuilder();
+            }
+            final Request.Builder breq = Request.newBuilder();
             breq.mergeFrom(req);
             breq.setSessionInfo(sessionInfo);
             if (!breq.hasMessageTime()) {
-                breq.setMessageTime(System.currentTimeMillis());
+                breq.setMessageTime(TimeManager.getSystemTime());
             }
             return breq.build();
         }
 
+        /**
+         * @return The next UUID that is generated.
+         */
         public static UUID nextID() {
-            counter += 0x10000L; // Overflow is perfectly fine.
-            return new UUID(counter, System.nanoTime() | 0x8000000000000000L);
+            counter += COUNTER_ADDITION; // Overflow is perfectly fine.
+            return new UUID(counter, System.nanoTime() | MIN_NANO_TIME);
         }
-    }
 
-    public int getCurrentConnectionNumber() {
-        return connectionToId.size();
+        /**
+         * @return the counter used in the generation of UUIDs.
+         */
+        public static long getCounter() {
+            return counter;
+        }
     }
 }
