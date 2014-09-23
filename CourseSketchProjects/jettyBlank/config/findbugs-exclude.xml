@@ -1,0 +1,8 @@
+<FindBugsFilter>
+  <Match>
+      <Bug pattern="SE_BAD_FIELD" />
+  </Match>
+   <Match>
+      <Package name="~protobuf[.]srl[.].*?" />
+  </Match>
+</FindBugsFilter>

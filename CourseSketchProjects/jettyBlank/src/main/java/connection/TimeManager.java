@@ -107,7 +107,7 @@ public final class TimeManager {
         System.out.println("proxy time:" + milltoDate(DateTime.now().getMillis()));
         final Request.Builder rsp = Request.newBuilder();
         rsp.setRequestType(Request.MessageType.TIME);
-        rsp.setMessageTime(req.getMessageTime() + (getSystemTime() - startCounter));
+        rsp.setMessageTime(req.getMessageTime() + getSystemTime() - startCounter);
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
 
         return rsp.build();

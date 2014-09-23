@@ -54,7 +54,7 @@ public class ConnectionWrapper {
     /**
      * This is the server that is running the connection wrapper.
      */
-    private GeneralConnectionServer parentServer;
+    private final GeneralConnectionServer parentServer;
 
     /**
      * This is the manager that holds an instance of this connection wrapper.
@@ -74,7 +74,7 @@ public class ConnectionWrapper {
     /**
      * The location of the server that this object is connected to.
      */
-    private URI destination;
+    private final URI destination;
 
     /**
      * True if the object is currently connected to the remote server.
@@ -246,9 +246,9 @@ public class ConnectionWrapper {
                 if (cause.getMessage().trim().equalsIgnoreCase("Connection refused")) {
                     // System.out.println("This error is caused by a server not being open yet!");
                     refusedConnection = true;
+                    System.err.println("Connection was refused");
                 }
-                // nonExistantServer = true;
-                // TODO: log this error
+                System.err.println("Connection had issues!");
             }
         }
     }
@@ -259,6 +259,7 @@ public class ConnectionWrapper {
      *
      * @param buffer The message that is received by this object.
      */
+    @SuppressWarnings("checkstyle:designforextension")
     public void onMessage(final ByteBuffer buffer) {
         final MultiConnectionState state = getStateFromId(GeneralConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
         session.getRemote().sendBytesByFuture(buffer);
@@ -273,9 +274,7 @@ public class ConnectionWrapper {
     protected final MultiConnectionState getStateFromId(final String key) {
         if (parentServer == null) {
             System.out.println("null parent");
-        }
-        if (parentServer.getIdToState() == null) {
-            System.out.println("null getIdToState");
+            return null;
         }
         return parentServer.getIdToState().get(key);
     }
@@ -289,9 +288,7 @@ public class ConnectionWrapper {
     protected final Session getConnectionFromState(final MultiConnectionState state) {
         if (parentServer == null) {
             System.out.println("null parent");
-        }
-        if (parentServer.getIdToConnection() == null) {
-            System.out.println("null IdToConnection");
+            return null;
         }
         return parentServer.getIdToConnection().get(state);
     }
