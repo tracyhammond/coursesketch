@@ -31,21 +31,21 @@ public final class TimeManager {
      *
      * Specifically this one is about sending a time message to the client.
      */
-    private static final String SEND_TIME_TO_CLIENT_MSG = "1";
+    public static final String SEND_TIME_TO_CLIENT_MSG = "1";
 
     /**
      * A message representing the state to send to the client.
      *
      * Specifically this one is about the client requesting the latency.
      */
-    private static final String CLIENT_REQUEST_LATENCY_MSG = "2";
+    public static final String CLIENT_REQUEST_LATENCY_MSG = "2";
 
     /**
      * A message representing the state to send to the client.
      *
      * Specifically this one is about sending the latency to the client.
      */
-    private static final String SEND_LATENCY_TO_CLIENT_MSG = "3";
+    public static final String SEND_LATENCY_TO_CLIENT_MSG = "3";
 
 
     /**
@@ -54,6 +54,11 @@ public final class TimeManager {
      * This is a transient value and is not thread safe.
      */
     private static long timeDifference = 0;
+
+    /**
+     * The latency between the client and the server.
+     */
+    private static long latencyDifference = 0;
 
     /**
      * The difference between the master server and the client server.
@@ -79,6 +84,7 @@ public final class TimeManager {
     public static long getSystemTime() {
         return DateTime.now().getMillis() + totalTimeDifference;
     }
+
     /**
      * @return Creates a request that sends the current time to the client. Request contains 'true' time.
      */
@@ -104,9 +110,11 @@ public final class TimeManager {
         System.out.println("Server Recieved Time");
         timeDifference = req.getMessageTime() - getSystemTime();
         System.out.println("server time:" + milltoDate(req.getMessageTime()));
-        System.out.println("proxy time:" + milltoDate(DateTime.now().getMillis()));
+        System.out.println("my (client) time:" + milltoDate(DateTime.now().getMillis()));
+        System.out.println("time difference:" + timeDifference);
         final Request.Builder rsp = Request.newBuilder();
         rsp.setRequestType(Request.MessageType.TIME);
+        // message time plus adjusted time minus time it took to compute adjusted time.
         rsp.setMessageTime(req.getMessageTime() + getSystemTime() - startCounter);
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
 
@@ -138,6 +146,7 @@ public final class TimeManager {
      */
     private static Request serverSendLatencyToClient(final Request req) {
         final long latency = getSystemTime() - req.getMessageTime();
+        System.out.println("latency: " + latency);
 
         final Request.Builder rsp = Request.newBuilder();
 
@@ -153,8 +162,8 @@ public final class TimeManager {
      * @return null
      */
     private static Request clientReceiveLatency(final Request req) {
-        final long latency = req.getMessageTime();
-        totalTimeDifference = timeDifference + latency;
+        latencyDifference = req.getMessageTime();
+        totalTimeDifference = timeDifference + latencyDifference;
         if (listen != null) {
             listen.actionPerformed(new ActionEvent(req, 0, null));
         }
@@ -169,5 +178,40 @@ public final class TimeManager {
      */
     private static DateTime milltoDate(final long mils) {
         return new DateTime(mils);
+    }
+
+    /**
+     * Resets the TimeManager so that it is fresh. The results of this method
+     * will be that all state will be equal to the TimeManager first being
+     * created.
+     */
+    public static void reset() {
+        timeDifference = 0;
+        totalTimeDifference = 0;
+        listen = null;
+    }
+
+    /**
+     * @return the time difference between the server an the client but this
+     *         assumes there is zero lag.
+     */
+    public static long getPartialTimeDifference() {
+        return timeDifference;
+    }
+
+    /**
+     * @return the time difference between the server an the client and this
+     *         accounts for lag. But it assumes lag is the same between server
+     *         and client.
+     */
+    public static long getTotalTimeDifference() {
+        return totalTimeDifference;
+    }
+
+    /**
+     * @return the latency difference between the server and the client.
+     */
+    public static long getLatencyDifference() {
+        return latencyDifference;
     }
 }
