@@ -15,7 +15,6 @@
 	it is worth reading the documentation. -->
 
 <module name="Checker">
-    
     <!-- Suppresses @SupressWarning tags -->
     <module name="SuppressWarningsFilter" />
     
@@ -153,7 +152,8 @@
 		<module name="InnerAssignment" />
 		<module name="MagicNumber" />
 		<module name="MissingSwitchDefault" />
-		<module name="RedundantThrows" />
+		<!-- IGNORED WHILE BUG EXIST -->
+		<!-- <module name="RedundantThrows" />  -->
 		<module name="SimplifyBooleanExpression" />
 		<module name="SimplifyBooleanReturn" />
 

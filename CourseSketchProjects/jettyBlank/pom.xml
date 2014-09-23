@@ -16,8 +16,13 @@
 		<!-- This may be removed and a later solution will need to be worked on -->
 		<absoluteCheckstyleLocation>../../${checkstyleLocation}</absoluteCheckstyleLocation>
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<testLevel>0</testLevel>
+		<averageTestLevel>0</averageTestLevel>
+		<projectBranchLevel>3</projectBranchLevel>
+		<projectLineLevel>7</projectLineLevel>
 	</properties>
 	<build>
+	    <defaultGoal>clean install</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
