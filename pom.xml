@@ -227,14 +227,8 @@
 								<goal>check</goal>
 							</goals>
 						</execution>
-						<!-- 
-						<execution>
-							<id>findbugs-test-compile</id>
-							<phase>test-compile</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution> -->
+						<!-- <execution> <id>findbugs-test-compile</id> <phase>test-compile</phase> 
+							<goals> <goal>check</goal> </goals> </execution> -->
 					</executions>
 				</plugin>
 				<plugin>
@@ -249,7 +243,9 @@
 							</goals>
 						</execution>
 					</executions>
-					<configuration><verbose>true</verbose></configuration>
+					<configuration>
+						<verbose>true</verbose>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -263,13 +259,13 @@
 							</excludes>
 						</instrumentation>
 						<check>
+							<haltOnFailure>true</haltOnFailure>
 							<branchRate>${testLevel}</branchRate>
 							<lineRate>${testLevel}</lineRate>
-							<haltOnFailure>true</haltOnFailure>
-							<totalBranchRate>${testLevel}</totalBranchRate>
-							<totalLineRate>${testLevel}</totalLineRate>
-							<packageLineRate>${testLevel}</packageLineRate>
-							<packageBranchRate>${testLevel}</packageBranchRate>
+							<totalBranchRate>${projectBranchLevel}</totalBranchRate>
+							<totalLineRate>${projectLineLevel}</totalLineRate>
+							<packageLineRate>${packageBranchLevel}</packageLineRate>
+							<packageBranchRate>${packageLineLevel}</packageBranchRate>
 						</check>
 					</configuration>
 					<executions>
@@ -332,6 +328,10 @@
 		<testLevel>85</testLevel>
 		<minTestLevel>70</minTestLevel>
 		<averageTestLevel>90</averageTestLevel>
+		<projectBranchLevel>${averageTestLevel}</projectBranchLevel>
+		<projectLineLevel>${averageTestLevel}</projectLineLevel>
+		<packageBranchLevel>${averageTestLevel}</packageBranchLevel>
+		<packageLineLevel>${averageTestLevel}</packageLineLevel>
 		<checkstyleLocation>config/checkstyle.xml</checkstyleLocation>
 		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
