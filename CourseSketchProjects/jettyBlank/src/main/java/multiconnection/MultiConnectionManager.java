@@ -32,25 +32,25 @@ public class MultiConnectionManager {
      *
      * Can be overridden.
      */
-    protected boolean connectLocally = CONNECT_LOCALLY;
+    private boolean connectLocally = CONNECT_LOCALLY;
 
     /**
      * Determines whether the server will be connecting securely.
-     * 
+     *
      * Can be overridden.
      */
-    protected boolean secure = false;
+    private boolean secure = false;
 
     /**
      * A map that contains a list of connections that are differentiated by a
      * specific class.
      */
-    HashMap<Class<?>, ArrayList<ConnectionWrapper>> connections = new HashMap<Class<?>, ArrayList<ConnectionWrapper>>();
+    private HashMap<Class<?>, ArrayList<ConnectionWrapper>> connections = new HashMap<Class<?>, ArrayList<ConnectionWrapper>>();
 
     /**
      * The server that using this {@link MultiConnectionManager}.
      */
-    private GeneralConnectionServer parent; // TODO: CHANGE THIS
+    private GeneralConnectionServer parent;
 
     /**
      * Creates a default {@link MultiConnectionManager}.
@@ -71,7 +71,7 @@ public class MultiConnectionManager {
 
     /**
      * Creates a connection given the different information.
-     * 
+     *
      * @param serv
      *            The server that is connected to this connection manager.
      * @param isLocal
@@ -100,9 +100,9 @@ public class MultiConnectionManager {
             throw new ConnectionException("Attempting to connect to null address");
         }
 
-        String start = isSecure ? "wss://" : "ws://";
+        final String start = isSecure ? "wss://" : "ws://";
 
-        String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port);
+        final String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port);
         System.out.println("Creating a client connecting to: " + location);
         try {
             @SuppressWarnings("rawtypes")
@@ -128,7 +128,7 @@ public class MultiConnectionManager {
 
     /**
      * Sends a request with the id and the connection at the given index.
-     * 
+     *
      * @param req
      *            The request to send.
      * @param sessionID
@@ -138,6 +138,7 @@ public class MultiConnectionManager {
      * @throws ConnectionException
      *             thrown if a connection failed to be found.
      */
+    @SuppressWarnings("checkstyle:designforextension")
     public void send(final Request req, final String sessionID, final Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
         // Attach the existing request with the UserID
         final Request packagedRequest = GeneralConnectionServer.Encoder.requestIDBuilder(req, sessionID);
@@ -151,7 +152,7 @@ public class MultiConnectionManager {
 
     /**
      * Creates and then adds a connection to the {@link MultiConnectionManager}.
-     * 
+     *
      * @param serv
      *            The server that is connected to this connection manager.
      * @param isLocal
@@ -181,16 +182,16 @@ public class MultiConnectionManager {
     /**
      * Allows a server to set an action to occur when a socket is no longer able
      * to send messages.
-     * 
+     *
      * @param listen
      *            the source object will be a list of request and will also
      *            contain a string specifying the type of connection.
      * @param connectionType
      *            The type to bind the action to.
-     * 
+     *
      */
     public final void setFailedSocketListener(final ActionListener listen, final Class<? extends ConnectionWrapper> connectionType) {
-        ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
+        final ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
             throw new NullPointerException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
@@ -258,6 +259,7 @@ public class MultiConnectionManager {
      *            The type of connection being requested.
      * @return A valid connection.
      */
+    @SuppressWarnings("checkstyle:designforextension")
     public ConnectionWrapper getBestConnection(final Class<? extends ConnectionWrapper> connectionType) {
         final ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
@@ -298,5 +300,19 @@ public class MultiConnectionManager {
      */
     protected final GeneralConnectionServer getParentServer() {
         return parent;
+    }
+
+    /**
+     * @return True if the connection is local (used for testing).
+     */
+    protected final boolean isConnectionLocal() {
+        return connectLocally;
+    }
+
+    /**
+     * @return True if the connection is using SSL.
+     */
+    protected final boolean isSecure() {
+        return secure;
     }
 }
