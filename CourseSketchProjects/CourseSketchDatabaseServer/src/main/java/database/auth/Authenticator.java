@@ -1,6 +1,6 @@
 package database.auth;
 
-import static util.StringConstants.*;
+import static database.DatabaseStringConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;

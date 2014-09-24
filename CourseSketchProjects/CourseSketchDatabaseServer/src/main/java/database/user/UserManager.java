@@ -1,6 +1,6 @@
 package database.user;
 
-import static util.StringConstants.*;
+import static database.DatabaseStringConstants.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;

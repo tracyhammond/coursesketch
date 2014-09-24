@@ -1,12 +1,6 @@
 package database.submission;
 
-import static util.StringConstants.ADMIN;
-import static util.StringConstants.COURSE_PROBLEM_COLLECTION;
-import static util.StringConstants.EXPERIMENT_COLLECTION;
-import static util.StringConstants.MOD;
-import static util.StringConstants.SELF_ID;
-import static util.StringConstants.SOLUTION_COLLECTION;
-import static util.StringConstants.SOLUTION_ID;
+import static database.DatabaseStringConstants.*;
 
 import java.util.ArrayList;
 
