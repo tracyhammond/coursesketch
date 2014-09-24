@@ -20,10 +20,15 @@
 			<id>jslint</id>
 			<url>http://repo1.maven.org/maven2/org/codehaus/mojo/jslint-maven-plugin/</url>
 		</pluginRepository>
+		<repository>
+			<id>mulesoft-releases</id>
+			<name>MuleSoft Repository</name>
+			<url>https://repository.mulesoft.org/releases/</url>
+		</repository>
 	</pluginRepositories>
 
 	<build>
-	    <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
+		<sourceDirectory>${basedir}/src/main/src</sourceDirectory>
 		<extensions>
 			<extension>
 				<groupId>org.codehaus.mojo</groupId>

@@ -5,17 +5,19 @@ import multiconnection.GeneralConnectionServer;
 import multiconnection.MultiConnectionManager;
 
 public class AnswerConnectionManager extends MultiConnectionManager {
+    private static final int PORT = 8883;
+    public AnswerConnectionManager(final GeneralConnectionServer parent,
+            final boolean connectType, final boolean secure) {
+        super(parent, connectType, secure);
+    }
 
-	public AnswerConnectionManager(GeneralConnectionServer parent, boolean connectType, boolean secure) {
-		super(parent, connectType, secure);
-	}
-
-	@Override
-	public void connectServers(GeneralConnectionServer parent) {
-		try {
-			createAndAddConnection(parent, connectLocally, "srl02.tamu.edu", 8883, secure, SubmissionConnection.class);
-		} catch (ConnectionException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public final void connectServers(final GeneralConnectionServer parent) {
+        try {
+            createAndAddConnection(parent, connectLocally, "srl02.tamu.edu",
+                    PORT, secure, SubmissionConnection.class);
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+        }
+    }
 }
