@@ -27,19 +27,19 @@ public class Authenticator {
 	 * @param list2
 	 * @return
 	 */
-	public static boolean checkAuthentication(DB dbs, String userId, List<String> groups) {
+	public static boolean checkAuthentication(final DB dbs, final String userId, List<String> groups) {
 		if (groups == null) {
 			return false;
 		}
 		//DBCollection new_user = dbs.getCollection(USER_GROUP_COLLECTION);
 		for (String group: groups) {
 			if (group.startsWith(GROUP_PREFIX)) {
-				DBRef myDbRef = new DBRef(dbs, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
-				DBObject corsor = myDbRef.fetch();
+				final DBRef myDbRef = new DBRef(dbs, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
+				final DBObject corsor = myDbRef.fetch();
 				ArrayList list = null;
 				try {
-				list = (ArrayList)corsor.get(USER_LIST);
-				} catch(Exception e) {
+				list = (ArrayList) corsor.get(USER_LIST);
+				} catch (Exception e) {
 					// TODO: REMOVE THIS BAD SHORTCUT CODE
 					if ("2fb06e65-beeb-4e6a-8012-0d4361b08921-778f1adeecac4e86".equals(userId)) {
 						return true;
@@ -49,17 +49,18 @@ public class Authenticator {
 					return true;
 				}
 			} else {
-				if (group.equals(userId))
+				if (group.equals(userId)) {
 					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	public static boolean isTimeValid(long time, DateTime openDate, DateTime closeDate) {
-		return time >= openDate.getMillisecond() && time <= closeDate.getMillisecond();	
+	public static boolean isTimeValid(final long time, final DateTime openDate, final DateTime closeDate) {
+		return time >= openDate.getMillisecond() && time <= closeDate.getMillisecond();
 	}
-	
+
 	public static class AuthType {
 		public boolean user = false;
 		public boolean mod = false;
@@ -74,7 +75,7 @@ public class Authenticator {
 			return user || mod || admin || checkDate || checkAdminOrMod;
 		}
 	}
-	
+
 	/**
 	 * Checks to make sure that the user is authenticated for all values that are true.
 	 *
@@ -88,21 +89,21 @@ public class Authenticator {
 	 * @return True if all checked values are valid
 	 * @throws DatabaseAccessException
 	 */
-	public static boolean mognoIsAuthenticated(DB dbs, String collection, String itemId,String userId, long checkTime,
-			Authenticator.AuthType checkType) throws DatabaseAccessException {
+	public static boolean mognoIsAuthenticated(final DB dbs, final String collection, final String itemId, final String userId, final long checkTime,
+			 final Authenticator.AuthType checkType) throws DatabaseAccessException {
 
-		if(!checkType.validRequest()) {
+		if (!checkType.validRequest()) {
 			return false;
 		}
 
-		DBRef myDbRef = new DBRef(dbs, collection, new ObjectId(itemId));
-		DBObject corsor = myDbRef.fetch();
+		final DBRef myDbRef = new DBRef(dbs, collection, new ObjectId(itemId));
+		final DBObject corsor = myDbRef.fetch();
 		if (corsor == null) {
 			throw new DatabaseAccessException(collection + " was not found with the following ID " + itemId);
 		}
 		boolean validUser = false;
 		if (checkType.user) {
-			ArrayList usersList =  (ArrayList<Object>) corsor.get(USERS); //convert to ArrayList<String>
+			final ArrayList usersList =  (ArrayList<Object>) corsor.get(USERS); //convert to ArrayList<String>
 			validUser = Authenticator.checkAuthentication(dbs, userId, usersList);
 		}
 
@@ -110,8 +111,8 @@ public class Authenticator {
 
 		boolean validMod = false;
 		if (checkType.mod || checkType.checkAdminOrMod) {
-			ArrayList modList =  (ArrayList<Object>) corsor.get(MOD); //convert to ArrayList<String>
-			boolean temp = Authenticator.checkAuthentication(dbs, userId, modList);
+			final ArrayList modList =  (ArrayList<Object>) corsor.get(MOD); //convert to ArrayList<String>
+			final boolean temp = Authenticator.checkAuthentication(dbs, userId, modList);
 			if (checkType.mod) {
 				validMod = temp;
 			}
@@ -122,8 +123,8 @@ public class Authenticator {
 
 		boolean validAdmin = false;
 		if (checkType.admin || checkType.checkAdminOrMod) {
-			ArrayList adminList =  (ArrayList<Object>) corsor.get(ADMIN); //convert to ArrayList<String>
-			boolean temp = Authenticator.checkAuthentication(dbs, userId, adminList);
+			final ArrayList adminList =  (ArrayList<Object>) corsor.get(ADMIN); //convert to ArrayList<String>
+			final boolean temp = Authenticator.checkAuthentication(dbs, userId, adminList);
 			if (checkType.admin) {
 				validAdmin = temp;
 			}
@@ -135,11 +136,11 @@ public class Authenticator {
 		boolean validDate = false;
 		if (checkType.checkDate) {
 			validDate = Authenticator.isTimeValid(checkTime,
-				RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(ACCESS_DATE)).longValue()),
-				RequestConverter.getProtoFromMilliseconds(((Number)corsor.get(CLOSE_DATE)).longValue()));
+				RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(ACCESS_DATE)).longValue()),
+				RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(CLOSE_DATE)).longValue()));
 		}
-		return (validUser == checkType.user) && (validMod == checkType.mod) &&
-				(validAdmin == checkType.admin) && (validDate == checkType.checkDate) &&
-				(validModOrAdmin == checkType.checkAdminOrMod);
+		return (validUser == checkType.user) && (validMod == checkType.mod)
+		        && (validAdmin == checkType.admin) && (validDate == checkType.checkDate)
+		        && (validModOrAdmin == checkType.checkAdminOrMod);
 	}
 }

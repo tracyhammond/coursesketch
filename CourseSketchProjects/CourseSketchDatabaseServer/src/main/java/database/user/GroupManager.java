@@ -16,58 +16,59 @@ import database.auth.Authenticator;
 
 public class GroupManager
 {
-	public static String mongoInsertGroup(DB dbs, SrlGroup group)
+	public static String mongoInsertGroup(final DB dbs, final SrlGroup group)
 	{
-		DBCollection new_user = dbs.getCollection(USER_GROUP_COLLECTION);
-		BasicDBObject query = new BasicDBObject(USER_LIST,group.getUserIdList())
-										.append(NAME,group.getGroupName())
-										.append(ADMIN,group.getAdminList());
+	    final DBCollection new_user = dbs.getCollection(USER_GROUP_COLLECTION);
+	    final BasicDBObject query = new BasicDBObject(USER_LIST, group.getUserIdList())
+										.append(NAME, group.getGroupName())
+										.append(ADMIN, group.getAdminList());
 
 		new_user.insert(query);
-		DBObject corsor = new_user.findOne(query);
+		final DBObject corsor = new_user.findOne(query);
 		return corsor.get(SELF_ID).toString();
 	}
 
-	public static SrlGroup mongoGetGroup(DB dbs, String groupId, String userId) throws AuthenticationException
+	public static SrlGroup mongoGetGroup(final DB dbs, final String groupId, final String userId) throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
-		BasicDBObject query = new BasicDBObject("_id",groupId);
-		DBObject corsor = courses.findOne(query);
+	    final DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
+	    final BasicDBObject query = new BasicDBObject("_id", groupId);
+	    final DBObject corsor = courses.findOne(query);
 
-		ArrayList<String> adminList = (ArrayList)corsor.get("Admin");
+	    final ArrayList<String> adminList = (ArrayList) corsor.get("Admin");
 		boolean isAdmin;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 
-		if(!isAdmin)
+		if (!isAdmin)
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
-		SrlGroup.Builder exactGroup = SrlGroup.newBuilder();
-		exactGroup.addAllUserId((ArrayList)corsor.get("UserList"));
-		exactGroup.setGroupName((String)corsor.get("Name"));
+		final SrlGroup.Builder exactGroup = SrlGroup.newBuilder();
+		exactGroup.addAllUserId((ArrayList) corsor.get("UserList"));
+		exactGroup.setGroupName((String) corsor.get("Name"));
 		if (isAdmin) {
-			exactGroup.addAllAdmin((ArrayList)corsor.get("Admin")); // admin
+			exactGroup.addAllAdmin((ArrayList) corsor.get("Admin")); // admin
 		}
 		return exactGroup.build();
 	}
 
-	public static boolean mongoUpdateGroup(DB dbs, String groupID, String userId, SrlGroup group) throws AuthenticationException
+	public static boolean mongoUpdateGroup(final DB dbs, final String groupID, final String userId, final SrlGroup group)
+	        throws AuthenticationException
 	{
-		DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
-		BasicDBObject query = new BasicDBObject(SELF_ID,groupID);
-		DBObject corsor = courses.findOne(query);
+	    final DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
+	    final BasicDBObject query = new BasicDBObject(SELF_ID, groupID);
+	    final DBObject corsor = courses.findOne(query);
 
-		ArrayList<String> adminList = (ArrayList)corsor.get("Admin");
+	    final ArrayList<String> adminList = (ArrayList) corsor.get("Admin");
 		boolean isAdmin;
 		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
 
-		if(!isAdmin)
+		if (!isAdmin)
 		{
 			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
 		}
 
-		BasicDBObject updated = new BasicDBObject();
+		final BasicDBObject updated = new BasicDBObject();
 		if (isAdmin) {
 			if (group.hasGroupName()) {
 				updated.append("$set", new BasicDBObject("Name", group.getGroupName()));
