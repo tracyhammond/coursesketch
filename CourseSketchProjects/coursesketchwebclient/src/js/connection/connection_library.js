@@ -20,7 +20,9 @@ function Connection(uri, encrypted, attemptReconnect) {
 	var wsUri = (encrypted?'wss://' : 'ws://') + uri;
 	var timeoutVariable = false;
 	var self = this;
-
+	
+	var totalTimeDifferance = 0;
+	
 	function createWebSocket() {
 		try {
 			websocket = new WebSocket(wsUri);
@@ -54,7 +56,10 @@ function Connection(uri, encrypted, attemptReconnect) {
 			        // Decode the Request
 			        var msg = Request.decode(evt.data);
 			        //console.log("request decoded succesfully ");
-			        if (msg.requestType == Request.MessageType.LOGIN && onLogin) {
+					if (msg.requestType == Request.MessageType.TIME) {
+						console.log("getting from time");
+			        	onTime(evt, msg);
+					} else if (msg.requestType == Request.MessageType.LOGIN && onLogin) {
 			        	console.log("getting from login");
 			        	onLogin(evt, msg);
 			        } else if (msg.requestType == Request.MessageType.RECOGNITION && onRecognition) {
@@ -200,7 +205,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 * Gets the current time as a long that is the same as the server time!
 	 */
 	this.getCurrentTime = function() {
-		var longVersion = Long.fromString("" + createTimeStamp());
+		var longVersion = Long.fromString("" + (createTimeStamp() + totalTimeDifferance));
 		return longVersion;
 	};
 
@@ -355,6 +360,11 @@ function Connection(uri, encrypted, attemptReconnect) {
 		command.commandId = generateUUID(); // unique ID
 		return command;
     };
+	
+	function onTime(evt, msg) {
+		
+		
+	};
 }
 var Long = false;
 

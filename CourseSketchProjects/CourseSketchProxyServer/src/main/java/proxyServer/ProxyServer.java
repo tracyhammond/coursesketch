@@ -9,16 +9,27 @@ import internalConnections.RecognitionConnection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import java.util.Set;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+
+import jettyMultiConnection.ConnectionException;
+import jettyMultiConnection.ConnectionWrapper;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.GeneralConnectionServlet;
+import jettyMultiConnection.MultiConnectionState;
 
 import multiconnection.ConnectionWrapper;
 import multiconnection.GeneralConnectionServer;
 import multiconnection.GeneralConnectionServlet;
 import multiconnection.MultiConnectionState;
 
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.joda.time.DateTime;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -49,6 +60,7 @@ public class ProxyServer extends GeneralConnectionServer {
 		ActionListener listener = new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				try {
 					getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
 				} catch (ConnectionException e1) {
@@ -66,11 +78,22 @@ public class ProxyServer extends GeneralConnectionServer {
 					e1.printStackTrace();
 				}
 				// */
+				Set<Session> conns=connectionToId.keySet();
+				for(Session conn:conns)
+				{	
+					send(conn, TimeManager.serverSendTimeToClient());
+				}
 			}
 		};
 		TimeManager.setTimeEstablishedListener(listener);
 	}
 
+	@Override
+	public void onOpen(Session conn) {
+		super.onOpen(conn);
+		send(conn, TimeManager.serverSendTimeToClient());
+	}
+	
 	/**
 	 * Accepts messages and sends the request to the correct server and holds minimum client state.
 	 */

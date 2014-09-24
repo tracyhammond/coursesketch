@@ -50,7 +50,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
 		// so we do not have to perform this again!
 		if (updateCourse) {
-			course.state = state;	//course.sate -> course.state?
+			course.sate = state;
 			setCourse(course);
 		}
 
@@ -82,7 +82,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 		database.getFromCourses(courseId, function(e, request, result) {
 			if (isUndefined(result) || isUndefined(result.data)) {
 				// the listener from the server of the request
-				// it stores the course locally then calls the callback with the course
+				// it stores the course locally then cals the callback with the course
 				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE, function(evt, item) {
 					var school = SchoolBuilder.SrlSchool.decode(item.data);
 					var course = school.courses[0];
