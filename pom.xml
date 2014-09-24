@@ -227,8 +227,13 @@
 								<goal>check</goal>
 							</goals>
 						</execution>
-						<!-- <execution> <id>findbugs-test-compile</id> <phase>test-compile</phase> 
-							<goals> <goal>check</goal> </goals> </execution> -->
+						<execution>
+							<id>findbugs-test-compile</id>
+							<phase>test-compile</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
 					</executions>
 				</plugin>
 				<plugin>

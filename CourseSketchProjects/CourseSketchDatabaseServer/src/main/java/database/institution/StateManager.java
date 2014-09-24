@@ -1,6 +1,6 @@
 package database.institution;
 
-import static util.StringConstants.*;
+import static database.DatabaseStringConstants.*;
 
 import org.bson.types.ObjectId;
 

@@ -1,6 +1,6 @@
 package database.user;
 
-import static util.StringConstants.DATABASE;
+import static database.DatabaseStringConstants.*;
 
 import java.util.ArrayList;
 
