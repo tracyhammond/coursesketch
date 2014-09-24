@@ -56,7 +56,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 	}
 
 	/**
-	 * Calls that stateCallback with all of the assignments in the list modifying their states appropriately.
+	 * Calls that stateCallback with all of the assignments in the list modifying their states appropiately.
 	 */
 	function stateCallbackList(assignmentList, assignmentCallback) {
 		for (var i = 0; i <assignmentList.length; i++) {

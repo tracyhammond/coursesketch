@@ -1,0 +1,42 @@
+application: coursesketch-test
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+- url: /
+  script: main.app
+
+- url: /index\.html
+  static_files: index.html
+  upload: index\.html
+
+- url: /testList
+  script: testFiles.app
+
+- url: /html
+  static_dir: src/html
+  
+- url: /js
+  static_dir: src/js
+
+- url: /css
+  static_dir: src/css
+
+- url: /src
+  static_dir: src/main/src
+
+- url: /test
+  static_dir: src/test/src
+
+
+- url: /images
+  static_dir: src/main/resources/images
+
+- url: /other
+  static_dir: src/main/resources/other
