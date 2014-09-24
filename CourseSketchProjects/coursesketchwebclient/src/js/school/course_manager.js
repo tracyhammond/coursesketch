@@ -231,28 +231,17 @@ function manageHeight() {
 	Given the source this will create an iframe that will manage its own height.
 	TODO: make this more general.
 */
-function replaceEditContent(src, object) {
-	var htmlLocation = "editContent";
-	var toReplace = document.getElementById('editable_unit');
-	if (toReplace.dataset.src == src) {
-		//alert("This type of control already exist");
-		return; // exit early we do not need to change anything
-	}
+function replaceEditContent(src) {
 
 	function onload(event) {
-		console.log("Onload was called");
+		console.log(event);
+		var toReplace = document.getElementById('editable_unit');
 		removeAllChildren(toReplace);
-		toReplace.dataset.src = src;
 		var link = event.srcElement;
-		console.log("link");
-		console.log(link);
-		var importedData = link.import.querySelector("#" + htmlLocation) || link.import.getElementById(htmlLocation);
-		console.log(importedData);
-		if (src && importedData) {
-			var shadow = toReplace.createShadowRoot();
-			var clone = document.importNode(importedData.content, true);
-			shadow.appendChild(clone);
-			contentManager.setHost(shadow);
+		var content = link.import.querySelector("#iframeBody");
+		console.log(content);
+		if (src && content) {
+			toReplace.appendChild(content.cloneNode(true));
 		} else {
 			toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
 			'<h2 style = "text-align:center">Click an item to edit</h2>';
@@ -260,12 +249,10 @@ function replaceEditContent(src, object) {
 	}
 
 	function onerror(event) {
-		toReplace.dataset.src = src;
-		console.log(event);
 		var toReplace = document.getElementById('editable_unit');
 		removeAllChildren(toReplace);
-		toReplace.innerHTML = '<h2 style = "text-align:center">An error occured</h2>' +
-		'<h2 style = "text-align:center">An error occured</h2>';
+		toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
+		'<h2 style = "text-align:center">Click an item to edit</h2>';
 	}
 
 	try {
@@ -279,8 +266,8 @@ function replaceEditContent(src, object) {
 function addNewCourse() { // Functionality to allow for adding of courses by instructors
 	var course = new SrlCourse();
 	//course.id = "Course_01";
-	course.name = "Course Name";
-	course.description = "Course Description";
+	course.name = "Physics";
+	course.description = "Physics is Phun";
 	//course.semester = "Should be in format: '_F13' (_F = Fall, Sp = Spring, Su = Summer) ";
 	//course.accessDate = "mm/dd/yyyy";
 	//course.closeDate = "mm/dd/yyyy";
