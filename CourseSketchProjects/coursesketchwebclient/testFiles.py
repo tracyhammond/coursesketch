@@ -18,15 +18,15 @@ import webapp2
 import os
 
 class MainPage(webapp2.RequestHandler):
-	
-	
+
 	def searchTestFiles(self):
 		fileList = []
-		directory = 'html/test'
+		directory = 'src/test/src/'
 		absPath = os.path.abspath(directory)
 		self.response.write('looking at files in directory ' + directory + ' <br>')
 		counter = 1
 		for r, d, f in os.walk(directory):
+			print f
 			self.response.write('<div class="row">')
 			self.response.write('<b>' + r + '</b><br><br>')
 			
@@ -42,7 +42,6 @@ class MainPage(webapp2.RequestHandler):
 			self.response.write('</ul>')
 			self.response.write('</div></div>')
 			counter = counter + 1
-
 		
 	def visitPath(arg, firname, names):
 		self.response.write('<a href="' + fileName + '">'+ fileName +'</a><br>')
