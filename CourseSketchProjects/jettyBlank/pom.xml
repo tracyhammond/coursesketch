@@ -18,8 +18,8 @@
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
 		<testLevel>0</testLevel>
 		<averageTestLevel>0</averageTestLevel>
-		<projectBranchLevel>3</projectBranchLevel>
-		<projectLineLevel>7</projectLineLevel>
+		<projectBranchLevel>6</projectBranchLevel>
+		<projectLineLevel>9</projectLineLevel>
 	</properties>
 	<build>
 	    <defaultGoal>clean install</defaultGoal>

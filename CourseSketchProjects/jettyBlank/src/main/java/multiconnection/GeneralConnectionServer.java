@@ -315,8 +315,7 @@ public class GeneralConnectionServer {
         public static Request parseRequest(final ByteBuffer buffer) {
             try {
                 return Request.parseFrom(buffer.array());
-            } catch (InvalidProtocolBufferException e) {
-                // e.printStackTrace();
+            } catch (final InvalidProtocolBufferException e) {
                 return null;
             }
         }
