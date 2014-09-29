@@ -11,6 +11,7 @@ import protobuf.srl.request.Message.Request;
 
 /**
  * A manager for holding all of the connections that were created.
+ *
  * @author gigemjt
  *
  */
@@ -31,40 +32,41 @@ public class MultiConnectionManager {
      *
      * Can be overridden.
      */
-    protected boolean connectLocally = CONNECT_LOCALLY;
+    private boolean connectLocally = CONNECT_LOCALLY;
 
     /**
      * Determines whether the server will be connecting securely.
      *
      * Can be overridden.
      */
-    protected boolean secure = false;
+    private boolean secure = false;
 
     /**
-     * A map that contains a list of connections that are differentiated by a specific class.
+     * A map that contains a list of connections that are differentiated by a
+     * specific class.
      */
-    HashMap<Class<?>, ArrayList<ConnectionWrapper>> connections = new HashMap<Class<?>, ArrayList<ConnectionWrapper>>();
+    private HashMap<Class<?>, ArrayList<ConnectionWrapper>> connections = new HashMap<Class<?>, ArrayList<ConnectionWrapper>>();
 
     /**
      * The server that using this {@link MultiConnectionManager}.
      */
-    protected GeneralConnectionServer parent; // TODO: CHANGE THIS
+    private GeneralConnectionServer parent;
 
     /**
      * Creates a default {@link MultiConnectionManager}.
      *
-     * @param parent
+     * @param iParent
      *            The server that is using this object.
-     * @param isLocal
+     * @param iIsLocal
      *            True if the connection should be for a local server instead of
      *            a remote server.
-     * @param secure
+     * @param iSecure
      *            True if the connections should be secure.
      */
-    public MultiConnectionManager(final GeneralConnectionServer parent, final boolean isLocal, final boolean secure) {
-        this.parent = parent;
-        this.connectLocally = isLocal;
-        this.secure = secure;
+    public MultiConnectionManager(final GeneralConnectionServer iParent, final boolean iIsLocal, final boolean iSecure) {
+        this.parent = iParent;
+        this.connectLocally = iIsLocal;
+        this.secure = iSecure;
     }
 
     /**
@@ -98,9 +100,9 @@ public class MultiConnectionManager {
             throw new ConnectionException("Attempting to connect to null address");
         }
 
-        String start = isSecure ? "wss://" : "ws://";
+        final String start = isSecure ? "wss://" : "ws://";
 
-        String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port);
+        final String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port);
         System.out.println("Creating a client connecting to: " + location);
         try {
             @SuppressWarnings("rawtypes")
@@ -133,8 +135,10 @@ public class MultiConnectionManager {
      *            The session Id of the request.
      * @param connectionType
      *            The type of connection being given
-     * @throws ConnectionException thrown if a connection failed to be found.
+     * @throws ConnectionException
+     *             thrown if a connection failed to be found.
      */
+    @SuppressWarnings("checkstyle:designforextension")
     public void send(final Request req, final String sessionID, final Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
         // Attach the existing request with the UserID
         final Request packagedRequest = GeneralConnectionServer.Encoder.requestIDBuilder(req, sessionID);
@@ -187,7 +191,7 @@ public class MultiConnectionManager {
      *
      */
     public final void setFailedSocketListener(final ActionListener listen, final Class<? extends ConnectionWrapper> connectionType) {
-        ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
+        final ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
             throw new NullPointerException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
@@ -199,7 +203,7 @@ public class MultiConnectionManager {
     /**
      * Drops all of the connections then adds them all back.
      */
-    protected void reconnect() {
+    protected final void reconnect() {
         this.dropAllConnection(true, false);
         this.connectServers(parent);
     }
@@ -207,21 +211,23 @@ public class MultiConnectionManager {
     /**
      * Does nothing by default. Can be overwritten to make life easier.
      *
-     * @param parentServer ignored by this implementation. Override to change functionality.
+     * @param parentServer
+     *            ignored by this implementation. Override to change
+     *            functionality.
      */
-    // @SuppressWarnings("unused")
     public void connectServers(final GeneralConnectionServer parentServer) {
     }
 
     /**
      * Adds a connection to a list with the given connection Type.
      *
+     * Throws a {@link NullPointerException} If connection is null or
+     * connectLocally is null.
+     *
      * @param connection
      *            The connection to be added.
      * @param connectionType
      *            The type to differentiate connections by.
-     * @throws {@link NullPointerException} If connection is null or
-     *         connectLocally is null.
      */
     public final void addConnection(final ConnectionWrapper connection, final Class<? extends ConnectionWrapper> connectionType) {
         if (connection == null) {
@@ -232,7 +238,7 @@ public class MultiConnectionManager {
             throw new NullPointerException("can not add connection to null type");
         }
 
-        connection.parentManager = this;
+        connection.setParentManager(this);
 
         ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
@@ -247,13 +253,15 @@ public class MultiConnectionManager {
 
     /**
      * Returns a connection that we believe to be the best connection at this
-     * time.
+     * time. This can be overridden for a better server specific system.
      *
-     * @param connectionType The type of connection being requested.
+     * @param connectionType
+     *            The type of connection being requested.
      * @return A valid connection.
      */
+    @SuppressWarnings("checkstyle:designforextension")
     public ConnectionWrapper getBestConnection(final Class<? extends ConnectionWrapper> connectionType) {
-        ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
+        final ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
             throw new NullPointerException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
@@ -285,5 +293,26 @@ public class MultiConnectionManager {
                 connections.clear();
             }
         }
+    }
+
+    /**
+     * @return The parent server for this MultiConnectionManager.
+     */
+    protected final GeneralConnectionServer getParentServer() {
+        return parent;
+    }
+
+    /**
+     * @return True if the connection is local (used for testing).
+     */
+    protected final boolean isConnectionLocal() {
+        return connectLocally;
+    }
+
+    /**
+     * @return True if the connection is using SSL.
+     */
+    protected final boolean isSecure() {
+        return secure;
     }
 }

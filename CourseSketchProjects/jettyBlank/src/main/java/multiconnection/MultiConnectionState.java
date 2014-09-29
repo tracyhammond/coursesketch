@@ -37,7 +37,7 @@ public class MultiConnectionState {
         if (!(obj instanceof MultiConnectionState)) {
             return false;
         }
-        return ((MultiConnectionState) obj).key == this.key;
+        return ((MultiConnectionState) obj).key.equals(this.key);
     }
 
     @Override

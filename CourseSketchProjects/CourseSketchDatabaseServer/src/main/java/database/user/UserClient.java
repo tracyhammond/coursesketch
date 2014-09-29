@@ -1,6 +1,6 @@
 package database.user;
 
-import static util.StringConstants.DATABASE;
+import static database.DatabaseStringConstants.*;
 
 import java.util.ArrayList;
 
@@ -19,12 +19,12 @@ public final class UserClient {
 	private DB db;
 	private MongoClient DUMB_CLIENT = null;
 
-	private UserClient(String url) {
+	private UserClient(final String url) {
 		try {
-			MongoClient mongoClient = new MongoClient(url);
+		    final MongoClient mongoClient = new MongoClient(url);
 			DUMB_CLIENT = mongoClient;
 			db = mongoClient.getDB(DATABASE);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -34,8 +34,9 @@ public final class UserClient {
 	}
 
 	private static UserClient getInstance() {
-		if (instance==null)
+		if (instance == null) {
 			instance = new UserClient();
+		}
 		return instance;
 	}
 
@@ -43,35 +44,35 @@ public final class UserClient {
 	 * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database
 	 * @param testOnly
 	 */
-	public UserClient(boolean testOnly) {
+	public UserClient(final boolean testOnly) {
 		try {
-			MongoClient mongoClient = new MongoClient("localhost");
+		    final MongoClient mongoClient = new MongoClient("localhost");
 			DUMB_CLIENT = mongoClient;
 			if (testOnly) {
 				db = mongoClient.getDB("test");
 			} else {
 				db = mongoClient.getDB(DATABASE);
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		instance = this;
 	}
 
-	public static boolean insertUser(SrlUser user, String userId) throws DatabaseAccessException {
+	public static boolean insertUser(final SrlUser user, final String userId) throws DatabaseAccessException {
 		UserManager.createUser(getInstance().db, user, userId);
 		return true;
 	}
 
-	public static void addCourseToUser(String userId, String courseId) {
+	public static void addCourseToUser(final String userId, final String courseId) {
 		UserManager.addCourseToUser(getInstance().db, userId, courseId);
 	}
 
-	public static ArrayList<String> getUserCourses(String userId) throws DatabaseAccessException {
+	public static ArrayList<String> getUserCourses(final String userId) throws DatabaseAccessException {
 		return UserManager.getUserCourses(getInstance().db, userId);
 	}
 
-	public static SrlSchool mongoGetReleventUpdates(String userId, long time) throws AuthenticationException, DatabaseAccessException {
+	public static SrlSchool mongoGetReleventUpdates(final String userId, final long time) throws AuthenticationException, DatabaseAccessException {
 		return UserUpdateHandler.mongoGetAllRelevantUpdates(getInstance().db, userId, time);
 	}
 
