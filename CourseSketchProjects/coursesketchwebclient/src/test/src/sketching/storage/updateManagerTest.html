@@ -337,10 +337,12 @@
             stub.returns(secondSketch);
 
             var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var sketchData = PROTOBUF_UTIL.ActionCreateSketch();
             var idChain = PROTOBUF_UTIL.IdChain();
             var id = generateUUID();
             idChain.idChain = [ id ];
-            command.setCommandData(idChain.toArrayBuffer());
+            sketchData.sketchId = idChain;
+            command.setCommandData(sketchData.toArrayBuffer());
             var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             updateList.addUpdate(update);
 
@@ -703,10 +705,12 @@
             stub1.returns(secondSketch);
 
             var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var sketchData = PROTOBUF_UTIL.ActionCreateSketch();
             var idChain = PROTOBUF_UTIL.IdChain();
             var id = generateUUID();
             idChain.idChain = [ id ];
-            command.setCommandData(idChain.toArrayBuffer());
+            sketchData.sketchId = idChain;
+            command.setCommandData(sketchData.toArrayBuffer());
             var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             updateList.addUpdate(update);
 
