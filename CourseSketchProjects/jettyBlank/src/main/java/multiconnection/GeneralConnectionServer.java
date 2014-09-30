@@ -95,7 +95,7 @@ public class GeneralConnectionServer {
     public final void onClose(final Session conn, final int statusCode, final String reason) {
         // FUTURE: find out how to see if the connection is closed by us or them.
         System.out.println(conn.getRemoteAddress() + " has disconnected from The Server." + statusCode + "with reason : " + reason);
-        final MultiConnectionState id = connectionToId.remove(conn);
+        final MultiConnectionState id = getConnectionToId().remove(conn);
         if (id != null) {
             idToConnection.remove(id);
             idToState.remove(id.getKey());
@@ -111,20 +111,29 @@ public class GeneralConnectionServer {
      */
     @OnWebSocketConnect
     public final void onOpen(final Session conn) {
-        if (connectionToId.size() >= MAX_CONNECTIONS) {
+        if (getConnectionToId().size() >= MAX_CONNECTIONS) {
             // Return negatative state.
             System.out.println("FULL SERVER"); // send message to someone?
             conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
         }
 
         final MultiConnectionState id = getUniqueState();
-        connectionToId.put(conn, id);
+        getConnectionToId().put(conn, id);
         getIdToConnection().put(id, conn);
         System.out.println("Session Key " + id.getKey());
         getIdToState().put(id.getKey(), id);
         System.out.println("ID ASSIGNED");
 
-        System.out.println("Recieving connection " + connectionToId.size());
+        System.out.println("Recieving connection " + getConnectionToId().size());
+        openSession(conn);
+    }
+
+    /**
+     * Called after onOpen Finished. Can be over written.
+     *
+     * @param conn the connection that is being opened.
+     */
+    protected void openSession(final Session conn) {
     }
 
     /**
@@ -227,10 +236,10 @@ public class GeneralConnectionServer {
      * Cleans out the server.
      */
     final void stop() {
-        for (Session sesh : connectionToId.keySet()) {
+        for (Session sesh : getConnectionToId().keySet()) {
             sesh.close();
         }
-        connectionToId.clear();
+        getConnectionToId().clear();
         idToConnection.clear();
         idToState.clear();
         onStop();
@@ -290,7 +299,7 @@ public class GeneralConnectionServer {
      * @return The current number of connections to the server.
      */
     public final int getCurrentConnectionNumber() {
-        return connectionToId.size();
+        return getConnectionToId().size();
     }
 
     /**
@@ -298,6 +307,13 @@ public class GeneralConnectionServer {
      */
     protected final GeneralConnectionServlet getParentServer() {
         return parentServer;
+    }
+
+    /**
+     * @return the connectionToId
+     */
+    protected final HashMap<Session, MultiConnectionState> getConnectionToId() {
+        return connectionToId;
     }
 
     /**

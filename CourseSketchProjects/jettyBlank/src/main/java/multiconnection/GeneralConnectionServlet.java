@@ -159,4 +159,11 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     /* package-private */ final MultiConnectionManager getManager() {
         return manager;
     }
+
+    /**
+     * @return the GeneralConnectionServer.
+     */
+    protected final GeneralConnectionServer getServer() {
+        return connectionServer;
+    }
 }
