@@ -33,7 +33,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     /**
      * The amount of time it takes before a connection times out.
      */
-    private final long timeoutTime = 0;
+    private final long timeoutTime;
 
     /**
      * True if the server is allowing secure connections.

@@ -15,8 +15,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
 
+import connection.CloseableWebsocketClient;
 import connection.ConnectionException;
 
 /**
@@ -148,20 +148,19 @@ public class ConnectionWrapper {
     /**
      * Attempts to connect to the server at URI with a webSocket Client.
      *
-     * @throws Exception Throws an exception if an error occurs during the connection attempt.
+     * @throws ConnectionException Throws an exception if an error occurs during the connection attempt.
      */
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public final void connect() throws Exception {
-        final WebSocketClient client = new WebSocketClient();
-        try {
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    public final void connect() throws ConnectionException {
+        try (final CloseableWebsocketClient client = new CloseableWebsocketClient()) {
             client.start();
             final ClientUpgradeRequest request = new ClientUpgradeRequest();
             client.connect(this, destination, request);
         } catch (IOException e) {
             e.printStackTrace();
-            throw e;
-        } finally {
-            client.stop();
+            throw new ConnectionException("an exception connecting", e);
+        } catch (Exception e) {
+            throw new ConnectionException("something went wrong when starting the client", e);
         }
     }
 

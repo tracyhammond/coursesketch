@@ -19,4 +19,13 @@ public class ConnectionException extends Exception {
         super(string);
     }
 
+    /**
+     * Passes up an exception as the cause of the exception.
+     * @param string A message that gives details of the error
+     * @param cause The cause of the exception.
+     */
+    public ConnectionException(final String string, final Exception cause) {
+        super(string, cause);
+    }
+
 }

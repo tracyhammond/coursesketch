@@ -10,7 +10,7 @@
 	<rule ref="rulesets/java/basic.xml" />
 	<rule ref="rulesets/java/codesize.xml" />
 	<rule ref="rulesets/java/braces.xml" />
-	<rule ref="rulesets/java/comments.xml" />
+	<rule ref="rulesets/java/comments.xml"/>
 	<rule ref="rulesets/java/naming.xml" />
 	<!-- <rule ref="rulesets/java/optimization.xml"/> -->
 	<rule ref="rulesets/java/strictexception.xml" />
@@ -19,15 +19,27 @@
 	<rule ref="rulesets/java/typeresolution.xml" />
 	<rule ref="rulesets/java/unusedcode.xml" />
 
-	<!-- customization -->
-	<rule ref="rulesets/java/naming.xml/LongVariable">
-		<properties>
-			<property name="minimum" value="30" />
-		</properties>
-	</rule>
+	<!-- exclusions -->
 
 	<rule ref="rulesets/java/coupling.xml">
 		<exclude name="LawOfDemeter" />
+		<exclude name="ExcessiveImports" />
+	</rule>
+
+	<rule ref="rulesets/java/design.xml">
+		<exclude name="GodClass" />
+		<exclude name="ConfusingTernary" />
+		<exclude name="UncommentedEmptyMethod" />
+	</rule>
+
+	<!-- modification -->
+	<rule ref="rulesets/java/naming.xml/LongVariable">
+		<properties>
+			<property name="minimum" value="30" />
+			<!-- when pmd actually makes this work lower to 25 -->
+			<!-- <property name="violationSuppressRegex" value="(^|(\\s+)|.*\\s+)([A-Z][A-Z0-9_]*[A-Z0-9])($|(\\s+)|\\s+.*|[.].*)" 
+				/> -->
+		</properties>
 	</rule>
 
 	<rule ref="rulesets/java/comments.xml/CommentSize">
@@ -35,11 +47,6 @@
 			<property name="maxLines" value="30" />
 			<property name="maxLineLength" value="150" />
 		</properties>
-	</rule>
-
-	<rule ref="rulesets/java/design.xml">
-		<exclude name="GodClass" />
-		<exclude name="ConfusingTernary" />
 	</rule>
 
 </ruleset>

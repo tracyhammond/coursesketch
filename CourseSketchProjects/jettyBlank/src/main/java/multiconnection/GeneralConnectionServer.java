@@ -24,6 +24,7 @@ import connection.TimeManager;
  * @author gigemjt
  */
 @WebSocket()
+@SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionServer {
 
     /**
