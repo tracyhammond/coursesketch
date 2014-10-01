@@ -60,17 +60,17 @@ public class GeneralConnectionServer {
     /**
      * Maps a Session to its MultiConnectionState.
      */
-    private final HashMap<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
+    private final Map<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
 
     /**
      * Maps a MultiConnectionState to a Session.
      */
-    private final HashMap<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
+    private final Map<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
 
     /**
      * Maps a String representing the connections ID to its MultiConnectionState.
      */
-    private final HashMap<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
+    private final Map<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
 
     /**
      * The parent servlet for this server.
@@ -95,10 +95,10 @@ public class GeneralConnectionServer {
     public final void onClose(final Session conn, final int statusCode, final String reason) {
         // FUTURE: find out how to see if the connection is closed by us or them.
         System.out.println(conn.getRemoteAddress() + " has disconnected from The Server." + statusCode + "with reason : " + reason);
-        final MultiConnectionState id = getConnectionToId().remove(conn);
-        if (id != null) {
-            idToConnection.remove(id);
-            idToState.remove(id.getKey());
+        final MultiConnectionState stateId = getConnectionToId().remove(conn);
+        if (stateId != null) {
+            idToConnection.remove(stateId);
+            idToState.remove(stateId.getKey());
         } else {
             System.err.println("Connection Id can not be found");
         }
@@ -117,11 +117,11 @@ public class GeneralConnectionServer {
             conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
         }
 
-        final MultiConnectionState id = getUniqueState();
-        getConnectionToId().put(conn, id);
-        getIdToConnection().put(id, conn);
-        System.out.println("Session Key " + id.getKey());
-        getIdToState().put(id.getKey(), id);
+        final MultiConnectionState uniqueState = getUniqueState();
+        getConnectionToId().put(conn, uniqueState);
+        getIdToConnection().put(uniqueState, conn);
+        System.out.println("Session Key " + uniqueState.getKey());
+        getIdToState().put(uniqueState.getKey(), uniqueState);
         System.out.println("ID ASSIGNED");
 
         System.out.println("Recieving connection " + getConnectionToId().size());
@@ -134,6 +134,7 @@ public class GeneralConnectionServer {
      * @param conn the connection that is being opened.
      */
     protected void openSession(final Session conn) {
+        // Does nothing by default.
     }
 
     /**
@@ -249,7 +250,7 @@ public class GeneralConnectionServer {
      * Available for override.  Called after the server is stopped.
      */
     public void onStop() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -312,7 +313,7 @@ public class GeneralConnectionServer {
     /**
      * @return the connectionToId
      */
-    protected final HashMap<Session, MultiConnectionState> getConnectionToId() {
+    protected final Map<Session, MultiConnectionState> getConnectionToId() {
         return connectionToId;
     }
 
@@ -322,6 +323,13 @@ public class GeneralConnectionServer {
      *
      */
     public static final class Decoder {
+
+        /**
+         * Empty constructor.
+         */
+        private Decoder() {
+        }
+
         /**
          * Returns a {@link Request} as it is parsed from the ByteBuffer.
          *
@@ -376,6 +384,12 @@ public class GeneralConnectionServer {
          * (taken from SCComponent)
          */
         private static long counter = VERSION_4_UUID | (long) (Math.random() * RANDOM_MULT);
+
+        /**
+         * Empty constructor.
+         */
+        private Encoder() {
+        }
 
         /**
          * Returns a {@link Request} that contains the sessionInfo and the time

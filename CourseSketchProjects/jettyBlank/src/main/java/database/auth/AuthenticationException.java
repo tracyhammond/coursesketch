@@ -8,22 +8,6 @@ package database.auth;
 public class AuthenticationException extends Exception {
 
     /**
-     * Contains the type of issue with the authentication.
-     */
-    private final int exceptionType;
-
-    /**
-     * Accepts an authentication type.
-     *
-     * @param value
-     *            An authetication exception type.
-     */
-    public AuthenticationException(final int value) {
-        super(getMessageFromValue(value));
-        exceptionType = value;
-    }
-
-    /**
      * Indicates that the exception thrown is one of invalid permission.
      */
     public static final int INVALID_PERMISSION = 0;
@@ -40,7 +24,24 @@ public class AuthenticationException extends Exception {
     public static final int NO_AUTH_SENT = 2;
 
     /**
-     * @param value An exception type.
+     * Contains the type of issue with the authentication.
+     */
+    private final int exceptionType;
+
+    /**
+     * Accepts an authentication type.
+     *
+     * @param value
+     *            An authentication exception type.
+     */
+    public AuthenticationException(final int value) {
+        super(getMessageFromValue(value));
+        exceptionType = value;
+    }
+
+    /**
+     * @param value
+     *            An exception type.
      * @return a message associated with each exception type.
      */
     public static String getMessageFromValue(final int value) {

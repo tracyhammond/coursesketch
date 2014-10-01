@@ -14,8 +14,7 @@
 
 	<properties>
 		<!-- This may be removed and a later solution will need to be worked on -->
-		<absoluteCheckstyleLocation>../../${checkstyleLocation}</absoluteCheckstyleLocation>
-		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<testLevel>0</testLevel>
 		<averageTestLevel>0</averageTestLevel>
 		<projectBranchLevel>6</projectBranchLevel>
@@ -42,6 +41,10 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javancss-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
