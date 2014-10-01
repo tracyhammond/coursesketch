@@ -27,11 +27,17 @@ public class DatabaseServlet extends GeneralConnectionServlet {
         super(timeoutTime, secure, connectLocally);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final GeneralConnectionServer createServerSocket() {
         return new DatabaseServer(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected final MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return new DatabaseConnectionManager(getServer(), connectLocally, secure);

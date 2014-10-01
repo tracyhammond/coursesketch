@@ -31,7 +31,7 @@ import database.institution.mongo.UpdateManager;
  * @author gigemjt
  *
  */
-public class UserUpdateHandler {
+public final class UserUpdateHandler {
 
     /**
      * The maximum amount of time an update is saved.  (30 days)
@@ -59,21 +59,27 @@ public class UserUpdateHandler {
     public static final String COURSE_PROBLEM_CLASSIFICATION = "COURSE_PROBLEM";
 
     /**
+     * Private constructor.
+     */
+    private UserUpdateHandler() {
+    }
+
+    /**
      * Removes updates for the user where the userId is older than 30 days.
      *
-     * @param db the database where the updates are stored.
+     * @param database the database where the updates are stored.
      * @param userId the user who is affected by these updates.
      * @throws AuthenticationException Thrown if the user does not have access to the update.
      * @throws DatabaseAccessException Thrown if the database does not contain the specified update.
      */
-    public static void removeOldUpdates(final DB db, final String userId) throws AuthenticationException, DatabaseAccessException {
+    public static void removeOldUpdates(final DB database, final String userId) throws AuthenticationException, DatabaseAccessException {
         // ges all of the updates.
-        final BasicDBList updateList = UpdateManager.mongoGetUpdate(db, userId, 0);
+        final BasicDBList updateList = UpdateManager.mongoGetUpdate(database, userId, 0);
         final int size = updateList.size();
         for (int i = 0; i < size; i++) {
             final long difference = TimeManager.getSystemTime() - ((Long) ((BasicBSONObject) updateList.get(i)).get(TIME));
             if (TIME_LIMIT < difference) {
-                UpdateManager.mongoDeleteUpdate(db, userId, (String) ((BasicBSONObject) updateList.get(i)).get(UPDATEID),
+                UpdateManager.mongoDeleteUpdate(database, userId, (String) ((BasicBSONObject) updateList.get(i)).get(UPDATEID),
                         (String) ((BasicBSONObject) updateList.get(i)).get(CLASSIFICATION));
             }
         }
@@ -82,20 +88,20 @@ public class UserUpdateHandler {
     /**
      * Inserts updates for a group of uses.
      *
-     * @param db the database where the update is being inserted
+     * @param database the database where the update is being inserted
      * @param users the list of users affected by this update.
-     * @param id the id of the update itself.
+     * @param objectAffectedId the id of the object that was updated.
      * @param classification the type of update (course, assignment, ...)
      */
-    public static void insertUpdates(final DB db, final String[] users, final String id, final String classification) {
+    public static void insertUpdates(final DB database, final String[] users, final String objectAffectedId, final String classification) {
         if (users == null) {
             System.err.println("There are no users for this school item");
             return;
         }
         for (int i = 0; i < users.length; i++) {
             try {
-                UpdateManager.mongoInsertUpdate(db, users[i], id, TimeManager.getSystemTime(), classification);
-            } catch (Exception e) {
+                UpdateManager.mongoInsertUpdate(database, users[i], objectAffectedId, TimeManager.getSystemTime(), classification);
+            } catch (AuthenticationException | DatabaseAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -107,12 +113,12 @@ public class UserUpdateHandler {
      * This method will recursively search for all users to insert into the
      * update list
      *
-     * @param db the database where the updates are being inserted.
+     * @param database the database where the updates are being inserted.
      * @param users the list of people who are holding this new update.
-     * @param id the id of the update itself.
+     * @param objectAffectedId the id of the object that was updated.
      * @param classification if it is a course, assignment, ...
      */
-    public static void insertUpdates(final DB db, final List<String> users, final String id, final String classification) {
+    public static void insertUpdates(final DB database, final List<String> users, final String objectAffectedId, final String classification) {
         if (users == null) {
             System.err.println("There are no users for this school item");
             return;
@@ -120,13 +126,13 @@ public class UserUpdateHandler {
 
         for (String group : users) {
             if (group.startsWith(GROUP_PREFIX)) {
-                final DBRef myDbRef = new DBRef(db, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
+                final DBRef myDbRef = new DBRef(database, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
                 final DBObject corsor = myDbRef.fetch();
                 final ArrayList<String> list = (ArrayList<String>) corsor.get(USER_LIST);
-                insertUpdates(db, list, id, classification);
+                insertUpdates(database, list, objectAffectedId, classification);
             } else {
                 try {
-                    UpdateManager.mongoInsertUpdate(db, group, id, TimeManager.getSystemTime(), classification);
+                    UpdateManager.mongoInsertUpdate(database, group, objectAffectedId, TimeManager.getSystemTime(), classification);
                 } catch (AuthenticationException e) {
                     e.printStackTrace();
                 } catch (DatabaseAccessException e) {
@@ -138,16 +144,16 @@ public class UserUpdateHandler {
 
     /**
      * Insert a new update into the database.
-     * @param db the database where the update is being inserted into.
+     * @param database the database where the update is being inserted into.
      * @param userId who the update is applying to.
-     * @param id the id of the update itself.
+     * @param objectAffectedId the id of the object that was updated.
      * @param classification the update classification.
      * @throws AuthenticationException thrown if the user does not have permission to access the update.
      * @throws DatabaseAccessException thrown if the update does not exist or if the user does not exist.
      */
-    public static void insertUpdate(final DB db, final String userId, final String id, final String classification)
+    public static void insertUpdate(final DB database, final String userId, final String objectAffectedId, final String classification)
             throws AuthenticationException, DatabaseAccessException {
-        UpdateManager.mongoInsertUpdate(db, userId, id, TimeManager.getSystemTime(), classification);
+        UpdateManager.mongoInsertUpdate(database, userId, objectAffectedId, TimeManager.getSystemTime(), classification);
     }
 
     /**
@@ -172,20 +178,20 @@ public class UserUpdateHandler {
             throws AuthenticationException, DatabaseAccessException {
         final BasicDBList userUpdates = UpdateManager.mongoGetUpdate(dbs, userId, time);
         final int size = userUpdates.size();
-        final List<String> id = new ArrayList<String>();
+        final List<String> objectAffectedId = new ArrayList<String>();
         final SrlSchool.Builder build = SrlSchool.newBuilder();
 
         for (int i = 0; i < size; i++) {
             final String classification = (String) ((BasicBSONObject) userUpdates.get(i)).get(CLASSIFICATION);
-            id.add((String) ((BasicBSONObject) userUpdates.get(i)).get(UPDATEID));
+            objectAffectedId.add((String) ((BasicBSONObject) userUpdates.get(i)).get(UPDATEID));
             if (COURSE_CLASSIFICATION.equals(classification)) {
-                build.addCourses(MongoInstitution.getInstance().getCourses(id, userId).get(0));
+                build.addCourses(MongoInstitution.getInstance().getCourses(objectAffectedId, userId).get(0));
             } else if (ASSIGNMENT_CLASSIFICATION.equals(classification)) {
-                build.addAssignments(MongoInstitution.getInstance().getAssignment(id, userId).get(0));
+                build.addAssignments(MongoInstitution.getInstance().getAssignment(objectAffectedId, userId).get(0));
             } else if (PROBLEM_CLASSIFICATION.equals(classification)) {
-                build.addBankProblems(MongoInstitution.getInstance().getProblem(id, userId).get(0));
+                build.addBankProblems(MongoInstitution.getInstance().getProblem(objectAffectedId, userId).get(0));
             } else if (COURSE_PROBLEM_CLASSIFICATION.equals(classification)) {
-                build.addProblems(MongoInstitution.getInstance().getCourseProblem(id, userId).get(0));
+                build.addProblems(MongoInstitution.getInstance().getCourseProblem(objectAffectedId, userId).get(0));
             }
         }
         return build.build();

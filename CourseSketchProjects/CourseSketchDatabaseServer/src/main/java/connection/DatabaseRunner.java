@@ -24,11 +24,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      */
     public static void main(final String[] args) {
         final DatabaseRunner run = new DatabaseRunner(args);
-        try {
-            run.runAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        run.runAll();
     }
 
     /**
@@ -39,12 +35,18 @@ public class DatabaseRunner extends GeneralConnectionRunner {
         super.setPort(DATABASE_PORT);
     }
 
+    /**
+     * Initializes a local instance of the database.
+     */
     @Override
     public final void executeLocalEnviroment() {
         new MongoInstitution(false, null); // makes the database point locally
         new UserClient(false); // makes the database point locally
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
         return new DatabaseServlet(time, secure, local);

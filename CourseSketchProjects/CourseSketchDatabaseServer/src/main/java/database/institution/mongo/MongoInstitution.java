@@ -48,6 +48,7 @@ import database.user.UserClient;
  * @author gigemjt
  *
  */
+@SuppressWarnings("PMD.CommentRequired")
 public final class MongoInstitution implements Institution {
     /**
      * A single instance of the mongo institution.

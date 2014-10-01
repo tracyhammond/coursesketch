@@ -52,7 +52,13 @@ import database.auth.Authenticator.AuthType;
  * Manages assignments for mongo.
  * @author gigemjt
  */
-public class AssignmentManager {
+public final class AssignmentManager {
+
+    /**
+     * Private constructor.
+     */
+    private AssignmentManager() {
+    }
 
     /**
      * Inserts an assignment into the mongo database.
