@@ -17,27 +17,38 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import database.RequestConverter;
+import database.auth.Authenticator.AuthenticationData;
 
-public final class MongoAuthenticator extends Authenticator {
+/**
+ * A mongo implementation of the {@link AuthenticationDataCreator}.
+ * @author gigemjt
+ *
+ */
+public final class MongoAuthenticator implements AuthenticationDataCreator {
 
-    final DB dbs;
+    /**
+     * The mongo database that is used for the authentication.
+     */
+    private final DB dbs;
 
+    /**
+     * @param iDbs The database that is used for all authentication purposes.
+     */
     public MongoAuthenticator(final DB iDbs) {
         this.dbs = iDbs;
     }
 
     @Override
-    protected final List<String> getUserList(String id) {
+    public List<String> getUserList(final String id) {
         final DBRef myDbRef = new DBRef(dbs, USER_GROUP_COLLECTION, new ObjectId(id));
         final DBObject corsor = myDbRef.fetch();
-        List<String> list = null;
-        list = (List) corsor.get(USER_LIST);
+        final List<String> list = (List) corsor.get(USER_LIST);
         return list;
     }
 
     @Override
-    protected AuthenticationData getAuthGroups(String collection, String itemId) {
-        AuthenticationData data = new AuthenticationData();
+    public AuthenticationData getAuthGroups(final String collection, final String itemId) {
+        final AuthenticationData data = new AuthenticationData();
 
         final DBRef myDbRef = new DBRef(dbs, collection, new ObjectId(itemId));
         final DBObject corsor = myDbRef.fetch();

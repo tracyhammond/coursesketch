@@ -52,6 +52,7 @@ public final class DatabaseStringConstants {
     public static final String ADMIN_GROUP_ID = "AdminGroupId";
     public static final String MOD_GROUP_ID = "ModGroupId";
     public static final String USER_GROUP_ID = "UserGroupId";
+    public static final int PERMISSION_LEVELS = 3;
 
     // grades
     public static final String GRADE_WEIGHT = "GradeWeight";
