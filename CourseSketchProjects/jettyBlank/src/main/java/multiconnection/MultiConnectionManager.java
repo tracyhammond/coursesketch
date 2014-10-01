@@ -2,7 +2,9 @@ package multiconnection;
 
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,7 +95,6 @@ public class MultiConnectionManager {
      */
     public static ConnectionWrapper createConnection(final GeneralConnectionServer serv, final boolean isLocal, final String remoteAdress,
             final int port, final boolean isSecure, final Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
-        ConnectionWrapper conWrapper = null;
         if (serv == null) {
             throw new ConnectionException("Can't create connection with a null parent server");
         }
@@ -105,25 +106,37 @@ public class MultiConnectionManager {
 
         final String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port);
         System.out.println("Creating a client connecting to: " + location);
+        return initializeConnection(location, connectionType, serv);
+    }
+
+    /**
+     * Initializes the connection given certain parameters.
+     * @param location The location of the server as a URI
+     * @param connectionType a class that represents the connection.
+     * @param serv The server that is managing the connection.
+     * @return A connection wrapper.
+     * @throws ConnectionException Thrown if there are problems initializing the connection.
+     */
+    private static ConnectionWrapper initializeConnection(final String location, final Class<? extends ConnectionWrapper> connectionType,
+            final GeneralConnectionServer serv) throws ConnectionException {
+        ConnectionWrapper conWrapper = null;
+        @SuppressWarnings("rawtypes")
+        Constructor construct;
         try {
-            @SuppressWarnings("rawtypes")
-            final Constructor construct = connectionType.getConstructor(URI.class, GeneralConnectionServer.class);
+            construct = connectionType.getConstructor(URI.class, GeneralConnectionServer.class);
             conWrapper = (ConnectionWrapper) construct.newInstance(new URI(location), serv);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NoSuchMethodException | SecurityException e) {
+            throw new ConnectionException("Failed to get constructor for connection wrapper: " + connectionType.getSimpleName(), e);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            throw new ConnectionException("Failed to invoke constructor for the connection wrapper: " + connectionType.getSimpleName(), e);
+        } catch (URISyntaxException e) {
+            throw new ConnectionException("The URI for localtion: [" + location + "] is not valid syntax", e);
         }
+
         if (conWrapper != null) {
-            try {
-                conWrapper.connect();
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
+            conWrapper.connect();
         }
-        // In case of error do this!
-        // c.setParent(serv);
-        if (conWrapper == null) {
-            throw new ConnectionException("failed to create ConnectionWrapper");
-        }
+
         return conWrapper;
     }
 
@@ -143,12 +156,12 @@ public class MultiConnectionManager {
     public void send(final Request req, final String sessionID, final Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
         // Attach the existing request with the UserID
         final Request packagedRequest = GeneralConnectionServer.Encoder.requestIDBuilder(req, sessionID);
-        try {
-            getBestConnection(connectionType).send(packagedRequest.toByteArray());
-        } catch (NullPointerException e) {
+        final ConnectionWrapper connection = getBestConnection(connectionType);
+        if (connection == null) {
             System.out.println("Failed to get a local connection");
-            throw new ConnectionException(e.getLocalizedMessage());
+            throw new ConnectionException("failed to get a connection of type " + connectionType.getSimpleName());
         }
+        connection.send(packagedRequest.toByteArray());
     }
 
     /**
@@ -189,12 +202,11 @@ public class MultiConnectionManager {
      *            contain a string specifying the type of connection.
      * @param connectionType
      *            The type to bind the action to.
-     *
      */
     public final void setFailedSocketListener(final ActionListener listen, final Class<? extends ConnectionWrapper> connectionType) {
         final ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
-            throw new NullPointerException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
+            throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
         for (ConnectionWrapper con : cons) {
             con.setFailedSocketListener(listen);
@@ -232,11 +244,11 @@ public class MultiConnectionManager {
      */
     public final void addConnection(final ConnectionWrapper connection, final Class<? extends ConnectionWrapper> connectionType) {
         if (connection == null) {
-            throw new NullPointerException("can not add null connection");
+            throw new IllegalArgumentException("can not add null connection");
         }
 
         if (connectionType == null) {
-            throw new NullPointerException("can not add connection to null type");
+            throw new IllegalArgumentException("can not add connection to null type");
         }
 
         connection.setParentManager(this);
@@ -264,7 +276,7 @@ public class MultiConnectionManager {
     public ConnectionWrapper getBestConnection(final Class<? extends ConnectionWrapper> connectionType) {
         final ArrayList<ConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
-            throw new NullPointerException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
+            throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
         System.out.println("getting Connection: " + connectionType.getSimpleName());
         return cons.get(0); // lame best connection.

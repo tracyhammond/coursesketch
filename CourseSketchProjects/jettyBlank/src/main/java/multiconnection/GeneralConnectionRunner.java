@@ -9,7 +9,6 @@ package multiconnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
@@ -127,16 +126,10 @@ public class GeneralConnectionRunner {
     /**
      * The main method that can be used to run a server.
      * @param args Input arguments that are running the server.
-     * @throws Exception Thrown if running the sever fails.
      */
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         final GeneralConnectionRunner runner = new GeneralConnectionRunner(args);
-        try {
-            runner.runAll();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        runner.runAll();
     }
 
     /**

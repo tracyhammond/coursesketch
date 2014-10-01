@@ -112,13 +112,6 @@
 		</profile>
 	</profiles>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>javancss</id>
-			<url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo</url>
-		</pluginRepository>
-	</pluginRepositories>
-
 	<reporting>
 		<plugins>
 			<plugin>
@@ -288,25 +281,6 @@
 							</configuration>
 							<goals>
 								<goal>checkstyle</goal>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>javancss-maven-plugin</artifactId>
-
-					<configuration>
-						<failOnViolation>true</failOnViolation>
-						<ccnLimit>12</ccnLimit>
-						<ncssLimit>100</ncssLimit>
-					</configuration>
-					<executions>
-						<execution>
-							<id>ncss</id>
-							<phase>validate</phase>
-							<goals>
 								<goal>check</goal>
 							</goals>
 						</execution>
