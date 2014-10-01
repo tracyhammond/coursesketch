@@ -312,9 +312,10 @@ function UpdateManager(inputSketch, onError, sketchManager) {
             return false;
         } else if (command.commandType == PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
             command.decodedData = currentSketchId;
-            var id = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getIdChainClass()).idChain[0];
+            var sketchData = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getActionCreateSketchClass());
+            var id = sketchData.sketchId.idChain[0];
             if (!isUndefined(sketch) && sketch.id != id && !isUndefined(sketchManager)) {
-                sketchManager.createSketch(id, this);
+                sketchManager.createSketch(id, this, sketchData);
             }
             switchToSketch(id);
             return true;
@@ -347,7 +348,8 @@ function UpdateManager(inputSketch, onError, sketchManager) {
             }
             return true;
         } else if (command.commandType == PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
-            var id = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getIdChainClass()).idChain[0];
+            var sketchData = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getActionCreateSketchClass());
+            var id = sketchData.sketchId.idChain[0];
             if (!isUndefined(sketchManager)) {
                 sketchManager.deleteSketch(id);
             }
