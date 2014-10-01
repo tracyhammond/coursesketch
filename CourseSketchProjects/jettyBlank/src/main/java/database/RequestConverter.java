@@ -7,7 +7,13 @@ import protobuf.srl.school.School.DateTime;
  * @author gigemjt
  *
  */
-public class RequestConverter {
+public final class RequestConverter {
+
+    /**
+     * Private constructor.
+     */
+    private RequestConverter() {
+    }
 
     /**
      * Creates a proto version of a date from the given milliseconds.

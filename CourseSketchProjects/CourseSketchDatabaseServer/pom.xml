@@ -15,8 +15,7 @@
 
 	<properties>
 		<!-- This may be removed and a later solution will need to be worked on -->
-		<absoluteCheckstyleLocation>../../${checkstyleLocation}</absoluteCheckstyleLocation>
-		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<mainClass>connection.DatabaseRunner</mainClass>
 	</properties>
 
@@ -43,7 +42,11 @@
 				<artifactId>cobertura-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javancss-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 			</plugin>
 			<plugin>

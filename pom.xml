@@ -112,6 +112,13 @@
 		</profile>
 	</profiles>
 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>javancss</id>
+			<url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo</url>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<reporting>
 		<plugins>
 			<plugin>
@@ -287,6 +294,25 @@
 					</executions>
 				</plugin>
 				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>javancss-maven-plugin</artifactId>
+
+					<configuration>
+						<failOnViolation>true</failOnViolation>
+						<ccnLimit>12</ccnLimit>
+						<ncssLimit>100</ncssLimit>
+					</configuration>
+					<executions>
+						<execution>
+							<id>ncss</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
 					<version>${pmdVersion}</version>
@@ -298,7 +324,11 @@
 								<goal>check</goal>
 							</goals>
 							<configuration>
+								<rulesets>
+									<ruleset>${pmdRuleset}</ruleset>
+								</rulesets>
 								<excludeFromFailureFile>${pmdExclude}</excludeFromFailureFile>
+								<!-- <skip>${skip.pmd.check}</skip> -->
 							</configuration>
 						</execution>
 						<execution>
@@ -423,7 +453,8 @@
 		<projectLineLevel>${averageTestLevel}</projectLineLevel>
 		<packageBranchLevel>${averageTestLevel}</packageBranchLevel>
 		<packageLineLevel>${averageTestLevel}</packageLineLevel>
-		<checkstyleLocation>config/checkstyle.xml</checkstyleLocation>
+		<checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
+		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
 		<findbugSupressionLocation>config/findbugs-exclude.xml</findbugSupressionLocation>
 		<protocLocation>/usr/local/bin/protoc</protocLocation>
@@ -431,14 +462,16 @@
 		<coberturaVersion>2.6</coberturaVersion>
 		<pmdVersion>3.2</pmdVersion>
 		<githubLocation>tracyhammond/coursesketch</githubLocation>
+		<pmdExclude>config/${pmdFile}</pmdExclude>
+		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
+		<cpdExclude>config/${cpdFile}</cpdExclude>
 		<pmdFile>exclude-pmd.properties</pmdFile>
 		<cpdFile>exclude-cpd.properties</cpdFile>
+		<absoluteConfigLocation>${parentConfigLocationDir}/config</absoluteConfigLocation>
 
 		<!-- This needs to be overwritten in child poms -->
-		<pmdExclude>${basedir}/config/${pmdFile}</pmdExclude>
-		<cpdExclude>${basedir}/config/${cpdFile}</cpdExclude>
 		<mainClass>fully.qualified.MainClass</mainClass>
-		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
+		<parentConfigLocationDir>${basedir}</parentConfigLocationDir>
 	</properties>
 
 	<dependencies>

@@ -6,6 +6,7 @@ package database;
  * @author gigemjt
  *
  */
+@SuppressWarnings("PMD.CommentRequired")
 public final class DatabaseStringConstants {
     // Id
     public static final String SELF_ID = "_id";

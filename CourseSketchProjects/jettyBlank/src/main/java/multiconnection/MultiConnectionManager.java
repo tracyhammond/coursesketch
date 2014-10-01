@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import connection.ConnectionException;
 import protobuf.srl.request.Message.Request;
@@ -32,25 +33,25 @@ public class MultiConnectionManager {
      *
      * Can be overridden.
      */
-    private boolean connectLocally = CONNECT_LOCALLY;
+    private final boolean connectLocally;
 
     /**
      * Determines whether the server will be connecting securely.
      *
      * Can be overridden.
      */
-    private boolean secure = false;
+    private final boolean secure;
 
     /**
      * A map that contains a list of connections that are differentiated by a
      * specific class.
      */
-    private HashMap<Class<?>, ArrayList<ConnectionWrapper>> connections = new HashMap<Class<?>, ArrayList<ConnectionWrapper>>();
+    private final Map<Class<?>, ArrayList<ConnectionWrapper>> connections = new HashMap<Class<?>, ArrayList<ConnectionWrapper>>();
 
     /**
      * The server that using this {@link MultiConnectionManager}.
      */
-    private GeneralConnectionServer parent;
+    private final GeneralConnectionServer parent;
 
     /**
      * Creates a default {@link MultiConnectionManager}.
@@ -92,7 +93,7 @@ public class MultiConnectionManager {
      */
     public static ConnectionWrapper createConnection(final GeneralConnectionServer serv, final boolean isLocal, final String remoteAdress,
             final int port, final boolean isSecure, final Class<? extends ConnectionWrapper> connectionType) throws ConnectionException {
-        ConnectionWrapper c = null;
+        ConnectionWrapper conWrapper = null;
         if (serv == null) {
             throw new ConnectionException("Can't create connection with a null parent server");
         }
@@ -107,23 +108,23 @@ public class MultiConnectionManager {
         try {
             @SuppressWarnings("rawtypes")
             final Constructor construct = connectionType.getConstructor(URI.class, GeneralConnectionServer.class);
-            c = (ConnectionWrapper) construct.newInstance(new URI(location), serv);
+            conWrapper = (ConnectionWrapper) construct.newInstance(new URI(location), serv);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (c != null) {
+        if (conWrapper != null) {
             try {
-                c.connect();
+                conWrapper.connect();
             } catch (Throwable e) {
                 e.printStackTrace();
             }
         }
         // In case of error do this!
         // c.setParent(serv);
-        if (c == null) {
+        if (conWrapper == null) {
             throw new ConnectionException("failed to create ConnectionWrapper");
         }
-        return c;
+        return conWrapper;
     }
 
     /**
