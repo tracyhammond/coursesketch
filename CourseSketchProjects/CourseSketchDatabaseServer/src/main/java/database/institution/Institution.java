@@ -1,6 +1,5 @@
 package database.institution;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import multiconnection.MultiConnectionManager;
@@ -33,7 +32,7 @@ public interface Institution {
      * @return A list of courses given a list of Ids for the courses.
      * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
      */
-    ArrayList<SrlCourse> getCourses(List<String> courseIds, String userId) throws AuthenticationException;
+    List<SrlCourse> getCourses(List<String> courseIds, String userId) throws AuthenticationException;
 
     /**
      * @param problemID A list of ids for a specific course problem.
@@ -42,7 +41,7 @@ public interface Institution {
      * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
      * @throws DatabaseAccessException Thrown if the data does not exist.
      */
-    ArrayList<SrlProblem> getCourseProblem(List<String> problemID, String userId) throws AuthenticationException,
+    List<SrlProblem> getCourseProblem(List<String> problemID, String userId) throws AuthenticationException,
             DatabaseAccessException;
 
     /**
@@ -52,7 +51,7 @@ public interface Institution {
      * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
      * @throws DatabaseAccessException Thrown if the data does not exist.
      */
-    ArrayList<SrlAssignment> getAssignment(List<String> assignementID, String userId) throws AuthenticationException,
+    List<SrlAssignment> getAssignment(List<String> assignementID, String userId) throws AuthenticationException,
             DatabaseAccessException;
 
     /**
@@ -61,12 +60,12 @@ public interface Institution {
      * @return A list of course problems given a list of Ids for the course problems.
      * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
      */
-    ArrayList<SrlBankProblem> getProblem(List<String> problemID, String userId) throws AuthenticationException;
+    List<SrlBankProblem> getProblem(List<String> problemID, String userId) throws AuthenticationException;
 
     /**
      * @return A list of courses that are public (used when registering problems)
      */
-    ArrayList<SrlCourse> getAllPublicCourses();
+    List<SrlCourse> getAllPublicCourses();
 
     /**
      * Inserts a {@link SrlCourse} into the the database.
@@ -184,7 +183,7 @@ public interface Institution {
      * @throws AuthenticationException Thrown if the user does not have authentication to some of the courses.
      * @throws DatabaseAccessException Thrown if there is a problem accessing the course.
      */
-    ArrayList<SrlCourse> getUserCourses(String userId) throws AuthenticationException, DatabaseAccessException;
+    List<SrlCourse> getUserCourses(String userId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * A message sent from the submission server that allows the insertion of

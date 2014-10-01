@@ -10,6 +10,8 @@ import multiconnection.MultiConnectionState;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
@@ -69,7 +71,7 @@ public class SubmissionConnection extends ConnectionWrapper {
                         result2.addResults(item);
                     }
                 }
-            } catch (Exception e) {
+            } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }
             final Request.Builder builder = Request.newBuilder(req);

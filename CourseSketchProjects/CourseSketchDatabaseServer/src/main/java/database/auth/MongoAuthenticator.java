@@ -38,14 +38,19 @@ public final class MongoAuthenticator implements AuthenticationDataCreator {
         this.dbs = iDbs;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<String> getUserList(final String id) {
-        final DBRef myDbRef = new DBRef(dbs, USER_GROUP_COLLECTION, new ObjectId(id));
+    public List<String> getUserList(final String userGroupId) {
+        final DBRef myDbRef = new DBRef(dbs, USER_GROUP_COLLECTION, new ObjectId(userGroupId));
         final DBObject corsor = myDbRef.fetch();
-        final List<String> list = (List) corsor.get(USER_LIST);
-        return list;
+        return (List) corsor.get(USER_LIST);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AuthenticationData getAuthGroups(final String collection, final String itemId) {
         final AuthenticationData data = new AuthenticationData();
