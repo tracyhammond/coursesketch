@@ -16,16 +16,6 @@ import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
-import protobuf.srl.submission.Submission.SrlExperiment;
-import protobuf.srl.submission.Submission.SrlExperimentList;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-
-import database.user.UserClient;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
@@ -34,6 +24,14 @@ import database.user.UserClient;
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
 public class SubmissionConnection extends ConnectionWrapper {
 
+    /**
+     * @see ConnectionWrapper#ConnectionWrapper(URI, GeneralConnectionServer).
+     * @param destination
+     *            The location the server is going as a URI. ex:
+     *            http://example.com:1234
+     * @param parentServer
+     *            The server that is using this connection wrapper.
+     */
     public SubmissionConnection(final URI destination, final GeneralConnectionServer parentServer) {
         super(destination, parentServer);
     }
@@ -41,13 +39,12 @@ public class SubmissionConnection extends ConnectionWrapper {
     /**
      * Splits the session info to find the correct level above to pass it up the
      * chain to the correct client.
+     *
+     * @param buffer Contains the sketch itself that is being passed.
      */
     @Override
-    public void onMessage(final ByteBuffer buffer) {
-        final Request req = GeneralConnectionServer.Decoder.parseRequest(buffer); // this
-                                                                            // contains
-                                                                            // the
-                                                                            // solution
+    public final void onMessage(final ByteBuffer buffer) {
+        final Request req = GeneralConnectionServer.Decoder.parseRequest(buffer);
         System.out.println("Got a response from the submission server!");
         System.out.println(req.getSessionInfo());
         final String[] sessionInfo = req.getSessionInfo().split("\\+");
@@ -66,8 +63,7 @@ public class SubmissionConnection extends ConnectionWrapper {
                         final ExperimentReview rev = ExperimentReview.parseFrom(item.getAdvanceQuery());
                         if (rev.getShowUserNames()) {
                             System.err.println("Attempting to change out usernames!");
-                            final ItemResult returnResult = mapExperimentsToUser(item);
-                            result2.addResults(returnResult);
+                            result2.addResults(item);
                         }
                     } else {
                         result2.addResults(item);
@@ -86,40 +82,4 @@ public class SubmissionConnection extends ConnectionWrapper {
             GeneralConnectionServer.send(getConnectionFromState(state), builder.build());
         }
     }
-
-    /**
-     * Attaches user names to all of the experiments so that the users.
-     *
-     * @param item
-     * @return
-     * @throws InvalidProtocolBufferException
-     */
-    private static ItemResult mapExperimentsToUser(final ItemResult item) throws InvalidProtocolBufferException {
-        final SrlExperimentList list = SrlExperimentList.parseFrom(item.getData());
-        final SrlExperimentList.Builder mappedList = SrlExperimentList.newBuilder();
-        final ItemResult.Builder result = ItemResult.newBuilder();
-        for (SrlExperiment ment : list.getExperimentsList()) {
-            if (ment.getUserId() == null) {
-                System.err.println("USER ID IS NULL?");
-                continue;
-            }
-            // TODO: get rid of this code in the loop! this is bad security!
-            final DB db = UserClient.getDB().getDB("login");
-            final DBCollection col = db.getCollection("CourseSketchUsers");
-            final DBCursor BAD_MAPPING_CURSOR = col.find(new BasicDBObject("ServerId", ment.getUserId()));
-            final String userName = "" + BAD_MAPPING_CURSOR.next().get("UserName");
-            System.out.println("New user name " + userName);
-            final SrlExperiment.Builder withUserName = ment.toBuilder();
-            withUserName.setUserId(userName); // ID IS REPLACED WITH HUMAN
-                                              // READABLE USERNAME!
-            mappedList.addExperiments(withUserName);
-        }
-        result.setData(mappedList.build().toByteString());
-        result.setQuery(item.getQuery());
-        if (item.hasErrorMessage()) {
-            result.setErrorMessage(item.getErrorMessage());
-        }
-        return result.build();
-    }
-
 }

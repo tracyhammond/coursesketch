@@ -1,10 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>DatabaseServer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>DatabaseServer</name>
+	<artifactId>AnswerCheckerServer</artifactId>
+	<name>AnswerCheckerServer</name>
 
 	<parent>
 		<groupId>CourseSketch</groupId>
@@ -17,9 +15,7 @@
 		<!-- This may be removed and a later solution will need to be worked on -->
 		<absoluteCheckstyleLocation>../../${checkstyleLocation}</absoluteCheckstyleLocation>
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
-		<mainClass>connection.DatabaseRunner</mainClass>
 	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -31,20 +27,11 @@
 				<artifactId>findbugs-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
+				<artifactId>maven-assembly-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
