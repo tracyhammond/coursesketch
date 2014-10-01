@@ -28,6 +28,12 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	var QueryBuilder = query;
 	var serverConnection = connection;
 
+	var courseManager;
+	var assignmentManager;
+	var courseProblemManager;
+	var submissionManager;
+	var gradeManager;
+
 	var dataSender = new Object();
 
 	this.getCurrentTime = connection.getCurrentTime;
@@ -120,11 +126,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		/*assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 		/*courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
 		/*submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
-		try {
 		/*submissionManager = */new GradeManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
-		} catch(exception) {
-			console.log(exception);
-		}
 
 		console.log("Database is ready for use! with user: " + userId);
 		databaseFinishedLoading = true;

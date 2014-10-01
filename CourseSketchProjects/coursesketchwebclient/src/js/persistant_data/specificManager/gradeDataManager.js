@@ -3,7 +3,6 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	var userCourses = {};
 	var userCourseId = [];
 	var userHasCourses = true;*/
-	//var ;
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
 	var sendDataRequest = sendData.sendDataRequest;
@@ -14,26 +13,19 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	var ByteBuffer = buffer;
 
 	/**
-	 * Looks at the grade(s) and gives it some state if the state values do not exist.
+	 * Looks at the course and gives it some state if the state values do not exist.
 	 */
-	function stateCallback(grade, gradeCallback) {
-		var state = grade.getState();
-		var updateGrade = false;
+	function stateCallback(course, courseCallback) {
+		var state = course.getState();
+		var updateCourse = false;
 		if (isUndefined(state) || state == null) {
 			state = new SchoolBuilder.State();
-			updateGrade = true;
+			updateCourse = true;
 		}
 		try {
 			// do state stuff
-			
-			//will we need date info.?
-			//If so, relate to grading penalties and the like?
-			//referencing protobuf?
-			
-			/*var access = assignment.getAccessDate().getMillisecond();
-			var close = assignment.getCloseDate().getMillisecond();
-			var due = assignment.getDueDate().getMillisecond();*/
-
+			var access = course.getAccessDate().getMillisecond();
+			var close = course.getCloseDate().getMillisecond();
 			var current = parent.getCurrentTime();
 			if (isUndefined(state.accessible) || state.accessible == null) {
 				if (current.lessThan(access) || current.greaterThan(close)) {
@@ -41,29 +33,29 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 				} else {
 					state.accessible = true;
 				}
-				updateGrade = true;
+				updateCourse = true;
 			}
 
 			if (isUndefined(state.pastDue) || state.pastDue == null) {
-				if (current.greaterThan(due)) {
+				if (current.greaterThan(close)) {
 					state.pastDue = true;
 				} else {
 					state.pastDue = false;
 				}
-				updateGrade = true;
+				updateCourse = true;
 			}
 		} catch(exception) {
 			console.log(exception);
 		}
 
 		// so we do not have to perform this again!
-		if (updateGrade) {
-			grade.state = state;
-			setGrade(grade);
+		if (updateCourse) {
+			course.sate = state;
+			setCourse(course);
 		}
 
-		if (gradeCallback) {
-			gradeCallback(grade);
+		if (courseCallback) {
+			courseCallback(course);
 		}
 	}
 	
@@ -76,7 +68,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	 * @param courseId The id of the course we want to find.
 	 * @param courseCallback The method to call when the course has been found. (this is asynchronous)
 	 */
-	/*function getGrade(gradeId, gradeCallback) {
+	function getCourse(courseId, courseCallback) {
 		// quick and dirty this is in ram (not in local memory)
 		if (!isUndefined(userCourses[courseId])) {
 			if (userCourses[courseId] == nonExistantValue) {
@@ -117,10 +109,10 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 				stateCallback(SrlCourse.decode(bytes), courseCallback);
 			}
 		});
-	};*/
-	//parent.getGrade = getGrade;
+	};
+	parent.getGrade = getGrade;
 
-	/*function setCourse(course, courseCallback) {
+	function setCourse(course, courseCallback) {
 		database.putInCourses(course.id, course.toBase64(), function(e, request) {
 			if (courseCallback) {
 				courseCallback(e, request);
@@ -143,14 +135,16 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	function setCourseIdList(idList) {
 		userCourseId = idList;
 		database.putInCourses(COURSE_LIST, idList); // no call back needed!
-	}*/
+	}
 
-	/*
-	 * Returns a list of all of the grades in database.
+	/**
+	 * Returns a list of all of the courses in database.
+	 *
+	 * This does attempt to pull courses from the server!
 	 */
-	function getAllGrades(gradeCallback) {
-		var localFunction = setGradeIdList;
-		// there are no grades loaded onto this client!
+	function getAllCourses(courseCallback) {
+		var localFunction = setCourseIdList;
+		// there are no courses loaded onto this client!
 		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.SCHOOL, function(evt, item) {
 			if (!isUndefined(item.returnText) && item.returnText != "" && item.returnText !="null" && item.returnText != null) {
 				userHasCourses = false;
@@ -160,47 +154,47 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 				return;
 			}
 			var school = SchoolBuilder.SrlSchool.decode(item.data);
-			var gradeList = school.grades;
+			var courseList = school.courses;
 			var idList = [];
-			for (var i = 0; i < gradeList.length; i++) {
-				var grade = gradeList[i];
-				localScope.setGrade(grade); // no callback is needed
-				idList.push(grade.id);
+			for (var i = 0; i < courseList.length; i++) {
+				var course = courseList[i];
+				localScope.setCourse(course); // no callback is needed
+				idList.push(course.id);
 			}
-			gradeCallback(gradeList);
-			setGradeIdList(idList);
+			courseCallback(courseList);
+			setCourseIdList(idList);
 			advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.SCHOOL);
 		});
-		if (userGradeId.length == 0 && userHasGrades) {
+		if (userCourseId.length == 0 && userHasCourses) {
 			sendDataRequest(QueryBuilder.ItemQuery.SCHOOL, [""]);
 		//	console.log("course list from server polled!");
 		} else {
 			// This calls the server for updates then creates a list from the local data to appear fast
 			// then updates list after server polling and comparing the two list.
 		//	console.log("course list from local place polled!");
-			var barrier = userGradeId.length;
-			var gradeList = [];
+			var barrier = userCourseId.length;
+			var courseList = [];
 
 			// ask server for course list
 			sendDataRequest(QueryBuilder.ItemQuery.SCHOOL, [""]);
 
 			// create local course list so everything appears really fast!
-			for (var i = 0; i < userGradeId.length; i++) {
-				this.getGrade(userGradeId[i], function(grade) {
-					gradeList.push(grade);
+			for (var i = 0; i < userCourseId.length; i++) {
+				this.getCourse(userCourseId[i], function(course) {
+					courseList.push(course);
 					barrier -= 1;
 					if (barrier == 0) {
-						courseCallback(gradeList);
+						courseCallback(courseList);
 					}
 				});
 			}
 			// we ask the program for the list of courses by id then we compare and update!
 		}
 	};
-	parent.getAllGrades = getAllGrades;
+	parent.getAllCourses = getAllCourses;
 
 	/**
-	 * Inserts a grade into the database.  This course must not exist.
+	 * Inserts a course into the database.  This course must not exist.
 	 *
 	 * If there is a problem courseCallback is called with an error code.
 	 * TODO: create error code and call courseCallback.
@@ -209,55 +203,55 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	 * @param courseCallback is called after the insertion of course into the local database. (this can be used for instant refresh)
 	 * @param serverCallback serverCallback is called after the insertion of course into the server and the return of the server with the correct courseId
 	 */
-	/*function insertGrade(grade, gradeCallback, serverCallback) {
-		var gradeId = generateUUID();
-		grade.id = gradeId;
-		setGrade(grade); // sets the course into the local database;
-		if (gradeCallback) gradeCallback(grade); // temp for now!
+	function insertCourse(course, courseCallback, serverCallback) {
+		var courseId = generateUUID();
+		course.id = courseId;
+		setCourse(course); // sets the course into the local database;
+		if (courseCallback) courseCallback(course); // temp for now!
 
-		sendData.sendDataInsert(QueryBuilder.ItemQuery.GRADE, Itgrade.toArrayBuffer());
+		sendData.sendDataInsert(QueryBuilder.ItemQuery.COURSE, Itcourse.toArrayBuffer());
 		advanceDataListener.setListener(Request.MessageType.DATA_INSERT, QueryBuilder.ItemQuery.COURSE, function(evt, item) {
 			var resultArray = item.getResponseText().split(":");
 			var oldId = resultArray[1];
 			var newId = resultArray[0];
 			// we want to get the current course in the local database in case it has changed while the server was processing.
-			getGrade(oldId, function(grade2) {
-				deleteGrade(oldId);
-				grade2.id = newId;
-				setGrade(grade2, function() {
-					serverCallback(grade2);
+			getCourse(oldId, function(course2) {
+				deleteCourse(oldId);
+				course2.id = newId;
+				setCourse(course2, function() {
+					serverCallback(course2);
 				});
 			});
 		});
 	}
-	parent.insertGrade = insertGrade;*/
+	parent.insertCourse = insertCourse;
 
 	/**
-	 * Updates an existing grade into the database.  This course must already exist.
+	 * Updates an existing course into the database.  This course must already exist.
 	 *
-	 * If there is a problem, gradeCallback is called with an error code
+	 * If there is a problem, courseCallback is called with an error code
 	 * TODO: create error code.
-	 * @param grade
-	 * @param gradeCallback
-	 * @param serverCallback don't watch anything in public without headphones -- people WILL hate you
+	 * @param course
+	 * @param courseCallback
+	 * @param serverCallback the people next to me on the bus are really annoying
 	 */
-	/*function updateGrade(grade, gradeCallback, serverCallback) {
-		setGrade(grade); // overrides the course into the local database;
-		if (gradeCallback) gradeCallback(grade);
+	function updateCourse(course, courseCallback, serverCallback) {
+		setCourse(course); // overrides the course into the local database;
+		if (courseCallback) courseCallback(course);
 
-		sendData.sendDataUpdate(QueryBuilder.ItemQuery.GRADE, Itgrade.toArrayBuffer());
-		advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, QueryBuilder.ItemQuery.GRADE, function(evt, item) {
+		sendData.sendDataUpdate(QueryBuilder.ItemQuery.COURSE, Itcourse.toArrayBuffer());
+		advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, QueryBuilder.ItemQuery.COURSE, function(evt, item) {
 			serverCallback(item); // we do not need to make server changes we just need to make sure it was successful.
 		});
-	}*/
+	}
 
 	/*
 	 * gets the id's of all of the courses in the user's local client.
 	 */
-	/*database.getFromGrades(GRADE_LIST, function(e, request, result) {
+	database.getFromCourses(COURSE_LIST, function(e, request, result) {
 		if (isUndefined(result) || isUndefined(result.data)) {
 			return;
 		}
-		userGradeId = result.data;
-	});*/
+		userCourseId = result.data;
+	});
 }
