@@ -33,12 +33,12 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     /**
      * The amount of time it takes before a connection times out.
      */
-    private long timeoutTime = 0;
+    private final long timeoutTime;
 
     /**
      * True if the server is allowing secure connections.
      */
-    private boolean secure;
+    private final boolean secure;
 
     /**
      * Creates a GeneralConnectionServlet.
@@ -46,6 +46,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      * @param iSecure True if the connection is allowing SSL connections.
      * @param connectLocally True if the server is connecting locally.
      */
+    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
     public GeneralConnectionServlet(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
         this.timeoutTime = iTimeoutTime;
         this.secure = iSecure;
@@ -158,5 +159,12 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      */
     /* package-private */ final MultiConnectionManager getManager() {
         return manager;
+    }
+
+    /**
+     * @return the GeneralConnectionServer.
+     */
+    protected final GeneralConnectionServer getServer() {
+        return connectionServer;
     }
 }

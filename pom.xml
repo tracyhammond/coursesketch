@@ -54,28 +54,59 @@
 			<build>
 				<plugins>
 					<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>findbugs-maven-plugin</artifactId>
-					<configuration>
-						<excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
-						<includeTests>false</includeTests>
-					</configuration>
-					<executions>
-						<execution>
-							<phase>compile</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>findbugs-test-compile</id>
-							<phase>test-compile</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>findbugs-maven-plugin</artifactId>
+						<configuration>
+							<excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
+							<includeTests>false</includeTests>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>findbugs-test-compile</id>
+								<phase>test-compile</phase>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>nosite</id>
+			<activation>
+				<property>
+					<name>!nosite</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-site-plugin</artifactId>
+						<version>${sitepluginVersion}</version>
+						<executions>
+							<execution>
+								<id>attach-descriptor</id>
+								<goals>
+									<goal>attach-descriptor</goal>
+								</goals>
+							</execution>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>site</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -137,25 +168,6 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>${sitepluginVersion}</version>
-				<executions>
-					<execution>
-						<id>attach-descriptor</id>
-						<goals>
-							<goal>attach-descriptor</goal>
-						</goals>
-					</execution>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>site</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
@@ -199,6 +211,31 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.3</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<finalName>${project.build.finalName}-run</finalName>
+						<transformers>
+							<transformer
+								implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<manifestEntries>
+									<Main-Class>${mainClass}</Main-Class>
+									<Build-Number>2</Build-Number>
+								</manifestEntries>
+							</transformer>
+						</transformers>
+					</configuration>
+				</plugin>
+				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.4.1</version>
 					<configuration>
@@ -208,7 +245,7 @@
 							</manifest>
 						</archive>
 						<descriptorRefs>
-							<descriptorRef>${project.build.finalName}-run</descriptorRef>
+							<descriptorRef>${project.build.finalName}-run.jar</descriptorRef>
 						</descriptorRefs>
 					</configuration>
 					<executions>
@@ -227,7 +264,7 @@
 					<version>${checkstyleVersion}</version>
 					<executions>
 						<execution>
-							<id>validate</id>
+							<id>checkstyle</id>
 							<phase>validate</phase>
 							<configuration>
 								<configLocation>${absoluteCheckstyleLocation}</configLocation>
@@ -250,6 +287,40 @@
 					</executions>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>${pmdVersion}</version>
+					<executions>
+						<execution>
+							<id>pmd</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+							<configuration>
+								<rulesets>
+									<ruleset>${pmdRuleset}</ruleset>
+								</rulesets>
+								<excludeFromFailureFile>${pmdExclude}</excludeFromFailureFile>
+								<!-- <skip>${skip.pmd.check}</skip> -->
+							</configuration>
+						</execution>
+						<execution>
+							<id>cpd</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>cpd-check</goal>
+							</goals>
+							<configuration>
+								<excludeFromFailureFile>${cpdExclude}</excludeFromFailureFile>
+							</configuration>
+						</execution>
+					</executions>
+					<configuration>
+						<verbose>true</verbose>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>findbugs-maven-plugin</artifactId>
 					<version>${findbugVersion}</version>
@@ -268,19 +339,8 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-pmd-plugin</artifactId>
-					<version>${pmdVersion}</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>check</goal>
-								<goal>cpd-check</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<verbose>true</verbose>
-					</configuration>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.17</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -320,7 +380,7 @@
 					<executions>
 						<execution>
 							<id>my-execution</id>
-							<phase>package</phase>
+							<phase>deploy</phase>
 							<goals>
 								<goal>java</goal>
 							</goals>
@@ -367,17 +427,25 @@
 		<projectLineLevel>${averageTestLevel}</projectLineLevel>
 		<packageBranchLevel>${averageTestLevel}</packageBranchLevel>
 		<packageLineLevel>${averageTestLevel}</packageLineLevel>
-		<checkstyleLocation>config/checkstyle.xml</checkstyleLocation>
+		<checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
 		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
 		<findbugSupressionLocation>config/findbugs-exclude.xml</findbugSupressionLocation>
 		<protocLocation>/usr/local/bin/protoc</protocLocation>
-		<!-- This needs to be overwritten in child poms -->
-		<mainClass>fully.qualified.MainClass</mainClass>
-		<githubLocation>tracyhammond/coursesketch</githubLocation>
 		<sitepluginVersion>2.3.3</sitepluginVersion>
 		<coberturaVersion>2.6</coberturaVersion>
 		<pmdVersion>3.2</pmdVersion>
+		<githubLocation>tracyhammond/coursesketch</githubLocation>
+		<pmdExclude>config/${pmdFile}</pmdExclude>
+		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
+		<cpdExclude>config/${cpdFile}</cpdExclude>
+		<pmdFile>exclude-pmd.properties</pmdFile>
+		<cpdFile>exclude-cpd.properties</cpdFile>
+		<absoluteConfigLocation>${parentConfigLocationDir}/config</absoluteConfigLocation>
+
+		<!-- This needs to be overwritten in child poms -->
+		<mainClass>fully.qualified.MainClass</mainClass>
+		<parentConfigLocationDir>${basedir}</parentConfigLocationDir>
 	</properties>
 
 	<dependencies>

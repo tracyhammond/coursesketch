@@ -32,6 +32,9 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<properties>
+	    <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>

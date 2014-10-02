@@ -1,0 +1,72 @@
+<html>
+<head>
+<!-- utilities -->
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+<!-- Jquery library -->
+<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
+
+<!-- security -->
+<script
+	src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"
+	onerror="loader.replaceFile('sha3.js', 'js/connection/libraries/crypto.js', 'js');"></script>
+<!-- utils -->
+<script src="/src/utilities/functions/objectAndInheritance.js"></script>
+
+<!-- connection -->
+<script type="text/javascript" src="/src/utilities/connection/connectionLibrary.js"></script>
+
+<!-- html template -->
+<link id="loginTemplateImport" rel="import"
+	href="/src/utilities/connection/login/login.html">
+
+<!-- login.js -->
+<script type="text/javascript" src="login.js"></script>
+<script>
+    (function(importDoc) {
+        $(document).ready(function() {
+            var link = importDoc.querySelector('#loginTemplateImport');
+            var template = link.import.querySelector('template');
+            var clone = document.importNode(template.content, true);
+
+            var newElement = new LoginSystem();
+          	var official = "srl01.tamu.edu:8888"; // our server
+    		var test = "localhost:8888"; // local server
+
+    		var wsUri = official;
+    		if (document.URL.indexOf("http://localhost") === 0 || document.URL.indexOf("httpw://localhost") === 0) {
+    		    if (isUndefined(Window.TESTING_ENVIRONMENT) && confirm('Using localhost do you want to connect locally?')) {
+	    		    wsUri = test;
+	    		} else {
+	    		    wsUri = official;
+	    		}
+    		}
+
+    		/**
+    		 * @Method
+    		 * Creates the connection to the server. (but does nothing else)
+    		 */
+            LoginSystem.prototype.createdCallback = function() {
+    		    console.log("connection " + wsUri);
+                this.createConnection(wsUri, false, true);
+            };
+
+            /**
+             * Creates the shadow root and adds that into the system.
+             */
+            LoginSystem.prototype.attachedCallback = function() {
+                this.initializeElement(document, clone.cloneNode(true));
+            };
+
+            LoginSystem.prototype.detachedCallback = function() {
+                this.finalize();
+            };
+
+            document.registerElement('login-system', {
+                prototype : newElement
+            });
+        });
+    })(document.currentScript.ownerDocument);
+</script>
+</head>
+</html>

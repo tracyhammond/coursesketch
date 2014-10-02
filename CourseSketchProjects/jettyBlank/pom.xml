@@ -14,15 +14,13 @@
 
 	<properties>
 		<!-- This may be removed and a later solution will need to be worked on -->
-		<absoluteCheckstyleLocation>../../${checkstyleLocation}</absoluteCheckstyleLocation>
-		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<testLevel>0</testLevel>
 		<averageTestLevel>0</averageTestLevel>
 		<projectBranchLevel>6</projectBranchLevel>
 		<projectLineLevel>9</projectLineLevel>
 	</properties>
 	<build>
-	    <defaultGoal>clean install</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -35,6 +33,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

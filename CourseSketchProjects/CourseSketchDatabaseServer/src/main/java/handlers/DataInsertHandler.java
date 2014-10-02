@@ -1,24 +1,14 @@
 package handlers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import multiconnection.GeneralConnectionServer;
 
 import org.eclipse.jetty.websocket.api.Session;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
-
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.institution.Institution;
-import database.user.UserClient;
-import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
-import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
@@ -26,23 +16,42 @@ import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlGrade;
 import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.school.School.SrlSchool;
 import protobuf.srl.school.School.SrlUser;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
+
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
+import database.institution.Institution;
+import database.institution.mongo.MongoInstitution;
+import database.user.UserClient;
 
 /**
  * Handles data being added or edited.
- * 
+ *
  * In most cases insert returns the mongoId and the id that was taken in. This
  * allows the client to replace the old assignment id with the new assignment
  * id.
- * 
+ *
  * @author gigemjt
  */
 public class DataInsertHandler {
-    public static String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
 
+    /**
+     * A message returned when the insert was successful.
+     */
+    private static final String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
+
+    /**
+     * Takes in a request that has to deal with inserting data.
+     *
+     * decode request and pull correct information from {@link Institution}
+     * (courses, assignments, ...) then repackage everything and send it out.
+     * @param req The request that has data being inserted.
+     * @param conn The connection where the result is sent to.
+     */
     public static void handleData(final Request req, final Session conn) {
         try {
             System.out.println("Receiving DATA SEND Request...");
@@ -54,6 +63,7 @@ public class DataInsertHandler {
             }
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
 
+            final Institution instance = MongoInstitution.getInstance();
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemSend itemSet = request.getItemsList().get(p);
                 try {
@@ -61,7 +71,7 @@ public class DataInsertHandler {
                         case COURSE: {
                             try {
                                 final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
-                                final String resultId = Institution.mongoInsertCourse(userId, course);
+                                final String resultId = instance.insertCourse(userId, course);
                                 results.add(buildResult(resultId + " : " + course.getId(), itemSet.getQuery()));
                             } catch (DatabaseAccessException e) {
                                 // unable to register user for course
@@ -74,26 +84,26 @@ public class DataInsertHandler {
                         break;
                         case ASSIGNMENT: {
                             final SrlAssignment assignment = SrlAssignment.parseFrom(itemSet.getData());
-                            final String resultId = Institution.mongoInsertAssignment(userId, assignment);
+                            final String resultId = instance.insertAssignment(userId, assignment);
                             results.add(buildResult(resultId + " : " + assignment.getId(), itemSet.getQuery()));
                         }
                         break;
                         case COURSE_PROBLEM: {
                             final SrlProblem problem = SrlProblem.parseFrom(itemSet.getData());
-                            final String resultId = Institution.mongoInsertCourseProblem(userId, problem);
+                            final String resultId = instance.insertCourseProblem(userId, problem);
                             results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
                         }
                         break;
                         case BANK_PROBLEM: {
                             final SrlBankProblem problem = SrlBankProblem.parseFrom(itemSet.getData());
-                            final String resultId = Institution.mongoInsertBankProblem(userId, problem);
+                            final String resultId = instance.insertBankProblem(userId, problem);
                             results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
                         }
                         break;
                         /*
                          * case CLASS_GRADE: { SrlGrade grade =
                          * SrlGrade.parseFrom(itemSet.getData()); String
-                         * resultId = Institution.mongoInsertClassGrade(userId,
+                         * resultId = MongoInstitution.mongoInsertClassGrade(userId,
                          * grade); results.add(buildResult(resultId + " : " +
                          * grade.getId(), itemSet.getQuery())); } break;
                          */
@@ -104,7 +114,7 @@ public class DataInsertHandler {
                         case REGISTER: {
                             final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
                             final String courseId = course.getId();
-                            final boolean success = Institution.putUserInCourse(courseId, userId);
+                            final boolean success = instance.putUserInCourse(courseId, userId);
                             if (!success) {
                                 results.add(buildResult("User was already registered for course!", itemSet.getQuery()));
                             }
@@ -113,34 +123,36 @@ public class DataInsertHandler {
                     /*
                      * case USERGROUP: ArrayList<UserGroupBuilder>
                      * assignmentLoop =
-                     * Institution.mongoGetAssignment((ArrayList
+                     * MongoInstitution.mongoGetAssignment((ArrayList
                      * )itrequest.getItemIdList(), request.getUserId());
                      * for(AssignmentBuilder loopCourse: assignmentLoop){
                      * finalSchool
                      * .addAssignments(RequestConverter.convertAssignmentToProtobuf
                      * (loopCourse)); } break; case CLASS_GRADE:
                      * ArrayList<AssignmentBuilder> assignmentLoop =
-                     * Institution.
+                     * MongoInstitution.
                      * mongoGetAssignment((ArrayList)itrequest.getItemIdList(),
                      * request.getUserId()); for(AssignmentBuilder loopCourse:
                      * assignmentLoop){
                      * finalSchool.addAssignments(RequestConverter
                      * .convertAssignmentToProtobuf(loopCourse)); } break; case
                      * SOLUTION: ArrayList<AssignmentBuilder> assignmentLoop =
-                     * Institution
+                     * MongoInstitution
                      * .mongoGetAssignment((ArrayList)itrequest.getItemIdList(),
                      * request.getUserId()); for(AssignmentBuilder loopCourse:
                      * assignmentLoop){
                      * finalSchool.addAssignments(RequestConverter
                      * .convertAssignmentToProtobuf(loopCourse)); } break; case
                      * EXPERIMENT: ArrayList<AssignmentBuilder> assignmentLoop =
-                     * Institution
+                     * MongoInstitution
                      * .mongoGetAssignment((ArrayList)itrequest.getItemIdList(),
                      * request.getUserId()); for(AssignmentBuilder loopCourse:
                      * assignmentLoop){
                      * finalSchool.addAssignments(RequestConverter
                      * .convertAssignmentToProtobuf(loopCourse)); } break;
                      */
+                        default:
+                            break;
                     }
                 } catch (AuthenticationException e) {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
@@ -166,10 +178,7 @@ public class DataInsertHandler {
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
-        }
-        // decode request and pull correct information from database.institution
-        // (courses, assignments, ...) then repackage everything and send it out
-        catch (AuthenticationException e) {
+        } catch (AuthenticationException e) {
             e.printStackTrace();
             GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (Exception e) {
@@ -178,6 +187,19 @@ public class DataInsertHandler {
         }
     }
 
+    /**
+     * Builds a complete result from the query. This one is typically used in
+     * the case of success.
+     *
+     * @param data
+     *            The data from the result.
+     * @param text
+     *            A message from the result (typically used if there is an error
+     *            but no data).
+     * @param type
+     *            What the original query was.
+     * @return A fully built item result.
+     */
     private static ItemResult buildResult(final ByteString data, final String text, final ItemQuery type) {
         final ItemResult.Builder result = ItemResult.newBuilder();
         result.setData(data);
@@ -186,6 +208,15 @@ public class DataInsertHandler {
         return result.build();
     }
 
+    /**
+     * Builds a result but with no binary data.
+     *
+     * @param data
+     *            The data from the result.
+     * @param type
+     *            What the original query was.
+     * @return A built item result with no binary data.
+     */
     private static ItemResult buildResult(final String data, final ItemQuery type) {
         final ItemResult.Builder result = ItemResult.newBuilder();
         result.setReturnText(data);
@@ -193,6 +224,13 @@ public class DataInsertHandler {
         return result.build();
     }
 
+    /**
+     * Builds a request from a list of {@link ItemResult}.
+     * @param results A list of results that need to be sent back to the user.
+     * @param message A message that goes with the results (could be an error)
+     * @param req The original request that was received.
+     * @return A {@link Request}.
+     */
     private static Request buildRequest(final ArrayList<ItemResult> results, final String message, final Request req) {
 
         DataResult.Builder dataResult = null;
@@ -204,7 +242,6 @@ public class DataInsertHandler {
         final Request.Builder dataReq = Request.newBuilder();
         dataReq.setRequestType(MessageType.DATA_REQUEST);
         dataReq.setSessionInfo(req.getSessionInfo());
-        dataReq.setOtherData(dataResult.build().toByteString());
         dataReq.setResponseText(message);
         if (dataResult != null) {
             dataReq.setOtherData(dataResult.build().toByteString());
