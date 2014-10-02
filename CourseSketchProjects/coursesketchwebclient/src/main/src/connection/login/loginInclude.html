@@ -11,7 +11,7 @@
  -->
  
 <!-- Jquery library -->
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
 <!-- security -->
 <script
@@ -53,6 +53,7 @@
     		 * Creates the connection to the server. (but does nothing else)
     		 */
             LoginSystem.prototype.createdCallback = function() {
+    		    console.log("connection " + wsUri);
                 this.createConnection(wsUri, false, true);
             };
 

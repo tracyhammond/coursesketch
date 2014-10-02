@@ -38,6 +38,7 @@ function LoginSystem() {
             alert("You are now able to log in");
             connected = true;
         });
+        connection.reconnect();
     };
 
     /**
@@ -106,6 +107,11 @@ function LoginSystem() {
         formElement.action = "Javascript:(function() { document.querySelector('login-system').getFormSubmitFunction()();})()";
     }
 
+    /**
+     * @Method
+     * The clallback is called with one parameter.
+     * @callbackParam {Login} An instance of this object.
+     */
     this.setOnSuccessLogin = function(callback) {
         successLoginCallback = callback;
     }

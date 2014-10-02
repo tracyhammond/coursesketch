@@ -5,6 +5,7 @@
  */
 function Connection(uri, encrypted, attemptReconnect) {
 
+    console.log("Creating connection");
 	var connected = false;
 	var onOpen = false;
 	var onClose = false;
@@ -33,6 +34,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 */
 	function createWebSocket() {
         try {
+            console.log("Creating socket at " + wsUri);
             websocket = new WebSocket(wsUri);
             websocket.binaryType = "arraybuffer"; // We are talking binary
             websocket.onopen = function(evt) {
@@ -63,29 +65,30 @@ function Connection(uri, encrypted, attemptReconnect) {
 
             websocket.onmessage = function(evt) {
                 try {
+                    var MessageType = PROTOBUF_UTIL.getRequestClass().MessageType; 
                     // Decode the Request
-                    var msg = Request.decode(evt.data);
+                    var msg = PROTOBUF_UTIL.getRequestClass().decode(evt.data);
                     // console.log("request decoded succesfully ");
-                    if (msg.requestType == Request.MessageType.TIME) {
+                    if (msg.requestType == MessageType.TIME) {
                         console.log("getting from time");
                         var rsp = onTime(evt, msg)
                         if (rsp != null) this.sendRequest(rsp);
-                    } else if (msg.requestType == Request.MessageType.LOGIN && onLogin) {
+                    } else if (msg.requestType == MessageType.LOGIN && onLogin) {
                         console.log("getting from login");
                         onLogin(evt, msg);
-                    } else if (msg.requestType == Request.MessageType.RECOGNITION && onRecognition) {
+                    } else if (msg.requestType == MessageType.RECOGNITION && onRecognition) {
                         console.log("getting from recognition");
                         onRecognition(evt, msg);
-                    } else if (msg.requestType == Request.MessageType.SUBMISSION && onSubmission) {
+                    } else if (msg.requestType == MessageType.SUBMISSION && onSubmission) {
                         console.log("getting from submission");
                         onSubmission(evt, msg);
-                    } else if (msg.requestType == Request.MessageType.FEEDBACK && onAnswerChecker) {
+                    } else if (msg.requestType == MessageType.FEEDBACK && onAnswerChecker) {
                         console.log("getting from answer checker");
                         onAnswerChecker(evt, msg);
-                    } else if (msg.requestType == Request.MessageType.DATA_REQUEST && onSchoolData) {
+                    } else if (msg.requestType == MessageType.DATA_REQUEST && onSchoolData) {
                         console.log("getting from school data");
                         onSchoolData(evt, msg);
-                    } else if (msg.requestType == Request.MessageType.ERROR) {
+                    } else if (msg.requestType == MessageType.ERROR) {
                         console.log(msg.getResponseText());
                         if (onError) {
                             onError(evt, msg.getResponseText());
@@ -117,7 +120,9 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 * Attempts to restart the websocket so it can be reused.
 	 */
 	this.reconnect = function() {
-		websocket.close();
+	    if (!isUndefined(websocket)) {
+	        websocket.close();
+	    }
 		createWebSocket();
 	};
 

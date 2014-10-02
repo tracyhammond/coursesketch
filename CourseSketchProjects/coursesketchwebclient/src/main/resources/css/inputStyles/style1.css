@@ -1,4 +1,6 @@
-
+a {
+	font: 14px Arial;
+}
 input[type="email"],
 input[type="text"],
 input[type="password"] {
