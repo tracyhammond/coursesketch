@@ -1,174 +1,71 @@
 package database.institution;
 
-import static database.DatabaseStringConstants.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import multiconnection.MultiConnectionManager;
-
-import org.bson.types.ObjectId;
-
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlGroup;
-import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.submission.Submission.SrlExperiment;
-import protobuf.srl.submission.Submission.SrlSolution;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.submission.SubmissionManager;
-import database.user.GroupManager;
-import database.user.UserClient;
 
-public final class Institution {
-    private static Institution instance;
-    private DB db;
-
-    private Institution(final String url) {
-        try {
-            final MongoClient mongoClient = new MongoClient(url);
-            db = mongoClient.getDB(DATABASE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Institution() {
-        this("goldberglinux.tamu.edu");
-        // this("localhost");
-    }
-
-    private static Institution getInstance() {
-        if (instance == null) {
-            instance = new Institution();
-        }
-        return instance;
-    }
+/**
+ * A wrapper around the database that contains institution data.
+ * @author gigemjt
+ *
+ */
+public interface Institution {
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test
-     * instance that can only access a test database
-     *
-     * @param testOnly
+     * Sets up any indexes that need to be set up or have not yet been set up.
      */
-    public Institution(final boolean testOnly) {
-        try {
-            final MongoClient mongoClient = new MongoClient("localhost");
-            if (testOnly) {
-                db = mongoClient.getDB("test");
-            } else {
-                db = mongoClient.getDB(DATABASE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        instance = this;
-    }
-
-    public void setUpIndexes() {
-        System.out.println("Setting up the indexes");
-        db.getCollection(USER_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
-        db.getCollection(UPDATE_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
-    }
+    void setUpIndexes();
 
     /**
-     * Returns a list of courses given a list of Ids for the courses
-     *
-     * @throws AuthenticationException
+     * @param courseIds A list of ids for a specific course
+     * @param userId The user requesting these courses.
+     * @return A list of courses given a list of Ids for the courses.
+     * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
      */
-    public static ArrayList<SrlCourse> mongoGetCourses(final List<String> courseIds, final String userId) throws AuthenticationException {
-        final long currentTime = System.currentTimeMillis();
-        final ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
-        for (String courseId : courseIds) {
-            try {
-                allCourses.add(CourseManager.mongoGetCourse(getInstance().db, courseId, userId, currentTime));
-            } catch (DatabaseAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return allCourses;
-    }
+    List<SrlCourse> getCourses(List<String> courseIds, String userId) throws AuthenticationException;
 
     /**
-     * Returns a list of problems given a list of Ids for the course problems.
-     *
-     * @throws AuthenticationException
-     * @throws DatabaseAccessException
+     * @param problemID A list of ids for a specific course problem.
+     * @param userId The user requesting these courses.
+     * @return A list of course problems given a list of Ids for the course problems.
+     * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if the data does not exist.
      */
-    public static ArrayList<SrlProblem> mongoGetCourseProblem(final List<String> problemID, final String userId) throws AuthenticationException,
-            DatabaseAccessException {
-        final long currentTime = System.currentTimeMillis();
-        final ArrayList<SrlProblem> allCourses = new ArrayList<SrlProblem>();
-        for (int index = 0; index < problemID.size(); index++) {
-            try {
-                allCourses.add(CourseProblemManager.mongoGetCourseProblem(getInstance().db, problemID.get(index), userId, currentTime));
-            } catch (DatabaseAccessException e) {
-                e.printStackTrace();
-                if (!e.isRecoverable()) {
-                    throw e;
-                }
-            } catch (AuthenticationException e) {
-                if (e.getType() != AuthenticationException.INVALID_DATE) {
-                    throw e;
-                }
-            }
-        }
-        return allCourses;
-    }
+    List<SrlProblem> getCourseProblem(List<String> problemID, String userId) throws AuthenticationException,
+            DatabaseAccessException;
 
     /**
-     * Returns a list of problems given a list of Ids for the course problems.
-     *
-     * @throws AuthenticationException
-     * @throws DatabaseAccessException
+     * @param assignementID A list of ids for a specific assignment.
+     * @param userId The user requesting these courses.
+     * @return A list of assignments given a list of Ids for the assignments.
+     * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if the data does not exist.
      */
-    public static ArrayList<SrlAssignment> mongoGetAssignment(final List<String> assignementID, final String userId) throws AuthenticationException,
-            DatabaseAccessException {
-        final long currentTime = System.currentTimeMillis();
-        final ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
-        for (int assignments = assignementID.size() - 1; assignments >= 0; assignments--) {
-            try {
-                allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().db, assignementID.get(assignments), userId, currentTime));
-            } catch (DatabaseAccessException e) {
-                e.printStackTrace();
-                if (!e.isRecoverable()) {
-                    throw e;
-                }
-            } catch (AuthenticationException e) {
-                if (e.getType() != AuthenticationException.INVALID_DATE) {
-                    throw e;
-                }
-            }
-        }
-        return allAssignments;
-    }
+    List<SrlAssignment> getAssignment(List<String> assignementID, String userId) throws AuthenticationException,
+            DatabaseAccessException;
 
-    public static ArrayList<SrlBankProblem> mongoGetProblem(final List<String> problemID, final String userId) throws AuthenticationException {
-        final ArrayList<SrlBankProblem> allProblems = new ArrayList<SrlBankProblem>();
-        for (int problem = problemID.size() - 1; problem >= 0; problem--) {
-            allProblems.add(BankProblemManager.mongoGetBankProblem(getInstance().db, problemID.get(problem), userId));
-        }
-        return allProblems;
-    }
+    /**
+     * @param problemID A list of ids for a specific bank problem.
+     * @param userId The user requesting these courses.
+     * @return A list of course problems given a list of Ids for the course problems.
+     * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     */
+    List<SrlBankProblem> getProblem(List<String> problemID, String userId) throws AuthenticationException;
 
-    public static ArrayList<SrlCourse> getAllPublicCourses() {
-        return CourseManager.mongoGetAllPublicCourses(getInstance().db);
-    }
+    /**
+     * @return A list of courses that are public (used when registering problems)
+     */
+    List<SrlCourse> getAllPublicCourses();
 
     /**
      * Inserts a {@link SrlCourse} into the the database.
@@ -183,67 +80,15 @@ public final class Institution {
      * </ol>
      *
      * @param userId
-     *            The credentials used to authenticate the insertion
-     * @param assignment
+     *            The credentials used to authenticate the insertion.  All users can create a course.
+     * @param course
      *            The object being inserted
      * @return The Id of the object that was inserted
      * @throws DatabaseAccessException
+     *             Thrown if the course is not able to be inserted.
+     *
      */
-    public static String mongoInsertCourse(final String userId, final SrlCourse course) throws DatabaseAccessException {
-
-        // Creates the default permissions for the courses.
-        SrlPermission permission = null;
-        if (course.hasAccessPermission()) {
-            permission = course.getAccessPermission();
-        }
-
-        final SrlGroup.Builder courseGroup = SrlGroup.newBuilder();
-        courseGroup.addAdmin(userId);
-        courseGroup.setGroupName(course.getName() + "_User");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getUserPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getUserPermissionList());
-        }
-        final String userGroupId = GroupManager.mongoInsertGroup(getInstance().db, courseGroup.buildPartial());
-
-        courseGroup.setGroupName(course.getName() + "_Mod");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getModeratorPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getModeratorPermissionList());
-        }
-        final String modGroupId = GroupManager.mongoInsertGroup(getInstance().db, courseGroup.buildPartial());
-
-        courseGroup.setGroupName(course.getName() + "_Admin");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getAdminPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getAdminPermissionList());
-        }
-        courseGroup.addUserId(userId); // an admin will always exist
-        final String adminGroupId = GroupManager.mongoInsertGroup(getInstance().db, courseGroup.buildPartial());
-
-        // overwrites the existing permissions with the new user specific course
-        // permission
-        final SrlCourse.Builder builder = SrlCourse.newBuilder(course);
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        permissions.addAdminPermission(GROUP_PREFIX + adminGroupId);
-        permissions.addModeratorPermission(GROUP_PREFIX + modGroupId);
-        permissions.addUserPermission(GROUP_PREFIX + userGroupId);
-        builder.setAccessPermission(permissions.build());
-        final String resultId = CourseManager.mongoInsertCourse(getInstance().db, builder.buildPartial());
-
-        // links the course to the group!
-        CourseManager.mongoInsertDefaultGroupId(getInstance().db, resultId, userGroupId, modGroupId, adminGroupId);
-
-        // adds the course to the users list
-        final boolean success = Institution.putUserInCourse(resultId, userId);
-        if (!success) {
-            throw new DatabaseAccessException("No success: ", false);
-        }
-
-        // TODO: try to undo what has been done! (and more error handling!)
-
-        return resultId;
-    }
+    String insertCourse(String userId, SrlCourse course) throws DatabaseAccessException;
 
     /**
      * Inserts the assignment into the the database.
@@ -259,17 +104,14 @@ public final class Institution {
      *            The credentials used to authenticate the insertion
      * @param assignment
      *            The object being inserted
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to insert an
+     *             Assignment.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem inserting the assignment.
      * @return The Id of the object that was inserted
      */
-    public static String mongoInsertAssignment(final String userId, final SrlAssignment assignment) throws AuthenticationException,
-            DatabaseAccessException {
-        final String resultId = AssignmentManager.mongoInsertAssignment(getInstance().db, userId, assignment);
-
-        final ArrayList<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().db, assignment.getCourseId());
-        AssignmentManager.mongoInsertDefaultGroupId(getInstance().db, resultId, ids);
-
-        return resultId;
-    }
+    String insertAssignment(String userId, SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts the assignment into the the database.
@@ -286,16 +128,14 @@ public final class Institution {
      *            The credentials used to authenticate the insertion
      * @param problem
      *            The object being inserted
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to insert a
+     *             Course Problem.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem inserting the assignment.
      * @return The Id of the object that was inserted
      */
-    public static String mongoInsertCourseProblem(final String userId, final SrlProblem problem) throws AuthenticationException,
-            DatabaseAccessException {
-        final String resultId = CourseProblemManager.mongoInsertCourseProblem(getInstance().db, userId, problem);
-
-        final ArrayList<String>[] ids = AssignmentManager.mongoGetDefaultGroupId(getInstance().db, problem.getAssignmentId());
-        CourseProblemManager.mongoInsertDefaultGroupId(getInstance().db, resultId, ids);
-        return resultId;
-    }
+    String insertCourseProblem(String userId, SrlProblem problem) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts the {@link SrlBankProblem} into the the database.
@@ -307,10 +147,10 @@ public final class Institution {
      * @param problem
      *            The object being inserted
      * @return The Id of the object that was inserted
+     *
+     * @throws AuthenticationException if the user does not have permission to insert this bank problem.
      */
-    public static String mongoInsertBankProblem(final String userId, final SrlBankProblem problem) throws AuthenticationException {
-        return BankProblemManager.mongoInsertBankProblem(getInstance().db, problem);
-    }
+    String insertBankProblem(String userId, SrlBankProblem problem) throws AuthenticationException;
 
     /**
      * Registers a user for a course
@@ -324,102 +164,68 @@ public final class Institution {
      * </ol>
      *
      * @param userId
-     *            The credentials used to authenticate the insertion
-     * @param problem
-     *            The object being inserted
+     *            The credentials user to be put into the course.
+     * @param courseId
+     *            The course that the user is being inserted into
      * @return The Id of the object that was inserted
      * @throws DatabaseAccessException
-     *             only thrown if the user is already registered for the course
+     *             Only thrown if the user is already registered for the course.
+     *
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to be inserted into the course.
      */
-    public static boolean putUserInCourse(final String courseId, final String userId) throws DatabaseAccessException {
-        // this actually requires getting the data from the course itself
-        final String userGroupId = CourseManager.mongoGetDefaultGroupId(getInstance().db, courseId)[2]; // user
-                                                                                                        // group!
+    boolean putUserInCourse(String courseId, String userId) throws DatabaseAccessException, AuthenticationException;
 
-        // FIXME: when mongo version 2.5.5 java client comes out please change
-        // this!
-        final ArrayList<String> hack = new ArrayList<String>();
-        hack.add(GROUP_PREFIX + userGroupId);
-        if (Authenticator.checkAuthentication(getInstance().db, userId, hack)) {
-            return false;
-        }
-        // DO NOT USE THIS CODE ANY WHERE ESLE
-        final DBRef myDbRef = new DBRef(getInstance().db, USER_GROUP_COLLECTION, new ObjectId(userGroupId));
-        final DBObject corsor = myDbRef.fetch();
-        final DBCollection courses = getInstance().db.getCollection(USER_GROUP_COLLECTION);
-        final BasicDBObject object = new BasicDBObject("$addToSet", new BasicDBObject(USER_LIST, userId));
-        courses.update(corsor, object);
-
-        UserClient.addCourseToUser(userId, courseId);
-        return true;
-    }
-
-    public static ArrayList<SrlCourse> getUserCourses(final String userId) throws AuthenticationException, DatabaseAccessException {
-        return Institution.mongoGetCourses(UserClient.getUserCourses(userId), userId);
-    }
+    /**
+     * Gets all of the courses of a specific user.
+     * @param userId The user asking for their courses.
+     * @return A list of all courses for a specific user.
+     * @throws AuthenticationException Thrown if the user does not have authentication to some of the courses.
+     * @throws DatabaseAccessException Thrown if there is a problem accessing the course.
+     */
+    List<SrlCourse> getUserCourses(String userId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * A message sent from the submission server that allows the insertion of
      * the message.
      *
-     * @param req
-     * @throws DatabaseAccessException
+     * @param req Submission being inserted.
+     * @throws DatabaseAccessException Thrown if there is data missing.
      */
-    public static void mongoInsertSubmission(final Request req) throws DatabaseAccessException {
-        try {
-            final SrlExperiment exp = SrlExperiment.parseFrom(req.getOtherData());
-            mongoInsertSubmission(exp.getProblemId(), req.getServersideId(), exp.getSubmission().getId(), true);
-            return;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            // TODO: change how this process works for instructors!
-            final SrlSolution exp = SrlSolution.parseFrom(req.getOtherData());
-            throw new DatabaseAccessException("Instructors need to be authenticated first!");
-            // SubmissionManager.mongoInsertSubmission(exp.getProblemBankId(),
-            // exp.getProblemBankId(), exp.getSubmission().getId(), false);
-            // return;
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-        }
-    }
+    void insertSubmission(Request req) throws DatabaseAccessException;
 
     /**
      * A message sent from the submission server that allows the insertion of
-     * the message.
-     *
-     * @param req
-     * @throws DatabaseAccessException
+     * the submission.
+     * @param problemId The bank problem that is related
+     * @param userId The user that the submission is associated.
+     * @param submissionId The submission that is being inserted.
+     * @param experiment True if the submission is an experiment.
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      */
-    public static void mongoInsertSubmission(final String problemId, final String userId, final String submissionId, final boolean experiment)
-            throws DatabaseAccessException {
-        SubmissionManager.mongoInsertSubmission(getInstance().db, problemId, userId, submissionId, experiment);
-    }
+    void insertSubmission(String problemId, String userId, String submissionId, boolean experiment)
+            throws DatabaseAccessException;
 
-    public static void mongoGetExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
-            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
-        try {
-            System.out.println("Getting experiment for user: " + userId + " problem: " + problemId);
-            SubmissionManager.mongoGetExperiment(getInstance().db, userId, problemId, sessionInfo, internalConnections);
-            return;
-        } catch (DatabaseAccessException e) {
-            if (e instanceof DatabaseAccessException) {
-                throw e;
-            }
-            e.printStackTrace();
-        } catch (Exception e) {
+    /**
+     * Calls the submission server for a specific experiment from a specific user.
+     * @param userId User requesting the experiment.
+     * @param problemId The problemId that the experiment is associated with.
+     * @param sessionInfo The session information of this query.
+     * @param internalConnections The connection manager to other servers.
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     */
+    void getExperimentAsUser(String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections)
+            throws DatabaseAccessException;
 
-        }
-    }
+    /**
+     * Calls the submission server for a specific experiment from a specific user.
+     * @param userId User requesting the experiment.
+     * @param problemId The problemId that the experiment is associated with.
+     * @param sessionInfo The session information of this query.
+     * @param internalConnections The connection manager to other servers.
+     * @param review data about review the sketch.
+     */
+    void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
+            MultiConnectionManager internalConnections, ByteString review);
 
-    public static void mongoGetExperimentAsInstructor(final String userId, final String problemId, final String sessionInfo,
-            final MultiConnectionManager internalConnections, final ByteString review) {
-        try {
-            SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().db, userId, problemId, sessionInfo, internalConnections, review);
-            return;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
