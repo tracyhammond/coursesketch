@@ -1,10 +1,15 @@
 package database.submission;
 
-import static database.DatabaseStringConstants.*;
+import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
+import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
+import static database.DatabaseStringConstants.MOD;
+import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
+import static database.DatabaseStringConstants.SOLUTION_ID;
 
 import java.util.ArrayList;
 
-import multiconnection.GeneralConnectionServer;
 import multiconnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
@@ -28,19 +33,15 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 
+/**
+ * Manages data that has to deal with submissions in the database server.
+ *
+ * This specifically is a link that links all of the institution data back to the submission data.
+ * This does not actually store the submissions themselves.
+ * @author gigemjt
+ *
+ */
 public class SubmissionManager {
-    private static SubmissionManager instance;
-    private SubmissionConnection solutionConnection;
-
-    public SubmissionManager(final SubmissionConnection connection) {
-        if (instance == null) {
-            this.solutionConnection = connection;
-        }
-    }
-
-    private static SubmissionManager getInstance() {
-        return instance;
-    }
 
     /**
      * Inserts a submission into the database.
@@ -49,13 +50,14 @@ public class SubmissionManager {
      * it is the bankProblem if {@code experiment} is true then {@code problem}
      * is a courseProblem otherwise it is the bankProblem
      *
-     * @param dbs
-     * @param uniqueId
-     * @param problemId
-     * @param submissionId
-     * @param experiment
+     * @param dbs The database that contains the information about the submission.
+     * @param uniqueId Generally the userId.
+     * @param problemId The problem id.
+     * @param submissionId The id associated with the submission on the submission server.
+     * @param experiment True if the object being submitted is an experiment
      */
-    public static void mongoInsertSubmission(final DB dbs, final String problemId, final String uniqueId, final String submissionId, final boolean experiment) {
+    public static void mongoInsertSubmission(final DB dbs, final String problemId, final String uniqueId, final String submissionId,
+            final boolean experiment) {
         System.out.println("Inserting an experiment " + experiment);
         System.out.println("database is " + dbs);
         final DBRef myDbRef = new DBRef(dbs, experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION, new ObjectId(problemId));
@@ -78,14 +80,16 @@ public class SubmissionManager {
     }
 
     /**
-     * @param submissionId
-     * @param userId
-     * @param problemId
-     * @return the submission id
-     * @throws DatabaseAccessException
+     * Sends a request to the submission server to request an experiment as a user.
+     * @param dbs The database that contains data about the experiment.
+     * @param userId The user who has access to the experiment.
+     * @param problemId The id of the problem associated with the sketch.
+     * @param sessionInfo The session information that is sent to the submission server.
+     * @param internalConnections A manager of connections to another database.
+     * @throws DatabaseAccessException Thrown is there is data missing in the database.
      */
-    public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final String sessionInfo, final MultiConnectionManager internalConnections)
-            throws DatabaseAccessException {
+    public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final String sessionInfo,
+            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
         final Request.Builder r = Request.newBuilder();
         r.setSessionInfo(sessionInfo);
         r.setRequestType(MessageType.DATA_REQUEST);
@@ -111,30 +115,34 @@ public class SubmissionManager {
     }
 
     /**
-     * Builds a request to the server for every single sketch in a single
+     * Builds a request to the server for all of the sketches in a single
      * problem.
-     *
-     * @param submissionId
-     * @param userId
-     * @param problemId
-     * @return the submission id
-     * @throws DatabaseAccessException
-     * @throws AuthenticationException
+     * @param authenticator The object being used to authenticate the server.
+     * @param dbs The database where the data is stored.
+     * @param userId The user that was requesting this information.
+     * @param problemId The problem for which the sketch data is being requested.
+     * @param sessionInfo The session information of the current server.
+     * @param internalConnections The connections of other servers.
+     * @param review A list of data about reviewing the sketches.
+     * @throws DatabaseAccessException Thrown if there are no problems data that exist.
+     * @throws AuthenticationException Thrown if the user does not have the authentication
      */
-    public static void mongoGetAllExperimentsAsInstructor(final DB dbs, final String userId, final String problemId, final String sessionInfo,
-            final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
+    public static void mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs, final String userId,
+            final String problemId, final String sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
+            throws DatabaseAccessException, AuthenticationException {
         final DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
         if (problem == null) {
             throw new DatabaseAccessException("Problem was not found with the following ID " + problemId);
         }
         final ArrayList adminList = (ArrayList<Object>) problem.get(ADMIN); // convert
-                                                                      // to
-                                                                      // ArrayList<String>
-        final ArrayList modList = (ArrayList<Object>) problem.get(MOD); // convert to
-                                                                  // ArrayList<String>
+        // to
+        // ArrayList<String>
+        final ArrayList modList = (ArrayList<Object>) problem.get(MOD); // convert
+                                                                        // to
+        // ArrayList<String>
         boolean isAdmin = false, isMod = false;
-        isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
-        isMod = Authenticator.checkAuthentication(dbs, userId, modList);
+        isAdmin = authenticator.checkAuthentication(userId, adminList);
+        isMod = authenticator.checkAuthentication(userId, modList);
         if (!isAdmin && !isMod) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }

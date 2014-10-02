@@ -71,6 +71,12 @@ public final class TimeManager {
     private static ActionListener listen;
 
     /**
+     * Private constructor.
+     */
+    private TimeManager() {
+    }
+
+    /**
      * Sets a listener that is called when the final time is established.
      * @param list The listener is called with an empty ActionEvent
      */

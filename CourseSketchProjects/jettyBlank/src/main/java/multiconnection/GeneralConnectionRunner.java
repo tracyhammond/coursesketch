@@ -7,9 +7,10 @@ package multiconnection;
  */
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Connector;
@@ -31,6 +32,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  * @author gigemjt
  *
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionRunner {
 
     /**
@@ -92,6 +94,7 @@ public class GeneralConnectionRunner {
     /**
      * If true then the server is treated as a production server.
      */
+    @SuppressWarnings("PMD.ImmutableField")
     private boolean production = false;
 
     /**
@@ -107,6 +110,7 @@ public class GeneralConnectionRunner {
     /**
      * True if the server is using SSL and false otherwise.
      */
+    @SuppressWarnings("PMD.ImmutableField")
     private boolean secure = false;
 
     /**
@@ -122,15 +126,10 @@ public class GeneralConnectionRunner {
     /**
      * The main method that can be used to run a server.
      * @param args Input arguments that are running the server.
-     * @throws Exception Thrown if running the sever fails.
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         final GeneralConnectionRunner runner = new GeneralConnectionRunner(args);
-        try {
-            runner.runAll();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        runner.runAll();
     }
 
     /**
@@ -141,21 +140,21 @@ public class GeneralConnectionRunner {
      *            the arguments from the server are then parsed.
      */
     protected GeneralConnectionRunner(final String[] arguments) {
-        this.args = arguments;
+        this.args = Arrays.copyOf(arguments, arguments.length);
         if (arguments.length >= 1 && arguments[0].equals("local")) {
             local = true;
         } else {
             local = false;
         }
+        production = false;
+        secure = false;
     }
 
     /**
      * Runs the entire startup process including input.
      *
-     * @throws Exception
-     *             when instantiating the server fails.
      */
-    protected final void runAll() throws Exception {
+    protected final void runAll() {
         this.runMost();
         this.startInput();
     }
@@ -166,18 +165,19 @@ public class GeneralConnectionRunner {
      */
     private void configureSSL() {
 
-        final SslContextFactory cf = new SslContextFactory();
+        final SslContextFactory contextfactor = new SslContextFactory();
 
         // Configure SSL
 
         // Use the real certificate
         System.out.println("Loaded real keystore");
-        cf.setKeyStorePath(keystorePath/* "srl01_tamu_edu.jks" */);
-        cf.setTrustStorePath(keystorePath);
-        cf.setTrustStorePassword(keystorePassword);
+        contextfactor.setKeyStorePath(keystorePath/* "srl01_tamu_edu.jks" */);
+        contextfactor.setTrustStorePath(keystorePath);
+        contextfactor.setTrustStorePassword(keystorePassword);
         // cf.setCertAlias("nss324-o");
         // cf.checkKeyStore();
-        final SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(cf, org.eclipse.jetty.http.HttpVersion.HTTP_1_1.toString());
+        final SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(contextfactor,
+                org.eclipse.jetty.http.HttpVersion.HTTP_1_1.toString());
 
         final HttpConfiguration config = new HttpConfiguration();
         config.setSecureScheme("https");
@@ -199,12 +199,9 @@ public class GeneralConnectionRunner {
     /**
      * Runs the majority of the startup process.
      *
-     * Does not handle accepting Input
-     *
-     * @throws Exception
-     *             if there is an error instantiating the server
+     * Does not handle accepting Input.
      */
-    protected final void runMost() throws Exception {
+    protected final void runMost() {
         this.loadConfigurations();
         if (local) {
             this.executeLocalEnviroment();
@@ -225,31 +222,29 @@ public class GeneralConnectionRunner {
     /**
      * Called to load the configuration data it can be overwritten to load specific data for each server.
      */
-    public void loadConfigurations() {
-
+    public final void loadConfigurations() {
+        // loading configuration code goes here.
     }
 
     /**
      * Called to setup the system if it is being run on a local computer with a local host.
      */
     public void executeLocalEnviroment() {
-
+        // does nothing by default.
     }
 
     /**
      * Called to setup the system for if it is being run to connect to remote compters.
      */
     public void executeRemoveEnviroment() {
-
+        // does nothing by default.
     }
 
     /**
      * Sets up a Jetty embedded server. Uses The given port
      *
-     * @throws Exception
-     *             if there is an error instantiating the server
      */
-    public final void createServer() throws Exception {
+    public final void createServer() {
         server = new Server(port);
         System.out.println("Server has been created on port: " + port);
     }
@@ -287,19 +282,22 @@ public class GeneralConnectionRunner {
      * A server can only be run once.
      */
     public final void startServer() {
-        final Thread d = new Thread() {
+        final Thread serverThread = new Thread() {
             @Override
+            @SuppressWarnings({"PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
             public void run() {
                 try {
                     server.start();
                     servletInstance.reconnect();
                     server.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
-        d.start();
+        serverThread.start();
     }
 
     /**
@@ -340,50 +338,85 @@ public class GeneralConnectionRunner {
      *            Used if additional input is needed for the command.
      * @return true if the command is an accepted command and is used by the
      *         server
-     * @throws Exception
-     *             if an error with I/O or instantiating the server occurs, or
-     *             the thread is interrupted
+     * @throws IOException an I/O error
+     * @throws InterruptedException the thread is interrupted.
      */
-    public final boolean parseCommand(final String command, final BufferedReader sysin) throws Exception {
-        final int waitDelay = 1000;
+    public final boolean parseCommand(final String command, final BufferedReader sysin) throws IOException, InterruptedException {
         if (command == null) {
             return true;
         }
-        if (command.equals("exit")) {
-            System.out.println("Are you sure you want to exit? [y/n]");
-            if (StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
-                this.stop();
-                acceptInput = false;
-                System.out.println("Stopped accepting input");
-            }
+        if ("exit".equals(command)) {
+            exitCommand(sysin);
             return true;
-        } else if (command.equals("restart")) {
-            System.out.println("Are you sure you want to restart? [y/n]");
-            if (StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
-                this.stop();
-                System.out.println("sleeping for 1s");
-                Thread.sleep(waitDelay);
-                this.runMost();
-            }
+        } else if ("restart".equals(command)) {
+            restartCommand(sysin);
             return true;
-        } else if (command.equals("reconnect")) {
+        } else if ("reconnect".equals(command)) {
             servletInstance.reconnect();
             return true;
-        } else if (command.equals("stop")) {
-            System.out.println("Are you sure you want to stop? [y/n]");
-            if (StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
-                this.stop();
-            }
+        } else if ("stop".equals(command)) {
+            stopCommand(sysin);
             return true;
-        } else if (command.equals("start")) {
-            if (this.server == null || !this.server.isRunning()) {
-                this.runMost();
-            } else {
-                System.out.println("you can not start the because it is already running.");
-            }
+        } else if ("start".equals(command)) {
+            startCommand();
             return true;
         }
         return parseUtilityCommand(command, sysin);
+    }
+
+    /**
+     * A command for exiting the server.
+     * @param sysin Keyboard input.
+     * @throws IOException Thrown if there are problems getting the keyboard input.
+     */
+    private void exitCommand(final BufferedReader sysin) throws IOException {
+        System.out.println("Are you sure you want to exit? [y/n]");
+        if (StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
+            this.stop();
+            acceptInput = false;
+            System.out.println("Stopped accepting input");
+        }
+    }
+
+    /**
+     * A command for restarting the server.
+     * @param sysin Keyboard input.
+     * @throws InterruptedException Thrown if the thread is interrupted while waiting.
+     * @throws IOException Thrown if there are problems getting the keyboard input.
+     */
+    private void restartCommand(final BufferedReader sysin) throws IOException, InterruptedException {
+        final int waitDelay = 1000;
+        System.out.println("Are you sure you want to restart? [y/n]");
+        if (StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
+            this.stop();
+            System.out.println("sleeping for 1s");
+            Thread.sleep(waitDelay);
+            this.runMost();
+        }
+    }
+
+    /**
+     * A command for stopping the server.
+     * @param sysin Keyboard input.
+     * @throws IOException Thrown if there are problems getting the keyboard input.
+     */
+    private void stopCommand(final BufferedReader sysin) throws IOException {
+        System.out.println("Are you sure you want to stop? [y/n]");
+        if (StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
+            this.stop();
+        }
+    }
+
+    /**
+     * A command for starting the server.
+     * @throws IOException Thrown if there are problems getting the keyboard input.
+     */
+    private void startCommand() throws IOException {
+        if (this.server == null || !this.server.isRunning()) {
+            this.runMost();
+        } else {
+            System.out.println("you can not start the because it is already running.");
+        }
     }
 
     // FUTURE: add a command manager of some sort.
@@ -392,11 +425,11 @@ public class GeneralConnectionRunner {
      * @param command The command that is being processed.
      * @param sysin Used for additional input.
      * @return True if the message command is processed.
-     * @throws Exception Thrown if there is a problem reading input.
+     * @throws IOException Thrown if there is a problem reading input.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws Exception {
-        if (command.equals("toggle logging")) {
+    public boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws IOException {
+        if ("toggle logging".equals(command)) {
             if (logging) {
                 System.out.println("Are you sure you want to turn loggin off? [y/n]");
                 if (!StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
@@ -412,7 +445,7 @@ public class GeneralConnectionRunner {
             logging = !logging;
             return true;
         }
-        if (command.equals("connectionNumber")) {
+        if ("connectionNumber".equals(command)) {
             System.out.println(servletInstance.getCurrentConnectionNumber());
             return true;
         }
@@ -423,31 +456,29 @@ public class GeneralConnectionRunner {
      * Starts the system that accepts command line input.
      */
     public final void startInput() {
-        final Thread d = new Thread() {
+        final Thread inputThread = new Thread() {
             @Override
+            @SuppressWarnings("PMD.CommentRequired")
             public void run() {
-                try {
-                    final BufferedReader sysin = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
-                    while (acceptInput) {
-                        final String in = sysin.readLine();
-                        try {
-                            localInstance.parseCommand(in, sysin);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                final BufferedReader sysin = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
+                while (acceptInput) {
+                    try {
+                        final String command = sysin.readLine();
+                        localInstance.parseCommand(command, sysin);
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         };
-        d.start();
+        inputThread.start();
     }
 
     /**
      * Stops the server.
      * Input is not stopped by the method.
      */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public final void stop() {
         try {
             server.stop();
@@ -467,7 +498,7 @@ public class GeneralConnectionRunner {
      */
     protected final void setKeystorePassword(final String pass) {
         if (this.keystorePath != null) {
-            throw new RuntimeException("password is already set throwing an error.");
+            throw new IllegalStateException("password is already set throwing an error.");
         }
         this.keystorePassword = pass;
     }
@@ -478,7 +509,7 @@ public class GeneralConnectionRunner {
      */
     protected final void setKeystorePath(final String path) {
         if (this.keystorePath != null) {
-            throw new RuntimeException("Key path is already set throwing an error.");
+            throw new IllegalStateException("Key path is already set throwing an error.");
         }
         this.keystorePath = path;
     }
