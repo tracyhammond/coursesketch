@@ -9,10 +9,13 @@ function ProtobufException(message) {
 ProtobufException.prototype = BaseException;
 
 /**
- * ************************************************************* Protobuf
- * Utility functions
+ * *************************************************************
  * 
- * @author gigemjt *************************************************************
+ * Protobuf Utility functions
+ * 
+ * @author gigemjt
+ * 
+ * *************************************************************
  */
 
 /**
