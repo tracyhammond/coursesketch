@@ -21,7 +21,12 @@ function Connection(uri, encrypted, attemptReconnect) {
 	var timeoutVariable = false;
 	var self = this;
 
-	var totalTimeDifferance = 0;
+	var totalTimeDifferance = dcodeIO.Long.fromInt(0);
+    var timeDifferance = dcodeIO.Long.fromInt(0);
+    var latency = dcodeIO.Long.fromInt(0);
+    var SEND_TIME_TO_CLIENT_MSG = "1";
+    var CLIENT_REQUEST_LATENCY_MSG = "2";
+    var SEND_LATENCY_TO_CLIENT_MSG = "3";
 
 	/**
 	 * Creates a websocket and adds typical websocket methods to it.
@@ -198,9 +203,13 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 * TODO: complete the entirety of the event that can be spoofed.
 	 */
 	this.sendSelf = function(message) {
-		var event =  { data : message.toArrayBuffer()};
-		setTimeout(function() {websocket.onmessage(event);},500);
-	};
+        var event = {
+            data : message.toArrayBuffer()
+        };
+        setTimeout(function() {
+            websocket.onmessage(event);
+        }, 500);
+    };
 	
 	/**
 	 * Closes the websocket.
@@ -212,10 +221,10 @@ function Connection(uri, encrypted, attemptReconnect) {
 	};
 
 	/**
-	 * Gets the current time as a long that is the same as the server time!
+	 * Gets the current time that is the same as the time the server sees.
 	 */
 	this.getCurrentTime = function() {
-		var longVersion = Long.fromString("" + (createTimeStamp() + totalTimeDifferance));
+		var longVersion = dcodeIO.Long.fromString("" + (createTimeStamp() + totalTimeDifferance));
 		return longVersion;
 	};
 
@@ -230,17 +239,17 @@ function Connection(uri, encrypted, attemptReconnect) {
 
     function clientReciveTimeDiff(req) {
         var startCounter = this.getCurrentTime();
-        timeDifferance = Long.fromString("" + req.getMessageTime()).subtract(this.getCurrentTime());
-        var rsp = Request.newBuilder();
-        rsp.setRequestType(Request.MessageType.TIME);
-        rsp.setMessageTime(Long.fromString("" + req.getMessageTime()).add(this.getCurrentTime().subtract(startCounter)));
+        timeDifferance = dcodeIO.Long.fromString("" + req.getMessageTime()).subtract(this.getCurrentTime());
+        var rsp = PROTOBUF_UTIL.Request();
+        rsp.setRequestType(PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
+        rsp.setMessageTime(dcodeIO.Long.fromString("" + req.getMessageTime()).add(this.getCurrentTime().subtract(startCounter)));
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
 
-        return rsp.build();
+        return rsp;
     }
 
     function clientReciveLatency(req) {
-        latency = Long.fromString("" + req.getMessageTime());
+        latency = dcodeIO.Long.fromString("" + req.getMessageTime());
         totalTimeDifferance = timeDifferance.add(latency);
         return null;
     }
