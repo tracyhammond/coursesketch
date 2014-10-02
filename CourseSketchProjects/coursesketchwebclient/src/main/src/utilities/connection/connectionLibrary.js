@@ -259,3 +259,7 @@ function Connection(uri, encrypted, attemptReconnect) {
         return null;
     }
 }
+
+makeValueReadOnly(Connection.prototype, "CONNECTION_LOST", 1006);
+makeValueReadOnly(Connection.prototype, "INCORRECT_LOGIN", 4002);
+makeValueReadOnly(Connection.prototype, "SERVER_FULL", 4001);

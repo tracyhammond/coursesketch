@@ -1,15 +1,8 @@
 <html>
 <head>
 <!-- utilities -->
-<link rel="import" href="/src/utilities/includes/protobufInclude.html">
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
-<!--
-<script type="text/javascript" src="/src/utilities/loadingManager.js"></script> 
-<script type="text/javascript">
-    var loader = new DynamicFileLoader(this.document);
-</script>
- -->
- 
 <!-- Jquery library -->
 <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
@@ -17,20 +10,21 @@
 <script
 	src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"
 	onerror="loader.replaceFile('sha3.js', 'js/connection/libraries/crypto.js', 'js');"></script>
+<!-- utils -->
+<script src="/src/utilities/functions/objectAndInheritance.js"></script>
 
 <!-- connection -->
-<script type="text/javascript" src="/src/connection/connectionLibrary.js"></script>
+<script type="text/javascript" src="/src/utilities/connection/connectionLibrary.js"></script>
 
 <!-- html template -->
 <link id="loginTemplateImport" rel="import"
-	href="/src/connection/login/login.html">
+	href="/src/utilities/connection/login/login.html">
 
 <!-- login.js -->
 <script type="text/javascript" src="login.js"></script>
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-
             var link = importDoc.querySelector('#loginTemplateImport');
             var template = link.import.querySelector('template');
             var clone = document.importNode(template.content, true);

@@ -19,11 +19,11 @@ function LoginSystem() {
     this.createConnection = function(location, encrytped, attemptReconnections){
         connection = new Connection(location, encrytped, attemptReconnections);
         connection.setOnCloseListener(function(evt, attemptingToReconnect) {
-            if (evt.code == CONNECTION_LOST) {
+            if (evt.code == connection.CONNECTION_LOST) {
                 if (!attemptingToReconnect) {
                     alert('can not connect to the server');
                 }
-            } else if (evt.code == SERVER_FULL) {
+            } else if (evt.code == connection.SERVER_FULL) {
                 if (!attemptingToReconnect) {
                     alert(evt.reason); // Here we can try to connect to other servers.
                 }
@@ -65,7 +65,9 @@ function LoginSystem() {
                 connection.isInstructor = message.login.isInstructor;
                 connection.userId = message.login.userId;
 
-                successLoginCallback(this);
+                // remove oneself from being able to respond to login attempts
+                connection.setLoginListener(undefined);
+                successLoginCallback(connection);
             } else {
                 alert("not able to login: " + message.responseText);
             }
@@ -93,6 +95,9 @@ function LoginSystem() {
 
                 var request = PROTOBUF_UTIL.Request();
                 request.setRequestType(PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
+                if (!isUndefined(request.setLogin)) {
+                    request.login = loginInfo;
+                }
                 request.otherData = loginInfo.toArrayBuffer();
                 console.log("Sending login information");
                 connection.sendRequest(request);
@@ -110,7 +115,7 @@ function LoginSystem() {
     /**
      * @Method
      * The clallback is called with one parameter.
-     * @callbackParam {Login} An instance of this object.
+     * @callbackParam {Connection} An instance of the connection object object.
      */
     this.setOnSuccessLogin = function(callback) {
         successLoginCallback = callback;
