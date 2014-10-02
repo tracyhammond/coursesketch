@@ -1,109 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Welcome!</title>
-	<script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
-	<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
-	<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
-   	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
-   	<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
-   	<script type="text/javascript" src="js/connection/connection_library.js"></script>
-   	<!--
-   	To include jquery use this!
-   	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.10.0/jquery.min.js"></script>
-   	-->
-    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
-	<style>
-	html, body {
-	    margin: 0px;
-	    padding: 0px;
-	    border: 0px;
-	    width: 100%;
-	    height: 100%;
-	}
+<meta charset="UTF-8">
+<title>Welcome!</title>
+<script type="text/javascript" src="js/utils/loadingManager.js"></script>
+<script type="text/javascript" src="js/utils/utilityFunctions.js"></script>
 
-	body {
-		background: #DCDDDF;
-	}
+<!-- login element -->
+<link rel="import" href="/src/connection/login/loginInclude.html">
 
-	</style>
-	<script>
-	var connection = false;
-	var connected = false;
-	function createWebSocket() {
-		console.log("connecting");
-		//var wsUri = "srl01.tamu.edu:8888"; // our server
-		//var wsUri = "echo.websocket.org";
-		var wsUri = "localhost:8888"; // local server
-		connection = new Connection(wsUri, false, true);
+<!-- protobuf -->
+<link rel="import" href="/src/utilities/includes/protobufInclude.html">
 
-		connection.setOnCloseListener(function(evt, attemptingToReconnect) {
-			if (evt.code == CONNECTION_LOST) {
-				if (!attemptingToReconnect) {
-					alert('can not connect to the server');
-				}
-			} else if(evt.code == SERVER_FULL) {
-				if (!attemptingToReconnect) {
-					alert(evt.reason); // Here we can try to connect to other servers.
-				}
-			} else {
-				if (!attemptingToReconnect) {
-					alert("SERVER CLOSED CONNECTION");
-				}
-			}
-		});
-		connection.setOnOpenListener(function(evt) {
-			// do something on opening?
-			alert("You are now able to log in");
-			connected = true;
-		});
-	}
+<!-- Jquery library -->
+<link rel="import"
+	href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
-	function Redirector(scope) {
-		var scope = scope;
-		var activeState = false;
-		/**
-		Sets the hash url to the file location.
-		
-		This allows us to find the url if something were to happen.
-		*/
-		this.setRedirect = function setRedirect(url) {
-			var shortUrl = replaceAll('html','',url); // Remove html from file ending
-			var hashUrl = replaceAll('/','.',shortUrl);
-			var trimmedHash = hashUrl.substring(1,hashUrl.length-1); // Trim ending
-			var replacedHash = ('' + window.location).split('#')[0] + '#' + trimmedHash;
-			scope.location.replace(replacedHash);
-		}
+<link rel="icon" type="image/ico" href="images/CSpencil.ico">
+<style>
+html,body {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	width: 100%;
+	height: 100%;
+}
 
-		function replaceAll(find, replace, str) {
-			  return str.replace(new RegExp(find, 'g'), replace);
-		}
+body {
+	background: #EDEEEF;
+}
+</style>
+<script>
+    var connection = false;
 
-		this.getRedirect = function getRedirect() {
-			var starting = scope.location.hash.substring(1);
-			var addedSlashes = 'html/' + replaceAll('\\.','/',starting) + '.html';
-			return addedSlashes;
-		}
+    function Redirector(scope) {
+        var scope = scope;
+        var activeState = false;
+        /**
+        Sets the hash url to the file location.
+        
+        This allows us to find the url if something were to happen.
+         */
+        this.setRedirect = function setRedirect(url) {
+            var shortUrl = replaceAll('html', '', url); // Remove html from file ending
+            var hashUrl = replaceAll('/', '.', shortUrl);
+            var trimmedHash = hashUrl.substring(1, hashUrl.length - 1); // Trim ending
+            var replacedHash = ('' + window.location).split('#')[0] + '#' + trimmedHash;
+            scope.location.replace(replacedHash);
+        }
 
-		this.moveWindow = function(url) {
-			document.getElementById('iframeContent').src = url;
-		}
-	}
-	createWebSocket();
-	var redirector = new Redirector(window);
-	window.onload = function() {
-		window.addEventListener("beforeunload", function(e) {
-			var r = new Request();
-			r.setRequestType(Request.MessageType.CLOSE);
-			connection.sendRequest(r);
-			return "you can close this window";
-		});
-		//redirector.setRedirect('html/login/login.html');
-	}
-	</script>
+        function replaceAll(find, replace, str) {
+            return str.replace(new RegExp(find, 'g'), replace);
+        }
+
+        this.getRedirect = function getRedirect() {
+            var starting = scope.location.hash.substring(1);
+            var addedSlashes = 'html/' + replaceAll('\\.', '/', starting) + '.html';
+            return addedSlashes;
+        }
+
+        this.moveWindow = function(url) {
+            document.getElementById('iframeContent').src = url;
+        }
+    }
+    var redirector = new Redirector(window);
+    $(document).ready(function() {
+        window.addEventListener("beforeunload", function(e) {
+            var r = PROTOBUF_UITL.Request();
+            r.setRequestType(Request.MessageType.CLOSE);
+            connection.sendRequest(r);
+            return "you can close this window";
+        });
+
+        var login = document.createElement("login-system");
+        login.setOnSuccessLogin(function() {
+
+        });
+
+        var element = document.querySelector("#loginLocation");
+        element.appendChild(login);
+
+        element.style.display = "block";
+    });
+</script>
 </head>
 <body>
-<iframe id="iframeContent" width = "100%" height = "100%" frameborder="0" src = "html/login/login.html" style="display:block"></iframe>
+	<!-- 
+	<iframe id="iframeContent" width="100%" height="100%" frameborder="0"
+		src="html/login/login.html" style="display: none"></iframe>
+		 -->
+	<div id="loginLocation" style="display: none"></div>
 </body>
 </html>
