@@ -29,26 +29,22 @@
 
 	<build>
 		<sourceDirectory>${basedir}/src/main/src</sourceDirectory>
-		<extensions>
-			<extension>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>javascript-maven-plugin</artifactId>
-				<version>2.0.0-alpha-1</version>
-			</extension>
-		</extensions>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jslint-maven-plugin</artifactId>
-				<version>1.0.1</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>${pmdVersion}</version>
 				<executions>
 					<execution>
 						<goals>
-							<goal>jslint</goal>
-							<goal>test-jslint</goal>
+							<goal>check</goal>
+							<goal>cpd-check</goal>
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<verbose>true</verbose>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
