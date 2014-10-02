@@ -1,6 +1,6 @@
 /**
  * Adds a couple of really useful methods to the commands. depends on
- * /src/utilities/includes/protobufInclude.html
+ * /src/utilities/connection/protobufInclude.html
  */
 (function() {
     function CommandException(message) {

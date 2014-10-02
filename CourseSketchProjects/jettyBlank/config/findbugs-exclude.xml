@@ -1,4 +1,5 @@
 <FindBugsFilter>
+    <!-- General bug excludes -->
 	<Match>
 		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
