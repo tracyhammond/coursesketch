@@ -4,10 +4,14 @@
 <meta charset="UTF-8">
 <title>Welcome!</title>
 <script type="text/javascript" src="/src/utilities/functions/base.js"></script>
-<script type="text/javascript" src="/src/utilities/functions/stateManager.js"></script>
+<script type="text/javascript"
+	src="/src/utilities/functions/objectAndInheritance.js"></script>
+<script type="text/javascript"
+	src="/src/utilities/functions/stateManager.js"></script>
 
 <!-- login element -->
-<link rel="import" href="/src/utilities/connection/login/loginInclude.html">
+<link rel="import"
+	href="/src/utilities/connection/login/loginInclude.html">
 
 <!-- protobuf -->
 <link rel="import" href="/src/utilities/connection/protobufInclude.html">
@@ -18,7 +22,7 @@
 
 <link rel="icon" type="image/ico" href="images/CSpencil.ico">
 <style>
-html,body {
+html,body,#mainPageContent {
 	margin: 0px;
 	padding: 0px;
 	border: 0px;
@@ -26,42 +30,18 @@ html,body {
 	height: 100%;
 }
 
+#mainPageContent {
+	overflow: visible;
+}
+
 body {
 	background: #EDEEEF;
 }
 </style>
-<script>
-    var connection = false;
-    var redirector = new Redirector(window, document.getElementById('iframeContent'));
-
-    $(document).ready(function() {
-        window.addEventListener("beforeunload", function(e) {
-            var r = PROTOBUF_UITL.Request();
-            r.setRequestType(Request.MessageType.CLOSE);
-            connection.sendRequest(r);
-            return "you can close this window";
-        });
-
-        var login = document.createElement("login-system");
-        login.setOnSuccessLogin(function(loggedInConnection) {
-			connection = loggedInConnection;
-			$("#loginLocation").empty();
-			if (connection.isInstructor) {
-				redirector.moveWindow("html/main.html");
-			} else {
-			    
-			}
-        });
-
-        var element = document.querySelector("#loginLocation");
-        element.appendChild(login);
-
-        element.style.display = "block";
-    });
-</script>
+<script src="/src/index.js"></script>
 </head>
 <body>
-	<iframe id="iframeContent" width="100%" height="100%" frameborder="0" style="display: none"></iframe>
+	<div id="mainPageContent" style="display: none;"></div>
 	<div id="loginLocation" style="display: none"></div>
 </body>
 </html>
