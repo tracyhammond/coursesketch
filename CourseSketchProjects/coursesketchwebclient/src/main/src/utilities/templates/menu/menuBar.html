@@ -1,60 +1,66 @@
 <template id="instructorMenu">
-<style>@import 'css/menu/menu.css';</style>
+<style>
+@import 'css/menu/menu.css';
+</style>
 <div id="menu">
 	<h1>
-		<a href="/src/instructor/homePage.html" target="wrapper" data-ajax="false"><img
+		<a href="/src/instructor/homePage.html" target="wrapper"><img
 			src="images/smallTitle.svg"></a>
 	</h1>
 	<ul id="menuList">
-		<li><a href="/src/instructor/homePage.html" target="wrapper" data-ajax="false"
-			class="contentLink">Home</a></li>
+		<li><a href="/src/instructor/homePage.html" target="wrapper"
+			class="contentLink"
+			onclick="CourseSketch.redirectContent('/src/instructor/homePage.html','Welcome Instructor')">Home</a></li>
 		<li class="header"><h3>Classes I\'m Teaching</h3></li>
 		<li><a href="html/instructor/gradebook.html" target="wrapper"
-			data-ajax="false" class="contentLink">Grades</a></li>
-		<li><a href="/src/instructor/homePage.html"
-			target="wrapper" data-ajax="false" class="contentLink">Course
+			class="contentLink"
+			onclick="CourseSketch.redirectContent('/html/instructor/gradebook.html','Grading')">Grades</a></li>
+		<li><a href="/src/instructor/homePage.html" target="wrapper"
+			class="contentLink"
+			onclick="CourseSketch.redirectContent('/src/instructor/homePage.html','Welcome Instructor')">Course
 				Management</a></li>
 		<li><a href="viewClassKeys.php" target="wrapper"
 			data-ajax="false" class="contentLink">View Class Keys</a></li>
 		<li><a href="html/instructor/roster.html" target="wrapper"
-			data-ajax="false" class="contentLink">Roster</a></li>
+			class="contentLink"
+			onclick="CourseSketch.redirectContent('/html/instructor/roster.html','Welcome Instructor')">Roster</a></li>
 		<li class="header"><h3>Account</h3></li>
 		<li><a href="changePassword.php" target="wrapper"
-			data-ajax="false" class="contentLink">Account options</a></li>
+			class="contentLink">Account options</a></li>
 		<!-- returns to login screen, but does not prevent user from re-accessing pages through the back button.  -->
-		<li><a href="index.html" data-ajax="false" class="contentLink">Sign
-				Out</a></li>
+		<li><a href="index.html" class="contentLink">Sign Out</a></li>
 	</ul>
 </div>
 </template>
 
 <template id="studentMenu">
-<style>@import 'css/menu/menu.css';</style>
+<style>
+@import 'css/menu/menu.css';
+</style>
 <div id="menu">
 	<h1>
-		<a href="/src/instructor/homePage.html" target="wrapper" data-ajax="false"><img
+		<a href="/src/instructor/homePage.html" target="wrapper" onclick="CourseSketch.redirectContent('/src/instructor/homePage.html','Welcome Student')"><img
 			src="images/smallTitle.svg"></a>
 	</h1>
 	<ul id="menuList">
-		<li><a href="/src/student/homePage.html" target="wrapper" data-ajax="false"
-			class="contentLink">Home</a></li>
+		<li><a href="/src/student/homePage.html" target="wrapper"
+			class="contentLink" onclick="CourseSketch.redirectContent('/src/student/homePage.html','Welcome Student')">Home</a></li>
 		<li class="header"><h3>Classes I\'m In</h3></li>
-		<li><a href="/src/student/homePage.html" target="wrapper" data-ajax="false">My
+		<li><a href="/src/student/homePage.html" target="wrapper" onclick="CourseSketch.redirectContent('/src/instructor/homePage.html','Welcome Student')">My
 				Courses</a></li>
 		<li><a href="html/student/classSearch.html" target="wrapper"
-			data-ajax="false" class="contentLink">Add New Class</a></li>
+			class="contentLink" onclick="CourseSketch.redirectContent('html/student/classSearch.html','Search for Classes')">Add New Class</a></li>
 		<li><a href="html/student/classOptions.html" target="wrapper"
-			data-ajax="false" class="contentLink">Remove Class</a></li>
+			class="contentLink" onclick="CourseSketch.redirectContent('html/student/classOptions.html','Class options')">Remove Class</a></li>
 		<li><a href="html/student/grades.html" target="wrapper"
-			data-ajax="false" class="contentLink">My Grades</a></li>
+			class="contentLink" onclick="CourseSketch.redirectContent('html/student/grades.html','My Grades')">My Grades</a></li>
 		<li><a href="html/student/roster.html" target="wrapper"
-			data-ajax="false" class="contentLink">Rosters</a></li>
+			class="contentLink" onclick="CourseSketch.redirectContent('html/student/roster.html','Class Rosters')">Rosters</a></li>
 		<li class="header"><h3>Account</h3></li>
 		<li><a href="changePassword.php" target="wrapper"
-			data-ajax="false" class="contentLink">Account options</a></li>
+			class="contentLink">Account options</a></li>
 		<!-- returns to login screen, but does not prevent user from re-accessing pages through the back button.  -->
-		<li><a href="index.html" data-ajax="false" class="contentLink">Sign
-				Out</a></li>
+		<li><a href="index.html" class="contentLink">Sign Out</a></li>
 	</ul>
 </div>
 </template>
