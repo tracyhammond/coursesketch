@@ -27,13 +27,16 @@
 function Redirector(scope, affectedWindow) {
     var scope = scope;
     var activeState = false;
+    var STARTING_URL = "src";
+    var FILE_ENDINGS = "html";
     /**
      * Sets the hash url to the file location.
      * 
      * This allows us to find the url if something were to happen.
      */
     this.setRedirect = function setRedirect(url) {
-        var shortUrl = replaceAll('html', '', url); // Remove html from file
+        var shortUrl = replaceAll(FILE_ENDINGS, '', url); // Remove html from file
+        shortUrl = replaceAll('/' + STARTING_URL, '', shortUrl); // Remove html from file
         // ending
         var hashUrl = replaceAll('/', '.', shortUrl);
         var trimmedHash = hashUrl.substring(1, hashUrl.length - 1); // Trim
@@ -48,7 +51,7 @@ function Redirector(scope, affectedWindow) {
 
     this.getRedirect = function getRedirect() {
         var starting = scope.location.hash.substring(1);
-        var addedSlashes = 'html/' + replaceAll('\\.', '/', starting) + '.html';
+        var addedSlashes = STARTING_URL + '/' + replaceAll('\\.', '/', starting) + '.' + FILE_ENDINGS;
         return addedSlashes;
     }
 
