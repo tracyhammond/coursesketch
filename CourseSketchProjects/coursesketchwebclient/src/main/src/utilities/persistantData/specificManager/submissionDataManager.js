@@ -39,7 +39,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 				submissionCallback(nonExistantValue);
 			} else {
 				// gets the data from the database and calls the callback
-				var bytes = ByteBuffer.decode64(result.data);
+				var bytes = ByteBuffer.fromBase64(result.data);
 				submissionCallback(PROTOBUF_UTIL.getSrlSubmissionClass().decode(bytes));
 				bytes = null;
 			}

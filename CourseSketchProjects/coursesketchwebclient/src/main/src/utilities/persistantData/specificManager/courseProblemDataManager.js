@@ -32,8 +32,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 				courseProblemCallback(nonExistantValue);
 			} else {
 				// gets the data from the database and calls the callback
-				var bytes = ByteBuffer.decode64(result.data);
-				courseProblemCallback(SrlProblem.decode(bytes));
+				var bytes = ByteBuffer.fromBase64(result.data);
+				courseProblemCallback(PROTOBUF_UTIL.getSrlProblemClass().decode(bytes));
 			}
 		});
 	}

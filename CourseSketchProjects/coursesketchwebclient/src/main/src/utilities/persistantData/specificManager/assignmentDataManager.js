@@ -93,8 +93,8 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 			} else {
 				// gets the data from the database and calls the callback
 				try{
-					var bytes = ByteBuffer.decode64(result.data);
-					stateCallback(SrlAssignment.decode(bytes), assignmentCallback);
+					var bytes = ByteBuffer.fromBase64(result.data);
+					stateCallback(PROTOBUF_UTIL.getSrlAssignmentClass().decode(bytes), assignmentCallback);
 				} catch(exception) {
 					console.error(exception);
 					assignmentCallback(undefined);
