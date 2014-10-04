@@ -1,4 +1,4 @@
-function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData, builders, buffer) {
+function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
 	/*const COURSE_LIST = "COURSE_LIST";
 	var userCourses = {};
 	var userCourseId = [];
@@ -6,9 +6,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
 	var sendDataRequest = sendData.sendDataRequest;
-	var Request = builders[0];
-	var PROTOBUF_UTIL = builders[1];
-	var SchoolBuilder = builders[2];
+	var Request = request;
 	var localScope = parent;
 	var ByteBuffer = buffer;
 
@@ -60,7 +58,8 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	}
 	
 	/**
-	 * Returns a course with the given couresId will ask the server if it does not exist locally
+	 * TODO: actually make this grade specific!!!!
+	 * Returns a grade with the given couresId will ask the server if it does not exist locally
 	 *
 	 * If the server is pulled and the course still does not exist the Id is set with nonExistantValue
 	 * and the database is never polled for this item for the life of the program again.
@@ -68,7 +67,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	 * @param courseId The id of the course we want to find.
 	 * @param courseCallback The method to call when the course has been found. (this is asynchronous)
 	 */
-	function getCourse(courseId, courseCallback) {
+	function getGrade(courseId, courseCallback) {
 		// quick and dirty this is in ram (not in local memory)
 		if (!isUndefined(userCourses[courseId])) {
 			if (userCourses[courseId] == nonExistantValue) {

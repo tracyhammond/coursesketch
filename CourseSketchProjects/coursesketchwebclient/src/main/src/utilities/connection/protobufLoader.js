@@ -150,6 +150,23 @@ function ProtobufSetup() {
     };
 
     /**
+     * Given a protobuf object compile it to other data and return a request.
+     * 
+     * @param data
+     *            {Protobuf} An uncompiled protobuf object.
+     * @param requestType
+     *            {MessageType} The message type of the request.
+     * @return {Request}
+     */
+    this.createRequestFromData = function(data, requestType) {
+        var request = this.Request();
+        request.requestType = requestType;
+        var buffer = data.toArrayBuffer();
+        request.setOtherData(buffer);
+        return request;
+    };
+
+    /**
      * Given a protobuf Command array an SrlUpdate is created.
      *
      * It is important to node that an SrlUpdate implies that the commands

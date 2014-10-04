@@ -4,11 +4,10 @@
  * @param userId The user that this database is associated with.
  * @param connection The connection to the server which will handle all connections relating to certain queries.
  * @param advanceDataListener An instance of {@link AdvanceDataListener} this is used for responses to queries made by the database server
- * @param schoolBuilder Used to create instances of protobuf school.
- * @param query Holds the protobuf builder for querying items.
+ * @param Request The class representing the Request protobuf used to get the message type.
  * @param byteBuffer The static instance that is used for encoding and decoding data.
  */
-function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilder, query, request, byteBuffer, long) {
+function SchoolDataManager(userId, advanceDataListener, connection, Request, byteBuffer, long) {
 	var COURSE_LIST = "COURSE_LIST";
 	var LAST_UPDATE_TIME = "LAST_UPDATE_TIME";
 	var localScope = this;
@@ -21,9 +20,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 
 	var ByteBuffer = byteBuffer;
 	this.ByteBuffer = ByteBuffer;
-	var Request = request;
 
-	var QueryBuilder = query;
 	var serverConnection = connection;
 
 	var courseManager;
@@ -102,7 +99,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 			itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
 		}
 		dataSend.items.push(itemRequest);
-		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
+		serverConnection.sendRequest(PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
 	};
 
 	/**
@@ -118,7 +115,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 
 		dataSend.items.push(itemSend);
 
-		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
+		serverConnection.sendRequest(PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
 	};
 
 	/**
@@ -132,7 +129,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		itemUpdate.setQuery(queryType);
 		itemUpdate.setData(data);
 		dataSend.items.push(itemUpdate);
-		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
+		serverConnection.sendRequest(PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
 	};
 
 	this.emptySchoolData = function() {
@@ -145,7 +142,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		/*assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
 		/*courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
 		/*submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-		/*submissionManager = */new GradeManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+		/*submissionManager = */ //new GradeDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
 
 		console.log("Database is ready for use! with user: " + userId);
 		databaseFinishedLoading = true;
@@ -190,10 +187,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	this.pollUpdates = function(callback) {
 		database.getFromOther(LAST_UPDATE_TIME, function (e, request, result) {
 			if ( isUndefined(result) || isUndefined(result.data)) {
-				dataSender.sendDataRequest(QueryBuilder.ItemQuery.UPDATE);
+				dataSender.sendDataRequest(PROTOBUF_UTIL.ItemQuery.UPDATE);
 			} else {
 				var lastTime = result.data;
-				dataSender.sendDataRequest(QueryBuilder.ItemQuery.UPDATE, [lastTime]);
+				dataSender.sendDataRequest(PROTOBUF_UTIL.ItemQuery.UPDATE, [lastTime]);
 			}
 		});
 		var functionCalled = false;
@@ -203,7 +200,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 				callback();
 			}
 		}, 5000);
-		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.UPDATE, function(evt, item) {
+		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
 			database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString()); // to store for later recall
 			clearTimeout(timeout);
 			var school = PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
