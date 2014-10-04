@@ -74,7 +74,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 				courseCallback(nonExistantValue);
 				return;
 			}
-			var bytes = ByteBuffer.decode64(userCourses[courseId]);
+			var bytes = ByteBuffer.fromBase64(userCourses[courseId]);
 			stateCallback(SrlCourse.decode(bytes), courseCallback);
 			return;
 		}
@@ -104,7 +104,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 			} else {
 				// gets the data from the database and calls the callback
 				userCourses[courseId] = result.data;
-				var bytes = ByteBuffer.decode64(result.data);
+				var bytes = ByteBuffer.fromBase64(result.data);
 				stateCallback(SrlCourse.decode(bytes), courseCallback);
 			}
 		});
