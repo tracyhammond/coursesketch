@@ -23,8 +23,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 	this.ByteBuffer = ByteBuffer;
 	var Request = request;
 
-	var SchoolBuilder = schoolBuilder;
-
 	var QueryBuilder = query;
 	var serverConnection = connection;
 
@@ -88,10 +86,15 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		database.open();
 	})();
 
+	/**
+	 * Sends a request to retrive data from the server.
+	 */
 	dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
-		var dataSend = new QueryBuilder.DataRequest();
+		var dataSend = PROTOBUF_UTIL.DataRequest();
 		dataSend.items = new Array();
-		var itemRequest = new QueryBuilder.ItemRequest(queryType);
+		var itemRequest = PROTOBUF_UTIL.ItemRequest();
+		itemRequest.setQuery(queryType);
+
 		if (!isUndefined(idList)) {
 			itemRequest.setItemId(idList);
 		}
@@ -102,17 +105,33 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
 	};
 
+	/**
+	 * Inserts data into the server database.
+	 */
 	dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
-		var dataSend = new QueryBuilder.DataSend();
+		var dataSend = PROTOBUF_UTIL.DataSend();
 		dataSend.items = new Array();
-		dataSend.items.push(new QueryBuilder.ItemSend(queryType, data));
+		
+		var itemSend = PROTOBUF_UTIL.ItemSend();
+		itemSend.setQuery(queryType);
+		itemSend.setData(data);
+
+		dataSend.items.push(itemSend);
+
 		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
 	};
 
+	/**
+	 * Sends an update to the server for the data to be updated.
+	 */
 	dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
-		var dataSend = new QueryBuilder.DataSend();
+		var dataSend = PROTOBUF_UTIL.DataSend();
 		dataSend.items = new Array();
-		dataSend.items.push(new QueryBuilder.ItemRequest(queryType, data));
+		
+		var itemUpdate = PROTOBUF_UTIL.ItemRequest();
+		itemUpdate.setQuery(queryType);
+		itemUpdate.setData(data);
+		dataSend.items.push(itemUpdate);
 		serverConnection.sendRequest(serverConnection.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
 	};
 
@@ -122,11 +141,11 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 
 	this.start = function() {
 		// creates a manager for just courses.
-		/*courseManager = */new CourseDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		/*assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		/*courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, SchoolBuilder], ByteBuffer);
-		/*submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
-		/*submissionManager = */new GradeManager(this, dataListener, database, dataSender, [Request, QueryBuilder, ProtoSubmissionBuilder], ByteBuffer);
+		/*courseManager = */new CourseDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+		/*assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+		/*courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+		/*submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+		/*submissionManager = */new GradeManager(this, dataListener, database, dataSender, Request, ByteBuffer);
 
 		console.log("Database is ready for use! with user: " + userId);
 		databaseFinishedLoading = true;
@@ -187,7 +206,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, schoolBuilde
 		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.UPDATE, function(evt, item) {
 			database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString()); // to store for later recall
 			clearTimeout(timeout);
-			var school = SchoolBuilder.SrlSchool.decode(item.data);
+			var school = PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
 			console.log(school);
 			var courseList = school.courses;
 			for (var i = 0; i < courseList.length; i ++) {
