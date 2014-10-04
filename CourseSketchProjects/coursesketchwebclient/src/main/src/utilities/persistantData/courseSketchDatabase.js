@@ -7,7 +7,7 @@
  * @param Request The class representing the Request protobuf used to get the message type.
  * @param byteBuffer The static instance that is used for encoding and decoding data.
  */
-function SchoolDataManager(userId, advanceDataListener, connection, Request, byteBuffer, long) {
+function SchoolDataManager(userId, advanceDataListener, connection, Request, ByteBuffer, long) {
 	var COURSE_LIST = "COURSE_LIST";
 	var LAST_UPDATE_TIME = "LAST_UPDATE_TIME";
 	var localScope = this;
@@ -17,9 +17,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, byt
 
 	var version = 4;
 	var dataListener = advanceDataListener;
-
-	var ByteBuffer = byteBuffer;
-	this.ByteBuffer = ByteBuffer;
 
 	var serverConnection = connection;
 
@@ -204,7 +201,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, byt
 			database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString()); // to store for later recall
 			clearTimeout(timeout);
 			var school = PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-			console.log(school);
 			var courseList = school.courses;
 			for (var i = 0; i < courseList.length; i ++) {
 				localScope.setCourse(courseList[i]);

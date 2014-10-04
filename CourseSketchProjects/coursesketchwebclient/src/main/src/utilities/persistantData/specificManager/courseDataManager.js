@@ -1,4 +1,4 @@
-function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, buffer) {
+function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
 	const COURSE_LIST = "COURSE_LIST";
 	var userCourses = {};
 	var userCourseId = [];
@@ -7,7 +7,6 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 	var database = parentDatabase;
 	var sendDataRequest = sendData.sendDataRequest;
 	var localScope = parent;
-	var ByteBuffer = buffer;
 
 	/**
 	 * Looks at the course and gives it some state if the state values do not exist.
@@ -72,7 +71,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 				courseCallback(nonExistantValue);
 				return;
 			}
-			var bytes = ByteBuffer.decode64(userCourses[courseId]);
+			var bytes = ByteBuffer.fromBase64(userCourses[courseId]);
 			stateCallback(PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
 			return;
 		}
@@ -102,8 +101,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 			} else {
 				// gets the data from the database and calls the callback
 				userCourses[courseId] = result.data;
-				console.log(ByteBuffer);
-				var bytes = ByteBuffer.decode64(result.data);
+				var bytes = ByteBuffer.fromBase64(result.data);
 				stateCallback(PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
 			}
 		});
