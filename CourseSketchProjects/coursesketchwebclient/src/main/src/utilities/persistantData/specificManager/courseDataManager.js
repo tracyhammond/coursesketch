@@ -1,4 +1,4 @@
-function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
+function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, buffer) {
 	const COURSE_LIST = "COURSE_LIST";
 	var userCourses = {};
 	var userCourseId = [];
@@ -6,7 +6,6 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 	var dataListener = advanceDataListener;
 	var database = parentDatabase;
 	var sendDataRequest = sendData.sendDataRequest;
-	var Request = request;
 	var localScope = parent;
 	var ByteBuffer = buffer;
 
@@ -74,7 +73,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 				return;
 			}
 			var bytes = ByteBuffer.decode64(userCourses[courseId]);
-			stateCallback(SrlCourse.decode(bytes), courseCallback);
+			stateCallback(PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
 			return;
 		}
 		database.getFromCourses(courseId, function(e, request, result) {
@@ -103,8 +102,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 			} else {
 				// gets the data from the database and calls the callback
 				userCourses[courseId] = result.data;
+				console.log(ByteBuffer);
 				var bytes = ByteBuffer.decode64(result.data);
-				stateCallback(SrlCourse.decode(bytes), courseCallback);
+				stateCallback(PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
 			}
 		});
 	};
@@ -207,7 +207,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 		setCourse(course); // sets the course into the local database;
 		if (courseCallback) courseCallback(course); // temp for now!
 
-		sendData.sendDataInsert(PROTOBUF_UTIL.ItemQuery.COURSE, Itcourse.toArrayBuffer());
+		sendData.sendDataInsert(PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
 		advanceDataListener.setListener(Request.MessageType.DATA_INSERT, PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
 			var resultArray = item.getResponseText().split(":");
 			var oldId = resultArray[1];
@@ -237,7 +237,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 		setCourse(course); // overrides the course into the local database;
 		if (courseCallback) courseCallback(course);
 
-		sendData.sendDataUpdate(PROTOBUF_UTIL.ItemQuery.COURSE, Itcourse.toArrayBuffer());
+		sendData.sendDataUpdate(PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
 		advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
 			serverCallback(item); // we do not need to make server changes we just need to make sure it was successful.
 		});

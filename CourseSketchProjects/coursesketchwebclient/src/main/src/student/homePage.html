@@ -19,7 +19,13 @@
 <script type="text/javascript" src="/js/utils/waiting.js"></script>
 <script type="text/javascript" src="/js/school/schoolItem.js"></script>
 
-<script type="text/javascript" src="/src/common/courseManager.js"></script>
+<script type="text/javascript" src="/src/common/homePage/courseManager.js"></script>
+<script>
+$(document).ready(function() {
+    console.log(document.querySelector("#class_list_column"));
+    CourseSketch.courseManagement.initializeCourseManagment(); 
+});
+</script>
 </head>
 <body>
 	<div class="wide_centre">
