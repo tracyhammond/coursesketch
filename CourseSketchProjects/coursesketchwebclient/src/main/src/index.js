@@ -72,7 +72,7 @@ $(document).ready(
 
                 $("#menu").find("a").click(function() {
                     animateMenu(true); // close menu if a link has been
-                                        // clicked.
+                    // clicked.
                 });
 
                 function animateMenu(value) {
@@ -123,7 +123,6 @@ $(document).ready(
                 CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection, PROTOBUF_UTIL.getRequestClass(), function(evt, item) {
                     console.log("default listener");
                 });
-                alert(dcodeIO.ByteBuffer);
                 CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
                         PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
             }
