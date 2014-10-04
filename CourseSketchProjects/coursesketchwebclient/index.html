@@ -27,7 +27,7 @@ html,body,#mainPageContent {
 	padding: 0px;
 	border: 0px;
 	width: 100%;
-	height: 100%;
+	height: 100vh;
 }
 
 #mainPageContent {
@@ -37,11 +37,28 @@ html,body,#mainPageContent {
 body {
 	background: #EDEEEF;
 }
+
+#loginLocation {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	text-align: center;
+}
+
+login-system {
+	display: inline-block;
+	position: relative;
+	margin: auto;
+}
 </style>
 <script src="/src/index.js"></script>
 </head>
 <body>
 	<div id="mainPageContent" style="display: none;"></div>
-	<div id="loginLocation" style="display: none"></div>
+	<div id="loginLocation" style="display: none;"></div>
 </body>
 </html>
