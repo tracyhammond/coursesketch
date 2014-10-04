@@ -1,4 +1,4 @@
-.mainPage {
+#mainPage {
 	position: relative;
 	border: 0;
 	padding: 0;
@@ -15,12 +15,11 @@
 	padding: 0;
 	margin: 0;
 	color: #333;
-	text-shadow: 0 1px 0 #FFF;
 	outline: 0;
 	display: block;
-	overflow: visible;
+	overflow: hidden;
 	min-height: 300px;
-	height:calc(100vh-1px);
+	height:100vh;
 	margin-left: 0px;
 }
 
@@ -111,8 +110,8 @@
 }
 
 .fullScreen {
-	border: 0;
+	border: none;
 	margin:0;
 	padding:0;
-	height:calc(100vh - 47px);
+	height:calc(100vh - 43px);
 }

@@ -1,6 +1,5 @@
 /**
- * @Class
- * Handles the window state.
+ * @Class Handles the window state.
  * 
  * Right now this is missing a couple of items but ill describe them here.
  * <ol>
@@ -15,9 +14,12 @@
  * <li> States are described through the url. There are a couple ways to do this
  * though.
  * <ul>
- *      <li>One is to have a mechanism that unviersally knows how to handle all possible states</li>
- *      <li>Another is to have a state map file in json that describes how to handle each state</li>
- *      <li>The final way I thought of is to have each level know how to handle the state and then pass the state down to the level below it</li>
+ * <li>One is to have a mechanism that unviersally knows how to handle all
+ * possible states</li>
+ * <li>Another is to have a state map file in json that describes how to handle
+ * each state</li>
+ * <li>The final way I thought of is to have each level know how to handle the
+ * state and then pass the state down to the level below it</li>
  * </ul>
  * </li>
  * </ol>
@@ -52,5 +54,15 @@ function Redirector(scope, affectedWindow) {
 
     this.moveWindow = function(url) {
         affectedWindow.src = url;
+    }
+
+    /**
+     * Redirects the window but does not actually add an event.
+     */
+    this.changeSourceNoEvent = function(url) {
+        var docWindow = affectedWindow.documentWindow || affectedWindow.contentDocument;
+        docWindow.location.replace(url); // it allows the url to change
+        // without adding an event to the
+        // history!
     }
 }

@@ -16,56 +16,6 @@
 	margin:0px auto;
 }
 
-/**
-Specifically for a 2 group column
-*/
-@media screen and (min-width: 44em) {
-  .col-group2 {
-  }
-  .col-group2 > div {
-    float: left;
-    width: 50%;
-  }
-}
-
-/**
-Specifically for a tiny 2 group column
-*/
-.tiny-col-group2 {
-}
-.tiny-col-group2 > div {
-  float: left;
-  width: 49%;
-}
-
-/**
-Specifically for a 3 group column
-*/
-@media screen and (min-width: 44em) {
-  .col-group3 {
-  }
-  .col-group3 > div {
-    float: left;
-    width: 33%;
-  }
-}
-
-/**
-Specifically for a 4 group column
-*/
-@media screen and (min-width: 44em) {
-  .col-group4 {
-  }
-  .col-group4 > div {
-    float: left;
-    width: 25%;
-  }
-}
-
-.child_center {
-	text-align:center;
-}
-
 .faded_column {
 	background: #DDDDDD;
 }
@@ -132,4 +82,31 @@ Specifically for a 4 group column
 		color-stop(0, #A9D0F5),
 		color-stop(1, #DDDDDD)
 	);
+}
+
+.columnContainer {
+	display:flex;
+}
+
+/* one item */
+.columnContainer > div:first-child:nth-last-child(1) {
+    width: 100%;
+}
+
+/* two items */
+.columnContainer > div:first-child:nth-last-child(2),
+li:first-child:nth-last-child(2) ~ div {
+    width: 50%;
+}
+
+/* three items */
+.columnContainer > div:first-child:nth-last-child(3),
+.columnContainer > div:first-child:nth-last-child(3) ~ div {
+    width: calc(100% / 3);
+}
+
+/* four items */
+.columnContainer > div:first-child:nth-last-child(4),
+.columnContainer > div:first-child:nth-last-child(4) ~ div {
+    width: 25%;
 }
