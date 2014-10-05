@@ -18,3 +18,4 @@ do
 done
 
 echo "To leave a running screen: ctrl-a d"
+echo "http://www.cyberciti.biz/tips/linux-screen-command-howto.html"
