@@ -17,7 +17,7 @@
 		<absoluteCheckstyleLocation>../../${checkstyleLocation}</absoluteCheckstyleLocation>
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
 	</properties>
-	<build>
+<!-- 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -32,7 +32,7 @@
 				<artifactId>cobertura-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build>
+	</build> -->
 
 	<dependencies>
 		<dependency>
