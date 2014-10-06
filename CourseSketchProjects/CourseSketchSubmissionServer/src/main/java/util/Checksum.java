@@ -1,12 +1,13 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.submission.Submission.SrlChecksum;
 
 public class Checksum {
-	public static final long MAX_TIME_SIZE = 2L << 63L - 1L; // 2 ^ 63 - 1 (or Long.maxValue)
+	public static final long MAX_TIME_SIZE = 2L << 63L - 2L; // 2 ^ 63 - 1 (or Long.maxValue)
 	public static final long LONG_EXP = 64;
 	public static final int MAX_LIST_SIZE_BITS = 16; // max size a list can be in a checksum this is 2 ^ 24 (which is the midpoint between 16 and 32
 	public static final int MAX_LIST_SIZE = 2 << MAX_LIST_SIZE_BITS; // max size a list can be in a checksum this is 2 ^ 24 (which is the midpoint between 16 and 32
@@ -33,8 +34,8 @@ public class Checksum {
 	 * @param list
 	 * @return
 	 */
-	public static SrlChecksum computeChecksum(List<SrlUpdate> list) {
-		int size = list.size() % MAX_LIST_SIZE;
+	public static SrlChecksum computeChecksum(final List<SrlUpdate> list) {
+		final int size = list.size() % MAX_LIST_SIZE;
 		long totalTime = 0;
 		int totalCommand = 0;
 		long totalUpdateDataSize = 0;
@@ -44,13 +45,67 @@ public class Checksum {
 			totalUpdateDataSize = (totalUpdateDataSize + list.get(i).getSerializedSize()) % MAX_UPDATE_DATA_SIZE;
 		}
 
-		int size_shift = 64 - Integer.SIZE + Integer.numberOfLeadingZeros(size);
-		int command_shift = 64 - MAX_LIST_SIZE_BITS - Integer.SIZE + Integer.numberOfLeadingZeros(totalCommand);
-		long result = ((long)size) << size_shift | ((long)totalCommand) << command_shift | totalUpdateDataSize;
-		SrlChecksum.Builder builder = SrlChecksum.newBuilder();
+		final int size_shift = 64 - Integer.SIZE + Integer.numberOfLeadingZeros(size);
+		final int command_shift = 64 - MAX_LIST_SIZE_BITS - Integer.SIZE + Integer.numberOfLeadingZeros(totalCommand);
+		final long result = ((long)size) << size_shift | ((long)totalCommand) << command_shift | totalUpdateDataSize;
+		final SrlChecksum.Builder builder = SrlChecksum.newBuilder();
 		builder.setFirstBits(result);
 		builder.setSecondBits(totalTime);
 		return builder.build();
+	}
+
+	/**
+	 * Creates a list of checksums for each point in the list.
+	 *
+	 * The check sums build on each other so you can use this to get the index of when a check summed matched.
+	 *
+	 * Not that the sum at zero is equal to the checksum of the item at index zero
+	 * @see Checksum#computeChecksum(List)
+	 * @param list
+	 * @return
+	 */
+	public static List<SrlChecksum> computeListedChecksum(final List<SrlUpdate> list) {
+		ArrayList<SrlChecksum> listSummed = new ArrayList<SrlChecksum>();
+		long totalTime = 0;
+		int totalCommand = 0;
+		long totalUpdateDataSize = 0;
+		for (int i = 0; i <list.size(); i++) {
+			int size = (i + 1) % MAX_LIST_SIZE;
+			totalTime  = (totalTime + list.get(i).getTime()) % MAX_TIME_SIZE;
+			totalCommand = (totalCommand + (list.get(i).getCommands(0).getCommandType().getNumber() + 1)) % MAX_COMMAND_SIZE;
+			totalUpdateDataSize = (totalUpdateDataSize + list.get(i).getSerializedSize()) % MAX_UPDATE_DATA_SIZE;
+
+			int size_shift = 64 - Integer.SIZE + Integer.numberOfLeadingZeros(size);
+			int command_shift = 64 - MAX_LIST_SIZE_BITS - Integer.SIZE + Integer.numberOfLeadingZeros(totalCommand);
+			long result = ((long)size) << size_shift | ((long)totalCommand) << command_shift | totalUpdateDataSize;
+			SrlChecksum.Builder builder = SrlChecksum.newBuilder();
+			builder.setFirstBits(result);
+			builder.setSecondBits(totalTime);
+			listSummed.add(builder.build());
+		}
+
+		return listSummed;
+	}
+
+	/**
+	 * Returns the index for the given checksum in the list of updates.
+	 *
+	 * This will return the last index of the item in this list.
+	 * EX:
+	 * If the checksum matches the list with one one item in it (index zero) then it will return 0
+	 * If the checksum matches the entire list then it will return list.size() - 1
+	 * @param list
+	 * @param sum
+	 * @return the index if it is located or -1 if there is no match
+	 */
+	public static int checksumIndex(final List<SrlUpdate> list, SrlChecksum sum) {
+		List<SrlChecksum> sums = computeListedChecksum(list);
+		for (int i = 0; i < sums.size(); i++) {
+			if (sums.get(i).equals(sum)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public static void main(String args[]) {

@@ -1,0 +1,41 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/sketching/srl/srlLibraryInclude.html">
+
+<!-- file being tested -->
+
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+	QUnit.module("creation");
+	QUnit.test("creating a new overloads", function(assert) {
+	    var sketch = new Overloads();
+		assert.ok(true);
+	});
+	QUnit.test("creating a sketch", function(assert) {
+	    var sketch = new SRL_Sketch();
+		assert.ok(true);
+	});
+	QUnit.test("creating an object", function(assert) {
+	    var obj = new SRL_Object();
+		assert.ok(true);
+	});
+	QUnit.test("creating a shape", function(assert) {
+	    var obj = new SRL_Shape();
+		assert.ok(true);
+	});
+	QUnit.test("creating a stroke", function(assert) {
+	    var obj = new SRL_Stroke();
+		assert.ok(true);
+	});
+    </script>
+</body>
