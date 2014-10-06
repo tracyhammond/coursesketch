@@ -23,11 +23,10 @@ public final class MongoAuthenticator extends Authenticator {
     final DB dbs;
 
     public MongoAuthenticator(final DB iDbs) {
-        // TODO THIS MAY NOT WORK
-        super(null);
         this.dbs = iDbs;
     }
 
+    @Override
     protected final List<String> getUserList(String id) {
         final DBRef myDbRef = new DBRef(dbs, USER_GROUP_COLLECTION, new ObjectId(id));
         final DBObject corsor = myDbRef.fetch();
@@ -36,6 +35,7 @@ public final class MongoAuthenticator extends Authenticator {
         return list;
     }
 
+    @Override
     protected AuthenticationData getAuthGroups(String collection, String itemId) {
         AuthenticationData data = new AuthenticationData();
 
