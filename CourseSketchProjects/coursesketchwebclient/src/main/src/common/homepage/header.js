@@ -2,16 +2,16 @@ function HeaderHandler() {
 	var open;
 	var handler = this;
 	this.animateHeader = function(value) {
-		var height = $(".headerBar").height();
+		var height = $(".ui-header").height();
     	if (value) { // close header
-			$(".headerBar").animate({
+			$(".ui-header").animate({
                 top: '-'+(height+2)+'px',
             	}, 300, function () {
             		open = false;
             });
             return false;
 		} else { // open header
-			$(".headerBar").animate({
+			$(".ui-header").animate({
 				top: "0px",
             	}, 300, function () {
             		open = true;
