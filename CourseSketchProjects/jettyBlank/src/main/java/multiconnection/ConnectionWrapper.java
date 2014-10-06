@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -14,8 +15,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
 
+import connection.CloseableWebsocketClient;
 import connection.ConnectionException;
 
 /**
@@ -28,6 +29,7 @@ import connection.ConnectionException;
  * takes much longer to send.
  */
 @WebSocket()
+@SuppressWarnings("PMD.TooManyMethods")
 public class ConnectionWrapper {
 
     /**
@@ -60,11 +62,6 @@ public class ConnectionWrapper {
      * This is the manager that holds an instance of this connection wrapper.
      */
     protected MultiConnectionManager parentManager;
-
-    /**
-     *
-     */
-    private WebSocketClient client;
 
     /**
      * The active session of the current connection wrapper.
@@ -112,7 +109,7 @@ public class ConnectionWrapper {
     /**
      * The messages that are queuing up and are waiting to be sent.
      */
-    private ArrayList<ByteBuffer> queuedMessages = new ArrayList<ByteBuffer>();
+    private final List<ByteBuffer> queuedMessages = new ArrayList<ByteBuffer>();
 
     /**
      * A listener that is called when the socket fails to connect properly.
@@ -151,26 +148,19 @@ public class ConnectionWrapper {
     /**
      * Attempts to connect to the server at URI with a webSocket Client.
      *
-     * @throws Exception Throws an exception if an error occurs during the connection attempt.
+     * @throws ConnectionException Throws an exception if an error occurs during the connection attempt.
      */
-    public final void connect() throws Exception {
-        client = new WebSocketClient();
-        try {
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    public final void connect() throws ConnectionException {
+        try (final CloseableWebsocketClient client = new CloseableWebsocketClient()) {
             client.start();
             final ClientUpgradeRequest request = new ClientUpgradeRequest();
             client.connect(this, destination, request);
         } catch (IOException e) {
             e.printStackTrace();
-            throw e;
+            throw new ConnectionException("an exception connecting", e);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            try {
-                client.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            throw new ConnectionException("something went wrong when starting the client", e);
         }
     }
 
@@ -238,9 +228,7 @@ public class ConnectionWrapper {
             reachedEof = true;
             System.out.println("This websocket timed out!");
         }
-        if (erroredSession != null) {
-            System.err.println("Socket: " + this.getClass().getSimpleName() + "Session Error: " + cause);
-        } else {
+        if (erroredSession == null) {
             System.err.println("Socket: " + this.getClass().getSimpleName() + " Error: " + cause);
             if (cause instanceof java.net.ConnectException) {
                 if (cause.getMessage().trim().equalsIgnoreCase("Connection refused")) {
@@ -250,6 +238,8 @@ public class ConnectionWrapper {
                 }
                 System.err.println("Connection had issues!");
             }
+        } else {
+            System.err.println("Socket: " + this.getClass().getSimpleName() + "Session Error: " + cause);
         }
     }
 
@@ -308,67 +298,11 @@ public class ConnectionWrapper {
      */
     public final void send(final ByteBuffer buffer) throws ConnectionException {
         if (connected) {
-            System.out.println("Sending message from: " + this.getClass().getSimpleName());
-            session.getRemote().sendBytesByFuture(buffer);
-            if (queing) {
-                while (queuedMessages.size() > 0) {
-                    session.getRemote().sendBytesByFuture(queuedMessages.remove(0));
-                }
-                queing = false;
-            }
+            connectedSend(buffer);
         } else if ((started || reachedEof || refusedConnection) && failedStarts < MAX_FAILED_STARTS) {
-            final String endReson = reachedEof || started ? "of a timeout" : refusedConnection ? "connection to the server was refused"
-                    : "We do not know why";
-            System.err.println("Trying to reconnect " + this.getClass().getSimpleName() + ". It has ended because " + endReson);
-            if (!queing) {
-                failedStarts += 1;
-                System.err.println("attempt " + failedStarts + " out of " + MAX_FAILED_STARTS);
-                queing = true;
-                // maybe try reconnecting here?
-                final Thread d = new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            connect();
-                            Thread.sleep(MIN_SLEEP_TIME);
-                            queing = false;
-                            send(buffer);
-                        } catch (Throwable e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                d.start();
-            } else {
-                System.err.println("Adding a queuedMessage");
-                queuedMessages.add(buffer);
-            }
-        } else if (failedStarts < MAX_FAILED_STARTS) { // connections has not
-                                                       // been established yet
-            System.err.println("Trying to wait on " + this.getClass().getSimpleName() + ". It has not connected yet.");
-            if (!queing) {
-                queing = true;
-                failedStarts += 1;
-                System.err.println("attempt " + failedStarts + " out of " + MAX_FAILED_STARTS);
-                final Thread d = new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(MIN_SLEEP_TIME);
-                            queing = false;
-                            send(buffer);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ConnectionException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                d.start();
-            } else {
-                System.err.println("Adding a queuedMessage");
-                queuedMessages.add(buffer);
-            }
+            connectionEndedSend(buffer);
+        } else if (failedStarts < MAX_FAILED_STARTS) {
+            connectionNotEstablishedSend(buffer);
         } else if (failedStarts >= MAX_FAILED_STARTS) {
             queing = false;
             System.out.println(failedStarts);
@@ -380,6 +314,90 @@ public class ConnectionWrapper {
             // all messages are empty after the actions with the message are finished.
             queuedMessages.clear();
             throw new ConnectionException("" + this.getClass().getSimpleName() + " failed to connect after multiple tries");
+        }
+    }
+
+    /**
+     * Called if the connection is connected and working properly.
+     * @param buffer The message that is trying to be sent.
+     */
+    private void connectedSend(final ByteBuffer buffer) {
+        System.out.println("Sending message from: " + this.getClass().getSimpleName());
+        session.getRemote().sendBytesByFuture(buffer);
+        if (queing) {
+            while (!queuedMessages.isEmpty()) {
+                session.getRemote().sendBytesByFuture(queuedMessages.remove(0));
+            }
+            queing = false;
+        }
+    }
+
+    /**
+     * This is called when trying to send a message but it fails because a connection has not yet been established.
+     * @param buffer The message that is trying to be sent.
+     */
+    @SuppressWarnings("PMD.ConfusingTernary")
+    private void connectionNotEstablishedSend(final ByteBuffer buffer) {
+        System.err.println("Trying to wait on " + this.getClass().getSimpleName() + ". It has not connected yet.");
+        if (!queing) {
+            queing = true;
+            failedStarts += 1;
+            System.err.println("attempt " + failedStarts + " out of " + MAX_FAILED_STARTS);
+            final Thread retryThread = new Thread() {
+                @Override
+                @SuppressWarnings("PMD.CommentRequired")
+                public void run() {
+                    try {
+                        Thread.sleep(MIN_SLEEP_TIME);
+                        queing = false;
+                        send(buffer);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ConnectionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            retryThread.start();
+        } else {
+            System.err.println("Adding a queuedMessage");
+            queuedMessages.add(buffer);
+        }
+    }
+
+    /**
+     * This is called when trying to send a message but it fails because the connection was terminated.
+     * This could because a connection was refused or because the connection timed out.
+     * @param buffer The message that is trying to be sent.
+     */
+    @SuppressWarnings("PMD.ConfusingTernary")
+    private void connectionEndedSend(final ByteBuffer buffer) {
+        final String endReson = reachedEof || started ? "of a timeout" : refusedConnection ? "connection to the server was refused"
+                : "We do not know why";
+        System.err.println("Trying to reconnect " + this.getClass().getSimpleName() + ". It has ended because " + endReson);
+        if (!queing) {
+            failedStarts += 1;
+            System.err.println("attempt " + failedStarts + " out of " + MAX_FAILED_STARTS);
+            queing = true;
+            // maybe try reconnecting here?
+            final Thread retryThread = new Thread() {
+                @Override
+                @SuppressWarnings({"PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
+                public void run() {
+                    try {
+                        connect();
+                        Thread.sleep(MIN_SLEEP_TIME);
+                        queing = false;
+                        send(buffer);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            retryThread.start();
+        } else {
+            System.err.println("Adding a queuedMessage");
+            queuedMessages.add(buffer);
         }
     }
 
@@ -454,7 +472,7 @@ public class ConnectionWrapper {
      */
     /* package-private */ final void setParentManager(final MultiConnectionManager multiConnectionManager) {
         if (this.parentManager != null) {
-            throw new RuntimeException("This field is immutable and can only be set once.");
+            throw new IllegalStateException("This field is immutable and can only be set once.");
         }
         parentManager = multiConnectionManager;
     }

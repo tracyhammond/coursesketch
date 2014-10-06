@@ -31,7 +31,14 @@
 			<url>http://maven.davidtrott.com/repository</url>
 		</pluginRepository>
 	</pluginRepositories>
+<<<<<<< HEAD
 <!-- 
+=======
+
+	<properties>
+	    <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+	</properties>
+>>>>>>> dtracers
 	<build>
 		<plugins>
 			<plugin>

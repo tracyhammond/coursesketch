@@ -25,9 +25,9 @@ public interface AuthenticationDataCreator {
     /**
      * Grabs the user list using some method.
      *
-     * @param id
+     * @param groupId
      *            The group Id
      * @return A list that represents the group found at id.
      */
-    List<String> getUserList(final String id);
+    List<String> getUserList(final String groupId);
 }

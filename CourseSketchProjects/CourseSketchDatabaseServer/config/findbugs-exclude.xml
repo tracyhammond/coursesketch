@@ -1,5 +1,29 @@
 <FindBugsFilter>
 	<Match>
+<<<<<<< HEAD
+=======
+		<Package name="protobuf.*" />
+	</Match>
+	<Match>
+		<Bug pattern="SE_NO_SERIALVERSIONID" />
+	</Match>
+	<Match>
+		<Bug pattern="LI_LAZY_INIT_UPDATE_STATIC" />
+		<Class name="database.institution.mongo.MongoInstitution" />
+	</Match>
+
+	<Match>
+		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+		<Or>
+			<Class name="database.institution.mongo.MongoInstitution" />
+			<Class name="database.user.UserClient" />
+		</Or>
+	</Match>
+
+
+	<!-- General bug excludes -->
+	<Match>
+>>>>>>> dtracers
 		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
 
@@ -32,7 +56,11 @@
 	</Match>
 
 	<Match>
+<<<<<<< HEAD
 	    <Or>
+=======
+		<Or>
+>>>>>>> dtracers
 			<Field name="e" />
 			<Local name="e" />
 		</Or>
