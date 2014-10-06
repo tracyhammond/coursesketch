@@ -1,0 +1,63 @@
+<html>
+<head>
+<!-- Utilities -->
+<script src="/src/utilities/base.js"></script>
+<script src="/src/utilities/objectAndInheritance.js"></script>
+<link rel="import" href="/src/utilities/includes/protobufInclude.html">
+
+<!-- Srl library -->
+<link rel="import" href="srl/srlLibraryInclude.html">
+
+<!-- adapters -->
+<script src="adapters/sketchToProtobufAdapter.js"></script>
+
+<!-- Jquery library -->
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<!-- input -->
+<script src="input/touch_event.js"></script>
+<script src="input/sketchingEventConverter.js"></script>
+
+
+
+
+<!-- sketch surface -->
+<link id="sketchSurfaceImport" rel="import"
+	href="/src/sketching/sketchSurface.html">
+<script src="sketchSurface.js"></script>
+<script src="sketchSurfaceManager.js"></script>
+
+<!-- Sketch Storage -->
+<link rel="import"
+	href="/src/sketching/storage/sketchStorageInclude.html">
+
+<meta charset="UTF-8">
+<script>
+    var importDoc = document.currentScript.ownerDocument;
+    $(document).ready(function() {
+
+        var link = importDoc.querySelector('#sketchSurfaceImport');
+        var template = link.import.querySelector('template');
+        var clone = document.importNode(template.content, true);
+
+        var newElement = new SketchSurface();
+
+        SketchSurface.prototype.createdCallback = function() {
+            this.initializeElement(document, clone.cloneNode(true));
+        };
+
+        SketchSurface.prototype.attachedCallback = function() {
+            this.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
+        };
+
+        SketchSurface.prototype.detachedCallback = function() {
+            this.finalize();
+        };
+
+        document.registerElement('sketch-surface', {
+            prototype : newElement
+        });
+    });
+</script>
+</head>
+</html>
