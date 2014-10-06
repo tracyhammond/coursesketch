@@ -1,28 +1,41 @@
+html,body {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	width: 100%;
+	height: 100%;
+}
+
 a {
-    text-decoration: none;
-    color: rgb(42,117,169);
+	text-decoration: none;
+	color: rgb(42, 117, 169);
 }
 
 a:hover {
-    color: rgb(60,101,134);
+	color: rgb(60, 101, 134);
 }
 
 h1 {
-    color: #000000;/*#A9D0F5;*/
-    font-size: large !important;
+	color: #000000; /*#A9D0F5;*/
+	font-size: large !important;
 }
 
 h2 {
-    font-family: 'Baskerville Old Face';
+	-webkit-margin-before: 0;
+	-webkit-margin-after: 0;
+	font-size: 1.5em;
+	margin-top: 0.75em;
+	margin-bottom: 0.75em;
+	font-family: 'Baskerville Old Face';
 }
 
 h3 {
-    color: rgb(248,248,248)  ;
+	color: rgb(248, 248, 248);
 }
 
 h3 {
-    margin:0;
-    font-size:20px;
+	margin: 0;
+	font-size: 20px;
 }
 
 .myButton2 {
@@ -32,20 +45,18 @@ h3 {
 	display: block;
 	margin-top: 5px;
 	margin-bottom: 5px;
-
 	/*
 	shadow
 	*/
-	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.3);
+	-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
 	-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-	
 	/*
 	text
 	*/
-	font-family: Helvetica,Arial,sans-serif;
+	font-family: Helvetica, Arial, sans-serif;
 	font-weight: bold;
-	font-size:100%;
+	font-size: 100%;
 	/**
 	State specific.
 	*/
@@ -54,12 +65,13 @@ h3 {
 	font-weight: bold;
 	color: #444;
 	text-shadow: 0 1px 1px #F6F6F6;
-	background-image: -webkit-gradient(linear,left top,left bottom,from(#FDFDFD),to(#EEE));
-	background-image: -webkit-linear-gradient(top,#FDFDFD,#EEE);
-	background-image: -moz-linear-gradient(top,#fdfdfd,#eee);
-	background-image: -ms-linear-gradient(top,#fdfdfd,#eee);
-	background-image: -o-linear-gradient(top,#fdfdfd,#eee);
-	background-image: linear-gradient(top,#fdfdfd,#eee);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#FDFDFD),
+		to(#EEE));
+	background-image: -webkit-linear-gradient(top, #FDFDFD, #EEE);
+	background-image: -moz-linear-gradient(top, #fdfdfd, #eee);
+	background-image: -ms-linear-gradient(top, #fdfdfd, #eee);
+	background-image: -o-linear-gradient(top, #fdfdfd, #eee);
+	background-image: linear-gradient(top, #fdfdfd, #eee);
 }
 
 .myButton2:hover {
@@ -68,12 +80,13 @@ h3 {
 	font-weight: bold;
 	color: #101010;
 	text-shadow: 0 1px 1px #FFF;
-	background-image: -webkit-gradient(linear,left top,left bottom,from(#EDEDED),to(#DADADA));
-	background-image: -webkit-linear-gradient(top,#EDEDED,#DADADA);
-	background-image: -moz-linear-gradient(top,#ededed,#dadada);
-	background-image: -ms-linear-gradient(top,#ededed,#dadada);
-	background-image: -o-linear-gradient(top,#ededed,#dadada);
-	background-image: linear-gradient(top,#ededed,#dadada);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#EDEDED),
+		to(#DADADA));
+	background-image: -webkit-linear-gradient(top, #EDEDED, #DADADA);
+	background-image: -moz-linear-gradient(top, #ededed, #dadada);
+	background-image: -ms-linear-gradient(top, #ededed, #dadada);
+	background-image: -o-linear-gradient(top, #ededed, #dadada);
+	background-image: linear-gradient(top, #ededed, #dadada);
 }
 
 .myButton2:active {
@@ -82,10 +95,11 @@ h3 {
 	font-weight: bold;
 	color: #111;
 	text-shadow: 0 1px 1px #FFF;
-	background-image: -webkit-gradient(linear,left top,left bottom,from(#EEE),to(#FDFDFD));
-	background-image: -webkit-linear-gradient(top,#EEE,#FDFDFD);
-	background-image: -moz-linear-gradient(top,#eee,#fdfdfd);
-	background-image: -ms-linear-gradient(top,#eee,#fdfdfd);
-	background-image: -o-linear-gradient(top,#eee,#fdfdfd);
-	background-image: linear-gradient(top,#eee,#fdfdfd);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#EEE),
+		to(#FDFDFD));
+	background-image: -webkit-linear-gradient(top, #EEE, #FDFDFD);
+	background-image: -moz-linear-gradient(top, #eee, #fdfdfd);
+	background-image: -ms-linear-gradient(top, #eee, #fdfdfd);
+	background-image: -o-linear-gradient(top, #eee, #fdfdfd);
+	background-image: linear-gradient(top, #eee, #fdfdfd);
 }
