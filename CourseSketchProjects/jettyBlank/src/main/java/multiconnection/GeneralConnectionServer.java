@@ -24,6 +24,7 @@ import connection.TimeManager;
  * @author gigemjt
  */
 @WebSocket()
+@SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionServer {
 
     /**
@@ -60,17 +61,21 @@ public class GeneralConnectionServer {
     /**
      * Maps a Session to its MultiConnectionState.
      */
+<<<<<<< HEAD
     protected final HashMap<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
+=======
+    private final Map<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
+>>>>>>> dtracers
 
     /**
      * Maps a MultiConnectionState to a Session.
      */
-    private final HashMap<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
+    private final Map<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
 
     /**
      * Maps a String representing the connections ID to its MultiConnectionState.
      */
-    private final HashMap<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
+    private final Map<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
 
     /**
      * The parent servlet for this server.
@@ -95,10 +100,10 @@ public class GeneralConnectionServer {
     public final void onClose(final Session conn, final int statusCode, final String reason) {
         // FUTURE: find out how to see if the connection is closed by us or them.
         System.out.println(conn.getRemoteAddress() + " has disconnected from The Server." + statusCode + "with reason : " + reason);
-        final MultiConnectionState id = connectionToId.remove(conn);
-        if (id != null) {
-            idToConnection.remove(id);
-            idToState.remove(id.getKey());
+        final MultiConnectionState stateId = getConnectionToId().remove(conn);
+        if (stateId != null) {
+            idToConnection.remove(stateId);
+            idToState.remove(stateId.getKey());
         } else {
             System.err.println("Connection Id can not be found");
         }
@@ -110,21 +115,36 @@ public class GeneralConnectionServer {
      * @param conn The connection that is being opened.
      */
     @OnWebSocketConnect
+<<<<<<< HEAD
     public void onOpen(final Session conn) {
         if (connectionToId.size() >= MAX_CONNECTIONS) {
+=======
+    public final void onOpen(final Session conn) {
+        if (getConnectionToId().size() >= MAX_CONNECTIONS) {
+>>>>>>> dtracers
             // Return negatative state.
             System.out.println("FULL SERVER"); // send message to someone?
             conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
         }
 
-        final MultiConnectionState id = getUniqueState();
-        connectionToId.put(conn, id);
-        getIdToConnection().put(id, conn);
-        System.out.println("Session Key " + id.getKey());
-        getIdToState().put(id.getKey(), id);
+        final MultiConnectionState uniqueState = getUniqueState();
+        getConnectionToId().put(conn, uniqueState);
+        getIdToConnection().put(uniqueState, conn);
+        System.out.println("Session Key " + uniqueState.getKey());
+        getIdToState().put(uniqueState.getKey(), uniqueState);
         System.out.println("ID ASSIGNED");
 
-        System.out.println("Recieving connection " + connectionToId.size());
+        System.out.println("Recieving connection " + getConnectionToId().size());
+        openSession(conn);
+    }
+
+    /**
+     * Called after onOpen Finished. Can be over written.
+     *
+     * @param conn the connection that is being opened.
+     */
+    protected void openSession(final Session conn) {
+        // Does nothing by default.
     }
 
     /**
@@ -227,10 +247,10 @@ public class GeneralConnectionServer {
      * Cleans out the server.
      */
     final void stop() {
-        for (Session sesh : connectionToId.keySet()) {
+        for (Session sesh : getConnectionToId().keySet()) {
             sesh.close();
         }
-        connectionToId.clear();
+        getConnectionToId().clear();
         idToConnection.clear();
         idToState.clear();
         onStop();
@@ -240,7 +260,7 @@ public class GeneralConnectionServer {
      * Available for override.  Called after the server is stopped.
      */
     public void onStop() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -290,7 +310,7 @@ public class GeneralConnectionServer {
      * @return The current number of connections to the server.
      */
     public final int getCurrentConnectionNumber() {
-        return connectionToId.size();
+        return getConnectionToId().size();
     }
 
     /**
@@ -301,11 +321,25 @@ public class GeneralConnectionServer {
     }
 
     /**
+     * @return the connectionToId
+     */
+    protected final Map<Session, MultiConnectionState> getConnectionToId() {
+        return connectionToId;
+    }
+
+    /**
      * Parses a request from the given ByteBuffer.
      * @author gigemjt
      *
      */
     public static final class Decoder {
+
+        /**
+         * Empty constructor.
+         */
+        private Decoder() {
+        }
+
         /**
          * Returns a {@link Request} as it is parsed from the ByteBuffer.
          *
@@ -360,6 +394,12 @@ public class GeneralConnectionServer {
          * (taken from SCComponent)
          */
         private static long counter = VERSION_4_UUID | (long) (Math.random() * RANDOM_MULT);
+
+        /**
+         * Empty constructor.
+         */
+        private Encoder() {
+        }
 
         /**
          * Returns a {@link Request} that contains the sessionInfo and the time

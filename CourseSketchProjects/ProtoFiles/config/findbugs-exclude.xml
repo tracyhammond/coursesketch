@@ -1,5 +1,5 @@
 <FindBugsFilter>
 	<Match>
-		<Package name="protobuf.*" />
+		<Package name="~protobuf.*" />
 	</Match>
 </FindBugsFilter>

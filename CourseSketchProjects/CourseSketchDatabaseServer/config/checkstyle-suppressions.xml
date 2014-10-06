@@ -5,4 +5,14 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
 <suppressions>
+	<!-- Used in a case statement to scope variables so they can be used multiple 
+		times and prevent data leackage from one statement to the next. -->
+	<suppress checks="AvoidNestedBlocksCheck" files="DataInsertHandler.java" />
+	
+	<!-- Used in a case statement to scope variables so they can be used multiple 
+		times and prevent data leackage from one statement to the next. -->
+	<suppress checks="AvoidNestedBlocksCheck" files="DataRequestHandler.java" />
+
+	<!-- Password hash library -->
+	<suppress checks=".*" files="PasswordHash.java" />
 </suppressions>
