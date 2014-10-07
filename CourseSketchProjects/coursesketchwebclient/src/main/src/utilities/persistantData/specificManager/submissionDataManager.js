@@ -23,24 +23,24 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 
 				// the listener from the server of the request
 				// it stores the course locally then cals the callback with the course
-				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
-					var experiment = PROTOBUF_UTIL.getSrlExperimentClass().decode(item.data);
+				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
+					var experiment = CourseSketch.PROTOBUF_UTIL.getSrlExperimentClass().decode(item.data);
 					var sub = experiment.submission;
 					localScope.setSubmission(problemId, sub);
 					submissionCallback(sub);
 					sub = undefined;
 					experiment = undefined;
-					advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
+					advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
 				});
 				// creates a request that is then sent to the server
-				sendData.sendDataRequest(PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [problemId]);
+				sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [problemId]);
 			} else if (result.data == nonExistantValue) {
 				// the server holds this special value then it means the server does not have the value
 				submissionCallback(nonExistantValue);
 			} else {
 				// gets the data from the database and calls the callback
 				var bytes = ByteBuffer.fromBase64(result.data);
-				submissionCallback(PROTOBUF_UTIL.getSrlSubmissionClass().decode(bytes));
+				submissionCallback(CourseSketch.PROTOBUF_UTIL.getSrlSubmissionClass().decode(bytes));
 				bytes = null;
 			}
 		});
@@ -48,14 +48,14 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 	parent.getSubmission = getSubmission;
 
 	function getAllExperiments(problemId, submissionCallback) {
-		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
+		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
 			if (isUndefined(item.data)) {
 				submissionCallback("Undefined");
 				return;
 			}
 			var list;
 			try {
-				list = PROTOBUF_UTIL.getSrlExperimentListClass().decode(item.data);
+				list = CourseSketch.PROTOBUF_UTIL.getSrlExperimentListClass().decode(item.data);
 			} catch(exception) {
 				return;
 			}
@@ -65,10 +65,10 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 		});
 
 		// creates a request that is then sent to the server
-		var advanceQuery = PROTOBUF_UTIL.ExperimentReview();
+		var advanceQuery = CourseSketch.PROTOBUF_UTIL.ExperimentReview();
 		advanceQuery.allowEditing = true;
 		advanceQuery.showUserNames = false;
-		sendData.sendDataRequest(PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [problemId], advanceQuery);
+		sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [problemId], advanceQuery);
 	}
 	parent.getAllExperiments = getAllExperiments;
 

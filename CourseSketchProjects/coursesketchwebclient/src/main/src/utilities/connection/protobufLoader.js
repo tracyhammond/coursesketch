@@ -168,10 +168,10 @@ function ProtobufSetup() {
 
     /**
      * Given a protobuf Command array an SrlUpdate is created.
-     *
+     * 
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
-     *
+     * 
      * @param commands
      *            {Array<SrlCommand>} a list of commands stored as an array.
      * @return {SrlUpdate}
@@ -214,7 +214,7 @@ function ProtobufSetup() {
      * 
      * @param commandType
      *            {CommandType} the enum object of the commandType (found at
-     *            PROTOBUF_UTIL.CommandType).
+     *            CourseSketch.PROTOBUF_UTIL.CommandType).
      * @param userCreated
      *            {boolean} true if the user created this command, false if the
      *            command is system created.
@@ -251,12 +251,12 @@ function ProtobufSetup() {
 
     /**
      * Decodes the data and perserves the bytebuffer for later use
-     *
+     * 
      * @param data
      *            {ArrayBuffer} a compiled set of data in the protobuf object.
      * @param proto
      *            {ProtobufClass} The protobuf object that is being decoded.
-     *            This can be grabbed by using PROTOBUF_UTIL.get<objectName>Class();
+     *            This can be grabbed by using CourseSketch.PROTOBUF_UTIL.get<objectName>Class();
      * @param onError
      *            {Function} A callback that is called when an error occurs
      *            (optional). This will be called before the result is returned
@@ -291,8 +291,11 @@ function ProtobufSetup() {
 };
 
 (function(scope) {
-    if (!isUndefined(scope.PROTOBUF_UTIL)) {
+    if (isUndefined(scope.CourseSketch)) {
+        makeValueReadOnly(scope, "CourseSketch", {});
+    }
+    if (!isUndefined(scope.CourseSketch.PROTOBUF_UTIL)) {
         return;
     }
-    makeValueReadOnly(scope, "PROTOBUF_UTIL", new ProtobufSetup().initializeBuf());
+    makeValueReadOnly(scope.CourseSketch, "PROTOBUF_UTIL", new ProtobufSetup().initializeBuf());
 })(this);
