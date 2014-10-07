@@ -1,0 +1,19 @@
+<html>
+<head>
+<script src="mockedIndex.js"></script>
+
+<!-- these three must be included after mockedIndex -->
+<link rel="import"
+	href="/src/utilities/persistantData/databaseInclude.html">
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+<script type="text/javascript" src="/src/utilities/connection/connectionLibrary.js"></script>
+
+<script>
+CourseSketch.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf();
+</script>
+
+<script src="mockedConnection.js"></script>
+<script src="mockedDataListener.js"></script>
+<script src="mockedDatabase.js"></script>
+</head>
+</html>
