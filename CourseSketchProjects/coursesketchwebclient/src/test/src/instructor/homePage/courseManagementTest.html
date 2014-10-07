@@ -21,6 +21,13 @@
 	<div id=""></div>
 
 	<script>
+		function checkForSchoolItems(assert, nodeList,  numberOfElements) {
+		    for (var i = 0; i < numberOfElements; i++) {
+		        var element = numberOfElements[i];
+		        assert.equal(element.class, "schoolItem", "checking for element " + i + " out of " + numberOfElements);
+		    }
+		}
+
         QUnit.module("initialization", {
             setup : function() {
                 this.showCourses = CourseSketch.courseManagement.showCourses;
@@ -41,7 +48,7 @@
             }
         });
         test("initialize with no document does not do anything", function(assert) {
-			assert.equal(CourseSketch.courseManagement.initializeCourseManagment(), false, "false is returned to show missing html code");
+            assert.equal(CourseSketch.courseManagement.initializeCourseManagment(), false, "false is returned to show missing html code");
         });
         test("initialize with a valid document does not throw an exception", function(assert) {
             CourseSketch.dataManager.isDatabaseReady.returns(false);
@@ -52,7 +59,6 @@
         });
 
         test("initialize called with updates calls show courses correctly", function(assert) {
-            console.log(CourseSketch.dataManager);
             CourseSketch.dataManager.isDatabaseReady.returns(true);
             CourseSketch.dataManager.pollUpdates.callsArg(0);
             var list = [];
@@ -67,5 +73,51 @@
             mock.verify();
             assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), false, "The waiting list should not be running");
         });
+
+        test("initialize called with updates calls show courses correctly after waiting for database", function(assert) {
+            var clock = sinon.useFakeTimers();
+
+            CourseSketch.dataManager.isDatabaseReady.returns(false);
+            CourseSketch.dataManager.pollUpdates.callsArg(0);
+            var list = [];
+            CourseSketch.dataManager.getAllCourses.callsArgWith(0, list);
+            var mock = this.mock(CourseSketch.courseManagement);
+            var mockedMethod = mock.expects("showCourses");
+            mockedMethod.withArgs(list);
+
+            // actual function call
+            CourseSketch.courseManagement.initializeCourseManagment(FAKE_PAGE_DOCUMENT);
+
+            CourseSketch.dataManager.isDatabaseReady.returns(true);
+            clock.tick(100);
+
+            mock.verify();
+            assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), false, "The waiting list should not be running");
+        });
+
+        QUnit.module("showing courses", {
+            setup : function() {
+            },
+            teardown : function() {
+                if (CourseSketch.courseManagement.waitingIcon.isRunning()) {
+                    CourseSketch.courseManagement.waitingIcon.finishWaiting();
+                }
+                //FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").innerHTML = "";
+                try {
+                    CourseSketch.courseManagement.restore();
+                } catch (exception) {
+
+                }
+            }
+        });
+        test("Showing the courses appear in the list", function(assert) {
+            var fakeCourse = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            fakeCourse.name = "Insert name";
+            fakeCourse.description = "Insert description";
+            var courseList = [fakeCourse];
+            CourseSketch.courseManagement.showCourses(courseList, FAKE_PAGE_DOCUMENT);
+            checkForSchoolItems(assert, FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").childNodes, 1);
+        });
+
     </script>
 </body>

@@ -144,7 +144,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                  * Creates a function for deleting items from the database.
                  */
 				self['deleteFrom' + localTable.name] = function(objectId, callback) {
-					if (!databaseSupported || !courseSketch.indexedDB) {
+					if (!databaseSupported || !courseSketch.indexedDB || !courseSketch.indexedDB.db) {
 						return; // fail silently
 					}
 

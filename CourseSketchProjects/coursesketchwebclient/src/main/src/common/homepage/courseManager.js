@@ -8,6 +8,13 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     var waitingIcon = CourseSketch.courseManagement.waitingIcon;
     var localScope = CourseSketch.courseManagement;
+
+    /**
+     * Polls for all updates to the user and then shows the courses.
+     * 
+     * This will wait till the database is ready before it polls for updates and
+     * shows the courses.
+     */
     CourseSketch.courseManagement.initializeCourseManagment = function(localDocument) {
         var doc = document;
         if (!isUndefined(localDocument)) {
@@ -41,7 +48,15 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
     };
 
-    localScope.showCourses = function showCourses(courseList) {
+    /**
+     * Given a list of {@link SrlCourse} a bunch of school items are built then
+     * added to the clss_list_column div.
+     */
+    localScope.showCourses = function showCourses(courseList, localDocument) {
+        var doc = document;
+        if (!isUndefined(localDocument)) {
+            doc = localDocument;
+        }
         var builder = new SchoolItemBuilder();
         builder.setList(courseList).setWidth('medium').centerItem(true);
         if (CourseSketch.dataManager.getState("isInstructor")) {
@@ -49,10 +64,15 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
         builder.showImage = false;
         builder.setBoxClickFunction(courseClickerFunction);
-        builder.build('class_list_column');
-        clearLists(2);
+        console.log(doc.querySelector('#class_list_column'));
+        builder.build(doc.querySelector('#class_list_column'));
+        clearLists(2, localDocument);
     };
 
+    /**
+     * Called when a user clicks on a course school item.
+     * This then creates the list of assignments for that course and then displays them.
+     */
     function courseClickerFunction(course) {
         clearLists(2);
 
@@ -211,25 +231,29 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
     }
 
-    function hideButton(id) {
-        var element = document.getElementById(id);
+    function hideButton(element) {
         if (element) {
             element.style.display = "none";
         }
     }
 
-    function clearLists(number) {
+    function clearLists(number, localDocument) {
+        var doc = document;
+        if (!isUndefined(localDocument)) {
+            doc = localDocument;
+        }
         var builder = new SchoolItemBuilder();
 
         if (number > 0) {
-            hideButton('problem_button');
+            hideButton(doc.querySelector('#problem_button'));
             builder.setEmptyListMessage('Please select an assignment to see the list of problems.');
-            builder.build('problem_list_column');
+            builder.build(doc.querySelector('#problem_list_column'));
         }
+
         if (number > 1) {
-            hideButton('assignment_button');
+            hideButton(doc.querySelector('#assignment_button'));
             builder.setEmptyListMessage('Please select a course to see the list of assignments.');
-            builder.build('assignment_list_column');
+            builder.build(doc.querySelector('#assignment_list_column'));
         }
     }
 
