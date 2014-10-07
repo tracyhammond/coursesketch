@@ -1,4 +1,6 @@
-makeValueReadOnly(this, "CourseSketch", {});
+if (isUndefined(CourseSketch)) {
+    makeValueReadOnly(this, "CourseSketch", {});
+}
 CourseSketch.connection = false;
 CourseSketch.redirector = {};
 
@@ -115,24 +117,24 @@ $(document).ready(
             function loadHomePage() {
                 console.log("LOADING HOMEPAGE");
                 if (CourseSketch.connection.isInstructor) {
-                    CourseSketch.redirectContent("/src/instructor/homePage.html", "Welcome Instructor");
+                    CourseSketch.redirectContent("/src/instructor/homePage/homePage.html", "Welcome Instructor");
                 } else {
-                    CourseSketch.redirectContent("/src/student/homePage.html", "Welcome Student");
+                    CourseSketch.redirectContent("/src/student/homePage/homePage.html", "Welcome Student");
                 }
 
-                CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection, PROTOBUF_UTIL.getRequestClass(), function(evt, item) {
+                CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), function(evt, item) {
                     console.log("default listener");
                 });
                 CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
-                        PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                        CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
             }
         });
 
 CourseSketch.isMenuSwipeable = true;
-function enableMenuSwiping() {
+CourseSketch.enableMenuSwiping = function() {
     CourseSketch.isMenuSwipeable = true;
 }
 
-function disableMenuSwiping() {
+CourseSketch.disableMenuSwiping = function() {
     CourseSketch.isMenuSwipeable = false;
 }
