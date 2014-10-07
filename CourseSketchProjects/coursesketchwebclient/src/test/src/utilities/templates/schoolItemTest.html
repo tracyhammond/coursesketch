@@ -1,0 +1,42 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import"
+	href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
+
+<!-- file being tested. -->
+</head>
+<body>
+	<school-item style="width:500px"> <span class="name">Course
+		Name</span> <div class="description">Course Description</div> </school-item>
+
+	<school-item style="width:500px"> <span class="name">Course
+		Name</span>
+	<div class="description">The course provides the mathematical
+		foundations from discrete mathematics for analyzing computer
+		algorithms, for both correctness and performance; introduction to
+		models of computation, including finite state machines and Turing
+		machines. At the end of the course, students will understand the basic
+		principles of logic, proofs and sets. They will be able to apply
+		results from discrete mathematics to analysis of algorithms. They will
+		be able to produce proofs by induction and apply counting techniques.
+		They will have a basic understanding of models of computation</div>
+	</school-item>
+
+	<school-item style="width:500px" data-instructor> <span class="name">Course
+		Name</span> <div class="description">Course Description</div> </school-item>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+        QUnit.module("testModule1");
+        test("test test", function(assert) {
+            assert.ok(true, "TESTING IS AWESOME!");
+        });
+    </script>
+</body>

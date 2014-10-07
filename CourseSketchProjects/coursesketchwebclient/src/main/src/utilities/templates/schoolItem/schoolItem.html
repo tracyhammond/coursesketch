@@ -1,0 +1,52 @@
+<html>
+<head>
+</head>
+<body>
+	<template id="schoolItemTemplate">
+	<style>
+	@import "/src/utilities/templates/schoolItem/schoolItem.css";
+	</style>
+	<div class="image">
+		<content select="img"></content>
+	</div>
+	<div class="school_item">
+		<span class="school_item_state"></span>
+		<div class="text">
+			<div class="title">
+				<h3 class="name">
+					<content select=".name"></content>
+					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</h3>
+			</div>
+			<span class="date">
+				<h4 class="closeDate subDate">
+					Close Date:
+					<content select=".closeDate"></content>
+					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</h4>
+				<h4 class="dueDate subDate">
+					Due Date:
+					<content select=".duteDate"></content>
+					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</h4>
+				<h4 class="accessDate subDate">
+					Access Date:
+					<content select=".accessDate"></content>
+					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</h4>
+			</span>
+			<div class="description">
+				<p class="medium">
+					<content select="div.description"></content>
+					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</p>
+				<p class="expand"></p>
+			</div>
+		</div>
+	</div>
+	<!-- 
+	<span class="editButton"
+		onclick="parent.parent.editSchoolItem('title');">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+		 --> </template>
+</body>
+</html>
