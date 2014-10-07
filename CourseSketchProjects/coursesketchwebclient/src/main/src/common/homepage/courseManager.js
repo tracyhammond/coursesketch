@@ -4,12 +4,19 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
 })();
 
-(function() {
+(function(document) {
 
     var waitingIcon = CourseSketch.courseManagement.waitingIcon;
     var localScope = CourseSketch.courseManagement;
-    CourseSketch.courseManagement.initializeCourseManagment = function() {
-        document.getElementById('class_list_column').appendChild(waitingIcon);
+    CourseSketch.courseManagement.initializeCourseManagment = function(localDocument) {
+        var doc = document;
+        if (!isUndefined(localDocument)) {
+            doc = localDocument;
+        }
+        if (!doc.querySelector('#class_list_column')) {
+            return false;
+        }
+        doc.querySelector('#class_list_column').appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
         var loadCourses = function(courseList) {
@@ -54,7 +61,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         problemSelectionManager.clearAllSelectedItems();
 
         // waiting icon
-        document.getElementById('assignment_list_column').appendChild(waitingIcon);
+        document.querySelector('#assignment_list_column').appendChild(waitingIcon);
         waitingIcon.startWaiting();
 
         // we can make this faster because we have the list of assignments
@@ -281,41 +288,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
     }
 
-    function addNewCourse() { // Functionality to allow for adding of courses
-        // by instructors
-        var course = new SrlCourse();
-        // course.id = "Course_01";
-        course.name = "Physics";
-        course.description = "Physics is Phun";
-        // course.semester = "Should be in format: '_F13' (_F = Fall, Sp =
-        // Spring, Su = Summer) ";
-        // course.accessDate = "mm/dd/yyyy";
-        // course.closeDate = "mm/dd/yyyy";
-        CourseSketch.dataManager.getAllCourses(function(courseList) {
-            var firstCourse = undefined;
-            CourseSketch.dataManager.insertCourse(course, function(course) {
-                firstCourse = course;
-                courseList.push(course);
-                showCourses(courseList);
-            }, function(course) {
-                // do something else here!
-                alert("Course added to database");
-            });
-        });
-
-        /***********************************************************************
-         * course.id = course.name =
-         **********************************************************************/
-        showCourses([ course ]);
-        insertCourse([ course ]);
-        // var newCourse = insertCourse(course);
-
-        /***********************************************************************
-         * alert("Hello! I am an alert box!!"); document.getElementById("demo");
-         **********************************************************************/
-    }
-
     var courseSelectionManager = new clickSelectionManager();
     var assignmentSelectionManager = new clickSelectionManager();
     var problemSelectionManager = new clickSelectionManager();
-})();
+})(document.currentScript.ownerDocument);
