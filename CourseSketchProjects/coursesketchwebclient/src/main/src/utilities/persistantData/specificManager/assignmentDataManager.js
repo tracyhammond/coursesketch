@@ -12,7 +12,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 		var state = assignment.getState();
 		var updateAssignment = false;
 		if (isUndefined(state) || state == null) {
-			state = PROTOBUF_UTIL.State();
+			state = CourseSketch.PROTOBUF_UTIL.State();
 			updateAssignment = true;
 		}
 		try {
@@ -94,7 +94,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 				// gets the data from the database and calls the callback
 				try{
 					var bytes = ByteBuffer.fromBase64(result.data);
-					stateCallback(PROTOBUF_UTIL.getSrlAssignmentClass().decode(bytes), assignmentCallback);
+					stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().decode(bytes), assignmentCallback);
 				} catch(exception) {
 					console.error(exception);
 					assignmentCallback(undefined);
@@ -151,12 +151,12 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 					if (barrier <= 0) {
 						// after the entire list has been gone through pull the leftovers from the server
 						if (leftOverId.length >= 1) {
-							advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
-								var school = PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
+							advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
+								var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
 								var assignment = school.assignments[0];
 								if (isUndefined(assignment)) {
 									assignmentCallback(nonExistantValue);
-									advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+									advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
 									return;
 								}
 								for (var i = 0; i < school.assignments.length; i++) {
@@ -164,11 +164,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 									assignmentList.push(school.assignments[i]);
 								}
 								stateCallbackList(assignmentList, assignmentCallback);
-								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
 								userAssignmentId = null;
 							});
 							// creates a request that is then sent to the server
-							sendData.sendDataRequest(PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, leftOverId);
+							sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, leftOverId);
 						}
 
 						// this calls actually before the response from the server is received!

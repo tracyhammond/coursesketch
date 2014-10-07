@@ -74,7 +74,7 @@ function LoginSystem() {
                 }
             } else {
                 if (message.otherData) {
-                    var loginInfo = PROTOBUF_UTILgetLoginClass().decode(message.otherData);
+                    var loginInfo = CourseSketch.PROTOBUF_UTILgetLoginClass().decode(message.otherData);
                     if (loginInfo.isLoggedIn) {
                         // successful login here
                         isInstructor = loginInfo.isInstructor;
@@ -111,13 +111,13 @@ function LoginSystem() {
                             + " \n server@coursesketch.com with your device, and web browser");
                     return;
                 }
-                var loginInfo = PROTOBUF_UTIL.LoginInformation();
+                var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
 
                 loginInfo.username = arg1;
                 loginInfo.password = "" + arg2;
 
-                var request = PROTOBUF_UTIL.Request();
-                request.setRequestType(PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
+                var request = CourseSketch.PROTOBUF_UTIL.Request();
+                request.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
                 if (!isUndefined(request.setLogin)) {
                     request.login = loginInfo;
                 }

@@ -64,20 +64,20 @@
         QUnit.module("proto Objects");
 
         test("protobuf correctly creates object with no arguments Using standard util", function(assert) {
-            var array = PROTOBUF_UTIL.getSupportedObjects();
+            var array = CourseSketch.PROTOBUF_UTIL.getSupportedObjects();
             for (var i = 0; i < array.length; i++) {
                 var object = array[i];
-                var object = PROTOBUF_UTIL[object]();
+                var object = CourseSketch.PROTOBUF_UTIL[object]();
             }
             ok(true);
 
         });
 
         test("protobuf throws exception when object is called with arguments", function(assert) {
-            var array = PROTOBUF_UTIL.getSupportedObjects();
+            var array = CourseSketch.PROTOBUF_UTIL.getSupportedObjects();
             for (var i = 0; i < array.length; i++) {
                 var object = array[i];
-                var spy = this.spy(PROTOBUF_UTIL, object);
+                var spy = this.spy(CourseSketch.PROTOBUF_UTIL, object);
                 try {
                     spy("arg1");
                 } catch (exception) {

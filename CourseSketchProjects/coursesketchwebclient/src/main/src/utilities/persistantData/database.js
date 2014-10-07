@@ -1,14 +1,16 @@
 /**
- * Creates a database with a specific name, and has a callback after being opened.
- *
+ * Creates a database with a specific name, and has a callback after being
+ * opened.
+ * 
  * It will also create all the functions needed for the specific database.
  */
-function protoDatabase(databaseName, version, openCallback) {
+function ProtoDatabase(databaseName, version, openCallback) {
 	var databaseSupported = true;
-	if (!window.indexedDB) {
+	if (!window.indexedDB || typeof window.indexedDB === "undefined") {
 		databaseSupported = false;
 		console.log("Your browser doesn't support a stable version of IndexedDB. So storing your data will not be possible");
-		//window.alert("Your browser doesn't support a stable version of IndexedDB. So storing your data will not be possible");
+		// window.alert("Your browser doesn't support a stable version of
+        // IndexedDB. So storing your data will not be possible");
 	}
 	var self = this;
 	var courseSketch = {};
@@ -18,17 +20,17 @@ function protoDatabase(databaseName, version, openCallback) {
 		courseSketch.indexedDB = undefined;
 	}
 
-	var updgradeTables = null;
+	var upgradeTables = null;
 	this.setTables = function(tables) {
-		updgradeTables = tables;
+		upgradeTables = tables;
 	};
 
 	/**
-	 * Returns an object that can be converted to a table.
-	 *
-	 * The table contains an addingFunction (other) and a generic callback.<br>
-	 * example addingFunction<br>
-	 * <code>
+     * Returns an object that can be converted to a table.
+     * 
+     * The table contains an addingFunction (other) and a generic callback.<br>
+     * example addingFunction<br>
+     * <code>
 	 * function adding(store, todoText) {
 	 * 		return store.put({
 	 * 			"text": todoText,
@@ -36,12 +38,18 @@ function protoDatabase(databaseName, version, openCallback) {
 	 * 		});
 	 * }
 	 * </code>
-	 * @param tableName The name of the specific table to be created.
-	 * @param keyValue This is the key for that specific table
-	 * @param addingFunction Takes in a store and then creates and returns a request see sample above.
-	 * @param gettingFunction
-	 * @param callback Is called upon success of a data change (either adding or 
-	 */
+     * 
+     * @param tableName
+     *            The name of the specific table to be created.
+     * @param keyValue
+     *            This is the key for that specific table
+     * @param addingFunction
+     *            Takes in a store and then creates and returns a request see
+     *            sample above.
+     * @param gettingFunction
+     * @param callback
+     *            Is called upon success of a data change (either adding or
+     */
 	this.createTable = function(tableName, keyValue, addingFunction) {
 		return {
 			name: tableName,
@@ -51,6 +59,7 @@ function protoDatabase(databaseName, version, openCallback) {
 	};
 
 	this.open = function() {
+	    var tableCreationCalled = false;
 		try {
 			// lets do browser checking for compatability.
 			var request = indexedDB.open(databaseName, version);
@@ -60,8 +69,8 @@ function protoDatabase(databaseName, version, openCallback) {
 				var db = e.target.result;
 				// A versionchange transaction is started automatically.
 				e.target.transaction.onerror = courseSketch.indexedDB.onerror;
-				for (var i = 0; i < updgradeTables.length; i++) {
-					table = updgradeTables[i];
+				for (var i = 0; i < upgradeTables.length; i++) {
+					table = upgradeTables[i];
 					// delete existing table
 					if (db.objectStoreNames.contains(table.name)) {
 						db.deleteObjectStore(table.name);
@@ -71,26 +80,44 @@ function protoDatabase(databaseName, version, openCallback) {
 			};
 			request.onsuccess = function(e) {
 				courseSketch.indexedDB.db = e.target.result;
-				createTableFunctions();
+				if (!tableCreationCalled) {
+		            tableCreationCalled = true;
+		            createTableFunctions();
+		        }
 			};
 			request.onerror = courseSketch.indexedDB.onerror;
 		} catch(exception) {
+		    console.error(exception);
 			// if there is an exception then we should continue
 			courseSketch.indexedDB = null;
-			createTableFunctions();
+			if (!tableCreationCalled) {
+	            tableCreationCalled = true;
+	            createTableFunctions();
+	        }
+		}
+		if (!tableCreationCalled) {
+		    tableCreationCalled = true;
+		    createTableFunctions();
 		}
 	};
 
 	/**
-	 * creates a bunch of functions for the table which are created upon successful database creation.
-	 */
+     * creates a bunch of functions for the table which are created upon
+     * successful database creation.
+     */
 	function createTableFunctions() {
-		for (var i = 0; i < updgradeTables.length; i++) {
-			table = updgradeTables[i];
+	    if (upgradeTables == null) {
+	        if (openCallback) {
+	            openCallback();
+	        }
+	        return;
+	    }
+		for (var i = 0; i < upgradeTables.length; i++) {
+			table = upgradeTables[i];
 			(function(localTable) {
 				/**
-				 * Creates a function for adding items to the database.
-				 */
+                 * Creates a function for adding items to the database.
+                 */
 				self['putIn' + localTable.name] = function(objectId, objectToAdd, callback) {
 					if (!databaseSupported || !courseSketch.indexedDB) {
 						return; // fail silently
@@ -101,8 +128,10 @@ function protoDatabase(databaseName, version, openCallback) {
 					var store = trans.objectStore(localTable.name);
 					var request = localTable.add(store, objectId, objectToAdd);
 					request.onsuccess = function(e) {
-						// add objectId to some sort of id list so we know what data is contained
-						// this data is only to be used for the local deletion of all items in the database
+						// add objectId to some sort of id list so we know what
+                        // data is contained
+						// this data is only to be used for the local deletion
+                        // of all items in the database
 						if (callback)
 							callback(e, request);
 					};
@@ -112,8 +141,8 @@ function protoDatabase(databaseName, version, openCallback) {
 					};
 				};
 				/**
-				 * Creates a function for deleting items from the database.
-				 */
+                 * Creates a function for deleting items from the database.
+                 */
 				self['deleteFrom' + localTable.name] = function(objectId, callback) {
 					if (!databaseSupported || !courseSketch.indexedDB) {
 						return; // fail silently
@@ -134,8 +163,8 @@ function protoDatabase(databaseName, version, openCallback) {
 				};
 
 				/**
-				 * Creates a function for deleting items from the database.
-				 */
+                 * Creates a function for deleting items from the database.
+                 */
 				self['getFrom' + localTable.name] = function(objectId, callback) {
 					if (!databaseSupported || !courseSketch.indexedDB) {
 						// return undefined
@@ -158,18 +187,19 @@ function protoDatabase(databaseName, version, openCallback) {
 				};
 			})(table);
 		}
-		if (openCallback)
+		if (openCallback) {
 			openCallback();
+		}
 	}
 
 	this.emptySelf = function() {
 		emptyDB(databaseName);
-	}
+	};
 
 	function emptyDB(databaseName) {
 		try {
 			var result = confirm("Do you want to empty all of the local data?");
-			if(result == true) {
+			if (result == true) {
 				var dbreq = courseSketch.indexedDB.deleteDatabase(databaseName);
 				dbreq.onsuccess = function (event) {
 					output_trace("indexedDB: " + databaseName + " deleted");

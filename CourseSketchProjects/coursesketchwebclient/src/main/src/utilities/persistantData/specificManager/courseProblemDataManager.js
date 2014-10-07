@@ -33,7 +33,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 			} else {
 				// gets the data from the database and calls the callback
 				var bytes = ByteBuffer.fromBase64(result.data);
-				courseProblemCallback(PROTOBUF_UTIL.getSrlProblemClass().decode(bytes));
+				courseProblemCallback(CourseSketch.PROTOBUF_UTIL.getSrlProblemClass().decode(bytes));
 			}
 		});
 	}
@@ -86,12 +86,12 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 					if (barrier == 0) {
 						// after the entire list has been gone through pull the leftovers from the server
 						if (leftOverId.length >= 1) {
-							advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(evt, item) {
-								var school = PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
+							advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(evt, item) {
+								var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
 								var courseProblem = school.problems[0];
 								if (isUndefined(courseProblem)) {
 									courseProblemCallback(nonExistantValue);
-									advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
+									advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
 									return;
 								}
 								for (var i = 0; i < school.problems.length; i++) {
@@ -99,10 +99,10 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 									courseProblemList.push(school.problems[i]);
 								}
 								courseProblemCallback(courseProblemList);
-								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
+								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
 							});
 							// creates a request that is then sent to the server
-							sendData.sendDataRequest(PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, leftOverId);
+							sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, leftOverId);
 						}
 
 						// this calls actually before the response from the server is received!
