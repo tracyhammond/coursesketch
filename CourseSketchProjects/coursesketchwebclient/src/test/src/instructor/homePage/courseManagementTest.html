@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Instructor Course Management</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+<link rel="import"
+	href="/test/testUtilities/mockedObjects/mockedObjectsInclude.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/instructor/homePage/homePage.html"
+	data-fake>
+
+<!-- file being tested. -->
+<script src="/src/common/homePage/courseManager.js" data-cover></script>
+</head>
+<body>
+	<div id="fakePage"></div>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<div id=""></div>
+
+	<script>
+        QUnit.module("initialization", {
+            setup : function() {
+                this.showCourses = CourseSketch.courseManagement.showCourses;
+            },
+            teardown : function() {
+                if (CourseSketch.courseManagement.waitingIcon.isRunning()) {
+                    CourseSketch.courseManagement.waitingIcon.finishWaiting();
+                }
+                FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").innerHTML = "";
+                CourseSketch.courseManagement.showCourses = this.showCourses;
+                CourseSketch.dataManager.isDatabaseReady.reset();
+                CourseSketch.dataManager.pollUpdates.reset();
+                try {
+                    CourseSketch.courseManagement.restore();
+                } catch (exception) {
+
+                }
+            }
+        });
+        test("initialize with no document does not do anything", function(assert) {
+			assert.equal(CourseSketch.courseManagement.initializeCourseManagment(), false, "false is returned to show missing html code");
+        });
+        test("initialize with a valid document does not throw an exception", function(assert) {
+            CourseSketch.dataManager.isDatabaseReady.returns(false);
+            CourseSketch.courseManagement.initializeCourseManagment(FAKE_PAGE_DOCUMENT);
+            assert.equal(FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").childNodes.length, 1,
+                    "There should be the waiting icon in this location");
+            assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), true, "There should be the waiting icon in this location");
+        });
+
+        test("initialize called with updates calls show courses correctly", function(assert) {
+            console.log(CourseSketch.dataManager);
+            CourseSketch.dataManager.isDatabaseReady.returns(true);
+            CourseSketch.dataManager.pollUpdates.callsArg(0);
+            var list = [];
+            CourseSketch.dataManager.getAllCourses.callsArgWith(0, list);
+            var mock = this.mock(CourseSketch.courseManagement);
+            var mockedMethod = mock.expects("showCourses");
+            mockedMethod.withArgs(list);
+
+            // actual function call
+            CourseSketch.courseManagement.initializeCourseManagment(FAKE_PAGE_DOCUMENT);
+
+            mock.verify();
+            assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), false, "The waiting list should not be running");
+        });
+    </script>
+</body>
