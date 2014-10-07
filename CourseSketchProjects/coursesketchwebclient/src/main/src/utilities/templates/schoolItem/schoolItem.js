@@ -74,7 +74,12 @@ function SchoolItemBuilder() {
 
 	this.build = function(id) {
 
-		var hostElement = document.getElementById(id);
+	    var hostElement = undefined;
+	    if (typeof id == "string") {
+	        hostElement = document.getElementById(id);
+	    } else {
+	        hostElement = id;
+	    }
 		hostElement.innerHTML = '';
 		
 		// if there is no list add the empty message and then exit
