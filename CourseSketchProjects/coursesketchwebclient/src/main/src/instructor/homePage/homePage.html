@@ -4,10 +4,38 @@
 <link rel="stylesheet" href="/css/courseSketch2.css">
 <link rel="stylesheet" href="/css/common/homePage.css">
 
+<link rel="stylesheet" href="/css/utility/externalLibraries/tooltip.css">
+<link rel="stylesheet" href="/css/utility/waiting.css">
+
 <!-- basic utilities -->
+<link rel="import" href="/src/utilities/defaultUtils.html">
+<script type="text/javascript" src="/src/utilities/functions/childScript.js"
+	data-namespace="courseManagement"></script>
+
+<!-- basic setup for this page -->
+
 <link rel="import"
-	href="/src/utilities/defaultUtils.html">
-<script type="text/javascript" src="/src/common/childScript.js" data-namespace="courseManagement"></script>
+	href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
+<link rel="import"
+	href="/src/utilities/templates/loading/loadingInclude.html">
+
+<!-- protobuf -->
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+<!-- homepage specific -->
+<script type="text/javascript"
+	src="/js/utils/externalLibraries/tooltip.js"></script>
+<script type="text/javascript"
+	src="/src/common/homePage/courseManager.js"></script>
+
+<!-- INSTRUCTOR SPECIFIC -->
+<script type="text/javascript" src="/src/instructor/homePage/create.js"></script>
+
+<script>
+    $(document).ready(function() {
+        CourseSketch.courseManagement.initializeCourseManagment();
+    });
+</script>
 
 </head>
 <body>
@@ -23,7 +51,7 @@
 					<div id="column1"
 						class="semi_wide_centre faded_column gradient_faded_column_instructor fullScreenColumn"
 						style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
-						<button class="myButton2 centre" onclick="addNewCourse()">Add
+						<button class="myButton2 centre" onclick="CourseSketch.courseManagement.addNewCourse()">Add
 							New Course</button>
 						<div id="class_list_column" class="school_div"></div>
 					</div>
