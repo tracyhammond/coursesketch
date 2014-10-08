@@ -14,12 +14,6 @@
 
 	<properties>
 		<!-- This may be removed and a later solution will need to be worked on -->
-<<<<<<< HEAD
-		<absoluteCheckstyleLocation>../../${checkstyleLocation}</absoluteCheckstyleLocation>
-		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
-	</properties>
-<!-- 	<build>
-=======
 		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<testLevel>0</testLevel>
 		<averageTestLevel>0</averageTestLevel>
@@ -27,7 +21,6 @@
 		<projectLineLevel>9</projectLineLevel>
 	</properties>
 	<build>
->>>>>>> dtracers
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -38,8 +31,6 @@
 				<artifactId>findbugs-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-<<<<<<< HEAD
-=======
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 			</plugin>
@@ -48,12 +39,11 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 			<plugin>
->>>>>>> dtracers
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build> -->
+	</build>
 
 	<dependencies>
 		<dependency>
@@ -62,5 +52,11 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+
 	</dependencies>
 </project>

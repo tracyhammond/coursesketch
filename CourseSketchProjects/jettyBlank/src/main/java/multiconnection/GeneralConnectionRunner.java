@@ -79,12 +79,12 @@ public class GeneralConnectionRunner {
     /**
      * The port of the server.
      */
-    protected int port = DEFAULT_PORT;
+    private int port = DEFAULT_PORT;
 
     /**
      * The timeoutTime of a connection.
      */
-    protected long timeoutTime;
+    private long timeoutTime;
 
     /**
      * If true then the server will accept commandline input.  If false the server will not accept commandline input.
@@ -110,12 +110,8 @@ public class GeneralConnectionRunner {
     /**
      * True if the server is using SSL and false otherwise.
      */
-<<<<<<< HEAD
-    protected boolean secure = false;
-=======
     @SuppressWarnings("PMD.ImmutableField")
     private boolean secure = false;
->>>>>>> dtracers
 
     /**
      * The password for the keystore.

@@ -22,8 +22,6 @@
 		<system>GitHub Issues</system>
 	</issueManagement>
 
-<<<<<<< HEAD
-=======
 	<profiles>
 		<profile>
 			<id>maven-3</id>
@@ -114,7 +112,6 @@
 		</profile>
 	</profiles>
 
->>>>>>> dtracers
 	<reporting>
 		<plugins>
 			<plugin>
@@ -139,10 +136,14 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>${findbugVersion}</version>
+				<configuration>
+					<excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>${coberturaVersion}</version>
 				<configuration>
 					<formats>
 						<format>html</format>
@@ -159,29 +160,14 @@
 		<developerConnection>scm:git:git@github.com:${githubLocation}.git</developerConnection>
 	</scm>
 
+	<!-- possible plugins https://code.google.com/p/maven-replacer-plugin/ -->
+
 	<build>
 		<finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
 		<defaultGoal>clean install</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-<<<<<<< HEAD
-				<artifactId>maven-site-plugin</artifactId>
-				<version>2.3.3</version>
-				<configuration>
-					<reportPlugins>
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>findbugs-maven-plugin</artifactId>
-							<version>${findbugVersion}</version>
-						</plugin>
-					</reportPlugins>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-=======
->>>>>>> dtracers
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
@@ -209,12 +195,12 @@
 					</execution>
 				</executions>
 				<configuration>
-				    <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+					<getRevisionOnlyOnce>true</getRevisionOnlyOnce>
 					<shortRevisionLength>5</shortRevisionLength>
 					<doCheck>true</doCheck>
 					<doUpdate>true</doUpdate>
 					<!-- the order of this format is to help with version sorting. -->
-					<format>{0,date,yyyy-MM-dd_HH:mm:ss}.{1}</format>
+					<format>{0,date,yyyy-MM-dd_HH-mm-ss}.{1}</format>
 					<items>
 						<item>timestamp</item>
 						<item>scmVersion</item>
@@ -339,7 +325,8 @@
 					<artifactId>findbugs-maven-plugin</artifactId>
 					<version>${findbugVersion}</version>
 					<configuration>
-						<includeTests>true</includeTests>
+						<excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
+						<includeTests>false</includeTests>
 					</configuration>
 					<executions>
 						<execution>
@@ -348,28 +335,17 @@
 								<goal>check</goal>
 							</goals>
 						</execution>
-<<<<<<< HEAD
-						<execution>
-							<id>findbugs-test-compile</id>
-							<phase>test-compile</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-=======
 					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.17</version>
->>>>>>> dtracers
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>cobertura-maven-plugin</artifactId>
-					<version>2.6</version>
+					<version>${coberturaVersion}</version>
 					<configuration>
 						<instrumentation>
 							<ignores>
@@ -378,27 +354,25 @@
 							</excludes>
 						</instrumentation>
 						<check>
+							<haltOnFailure>true</haltOnFailure>
 							<branchRate>${testLevel}</branchRate>
 							<lineRate>${testLevel}</lineRate>
-							<haltOnFailure>true</haltOnFailure>
-							<totalBranchRate>${testLevel}</totalBranchRate>
-							<totalLineRate>${testLevel}</totalLineRate>
-							<packageLineRate>${testLevel}</packageLineRate>
-							<packageBranchRate>${testLevel}</packageBranchRate>
+							<totalBranchRate>${projectBranchLevel}</totalBranchRate>
+							<totalLineRate>${projectLineLevel}</totalLineRate>
+							<packageLineRate>${packageBranchLevel}</packageLineRate>
+							<packageBranchRate>${packageLineLevel}</packageBranchRate>
 						</check>
 					</configuration>
 					<executions>
 						<execution>
 							<goals>
 								<goal>clean</goal>
-								<goal>check</goal>
 								<goal>cobertura</goal>
+								<goal>check</goal>
 							</goals>
 						</execution>
 					</executions>
 				</plugin>
-<<<<<<< HEAD
-=======
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
@@ -431,7 +405,6 @@
 						<version>1.9.7</version>
 					</configuration>
 				</plugin>
->>>>>>> dtracers
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -445,28 +418,20 @@
 		<mockitoVersion>[1.9.5,)</mockitoVersion>
 		<puppyVersion>[5.6,)</puppyVersion>
 		<junitVersion>[4.11,)</junitVersion>
-		<checkstyleVersion>2.12.1</checkstyleVersion>
+		<checkstyleVersion>2.13</checkstyleVersion>
 		<findbugVersion>3.0.0</findbugVersion>
 		<testLevel>85</testLevel>
 		<minTestLevel>70</minTestLevel>
 		<averageTestLevel>90</averageTestLevel>
-<<<<<<< HEAD
-		<checkstyleLocation>config/checkstyle.xml</checkstyleLocation>
-=======
 		<projectBranchLevel>${averageTestLevel}</projectBranchLevel>
 		<projectLineLevel>${averageTestLevel}</projectLineLevel>
 		<packageBranchLevel>${averageTestLevel}</packageBranchLevel>
 		<packageLineLevel>${averageTestLevel}</packageLineLevel>
 		<checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
->>>>>>> dtracers
 		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<findbugSupressionLocation>config/findbugs-exclude.xml</findbugSupressionLocation>
 		<protocLocation>/usr/local/bin/protoc</protocLocation>
-<<<<<<< HEAD
-		<!-- This needs to be overwritten in child poms -->
-		<mainClass>fully.qualified.MainClass</mainClass>
-		<githubLocation>tracyhammond/coursesketch</githubLocation>
-=======
 		<sitepluginVersion>2.3.3</sitepluginVersion>
 		<coberturaVersion>2.6</coberturaVersion>
 		<pmdVersion>3.2</pmdVersion>
@@ -481,7 +446,6 @@
 		<!-- This needs to be overwritten in child poms -->
 		<mainClass>fully.qualified.MainClass</mainClass>
 		<parentConfigLocationDir>${basedir}</parentConfigLocationDir>
->>>>>>> dtracers
 	</properties>
 
 	<dependencies>

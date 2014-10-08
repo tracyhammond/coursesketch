@@ -15,7 +15,7 @@ import protobuf.srl.school.School.DateTime;
  *
  * @author gigemjt
  */
-public class Authenticator {
+public final class Authenticator {
 
     /**
      * An implementation of the {@link AuthenticationDataCreator}.
@@ -112,7 +112,7 @@ public class Authenticator {
         /**
          * If true then it passes if either mod or admin exist. {@link AuthenticationData}.
          */
-        public boolean checkAdminOrMod = false;
+        private boolean checkAdminOrMod = false;
 
         /**
          * @return True if one of the values in AuthType is true.
