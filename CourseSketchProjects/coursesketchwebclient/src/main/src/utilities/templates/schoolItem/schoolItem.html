@@ -6,9 +6,7 @@
 	<style>
 	@import "/src/utilities/templates/schoolItem/schoolItem.css";
 	</style>
-	<div class="image">
-		<content select="img"></content>
-	</div>
+	<img class=".image">
 	<div class="school_item">
 		<span class="school_item_state"></span>
 		<div class="text">
@@ -19,24 +17,24 @@
 				</h3>
 			</div>
 			<span class="date">
-				<h4 class="closeDate subDate">
+				<h4 class="closeDate">
 					Close Date:
 					<content select=".closeDate"></content>
 					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</h4>
-				<h4 class="dueDate subDate">
+				<h4 class="dueDate">
 					Due Date:
 					<content select=".duteDate"></content>
 					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</h4>
-				<h4 class="accessDate subDate">
+				<h4 class="accessDate">
 					Access Date:
 					<content select=".accessDate"></content>
 					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</h4>
 			</span>
 			<div class="description">
-				<p class="medium">
+				<p class="contentHolder">
 					<content select="div.description"></content>
 					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</p>
@@ -44,9 +42,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- 
-	<span class="editButton"
-		onclick="parent.parent.editSchoolItem('title');">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-		 --> </template>
+	</template>
 </body>
 </html>
