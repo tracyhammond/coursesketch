@@ -37,7 +37,14 @@ import database.user.UserClient;
  *
  * @author gigemjt
  */
-public class DataInsertHandler {
+public final class DataInsertHandler {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private DataInsertHandler() {
+    }
 
     /**
      * A message returned when the insert was successful.
@@ -171,7 +178,7 @@ public class DataInsertHandler {
                     results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                 }
             }
-            if (results.size() > 0) {
+            if (!results.isEmpty()) {
                 GeneralConnectionServer.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
             }
             return;
@@ -231,10 +238,10 @@ public class DataInsertHandler {
      * @param req The original request that was received.
      * @return A {@link Request}.
      */
-    private static Request buildRequest(final ArrayList<ItemResult> results, final String message, final Request req) {
+    private static Request buildRequest(final List<ItemResult> results, final String message, final Request req) {
 
         DataResult.Builder dataResult = null;
-        if (results != null && results.size() > 0) {
+        if (results != null && !results.isEmpty()) {
             dataResult = DataResult.newBuilder();
             dataResult.addAllResults(results);
         }

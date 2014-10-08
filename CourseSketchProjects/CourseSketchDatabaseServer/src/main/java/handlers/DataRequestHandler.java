@@ -35,7 +35,14 @@ import database.user.UserClient;
  * Typcially an Id is given of that data requested it is then sent back to the client that requested it.
  * @author gigemjt
  */
-public class DataRequestHandler {
+public final class DataRequestHandler {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private DataRequestHandler() {
+    }
 
     /**
      * A message returned when getting the data was successful.
@@ -247,10 +254,10 @@ public class DataRequestHandler {
      * @param req The original request that was received.
      * @return A {@link Request}.
      */
-    private static Request buildRequest(final ArrayList<ItemResult> results, final String message, final Request req) {
+    private static Request buildRequest(final List<ItemResult> results, final String message, final Request req) {
 
         final DataResult.Builder dataResult = DataResult.newBuilder();
-        if (results != null && results.size() > 0) {
+        if (results != null && !results.isEmpty()) {
             dataResult.addAllResults(results);
         }
 

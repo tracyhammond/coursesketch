@@ -41,7 +41,14 @@ import database.auth.Authenticator;
  * @author gigemjt
  *
  */
-public class SubmissionManager {
+public final class SubmissionManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private SubmissionManager() {
+    }
 
     /**
      * Inserts a submission into the database.

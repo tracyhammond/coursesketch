@@ -72,12 +72,8 @@ public final class MongoInstitution implements Institution {
      *            The location that the server is taking place.
      */
     private MongoInstitution(final String url) {
-        try {
-            final MongoClient mongoClient = new MongoClient(url);
-            db = mongoClient.getDB(DATABASE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        final MongoClient mongoClient = new MongoClient(url);
+        db = mongoClient.getDB(DATABASE);
     }
 
     /**
@@ -115,15 +111,11 @@ public final class MongoInstitution implements Institution {
         if (testOnly && fakeDB != null) {
             db = fakeDB;
         } else {
-            try {
-                final MongoClient mongoClient = new MongoClient("localhost");
-                if (testOnly) {
-                    db = mongoClient.getDB("test");
-                } else {
-                    db = mongoClient.getDB(DATABASE);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            final MongoClient mongoClient = new MongoClient("localhost");
+            if (testOnly) {
+                db = mongoClient.getDB("test");
+            } else {
+                db = mongoClient.getDB(DATABASE);
             }
         }
         instance = this;
@@ -447,16 +439,8 @@ public final class MongoInstitution implements Institution {
     @Override
     public void getExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
-        try {
-            System.out.println("Getting experiment for user: " + userId + " problem: " + problemId);
-            SubmissionManager.mongoGetExperiment(getInstance().db, userId, problemId, sessionInfo, internalConnections);
-            return;
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        System.out.println("Getting experiment for user: " + userId + " problem: " + problemId);
+        SubmissionManager.mongoGetExperiment(getInstance().db, userId, problemId, sessionInfo, internalConnections);
     }
 
     /*
@@ -470,12 +454,7 @@ public final class MongoInstitution implements Institution {
     @Override
     public void getExperimentAsInstructor(final String userId, final String problemId, final String sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) {
-        try {
-            SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().db, userId, problemId, sessionInfo,
-                    internalConnections, review);
-            return;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().db, userId, problemId, sessionInfo,
+                internalConnections, review);
     }
 }
