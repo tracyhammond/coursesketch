@@ -1,18 +1,14 @@
 function SchoolItem() {
-
     var shadowRoot = undefined;
     var isOverflow = false;
 
     /**
-     * @param document
-     *            {document} The document in which the node is being imported
-     *            to.
      * @param templateClone
      *            {Element} an element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
-    this.initializeElement = function(document, templateClone) {
+    this.initializeElement = function(templateClone) {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
         this.checkOverflow();
@@ -28,6 +24,10 @@ function SchoolItem() {
         var descriptionContent = shadowRoot.querySelector('.description content');
 
         var nodes = descriptionContent.getDistributedNodes();
+        if (!nodes || nodes == null || nodes.length == 0) {
+            isOverflow = false;
+            return false;
+        }
         var element = nodes[0];
         var text = element.textContent;
 
@@ -71,10 +71,12 @@ function SchoolItem() {
      * Builds the event for what happens when expanding content.
      */
     this.buildExpandEvent = function() {
-        var paragraph = shadowRoot.querySelector('.description p');
-        if (isOverflow) {
-            $(paragraph).addClass("overflow");
+        if (!isOverflow) {
+            return; // do nothing if there is no overflow
         }
+
+        var paragraph = shadowRoot.querySelector('.description p');
+        $(paragraph).addClass("overflow");
 
         var descriptionContent = shadowRoot.querySelector('.description content');
 
@@ -130,9 +132,19 @@ function SchoolItem() {
         });
     };
 
+    /**
+     * Should create a special editor element based on its state.
+     */
     function getEditorElement(parentNode) {
         return document.createElement('input');
     }
+
+    /**
+     * Returns true if the description has larger text size than is allowed.
+     */
+    this.isDescriptionOverflow = function() {
+        return isOverflow;
+    };
 }
 
 SchoolItem.prototype = Object.create(HTMLElement.prototype);
