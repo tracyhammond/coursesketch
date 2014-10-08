@@ -61,11 +61,7 @@ public class GeneralConnectionServer {
     /**
      * Maps a Session to its MultiConnectionState.
      */
-<<<<<<< HEAD
-    protected final HashMap<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
-=======
     private final Map<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
->>>>>>> dtracers
 
     /**
      * Maps a MultiConnectionState to a Session.
@@ -115,13 +111,8 @@ public class GeneralConnectionServer {
      * @param conn The connection that is being opened.
      */
     @OnWebSocketConnect
-<<<<<<< HEAD
-    public void onOpen(final Session conn) {
-        if (connectionToId.size() >= MAX_CONNECTIONS) {
-=======
     public final void onOpen(final Session conn) {
         if (getConnectionToId().size() >= MAX_CONNECTIONS) {
->>>>>>> dtracers
             // Return negatative state.
             System.out.println("FULL SERVER"); // send message to someone?
             conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
@@ -267,7 +258,7 @@ public class GeneralConnectionServer {
      * @return The name of the connection should be overwritten to give it a new name.
      */
     @SuppressWarnings("static-method")
-    public String getName() {
+    public final String getName() {
         return NAME;
     }
 

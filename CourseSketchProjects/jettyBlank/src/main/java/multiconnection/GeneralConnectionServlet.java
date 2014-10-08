@@ -22,7 +22,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     /**
      * The server that the servlet is connected to.
      */
-    protected final GeneralConnectionServer connectionServer;
+    private final GeneralConnectionServer connectionServer;
 
     /**
      * The {@link MultiConnectionManager} that is used by the servlet to recieve
@@ -139,7 +139,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      *
      * @see multiconnection.MultiConnectionManager#connectServers(GeneralConnectionServer)
      */
-    public void reconnect() {
+    public final void reconnect() {
         System.out.println("Reconnecting");
         if (manager != null) {
             manager.dropAllConnection(true, false);

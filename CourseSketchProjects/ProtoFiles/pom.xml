@@ -31,14 +31,10 @@
 			<url>http://maven.davidtrott.com/repository</url>
 		</pluginRepository>
 	</pluginRepositories>
-<<<<<<< HEAD
-<!-- 
-=======
 
 	<properties>
 	    <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 	</properties>
->>>>>>> dtracers
 	<build>
 		<plugins>
 			<plugin>
@@ -66,7 +62,7 @@
 			</plugin>
 		</plugins>
 	</build>
- -->
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.protobuf</groupId>

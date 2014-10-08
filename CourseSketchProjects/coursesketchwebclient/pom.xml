@@ -15,11 +15,20 @@
 		<relativePath>../../</relativePath>
 	</parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jslint</id>
+			<url>http://repo1.maven.org/maven2/org/codehaus/mojo/jslint-maven-plugin/</url>
+		</pluginRepository>
+		<repository>
+			<id>mulesoft-releases</id>
+			<name>MuleSoft Repository</name>
+			<url>https://repository.mulesoft.org/releases/</url>
+		</repository>
+	</pluginRepositories>
 
 	<build>
+		<sourceDirectory>${basedir}/src/main/src</sourceDirectory>
 		<extensions>
 			<extension>
 				<groupId>org.codehaus.mojo</groupId>
@@ -27,6 +36,21 @@
 				<version>2.0.0-alpha-1</version>
 			</extension>
 		</extensions>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jslint-maven-plugin</artifactId>
+				<version>1.0.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jslint</goal>
+							<goal>test-jslint</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 
 </project>

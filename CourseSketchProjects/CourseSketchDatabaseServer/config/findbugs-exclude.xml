@@ -1,7 +1,5 @@
 <FindBugsFilter>
 	<Match>
-<<<<<<< HEAD
-=======
 		<Package name="protobuf.*" />
 	</Match>
 	<Match>
@@ -23,7 +21,6 @@
 
 	<!-- General bug excludes -->
 	<Match>
->>>>>>> dtracers
 		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
 
@@ -56,11 +53,7 @@
 	</Match>
 
 	<Match>
-<<<<<<< HEAD
-	    <Or>
-=======
 		<Or>
->>>>>>> dtracers
 			<Field name="e" />
 			<Local name="e" />
 		</Or>

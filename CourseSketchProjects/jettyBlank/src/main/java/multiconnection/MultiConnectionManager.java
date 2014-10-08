@@ -35,22 +35,14 @@ public class MultiConnectionManager {
      *
      * Can be overridden.
      */
-<<<<<<< HEAD
-    protected boolean connectLocally = CONNECT_LOCALLY;
-=======
     private final boolean connectLocally;
->>>>>>> dtracers
 
     /**
      * Determines whether the server will be connecting securely.
      *
      * Can be overridden.
      */
-<<<<<<< HEAD
-    protected boolean secure = false;
-=======
     private final boolean secure;
->>>>>>> dtracers
 
     /**
      * A map that contains a list of connections that are differentiated by a

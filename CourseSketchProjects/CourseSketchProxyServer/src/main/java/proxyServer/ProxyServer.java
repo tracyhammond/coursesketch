@@ -15,7 +15,11 @@ import java.util.Set;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import connection.ConnectionException;
+import jettyMultiConnection.ConnectionException;
+import jettyMultiConnection.ConnectionWrapper;
+import jettyMultiConnection.GeneralConnectionServer;
+import jettyMultiConnection.GeneralConnectionServlet;
+import jettyMultiConnection.MultiConnectionState;
 
 import multiconnection.ConnectionWrapper;
 import multiconnection.GeneralConnectionServer;

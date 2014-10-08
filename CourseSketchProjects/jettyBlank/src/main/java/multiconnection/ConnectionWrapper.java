@@ -61,7 +61,7 @@ public class ConnectionWrapper {
     /**
      * This is the manager that holds an instance of this connection wrapper.
      */
-    protected MultiConnectionManager parentManager;
+    private MultiConnectionManager parentManager;
 
     /**
      * The active session of the current connection wrapper.

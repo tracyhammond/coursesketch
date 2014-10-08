@@ -20,7 +20,6 @@
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
 		<mainClass>proxyServer.ProxyRunner</mainClass>
 	</properties>
-	<!-- 
 	<build>
 		<plugins>
 			<plugin>
@@ -44,7 +43,7 @@
 			</plugin>
 		</plugins>
 	</build>
- -->
+
 	<dependencies>
 		<dependency>
 			<groupId>CourseSketch</groupId>
