@@ -22,6 +22,7 @@ import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PERMISSION_LEVELS;
 import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 
@@ -157,17 +158,13 @@ public final class AssignmentManager {
         exactAssignment.setGradeWeight((String) corsor.get(GRADE_WEIGHT));
 
         if (isAdmin || isMod) {
-            try {
-                final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
-                latePolicy.setFunctionType(SrlAssignment.LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
-                // safety case to string then parse to float
-                latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
-                latePolicy.setSubtractionType((Boolean) corsor.get(LATE_POLICY_SUBTRACTION_TYPE));
-                if (latePolicy.getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
-                    latePolicy.setTimeFrameType(SrlAssignment.LatePolicy.TimeFrame.valueOf((Integer) corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
-                }
-            } catch (Exception e) {
-                 e.printStackTrace();
+            final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
+            latePolicy.setFunctionType(SrlAssignment.LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
+            // safety case to string then parse to float
+            latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
+            latePolicy.setSubtractionType((Boolean) corsor.get(LATE_POLICY_SUBTRACTION_TYPE));
+            if (latePolicy.getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
+                latePolicy.setTimeFrameType(SrlAssignment.LatePolicy.TimeFrame.valueOf((Integer) corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
             }
         }
 
@@ -184,20 +181,14 @@ public final class AssignmentManager {
         // FUTURE: add this to all fields!
         // A course is only publishable after a certain criteria is met
         if (corsor.containsField(STATE_PUBLISHED)) {
-            try {
-                final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
-                if (published) {
-                    stateBuilder.setPublished(true);
-                } else {
-                    if (!isAdmin || !isMod) {
-                        throw new DatabaseAccessException("The specific assignment is not published yet", true);
-                    }
-                    stateBuilder.setPublished(false);
+            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
+            if (published) {
+                stateBuilder.setPublished(true);
+            } else {
+                if (!isAdmin || !isMod) {
+                    throw new DatabaseAccessException("The specific assignment is not published yet", true);
                 }
-            } catch (DatabaseAccessException e) {
-                throw e;
-            } catch (Exception e) {
-                e.printStackTrace();
+                stateBuilder.setPublished(false);
             }
         }
 
@@ -275,29 +266,29 @@ public final class AssignmentManager {
         if (isAdmin || isMod) {
             if (assignment.hasName()) {
                 updateObj = new BasicDBObject(NAME, assignment.getName());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (assignment.hasType()) {
                 updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getType().getNumber());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (assignment.hasOther()) {
                 updateObj = new BasicDBObject(ASSIGNMENT_OTHER_TYPE, assignment.getOther());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (assignment.hasDescription()) {
                 updateObj = new BasicDBObject(DESCRIPTION, assignment.getDescription());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (assignment.getLinksList() != null) {
                 updateObj = new BasicDBObject(ASSIGNMENT_RESOURCES, assignment.getLinksList());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (assignment.hasLatePolicy()) {
@@ -305,38 +296,38 @@ public final class AssignmentManager {
                 /*
                  updateObj = new BasicDBObject(LATE_POLICY,
                  assignment.getLatePolicy().getNumber());
-                 courses.update(corsor, new BasicDBObject ("$set",
+                 courses.update(corsor, new BasicDBObject (SET_COMMAND,
                  updateObj));
                  */
             }
             if (assignment.hasGradeWeight()) {
                 updateObj = new BasicDBObject(GRADE_WEIGHT, assignment.getGradeWeight());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (assignment.hasAccessDate()) {
                 updateObj = new BasicDBObject(ACCESS_DATE, assignment.getAccessDate().getMillisecond());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (assignment.hasDueDate()) {
                 updateObj = new BasicDBObject(DUE_DATE, assignment.getDueDate().getMillisecond());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (assignment.hasCloseDate()) {
                 updateObj = new BasicDBObject(CLOSE_DATE, assignment.getCloseDate().getMillisecond());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (assignment.hasImageUrl()) {
                 updateObj = new BasicDBObject(IMAGE, assignment.getImageUrl());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (assignment.getProblemListCount() > 0) {
                 updateObj = new BasicDBObject(PROBLEM_LIST, assignment.getProblemListList());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
 
@@ -347,18 +338,18 @@ public final class AssignmentManager {
                 if (isAdmin) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
-                        updated.append("$set", new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+                        updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
                         updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                        courses.update(corsor, new BasicDBObject("$set", updateObj));
+                        courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                     }
                     if (permissions.getModeratorPermissionCount() > 0) {
                         updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                        courses.update(corsor, new BasicDBObject("$set", updateObj));
+                        courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                     }
                 }
                 if (permissions.getUserPermissionCount() > 0) {
                     updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                    courses.update(corsor, new BasicDBObject("$set", updateObj));
+                    courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 }
             }
         }
@@ -402,7 +393,7 @@ public final class AssignmentManager {
      * @param assignmentId the id of the assignment that is getting permissions.
      * @param ids the list of list of permissions that is getting added.
      */
-    /*package-private*/ static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final ArrayList<String>[] ids) {
+    /*package-private*/ static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>[] ids) {
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
         final DBObject corsor = myDbRef.fetch();
         final DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);

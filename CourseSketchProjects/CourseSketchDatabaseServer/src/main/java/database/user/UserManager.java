@@ -28,7 +28,14 @@ import database.PasswordHash;
  * @author gigemjt
  *
  */
-public class UserManager {
+public final class UserManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private UserManager() {
+    }
 
     // get grades
     // update grades

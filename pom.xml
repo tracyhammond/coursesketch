@@ -436,9 +436,9 @@
 		<coberturaVersion>2.6</coberturaVersion>
 		<pmdVersion>3.2</pmdVersion>
 		<githubLocation>tracyhammond/coursesketch</githubLocation>
-		<pmdExclude>config/${pmdFile}</pmdExclude>
+		<pmdExclude>${basedir}/config/${pmdFile}</pmdExclude>
 		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
-		<cpdExclude>config/${cpdFile}</cpdExclude>
+		<cpdExclude>${basedir}/config/${cpdFile}</cpdExclude>
 		<pmdFile>exclude-pmd.properties</pmdFile>
 		<cpdFile>exclude-cpd.properties</cpdFile>
 		<absoluteConfigLocation>${parentConfigLocationDir}/config</absoluteConfigLocation>

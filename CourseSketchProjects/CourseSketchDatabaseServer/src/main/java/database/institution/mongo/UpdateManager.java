@@ -24,7 +24,14 @@ import database.auth.AuthenticationException;
  * Manages updates for mongo.
  * @author gigemjt
  */
-public class UpdateManager {
+public final class UpdateManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private UpdateManager() {
+    }
 
     /**
      * Inserts a new update into the database for a specific user.
