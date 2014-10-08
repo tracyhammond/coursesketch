@@ -24,8 +24,8 @@
             /**
              * Creates the shadow root and adds that into the system.
              */
-             SchoolItem.prototype.attachedCallback = function() {
-                this.initializeElement(document, clone.cloneNode(true));
+            SchoolItem.prototype.attachedCallback = function() {
+                this.initializeElement(clone.cloneNode(true));
             };
 
             SchoolItem.prototype.detachedCallback = function() {

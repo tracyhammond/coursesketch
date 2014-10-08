@@ -126,6 +126,11 @@ p.expand {
 	cursor: pointer;
 }
 
+p.currentlyEditing + p {
+	/* hide the button while editing regardless of its state. */
+	display: none;
+}
+
 p:not(.overflow) + p {
 	display: none;
 }
