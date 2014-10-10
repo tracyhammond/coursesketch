@@ -6,37 +6,34 @@
 	<style>
 	@import "/src/utilities/templates/schoolItem/schoolItem.css";
 	</style>
+	<span class="schoolItemState"><content select="span.grade"></content></span>
 	<img class=".image">
 	<div class="school_item">
-		<span class="school_item_state"></span>
 		<div class="text">
 			<div class="title">
 				<h3 class="name">
 					<content select=".name"></content>
-					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<span class="editButton" data-type="name">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</h3>
 			</div>
 			<span class="date">
-				<h4 class="closeDate">
-					Close Date:
-					<content select=".closeDate"></content>
-					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<h4 class="accessDate">
+					<content select=".accessDate"></content>
+					<span class="editButton" data-type="accessDate">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</h4>
 				<h4 class="dueDate">
-					Due Date:
-					<content select=".duteDate"></content>
-					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<content select=".dueDate"></content>
+					<span class="editButton" data-type="dueDate">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</h4>
-				<h4 class="accessDate">
-					Access Date:
-					<content select=".accessDate"></content>
-					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<h4 class="closeDate">
+					<content select=".closeDate"></content>
+					<span class="editButton" data-type="closeDate">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</h4>
 			</span>
 			<div class="description">
 				<p class="contentHolder">
 					<content select="div.description"></content>
-					<span class="editButton">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<span class="editButton" data-type="description">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</p>
 				<p class="expand"></p>
 			</div>

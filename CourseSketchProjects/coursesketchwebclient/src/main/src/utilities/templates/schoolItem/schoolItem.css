@@ -20,13 +20,14 @@
 	/* in case we need to place other items behind it with a z-index*/
 	max-height: 200px;
 	max-width:100%;
+	width:100%; /* by default but it can be changed */
 }
 
-.hover_box {
+:host[clickable] {
 	cursor: pointer;
 }
 
-.hover_box:hover {
+:host[clickable]:hover {
 	background: #D4D4D4;
 }
 
@@ -52,24 +53,43 @@ img[src] ~ .school_item {
 	max-width:75%;
 }
 
+/* title */
+::content .name {
+	display: inline-block;
+}
 
 /* date */
 
-.date {
-	display:inline-block;
-}
-
 .date h4 {
-   display: none;
-   margin-right: .75em;
+	display:inline;
+	margin-right: .75em;
 }
 
-.date h4.validDate {
-   display:inline-block;
+:host(:not([data-instructor])):not(.validDate) .date {
+	display:none;
 }
 
-.date ::content {
-	display: inline-block;
+:host(.validDate) .date {
+	display:block;
+}
+
+:host(:not([data-instructor])) .date ::content .accessDate::before, :host([data-instructor]) .accessDate::before {
+    content: "Access Date: ";
+    display: inline;
+}
+
+:host(:not([data-instructor])) .date ::content .dueDate::before, :host([data-instructor]) .dueDate::before {
+    content: "Due Date: ";
+    display: inline;
+}
+
+:host(:not([data-instructor])) .date ::content .closeDate::before, :host([data-instructor]) .closeDate::before {
+	content: "Close Date: ";
+	display: inline;
+}
+
+::content .accessDate, ::content .dueDate, ::content .closeDate {
+	display: inline;
 }
 
 /* description */
@@ -176,7 +196,7 @@ p.contract {
     background-image: url(/images/schoolItem/pencil_tilted.svg);
 	background-repeat: no-repeat;
 	background-position: right top;
-    
+
     top: 0;
     left: 0;
     position: absolute;
@@ -231,7 +251,7 @@ h1,h4 {
 /**
 	States
 */
-.school_item_state {
+.schoolItemState {
 	width: 25%;
 	height: 40%;
 	position: absolute;
@@ -242,22 +262,72 @@ h1,h4 {
 	z-index: -1;
 }
 
-.in_progress {
+/* grades */
+
+:host([data-state="graded"]) .schoolItemState {
+	width: initial;
+}
+
+:host(:not([data-state="graded"])) ::content .grade {
+	display:none;
+}
+
+:host([data-state="graded"]):not([data-instructor) .accessDate {
+	display:none;
+}
+
+:host([data-state="graded"]):not([data-instructor) .dueDate {
+	display:none;
+}
+
+:host([data-state="graded"]):not([data-instructor) .closeDate {
+	display:none;
+}
+*/
+
+/* not open */
+
+:host([data-state="notOpen"]) .schoolItemState {
+	background-image: url(/images/schoolItem/coming_soon.svg);
+}
+
+:host([data-state="notOpen"]):not([data-instructor) .closeDate {
+	display:none;
+}
+/* in progress */
+
+:host([data-state="inProgress"]) .schoolItemState {
 	width: 40%;
 	height: 60%;
 	background-image: url(/images/schoolItem/construction_corner.svg);
 }
 
-.assignment_closed {
+:host([data-state="inProgress"]):not([data-instructor) .accessDate {
+	display:none;
+}
+
+/* closed */
+
+:host([data-state="closed"]) .schoolItemState {
 	background-image: url(/images/schoolItem/closed_sign.svg);
 	width: 20%;
 	height: 40%;
 }
 
-.completed {
+:host([data-state="closed"]):not([data-instructor) .accessDate {
+	display:none;
+}
+
+:host([data-state="closed"]):not([data-instructor) .dueDate {
+	display:none;
+}
+
+/* completed */
+
+:host([data-state="completed"]) .schoolItemState {
 	background-image: url(/images/schoolItem/fancy_checkered_flag.svg);
 }
 
-.not_open {
-	background-image: url(/images/schoolItem/coming_soon.svg);
+:host([data-state="inProgress"]):not([data-instructor) .accessDate {
+	display:none;
 }

@@ -1,6 +1,7 @@
 function SchoolItem() {
     var shadowRoot = undefined;
     var isOverflow = false;
+    var editFunction = undefined;
 
     /**
      * @param templateClone
@@ -104,30 +105,47 @@ function SchoolItem() {
      * Sets up what happens when an edit button is clicked.
      */
     this.setUpEditButtons = function() {
+        var localScope = this;
         if (isUndefined(this.dataset.instructor)) {
             return;
         }
 
         var editingClass = 'currentlyEditing';
+        // calls the function for ever instance of the editButton
         [].forEach.call(shadowRoot.querySelectorAll('.editButton'), function(element) {
             var parentNode = element.parentNode;
             var content = parentNode.querySelector('content');
             var nodes = content.getDistributedNodes();
             var contentElement = nodes[0];
             var editorElement = getEditorElement(parentNode);
-            $(element).click(function() {
+            var finishEditing = function() {
+                $(parentNode).removeClass(editingClass);
+                $(contentElement).removeClass(editingClass);
+                parentNode.removeChild(editorElement);
+                var oldContent = contentElement.textContent;
+                contentElement.textContent = editorElement.value;
+                if (editFunction) {
+                    editFunction(element.dataset.type, oldContent, contentElement.textContent);
+                }
+            }
+            $(element).click(function(event) {
+                event.stopPropagation();
                 if ($(parentNode).hasClass(editingClass)) {
-                    $(parentNode).removeClass(editingClass);
-                    $(contentElement).removeClass(editingClass);
-                    parentNode.removeChild(editorElement);
-                    contentElement.textContent = editorElement.value;
+                    finishEditing();
                 } else {
                     $(parentNode).addClass(editingClass);
+
+                    if (isUndefined(contentElement)) {
+                        contentElement = document.createElement("div");
+                        $(contentElement).addClass(element.dataset.type);
+                        localScope.appendChild(contentElement);
+                    }
                     // makes the display = none
                     $(contentElement).addClass(editingClass);
                     editorElement.value = contentElement.textContent;
                     parentNode.insertBefore(editorElement, element);
                 }
+                return false;
             });
         });
     };
@@ -144,6 +162,21 @@ function SchoolItem() {
      */
     this.isDescriptionOverflow = function() {
         return isOverflow;
+    };
+
+    /**
+     * @Method
+     * @param func
+     *            A function that is called at the end of an edit.
+     * @callbackParam type {string} this is the class of the item that was
+     *                edited (description, name, accessDate, dueDate,
+     *                closedDate)
+     * @callbackParam oldValue {string} the old value.
+     * @callbackParam newValue {string} the value that the element was changed
+     *                to.
+     */
+    this.setEditCallback = function(func) {
+        editFunction = func;
     };
 }
 
