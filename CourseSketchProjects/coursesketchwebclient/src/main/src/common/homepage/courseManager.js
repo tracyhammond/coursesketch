@@ -58,7 +58,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             doc = localDocument;
         }
         var builder = new SchoolItemBuilder();
-        builder.setList(courseList).setWidth('medium').centerItem(true);
+        builder.setList(courseList)
         if (CourseSketch.dataManager.getState("isInstructor")) {
             builder.setInstructorCard(true);
         }
@@ -99,7 +99,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                                 assignmentList = [];
                             }
 
-                            builder.setList(assignmentList).setWidth('medium').centerItem(true);
+                            builder.setList(assignmentList);
                             builder.showImage = false;
 
                             builder.setBoxClickFunction(assignmentClickerFunction);
@@ -153,7 +153,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                                     }
                                 }
                             }
-                            builder.setList(problemList).setWidth('medium').centerItem(true);
+                            builder.setList(problemList);
                             builder.showImage = false;
                             builder.setBoxClickFunction(problemClickerFunction);
                             if (waitingIcon.isRunning()) {
