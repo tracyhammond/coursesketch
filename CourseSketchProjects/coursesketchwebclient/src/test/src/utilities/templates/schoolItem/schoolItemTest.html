@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Command Methods test</title>
+<title>School Item test</title>
 <!-- test Library -->
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 
@@ -15,30 +15,17 @@
 	data-cover></script>
 </head>
 <body>
-	<school-item style="width:500px"> <span class="name">Course
-		Name</span>
-	<div class="description">Course Description</div>
-	</school-item>
-
-	<school-item style="width:500px"> <span class="name">Course
-		Name</span>
-	<div class="description">The course provides the mathematical
-		foundations from discrete mathematics for analyzing computer
-		algorithms, for both correctness and performance; introduction to
-		models of computation, including finite state machines and Turing
-		machines. At the end of the course, students will understand the basic
-		principles of logic, proofs and sets. They will be able to apply
-		results from discrete mathematics to analysis of algorithms. They will
-		be able to produce proofs by induction and apply counting techniques.
-		They will have a basic understanding of models of computation</div>
-	</school-item>
-	<h1>NOW CONTAINED ELEMENTS</h1>
-	<div style="width: 100; outline: black solid thin;">
-		<school-item> <span class="name">Course Name</span>
+	<div>
+		<school-item style="width:500px" class=".validDate"> <span class="name">Course
+			Name</span>
 		<div class="description">Course Description</div>
+		<div class="accessDate">11-22-1234</div>
+		<div class="dueDate">22-11-9876</div>
+		<div class="closeDate">99-99-9999</div>
 		</school-item>
 
-		<school-item> <span class="name">Course Name</span>
+		<school-item style="width:500px"> <span class="name">Course
+			Name</span>
 		<div class="description">The course provides the mathematical
 			foundations from discrete mathematics for analyzing computer
 			algorithms, for both correctness and performance; introduction to
@@ -50,12 +37,41 @@
 			techniques. They will have a basic understanding of models of
 			computation</div>
 		</school-item>
-	</div>
+		<h1>NOW CONTAINED ELEMENTS</h1>
+		<div style="width: 100; outline: black solid thin;">
+			<school-item> <span class="name">Course Name</span>
+			<div class="description">Course Description</div>
+			</school-item>
 
-	<school-item style="width:500px" data-instructor> <span
-		class="name">Course Name</span>
-	<div class="description">Course Description</div>
-	</school-item>
+			<school-item> <span class="name">Course Name</span>
+			<div class="description">The course provides the mathematical
+				foundations from discrete mathematics for analyzing computer
+				algorithms, for both correctness and performance; introduction to
+				models of computation, including finite state machines and Turing
+				machines. At the end of the course, students will understand the
+				basic principles of logic, proofs and sets. They will be able to
+				apply results from discrete mathematics to analysis of algorithms.
+				They will be able to produce proofs by induction and apply counting
+				techniques. They will have a basic understanding of models of
+				computation</div>
+			</school-item>
+		</div>
+
+		<school-item style="width:500px" data-instructor> <span
+			class="name">Course Name</span>
+		<div class="description">Course Description</div>
+		</school-item>
+
+		<br>
+		<school-item style="width:500px" data-instructor>
+		<div class="description">Course Description</div>
+		</school-item>
+		<school-item style="width:500px" data-state="graded">
+		<span class="grade">100%</span>
+		<span class="name">Course Name</span>
+		<div class="description">Course Description</div>
+		</school-item>
+	</div>
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
 
@@ -129,13 +145,21 @@
 
         });
 
-        test("edit buttons can be assigned functions", function(assert) {
+        test("edit buttons can be assigned functions (with value not changed)", function(assert) {
+            expect(9);
             var s = document.createElement('school-item2');
             s.dataset.instructor = "";
             var desc = document.createElement('div');
             desc.className = "name";
-            desc.textContent = "Course Description";
+            var oldValue = "Course Description";
+            desc.textContent = oldValue;
             s.appendChild(desc);
+            s.setEditCallback(function(type, oldV, newV) {
+                assert.equal(type, "name", "edit function called with correct type");
+                assert.equal(oldV, oldValue, "edit function called with correct old value");
+                assert.equal(newV, oldValue, "edit function called with correct old value");
+                assert.ok(true, "edit function called");
+            });
             s.initializeElement(template.cloneNode(true));
 
             var button = s.shadowRoot.querySelector('.title .editButton'); // grab title edit button.
@@ -145,10 +169,52 @@
             assert.equal($(buttonParent).hasClass('currentlyEditing'), false, "starts off not being able to edit");
             simulate(button, 'click');
             assert.equal($(buttonParent).hasClass('currentlyEditing'), true, "starts off not being able to edit");
-			assert.notEqual(buttonParent.querySelector('input'), null, "an edit box should now exist");
+            assert.notEqual(buttonParent.querySelector('input'), null, "an edit box should now exist");
             simulate(button, 'click');
             assert.equal($(buttonParent).hasClass('currentlyEditing'), false, "after editing is done it should not be editable");
             assert.equal(buttonParent.querySelector('input'), null, "an edit box should not exist anymore");
+        });
+
+        test("edit buttons can be assigned functions with value changing", function(assert) {
+            expect(4);
+            var s = document.createElement('school-item2');
+            s.dataset.instructor = "";
+            var desc = document.createElement('div');
+            desc.className = "name";
+            var oldValue = "Course Description";
+            var newValue = "newValue";
+            desc.textContent = oldValue;
+            s.appendChild(desc);
+            s.setEditCallback(function(type, oldV, newV) {
+                assert.equal(type, "name", "edit function called with correct type");
+                assert.equal(oldV, oldValue, "edit function called with correct old value");
+                assert.equal(newV, newValue, "edit function called with correct new value");
+                assert.ok(true, "edit function called");
+            });
+            s.initializeElement(template.cloneNode(true));
+
+            var button = s.shadowRoot.querySelector('.title .editButton'); // grab title edit button.
+            console.log(button);
+            var buttonParent = button.parentNode;
+            buttonParent.querySelector(".name");
+
+            simulate(button, 'click');
+            buttonParent.querySelector("input").value = newValue;
+            simulate(button, 'click');
+        });
+
+        test("edit buttons creates an element if it does not exist", function(assert) {
+            var s = document.createElement('school-item2');
+            s.dataset.instructor = "";
+            s.initializeElement(template.cloneNode(true));
+
+            var button = s.shadowRoot.querySelector('.title .editButton'); // grab title edit button.
+            console.log(button);
+            var buttonParent = button.parentNode;
+
+            assert.equal(s.querySelector(".name"), null, "the content does not exist prior to being edited");
+            simulate(button, 'click');
+            assert.notEqual(s.querySelector(".name"), null, "the element should now exist");
         });
     </script>
 </body>
