@@ -233,6 +233,8 @@ function Connection(uri, encrypted, attemptReconnect) {
 		return longVersion;
 	};
 
+	CourseSketch.getCurrentTime = this.getCurrentTime;
+
 	function onTime(evt, msg) {
         if (msg.getResponseText() == SEND_TIME_TO_CLIENT_MSG) { // client
             return clientReciveTimeDiff(msg);
