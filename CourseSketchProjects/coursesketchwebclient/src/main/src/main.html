@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>Welcome!</title>
+<link rel="import"
+	href="/src/utilities/persistantData/databaseInclude.html">
+
+<link id="menubarTemplate" rel="import"
+	href="/src/utilities/templates/menu/menuBar.html">
+
+<link rel="stylesheet" href="/css/main.css">
+<!-- Jquery library -->
+<script src="/src/utilities/templates/menu/menuSlider.js"></script>
+<script src="/src/common/homepage/header.js"></script>
+
+<script>
+$(document).ready(function() {
+    CourseSketch.headerManager = new HeaderHandler();
+});
+</script>
+</head>
+<body>
+	<div id="mainPage">
+		<!-- Menu Section -->
+		<div id="menuBar"></div>
+
+		<!-- Section in the Header bar -->
+		<div id="content" class="totalPage">
+			<div id="header" class="headerBar">
+				<a id = "showMenu" class="showMenu"><span class="outerButton" aria-hidden="true"><span
+						class="innerButton">Menu</span></span></a>
+				<div onclick="CourseSketch.reloadContent();"
+					style="position: fixed; right: 20px;">refresh</div>
+				<h1 id="nameBlock" class="title">Welcome!</h1>
+			</div>
+			<!-- Center Section -->
+			<div id="singlePageContent" class="mainBackground fullScreen">
+				<iframe id="iframeContent" name="wrapper" src="" height="100%"
+					width="100%" frameborder="0"> </iframe>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
