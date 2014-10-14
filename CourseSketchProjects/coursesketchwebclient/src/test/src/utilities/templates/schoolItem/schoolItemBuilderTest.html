@@ -34,9 +34,9 @@
 		results from discrete mathematics to analysis of algorithms. They will
 		be able to produce proofs by induction and apply counting techniques.
 		They will have a basic understanding of models of computation</div>
-		<div class="accessDate">11-22-1234</div>
-		<div class="dueDate">22-11-9876</div>
-		<div class="closeDate">99-99-9999</div>
+	<div class="accessDate">11-22-1234</div>
+	<div class="dueDate">22-11-9876</div>
+	<div class="closeDate">99-99-9999</div>
 	</school-item>
 	<h1>NOW CONTAINED ELEMENTS</h1>
 	<div style="width: 400; outline: black solid thin;">
@@ -157,9 +157,7 @@
 
             schoolItem.name = oldValue;
 
-            console.log(schoolItem);
             s.setEditCallback(function(type, oldV, newV, item) {
-                console.log(item);
                 assert.ok(true, "edit callbock called");
                 assert.equal(type, 'name', "function is called with correct type");
                 assert.equal(oldV, oldValue, "function is called with the old value");
@@ -171,79 +169,227 @@
             s.build(this.schoolElement);
             assert.equal(this.schoolElement.childNodes.length, 1, "There should be a single item built into the child list");
             var schoolItemNode = this.schoolElement.childNodes[0];
-            console.log(schoolItemNode);
             var editButton = schoolItemNode.shadowRoot.querySelector('.title .editButton');
-            console.log(editButton);
             simulate(editButton, 'click');
             simulate(editButton, 'click');
         });
     </script>
-    <script>
-    QUnit.module("state", {
-    });
+	<script>
+        QUnit.module("state", {});
 
-    test("no state", function(assert) {
-        var box = document.createElement("school-item");
-        var s = new SchoolItemBuilder();
-        s.setShowState(false);
-        var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-        s.setBoxState(box, schoolItem);
-        assert.equal(box.dataset.state, undefined);
-        // create school item.
-     });
+        test("no state", function(assert) {
+            var box = document.createElement("school-item");
+            var s = new SchoolItemBuilder();
+            s.setShowState(false);
+            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            s.setBoxState(box, schoolItem);
+            assert.equal(box.dataset.state, undefined);
+            // create school item.
+        });
 
-    test("closed", function(assert) {
-       var box = document.createElement("school-item");
-       var s = new SchoolItemBuilder();
-       var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-       schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
-       schoolItem.state.pastDue = true;
-       s.setBoxState(box, schoolItem);
-       assert.equal(box.dataset.state, "closed");
-       // create school item.
-    });
+        test("closed", function(assert) {
+            var box = document.createElement("school-item");
+            var s = new SchoolItemBuilder();
+            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            schoolItem.state.pastDue = true;
+            s.setBoxState(box, schoolItem);
+            assert.equal(box.dataset.state, "closed");
+            // create school item.
+        });
 
-    test("notOpen", function(assert) {
-        var box = document.createElement("school-item");
-        var s = new SchoolItemBuilder();
-        var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-        schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
-        s.setBoxState(box, schoolItem);
-        assert.equal(box.dataset.state, "notOpen");
-        // create school item.
-     });
+        test("notOpen", function(assert) {
+            var box = document.createElement("school-item");
+            var s = new SchoolItemBuilder();
+            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            s.setBoxState(box, schoolItem);
+            assert.equal(box.dataset.state, "notOpen");
+            // create school item.
+        });
 
-    test("completed", function(assert) {
-        var box = document.createElement("school-item");
-        var s = new SchoolItemBuilder();
-        var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-        schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
-        schoolItem.state.completed = true;
-        s.setBoxState(box, schoolItem);
-        assert.equal(box.dataset.state, "completed");
-        // create school item.
-     });
+        test("completed", function(assert) {
+            var box = document.createElement("school-item");
+            var s = new SchoolItemBuilder();
+            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            schoolItem.state.completed = true;
+            s.setBoxState(box, schoolItem);
+            assert.equal(box.dataset.state, "completed");
+            // create school item.
+        });
 
-    test("inProgress", function(assert) {
-        var box = document.createElement("school-item");
-        var s = new SchoolItemBuilder();
-        var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-        schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
-        schoolItem.state.started = true;
-        s.setBoxState(box, schoolItem);
-        assert.equal(box.dataset.state, "inProgress");
-        // create school item.
-     });
+        test("inProgress", function(assert) {
+            var box = document.createElement("school-item");
+            var s = new SchoolItemBuilder();
+            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            schoolItem.state.started = true;
+            s.setBoxState(box, schoolItem);
+            assert.equal(box.dataset.state, "inProgress");
+            // create school item.
+        });
 
-    test("graded", function(assert) {
-        var box = document.createElement("school-item");
-        var s = new SchoolItemBuilder();
-        var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-        schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
-        schoolItem.state.graded = true;
-        s.setBoxState(box, schoolItem);
-        assert.equal(box.dataset.state, "graded");
-        // create school item.
-     });
+        test("graded", function(assert) {
+            var box = document.createElement("school-item");
+            var s = new SchoolItemBuilder();
+            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            schoolItem.state.graded = true;
+            s.setBoxState(box, schoolItem);
+            assert.equal(box.dataset.state, "graded");
+            // create school item.
+        });
+    </script>
+	<script>
+        QUnit.module("composition", {
+            setup : function() {
+                this.schoolElementId = "schoolItemDiv";
+                this.schoolElement = document.querySelector("#" + this.schoolElementId);
+            },
+            teardown : function() {
+                document.querySelector("#schoolItemDiv").innerHTML = "";
+            }
+        });
+
+        test("description", function(assert) {
+            var s = new SchoolItemBuilder();
+            var customMessage = "my message!";
+            s.setListTitle(customMessage);
+            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            assignment.description = customMessage;
+            s.setList([ assignment ]);
+            s.build(this.schoolElement);
+            var item = this.schoolElement.querySelector("school-item");
+            assert.notEqual(item.querySelector(".description"), null, "there should be an element with the class description");
+            assert.equal(item.querySelector(".description").textContent, customMessage, "there should be description text");
+        });
+
+        test("access date format", function(assert) {
+            var s = new SchoolItemBuilder();
+            var date = new Date(2014, 10, 7, 41); // time this date was created.
+            var dateString = getFormattedDateTime(date);
+            console.log(dateString);
+
+            var time = date.getTime();
+
+            s.setShowDate(true);
+            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            var date = CourseSketch.PROTOBUF_UTIL.DateTime();
+            date.millisecond = dcodeIO.Long.fromNumber(time);
+
+            assignment.accessDate = date;
+            s.setList([ assignment ]);
+            s.build(this.schoolElement);
+            var item = this.schoolElement.querySelector("school-item");
+            assert.notEqual(item.querySelector(".accessDate"), null, "there should be an element with the class description");
+            assert.equal(item.querySelector(".accessDate").textContent, dateString, "there should be description text");
+        });
+
+        test("due date format", function(assert) {
+            var s = new SchoolItemBuilder();
+            var date = new Date(2014, 10, 7, 41); // time this date was created.
+            var dateString = getFormattedDateTime(date);
+            console.log(dateString);
+
+            var time = date.getTime();
+
+            s.setShowDate(true);
+            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            var date = CourseSketch.PROTOBUF_UTIL.DateTime();
+            date.millisecond = dcodeIO.Long.fromNumber(time);
+
+            assignment.dueDate = date;
+            s.setList([ assignment ]);
+            s.build(this.schoolElement);
+            var item = this.schoolElement.querySelector("school-item");
+            assert.notEqual(item.querySelector(".dueDate"), null, "there should be an element with the class description");
+            assert.equal(item.querySelector(".dueDate").textContent, dateString, "there should be description text");
+        });
+
+        test("close date format", function(assert) {
+            var s = new SchoolItemBuilder();
+            var date = new Date(2014, 10, 7, 41); // time this date was created.
+            var dateString = getFormattedDateTime(date);
+            console.log(dateString);
+
+            var time = date.getTime();
+
+            s.setShowDate(true);
+            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            var date = CourseSketch.PROTOBUF_UTIL.DateTime();
+            date.millisecond = dcodeIO.Long.fromNumber(time);
+
+            assignment.closeDate = date;
+            s.setList([ assignment ]);
+            s.build(this.schoolElement);
+            var item = this.schoolElement.querySelector("school-item");
+            assert.notEqual(item.querySelector(".closeDate"), null, "there should be an element with the class description");
+            assert.equal(item.querySelector(".closeDate").textContent, dateString, "there should be description text");
+        });
+
+        test("only show due date if due and close are the same", function(assert) {
+            var s = new SchoolItemBuilder();
+            var date = new Date(2014, 10, 7, 41); // time this date was created.
+            var dateString = getFormattedDateTime(date);
+            console.log(dateString);
+
+            var time = date.getTime();
+
+            s.setShowDate(true);
+            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            var date = CourseSketch.PROTOBUF_UTIL.DateTime();
+            date.millisecond = dcodeIO.Long.fromNumber(time);
+
+            assignment.closeDate = date;
+            assignment.dueDate = date;
+            s.setList([ assignment ]);
+            s.build(this.schoolElement);
+            var item = this.schoolElement.querySelector("school-item");
+            assert.equal(item.querySelector(".closeDate"), null, "there should be an element with the class description");
+        });
+    </script>
+	<script>
+        QUnit.module("type", {
+            setup : function() {
+                this.schoolElementId = "schoolItemDiv";
+                this.schoolElement = document.querySelector("#" + this.schoolElementId);
+            },
+            teardown : function() {
+                document.querySelector("#schoolItemDiv").innerHTML = "";
+            }
+        });
+
+        test("course type", function(assert) {
+            expect(0);
+            var s = new SchoolItemBuilder();
+            var assignment = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            s.setList([ assignment ]);
+            s.build(this.schoolElement);
+        });
+
+        test("assignment type", function(assert) {
+            expect(0);
+            var s = new SchoolItemBuilder();
+            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            s.setList([ assignment ]);
+            s.build(this.schoolElement);
+        });
+
+        test("problem type", function(assert) {
+            expect(0);
+            var s = new SchoolItemBuilder();
+            var assignment = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+            s.setList([ assignment ]);
+            s.build(this.schoolElement);
+        });
+
+        test("bank problem type", function(assert) {
+            expect(0);
+            var s = new SchoolItemBuilder();
+            var assignment = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+            s.setList([ assignment ]);
+            s.build(this.schoolElement);
+        });
     </script>
 </body>
