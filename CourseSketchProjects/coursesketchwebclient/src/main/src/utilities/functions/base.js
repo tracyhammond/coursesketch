@@ -100,21 +100,6 @@ if (isUndefined(isFunction)) {
 }
 
 /**
- * copies a property from parent scope to child scope
- */
-if (isUndefined(copyParentValues)) {
-    function copyParentValues(scope, propertyName, bindFunction) {
-        var object = this[propertyName];
-        // 
-        if (isFunction(object) && bindFunction) {
-            scope[propertyName] = object.bind(scope);
-        } else {
-            scope[propertyName] = this[propertyName];
-        }
-    }
-}
-
-/**
  * *************************************************************
  * 
  * Date Functions
@@ -122,6 +107,11 @@ if (isUndefined(copyParentValues)) {
  * @author gigemjt
  * 
  * *************************************************************
+ */
+
+/**
+ * Given a number that could be 1 or 2 digits returns a 2 digit version of that number
+ * ex: 1 -> 01, or 15 -> 15
  */
 if (isUndefined(make2Digits)) {
     function make2Digits(num) {
@@ -137,6 +127,9 @@ if (isUndefined(getMillitaryFormattedDateTime)) {
     }
 }
 
+/**
+ * @param dateTime {Date} uses the default Date object in the browser to return 
+ */
 if (isUndefined(getFormattedDateTime)) {
     function getFormattedDateTime(dateTime) {
         var date = make2Digits(dateTime.getMonth() + 1) + "-" + make2Digits(dateTime.getDate()) + "-" + dateTime.getFullYear();

@@ -20,6 +20,7 @@ function SchoolItemBuilder() {
         this.showBox = true; // if we want the card to be boxed shape
         this.showDescription = true; // true to show the description
         this.showState = true; // changed from this.showCompletionStatus
+        this.showDate = true; // true to show the date.
 
         // function
         this.boxClickFunction = false; // calls a function with the entire
@@ -218,8 +219,8 @@ function SchoolItemBuilder() {
 
         if (srlSchoolItem.description) {
             var description = document.createElement('div');
-            description.class = "description";
-            description.textContent = srlSchoolItem.name;
+            description.className = "description";
+            description.textContent = srlSchoolItem.description;
             box.appendChild(description);
         }
 
@@ -249,21 +250,22 @@ function SchoolItemBuilder() {
 
         var dueDate = srlSchoolItem.dueDate;
         if (dueDate) {
+            console.log(dueDate);
             var element = document.createElement('span');
             element.setAttribute('class', 'dueDate');
-            element.textContent = 'Due: ' + getFormattedDateTime(new Date(dueDate.millisecond.toNumber()));
+            element.textContent = getFormattedDateTime(new Date(dueDate.millisecond.toNumber()));
             box.appendChild(element);
         }
 
         var closeDate = srlSchoolItem.closeDate;
         var showCloseDate = true;
-        if (dueDate) {
+        if (dueDate && closeDate) {
             showCloseDate = closeDate.millisecond.toNumber() != dueDate.millisecond.toNumber();
         }
         if (closeDate && showCloseDate) {
             var element = document.createElement('span');
             element.setAttribute('class', 'closeDate');
-            element.textContent = 'Close: ' + getFormattedDateTime(new Date(closeDate.millisecond.toNumber()));
+            element.textContent = getFormattedDateTime(new Date(closeDate.millisecond.toNumber()));
             box.appendChild(element);
         }
 
