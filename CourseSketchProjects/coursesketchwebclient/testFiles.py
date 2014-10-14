@@ -46,6 +46,7 @@ class MainPage(webapp2.RequestHandler):
 					self.response.write('<li><a class="testFile" href="' + fileNameWithPath + '" target="_blank">'+ fileName +'</a></li>')
 				self.response.write('</ul>')
 				self.response.write('</div></div>')
+				counter = counter + 1
 		if counter == 1:
 			self.response.write('<br><b>There are no test files in: ' + directory + '</b>')
 
