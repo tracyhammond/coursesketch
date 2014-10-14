@@ -1,26 +1,22 @@
 function clickSelectionManager() {
     this.selectedItems = [];
-    this.selectionClassName = ' selected_box';
+    this.selectionClassName = ' selectedBox';
+    this.localDoc = document;
 
-    this.addSelectedItem = function(id) {
-        this.selectedItems.push(id);
-        this.selectItem(id);
+    this.addSelectedItem = function(element) {
+        this.selectedItems.push(element);
+        this.selectItem(element);
     };
 
-    this.selectItem = function(id) {
-        document.getElementById(id).className += this.selectionClassName;
+    this.selectItem = function(element) {
+        element.className += this.selectionClassName;
     };
 
-    this.clearItem = function(id) {
-        var toSelect = document.getElementById(id);
-        if (!toSelect) {
+    this.clearItem = function(element) {
+        if (!element) {
             return;
         }
-        var className = toSelect.className;
-        var index = className.indexOf(this.selectionClassName);
-        var firstHalf = className.substring(0, index);
-        var secondHalf = className.substring(index + this.selectionClassName.length);
-        toSelect.className = firstHalf + secondHalf;
+        $(element).removeClass(this.selectionClassName);
     };
 
     this.clearAllSelectedItems = function() {
@@ -31,7 +27,7 @@ function clickSelectionManager() {
         this.selectedItems = [];
     };
 
-    this.isItemSelected = function(id) {
-        return this.selectedItems.indexOf(id) > -1;
+    this.isItemSelected = function(element) {
+        return this.selectedItems.indexOf(element) > -1;
     };
 }
