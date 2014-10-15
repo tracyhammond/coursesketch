@@ -18,34 +18,33 @@ import connection.TimeManager;
 @WebSocket()
 public class AnswerConnection extends ConnectionWrapper {
 
-	public AnswerConnection(URI destination, GeneralConnectionServer parent) {
-		super(destination, parent);
-	}
+    public AnswerConnection(final URI destination, final GeneralConnectionServer parent) {
+        super(destination, parent);
+    }
 
-	/**
-	 * Accepts messages and sends the request to the correct server and holds minimum client state.
-	 *
-	 * Also removes all identification that should not be sent to the client.
-	 */
-	@Override
-	public void onMessage(ByteBuffer buffer) {
-		MultiConnectionState state = getStateFromId(GeneralConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
+    /**
+     *  * Accepts messages and sends the request to the correct server and holds minimum client state.
+     *
+     * Also removes all identification that should not be sent to the client.
+    */
+    @Override
+    public void onMessage(final ByteBuffer buffer) {
+        final MultiConnectionState state = getStateFromId(GeneralConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
 
-		Request r = GeneralConnectionServer.Decoder.parseRequest(buffer);
-		if (r.getRequestType() == Request.MessageType.TIME) {
-			
-			Request rsp = TimeManager.decodeRequest(r);
-			if (rsp != null) {
-				try {
-					this.parentManager.send(rsp, r.getSessionInfo(), AnswerConnection.class);
-				} catch (ConnectionException e) {
-					e.printStackTrace();
-				}
-			}
-			return;
-		}
-		Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
-		GeneralConnectionServer.send(getConnectionFromState(state), result);
-	}
+        final Request r = GeneralConnectionServer.Decoder.parseRequest(buffer);
+        if (r.getRequestType() == Request.MessageType.TIME) {
+            final Request rsp = TimeManager.decodeRequest(r);
+            if (rsp != null) {
+                try {
+                    this.parentManager.send(rsp, r.getSessionInfo(), AnswerConnection.class);
+                } catch (ConnectionException e) {
+                    e.printStackTrace();
+                }
+            }
+            return;
+        }
+        final Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
+        GeneralConnectionServer.send(getConnectionFromState(state), result);
+    }
 
 }
