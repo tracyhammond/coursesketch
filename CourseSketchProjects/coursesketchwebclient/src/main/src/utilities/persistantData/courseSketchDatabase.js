@@ -265,6 +265,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     this.getCurrentId = function() {
         return localUserId;
     };
+
+    this.getCurrentTime = connection.getCurrentTime;
 }
 var nonExistantValue = "NONEXISTANT_VALUE";
 var CURRENT_QUESTION = "CURRENT_QUESTION";

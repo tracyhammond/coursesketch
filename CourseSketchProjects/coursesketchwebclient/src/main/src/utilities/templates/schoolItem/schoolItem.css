@@ -31,7 +31,7 @@
 	background: #D4D4D4;
 }
 
-.selected_box {
+:host(.selectedBox) {
 	background: #C4C4C4;
 }
 
@@ -58,6 +58,9 @@ img[src] ~ .school_item {
 	display: inline-block;
 }
 
+.title {
+	margin-bottom: .5em;
+}
 /* date */
 
 .date h4 {
@@ -253,7 +256,8 @@ h1,h4 {
 */
 .schoolItemState {
 	width: 25%;
-	height: 40%;
+	height: 3em;
+	max-height:100%;
 	position: absolute;
 	background-repeat: no-repeat;
 	background-position: right top;
@@ -272,18 +276,18 @@ h1,h4 {
 	display:none;
 }
 
-:host([data-state="graded"]):not([data-instructor) .accessDate {
+:host([data-state="graded"]):not([data-instructor]) .accessDate {
 	display:none;
 }
 
-:host([data-state="graded"]):not([data-instructor) .dueDate {
+:host([data-state="graded"]):not([data-instructor]) .dueDate {
 	display:none;
 }
 
-:host([data-state="graded"]):not([data-instructor) .closeDate {
+:host([data-state="graded"]):not([data-instructor]) .closeDate {
 	display:none;
 }
-*/
+
 
 /* not open */
 
@@ -291,18 +295,17 @@ h1,h4 {
 	background-image: url(/images/schoolItem/coming_soon.svg);
 }
 
-:host([data-state="notOpen"]):not([data-instructor) .closeDate {
+:host([data-state="notOpen"]:not([data-instructor])) .closeDate {
 	display:none;
 }
 /* in progress */
 
 :host([data-state="inProgress"]) .schoolItemState {
 	width: 40%;
-	height: 60%;
 	background-image: url(/images/schoolItem/construction_corner.svg);
 }
 
-:host([data-state="inProgress"]):not([data-instructor) .accessDate {
+:host([data-state="inProgress"]:not([data-instructor])) .accessDate {
 	display:none;
 }
 
@@ -311,14 +314,13 @@ h1,h4 {
 :host([data-state="closed"]) .schoolItemState {
 	background-image: url(/images/schoolItem/closed_sign.svg);
 	width: 20%;
-	height: 40%;
 }
 
-:host([data-state="closed"]):not([data-instructor) .accessDate {
+:host([data-state="closed"]:not([data-instructor])) .accessDate {
 	display:none;
 }
 
-:host([data-state="closed"]):not([data-instructor) .dueDate {
+:host([data-state="closed"]:not([data-instructor])) .dueDate {
 	display:none;
 }
 
@@ -328,6 +330,6 @@ h1,h4 {
 	background-image: url(/images/schoolItem/fancy_checkered_flag.svg);
 }
 
-:host([data-state="inProgress"]):not([data-instructor) .accessDate {
+:host([data-state="inProgress"]:not([data-instructor])) .accessDate {
 	display:none;
 }

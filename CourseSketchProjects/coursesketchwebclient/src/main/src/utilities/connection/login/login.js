@@ -85,8 +85,8 @@ function LoginSystem() {
 
             if (!isUndefined(userId) && !isUndefined(isInstructor)) {
                 // successful login here
-                connection.isInstructor = isInstructor;
-                connection.userId = userId;
+                makeValueReadOnly(connection, 'isInstructor', isInstructor);
+                makeValueReadOnly(connection, 'userId', userId);
 
                 // remove oneself from being able to respond to login attempts
                 connection.setLoginListener(undefined);

@@ -1,0 +1,171 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Instructor Course Management</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+<link rel="import"
+	href="/test/testUtilities/mockedObjects/mockedObjectsInclude.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/student/homePage/homePage.html"
+	data-fake>
+
+<!-- file being tested. -->
+<script src="/src/common/homePage/courseManager.js" data-cover></script>
+</head>
+<body>
+	<div id="fakePage"></div>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<div id=""></div>
+
+	<script>
+		function checkForSchoolItems(assert, nodeList,  numberOfElements) {
+		    for (var i = 0; i < numberOfElements; i++) {
+		        var element = nodeList[i];
+		        assert.equal(element instanceof SchoolItem, true, "checking for element " + i + " out of " + numberOfElements);
+		    }
+		}
+
+        QUnit.module("initialization", {
+            setup : function() {
+                this.showCourses = CourseSketch.courseManagement.showCourses;
+            },
+            teardown : function() {
+                if (CourseSketch.courseManagement.waitingIcon.isRunning()) {
+                    CourseSketch.courseManagement.waitingIcon.finishWaiting();
+                }
+                FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").innerHTML = "";
+                CourseSketch.courseManagement.showCourses = this.showCourses;
+                CourseSketch.dataManager.isDatabaseReady.reset();
+                CourseSketch.dataManager.pollUpdates.reset();
+                try {
+                    CourseSketch.courseManagement.restore();
+                } catch (exception) {
+
+                }
+            }
+        });
+        test("initialize with no document does not do anything", function(assert) {
+            assert.equal(CourseSketch.courseManagement.initializeCourseManagment(), false, "false is returned to show missing html code");
+        });
+        test("initialize with a valid document does not throw an exception", function(assert) {
+            CourseSketch.dataManager.isDatabaseReady.returns(false);
+            CourseSketch.courseManagement.initializeCourseManagment(FAKE_PAGE_DOCUMENT);
+            assert.equal(FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").childNodes.length, 1,
+                    "There should be the waiting icon in this location");
+            assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), true, "There should be the waiting icon in this location");
+        });
+
+        test("initialize called with updates calls show courses correctly", function(assert) {
+            CourseSketch.dataManager.isDatabaseReady.returns(true);
+            CourseSketch.dataManager.pollUpdates.callsArg(0);
+            var list = [];
+            CourseSketch.dataManager.getAllCourses.callsArgWith(0, list);
+            var mock = this.mock(CourseSketch.courseManagement);
+            var mockedMethod = mock.expects("showCourses");
+            mockedMethod.withArgs(list);
+
+            // actual function call
+            CourseSketch.courseManagement.initializeCourseManagment(FAKE_PAGE_DOCUMENT);
+
+            mock.verify();
+            assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), false, "The waiting list should not be running");
+        });
+
+        test("initialize called with updates calls show courses correctly after waiting for database", function(assert) {
+            var clock = sinon.useFakeTimers();
+
+            CourseSketch.dataManager.isDatabaseReady.returns(false);
+            CourseSketch.dataManager.pollUpdates.callsArg(0);
+            var list = [];
+            CourseSketch.dataManager.getAllCourses.callsArgWith(0, list);
+            var mock = this.mock(CourseSketch.courseManagement);
+            var mockedMethod = mock.expects("showCourses");
+            mockedMethod.withArgs(list);
+
+            // actual function call
+            CourseSketch.courseManagement.initializeCourseManagment(FAKE_PAGE_DOCUMENT);
+
+            CourseSketch.dataManager.isDatabaseReady.returns(true);
+            clock.tick(100);
+
+            mock.verify();
+            assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), false, "The waiting list should not be running");
+        });
+
+        QUnit.module("showing courses", {
+            setup : function() {
+            },
+            teardown : function() {
+                if (CourseSketch.courseManagement.waitingIcon.isRunning()) {
+                    CourseSketch.courseManagement.waitingIcon.finishWaiting();
+                }
+                FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").innerHTML = "";
+                FAKE_PAGE_DOCUMENT.querySelector("#assignment_list_column").innerHTML = "";
+                FAKE_PAGE_DOCUMENT.querySelector("#problem_list_column").innerHTML = "";
+                try {
+                    CourseSketch.courseManagement.restore();
+                } catch (exception) {
+
+                }
+                document = this.saveDocument;
+            }
+        });
+
+        test("Showing the courses appear in the list", function(assert) {
+            var fakeCourse = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            fakeCourse.name = "Insert name";
+            fakeCourse.description = "Insert description";
+            var courseList = [fakeCourse];
+            CourseSketch.courseManagement.showCourses(courseList, FAKE_PAGE_DOCUMENT);
+            checkForSchoolItems(assert, FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").childNodes, 1);
+        });
+
+        QUnit.module("assignments", {
+            setup : function() {
+            },
+            teardown : function() {
+                if (CourseSketch.courseManagement.waitingIcon.isRunning()) {
+                    CourseSketch.courseManagement.waitingIcon.finishWaiting();
+                }
+                //FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").innerHTML = "";
+                //FAKE_PAGE_DOCUMENT.querySelector("#assignment_list_column").innerHTML = "";
+                //FAKE_PAGE_DOCUMENT.querySelector("#problem_list_column").innerHTML = "";
+                try {
+                    CourseSketch.courseManagement.restore();
+                } catch (exception) {
+
+                }
+                document = this.saveDocument;
+            }
+        });
+
+        test("course clicker makes an assignment", function(assert) {
+            // mocking setup
+            var fakeIdList = ["fakeId"];
+            var fakeAssignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            fakeAssignment.name = "assignment name";
+            fakeAssignment.description = "assignment name";
+            var assignmentList = [fakeAssignment];
+            CourseSketch.dataManager.getAssignments.withArgs(fakeIdList).callsArgWith(1, assignmentList);
+
+            // other setup
+            var fakeCourse = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            fakeCourse.name = "Insert name";
+            fakeCourse.description = "Insert description";
+            fakeCourse.assignmentList = fakeIdList;
+            var courseList = [fakeCourse];
+            CourseSketch.courseManagement.showCourses(courseList, FAKE_PAGE_DOCUMENT);
+            var courseElement = FAKE_PAGE_DOCUMENT.querySelector("#class_list_column school-item");
+
+            // actual running the test
+            simulate(courseElement, 'click');
+
+            // assertion
+            checkForSchoolItems(assert, FAKE_PAGE_DOCUMENT.querySelector("#assignment_list_column").childNodes, 1);
+        });
+
+    </script>
+</body>

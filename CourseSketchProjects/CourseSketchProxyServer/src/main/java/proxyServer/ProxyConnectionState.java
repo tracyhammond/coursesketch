@@ -4,8 +4,8 @@ import internalConnections.LoginConnectionState;
 
 public final class ProxyConnectionState extends LoginConnectionState {
 
-	private long lastActive;
-	public ProxyConnectionState(String key) {
+    private long lastActive;
+    public ProxyConnectionState(final String key) {
 		super(key);
 	}
 

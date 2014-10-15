@@ -57,66 +57,73 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         if (!isUndefined(localDocument)) {
             doc = localDocument;
         }
+
         var builder = new SchoolItemBuilder();
         builder.setList(courseList)
-        if (CourseSketch.dataManager.getState("isInstructor")) {
+        if (CourseSketch.connection.isInstructor) {
             builder.setInstructorCard(true);
         }
         builder.showImage = false;
-        builder.setBoxClickFunction(courseClickerFunction);
-        console.log(doc.querySelector('#class_list_column'));
+        builder.setBoxClickFunction(function(course) {
+            courseClickerFunction(course, doc)
+        });
         builder.build(doc.querySelector('#class_list_column'));
         clearLists(2, localDocument);
     };
 
     /**
-     * Called when a user clicks on a course school item.
-     * This then creates the list of assignments for that course and then displays them.
+     * Called when a user clicks on a course school item. This then creates the
+     * list of assignments for that course and then displays them.
      */
-    function courseClickerFunction(course) {
-        clearLists(2);
+    function courseClickerFunction(course, doc) {
+        clearLists(2, doc);
 
-        changeSelection(course.id, courseSelectionManager);
+        // note that query selector does not work on ids that start with a number.
+        changeSelection(doc.getElementById(course.id), courseSelectionManager);
         assignmentSelectionManager.clearAllSelectedItems();
         problemSelectionManager.clearAllSelectedItems();
 
         // waiting icon
-        document.querySelector('#assignment_list_column').appendChild(waitingIcon);
+        doc.querySelector('#assignment_list_column').appendChild(waitingIcon);
         waitingIcon.startWaiting();
 
+        function buildSchoolList(assignmentList) {
+            console.log(assignmentList);
+            var builder = new SchoolItemBuilder();
+            builder.setEmptyListMessage('There are no assignments for this course!');
+            if (assignmentList == "NONEXISTANT_VALUE") {
+                if (!course.getState().accessible) {
+                    builder
+                            .setEmptyListMessage('This course is currently not avialable. Please contact the instructor to let you view the assignments');
+                }
+                assignmentList = [];
+            }
+
+            builder.setList(assignmentList);
+            builder.showImage = false;
+
+            builder.setBoxClickFunction(function(assignment) {
+                assignmentClickerFunction(assignment, doc);
+            });
+            builder.build(doc.querySelector('#assignment_list_column'));
+            doc.querySelector('#assignment_list_column').appendChild(waitingIcon); // because it was probably removed
+            if (CourseSketch.dataManager.getState("isInstructor")) {
+                try {
+                    replaceEditContent('html/instructor/course_managment_frames/edit_course.html');
+                } catch (exception) {
+
+                }
+                showButton('assignment_button');
+            }
+        }
         // we can make this faster because we have the list of assignments
-        CourseSketch.dataManager
-                .getAssignments(
-                        course.assignmentList,
-                        function(assignmentList) {
-                            var builder = new SchoolItemBuilder();
-                            builder.setEmptyListMessage('There are no assignments for this course!');
-                            if (assignmentList == "NONEXISTANT_VALUE") {
-                                if (!course.getState().accessible) {
-                                    builder
-                                            .setEmptyListMessage('This course is currently not avialable. Please contact the instructor to let you view the assignments');
-                                }
-                                assignmentList = [];
-                            }
-
-                            builder.setList(assignmentList);
-                            builder.showImage = false;
-
-                            builder.setBoxClickFunction(assignmentClickerFunction);
-                            if (waitingIcon.isRunning()) {
-                                waitingIcon.finishWaiting(); // stops the
-                                // waiting icon
-                            }
-                            builder.build('assignment_list_column');
-                            if (CourseSketch.dataManager.getState("isInstructor")) {
-                                try {
-                                    replaceEditContent('html/instructor/course_managment_frames/edit_course.html');
-                                } catch (exception) {
-
-                                }
-                                showButton('assignment_button');
-                            }
-                        });
+        CourseSketch.dataManager.getAssignments(course.assignmentList, buildSchoolList, function(assignmentList) {
+            buildSchoolList(assignmentList);
+            if (waitingIcon.isRunning()) {
+                waitingIcon.finishWaiting(); // stops the
+                // waiting icon
+            }
+        });
     }
 
     function assignmentClickerFunction(assignment) {
@@ -283,12 +290,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     function replaceEditContent(src) {
 
         function onload(event) {
-            console.log(event);
             var toReplace = document.getElementById('editable_unit');
             removeAllChildren(toReplace);
             var link = event.srcElement;
             var content = link.import.querySelector("#iframeBody");
-            console.log(content);
             if (src && content) {
                 toReplace.appendChild(content.cloneNode(true));
             } else {
@@ -307,7 +312,6 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         try {
             loader.replaceFile(false, src, "html", onload, onerror, 'editable_import', 'editable_import');
         } catch (exception) {
-            // console.log(exception.stack);
             loader.loadFile(src, "html", onload, onerror, 'editable_import');
         }
     }
