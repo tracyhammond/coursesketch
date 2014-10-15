@@ -37,7 +37,7 @@ public class TimeManagerTest {
     @Test
     public void testSendClientTimeReturnsCorrectValue() {
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER);
-        Request req = TimeManager.serverSendTimeToClient();
+        final Request req = TimeManager.serverSendTimeToClient();
         assertEquals(TimeManager.SEND_TIME_TO_CLIENT_MSG, req.getResponseText());
         assertEquals(FIXED_TIME_SERVER, req.getMessageTime());
     }
@@ -45,10 +45,10 @@ public class TimeManagerTest {
     @Test
     public void testClientReceiveTimeDiffCorrectlyPartiallyNoLag() {
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER);
-        Request server = TimeManager.serverSendTimeToClient();
+        final Request server = TimeManager.serverSendTimeToClient();
         // the client now has a different time it should be off by 50
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT);
-        Request clientResponse = TimeManager.decodeRequest(server);
+        final Request clientResponse = TimeManager.decodeRequest(server);
         // we are assuming no lag for this test.
         assertEquals(FIXED_TIME_SERVER - FIXED_TIME_CLIENT, TimeManager.getPartialTimeDifference());
         assertEquals(FIXED_TIME_SERVER, clientResponse.getMessageTime());
@@ -58,13 +58,13 @@ public class TimeManagerTest {
     @Test
     public void testClientReceiveTimeDiffCorrectlyPartialOnlyLag() {
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER);
-        Request server = TimeManager.serverSendTimeToClient();
+        final Request server = TimeManager.serverSendTimeToClient();
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER + LAG);
-        Request clientResponse = TimeManager.decodeRequest(server);
+        final Request clientResponse = TimeManager.decodeRequest(server);
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER + LAG * 2);
-        Request lagResponse = TimeManager.decodeRequest(clientResponse);
+        final Request lagResponse = TimeManager.decodeRequest(clientResponse);
 
         assertEquals(LAG, lagResponse.getMessageTime());
         assertEquals(TimeManager.SEND_LATENCY_TO_CLIENT_MSG, lagResponse.getResponseText());
@@ -73,16 +73,16 @@ public class TimeManagerTest {
     @Test
     public void testClientReceiveTimeDiffCorrectlyCompleteOnlyLag() {
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER);
-        Request server = TimeManager.serverSendTimeToClient();
+        final Request server = TimeManager.serverSendTimeToClient();
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER + LAG);
-        Request clientResponse = TimeManager.decodeRequest(server);
+        final Request clientResponse = TimeManager.decodeRequest(server);
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER + LAG * 2);
-        Request lagResponse = TimeManager.decodeRequest(clientResponse);
+        final Request lagResponse = TimeManager.decodeRequest(clientResponse);
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER + LAG * 3);
-        Request finalResponse = TimeManager.decodeRequest(lagResponse);
+        final Request finalResponse = TimeManager.decodeRequest(lagResponse);
 
         // set time back to server time
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER);
@@ -95,16 +95,16 @@ public class TimeManagerTest {
     @Test
     public void testClientReceiveTimeDiffCorrectlyCompletelyNoLag() {
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER);
-        Request server = TimeManager.serverSendTimeToClient();
+        final Request server = TimeManager.serverSendTimeToClient();
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT);
-        Request clientResponse = TimeManager.decodeRequest(server);
+        final Request clientResponse = TimeManager.decodeRequest(server);
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER);
-        Request lagResponse = TimeManager.decodeRequest(clientResponse);
+        final Request lagResponse = TimeManager.decodeRequest(clientResponse);
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT);
-        Request finalResponse = TimeManager.decodeRequest(lagResponse);
+        final Request finalResponse = TimeManager.decodeRequest(lagResponse);
 
         // set time back to server time
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT);
@@ -117,16 +117,16 @@ public class TimeManagerTest {
     @Test
     public void testClientReceiveTimeDiffCorrectlyCompletely() {
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER);
-        Request server = TimeManager.serverSendTimeToClient();
+        final Request server = TimeManager.serverSendTimeToClient();
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT + LAG);
-        Request clientResponse = TimeManager.decodeRequest(server);
+        final Request clientResponse = TimeManager.decodeRequest(server);
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER  + LAG * 2);
-        Request lagResponse = TimeManager.decodeRequest(clientResponse);
+        final Request lagResponse = TimeManager.decodeRequest(clientResponse);
 
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT  + LAG * 3);
-        Request finalResponse = TimeManager.decodeRequest(lagResponse);
+        final Request finalResponse = TimeManager.decodeRequest(lagResponse);
 
         // set time back to server time
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT);
@@ -155,7 +155,7 @@ public class TimeManagerTest {
         TimeManager.setTimeEstablishedListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT);
                 assertEquals(FIXED_TIME_SERVER, TimeManager.getSystemTime());
                 TimeManager.getTotalTimeDifference();
