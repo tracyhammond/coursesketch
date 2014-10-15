@@ -6,7 +6,7 @@
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 
 <!-- files needed for testing -->
-<link rel="import" href="/src/utilities/includes/protobufInclude.html">
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
 <script src="/src/sketching/storage/commandMethods.js"></script>
 
 <!-- file being tested. -->
@@ -37,14 +37,14 @@
         QUnit.test("createMarker returns correct value", function(assert) {
             var update = new UpdateManager(undefined, undefined);
             var otherData = "data";
-            var markerObject = update.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, otherData);
-            assert.ok(markerObject instanceof PROTOBUF_UTIL.getSrlCommandClass(), "testing that command is an object of the correct protobuf type");
+            var markerObject = update.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, otherData);
+            assert.ok(markerObject instanceof CourseSketch.PROTOBUF_UTIL.getSrlCommandClass(), "testing that command is an object of the correct protobuf type");
             assert.equal(markerObject.isUserCreated, true, "testing input for userCreated matches");
-            assert.equal(markerObject.getCommandType(), PROTOBUF_UTIL.CommandType.MARKER, "testing input for commandType matches");
+            assert.equal(markerObject.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.MARKER, "testing input for commandType matches");
             assert.notEqual(markerObject.getCommandId(), null, "testing that the command Id is not null");
 
-            var markerData = PROTOBUF_UTIL.decodeProtobuf(markerObject.getCommandData(), PROTOBUF_UTIL.getMarkerClass());
-            assert.equal(markerData.type, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE);
+            var markerData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(markerObject.getCommandData(), CourseSketch.PROTOBUF_UTIL.getMarkerClass());
+            assert.equal(markerData.type, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE);
             assert.equal(markerData.otherData, otherData);
         });
 
@@ -53,21 +53,21 @@
                 assert.ok(false, error);
                 QUnit.start();
             });
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
             for (var i = 0; i < MinListNumber; i++) {
-                var SAVEObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
-                var SAVEUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
+                var SAVEObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
+                var SAVEUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
                 updateList.addUpdate(SAVEUpdate);
 
-                var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
-                var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+                var markerObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
                 updateList.addUpdate(update);
 
-                var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-                var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+                var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+                var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
                 updateList.addUpdate(assignUpdate);
             }
 
@@ -87,8 +87,8 @@
                 }
                 QUnit.start();
             });
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
         });
 
         QUnit.test("setUpdateList creates the updates in the correct order", function(assert) {
@@ -99,22 +99,22 @@
 
             var localUpdateList = new Array();
             for (var i = 0; i < MinListNumber; i++) {
-                var SAVEObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
-                var SAVEUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
+                var SAVEObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
+                var SAVEUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
                 localUpdateList.push(SAVEUpdate);
 
-                var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
-                var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+                var markerObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
                 localUpdateList.push(update);
 
-                var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-                var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+                var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+                var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
                 localUpdateList.push(assignUpdate);
             }
 
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
 
             updateList.setUpdateList(localUpdateList);
@@ -122,8 +122,8 @@
                 clock.tick(20);
             }
 
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             var listCallback = undefined;
             var listOne = updateList.getUpdateList();
             assert.deepEqual(listOne, localUpdateList);
@@ -139,22 +139,22 @@
 
             var localUpdateList = new Array();
             for (var i = 0; i < MinListNumber; i++) {
-                var SAVEObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
-                var SAVEUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
+                var SAVEObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
+                var SAVEUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
                 localUpdateList.push(SAVEUpdate);
 
-                var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
-                var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+                var markerObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
                 localUpdateList.push(update);
 
-                var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-                var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+                var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+                var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
                 localUpdateList.push(assignUpdate);
             }
 
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
 
             var percent = this.spy();
@@ -173,8 +173,8 @@
                 assert.ok(percent.calledWith(i, total));
             }
             assert.ok(percent.calledWith(1, 1));
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
 
             assert.ok(finished.calledOnce, "the percent bar finishes");
         });
@@ -207,8 +207,8 @@
 
             assert.equal(updateList.isLastUpdateSubmission(), false, "there are no submissions before the marker submission is added");
 
-            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
 
             assert.equal(updateList.isLastUpdateSubmission(), true, "afer marker is added the submission is the last update");
@@ -230,8 +230,8 @@
                 QUnit.start();
             });
 
-            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
 
             assert.equal(updateList.isValidForSubmission(), false, "afer marker is added the submission is the last update");
@@ -245,8 +245,8 @@
                 QUnit.start();
             });
 
-            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "pounded you to saving");
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "pounded you to saving");
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
 
             assert.equal(updateList.isValidForSubmission(), true, "afer marker is added the save is the last update");
@@ -277,7 +277,7 @@
                 assert.ok(error instanceof UpdateException, error);
             });
 
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([]);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([]);
             updateList.addUpdate(update);
         });
 
@@ -286,15 +286,15 @@
             var stub = this.stub();
             stub.returns(false); // we are not drawing.
 
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
             var updateList = new UpdateManager(this.sketch, function(error) {
                 assert.ok(false, error);
             });
-            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
             assert.ok(stub.calledOnce, "spy is called once");
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
         });
 
         QUnit.test("testing adding an update Marker.SUBMISSION after adding SAVE And test the last update is submission", function(assert) {
@@ -305,14 +305,14 @@
 
             assert.equal(updateList.isLastUpdateSubmission(), false, "there are no submissions before the marker submission is added");
 
-            var SAVEObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
+            var SAVEObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ SAVEObject ]);
             updateList.addUpdate(update);
 
             assert.equal(updateList.isLastUpdateSubmission(), false, "there are no submissions before the marker submission is added");
 
-            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
 
             assert.equal(updateList.isLastUpdateSubmission(), true, "afer marker is added the submission is the last update");
@@ -336,14 +336,14 @@
 
             stub.returns(secondSketch);
 
-            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
-            var sketchData = PROTOBUF_UTIL.ActionCreateSketch();
-            var idChain = PROTOBUF_UTIL.IdChain();
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var sketchData = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             var id = generateUUID();
             idChain.idChain = [ id ];
             sketchData.sketchId = idChain;
             command.setCommandData(sketchData.toArrayBuffer());
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             updateList.addUpdate(update);
 
             clock.tick(20);
@@ -370,12 +370,12 @@
 
             stub.returns(secondSketch);
 
-            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
-            var idChain = PROTOBUF_UTIL.IdChain();
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             var id = generateUUID();
             idChain.idChain = [ id ];
             command.setCommandData(idChain.toArrayBuffer());
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             updateList.addUpdate(update);
 
             clock.tick(20);
@@ -397,12 +397,12 @@
                 drawEntireSketch : spy2,
             };
 
-            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
-            var idChain = PROTOBUF_UTIL.IdChain();
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             var id = generateUUID();
             idChain.idChain = [ id ];
             command.setCommandData(idChain.toArrayBuffer());
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             updateList.addUpdate(update);
         });
     </script>
@@ -423,12 +423,12 @@
                 QUnit.start();
             });
 
-            var saveObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "Save the sketch!");
-            var saveUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ saveObject ]);
+            var saveObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "Save the sketch!");
+            var saveUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ saveObject ]);
             updateList.addUpdate(saveUpdate);
 
-            var markerObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
 
             var list = updateList.getUpdateList();
@@ -470,8 +470,8 @@
                 QUnit.start();
             });
 
-            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.REDO, false);
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.REDO, false);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
         });
 
@@ -483,8 +483,8 @@
 
             });
 
-            var undoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
-            var undoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+            var undoMarkerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
+            var undoUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
             updateList.addUpdate(undoUpdate);
         });
 
@@ -495,14 +495,14 @@
                 QUnit.start();
             });
 
-            var submissionObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
-            var subUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ submissionObject ]);
+            var submissionObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
+            var subUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ submissionObject ]);
             updateList.addUpdate(subUpdate);
 
             assert.equal(updateList.getCurrentPointer(), 1, "a single item means pointer is at 1");
 
-            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
 
             assert.equal(updateList.getCurrentPointer(), 0, "after undoing once the pointer should be at zero");
@@ -518,24 +518,24 @@
 
             var stub = this.stub();
             stub.returns(false); // we are not drawing.
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
-            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
+            var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
             updateList.addUpdate(assignUpdate);
 
             assert.equal(updateList.getCurrentPointer(), 1, "a single item means pointer is at 1");
 
-            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
 
             assert.equal(updateList.getCurrentPointer(), 0, "after undoing once the pointer should be at zero");
             assert.ok(stub.calledOnce, "Undo method for the assign should be called once");
 
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             QUnit.start();
         });
 
@@ -548,24 +548,24 @@
 
             });
 
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
             });
-            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
             updateList.addUpdate(assignUpdate);
 
-            var markerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+            var markerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
             updateList.addUpdate(update);
 
-            var undoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
-            var undoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+            var undoMarkerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
+            var undoUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
             updateList.addUpdate(undoUpdate);
 
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
         });
 
         QUnit.asyncTest("a single undo then redo", function(assert) {
@@ -580,31 +580,31 @@
 
             var redoStub = this.stub();
             redoStub.returns(false); // we are not drawing.
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
-            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
+            var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
             updateList.addUpdate(assignUpdate);
 
             assert.equal(updateList.getCurrentPointer(), 1, "a single item means pointer is at 1");
             assert.ok(redoStub.calledOnce, "Redo should be called once");
 
-            var undoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
-            var undoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+            var undoMarkerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
+            var undoUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
             updateList.addUpdate(undoUpdate);
 
             assert.equal(updateList.getCurrentPointer(), 0, "after undoing once the pointer should be at zero");
             assert.ok(undoStub.calledOnce, "Undo method for the assign should be called once");
 
-            var undoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.REDO, false);
-            var undoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+            var undoMarkerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.REDO, false);
+            var undoUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
             updateList.addUpdate(undoUpdate);
 
             assert.equal(updateList.getCurrentPointer(), 1, "after undoing once the pointer should be at zero");
             assert.ok(redoStub.calledTwice, "redo method for the assign should be called a second time");
 
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             QUnit.start();
         });
 
@@ -620,10 +620,10 @@
 
             var redoStub = this.stub();
             redoStub.returns(false); // we are not drawing.
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
-            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
+            var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
             updateList.addUpdate(assignUpdate);
 
             assert.equal(updateList.getCurrentPointer(), 1, "a single item means pointer is at 1");
@@ -639,8 +639,8 @@
             assert.equal(updateList.getCurrentPointer(), 1, "after undoing once the pointer should be at zero");
             assert.ok(redoStub.calledTwice, "redo method for the assign should be called a second time");
 
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             QUnit.start();
         });
 
@@ -656,32 +656,32 @@
 
             var redoStub = this.stub();
             redoStub.returns(false); // we are not drawing.
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
-            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
+            var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
             updateList.addUpdate(assignUpdate);
 
             updateList.undoAction(false);
 
             updateList.redoAction(false);
 
-            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
             updateList.addUpdate(assignUpdate);
 
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
 
             var updateList = updateList.getUpdateList();
             console.log(updateList);
             assert.equal(6, updateList.length);
-            assert.equal(updateList[0].commands[0].commandType, PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            assert.equal(updateList[1].commands[0].commandType, PROTOBUF_UTIL.CommandType.MARKER);
-            assert.equal(updateList[2].commands[0].commandType, PROTOBUF_UTIL.CommandType.UNDO);
-            assert.equal(updateList[3].commands[0].commandType, PROTOBUF_UTIL.CommandType.REDO);
-            assert.equal(updateList[4].commands[0].commandType, PROTOBUF_UTIL.CommandType.MARKER);
-            assert.equal(updateList[5].commands[0].commandType, PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            assert.equal(updateList[0].commands[0].commandType, CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            assert.equal(updateList[1].commands[0].commandType, CourseSketch.PROTOBUF_UTIL.CommandType.MARKER);
+            assert.equal(updateList[2].commands[0].commandType, CourseSketch.PROTOBUF_UTIL.CommandType.UNDO);
+            assert.equal(updateList[3].commands[0].commandType, CourseSketch.PROTOBUF_UTIL.CommandType.REDO);
+            assert.equal(updateList[4].commands[0].commandType, CourseSketch.PROTOBUF_UTIL.CommandType.MARKER);
+            assert.equal(updateList[5].commands[0].commandType, CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             QUnit.start();
         });
 
@@ -704,14 +704,14 @@
 
             stub1.returns(secondSketch);
 
-            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
-            var sketchData = PROTOBUF_UTIL.ActionCreateSketch();
-            var idChain = PROTOBUF_UTIL.IdChain();
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var sketchData = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             var id = generateUUID();
             idChain.idChain = [ id ];
             sketchData.sketchId = idChain;
             command.setCommandData(sketchData.toArrayBuffer());
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             updateList.addUpdate(update);
 
             clock.tick(10);
@@ -745,12 +745,12 @@
 
             stub.returns(secondSketch);
 
-            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
-            var idChain = PROTOBUF_UTIL.IdChain();
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             var id = generateUUID();
             idChain.idChain = [ id ];
             command.setCommandData(idChain.toArrayBuffer());
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             updateList.addUpdate(update);
 
             clock.tick(10);
@@ -781,8 +781,8 @@
                 QUnit.start();
             });
 
-            var startSplitObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "1");
-            var startSplitUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ startSplitObject ]);
+            var startSplitObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "1");
+            var startSplitUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ startSplitObject ]);
             updateList.addUpdate(startSplitUpdate);
 
             var undoStub = this.stub();
@@ -790,20 +790,20 @@
 
             var redoStub = this.stub();
             redoStub.returns(false); // we are not drawing.
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
-            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
+            var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
             updateList.addUpdate(assignUpdate);
 
-            var endSplitObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "-1");
-            var endSplitUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ endSplitObject ]);
+            var endSplitObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "-1");
+            var endSplitUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ endSplitObject ]);
             updateList.addUpdate(endSplitUpdate);
 
             sinon.assert.notCalled(redoStub);
             sinon.assert.notCalled(undoStub);
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             QUnit.start();
         });
 
@@ -823,8 +823,8 @@
                 QUnit.start();
             });
 
-            var startSplitObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "1");
-            var startSplitUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ startSplitObject ]);
+            var startSplitObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "1");
+            var startSplitUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ startSplitObject ]);
             updateList.addUpdate(startSplitUpdate);
 
             var undoStub = this.stub();
@@ -832,32 +832,32 @@
 
             var redoStub = this.stub();
             redoStub.returns(false); // we are not drawing.
-            PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
-            PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
-            var assignAt = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-            var assignUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, redoStub);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, undoStub);
+            var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
             updateList.addUpdate(assignUpdate);
 
-            var endSplitObject = updateList.createMarker(true, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "-1");
-            var endSplitUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ endSplitObject ]);
+            var endSplitObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "-1");
+            var endSplitUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ endSplitObject ]);
             updateList.addUpdate(endSplitUpdate);
 
-            var undoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, false);
-            var undoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+            var undoMarkerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
+            var undoUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
             updateList.addUpdate(undoUpdate);
 
             assert.equal(updateList.getCurrentPointer(), 0);
 
-            var redoMarkerObject = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.REDO, false);
-            var redoUpdate = PROTOBUF_UTIL.createUpdateFromCommands([ redoMarkerObject ]);
+            var redoMarkerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.REDO, false);
+            var redoUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ redoMarkerObject ]);
             updateList.addUpdate(redoUpdate);
 
             assert.equal(updateList.getCurrentPointer(), updateList.getListLength() - 2);
 
             sinon.assert.notCalled(redoStub);
             sinon.assert.notCalled(undoStub);
-            PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
-            PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             QUnit.start();
         });
     </script>
