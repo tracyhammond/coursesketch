@@ -26,13 +26,18 @@ handlers:
   static_dir: src/js
 
 - url: /css
-  static_dir: src/css
+  static_dir: src/main/resources/css
+
+- url: /src/test/src
+  static_dir: src/test/src
+  application_readable: true
 
 - url: /src
   static_dir: src/main/src
 
 - url: /test
   static_dir: src/test/src
+  application_readable: true
 
 
 - url: /images
