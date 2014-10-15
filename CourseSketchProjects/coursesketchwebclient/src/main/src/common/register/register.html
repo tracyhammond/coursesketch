@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+ <html>
+    <head>
+        <meta charset="utf-8">
+        <base href="../../">
+        <title>Course Sketch</title>
+        <script type="text/javascript" src="js/connection/libraries/Long.min.js"></script>
+		<script type="text/javascript" src="js/connection/libraries/ByteBuffer.min.js"></script>
+		<script type="text/javascript" src="js/connection/libraries/Protobuf.min.js"></script>
+        <script type="text/javascript" src="js/connection/connection_library.js"></script>
+    	<script type="text/javascript" src="js/utils/loadingManager.js"></script>
+    	<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"
+    	onerror = "loader.replaceFile('sha3.js', 'js/connection/libraries/crypto.js', 'js');"></script>
+    	<link rel="stylesheet" href="css/utility/toggleswitch.css">
+    	<link rel="stylesheet" href="css/inputStyles/style1.css">
+        <link rel="stylesheet" type="text/css" href="css/login/introForms.css" />
+       <link rel="icon" 
+            type="image/ico" 
+            href="/images/CSpencil.ico" />   
+		<script type='text/javascript'>
+			//called when login button is pressed
+			parent.copyParentUtilityFunctions(this);
+            function formSubmit() {
+				function sendLogin(arg1, arg2, email , isInstructor) {
+					if (!parent.connected) {
+						alert("The server has not yet opened a connection, please be patient");
+						return;
+					}
+	  				var request = new Request(parent.Request.MessageType.LOGIN);
+	  				var loginInfo = new LoginInformation(arg1, CryptoJS.SHA3(arg2), false, isInstructor, true, email);
+	  				request.login = loginInfo;
+	  				connection.sendRequest(request);
+	  				console.log("Sending register information");
+	  			}
+				var p1 = document.getElementById("password1").value;
+				var p2 = document.getElementById("password2").value;
+				var use = document.getElementById("username").value;
+				if (p1 != p2) {
+					alert("The passwords must match");
+					return;
+				}
+				sendLogin(use, p1, document.getElementById("email").value, document.getElementById("myonoffswitch").checked);
+            }
+
+            function setup() {
+            	connection = parent.connection;
+            	parent.copyParentProtos(this);
+	  			function onOpen(evt) {
+	  				console.log("Opened here which means something bad happened");
+	  				parent.connected = true;
+	  			}
+
+	  			function onClose(evt, attemptingToReconnect) {
+	  				// logout.
+	  				if (evt.code == CONNECTION_LOST) {
+	  					if (!attemptingToReconnect) {
+	  						alert('can not connect to the server');
+	  					}
+	  				} else if (evt.code == SERVER_FULL) {
+	  					if (!attemptingToReconnect) {
+	  						alert(evt.reason);
+	  					}
+	  				} else if (evt.code == INCORRECT_LOGIN) {
+	  					alert(evt.reason);
+	  					return false;
+	  				}
+	  				if (!attemptingToReconnect) {
+	  					alert("Closing");
+	  				}
+	  			}
+
+	  			function onLogin(evt, message) {
+	  				console.log(evt);
+	  				console.log(message);
+	  				console.log(message.login);
+	  				if (message.login.isLoggedIn) {
+	  					// Redirect to main.html
+	  					connection.isInstructor = message.login.isInstructor;
+	  					//window.location.href = ("/main.html");
+	  					parent.redirector.moveWindow("html/main.html");
+	  					console.log("Redirecting to the other window");
+	  				} else {
+	  					alert("not able to login: " + message.responseText);
+	  				}
+	  			}
+
+	  			function onError(evt, error) {
+	  				// through an uhoh oreo.
+	  				//alert('OMG AN ERROR ' + error);
+	  			}
+	  			connection.setListeners(onOpen, onClose, false, onError);
+	  			connection.setLoginListener(onLogin);
+	  		}
+	  		var connection = false;
+	  		
+	  		function cancel() {
+	  			parent.redirector.moveWindow("html/login/login.html");
+	  		}
+        </script>
+    </head>
+    <body onload="setup();">
+        <div class="container">
+           <section id="content"> 
+                <h1>Registration</h1>
+                <div id="errorMessage">
+                </div>
+                <div id="form">
+                    <!-- Form with 5 values, 2 text fields, 1 email field, 2 password fields. 
+                             Email field checked for .edu email Rest call function to check for value. Passwords check for equal value.
+                             Redirects on success -->
+                    <form name="registration" action="Javascript:formSubmit()">
+                        <input type="text" id="username" placeholder="Username" required="" name="username"><br />                        
+                        <input type="email" id="email" placeholder="Email Address" required="" name="email"><br />
+                        <input type="password" id="password1" placeholder="password" required="" autocomplete="off" name="password1"><br />
+                        <input type="password" id="password2" placeholder="confirm password" required="" autocomplete="off" name="password2"><br />
+                        <div class="onoffswitch">
+						    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+						    <label class="onoffswitch-label" for="myonoffswitch">
+						        <div class="onoffswitch-inner"></div>
+						        <div class="onoffswitch-switch"></div>
+						    </label>
+						</div>
+                        <input type="submit" value="submit">
+                        <input type="submit" value="cancel" onclick="cancel()">
+                    </form>
+                </div>
+            </section>
+        </div>
+    </body>
+</html>

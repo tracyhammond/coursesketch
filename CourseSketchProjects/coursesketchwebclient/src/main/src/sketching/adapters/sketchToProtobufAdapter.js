@@ -3,7 +3,7 @@
      * Creates an SRL prtobuf version of a point
      */
     SRL_Point.prototype.sendToProtobuf = function(scope) {
-        var proto = PROTOBUF_UTIL.ProtoSrlPoint();
+        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
         proto.id = this.getId();
         var n = this.getTime();
         proto.setTime("" + n);
@@ -40,7 +40,7 @@
      */
     SRL_Stroke.prototype.sendToProtobuf = function(scope) {
         var Long = scope.dcodeIO.Long || dcodeIO.Long;
-        var proto = PROTOBUF_UTIL.ProtoSrlStroke();
+        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
         proto.id = this.getId();
         var n = this.getTime();
         proto.setTime("" + n);
@@ -77,7 +77,7 @@
      * Creates an SRL protobuf version of a shape.
      */
     SRL_Shape.prototype.sendToProtobuf = function(scope) {
-        var proto = PROTOBUF_UTIL.ProtoSrlShape();
+        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlShape();
 
         var interpretations = this.getInterpretations();
         var protoInterp = new Array();
@@ -125,7 +125,7 @@
      * Creates an SRL protobuf version of an Interpretation.
      */
     SRL_Interpretation.prototype.sendToProtobuf = function(scope) {
-        var proto = PROTOBUF_UTIL.ProtoSrlInterpretation();
+        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlInterpretation();
         proto.label = this.label;
         proto.confidence = this.confidence;
         proto.complexity = this.complexity;
@@ -158,7 +158,7 @@
     }
 
     function encodeSrlObject(scope, object) {
-        var proto = PROTOBUF_UTIL.ProtoSrlIbject();
+        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlIbject();
 
         if (object.check_type() == SRL_ShapeType) {
             proto.type = SrlObject.ObjectType.SHAPE;
