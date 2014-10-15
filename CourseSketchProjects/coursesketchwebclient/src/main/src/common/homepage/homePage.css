@@ -1,0 +1,18 @@
+.fullScreenColumn {
+	height:calc(100vh - 3.75em - 5px);
+}
+
+h2 {
+	margin-top:0.5em;
+	margin-bottom:0.5em;
+	font-size:1.5em;
+	line-height: 1.5em;
+}
+
+.wide_centre > div {
+	height:100vh;
+}
+
+.columnContainer {
+	display:flex;
+}

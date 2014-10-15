@@ -1,0 +1,213 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Protobuf Creation Test</title>
+
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/utilities/connection/protobufLoader.js" data-cover></script>
+
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script>
+        QUnit.module("startup");
+        test("test that a new object can be created", function(assert) {
+            new ProtobufSetup();
+            assert.ok(true);
+        });
+        test("test that a new object can be created and initialized", function(assert) {
+            var localStuff = new ProtobufSetup();
+            localStuff.initializeBuf();
+            assert.ok(true);
+        });
+
+        test("test that all objects have only read only methods (before initialized)", function(assert) {
+            var localStuff = new ProtobufSetup();
+            var fakeFunction = function() {
+            };
+            for (obj in localStuff) {
+                try {
+                    var beforeFunc = localStuff[obj];
+                    localStuff[obj] = fakeFunction;
+                    assert.equal(localStuff[obj], beforeFunc, "Function should not change for " + obj);
+                    assert.notEqual(localStuff[obj], fakeFunction, "current function should not equal my new function for " + obj);
+                } catch (exception) {
+                    console.error(exception);
+                }
+            }
+        });
+
+        QUnit.module("lists", {
+            PROTOBUF_UTIL : new ProtobufSetup().initializeBuf(),
+        });
+
+        test("protobuf contains a list of supported objects", function(assert) {
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            assert.ok(this.PROTOBUF_UTIL.getSupportedObjects().length > 0, "List contains " + this.PROTOBUF_UTIL.getSupportedObjects().length
+                    + " elements");
+        });
+
+        test("protobuf contains a list of supported enums", function(assert) {
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            assert.ok(this.PROTOBUF_UTIL.getSupportedEnums().length > 0, "List contains " + this.PROTOBUF_UTIL.getSupportedEnums().length
+                    + " elements");
+        });
+
+        /* Also tests that the default PROTOBUF_UTIL actually works as it is supposed to. */
+        QUnit.module("proto Objects");
+
+        test("protobuf correctly creates object with no arguments Using standard util", function(assert) {
+            var array = CourseSketch.PROTOBUF_UTIL.getSupportedObjects();
+            for (var i = 0; i < array.length; i++) {
+                var object = array[i];
+                var object = CourseSketch.PROTOBUF_UTIL[object]();
+            }
+            ok(true);
+
+        });
+
+        test("protobuf throws exception when object is called with arguments", function(assert) {
+            var array = CourseSketch.PROTOBUF_UTIL.getSupportedObjects();
+            for (var i = 0; i < array.length; i++) {
+                var object = array[i];
+                var spy = this.spy(CourseSketch.PROTOBUF_UTIL, object);
+                try {
+                    spy("arg1");
+                } catch (exception) {
+                }
+                assert.ok(spy.threw("ProtobufException"));
+            }
+        });
+
+        test("protobuf correctly creates object with no arguments", function(assert) {
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var array = this.PROTOBUF_UTIL.getSupportedObjects();
+            for (var i = 0; i < array.length; i++) {
+                var object = array[i];
+                var object = this.PROTOBUF_UTIL[object]();
+            }
+            ok(true);
+
+        });
+
+        test("protobuf throws exception when object is called with arguments", function(assert) {
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var array = this.PROTOBUF_UTIL.getSupportedObjects();
+            for (var i = 0; i < array.length; i++) {
+                var object = array[i];
+                var spy = this.spy(this.PROTOBUF_UTIL, object);
+                try {
+                    spy("arg1");
+                } catch (exception) {
+                }
+                assert.ok(spy.threw("ProtobufException"));
+            }
+        });
+
+        QUnit.module("converters", {
+            PROTOBUF_UTIL : new ProtobufSetup().initializeBuf(),
+        });
+        QUnit.test("createBaseCommand", function(assert) {
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            assert.equal(command.getCommandType(), this.PROTOBUF_UTIL.CommandType.ADD_STROKE);
+            assert.equal(command.isUserCreated, false);
+            assert.notEqual(command.getCommandId, null);
+        });
+
+        QUnit.test("createUpdateFromCommands", function(assert) {
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            var update = this.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            assert.notEqual(update.getUpdateId(), null);
+            assert.notEqual(update.getTime(), null);
+            assert.equal(update.getCommands()[0], command);
+        });
+
+        test("createUpdateFromCommands throws exception when not array is given", function(assert) {
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            var spy = this.spy(this.PROTOBUF_UTIL.createUpdateFromCommands);
+            try {
+                spy(command);
+            } catch (error) {
+            }
+            assert.ok(spy.threw("TypeError"));
+        });
+        QUnit.test("createRequestFromUpdate", function(assert) {
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            var update = this.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+
+            var request = this.PROTOBUF_UTIL.createRequestFromUpdate(update, this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+            assert.equal(request.getRequestType(), this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+            // TODO: add an assert to compare the buffer data decoded to the update to make sure that part is correct.
+
+        });
+
+        QUnit.test("createRequestFromUpdate fails when invalid type is given", function(assert) {
+
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+
+            var request = this.PROTOBUF_UTIL.createRequestFromUpdate;
+            var spy = this.spy(this.PROTOBUF_UTIL.createRequestFromUpdate);
+            try {
+                spy([ command ], this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+            } catch (exception) {
+
+            }
+            assert.ok(spy.threw("TypeError"));
+        });
+
+        QUnit.test("createRequestFromCommands", function(assert) {
+
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+
+            var request = this.PROTOBUF_UTIL.createRequestFromCommands([ command ], this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+            assert.equal(request.getRequestType(), this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+        });
+    </script>
+	<script>
+        QUnit.module("encode/decode", {
+            PROTOBUF_UTIL : new ProtobufSetup().initializeBuf(),
+        });
+        QUnit.test("decoding a protobuf works", function(assert) {
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf();
+            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            var data = command.encode();
+            var result = this.PROTOBUF_UTIL.decodeProtobuf(data, this.PROTOBUF_UTIL.getSrlCommandClass());
+            assert.deepEqual(command, result);
+        });
+        QUnit.test("decoding a protobuf throws errors when needed", function(assert) {
+
+            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf();
+            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            var exceptionString = "Exception"
+            var data = command.encode();
+
+            // set up mock
+            this.stub(data, "mark").throws(exceptionString);
+            this.stub(data, "reset").throws(exceptionString);
+
+            var spy = this.spy();
+            spy.withArgs(exceptionString);
+            
+            console.log(spy);
+
+            // method being tested
+            this.PROTOBUF_UTIL.decodeProtobuf(data, this.PROTOBUF_UTIL.getSrlCommandClass(), spy);
+
+            assert.equal(spy.callCount, 2);
+        });
+    </script>
+</body>
+</html>
