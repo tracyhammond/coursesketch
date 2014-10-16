@@ -25,3 +25,6 @@ target/
 .checkstyle
 .pydevproject
 *.pydevproject
+.idea/*
+
+*.iml
