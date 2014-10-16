@@ -8,9 +8,11 @@ import static database.DatabaseStringConstants.USER_COLLECTION;
 import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
 import static database.DatabaseStringConstants.USER_LIST;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import multiconnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
@@ -73,7 +75,15 @@ public final class MongoInstitution implements Institution {
      *            The location that the server is taking place.
      */
     private MongoInstitution(final String url) {
-        final MongoClient mongoClient = new MongoClient(url);
+        MongoClient mongoClient = null;
+        try {
+            mongoClient = new MongoClient(url);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        if (mongoClient == null) {
+            return;
+        }
         database = mongoClient.getDB(DATABASE);
     }
 
@@ -119,7 +129,15 @@ public final class MongoInstitution implements Institution {
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
-            final MongoClient mongoClient = new MongoClient("localhost");
+            MongoClient mongoClient = null;
+            try {
+                mongoClient = new MongoClient("localhost");
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            if (mongoClient == null) {
+                return;
+            }
             if (testOnly) {
                 database = mongoClient.getDB("test");
             } else {
@@ -244,7 +262,7 @@ public final class MongoInstitution implements Institution {
      * @see database.institution.mongo.Institution#getAllPublicCourses()
      */
     @Override
-    public ArrayList<SrlCourse> getAllPublicCourses() {
+    public List<SrlCourse> getAllPublicCourses() {
         return CourseManager.mongoGetAllPublicCourses(getInstance().database);
     }
 
@@ -323,7 +341,7 @@ public final class MongoInstitution implements Institution {
     public String insertAssignment(final String userId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         final String resultId = AssignmentManager.mongoInsertAssignment(getInstance().auth, getInstance().database, userId, assignment);
 
-        final ArrayList<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().database, assignment.getCourseId());
+        final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().database, assignment.getCourseId());
         AssignmentManager.mongoInsertDefaultGroupId(getInstance().database, resultId, ids);
 
         return resultId;
@@ -340,7 +358,7 @@ public final class MongoInstitution implements Institution {
     public String insertCourseProblem(final String userId, final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         final String resultId = CourseProblemManager.mongoInsertCourseProblem(getInstance().auth, getInstance().database, userId, problem);
 
-        final ArrayList<String>[] ids = AssignmentManager.mongoGetDefaultGroupId(getInstance().database, problem.getAssignmentId());
+        final List<String>[] ids = AssignmentManager.mongoGetDefaultGroupId(getInstance().database, problem.getAssignmentId());
         CourseProblemManager.mongoInsertDefaultGroupId(getInstance().database, resultId, ids);
         return resultId;
     }
@@ -412,10 +430,10 @@ public final class MongoInstitution implements Institution {
             final SrlExperiment exp = SrlExperiment.parseFrom(req.getOtherData());
             insertSubmission(exp.getProblemId(), req.getServersideId(), exp.getSubmission().getId(), true);
             return;
-        } catch (ParseException e) {
+        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
-            // FUTURE: change how this process works for instructors!
+        // FUTURE: change how this process works for instructors!
             //final SrlSolution exp = SrlSolution.parseFrom(req.getOtherData());
             throw new DatabaseAccessException("Instructors need to be authenticated first!");
             // SubmissionManager.mongoInsertSubmission(exp.getProblemBankId(),
@@ -461,7 +479,7 @@ public final class MongoInstitution implements Institution {
      */
     @Override
     public void getExperimentAsInstructor(final String userId, final String problemId, final String sessionInfo,
-            final MultiConnectionManager internalConnections, final ByteString review) {
+            final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
                 internalConnections, review);
     }

@@ -12,6 +12,9 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 
+import java.net.UnknownHostException;
+import java.util.List;
+
 /**
  * A client for all user data.  This has its own database and instance.
  * @author gigemjt
@@ -35,7 +38,15 @@ public final class UserClient {
      * @param url The url is the location of the server.
      */
     private UserClient(final String url) {
-        final MongoClient mongoClient = new MongoClient(url);
+        MongoClient mongoClient = null;
+        try {
+            mongoClient = new MongoClient(url);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        if (mongoClient == null) {
+            return;
+        }
         database = mongoClient.getDB(DATABASE);
     }
 
@@ -78,7 +89,15 @@ public final class UserClient {
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
-            final MongoClient mongoClient = new MongoClient("localhost");
+            MongoClient mongoClient = null;
+            try {
+                mongoClient = new MongoClient("localhost");
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            if (mongoClient == null) {
+                return;
+            }
             if (testOnly) {
                 database = mongoClient.getDB("test");
             } else {

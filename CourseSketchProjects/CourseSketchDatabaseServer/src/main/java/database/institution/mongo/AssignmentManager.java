@@ -140,9 +140,9 @@ public final class AssignmentManager {
         }
 
         boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (List<Object>) corsor.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (List<Object>) corsor.get(MOD));
-        isUsers = authenticator.checkAuthentication(userId, (List<Object>) corsor.get(USERS));
+        isAdmin = authenticator.checkAuthentication(userId, (List<String>) corsor.get(ADMIN));
+        isMod = authenticator.checkAuthentication(userId, (List<String>) corsor.get(MOD));
+        isUsers = authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
 
         if (!isAdmin && !isMod && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -181,7 +181,7 @@ public final class AssignmentManager {
         // sets the majority of the assignment data
         setAssignmentData(exactAssignment, corsor);
 
-        setAssignmentStateAndDate(exactAssignment, stateBuilder, corsor, isAdmin, isMod);
+        setAssignmentStateAndDate(exactAssignment, stateBuilder, corsor, isAdmin, isMod, checkTime);
 
         if (corsor.get(IMAGE) != null) {
             exactAssignment.setImageUrl((String) corsor.get(IMAGE));
@@ -225,7 +225,7 @@ public final class AssignmentManager {
      * @param corsor
      *            The database cursor pointing to a specific assignment.
      */
-    private void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject corsor) {
+    private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject corsor) {
         exactAssignment.setCourseId((String) corsor.get(COURSE_ID));
         exactAssignment.setName((String) corsor.get(NAME));
         exactAssignment.setType(SrlAssignment.AssignmentType.valueOf((Integer) corsor.get(ASSIGNMENT_TYPE)));
@@ -245,12 +245,14 @@ public final class AssignmentManager {
      * @param corsor
      *            the current database pointer for the assignment.
      * @param isAdmin
-     *            true if the user is acting as an admin
+     *            true if the user is acting as an admin.
      * @param isMod
-     *            true if the user is acting as a moderator
+     *            true if the user is acting as a moderator.
+     * @param checkTime
+     *            the time that the check was performed.
      */
-    private void setAssignmentStateAndDate(final SrlAssignment.Builder exactAssignment, final State.Builder stateBuilder, final DBObject corsor,
-            final boolean isAdmin, final boolean isMod) {
+    private static void setAssignmentStateAndDate(final SrlAssignment.Builder exactAssignment, final State.Builder stateBuilder,
+            final DBObject corsor, final boolean isAdmin, final boolean isMod, final long checkTime) {
         if (isAdmin || isMod) {
             final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
             latePolicy.setFunctionType(SrlAssignment.LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
