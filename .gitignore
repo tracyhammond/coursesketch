@@ -26,5 +26,8 @@ target/
 .pydevproject
 *.pydevproject
 .idea/*
+*/.idea/*
+*.idea/*
+.idea
 
 *.iml
