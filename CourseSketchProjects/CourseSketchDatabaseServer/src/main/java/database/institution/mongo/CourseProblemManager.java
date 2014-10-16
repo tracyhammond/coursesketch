@@ -13,6 +13,7 @@ import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.PROBLEM_NUMBER;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 
@@ -42,7 +43,14 @@ import database.auth.Authenticator.AuthType;
  * Manages course problems for the mongo database.
  * @author gigemjt
  */
-public class CourseProblemManager {
+public final class CourseProblemManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private CourseProblemManager() {
+    }
 
     /**
      * @param authenticator the object that is performing authentication.
@@ -137,20 +145,14 @@ public class CourseProblemManager {
         // FUTURE: add this to all fields!
         // A course is only publishable after a certain criteria is met
         if (corsor.containsField(STATE_PUBLISHED)) {
-            try {
-                final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
-                if (published) {
-                    stateBuilder.setPublished(true);
-                } else {
-                    if (!isAdmin || !isMod) {
-                        throw new DatabaseAccessException("The specific course problem is not published yet", true);
-                    }
-                    stateBuilder.setPublished(false);
+            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
+            if (published) {
+                stateBuilder.setPublished(true);
+            } else {
+                if (!isAdmin || !isMod) {
+                    throw new DatabaseAccessException("The specific course problem is not published yet", true);
                 }
-            } catch (DatabaseAccessException e) {
-                throw e;
-            } catch (Exception e) {
-                e.printStackTrace();
+                stateBuilder.setPublished(false);
             }
         }
 
@@ -207,11 +209,11 @@ public class CourseProblemManager {
         final BasicDBObject updated = new BasicDBObject();
         if (isAdmin || isMod) {
             if (problem.hasGradeWeight()) {
-                updated.append("$set", new BasicDBObject(GRADE_WEIGHT, problem.getGradeWeight()));
+                updated.append(SET_COMMAND, new BasicDBObject(GRADE_WEIGHT, problem.getGradeWeight()));
                 update = true;
             }
             if (problem.hasProblemBankId()) {
-                updated.append("$set", new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId()));
+                updated.append(SET_COMMAND, new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId()));
                 update = true;
             }
             // Optimization: have something to do with pulling values of an
@@ -221,14 +223,14 @@ public class CourseProblemManager {
                 if (isAdmin) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
-                        updated.append("$set", new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+                        updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
                     }
                     if (permissions.getModeratorPermissionCount() > 0) {
-                        updated.append("$set", new BasicDBObject(MOD, permissions.getModeratorPermissionList()));
+                        updated.append(SET_COMMAND, new BasicDBObject(MOD, permissions.getModeratorPermissionList()));
                     }
                 }
                 if (permissions.getUserPermissionCount() > 0) {
-                    updated.append("$set", new BasicDBObject(USERS, permissions.getUserPermissionList()));
+                    updated.append(SET_COMMAND, new BasicDBObject(USERS, permissions.getUserPermissionList()));
                 }
             }
         }
@@ -248,7 +250,7 @@ public class CourseProblemManager {
      * @param courseProblemId the problem that the group is being inserted into.
      * @param ids the list of id groupings that contain the ids being copied over.
      */
-    static void mongoInsertDefaultGroupId(final DB dbs, final String courseProblemId, final ArrayList<String>[] ids) {
+    static void mongoInsertDefaultGroupId(final DB dbs, final String courseProblemId, final List<String>[] ids) {
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(courseProblemId));
         final DBObject corsor = myDbRef.fetch();
         final DBCollection problems = dbs.getCollection(COURSE_PROBLEM_COLLECTION);

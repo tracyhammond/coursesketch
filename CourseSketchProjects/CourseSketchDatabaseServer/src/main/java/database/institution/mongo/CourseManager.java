@@ -15,6 +15,7 @@ import static database.DatabaseStringConstants.MOD_GROUP_ID;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PERMISSION_LEVELS;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
@@ -46,7 +47,14 @@ import database.auth.Authenticator;
  * @author gigemjt
  *
  */
-public class CourseManager {
+public final class CourseManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private CourseManager() {
+    }
 
     /**
      *
@@ -130,21 +138,15 @@ public class CourseManager {
         // FUTURE: add this to all fields!
         // A course is only publishable after a certain criteria is met
         if (corsor.containsField(STATE_PUBLISHED)) {
-            try {
-                final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
-                if (published) {
-                    stateBuilder.setPublished(true);
+            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
+            if (published) {
+                stateBuilder.setPublished(true);
+            } else {
+                if (!isAdmin || !isMod) {
+                    throw new DatabaseAccessException("The specific course is not published yet", true);
                 } else {
-                    if (!isAdmin || !isMod) {
-                        throw new DatabaseAccessException("The specific course is not published yet", true);
-                    } else {
-                        stateBuilder.setPublished(false);
-                    }
+                    stateBuilder.setPublished(false);
                 }
-            } catch (DatabaseAccessException e) {
-                throw e;
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
 
@@ -169,11 +171,7 @@ public class CourseManager {
         exactCourse.setState(stateBuilder);
 
         if (isAdmin) {
-            try {
-                exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) corsor.get(COURSE_ACCESS))); // admin
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) corsor.get(COURSE_ACCESS))); // admin
             final SrlPermission.Builder permissions = SrlPermission.newBuilder();
             permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
             permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
@@ -215,41 +213,41 @@ public class CourseManager {
         if (isAdmin) {
             if (course.hasSemester()) {
                 updateObj = new BasicDBObject(COURSE_SEMESTER, course.getSemester());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (course.hasAccessDate()) {
 
                 updateObj = new BasicDBObject(ACCESS_DATE, course.getAccessDate().getMillisecond());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (course.hasCloseDate()) {
                 updateObj = new BasicDBObject(CLOSE_DATE, course.getCloseDate().getMillisecond());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
 
             if (course.hasImageUrl()) {
                 updateObj = new BasicDBObject(IMAGE, course.getImageUrl());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (course.hasDescription()) {
                 updateObj = new BasicDBObject(DESCRIPTION, course.getDescription());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (course.hasName()) {
                 updateObj = new BasicDBObject(NAME, course.getName());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (course.hasAccess()) {
                 updateObj = new BasicDBObject(COURSE_ACCESS, course.getAccess().getNumber());
-                courses.update(corsor, new BasicDBObject("$set", updateObj));
+                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             // Optimization: have something to do with pulling values of an
@@ -259,24 +257,24 @@ public class CourseManager {
                 final SrlPermission permissions = course.getAccessPermission();
                 if (permissions.getAdminPermissionList() != null) {
                     updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                    courses.update(corsor, new BasicDBObject("$set", updateObj));
+                    courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 }
                 if (permissions.getModeratorPermissionList() != null) {
                     updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                    courses.update(corsor, new BasicDBObject("$set", updateObj));
+                    courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 }
                 if (permissions.getUserPermissionList() != null) {
                     updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                    courses.update(corsor, new BasicDBObject("$set", updateObj));
+                    courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 }
             }
         }
         if (isAdmin || isMod && course.getAssignmentListList() != null) {
             updateObj = new BasicDBObject(ASSIGNMENT_LIST, course.getAssignmentListList());
-            courses.update(corsor, new BasicDBObject("$set", updateObj));
+            courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
             update = true;
         }
-        // courses.update(corsor, new BasicDBObject ("$set",updateObj));
+        // courses.update(corsor, new BasicDBObject (SET_COMMAND,updateObj));
 
         // get user list
         // send updates
@@ -385,7 +383,7 @@ public class CourseManager {
         final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
         final BasicDBObject listQueries = new BasicDBObject(ADMIN_GROUP_ID, adminGroupId).append(MOD_GROUP_ID, modGroupId).append(USER_GROUP_ID,
                 userGroupId);
-        final DBObject courseQuery = new BasicDBObject("$set", listQueries);
+        final DBObject courseQuery = new BasicDBObject(SET_COMMAND, listQueries);
         courses.update(corsor, courseQuery);
     }
 

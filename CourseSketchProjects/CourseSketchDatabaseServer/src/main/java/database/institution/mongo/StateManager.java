@@ -19,7 +19,14 @@ import com.mongodb.DBRef;
  * @author gigemjt
  *
  */
-public class StateManager {
+public final class StateManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private StateManager() {
+    }
 
     /**
      * Returns the state for a given school item.

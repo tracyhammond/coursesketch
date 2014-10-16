@@ -23,7 +23,14 @@ import database.auth.Authenticator;
  * @author gigemjt
  *
  */
-public class GroupManager {
+public final class GroupManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private GroupManager() {
+    }
 
     /**
      * Inserts a new group into the database.

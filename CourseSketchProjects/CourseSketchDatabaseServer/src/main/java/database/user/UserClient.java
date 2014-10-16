@@ -36,12 +36,8 @@ public final class UserClient {
      * @param url The url is the location of the server.
      */
     private UserClient(final String url) {
-        try {
-            final MongoClient mongoClient = new MongoClient(url);
-            db = mongoClient.getDB(DATABASE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        final MongoClient mongoClient = new MongoClient(url);
+        db = mongoClient.getDB(DATABASE);
     }
 
     /**
