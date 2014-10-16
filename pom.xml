@@ -440,6 +440,7 @@
 		<pmdExclude>${moduleConfigLocation}/${pmdFile}</pmdExclude>
 		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
 		<cpdExclude>${moduleConfigLocation}/${cpdFile}</cpdExclude>
+		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
 		<pmdFile>exclude-pmd.properties</pmdFile>
 		<cpdFile>exclude-cpd.properties</cpdFile>
 		<absoluteConfigLocation>${parentConfigLocationDir}/config</absoluteConfigLocation>
