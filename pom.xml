@@ -429,16 +429,18 @@
 		<packageLineLevel>${averageTestLevel}</packageLineLevel>
 		<checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
 		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
-		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
-		<findbugSupressionLocation>config/findbugs-exclude.xml</findbugSupressionLocation>
+		<checkstyleSuppressionLocation>${moduleConfigLocation}/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<findbugSupressionLocation>${moduleConfigLocation}/findbugs-exclude.xml</findbugSupressionLocation>
 		<protocLocation>/usr/local/bin/protoc</protocLocation>
 		<sitepluginVersion>2.3.3</sitepluginVersion>
 		<coberturaVersion>2.6</coberturaVersion>
 		<pmdVersion>3.2</pmdVersion>
+		<moduleConfigLocation>${basedir}/config</moduleConfigLocation>
 		<githubLocation>tracyhammond/coursesketch</githubLocation>
-		<pmdExclude>config/${pmdFile}</pmdExclude>
+		<pmdExclude>${moduleConfigLocation}/${pmdFile}</pmdExclude>
 		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
-		<cpdExclude>config/${cpdFile}</cpdExclude>
+		<cpdExclude>${moduleConfigLocation}/${cpdFile}</cpdExclude>
+		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
 		<pmdFile>exclude-pmd.properties</pmdFile>
 		<cpdFile>exclude-cpd.properties</cpdFile>
 		<absoluteConfigLocation>${parentConfigLocationDir}/config</absoluteConfigLocation>

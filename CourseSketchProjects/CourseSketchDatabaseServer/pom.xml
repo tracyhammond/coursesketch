@@ -17,6 +17,10 @@
 		<!-- This may be removed and a later solution will need to be worked on -->
 		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<mainClass>connection.DatabaseRunner</mainClass>
+        <testLevel>0</testLevel>
+        <averageTestLevel>0</averageTestLevel>
+        <projectBranchLevel>0</projectBranchLevel>
+        <projectLineLevel>0</projectLineLevel>
 	</properties>
 
 	<build>
@@ -64,6 +68,11 @@
 			<artifactId>BlankServer</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.12.3</version>
 		</dependency>
 	</dependencies>
 </project>

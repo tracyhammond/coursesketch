@@ -8,6 +8,7 @@ import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
@@ -36,7 +37,15 @@ import database.auth.Authenticator;
  * @author gigemjt
  *
  */
-public class BankProblemManager {
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
+public final class BankProblemManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private BankProblemManager() {
+    }
 
     /**
      * Inserts a problem bank into the mongo database.
@@ -119,6 +128,7 @@ public class BankProblemManager {
      * @throws AuthenticationException Thrown if the user does not have permission to update the bank problem.
      * @throws DatabaseAccessException Thrown if there is an issue updating the problem.
      */
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
@@ -133,53 +143,51 @@ public class BankProblemManager {
         }
 
         final BasicDBObject updated = new BasicDBObject();
-        if (isAdmin) {
-            if (problem.hasQuestionText()) {
-                updated.append("$set", new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()));
-                update = true;
-            }
-            if (problem.hasImage()) {
-                updated.append("$set", new BasicDBObject(IMAGE, problem.getImage()));
-                update = true;
-            }
-            // Optimization: have something to do with pulling values of an
-            // array and pushing values to an array
-            if (problem.hasSolutionId()) {
-                updated.append("$set", new BasicDBObject(SOLUTION_ID, problem.getSolutionId()));
-                update = true;
-            }
-            if (problem.hasCourseTopic()) {
-                updated.append("$set", new BasicDBObject(COURSE_TOPIC, problem.getCourseTopic()));
-                update = true;
-            }
-            if (problem.hasSubTopic()) {
-                updated.append("$set", new BasicDBObject(SUB_TOPIC, problem.getSubTopic()));
-                update = true;
-            }
-            if (problem.hasSource()) {
-                updated.append("$set", new BasicDBObject(SOURCE, problem.getSource()));
-                update = true;
-            }
-            if (problem.hasQuestionType()) {
-                updated.append("$set", new BasicDBObject(QUESTION_TYPE, problem.getQuestionType().getNumber()));
-                update = true;
-            }
-            if (problem.getOtherKeywordsCount() > 0) {
-                updated.append("$set", new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
-                update = true;
-            }
-            // Optimization: have something to do with pulling values of an
-            // array and pushing values to an array
-            if (problem.hasAccessPermission()) {
-                final SrlPermission permissions = problem.getAccessPermission();
-                if (isAdmin) {
-                    // ONLY ADMIN CAN CHANGE ADMIN OR MOD
-                    if (permissions.getAdminPermissionCount() > 0) {
-                        updated.append("$set", new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
-                    }
-                    if (permissions.getUserPermissionCount() > 0) {
-                        updated.append("$set", new BasicDBObject(USERS, permissions.getUserPermissionList()));
-                    }
+        if (problem.hasQuestionText()) {
+            updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()));
+            update = true;
+        }
+        if (problem.hasImage()) {
+            updated.append(SET_COMMAND, new BasicDBObject(IMAGE, problem.getImage()));
+            update = true;
+        }
+        // Optimization: have something to do with pulling values of an
+        // array and pushing values to an array
+        if (problem.hasSolutionId()) {
+            updated.append(SET_COMMAND, new BasicDBObject(SOLUTION_ID, problem.getSolutionId()));
+            update = true;
+        }
+        if (problem.hasCourseTopic()) {
+            updated.append(SET_COMMAND, new BasicDBObject(COURSE_TOPIC, problem.getCourseTopic()));
+            update = true;
+        }
+        if (problem.hasSubTopic()) {
+            updated.append(SET_COMMAND, new BasicDBObject(SUB_TOPIC, problem.getSubTopic()));
+            update = true;
+        }
+        if (problem.hasSource()) {
+            updated.append(SET_COMMAND, new BasicDBObject(SOURCE, problem.getSource()));
+            update = true;
+        }
+        if (problem.hasQuestionType()) {
+            updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TYPE, problem.getQuestionType().getNumber()));
+            update = true;
+        }
+        if (problem.getOtherKeywordsCount() > 0) {
+            updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
+            update = true;
+        }
+        // Optimization: have something to do with pulling values of an
+        // array and pushing values to an array
+        if (problem.hasAccessPermission()) {
+            final SrlPermission permissions = problem.getAccessPermission();
+            if (isAdmin) {
+                // ONLY ADMIN CAN CHANGE ADMIN OR MOD
+                if (permissions.getAdminPermissionCount() > 0) {
+                    updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+                }
+                if (permissions.getUserPermissionCount() > 0) {
+                    updated.append(SET_COMMAND, new BasicDBObject(USERS, permissions.getUserPermissionList()));
                 }
             }
         }
