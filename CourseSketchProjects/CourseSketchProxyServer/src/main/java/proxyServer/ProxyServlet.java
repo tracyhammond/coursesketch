@@ -17,17 +17,13 @@ public final class ProxyServlet extends GeneralConnectionServlet {
     	return new ProxyServer(this);
     }
 
-	/**
-	 * We do not need to manage multiple connections so we might as well just make it return null
-	 */
 	@Override
 	protected final MultiConnectionManager createConnectionManager(boolean connectLocally, boolean secure) {
-		return new ProxyConnectionManager(connectionServer, connectLocally, secure);
+		return new ProxyConnectionManager(getServer(), connectLocally, secure);
 	}
 
 	@Override
-	public void reconnect() {
-		super.reconnect();
-		((ProxyServer) connectionServer).initializeListeners();
+	protected final void onReconnect() {
+		((ProxyServer) getServer()).initializeListeners();
 	}
 }

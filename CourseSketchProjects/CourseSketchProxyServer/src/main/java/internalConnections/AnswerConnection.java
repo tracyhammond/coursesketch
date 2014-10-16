@@ -23,7 +23,7 @@ public class AnswerConnection extends ConnectionWrapper {
     }
 
     /**
-     *  * Accepts messages and sends the request to the correct server and holds minimum client state.
+     * Accepts messages and sends the request to the correct server and holds minimum client state.
      *
      * Also removes all identification that should not be sent to the client.
     */
@@ -36,14 +36,15 @@ public class AnswerConnection extends ConnectionWrapper {
             final Request rsp = TimeManager.decodeRequest(r);
             if (rsp != null) {
                 try {
-                    this.parentManager.send(rsp, r.getSessionInfo(), AnswerConnection.class);
+                    this.getParentManager().send(rsp, r.getSessionInfo(), AnswerConnection.class);
                 } catch (ConnectionException e) {
                     e.printStackTrace();
                 }
             }
             return;
         }
-        final Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
+        // strips away identification.
+        final Request  result = ProxyConnectionManager.createClientRequest(r);
         GeneralConnectionServer.send(getConnectionFromState(state), result);
     }
 

@@ -19,9 +19,9 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		//System.out.println("Open Recognition...");
 		System.out.println("Open Login...");
 		System.out.println(isConnectionLocal());
-		System.out.println(secure);
+		System.out.println(isSecure());
 		try {
-			createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", 8886, secure, LoginConnection.class);
+			createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", 8886, isSecure(), LoginConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -29,7 +29,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		
 		System.out.println("Open Data...");
 		try {
-			createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", 8885, secure, DataConnection.class);
+			createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", 8885, isSecure(), DataConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +37,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		
 		System.out.println("Open Answer...");
 		try {
-			createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", 8884, secure, AnswerConnection.class);
+			createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", 8884, isSecure(), AnswerConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

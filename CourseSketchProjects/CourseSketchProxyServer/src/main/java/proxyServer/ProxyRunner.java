@@ -16,15 +16,14 @@ public class ProxyRunner extends GeneralConnectionRunner {
 
 	@Override
 	public final void executeRemoveEnviroment() {
-		secure = false;
 		setKeystorePassword("Challeng3");
 		setKeystorePath("srl01_tamu_edu.jks");
 	}
 
 	public ProxyRunner(String args[]) {
 		super(args);
-		super.port = 8888;
-		super.timeoutTime = 30 * 60 * 1000; // 30 minutes * 60 seconds * 1000 milliseconds
+		super.setPort(8888);
+		super.setTimeoutTime(30 * 60 * 1000); // 30 minutes * 60 seconds * 1000 milliseconds
 	}
 
 	@Override
