@@ -19,7 +19,14 @@ import com.mongodb.DBRef;
  * @author gigemjt
  *
  */
-public class StateManager {
+public final class StateManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private StateManager() {
+    }
 
     /**
      * Returns the state for a given school item.
@@ -29,14 +36,14 @@ public class StateManager {
      * @param dbs the database that contains the state.
      * @param userId the id of the user asking for the state.
      * @param classification if it is a course, assignment, ...
-     * @param id the id of the related state (assignmentId, courseId, ...)
+     * @param itemId the id of the related state (assignmentId, courseId, ...)
      * @return the sate of the assignment.
      */
-    public static State getState(final DB dbs, final String userId, final String classification, final String id) {
+    public static State getState(final DB dbs, final String userId, final String classification, final String itemId) {
         final State.Builder state = State.newBuilder();
         final DBRef myDbRef = new DBRef(dbs, STATE_COLLECTION, new ObjectId(userId));
         final DBObject obj = myDbRef.fetch();
-        final DBObject stateInfo = (DBObject) obj.get(classification + id);
+        final DBObject stateInfo = (DBObject) obj.get(classification + itemId);
         state.setCompleted((Boolean) (stateInfo.get(STATE_COMPLETED)));
         state.setStarted((Boolean) (stateInfo.get(STATE_STARTED)));
         return state.build();
@@ -47,10 +54,10 @@ public class StateManager {
      * @param dbs the database that contains the state.
      * @param userId the id of the user asking for the state.
      * @param classification if it is a course, assignment, ...
-     * @param id the id of the related state (assignmentId, courseId, ...)
+     * @param itemId the id of the related state (assignmentId, courseId, ...)
      * @param state what the state is being set to.
      */
-    public static void setState(final DB dbs, final String userId, final String classification, final String id, final State state) {
+    public static void setState(final DB dbs, final String userId, final String classification, final String itemId, final State state) {
         // FUTURE: finish this!
         // what might be good is to retrieve the old state... compare given
         // values

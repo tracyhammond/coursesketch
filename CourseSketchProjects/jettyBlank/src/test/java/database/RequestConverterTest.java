@@ -11,9 +11,9 @@ public class RequestConverterTest {
     @Test
     public void testProtoCreationFromMillis() {
 
-        long millis = System.currentTimeMillis();
-        org.joda.time.DateTime t = new org.joda.time.DateTime(millis);
-        DateTime protoDate = RequestConverter.getProtoFromMilliseconds(millis);
+        final long millis = System.currentTimeMillis();
+        final org.joda.time.DateTime t = new org.joda.time.DateTime(millis);
+        final DateTime protoDate = RequestConverter.getProtoFromMilliseconds(millis);
 
         assertEquals(protoDate.getMillisecond(), millis);
         assertEquals(protoDate.getYear(), t.getYear());
@@ -26,11 +26,11 @@ public class RequestConverterTest {
     @Test
     public void testProtoConverstion() {
 
-        long millis = System.currentTimeMillis();
-        org.joda.time.DateTime t = new org.joda.time.DateTime(millis);
-        DateTime protoDate = RequestConverter.getProtoFromMilliseconds(millis);
-        
-        org.joda.time.DateTime t2 = RequestConverter.getDateFromProto(protoDate);
+        final long millis = System.currentTimeMillis();
+        final org.joda.time.DateTime t = new org.joda.time.DateTime(millis);
+        final DateTime protoDate = RequestConverter.getProtoFromMilliseconds(millis);
+
+        final org.joda.time.DateTime t2 = RequestConverter.getDateFromProto(protoDate);
         assertEquals(t, t2);
     }
 }
