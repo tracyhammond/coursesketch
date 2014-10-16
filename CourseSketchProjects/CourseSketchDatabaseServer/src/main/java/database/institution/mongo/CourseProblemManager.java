@@ -112,9 +112,9 @@ public final class CourseProblemManager {
         }
 
         boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList<Object>) corsor.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (ArrayList<Object>) corsor.get(MOD));
-        isUsers = authenticator.checkAuthentication(userId, (ArrayList<Object>) corsor.get(USERS));
+        isAdmin = authenticator.checkAuthentication(userId, (ArrayList<String>) corsor.get(ADMIN));
+        isMod = authenticator.checkAuthentication(userId, (ArrayList<String>) corsor.get(MOD));
+        isUsers = authenticator.checkAuthentication(userId, (ArrayList<String>) corsor.get(USERS));
 
         if (!isAdmin && !isMod && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);

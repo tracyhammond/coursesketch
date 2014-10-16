@@ -343,7 +343,7 @@ public final class CourseManager {
      * @param cursor The pointer to the database object
      * @param resultList The list that the results are added to.  This list is modified by this method.
      */
-    private void buildCourseForSearching(final DBCursor cursor, final List<SrlCourse> resultList) {
+    private static void buildCourseForSearching(final DBCursor cursor, final List<SrlCourse> resultList) {
         while (cursor.hasNext()) {
             final SrlCourse.Builder build = SrlCourse.newBuilder();
             final DBObject foundCourse = cursor.next();

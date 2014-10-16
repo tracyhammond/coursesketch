@@ -120,7 +120,7 @@ public final class DataRequestHandler {
                         }
                         break;
                         case SCHOOL: {
-                            final ArrayList<SrlCourse> courseLoop = instance.getUserCourses(userId);
+                            final List<SrlCourse> courseLoop = instance.getUserCourses(userId);
                             final SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
                             courseSearch.addAllCourses(courseLoop);
                             if (courseLoop.size() <= 0) {

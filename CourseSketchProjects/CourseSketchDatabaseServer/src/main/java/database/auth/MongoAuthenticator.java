@@ -8,7 +8,6 @@ import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
 import static database.DatabaseStringConstants.USER_LIST;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -81,7 +80,7 @@ public final class MongoAuthenticator implements AuthenticationDataCreator {
         BasicDBObject updateQuery = null;
         BasicDBObject fieldQuery = null;
         for (int k = 0; k < ids.length; k++) {
-            final ArrayList<String> list = ids[k];
+            final List<String> list = ids[k];
             // k = 0 ADMIN, k = 1, MOD, k >= 2 USERS
             final String field = k == 0 ? ADMIN : (k == 1 ? MOD : USERS);
             if (k == 0) {
