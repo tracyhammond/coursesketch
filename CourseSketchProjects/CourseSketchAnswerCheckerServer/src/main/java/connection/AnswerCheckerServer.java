@@ -2,14 +2,13 @@ package connection;
 
 import internalConnection.AnswerConnectionState;
 import internalConnection.SubmissionConnection;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.GeneralConnectionServlet;
+import multiconnection.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.GeneralConnectionServlet;
-import jettyMultiConnection.MultiConnectionState;
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
@@ -27,73 +26,87 @@ import com.google.protobuf.InvalidProtocolBufferException;
 @WebSocket()
 public class AnswerCheckerServer extends GeneralConnectionServer {
 
-	public AnswerCheckerServer(GeneralConnectionServlet parent) {
-		super(parent);
-	}
+    public AnswerCheckerServer(final GeneralConnectionServlet parent) {
+        super(parent);
+    }
 
-	@Override
-	public void onMessage(Session conn, Request req) {
+    @Override
+    public final void onMessage(final Session conn, final Request req) {
 
-		if (req.getRequestType()==Request.MessageType.TIME) {
-			Request rsp = TimeManager.decodeRequest(req);
-			if (rsp != null) {
-				send(conn, rsp);
-			}
-			return;
-		}
-		if (req.getRequestType() == Request.MessageType.SUBMISSION) {
-			// then we submit!
-			if (req.getResponseText().equals("student")) {
-				MultiConnectionState state = connectionToId.get(conn);
-				try {
-					SrlUpdate.parseFrom(req.getOtherData());
-					System.out.println("Parsing as an update");
-					try {
-						getConnectionManager().send(req, req.getSessionInfo() + "+" + state.getKey(), SubmissionConnection.class);
-					} catch (ConnectionException e) {
-						e.printStackTrace();
-					}
-					return;
-				} catch (InvalidProtocolBufferException e) {
-					System.out.println("Parsing as an experiment");
-					SrlExperiment student = null;
-					try {
-						student = SrlExperiment.parseFrom(req.getOtherData());
-					} catch (InvalidProtocolBufferException e1) {
-						e1.printStackTrace();
-					}
-					((AnswerConnectionState) state).addPendingExperiment(req.getSessionInfo(), student);
-					System.out.println("Student exp " + student);
-					try {
-						getConnectionManager().send(req, req.getSessionInfo() + "+" + state.getKey(), SubmissionConnection.class);
-					} catch (ConnectionException e1) {
-						e1.printStackTrace();
-					} // pass submission on
+        if (req.getRequestType() == Request.MessageType.TIME) {
+            final Request rsp = TimeManager.decodeRequest(req);
+            if (rsp != null) {
+                send(conn, rsp);
+            }
+            return;
+        }
+        if (req.getRequestType() == Request.MessageType.SUBMISSION) {
+            // then we submit!
+            if (req.getResponseText().equals("student")) {
+                final MultiConnectionState state = connectionToId.get(conn);
+                try {
+                    SrlUpdate.parseFrom(req.getOtherData());
+                    System.out.println("Parsing as an update");
+                    try {
+                        getConnectionManager().send(req,
+                                req.getSessionInfo() + "+" + state.getKey(),
+                                SubmissionConnection.class);
+                    } catch (ConnectionException e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                } catch (InvalidProtocolBufferException e) {
+                    System.out.println("Parsing as an experiment");
+                    SrlExperiment student = null;
+                    try {
+                        student = SrlExperiment.parseFrom(req.getOtherData());
+                    } catch (InvalidProtocolBufferException e1) {
+                        e1.printStackTrace();
+                    }
+                    ((AnswerConnectionState) state).addPendingExperiment(
+                            req.getSessionInfo(), student);
+                    System.out.println("Student exp " + student);
+                    try {
+                        getConnectionManager().send(req,
+                                req.getSessionInfo() + "+" + state.getKey(),
+                                SubmissionConnection.class);
+                    } catch (ConnectionException e1) {
+                        e1.printStackTrace();
+                    } // pass submission on
 
-					// request the solution for checking  NOSHIP: need to actually retrieve answer.
-					Request.Builder builder = Request.newBuilder();
-					builder.setRequestType(MessageType.DATA_REQUEST);
-					builder.setSessionInfo(req.getSessionInfo() + "+" + state.getKey());
-					ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
-					itemRequest.setQuery(ItemQuery.SOLUTION);
-					itemRequest.addItemId(student.getProblemId());  // FIXME: this needs to change probably to make this work
-					//internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(), state.getKey(), SubmissionConnection.class);
-				}
-			} else {
-				try {
-					getConnectionManager().send(req, req.getSessionInfo(), SubmissionConnection.class);
-				} catch (ConnectionException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+                    // request the solution for checking NOSHIP: need to
+                    // actually retrieve answer.
+                    final Request.Builder builder = Request.newBuilder();
+                    builder.setRequestType(MessageType.DATA_REQUEST);
+                    builder.setSessionInfo(req.getSessionInfo() + "+"
+                            + state.getKey());
+                    final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
+                    itemRequest.setQuery(ItemQuery.SOLUTION);
+                    itemRequest.addItemId(student.getProblemId()); // FIXME:
+                                                                   // this needs
+                                                                   // to change
+                                                                   // probably
+                                                                   // to make
+                                                                   // this work
+                    // internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
+                    // state.getKey(), SubmissionConnection.class);
+                }
+            } else {
+                try {
+                    getConnectionManager().send(req, req.getSessionInfo(),
+                            SubmissionConnection.class);
+                } catch (ConnectionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
-	/**
-	 * Returns a number that should be unique.
-	 */
-	@Override
-	public MultiConnectionState getUniqueState() {
-		return new AnswerConnectionState(Encoder.nextID().toString());
-	}
+    /**
+     * Returns a number that should be unique.
+     */
+    @Override
+    public final MultiConnectionState getUniqueState() {
+        return new AnswerConnectionState(Encoder.nextID().toString());
+    }
 }

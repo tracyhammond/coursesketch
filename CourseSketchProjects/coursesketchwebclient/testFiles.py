@@ -18,35 +18,38 @@ import webapp2
 import os
 
 class MainPage(webapp2.RequestHandler):
-	
-	
+
 	def searchTestFiles(self):
 		fileList = []
-		directory = 'html/test'
+		directory = 'src/test/src/'
 		absPath = os.path.abspath(directory)
 		self.response.write('looking at files in directory ' + directory + ' <br>')
 		counter = 1
 		for r, d, f in os.walk(directory):
-			self.response.write('<div class="row">')
-			self.response.write('<b>' + r + '</b><br><br>')
-			
-			self.response.write('<a href="#hide' + str(counter) + '" class="hide myButton" id="hide' + str(counter) + '">Expand</a>')
-			self.response.write('<a href="#show' + str(counter) + '" class="show myButton" id="show' + str(counter) + '">Collapse</a><div class="list">')
-			self.response.write('<ul>')
+			testFiles = [];
 			for files in f:
-				if files.endswith(".html"):
+					if files.endswith(".html"):
+						testFiles.append(files)
+			print r
+			print f
+			print len(f)
+			if len(testFiles) >= 1:
+				self.response.write('<div class="row">')
+				self.response.write('<b>' + r + '</b><br><br>')
+				
+				self.response.write('<a href="#hide' + str(counter) + '" class="hide myButton" id="hide' + str(counter) + '">Expand</a>')
+				self.response.write('<a href="#show' + str(counter) + '" class="show myButton" id="show' + str(counter) + '">Collapse</a><div class="list">')
+				self.response.write('<ul>')
+				for files in testFiles:
 					fileNameWithPath = os.path.join(r,files);
 					fileName = str(files);
 					self.response.write('<li><a class="testFile" href="' + fileNameWithPath + '" target="_blank">'+ fileName +'</a></li>')
-					#fileList[len(fileList):] = [os.path.join(r,files)]
-			self.response.write('</ul>')
-			self.response.write('</div></div>')
-			counter = counter + 1
+				self.response.write('</ul>')
+				self.response.write('</div></div>')
+				counter = counter + 1
+		if counter == 1:
+			self.response.write('<br><b>There are no test files in: ' + directory + '</b>')
 
-		
-	def visitPath(arg, firname, names):
-		self.response.write('<a href="' + fileName + '">'+ fileName +'</a><br>')
-	
 	def get(myOwn):
 		myOwn.response.write('<style type="text/css">')
 		myOwn.response.write('b {margin-bottom:5px;}')

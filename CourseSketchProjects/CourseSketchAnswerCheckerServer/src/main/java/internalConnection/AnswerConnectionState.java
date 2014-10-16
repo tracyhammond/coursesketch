@@ -2,21 +2,21 @@ package internalConnection;
 
 import java.util.HashMap;
 
-import jettyMultiConnection.MultiConnectionState;
+import multiconnection.MultiConnectionState;
 import protobuf.srl.submission.Submission.SrlExperiment;
 
 public class AnswerConnectionState extends MultiConnectionState {
-	private HashMap<String,SrlExperiment> pendingExperiments = new HashMap<String,SrlExperiment>();
+    private HashMap<String, SrlExperiment> pendingExperiments = new HashMap<String, SrlExperiment>();
 
-	public AnswerConnectionState(String key) {
-		super(key);
-	}
+    public AnswerConnectionState(final String key) {
+        super(key);
+    }
 
-	public void addPendingExperiment(String key, SrlExperiment exp) {
-		pendingExperiments.put(key, exp);
-	}
+    public final void addPendingExperiment(final String key, final SrlExperiment exp) {
+        pendingExperiments.put(key, exp);
+    }
 
-	public SrlExperiment getExperiment(String key) {
-		return pendingExperiments.remove(key);
-	}
+    public final SrlExperiment getExperiment(final String key) {
+        return pendingExperiments.remove(key);
+    }
 }

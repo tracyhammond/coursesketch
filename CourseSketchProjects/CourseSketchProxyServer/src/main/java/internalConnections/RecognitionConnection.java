@@ -2,10 +2,10 @@ package internalConnections;
 
 import java.net.URI;
 
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import multiconnection.ConnectionWrapper;
+import multiconnection.GeneralConnectionServer;
 
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 @WebSocket()

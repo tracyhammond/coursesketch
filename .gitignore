@@ -18,4 +18,10 @@ Non_Commit/
 .dgd/*.tmp
 
 target/
+.project
+.settings
+.settings/
 *.project
+.checkstyle
+.pydevproject
+*.pydevproject

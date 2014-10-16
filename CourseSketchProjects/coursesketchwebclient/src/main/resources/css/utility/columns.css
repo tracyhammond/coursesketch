@@ -1,0 +1,112 @@
+.centre
+{
+	width: 90%;
+	margin:0px auto;
+}
+
+.semi_wide_centre
+{
+	width: 95%;
+	margin:0px auto;
+}
+
+.wide_centre
+{
+	width: 98%;
+	margin:0px auto;
+}
+
+.faded_column {
+	background: #DDDDDD;
+}
+
+.gradient_faded_column {
+	background-image: linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	background-image: -o-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	background-image: -moz-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	background-image: -webkit-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	background-image: -ms-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #DDDDDD),
+		color-stop(1, #CCCCCC)
+	);
+}
+
+.gradient_faded_column_instructor_reverse {
+	background-image: linear-gradient(top, #EEEEEE 0%, #A9D0F5 100%);
+	background-image: -o-linear-gradient(top, #EEEEEE 0%, #A9D0F5 100%);
+	background-image: -moz-linear-gradient(top, #EEEEEE 0%, #A9D0F5 100%);
+	background-image: -webkit-linear-gradient(top, #EEEEEE 0%, #A9D0F5 100%);
+	background-image: -ms-linear-gradient(top, #EEEEEE 0%, #A9D0F5 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #EEEEEE),
+		color-stop(1, #A9D0F5)
+	);
+}
+
+.gradient_faded_column_instructor {
+	background-image: linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	background-image: -o-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	background-image: -moz-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	background-image: -webkit-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	background-image: -ms-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #DDDDDD),
+		color-stop(1, #A9D0F5)
+	);
+}
+
+.gradient_faded_column_student {
+	background-image: linear-gradient(top, #A9D0F5 0%, #DDDDDD 100%);
+	background-image: -o-linear-gradient(top, #A9D0F5 0%, #DDDDDD 100%);
+	background-image: -moz-linear-gradient(top, #A9D0F5 0%, #DDDDDD 100%);
+	background-image: -webkit-linear-gradient(top, #A9D0F5 0%, #DDDDDD 100%);
+	background-image: -ms-linear-gradient(top, #A9D0F5 0%, #DDDDDD 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #A9D0F5),
+		color-stop(1, #DDDDDD)
+	);
+}
+
+.columnContainer {
+	display:flex;
+}
+
+/* one item */
+.columnContainer > div:first-child:nth-last-child(1) {
+    width: 100%;
+}
+
+/* two items */
+.columnContainer > div:first-child:nth-last-child(2),
+li:first-child:nth-last-child(2) ~ div {
+    width: 50%;
+}
+
+/* three items */
+.columnContainer > div:first-child:nth-last-child(3),
+.columnContainer > div:first-child:nth-last-child(3) ~ div {
+    width: calc(100% / 3);
+}
+
+/* four items */
+.columnContainer > div:first-child:nth-last-child(4),
+.columnContainer > div:first-child:nth-last-child(4) ~ div {
+    width: 25%;
+}

@@ -1,9 +1,9 @@
 package internalConnections;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.MultiConnectionManager;
+import connection.ConnectionException;
+import multiconnection.ConnectionWrapper;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 
 
@@ -18,10 +18,10 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 	public void connectServers(GeneralConnectionServer serv) {
 		//System.out.println("Open Recognition...");
 		System.out.println("Open Login...");
-		System.out.println(connectLocally);
+		System.out.println(isConnectionLocal());
 		System.out.println(secure);
 		try {
-			createAndAddConnection(serv, connectLocally, "srl02.tamu.edu", 8886, secure, LoginConnection.class);
+			createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", 8886, secure, LoginConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -29,7 +29,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		
 		System.out.println("Open Data...");
 		try {
-			createAndAddConnection(serv, connectLocally, "srl04.tamu.edu", 8885, secure, DataConnection.class);
+			createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", 8885, secure, DataConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +37,7 @@ public class ProxyConnectionManager extends MultiConnectionManager {
 		
 		System.out.println("Open Answer...");
 		try {
-			createAndAddConnection(serv, connectLocally, "srl04.tamu.edu", 8884, secure, AnswerConnection.class);
+			createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", 8884, secure, AnswerConnection.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
