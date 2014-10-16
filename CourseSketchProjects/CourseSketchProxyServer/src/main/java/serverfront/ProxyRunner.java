@@ -1,4 +1,4 @@
-package proxyServer;
+package serverfront;
 
 import multiconnection.GeneralConnectionRunner;
 import multiconnection.GeneralConnectionServlet;

@@ -1,9 +1,9 @@
-package proxyServer;
+package serverfront;
 
 import multiconnection.GeneralConnectionServer;
 import multiconnection.GeneralConnectionServlet;
 import multiconnection.MultiConnectionManager;
-import internalConnections.ProxyConnectionManager;
+import internalconnections.ProxyConnectionManager;
 
 @SuppressWarnings("serial")
 public final class ProxyServlet extends GeneralConnectionServlet {

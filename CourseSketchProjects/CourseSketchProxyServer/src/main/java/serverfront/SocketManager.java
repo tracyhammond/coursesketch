@@ -1,4 +1,4 @@
-package proxyServer;
+package serverfront;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

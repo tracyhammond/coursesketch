@@ -1,6 +1,6 @@
-package proxyServer;
+package serverfront;
 
-import internalConnections.LoginConnectionState;
+import internalconnections.LoginConnectionState;
 
 public final class ProxyConnectionState extends LoginConnectionState {
 
@@ -9,11 +9,13 @@ public final class ProxyConnectionState extends LoginConnectionState {
 		super(key);
 	}
 
-	protected String getUserId() {
-		return this.sessionId;
+    /**
+     * @return the user id of this connection.
+     */
+	/* package-private */ String getUserId() {
+		return getSessionId();
 	}
-	
-	
+
 	long getTimeSinceLastActive() {
 		return System.currentTimeMillis() - lastActive;
 	}
