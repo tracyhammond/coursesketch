@@ -1,9 +1,9 @@
 <html>
 <head>
 <!-- Utilities -->
-<script src="/src/utilities/base.js"></script>
-<script src="/src/utilities/objectAndInheritance.js"></script>
-<link rel="import" href="/src/utilities/includes/protobufInclude.html">
+<script src="/src/utilities/functions/base.js"></script>
+<script src="/src/utilities/functions/objectAndInheritance.js"></script>
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
 <!-- Srl library -->
 <link rel="import" href="srl/srlLibraryInclude.html">
@@ -12,7 +12,7 @@
 <script src="adapters/sketchToProtobufAdapter.js"></script>
 
 <!-- Jquery library -->
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
 <!-- input -->
 <script src="input/touch_event.js"></script>
@@ -30,31 +30,32 @@
 
 <meta charset="UTF-8">
 <script>
-    var importDoc = document.currentScript.ownerDocument;
-    $(document).ready(function() {
+    (function(importDoc) {
+        $(document).ready(function() {
 
-        var link = importDoc.querySelector('#sketchSurfaceImport');
-        var template = link.import.querySelector('template');
-        var clone = document.importNode(template.content, true);
+            var link = importDoc.querySelector('#sketchSurfaceImport');
+            var template = link.import.querySelector('template');
+            var clone = document.importNode(template.content, true);
 
-        var newElement = new SketchSurface();
+            var newElement = new SketchSurface();
 
-        SketchSurface.prototype.createdCallback = function() {
-            this.initializeElement(document, clone.cloneNode(true));
-        };
+            SketchSurface.prototype.createdCallback = function() {
+                this.initializeElement(document, clone.cloneNode(true));
+            };
 
-        SketchSurface.prototype.attachedCallback = function() {
-            this.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
-        };
+            SketchSurface.prototype.attachedCallback = function() {
+                this.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
+            };
 
-        SketchSurface.prototype.detachedCallback = function() {
-            this.finalize();
-        };
+            SketchSurface.prototype.detachedCallback = function() {
+                this.finalize();
+            };
 
-        document.registerElement('sketch-surface', {
-            prototype : newElement
+            document.registerElement('sketch-surface', {
+                prototype : newElement
+            });
         });
-    });
+    })(document.currentScript.ownerDocument);
 </script>
 </head>
 </html>

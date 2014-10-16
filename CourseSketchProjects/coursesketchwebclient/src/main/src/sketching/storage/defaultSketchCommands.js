@@ -8,7 +8,7 @@
      * Every command will have a sketch Id that is added to it when being added
      * to the sketch surface
      */
-    PROTOBUF_UTIL.getSrlCommandClass().prototype.getLocalSketchSurface = function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().prototype.getLocalSketchSurface = function() {
         return SKETCHING_SURFACE_HANDLER.getSketch(this.sketchId);
     };
 
@@ -21,7 +21,7 @@
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.CLEAR, function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, function() {
         var sketch = this.getLocalSketchSurface();
         sketch.resetSketch();
         return true;
@@ -34,9 +34,9 @@
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ADD_STROKE, function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, function() {
         if (!this.decodedData) {
-            var stroke = PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.ProtoSrlStroke);
+            var stroke = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.ProtoSrlStroke);
             this.decodedData = SRL_Stroke.createFromProtobuf(stroke);
         }
         this.getLocalSketchSurface().addObject(this.decodedData);
@@ -50,9 +50,9 @@
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ADD_STROKE, function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, function() {
         if (!this.decodedData) {
-            var stroke = PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.ProtoSrlStroke);
+            var stroke = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.ProtoSrlStroke);
             this.decodedData = SRL_Stroke.createFromProtobuf(stroke);
         }
         this.getLocalSketchSurface().removeSubObjectById(this.decodedData.getId());
@@ -66,9 +66,9 @@
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.ADD_SHAPE, function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_SHAPE, function() {
         if (!this.decodedData) {
-            var shape = PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.ProtoSrlShape);
+            var shape = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.ProtoSrlShape);
             this.decodedData = SRL_Shape.createFromProtobuf(shape);
         }
         this.getLocalSketchSurface().addObject(this.decodedData);
@@ -82,9 +82,9 @@
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.ADD_SHAPE, function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_SHAPE, function() {
         if (!this.decodedData) {
-            var shape = PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.ProtoSrlShape);
+            var shape = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.ProtoSrlShape);
             this.decodedData = SRL_Shape.createFromProtobuf(shape);
         }
         this.getLocalSketchSurface().removeSubObjectById(this.decodedData.getId());
@@ -99,10 +99,10 @@
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
         if (!this.decodedData || !isArray(this.decodedData)) {
             this.decodedData = new Array();
-            var idChain = PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.IdChain);
+            var idChain = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.IdChain);
             this.decodedData[0] = idChain;
         }
         this.decodedData[1] = this.getLocalSketchSurface().removeSubObjectByIdChain(this.decodedData[0].idChain);
@@ -117,10 +117,10 @@
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
         if (!this.decodedData || !isArray(this.decodedData)) {
             this.decodedData = new Array();
-            var idChain = PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.IdChain);
+            var idChain = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, parent.IdChain);
             this.decodedData[0] = idChain;
         }
         // this.getLocalSketchSurface().addObject(this.decodedData);
@@ -136,9 +136,9 @@
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(PROTOBUF_UTIL.CommandType.PACKAGE_SHAPE, function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.PACKAGE_SHAPE, function() {
         if (isUndefined(this.decodedData) || (!this.decodedData)) {
-            this.decodedData = PROTOBUF_UTIL.decodeProtobuf(this.commandData, Action.ActionPackageShape);
+            this.decodedData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, Action.ActionPackageShape);
         }
         this.decodedData.redo(this.getLocalSketchSurface());
         return false;
@@ -152,9 +152,9 @@
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(PROTOBUF_UTIL.CommandType.PACKAGE_SHAPE, function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.PACKAGE_SHAPE, function() {
         if (isUndefined(this.decodedData) || (!this.decodedData)) {
-            this.decodedData = PROTOBUF_UTIL.decodeProtobuf(this.commandData, Action.ActionPackageShape);
+            this.decodedData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, Action.ActionPackageShape);
         }
         this.decodedData.undo(this.getLocalSketchSurface());
         return false;
@@ -168,17 +168,17 @@
      * @returns the human readable name of the given marker type
      */
 
-    PROTOBUF_UTIL.getMarkerClass().prototype.getCommandTypeName = function() {
+    CourseSketch.PROTOBUF_UTIL.getMarkerClass().prototype.getCommandTypeName = function() {
         switch (this.getType()) {
             case this.MarkerType.SUBMISSION:
                 return 'SUBMISSION';
-            case PROTOBUF_UTIL.CommandType.FEEDBACK:
+            case CourseSketch.PROTOBUF_UTIL.CommandType.FEEDBACK:
                 return 'FEEDBACK';
-            case PROTOBUF_UTIL.CommandType.SAVE:
+            case CourseSketch.PROTOBUF_UTIL.CommandType.SAVE:
                 return 'SAVE';
-            case PROTOBUF_UTIL.CommandType.SPLIT:
+            case CourseSketch.PROTOBUF_UTIL.CommandType.SPLIT:
                 return 'SPLIT';
-            case PROTOBUF_UTIL.CommandType.CLEAR:
+            case CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR:
                 return 'CLEAR';
         }
         return "NO_NAME # is: " + this.getCommandType();
@@ -195,7 +195,7 @@
      *            {SrlSketch} the sketch object that is being affected by these
      *            changes.
      */
-    PROTOBUF_UTIL.getActionPackageShapeClass().prototype.redo = function(sketch) {
+    CourseSketch.PROTOBUF_UTIL.getActionPackageShapeClass().prototype.redo = function(sketch) {
         var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
         var newContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 
@@ -218,7 +218,7 @@
      *            {SrlSketch} the sketch object that is being affected by these
      *            changes.
      */
-    PROTOBUF_UTIL.getActionPackageShapeClass().prototype.undo = function(sketch) {
+    CourseSketch.PROTOBUF_UTIL.getActionPackageShapeClass().prototype.undo = function(sketch) {
         var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
         var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 
@@ -236,4 +236,4 @@
         }
     };
 
-})();// (PROTOBUF_UTIL.SrlUpdate, PROTOBUF_UTIL.SrlCommand, PROTOBUF_UTIL);
+})();// (CourseSketch.PROTOBUF_UTIL.SrlUpdate, CourseSketch.PROTOBUF_UTIL.SrlCommand, CourseSketch.PROTOBUF_UTIL);
