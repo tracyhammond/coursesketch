@@ -53,7 +53,7 @@ public final class UserManager {
      * @return A list of course id.
      * @throws DatabaseAccessException Thrown if the user id does not exist.
      */
-    public static ArrayList<String> getUserCourses(final DB dbs, final String userId) throws DatabaseAccessException {
+    public static List<String> getUserCourses(final DB dbs, final String userId) throws DatabaseAccessException {
         final DBCollection users = dbs.getCollection(USER_COLLECTION);
         final BasicDBObject query = new BasicDBObject(SELF_ID, userId);
         final DBObject cursor = users.findOne(query);
@@ -108,15 +108,15 @@ public final class UserManager {
 
     /**
      * After this method is called a user now has a course added to their account.
-     * @param db The database where the user exist.
+     * @param database The database where the user exist.
      * @param userId The id of the user.
      * @param courseId The id of the course that is being added.
      */
-    static void addCourseToUser(final DB db, final String userId, final String courseId) {
+    static void addCourseToUser(final DB database, final String userId, final String courseId) {
         System.out.println("The users Id " + userId);
-        final DBCollection users = db.getCollection(USER_COLLECTION);
+        final DBCollection users = database.getCollection(USER_COLLECTION);
         final BasicDBObject query = new BasicDBObject("$addToSet", new BasicDBObject(COURSE_LIST, courseId));
-        final DBRef myDbRef = new DBRef(db, USER_COLLECTION, userId);
+        final DBRef myDbRef = new DBRef(database, USER_COLLECTION, userId);
         final DBObject corsor = myDbRef.fetch();
         System.out.println("coros" + corsor);
         System.out.println("query" + query);

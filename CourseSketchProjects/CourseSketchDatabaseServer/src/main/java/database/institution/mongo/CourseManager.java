@@ -47,6 +47,7 @@ import database.auth.Authenticator;
  * @author gigemjt
  *
  */
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",  "PMD.UselessParentheses" })
 public final class CourseManager {
 
     /**
@@ -92,6 +93,7 @@ public final class CourseManager {
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the course.
      * @throws DatabaseAccessException Thrown if there are problems retrieving the course.
      */
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
     static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId, final long checkTime)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
@@ -194,6 +196,7 @@ public final class CourseManager {
      * @throws AuthenticationException Thrown if the user did not have the authentication to update the course.
      * @throws DatabaseAccessException Thrown if there are problems updating the course.
      */
+    @SuppressWarnings("PMD.NPathComplexity")
     static boolean mongoUpdateCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId,
             final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
@@ -320,18 +323,14 @@ public final class CourseManager {
      *         FUTURE: this should probably be paginated so it does not crush
      *         the database.
      */
-    public static ArrayList<SrlCourse> mongoGetAllPublicCourses(final DB dbs) {
+    public static List<SrlCourse> mongoGetAllPublicCourses(final DB dbs) {
         final DBCollection courseTable = dbs.getCollection(COURSE_COLLECTION);
 
         final ArrayList<SrlCourse> resultList = new ArrayList<SrlCourse>();
 
         // checks for all public courses.
-        final DBObject publicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.PUBLIC.getNumber()); // the
-        // value
-        // for
-        // a
-        // public
-        // course
+        //                                                                  the value for a public course
+        final DBObject publicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.PUBLIC.getNumber());
         DBCursor cursor = courseTable.find(publicCheck);
         while (cursor.hasNext()) {
             final SrlCourse.Builder build = SrlCourse.newBuilder();
@@ -399,7 +398,7 @@ public final class CourseManager {
      * @param courseId the course that the groups are being grabbed from.
      * @return a list of usergroups.
      */
-    static ArrayList<String>[] mongoGetDefaultGroupList(final DB dbs, final String courseId) {
+    static List<String>[] mongoGetDefaultGroupList(final DB dbs, final String courseId) {
         final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
         final DBObject corsor = myDbRef.fetch();
         final ArrayList<String>[] returnValue = new ArrayList[PERMISSION_LEVELS];
