@@ -1,11 +1,11 @@
-package proxyServer;
+package serverfront;
 
-import internalConnections.AnswerConnection;
-import internalConnections.DataConnection;
-import internalConnections.LoginConnection;
-import internalConnections.LoginConnectionState;
-import internalConnections.ProxyConnectionManager;
-import internalConnections.RecognitionConnection;
+import internalconnections.AnswerConnection;
+import internalconnections.DataConnection;
+import internalconnections.LoginConnection;
+import internalconnections.LoginConnectionState;
+import internalconnections.ProxyConnectionManager;
+import internalconnections.RecognitionConnection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

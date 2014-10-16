@@ -1,4 +1,4 @@
-package internalConnections;
+package internalconnections;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -16,8 +16,13 @@ import connection.TimeManager;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 @WebSocket()
-public class AnswerConnection extends ConnectionWrapper {
+public final class AnswerConnection extends ConnectionWrapper {
 
+    /**
+     * Creates a new connection for the Answer checker server.
+     * @param destination The location of the answer checker server.
+     * @param parent The proxy server instance.
+     */
     public AnswerConnection(final URI destination, final GeneralConnectionServer parent) {
         super(destination, parent);
     }
@@ -26,6 +31,7 @@ public class AnswerConnection extends ConnectionWrapper {
      * Accepts messages and sends the request to the correct server and holds minimum client state.
      *
      * Also removes all identification that should not be sent to the client.
+     * @param buffer The message that is received by this object.
     */
     @Override
     public void onMessage(final ByteBuffer buffer) {
