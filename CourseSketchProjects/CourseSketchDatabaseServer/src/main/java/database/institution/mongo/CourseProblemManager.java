@@ -43,6 +43,7 @@ import database.auth.Authenticator.AuthType;
  * Manages course problems for the mongo database.
  * @author gigemjt
  */
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",  "PMD.UselessParentheses" })
 public final class CourseProblemManager {
 
     /**

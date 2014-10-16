@@ -2,8 +2,6 @@ package database.user;
 
 import static database.DatabaseStringConstants.DATABASE;
 
-import java.util.ArrayList;
-
 import protobuf.srl.school.School.SrlSchool;
 import protobuf.srl.school.School.SrlUser;
 
@@ -29,7 +27,7 @@ public final class UserClient {
     /**
      * A database specific to each instance.
      */
-    private DB db;
+    private DB database;
 
     /**
      * A private constructor that creates a client at a specific Url.
@@ -37,7 +35,7 @@ public final class UserClient {
      */
     private UserClient(final String url) {
         final MongoClient mongoClient = new MongoClient(url);
-        db = mongoClient.getDB(DATABASE);
+        database = mongoClient.getDB(DATABASE);
     }
 
     /**
@@ -68,9 +66,9 @@ public final class UserClient {
         try {
             final MongoClient mongoClient = new MongoClient("localhost");
             if (testOnly) {
-                db = mongoClient.getDB("test");
+                database = mongoClient.getDB("test");
             } else {
-                db = mongoClient.getDB(DATABASE);
+                database = mongoClient.getDB(DATABASE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +88,7 @@ public final class UserClient {
      *             Thrown if there are problems inserting the user.
      */
     public static boolean insertUser(final SrlUser user, final String userId) throws DatabaseAccessException {
-        UserManager.createUser(getInstance().db, user, userId);
+        UserManager.createUser(getInstance().database, user, userId);
         return true;
     }
 
@@ -103,7 +101,7 @@ public final class UserClient {
      *            The course that is being added to the user.
      */
     public static void addCourseToUser(final String userId, final String courseId) {
-        UserManager.addCourseToUser(getInstance().db, userId, courseId);
+        UserManager.addCourseToUser(getInstance().database, userId, courseId);
     }
 
     /**
@@ -115,8 +113,8 @@ public final class UserClient {
      * @throws DatabaseAccessException
      *             Thrown if the user does not exist.
      */
-    public static ArrayList<String> getUserCourses(final String userId) throws DatabaseAccessException {
-        return UserManager.getUserCourses(getInstance().db, userId);
+    public static List<String> getUserCourses(final String userId) throws DatabaseAccessException {
+        return UserManager.getUserCourses(getInstance().database, userId);
     }
 
     /**
@@ -134,6 +132,6 @@ public final class UserClient {
      *             Thrown if no dates exist.
      */
     public static SrlSchool mongoGetReleventUpdates(final String userId, final long time) throws AuthenticationException, DatabaseAccessException {
-        return UserUpdateHandler.mongoGetAllRelevantUpdates(getInstance().db, userId, time);
+        return UserUpdateHandler.mongoGetAllRelevantUpdates(getInstance().database, userId, time);
     }
 }
