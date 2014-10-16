@@ -1,0 +1,26 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+<link rel="import" href="/test/testUtilities/mockedObjects/mockedObjectsInclude.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/instructor/homePage/homePage.html" data-fake>
+
+<!-- file being tested. -->
+<script src="/src/instructor/homePage/create.js" data-cover></script>
+</head>
+<body>
+	<div id="fakePage"></div>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+	QUnit.module("testModule1");
+	test("test test", function(assert) {
+	    assert.ok();
+    });
+    </script>
+</body>

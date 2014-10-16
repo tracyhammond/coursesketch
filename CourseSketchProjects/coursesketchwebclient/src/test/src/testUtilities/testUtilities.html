@@ -1,0 +1,61 @@
+<head>
+<!-- Caches the timing function so I can restore them at any time. -->
+<script>
+    var setRealTimeout = (function(scope) {
+        var localMethod = scope.setTimeout;
+        return function(func, time) {
+            return localMethod(func, time);
+        };
+    })(this);
+
+    var clearRealTimeout = (function(scope) {
+        var localMethod = scope.clearTimeout;
+        return function(timeThing) {
+            return localMethod(timeThing);
+        };
+    })(this);
+
+    var setRealInterval = (function(scope) {
+        var localMethod = scope.setInterval;
+        return function(func, time) {
+            return localMethod(func, time);
+        };
+    })(this);
+
+    var clearRealInterval = (function(scope) {
+        var localMethod = scope.clearInterval;
+        return function(timeThing) {
+            return localMethod(timeThing);
+        };
+    })(this);
+    function restoreRealTime() {
+        setTimeout = setRealTimeout;
+        clearTimeout = clearRealTimeout;
+        setInterval = setRealInterval;
+        clearInterval = clearRealInterval;
+    }
+</script>
+
+<link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.15.0.css">
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//code.jquery.com/qunit/qunit-1.15.0.js"></script>
+<!-- http://sinonjs.org/qunit/ -->
+<script src="sinon-1.10.3.js"></script>
+<!-- mocking framework -->
+<script src="sinon-qunit-1.0.0.js"></script>
+<!-- qunit mocking framework -->
+
+<script src="qunit-once.js"></script>
+<!-- qunit once nice and helpful for making a teardownOnce and setupOnce method -->
+
+<script src="blanket.min.js"></script>
+
+<script src="eventSimulator.js"></script>
+<!-- code coverage framework -->
+<script>
+    QUnit.config.testTimeout = 5000;
+</script>
+
+<!-- makes a fake page appear at the top using the css style element correctly -->
+<script src="fakePage.js"></script>
+</head>

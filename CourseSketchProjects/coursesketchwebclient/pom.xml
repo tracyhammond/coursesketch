@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>CourseSketch</groupId>
+	<artifactId>WebClient</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>WebClient</name>
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>CourseSketch</groupId>
+		<artifactId>CourseSketch-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../../</relativePath>
+	</parent>
+
+	<properties>
+		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+		<sourceDirectory>${basedir}/src/main/src</sourceDirectory>
+		<testDirectory>${basedir}/src/main/test</testDirectory>
+	</properties>
+	<!-- <pluginRepositories> <pluginRepository> <id>jslint</id> <url>http://repo1.maven.org/maven2/org/codehaus/mojo/jslint-maven-plugin/</url> 
+		</pluginRepository> <repository> <id>mulesoft-releases</id> <name>MuleSoft 
+		Repository</name> <url>https://repository.mulesoft.org/releases/</url> </repository> 
+		</pluginRepositories> -->
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>${pmdVersion}</version>
+				<configuration>
+					<language>javascript</language>
+					<rulesets>
+						<ruleset>ecmascript-basic</ruleset>
+						<ruleset>ecmascript-braces</ruleset>
+						<ruleset>ecmascript-unnecessary</ruleset>
+					</rulesets>
+					<includes>
+						<include>**/*.js</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<build>
+		<sourceDirectory>${basedir}/src/main/src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<configuration>
+					<sources>
+						<source>${basedir}/src/main/src/</source>
+					</sources>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>${pmdVersion}</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+							<goal>cpd-check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includes>
+						<include>**/*.js</include>
+					</includes>
+					<language>javascript</language>
+					<verbose>true</verbose>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.github.klieber</groupId>
+				<artifactId>phantomjs-maven-plugin</artifactId>
+				<version>0.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>install</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<version>1.9.7</version>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>net.kennychua</groupId>
+				<artifactId>phantomjs-qunit-runner</artifactId>
+				<configuration>
+					<jsSourceDirectory>${sourceDirectory}</jsSourceDirectory>
+					<jsTestDirectory>${testDirectory}</jsTestDirectory>
+					<ignoreFailures>false</ignoreFailures>
+					<phantomJsExec>${phantomjs.binary}</phantomJsExec>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test</goal>
+							</goals>
+						</execution>
+					</executions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

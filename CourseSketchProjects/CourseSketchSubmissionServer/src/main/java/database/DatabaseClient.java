@@ -1,16 +1,20 @@
 package database;
 
-import static database.StringConstants.*;
+import static database.DatabaseStringConstants.*;
 
 import java.net.UnknownHostException;
 
 import org.bson.types.ObjectId;
 
+import protobuf.srl.commands.Commands.SrlUpdateList;
+import protobuf.srl.submission.Submission.SrlChecksum;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
+import util.Checksum;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -33,7 +37,7 @@ public class DatabaseClient {
 		if (mongoClient == null) {
 			throw new Exception("An error occured while making mongoClient");
 		}
-		db = mongoClient.getDB("submissions");
+		db = (mongoClient.getDB("submissions"));
 		if (db == null) {
 			System.out.println("Db is null!");
 		} else {
@@ -72,9 +76,9 @@ public class DatabaseClient {
 		try {
 			MongoClient mongoClient = new MongoClient("localhost");
 			if (testOnly) {
-				db = mongoClient.getDB("test");
+				db = (mongoClient.getDB("test"));
 			} else {
-				db = mongoClient.getDB("submissions");
+				db = (mongoClient.getDB("submissions"));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -86,12 +90,14 @@ public class DatabaseClient {
 	 * Saves the experiment trying to make sure that there are no duplicates.
 	 *
 	 * First it searches to see if any experiments exist.  If they do then we sort them by submission time and overwrite them!
+	 *
+	 * It also ensures that the solution recieved is built on the previous solution as we do not permit the overwritting of history
 	 * @param experiment
 	 * @return
 	 */
-	public static final String saveSolution(SrlSolution solution) {
+	public static final String saveSolution(final SrlSolution solution, final DatabaseClient databaseClient) {
 		System.out.println("\n\n\nsaving the experiment!");
-		DBCollection solutions = getInstance().db.getCollection(SOLUTION_COLLECTION);
+		DBCollection solutions = databaseClient.getDB().getCollection(SOLUTION_COLLECTION);
 
 		BasicDBObject findQuery = new BasicDBObject(PROBLEM_BANK_ID, solution.getProblemBankId());
 		DBCursor c = solutions.find(findQuery);
@@ -99,12 +105,12 @@ public class DatabaseClient {
 		if (c.count() > 0) {
 			corsor = c.next();
 			c.close();
-			DBCollection courses = getInstance().db.getCollection(SOLUTION_COLLECTION);
+			DBCollection courses = databaseClient.getDB().getCollection(SOLUTION_COLLECTION);
 			DBObject updateObj = new BasicDBObject(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray());
 			courses.update(corsor, new BasicDBObject ("$set", updateObj));
 		} else {
 			System.out.println("No existing submissions found");
-			DBCollection new_user = getInstance().db.getCollection(SOLUTION_COLLECTION);
+			DBCollection new_user = databaseClient.getDB().getCollection(SOLUTION_COLLECTION);
 
 			BasicDBObject query = new BasicDBObject(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
 			.append(IS_PRACTICE_PROBLEM, solution.getIsPracticeProblem())
@@ -119,17 +125,31 @@ public class DatabaseClient {
 	}
 
 	/**
+	 * Returns null if a subclass is used.
+	 * @return An instance of the current database (this method is protected).
+	 */
+	protected DB getDB() {
+		if (getClass().equals(DatabaseClient.class)) {
+			return db;
+		}
+		return null;
+	}
+
+	/**
 	 * Saves the experiment trying to make sure that there are no duplicates.
-	 * 
+	 *
 	 * First it searches to see if any experiments exist.  If they do then we sort them by submission time and overwrite them!
+	 *
+	 * TODO SECURITY CHECKS!
 	 * @param experiment
 	 * @return
+	 * @throws DatabaseException 
 	 */
-	public static final String saveExperiment(SrlExperiment experiment) {
+	public static final String saveExperiment(final SrlExperiment experiment, final DatabaseClient databaseClient) throws DatabaseException {
 		System.out.println("saving the experiment!");
-		DBCollection experiments = getInstance().db.getCollection(EXPERIMENT_COLLECTION);
+		final DBCollection experiments = databaseClient.getDB().getCollection(EXPERIMENT_COLLECTION);
 
-		BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
+		final BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
 		.append(USER_ID, experiment.getUserId());
 		System.out.println("Searching for existing solutions " + findQuery);
 		DBCursor c = experiments.find(findQuery).sort(new BasicDBObject(SUBMISSION_TIME, -1));
@@ -139,15 +159,33 @@ public class DatabaseClient {
 		if (c.count() > 0) {
 			System.out.println("UPDATING AN EXPERIMENT!!!!!!!!");
 			corsor = c.next();
-			c.close();
-			DBCollection courses = getInstance().db.getCollection(EXPERIMENT_COLLECTION);
-			
+
+			try {
+				SrlUpdateList databaseList = SrlUpdateList.parseFrom((byte[])corsor.get(UPDATELIST));
+				SrlUpdateList inputList = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
+
+				SrlUpdateList result;
+				result = completeListCheck(databaseList, inputList);
+				// This is a safe comparison as the method ensures the same object is returned and is not aliased.
+				if (result == databaseList) {
+					// We do a NO-OP and return success
+					return corsor.get(SELF_ID).toString();
+				}
+			} catch (InvalidProtocolBufferException e) {
+				// TODO: figure out how to handle this event...
+				e.printStackTrace();
+			} finally {
+				c.close();
+			}
+
+			final DBCollection courses = databaseClient.getDB().getCollection(EXPERIMENT_COLLECTION);
+
 			// TODO: figure out how to update a document with a single command
-			
-			DBObject updateObj = new BasicDBObject(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray());
-			DBObject updateObj2 = new BasicDBObject(SUBMISSION_TIME, experiment.getSubmission().getSubmissionTime());
-			BasicDBObject updateQueryPart2 = new BasicDBObject("$set", updateObj);
-			BasicDBObject updateQuery2Part2 = new BasicDBObject("$set", updateObj2);
+
+			final DBObject updateObj = new BasicDBObject(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray());
+			final DBObject updateObj2 = new BasicDBObject(SUBMISSION_TIME, experiment.getSubmission().getSubmissionTime());
+			final BasicDBObject updateQueryPart2 = new BasicDBObject("$set", updateObj);
+			final BasicDBObject updateQuery2Part2 = new BasicDBObject("$set", updateObj2);
 			courses.update(corsor, updateQueryPart2);
 			courses.update(corsor, updateQuery2Part2);
 		} else {
@@ -167,14 +205,15 @@ public class DatabaseClient {
 		return corsor.get(SELF_ID).toString();
 	}
 
+
 	/**
 	 * Gets the experiment by its id and sends all of the important information associated with it
 	 * @param itemId
 	 * @return
 	 */
-	public static SrlExperiment getExperiment(String itemId) {
+	public static SrlExperiment getExperiment(String itemId, final DatabaseClient databaseClient) {
 		System.out.println("Fetching experiment");
-		DBRef myDbRef = new DBRef(getInstance().db, EXPERIMENT_COLLECTION, new ObjectId(itemId));
+		DBRef myDbRef = new DBRef(databaseClient.getDB(), EXPERIMENT_COLLECTION, new ObjectId(itemId));
 		DBObject corsor = myDbRef.fetch();
 
 		if (corsor == null) {
@@ -193,4 +232,29 @@ public class DatabaseClient {
 		return build.build();
 	}
 
+	/**
+	 * Returns database object unmodified if the list are the same
+	 * If they are not the same but are compatibable a new object of the combined version is made
+	 * @throws DatabaseException 
+	 */
+	public static SrlUpdateList completeListCheck(final SrlUpdateList database, final SrlUpdateList input) throws DatabaseException {
+		SrlChecksum databaseSum = Checksum.computeChecksum(database.getListList());
+		SrlChecksum inputSum = Checksum.computeChecksum(input.getListList());
+		if (databaseSum.equals(inputSum)) {
+			return database;
+		}
+
+		int newIndex = Checksum.checksumIndex(input.getListList(), databaseSum);
+		if (newIndex < 0) {
+			throw new DatabaseException("Input list is not compatible with previous data");
+		}
+
+		SrlUpdateList.Builder combinedList = SrlUpdateList.newBuilder(database);
+		// The combined list should be safe as we can ensure that history is not changed as we use it to build the new list.
+		// and the checksum of the new combined data should match the complete list of the input data
+		// this is to safegaurd against a possible attack where they managed to figure out the checksum process
+		// and come up with a way to ensure equality with it not being equal (so changing history will still not be possible)
+		combinedList.addAllList(input.getListList().subList(newIndex + 1, input.getListCount()));
+		return combinedList.build();
+	}
 }

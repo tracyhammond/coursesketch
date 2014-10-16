@@ -2,8 +2,8 @@ package connection;
 
 import handlers.DataRequestHandler;
 import handlers.SubmissionRequestHandler;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.GeneralConnectionServlet;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;

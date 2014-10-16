@@ -1,0 +1,44 @@
+<html>
+<head>
+<script type="text/javascript" src="/src/utilities/functions/base.js"></script>
+<script type="text/javascript" src="/src/utilities/functions/string.js"></script>
+
+<script type="text/javascript" src="schoolItem.js"></script>
+<script type="text/javascript" src="schoolItemBuilder.js"></script>
+<script type="text/javascript" src="clickSelectionManager.js"></script>
+<link id="schoolItemTemplateImport" rel="import" href="schoolItem.html">
+<script>
+    (function(importDoc) {
+        $(document).ready(function() {
+            var link = importDoc.querySelector('#schoolItemTemplateImport');
+            var template = link.import.querySelector('#schoolItemTemplate');
+            var clone = document.importNode(template.content, true);
+
+            var newElement = new SchoolItem();
+
+            /**
+             * @Method
+             * Called when the element is created, using document.create()(but does nothing else)
+             */
+            SchoolItem.prototype.createdCallback = function() {
+            };
+
+            /**
+             * Creates the shadow root and adds that into the system.
+             */
+            SchoolItem.prototype.attachedCallback = function() {
+                this.initializeElement(clone.cloneNode(true));
+            };
+
+            SchoolItem.prototype.detachedCallback = function() {
+                //this.finalize();
+            };
+
+            document.registerElement('school-item', {
+                prototype : newElement
+            });
+        });
+    })(document.currentScript.ownerDocument);
+</script>
+</head>
+</html>

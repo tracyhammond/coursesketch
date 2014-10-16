@@ -1,24 +1,38 @@
 package connection;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.MultiConnectionManager;
-import protobuf.srl.request.Message.Request;
+import multiconnection.GeneralConnectionServer;
+import multiconnection.MultiConnectionManager;
 
-/** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
+/**
+ * Creates a connection to the submission server.
+ */
 public class DatabaseConnectionManager extends MultiConnectionManager {
 
-	public DatabaseConnectionManager(GeneralConnectionServer parent, boolean connectType, boolean secure) {
-		super(parent, connectType, secure);
-	}
+    /**
+     * The port number of the submission server.
+     */
+    private static final int SUBMISSION_PORT = 8883;
 
-	@Override
-	public void connectServers(GeneralConnectionServer serv) {
-		try {
-			createAndAddConnection(serv, connectLocally, "srl02.tamu.edu", 8883, secure, SubmissionConnection.class);
-		} catch (ConnectionException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * A constructor for the multi connection manager.
+     * @param parent The parent server
+     * @param connectType If the connection is local or if it is remote
+     * @param secure If ssl should be used.
+     */
+    public DatabaseConnectionManager(final GeneralConnectionServer parent, final boolean connectType, final boolean secure) {
+        super(parent, connectType, secure);
+    }
+
+    /**
+     * Called to connect this server to other servers.
+     * @param serv The current server that the connections will be made from.
+     */
+    @Override
+    public final void connectServers(final GeneralConnectionServer serv) {
+        try {
+            createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(), SubmissionConnection.class);
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+        }
+    }
 }
