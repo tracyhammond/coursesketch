@@ -47,6 +47,7 @@ import database.RequestConverter;
 import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import database.auth.MongoAuthenticator;
 import database.auth.Authenticator.AuthType;
 
 /**
@@ -138,13 +139,10 @@ public final class AssignmentManager {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
         }
 
-        final ArrayList adminList = (ArrayList<Object>) corsor.get(ADMIN);
-        final ArrayList modList = (ArrayList<Object>) corsor.get(MOD);
-        final ArrayList usersList = (ArrayList<Object>) corsor.get(USERS);
         boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-        isMod = authenticator.checkAuthentication(userId, modList);
-        isUsers = authenticator.checkAuthentication(userId, usersList);
+        isAdmin = authenticator.checkAuthentication(userId, (List<Object>) corsor.get(ADMIN));
+        isMod = authenticator.checkAuthentication(userId, (List<Object>) corsor.get(MOD));
+        isUsers = authenticator.checkAuthentication(userId, (List<Object>) corsor.get(USERS));
 
         if (!isAdmin && !isMod && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -152,6 +150,7 @@ public final class AssignmentManager {
 
         // check to make sure the assignment is within the time period that the
         // course is open and the user is in the course
+        // FUTURE: maybe not make this necessarry if the insertion of assignments prevents this.
         final AuthType auth = new AuthType();
         auth.setCheckDate(true);
         auth.setUser(true);
@@ -188,7 +187,7 @@ public final class AssignmentManager {
             exactAssignment.setImageUrl((String) corsor.get(IMAGE));
         }
 
-        // if you are a user, the course must be open to view the assignments
+        // if you are a user, the assignment must be open to view the problems
         if (isAdmin || isMod || (isUsers
                 && Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate()))) {
             if (corsor.get(PROBLEM_LIST) != null) {
@@ -438,19 +437,8 @@ public final class AssignmentManager {
         final DBObject corsor = myDbRef.fetch();
         final DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);
 
-        BasicDBObject updateQuery = null;
-        BasicDBObject fieldQuery = null;
-        for (int k = 0; k < ids.length; k++) {
-            final ArrayList<String> list = ids[k];
-            // k = 0 ADMIN, k = 1, MOD, k >= 2 USERS
-            final String field = k == 0 ? ADMIN : (k == 1 ? MOD : USERS);
-            if (k == 0) {
-                fieldQuery = new BasicDBObject(field, new BasicDBObject("$each", list));
-                updateQuery = new BasicDBObject("$addToSet", fieldQuery);
-            } else {
-                fieldQuery.append(field, new BasicDBObject("$each", list));
-            }
-        }
+        final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
+
         System.out.println(updateQuery);
         assignments.update(corsor, updateQuery);
     }

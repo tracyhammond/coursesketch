@@ -1,7 +1,6 @@
 package database.user;
 
 import static database.DatabaseStringConstants.DATABASE;
-
 import protobuf.srl.school.School.SrlSchool;
 import protobuf.srl.school.School.SrlUser;
 
@@ -11,6 +10,7 @@ import com.mongodb.MongoClient;
 import database.DatabaseAccessException;
 import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
+import database.institution.mongo.MongoInstitution;
 
 /**
  * A client for all user data.  This has its own database and instance.
@@ -22,6 +22,7 @@ public final class UserClient {
     /**
      * A specific instance used for client actions.
      */
+    @SuppressWarnings("PMD.AssignmentToNonFinalStatic")
     private static UserClient instance;
 
     /**
@@ -49,11 +50,18 @@ public final class UserClient {
      * Gets the instance for local use. Creates it if it does not exist.
      * @return an instance of the user client.
      */
+    @SuppressWarnings("checkstyle:innerassignment")
     private static UserClient getInstance() {
-        if (instance == null) {
-            instance = new UserClient();
+        UserClient result = instance;
+        if (result == null) {
+            synchronized (MongoInstitution.class) {
+                if (result == null) {
+                    result = instance;
+                    instance = result = new UserClient();
+                }
+            }
         }
-        return instance;
+        return result;
     }
 
     /**
@@ -61,17 +69,21 @@ public final class UserClient {
      * instance that can only access a test database.
      *
      * @param testOnly denotes that his is only being used for testing.
+     *
+     * @param fakeDB
+     *            uses a fake DB for its unit tests. This is typically used for
+     *            unit test.
      */
-    public UserClient(final boolean testOnly) {
-        try {
+    public UserClient(final boolean testOnly, final DB fakeDB) {
+        if (testOnly && fakeDB != null) {
+            database = fakeDB;
+        } else {
             final MongoClient mongoClient = new MongoClient("localhost");
             if (testOnly) {
                 database = mongoClient.getDB("test");
             } else {
                 database = mongoClient.getDB(DATABASE);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         instance = this;
     }

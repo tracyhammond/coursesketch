@@ -326,28 +326,24 @@ public final class CourseManager {
     public static List<SrlCourse> mongoGetAllPublicCourses(final DB dbs) {
         final DBCollection courseTable = dbs.getCollection(COURSE_COLLECTION);
 
-        final ArrayList<SrlCourse> resultList = new ArrayList<SrlCourse>();
+        final List<SrlCourse> resultList = new ArrayList<SrlCourse>();
 
         // checks for all public courses.
-        //                                                                  the value for a public course
         final DBObject publicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.PUBLIC.getNumber());
-        DBCursor cursor = courseTable.find(publicCheck);
-        while (cursor.hasNext()) {
-            final SrlCourse.Builder build = SrlCourse.newBuilder();
-            final DBObject foundCourse = cursor.next();
-            build.setId(foundCourse.get(SELF_ID).toString());
-            build.setDescription(foundCourse.get(DESCRIPTION).toString());
-            build.setName(foundCourse.get(NAME).toString());
-            build.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(ACCESS_DATE)).longValue()));
-            build.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(CLOSE_DATE)).longValue()));
-            resultList.add(build.build());
-        }
-        cursor.close();
+        buildCourseForSearching(courseTable.find(publicCheck), resultList);
 
         // checks for all super public courses.
-        // the value for a superbulic course
         final DBObject superPublicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.SUPER_PUBLIC.getNumber());
-        cursor = courseTable.find(superPublicCheck);
+        buildCourseForSearching(courseTable.find(superPublicCheck), resultList);
+
+        return resultList;
+    }
+
+    /**
+     * @param cursor The pointer to the database object
+     * @param resultList The list that the results are added to.  This list is modified by this method.
+     */
+    private void buildCourseForSearching(final DBCursor cursor, final List<SrlCourse> resultList) {
         while (cursor.hasNext()) {
             final SrlCourse.Builder build = SrlCourse.newBuilder();
             final DBObject foundCourse = cursor.next();
@@ -358,9 +354,7 @@ public final class CourseManager {
             build.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(CLOSE_DATE)).longValue()));
             resultList.add(build.build());
         }
-
         cursor.close();
-        return resultList;
     }
 
     /**
