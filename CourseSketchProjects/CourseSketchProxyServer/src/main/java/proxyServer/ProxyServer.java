@@ -15,12 +15,6 @@ import java.util.Set;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import jettyMultiConnection.ConnectionException;
-import jettyMultiConnection.ConnectionWrapper;
-import jettyMultiConnection.GeneralConnectionServer;
-import jettyMultiConnection.GeneralConnectionServlet;
-import jettyMultiConnection.MultiConnectionState;
-
 import multiconnection.ConnectionWrapper;
 import multiconnection.GeneralConnectionServer;
 import multiconnection.GeneralConnectionServlet;
@@ -29,7 +23,6 @@ import multiconnection.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.joda.time.DateTime;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -45,6 +38,11 @@ import connection.TimeManager;
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
 public class ProxyServer extends GeneralConnectionServer {
+
+    /**
+     * The name of the socket This can be hidden in a subclass.
+     */
+    public static final String NAME = "Proxy";
 
 	@SuppressWarnings("hiding")
 	public static final int MAX_CONNECTIONS = 60; // sets see if this works!
@@ -78,7 +76,7 @@ public class ProxyServer extends GeneralConnectionServer {
 					e1.printStackTrace();
 				}
 				// */
-				Set<Session> conns=connectionToId.keySet();
+				Set<Session> conns = getConnectionToId().keySet();
 				for(Session conn:conns)
 				{	
 					send(conn, TimeManager.serverSendTimeToClient());
@@ -88,9 +86,12 @@ public class ProxyServer extends GeneralConnectionServer {
 		TimeManager.setTimeEstablishedListener(listener);
 	}
 
+    /**
+     * Tries to sync time with this new client.
+     * @param conn the connection that is being opened.
+     */
 	@Override
-	public void onOpen(Session conn) {
-		super.onOpen(conn);
+	public void openSession(Session conn) {
 		send(conn, TimeManager.serverSendTimeToClient());
 	}
 	
@@ -99,7 +100,7 @@ public class ProxyServer extends GeneralConnectionServer {
 	 */
 	@Override
 	public void onMessage(Session conn, Request req) {
-		LoginConnectionState state = (LoginConnectionState) connectionToId.get(conn);
+		LoginConnectionState state = (LoginConnectionState) getConnectionToId().get(conn);
 
 		//DO NOT FORGET ABOUT THIS
 		if (state.isPending()) {
@@ -168,11 +169,6 @@ public class ProxyServer extends GeneralConnectionServer {
 	public MultiConnectionState getUniqueState() {
 		return new ProxyConnectionState(Encoder.nextID().toString());
 	}
-
-	@Override
-	public String getName() {
-    	return "Proxy";
-    }
 
 	/**
 	 * Creates the listener that happens when the server fails to communicate to another websocket.

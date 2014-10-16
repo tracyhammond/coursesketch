@@ -34,7 +34,7 @@ public class LoginConnection extends ConnectionWrapper {
 			Request rsp = TimeManager.decodeRequest(r);
 			if (rsp != null) {
 				try {
-					this.parentManager.send(rsp, r.getSessionInfo(), LoginConnection.class);
+					this.getParentManager().send(rsp, r.getSessionInfo(), LoginConnection.class);
 				} catch (ConnectionException e) {
 					e.printStackTrace();
 				}
@@ -64,7 +64,7 @@ public class LoginConnection extends ConnectionWrapper {
 			dataSend.addItems(itemSend);
 			createUser.setOtherData(dataSend.build().toByteString());
 			try {
-				this.parentManager.send(createUser.build(), r.getSessionInfo(), DataConnection.class);
+				this.getParentManager().send(createUser.build(), r.getSessionInfo(), DataConnection.class);
 			} catch (ConnectionException e) {
 				e.printStackTrace();
 			}

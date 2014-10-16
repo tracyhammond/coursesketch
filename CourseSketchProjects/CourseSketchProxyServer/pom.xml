@@ -16,8 +16,7 @@
 
 	<properties>
 		<!-- This may be removed and a later solution will need to be worked on -->
-		<absoluteCheckstyleLocation>../../${checkstyleLocation}</absoluteCheckstyleLocation>
-		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<mainClass>proxyServer.ProxyRunner</mainClass>
 	</properties>
 	<build>

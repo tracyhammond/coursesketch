@@ -37,7 +37,7 @@ public class DataConnection extends ConnectionWrapper {
 			Request rsp = TimeManager.decodeRequest(req);
 			if (rsp != null) {
 				try {
-					this.parentManager.send(rsp, req.getSessionInfo(), DataConnection.class);
+					this.getParentManager().send(rsp, req.getSessionInfo(), DataConnection.class);
 				} catch (ConnectionException e) {
 					e.printStackTrace();
 				}
