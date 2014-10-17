@@ -37,28 +37,47 @@ import connection.TimeManager;
  * Contains simple proxy information that is sent to other servers.
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public class ProxyServer extends GeneralConnectionServer {
+public final class ProxyServer extends GeneralConnectionServer {
 
     /**
      * The name of the socket This can be hidden in a subclass.
      */
     public static final String NAME = "Proxy";
 
+    /**
+     * an overwrite of the max number of connections to increase it to 60.
+     */
 	@SuppressWarnings("hiding")
-	public static final int MAX_CONNECTIONS = 60; // sets see if this works!
+	public static final int MAX_CONNECTIONS = 60;
 
+    /**
+     * The code for when an invalid login has happened.
+     */
 	public static final int STATE_INVALID_LOGIN = 4002;
+
+    /**
+     * The number of times someone can attempt to login.
+     */
 	public static final int MAX_LOGIN_TRIES = 5;
+
+    /**
+     * A message that is sent when too many login attempts happen.
+     */
 	public static final String INVALID_LOGIN_MESSAGE = "Too many incorrect login attempts.\nClosing connection.";
 
-	static int numberOfConnections = Integer.MIN_VALUE;
+    /**
+     * The current number of connections in the server.
+     */
+	private static int numberOfConnections = Integer.MIN_VALUE;
 
-	public ProxyServer(GeneralConnectionServlet parent) {
+    /**
+     * @param parent The servlet made for this server.
+     */
+	public ProxyServer(final GeneralConnectionServlet parent) {
 		super(parent);
-		ActionListener listener = new ActionListener(){
+		final ActionListener listener = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-
+			public void actionPerformed(final ActionEvent e) {
 				try {
 					getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginConnection.class);
 				} catch (ConnectionException e1) {
@@ -76,9 +95,8 @@ public class ProxyServer extends GeneralConnectionServer {
 					e1.printStackTrace();
 				}
 				// */
-				Set<Session> conns = getConnectionToId().keySet();
-				for(Session conn:conns)
-				{	
+				final Set<Session> conns = getConnectionToId().keySet();
+				for (Session conn:conns) {
 					send(conn, TimeManager.serverSendTimeToClient());
 				}
 			}
@@ -91,18 +109,19 @@ public class ProxyServer extends GeneralConnectionServer {
      * @param conn the connection that is being opened.
      */
 	@Override
-	public void openSession(Session conn) {
+	public void openSession(final Session conn) {
 		send(conn, TimeManager.serverSendTimeToClient());
 	}
-	
-	/**
-	 * Accepts messages and sends the request to the correct server and holds minimum client state.
-	 */
-	@Override
-	public void onMessage(Session conn, Request req) {
-		LoginConnectionState state = (LoginConnectionState) getConnectionToId().get(conn);
 
-		//DO NOT FORGET ABOUT THIS
+    /**
+     * {@inheritDoc}
+     * Routes the given request to the correct server.
+     */
+	@Override
+	public void onMessage(final Session conn, final Request req) {
+		final LoginConnectionState state = (LoginConnectionState) getConnectionToId().get(conn);
+
+		// the connection is waiting to login
 		if (state.isPending()) {
 			//conn.send(pending);
 			return;
@@ -112,11 +131,11 @@ public class ProxyServer extends GeneralConnectionServer {
 				conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
 				return;
 			}
-			String sessionID = state.getKey();
+			final String sessionID = state.getKey();
 			System.out.println("Request type is " + req.getRequestType().name());
 			try {
 				this.getConnectionManager().send(req, sessionID, LoginConnection.class);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				send(conn, createBadConnectionResponse(req, LoginConnection.class));
 			}
 		} else {
@@ -126,10 +145,11 @@ public class ProxyServer extends GeneralConnectionServer {
 			}
 			if (req.getRequestType() == MessageType.RECOGNITION) {
 				System.out.println("REQUEST TYPE = RECOGNITION");
-				String sessionID = state.getKey();
+				final String sessionID = state.getKey();
 				try {
-					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, RecognitionConnection.class); // no userId is sent for security reasons.
-				} catch(Exception e) {
+                    // No userId is sent for security reasons.
+					((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, RecognitionConnection.class);
+				} catch (Exception e) {
 					System.err.println("Recognition error!");
 					send(conn, createBadConnectionResponse(req, RecognitionConnection.class));
 				}
@@ -137,10 +157,11 @@ public class ProxyServer extends GeneralConnectionServer {
 			}
 			if (req.getRequestType() == MessageType.SUBMISSION) {
 				System.out.println("REQUEST TYPE = SUBMISSION");
-				String sessionID = state.getKey();
+				final String sessionID = state.getKey();
 				try {
-					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, AnswerConnection.class, ((ProxyConnectionState) state).getUserId());
-				} catch(Exception e) {
+					((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, AnswerConnection.class,
+                            ((ProxyConnectionState) state).getUserId());
+				} catch (Exception e) {
 					e.printStackTrace();
 					send(conn, createBadConnectionResponse(req, AnswerConnection.class));
 				}
@@ -149,10 +170,11 @@ public class ProxyServer extends GeneralConnectionServer {
 			if (req.getRequestType() == MessageType.DATA_REQUEST || req.getRequestType() == MessageType.DATA_INSERT
 					|| req.getRequestType() == MessageType.DATA_UPDATE || req.getRequestType() == MessageType.DATA_REMOVE) {
 				System.out.println("REQUEST TYPE = DATA REQUEST");
-				String sessionID = state.getKey();
+				final String sessionID = state.getKey();
 				try {
-					((ProxyConnectionManager)this.getConnectionManager()).send(req, sessionID, DataConnection.class, ((ProxyConnectionState) state).getUserId());
-				} catch(Exception e) {
+					((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, DataConnection.class,
+                            ((ProxyConnectionState) state).getUserId());
+				} catch (Exception e) {
 					e.printStackTrace();
 					send(conn, createBadConnectionResponse(req, DataConnection.class));
 				}
@@ -163,7 +185,7 @@ public class ProxyServer extends GeneralConnectionServer {
 	}
 
 	/**
-	 * Returns a number that should be unique.
+	 * @return a number that should be unique.
 	 */
 	@Override
 	public MultiConnectionState getUniqueState() {
@@ -177,17 +199,18 @@ public class ProxyServer extends GeneralConnectionServer {
 	 */
 	public void initializeListeners() {
 		System.out.println("Creating the socket failed listeners for the server");
-		ActionListener listen = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		final ActionListener listen = new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
 				System.err.println("Looking at the failed messages");
-				ArrayList<ByteBuffer> failedMessages = (ArrayList<ByteBuffer>) e.getSource();
+				final ArrayList<ByteBuffer> failedMessages = (ArrayList<ByteBuffer>) e.getSource();
 				for (ByteBuffer message : failedMessages) {
 					try {
-						Request req = Request.parseFrom(message.array());
-						MultiConnectionState state = getIdToState().get(req.getSessionInfo());
-						Class<? extends ConnectionWrapper> classType = (Class<? extends ConnectionWrapper>) Class.forName(e.getActionCommand());
-						Request result = createBadConnectionResponse(req, classType);
+						final Request req = Request.parseFrom(message.array());
+						final MultiConnectionState state = getIdToState().get(req.getSessionInfo());
+						final Class<? extends ConnectionWrapper> classType = (Class<? extends ConnectionWrapper>)
+                                Class.forName(e.getActionCommand());
+						final Request result = createBadConnectionResponse(req, classType);
 						send(getIdToConnection().get(state), result);
 					} catch (InvalidProtocolBufferException e1) {
 						e1.printStackTrace();
