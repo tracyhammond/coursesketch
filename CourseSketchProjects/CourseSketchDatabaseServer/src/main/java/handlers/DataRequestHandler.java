@@ -35,14 +35,8 @@ import database.user.UserClient;
  * Typcially an Id is given of that data requested it is then sent back to the client that requested it.
  * @author gigemjt
  */
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
 public final class DataRequestHandler {
-
-    /**
-     * Private constructor.
-     *
-     */
-    private DataRequestHandler() {
-    }
 
     /**
      * A message returned when getting the data was successful.
@@ -55,6 +49,12 @@ public final class DataRequestHandler {
     private static final String NO_COURSE_MESSAGE = "You do not have any courses associated with this account";
 
     /**
+     * Private constructor.
+     */
+    private DataRequestHandler() {
+    }
+
+    /**
      * Takes in a request that has to deal with requesting data.
      *
      * decode request and pull correct information from {@link Institution}
@@ -64,6 +64,8 @@ public final class DataRequestHandler {
      * @param sessionId the id of this particular session which is used if another server is talked to.
      * @param internalConnections Connections to other servers that can be used to grab data from them.
      */
+    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
+        "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount" })
     public static void handleRequest(final Request req, final Session conn, final String sessionId,
             final MultiConnectionManager internalConnections) {
         try {
@@ -75,7 +77,6 @@ public final class DataRequestHandler {
                 throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
             }
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
-
             final Institution instance = MongoInstitution.getInstance();
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemRequest itrequest = request.getItemsList().get(p);
@@ -110,17 +111,6 @@ public final class DataRequestHandler {
                             results.add(buildResult(bankproblemSchool.build().toByteString(), ItemQuery.BANK_PROBLEM));
                         }
                         break;
-                        /*
-                         * case CLASS_GRADE: { List<SrlGrade> classGradeLoop =
-                         * MongoInstitution
-                         * .mongoGetGrade(itrequest.getItemIdList(), userId);
-                         * SrlSchool.Builder gradeSchool =
-                         * SrlSchool.newBuilder();
-                         * gradeSchool.addAllGrades(classGradeLoop);
-                         * results.add(
-                         * buildResult(gradeSchool.build().toByteString
-                         * (),ItemQuery.CLASS_GRADE)); break; }
-                         */
                         case COURSE_SEARCH: {
                             final List<SrlCourse> courseLoop = instance.getAllPublicCourses();
                             System.out.println("Searching all public courses: " + courseLoop);
@@ -130,7 +120,7 @@ public final class DataRequestHandler {
                         }
                         break;
                         case SCHOOL: {
-                            final ArrayList<SrlCourse> courseLoop = instance.getUserCourses(userId);
+                            final List<SrlCourse> courseLoop = instance.getUserCourses(userId);
                             final SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
                             courseSearch.addAllCourses(courseLoop);
                             if (courseLoop.size() <= 0) {
@@ -142,11 +132,8 @@ public final class DataRequestHandler {
                         break;
                         case EXPERIMENT: {
                             // need to get the submission ID?
-
-                            // we send it the CourseProblemId and the userId and
-                            // we get the submission Id
-                            // MongoInstitution.mongoGetExperiment(assignementID,
-                            // userId)
+                            // we send it the CourseProblemId and the userId and we get the submission Id
+                            // MongoInstitution.mongoGetExperiment(assignementID, userId)
                             if (!itrequest.hasAdvanceQuery()) {
                                 for (String itemId : itrequest.getItemIdList()) {
                                     System.out.println("Trying to retrieve an experiemnt from a user!");
@@ -197,10 +184,10 @@ public final class DataRequestHandler {
                 }
             }
             GeneralConnectionServer.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-            GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (AuthenticationException e) {
+            e.printStackTrace();
+            GeneralConnectionServer.send(conn, buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
+        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (Exception e) {

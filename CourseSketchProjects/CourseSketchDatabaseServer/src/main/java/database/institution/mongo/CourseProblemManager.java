@@ -3,7 +3,6 @@ package database.institution.mongo;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.DESCRIPTION;
@@ -38,11 +37,14 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
+import database.auth.MongoAuthenticator;
 
 /**
  * Manages course problems for the mongo database.
  * @author gigemjt
  */
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
+        "PMD.NPathComplexity" })
 public final class CourseProblemManager {
 
     /**
@@ -106,36 +108,24 @@ public final class CourseProblemManager {
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
         final DBObject corsor = myDbRef.fetch();
         if (corsor == null) {
-            throw new DatabaseAccessException("Course was not found with the following ID " + problemId);
+            throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
         }
 
-        final ArrayList adminList = (ArrayList<Object>) corsor.get(ADMIN);
-        final ArrayList modList = (ArrayList<Object>) corsor.get(MOD);
-        final ArrayList usersList = (ArrayList<Object>) corsor.get(USERS);
         boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-        isMod = authenticator.checkAuthentication(userId, modList);
-        isUsers = authenticator.checkAuthentication(userId, usersList);
+        isAdmin = authenticator.checkAuthentication(userId, (ArrayList<String>) corsor.get(ADMIN));
+        isMod = authenticator.checkAuthentication(userId, (ArrayList<String>) corsor.get(MOD));
+        isUsers = authenticator.checkAuthentication(userId, (ArrayList<String>) corsor.get(USERS));
 
         if (!isAdmin && !isMod && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
-
-        final SrlProblem.Builder exactProblem = SrlProblem.newBuilder();
-
-        exactProblem.setId(problemId);
-        exactProblem.setCourseId((String) corsor.get(COURSE_ID));
-        exactProblem.setAssignmentId((String) corsor.get(ASSIGNMENT_ID));
-        exactProblem.setGradeWeight((String) corsor.get(GRADE_WEIGHT));
-        exactProblem.setName((String) corsor.get(NAME));
-        exactProblem.setDescription((String) corsor.get(DESCRIPTION));
 
         // check to make sure the problem is within the time period that the
         // assignment is open and the user is in the assignment
         final AuthType auth = new AuthType();
         auth.setCheckDate(true);
         auth.setUser(true);
-        if (isUsers && !authenticator.isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
+        if (isUsers && !authenticator.isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
 
@@ -156,10 +146,14 @@ public final class CourseProblemManager {
             }
         }
 
-        /*
-         * if (corsor.get(IMAGE) != null) { exactProblem.setImageUrl((String)
-         * corsor.get(IMAGE)); }
-         */
+        final SrlProblem.Builder exactProblem = SrlProblem.newBuilder();
+
+        exactProblem.setId(problemId);
+        exactProblem.setCourseId((String) corsor.get(COURSE_ID));
+        exactProblem.setAssignmentId((String) corsor.get(ASSIGNMENT_ID));
+        exactProblem.setGradeWeight((String) corsor.get(GRADE_WEIGHT));
+        exactProblem.setName((String) corsor.get(NAME));
+        exactProblem.setDescription((String) corsor.get(DESCRIPTION));
 
         // problem manager get problem from bank (as a user!)
         final SrlBankProblem problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) corsor.get(PROBLEM_BANK_ID),
@@ -255,19 +249,8 @@ public final class CourseProblemManager {
         final DBObject corsor = myDbRef.fetch();
         final DBCollection problems = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 
-        BasicDBObject updateQuery = null;
-        BasicDBObject fieldQuery = null;
-        for (int k = 0; k < ids.length; k++) {
-            final ArrayList<String> list = ids[k];
-            // k = 0 ADMIN, k = 1, MOD, k >= 2 USERS
-            final String field = k == 0 ? ADMIN : (k == 1 ? MOD : USERS);
-            if (k == 0) {
-                fieldQuery = new BasicDBObject(field, new BasicDBObject("$each", list));
-                updateQuery = new BasicDBObject("$addToSet", fieldQuery);
-            } else {
-                fieldQuery.append(field, new BasicDBObject("$each", list));
-            }
-        }
+        final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
+
         System.out.println(updateQuery);
         problems.update(corsor, updateQuery);
     }
