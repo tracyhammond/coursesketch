@@ -12,12 +12,15 @@ public final class LoginServlet extends GeneralConnectionServlet {
 
     /**
      * Creates a GeneralConnectionServlet.
-     * @param timeoutTime The time it takes before a connection times out.
-     * @param secure True if the connection is allowing SSL connections.
-     * @param connectLocally True if the server is connecting locally.
+     *
+     * @param timeoutTime
+     *            The time it takes before a connection times out.
+     * @param secure
+     *            True if the connection is allowing SSL connections.
+     * @param connectLocally
+     *            True if the server is connecting locally.
      */
-    public LoginServlet(final long timeoutTime, final boolean secure,
-            final boolean connectLocally) {
+    public LoginServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
         super(timeoutTime, secure, connectLocally);
     }
 
@@ -39,12 +42,11 @@ public final class LoginServlet extends GeneralConnectionServlet {
      * @param secure
      *            <code>true</code> if the connections should be secured,
      *            <code>false</code> otherwise
-     *
+     * 
      * @return a new connection manager object
      */
     @Override
-    protected MultiConnectionManager createConnectionManager(
-            final boolean connectLocally, final boolean secure) {
+    protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return null;
     }
 }
