@@ -79,6 +79,7 @@ public final class LoginConnection extends ConnectionWrapper {
                 errorMessage.setResponseText(errorMessage.getResponseText()
                         + " : The data sent back from the login server was not the correct format");
                 GeneralConnectionServer.send(getConnectionFromState(state), result);
+                return;
             }
 
             loginUser(login, request, state);
