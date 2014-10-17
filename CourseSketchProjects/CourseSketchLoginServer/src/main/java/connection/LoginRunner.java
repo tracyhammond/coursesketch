@@ -40,9 +40,12 @@ public class LoginRunner extends GeneralConnectionRunner {
     @Override
     public final void executeLocalEnviroment() {
         System.out.println("Setting the login database to connect locally");
-        new DatabaseClient(false); // makes the database point locally
+        new DatabaseClient(false, null); // makes the database point locally
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final GeneralConnectionServlet getServlet(final long time,
             final boolean secure, final boolean local) {
