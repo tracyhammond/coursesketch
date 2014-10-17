@@ -42,7 +42,7 @@ public final class LoginServlet extends GeneralConnectionServlet {
      * @param secure
      *            <code>true</code> if the connections should be secured,
      *            <code>false</code> otherwise
-     * 
+     *
      * @return a new connection manager object
      */
     @Override
