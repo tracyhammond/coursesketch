@@ -24,9 +24,10 @@ import database.DatabaseClient;
 @WebSocket()
 public final class LoginServer extends GeneralConnectionServer {
 
-    public LoginServer(final GeneralConnectionServlet parent) {
-        super(parent);
-    }
+    /**
+     * The name of the socket.
+     */
+    public static final String NAME = "Login";
 
     @SuppressWarnings("hiding")
     public static final int MAX_CONNECTIONS = 20;
@@ -44,6 +45,11 @@ public final class LoginServer extends GeneralConnectionServer {
             + "Register: User name is already taken";
 
     private static int numberOfConnections = Integer.MIN_VALUE;
+
+
+    public LoginServer(final GeneralConnectionServlet parent) {
+        super(parent);
+    }
 
     @Override
     public void onMessage(final Session conn, final Request req) {
@@ -172,9 +178,5 @@ public final class LoginServer extends GeneralConnectionServer {
         requestBuilder.setLogin(loginBuilder.build());
         // Build and send.
         return requestBuilder.build();
-    }
-
-    public String getName() {
-        return "Login Socket";
     }
 }
