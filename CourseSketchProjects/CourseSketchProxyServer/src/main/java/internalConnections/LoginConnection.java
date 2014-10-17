@@ -1,21 +1,21 @@
 package internalconnections;
 
-import java.net.URI;
-import java.nio.ByteBuffer;
-
+import com.google.protobuf.InvalidProtocolBufferException;
+import connection.ConnectionException;
+import connection.TimeManager;
 import multiconnection.ConnectionWrapper;
 import multiconnection.GeneralConnectionServer;
-
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.school.School.SrlUser;
-import connection.ConnectionException;
-import connection.TimeManager;
+
+import java.net.URI;
+import java.nio.ByteBuffer;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
@@ -44,7 +44,6 @@ public final class LoginConnection extends ConnectionWrapper {
 	public void onMessage(final ByteBuffer buffer) {
 		final Request r = GeneralConnectionServer.Decoder.parseRequest(buffer);
 		if (r.getRequestType() == Request.MessageType.TIME) {
-
 			final Request rsp = TimeManager.decodeRequest(r);
 			if (rsp != null) {
 				try {
@@ -55,33 +54,48 @@ public final class LoginConnection extends ConnectionWrapper {
 			}
 			return;
 		}
-		final LoginConnectionState state = (LoginConnectionState) getStateFromId(r.getSessionInfo());
-		if (r.getLogin().getIsLoggedIn()) {
-			state.logIn(r.getLogin().getIsInstructor(), r.getServersideId());
-		}
 
-		final Request  result = ProxyConnectionManager.createClientRequest(r); // strips away identification
-		GeneralConnectionServer.send(getConnectionFromState(state), result);
+        if (r.getRequestType() == Request.MessageType.LOGIN) {
+            LoginInformation login = null;
+            try {
+                login = LoginInformation.parseFrom(r.getOtherData());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+            final LoginConnectionState state = (LoginConnectionState) getStateFromId(r.getSessionInfo());
+            state.addTry();
+            if (login == null) {
+                // FUTURE: make this send an error message to flag.
+                System.out.println("Login failed to get to the client");
+                return;
+            }
+            if (login.getIsLoggedIn()) {
+                state.logIn(login.getIsInstructor(), r.getServersideId());
+            }
 
-		if (r.getLogin().getIsRegistering() && r.getLogin().getIsLoggedIn()) {
-			// extra steps that we need to do
-			final Request.Builder createUser = Request.newBuilder();
-			createUser.setServersideId(r.getServersideId());
-			createUser.setRequestType(MessageType.DATA_INSERT);
-			final DataSend.Builder dataSend = DataSend.newBuilder();
-			final ItemSend.Builder itemSend = ItemSend.newBuilder();
-			itemSend.setQuery(ItemQuery.USER_INFO);
-			final SrlUser.Builder user = SrlUser.newBuilder();
-			user.setEmail(r.getLogin().getEmail());
-			user.setUsername(r.getLogin().getUsername());
-			itemSend.setData(user.build().toByteString());
-			dataSend.addItems(itemSend);
-			createUser.setOtherData(dataSend.build().toByteString());
-			try {
-				this.getParentManager().send(createUser.build(), r.getSessionInfo(), DataConnection.class);
-			} catch (ConnectionException e) {
-				e.printStackTrace();
-			}
-		}
+            final Request result = ProxyConnectionManager.createClientRequest(r); // strips away identification
+            GeneralConnectionServer.send(getConnectionFromState(state), result);
+
+            if (login.getIsRegistering() && login.getIsLoggedIn()) {
+                // extra steps that we need to do
+                final Request.Builder createUser = Request.newBuilder();
+                createUser.setServersideId(r.getServersideId());
+                createUser.setRequestType(MessageType.DATA_INSERT);
+                final DataSend.Builder dataSend = DataSend.newBuilder();
+                final ItemSend.Builder itemSend = ItemSend.newBuilder();
+                itemSend.setQuery(ItemQuery.USER_INFO);
+                final SrlUser.Builder user = SrlUser.newBuilder();
+                user.setEmail(login.getEmail());
+                user.setUsername(login.getUsername());
+                itemSend.setData(user.build().toByteString());
+                dataSend.addItems(itemSend);
+                createUser.setOtherData(dataSend.build().toByteString());
+                try {
+                    this.getParentManager().send(createUser.build(), r.getSessionInfo(), DataConnection.class);
+                } catch (ConnectionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 	}
 }

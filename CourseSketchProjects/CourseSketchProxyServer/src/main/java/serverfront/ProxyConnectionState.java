@@ -2,11 +2,18 @@ package serverfront;
 
 import internalconnections.LoginConnectionState;
 
+/**
+ * An extension of the login connection state this handles timing and the id.
+ */
 public final class ProxyConnectionState extends LoginConnectionState {
-
-    private long lastActive;
-    public ProxyConnectionState(final String key) {
-		super(key);
+    /**
+     * Creates a {@link multiconnection.MultiConnectionState} with the given Key.
+     *
+     * @param inputKey
+     *            Uniquely Identifies this connection from any other connection.
+     */
+    public ProxyConnectionState(final String inputKey) {
+		super(inputKey);
 	}
 
     /**
@@ -14,13 +21,5 @@ public final class ProxyConnectionState extends LoginConnectionState {
      */
 	/* package-private */ String getUserId() {
 		return getSessionId();
-	}
-
-	long getTimeSinceLastActive() {
-		return System.currentTimeMillis() - lastActive;
-	}
-	
-	public void updateActivityTime() {
-		lastActive = System.currentTimeMillis();
 	}
 }
