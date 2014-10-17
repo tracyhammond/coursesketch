@@ -28,7 +28,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * @param args Arguemtns passed from the command line.
+     * @param args Arguments passed from the command line.
      */
     public DatabaseRunner(final String[] args) {
         super(args);
