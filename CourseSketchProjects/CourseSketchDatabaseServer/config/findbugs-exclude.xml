@@ -81,4 +81,8 @@
         <!-- problems with the double checked locking pattern -->
         <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE" />
     </Match>
+
+    <Match>
+        <Class name="database.PasswordHash" />
+    </Match>
 </FindBugsFilter>
