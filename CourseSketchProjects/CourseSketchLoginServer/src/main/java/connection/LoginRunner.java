@@ -4,29 +4,42 @@ import multiconnection.GeneralConnectionRunner;
 import multiconnection.GeneralConnectionServlet;
 import database.DatabaseClient;
 
+/**
+ * Starts the login server.
+ *
+ * @author gigemjt
+ */
 public class LoginRunner extends GeneralConnectionRunner {
-    public static final int DEFAULT_PORT = 8886;
 
+    /**
+     * The port on which the login server lies.
+     */
+    public static final int LOGIN_PORT = 8886;
+
+    /**
+     * The actual main method that starts the login server.
+     *
+     * @param args Arguments passed from the command line.
+     */
     public static void main(final String[] args) {
-        LoginRunner run = new LoginRunner(args);
-        try {
-            run.runAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public LoginRunner(final String[] args) {
-        super(args);
-        super.port = DEFAULT_PORT;
+        final LoginRunner run = new LoginRunner(args);
+        run.runAll();
     }
 
     /**
-     * Makes the databases run locally.
+     * @param args Arguments passed from the command line.
+     */
+    public LoginRunner(final String[] args) {
+        super(args);
+        super.setPort(LOGIN_PORT);
+    }
+
+    /**
+     * Makes the login database run locally.
      */
     @Override
     public final void executeLocalEnviroment() {
-        System.out.println("Setting the database to connect locally");
+        System.out.println("Setting the login database to connect locally");
         new DatabaseClient(false); // makes the database point locally
     }
 
