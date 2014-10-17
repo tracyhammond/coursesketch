@@ -39,7 +39,7 @@ import connection.TimeManager;
 public final class ProxyServer extends GeneralConnectionServer {
 
     /**
-     * The name of the socket This can be hidden in a subclass.
+     * The name of the socket.
      */
     public static final String NAME = "Proxy";
 
