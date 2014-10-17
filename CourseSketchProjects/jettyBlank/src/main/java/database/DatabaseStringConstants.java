@@ -31,8 +31,9 @@ public final class DatabaseStringConstants {
     public static final String STATE_COLLECTION = "UserStates";
     public static final String GRADE_COLLECTION = "problem_submissions";
     public static final String UPDATE_COLLECTION = "User_Updates";
-    public static final String DATABASE = "institution";
     public static final String LOGIN_COLLECTION = "CourseSketchUsers";
+    public static final String DATABASE = "institution";
+    public static final String LOGIN_DATABASE = "login";
 
     // meta fields
     public static final String NAME = "Name";
