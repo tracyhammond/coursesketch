@@ -4,7 +4,8 @@ import multiconnection.GeneralConnectionRunner;
 import multiconnection.GeneralConnectionServlet;
 
 /**
- * A subclass of the runner and sets up some special information for running the environment.
+ * A subclass of the runner and sets up some special information for running the
+ * environment.
  */
 public class ProxyRunner extends GeneralConnectionRunner {
 
@@ -15,40 +16,41 @@ public class ProxyRunner extends GeneralConnectionRunner {
     private static final int PROXY_PORT = 8888;
 
     /**
-     * @param args arguments from the command line.
+     * @param args
+     *            arguments from the command line.
      */
-	public static void main(final String[] args) {
-		final ProxyRunner run = new ProxyRunner(args);
-		try {
-			run.runAll();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+    public static void main(final String[] args) {
+        final ProxyRunner run = new ProxyRunner(args);
+        run.runAll();
     }
 
     /**
-     * sets some SSL information.
-     * FUTURE: this should be read from a file instead of listed in code.
+     * sets some SSL information. FUTURE: this should be read from a file
+     * instead of listed in code.
      */
-	@Override
-	public final void executeRemoveEnviroment() {
-		setKeystorePassword("Challeng3");
-		setKeystorePath("srl01_tamu_edu.jks");
-	}
+    @Override
+    public final void executeRemoveEnviroment() {
+        setKeystorePassword("Challeng3");
+        setKeystorePath("srl01_tamu_edu.jks");
+    }
 
     /**
      * Creates a new proxy runner.
-     * @param args arguments from the command line.
+     *
+     * @param args
+     *            arguments from the command line.
      */
-	public ProxyRunner(final String[] args) {
-		super(args);
-		super.setPort(PROXY_PORT);
-		super.setTimeoutTime(TIMEOUT_TIME);
-	}
+    public ProxyRunner(final String[] args) {
+        super(args);
+        super.setPort(PROXY_PORT);
+        super.setTimeoutTime(TIMEOUT_TIME);
+    }
 
-	@Override
-	public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
-		return new ProxyServlet(time, secure, local);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
+        return new ProxyServlet(time, secure, local);
+    }
 }

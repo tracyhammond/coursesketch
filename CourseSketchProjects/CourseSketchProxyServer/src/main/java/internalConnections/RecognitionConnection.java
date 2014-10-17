@@ -7,7 +7,10 @@ import multiconnection.GeneralConnectionServer;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-/** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
+/**
+ * This example demonstrates how to create a websocket connection to a server.
+ * Only the most important callbacks are overloaded.
+ */
 @WebSocket()
 public class RecognitionConnection extends ConnectionWrapper {
 
@@ -24,8 +27,8 @@ public class RecognitionConnection extends ConnectionWrapper {
      * @param parent
      *            The server that is using this connection wrapper.
      */
-	public RecognitionConnection(final URI destination, final GeneralConnectionServer parent) {
-		super(destination, parent);
-	}
+    public RecognitionConnection(final URI destination, final GeneralConnectionServer parent) {
+        super(destination, parent);
+    }
 
 }

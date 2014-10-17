@@ -7,19 +7,20 @@ import internalconnections.LoginConnectionState;
  */
 public final class ProxyConnectionState extends LoginConnectionState {
     /**
-     * Creates a {@link multiconnection.MultiConnectionState} with the given Key.
+     * Creates a {@link multiconnection.MultiConnectionState} with the given
+     * Key.
      *
      * @param inputKey
      *            Uniquely Identifies this connection from any other connection.
      */
     public ProxyConnectionState(final String inputKey) {
-		super(inputKey);
-	}
+        super(inputKey);
+    }
 
     /**
      * @return the user id of this connection.
      */
-	/* package-private */ String getUserId() {
-		return getSessionId();
-	}
+    /* package-private */String getUserId() {
+        return getSessionId();
+    }
 }
