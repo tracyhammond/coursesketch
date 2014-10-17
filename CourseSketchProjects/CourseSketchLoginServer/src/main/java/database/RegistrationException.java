@@ -5,7 +5,8 @@ package database;
  */
 public class RegistrationException extends Exception {
     /**
-     * @param message takes in a message.
+     * @param message
+     *            takes in a message.
      */
     public RegistrationException(final String message) {
         super(message);

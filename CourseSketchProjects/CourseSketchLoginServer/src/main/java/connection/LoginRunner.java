@@ -19,7 +19,8 @@ public class LoginRunner extends GeneralConnectionRunner {
     /**
      * The actual main method that starts the login server.
      *
-     * @param args Arguments passed from the command line.
+     * @param args
+     *            Arguments passed from the command line.
      */
     public static void main(final String[] args) {
         final LoginRunner run = new LoginRunner(args);
@@ -27,7 +28,8 @@ public class LoginRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * @param args Arguments passed from the command line.
+     * @param args
+     *            Arguments passed from the command line.
      */
     public LoginRunner(final String[] args) {
         super(args);
@@ -47,8 +49,7 @@ public class LoginRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServlet getServlet(final long time,
-            final boolean secure, final boolean local) {
+    public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
         return new LoginServlet(time, secure, local);
     }
 }

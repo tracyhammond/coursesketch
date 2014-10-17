@@ -32,36 +32,37 @@ public class DatabaseClient {
      * A single instance of the database client.
      */
     @SuppressWarnings("PMD.AssignmentToNonFinalStatic")
-	private static volatile DatabaseClient instance;
+    private static volatile DatabaseClient instance;
 
     /**
      * a private database.
      */
-	private DB database;
+    private DB database;
 
     /**
-     * @param url the location at which the database is created.
+     * @param url
+     *            the location at which the database is created.
      */
-	private DatabaseClient(final String url) {
-		System.out.println("creating new database instance");
-		MongoClient mongoClient = null;
-		try {
-			mongoClient = new MongoClient(url);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		database = mongoClient.getDB("login");
-		if (database == null) {
-			System.out.println("Db is null!");
-		}
-	}
+    private DatabaseClient(final String url) {
+        System.out.println("creating new database instance");
+        MongoClient mongoClient = null;
+        try {
+            mongoClient = new MongoClient(url);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        database = mongoClient.getDB("login");
+        if (database == null) {
+            System.out.println("Db is null!");
+        }
+    }
 
     /**
      * Creates the database at a specific url.
      */
-	private DatabaseClient() {
-		this("goldberglinux.tamu.edu");
-	}
+    private DatabaseClient() {
+        this("goldberglinux.tamu.edu");
+    }
 
     /**
      * Used only for the purpose of testing overwrite the instance with a test
@@ -114,21 +115,31 @@ public class DatabaseClient {
     }
 
     /**
-     * Logs in the user.  Attempts to log in as the default account if that option is specified otherwise it will login
-     * as the type that is specified.
-     * @param user the user name that is attempting to login.
-     * @param password the password of the user that is attempting to log in.
-     * @param loginAsDefault true if the system will log in as the default account.
-     * @param loginAsInstructor true if the system will log in as the instructor (not used if loginAsDefault is true).
+     * Logs in the user. Attempts to log in as the default account if that
+     * option is specified otherwise it will login as the type that is
+     * specified.
+     *
+     * @param user
+     *            the user name that is attempting to login.
+     * @param password
+     *            the password of the user that is attempting to log in.
+     * @param loginAsDefault
+     *            true if the system will log in as the default account.
+     * @param loginAsInstructor
+     *            true if the system will log in as the instructor (not used if
+     *            loginAsDefault is true).
      * @return The server side userid : the client side user id.
-     * @throws LoginException thrown if there is a problem loggin in.
+     * @throws LoginException
+     *             thrown if there is a problem loggin in.
      */
-	public static final String mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
-		//boolean auth = getInstance().database.authenticate("headlogin","login".toCharArray());
-		final DBCollection table = getInstance().database.getCollection(LOGIN_COLLECTION);
-		final BasicDBObject query = new BasicDBObject(USER_NAME, user);
+    public static final String mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor)
+            throws LoginException {
+        // boolean auth =
+        // getInstance().database.authenticate("headlogin","login".toCharArray());
+        final DBCollection table = getInstance().database.getCollection(LOGIN_COLLECTION);
+        final BasicDBObject query = new BasicDBObject(USER_NAME, user);
 
-		final DBObject cursor = table.findOne(query);
+        final DBObject cursor = table.findOne(query);
 
         if (cursor == null) {
             throw new LoginException(LoginServer.INCORRECT_LOGIN_MESSAGE);
@@ -143,15 +154,22 @@ public class DatabaseClient {
             e.printStackTrace();
             throw new LoginException("An error occured while comparing passwords", e);
         }
-	}
+    }
 
     /**
-     * Gets the user information.  This assumes that the user was able to log in correctly.
-     * @param cursor a pointer to the database object.
-     * @param loginAsDefault true if the system will log in as the default account.
-     * @param loginAsInstructor true if the system will log in as the instructor (not used if loginAsDefault is true).
+     * Gets the user information. This assumes that the user was able to log in
+     * correctly.
+     *
+     * @param cursor
+     *            a pointer to the database object.
+     * @param loginAsDefault
+     *            true if the system will log in as the default account.
+     * @param loginAsInstructor
+     *            true if the system will log in as the instructor (not used if
+     *            loginAsDefault is true).
      * @return A string representing the user id.
-     * @throws LoginException Thrown if the user ids are not able to be grabbed.
+     * @throws LoginException
+     *             Thrown if the user ids are not able to be grabbed.
      */
     @SuppressWarnings("PMD.UselessParentheses")
     private static String getUserInfo(final DBObject cursor, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
@@ -169,49 +187,55 @@ public class DatabaseClient {
 
     /**
      * Adds a new user to the database.
-     * @param user The user name to be added.
-     * @param password the password of the user to be added to the DB.
-     * @param email The email of the user.
-     * @param isInstructor If the default account is an instructor
-     * @throws GeneralSecurityException Thrown if there are problems creating the hash for the password.
-     * @throws RegistrationException Thrown if the user already exist in the system.
+     *
+     * @param user
+     *            The user name to be added.
+     * @param password
+     *            the password of the user to be added to the DB.
+     * @param email
+     *            The email of the user.
+     * @param isInstructor
+     *            If the default account is an instructor
+     * @throws GeneralSecurityException
+     *             Thrown if there are problems creating the hash for the
+     *             password.
+     * @throws RegistrationException
+     *             Thrown if the user already exist in the system.
      */
-	public static final void createUser(final String user, final String password, final String email,
-            final boolean isInstructor) throws GeneralSecurityException, RegistrationException {
-		final DBCollection loginCollection = getInstance().database.getCollection(LOGIN_COLLECTION);
-		BasicDBObject query = new BasicDBObject(USER_NAME, user);
-		final DBObject cursor = loginCollection.findOne(query);
-		if (cursor == null) {
-			query = new BasicDBObject(USER_NAME, user)
-				.append(PASSWORD, PasswordHash.createHash(password))
-				.append(EMAIL, email)
-				.append(IS_DEFAULT_INSTRUCTOR, isInstructor)
-				.append(INSTRUCTOR_ID, FancyEncoder.fancyID())
-                .append(STUDENT_ID, FancyEncoder.fancyID())
-				.append(STUDENT_CLIENT_ID, GeneralConnectionServer.Encoder.nextID().toString())
-                .append(INSTRUCTOR_CLIENT_ID, GeneralConnectionServer.Encoder.nextID().toString());
-			loginCollection.insert(query);
-		} else {
+    public static final void createUser(final String user, final String password, final String email, final boolean isInstructor)
+            throws GeneralSecurityException, RegistrationException {
+        final DBCollection loginCollection = getInstance().database.getCollection(LOGIN_COLLECTION);
+        BasicDBObject query = new BasicDBObject(USER_NAME, user);
+        final DBObject cursor = loginCollection.findOne(query);
+        if (cursor == null) {
+            query = new BasicDBObject(USER_NAME, user).append(PASSWORD, PasswordHash.createHash(password)).append(EMAIL, email)
+                    .append(IS_DEFAULT_INSTRUCTOR, isInstructor).append(INSTRUCTOR_ID, FancyEncoder.fancyID())
+                    .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, GeneralConnectionServer.Encoder.nextID().toString())
+                    .append(INSTRUCTOR_CLIENT_ID, GeneralConnectionServer.Encoder.nextID().toString());
+            loginCollection.insert(query);
+        } else {
             throw new RegistrationException(LoginServer.REGISTRATION_ERROR_MESSAGE);
         }
-	}
+    }
 
     /**
-     * @param user the username of the account that is being checked.
-     * @return true if the default account for the user is an instructor account.
+     * @param user
+     *            the username of the account that is being checked.
+     * @return true if the default account for the user is an instructor
+     *         account.
      */
-	public static final boolean defaultIsInstructor(final String user) {
-		final DBCollection table = getInstance().database.getCollection(LOGIN_COLLECTION);
-		final BasicDBObject query = new BasicDBObject(USER_NAME, user);
+    public static final boolean defaultIsInstructor(final String user) {
+        final DBCollection table = getInstance().database.getCollection(LOGIN_COLLECTION);
+        final BasicDBObject query = new BasicDBObject(USER_NAME, user);
 
-		final DBObject cursor = table.findOne(query);
-		if (cursor == null) {
-			System.out.println("Unable to find user!");
-			return false;
-		}
+        final DBObject cursor = table.findOne(query);
+        if (cursor == null) {
+            System.out.println("Unable to find user!");
+            return false;
+        }
 
-		final String instructor = (String) cursor.get(IS_DEFAULT_INSTRUCTOR);
-		return "true".equals(instructor);
-	}
+        final String instructor = (String) cursor.get(IS_DEFAULT_INSTRUCTOR);
+        return "true".equals(instructor);
+    }
 
 }
