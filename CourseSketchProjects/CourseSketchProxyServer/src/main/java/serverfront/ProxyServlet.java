@@ -12,34 +12,43 @@ import internalconnections.ProxyConnectionManager;
 public final class ProxyServlet extends GeneralConnectionServlet {
 
     /**
-     * @param timeoutTime The time it takes before a connection times out.
-     * @param secure True if the connection is allowing SSL connections.
-     * @param connectLocally True if the server is connecting locally.
+     * @param timeoutTime
+     *            The time it takes before a connection times out.
+     * @param secure
+     *            True if the connection is allowing SSL connections.
+     * @param connectLocally
+     *            True if the server is connecting locally.
      */
-	public ProxyServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
-		super(timeoutTime, secure, connectLocally);
-	}
-
-	@Override
-	public GeneralConnectionServer createServerSocket() {
-    	return new ProxyServer(this);
+    public ProxyServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
+        super(timeoutTime, secure, connectLocally);
     }
 
     /**
-     * @param connectLocally True if the connection is acting as if it is on a local computer (used for testing)
-     * @param secure True if the connection is using SSL.
+     * {@inheritDoc}
+     */
+    @Override
+    public GeneralConnectionServer createServerSocket() {
+        return new ProxyServer(this);
+    }
+
+    /**
+     * @param connectLocally
+     *            True if the connection is acting as if it is on a local
+     *            computer (used for testing)
+     * @param secure
+     *            True if the connection is using SSL.
      * @return {@link internalconnections.ProxyConnectionManager}
      */
-	@Override
-	protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
-		return new ProxyConnectionManager(getServer(), connectLocally, secure);
-	}
+    @Override
+    protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+        return new ProxyConnectionManager(getServer(), connectLocally, secure);
+    }
 
     /**
      * initializes the listeners for the servers.
      */
-	@Override
-	protected void onReconnect() {
-		((ProxyServer) getServer()).initializeListeners();
-	}
+    @Override
+    protected void onReconnect() {
+        ((ProxyServer) getServer()).initializeListeners();
+    }
 }
