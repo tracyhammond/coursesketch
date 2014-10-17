@@ -18,7 +18,7 @@ import static database.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
 import static database.DatabaseStringConstants.INSTRUCTOR_ID;
 import static database.DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR;
 import static database.DatabaseStringConstants.EMAIL;
-import static database.DatabaseStringConstants.DATABASE;
+import static database.DatabaseStringConstants.LOGIN_DATABASE;
 
 import connection.LoginServer;
 import multiconnection.GeneralConnectionServer;
@@ -37,24 +37,24 @@ public class DatabaseClient {
     /**
      * a private database.
      */
-    private DB database;
+    @SuppressWarnings("PMD.UnusedPrivateField")
+    private DB database = null;
 
     /**
      * @param url
      *            the location at which the database is created.
      */
     private DatabaseClient(final String url) {
-        System.out.println("creating new database instance");
         MongoClient mongoClient = null;
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        database = mongoClient.getDB("login");
-        if (database == null) {
-            System.out.println("Db is null!");
+        if (mongoClient == null) {
+            return;
         }
+        database = mongoClient.getDB(LOGIN_DATABASE);
     }
 
     /**
@@ -91,7 +91,7 @@ public class DatabaseClient {
             if (testOnly) {
                 database = mongoClient.getDB("test");
             } else {
-                database = mongoClient.getDB(DATABASE);
+                database = mongoClient.getDB(LOGIN_DATABASE);
             }
         }
         instance = this;
@@ -134,8 +134,6 @@ public class DatabaseClient {
      */
     public static final String mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor)
             throws LoginException {
-        // boolean auth =
-        // getInstance().database.authenticate("headlogin","login".toCharArray());
         final DBCollection table = getInstance().database.getCollection(LOGIN_COLLECTION);
         final BasicDBObject query = new BasicDBObject(USER_NAME, user);
 

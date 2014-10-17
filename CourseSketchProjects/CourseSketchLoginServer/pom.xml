@@ -18,6 +18,10 @@
         <!-- This may be removed and a later solution will need to be worked on -->
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <mainClass>connection.LoginRunner</mainClass>
+        <testLevel>0</testLevel>
+        <averageTestLevel>0</averageTestLevel>
+        <projectBranchLevel>0</projectBranchLevel>
+        <projectLineLevel>0</projectLineLevel>
 	</properties>
     <build>
         <plugins>
