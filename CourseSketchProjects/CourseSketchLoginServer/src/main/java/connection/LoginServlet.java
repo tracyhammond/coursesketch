@@ -4,14 +4,26 @@ import multiconnection.GeneralConnectionServer;
 import multiconnection.GeneralConnectionServlet;
 import multiconnection.MultiConnectionManager;
 
+/**
+ * Creates a servlet specific to the login server.
+ */
 @SuppressWarnings("serial")
 public final class LoginServlet extends GeneralConnectionServlet {
 
+    /**
+     * Creates a GeneralConnectionServlet.
+     * @param timeoutTime The time it takes before a connection times out.
+     * @param secure True if the connection is allowing SSL connections.
+     * @param connectLocally True if the server is connecting locally.
+     */
     public LoginServlet(final long timeoutTime, final boolean secure,
             final boolean connectLocally) {
         super(timeoutTime, secure, connectLocally);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GeneralConnectionServer createServerSocket() {
         return new LoginServer(this);

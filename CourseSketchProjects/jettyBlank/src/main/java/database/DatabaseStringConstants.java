@@ -32,6 +32,7 @@ public final class DatabaseStringConstants {
     public static final String GRADE_COLLECTION = "problem_submissions";
     public static final String UPDATE_COLLECTION = "User_Updates";
     public static final String DATABASE = "institution";
+    public static final String LOGIN_COLLECTION = "CourseSketchUsers";
 
     // meta fields
     public static final String NAME = "Name";
@@ -112,6 +113,14 @@ public final class DatabaseStringConstants {
     public static final String CLASSIFICATION = "Classification";
     public static final String UPDATEID = "UpdateId";
     public static final String TIME = "Time";
+
+    // login specific
+    public static final String PASSWORD = "Password";
+    public static final String IS_DEFAULT_INSTRUCTOR = "IsInstructor";
+    public static final String INSTRUCTOR_ID = "InstructorId";
+    public static final String STUDENT_ID = "StudentId";
+    public static final String STUDENT_CLIENT_ID = "StudentClientId";
+    public static final String INSTRUCTOR_CLIENT_ID = "InstructorClientId";
 
     // user group specific
     public static final String USER_LIST = "UserList";
