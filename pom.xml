@@ -11,10 +11,10 @@
 		<module>CourseSketchProjects/ProtoFiles</module>
 		<module>CourseSketchProjects/jettyBlank</module>
 		<module>CourseSketchProjects/CourseSketchDatabaseServer</module>
+        <module>CourseSketchProjects/CourseSketchLoginServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
-		<module>CourseSketchProjects/CourseSketchLoginServer</module>
 	</modules>
 
 	<issueManagement>
