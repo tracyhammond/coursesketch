@@ -2,7 +2,7 @@ package internalConnection;
 
 import java.util.HashMap;
 
-import multiconnection.MultiConnectionState;
+import interfaces.MultiConnectionState;
 import protobuf.srl.submission.Submission.SrlExperiment;
 
 public class AnswerConnectionState extends MultiConnectionState {

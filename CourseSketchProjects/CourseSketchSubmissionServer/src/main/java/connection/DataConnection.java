@@ -4,8 +4,8 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 import multiconnection.ConnectionWrapper;
-import multiconnection.GeneralConnectionServer;
-import multiconnection.GeneralConnectionServer.Decoder;
+import multiconnection.ServerWebSocket;
+import multiconnection.ServerWebSocket.Decoder;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
@@ -16,7 +16,7 @@ import protobuf.srl.request.Message.Request;
 @WebSocket()
 public class DataConnection extends ConnectionWrapper {
 
-    public DataConnection(final URI destination, GeneralConnectionServer parentServer) {
+    public DataConnection(final URI destination, ServerWebSocket parentServer) {
         super(destination, parentServer);
     }
 

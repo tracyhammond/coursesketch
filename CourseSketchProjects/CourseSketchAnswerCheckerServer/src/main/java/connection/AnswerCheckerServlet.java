@@ -1,6 +1,6 @@
 package connection;
 
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 import multiconnection.GeneralConnectionServlet;
 import multiconnection.MultiConnectionManager;
 import internalConnection.AnswerConnectionManager;
@@ -14,8 +14,8 @@ public class AnswerCheckerServlet extends GeneralConnectionServlet {
     }
 
     @Override
-    public final GeneralConnectionServer createServerSocket() {
-        return new AnswerCheckerServer(this);
+    public final ServerWebSocket createServerSocket() {
+        return new AnswerCheckerServerWebSocket(this);
     }
 
     /**

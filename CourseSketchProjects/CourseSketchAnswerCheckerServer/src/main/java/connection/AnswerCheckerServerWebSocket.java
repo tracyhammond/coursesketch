@@ -2,9 +2,9 @@ package connection;
 
 import internalConnection.AnswerConnectionState;
 import internalConnection.SubmissionConnection;
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionState;
+import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -24,9 +24,9 @@ import com.google.protobuf.InvalidProtocolBufferException;
  * This is a backend server that is only connected by other servers
  */
 @WebSocket()
-public class AnswerCheckerServer extends GeneralConnectionServer {
+public class AnswerCheckerServerWebSocket extends ServerWebSocket {
 
-    public AnswerCheckerServer(final GeneralConnectionServlet parent) {
+    public AnswerCheckerServerWebSocket(final GeneralConnectionServlet parent) {
         super(parent);
     }
 

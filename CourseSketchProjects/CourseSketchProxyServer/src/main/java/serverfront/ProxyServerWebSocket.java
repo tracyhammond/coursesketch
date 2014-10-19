@@ -1,5 +1,6 @@
 package serverfront;
 
+import interfaces.IConnectionWrapper;
 import internalconnections.AnswerConnection;
 import internalconnections.DataConnection;
 import internalconnections.LoginConnection;
@@ -15,10 +16,9 @@ import java.util.Set;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import multiconnection.ConnectionWrapper;
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionState;
+import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -36,7 +36,7 @@ import connection.TimeManager;
  * Contains simple proxy information that is sent to other servers.
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public final class ProxyServer extends GeneralConnectionServer {
+public final class ProxyServerWebSocket extends ServerWebSocket {
 
     /**
      * The name of the socket.
@@ -68,7 +68,7 @@ public final class ProxyServer extends GeneralConnectionServer {
      * @param parent
      *            The servlet made for this server.
      */
-    public ProxyServer(final GeneralConnectionServlet parent) {
+    public ProxyServerWebSocket(final GeneralConnectionServlet parent) {
         super(parent);
         final ActionListener listener = new ActionListener() {
             /**
@@ -223,7 +223,7 @@ public final class ProxyServer extends GeneralConnectionServer {
                     try {
                         final Request req = Request.parseFrom(message.array());
                         final MultiConnectionState state = getIdToState().get(req.getSessionInfo());
-                        final Class<? extends ConnectionWrapper> classType = (Class<? extends ConnectionWrapper>)
+                        final Class<? extends IConnectionWrapper> classType = (Class<? extends IConnectionWrapper>)
                                 Class.forName(event.getActionCommand());
                         final Request result = createBadConnectionResponse(req, classType);
                         send(getIdToConnection().get(state), result);

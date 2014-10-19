@@ -1,6 +1,6 @@
 package connection;
 
-import multiconnection.GeneralConnectionServer;
+import interfaces.IServerWebSocket;
 import multiconnection.MultiConnectionManager;
 
 /**
@@ -19,7 +19,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
      * @param connectType If the connection is local or if it is remote
      * @param secure If ssl should be used.
      */
-    public DatabaseConnectionManager(final GeneralConnectionServer parent, final boolean connectType, final boolean secure) {
+    public DatabaseConnectionManager(final IServerWebSocket parent, final boolean connectType, final boolean secure) {
         super(parent, connectType, secure);
     }
 
@@ -28,7 +28,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
      * @param serv The current server that the connections will be made from.
      */
     @Override
-    public final void connectServers(final GeneralConnectionServer serv) {
+    public final void connectServers(final IServerWebSocket serv) {
         try {
             createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(), SubmissionConnection.class);
         } catch (ConnectionException e) {

@@ -2,7 +2,7 @@ package connection;
 
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 import multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -18,12 +18,12 @@ import database.institution.mongo.MongoInstitution;
  * Contains simple proxy information that is sent to other servers.
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public class DatabaseServer extends GeneralConnectionServer {
+public class DatabaseServerWebSocket extends ServerWebSocket {
 
     /**
      * @param parent Passes it up to super constructor.
      */
-    public DatabaseServer(final GeneralConnectionServlet parent) {
+    public DatabaseServerWebSocket(final GeneralConnectionServlet parent) {
         super(parent);
     }
 

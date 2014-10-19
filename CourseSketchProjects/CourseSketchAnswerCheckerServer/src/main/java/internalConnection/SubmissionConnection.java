@@ -4,8 +4,9 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 import multiconnection.ConnectionWrapper;
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 
+import interfaces.IServerWebSocket;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
@@ -24,13 +25,13 @@ import protobuf.srl.request.Message.Request.MessageType;
 public class SubmissionConnection extends ConnectionWrapper {
 
     public SubmissionConnection(final URI destination,
-            final GeneralConnectionServer parentServer) {
+            final ServerWebSocket parentServer) {
         super(destination, parentServer);
     }
 
     @Override
     public final void onMessage(final ByteBuffer buffer) {
-        final Request req = GeneralConnectionServer.Decoder.parseRequest(buffer); // this
+        final Request req = IServerWebSocket.Decoder.parseRequest(buffer); // this
                                                                             // contains
                                                                             // the
                                                                             // solution
@@ -52,7 +53,7 @@ public class SubmissionConnection extends ConnectionWrapper {
             // we need to this at least
             final Request.Builder builder = Request.newBuilder(req);
             builder.setSessionInfo(sessionInfo[0]);
-            GeneralConnectionServer.send(getConnectionFromState(state),
+            ServerWebSocket.send(getConnectionFromState(state),
                     builder.build());
         } else if (req.getRequestType() == MessageType.SUBMISSION) {
             // pass up the Id to the client
@@ -62,7 +63,7 @@ public class SubmissionConnection extends ConnectionWrapper {
             if (connection == null) {
                 System.err.println("SOCKET IS NULL");
             }
-            GeneralConnectionServer.send(getConnectionFromState(state),
+            ServerWebSocket.send(getConnectionFromState(state),
                     builder.build());
         }
     }

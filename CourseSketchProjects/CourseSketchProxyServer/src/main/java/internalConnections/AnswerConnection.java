@@ -4,8 +4,9 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 import multiconnection.ConnectionWrapper;
-import multiconnection.GeneralConnectionServer;
-import multiconnection.MultiConnectionState;
+import multiconnection.ServerWebSocket;
+import interfaces.IServerWebSocket;
+import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
@@ -28,7 +29,7 @@ public final class AnswerConnection extends ConnectionWrapper {
      * @param parent
      *            The proxy server instance.
      */
-    public AnswerConnection(final URI destination, final GeneralConnectionServer parent) {
+    public AnswerConnection(final URI destination, final ServerWebSocket parent) {
         super(destination, parent);
     }
 
@@ -43,9 +44,9 @@ public final class AnswerConnection extends ConnectionWrapper {
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
-        final MultiConnectionState state = getStateFromId(GeneralConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
+        final MultiConnectionState state = getStateFromId(IServerWebSocket.Decoder.parseRequest(buffer).getSessionInfo());
 
-        final Request request = GeneralConnectionServer.Decoder.parseRequest(buffer);
+        final Request request = IServerWebSocket.Decoder.parseRequest(buffer);
         if (request.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(request);
             if (rsp != null) {
@@ -59,7 +60,7 @@ public final class AnswerConnection extends ConnectionWrapper {
         }
         // strips away identification.
         final Request result = ProxyConnectionManager.createClientRequest(request);
-        GeneralConnectionServer.send(getConnectionFromState(state), result);
+        ServerWebSocket.send(getConnectionFromState(state), result);
     }
 
 }
