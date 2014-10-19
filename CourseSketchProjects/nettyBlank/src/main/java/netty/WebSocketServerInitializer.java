@@ -28,7 +28,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 
     private final SslContext sslCtx;
 
-    public WebSocketServerInitializer(SslContext sslCtx) {
+    public WebSocketServerInitializer(final SslContext sslCtx) {
         this.sslCtx = sslCtx;
     }
 
