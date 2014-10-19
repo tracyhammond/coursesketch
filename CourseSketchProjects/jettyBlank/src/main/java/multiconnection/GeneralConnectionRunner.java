@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import interfaces.IGeneralConnectionRunner;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -33,7 +34,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  *
  */
 @SuppressWarnings("PMD.TooManyMethods")
-public class GeneralConnectionRunner {
+public class GeneralConnectionRunner implements IGeneralConnectionRunner {
 
     /**
      * Max buffer size for the output in bytes.
@@ -58,7 +59,7 @@ public class GeneralConnectionRunner {
     /**
      * A local instance is stored here.
      */
-    private final GeneralConnectionRunner localInstance = this;
+    private final IGeneralConnectionRunner localInstance = this;
 
     /**
      * A jetty server that is called upon by all of the other data.
@@ -222,6 +223,7 @@ public class GeneralConnectionRunner {
     /**
      * Called to load the configuration data it can be overwritten to load specific data for each server.
      */
+    @Override
     public final void loadConfigurations() {
         // loading configuration code goes here.
     }
@@ -229,6 +231,7 @@ public class GeneralConnectionRunner {
     /**
      * Called to setup the system if it is being run on a local computer with a local host.
      */
+    @Override
     public void executeLocalEnviroment() {
         // does nothing by default.
     }
@@ -236,6 +239,7 @@ public class GeneralConnectionRunner {
     /**
      * Called to setup the system for if it is being run to connect to remote compters.
      */
+    @Override
     public void executeRemoveEnviroment() {
         // does nothing by default.
     }
@@ -244,6 +248,7 @@ public class GeneralConnectionRunner {
      * Sets up a Jetty embedded server. Uses The given port
      *
      */
+    @Override
     public final void createServer() {
         server = new Server(port);
         System.out.println("Server has been created on port: " + port);
@@ -281,6 +286,7 @@ public class GeneralConnectionRunner {
      * Starts the server in a separate thread.
      * A server can only be run once.
      */
+    @Override
     public final void startServer() {
         final Thread serverThread = new Thread() {
             @Override
@@ -341,6 +347,7 @@ public class GeneralConnectionRunner {
      * @throws IOException an I/O error
      * @throws InterruptedException the thread is interrupted.
      */
+    @Override
     public final boolean parseCommand(final String command, final BufferedReader sysin) throws IOException, InterruptedException {
         if (command == null) {
             return true;
@@ -427,6 +434,7 @@ public class GeneralConnectionRunner {
      * @return True if the message command is processed.
      * @throws IOException Thrown if there is a problem reading input.
      */
+    @Override
     @SuppressWarnings("checkstyle:designforextension")
     public boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws IOException {
         if ("toggle logging".equals(command)) {
@@ -455,6 +463,7 @@ public class GeneralConnectionRunner {
     /**
      * Starts the system that accepts command line input.
      */
+    @Override
     public final void startInput() {
         final Thread inputThread = new Thread() {
             @Override
@@ -478,6 +487,7 @@ public class GeneralConnectionRunner {
      * Stops the server.
      * Input is not stopped by the method.
      */
+    @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public final void stop() {
         try {
@@ -517,6 +527,7 @@ public class GeneralConnectionRunner {
     /**
      * @return The arguments that were used to start this program.
      */
+    @Override
     public final String[] getArgs() {
         return args.clone();
     }
@@ -524,6 +535,7 @@ public class GeneralConnectionRunner {
     /**
      * @return The server that has been created by this runner.
      */
+    @Override
     public final Server getServer() {
         return server;
     }
@@ -538,6 +550,7 @@ public class GeneralConnectionRunner {
     /**
      * @return The port number that this server is connected to.
      */
+    @Override
     public final int getPort() {
         return port;
     }
@@ -552,6 +565,7 @@ public class GeneralConnectionRunner {
     /**
      * @return The time it takes for a connection to timeout.
      */
+    @Override
     public final long getTimeoutTime() {
         return timeoutTime;
     }
@@ -567,6 +581,7 @@ public class GeneralConnectionRunner {
     /**
      * @return true if the command-line is accepting input.
      */
+    @Override
     public final boolean isAcceptingCommandInput() {
         return acceptInput;
     }
@@ -574,6 +589,7 @@ public class GeneralConnectionRunner {
     /**
      * @param acceptInputToSet True if the command line will accept input.  False otherwise.
      */
+    @Override
     public final void setAcceptingCommandInput(final boolean acceptInputToSet) {
         this.acceptInput = acceptInputToSet;
     }
@@ -581,6 +597,7 @@ public class GeneralConnectionRunner {
     /**
      * @return True if the server is running as a production environment.
      */
+    @Override
     public final boolean isProduction() {
         return production;
     }
@@ -588,6 +605,7 @@ public class GeneralConnectionRunner {
     /**
      * @return True if the server is attempting to run as a local server.  (used for testing)
      */
+    @Override
     public final boolean isLocal() {
         return local;
     }
@@ -595,6 +613,7 @@ public class GeneralConnectionRunner {
     /**
      * @return True if the computer is logging.
      */
+    @Override
     public final boolean isLogging() {
         return logging;
     }

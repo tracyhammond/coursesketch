@@ -8,6 +8,10 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import interfaces.IConnectionWrapper;
+import interfaces.IServerWebSocket;
+import interfaces.MultiConnectionState;
+import interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -30,33 +34,7 @@ import connection.ConnectionException;
  */
 @WebSocket()
 @SuppressWarnings("PMD.TooManyMethods")
-public class ConnectionWrapper {
-
-    /**
-     * The code denoting that a websocket closed abnormally.
-     */
-    public static final int CLOSE_ABNORMAL = 1006;
-
-    /**
-     * A string representing that the websocket was closed due to an end of
-     * file.
-     */
-    public static final String CLOSE_EOF = "(EOF)*";
-
-    /**
-     * A websocket can only have a maximum of 10 failed starts.
-     */
-    private static final int MAX_FAILED_STARTS = 10;
-
-    /**
-     * The amount of time to sleep between connection attempts.
-     */
-    private static final int MIN_SLEEP_TIME = 1000;
-
-    /**
-     * This is the server that is running the connection wrapper.
-     */
-    private final GeneralConnectionServer parentServer;
+public class ConnectionWrapper extends IConnectionWrapper {
 
     /**
      * This is the manager that holds an instance of this connection wrapper.
@@ -66,12 +44,7 @@ public class ConnectionWrapper {
     /**
      * The active session of the current connection wrapper.
      */
-    private Session session;
-
-    /**
-     * The location of the server that this object is connected to.
-     */
-    private final URI destination;
+    private SocketSession session;
 
     /**
      * True if the object is currently connected to the remote server.
@@ -121,7 +94,7 @@ public class ConnectionWrapper {
      *
      * Note that this does not actually try and connect the wrapper you have to
      * either explicitly call {@link ConnectionWrapper#connect()} or call
-     * {@link ConnectionWrapper#send(byte[])}.
+     * {@link ConnectionWrapper#send(java.nio.ByteBuffer)}.
      *
      * @param iDestination
      *            The location the server is going as a URI. ex:
@@ -129,20 +102,8 @@ public class ConnectionWrapper {
      * @param iParentServer
      *            The server that is using this connection wrapper.
      */
-    public ConnectionWrapper(final URI iDestination, final GeneralConnectionServer iParentServer) {
-        this.parentServer = iParentServer;
-        this.destination = iDestination;
-        started = false;
-    }
-
-    /**
-     * Sets the listener for when a connection fails.
-     *
-     * @param listen
-     *            The listener that is called when a connection fails.
-     */
-    protected final void setFailedSocketListener(final ActionListener listen) {
-        socketFailedListener = listen;
+    public ConnectionWrapper(final URI iDestination, final ServerWebSocket iParentServer) {
+        super(iDestination, iParentServer);
     }
 
     /**
@@ -150,12 +111,13 @@ public class ConnectionWrapper {
      *
      * @throws ConnectionException Throws an exception if an error occurs during the connection attempt.
      */
+    @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public final void connect() throws ConnectionException {
         try (final CloseableWebsocketClient client = new CloseableWebsocketClient()) {
             client.start();
             final ClientUpgradeRequest request = new ClientUpgradeRequest();
-            client.connect(this, destination, request);
+            client.connect(this, this.getURI(), request);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ConnectionException("an exception connecting", e);
@@ -165,39 +127,23 @@ public class ConnectionWrapper {
     }
 
     /**
-     * Occurs when the remote connection closes the socket.
-     *
-     * @param statusCode
-     *            The status code reason that the socket closed. Look up socket
-     *            status codes for more information.
-     * @param reason
-     *            The string reason or message that occurs when the socket
-     *            closes.
+     * Called when the connection is closed.
+     * @param statusCode The reason that the connection was closed.
+     * @param reason The human readable reason that the connection was closed.
      */
     @OnWebSocketClose
-    public final void onClose(final int statusCode, final String reason) {
-        connected = false;
-        System.out.printf("Connection closed: %d - %s%n", statusCode, reason);
-        if (statusCode == CLOSE_ABNORMAL && reason.matches(CLOSE_EOF) || reachedEof) {
-            reachedEof = true;
-        }
-        this.session = null;
+    public final void jettyClose(final int statusCode, final String reason) {
+        onClose(statusCode, reason);
     }
 
     /**
-     * @param iSession
-     *            The session handed to this object when the connection is
-     *            opened and has succeeded.
+     * Called every time the connection is formed.
+     *
+     * @param conn The connection that is being opened.
      */
     @OnWebSocketConnect
-    public final void onOpen(final Session iSession) {
-        failedStarts = 0;
-        started = true;
-        reachedEof = false;
-        connected = true;
-        queing = false;
-        this.session = iSession;
-        System.out.println("Connection was succesful for: " + this.getClass().getSimpleName());
+    public final void jettyOpen(final Session conn) {
+        onOpen(new JettySession(conn));
     }
 
     /**
@@ -208,7 +154,7 @@ public class ConnectionWrapper {
      * @see {@link ConnectionWrapper#onMessage(ByteBuffer)}
      */
     @OnWebSocketMessage
-    public final void onMessage(final byte[] data, final int offset, final int length) {
+    public final void jettyOnMessage(final byte[] data, final int offset, final int length) {
         onMessage(ByteBuffer.wrap(data, offset, length));
     }
 
@@ -223,24 +169,9 @@ public class ConnectionWrapper {
      *            A {@link Throwable} representing the actual error that occurred.
      */
     @OnWebSocketError
-    public final void onError(final Session erroredSession, final Throwable cause) {
-        if (cause instanceof java.io.EOFException || cause instanceof java.net.SocketTimeoutException) {
-            reachedEof = true;
-            System.out.println("This websocket timed out!");
-        }
-        if (erroredSession == null) {
-            System.err.println("Socket: " + this.getClass().getSimpleName() + " Error: " + cause);
-            if (cause instanceof java.net.ConnectException) {
-                if (cause.getMessage().trim().equalsIgnoreCase("Connection refused")) {
-                    // System.out.println("This error is caused by a server not being open yet!");
-                    refusedConnection = true;
-                    System.err.println("Connection was refused");
-                }
-                System.err.println("Connection had issues!");
-            }
-        } else {
-            System.err.println("Socket: " + this.getClass().getSimpleName() + "Session Error: " + cause);
-        }
+    @SuppressWarnings("static-method")
+    public final void jettyError(final Session erroredSession, final Throwable cause) {
+        onError(new JettySession(erroredSession), cause);
     }
 
     /**
@@ -250,37 +181,10 @@ public class ConnectionWrapper {
      * @param buffer The message that is received by this object.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public void onMessage(final ByteBuffer buffer) {
-        final MultiConnectionState state = getStateFromId(GeneralConnectionServer.Decoder.parseRequest(buffer).getSessionInfo());
-        session.getRemote().sendBytesByFuture(buffer);
-        getConnectionFromState(state).getRemote().sendBytesByFuture(buffer);
-    }
-
-    /**
-     * @param key
-     *            The key that maps to a specific state.
-     * @return a MultiConnectionState given a key representing that state.
-     */
-    protected final MultiConnectionState getStateFromId(final String key) {
-        if (parentServer == null) {
-            System.out.println("null parent");
-            return null;
-        }
-        return parentServer.getIdToState().get(key);
-    }
-
-    /**
-     * @param state
-     *            A specific server that is connected by this connection
-     *            wrapper.
-     * @return Given a state grab the session associated with that state.
-     */
-    protected final Session getConnectionFromState(final MultiConnectionState state) {
-        if (parentServer == null) {
-            System.out.println("null parent");
-            return null;
-        }
-        return parentServer.getIdToConnection().get(state);
+    protected void onMessage(final ByteBuffer buffer) {
+        final MultiConnectionState state = getStateFromId(IServerWebSocket.Decoder.parseRequest(buffer).getSessionInfo());
+        session.send(buffer);
+        getConnectionFromState(state).send(buffer);
     }
 
     /**
@@ -296,6 +200,7 @@ public class ConnectionWrapper {
      *             Thrown if the number of connection attempts exceeds
      *             {@link ConnectionWrapper#MAX_FAILED_STARTS}
      */
+    @Override
     public final void send(final ByteBuffer buffer) throws ConnectionException {
         if (connected) {
             connectedSend(buffer);
@@ -323,10 +228,10 @@ public class ConnectionWrapper {
      */
     private void connectedSend(final ByteBuffer buffer) {
         System.out.println("Sending message from: " + this.getClass().getSimpleName());
-        session.getRemote().sendBytesByFuture(buffer);
+        session.send(buffer);
         if (queing) {
             while (!queuedMessages.isEmpty()) {
-                session.getRemote().sendBytesByFuture(queuedMessages.remove(0));
+                session.send(queuedMessages.remove(0));
             }
             queing = false;
         }
@@ -399,65 +304,6 @@ public class ConnectionWrapper {
             System.err.println("Adding a queuedMessage");
             queuedMessages.add(buffer);
         }
-    }
-
-    /**
-     * Sends a binary message over the connection.
-     *
-     * @param bytes The binary message being sent.
-     * @throws ConnectionException Thrown if an the connection fails
-     * @see {@link ConnectionWrapper#send(ByteBuffer)}
-     */
-    public final void send(final byte[] bytes) throws ConnectionException {
-        send(ByteBuffer.wrap(bytes));
-    }
-
-    /**
-     * Closes out the connection.
-     */
-    public final void close() {
-        System.out.println("Closing connection: " + this.getClass().getSimpleName());
-        if (session != null) {
-            session.close();
-        }
-    }
-
-    /**
-     * Closes out the connection with the given statusCode and arguments.
-     *
-     * @param statusCode
-     *            The statusCode that is used to close out the Websocket (look
-     *            up socket close statuses for more information)
-     * @param args
-     *            The additional arguments attached to the close command. (This
-     *            is usually a message with details).
-     */
-    public final void close(final int statusCode, final String args) {
-        System.out.println("Closing connection: " + this.getClass().getSimpleName());
-        if (session != null) {
-            session.close(statusCode, args);
-        }
-    }
-
-    /**
-     * @return {@link URI} a copy of the URI that is also normalized.
-     */
-    public final URI getURI() {
-        return destination.normalize();
-    }
-
-    /**
-     * @return true if the ConnectionWrapper is currently connected.
-     */
-    public final boolean isConnected() {
-        return connected;
-    }
-
-    /**
-     * @return The parent server for this specific connection.
-     */
-    protected final GeneralConnectionServer getParentServer() {
-        return parentServer;
     }
 
     /**
