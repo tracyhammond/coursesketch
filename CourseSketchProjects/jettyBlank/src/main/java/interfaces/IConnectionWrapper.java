@@ -258,7 +258,7 @@ public abstract class IConnectionWrapper {
      * @param listen
      *            The listener that is called when a connection fails.
      */
-    protected final void setFailedSocketListener(final ActionListener listen) {
+    public final void setFailedSocketListener(final ActionListener listen) {
         socketFailedListener = listen;
     }
 
