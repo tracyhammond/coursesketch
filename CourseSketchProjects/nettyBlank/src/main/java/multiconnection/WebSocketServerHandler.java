@@ -13,8 +13,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package netty;
+package multiconnection;
 
+import interfaces.IConnectionWrapper;
+import interfaces.IServerWebSocket;
+import interfaces.MultiConnectionState;
+import interfaces.SocketSession;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -26,23 +30,27 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
+import netty.WebSocketServer;
 
 import java.nio.ByteBuffer;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.*;
-import static io.netty.handler.codec.http.HttpHeaders.*;
-import static io.netty.handler.codec.http.HttpMethod.*;
+import static io.netty.handler.codec.http.HttpHeaders.Names.HOST;
+import static io.netty.handler.codec.http.HttpHeaders.isKeepAlive;
+import static io.netty.handler.codec.http.HttpHeaders.setContentLength;
+import static io.netty.handler.codec.http.HttpMethod.GET;
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
-import static io.netty.handler.codec.http.HttpVersion.*;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 /**
  * Handles handshakes and messages
  */
-public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> {
+public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> implements IServerWebSocket {
 
     private static final String WEBSOCKET_PATH = "/websocket";
 
     private WebSocketServerHandshaker handshaker;
+
+    private ChannelHandlerContext session; //TODO: check to see if this is the same object.
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -72,14 +80,9 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
             return;
         }
 
-        // Send the demo page and favicon.ico
+        // only allow socket communication right now.
         if ("/".equals(req.uri())) {
-            ByteBuf content = WebSocketServerIndexPage.getContent(getWebSocketLocation(req));
-            FullHttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, OK, content);
-
-            res.headers().set(CONTENT_TYPE, "text/html; charset=UTF-8");
-            setContentLength(res, content.readableBytes());
-
+            FullHttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND);
             sendHttpResponse(ctx, req, res);
             return;
         }
@@ -90,7 +93,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
         }
 
         // Handshake
-        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
+        final WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
                 getWebSocketLocation(req), null, false);
         handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
@@ -104,6 +107,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
         // Check for closing frame
         if (frame instanceof CloseWebSocketFrame) {
+
             handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
             return;
         }
@@ -138,8 +142,8 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
     private static void sendHttpResponse(
             ChannelHandlerContext ctx, FullHttpRequest req, FullHttpResponse res) {
         // Generate an error page if response getStatus code is not OK (200).
-        if (res.getStatus().code() != 200) {
-            ByteBuf buf = Unpooled.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8);
+        if (res.status().code() != 200) {
+            ByteBuf buf = Unpooled.copiedBuffer(res.status().toString(), CharsetUtil.UTF_8);
             res.content().writeBytes(buf);
             buf.release();
             setContentLength(res, res.content().readableBytes());
@@ -147,7 +151,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
         // Send the response and close the connection if necessary.
         ChannelFuture f = ctx.channel().writeAndFlush(res);
-        if (!isKeepAlive(req) || res.getStatus().code() != 200) {
+        if (!isKeepAlive(req) || res.status().code() != 200) {
             f.addListener(ChannelFutureListener.CLOSE);
         }
     }
@@ -165,5 +169,55 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
         } else {
             return "ws://" + location;
         }
+    }
+
+    @Override
+    public void onClose(SocketSession conn, int statusCode, String reason) {
+
+    }
+
+    @Override
+    public void onOpen(SocketSession conn) {
+
+    }
+
+    @Override
+    public void onError(SocketSession session, Throwable cause) {
+
+    }
+
+    @Override
+    public void onMessage(SocketSession session, Request req) {
+
+    }
+
+    @Override
+    public void send(SocketSession session, Request req) {
+
+    }
+
+    @Override
+    public void onStop() {
+
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public MultiConnectionState getUniqueState() {
+        return null;
+    }
+
+    @Override
+    public int getCurrentConnectionNumber() {
+        return 0;
+    }
+
+    @Override
+    public Request createBadConnectionResponse(Request req, Class<? extends IConnectionWrapper> connectionType) {
+        return null;
     }
 }
