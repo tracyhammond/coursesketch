@@ -1,4 +1,7 @@
-package multiconnection;
+package interfaces;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+import connection.TimeManager;
 
 import java.nio.ByteBuffer;
 import java.util.Collections;
@@ -6,67 +9,47 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
 import protobuf.srl.request.Message.Request;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-
-import connection.TimeManager;
-
 /**
- * A connection server.
- * @author gigemjt
+ * Created by gigemjt on 10/19/14.
  */
-@WebSocket()
-@SuppressWarnings("PMD.TooManyMethods")
-public class GeneralConnectionServer {
-
+public abstract class IServerWebSocket {
     /**
      * The maximum number of connections.
      * This can be overwritten to give the number of connections a new value.
      */
     public static final int MAX_CONNECTIONS = 80;
-
     /**
      * The name of the socket This can be hidden in a subclass.
      */
     public static final String NAME = "General Socket";
-
     /**
      * The state that represents the server being full.
      */
     public static final int STATE_SERVER_FULL = 4001;
-
-    /**
-     * The message for when the server is full.
-     */
-    static final String FULL_SERVER_MESSAGE = "Sorry, the BLANK server is full";
-
     /**
      * The state representing that the client has closed the connection.
      */
     public static final int STATE_CLIENT_CLOSE = 4003;
-
     /**
      * The message representing that the client closed the connection.
      */
     public static final String CLIENT_CLOSE_MESSAGE = "The client closed the connection";
 
     /**
+     * The message for when the server is full.
+     */
+    public static final String FULL_SERVER_MESSAGE = "Sorry, the " + NAME + "server is full";
+
+    /**
      * Maps a Session to its MultiConnectionState.
      */
-    private final Map<Session, MultiConnectionState> connectionToId = new HashMap<Session, MultiConnectionState>();
+    private final Map<SocketSession, MultiConnectionState> connectionToId = new HashMap<SocketSession, MultiConnectionState>();
 
     /**
      * Maps a MultiConnectionState to a Session.
      */
-    private final Map<MultiConnectionState, Session> idToConnection = new HashMap<MultiConnectionState, Session>();
+    private final Map<MultiConnectionState, SocketSession> idToConnection = new HashMap<MultiConnectionState, SocketSession>();
 
     /**
      * Maps a String representing the connections ID to its MultiConnectionState.
@@ -74,26 +57,12 @@ public class GeneralConnectionServer {
     private final Map<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
 
     /**
-     * The parent servlet for this server.
-     */
-    private final GeneralConnectionServlet parentServer;
-
-    /**
-     * A constructor that accepts a servlet.
-     * @param parent The parent servlet of this server.
-     */
-    public GeneralConnectionServer(final GeneralConnectionServlet parent) {
-        parentServer = parent;
-    }
-
-    /**
      * Called when the connection is closed.
      * @param conn The connection that closed the websocket
      * @param statusCode The reason that the connection was closed.
      * @param reason The human readable reason that the connection was closed.
      */
-    @OnWebSocketClose
-    public final void onClose(final Session conn, final int statusCode, final String reason) {
+    public final void onClose(final SocketSession conn, final int statusCode, final String reason) {
         // FUTURE: find out how to see if the connection is closed by us or them.
         System.out.println(conn.getRemoteAddress() + " has disconnected from The Server." + statusCode + "with reason : " + reason);
         final MultiConnectionState stateId = getConnectionToId().remove(conn);
@@ -110,8 +79,7 @@ public class GeneralConnectionServer {
      *
      * @param conn The connection that is being opened.
      */
-    @OnWebSocketConnect
-    public final void onOpen(final Session conn) {
+    public final void onOpen(final SocketSession conn) {
         if (getConnectionToId().size() >= MAX_CONNECTIONS) {
             // Return negatative state.
             System.out.println("FULL SERVER"); // send message to someone?
@@ -134,42 +102,24 @@ public class GeneralConnectionServer {
      *
      * @param conn the connection that is being opened.
      */
-    protected void openSession(final Session conn) {
-        // Does nothing by default.
-    }
+    protected abstract void openSession(final SocketSession conn);
 
     /**
      * Called when an error occurs with the connection.
      * @param session The session that has an error.
      * @param cause The actual error.
      */
-    @SuppressWarnings("static-method")
-    @OnWebSocketError
-    public final void onError(final Session session, final Throwable cause) {
-        System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
-    }
-
-    /**
-     * Called when data is received.
-     * @param session The session that sent the message.
-     * @param data The bytes that sent the message.
-     * @param offset The offset at which the message occurs.
-     * @param length The length of the message.
-     */
-    @OnWebSocketMessage
-    public final void onMessage(final Session session, final byte[] data, final int offset, final int length) {
-        onMessage(session, ByteBuffer.wrap(data, offset, length));
-    }
+    protected abstract void onError(SocketSession session, Throwable cause);
 
     /**
      * Called when data is received.
      * @param session The session that sent the message.
      * @param buffer The bytes that sent the message.
      */
-    protected final void onMessage(final Session session, final ByteBuffer buffer) {
+    protected final void onMessage(final SocketSession session, final ByteBuffer buffer) {
         final Request req = Decoder.parseRequest(buffer);
         if (req == null) {
-            send(session, createBadConnectionResponse(null, ConnectionWrapper.class));
+            send(session, createBadConnectionResponse(null, IConnectionWrapper.class));
             System.out.println("protobuf error");
             // this.
             // we need to somehow send an error to the client here
@@ -189,17 +139,13 @@ public class GeneralConnectionServer {
      * Takes a request and allows overriding so that subclass servers can handle
      * messages.
      *
-     * By default it is an echo server, basically it echos what it receives.
-     *
      * @param session
      *            the session object that created the message
      * @param req
      *            the message itself
      */
     @SuppressWarnings("checkstyle:designforextension")
-    protected void onMessage(final Session session, final Request req) {
-        send(session, req);
-    }
+    protected abstract void onMessage(final SocketSession session, final Request req);
 
     /**
      * A helper method for sending data given a session.
@@ -208,8 +154,32 @@ public class GeneralConnectionServer {
      * @param session The session that the message is being sent with.
      * @param req The actual message that is being sent.
      */
-    public static void send(final Session session, final Request req) {
-        session.getRemote().sendBytesByFuture(ByteBuffer.wrap(req.toByteArray()));
+    protected abstract void send(final SocketSession session, final Request req);
+
+    /**
+     * Available for override.  Called after the server is stopped.
+     */
+    protected abstract void onStop();
+
+    /**
+     * @return The {@link interfaces.IServerWebSocket#NAME} of the connection should be overwritten to give it a new name.
+     */
+    @SuppressWarnings("static-method")
+    public final String getName() {
+        return NAME;
+    }
+
+    /**
+     * Returns a new connection with an id.
+     *
+     * This can be overwritten to make a more advance connection. This is only
+     * called in {@link IServerWebSocket#onOpen(SocketSession)}
+     *
+     * @return an instance of {@link MultiConnectionState}.
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    public MultiConnectionState getUniqueState() {
+        return new MultiConnectionState(Encoder.nextID().toString());
     }
 
     /**
@@ -223,7 +193,7 @@ public class GeneralConnectionServer {
      * @param connectionType A class representing the connection that is not correctly connected.
      * @return {@link Request} with a message explaining what happened.
      */
-    protected static Request createBadConnectionResponse(final Request req, final Class<? extends ConnectionWrapper> connectionType) {
+    public final Request createBadConnectionResponse(final Request req, final Class<? extends IConnectionWrapper> connectionType) {
         final Request.Builder response = Request.newBuilder();
         if (req == null) {
             response.setRequestType(Request.MessageType.ERROR);
@@ -235,44 +205,16 @@ public class GeneralConnectionServer {
     }
 
     /**
-     * Cleans out the server.
+     * Stops the server and empties out all connections.
      */
-    final void stop() {
-        for (Session sesh : getConnectionToId().keySet()) {
+    protected final void stop() {
+        for (SocketSession sesh : getConnectionToId().keySet()) {
             sesh.close();
         }
         getConnectionToId().clear();
         idToConnection.clear();
         idToState.clear();
         onStop();
-    }
-
-    /**
-     * Available for override.  Called after the server is stopped.
-     */
-    public void onStop() {
-        // Does nothing by default.
-    }
-
-    /**
-     * @return The name of the connection should be overwritten to give it a new name.
-     */
-    @SuppressWarnings("static-method")
-    public final String getName() {
-        return NAME;
-    }
-
-    /**
-     * Returns a new connection with an id.
-     *
-     * This can be overwritten to make a more advance connection. This is only
-     * called in {@link GeneralConnectionServer#onOpen(Session)}
-     *
-     * @return an instance of {@link MultiConnectionState}.
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    public MultiConnectionState getUniqueState() {
-        return new MultiConnectionState(Encoder.nextID().toString());
     }
 
     /**
@@ -285,16 +227,8 @@ public class GeneralConnectionServer {
     /**
      * @return A map representing the Id to Connection. The returned map is read only.
      */
-    protected final Map<MultiConnectionState, Session> getIdToConnection() {
+    protected final Map<MultiConnectionState, SocketSession> getIdToConnection() {
         return Collections.unmodifiableMap(idToConnection);
-    }
-
-    /**
-     * @return The {@link MultiConnectionManager} or subclass so it can be used
-     * in this instance.
-     */
-    protected final MultiConnectionManager getConnectionManager() {
-        return parentServer.getManager();
     }
 
     /**
@@ -305,16 +239,9 @@ public class GeneralConnectionServer {
     }
 
     /**
-     * @return The servlet that represents this server.
-     */
-    protected final GeneralConnectionServlet getParentServer() {
-        return parentServer;
-    }
-
-    /**
      * @return the connectionToId
      */
-    protected final Map<Session, MultiConnectionState> getConnectionToId() {
+    protected final Map<SocketSession, MultiConnectionState> getConnectionToId() {
         return connectionToId;
     }
 

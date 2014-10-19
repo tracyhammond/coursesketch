@@ -1,4 +1,4 @@
-package multiconnection;
+package interfaces;
 
 /**
  * An object that contains the state of connection with another server.
