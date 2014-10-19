@@ -2,7 +2,7 @@ package connection;
 
 import handlers.DataRequestHandler;
 import handlers.SubmissionRequestHandler;
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 import multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -16,9 +16,9 @@ import protobuf.srl.request.Message.Request;
  * This is a backend server that is only connected by other servers
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public class SubmissionServer extends GeneralConnectionServer {
+public class SubmissionServerWebSocket extends ServerWebSocket {
 
-	public SubmissionServer(GeneralConnectionServlet parent) {
+	public SubmissionServerWebSocket(GeneralConnectionServlet parent) {
 		super(parent);
 	}
 

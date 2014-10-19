@@ -5,7 +5,7 @@ import java.security.GeneralSecurityException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import database.LoginException;
 import database.RegistrationException;
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 import multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -22,7 +22,7 @@ import database.DatabaseClient;
  * Contains simple proxy information that is sent to other servers.
  */
 @WebSocket()
-public final class LoginServer extends GeneralConnectionServer {
+public final class LoginServerWebSocket extends ServerWebSocket {
 
     /**
      * The name of the socket.
@@ -73,7 +73,7 @@ public final class LoginServer extends GeneralConnectionServer {
      * @param parent
      *            {@link connection.LoginServlet}
      */
-    public LoginServer(final GeneralConnectionServlet parent) {
+    public LoginServerWebSocket(final GeneralConnectionServlet parent) {
         super(parent);
     }
 

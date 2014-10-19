@@ -1,6 +1,6 @@
 package connection;
 
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 import multiconnection.GeneralConnectionServlet;
 import multiconnection.MultiConnectionManager;
 
@@ -31,8 +31,8 @@ public class DatabaseServlet extends GeneralConnectionServlet {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServer createServerSocket() {
-        return new DatabaseServer(this);
+    public final ServerWebSocket createServerSocket() {
+        return new DatabaseServerWebSocket(this);
     }
 
     /**

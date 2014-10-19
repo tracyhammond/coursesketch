@@ -1,6 +1,6 @@
 package serverfront;
 
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 import multiconnection.GeneralConnectionServlet;
 import multiconnection.MultiConnectionManager;
 import internalconnections.ProxyConnectionManager;
@@ -27,8 +27,8 @@ public final class ProxyServlet extends GeneralConnectionServlet {
      * {@inheritDoc}
      */
     @Override
-    public GeneralConnectionServer createServerSocket() {
-        return new ProxyServer(this);
+    public ServerWebSocket createServerSocket() {
+        return new ProxyServerWebSocket(this);
     }
 
     /**
@@ -49,6 +49,6 @@ public final class ProxyServlet extends GeneralConnectionServlet {
      */
     @Override
     protected void onReconnect() {
-        ((ProxyServer) getServer()).initializeListeners();
+        ((ProxyServerWebSocket) getServer()).initializeListeners();
     }
 }

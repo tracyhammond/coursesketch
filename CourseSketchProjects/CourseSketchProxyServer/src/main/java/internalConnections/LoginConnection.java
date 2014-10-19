@@ -4,7 +4,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import connection.ConnectionException;
 import connection.TimeManager;
 import multiconnection.ConnectionWrapper;
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
+import interfaces.IServerWebSocket;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
@@ -32,7 +33,7 @@ public final class LoginConnection extends ConnectionWrapper {
      * @param parent
      *            The proxy server instance.
      */
-    public LoginConnection(final URI destination, final GeneralConnectionServer parent) {
+    public LoginConnection(final URI destination, final ServerWebSocket parent) {
         super(destination, parent);
     }
 
@@ -50,7 +51,7 @@ public final class LoginConnection extends ConnectionWrapper {
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
-        final Request request = GeneralConnectionServer.Decoder.parseRequest(buffer);
+        final Request request = IServerWebSocket.Decoder.parseRequest(buffer);
         if (request.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(request);
             if (rsp != null) {
@@ -78,7 +79,7 @@ public final class LoginConnection extends ConnectionWrapper {
                 final Request.Builder errorMessage = Request.newBuilder(result);
                 errorMessage.setResponseText(errorMessage.getResponseText()
                         + " : The data sent back from the login server was not the correct format");
-                GeneralConnectionServer.send(getConnectionFromState(state), result);
+                ServerWebSocket.send(getConnectionFromState(state), result);
                 return;
             }
 
@@ -101,7 +102,7 @@ public final class LoginConnection extends ConnectionWrapper {
 
         // strips away identification
         final Request result = ProxyConnectionManager.createClientRequest(request);
-        GeneralConnectionServer.send(getConnectionFromState(state), result);
+        ServerWebSocket.send(getConnectionFromState(state), result);
 
 
     }

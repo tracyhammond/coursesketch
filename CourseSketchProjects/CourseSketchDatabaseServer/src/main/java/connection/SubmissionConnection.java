@@ -4,8 +4,9 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 import multiconnection.ConnectionWrapper;
-import multiconnection.GeneralConnectionServer;
-import multiconnection.MultiConnectionState;
+import multiconnection.ServerWebSocket;
+import interfaces.IServerWebSocket;
+import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -27,14 +28,14 @@ import protobuf.srl.request.Message.Request.MessageType;
 public class SubmissionConnection extends ConnectionWrapper {
 
     /**
-     * @see ConnectionWrapper#ConnectionWrapper(URI, GeneralConnectionServer).
+     * @see ConnectionWrapper#ConnectionWrapper(URI, interfaces.IServerWebSocket).
      * @param destination
      *            The location the server is going as a URI. ex:
      *            http://example.com:1234
      * @param parentServer
      *            The server that is using this connection wrapper.
      */
-    public SubmissionConnection(final URI destination, final GeneralConnectionServer parentServer) {
+    public SubmissionConnection(final URI destination, final ServerWebSocket parentServer) {
         super(destination, parentServer);
     }
 
@@ -46,7 +47,7 @@ public class SubmissionConnection extends ConnectionWrapper {
      */
     @Override
     public final void onMessage(final ByteBuffer buffer) {
-        final Request req = GeneralConnectionServer.Decoder.parseRequest(buffer);
+        final Request req = IServerWebSocket.Decoder.parseRequest(buffer);
         System.out.println("Got a response from the submission server!");
         System.out.println(req.getSessionInfo());
         final String[] sessionInfo = req.getSessionInfo().split("\\+");
@@ -81,7 +82,7 @@ public class SubmissionConnection extends ConnectionWrapper {
             if (connection == null) {
                 System.err.println("SOCKET IS NULL");
             }
-            GeneralConnectionServer.send(getConnectionFromState(state), builder.build());
+            ServerWebSocket.send(getConnectionFromState(state), builder.build());
         }
     }
 }

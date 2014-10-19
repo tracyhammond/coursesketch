@@ -3,7 +3,7 @@ package internalconnections;
 import java.net.URI;
 
 import multiconnection.ConnectionWrapper;
-import multiconnection.GeneralConnectionServer;
+import multiconnection.ServerWebSocket;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
@@ -27,7 +27,7 @@ public class RecognitionConnection extends ConnectionWrapper {
      * @param parent
      *            The server that is using this connection wrapper.
      */
-    public RecognitionConnection(final URI destination, final GeneralConnectionServer parent) {
+    public RecognitionConnection(final URI destination, final ServerWebSocket parent) {
         super(destination, parent);
     }
 
