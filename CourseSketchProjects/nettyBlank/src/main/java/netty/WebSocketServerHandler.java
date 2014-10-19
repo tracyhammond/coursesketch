@@ -24,13 +24,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
-import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.*;
@@ -114,9 +108,19 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
             ctx.channel().write(new PongWebSocketFrame(frame.content().retain()));
             return;
         }
+
+        if (frame instanceof BinaryWebSocketFrame) {
+            System.out.println("RECIEVING BINARY MESSAGE?!?!");
+            return;
+        }
+
         if (!(frame instanceof TextWebSocketFrame)) {
             throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass()
                     .getName()));
+        }
+
+        if (frame instanceof BinaryWebSocketFrame) {
+            System.out.println("RECIEVING BINARY MESSAGE?!?!");
         }
 
         // Send the uppercase string back.
