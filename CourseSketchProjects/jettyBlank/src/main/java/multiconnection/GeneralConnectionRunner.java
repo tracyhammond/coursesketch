@@ -7,13 +7,17 @@ package multiconnection;
  */
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.http.HttpVersion;
+import org.eclipse.jetty.npn.NextProtoNego;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -21,18 +25,27 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.StatisticsHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
+//import org.eclipse.jetty.server.handler.StatisticsHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+//import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.resource.PathResource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.websocket.server.WebSocketHandler;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+
+import javax.net.ssl.SSLEngine;
 
 /**
  * Runs and sets up the server.
  * @author gigemjt
  *
  */
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.TooManyFields" })
 public class GeneralConnectionRunner {
 
     /**
@@ -82,6 +95,11 @@ public class GeneralConnectionRunner {
     private int port = DEFAULT_PORT;
 
     /**
+     * The url that the server runs on.
+     */
+    private String host;
+
+    /**
      * The timeoutTime of a connection.
      */
     private long timeoutTime;
@@ -116,12 +134,22 @@ public class GeneralConnectionRunner {
     /**
      * The password for the keystore.
      */
-    private String keystorePassword = "";
+    private String keystorePassword;
+
+    /**
+     * The password for the keystore.
+     */
+    private String keyManagerPassword;
 
     /**
      * The location the keystore is stored in.
      */
     private String keystorePath = "";
+
+    /**
+     * The location the truststore is stored in.
+     */
+    private String truststorePath = "";
 
     /**
      * The main method that can be used to run a server.
@@ -142,12 +170,19 @@ public class GeneralConnectionRunner {
     protected GeneralConnectionRunner(final String[] arguments) {
         this.args = Arrays.copyOf(arguments, arguments.length);
         if (arguments.length >= 1 && arguments[0].equals("local")) {
+            System.out.println("Running local code!");
+            host = "localhost";
+            keystorePassword = "sketchrec";
+            keyManagerPassword = "sketchrec";
+            keystorePath = "keystore.jks";
+            truststorePath = "truststore.jks";
+            secure = true;
             local = true;
         } else {
             local = false;
+            secure = false;
         }
         production = false;
-        secure = false;
     }
 
     /**
@@ -163,21 +198,20 @@ public class GeneralConnectionRunner {
      * Configures the SSL for the server.
      * Ignoring this method for now.
      */
+    @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     private void configureSSL() {
+        final SslContextFactory sslContextFactory = new SslContextFactory();
+        System.out.println("Loading a file resource at: " + keystorePath);
+        final File res = new File(keystorePath);
+        System.out.println("Loading a file resource at: " + res);
 
-        final SslContextFactory contextfactor = new SslContextFactory();
+        sslContextFactory.setKeyStoreResource(new PathResource(res));
 
-        // Configure SSL
-
-        // Use the real certificate
-        System.out.println("Loaded real keystore");
-        contextfactor.setKeyStorePath(keystorePath/* "srl01_tamu_edu.jks" */);
-        contextfactor.setTrustStorePath(keystorePath);
-        contextfactor.setTrustStorePassword(keystorePassword);
-        // cf.setCertAlias("nss324-o");
-        // cf.checkKeyStore();
-        final SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(contextfactor,
-                org.eclipse.jetty.http.HttpVersion.HTTP_1_1.toString());
+        sslContextFactory.setKeyStorePassword(keystorePassword);
+        sslContextFactory.setKeyManagerPassword(keyManagerPassword);
+        sslContextFactory.setTrustStorePath(truststorePath);
+        sslContextFactory.setTrustStorePassword(keyManagerPassword);
+        sslContextFactory.setProtocol("TLS");
 
         final HttpConfiguration config = new HttpConfiguration();
         config.setSecureScheme("https");
@@ -187,13 +221,43 @@ public class GeneralConnectionRunner {
         config.setResponseHeaderSize(DEFAULT_RESPONSE_HEADER_SIZE);
         final HttpConfiguration sslConfiguration = new HttpConfiguration(config);
         sslConfiguration.addCustomizer(new SecureRequestCustomizer());
-        final HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(sslConfiguration);
+        final HttpConnectionFactory httpConnectionFactoryOld = new HttpConnectionFactory(sslConfiguration);
 
-        final ServerConnector connector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
-        connector.setPort(port);
-        server.addConnector(connector);
+        //final SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString());
+        System.out.println("get ssl protocal");
+        //System.out.println(sslConnectionFactory.getProtocol());
 
-        server.setConnectors(new Connector[] {connector});
+        //sslConnectionFactory.getSslContextFactory().getSslContext().createSSLEngine()
+        final ServerConnector sslConnector = new ServerConnector(server, sslContextFactory);
+        sslConnector.setHost(host);
+        sslConnector.setPort(port);
+
+        server.addConnector(sslConnector);
+
+        System.out.println("annoyed");
+        /*
+        final SSLEngine socket = sslConnectionFactory.getSslContextFactory().newSSLEngine();
+        NextProtoNego.put(socket, new NextProtoNego.ServerProvider() {
+            @SuppressWarnings("PMD.CommentRequired")
+            @Override
+            public void unsupported() {
+                NextProtoNego.remove(socket);
+            }
+
+            @SuppressWarnings("PMD.CommentRequired")
+            @Override
+            public List<String> protocols() {
+                return Arrays.asList("http/1.1");
+            }
+
+            @SuppressWarnings("PMD.CommentRequired")
+            @Override
+            public void protocolSelected(final String protocol) {
+                NextProtoNego.remove(socket);
+                System.out.println("Protocol Selected is: " + protocol);
+            }
+        });
+        */
     }
 
     /**
@@ -253,14 +317,31 @@ public class GeneralConnectionRunner {
      * Adds the servlets to the server.  And sets up the port for it.
      */
     public final void addServletHandlers() {
-        final StatisticsHandler stats = new StatisticsHandler();
+        servletInstance = getServlet(timeoutTime, false, local);
+
+        final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SECURITY);
+        context.setContextPath("/socket");
+        context.addServlet(new ServletHolder(servletInstance), "/socket");
+
+        final HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[] {context});
+        server.setHandler(handlers);
+
         /*
-         * ServletContextHandler servletHandler = new
-         * ServletContextHandler(ServletContextHandler.SESSIONS);
-         * servletHandler.setContextPath("/coursesketch");
-         * servletHandler.addServlet(new ServletHolder(new
-         * GeneralConnectionServlet()),"/");
-         */
+        final WebSocketHandler wsHandler = getSocketHandler(timeoutTime, true, local);
+        final ContextHandler wsContextHandler = new ContextHandler();
+        wsContextHandler.setHandler(wsHandler);
+        wsContextHandler.setContextPath("/");  // this context path doesn't work ftm
+        final List<Handler> webSocketHandlerList = new ArrayList<>();
+        webSocketHandlerList.add(wsHandler);
+
+        final HandlerCollection handlerCollection = new HandlerCollection();
+        handlerCollection.setHandlers(webSocketHandlerList.toArray(new Handler[0]));
+        server.setHandler(handlerCollection);
+
+        */
+        /*
+        final StatisticsHandler stats = new StatisticsHandler();
         final ServletHandler servletHandler = new ServletHandler();
 
         System.out.println("Creating a new servlet");
@@ -269,12 +350,14 @@ public class GeneralConnectionRunner {
         servletInstance = getServlet(timeoutTime, false, local);
 
         servletHandler.addServletWithMapping(new ServletHolder(servletInstance), "/*");
+
         stats.setHandler(servletHandler);
 
         final HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] {stats});
 
         server.setHandler(handlers);
+        */
     }
 
     /**
@@ -288,7 +371,10 @@ public class GeneralConnectionRunner {
             public void run() {
                 try {
                     server.start();
-                    servletInstance.reconnect();
+                    //servletInstance.reconnect();
+                    System.out.println("Checking server scheme");
+                    System.out.println(server.getURI());
+                    System.out.println(server.getURI().getScheme());
                     server.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -323,6 +409,31 @@ public class GeneralConnectionRunner {
             System.err.println("Running an insecure server");
         }
         return new GeneralConnectionServlet(timeOut, isSecure, isLocal);
+    }
+
+    /**
+     * Returns a new instance of a {@link GeneralConnectionServlet}.
+     *
+     * Override this method if you want to return a subclass of
+     * GeneralConnectionServlet
+     *
+     * @param timeOut
+     *            length of specified timeout, in miliseconds
+     * @param isSecure
+     *            <code>true</code> if the servlet should be secure,
+     *            <code>false</code> otherwise
+     * @param isLocal
+     *            <code>true</code> if the server is running locally,
+     *            <code>false</code> otherwise
+     *
+     * @return a new connection servlet for this server
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    public GeneralSocketHandler getSocketHandler(final long timeOut, final boolean isSecure, final boolean isLocal) {
+        if (!isSecure && production) {
+            System.err.println("Running an insecure server");
+        }
+        return new GeneralSocketHandler(timeOut, isSecure, isLocal);
     }
 
     /**

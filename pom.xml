@@ -232,6 +232,10 @@
 									<Build-Number>2</Build-Number>
 								</manifestEntries>
 							</transformer>
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                <resource>clientkeystore</resource>
+                                <file>clientkeystore</file>
+                            </transformer>
 						</transformers>
 					</configuration>
 				</plugin>
@@ -411,8 +415,12 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jettyVersion>[9.2.2,)</jettyVersion> <!-- 9.2.2.v20140723 -->
-		<protobufVersion>[2.5.0,)</protobufVersion>
+		<jettyVersion>[9.2.3.v,)</jettyVersion> <!-- 9.2.2.v20140723 -->
+        <jettyServerVersion>9.2.3.v20140905</jettyServerVersion> <!-- 9.2.2.v20140723 -->
+        <jettySocketVersion>9.2.3.v20140905</jettySocketVersion> <!-- 9.2.2.v20140723 -->
+        <jettyServletVersion>9.2.3.v20140905</jettyServletVersion>
+        <jettyNpnVersion>1.1.7.v20140316</jettyNpnVersion>
+        <protobufVersion>[2.5.0,)</protobufVersion>
 		<jodaVersion>[2.1,)</jodaVersion>
 		<mongodbVersion>[2.12.3,)</mongodbVersion>
 		<mockitoVersion>[1.9.5,)</mockitoVersion>
@@ -451,11 +459,27 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.eclipse.jetty.aggregate</groupId>
-			<artifactId>jetty-all</artifactId>
-			<version>${jettyVersion}</version>
-		</dependency>
+        <!-- jetty -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jettyServerVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-server</artifactId>
+            <version>${jettySocketVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jettyServletVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty.npn</groupId>
+            <artifactId>npn-boot</artifactId>
+            <version>${jettyNpnVersion}</version>
+        </dependency>
 
 		<dependency>
 			<groupId>com.google.protobuf</groupId>

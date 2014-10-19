@@ -2,6 +2,7 @@ package serverfront;
 
 import multiconnection.GeneralConnectionRunner;
 import multiconnection.GeneralConnectionServlet;
+import multiconnection.GeneralSocketHandler;
 
 /**
  * A subclass of the runner and sets up some special information for running the
@@ -13,14 +14,16 @@ public class ProxyRunner extends GeneralConnectionRunner {
     private static final long TIMEOUT_TIME = 30 * 60 * 1000;
 
     /** port of the proxy server. */
-    private static final int PROXY_PORT = 8888;
+    private static final int PROXY_PORT = 8443;
 
     /**
      * @param args
      *            arguments from the command line.
      */
     public static void main(final String[] args) {
-        final ProxyRunner run = new ProxyRunner(args);
+        System.out.println("StARTING THE PROXY ESERVER");
+        final String[] args2 = {"local"};
+        final ProxyRunner run = new ProxyRunner(args2);
         run.runAll();
     }
 
@@ -30,8 +33,10 @@ public class ProxyRunner extends GeneralConnectionRunner {
      */
     @Override
     public final void executeRemoveEnviroment() {
+        /*
         setKeystorePassword("Challeng3");
         setKeystorePath("srl01_tamu_edu.jks");
+        */
     }
 
     /**
@@ -52,5 +57,13 @@ public class ProxyRunner extends GeneralConnectionRunner {
     @Override
     public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
         return new ProxyServlet(time, secure, local);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final GeneralSocketHandler getSocketHandler(final long time, final boolean secure, final boolean local) {
+        return new ProxySocketHandler(time, secure, local);
     }
 }

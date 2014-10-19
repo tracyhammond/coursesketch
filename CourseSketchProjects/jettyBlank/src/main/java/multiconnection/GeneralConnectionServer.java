@@ -96,7 +96,7 @@ public class GeneralConnectionServer {
     public final void onClose(final Session conn, final int statusCode, final String reason) {
         // FUTURE: find out how to see if the connection is closed by us or them.
         System.out.println(conn.getRemoteAddress() + " has disconnected from The Server." + statusCode + "with reason : " + reason);
-        final MultiConnectionState stateId = getConnectionToId().remove(conn);
+        final MultiConnectionState stateId = connectionToId.remove(conn);
         if (stateId != null) {
             idToConnection.remove(stateId);
             idToState.remove(stateId.getKey());
@@ -112,20 +112,20 @@ public class GeneralConnectionServer {
      */
     @OnWebSocketConnect
     public final void onOpen(final Session conn) {
-        if (getConnectionToId().size() >= MAX_CONNECTIONS) {
+        if (getCurrentConnectionNumber() >= MAX_CONNECTIONS) {
             // Return negatative state.
             System.out.println("FULL SERVER"); // send message to someone?
             conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
         }
 
         final MultiConnectionState uniqueState = getUniqueState();
-        getConnectionToId().put(conn, uniqueState);
-        getIdToConnection().put(uniqueState, conn);
+        connectionToId.put(conn, uniqueState);
+        idToConnection.put(uniqueState, conn);
         System.out.println("Session Key " + uniqueState.getKey());
-        getIdToState().put(uniqueState.getKey(), uniqueState);
+        idToState.put(uniqueState.getKey(), uniqueState);
         System.out.println("ID ASSIGNED");
 
-        System.out.println("Recieving connection " + getConnectionToId().size());
+        System.out.println("Recieving connection " + getCurrentConnectionNumber());
         openSession(conn);
     }
 
@@ -241,7 +241,7 @@ public class GeneralConnectionServer {
         for (Session sesh : getConnectionToId().keySet()) {
             sesh.close();
         }
-        getConnectionToId().clear();
+        connectionToId.clear();
         idToConnection.clear();
         idToState.clear();
         onStop();
@@ -276,14 +276,14 @@ public class GeneralConnectionServer {
     }
 
     /**
-     * @return A map representing the Id to state. The returned map is read only.
+     * @return A map representing the session id as a string to the session state. The returned map is read only.
      */
     protected final Map<String, MultiConnectionState> getIdToState() {
         return Collections.unmodifiableMap(idToState);
     }
 
     /**
-     * @return A map representing the Id to Connection. The returned map is read only.
+     * @return A map representing the connection state to Connection. The returned map is read only.
      */
     protected final Map<MultiConnectionState, Session> getIdToConnection() {
         return Collections.unmodifiableMap(idToConnection);
@@ -312,10 +312,10 @@ public class GeneralConnectionServer {
     }
 
     /**
-     * @return the connectionToId
+     * @return a read only map that contains session mapped to states.
      */
     protected final Map<Session, MultiConnectionState> getConnectionToId() {
-        return connectionToId;
+        return Collections.unmodifiableMap(connectionToId);
     }
 
     /**
