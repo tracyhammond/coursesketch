@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -163,7 +164,7 @@ public class MultiConnectionManager {
             System.out.println("Failed to get a local connection");
             throw new ConnectionException("failed to get a connection of type " + connectionType.getSimpleName());
         }
-        connection.send(packagedRequest.toByteArray());
+        connection.send(ByteBuffer.wrap(packagedRequest.toByteArray()));
     }
 
     /**
@@ -210,7 +211,7 @@ public class MultiConnectionManager {
         if (cons == null) {
             throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
-        for (ConnectionWrapper con : cons) {
+        for (IConnectionWrapper con : cons) {
             con.setFailedSocketListener(listen);
         }
     }
@@ -257,7 +258,7 @@ public class MultiConnectionManager {
 
         ArrayList<IConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
-            cons = new ArrayList<ConnectionWrapper>();
+            cons = new ArrayList<IConnectionWrapper>();
             cons.add(connection);
             connections.put(connectionType, cons);
             System.out.println("creating a new connectionList for: " + connectionType + " with list: " + connections.get(connectionType));
