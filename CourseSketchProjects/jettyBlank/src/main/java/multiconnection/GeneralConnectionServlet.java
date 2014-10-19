@@ -2,6 +2,7 @@ package multiconnection;
 
 import javax.servlet.annotation.WebServlet;
 
+import interfaces.IServerWebSocket;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
@@ -22,7 +23,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     /**
      * The server that the servlet is connected to.
      */
-    private final GeneralConnectionServer connectionServer;
+    private final ServerWebSocket connectionServer;
 
     /**
      * The {@link MultiConnectionManager} that is used by the servlet to recieve
@@ -84,7 +85,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
          *
          * @param req The servlet upgrade request.
          * @param resp The servlet upgrade response.
-         * @return the {@link GeneralConnectionServer} that handles the websocket communication.
+         * @return the {@link ServerWebSocket} that handles the websocket communication.
          */
         @Override
         public final Object createWebSocket(final ServletUpgradeRequest req, final ServletUpgradeResponse resp) {
@@ -113,11 +114,11 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     /**
      * Override this method to create a subclass of GeneralConnectionServer.
      *
-     * @return An instance of the {@link GeneralConnectionServer}
+     * @return An instance of the {@link ServerWebSocket}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    protected GeneralConnectionServer createServerSocket() {
-        return new GeneralConnectionServer(this);
+    protected ServerWebSocket createServerSocket() {
+        return new ServerWebSocket(this);
     }
 
     /**
@@ -137,7 +138,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      *
      * By default this drops all connections and then calls
      *
-     * @see multiconnection.MultiConnectionManager#connectServers(GeneralConnectionServer)
+     * @see multiconnection.MultiConnectionManager#connectServers(interfaces.IServerWebSocket)
      */
     public final void reconnect() {
         System.out.println("Reconnecting");
@@ -170,7 +171,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     /**
      * @return the GeneralConnectionServer.
      */
-    protected final GeneralConnectionServer getServer() {
+    protected final IServerWebSocket getServer() {
         return connectionServer;
     }
 }
