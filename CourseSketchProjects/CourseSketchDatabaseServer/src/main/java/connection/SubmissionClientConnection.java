@@ -3,9 +3,9 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.jetty.multiconnection.ConnectionWrapper;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import interfaces.IServerWebSocket;
+import coursesketch.jetty.multiconnection.ClientConnection;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import interfaces.IServerWebSocketHandler;
 import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -25,17 +25,17 @@ import protobuf.srl.request.Message.Request.MessageType;
  * Only the most important callbacks are overloaded.
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public class SubmissionConnection extends ConnectionWrapper {
+public class SubmissionClientConnection extends ClientConnection {
 
     /**
-     * @see ConnectionWrapper#ConnectionWrapper(URI, interfaces.IServerWebSocket).
+     * @see coursesketch.jetty.multiconnection.ClientConnection#ConnectionWrapper(URI, interfaces.IServerWebSocketHandler).
      * @param destination
      *            The location the server is going as a URI. ex:
      *            http://example.com:1234
      * @param parentServer
      *            The server that is using this connection wrapper.
      */
-    public SubmissionConnection(final URI destination, final ServerWebSocket parentServer) {
+    public SubmissionClientConnection(final URI destination, final ServerWebSocketHandler parentServer) {
         super(destination, parentServer);
     }
 
@@ -47,7 +47,7 @@ public class SubmissionConnection extends ConnectionWrapper {
      */
     @Override
     public final void onMessage(final ByteBuffer buffer) {
-        final Request req = IServerWebSocket.Decoder.parseRequest(buffer);
+        final Request req = IServerWebSocketHandler.Decoder.parseRequest(buffer);
         System.out.println("Got a response from the submission server!");
         System.out.println(req.getSessionInfo());
         final String[] sessionInfo = req.getSessionInfo().split("\\+");
@@ -82,7 +82,7 @@ public class SubmissionConnection extends ConnectionWrapper {
             if (connection == null) {
                 System.err.println("SOCKET IS NULL");
             }
-            ServerWebSocket.send(getConnectionFromState(state), builder.build());
+            ServerWebSocketHandler.send(getConnectionFromState(state), builder.build());
         }
     }
 }

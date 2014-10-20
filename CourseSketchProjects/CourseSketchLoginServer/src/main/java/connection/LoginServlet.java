@@ -1,14 +1,13 @@
 package connection;
 
-import interfaces.IMultiConnectionManager;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
 
 /**
  * Creates a servlet specific to the login server.
  */
 @SuppressWarnings("serial")
-public final class LoginServlet extends GeneralConnectionServlet {
+public final class LoginServlet extends ServerWebSocketInitializer {
 
     /**
      * Creates a GeneralConnectionServlet.
@@ -28,8 +27,8 @@ public final class LoginServlet extends GeneralConnectionServlet {
      * {@inheritDoc}
      */
     @Override
-    public ServerWebSocket createServerSocket() {
-        return new LoginServerWebSocket(this);
+    public ServerWebSocketHandler createServerSocket() {
+        return new LoginServerWebSocketHandler(this);
     }
 
     /**
@@ -46,7 +45,7 @@ public final class LoginServlet extends GeneralConnectionServlet {
      * @return a new connection manager object
      */
     @Override
-    protected IMultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return null;
     }
 }

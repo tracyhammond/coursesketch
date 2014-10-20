@@ -3,9 +3,9 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.jetty.multiconnection.ConnectionWrapper;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import coursesketch.jetty.multiconnection.ServerWebSocket.Decoder;
+import coursesketch.jetty.multiconnection.ClientConnection;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler.Decoder;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
@@ -16,9 +16,9 @@ import utilities.TimeManager;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 @WebSocket()
-public class DataConnection extends ConnectionWrapper {
+public class DataClientConnection extends ClientConnection {
 
-    public DataConnection(final URI destination, ServerWebSocket parentServer) {
+    public DataClientConnection(final URI destination, ServerWebSocketHandler parentServer) {
         super(destination, parentServer);
     }
 
@@ -34,7 +34,7 @@ public class DataConnection extends ConnectionWrapper {
 			final Request rsp = TimeManager.decodeRequest(req);
 			if (rsp != null) {
 				try {
-					this.parentManager.send(rsp, req.getSessionInfo(), DataConnection.class);
+					this.parentManager.send(rsp, req.getSessionInfo(), DataClientConnection.class);
 				} catch (ConnectionException e) {
 					e.printStackTrace();
 				}

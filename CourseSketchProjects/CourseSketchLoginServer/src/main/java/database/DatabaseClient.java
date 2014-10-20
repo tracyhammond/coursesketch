@@ -20,8 +20,8 @@ import static database.DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR;
 import static database.DatabaseStringConstants.EMAIL;
 import static database.DatabaseStringConstants.LOGIN_DATABASE;
 
-import connection.LoginServerWebSocket;
-import interfaces.IServerWebSocket;
+import connection.LoginServerWebSocketHandler;
+import interfaces.IServerWebSocketHandler;
 
 /**
  * A client for the login database.
@@ -140,13 +140,13 @@ public class DatabaseClient {
         final DBObject cursor = table.findOne(query);
 
         if (cursor == null) {
-            throw new LoginException(LoginServerWebSocket.INCORRECT_LOGIN_MESSAGE);
+            throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
         }
         try {
             if (PasswordHash.validatePassword(password.toCharArray(), cursor.get(PASSWORD).toString())) {
                 return getUserInfo(cursor, loginAsDefault, loginAsInstructor);
             } else {
-                throw new LoginException(LoginServerWebSocket.INCORRECT_LOGIN_MESSAGE);
+                throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
             }
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
@@ -178,7 +178,7 @@ public class DatabaseClient {
         } else if ((loginAsDefault && !defaultAccountIsInstructor) || (!loginAsDefault && !loginAsInstructor)) {
             result = cursor.get(STUDENT_ID) + ":" + cursor.get(STUDENT_CLIENT_ID);
         } else {
-            throw new LoginException(LoginServerWebSocket.PERMISSION_ERROR_MESSAGE);
+            throw new LoginException(LoginServerWebSocketHandler.PERMISSION_ERROR_MESSAGE);
         }
         return result;
     }
@@ -208,11 +208,11 @@ public class DatabaseClient {
         if (cursor == null) {
             query = new BasicDBObject(USER_NAME, user).append(PASSWORD, PasswordHash.createHash(password)).append(EMAIL, email)
                     .append(IS_DEFAULT_INSTRUCTOR, isInstructor).append(INSTRUCTOR_ID, FancyEncoder.fancyID())
-                    .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, IServerWebSocket.Encoder.nextID().toString())
-                    .append(INSTRUCTOR_CLIENT_ID, IServerWebSocket.Encoder.nextID().toString());
+                    .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, IServerWebSocketHandler.Encoder.nextID().toString())
+                    .append(INSTRUCTOR_CLIENT_ID, IServerWebSocketHandler.Encoder.nextID().toString());
             loginCollection.insert(query);
         } else {
-            throw new RegistrationException(LoginServerWebSocket.REGISTRATION_ERROR_MESSAGE);
+            throw new RegistrationException(LoginServerWebSocketHandler.REGISTRATION_ERROR_MESSAGE);
         }
     }
 

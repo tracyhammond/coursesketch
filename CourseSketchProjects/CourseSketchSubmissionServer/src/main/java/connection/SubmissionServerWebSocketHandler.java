@@ -1,9 +1,9 @@
 package connection;
 
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
 import handlers.DataRequestHandler;
 import handlers.SubmissionRequestHandler;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -16,9 +16,9 @@ import protobuf.srl.request.Message.Request;
  * This is a backend server that is only connected by other servers
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public class SubmissionServerWebSocket extends ServerWebSocket {
+public class SubmissionServerWebSocketHandler extends ServerWebSocketHandler {
 
-	public SubmissionServerWebSocket(GeneralConnectionServlet parent) {
+	public SubmissionServerWebSocketHandler(ServerWebSocketInitializer parent) {
 		super(parent);
 	}
 

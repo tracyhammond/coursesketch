@@ -3,10 +3,10 @@ package connection;
 import java.security.GeneralSecurityException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
 import database.LoginException;
 import database.RegistrationException;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -23,7 +23,7 @@ import utilities.TimeManager;
  * Contains simple proxy information that is sent to other servers.
  */
 @WebSocket()
-public final class LoginServerWebSocket extends ServerWebSocket {
+public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**
      * The name of the socket.
@@ -74,7 +74,7 @@ public final class LoginServerWebSocket extends ServerWebSocket {
      * @param parent
      *            {@link connection.LoginServlet}
      */
-    public LoginServerWebSocket(final GeneralConnectionServlet parent) {
+    public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent) {
         super(parent);
     }
 

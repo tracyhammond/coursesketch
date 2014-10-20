@@ -1,6 +1,5 @@
 package handlers;
 
-import interfaces.IMultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
@@ -8,14 +7,14 @@ import protobuf.srl.submission.Submission.SrlSubmission;
 
 import com.google.protobuf.ByteString;
 
-import connection.DataConnection;
+import connection.DataClientConnection;
 import database.DatabaseClient;
 import database.UpdateHandler;
 
 public class SubmissionRequestHandler {
 	
 	private static final UpdateHandler updateHandler = new UpdateHandler();
-	public static Request handleRequest(Request req, IMultiConnectionManager internalConnections) {
+	public static Request handleRequest(Request req, MultiConnectionManager internalConnections) {
 		final String sessionInfo = req.getSessionInfo();
 		try {
 			String resultantId = null;
@@ -48,7 +47,7 @@ public class SubmissionRequestHandler {
 					if (data != null) {
 						// passes the data to the database for connecting
 						build.setOtherData(data);
-						internalConnections.send(build.build(), "", DataConnection.class);
+						internalConnections.send(build.build(), "", DataClientConnection.class);
 					}
 				}
 				updateHandler.clearSubmission(sessionInfo);

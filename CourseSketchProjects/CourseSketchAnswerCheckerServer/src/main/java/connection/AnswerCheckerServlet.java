@@ -1,12 +1,11 @@
 package connection;
 
-import interfaces.IMultiConnectionManager;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
 import internalConnection.AnswerConnectionManager;
 
 @SuppressWarnings("serial")
-public class AnswerCheckerServlet extends GeneralConnectionServlet {
+public class AnswerCheckerServlet extends ServerWebSocketInitializer {
 
     public AnswerCheckerServlet(final long timeoutTime, final boolean secure,
             final boolean connectLocally) {
@@ -14,8 +13,8 @@ public class AnswerCheckerServlet extends GeneralConnectionServlet {
     }
 
     @Override
-    public final ServerWebSocket createServerSocket() {
-        return new AnswerCheckerServerWebSocket(this);
+    public final ServerWebSocketHandler createServerSocket() {
+        return new AnswerCheckerServerWebSocketHandler(this);
     }
 
     /**
@@ -23,7 +22,7 @@ public class AnswerCheckerServlet extends GeneralConnectionServlet {
      * make it return null
      */
     @Override
-    protected final IMultiConnectionManager createConnectionManager(
+    protected final MultiConnectionManager createConnectionManager(
             final boolean connectLocally, final boolean secure) {
         return new AnswerConnectionManager(connectionServer, connectLocally,
                 secure);

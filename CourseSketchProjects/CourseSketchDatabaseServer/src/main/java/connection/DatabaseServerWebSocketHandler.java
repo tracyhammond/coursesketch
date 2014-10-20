@@ -1,9 +1,9 @@
 package connection;
 
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -19,12 +19,12 @@ import utilities.TimeManager;
  * Contains simple proxy information that is sent to other servers.
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public class DatabaseServerWebSocket extends ServerWebSocket {
+public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**
      * @param parent Passes it up to super constructor.
      */
-    public DatabaseServerWebSocket(final GeneralConnectionServlet parent) {
+    public DatabaseServerWebSocketHandler(final ServerWebSocketInitializer parent) {
         super(parent);
     }
 

@@ -1,21 +1,21 @@
 package internalConnection;
 
+import interfaces.IServerWebSocketHandler;
 import utilities.ConnectionException;
-import interfaces.IServerWebSocket;
-import coursesketch.jetty.multiconnection.MultiConnectionManager;
+import interfaces.MultiConnectionManager;
 
 public class AnswerConnectionManager extends MultiConnectionManager {
     private static final int PORT = 8883;
-    public AnswerConnectionManager(final IServerWebSocket parent,
+    public AnswerConnectionManager(final IServerWebSocketHandler parent,
             final boolean connectType, final boolean secure) {
         super(parent, connectType, secure);
     }
 
     @Override
-    public final void connectServers(final IServerWebSocket parent) {
+    public final void connectServers(final IServerWebSocketHandler parent) {
         try {
             createAndAddConnection(parent, isConnectionLocal(), "srl02.tamu.edu",
-                    PORT, secure, SubmissionConnection.class);
+                    PORT, secure, SubmissionClientConnection.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }

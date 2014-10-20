@@ -1,9 +1,9 @@
 package connection;
 
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
 import internalConnection.AnswerConnectionState;
-import internalConnection.SubmissionConnection;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
+import internalConnection.SubmissionClientConnection;
 import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -26,9 +26,9 @@ import utilities.TimeManager;
  * This is a backend server that is only connected by other servers
  */
 @WebSocket()
-public class AnswerCheckerServerWebSocket extends ServerWebSocket {
+public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler {
 
-    public AnswerCheckerServerWebSocket(final GeneralConnectionServlet parent) {
+    public AnswerCheckerServerWebSocketHandler(final ServerWebSocketInitializer parent) {
         super(parent);
     }
 
@@ -52,7 +52,7 @@ public class AnswerCheckerServerWebSocket extends ServerWebSocket {
                     try {
                         getConnectionManager().send(req,
                                 req.getSessionInfo() + "+" + state.getKey(),
-                                SubmissionConnection.class);
+                                SubmissionClientConnection.class);
                     } catch (ConnectionException e) {
                         e.printStackTrace();
                     }
@@ -71,7 +71,7 @@ public class AnswerCheckerServerWebSocket extends ServerWebSocket {
                     try {
                         getConnectionManager().send(req,
                                 req.getSessionInfo() + "+" + state.getKey(),
-                                SubmissionConnection.class);
+                                SubmissionClientConnection.class);
                     } catch (ConnectionException e1) {
                         e1.printStackTrace();
                     } // pass submission on
@@ -96,7 +96,7 @@ public class AnswerCheckerServerWebSocket extends ServerWebSocket {
             } else {
                 try {
                     getConnectionManager().send(req, req.getSessionInfo(),
-                            SubmissionConnection.class);
+                            SubmissionClientConnection.class);
                 } catch (ConnectionException e) {
                     e.printStackTrace();
                 }
