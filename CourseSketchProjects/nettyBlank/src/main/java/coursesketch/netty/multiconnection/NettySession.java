@@ -62,4 +62,24 @@ public final class NettySession implements SocketSession {
     public void close(int statusCode, String reason) {
         session.channel().close();
     }
+
+    /**
+     * @param other a different JettySession.
+     * @return true if the {@link org.eclipse.jetty.websocket.api.Session} are equal.
+     */
+    @Override
+    public boolean equals(final Object other) {
+        if (other instanceof NettySession) {
+            return session.equals(((NettySession) other).session);
+        }
+        return false;
+    }
+
+    /**
+     * @return the hash code of the {@link org.eclipse.jetty.websocket.api.Session}.
+     */
+    @Override
+    public int hashCode() {
+        return session.hashCode();
+    }
 }
