@@ -1,0 +1,32 @@
+<html>
+<head>
+
+<template id="textBoxCreation">
+    <style>
+    #closeButton {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+    }
+    #creatorText {
+    }
+    :host {
+        position: fixed;
+        top: 0px;
+        left: centered;
+        cursor: move;
+    }
+    </style>
+
+    <dialog id="textBoxDialog" class="draggable" open>
+        <textarea rows="10" cols="30" id="creatorText" placeholder="Insert your text here..."></textarea>
+        <button id="closeButton">X</button>
+    </dialog>
+</template>
+
+<template id="textBoxViewing">
+
+</template>
+
+</head>
+</html>
