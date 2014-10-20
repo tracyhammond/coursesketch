@@ -1,8 +1,8 @@
 package connection;
 
-import multiconnection.ServerWebSocket;
-import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionManager;
+import interfaces.IMultiConnectionManager;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 
 /**
  * Creates a servlet specific to the login server.
@@ -46,7 +46,7 @@ public final class LoginServlet extends GeneralConnectionServlet {
      * @return a new connection manager object
      */
     @Override
-    protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    protected IMultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return null;
     }
 }

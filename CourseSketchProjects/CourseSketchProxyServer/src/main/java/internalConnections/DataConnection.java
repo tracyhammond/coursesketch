@@ -3,16 +3,16 @@ package internalconnections;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import multiconnection.ConnectionWrapper;
-import multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.ConnectionWrapper;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
 import interfaces.IServerWebSocket;
 import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.Request;
-import connection.ConnectionException;
-import connection.TimeManager;
+import utilities.ConnectionException;
+import utilities.TimeManager;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.

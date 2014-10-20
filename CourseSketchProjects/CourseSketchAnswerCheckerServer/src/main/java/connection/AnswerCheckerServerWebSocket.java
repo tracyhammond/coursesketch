@@ -2,8 +2,8 @@ package connection;
 
 import internalConnection.AnswerConnectionState;
 import internalConnection.SubmissionConnection;
-import multiconnection.ServerWebSocket;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -17,6 +17,8 @@ import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import utilities.ConnectionException;
+import utilities.TimeManager;
 
 /**
  * A simple WebSocketServer implementation.

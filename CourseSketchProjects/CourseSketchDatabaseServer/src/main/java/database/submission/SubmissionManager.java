@@ -10,7 +10,7 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 
 import java.util.ArrayList;
 
-import multiconnection.MultiConnectionManager;
+import interfaces.IMultiConnectionManager;
 
 import org.bson.types.ObjectId;
 
@@ -27,7 +27,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import connection.ConnectionException;
+import utilities.ConnectionException;
 import connection.SubmissionConnection;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
@@ -97,7 +97,7 @@ public final class SubmissionManager {
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
      */
     public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final String sessionInfo,
-            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
+            final IMultiConnectionManager internalConnections) throws DatabaseAccessException {
         final Request.Builder requestBuilder = Request.newBuilder();
         requestBuilder.setSessionInfo(sessionInfo);
         requestBuilder.setRequestType(MessageType.DATA_REQUEST);
@@ -136,7 +136,7 @@ public final class SubmissionManager {
      * @throws AuthenticationException Thrown if the user does not have the authentication
      */
     public static void mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs, final String userId,
-            final String problemId, final String sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
+            final String problemId, final String sessionInfo, final IMultiConnectionManager internalConnections, final ByteString review)
             throws DatabaseAccessException, AuthenticationException {
         final DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
         if (problem == null) {

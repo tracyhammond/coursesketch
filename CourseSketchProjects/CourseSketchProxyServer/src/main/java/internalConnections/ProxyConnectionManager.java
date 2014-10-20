@@ -1,9 +1,9 @@
 package internalconnections;
 
-import connection.ConnectionException;
+import utilities.ConnectionException;
 import interfaces.IConnectionWrapper;
 import interfaces.IServerWebSocket;
-import multiconnection.MultiConnectionManager;
+import coursesketch.jetty.multiconnection.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 
 /**

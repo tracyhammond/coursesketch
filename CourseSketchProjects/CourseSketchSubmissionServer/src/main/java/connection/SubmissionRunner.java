@@ -1,14 +1,14 @@
 package connection;
 
-import multiconnection.GeneralConnectionRunner;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.GeneralConnectionRunner;
+import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 import database.DatabaseClient;
 
 public class SubmissionRunner extends GeneralConnectionRunner {
 	public static void main(String args[]) {
 		SubmissionRunner run = new SubmissionRunner(args);
 		try {
-			run.runAll();
+			run.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -29,7 +29,7 @@ public class SubmissionRunner extends GeneralConnectionRunner {
 	}
 
 	@Override
-	public final GeneralConnectionServlet getServlet(long time, boolean secure, boolean local) {
+	public final GeneralConnectionServlet getSocketInitializer(long time, boolean secure, boolean local) {
 		return new SubmissionServlet(time, secure, local);
 	}
 }

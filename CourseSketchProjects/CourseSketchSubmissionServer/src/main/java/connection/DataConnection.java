@@ -3,13 +3,15 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import multiconnection.ConnectionWrapper;
-import multiconnection.ServerWebSocket;
-import multiconnection.ServerWebSocket.Decoder;
+import coursesketch.jetty.multiconnection.ConnectionWrapper;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.ServerWebSocket.Decoder;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.Request;
+import utilities.ConnectionException;
+import utilities.TimeManager;
 
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */

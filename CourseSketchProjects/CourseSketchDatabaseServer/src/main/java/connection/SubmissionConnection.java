@@ -3,8 +3,8 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import multiconnection.ConnectionWrapper;
-import multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.ConnectionWrapper;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
 import interfaces.IServerWebSocket;
 import interfaces.MultiConnectionState;
 

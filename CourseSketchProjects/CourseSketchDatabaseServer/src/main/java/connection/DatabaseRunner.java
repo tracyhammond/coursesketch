@@ -1,7 +1,7 @@
 package connection;
 
-import multiconnection.GeneralConnectionRunner;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.GeneralConnectionRunner;
+import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 
@@ -24,7 +24,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      */
     public static void main(final String[] args) {
         final DatabaseRunner run = new DatabaseRunner(args);
-        run.runAll();
+        run.start();
     }
 
     /**
@@ -48,7 +48,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
+    public final GeneralConnectionServlet getSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new DatabaseServlet(time, secure, local);
     }
 }

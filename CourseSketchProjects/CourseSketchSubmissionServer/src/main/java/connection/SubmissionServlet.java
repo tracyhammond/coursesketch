@@ -1,8 +1,8 @@
 package connection;
 
-import multiconnection.ServerWebSocket;
-import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionManager;
+import interfaces.IMultiConnectionManager;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 
 @SuppressWarnings("serial")
 public class SubmissionServlet extends GeneralConnectionServlet {
@@ -20,7 +20,7 @@ public class SubmissionServlet extends GeneralConnectionServlet {
 	 * We do not need to manage multiple connections so we might as well just make it return null
 	 */
 	@Override
-	protected final MultiConnectionManager createConnectionManager(boolean connectLocally, boolean secure) {
+	protected final IMultiConnectionManager createConnectionManager(boolean connectLocally, boolean secure) {
 		return new SubmissionConnectionManager(connectionServer, connectLocally, secure);
 	}
 }
