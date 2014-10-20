@@ -1,253 +1,272 @@
 /**
- * Attempts to use data as a database, pulls data from the server if it does not exist
- *
- * @param userId The user that this database is associated with.
- * @param connection The connection to the server which will handle all connections relating to certain queries.
- * @param advanceDataListener An instance of {@link AdvanceDataListener} this is used for responses to queries made by the database server
- * @param Request The class representing the Request protobuf used to get the message type.
- * @param byteBuffer The static instance that is used for encoding and decoding data.
+ * Attempts to use data as a database, pulls data from the server if it does not
+ * exist
+ * 
+ * @param userId
+ *            The user that this database is associated with.
+ * @param connection
+ *            The connection to the server which will handle all connections
+ *            relating to certain queries.
+ * @param advanceDataListener
+ *            An instance of {@link AdvanceDataListener} this is used for
+ *            responses to queries made by the database server
+ * @param Request
+ *            The class representing the Request protobuf used to get the
+ *            message type.
+ * @param byteBuffer
+ *            The static instance that is used for encoding and decoding data.
  */
 function SchoolDataManager(userId, advanceDataListener, connection, Request, ByteBuffer, long) {
-	var COURSE_LIST = "COURSE_LIST";
-	var LAST_UPDATE_TIME = "LAST_UPDATE_TIME";
-	var localScope = this;
-	var localUserId = userId;
-	var stateMachine = {};
-	var databaseFinishedLoading = false;
+    var COURSE_LIST = "COURSE_LIST";
+    var LAST_UPDATE_TIME = "LAST_UPDATE_TIME";
+    var localScope = this;
+    var localUserId = userId;
+    var stateMachine = {};
+    var databaseFinishedLoading = false;
 
-	var version = 4;
-	var dataListener = advanceDataListener;
+    var version = 4;
+    var dataListener = advanceDataListener;
 
-	var serverConnection = connection;
+    var serverConnection = connection;
 
-	var courseManager;
-	var assignmentManager;
-	var courseProblemManager;
-	var submissionManager;
-	var gradeManager;
+    var courseManager;
+    var assignmentManager;
+    var courseProblemManager;
+    var submissionManager;
+    var gradeManager;
 
-	var dataSender = new Object();
+    var dataSender = new Object();
 
-	this.getCurrentTime = connection.getCurrentTime;
-	/*
-	 * END OF VARIABLE SETTING
-	 */
+    /*
+     * END OF VARIABLE SETTING
+     */
 
-	/**
-	 * Returns true if the database is ready false otherwise.
-	 *
-	 * it is placed this far up so that it can be called even before most of the database is set up.
-	 */
-	this.isDatabaseReady = function() {
-		return databaseFinishedLoading;
-	}
+    /**
+     * Returns true if the database is ready false otherwise.
+     * 
+     * it is placed this far up so that it can be called even before most of the
+     * database is set up.
+     */
+    this.isDatabaseReady = function() {
+        return databaseFinishedLoading;
+    }
 
-	/**
-	 * After the lower level database has been completely setup the higher level specific databases can be called.
-	 */
-	var initalizedFunction = function() {
-		if (!localScope.start) {
-			var intervalVar = setInterval(function() {
-				if (localScope.start) {
-					console.log("Checking if higher database is truly ready!");
-					clearInterval(intervalVar);
-					localScope.start();
-				}
-			}, 100);
-		} else {
-			localScope.start();
-		}
-	};
+    /**
+     * After the lower level database has been completely setup the higher level
+     * specific databases can be called.
+     */
+    var initalizedFunction = function() {
+        if (!localScope.start) {
+            var intervalVar = setInterval(function() {
+                if (localScope.start) {
+                    console.log("Checking if higher database is truly ready!");
+                    clearInterval(intervalVar);
+                    localScope.start();
+                }
+            }, 100);
+        } else {
+            localScope.start();
+        }
+    };
 
-	var database = new protoDatabase(localUserId, version, initalizedFunction);
+    var database = new ProtoDatabase(localUserId, version, initalizedFunction);
 
-	(function() {
+    (function() {
 
-		var addFunction = function(store, objectId, objectToAdd) {
-			return store.put({"id" : objectId, "data" : objectToAdd});
-		};
+        var addFunction = function(store, objectId, objectToAdd) {
+            return store.put({
+                "id" : objectId,
+                "data" : objectToAdd
+            });
+        };
 
-		var tables = new Array();
-		tables.push(database.createTable("Courses","id", addFunction));
-		tables.push(database.createTable("Assignments","id", addFunction));
-		tables.push(database.createTable("CourseProblems","id", addFunction));
-		tables.push(database.createTable("BankProblems","id", addFunction));
-		tables.push(database.createTable("Submissions","id", addFunction));
-		tables.push(database.createTable("Grades","id", addFunction));
-		tables.push(database.createTable("Other","id", addFunction));
+        var tables = new Array();
+        tables.push(database.createTable("Courses", "id", addFunction));
+        tables.push(database.createTable("Assignments", "id", addFunction));
+        tables.push(database.createTable("CourseProblems", "id", addFunction));
+        tables.push(database.createTable("BankProblems", "id", addFunction));
+        tables.push(database.createTable("Submissions", "id", addFunction));
+        tables.push(database.createTable("Grades", "id", addFunction));
+        tables.push(database.createTable("Other", "id", addFunction));
 
-		database.setTables(tables);
-		database.open();
-	})();
+        database.setTables(tables);
+        database.open();
+    })();
 
-	/**
-	 * Sends a request to retrive data from the server.
-	 */
-	dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
-		var dataSend = PROTOBUF_UTIL.DataRequest();
-		dataSend.items = new Array();
-		var itemRequest = PROTOBUF_UTIL.ItemRequest();
-		itemRequest.setQuery(queryType);
+    /**
+     * Sends a request to retrive data from the server.
+     */
+    dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
+        var dataSend = CourseSketch.PROTOBUF_UTIL.DataRequest();
+        dataSend.items = new Array();
+        var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+        itemRequest.setQuery(queryType);
 
-		if (!isUndefined(idList)) {
-			itemRequest.setItemId(idList);
-		}
-		if (!isUndefined(advanceQuery)) {
-			itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
-		}
-		dataSend.items.push(itemRequest);
-		serverConnection.sendRequest(PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
-	};
+        if (!isUndefined(idList)) {
+            itemRequest.setItemId(idList);
+        }
+        if (!isUndefined(advanceQuery)) {
+            itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
+        }
+        dataSend.items.push(itemRequest);
+        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
+    };
 
-	/**
-	 * Inserts data into the server database.
-	 */
-	dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
-		var dataSend = PROTOBUF_UTIL.DataSend();
-		dataSend.items = new Array();
-		
-		var itemSend = PROTOBUF_UTIL.ItemSend();
-		itemSend.setQuery(queryType);
-		itemSend.setData(data);
+    /**
+     * Inserts data into the server database.
+     */
+    dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
+        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
+        dataSend.items = new Array();
 
-		dataSend.items.push(itemSend);
+        var itemSend = CourseSketch.PROTOBUF_UTIL.ItemSend();
+        itemSend.setQuery(queryType);
+        itemSend.setData(data);
 
-		serverConnection.sendRequest(PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
-	};
+        dataSend.items.push(itemSend);
 
-	/**
-	 * Sends an update to the server for the data to be updated.
-	 */
-	dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
-		var dataSend = PROTOBUF_UTIL.DataSend();
-		dataSend.items = new Array();
-		
-		var itemUpdate = PROTOBUF_UTIL.ItemRequest();
-		itemUpdate.setQuery(queryType);
-		itemUpdate.setData(data);
-		dataSend.items.push(itemUpdate);
-		serverConnection.sendRequest(PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
-	};
+        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
+    };
 
-	this.emptySchoolData = function() {
-		database.emptySelf();
-	};
+    /**
+     * Sends an update to the server for the data to be updated.
+     */
+    dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
+        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
+        dataSend.items = new Array();
 
-	this.start = function() {
-		// creates a manager for just courses.
-		/*courseManager = */new CourseDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-		/*assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-		/*courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-		/*submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-		/*submissionManager = */ //new GradeDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+        itemUpdate.setQuery(queryType);
+        itemUpdate.setData(data);
+        dataSend.items.push(itemUpdate);
+        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
+    };
 
-		console.log("Database is ready for use! with user: " + userId);
-		databaseFinishedLoading = true;
-	};
+    this.emptySchoolData = function() {
+        database.emptySelf();
+    };
 
-	/**
-	 * retrieves all the assignments for a given course.
-	 *
-	 * The callback is called with a list of assignment objects
-	 */
-	this.getAllAssignmentsFromCourse = function(courseId, assignmentCallback) {
-		var getAssignments = this.getAssignments;
-		this.getCourse(courseId, function(course) {
-			if (isUndefined(course)) {
-				throw new Error("Course not defined");
-			}
-			if (course.assignmentList.length <= 0) {
-				assignmentCallback([]);
-			}
-			getAssignments(course.assignmentList, assignmentCallback);
-		});
-	};
+    this.start = function() {
+        // creates a manager for just courses.
+        /* courseManager = */new CourseDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        /* assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        /* courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        /* submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        /* submissionManager = */// new GradeDataManager(this, dataListener,
+                                // database, dataSender, Request, ByteBuffer);
+        console.log("Database is ready for use! with user: " + userId);
+        databaseFinishedLoading = true;
+    };
 
-	/**
-	 * retrieves all the assignments for a given course.
-	 *
-	 * The callback is called with a list of assignment objects
-	 */
-	this.getAllProblemsFromAssignment = function(assignmentId, problemCallback) {
-		var getCourseProblems = this.getCourseProblems;
-		this.getAssignment(assignmentId, function(assignment) {
-			if (isUndefined(assignment)) {
-				throw new Error("Assignment not defined");
-			}
-			getCourseProblems(assignment.problemList, problemCallback);
-		});
-	};
+    /**
+     * retrieves all the assignments for a given course.
+     * 
+     * The callback is called with a list of assignment objects
+     */
+    this.getAllAssignmentsFromCourse = function(courseId, assignmentCallback) {
+        var getAssignments = this.getAssignments;
+        this.getCourse(courseId, function(course) {
+            if (isUndefined(course)) {
+                throw new Error("Course not defined");
+            }
+            if (course.assignmentList.length <= 0) {
+                assignmentCallback([]);
+            }
+            getAssignments(course.assignmentList, assignmentCallback);
+        });
+    };
 
-	/**
-	 * Polls the server for updates, after all items 
-	 */
-	this.pollUpdates = function(callback) {
-		database.getFromOther(LAST_UPDATE_TIME, function (e, request, result) {
-			if ( isUndefined(result) || isUndefined(result.data)) {
-				dataSender.sendDataRequest(PROTOBUF_UTIL.ItemQuery.UPDATE);
-			} else {
-				var lastTime = result.data;
-				dataSender.sendDataRequest(PROTOBUF_UTIL.ItemQuery.UPDATE, [lastTime]);
-			}
-		});
-		var functionCalled = false;
-		var timeout = setTimeout(function() {
-			if (!functionCalled && callback) {
-				functionCalled = true;
-				callback();
-			}
-		}, 5000);
-		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
-			database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString()); // to store for later recall
-			clearTimeout(timeout);
-			var school = PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-			var courseList = school.courses;
-			for (var i = 0; i < courseList.length; i ++) {
-				localScope.setCourse(courseList[i]);
-			}
+    /**
+     * retrieves all the assignments for a given course.
+     * 
+     * The callback is called with a list of assignment objects
+     */
+    this.getAllProblemsFromAssignment = function(assignmentId, problemCallback) {
+        var getCourseProblems = this.getCourseProblems;
+        this.getAssignment(assignmentId, function(assignment) {
+            if (isUndefined(assignment)) {
+                throw new Error("Assignment not defined");
+            }
+            getCourseProblems(assignment.problemList, problemCallback);
+        });
+    };
 
-			var assignmentList = school.assignments;
-			for (var i = 0; i < assignmentList.length; i ++) {
-				localScope.setAssignment(assignmentList[i]);
-			}
+    /**
+     * Polls the server for updates, after all items
+     */
+    this.pollUpdates = function(callback) {
+        database.getFromOther(LAST_UPDATE_TIME, function(e, request, result) {
+            if (isUndefined(result) || isUndefined(result.data)) {
+                dataSender.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE);
+            } else {
+                var lastTime = result.data;
+                dataSender.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, [ lastTime ]);
+            }
+        });
+        var functionCalled = false;
+        var timeout = setTimeout(function() {
+            if (!functionCalled && callback) {
+                functionCalled = true;
+                callback();
+            }
+        }, 5000);
 
-			var problemList = school.problems;
-			for (var i = 0; i < problemList.length; i ++) {
-				localScope.setCourseProblem(problemList[i]);
-			}
+        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
+            // to store for later recall
+            database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
+            clearTimeout(timeout);
+            var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
+            var courseList = school.courses;
+            for (var i = 0; i < courseList.length; i++) {
+                localScope.setCourse(courseList[i]);
+            }
 
-			if (!functionCalled && callback) {
-				functionCalled = true;
-				callback();
-			};
-		});
-	};
+            var assignmentList = school.assignments;
+            for (var i = 0; i < assignmentList.length; i++) {
+                localScope.setAssignment(assignmentList[i]);
+            }
 
-	/**
-	 * Adds the ability to set and remove state objects (for the use of transitioning from one page to the next!)
-	 */
-	this.addState = function(key, value) {
-		stateMachine[key] = value;
-	}
+            var problemList = school.problems;
+            for (var i = 0; i < problemList.length; i++) {
+                localScope.setCourseProblem(problemList[i]);
+            }
 
-	this.getState = function(key) {
-		return stateMachine[key];
-	}
+            if (!functionCalled && callback) {
+                functionCalled = true;
+                callback();
+            }
+            ;
+        });
+    };
 
-	this.hasState = function(key) {
-		return !isUndefined(stateMachine[key]);
-	}
+    /**
+     * Adds the ability to set and remove state objects (for the use of
+     * transitioning from one page to the next!)
+     */
+    this.addState = function(key, value) {
+        stateMachine[key] = value;
+    }
 
-	this.clearStates = function() {
-		stateMachine = {};
-	}
+    this.getState = function(key) {
+        return stateMachine[key];
+    }
 
-	/**
-	 * Returns the current id that is being used with the database
-	 */
-	this.getCurrentId = function() {
-		return localUserId;
-	};
+    this.hasState = function(key) {
+        return !isUndefined(stateMachine[key]);
+    }
+
+    this.clearStates = function() {
+        stateMachine = {};
+    }
+
+    /**
+     * Returns the current id that is being used with the database
+     */
+    this.getCurrentId = function() {
+        return localUserId;
+    };
+
+    this.getCurrentTime = connection.getCurrentTime;
 }
 var nonExistantValue = "NONEXISTANT_VALUE";
 var CURRENT_QUESTION = "CURRENT_QUESTION";

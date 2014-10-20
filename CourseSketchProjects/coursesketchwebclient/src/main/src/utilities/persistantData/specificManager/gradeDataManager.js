@@ -17,7 +17,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 		var state = course.getState();
 		var updateCourse = false;
 		if (isUndefined(state) || state == null) {
-			state = PROTOBUF_UTIL.State();
+			state = CourseSketch.PROTOBUF_UTIL.State();
 			updateCourse = true;
 		}
 		try {
@@ -82,21 +82,21 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 			if (isUndefined(result) || isUndefined(result.data)) {
 				// the listener from the server of the request
 				// it stores the course locally then cals the callback with the course
-				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
-					var school = PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
+				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
+					var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
 					var course = school.courses[0];
 					if (isUndefined(course)) {
 						userCourses[courseId] = nonExistantValue;
 						courseCallback(nonExistantValue);
-						advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.COURSE);
+						advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
 						return;
 					}
 					localScope.setCourse(course);
 					stateCallback(course, courseCallback);
-					advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.COURSE);
+					advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
 				});
 				// creates a request that is then sent to the server
-				sendDataRequest(PROTOBUF_UTIL.ItemQuery.COURSE, [courseId]);
+				sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, [courseId]);
 			} else if (result.data == nonExistantValue) {
 				// the server holds this special value then it means the server does not have the value
 				courseCallback(nonExistantValue);
@@ -144,15 +144,15 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	function getAllCourses(courseCallback) {
 		var localFunction = setCourseIdList;
 		// there are no courses loaded onto this client!
-		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
+		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
 			if (!isUndefined(item.returnText) && item.returnText != "" && item.returnText !="null" && item.returnText != null) {
 				userHasCourses = false;
 				console.log(item.returnText);
 				alert(item.returnText);
-				advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.SCHOOL);
+				advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
 				return;
 			}
-			var school = PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
+			var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
 			var courseList = school.courses;
 			var idList = [];
 			for (var i = 0; i < courseList.length; i++) {
@@ -162,10 +162,10 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 			}
 			courseCallback(courseList);
 			setCourseIdList(idList);
-			advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, PROTOBUF_UTIL.ItemQuery.SCHOOL);
+			advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
 		});
 		if (userCourseId.length == 0 && userHasCourses) {
-			sendDataRequest(PROTOBUF_UTIL.ItemQuery.SCHOOL, [""]);
+			sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [""]);
 		//	console.log("course list from server polled!");
 		} else {
 			// This calls the server for updates then creates a list from the local data to appear fast
@@ -175,7 +175,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 			var courseList = [];
 
 			// ask server for course list
-			sendDataRequest(PROTOBUF_UTIL.ItemQuery.SCHOOL, [""]);
+			sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [""]);
 
 			// create local course list so everything appears really fast!
 			for (var i = 0; i < userCourseId.length; i++) {
@@ -208,8 +208,8 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 		setCourse(course); // sets the course into the local database;
 		if (courseCallback) courseCallback(course); // temp for now!
 
-		sendData.sendDataInsert(PROTOBUF_UTIL.ItemQuery.COURSE, Itcourse.toArrayBuffer());
-		advanceDataListener.setListener(Request.MessageType.DATA_INSERT, PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
+		sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, Itcourse.toArrayBuffer());
+		advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
 			var resultArray = item.getResponseText().split(":");
 			var oldId = resultArray[1];
 			var newId = resultArray[0];
@@ -238,8 +238,8 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
 		setCourse(course); // overrides the course into the local database;
 		if (courseCallback) courseCallback(course);
 
-		sendData.sendDataUpdate(PROTOBUF_UTIL.ItemQuery.COURSE, Itcourse.toArrayBuffer());
-		advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
+		sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, Itcourse.toArrayBuffer());
+		advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
 			serverCallback(item); // we do not need to make server changes we just need to make sure it was successful.
 		});
 	}

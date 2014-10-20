@@ -65,9 +65,9 @@ function Connection(uri, encrypted, attemptReconnect) {
 
             websocket.onmessage = function(evt) {
                 try {
-                    var MessageType = PROTOBUF_UTIL.getRequestClass().MessageType; 
+                    var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType; 
                     // Decode the Request
-                    var msg = PROTOBUF_UTIL.getRequestClass().decode(evt.data);
+                    var msg = CourseSketch.PROTOBUF_UTIL.getRequestClass().decode(evt.data);
                     // console.log("request decoded succesfully ");
                     if (msg.requestType == MessageType.TIME) {
                         console.log("getting from time");
@@ -233,6 +233,8 @@ function Connection(uri, encrypted, attemptReconnect) {
 		return longVersion;
 	};
 
+	CourseSketch.getCurrentTime = this.getCurrentTime;
+
 	function onTime(evt, msg) {
         if (msg.getResponseText() == SEND_TIME_TO_CLIENT_MSG) { // client
             return clientReciveTimeDiff(msg);
@@ -245,8 +247,8 @@ function Connection(uri, encrypted, attemptReconnect) {
     function clientReciveTimeDiff(req) {
         var startCounter = this.getCurrentTime();
         timeDifferance = dcodeIO.Long.fromString("" + req.getMessageTime()).subtract(this.getCurrentTime());
-        var rsp = PROTOBUF_UTIL.Request();
-        rsp.setRequestType(PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
+        var rsp = CourseSketch.PROTOBUF_UTIL.Request();
+        rsp.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
         rsp.setMessageTime(dcodeIO.Long.fromString("" + req.getMessageTime()).add(this.getCurrentTime().subtract(startCounter)));
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
 
