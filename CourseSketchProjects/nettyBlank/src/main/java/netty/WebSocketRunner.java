@@ -23,7 +23,14 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import java.io.FileInputStream;
+import java.security.KeyStore;
 
 /**
  * A HTTP server which serves Web Socket requests at:
@@ -44,17 +51,37 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  * <li>Firefox 11+ (RFC 6455 aka draft-ietf-hybi-thewebsocketprotocol-17)
  * </ul>
  */
-public final class WebSocketServer {
+public final class WebSocketRunner {
 
     static final boolean SSL = true;//System.getProperty("ssl") != null;
     static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
 
     public static void main(String[] args) throws Exception {
         // Configure SSL.
-        final SslContext sslCtx;
+        final SslHandler sslCtx;
         if (SSL) {
-            SelfSignedCertificate ssc = new SelfSignedCertificate();
-            sslCtx = SslContext.newServerContext(ssc.certificate(), ssc.privateKey());
+            SSLContext serverContext = SSLContext.getInstance("TLS");
+
+            final KeyStore ks = KeyStore.getInstance("JKS");
+
+            ks.load(new FileInputStream("file loc"),
+
+                    "yourkeystorepassword".toCharArray());
+
+            final KeyManagerFactory kmf = KeyManagerFactory
+
+                    .getInstance(KeyManagerFactory.getDefaultAlgorithm());
+
+            kmf.init(ks, "yourkeystorepassword".toCharArray());
+
+            serverContext.init(kmf.getKeyManagers(), null, null);
+            final SSLEngine eng = serverContext.createSSLEngine();
+            eng.setUseClientMode(false);
+            final SslHandler sslHandler = new SslHandler(eng, true);
+            sslCtx = sslHandler;
+
+            //SelfSignedCertificate ssc = new SelfSignedCertificate();
+            //sslCtx = SslContext.newServerContext(ssc.certificate(), ssc.privateKey());
         } else {
             sslCtx = null;
         }

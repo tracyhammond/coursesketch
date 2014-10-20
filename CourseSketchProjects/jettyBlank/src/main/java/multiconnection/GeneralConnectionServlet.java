@@ -105,7 +105,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      */
     public final void stop() {
         System.out.println("Stopping socket");
-        connectionServer.stop();
+        //connectionServer.stop();
         if (manager != null) {
             manager.dropAllConnection(true, false);
         }
