@@ -8,7 +8,7 @@ import java.util.Set;
  * Created by gigemjt on 10/19/14.
  */
 public class AnnotationLoader {
-    public static void main(final String aargs[]) {
+    public static void main(final String args[]) {
         final Reflections reflections =
                 isProduction() ? Reflections.collect() : new Reflections("");
 

@@ -160,7 +160,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
     private static String getWebSocketLocation(FullHttpRequest req) {
         String location =  req.headers().get(HOST) + WEBSOCKET_PATH;
-        if (WebSocketServer.SSL) {
+        if (WebSocketRunner.SSL) {
             return "wss://" + location;
         } else {
             return "ws://" + location;
