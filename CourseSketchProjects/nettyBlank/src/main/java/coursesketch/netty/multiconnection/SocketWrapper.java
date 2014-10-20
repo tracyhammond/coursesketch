@@ -21,6 +21,8 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
 import netty.WebSocketServerIndexPage;
 
+import java.nio.ByteBuffer;
+
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpHeaders.Names.HOST;
 import static io.netty.handler.codec.http.HttpHeaders.isKeepAlive;
@@ -170,7 +172,11 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
     }
 
     private void onMessage(final ChannelHandlerContext ctx, final BinaryWebSocketFrame frame) {
-        socketHandler.nettyOnMessage(ctx, frame.content().nioBuffer());
+        // This was the only way we were able to make the bytes able to be read.
+        // There may be another way in the future to grab the bytes.
+        final byte[] bytes = new byte[frame.content().readableBytes()];
+        frame.content().readBytes(bytes);
+        socketHandler.nettyOnMessage(ctx, ByteBuffer.wrap(bytes));
     }
 
     /**
