@@ -1,7 +1,7 @@
 package connection;
 
-import interfaces.IServerWebSocket;
-import coursesketch.jetty.multiconnection.MultiConnectionManager;
+import interfaces.IServerWebSocketHandler;
+import interfaces.MultiConnectionManager;
 import utilities.ConnectionException;
 
 /**
@@ -20,7 +20,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
      * @param connectType If the connection is local or if it is remote
      * @param secure If ssl should be used.
      */
-    public DatabaseConnectionManager(final IServerWebSocket parent, final boolean connectType, final boolean secure) {
+    public DatabaseConnectionManager(final IServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
         super(parent, connectType, secure);
     }
 
@@ -29,9 +29,9 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
      * @param serv The current server that the connections will be made from.
      */
     @Override
-    public final void connectServers(final IServerWebSocket serv) {
+    public final void connectServers(final IServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(), SubmissionConnection.class);
+            createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(), SubmissionClientConnection.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }

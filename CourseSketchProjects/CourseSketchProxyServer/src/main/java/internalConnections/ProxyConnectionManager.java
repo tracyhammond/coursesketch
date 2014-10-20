@@ -1,9 +1,9 @@
 package internalconnections;
 
+import interfaces.IClientConnection;
+import interfaces.IServerWebSocketHandler;
 import utilities.ConnectionException;
-import interfaces.IConnectionWrapper;
-import interfaces.IServerWebSocket;
-import coursesketch.jetty.multiconnection.MultiConnectionManager;
+import interfaces.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 
 /**
@@ -31,13 +31,13 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      * Creates a manager for the proxy connections.
      *
      * @param parent
-     *            {@link serverfront.ProxyServerWebSocket}
+     *            {@link serverfront.ProxyServerWebSocketHandler}
      * @param connectType
      *            true if connection is local.
      * @param secure
      *            true if all connections should be secure.
      */
-    public ProxyConnectionManager(final IServerWebSocket parent, final boolean connectType, final boolean secure) {
+    public ProxyConnectionManager(final IServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
         super(parent, connectType, secure);
     }
 
@@ -46,23 +46,23 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      *
      * @param serv
      *            an instance of the local server (
-     *            {@link serverfront.ProxyServerWebSocket}) in this case.
+     *            {@link serverfront.ProxyServerWebSocketHandler}) in this case.
      */
     @Override
-    public void connectServers(final IServerWebSocket serv) {
+    public void connectServers(final IServerWebSocketHandler serv) {
         // System.out.println("Open Recognition...");
         System.out.println("Open Login...");
         System.out.println(isConnectionLocal());
         System.out.println(isSecure());
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginConnection.class);
+            createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginClientConnection.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }
 
         System.out.println("Open Data...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataConnection.class);
+            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataClientConnection.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -70,7 +70,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
 
         System.out.println("Open Answer...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerConnection.class);
+            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientConnection.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -109,7 +109,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      * @throws ConnectionException
      *             thrown if there are problems sending the message.
      */
-    public void send(final Request req, final String sessionId, final Class<? extends IConnectionWrapper> connectionType, final String userId)
+    public void send(final Request req, final String sessionId, final Class<? extends IClientConnection> connectionType, final String userId)
             throws ConnectionException {
         final Request.Builder builder = Request.newBuilder(req);
         builder.clearServersideId();

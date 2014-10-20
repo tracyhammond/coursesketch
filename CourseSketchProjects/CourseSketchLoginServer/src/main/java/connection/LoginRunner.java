@@ -1,7 +1,7 @@
 package connection;
 
 import coursesketch.jetty.multiconnection.GeneralConnectionRunner;
-import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
 import database.DatabaseClient;
 
 /**
@@ -49,7 +49,7 @@ public class LoginRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServlet getSocketInitializer(final long time, final boolean secure, final boolean local) {
+    public final ServerWebSocketInitializer getSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new LoginServlet(time, secure, local);
     }
 }

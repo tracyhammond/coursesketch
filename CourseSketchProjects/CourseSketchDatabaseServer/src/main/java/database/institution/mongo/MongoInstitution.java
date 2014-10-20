@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import interfaces.IMultiConnectionManager;
 
 import org.bson.types.ObjectId;
 
@@ -460,11 +459,11 @@ public final class MongoInstitution implements Institution {
      * @see
      * database.institution.mongo.Institution#mongoGetExperimentAsUser(java.
      * lang.String, java.lang.String, java.lang.String,
-     * coursesketch.jetty.multiconnection.MultiConnectionManager)
+     * interfaces.MultiConnectionManager)
      */
     @Override
     public void getExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
-            final IMultiConnectionManager internalConnections) throws DatabaseAccessException {
+            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
         System.out.println("Getting experiment for user: " + userId + " problem: " + problemId);
         SubmissionManager.mongoGetExperiment(getInstance().database, userId, problemId, sessionInfo, internalConnections);
     }
@@ -475,11 +474,11 @@ public final class MongoInstitution implements Institution {
      * @see
      * database.institution.mongo.Institution#mongoGetExperimentAsInstructor
      * (java.lang.String, java.lang.String, java.lang.String,
-     * coursesketch.jetty.multiconnection.MultiConnectionManager, com.google.protobuf.ByteString)
+     * interfaces.MultiConnectionManager, com.google.protobuf.ByteString)
      */
     @Override
     public void getExperimentAsInstructor(final String userId, final String problemId, final String sessionInfo,
-            final IMultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
+            final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
                 internalConnections, review);
     }

@@ -3,7 +3,7 @@ package handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
 
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -188,18 +188,18 @@ public final class DataInsertHandler {
                 }
             }
             if (!results.isEmpty()) {
-                ServerWebSocket.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
+                ServerWebSocketHandler.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
             }
             return;
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            ServerWebSocket.send(conn, buildRequest(null, e.getMessage(), req));
+            ServerWebSocketHandler.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            ServerWebSocket.send(conn, buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
+            ServerWebSocketHandler.send(conn, buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
         } catch (Exception e) {
             e.printStackTrace();
-            ServerWebSocket.send(conn, buildRequest(null, e.getMessage(), req));
+            ServerWebSocketHandler.send(conn, buildRequest(null, e.getMessage(), req));
         }
     }
 

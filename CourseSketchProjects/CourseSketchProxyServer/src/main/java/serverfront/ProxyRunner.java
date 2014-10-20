@@ -1,7 +1,7 @@
 package serverfront;
 
 import coursesketch.jetty.multiconnection.GeneralConnectionRunner;
-import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
 
 /**
  * A subclass of the runner and sets up some special information for running the
@@ -50,7 +50,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServlet getSocketInitializer(final long time, final boolean secure, final boolean local) {
+    public final ServerWebSocketInitializer getSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new ProxyServlet(time, secure, local);
     }
 }

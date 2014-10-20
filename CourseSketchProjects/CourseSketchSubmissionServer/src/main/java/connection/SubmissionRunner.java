@@ -1,7 +1,7 @@
 package connection;
 
 import coursesketch.jetty.multiconnection.GeneralConnectionRunner;
-import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
 import database.DatabaseClient;
 
 public class SubmissionRunner extends GeneralConnectionRunner {
@@ -29,7 +29,7 @@ public class SubmissionRunner extends GeneralConnectionRunner {
 	}
 
 	@Override
-	public final GeneralConnectionServlet getSocketInitializer(long time, boolean secure, boolean local) {
+	public final ServerWebSocketInitializer getSocketInitializer(long time, boolean secure, boolean local) {
 		return new SubmissionServlet(time, secure, local);
 	}
 }

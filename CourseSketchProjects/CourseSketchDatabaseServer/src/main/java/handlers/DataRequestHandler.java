@@ -3,8 +3,7 @@ package handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import interfaces.IMultiConnectionManager;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
 
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -67,7 +66,7 @@ public final class DataRequestHandler {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
         "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount" })
     public static void handleRequest(final Request req, final Session conn, final String sessionId,
-            final IMultiConnectionManager internalConnections) {
+            final MultiConnectionManager internalConnections) {
         try {
             System.out.println("Receiving DATA Request...");
 
@@ -183,16 +182,16 @@ public final class DataRequestHandler {
                     results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                 }
             }
-            ServerWebSocket.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
+            ServerWebSocketHandler.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            ServerWebSocket.send(conn, buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
+            ServerWebSocketHandler.send(conn, buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            ServerWebSocket.send(conn, buildRequest(null, e.getMessage(), req));
+            ServerWebSocketHandler.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (Exception e) {
             e.printStackTrace();
-            ServerWebSocket.send(conn, buildRequest(null, e.getMessage(), req));
+            ServerWebSocketHandler.send(conn, buildRequest(null, e.getMessage(), req));
         }
     }
 
