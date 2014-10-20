@@ -94,6 +94,15 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
      */
     @Override
     protected final void configureSSL(final String iKeystorePath, final String iCertificatePath) {
+        // TO GENERATE NEEDED FILES FOR SSL.
+        /*
+            openssl genrsa -des3 -out server.key 1024
+            openssl req -new -key server.key -out server.csr
+            cp server.key server.key.org
+            openssl rsa -in server.key.org -out server.key
+            openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+            openssl pkcs8 -topk8 -nocrypt -in server.key -out serverpk8.key
+        */
         try {
             sslCtx = SslContext.newServerContext(new File(iCertificatePath), new File(iKeystorePath));
         } catch (SSLException e) {
@@ -106,11 +115,11 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
      */
     @Override
     protected final void addConnections() {
-        ((WebSocketInitializer) getSocketInitailizerInstance()).setSslContext(sslCtx);
+        ((ServerWebSocketInitializer) getSocketInitailizerInstance()).setSslContext(sslCtx);
         server.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
-                .childHandler((WebSocketInitializer) getSocketInitailizerInstance());
+                .childHandler((ServerWebSocketInitializer) getSocketInitailizerInstance());
     }
 
     /**
@@ -184,7 +193,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
      */
     @Override
     protected ISocketInitializer getSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
-        return new WebSocketInitializer(timeOut, isSecure, isLocal);
+        return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
     }
     /**
      * @return true if the server has not been started (basically run most has not been called yet)
