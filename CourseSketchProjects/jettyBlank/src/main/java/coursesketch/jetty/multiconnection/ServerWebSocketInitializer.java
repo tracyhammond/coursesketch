@@ -2,9 +2,9 @@ package coursesketch.jetty.multiconnection;
 
 import javax.servlet.annotation.WebServlet;
 
-import interfaces.IMultiConnectionManager;
-import interfaces.IServerWebSocket;
+import interfaces.IServerWebSocketHandler;
 import interfaces.ISocketInitializer;
+import interfaces.MultiConnectionManager;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
@@ -20,18 +20,18 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
  * @author gigemjt
  */
 @WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/" })
-public class GeneralConnectionServlet extends WebSocketServlet implements ISocketInitializer {
+public class ServerWebSocketInitializer extends WebSocketServlet implements ISocketInitializer {
 
     /**
      * The server that the servlet is connected to.
      */
-    private final IServerWebSocket connectionServer;
+    private final IServerWebSocketHandler connectionServer;
 
     /**
      * The {@link MultiConnectionManager} that is used by the servlet to recieve
      * connections.
      */
-    private final IMultiConnectionManager manager;
+    private final MultiConnectionManager manager;
 
     /**
      * The amount of time it takes before a connection times out.
@@ -50,7 +50,7 @@ public class GeneralConnectionServlet extends WebSocketServlet implements ISocke
      * @param connectLocally True if the server is connecting locally.
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
-    public GeneralConnectionServlet(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
+    public ServerWebSocketInitializer(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
         this.timeoutTime = iTimeoutTime;
         this.secure = iSecure;
         System.out.println("Creating a new connectionServer");
@@ -87,7 +87,7 @@ public class GeneralConnectionServlet extends WebSocketServlet implements ISocke
          *
          * @param req The servlet upgrade request.
          * @param resp The servlet upgrade response.
-         * @return the {@link ServerWebSocket} that handles the websocket communication.
+         * @return the {@link ServerWebSocketHandler} that handles the websocket communication.
          */
         @Override
         public final Object createWebSocket(final ServletUpgradeRequest req, final ServletUpgradeResponse resp) {
@@ -117,11 +117,11 @@ public class GeneralConnectionServlet extends WebSocketServlet implements ISocke
     /**
      * Override this method to create a subclass of GeneralConnectionServer.
      *
-     * @return An instance of the {@link ServerWebSocket}
+     * @return An instance of the {@link ServerWebSocketHandler}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public IServerWebSocket createServerSocket() {
-        return new ServerWebSocket(this);
+    public IServerWebSocketHandler createServerSocket() {
+        return new ServerWebSocketHandler(this);
     }
 
     /**
@@ -129,10 +129,10 @@ public class GeneralConnectionServlet extends WebSocketServlet implements ISocke
      *
      * @param connectLocally True if the connection is acting as if it is on a local computer (used for testing)
      * @param iSecure True if the connection is using SSL.
-     * @return An instance of the {@link IMultiConnectionManager}
+     * @return An instance of the {@link MultiConnectionManager}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public IMultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean iSecure) {
+    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean iSecure) {
         return new MultiConnectionManager(connectionServer, connectLocally, iSecure);
     }
 
@@ -141,7 +141,7 @@ public class GeneralConnectionServlet extends WebSocketServlet implements ISocke
      *
      * By default this drops all connections and then calls
      *
-     * @see coursesketch.jetty.multiconnection.MultiConnectionManager#connectServers(interfaces.IServerWebSocket)
+     * @see interfaces.MultiConnectionManager#connectServers(interfaces.IServerWebSocketHandler)
      */
     @Override
     public final void reconnect() {
@@ -169,14 +169,14 @@ public class GeneralConnectionServlet extends WebSocketServlet implements ISocke
     /**
      * @return the multiConnectionManager.  This is only used within this package.
      */
-    /* package-private */ final IMultiConnectionManager getManager() {
+    /* package-private */ final MultiConnectionManager getManager() {
         return manager;
     }
 
     /**
      * @return the GeneralConnectionServer.
      */
-    protected final IServerWebSocket getServer() {
+    protected final IServerWebSocketHandler getServer() {
         return connectionServer;
     }
 }

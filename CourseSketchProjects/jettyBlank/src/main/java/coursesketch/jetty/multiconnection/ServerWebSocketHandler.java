@@ -2,9 +2,9 @@ package coursesketch.jetty.multiconnection;
 
 import java.nio.ByteBuffer;
 
-import interfaces.IMultiConnectionManager;
-import interfaces.IServerWebSocket;
+import interfaces.IServerWebSocketHandler;
 import interfaces.ISocketInitializer;
+import interfaces.MultiConnectionManager;
 import interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -21,19 +21,14 @@ import protobuf.srl.request.Message.Request;
  */
 @WebSocket()
 @SuppressWarnings("PMD.TooManyMethods")
-public class ServerWebSocket extends IServerWebSocket {
-
-    /**
-     * The parent servlet for this server.
-     */
-    private final GeneralConnectionServlet parentServer;
+public class ServerWebSocketHandler extends IServerWebSocketHandler {
 
     /**
      * A constructor that accepts a servlet.
      * @param parent The parent servlet of this server.
      */
-    public ServerWebSocket(final GeneralConnectionServlet parent) {
-        parentServer = parent;
+    public ServerWebSocketHandler(final ISocketInitializer parent) {
+        super(parent);
     }
 
     /**
@@ -140,14 +135,7 @@ public class ServerWebSocket extends IServerWebSocket {
      * @return The {@link MultiConnectionManager} or subclass so it can be used
      * in this instance.
      */
-    protected final IMultiConnectionManager getConnectionManager() {
-        return parentServer.getManager();
-    }
-
-    /**
-     * @return The servlet that represents this server.
-     */
-    protected final ISocketInitializer getParentServer() {
-        return parentServer;
+    protected final MultiConnectionManager getConnectionManager() {
+        return ((ServerWebSocketInitializer) getParentServer()).getManager();
     }
 }

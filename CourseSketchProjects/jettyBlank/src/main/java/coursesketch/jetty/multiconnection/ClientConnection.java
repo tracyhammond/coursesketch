@@ -8,9 +8,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import interfaces.IConnectionWrapper;
-import interfaces.IMultiConnectionManager;
-import interfaces.IServerWebSocket;
+import interfaces.IClientConnection;
+import interfaces.IServerWebSocketHandler;
 import interfaces.MultiConnectionState;
 import interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;
@@ -35,12 +34,7 @@ import utilities.ConnectionException;
  */
 @WebSocket()
 @SuppressWarnings("PMD.TooManyMethods")
-public class ConnectionWrapper extends IConnectionWrapper {
-
-    /**
-     * This is the manager that holds an instance of this connection wrapper.
-     */
-    private IMultiConnectionManager parentManager;
+public class ClientConnection extends IClientConnection {
 
     /**
      * The active session of the current connection wrapper.
@@ -94,8 +88,8 @@ public class ConnectionWrapper extends IConnectionWrapper {
      * Creates a ConnectionWrapper to a destination using a given server.
      *
      * Note that this does not actually try and connect the wrapper you have to
-     * either explicitly call {@link ConnectionWrapper#connect()} or call
-     * {@link ConnectionWrapper#send(java.nio.ByteBuffer)}.
+     * either explicitly call {@link ClientConnection#connect()} or call
+     * {@link ClientConnection#send(java.nio.ByteBuffer)}.
      *
      * @param iDestination
      *            The location the server is going as a URI. ex:
@@ -103,7 +97,7 @@ public class ConnectionWrapper extends IConnectionWrapper {
      * @param iParentServer
      *            The server that is using this connection wrapper.
      */
-    public ConnectionWrapper(final URI iDestination, final ServerWebSocket iParentServer) {
+    public ClientConnection(final URI iDestination, final ServerWebSocketHandler iParentServer) {
         super(iDestination, iParentServer);
     }
 
@@ -152,7 +146,7 @@ public class ConnectionWrapper extends IConnectionWrapper {
      * @param data The actual bytes that contain the message.
      * @param offset The offset at which the message occurs.
      * @param length The length of the message itself.
-     * @see {@link ConnectionWrapper#onMessage(ByteBuffer)}
+     * @see {@link ClientConnection#onMessage(ByteBuffer)}
      */
     @OnWebSocketMessage
     public final void jettyOnMessage(final byte[] data, final int offset, final int length) {
@@ -183,7 +177,7 @@ public class ConnectionWrapper extends IConnectionWrapper {
      */
     @SuppressWarnings("checkstyle:designforextension")
     protected void onMessage(final ByteBuffer buffer) {
-        final MultiConnectionState state = getStateFromId(IServerWebSocket.Decoder.parseRequest(buffer).getSessionInfo());
+        final MultiConnectionState state = getStateFromId(IServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
         session.send(buffer);
         getConnectionFromState(state).send(buffer);
     }
@@ -192,14 +186,14 @@ public class ConnectionWrapper extends IConnectionWrapper {
      * Sends a binary message over the connection.
      *
      * If the connection fails then a reconnect is attempted. If the attempt
-     * fails more than {@link ConnectionWrapper#MAX_FAILED_STARTS} times then an
+     * fails more than {@link ClientConnection#MAX_FAILED_STARTS} times then an
      * exception is thrown
      *
      * @param buffer
      *            The binary message that is being sent out.
      * @throws ConnectionException
      *             Thrown if the number of connection attempts exceeds
-     *             {@link ConnectionWrapper#MAX_FAILED_STARTS}
+     *             {@link ClientConnection#MAX_FAILED_STARTS}
      */
     @Override
     public final void send(final ByteBuffer buffer) throws ConnectionException {
@@ -305,22 +299,5 @@ public class ConnectionWrapper extends IConnectionWrapper {
             System.err.println("Adding a queuedMessage");
             queuedMessages.add(buffer);
         }
-    }
-
-    /**
-     * @return The parent manager for this specific connection.
-     */
-    protected final IMultiConnectionManager getParentManager() {
-        return parentManager;
-    }
-
-    /**
-     * @param IMultiConnectionManager The Parent manager for this specific connection.
-     */
-    /* package-private */ final void setParentManager(final IMultiConnectionManager multiConnectionManager) {
-        if (this.parentManager != null) {
-            throw new IllegalStateException("This field is immutable and can only be set once.");
-        }
-        parentManager = multiConnectionManager;
     }
 }

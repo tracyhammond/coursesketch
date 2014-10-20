@@ -42,4 +42,24 @@ public final class JettySession implements SocketSession {
     public void close(final int statusCode, final String args) {
         socketSession.close(statusCode, args);
     }
+
+    /**
+     * @param other a different JettySession.
+     * @return true if the {@link Session} are equal.
+     */
+    @Override
+    public boolean equals(final Object other) {
+        if (other instanceof JettySession) {
+            return socketSession.equals(((JettySession) other).socketSession);
+        }
+        return false;
+    }
+
+    /**
+     * @return the hash code of the {@link Session}.
+     */
+    @Override
+    public int hashCode() {
+        return socketSession.hashCode();
+    }
 }

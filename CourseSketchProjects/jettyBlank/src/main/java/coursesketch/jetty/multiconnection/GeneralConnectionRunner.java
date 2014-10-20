@@ -151,7 +151,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
 
         System.out.println("Creating a new servlet");
 
-        servletHandler.addServletWithMapping(new ServletHolder((GeneralConnectionServlet) getSocketInitailizerInstance()), "/*");
+        servletHandler.addServletWithMapping(new ServletHolder((ServerWebSocketInitializer) getSocketInitailizerInstance()), "/*");
         stats.setHandler(servletHandler);
 
         final HandlerList handlers = new HandlerList();
@@ -185,7 +185,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
     }
 
     /**
-     * Returns a new instance of a {@link GeneralConnectionServlet}.
+     * Returns a new instance of a {@link ServerWebSocketInitializer}.
      *
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
@@ -202,11 +202,11 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
      * @return a new connection servlet for this server
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public GeneralConnectionServlet getSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
+    public ServerWebSocketInitializer getSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
         if (!isSecure && isProduction()) {
             System.err.println("Running an insecure server");
         }
-        return new GeneralConnectionServlet(timeOut, isSecure, isLocal);
+        return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
     }
 
     @Override
