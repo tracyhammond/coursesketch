@@ -1,4 +1,4 @@
-package multiconnection;
+package coursesketch.jetty.multiconnection;
 
 import interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;

@@ -1,4 +1,4 @@
-package multiconnection;
+package coursesketch.jetty.multiconnection;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import interfaces.IConnectionWrapper;
+import interfaces.IMultiConnectionManager;
 import interfaces.IServerWebSocket;
 import interfaces.MultiConnectionState;
 import interfaces.SocketSession;
@@ -21,7 +22,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 
 import connection.CloseableWebsocketClient;
-import connection.ConnectionException;
+import utilities.ConnectionException;
 
 /**
  * Wraps around a basic client and maintains a sessions to a single server.
@@ -39,7 +40,7 @@ public class ConnectionWrapper extends IConnectionWrapper {
     /**
      * This is the manager that holds an instance of this connection wrapper.
      */
-    private MultiConnectionManager parentManager;
+    private IMultiConnectionManager parentManager;
 
     /**
      * The active session of the current connection wrapper.
@@ -309,14 +310,14 @@ public class ConnectionWrapper extends IConnectionWrapper {
     /**
      * @return The parent manager for this specific connection.
      */
-    protected final MultiConnectionManager getParentManager() {
+    protected final IMultiConnectionManager getParentManager() {
         return parentManager;
     }
 
     /**
-     * @param multiConnectionManager The Parent manager for this specific connection.
+     * @param IMultiConnectionManager The Parent manager for this specific connection.
      */
-    /* package-private */ final void setParentManager(final MultiConnectionManager multiConnectionManager) {
+    /* package-private */ final void setParentManager(final IMultiConnectionManager multiConnectionManager) {
         if (this.parentManager != null) {
             throw new IllegalStateException("This field is immutable and can only be set once.");
         }
