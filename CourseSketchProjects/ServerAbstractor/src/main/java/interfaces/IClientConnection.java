@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by gigemjt on 10/19/14.
  */
-public abstract class IConnectionWrapper {
+public abstract class IClientConnection {
     /**
      * A websocket can only have a maximum of 10 failed starts.
      */
@@ -34,9 +34,14 @@ public abstract class IConnectionWrapper {
     protected static final String CLOSE_EOF = "(EOF)*";
 
     /**
+     * This is the manager that holds an instance of this connection wrapper.
+     */
+    private MultiConnectionManager parentManager;
+
+    /**
      * This is the server that is running the connection wrapper.
      */
-    private final IServerWebSocket parentServer;
+    private final IServerWebSocketHandler parentServer;
 
     /**
      * The active session of the current connection wrapper.
@@ -95,8 +100,8 @@ public abstract class IConnectionWrapper {
      * Creates a ConnectionWrapper to a destination using a given server.
      *
      * Note that this does not actually try and connect the wrapper you have to
-     * either explicitly call {@link interfaces.IConnectionWrapper#connect()} or call
-     * {@link interfaces.IConnectionWrapper#send(java.nio.ByteBuffer)}.
+     * either explicitly call {@link IClientConnection#connect()} or call
+     * {@link IClientConnection#send(java.nio.ByteBuffer)}.
      *
      * @param iDestination
      *            The location the server is going as a URI. ex:
@@ -104,7 +109,7 @@ public abstract class IConnectionWrapper {
      * @param iParentServer
      *            The server that is using this connection wrapper.
      */
-    protected IConnectionWrapper(final URI iDestination, final IServerWebSocket iParentServer) {
+    protected IClientConnection(final URI iDestination, final IServerWebSocketHandler iParentServer) {
         this.parentServer = iParentServer;
         this.destination = iDestination;
         started = false;
@@ -193,14 +198,14 @@ public abstract class IConnectionWrapper {
      * Sends a binary message over the connection.
      *
      * If the connection fails then a reconnect is attempted. If the attempt
-     * fails more than {@link interfaces.IConnectionWrapper#MAX_FAILED_STARTS} times then an
+     * fails more than {@link IClientConnection#MAX_FAILED_STARTS} times then an
      * exception is thrown
      *
      * @param buffer
      *            The binary message that is being sent out.
      * @throws ConnectionException
      *             Thrown if the number of connection attempts exceeds
-     *             {@link interfaces.IConnectionWrapper#MAX_FAILED_STARTS}
+     *             {@link IClientConnection#MAX_FAILED_STARTS}
      */
     public abstract void send(ByteBuffer buffer) throws ConnectionException;
 
@@ -248,7 +253,7 @@ public abstract class IConnectionWrapper {
     /**
      * @return The parent server for this specific connection.
      */
-    protected final IServerWebSocket getParentServer() {
+    protected final IServerWebSocketHandler getParentServer() {
         return parentServer;
     }
 
@@ -287,5 +292,23 @@ public abstract class IConnectionWrapper {
             return null;
         }
         return this.getParentServer().getIdToConnection().get(state);
+    }
+
+
+    /**
+     * @return The parent manager for this specific connection.
+     */
+    protected final MultiConnectionManager getParentManager() {
+        return parentManager;
+    }
+
+    /**
+     * @param multiConnectionManager The Parent manager for this specific connection.
+     */
+    /* package-private */ final void setParentManager(final MultiConnectionManager multiConnectionManager) {
+        if (this.parentManager != null) {
+            throw new IllegalStateException("This field is immutable and can only be set once.");
+        }
+        parentManager = multiConnectionManager;
     }
 }
