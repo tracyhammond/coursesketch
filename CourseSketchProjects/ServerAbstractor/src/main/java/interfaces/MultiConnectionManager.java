@@ -179,7 +179,7 @@ public class MultiConnectionManager {
      * @see #addConnection(interfaces.IClientConnection, Class)
      */
     public final void createAndAddConnection(final IServerWebSocketHandler serv, final boolean isLocal, final String remoteAdress, final int port,
-                                             final boolean isSecure, final Class<? extends IClientConnection> connectionType) throws ConnectionException {
+            final boolean isSecure, final Class<? extends IClientConnection> connectionType) throws ConnectionException {
         final IClientConnection connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
         addConnection(connection, connectionType);
     }

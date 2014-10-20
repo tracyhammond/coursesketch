@@ -100,10 +100,11 @@ public abstract class IServerWebSocketHandler {
         }
 
         final MultiConnectionState uniqueState = getUniqueState();
-        getConnectionToId().put(conn, uniqueState);
-        getIdToConnection().put(uniqueState, conn);
+        // uses actual variables as get methods produce unmodifiable maps
+        connectionToId.put(conn, uniqueState);
+        idToConnection.put(uniqueState, conn);
         System.out.println("Session Key " + uniqueState.getKey());
-        getIdToState().put(uniqueState.getKey(), uniqueState);
+        idToState.put(uniqueState.getKey(), uniqueState);
         System.out.println("ID ASSIGNED");
 
         System.out.println("Recieving connection " + getConnectionToId().size());

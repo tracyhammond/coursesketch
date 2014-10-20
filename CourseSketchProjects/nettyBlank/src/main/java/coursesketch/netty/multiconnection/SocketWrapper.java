@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -18,7 +19,9 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
+import netty.WebSocketServerIndexPage;
 
+import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpHeaders.Names.HOST;
 import static io.netty.handler.codec.http.HttpHeaders.isKeepAlive;
 import static io.netty.handler.codec.http.HttpHeaders.setContentLength;
@@ -31,7 +34,10 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 /**
  * Created by gigemjt on 10/19/14.
+ *
+ *  This channel should be shareable!
  */
+@ChannelHandler.Sharable
 /* package private! */ class SocketWrapper extends SimpleChannelInboundHandler<Object> {
 
     private static final String WEBSOCKET_PATH = "/websocket";
@@ -93,9 +99,9 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
             return;
         }
 
-        /*
+
         // Send the demo page and favicon.ico
-        if ("/".equals(req.uri())) {
+        if ("/demo".equals(req.uri())) {
             ByteBuf content = WebSocketServerIndexPage.getContent(getWebSocketLocation(req));
             FullHttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, OK, content);
 
@@ -105,7 +111,6 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
             sendHttpResponse(ctx, req, res);
             return;
         }
-        */
 
         if ("/favicon.ico".equals(req.uri())) {
             final FullHttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND);
