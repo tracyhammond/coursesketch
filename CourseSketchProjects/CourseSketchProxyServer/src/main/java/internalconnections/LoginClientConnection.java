@@ -1,11 +1,11 @@
 package internalconnections;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import interfaces.IServerWebSocketHandler;
 import utilities.ConnectionException;
 import utilities.TimeManager;
-import coursesketch.jetty.multiconnection.ConnectionWrapper;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import interfaces.IServerWebSocket;
+import coursesketch.jetty.multiconnection.ClientConnection;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
  * Only the most important callbacks are overloaded.
  */
 @WebSocket()
-public final class LoginConnection extends ConnectionWrapper {
+public final class LoginClientConnection extends ClientConnection {
 
     /**
      * Creates a new connection for the Answer checker server.
@@ -33,7 +33,7 @@ public final class LoginConnection extends ConnectionWrapper {
      * @param parent
      *            The proxy server instance.
      */
-    public LoginConnection(final URI destination, final ServerWebSocket parent) {
+    public LoginClientConnection(final URI destination, final ServerWebSocketHandler parent) {
         super(destination, parent);
     }
 
@@ -51,12 +51,12 @@ public final class LoginConnection extends ConnectionWrapper {
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
-        final Request request = IServerWebSocket.Decoder.parseRequest(buffer);
+        final Request request = IServerWebSocketHandler.Decoder.parseRequest(buffer);
         if (request.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(request);
             if (rsp != null) {
                 try {
-                    this.getParentManager().send(rsp, request.getSessionInfo(), LoginConnection.class);
+                    this.getParentManager().send(rsp, request.getSessionInfo(), LoginClientConnection.class);
                 } catch (ConnectionException e) {
                     e.printStackTrace();
                 }
@@ -79,7 +79,7 @@ public final class LoginConnection extends ConnectionWrapper {
                 final Request.Builder errorMessage = Request.newBuilder(result);
                 errorMessage.setResponseText(errorMessage.getResponseText()
                         + " : The data sent back from the login server was not the correct format");
-                ServerWebSocket.send(getConnectionFromState(state), result);
+                ServerWebSocketHandler.send(getConnectionFromState(state), result);
                 return;
             }
 
@@ -102,7 +102,7 @@ public final class LoginConnection extends ConnectionWrapper {
 
         // strips away identification
         final Request result = ProxyConnectionManager.createClientRequest(request);
-        ServerWebSocket.send(getConnectionFromState(state), result);
+        ServerWebSocketHandler.send(getConnectionFromState(state), result);
 
 
     }
@@ -128,7 +128,7 @@ public final class LoginConnection extends ConnectionWrapper {
             dataSend.addItems(itemSend);
             createUser.setOtherData(dataSend.build().toByteString());
             try {
-                this.getParentManager().send(createUser.build(), request.getSessionInfo(), DataConnection.class);
+                this.getParentManager().send(createUser.build(), request.getSessionInfo(), DataClientConnection.class);
             } catch (ConnectionException e) {
                 e.printStackTrace();
             }
