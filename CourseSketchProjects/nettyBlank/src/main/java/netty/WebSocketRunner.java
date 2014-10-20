@@ -62,12 +62,14 @@ public final class WebSocketRunner {
         final SslContext sslCtx;
         if (SSL) {
             // TO GENERATE A KEY:
-            // openssl genrsa -des3 -out server.key 1024
-            // openssl req -new -key server.key -out server.csr
-            // cp server.key server.key.org
-            // openssl rsa -in server.key.org -out server.key
-            // openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
-            // openssl pkcs8 -topk8 -nocrypt -in server.key -out serverpk8.key
+            /*
+            openssl genrsa -des3 -out server.key 1024
+            openssl req -new -key server.key -out server.csr
+            cp server.key server.key.org
+            openssl rsa -in server.key.org -out server.key
+            openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+            openssl pkcs8 -topk8 -nocrypt -in server.key -out serverpk8.key
+            */
 
             File cert = new File("/Users/gigemjt/workspace/coursesketch/config/localssl/server.crt");
             File privatekey = new File("/Users/gigemjt/workspace/coursesketch/config/localssl/serverpk8.key");
