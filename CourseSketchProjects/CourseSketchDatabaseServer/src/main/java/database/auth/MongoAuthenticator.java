@@ -15,7 +15,6 @@ import org.bson.types.ObjectId;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import com.mongodb.BasicDBObject;
 
 import database.RequestConverter;
 import database.auth.Authenticator.AuthenticationData;
@@ -69,27 +68,5 @@ public final class MongoAuthenticator implements AuthenticationDataCreator {
 
         data.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(CLOSE_DATE)).longValue()));
         return data;
-    }
-
-    /**
-     * @param ids a list of ids for the admin, mod, and user.
-     * @return a query created from the list of ids.
-     */
-    @SuppressWarnings({ "PMD.UselessParentheses" })
-    public static BasicDBObject createMongoCopyPermissionQeuery(final List<String>[] ids) {
-        BasicDBObject updateQuery = null;
-        BasicDBObject fieldQuery = null;
-        for (int k = 0; k < ids.length; k++) {
-            final List<String> list = ids[k];
-            // k = 0 ADMIN, k = 1, MOD, k >= 2 USERS
-            final String field = k == 0 ? ADMIN : (k == 1 ? MOD : USERS);
-            if (k == 0) {
-                fieldQuery = new BasicDBObject(field, new BasicDBObject("$each", list));
-                updateQuery = new BasicDBObject("$addToSet", fieldQuery);
-            } else {
-                fieldQuery.append(field, new BasicDBObject("$each", list));
-            }
-        }
-        return updateQuery;
     }
 }

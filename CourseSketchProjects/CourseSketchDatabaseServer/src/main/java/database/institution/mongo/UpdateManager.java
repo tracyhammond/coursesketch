@@ -24,38 +24,31 @@ import database.auth.AuthenticationException;
  * Manages updates for mongo.
  * @author gigemjt
  */
-public final class UpdateManager {
-
-    /**
-     * Private constructor.
-     *
-     */
-    private UpdateManager() {
-    }
+public class UpdateManager {
 
     /**
      * Inserts a new update into the database for a specific user.
      * @param dbs the database where the update is being stored.
      * @param userId The user that the update is being added to.
-     * @param updateId the id of the new update
+     * @param id the id of the new update
      * @param time the time that the update was created.
      * @param classification the classification of the update. (course, assignment, ...)
      * @throws AuthenticationException Thrown if the user does not have access to the update.
      * @throws DatabaseAccessException Thrown if there is data missing.
      */
-    public static void mongoInsertUpdate(final DB dbs, final String userId, final String updateId, final long time, final String classification)
+    public static void mongoInsertUpdate(final DB dbs, final String userId, final String id, final long time, final String classification)
             throws AuthenticationException, DatabaseAccessException {
         // pull the item and delete it from the list
         DBCollection users = dbs.getCollection(UPDATE_COLLECTION);
         BasicDBObject query = new BasicDBObject("$pull", new BasicDBObject(UPDATE, new BasicDBObject(CLASSIFICATION, classification).append(UPDATEID,
-                updateId)));
+                id)));
         final DBObject corsor = retrieveUpdate(dbs, userId);
         users.update(corsor, query);
 
         // push the new file onto the classification
         users = dbs.getCollection(UPDATE_COLLECTION);
-        query = new BasicDBObject("$push", new BasicDBObject(UPDATE, new BasicDBObject(CLASSIFICATION, classification).append(UPDATEID, updateId)
-                .append(TIME, time)));
+        query = new BasicDBObject("$push", new BasicDBObject(UPDATE, new BasicDBObject(CLASSIFICATION, classification).append(UPDATEID, id).append(
+                TIME, time)));
         users.update(corsor, query);
     }
 
@@ -98,17 +91,17 @@ public final class UpdateManager {
      * Deletes an update.
      * @param dbs The database where the update is getting deleted.
      * @param userId The id of the user that is deleting the update.
-     * @param updateId The id of the udpate that is being deleted.
+     * @param id The id of the udpate that is being deleted.
      * @param classification The type of update (course, assignment, ...)
      * @throws AuthenticationException Thrown if the user does not have permission to delete the update.
      * @throws DatabaseAccessException Thrown if the user does not exist.
      */
-    public static void mongoDeleteUpdate(final DB dbs, final String userId, final String updateId, final String classification)
+    public static void mongoDeleteUpdate(final DB dbs, final String userId, final String id, final String classification)
             throws AuthenticationException, DatabaseAccessException {
         // pull the item and delete it from the list
         final DBCollection users = dbs.getCollection(UPDATE_COLLECTION);
         final BasicDBObject query = new BasicDBObject("$pull", new BasicDBObject(UPDATE, new BasicDBObject(CLASSIFICATION, classification).append(
-                UPDATEID, updateId)));
+                UPDATEID, id)));
 
         users.update(retrieveUpdate(dbs, userId), query);
     }

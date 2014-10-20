@@ -224,10 +224,8 @@ public interface Institution {
      * @param sessionInfo The session information of this query.
      * @param internalConnections The connection manager to other servers.
      * @param review data about review the sketch.
-     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
-     * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      */
     void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
-            MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
+            MultiConnectionManager internalConnections, ByteString review);
 
 }

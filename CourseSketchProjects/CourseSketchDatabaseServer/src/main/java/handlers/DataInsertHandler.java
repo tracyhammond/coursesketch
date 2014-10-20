@@ -1,7 +1,6 @@
 package handlers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import multiconnection.GeneralConnectionServer;
 
@@ -38,25 +37,12 @@ import database.user.UserClient;
  *
  * @author gigemjt
  */
-@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
-public final class DataInsertHandler {
-
-    /**
-     * The string used to separate ids when returning a result.
-     */
-    private static final String ID_SEPARATOR = " : ";
+public class DataInsertHandler {
 
     /**
      * A message returned when the insert was successful.
      */
     private static final String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
-
-    /**
-     * Private constructor.
-     *
-     */
-    private DataInsertHandler() {
-    }
 
     /**
      * Takes in a request that has to deal with inserting data.
@@ -66,8 +52,6 @@ public final class DataInsertHandler {
      * @param req The request that has data being inserted.
      * @param conn The connection where the result is sent to.
      */
-    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException" })
     public static void handleData(final Request req, final Session conn) {
         try {
             System.out.println("Receiving DATA SEND Request...");
@@ -88,7 +72,7 @@ public final class DataInsertHandler {
                             try {
                                 final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
                                 final String resultId = instance.insertCourse(userId, course);
-                                results.add(buildResult(resultId + ID_SEPARATOR + course.getId(), itemSet.getQuery()));
+                                results.add(buildResult(resultId + " : " + course.getId(), itemSet.getQuery()));
                             } catch (DatabaseAccessException e) {
                                 // unable to register user for course
                                 final ItemResult.Builder build = ItemResult.newBuilder();
@@ -101,19 +85,19 @@ public final class DataInsertHandler {
                         case ASSIGNMENT: {
                             final SrlAssignment assignment = SrlAssignment.parseFrom(itemSet.getData());
                             final String resultId = instance.insertAssignment(userId, assignment);
-                            results.add(buildResult(resultId + ID_SEPARATOR + assignment.getId(), itemSet.getQuery()));
+                            results.add(buildResult(resultId + " : " + assignment.getId(), itemSet.getQuery()));
                         }
                         break;
                         case COURSE_PROBLEM: {
                             final SrlProblem problem = SrlProblem.parseFrom(itemSet.getData());
                             final String resultId = instance.insertCourseProblem(userId, problem);
-                            results.add(buildResult(resultId + ID_SEPARATOR + problem.getId(), itemSet.getQuery()));
+                            results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
                         }
                         break;
                         case BANK_PROBLEM: {
                             final SrlBankProblem problem = SrlBankProblem.parseFrom(itemSet.getData());
                             final String resultId = instance.insertBankProblem(userId, problem);
-                            results.add(buildResult(resultId + ID_SEPARATOR + problem.getId(), itemSet.getQuery()));
+                            results.add(buildResult(resultId + " : " + problem.getId(), itemSet.getQuery()));
                         }
                         break;
                         /*
@@ -187,7 +171,7 @@ public final class DataInsertHandler {
                     results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                 }
             }
-            if (!results.isEmpty()) {
+            if (results.size() > 0) {
                 GeneralConnectionServer.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
             }
             return;
@@ -196,7 +180,7 @@ public final class DataInsertHandler {
             GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            GeneralConnectionServer.send(conn, buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
+            GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (Exception e) {
             e.printStackTrace();
             GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
@@ -247,10 +231,10 @@ public final class DataInsertHandler {
      * @param req The original request that was received.
      * @return A {@link Request}.
      */
-    private static Request buildRequest(final List<ItemResult> results, final String message, final Request req) {
+    private static Request buildRequest(final ArrayList<ItemResult> results, final String message, final Request req) {
 
         DataResult.Builder dataResult = null;
-        if (results != null && !results.isEmpty()) {
+        if (results != null && results.size() > 0) {
             dataResult = DataResult.newBuilder();
             dataResult.addAllResults(results);
         }
