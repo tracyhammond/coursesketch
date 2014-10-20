@@ -84,12 +84,12 @@ public abstract class IGeneralConnectionRunner {
     /**
      * The password for the keystore.
      */
-    private String certificatePath = "";
+    private String certificatePath = null;
 
     /**
      * The location the keystore is stored in.
      */
-    private String keystorePath = "";
+    private String keystorePath = null;
 
     /**
      * The servlet that is connected to the server.  (it is typically binded to a certain URL)
@@ -111,12 +111,11 @@ public abstract class IGeneralConnectionRunner {
             local = false;
         }
         production = false;
-        secure = false;
+        secure = true;
     }
 
     /**
      * Runs the entire startup process including input.
-     *
      */
     protected final void start() {
         this.runMost();
@@ -140,7 +139,7 @@ public abstract class IGeneralConnectionRunner {
         if (secure) {
             configureSSL(keystorePath, certificatePath);
         }
-        socketInitializerInstance = getSocketInitializer(getTimeoutTime(), false, isLocal());
+        socketInitializerInstance = getSocketInitializer(getTimeoutTime(), secure, isLocal());
 
         this.addConnections();
 
