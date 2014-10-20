@@ -1,8 +1,10 @@
-package multiconnection;
+package coursesketch.jetty.multiconnection;
 
 import java.nio.ByteBuffer;
 
+import interfaces.IMultiConnectionManager;
 import interfaces.IServerWebSocket;
+import interfaces.ISocketInitializer;
 import interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -138,14 +140,14 @@ public class ServerWebSocket extends IServerWebSocket {
      * @return The {@link MultiConnectionManager} or subclass so it can be used
      * in this instance.
      */
-    protected final MultiConnectionManager getConnectionManager() {
+    protected final IMultiConnectionManager getConnectionManager() {
         return parentServer.getManager();
     }
 
     /**
      * @return The servlet that represents this server.
      */
-    protected final GeneralConnectionServlet getParentServer() {
+    protected final ISocketInitializer getParentServer() {
         return parentServer;
     }
 }

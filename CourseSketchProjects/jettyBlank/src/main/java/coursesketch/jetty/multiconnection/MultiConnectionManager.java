@@ -1,4 +1,4 @@
-package multiconnection;
+package coursesketch.jetty.multiconnection;
 
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import connection.ConnectionException;
+import utilities.ConnectionException;
 import interfaces.IConnectionWrapper;
+import interfaces.IMultiConnectionManager;
 import interfaces.IServerWebSocket;
 import protobuf.srl.request.Message.Request;
 
@@ -21,17 +22,7 @@ import protobuf.srl.request.Message.Request;
  * @author gigemjt
  *
  */
-public class MultiConnectionManager {
-
-    /**
-     * This value signifies that the server will connect to a local host.
-     */
-    public static final boolean CONNECT_LOCALLY = true;
-
-    /**
-     * This value signifies that the server will connect to a remote host.
-     */
-    public static final boolean CONNECT_REMOTE = false;
+public class MultiConnectionManager implements IMultiConnectionManager {
 
     /**
      * Determines whether the server is being connected locally.
@@ -155,6 +146,7 @@ public class MultiConnectionManager {
      * @throws ConnectionException
      *             thrown if a connection failed to be found.
      */
+    @Override
     @SuppressWarnings("checkstyle:designforextension")
     public void send(final Request req, final String sessionID, final Class<? extends IConnectionWrapper> connectionType) throws ConnectionException {
         // Attach the existing request with the UserID
@@ -190,8 +182,9 @@ public class MultiConnectionManager {
      *      Class)
      * @see #addConnection(interfaces.IConnectionWrapper, Class)
      */
+    @Override
     public final void createAndAddConnection(final IServerWebSocket serv, final boolean isLocal, final String remoteAdress, final int port,
-            final boolean isSecure, final Class<? extends IConnectionWrapper> connectionType) throws ConnectionException {
+                                             final boolean isSecure, final Class<? extends IConnectionWrapper> connectionType) throws ConnectionException {
         final ConnectionWrapper connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
         addConnection(connection, connectionType);
     }
@@ -206,6 +199,7 @@ public class MultiConnectionManager {
      * @param connectionType
      *            The type to bind the action to.
      */
+    @Override
     public final void setFailedSocketListener(final ActionListener listen, final Class<? extends IConnectionWrapper> connectionType) {
         final ArrayList<IConnectionWrapper> cons = connections.get(connectionType);
         if (cons == null) {
@@ -231,6 +225,7 @@ public class MultiConnectionManager {
      *            ignored by this implementation. Override to change
      *            functionality.
      */
+    @Override
     public void connectServers(final IServerWebSocket parentServer) {
     }
 
@@ -245,6 +240,7 @@ public class MultiConnectionManager {
      * @param connectionType
      *            The type to differentiate connections by.
      */
+    @Override
     public final void addConnection(final ConnectionWrapper connection, final Class<? extends IConnectionWrapper> connectionType) {
         if (connection == null) {
             throw new IllegalArgumentException("can not add null connection");
@@ -275,6 +271,7 @@ public class MultiConnectionManager {
      *            The type of connection being requested.
      * @return A valid connection.
      */
+    @Override
     @SuppressWarnings("checkstyle:designforextension")
     public IConnectionWrapper getBestConnection(final Class<? extends IConnectionWrapper> connectionType) {
         final ArrayList<IConnectionWrapper> cons = connections.get(connectionType);
@@ -293,6 +290,7 @@ public class MultiConnectionManager {
      * @param debugPrint
      *            If true then the uri is printed as the connection is closed.
      */
+    @Override
     public final void dropAllConnection(final boolean clearTypes, final boolean debugPrint) {
         synchronized (connections) {
             // <? extends ConnectionWrapper> // for safe keeping

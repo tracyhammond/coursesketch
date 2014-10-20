@@ -1,4 +1,4 @@
-package multiconnection;
+package coursesketch.jetty.multiconnection;
 
 /*
  * Jetty server information
@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import interfaces.IGeneralConnectionRunner;
+import interfaces.ISocketInitializer;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -45,7 +46,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
     /**
      * The servlet that is connected to the server.  (it is typically binded to a certain URL)
      */
-    private GeneralConnectionServlet servletInstance;
+    private ISocketInitializer servletInstance;
 
     /**
      * The main method that can be used to run a server.
@@ -53,7 +54,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
      */
     public static void main(final String[] args) {
         final GeneralConnectionRunner runner = new GeneralConnectionRunner(args);
-        runner.runAll();
+        runner.start();
     }
 
     /**
@@ -68,7 +69,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
     }
 
     @Override
-    protected final void configureSSL(final String keystorePath, final String keystorePassword) {
+    protected final void configureSSL(final String keystorePath, final String iCertificatePath) {
 
         final SslContextFactory contextfactor = new SslContextFactory();
 
@@ -78,7 +79,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
         System.out.println("Loaded real keystore");
         contextfactor.setKeyStorePath(keystorePath/* "srl01_tamu_edu.jks" */);
         contextfactor.setTrustStorePath(keystorePath);
-        contextfactor.setTrustStorePassword(keystorePassword);
+        contextfactor.setTrustStorePassword(iCertificatePath);
         // cf.setCertAlias("nss324-o");
         // cf.checkKeyStore();
         final SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(contextfactor,
@@ -150,10 +151,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
 
         System.out.println("Creating a new servlet");
 
-        // FUTURE: change this to true!
-        servletInstance = getServlet(getTimeoutTime(), false, isLocal());
-
-        servletHandler.addServletWithMapping(new ServletHolder(servletInstance), "/*");
+        servletHandler.addServletWithMapping(new ServletHolder((GeneralConnectionServlet) getSocketInitailizerInstance()), "/*");
         stats.setHandler(servletHandler);
 
         final HandlerList handlers = new HandlerList();
@@ -204,7 +202,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
      * @return a new connection servlet for this server
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public GeneralConnectionServlet getServlet(final long timeOut, final boolean isSecure, final boolean isLocal) {
+    public GeneralConnectionServlet getSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
         if (!isSecure && isProduction()) {
             System.err.println("Running an insecure server");
         }
@@ -262,7 +260,7 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
     /**
      * @return An instance of the servlet created by this runner.
      */
-    public final GeneralConnectionServlet getServletInstance() {
+    protected final ISocketInitializer getServletInstance() {
         return servletInstance;
     }
 }

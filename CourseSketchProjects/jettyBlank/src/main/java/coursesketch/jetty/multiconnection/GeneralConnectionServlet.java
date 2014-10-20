@@ -1,8 +1,10 @@
-package multiconnection;
+package coursesketch.jetty.multiconnection;
 
 import javax.servlet.annotation.WebServlet;
 
+import interfaces.IMultiConnectionManager;
 import interfaces.IServerWebSocket;
+import interfaces.ISocketInitializer;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
@@ -18,18 +20,18 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
  * @author gigemjt
  */
 @WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/" })
-public class GeneralConnectionServlet extends WebSocketServlet {
+public class GeneralConnectionServlet extends WebSocketServlet implements ISocketInitializer {
 
     /**
      * The server that the servlet is connected to.
      */
-    private final ServerWebSocket connectionServer;
+    private final IServerWebSocket connectionServer;
 
     /**
      * The {@link MultiConnectionManager} that is used by the servlet to recieve
      * connections.
      */
-    private final MultiConnectionManager manager;
+    private final IMultiConnectionManager manager;
 
     /**
      * The amount of time it takes before a connection times out.
@@ -77,7 +79,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      *
      * @author gigemjt
      */
-    class SocketCreator implements WebSocketCreator {
+    private class SocketCreator implements WebSocketCreator {
 
         /**
          * Creates the new websocket. If the socket needs to be secure and it is
@@ -103,6 +105,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     /**
      * Stops the socket, and the server and drops all connections.
      */
+    @Override
     public final void stop() {
         System.out.println("Stopping socket");
         //connectionServer.stop();
@@ -117,7 +120,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      * @return An instance of the {@link ServerWebSocket}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    protected ServerWebSocket createServerSocket() {
+    public IServerWebSocket createServerSocket() {
         return new ServerWebSocket(this);
     }
 
@@ -126,10 +129,10 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      *
      * @param connectLocally True if the connection is acting as if it is on a local computer (used for testing)
      * @param iSecure True if the connection is using SSL.
-     * @return An instance of the {@link MultiConnectionManager}
+     * @return An instance of the {@link IMultiConnectionManager}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean iSecure) {
+    public IMultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean iSecure) {
         return new MultiConnectionManager(connectionServer, connectLocally, iSecure);
     }
 
@@ -138,8 +141,9 @@ public class GeneralConnectionServlet extends WebSocketServlet {
      *
      * By default this drops all connections and then calls
      *
-     * @see multiconnection.MultiConnectionManager#connectServers(interfaces.IServerWebSocket)
+     * @see coursesketch.jetty.multiconnection.MultiConnectionManager#connectServers(interfaces.IServerWebSocket)
      */
+    @Override
     public final void reconnect() {
         System.out.println("Reconnecting");
         if (manager != null) {
@@ -150,21 +154,22 @@ public class GeneralConnectionServlet extends WebSocketServlet {
     }
 
     /**
-     * Called after reconnecting the connections.
-     */
-    protected void onReconnect() { }
-
-    /**
      * @return The current number of current connections.
      */
+    @Override
     public final int getCurrentConnectionNumber() {
         return connectionServer.getCurrentConnectionNumber();
     }
 
     /**
+     * Called after reconnecting the connections.
+     */
+    protected void onReconnect() { }
+
+    /**
      * @return the multiConnectionManager.  This is only used within this package.
      */
-    /* package-private */ final MultiConnectionManager getManager() {
+    /* package-private */ final IMultiConnectionManager getManager() {
         return manager;
     }
 
