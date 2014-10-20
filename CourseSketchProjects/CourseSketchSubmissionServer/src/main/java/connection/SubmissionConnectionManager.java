@@ -1,7 +1,8 @@
 package connection;
 
 import interfaces.IServerWebSocket;
-import multiconnection.MultiConnectionManager;
+import coursesketch.jetty.multiconnection.MultiConnectionManager;
+import utilities.ConnectionException;
 
 public class SubmissionConnectionManager extends MultiConnectionManager {
 

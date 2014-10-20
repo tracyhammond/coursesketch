@@ -3,8 +3,8 @@ package handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import multiconnection.ServerWebSocket;
-import multiconnection.MultiConnectionManager;
+import interfaces.IMultiConnectionManager;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
 
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -67,7 +67,7 @@ public final class DataRequestHandler {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
         "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount" })
     public static void handleRequest(final Request req, final Session conn, final String sessionId,
-            final MultiConnectionManager internalConnections) {
+            final IMultiConnectionManager internalConnections) {
         try {
             System.out.println("Receiving DATA Request...");
 

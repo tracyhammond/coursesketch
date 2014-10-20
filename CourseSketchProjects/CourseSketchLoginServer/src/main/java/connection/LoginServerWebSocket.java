@@ -5,8 +5,8 @@ import java.security.GeneralSecurityException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import database.LoginException;
 import database.RegistrationException;
-import multiconnection.ServerWebSocket;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -15,6 +15,7 @@ import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import database.DatabaseClient;
+import utilities.TimeManager;
 
 /**
  * A simple WebSocketServer implementation.

@@ -16,8 +16,8 @@ import java.util.Set;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import multiconnection.ServerWebSocket;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -27,8 +27,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
-import connection.ConnectionException;
-import connection.TimeManager;
+import utilities.ConnectionException;
+import utilities.TimeManager;
 
 /**
  * A simple WebSocketServer implementation.

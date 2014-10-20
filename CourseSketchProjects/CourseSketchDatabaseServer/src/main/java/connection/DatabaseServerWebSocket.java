@@ -2,8 +2,8 @@ package connection;
 
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
-import multiconnection.ServerWebSocket;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -11,6 +11,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.request.Message.Request;
 import database.DatabaseAccessException;
 import database.institution.mongo.MongoInstitution;
+import utilities.TimeManager;
 
 /**
  * A simple WebSocketServer implementation.

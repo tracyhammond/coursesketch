@@ -1,6 +1,6 @@
 package handlers;
 
-import multiconnection.MultiConnectionManager;
+import interfaces.IMultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
@@ -15,7 +15,7 @@ import database.UpdateHandler;
 public class SubmissionRequestHandler {
 	
 	private static final UpdateHandler updateHandler = new UpdateHandler();
-	public static Request handleRequest(Request req, MultiConnectionManager internalConnections) {
+	public static Request handleRequest(Request req, IMultiConnectionManager internalConnections) {
 		final String sessionInfo = req.getSessionInfo();
 		try {
 			String resultantId = null;

@@ -1,10 +1,10 @@
 package internalconnections;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import connection.ConnectionException;
-import connection.TimeManager;
-import multiconnection.ConnectionWrapper;
-import multiconnection.ServerWebSocket;
+import utilities.ConnectionException;
+import utilities.TimeManager;
+import coursesketch.jetty.multiconnection.ConnectionWrapper;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
 import interfaces.IServerWebSocket;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.query.Data.DataSend;

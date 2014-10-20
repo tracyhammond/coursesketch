@@ -1,8 +1,8 @@
 package serverfront;
 
-import multiconnection.ServerWebSocket;
-import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionManager;
+import interfaces.IMultiConnectionManager;
+import coursesketch.jetty.multiconnection.ServerWebSocket;
+import coursesketch.jetty.multiconnection.GeneralConnectionServlet;
 import internalconnections.ProxyConnectionManager;
 
 /**
@@ -40,7 +40,7 @@ public final class ProxyServlet extends GeneralConnectionServlet {
      * @return {@link internalconnections.ProxyConnectionManager}
      */
     @Override
-    protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    protected IMultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return new ProxyConnectionManager(getServer(), connectLocally, secure);
     }
 
