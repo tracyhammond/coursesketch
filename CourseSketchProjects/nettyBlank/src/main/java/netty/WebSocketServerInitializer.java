@@ -23,21 +23,24 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslHandler;
 
+
 /**
  */
 public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final SslHandler sslCtx;
+    private final SslContext sslCtx;
 
-    public WebSocketServerInitializer(final SslHandler sslCtx) {
+    public WebSocketServerInitializer(final SslContext sslCtx) {
         this.sslCtx = sslCtx;
     }
 
     @Override
-    public void initChannel(SocketChannel ch) throws Exception {
+    public void initChannel(final SocketChannel ch) throws Exception {
+        System.out.println("Adding channled!");
         final ChannelPipeline pipeline = ch.pipeline();
         if (sslCtx != null) {
-            pipeline.addLast(sslCtx); //sslCtx.newHandler(ch.alloc()));
+            pipeline.addFirst("ssl", sslCtx.newHandler(ch.alloc()));
+            //pipeline.addLast("ssl", new SslHandler(sslCtx)); //sslCtx.newHandler(ch.alloc()));
         }
         pipeline.addLast(new HttpServerCodec());
         pipeline.addLast(new HttpObjectAggregator(65536));

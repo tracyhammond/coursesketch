@@ -29,6 +29,7 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
+import java.io.File;
 import java.io.FileInputStream;
 import java.security.KeyStore;
 
@@ -56,38 +57,28 @@ public final class WebSocketRunner {
     static final boolean SSL = true;//System.getProperty("ssl") != null;
     static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         // Configure SSL.
-        final SslHandler sslCtx;
+        final SslContext sslCtx;
         if (SSL) {
-            SSLContext serverContext = SSLContext.getInstance("TLS");
+            // TO GENERATE A KEY:
+            // openssl genrsa -des3 -out server.key 1024
+            // openssl req -new -key server.key -out server.csr
+            // cp server.key server.key.org
+            // openssl rsa -in server.key.org -out server.key
+            // openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+            // openssl pkcs8 -topk8 -nocrypt -in server.key -out serverpk8.key
 
-            final KeyStore ks = KeyStore.getInstance("JKS");
+            File cert = new File("/Users/gigemjt/workspace/coursesketch/config/localssl/server.crt");
+            File privatekey = new File("/Users/gigemjt/workspace/coursesketch/config/localssl/serverpk8.key");
 
-            ks.load(new FileInputStream("file loc"),
-
-                    "yourkeystorepassword".toCharArray());
-
-            final KeyManagerFactory kmf = KeyManagerFactory
-
-                    .getInstance(KeyManagerFactory.getDefaultAlgorithm());
-
-            kmf.init(ks, "yourkeystorepassword".toCharArray());
-
-            serverContext.init(kmf.getKeyManagers(), null, null);
-            final SSLEngine eng = serverContext.createSSLEngine();
-            eng.setUseClientMode(false);
-            final SslHandler sslHandler = new SslHandler(eng, true);
-            sslCtx = sslHandler;
-
-            //SelfSignedCertificate ssc = new SelfSignedCertificate();
-            //sslCtx = SslContext.newServerContext(ssc.certificate(), ssc.privateKey());
+            sslCtx = SslContext.newServerContext(cert, privatekey);
         } else {
             sslCtx = null;
         }
 
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        final EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
@@ -95,7 +86,7 @@ public final class WebSocketRunner {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new WebSocketServerInitializer(sslCtx));
 
-            Channel ch = b.bind(PORT).sync().channel();
+            final Channel ch = b.bind(PORT).sync().channel();
 
             System.err.println("Open your web browser and navigate to " +
                     (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
