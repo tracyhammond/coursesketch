@@ -3,11 +3,12 @@ package protobuf.srl.request;
 // Always sent and is filled out properly.
 message Request {
 	required MessageType requestType = 1 [default=LOGIN];
-    optional bytes otherData = 2;
-	optional string responseText = 3;
-	optional string sessionInfo = 4; // This may be separated out more.
-	optional string serversideId = 5;
-	optional int64 messageTime = 6; // this is the time that the message is received by the server
+	optional LoginInformation login = 2;
+    optional bytes otherData = 3;
+	optional string responseText = 4;
+	optional string sessionInfo = 5; // This may be separated out more.
+	optional string serversideId = 6;
+	optional int64 messageTime = 7; // this is the time that the message is received by the server
 
     enum MessageType {
 		LOGIN = 0;

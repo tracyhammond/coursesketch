@@ -88,7 +88,7 @@ public class AnswerCheckerServer extends GeneralConnectionServer {
                                                                    // probably
                                                                    // to make
                                                                    // this work
-                    // internalconnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
+                    // internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
                     // state.getKey(), SubmissionConnection.class);
                 }
             } else {

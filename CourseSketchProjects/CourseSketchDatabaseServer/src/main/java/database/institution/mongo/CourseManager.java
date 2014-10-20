@@ -15,7 +15,6 @@ import static database.DatabaseStringConstants.MOD_GROUP_ID;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PERMISSION_LEVELS;
 import static database.DatabaseStringConstants.SELF_ID;
-import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
@@ -47,15 +46,7 @@ import database.auth.Authenticator;
  * @author gigemjt
  *
  */
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",  "PMD.UselessParentheses" })
-public final class CourseManager {
-
-    /**
-     * Private constructor.
-     *
-     */
-    private CourseManager() {
-    }
+public class CourseManager {
 
     /**
      *
@@ -93,7 +84,6 @@ public final class CourseManager {
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the course.
      * @throws DatabaseAccessException Thrown if there are problems retrieving the course.
      */
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
     static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId, final long checkTime)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
@@ -140,15 +130,21 @@ public final class CourseManager {
         // FUTURE: add this to all fields!
         // A course is only publishable after a certain criteria is met
         if (corsor.containsField(STATE_PUBLISHED)) {
-            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
-            if (published) {
-                stateBuilder.setPublished(true);
-            } else {
-                if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific course is not published yet", true);
+            try {
+                final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
+                if (published) {
+                    stateBuilder.setPublished(true);
                 } else {
-                    stateBuilder.setPublished(false);
+                    if (!isAdmin || !isMod) {
+                        throw new DatabaseAccessException("The specific course is not published yet", true);
+                    } else {
+                        stateBuilder.setPublished(false);
+                    }
                 }
+            } catch (DatabaseAccessException e) {
+                throw e;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -173,7 +169,11 @@ public final class CourseManager {
         exactCourse.setState(stateBuilder);
 
         if (isAdmin) {
-            exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) corsor.get(COURSE_ACCESS))); // admin
+            try {
+                exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) corsor.get(COURSE_ACCESS))); // admin
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             final SrlPermission.Builder permissions = SrlPermission.newBuilder();
             permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
             permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
@@ -196,7 +196,6 @@ public final class CourseManager {
      * @throws AuthenticationException Thrown if the user did not have the authentication to update the course.
      * @throws DatabaseAccessException Thrown if there are problems updating the course.
      */
-    @SuppressWarnings("PMD.NPathComplexity")
     static boolean mongoUpdateCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId,
             final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
@@ -216,41 +215,41 @@ public final class CourseManager {
         if (isAdmin) {
             if (course.hasSemester()) {
                 updateObj = new BasicDBObject(COURSE_SEMESTER, course.getSemester());
-                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                courses.update(corsor, new BasicDBObject("$set", updateObj));
                 update = true;
             }
             if (course.hasAccessDate()) {
 
                 updateObj = new BasicDBObject(ACCESS_DATE, course.getAccessDate().getMillisecond());
-                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                courses.update(corsor, new BasicDBObject("$set", updateObj));
                 update = true;
             }
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (course.hasCloseDate()) {
                 updateObj = new BasicDBObject(CLOSE_DATE, course.getCloseDate().getMillisecond());
-                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                courses.update(corsor, new BasicDBObject("$set", updateObj));
                 update = true;
             }
 
             if (course.hasImageUrl()) {
                 updateObj = new BasicDBObject(IMAGE, course.getImageUrl());
-                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                courses.update(corsor, new BasicDBObject("$set", updateObj));
                 update = true;
             }
             if (course.hasDescription()) {
                 updateObj = new BasicDBObject(DESCRIPTION, course.getDescription());
-                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                courses.update(corsor, new BasicDBObject("$set", updateObj));
                 update = true;
             }
             if (course.hasName()) {
                 updateObj = new BasicDBObject(NAME, course.getName());
-                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                courses.update(corsor, new BasicDBObject("$set", updateObj));
                 update = true;
             }
             if (course.hasAccess()) {
                 updateObj = new BasicDBObject(COURSE_ACCESS, course.getAccess().getNumber());
-                courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                courses.update(corsor, new BasicDBObject("$set", updateObj));
                 update = true;
             }
             // Optimization: have something to do with pulling values of an
@@ -260,24 +259,24 @@ public final class CourseManager {
                 final SrlPermission permissions = course.getAccessPermission();
                 if (permissions.getAdminPermissionList() != null) {
                     updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                    courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                    courses.update(corsor, new BasicDBObject("$set", updateObj));
                 }
                 if (permissions.getModeratorPermissionList() != null) {
                     updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                    courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                    courses.update(corsor, new BasicDBObject("$set", updateObj));
                 }
                 if (permissions.getUserPermissionList() != null) {
                     updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                    courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                    courses.update(corsor, new BasicDBObject("$set", updateObj));
                 }
             }
         }
         if (isAdmin || isMod && course.getAssignmentListList() != null) {
             updateObj = new BasicDBObject(ASSIGNMENT_LIST, course.getAssignmentListList());
-            courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+            courses.update(corsor, new BasicDBObject("$set", updateObj));
             update = true;
         }
-        // courses.update(corsor, new BasicDBObject (SET_COMMAND,updateObj));
+        // courses.update(corsor, new BasicDBObject ("$set",updateObj));
 
         // get user list
         // send updates
@@ -323,27 +322,19 @@ public final class CourseManager {
      *         FUTURE: this should probably be paginated so it does not crush
      *         the database.
      */
-    public static List<SrlCourse> mongoGetAllPublicCourses(final DB dbs) {
+    public static ArrayList<SrlCourse> mongoGetAllPublicCourses(final DB dbs) {
         final DBCollection courseTable = dbs.getCollection(COURSE_COLLECTION);
 
-        final List<SrlCourse> resultList = new ArrayList<SrlCourse>();
+        final ArrayList<SrlCourse> resultList = new ArrayList<SrlCourse>();
 
         // checks for all public courses.
-        final DBObject publicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.PUBLIC.getNumber());
-        buildCourseForSearching(courseTable.find(publicCheck), resultList);
-
-        // checks for all super public courses.
-        final DBObject superPublicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.SUPER_PUBLIC.getNumber());
-        buildCourseForSearching(courseTable.find(superPublicCheck), resultList);
-
-        return resultList;
-    }
-
-    /**
-     * @param cursor The pointer to the database object
-     * @param resultList The list that the results are added to.  This list is modified by this method.
-     */
-    private static void buildCourseForSearching(final DBCursor cursor, final List<SrlCourse> resultList) {
+        final DBObject publicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.PUBLIC.getNumber()); // the
+        // value
+        // for
+        // a
+        // public
+        // course
+        DBCursor cursor = courseTable.find(publicCheck);
         while (cursor.hasNext()) {
             final SrlCourse.Builder build = SrlCourse.newBuilder();
             final DBObject foundCourse = cursor.next();
@@ -355,6 +346,24 @@ public final class CourseManager {
             resultList.add(build.build());
         }
         cursor.close();
+
+        // checks for all super public courses.
+        // the value for a superbulic course
+        final DBObject superPublicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.SUPER_PUBLIC.getNumber());
+        cursor = courseTable.find(superPublicCheck);
+        while (cursor.hasNext()) {
+            final SrlCourse.Builder build = SrlCourse.newBuilder();
+            final DBObject foundCourse = cursor.next();
+            build.setId(foundCourse.get(SELF_ID).toString());
+            build.setDescription(foundCourse.get(DESCRIPTION).toString());
+            build.setName(foundCourse.get(NAME).toString());
+            build.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(ACCESS_DATE)).longValue()));
+            build.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) foundCourse.get(CLOSE_DATE)).longValue()));
+            resultList.add(build.build());
+        }
+
+        cursor.close();
+        return resultList;
     }
 
     /**
@@ -376,7 +385,7 @@ public final class CourseManager {
         final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
         final BasicDBObject listQueries = new BasicDBObject(ADMIN_GROUP_ID, adminGroupId).append(MOD_GROUP_ID, modGroupId).append(USER_GROUP_ID,
                 userGroupId);
-        final DBObject courseQuery = new BasicDBObject(SET_COMMAND, listQueries);
+        final DBObject courseQuery = new BasicDBObject("$set", listQueries);
         courses.update(corsor, courseQuery);
     }
 
@@ -392,7 +401,7 @@ public final class CourseManager {
      * @param courseId the course that the groups are being grabbed from.
      * @return a list of usergroups.
      */
-    static List<String>[] mongoGetDefaultGroupList(final DB dbs, final String courseId) {
+    static ArrayList<String>[] mongoGetDefaultGroupList(final DB dbs, final String courseId) {
         final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
         final DBObject corsor = myDbRef.fetch();
         final ArrayList<String>[] returnValue = new ArrayList[PERMISSION_LEVELS];

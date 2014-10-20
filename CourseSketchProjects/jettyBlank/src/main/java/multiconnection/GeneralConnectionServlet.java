@@ -84,7 +84,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
          *
          * @param req The servlet upgrade request.
          * @param resp The servlet upgrade response.
-         * @return the {@link GeneralConnectionServer} that handles the websocket communication.
+         * @return the {@link ConnectionServer} that handles the websocket communication.
          */
         @Override
         public final Object createWebSocket(final ServletUpgradeRequest req, final ServletUpgradeResponse resp) {
@@ -145,13 +145,7 @@ public class GeneralConnectionServlet extends WebSocketServlet {
             manager.dropAllConnection(true, false);
             manager.connectServers(connectionServer);
         }
-        onReconnect();
     }
-
-    /**
-     * Called after reconnecting the connections.
-     */
-    protected void onReconnect() { }
 
     /**
      * @return The current number of current connections.

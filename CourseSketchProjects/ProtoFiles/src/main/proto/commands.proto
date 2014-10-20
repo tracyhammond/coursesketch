@@ -1,5 +1,4 @@
 package protobuf.srl.commands;
-/* https://developers.google.com/protocol-buffers/docs/proto#oneof */
 
 message SrlUpdateList {
 	repeated SrlUpdate list = 1;
@@ -34,9 +33,6 @@ enum CommandType {
 	ASSIGN_ATTRIBUTE = 4;
 	REMOVE_ATTRIBUTE = 5;
 	MARKER = 6; //marker has a number and a MARKERTYPE
-	CLEAR = 7; // removes all data from the current sketch object
-	CREATE_SKETCH = 8; // This will contain ActionCreateSketch.  This will also switch to the sketch immediately.
-	SWITCH_SKETCH = 9; // This should have an IdChain which contains a single id.
 	FORCE_INTERPRETATION = 10;
 
 	// Stack Commands, They do not have any other data associated with it.
@@ -46,8 +42,6 @@ enum CommandType {
 	CLEAR_STACK = 14; // Clears the stack.
 	OPEN_SYNC = 15; // Tells this machine that it will recieve a list of Updates and to execute them and compare order
 	CLOSE_SYNC = 16; // Tells the machine that it is going back to normal mode.
-
-	// all other commands will appear after 16
 }
 
 /**
@@ -66,12 +60,11 @@ message IdChain {
 message Marker {
 	required MarkerType type = 1;
 	enum MarkerType {
-		SUBMISSION = 0; // notes that the sketch was submitted at this point.
-		FEEDBACK = 1; // notes that the user recieved answer checking feedback at this point.
-		SAVE = 2; // notes that the sketch was saved at this point.
-		// when an undo / redo branch occurs this is the marker that signifies the split.
-		// additionally some special care needs to be done to check when saving the sketch that splits do not corrupt existing sketch data.
+		SUBMISSION = 0;
+		FEEDBACK = 1;
+		SAVE = 2;
 		SPLIT = 3;
+		CLEAR = 4; // To be supported later
 	}
 	optional string otherData = 2;
 }
@@ -116,28 +109,4 @@ message ActionRemoveAttribtue {
 	required IdChain shapeId = 1;
 	required string attributeKey = 2;
 	required bytes attributeValue = 3;
-}
-
-/**
- * Advance data for creating a sketch.
- */
-message ActionCreateSketch {
-	required IdChain sketchId = 1; // The id of the sketch.  It will only contain a single value.
-	optional SketchType sketchType = 2 [default = DEFAULT];
-
-	// if these values are -1 they take the values of the parent sketch.
-	optional int32 x = 3;
-	optional int32 y = 4;
-	optional int32 width = 5;
-	optional int32 height = 6;
-
-	// used to define a special domain that is different from the main sketch.
-	optional string domainId = 7;
-}
-
-enum SketchType {
-	DEFAULT = 0; // the default
-	RESPONSE = 1;
-	TEXT = 2;
-	DOMAIN_SPECIFIC = 3;
 }
