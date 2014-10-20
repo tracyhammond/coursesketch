@@ -3,9 +3,9 @@ package internalconnections;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.jetty.multiconnection.ConnectionWrapper;
-import coursesketch.jetty.multiconnection.ServerWebSocket;
-import interfaces.IServerWebSocket;
+import coursesketch.jetty.multiconnection.ClientConnection;
+import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import interfaces.IServerWebSocketHandler;
 import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -19,7 +19,7 @@ import utilities.TimeManager;
  * Only the most important callbacks are overloaded.
  */
 @WebSocket()
-public final class AnswerConnection extends ConnectionWrapper {
+public final class AnswerClientConnection extends ClientConnection {
 
     /**
      * Creates a new connection for the Answer checker server.
@@ -29,7 +29,7 @@ public final class AnswerConnection extends ConnectionWrapper {
      * @param parent
      *            The proxy server instance.
      */
-    public AnswerConnection(final URI destination, final ServerWebSocket parent) {
+    public AnswerClientConnection(final URI destination, final ServerWebSocketHandler parent) {
         super(destination, parent);
     }
 
@@ -44,14 +44,14 @@ public final class AnswerConnection extends ConnectionWrapper {
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
-        final MultiConnectionState state = getStateFromId(IServerWebSocket.Decoder.parseRequest(buffer).getSessionInfo());
+        final MultiConnectionState state = getStateFromId(IServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
 
-        final Request request = IServerWebSocket.Decoder.parseRequest(buffer);
+        final Request request = IServerWebSocketHandler.Decoder.parseRequest(buffer);
         if (request.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(request);
             if (rsp != null) {
                 try {
-                    this.getParentManager().send(rsp, request.getSessionInfo(), AnswerConnection.class);
+                    this.getParentManager().send(rsp, request.getSessionInfo(), AnswerClientConnection.class);
                 } catch (ConnectionException e) {
                     e.printStackTrace();
                 }
@@ -60,7 +60,7 @@ public final class AnswerConnection extends ConnectionWrapper {
         }
         // strips away identification.
         final Request result = ProxyConnectionManager.createClientRequest(request);
-        ServerWebSocket.send(getConnectionFromState(state), result);
+        ServerWebSocketHandler.send(getConnectionFromState(state), result);
     }
 
 }
