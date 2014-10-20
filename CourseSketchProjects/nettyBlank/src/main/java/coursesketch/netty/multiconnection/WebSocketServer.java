@@ -1,15 +1,14 @@
-package multiconnection;
+package coursesketch.netty.multiconnection;
 
 import interfaces.IServerWebSocket;
 import interfaces.SocketSession;
-import io.netty.channel.ChannelHandlerContext;
-import netty.annotation.NettyWebSocket;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.request.Message;
 
 /**
  * Created by gigemjt on 10/19/14.
  */
-@NettyWebSocket()
+@WebSocket()
 public class WebSocketServer extends IServerWebSocket {
     /**
      * Called after onOpen Finished. Can be over written.

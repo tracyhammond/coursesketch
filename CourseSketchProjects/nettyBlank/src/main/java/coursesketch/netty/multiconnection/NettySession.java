@@ -1,4 +1,4 @@
-package multiconnection;
+package coursesketch.netty.multiconnection;
 
 import interfaces.SocketSession;
 import io.netty.channel.ChannelHandlerContext;
