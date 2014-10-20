@@ -1,4 +1,4 @@
-package connection;
+package utilities;
 
 /**
  * A generic exception that is thrown by this library.
