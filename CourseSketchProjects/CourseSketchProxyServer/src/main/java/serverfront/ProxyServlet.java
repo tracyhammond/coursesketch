@@ -1,18 +1,17 @@
-package connection;
+package serverfront;
 
 import multiconnection.GeneralConnectionServer;
 import multiconnection.GeneralConnectionServlet;
 import multiconnection.MultiConnectionManager;
+import internalconnections.ProxyConnectionManager;
 
 /**
- * Creates a servlet specific to the login server.
+ *
  */
 @SuppressWarnings("serial")
-public final class LoginServlet extends GeneralConnectionServlet {
+public final class ProxyServlet extends GeneralConnectionServlet {
 
     /**
-     * Creates a GeneralConnectionServlet.
-     *
      * @param timeoutTime
      *            The time it takes before a connection times out.
      * @param secure
@@ -20,7 +19,7 @@ public final class LoginServlet extends GeneralConnectionServlet {
      * @param connectLocally
      *            True if the server is connecting locally.
      */
-    public LoginServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
+    public ProxyServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
         super(timeoutTime, secure, connectLocally);
     }
 
@@ -29,24 +28,27 @@ public final class LoginServlet extends GeneralConnectionServlet {
      */
     @Override
     public GeneralConnectionServer createServerSocket() {
-        return new LoginServer(this);
+        return new ProxyServer(this);
     }
 
     /**
-     * We do not need to manage multiple connections so we might as well just
-     * make it return null.
-     *
      * @param connectLocally
-     *            <code>true</code> if the connection manager should use local
-     *            connections, <code>false</code> otherwise
+     *            True if the connection is acting as if it is on a local
+     *            computer (used for testing)
      * @param secure
-     *            <code>true</code> if the connections should be secured,
-     *            <code>false</code> otherwise
-     *
-     * @return a new connection manager object
+     *            True if the connection is using SSL.
+     * @return {@link internalconnections.ProxyConnectionManager}
      */
     @Override
     protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
-        return null;
+        return new ProxyConnectionManager(getServer(), connectLocally, secure);
+    }
+
+    /**
+     * initializes the listeners for the servers.
+     */
+    @Override
+    protected void onReconnect() {
+        ((ProxyServer) getServer()).initializeListeners();
     }
 }

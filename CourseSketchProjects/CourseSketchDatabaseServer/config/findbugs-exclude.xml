@@ -67,4 +67,22 @@
 			<Bug code="IJU" />
 		</Not>
 	</Match>
+
+    <!--PROJECT SPECIFIC BUGS -->
+
+    <Match>
+        <Class name="database.institution.mongo.MongoInstitution" />
+        <!-- problems with the double checked locking pattern -->
+        <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE" />
+    </Match>
+
+    <Match>
+        <Class name="database.user.UserClient" />
+        <!-- problems with the double checked locking pattern -->
+        <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE" />
+    </Match>
+
+    <Match>
+        <Class name="database.PasswordHash" />
+    </Match>
 </FindBugsFilter>

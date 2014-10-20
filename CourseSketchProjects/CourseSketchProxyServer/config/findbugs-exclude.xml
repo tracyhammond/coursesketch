@@ -1,7 +1,5 @@
 <FindBugsFilter>
 	<Match>
-<<<<<<< HEAD
-=======
 		<Package name="protobuf.*" />
 	</Match>
 	<Match>
@@ -23,7 +21,6 @@
 
 	<!-- General bug excludes -->
 	<Match>
->>>>>>> master
 		<Bug pattern="SE_BAD_FIELD" />
 	</Match>
 
@@ -56,11 +53,7 @@
 	</Match>
 
 	<Match>
-<<<<<<< HEAD
-	    <Or>
-=======
 		<Or>
->>>>>>> master
 			<Field name="e" />
 			<Local name="e" />
 		</Or>
@@ -74,26 +67,6 @@
 			<Bug code="IJU" />
 		</Not>
 	</Match>
-<<<<<<< HEAD
-</FindBugsFilter>
-=======
 
     <!--PROJECT SPECIFIC BUGS -->
-
-    <Match>
-        <Class name="database.DatabaseClient" />
-        <!-- problems with the double checked locking pattern -->
-        <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE" />
-    </Match>
-
-    <Match>
-        <Class name="database.DatabaseClient" />
-        <!-- problems with the double checked locking pattern -->
-        <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
-    </Match>
-
-    <Match>
-        <Class name="database.PasswordHash" />
-    </Match>
 </FindBugsFilter>
->>>>>>> master

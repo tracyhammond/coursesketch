@@ -41,7 +41,14 @@ import database.auth.Authenticator;
  * @author gigemjt
  *
  */
-public class SubmissionManager {
+public final class SubmissionManager {
+
+    /**
+     * Private constructor.
+     *
+     */
+    private SubmissionManager() {
+    }
 
     /**
      * Inserts a submission into the database.
@@ -56,6 +63,7 @@ public class SubmissionManager {
      * @param submissionId The id associated with the submission on the submission server.
      * @param experiment True if the object being submitted is an experiment
      */
+    @SuppressWarnings({ "PMD.NPathComplexity" })
     public static void mongoInsertSubmission(final DB dbs, final String problemId, final String uniqueId, final String submissionId,
             final boolean experiment) {
         System.out.println("Inserting an experiment " + experiment);
@@ -90,9 +98,9 @@ public class SubmissionManager {
      */
     public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final String sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
-        final Request.Builder r = Request.newBuilder();
-        r.setSessionInfo(sessionInfo);
-        r.setRequestType(MessageType.DATA_REQUEST);
+        final Request.Builder requestBuilder = Request.newBuilder();
+        requestBuilder.setSessionInfo(sessionInfo);
+        requestBuilder.setRequestType(MessageType.DATA_REQUEST);
         final ItemRequest.Builder build = ItemRequest.newBuilder();
         build.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
@@ -105,10 +113,10 @@ public class SubmissionManager {
         build.addItemId(sketchId);
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
-        r.setOtherData(data.build().toByteString());
-        System.out.println("Sending command " + r.build());
+        requestBuilder.setOtherData(data.build().toByteString());
+        System.out.println("Sending command " + requestBuilder.build());
         try {
-            internalConnections.send(r.build(), null, SubmissionConnection.class);
+            internalConnections.send(requestBuilder.build(), null, SubmissionConnection.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }
@@ -147,9 +155,9 @@ public class SubmissionManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final Request.Builder r = Request.newBuilder();
-        r.setSessionInfo(sessionInfo);
-        r.setRequestType(MessageType.DATA_REQUEST);
+        final Request.Builder requestBuilder = Request.newBuilder();
+        requestBuilder.setSessionInfo(sessionInfo);
+        requestBuilder.setRequestType(MessageType.DATA_REQUEST);
         final ItemRequest.Builder build = ItemRequest.newBuilder();
         build.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
@@ -162,10 +170,10 @@ public class SubmissionManager {
         build.setAdvanceQuery(review);
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
-        r.setOtherData(data.build().toByteString());
-        System.out.println("Sending command " + r.build());
+        requestBuilder.setOtherData(data.build().toByteString());
+        System.out.println("Sending command " + requestBuilder.build());
         try {
-            internalConnections.send(r.build(), null, SubmissionConnection.class);
+            internalConnections.send(requestBuilder.build(), null, SubmissionConnection.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }
