@@ -13,7 +13,7 @@ import protobuf.srl.request.Message.Request;
 /**
  * Created by gigemjt on 10/19/14.
  */
-public abstract class IServerWebSocket {
+public abstract class IServerWebSocketHandler {
     /**
      * The maximum number of connections.
      * This can be overwritten to give the number of connections a new value.
@@ -57,12 +57,25 @@ public abstract class IServerWebSocket {
     private final Map<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
 
     /**
+     * The parent servlet for this server.
+     */
+    private final ISocketInitializer parentServer;
+
+    /**
+     * A constructor that accepts a servlet.
+     * @param parent The parent servlet of this server.
+     */
+    protected IServerWebSocketHandler(final ISocketInitializer parent) {
+        parentServer = parent;
+    }
+
+    /**
      * Called when the connection is closed.
      * @param conn The connection that closed the websocket
      * @param statusCode The reason that the connection was closed.
      * @param reason The human readable reason that the connection was closed.
      */
-    public final void onClose(final SocketSession conn, final int statusCode, final String reason) {
+    protected final void onClose(final SocketSession conn, final int statusCode, final String reason) {
         // FUTURE: find out how to see if the connection is closed by us or them.
         System.out.println(conn.getRemoteAddress() + " has disconnected from The Server." + statusCode + "with reason : " + reason);
         final MultiConnectionState stateId = getConnectionToId().remove(conn);
@@ -79,7 +92,7 @@ public abstract class IServerWebSocket {
      *
      * @param conn The connection that is being opened.
      */
-    public final void onOpen(final SocketSession conn) {
+    protected final void onOpen(final SocketSession conn) {
         if (getConnectionToId().size() >= MAX_CONNECTIONS) {
             // Return negatative state.
             System.out.println("FULL SERVER"); // send message to someone?
@@ -119,7 +132,7 @@ public abstract class IServerWebSocket {
     protected final void onMessage(final SocketSession session, final ByteBuffer buffer) {
         final Request req = Decoder.parseRequest(buffer);
         if (req == null) {
-            send(session, createBadConnectionResponse(null, IConnectionWrapper.class));
+            send(session, createBadConnectionResponse(null, IClientConnection.class));
             System.out.println("protobuf error");
             // this.
             // we need to somehow send an error to the client here
@@ -162,7 +175,7 @@ public abstract class IServerWebSocket {
     protected abstract void onStop();
 
     /**
-     * @return The {@link interfaces.IServerWebSocket#NAME} of the connection should be overwritten to give it a new name.
+     * @return The {@link IServerWebSocketHandler#NAME} of the connection should be overwritten to give it a new name.
      */
     @SuppressWarnings("static-method")
     public final String getName() {
@@ -173,7 +186,7 @@ public abstract class IServerWebSocket {
      * Returns a new connection with an id.
      *
      * This can be overwritten to make a more advance connection. This is only
-     * called in {@link interfaces.IServerWebSocket#onOpen(SocketSession)}
+     * called in {@link IServerWebSocketHandler#onOpen(SocketSession)}
      *
      * @return an instance of {@link MultiConnectionState}.
      */
@@ -193,7 +206,7 @@ public abstract class IServerWebSocket {
      * @param connectionType A class representing the connection that is not correctly connected.
      * @return {@link Request} with a message explaining what happened.
      */
-    public final Request createBadConnectionResponse(final Request req, final Class<? extends IConnectionWrapper> connectionType) {
+    public final Request createBadConnectionResponse(final Request req, final Class<? extends IClientConnection> connectionType) {
         final Request.Builder response = Request.newBuilder();
         if (req == null) {
             response.setRequestType(Request.MessageType.ERROR);
@@ -216,6 +229,19 @@ public abstract class IServerWebSocket {
         idToState.clear();
         onStop();
     }
+
+    /**
+     * @return The servlet that represents this server.
+     */
+    protected final ISocketInitializer getParentServer() {
+        return parentServer;
+    }
+
+    /**
+     * @return The {@link MultiConnectionManager} or subclass so it can be used
+     * in this instance.
+     */
+    protected abstract MultiConnectionManager getConnectionManager();
 
     /**
      * @return A map representing the Id to state. The returned map is read only.
