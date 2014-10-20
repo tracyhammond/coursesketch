@@ -4,12 +4,26 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
 })();
 
-(function() {
+(function(document) {
 
     var waitingIcon = CourseSketch.courseManagement.waitingIcon;
     var localScope = CourseSketch.courseManagement;
-    CourseSketch.courseManagement.initializeCourseManagment = function() {
-        document.getElementById('class_list_column').appendChild(waitingIcon);
+
+    /**
+     * Polls for all updates to the user and then shows the courses.
+     * 
+     * This will wait till the database is ready before it polls for updates and
+     * shows the courses.
+     */
+    CourseSketch.courseManagement.initializeCourseManagment = function(localDocument) {
+        var doc = document;
+        if (!isUndefined(localDocument)) {
+            doc = localDocument;
+        }
+        if (!doc.querySelector('#class_list_column')) {
+            return false;
+        }
+        doc.querySelector('#class_list_column').appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
         var loadCourses = function(courseList) {
@@ -34,62 +48,82 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
     };
 
-    localScope.showCourses = function showCourses(courseList) {
+    /**
+     * Given a list of {@link SrlCourse} a bunch of school items are built then
+     * added to the clss_list_column div.
+     */
+    localScope.showCourses = function showCourses(courseList, localDocument) {
+        var doc = document;
+        if (!isUndefined(localDocument)) {
+            doc = localDocument;
+        }
+
         var builder = new SchoolItemBuilder();
-        builder.setList(courseList).setWidth('medium').centerItem(true);
-        if (CourseSketch.dataManager.getState("isInstructor")) {
+        builder.setList(courseList)
+        if (CourseSketch.connection.isInstructor) {
             builder.setInstructorCard(true);
         }
         builder.showImage = false;
-        builder.setBoxClickFunction(courseClickerFunction);
-        builder.build('class_list_column');
-        clearLists(2);
+        builder.setBoxClickFunction(function(course) {
+            courseClickerFunction(course, doc)
+        });
+        builder.build(doc.querySelector('#class_list_column'));
+        clearLists(2, localDocument);
     };
 
-    function courseClickerFunction(course) {
-        clearLists(2);
+    /**
+     * Called when a user clicks on a course school item. This then creates the
+     * list of assignments for that course and then displays them.
+     */
+    function courseClickerFunction(course, doc) {
+        clearLists(2, doc);
 
-        changeSelection(course.id, courseSelectionManager);
+        // note that query selector does not work on ids that start with a number.
+        changeSelection(doc.getElementById(course.id), courseSelectionManager);
         assignmentSelectionManager.clearAllSelectedItems();
         problemSelectionManager.clearAllSelectedItems();
 
         // waiting icon
-        document.getElementById('assignment_list_column').appendChild(waitingIcon);
+        doc.querySelector('#assignment_list_column').appendChild(waitingIcon);
         waitingIcon.startWaiting();
 
+        function buildSchoolList(assignmentList) {
+            console.log(assignmentList);
+            var builder = new SchoolItemBuilder();
+            builder.setEmptyListMessage('There are no assignments for this course!');
+            if (assignmentList == "NONEXISTANT_VALUE") {
+                if (!course.getState().accessible) {
+                    builder
+                            .setEmptyListMessage('This course is currently not avialable. Please contact the instructor to let you view the assignments');
+                }
+                assignmentList = [];
+            }
+
+            builder.setList(assignmentList);
+            builder.showImage = false;
+
+            builder.setBoxClickFunction(function(assignment) {
+                assignmentClickerFunction(assignment, doc);
+            });
+            builder.build(doc.querySelector('#assignment_list_column'));
+            doc.querySelector('#assignment_list_column').appendChild(waitingIcon); // because it was probably removed
+            if (CourseSketch.dataManager.getState("isInstructor")) {
+                try {
+                    replaceEditContent('html/instructor/course_managment_frames/edit_course.html');
+                } catch (exception) {
+
+                }
+                showButton('assignment_button');
+            }
+        }
         // we can make this faster because we have the list of assignments
-        CourseSketch.dataManager
-                .getAssignments(
-                        course.assignmentList,
-                        function(assignmentList) {
-                            var builder = new SchoolItemBuilder();
-                            builder.setEmptyListMessage('There are no assignments for this course!');
-                            if (assignmentList == "NONEXISTANT_VALUE") {
-                                if (!course.getState().accessible) {
-                                    builder
-                                            .setEmptyListMessage('This course is currently not avialable. Please contact the instructor to let you view the assignments');
-                                }
-                                assignmentList = [];
-                            }
-
-                            builder.setList(assignmentList).setWidth('medium').centerItem(true);
-                            builder.showImage = false;
-
-                            builder.setBoxClickFunction(assignmentClickerFunction);
-                            if (waitingIcon.isRunning()) {
-                                waitingIcon.finishWaiting(); // stops the
-                                // waiting icon
-                            }
-                            builder.build('assignment_list_column');
-                            if (CourseSketch.dataManager.getState("isInstructor")) {
-                                try {
-                                    replaceEditContent('html/instructor/course_managment_frames/edit_course.html');
-                                } catch (exception) {
-
-                                }
-                                showButton('assignment_button');
-                            }
-                        });
+        CourseSketch.dataManager.getAssignments(course.assignmentList, buildSchoolList, function(assignmentList) {
+            buildSchoolList(assignmentList);
+            if (waitingIcon.isRunning()) {
+                waitingIcon.finishWaiting(); // stops the
+                // waiting icon
+            }
+        });
     }
 
     function assignmentClickerFunction(assignment) {
@@ -126,7 +160,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                                     }
                                 }
                             }
-                            builder.setList(problemList).setWidth('medium').centerItem(true);
+                            builder.setList(problemList);
                             builder.showImage = false;
                             builder.setBoxClickFunction(problemClickerFunction);
                             if (waitingIcon.isRunning()) {
@@ -204,25 +238,29 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
     }
 
-    function hideButton(id) {
-        var element = document.getElementById(id);
+    function hideButton(element) {
         if (element) {
             element.style.display = "none";
         }
     }
 
-    function clearLists(number) {
+    function clearLists(number, localDocument) {
+        var doc = document;
+        if (!isUndefined(localDocument)) {
+            doc = localDocument;
+        }
         var builder = new SchoolItemBuilder();
 
         if (number > 0) {
-            hideButton('problem_button');
+            hideButton(doc.querySelector('#problem_button'));
             builder.setEmptyListMessage('Please select an assignment to see the list of problems.');
-            builder.build('problem_list_column');
+            builder.build(doc.querySelector('#problem_list_column'));
         }
+
         if (number > 1) {
-            hideButton('assignment_button');
+            hideButton(doc.querySelector('#assignment_button'));
             builder.setEmptyListMessage('Please select a course to see the list of assignments.');
-            builder.build('assignment_list_column');
+            builder.build(doc.querySelector('#assignment_list_column'));
         }
     }
 
@@ -252,12 +290,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     function replaceEditContent(src) {
 
         function onload(event) {
-            console.log(event);
             var toReplace = document.getElementById('editable_unit');
             removeAllChildren(toReplace);
             var link = event.srcElement;
             var content = link.import.querySelector("#iframeBody");
-            console.log(content);
             if (src && content) {
                 toReplace.appendChild(content.cloneNode(true));
             } else {
@@ -276,46 +312,11 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         try {
             loader.replaceFile(false, src, "html", onload, onerror, 'editable_import', 'editable_import');
         } catch (exception) {
-            // console.log(exception.stack);
             loader.loadFile(src, "html", onload, onerror, 'editable_import');
         }
-    }
-
-    function addNewCourse() { // Functionality to allow for adding of courses
-        // by instructors
-        var course = new SrlCourse();
-        // course.id = "Course_01";
-        course.name = "Physics";
-        course.description = "Physics is Phun";
-        // course.semester = "Should be in format: '_F13' (_F = Fall, Sp =
-        // Spring, Su = Summer) ";
-        // course.accessDate = "mm/dd/yyyy";
-        // course.closeDate = "mm/dd/yyyy";
-        CourseSketch.dataManager.getAllCourses(function(courseList) {
-            var firstCourse = undefined;
-            CourseSketch.dataManager.insertCourse(course, function(course) {
-                firstCourse = course;
-                courseList.push(course);
-                showCourses(courseList);
-            }, function(course) {
-                // do something else here!
-                alert("Course added to database");
-            });
-        });
-
-        /***********************************************************************
-         * course.id = course.name =
-         **********************************************************************/
-        showCourses([ course ]);
-        insertCourse([ course ]);
-        // var newCourse = insertCourse(course);
-
-        /***********************************************************************
-         * alert("Hello! I am an alert box!!"); document.getElementById("demo");
-         **********************************************************************/
     }
 
     var courseSelectionManager = new clickSelectionManager();
     var assignmentSelectionManager = new clickSelectionManager();
     var problemSelectionManager = new clickSelectionManager();
-})();
+})(document.currentScript.ownerDocument);

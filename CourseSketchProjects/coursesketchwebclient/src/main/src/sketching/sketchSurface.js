@@ -57,11 +57,11 @@ function SketchSurface() {
             this.id = generateUUID();
         }
         if (!isUndefined(updateList) && updateList.getListLength() <= 0) {
-            var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
-            var idChain = PROTOBUF_UTIL.IdChain();
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             idChain.idChain = [ this.id ];
             command.setCommandData(idChain.toArrayBuffer());
-            var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             updateList.addUpdate(update);
         }
     };
@@ -105,11 +105,11 @@ function SketchSurface() {
     function addStrokeCallback(stroke) {
         stroke.draw(sketch.canvasContext);
 
-        var command = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
+        var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
 
         command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
         command.decodedData = stroke;
-        var update = PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+        var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
         updateList.addUpdate(update);
     }
 
