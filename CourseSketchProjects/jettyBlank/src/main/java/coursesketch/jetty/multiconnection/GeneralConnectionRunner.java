@@ -114,7 +114,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * Called to setup the system if it is being run on a local computer with a local host.
      */
     @Override
-    public void executeLocalEnviroment() {
+    public void executeLocalEnvironment() {
         // does nothing by default.
     }
 
@@ -122,7 +122,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * Called to setup the system for if it is being run to connect to remote compters.
      */
     @Override
-    public void executeRemoveEnviroment() {
+    public void executeRemoveEnvironment() {
         // does nothing by default.
     }
 

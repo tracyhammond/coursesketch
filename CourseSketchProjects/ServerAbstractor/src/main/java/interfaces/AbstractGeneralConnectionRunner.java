@@ -129,22 +129,22 @@ public abstract class AbstractGeneralConnectionRunner {
      * Does not handle accepting Input.
      */
     protected final void runMost() {
-        this.loadConfigurations();
+        loadConfigurations();
         if (local) {
-            this.executeLocalEnviroment();
+            executeLocalEnvironment();
         } else {
-            this.executeRemoveEnviroment();
+            executeRemoveEnvironment();
         }
-        this.createServer();
+        createServer();
 
         if (secure) {
             configureSSL(keystorePath, certificatePath);
         }
         socketInitializerInstance = getSocketInitializer(getTimeoutTime(), secure, isLocal());
 
-        this.addConnections();
+        addConnections();
 
-        this.startServer();
+        startServer();
     }
 
     /**
@@ -155,12 +155,12 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * Called to setup the system if it is being run on a local computer with a local host.
      */
-    protected abstract void executeLocalEnviroment();
+    protected abstract void executeLocalEnvironment();
 
     /**
      * Called to setup the system for if it is being run to connect to remote compters.
      */
-    protected abstract void executeRemoveEnviroment();
+    protected abstract void executeRemoveEnvironment();
 
     /**
      * Called to create an actual server.

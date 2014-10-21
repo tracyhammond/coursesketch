@@ -23,7 +23,7 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      * Creates the local AnswerCheckers.
      */
     @Override
-    public void executeLocalEnviroment() {
+    public void executeLocalEnvironment() {
     }
 
     @Override
