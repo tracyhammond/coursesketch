@@ -10,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.reflect.Whitebox;
 import protobuf.srl.request.Message.Request;
 import utilities.TimeManager;
 
@@ -27,6 +29,11 @@ public class TimeManagerTest {
     public void tearDown() throws Exception {
         DateTimeUtils.setCurrentMillisSystem();
         TimeManager.reset();
+    }
+
+    @Test
+    public void testConstructorForPoints() throws Exception {
+        Whitebox.invokeConstructor(TimeManager.class);
     }
 
     @Test
