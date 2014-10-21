@@ -24,7 +24,7 @@ public class SubmissionRunner extends GeneralConnectionRunner {
 	 */
 	@SuppressWarnings("unused")
 	@Override
-	public void executeLocalEnviroment() {
+	public void executeLocalEnvironment() {
 		new DatabaseClient(true);
 	}
 
