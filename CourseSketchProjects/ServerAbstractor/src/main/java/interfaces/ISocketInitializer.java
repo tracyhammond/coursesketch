@@ -15,7 +15,7 @@ public interface ISocketInitializer {
      *
      * By default this drops all connections and then calls
      *
-     * @see MultiConnectionManager#connectServers(IServerWebSocketHandler)
+     * @see MultiConnectionManager#connectServers(AbstractServerWebSocketHandler)
      */
     void reconnect();
 
@@ -36,9 +36,9 @@ public interface ISocketInitializer {
     /**
      * Override this method to create a subclass of GeneralConnectionServer.
      *
-     * @return An instance of the {@link IServerWebSocketHandler}
+     * @return An instance of the {@link AbstractServerWebSocketHandler}
      */
-    IServerWebSocketHandler createServerSocket();
+    AbstractServerWebSocketHandler createServerSocket();
 
     // METHODS BELOW NEED TO BE IN ALL CLASSES OF THIS INTERFACE (but they can't be in interface because of scope.
 

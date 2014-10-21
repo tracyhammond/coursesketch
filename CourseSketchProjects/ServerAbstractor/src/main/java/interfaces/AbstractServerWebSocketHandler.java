@@ -13,7 +13,8 @@ import protobuf.srl.request.Message.Request;
 /**
  * Created by gigemjt on 10/19/14.
  */
-public abstract class IServerWebSocketHandler {
+@SuppressWarnings("PMD.TooManyMethods")
+public abstract class AbstractServerWebSocketHandler {
     /**
      * The maximum number of connections.
      * This can be overwritten to give the number of connections a new value.
@@ -65,7 +66,7 @@ public abstract class IServerWebSocketHandler {
      * A constructor that accepts a servlet.
      * @param parent The parent servlet of this server.
      */
-    protected IServerWebSocketHandler(final ISocketInitializer parent) {
+    protected AbstractServerWebSocketHandler(final ISocketInitializer parent) {
         parentServer = parent;
     }
 
@@ -133,7 +134,7 @@ public abstract class IServerWebSocketHandler {
     protected final void onMessage(final SocketSession session, final ByteBuffer buffer) {
         final Request req = Decoder.parseRequest(buffer);
         if (req == null) {
-            send(session, createBadConnectionResponse(null, IClientConnection.class));
+            send(session, createBadConnectionResponse(null, AbstractClientConnection.class));
             System.out.println("protobuf error");
             // this.
             // we need to somehow send an error to the client here
@@ -176,7 +177,7 @@ public abstract class IServerWebSocketHandler {
     protected abstract void onStop();
 
     /**
-     * @return The {@link IServerWebSocketHandler#NAME} of the connection should be overwritten to give it a new name.
+     * @return The {@link AbstractServerWebSocketHandler#NAME} of the connection should be overwritten to give it a new name.
      */
     @SuppressWarnings("static-method")
     public final String getName() {
@@ -187,7 +188,7 @@ public abstract class IServerWebSocketHandler {
      * Returns a new connection with an id.
      *
      * This can be overwritten to make a more advance connection. This is only
-     * called in {@link IServerWebSocketHandler#onOpen(SocketSession)}
+     * called in {@link AbstractServerWebSocketHandler#onOpen(SocketSession)}
      *
      * @return an instance of {@link MultiConnectionState}.
      */
@@ -207,7 +208,7 @@ public abstract class IServerWebSocketHandler {
      * @param connectionType A class representing the connection that is not correctly connected.
      * @return {@link Request} with a message explaining what happened.
      */
-    public final Request createBadConnectionResponse(final Request req, final Class<? extends IClientConnection> connectionType) {
+    public final Request createBadConnectionResponse(final Request req, final Class<? extends AbstractClientConnection> connectionType) {
         final Request.Builder response = Request.newBuilder();
         if (req == null) {
             response.setRequestType(Request.MessageType.ERROR);
