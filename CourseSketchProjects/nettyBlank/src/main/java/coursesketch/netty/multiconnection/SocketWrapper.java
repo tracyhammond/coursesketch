@@ -1,6 +1,6 @@
 package coursesketch.netty.multiconnection;
 
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractServerWebSocketHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -57,7 +57,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * @param handler
      * @param secure
      */
-    SocketWrapper(final IServerWebSocketHandler handler, final boolean secure) {
+    SocketWrapper(final AbstractServerWebSocketHandler handler, final boolean secure) {
         socketHandler = (ServerWebSocketHandler) handler;
         isSecure = secure;
     }

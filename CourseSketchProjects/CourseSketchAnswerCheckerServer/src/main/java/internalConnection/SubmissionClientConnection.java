@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import coursesketch.jetty.multiconnection.ClientConnection;
 import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
 
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractServerWebSocketHandler;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
@@ -31,7 +31,7 @@ public class SubmissionClientConnection extends ClientConnection {
 
     @Override
     public final void onMessage(final ByteBuffer buffer) {
-        final Request req = IServerWebSocketHandler.Decoder.parseRequest(buffer); // this
+        final Request req = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer); // this
                                                                             // contains
                                                                             // the
                                                                             // solution

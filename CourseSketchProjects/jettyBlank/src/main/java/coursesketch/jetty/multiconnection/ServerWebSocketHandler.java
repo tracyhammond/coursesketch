@@ -2,7 +2,7 @@ package coursesketch.jetty.multiconnection;
 
 import java.nio.ByteBuffer;
 
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractServerWebSocketHandler;
 import interfaces.ISocketInitializer;
 import interfaces.MultiConnectionManager;
 import interfaces.SocketSession;
@@ -21,7 +21,7 @@ import protobuf.srl.request.Message.Request;
  */
 @WebSocket()
 @SuppressWarnings("PMD.TooManyMethods")
-public class ServerWebSocketHandler extends IServerWebSocketHandler {
+public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     /**
      * A constructor that accepts a servlet.

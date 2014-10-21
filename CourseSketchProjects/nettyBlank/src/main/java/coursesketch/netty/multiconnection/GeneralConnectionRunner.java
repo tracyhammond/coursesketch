@@ -1,6 +1,6 @@
 package coursesketch.netty.multiconnection;
 
-import interfaces.IGeneralConnectionRunner;
+import interfaces.AbstractGeneralConnectionRunner;
 import interfaces.ISocketInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * Created by gigemjt on 10/19/14.
  */
-public class GeneralConnectionRunner extends IGeneralConnectionRunner {
+public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
 
     /**
      * Context for SSL to take place.
@@ -50,6 +50,8 @@ public class GeneralConnectionRunner extends IGeneralConnectionRunner {
      */
     protected GeneralConnectionRunner(final String[] arguments) {
         super(arguments);
+        super.setCertificatePath("/Users/gigemjt/workspace/coursesketch/config/localssl/server.crt");
+        super.setKeystorePath("/Users/gigemjt/workspace/coursesketch/config/localssl/serverpk8.key");
     }
 
     /**

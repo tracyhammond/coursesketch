@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 
 import coursesketch.jetty.multiconnection.ClientConnection;
 import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractServerWebSocketHandler;
 import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -44,7 +44,7 @@ public final class DataClientConnection extends ClientConnection {
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
-        final Request req = IServerWebSocketHandler.Decoder.parseRequest(buffer);
+        final Request req = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
 
         if (req.getRequestType() == Request.MessageType.TIME) {
 
@@ -57,9 +57,9 @@ public final class DataClientConnection extends ClientConnection {
                 }
             }
         } else {
-            final MultiConnectionState state = getStateFromId(IServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
+            final MultiConnectionState state = getStateFromId(AbstractServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
 
-            final Request request = IServerWebSocketHandler.Decoder.parseRequest(buffer);
+            final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
             // Strips away identification.
             final Request result = ProxyConnectionManager.createClientRequest(request);
             ServerWebSocketHandler.send(getConnectionFromState(state), result);

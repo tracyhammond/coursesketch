@@ -2,7 +2,7 @@ package coursesketch.jetty.multiconnection;
 
 import javax.servlet.annotation.WebServlet;
 
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractServerWebSocketHandler;
 import interfaces.ISocketInitializer;
 import interfaces.MultiConnectionManager;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
@@ -25,7 +25,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     /**
      * The server that the servlet is connected to.
      */
-    private final IServerWebSocketHandler connectionServer;
+    private final AbstractServerWebSocketHandler connectionServer;
 
     /**
      * The {@link MultiConnectionManager} that is used by the servlet to recieve
@@ -120,7 +120,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      * @return An instance of the {@link ServerWebSocketHandler}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public IServerWebSocketHandler createServerSocket() {
+    public AbstractServerWebSocketHandler createServerSocket() {
         return new ServerWebSocketHandler(this);
     }
 
@@ -141,7 +141,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      *
      * By default this drops all connections and then calls
      *
-     * @see interfaces.MultiConnectionManager#connectServers(interfaces.IServerWebSocketHandler)
+     * @see interfaces.MultiConnectionManager#connectServers(interfaces.AbstractServerWebSocketHandler)
      */
     @Override
     public final void reconnect() {
@@ -176,7 +176,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     /**
      * @return the GeneralConnectionServer.
      */
-    protected final IServerWebSocketHandler getServer() {
+    protected final AbstractServerWebSocketHandler getServer() {
         return connectionServer;
     }
 }

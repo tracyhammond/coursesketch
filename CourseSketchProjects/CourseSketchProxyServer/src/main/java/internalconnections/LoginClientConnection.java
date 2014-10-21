@@ -2,7 +2,7 @@ package internalconnections;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractServerWebSocketHandler;
 import utilities.ConnectionException;
 import utilities.TimeManager;
 import coursesketch.jetty.multiconnection.ClientConnection;
@@ -51,7 +51,7 @@ public final class LoginClientConnection extends ClientConnection {
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
-        final Request request = IServerWebSocketHandler.Decoder.parseRequest(buffer);
+        final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
         if (request.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(request);
             if (rsp != null) {

@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 
 import coursesketch.jetty.multiconnection.ClientConnection;
 import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractServerWebSocketHandler;
 import interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -28,7 +28,7 @@ import protobuf.srl.request.Message.Request.MessageType;
 public class SubmissionClientConnection extends ClientConnection {
 
     /**
-     * @see coursesketch.jetty.multiconnection.ClientConnection#ConnectionWrapper(URI, interfaces.IServerWebSocketHandler).
+     * @see coursesketch.jetty.multiconnection.ClientConnection#ConnectionWrapper(URI, interfaces.AbstractServerWebSocketHandler).
      * @param destination
      *            The location the server is going as a URI. ex:
      *            http://example.com:1234
@@ -47,7 +47,7 @@ public class SubmissionClientConnection extends ClientConnection {
      */
     @Override
     public final void onMessage(final ByteBuffer buffer) {
-        final Request req = IServerWebSocketHandler.Decoder.parseRequest(buffer);
+        final Request req = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
         System.out.println("Got a response from the submission server!");
         System.out.println(req.getSessionInfo());
         final String[] sessionInfo = req.getSessionInfo().split("\\+");

@@ -1,7 +1,7 @@
 package internalconnections;
 
-import interfaces.IClientConnection;
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractClientConnection;
+import interfaces.AbstractServerWebSocketHandler;
 import utilities.ConnectionException;
 import interfaces.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
@@ -37,7 +37,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      * @param secure
      *            true if all connections should be secure.
      */
-    public ProxyConnectionManager(final IServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
+    public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
         super(parent, connectType, secure);
     }
 
@@ -49,7 +49,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      *            {@link serverfront.ProxyServerWebSocketHandler}) in this case.
      */
     @Override
-    public void connectServers(final IServerWebSocketHandler serv) {
+    public void connectServers(final AbstractServerWebSocketHandler serv) {
         // System.out.println("Open Recognition...");
         System.out.println("Open Login...");
         System.out.println(isConnectionLocal());
@@ -109,7 +109,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      * @throws ConnectionException
      *             thrown if there are problems sending the message.
      */
-    public void send(final Request req, final String sessionId, final Class<? extends IClientConnection> connectionType, final String userId)
+    public void send(final Request req, final String sessionId, final Class<? extends AbstractClientConnection> connectionType, final String userId)
             throws ConnectionException {
         final Request.Builder builder = Request.newBuilder(req);
         builder.clearServersideId();

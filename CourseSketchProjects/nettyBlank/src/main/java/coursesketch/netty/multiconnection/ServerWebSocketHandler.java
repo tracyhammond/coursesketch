@@ -1,6 +1,6 @@
 package coursesketch.netty.multiconnection;
 
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractServerWebSocketHandler;
 import interfaces.ISocketInitializer;
 import interfaces.MultiConnectionManager;
 import interfaces.SocketSession;
@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
 /**
  * Created by gigemjt on 10/19/14.
  */
-public class ServerWebSocketHandler extends IServerWebSocketHandler {
+public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     /**
      * A constructor that accepts a servlet.
@@ -66,7 +66,7 @@ public class ServerWebSocketHandler extends IServerWebSocketHandler {
      */
     @Override
     protected void onMessage(final SocketSession session, final Message.Request req) {
-
+        System.out.println(req);
     }
 
     /**
