@@ -9,7 +9,7 @@ package coursesketch.jetty.multiconnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import interfaces.IGeneralConnectionRunner;
+import interfaces.AbstractGeneralConnectionRunner;
 import interfaces.ISocketInitializer;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -31,12 +31,12 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  *
  */
 @SuppressWarnings("PMD.TooManyMethods")
-public class GeneralConnectionRunner extends IGeneralConnectionRunner {
+public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
 
     /**
      * A local instance is stored here.
      */
-    private final IGeneralConnectionRunner localInstance = this;
+    private final AbstractGeneralConnectionRunner localInstance = this;
 
     /**
      * A jetty server that is called upon by all of the other data.

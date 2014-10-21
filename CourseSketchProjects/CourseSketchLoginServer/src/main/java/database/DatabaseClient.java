@@ -21,7 +21,7 @@ import static database.DatabaseStringConstants.EMAIL;
 import static database.DatabaseStringConstants.LOGIN_DATABASE;
 
 import connection.LoginServerWebSocketHandler;
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractServerWebSocketHandler;
 
 /**
  * A client for the login database.
@@ -208,8 +208,8 @@ public class DatabaseClient {
         if (cursor == null) {
             query = new BasicDBObject(USER_NAME, user).append(PASSWORD, PasswordHash.createHash(password)).append(EMAIL, email)
                     .append(IS_DEFAULT_INSTRUCTOR, isInstructor).append(INSTRUCTOR_ID, FancyEncoder.fancyID())
-                    .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, IServerWebSocketHandler.Encoder.nextID().toString())
-                    .append(INSTRUCTOR_CLIENT_ID, IServerWebSocketHandler.Encoder.nextID().toString());
+                    .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
+                    .append(INSTRUCTOR_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString());
             loginCollection.insert(query);
         } else {
             throw new RegistrationException(LoginServerWebSocketHandler.REGISTRATION_ERROR_MESSAGE);

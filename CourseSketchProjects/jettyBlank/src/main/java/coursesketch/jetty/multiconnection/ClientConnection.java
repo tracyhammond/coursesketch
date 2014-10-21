@@ -8,8 +8,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import interfaces.IClientConnection;
-import interfaces.IServerWebSocketHandler;
+import interfaces.AbstractClientConnection;
+import interfaces.AbstractServerWebSocketHandler;
 import interfaces.MultiConnectionState;
 import interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;
@@ -34,7 +34,7 @@ import utilities.ConnectionException;
  */
 @WebSocket()
 @SuppressWarnings("PMD.TooManyMethods")
-public class ClientConnection extends IClientConnection {
+public class ClientConnection extends AbstractClientConnection {
 
     /**
      * The active session of the current connection wrapper.
@@ -177,7 +177,7 @@ public class ClientConnection extends IClientConnection {
      */
     @SuppressWarnings("checkstyle:designforextension")
     protected void onMessage(final ByteBuffer buffer) {
-        final MultiConnectionState state = getStateFromId(IServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
+        final MultiConnectionState state = getStateFromId(AbstractServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
         session.send(buffer);
         getConnectionFromState(state).send(buffer);
     }

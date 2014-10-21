@@ -2,7 +2,7 @@ package serverfront;
 
 import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
 import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
-import interfaces.IClientConnection;
+import interfaces.AbstractClientConnection;
 import internalconnections.AnswerClientConnection;
 import internalconnections.DataClientConnection;
 import internalconnections.LoginClientConnection;
@@ -223,7 +223,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                     try {
                         final Request req = Request.parseFrom(message.array());
                         final MultiConnectionState state = getIdToState().get(req.getSessionInfo());
-                        final Class<? extends IClientConnection> classType = (Class<? extends IClientConnection>)
+                        final Class<? extends AbstractClientConnection> classType = (Class<? extends AbstractClientConnection>)
                                 Class.forName(event.getActionCommand());
                         final Request result = createBadConnectionResponse(req, classType);
                         send(getIdToConnection().get(state), result);
