@@ -17,20 +17,19 @@ import protobuf.srl.request.Message.Request;
  * A manager for holding all of the connections that were created.
  *
  * @author gigemjt
- *
  */
 public class MultiConnectionManager {
 
     /**
      * Determines whether the server is being connected locally.
-     *
+     * <p/>
      * Can be overridden.
      */
     private final boolean connectLocally;
 
     /**
      * Determines whether the server will be connecting securely.
-     *
+     * <p/>
      * Can be overridden.
      */
     private final boolean secure;
@@ -39,25 +38,22 @@ public class MultiConnectionManager {
      * A map that contains a list of connections that are differentiated by a
      * specific class.
      */
-    private final Map<Class<?>, ArrayList<IClientConnection>> connections = new HashMap<Class<?>, ArrayList<IClientConnection>>();
+    private final Map<Class<?>, ArrayList<AbstractClientConnection>> connections = new HashMap<Class<?>, ArrayList<AbstractClientConnection>>();
 
     /**
      * The server that using this {@link MultiConnectionManager}.
      */
-    private final IServerWebSocketHandler parent;
+    private final AbstractServerWebSocketHandler parent;
 
     /**
      * Creates a default {@link MultiConnectionManager}.
      *
-     * @param iParent
-     *            The server that is using this object.
-     * @param iIsLocal
-     *            True if the connection should be for a local server instead of
-     *            a remote server.
-     * @param iSecure
-     *            True if the connections should be secure.
+     * @param iParent  The server that is using this object.
+     * @param iIsLocal True if the connection should be for a local server instead of
+     *                 a remote server.
+     * @param iSecure  True if the connections should be secure.
      */
-    public MultiConnectionManager(final IServerWebSocketHandler iParent, final boolean iIsLocal, final boolean iSecure) {
+    public MultiConnectionManager(final AbstractServerWebSocketHandler iParent, final boolean iIsLocal, final boolean iSecure) {
         this.parent = iParent;
         this.connectLocally = iIsLocal;
         this.secure = iSecure;
@@ -66,26 +62,20 @@ public class MultiConnectionManager {
     /**
      * Creates a connection given the different information.
      *
-     * @param serv
-     *            The server that is connected to this connection manager.
-     * @param isLocal
-     *            If the connection that is being created is local or remote.
-     * @param remoteAdress
-     *            The location to connect to if it is connecting remotely.
-     * @param port
-     *            The port that this connection is created at. (Has to be unique
-     *            to this computer)
-     * @param isSecure
-     *            True if using SSL false otherwise.
-     * @param connectionType
-     *            The class that will be made (should be a subclass of
-     *            ConnectionWrapper)
-     * @return a completed {@link IClientConnection}.
-     * @throws ConnectionException
-     *             If a connection has failed to be made.
+     * @param serv           The server that is connected to this connection manager.
+     * @param isLocal        If the connection that is being created is local or remote.
+     * @param remoteAdress   The location to connect to if it is connecting remotely.
+     * @param port           The port that this connection is created at. (Has to be unique
+     *                       to this computer)
+     * @param isSecure       True if using SSL false otherwise.
+     * @param connectionType The class that will be made (should be a subclass of
+     *                       ConnectionWrapper)
+     * @return a completed {@link AbstractClientConnection}.
+     * @throws ConnectionException If a connection has failed to be made.
      */
-    public static IClientConnection createConnection(final IServerWebSocketHandler serv, final boolean isLocal, final String remoteAdress,
-            final int port, final boolean isSecure, final Class<? extends IClientConnection> connectionType) throws ConnectionException {
+    public static AbstractClientConnection createConnection(final AbstractServerWebSocketHandler serv, final boolean isLocal,
+            final String remoteAdress,
+            final int port, final boolean isSecure, final Class<? extends AbstractClientConnection> connectionType) throws ConnectionException {
         if (serv == null) {
             throw new ConnectionException("Can't create connection with a null parent server");
         }
@@ -102,20 +92,22 @@ public class MultiConnectionManager {
 
     /**
      * Initializes the connection given certain parameters.
-     * @param location The location of the server as a URI
+     *
+     * @param location       The location of the server as a URI
      * @param connectionType a class that represents the connection.
-     * @param serv The server that is managing the connection.
+     * @param serv           The server that is managing the connection.
      * @return A connection wrapper.
      * @throws ConnectionException Thrown if there are problems initializing the connection.
      */
-    private static IClientConnection initializeConnection(final String location, final Class<? extends IClientConnection> connectionType,
-            final IServerWebSocketHandler serv) throws ConnectionException {
-        IClientConnection conWrapper = null;
+    private static AbstractClientConnection initializeConnection(final String location,
+            final Class<? extends AbstractClientConnection> connectionType,
+            final AbstractServerWebSocketHandler serv) throws ConnectionException {
+        AbstractClientConnection conWrapper = null;
         @SuppressWarnings("rawtypes")
         Constructor construct;
         try {
-            construct = connectionType.getConstructor(URI.class, IServerWebSocketHandler.class);
-            conWrapper = (IClientConnection) construct.newInstance(new URI(location), serv);
+            construct = connectionType.getConstructor(URI.class, AbstractServerWebSocketHandler.class);
+            conWrapper = (AbstractClientConnection) construct.newInstance(new URI(location), serv);
         } catch (NoSuchMethodException | SecurityException e) {
             throw new ConnectionException("Failed to get constructor for connection wrapper: " + connectionType.getSimpleName(), e);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -134,20 +126,17 @@ public class MultiConnectionManager {
     /**
      * Sends a request with the id and the connection at the given index.
      *
-     * @param req
-     *            The request to send.
-     * @param sessionID
-     *            The session Id of the request.
-     * @param connectionType
-     *            The type of connection being given
-     * @throws ConnectionException
-     *             thrown if a connection failed to be found.
+     * @param req            The request to send.
+     * @param sessionID      The session Id of the request.
+     * @param connectionType The type of connection being given
+     * @throws ConnectionException thrown if a connection failed to be found.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public void send(final Request req, final String sessionID, final Class<? extends IClientConnection> connectionType) throws ConnectionException {
+    public void send(final Request req, final String sessionID, final Class<? extends AbstractClientConnection> connectionType)
+            throws ConnectionException {
         // Attach the existing request with the UserID
-        final Request packagedRequest = IServerWebSocketHandler.Encoder.requestIDBuilder(req, sessionID);
-        final IClientConnection connection = getBestConnection(connectionType);
+        final Request packagedRequest = AbstractServerWebSocketHandler.Encoder.requestIDBuilder(req, sessionID);
+        final AbstractClientConnection connection = getBestConnection(connectionType);
         if (connection == null) {
             System.out.println("Failed to get a local connection");
             throw new ConnectionException("failed to get a connection of type " + connectionType.getSimpleName());
@@ -158,29 +147,23 @@ public class MultiConnectionManager {
     /**
      * Creates and then adds a connection to the {@link MultiConnectionManager}.
      *
-     * @param serv
-     *            The server that is connected to this connection manager.
-     * @param isLocal
-     *            If the connection that is being created is local or remote.
-     * @param remoteAdress
-     *            The location to connect to if it is connecting remotely.
-     * @param port
-     *            The port that this connection is created at. (Has to be unique
-     *            to this computer)
-     * @param isSecure
-     *            True if using SSL false otherwise.
-     * @param connectionType
-     *            The class that will be made (should be a subclass of
-     *            ConnectionWrapper)
-     * @throws ConnectionException
-     *             If a connection has failed to be made.
-     * @see #createConnection(IServerWebSocketHandler, boolean, String, int,
-     *      Class)
-     * @see #addConnection(interfaces.IClientConnection, Class)
+     * @param serv           The server that is connected to this connection manager.
+     * @param isLocal        If the connection that is being created is local or remote.
+     * @param remoteAdress   The location to connect to if it is connecting remotely.
+     * @param port           The port that this connection is created at. (Has to be unique
+     *                       to this computer)
+     * @param isSecure       True if using SSL false otherwise.
+     * @param connectionType The class that will be made (should be a subclass of
+     *                       ConnectionWrapper)
+     * @throws ConnectionException If a connection has failed to be made.
+     * @see #createConnection(AbstractServerWebSocketHandler, boolean, String, int,
+     * Class)
+     * @see #addConnection(AbstractClientConnection, Class)
      */
-    public final void createAndAddConnection(final IServerWebSocketHandler serv, final boolean isLocal, final String remoteAdress, final int port,
-            final boolean isSecure, final Class<? extends IClientConnection> connectionType) throws ConnectionException {
-        final IClientConnection connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
+    public final void createAndAddConnection(final AbstractServerWebSocketHandler serv, final boolean isLocal,
+            final String remoteAdress, final int port, final boolean isSecure,
+            final Class<? extends AbstractClientConnection> connectionType) throws ConnectionException {
+        final AbstractClientConnection connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
         addConnection(connection, connectionType);
     }
 
@@ -188,18 +171,16 @@ public class MultiConnectionManager {
      * Allows a server to set an action to occur when a socket is no longer able
      * to send messages.
      *
-     * @param listen
-     *            the source object will be a list of request and will also
-     *            contain a string specifying the type of connection.
-     * @param connectionType
-     *            The type to bind the action to.
+     * @param listen         the source object will be a list of request and will also
+     *                       contain a string specifying the type of connection.
+     * @param connectionType The type to bind the action to.
      */
-    public final void setFailedSocketListener(final ActionListener listen, final Class<? extends IClientConnection> connectionType) {
-        final ArrayList<IClientConnection> cons = connections.get(connectionType);
+    public final void setFailedSocketListener(final ActionListener listen, final Class<? extends AbstractClientConnection> connectionType) {
+        final ArrayList<AbstractClientConnection> cons = connections.get(connectionType);
         if (cons == null) {
             throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
-        for (IClientConnection con : cons) {
+        for (AbstractClientConnection con : cons) {
             con.setFailedSocketListener(listen);
         }
     }
@@ -215,25 +196,22 @@ public class MultiConnectionManager {
     /**
      * Does nothing by default. Can be overwritten to make life easier.
      *
-     * @param parentServer
-     *            ignored by this implementation. Override to change
-     *            functionality.
+     * @param parentServer ignored by this implementation. Override to change
+     *                     functionality.
      */
-    public void connectServers(final IServerWebSocketHandler parentServer) {
+    public void connectServers(final AbstractServerWebSocketHandler parentServer) {
     }
 
     /**
      * Adds a connection to a list with the given connection Type.
-     *
+     * <p/>
      * Throws a {@link NullPointerException} If connection is null or
      * connectLocally is null.
      *
-     * @param connection
-     *            The connection to be added.
-     * @param connectionType
-     *            The type to differentiate connections by.
+     * @param connection     The connection to be added.
+     * @param connectionType The type to differentiate connections by.
      */
-    public final void addConnection(final IClientConnection connection, final Class<? extends IClientConnection> connectionType) {
+    public final void addConnection(final AbstractClientConnection connection, final Class<? extends AbstractClientConnection> connectionType) {
         if (connection == null) {
             throw new IllegalArgumentException("can not add null connection");
         }
@@ -244,9 +222,9 @@ public class MultiConnectionManager {
 
         connection.setParentManager(this);
 
-        ArrayList<IClientConnection> cons = connections.get(connectionType);
+        ArrayList<AbstractClientConnection> cons = connections.get(connectionType);
         if (cons == null) {
-            cons = new ArrayList<IClientConnection>();
+            cons = new ArrayList<AbstractClientConnection>();
             cons.add(connection);
             connections.put(connectionType, cons);
             System.out.println("creating a new connectionList for: " + connectionType + " with list: " + connections.get(connectionType));
@@ -259,13 +237,12 @@ public class MultiConnectionManager {
      * Returns a connection that we believe to be the best connection at this
      * time. This can be overridden for a better server specific system.
      *
-     * @param connectionType
-     *            The type of connection being requested.
+     * @param connectionType The type of connection being requested.
      * @return A valid connection.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public IClientConnection getBestConnection(final Class<? extends IClientConnection> connectionType) {
-        final ArrayList<IClientConnection> cons = connections.get(connectionType);
+    public AbstractClientConnection getBestConnection(final Class<? extends AbstractClientConnection> connectionType) {
+        final ArrayList<AbstractClientConnection> cons = connections.get(connectionType);
         if (cons == null) {
             throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
@@ -276,16 +253,14 @@ public class MultiConnectionManager {
     /**
      * Closes all connections and removes them from storage.
      *
-     * @param clearTypes
-     *            if true then the mapping will be completely cleared.
-     * @param debugPrint
-     *            If true then the uri is printed as the connection is closed.
+     * @param clearTypes if true then the mapping will be completely cleared.
+     * @param debugPrint If true then the uri is printed as the connection is closed.
      */
     public final void dropAllConnection(final boolean clearTypes, final boolean debugPrint) {
         synchronized (connections) {
             // <? extends ConnectionWrapper> // for safe keeping
             for (Class<?> conKey : connections.keySet()) {
-                for (IClientConnection connection : connections.get(conKey)) {
+                for (AbstractClientConnection connection : connections.get(conKey)) {
                     if (debugPrint) {
                         System.out.println(connection.getURI());
                     }
@@ -302,7 +277,7 @@ public class MultiConnectionManager {
     /**
      * @return The parent server for this MultiConnectionManager.
      */
-    protected final IServerWebSocketHandler getParentServer() {
+    protected final AbstractServerWebSocketHandler getParentServer() {
         return parent;
     }
 

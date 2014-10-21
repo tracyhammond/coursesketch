@@ -11,7 +11,8 @@ import java.util.List;
 /**
  * Created by gigemjt on 10/19/14.
  */
-public abstract class IClientConnection {
+@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+public abstract class AbstractClientConnection {
     /**
      * A websocket can only have a maximum of 10 failed starts.
      */
@@ -41,7 +42,7 @@ public abstract class IClientConnection {
     /**
      * This is the server that is running the connection wrapper.
      */
-    private final IServerWebSocketHandler parentServer;
+    private final AbstractServerWebSocketHandler parentServer;
 
     /**
      * The active session of the current connection wrapper.
@@ -100,8 +101,8 @@ public abstract class IClientConnection {
      * Creates a ConnectionWrapper to a destination using a given server.
      *
      * Note that this does not actually try and connect the wrapper you have to
-     * either explicitly call {@link IClientConnection#connect()} or call
-     * {@link IClientConnection#send(java.nio.ByteBuffer)}.
+     * either explicitly call {@link AbstractClientConnection#connect()} or call
+     * {@link AbstractClientConnection#send(java.nio.ByteBuffer)}.
      *
      * @param iDestination
      *            The location the server is going as a URI. ex:
@@ -109,7 +110,7 @@ public abstract class IClientConnection {
      * @param iParentServer
      *            The server that is using this connection wrapper.
      */
-    protected IClientConnection(final URI iDestination, final IServerWebSocketHandler iParentServer) {
+    protected AbstractClientConnection(final URI iDestination, final AbstractServerWebSocketHandler iParentServer) {
         this.parentServer = iParentServer;
         this.destination = iDestination;
         started = false;
@@ -198,14 +199,14 @@ public abstract class IClientConnection {
      * Sends a binary message over the connection.
      *
      * If the connection fails then a reconnect is attempted. If the attempt
-     * fails more than {@link IClientConnection#MAX_FAILED_STARTS} times then an
+     * fails more than {@link AbstractClientConnection#MAX_FAILED_STARTS} times then an
      * exception is thrown
      *
      * @param buffer
      *            The binary message that is being sent out.
      * @throws ConnectionException
      *             Thrown if the number of connection attempts exceeds
-     *             {@link IClientConnection#MAX_FAILED_STARTS}
+     *             {@link AbstractClientConnection#MAX_FAILED_STARTS}
      */
     public abstract void send(ByteBuffer buffer) throws ConnectionException;
 
@@ -253,7 +254,7 @@ public abstract class IClientConnection {
     /**
      * @return The parent server for this specific connection.
      */
-    protected final IServerWebSocketHandler getParentServer() {
+    protected final AbstractServerWebSocketHandler getParentServer() {
         return parentServer;
     }
 

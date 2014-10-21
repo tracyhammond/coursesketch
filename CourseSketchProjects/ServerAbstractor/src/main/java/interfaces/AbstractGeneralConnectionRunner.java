@@ -11,7 +11,8 @@ import java.util.Arrays;
 /**
  * Created by gigemjt on 10/19/14.
  */
-public abstract class IGeneralConnectionRunner {
+@SuppressWarnings("PMD.TooManyMethods")
+public abstract class AbstractGeneralConnectionRunner {
 
     /**
      * Max buffer size for the output in bytes.
@@ -36,7 +37,7 @@ public abstract class IGeneralConnectionRunner {
     /**
      * A local instance is stored here.
      */
-    private final IGeneralConnectionRunner localInstance = this;
+    private final AbstractGeneralConnectionRunner localInstance = this;
 
     // these should be changed based on the properties
     /**
@@ -103,7 +104,7 @@ public abstract class IGeneralConnectionRunner {
      * @param arguments
      *            the arguments from the server are then parsed.
      */
-    protected IGeneralConnectionRunner(final String[] arguments) {
+    protected AbstractGeneralConnectionRunner(final String[] arguments) {
         this.args = Arrays.copyOf(arguments, arguments.length);
         if (arguments.length >= 1 && arguments[0].equals("local")) {
             local = true;
@@ -300,7 +301,6 @@ public abstract class IGeneralConnectionRunner {
         }
         System.out.println("Turning loggin " + isLoggingStr);
         logging = !logging;
-        return;
     }
     /**
      * Starts the system that accepts command line input.
@@ -470,5 +470,12 @@ public abstract class IGeneralConnectionRunner {
      */
     protected final ISocketInitializer getSocketInitailizerInstance() {
         return socketInitializerInstance;
+    }
+
+    /**
+     * @return the arguments that were passed from the command line.
+     */
+    protected final String[] getArgs() {
+        return Arrays.copyOf(args, args.length);
     }
 }
