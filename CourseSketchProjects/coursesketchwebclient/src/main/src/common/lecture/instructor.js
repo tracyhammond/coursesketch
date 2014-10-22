@@ -7,7 +7,12 @@ var foo = [
 var courseSelected = function(evt) {
 	var item = $(evt.currentTarget);
 	var title = item[0].children[0];
-	$("#placeholder").text($(title).text());
+	$("#placeholder").css({
+		display: "none"
+	});
+	$("#add").css({
+		display: "inline-block"
+	});
 	$.each($(".list-item"), function() {
 		if($(this) != item)
 			$(this).removeClass("selected");
@@ -16,7 +21,7 @@ var courseSelected = function(evt) {
 }
 
 var addLecture = function(evt) {
-	$("#col2").append("<span>HELLO WORLD</span>");
+	$("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">HELLO WORLD</div></span>");
 }
 
 $(document).ready(function() {
