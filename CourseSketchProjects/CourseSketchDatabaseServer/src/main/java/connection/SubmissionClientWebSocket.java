@@ -4,7 +4,6 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 import coursesketch.server.base.ClientWebSocket;
-import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
 
@@ -35,7 +34,7 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
      * @param parentServer
      *            The server that is using this connection wrapper.
      */
-    public SubmissionClientWebSocket(final URI destination, final ServerWebSocketHandler parentServer) {
+    public SubmissionClientWebSocket(final URI destination, final AbstractServerWebSocketHandler parentServer) {
         super(destination, parentServer);
     }
 

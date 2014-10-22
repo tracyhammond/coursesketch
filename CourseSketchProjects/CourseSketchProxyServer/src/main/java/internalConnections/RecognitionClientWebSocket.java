@@ -3,8 +3,8 @@ package internalconnections;
 import java.net.URI;
 
 import coursesketch.server.base.ClientWebSocket;
-import coursesketch.server.base.ServerWebSocketHandler;
 
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 /**
@@ -27,7 +27,7 @@ public class RecognitionClientWebSocket extends ClientWebSocket {
      * @param parent
      *            The server that is using this connection wrapper.
      */
-    public RecognitionClientWebSocket(final URI destination, final ServerWebSocketHandler parent) {
+    public RecognitionClientWebSocket(final URI destination, final AbstractServerWebSocketHandler parent) {
         super(destination, parent);
     }
 
