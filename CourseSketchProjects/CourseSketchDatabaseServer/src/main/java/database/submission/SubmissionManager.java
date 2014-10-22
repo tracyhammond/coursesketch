@@ -10,7 +10,7 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 
 import java.util.ArrayList;
 
-import connection.SubmissionClientConnection;
+import connection.SubmissionClientWebSocket;
 
 import org.bson.types.ObjectId;
 
@@ -115,7 +115,7 @@ public final class SubmissionManager {
         requestBuilder.setOtherData(data.build().toByteString());
         System.out.println("Sending command " + requestBuilder.build());
         try {
-            internalConnections.send(requestBuilder.build(), null, SubmissionClientConnection.class);
+            internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }
@@ -172,7 +172,7 @@ public final class SubmissionManager {
         requestBuilder.setOtherData(data.build().toByteString());
         System.out.println("Sending command " + requestBuilder.build());
         try {
-            internalConnections.send(requestBuilder.build(), null, SubmissionClientConnection.class);
+            internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }

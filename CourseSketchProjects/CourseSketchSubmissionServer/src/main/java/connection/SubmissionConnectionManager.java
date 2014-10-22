@@ -13,7 +13,7 @@ public class SubmissionConnectionManager extends MultiConnectionManager {
 	@Override
 	public void connectServers(AbstractServerWebSocketHandler serv) {
 		try {
-			createAndAddConnection(serv, connectLocally, "srl04.tamu.edu", 8885, secure, DataClientConnection.class);
+			createAndAddConnection(serv, connectLocally, "srl04.tamu.edu", 8885, secure, DataClientWebSocket.class);
 		} catch (ConnectionException e) {
 			e.printStackTrace();
 		}

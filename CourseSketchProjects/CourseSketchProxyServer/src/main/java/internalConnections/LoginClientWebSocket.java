@@ -5,7 +5,7 @@ import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import utilities.ConnectionException;
 import utilities.TimeManager;
-import coursesketch.server.base.ClientConnection;
+import coursesketch.server.base.ClientWebSocket;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
  * Only the most important callbacks are overloaded.
  */
 @WebSocket()
-public final class LoginClientConnection extends ClientConnection {
+public final class LoginClientWebSocket extends ClientWebSocket {
 
     /**
      * Creates a new connection for the Answer checker server.
@@ -33,7 +33,7 @@ public final class LoginClientConnection extends ClientConnection {
      * @param parent
      *            The proxy server instance.
      */
-    public LoginClientConnection(final URI destination, final ServerWebSocketHandler parent) {
+    public LoginClientWebSocket(final URI destination, final ServerWebSocketHandler parent) {
         super(destination, parent);
     }
 
@@ -56,7 +56,7 @@ public final class LoginClientConnection extends ClientConnection {
             final Request rsp = TimeManager.decodeRequest(request);
             if (rsp != null) {
                 try {
-                    this.getParentManager().send(rsp, request.getSessionInfo(), LoginClientConnection.class);
+                    this.getParentManager().send(rsp, request.getSessionInfo(), LoginClientWebSocket.class);
                 } catch (ConnectionException e) {
                     e.printStackTrace();
                 }
@@ -128,7 +128,7 @@ public final class LoginClientConnection extends ClientConnection {
             dataSend.addItems(itemSend);
             createUser.setOtherData(dataSend.build().toByteString());
             try {
-                this.getParentManager().send(createUser.build(), request.getSessionInfo(), DataClientConnection.class);
+                this.getParentManager().send(createUser.build(), request.getSessionInfo(), DataClientWebSocket.class);
             } catch (ConnectionException e) {
                 e.printStackTrace();
             }

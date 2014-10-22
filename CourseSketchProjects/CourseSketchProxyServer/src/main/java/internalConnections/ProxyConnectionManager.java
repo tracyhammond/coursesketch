@@ -1,6 +1,6 @@
 package internalconnections;
 
-import coursesketch.server.interfaces.AbstractClientConnection;
+import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import utilities.ConnectionException;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -55,14 +55,14 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
         System.out.println(isConnectionLocal());
         System.out.println(isSecure());
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginClientConnection.class);
+            createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }
 
         System.out.println("Open Data...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataClientConnection.class);
+            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -70,7 +70,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
 
         System.out.println("Open Answer...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientConnection.class);
+            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -109,7 +109,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      * @throws ConnectionException
      *             thrown if there are problems sending the message.
      */
-    public void send(final Request req, final String sessionId, final Class<? extends AbstractClientConnection> connectionType, final String userId)
+    public void send(final Request req, final String sessionId, final Class<? extends AbstractClientWebSocket> connectionType, final String userId)
             throws ConnectionException {
         final Request.Builder builder = Request.newBuilder(req);
         builder.clearServersideId();

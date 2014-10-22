@@ -3,7 +3,7 @@ package connection;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import internalConnection.AnswerConnectionState;
-import internalConnection.SubmissionClientConnection;
+import internalConnection.SubmissionClientWebSocket;
 import coursesketch.server.interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -52,7 +52,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                     try {
                         getConnectionManager().send(req,
                                 req.getSessionInfo() + "+" + state.getKey(),
-                                SubmissionClientConnection.class);
+                                SubmissionClientWebSocket.class);
                     } catch (ConnectionException e) {
                         e.printStackTrace();
                     }
@@ -71,7 +71,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                     try {
                         getConnectionManager().send(req,
                                 req.getSessionInfo() + "+" + state.getKey(),
-                                SubmissionClientConnection.class);
+                                SubmissionClientWebSocket.class);
                     } catch (ConnectionException e1) {
                         e1.printStackTrace();
                     } // pass submission on
@@ -96,7 +96,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
             } else {
                 try {
                     getConnectionManager().send(req, req.getSessionInfo(),
-                            SubmissionClientConnection.class);
+                            SubmissionClientWebSocket.class);
                 } catch (ConnectionException e) {
                     e.printStackTrace();
                 }

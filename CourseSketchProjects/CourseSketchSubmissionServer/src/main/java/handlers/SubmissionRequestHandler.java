@@ -7,7 +7,7 @@ import protobuf.srl.submission.Submission.SrlSubmission;
 
 import com.google.protobuf.ByteString;
 
-import connection.DataClientConnection;
+import connection.DataClientWebSocket;
 import database.DatabaseClient;
 import database.UpdateHandler;
 
@@ -47,7 +47,7 @@ public class SubmissionRequestHandler {
 					if (data != null) {
 						// passes the data to the database for connecting
 						build.setOtherData(data);
-						internalConnections.send(build.build(), "", DataClientConnection.class);
+						internalConnections.send(build.build(), "", DataClientWebSocket.class);
 					}
 				}
 				updateHandler.clearSubmission(sessionInfo);

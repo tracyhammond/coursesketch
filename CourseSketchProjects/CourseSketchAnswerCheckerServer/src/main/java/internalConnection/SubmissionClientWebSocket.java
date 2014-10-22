@@ -3,7 +3,7 @@ package internalConnection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.server.base.ClientConnection;
+import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.base.ServerWebSocketHandler;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -22,10 +22,10 @@ import protobuf.srl.request.Message.Request.MessageType;
  * Only the most important callbacks are overloaded.
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public class SubmissionClientConnection extends ClientConnection {
+public class SubmissionClientWebSocket extends ClientWebSocket {
 
-    public SubmissionClientConnection(final URI destination,
-                                      final ServerWebSocketHandler parentServer) {
+    public SubmissionClientWebSocket(final URI destination,
+            final ServerWebSocketHandler parentServer) {
         super(destination, parentServer);
     }
 

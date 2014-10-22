@@ -3,7 +3,7 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.server.base.ClientConnection;
+import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketHandler.Decoder;
 
@@ -16,9 +16,9 @@ import utilities.TimeManager;
 
 /** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
 @WebSocket()
-public class DataClientConnection extends ClientConnection {
+public class DataClientWebSocket extends ClientWebSocket {
 
-    public DataClientConnection(final URI destination, ServerWebSocketHandler parentServer) {
+    public DataClientWebSocket(final URI destination, ServerWebSocketHandler parentServer) {
         super(destination, parentServer);
     }
 
@@ -34,7 +34,7 @@ public class DataClientConnection extends ClientConnection {
 			final Request rsp = TimeManager.decodeRequest(req);
 			if (rsp != null) {
 				try {
-					this.parentManager.send(rsp, req.getSessionInfo(), DataClientConnection.class);
+					this.parentManager.send(rsp, req.getSessionInfo(), DataClientWebSocket.class);
 				} catch (ConnectionException e) {
 					e.printStackTrace();
 				}
