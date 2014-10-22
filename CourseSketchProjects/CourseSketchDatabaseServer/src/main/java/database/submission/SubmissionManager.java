@@ -1,16 +1,15 @@
 package database.submission;
 
-import static util.StringConstants.ADMIN;
-import static util.StringConstants.COURSE_PROBLEM_COLLECTION;
-import static util.StringConstants.EXPERIMENT_COLLECTION;
-import static util.StringConstants.MOD;
-import static util.StringConstants.SELF_ID;
-import static util.StringConstants.SOLUTION_COLLECTION;
-import static util.StringConstants.SOLUTION_ID;
+import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
+import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
+import static database.DatabaseStringConstants.MOD;
+import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
+import static database.DatabaseStringConstants.SOLUTION_ID;
 
 import java.util.ArrayList;
 
-import multiconnection.GeneralConnectionServer;
 import multiconnection.MultiConnectionManager;
 
 import org.bson.types.ObjectId;
@@ -34,136 +33,155 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 
+/**
+ * Manages data that has to deal with submissions in the database server.
+ *
+ * This specifically is a link that links all of the institution data back to the submission data.
+ * This does not actually store the submissions themselves.
+ * @author gigemjt
+ *
+ */
+public final class SubmissionManager {
 
-public class SubmissionManager 
-{
-	private static SubmissionManager instance;
-	private SubmissionConnection solutionConnection;
+    /**
+     * Private constructor.
+     *
+     */
+    private SubmissionManager() {
+    }
 
-	public SubmissionManager(SubmissionConnection connection) {
-		if (instance == null) {
-			this.solutionConnection = connection;
-		}
-	}
+    /**
+     * Inserts a submission into the database.
+     *
+     * if {@code experiment} is true then {@code uniqueId} is a userId otherwise
+     * it is the bankProblem if {@code experiment} is true then {@code problem}
+     * is a courseProblem otherwise it is the bankProblem
+     *
+     * @param dbs The database that contains the information about the submission.
+     * @param uniqueId Generally the userId.
+     * @param problemId The problem id.
+     * @param submissionId The id associated with the submission on the submission server.
+     * @param experiment True if the object being submitted is an experiment
+     */
+    @SuppressWarnings({ "PMD.NPathComplexity" })
+    public static void mongoInsertSubmission(final DB dbs, final String problemId, final String uniqueId, final String submissionId,
+            final boolean experiment) {
+        System.out.println("Inserting an experiment " + experiment);
+        System.out.println("database is " + dbs);
+        final DBRef myDbRef = new DBRef(dbs, experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION, new ObjectId(problemId));
+        final DBCollection collection = dbs.getCollection(experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION);
+        final DBObject corsor = myDbRef.fetch();
+        System.out.println(corsor);
+        System.out.println("uniuq id " + uniqueId);
+        final BasicDBObject queryObj = new BasicDBObject(experiment ? uniqueId : SOLUTION_ID, submissionId);
+        if (corsor == null) {
+            System.out.println("creating a new instance for this problemId");
+            queryObj.append(SELF_ID, new ObjectId(problemId));
+            collection.insert(queryObj);
+            // we need to create a new corsor
+        } else {
+            System.out.println("adding a new submission to this old itemid");
+            // insert the submissionId, if it is an experiment then we need to
+            // use the uniqueId to make it work.
+            collection.update(corsor, new BasicDBObject("$set", queryObj));
+        }
+    }
 
-	private static SubmissionManager getInstance() {
-		return instance;
-	}
+    /**
+     * Sends a request to the submission server to request an experiment as a user.
+     * @param dbs The database that contains data about the experiment.
+     * @param userId The user who has access to the experiment.
+     * @param problemId The id of the problem associated with the sketch.
+     * @param sessionInfo The session information that is sent to the submission server.
+     * @param internalConnections A manager of connections to another database.
+     * @throws DatabaseAccessException Thrown is there is data missing in the database.
+     */
+    public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final String sessionInfo,
+            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
+        final Request.Builder requestBuilder = Request.newBuilder();
+        requestBuilder.setSessionInfo(sessionInfo);
+        requestBuilder.setRequestType(MessageType.DATA_REQUEST);
+        final ItemRequest.Builder build = ItemRequest.newBuilder();
+        build.setQuery(ItemQuery.EXPERIMENT);
+        final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
+        final DBObject corsor = myDbRef.fetch();
+        final String sketchId = "" + corsor.get(userId);
+        System.out.println("SketchId " + sketchId);
+        if ("null".equals(sketchId)) {
+            throw new DatabaseAccessException("The student has not submitted anything for this problem");
+        }
+        build.addItemId(sketchId);
+        final DataRequest.Builder data = DataRequest.newBuilder();
+        data.addItems(build);
+        requestBuilder.setOtherData(data.build().toByteString());
+        System.out.println("Sending command " + requestBuilder.build());
+        try {
+            internalConnections.send(requestBuilder.build(), null, SubmissionConnection.class);
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Inserts a submission into the database.
-	 *
-	 * if {@code experiment} is true then {@code uniqueId} is a userId otherwise it is the bankProblem
-	 * if {@code experiment} is true then {@code problem} is a courseProblem otherwise it is the bankProblem
-	 * @param dbs
-	 * @param uniqueId
-	 * @param problemId
-	 * @param submissionId
-	 * @param experiment
-	 */
-	public static void mongoInsertSubmission(DB dbs, String problemId, String uniqueId, String submissionId, boolean experiment) {
-		System.out.println("Inserting an experiment " + experiment);
-		System.out.println("database is " + dbs);
-		DBRef myDbRef = new DBRef(dbs, experiment?EXPERIMENT_COLLECTION:SOLUTION_COLLECTION, new ObjectId(problemId));
-		DBCollection collection = dbs.getCollection(experiment?EXPERIMENT_COLLECTION:SOLUTION_COLLECTION);
-		DBObject corsor = myDbRef.fetch();
-		System.out.println(corsor);
-		System.out.println("uniuq id " + uniqueId);
-		BasicDBObject queryObj = new BasicDBObject( experiment ? uniqueId : SOLUTION_ID, submissionId);
-		if (corsor == null) {
-			System.out.println("creating a new instance for this problemId");
-			queryObj.append(SELF_ID, new ObjectId(problemId));
-			collection.insert(queryObj);
-			// we need to create a new corsor
-		} else {
-			System.out.println("adding a new submission to this old itemid");
-			// insert the submissionId, if it is an experiment then we need to use the uniqueId to make it work.
-			collection.update(corsor, new BasicDBObject("$set", queryObj));
-		}
-	}
+    /**
+     * Builds a request to the server for all of the sketches in a single
+     * problem.
+     * @param authenticator The object being used to authenticate the server.
+     * @param dbs The database where the data is stored.
+     * @param userId The user that was requesting this information.
+     * @param problemId The problem for which the sketch data is being requested.
+     * @param sessionInfo The session information of the current server.
+     * @param internalConnections The connections of other servers.
+     * @param review A list of data about reviewing the sketches.
+     * @throws DatabaseAccessException Thrown if there are no problems data that exist.
+     * @throws AuthenticationException Thrown if the user does not have the authentication
+     */
+    public static void mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs, final String userId,
+            final String problemId, final String sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
+            throws DatabaseAccessException, AuthenticationException {
+        final DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
+        if (problem == null) {
+            throw new DatabaseAccessException("Problem was not found with the following ID " + problemId);
+        }
+        final ArrayList adminList = (ArrayList<Object>) problem.get(ADMIN); // convert
+        // to
+        // ArrayList<String>
+        final ArrayList modList = (ArrayList<Object>) problem.get(MOD); // convert
+                                                                        // to
+        // ArrayList<String>
+        boolean isAdmin = false, isMod = false;
+        isAdmin = authenticator.checkAuthentication(userId, adminList);
+        isMod = authenticator.checkAuthentication(userId, modList);
+        if (!isAdmin && !isMod) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
 
-	/**
-	 * @param submissionId
-	 * @param userId
-	 * @param problemId
-	 * @return the submission id
-	 * @throws DatabaseAccessException 
-	 */
-	public static void mongoGetExperiment(DB dbs, String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections) throws DatabaseAccessException {
-		Request.Builder r = Request.newBuilder();
-		r.setSessionInfo(sessionInfo);
-		r.setRequestType(MessageType.DATA_REQUEST);
-		ItemRequest.Builder build = ItemRequest.newBuilder();
-		build.setQuery(ItemQuery.EXPERIMENT);
-		DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
-		DBObject corsor = myDbRef.fetch();
-		String sketchId = "" + corsor.get(userId);
-		System.out.println("SketchId " + sketchId);
-		if ("null".equals(sketchId)) {
-			throw new DatabaseAccessException("The student has not submitted anything for this problem");
-		}
-		build.addItemId(sketchId);
-		DataRequest.Builder data = DataRequest.newBuilder();
-		data.addItems(build);
-		r.setOtherData(data.build().toByteString());
-		System.out.println("Sending command " + r.build());
-		try {
-			internalConnections.send(r.build(), null, SubmissionConnection.class);
-		} catch (ConnectionException e) {
-			e.printStackTrace();
-		}
-	}
+        final Request.Builder requestBuilder = Request.newBuilder();
+        requestBuilder.setSessionInfo(sessionInfo);
+        requestBuilder.setRequestType(MessageType.DATA_REQUEST);
+        final ItemRequest.Builder build = ItemRequest.newBuilder();
+        build.setQuery(ItemQuery.EXPERIMENT);
+        final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
+        final DBObject corsor = myDbRef.fetch();
+        for (String key : corsor.keySet()) {
+            final String sketchId = "" + corsor.get(key);
+            System.out.println("SketchId " + sketchId);
+            build.addItemId(sketchId);
+        }
+        build.setAdvanceQuery(review);
+        final DataRequest.Builder data = DataRequest.newBuilder();
+        data.addItems(build);
+        requestBuilder.setOtherData(data.build().toByteString());
+        System.out.println("Sending command " + requestBuilder.build());
+        try {
+            internalConnections.send(requestBuilder.build(), null, SubmissionConnection.class);
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Builds a request to the server for every single sketch in a single problem.
-	 * @param submissionId
-	 * @param userId
-	 * @param problemId
-	 * @return the submission id
-	 * @throws DatabaseAccessException
-	 * @throws AuthenticationException
-	 */
-	public static void mongoGetAllExperimentsAsInstructor(DB dbs, String userId, String problemId, String sessionInfo,
-			MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException {
-		DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
-		if (problem == null) {
-			throw new DatabaseAccessException("Problem was not found with the following ID " + problemId);
-		}
-		ArrayList adminList = (ArrayList<Object>) problem.get(ADMIN); // convert to ArrayList<String>
-		ArrayList modList = (ArrayList<Object>) problem.get(MOD); // convert to ArrayList<String>
-		boolean isAdmin = false, isMod = false;
-		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
-		isMod = Authenticator.checkAuthentication(dbs, userId, modList);
-		if (!isAdmin && !isMod) {
-			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
-		}
-
-		Request.Builder r = Request.newBuilder();
-		r.setSessionInfo(sessionInfo);
-		r.setRequestType(MessageType.DATA_REQUEST);
-		ItemRequest.Builder build = ItemRequest.newBuilder();
-		build.setQuery(ItemQuery.EXPERIMENT);
-		DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
-		DBObject corsor = myDbRef.fetch();
-		for (String key: corsor.keySet()) {
-			String sketchId = "" + corsor.get(key);
-			System.out.println("SketchId " + sketchId);
-			build.addItemId(sketchId);
-		}
-		build.setAdvanceQuery(review);
-		DataRequest.Builder data = DataRequest.newBuilder();
-		data.addItems(build);
-		r.setOtherData(data.build().toByteString());
-		System.out.println("Sending command " + r.build());
-		try {
-			internalConnections.send(r.build(), null, SubmissionConnection.class);
-		} catch (ConnectionException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//need to be able to get a single submission
-	// be able to get all of the submissions
-	// if you are trying to get your submission you just need your userId
-	// if you are trying to get all submissions you need to authenticate with the specific course problem.
+    // need to be able to get a single submission
+    // be able to get all of the submissions
+    // if you are trying to get your submission you just need your userId
+    // if you are trying to get all submissions you need to authenticate with
+    // the specific course problem.
 }

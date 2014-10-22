@@ -1,9 +1,6 @@
 package database.user;
 
-import static util.StringConstants.DATABASE;
-
-import java.util.ArrayList;
-
+import static database.DatabaseStringConstants.DATABASE;
 import protobuf.srl.school.School.SrlSchool;
 import protobuf.srl.school.School.SrlUser;
 
@@ -13,73 +10,159 @@ import com.mongodb.MongoClient;
 import database.DatabaseAccessException;
 import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
+import database.institution.mongo.MongoInstitution;
 
+import java.net.UnknownHostException;
+import java.util.List;
+
+/**
+ * A client for all user data.  This has its own database and instance.
+ * @author gigemjt
+ *
+ */
 public final class UserClient {
-	private static UserClient instance;
-	private DB db;
-	private MongoClient DUMB_CLIENT = null;
 
-	private UserClient(String url) {
-		try {
-			MongoClient mongoClient = new MongoClient(url);
-			DUMB_CLIENT = mongoClient;
-			db = mongoClient.getDB(DATABASE);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * A specific instance used for client actions.
+     */
+    @SuppressWarnings("PMD.AssignmentToNonFinalStatic")
+    private static UserClient instance;
 
-	private UserClient() {
-		this("goldberglinux.tamu.edu");
-	}
+    /**
+     * A database specific to each instance.
+     */
+    private DB database;
 
-	private static UserClient getInstance() {
-		if (instance==null)
-			instance = new UserClient();
-		return instance;
-	}
+    /**
+     * A private constructor that creates a client at a specific Url.
+     * @param url The url is the location of the server.
+     */
+    private UserClient(final String url) {
+        MongoClient mongoClient = null;
+        try {
+            mongoClient = new MongoClient(url);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        if (mongoClient == null) {
+            return;
+        }
+        database = mongoClient.getDB(DATABASE);
+    }
 
-	/**
-	 * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database
-	 * @param testOnly
-	 */
-	public UserClient(boolean testOnly) {
-		try {
-			MongoClient mongoClient = new MongoClient("localhost");
-			DUMB_CLIENT = mongoClient;
-			if (testOnly) {
-				db = mongoClient.getDB("test");
-			} else {
-				db = mongoClient.getDB(DATABASE);
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		instance = this;
-	}
+    /**
+     * A private constructor that creates a client.
+     */
+    private UserClient() {
+        this("goldberglinux.tamu.edu");
+    }
 
-	public static boolean insertUser(SrlUser user, String userId) throws DatabaseAccessException {
-		UserManager.createUser(getInstance().db, user, userId);
-		return true;
-	}
+    /**
+     * Gets the instance for local use. Creates it if it does not exist.
+     * @return an instance of the user client.
+     */
+    @SuppressWarnings("checkstyle:innerassignment")
+    private static UserClient getInstance() {
+        UserClient result = instance;
+        if (result == null) {
+            synchronized (MongoInstitution.class) {
+                if (result == null) {
+                    result = instance;
+                    instance = result = new UserClient();
+                }
+            }
+        }
+        return result;
+    }
 
-	public static void addCourseToUser(String userId, String courseId) {
-		UserManager.addCourseToUser(getInstance().db, userId, courseId);
-	}
+    /**
+     * Used only for the purpose of testing overwrite the instance with a test.
+     * instance that can only access a test database.
+     *
+     * @param testOnly denotes that his is only being used for testing.
+     *
+     * @param fakeDB
+     *            uses a fake DB for its unit tests. This is typically used for
+     *            unit test.
+     */
+    public UserClient(final boolean testOnly, final DB fakeDB) {
+        if (testOnly && fakeDB != null) {
+            database = fakeDB;
+        } else {
+            MongoClient mongoClient = null;
+            try {
+                mongoClient = new MongoClient("localhost");
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            if (mongoClient == null) {
+                return;
+            }
+            if (testOnly) {
+                database = mongoClient.getDB("test");
+            } else {
+                database = mongoClient.getDB(DATABASE);
+            }
+        }
+        instance = this;
+    }
 
-	public static ArrayList<String> getUserCourses(String userId) throws DatabaseAccessException {
-		return UserManager.getUserCourses(getInstance().db, userId);
-	}
+    /**
+     * Inserts a new user into the database.
+     *
+     * @param user
+     *            {@link SrlUser} data for the new user to be inserted.
+     * @param userId
+     *            The userId associated with the user.
+     * @return True if it is successful otherwise it will throw an exception.
+     * @throws DatabaseAccessException
+     *             Thrown if there are problems inserting the user.
+     */
+    public static boolean insertUser(final SrlUser user, final String userId) throws DatabaseAccessException {
+        UserManager.createUser(getInstance().database, user, userId);
+        return true;
+    }
 
-	public static SrlSchool mongoGetReleventUpdates(String userId, long time) throws AuthenticationException, DatabaseAccessException {
-		return UserUpdateHandler.mongoGetAllRelevantUpdates(getInstance().db, userId, time);
-	}
+    /**
+     * Adds the course to the user list of courses.
+     *
+     * @param userId
+     *            The user that the course is being added to.
+     * @param courseId
+     *            The course that is being added to the user.
+     */
+    public static void addCourseToUser(final String userId, final String courseId) {
+        UserManager.addCourseToUser(getInstance().database, userId, courseId);
+    }
 
-	/**
-	 * TODO: DELETE THIS CODE AS SOON AS GRADES ARE WORKING!
-	 * @return
-	 */
-	public static MongoClient getDB() {
-		return getInstance().DUMB_CLIENT;
-	}
+    /**
+     * Gets all of the course ids for a specific user.
+     *
+     * @param userId
+     *            The user that the courses are being grabbed for.
+     * @return A list that contains all of the Id's for a specific user.
+     * @throws DatabaseAccessException
+     *             Thrown if the user does not exist.
+     */
+    public static List<String> getUserCourses(final String userId) throws DatabaseAccessException {
+        return UserManager.getUserCourses(getInstance().database, userId);
+    }
+
+    /**
+     * Gets an update for the user given a userId and the time of the last
+     * update.
+     *
+     * @param userId
+     *            Gets all updates after a certain time.
+     * @param time
+     *            The time the last update was given.
+     * @return An SrlSchool that contains data about all of the updates.
+     * @throws AuthenticationException
+     *             Thrown if the user does not have access to any updates.
+     * @throws DatabaseAccessException
+     *             Thrown if no dates exist.
+     */
+    public static SrlSchool mongoGetReleventUpdates(final String userId, final long time) throws AuthenticationException, DatabaseAccessException {
+        return UserUpdateHandler.mongoGetAllRelevantUpdates(getInstance().database, userId, time);
+    }
 }

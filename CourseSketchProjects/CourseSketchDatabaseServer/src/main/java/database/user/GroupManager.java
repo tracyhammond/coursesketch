@@ -1,6 +1,10 @@
 package database.user;
 
-import static util.StringConstants.*;
+import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.NAME;
+import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
+import static database.DatabaseStringConstants.USER_LIST;
 
 import java.util.ArrayList;
 
@@ -14,71 +18,104 @@ import com.mongodb.DBObject;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 
-public class GroupManager
-{
-	public static String mongoInsertGroup(DB dbs, SrlGroup group)
-	{
-		DBCollection new_user = dbs.getCollection(USER_GROUP_COLLECTION);
-		BasicDBObject query = new BasicDBObject(USER_LIST,group.getUserIdList())
-										.append(NAME,group.getGroupName())
-										.append(ADMIN,group.getAdminList());
+/**
+ * Manages information about authetication groups.
+ * @author gigemjt
+ *
+ */
+public final class GroupManager {
 
-		new_user.insert(query);
-		DBObject corsor = new_user.findOne(query);
-		return corsor.get(SELF_ID).toString();
-	}
+    /**
+     * Private constructor.
+     *
+     */
+    private GroupManager() {
+    }
 
-	public static SrlGroup mongoGetGroup(DB dbs, String groupId, String userId) throws AuthenticationException
-	{
-		DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
-		BasicDBObject query = new BasicDBObject("_id",groupId);
-		DBObject corsor = courses.findOne(query);
+    /**
+     * Inserts a new group into the database.
+     * @param dbs the database that the group is beign added to.
+     * @param group the infomration about the group itself.
+     * @return A string that represents the database Id of the group.
+     */
+    public static String mongoInsertGroup(final DB dbs, final SrlGroup group) {
+        final DBCollection newUser = dbs.getCollection(USER_GROUP_COLLECTION);
+        final BasicDBObject query = new BasicDBObject(USER_LIST, group.getUserIdList()).append(NAME, group.getGroupName()).append(ADMIN,
+                group.getAdminList());
 
-		ArrayList<String> adminList = (ArrayList)corsor.get("Admin");
-		boolean isAdmin;
-		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
+        newUser.insert(query);
+        final DBObject corsor = newUser.findOne(query);
+        return corsor.get(SELF_ID).toString();
+    }
 
-		if(!isAdmin)
-		{
-			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
-		}
+    /**
+     * Returns a group.
+     * @param authenticator The object that is authenticating the user.
+     * @param dbs The database where the group is stored.
+     * @param groupId The database id of the group.
+     * @param userId the user that is asking permission to get the group.
+     * @return A group if the user has permission to access the group.
+     * @throws AuthenticationException Thrown if the person asking for the group does not have authentication to the group.
+     */
+    public static SrlGroup mongoGetGroup(final Authenticator authenticator, final DB dbs, final String groupId, final String userId)
+            throws AuthenticationException {
+        final DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
+        final BasicDBObject query = new BasicDBObject("_id", groupId);
+        final DBObject corsor = courses.findOne(query);
 
-		SrlGroup.Builder exactGroup = SrlGroup.newBuilder();
-		exactGroup.addAllUserId((ArrayList)corsor.get("UserList"));
-		exactGroup.setGroupName((String)corsor.get("Name"));
-		if (isAdmin) {
-			exactGroup.addAllAdmin((ArrayList)corsor.get("Admin")); // admin
-		}
-		return exactGroup.build();
-	}
+        final ArrayList<String> adminList = (ArrayList) corsor.get("Admin");
+        boolean isAdmin;
+        isAdmin = authenticator.checkAuthentication(userId, adminList);
 
-	public static boolean mongoUpdateGroup(DB dbs, String groupID, String userId, SrlGroup group) throws AuthenticationException
-	{
-		DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
-		BasicDBObject query = new BasicDBObject(SELF_ID,groupID);
-		DBObject corsor = courses.findOne(query);
+        if (!isAdmin) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
 
-		ArrayList<String> adminList = (ArrayList)corsor.get("Admin");
-		boolean isAdmin;
-		isAdmin = Authenticator.checkAuthentication(dbs, userId, adminList);
+        final SrlGroup.Builder exactGroup = SrlGroup.newBuilder();
+        exactGroup.addAllUserId((ArrayList) corsor.get("UserList"));
+        exactGroup.setGroupName((String) corsor.get("Name"));
+        if (isAdmin) {
+            exactGroup.addAllAdmin((ArrayList) corsor.get("Admin")); // admin
+        }
+        return exactGroup.build();
+    }
 
-		if(!isAdmin)
-		{
-			throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
-		}
+    /**
+     * Updates the user in the group.
+     * @param authenticator The object that is authenticating the user.
+     * @param dbs The database where the group is stored
+     * @param groupID the database id of the group
+     * @param userId the user that is trying to update the group
+     * @param group the group that contains the updated information.
+     * @return true if succeeds.
+     * @throws AuthenticationException Thrown if the user does not have permission to modify the group.
+     */
+    public static boolean mongoUpdateGroup(final Authenticator authenticator, final DB dbs, final String groupID, final String userId,
+            final SrlGroup group) throws AuthenticationException {
+        final DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
+        final BasicDBObject query = new BasicDBObject(SELF_ID, groupID);
+        final DBObject corsor = courses.findOne(query);
 
-		BasicDBObject updated = new BasicDBObject();
-		if (isAdmin) {
-			if (group.hasGroupName()) {
-				updated.append("$set", new BasicDBObject("Name", group.getGroupName()));
-			}
-			if (group.getUserIdCount() > 0) {
-				updated.append("$set", new BasicDBObject("UserList", group.getUserIdList()));
-			}
-			if (group.getAdminCount() > 0) {
-				updated.append("$set", new BasicDBObject("UserList", group.getAdminList()));
-			}
-		}
-		return true;
-	}
+        final ArrayList<String> adminList = (ArrayList) corsor.get("Admin");
+        boolean isAdmin;
+        isAdmin = authenticator.checkAuthentication(userId, adminList);
+
+        if (!isAdmin) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final BasicDBObject updated = new BasicDBObject();
+        if (isAdmin) {
+            if (group.hasGroupName()) {
+                updated.append("$set", new BasicDBObject("Name", group.getGroupName()));
+            }
+            if (group.getUserIdCount() > 0) {
+                updated.append("$set", new BasicDBObject("UserList", group.getUserIdList()));
+            }
+            if (group.getAdminCount() > 0) {
+                updated.append("$set", new BasicDBObject("UserList", group.getAdminList()));
+            }
+        }
+        return true;
+    }
 }

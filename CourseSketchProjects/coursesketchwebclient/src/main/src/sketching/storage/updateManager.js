@@ -159,12 +159,12 @@ function UpdateManager(inputSketch, onError, sketchManager) {
      * @returns {SrlCommnand}.
      */
     this.createMarker = function createMarker(userCreated, markerType, otherData) {
-        var marker = PROTOBUF_UTIL.Marker();
+        var marker = CourseSketch.PROTOBUF_UTIL.Marker();
         marker.setType(markerType);
         marker.setOtherData(otherData);
 
-        var command = PROTOBUF_UTIL.SrlCommand();
-        command.setCommandType(PROTOBUF_UTIL.CommandType.MARKER);
+        var command = CourseSketch.PROTOBUF_UTIL.SrlCommand();
+        command.setCommandType(CourseSketch.PROTOBUF_UTIL.CommandType.MARKER);
         command.setIsUserCreated(userCreated);
         command.setCommandData(marker.toArrayBuffer());
         command.setCommandId(generateUUID());
@@ -229,20 +229,20 @@ function UpdateManager(inputSketch, onError, sketchManager) {
             return;
         }
         if (inRedoUndoMode) {
-            if ((command != PROTOBUF_UTIL.CommandType.REDO && command != PROTOBUF_UTIL.CommandType.UNDO)) {
+            if ((command != CourseSketch.PROTOBUF_UTIL.CommandType.REDO && command != CourseSketch.PROTOBUF_UTIL.CommandType.UNDO)) {
                 // we do a bunch of changing then we call the executeUpdate
                 // method again
                 var splitDifference = updateList.length - currentUpdateIndex;
 
                 // creates and inserts the first marker [update] -> [marker] ->
                 // [unreachable update]
-                var startingMarker = localScope.createMarker(false, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "" + splitDifference);
-                updateList.splice(currentUpdateIndex, 0, PROTOBUF_UTIL.createUpdateFromCommands([ startingMarker ]));
+                var startingMarker = localScope.createMarker(false, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "" + splitDifference);
+                updateList.splice(currentUpdateIndex, 0, CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ startingMarker ]));
 
                 // creates and inserts the second marker [unreachable update
                 // (probably undo or redo)] -> [marker] -> [index out of range]
-                var endingMarker = localScope.createMarker(false, PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "" + (0 - splitDifference));
-                updateList.push(PROTOBUF_UTIL.createUpdateFromCommands([ endingMarker ]));
+                var endingMarker = localScope.createMarker(false, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "" + (0 - splitDifference));
+                updateList.push(CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ endingMarker ]));
 
                 // reset the information
                 inRedoUndoMode = false;
@@ -251,7 +251,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
                 return executeUpdate(update);
             }
         }
-        if (command == PROTOBUF_UTIL.CommandType.REDO) {
+        if (command == CourseSketch.PROTOBUF_UTIL.CommandType.REDO) {
             if (netCount >= 0) {
                 throw new UndoRedoException("Can't Redo Anymore");
             }
@@ -261,7 +261,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
             var redraw = redoUpdate(updateList[currentUpdateIndex]);
             currentUpdateIndex += 1;
             return redraw;
-        } else if (command == PROTOBUF_UTIL.CommandType.UNDO) {
+        } else if (command == CourseSketch.PROTOBUF_UTIL.CommandType.UNDO) {
             if (currentUpdateIndex <= 0) {
                 throw new UndoRedoException("Can't Undo Anymore");
             }
@@ -295,32 +295,33 @@ function UpdateManager(inputSketch, onError, sketchManager) {
      */
     function redoUpdate(update) {
         var command = update.getCommands()[0];
-        if (command.commandType == PROTOBUF_UTIL.CommandType.MARKER) {
-            var marker = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getMarkerClass());
-            if (marker.type == PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
+        if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
+            var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
+            if (marker.type == CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
                 var tempIndex = currentUpdateIndex;
                 currentUpdateIndex += parseInt(marker.otherData) + 1;
                 if (currentUpdateIndex > updateList.length) {
                     amountToSkip = parseInt(marker.otherData) + 1;
                     skippingMarkerMode = true;
                 }
-            } else if (marker.type == PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION) {
+            } else if (marker.type == CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION) {
                 if (currentUpdateIndex > lastSubmissionPointer) {
                     lastSubmissionPointer = currentUpdateIndex;
                 }
             }
             return false;
-        } else if (command.commandType == PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
+        } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
             command.decodedData = currentSketchId;
-            var id = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getIdChainClass()).idChain[0];
+            var sketchData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
+            var id = sketchData.sketchId.idChain[0];
             if (!isUndefined(sketch) && sketch.id != id && !isUndefined(sketchManager)) {
-                sketchManager.createSketch(id, this);
+                sketchManager.createSketch(id, this, sketchData);
             }
             switchToSketch(id);
             return true;
-        } else if (command.commandType == PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
+        } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
             command.decodedData = currentSketchId;
-            var id = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getIdChainClass()).idChain[0];
+            var id = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getIdChainClass()).idChain[0];
             switchToSketch(id);
             return true;
         }
@@ -338,22 +339,23 @@ function UpdateManager(inputSketch, onError, sketchManager) {
     function undoUpdate(update) {
 
         var command = update.getCommands()[0];
-        if (command.commandType == PROTOBUF_UTIL.CommandType.MARKER) {
-            var marker = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getMarkerClass());
-            if (marker.type == PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
+        if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
+            var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
+            if (marker.type == CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
                 currentUpdateIndex += parseInt(marker.otherData) - 1;
             } else {
                 throw new UpdateException("You can't undo that (something went wrong)");
             }
             return true;
-        } else if (command.commandType == PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
-            var id = PROTOBUF_UTIL.decodeProtobuf(command.commandData, PROTOBUF_UTIL.getIdChainClass()).idChain[0];
+        } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
+            var sketchData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
+            var id = sketchData.sketchId.idChain[0];
             if (!isUndefined(sketchManager)) {
                 sketchManager.deleteSketch(id);
             }
             switchToSketch(command.decodedData);
             return true;
-        } else if (command.commandType == PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
+        } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
             switchToSketch(command.decodedData);
             return true;
         }
@@ -379,11 +381,11 @@ function UpdateManager(inputSketch, onError, sketchManager) {
             var startIndex = index;
             while (index < maxIndex && startIndex - index <= 5) {
                 var update = oldList[index];
-                var newUpdate = PROTOBUF_UTIL.SrlUpdate();
+                var newUpdate = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
                 var newCommandList = new Array();
                 for (var i = 0; i < update.commands.length; i++) {
                     var command = update.commands[i];
-                    var cleanCommand = PROTOBUF_UTIL.SrlCommand();
+                    var cleanCommand = CourseSketch.PROTOBUF_UTIL.SrlCommand();
                     cleanCommand.commandType = command.commandType;
                     cleanCommand.isUserCreated = command.isUserCreated;
                     cleanCommand.commandData = command.commandData;
@@ -431,9 +433,9 @@ function UpdateManager(inputSketch, onError, sketchManager) {
         var update = updateList[updateList.length - 1];
         var commandList = update.getCommands();
         var currentCommand = commandList[0];
-        if (currentCommand.commandType == PROTOBUF_UTIL.CommandType.MARKER) {
-            var marker = PROTOBUF_UTIL.decodeProtobuf(currentCommand.commandData, PROTOBUF_UTIL.getMarkerClass());
-            if (marker.type == PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION) {
+        if (currentCommand.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
+            var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(currentCommand.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
+            if (marker.type == CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION) {
                 return true;
             }
         }
@@ -495,8 +497,8 @@ function UpdateManager(inputSketch, onError, sketchManager) {
      *            {boolean} true if the userCreated the command false otherwise.
      */
     this.redoAction = function(userCreated) {
-        var redoCommand = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.REDO, userCreated);
-        var update = PROTOBUF_UTIL.createUpdateFromCommands([ redoCommand ]);
+        var redoCommand = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.REDO, userCreated);
+        var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ redoCommand ]);
         this.addUpdate(update, false);
     };
 
@@ -507,8 +509,8 @@ function UpdateManager(inputSketch, onError, sketchManager) {
      *            {boolean} true if the userCreated the command false otherwise.
      */
     this.undoAction = function(userCreated) {
-        var undoCommand = PROTOBUF_UTIL.createBaseCommand(PROTOBUF_UTIL.CommandType.UNDO, userCreated);
-        var update = PROTOBUF_UTIL.createUpdateFromCommands([ undoCommand ]);
+        var undoCommand = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, userCreated);
+        var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ undoCommand ]);
         var tempIndex = currentUpdateIndex;
         this.addUpdate(update, false);
     };

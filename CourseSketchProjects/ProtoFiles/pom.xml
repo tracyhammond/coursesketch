@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>CourseSketch</groupId>
 	<artifactId>ProtoFiles</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>ProtoFiles</name>
 	<profiles>
 		<profile>
@@ -32,6 +32,9 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<properties>
+	    <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
