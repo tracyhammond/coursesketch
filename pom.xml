@@ -11,16 +11,106 @@
 		<module>CourseSketchProjects/ProtoFiles</module>
 		<module>CourseSketchProjects/jettyBlank</module>
 		<module>CourseSketchProjects/CourseSketchDatabaseServer</module>
+        <module>CourseSketchProjects/CourseSketchLoginServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
-		<module>CourseSketchProjects/CourseSketchLoginServer</module>
 	</modules>
 
 	<issueManagement>
 		<url>https://github.com/${githubLocation}/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
+
+	<profiles>
+		<profile>
+			<id>maven-3</id>
+			<activation>
+				<file>
+					<!-- This employs that the basedir expression is only recognized by 
+						Maven 3.x (see MNG-2363) -->
+					<exists>${basedir}</exists>
+				</file>
+			</activation>
+			<properties>
+				<sitepluginVersion>3.4</sitepluginVersion>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-site-plugin</artifactId>
+						<version>${sitepluginVersion}</version>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>eclipse</id>
+			<activation>
+				<property>
+					<name>!smart</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>findbugs-maven-plugin</artifactId>
+						<configuration>
+							<excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
+							<includeTests>false</includeTests>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>findbugs-test-compile</id>
+								<phase>test-compile</phase>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>nosite</id>
+			<activation>
+				<property>
+					<name>!nosite</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-site-plugin</artifactId>
+						<version>${sitepluginVersion}</version>
+						<executions>
+							<execution>
+								<id>attach-descriptor</id>
+								<goals>
+									<goal>attach-descriptor</goal>
+								</goals>
+							</execution>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>site</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<reporting>
 		<plugins>
@@ -46,10 +136,14 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>${findbugVersion}</version>
+				<configuration>
+					<excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>${coberturaVersion}</version>
 				<configuration>
 					<formats>
 						<format>html</format>
@@ -66,28 +160,12 @@
 		<developerConnection>scm:git:git@github.com:${githubLocation}.git</developerConnection>
 	</scm>
 
-	<!-- possible plugins
-		https://code.google.com/p/maven-replacer-plugin/
-	 -->
+	<!-- possible plugins https://code.google.com/p/maven-replacer-plugin/ -->
 
 	<build>
 		<finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
 		<defaultGoal>clean install</defaultGoal>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>2.3.3</version>
-				<configuration>
-					<reportPlugins>
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>findbugs-maven-plugin</artifactId>
-							<version>${findbugVersion}</version>
-						</plugin>
-					</reportPlugins>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -133,6 +211,31 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.3</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<finalName>${project.build.finalName}-run</finalName>
+						<transformers>
+							<transformer
+								implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<manifestEntries>
+									<Main-Class>${mainClass}</Main-Class>
+									<Build-Number>2</Build-Number>
+								</manifestEntries>
+							</transformer>
+						</transformers>
+					</configuration>
+				</plugin>
+				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.4.1</version>
 					<configuration>
@@ -142,7 +245,7 @@
 							</manifest>
 						</archive>
 						<descriptorRefs>
-							<descriptorRef>${project.build.finalName}-run</descriptorRef>
+							<descriptorRef>${project.build.finalName}-run.jar</descriptorRef>
 						</descriptorRefs>
 					</configuration>
 					<executions>
@@ -161,7 +264,7 @@
 					<version>${checkstyleVersion}</version>
 					<executions>
 						<execution>
-							<id>validate</id>
+							<id>checkstyle</id>
 							<phase>validate</phase>
 							<configuration>
 								<configLocation>${absoluteCheckstyleLocation}</configLocation>
@@ -184,11 +287,46 @@
 					</executions>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>${pmdVersion}</version>
+					<executions>
+						<execution>
+							<id>pmd</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+							<configuration>
+								<rulesets>
+									<ruleset>${pmdRuleset}</ruleset>
+								</rulesets>
+								<excludeFromFailureFile>${pmdExclude}</excludeFromFailureFile>
+								<!-- <skip>${skip.pmd.check}</skip> -->
+							</configuration>
+						</execution>
+						<execution>
+							<id>cpd</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>cpd-check</goal>
+							</goals>
+							<configuration>
+								<excludeFromFailureFile>${cpdExclude}</excludeFromFailureFile>
+							</configuration>
+						</execution>
+					</executions>
+					<configuration>
+						<verbose>true</verbose>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>findbugs-maven-plugin</artifactId>
 					<version>${findbugVersion}</version>
 					<configuration>
-						<includeTests>true</includeTests>
+						<excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
+						<includeTests>false</includeTests>
 					</configuration>
 					<executions>
 						<execution>
@@ -197,19 +335,17 @@
 								<goal>check</goal>
 							</goals>
 						</execution>
-						<execution>
-							<id>findbugs-test-compile</id>
-							<phase>test-compile</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.17</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>cobertura-maven-plugin</artifactId>
-					<version>2.6</version>
+					<version>${coberturaVersion}</version>
 					<configuration>
 						<instrumentation>
 							<ignores>
@@ -218,26 +354,42 @@
 							</excludes>
 						</instrumentation>
 						<check>
+							<haltOnFailure>true</haltOnFailure>
 							<branchRate>${testLevel}</branchRate>
 							<lineRate>${testLevel}</lineRate>
-							<haltOnFailure>true</haltOnFailure>
-							<totalBranchRate>${testLevel}</totalBranchRate>
-							<totalLineRate>${testLevel}</totalLineRate>
-							<packageLineRate>${testLevel}</packageLineRate>
-							<packageBranchRate>${testLevel}</packageBranchRate>
+							<totalBranchRate>${projectBranchLevel}</totalBranchRate>
+							<totalLineRate>${projectLineLevel}</totalLineRate>
+							<packageLineRate>${packageBranchLevel}</packageLineRate>
+							<packageBranchRate>${packageLineLevel}</packageBranchRate>
 						</check>
 					</configuration>
 					<executions>
 						<execution>
 							<goals>
 								<goal>clean</goal>
-								<goal>check</goal>
 								<goal>cobertura</goal>
+								<goal>check</goal>
 							</goals>
 						</execution>
 					</executions>
 				</plugin>
-				<!-- 
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.1</version>
+					<executions>
+						<execution>
+							<id>my-execution</id>
+							<phase>deploy</phase>
+							<goals>
+								<goal>java</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<mainClass>${mainClass}</mainClass>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>com.github.klieber</groupId>
 					<artifactId>phantomjs-maven-plugin</artifactId>
@@ -253,7 +405,6 @@
 						<version>1.9.7</version>
 					</configuration>
 				</plugin>
-				 -->
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -267,18 +418,36 @@
 		<mockitoVersion>[1.9.5,)</mockitoVersion>
 		<puppyVersion>[5.6,)</puppyVersion>
 		<junitVersion>[4.11,)</junitVersion>
-		<checkstyleVersion>2.12.1</checkstyleVersion>
+		<checkstyleVersion>2.13</checkstyleVersion>
 		<findbugVersion>3.0.0</findbugVersion>
 		<testLevel>85</testLevel>
 		<minTestLevel>70</minTestLevel>
 		<averageTestLevel>90</averageTestLevel>
-		<checkstyleLocation>config/checkstyle.xml</checkstyleLocation>
+		<projectBranchLevel>${averageTestLevel}</projectBranchLevel>
+		<projectLineLevel>${averageTestLevel}</projectLineLevel>
+		<packageBranchLevel>${averageTestLevel}</packageBranchLevel>
+		<packageLineLevel>${averageTestLevel}</packageLineLevel>
+		<checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
 		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
-		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<checkstyleSuppressionLocation>${moduleConfigLocation}/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<findbugSupressionLocation>${moduleConfigLocation}/findbugs-exclude.xml</findbugSupressionLocation>
 		<protocLocation>/usr/local/bin/protoc</protocLocation>
+		<sitepluginVersion>2.3.3</sitepluginVersion>
+		<coberturaVersion>2.6</coberturaVersion>
+		<pmdVersion>3.2</pmdVersion>
+		<moduleConfigLocation>${basedir}/config</moduleConfigLocation>
+		<githubLocation>tracyhammond/coursesketch</githubLocation>
+		<pmdExclude>${moduleConfigLocation}/${pmdFile}</pmdExclude>
+		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
+		<cpdExclude>${moduleConfigLocation}/${cpdFile}</cpdExclude>
+		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
+		<pmdFile>exclude-pmd.properties</pmdFile>
+		<cpdFile>exclude-cpd.properties</cpdFile>
+		<absoluteConfigLocation>${parentConfigLocationDir}/config</absoluteConfigLocation>
+
 		<!-- This needs to be overwritten in child poms -->
 		<mainClass>fully.qualified.MainClass</mainClass>
-		<githubLocation>tracyhammond/coursesketch</githubLocation>
+		<parentConfigLocationDir>${basedir}</parentConfigLocationDir>
 	</properties>
 
 	<dependencies>

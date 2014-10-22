@@ -21,7 +21,7 @@ function recognitionConnection(serverConnection) {
         setTimeout(function() {
             if (queuedServerUpdates.length > 0) {
                 var update = queuedServerUpdates.removeObjectByIndex(0);
-                var request = PROTOBUF_UTIL.createRequestFromUpdate(update, PROTOBUF_UTIL.getRequestClass().MessageType.RECOGNITION);
+                var request = CourseSketch.PROTOBUF_UTIL.createRequestFromUpdate(update, CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.RECOGNITION);
                 serverConnection.sendRequest(request);
                 if (queuedServerUpdates.length > 0) {
                     this.emptyQueue(); // recursion! (kind of)

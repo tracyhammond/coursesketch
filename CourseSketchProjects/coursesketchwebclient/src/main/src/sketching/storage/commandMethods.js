@@ -1,6 +1,6 @@
 /**
  * Adds a couple of really useful methods to the commands. depends on
- * /src/utilities/includes/protobufInclude.html
+ * /src/utilities/connection/protobufInclude.html
  */
 (function() {
     function CommandException(message) {
@@ -12,11 +12,11 @@
 
     CommandException.prototype = BaseException;
 
-    var ProtoSrlUpdate = Object.getPrototypeOf(PROTOBUF_UTIL.SrlUpdate());
-    var ProtoSrlCommand = Object.getPrototypeOf(PROTOBUF_UTIL.SrlCommand());
+    var ProtoSrlUpdate = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlUpdate());
+    var ProtoSrlCommand = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlCommand());
 
-    PROTOBUF_UTIL.getSrlCommandClass().prototype.sketchId = undefined;
-    PROTOBUF_UTIL.getSrlUpdateClass().prototype.sketchId = undefined;
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().prototype.sketchId = undefined;
+    CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.sketchId = undefined;
     /**
      * @Method Calls redo on an {@link SrlCommand} list in the order they are
      *         added to the list.
@@ -59,12 +59,12 @@
      */
     ProtoSrlCommand.getCommandTypeName = function() {
         var commandType = this.getCommandType();
-        for ( var type in PROTOBUF_UTIL.CommandType) {
-            if (PROTOBUF_UTIL.CommandType[type] == commandType) {
+        for ( var type in CourseSketch.PROTOBUF_UTIL.CommandType) {
+            if (CourseSketch.PROTOBUF_UTIL.CommandType[type] == commandType) {
                 return '' + type;
             }
         }
-        throw new PROTOBUF_UTIL.ProtobufException("The assigned type (" + commandType + ") is not a value for enum CommandType");
+        throw new CourseSketch.PROTOBUF_UTIL.ProtobufException("The assigned type (" + commandType + ") is not a value for enum CommandType");
     };
 
     ProtoSrlCommand.decodedData = false;
@@ -80,7 +80,7 @@
     /**
      * Allows one to dynamically add and remove methods to the command type.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod = function(commandType, func) {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod = function(commandType, func) {
         if (isUndefined(commandType)) {
             throw new CommandException("The input commandType can not be undefined");
         }
@@ -93,7 +93,7 @@
     /**
      * Allows one to dynamically add and remove methods to the command type.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod = function(commandType) {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod = function(commandType) {
         if (isUndefined(commandType)) {
             throw new CommandException("The input commandType can not be undefined");
         }
@@ -106,7 +106,7 @@
     /**
      * Allows one to dynamically add and remove methods to the command type.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod = function(commandType, func) {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod = function(commandType, func) {
         if (isUndefined(commandType)) {
             throw new CommandException("The input commandType can not be undefined");
         }
@@ -119,7 +119,7 @@
     /**
      * Allows one to dynamically add and remove methods to the command type.
      */
-    PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod = function(commandType) {
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod = function(commandType) {
         if (isUndefined(commandType)) {
             throw new CommandException("The input commandType can not be undefined");
         }

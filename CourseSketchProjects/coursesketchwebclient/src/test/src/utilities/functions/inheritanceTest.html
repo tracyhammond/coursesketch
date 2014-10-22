@@ -1,0 +1,232 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<script src="/src/utilities/functions/base.js"></script>
+
+
+<!-- file being tested. -->
+<script src="/src/utilities/functions/objectAndInheritance.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+        QUnit.module("testModule1");
+        QUnit.test("checking instanceof", function(assert) {
+            function parent() {
+            }
+
+            function child() {
+            }
+            child.Inherits(parent);
+
+            assert.ok(new child() instanceof parent);
+        });
+
+        QUnit.test("singleInheritance", function(assert) {
+            function parent(arg1) {
+                if (!isUndefined(arg1)) {
+                    assert.ok(arg1, "Parent is called with arg1");
+                }
+            }
+
+            function child(arg1) {
+                this.superConstructor(arg1);
+            }
+            child.Inherits(parent);
+
+            new child(true);
+        });
+
+        QUnit.test("singleInheritance2", function(assert) {
+            function parent(arg1, childP, parentP) {
+                if (!isUndefined(arg1)) {
+                    // in this case it is only called by child!
+                    console.log(Object.getPrototypeOf(this));
+                    assert.ok(this instanceof childP, "child instance");
+                    assert.ok(this instanceof parentP, "parent instance");
+                    assert.ok(arg1, "Parent is called with arg1");
+                }
+            }
+
+            function child(arg1, childP, parentP) {
+                console.log(Object.getPrototypeOf(this));
+                assert.ok(this instanceof childP, "child instance");
+                assert.ok(this instanceof parentP, "parent instance");
+                this.superConstructor(arg1, childP, parentP);
+            }
+            child.Inherits(parent);
+            console.log("presenting my argument");
+            new child(true, child, parent);
+        });
+
+        QUnit.test("doubleInheritance2", function(assert) {
+            function parent(arg1, grandChildP, childP, parentP) {
+                if (!isUndefined(arg1)) {
+                    console.log("prototype in parent");
+                    console.log(Object.getPrototypeOf(this));
+                    assert.ok(this instanceof grandChildP, "grandChild instance in parent");
+                    assert.ok(this instanceof childP, "child instance in parent");
+                    assert.ok(this instanceof parentP, "parent instance in parent");
+                }
+            }
+
+            function child(arg1, arg2, grandChildP, childP, parentP) {
+                if (!isUndefined(arg2)) {
+                    console.log("prototype in child");
+                    console.log(Object.getPrototypeOf(this));
+                    assert.ok(this instanceof grandChildP, "grandChild instance in child");
+                    assert.ok(this instanceof childP, "child instance in child");
+                    assert.ok(this instanceof parentP, "parent instance in child");
+                }
+                this.superConstructor(arg1, grandChildP, childP, parentP);
+            }
+
+            function grandChild(arg1, arg2, grandChildP, childP, parentP) {
+                console.log("prototype in grandchild");
+                console.log(Object.getPrototypeOf(this));
+                assert.ok(this instanceof grandChildP, "grandChild instance in grandChild");
+                assert.ok(this instanceof childP, "child instance in grandChild");
+                assert.ok(this instanceof parentP, "parent instance in grandChild");
+                this.superConstructor(arg1, arg2, grandChildP, childP, parentP);
+            }
+            child.Inherits(parent);
+            grandChild.Inherits(child);
+
+            //console.log("CREATING PARENT");
+            //new parent(true, grandChild, child, parent);
+            //assert.ok(true,"BREAKPOINT1");
+            //console.log("CREATING CHILD");
+            //new child(true, false, grandChild, child, parent);
+            //assert.ok(true,"BREAKPOINT2");
+            console.log("CREATING GRANDCHILD");
+            new grandChild(true, false, grandChild, child, parent);
+
+        });
+
+        QUnit.test("tripleInheritance", function(assert) {
+            function parent(arg1, grandChildP, childP, parentP) {
+                console.log("starting parent");
+                if (!isUndefined(arg1)) {
+                    console.log("prototype in parent");
+                    console.log(Object.getPrototypeOf(this));
+                    assert.ok(this instanceof grandChildP, "grandChild instance in parent");
+                    assert.ok(this instanceof childP, "child instance in parent");
+                    assert.ok(this instanceof parentP, "parent instance in parent");
+                }
+                this.parentFunction = function() {
+                    alert("parent");
+                };
+                console.log("leaving parent");
+            }
+
+            function child(arg1, arg2, grandChildP, childP, parentP) {
+                if (!isUndefined(arg2)) {
+                    console.log("prototype in child");
+                    console.log(Object.getPrototypeOf(this));
+                    assert.ok(this instanceof grandChildP, "grandChild instance in child");
+                    assert.ok(this instanceof childP, "child instance in child");
+                    assert.ok(this instanceof parentP, "parent instance in child");
+                }
+                this.superConstructor(arg1, grandChildP, childP, parentP);
+                this.childFunction = function() {
+                    alert("child");
+                };
+                console.log("leaving child");
+
+            }
+
+            function grandChild(arg1, arg2, grandChildP, childP, parentP) {
+                if (!isUndefined(arg2)) {
+                    console.log("prototype in grandchild");
+                    console.log(Object.getPrototypeOf(this));
+                    assert.ok(this instanceof grandChildP, "grandChild instance in grandChild");
+                    assert.ok(this instanceof childP, "child instance in grandChild");
+                    assert.ok(this instanceof parentP, "parent instance in grandChild");
+                }
+                this.superConstructor(arg1, arg2, grandChildP, childP, parentP);
+                this.gandChildFunction = function() {
+                    alert("grandChild");
+                };
+                console.log("leaving grandchild");
+            }
+
+            function superGrandChild(arg1, arg2, grandChildP, childP, parentP) {
+                console.log("prototype in supergrandchild");
+                console.log(Object.getPrototypeOf(this));
+                assert.ok(this instanceof grandChildP, "grandChild instance in grandChild");
+                assert.ok(this instanceof childP, "child instance in grandChild");
+                assert.ok(this instanceof parentP, "parent instance in grandChild");
+                this.superConstructor(arg1, arg2, grandChildP, childP, parentP);
+                this.supergrandChildFunction = function() {
+                    alert("superGrandChild");
+                };
+                console.log("leaving supergrandchild");
+            }
+            child.Inherits(parent);
+            grandChild.Inherits(child);
+            superGrandChild.Inherits(grandChild);
+
+            //console.log("CREATING PARENT");
+            //new parent(true, grandChild, child, parent);
+            //assert.ok(true,"BREAKPOINT1");
+            //console.log("CREATING CHILD");
+            //new child(true, false, grandChild, child, parent);
+            //assert.ok(true,"BREAKPOINT2");
+            console.log("CREATING SUPERGRANDCHILD");
+            var whipperSnapper = new superGrandChild(true, false, grandChild, child, parent);
+            console.log(whipperSnapper);
+        });
+
+        QUnit.test("doubleInheritance", function(assert) {
+            expect(6);
+            function parent() {
+                assert.ok(true, "parent");// run 3 times
+            }
+
+            function child(arg1, arg2) {
+                assert.ok(true, "child"); // run 2
+                this.superConstructor();
+            }
+
+            function grandChild() {
+                assert.ok(true, "grandchild"); // run 1
+                this.superConstructor();
+            }
+            child.Inherits(parent);
+            grandChild.Inherits(child);
+
+            new grandChild();
+        });
+
+        QUnit.test("doubleInheritance with Readonly", function(assert) {
+            expect(6);
+            function parent() {
+                assert.ok(true, "parent");// run 3 times
+                makeValueReadOnly(this, "parentFunc", function() {
+                    alert("parent");
+                });
+            }
+
+            function child(arg1, arg2) {
+                assert.ok(true, "child"); // run 2
+                this.superConstructor();
+            }
+
+            function grandChild() {
+                assert.ok(true, "grandchild"); // run 1
+                this.superConstructor();
+            }
+            child.Inherits(parent);
+            grandChild.Inherits(child);
+
+            new grandChild();
+        });
+    </script>
+</body>

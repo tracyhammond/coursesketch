@@ -15,6 +15,9 @@
 	it is worth reading the documentation. -->
 
 <module name="Checker">
+    <!-- Suppresses @SupressWarning tags -->
+    <module name="SuppressWarningsFilter" />
+    
 	<!-- If you set the basedir property below, then all reported file names 
 		will be relative to the specified directory. See http://checkstyle.sourceforge.net/5.x/config.html#Checker 
 		<property name="basedir" value="${basedir}"/> -->
@@ -49,6 +52,9 @@
 	</module>
 
 	<module name="TreeWalker">
+
+	    <!-- Supresses warning using the @SuppressWarnings("checkstyle:methodlength") -->
+	    <module name="SuppressWarningsHolder" />
 
 		<!-- Checks for Javadoc comments. -->
 		<!-- See http://checkstyle.sf.net/config_javadoc.html -->
@@ -137,7 +143,7 @@
 
 		<!-- Checks for common coding problems -->
 		<!-- See http://checkstyle.sf.net/config_coding.html -->
-		<module name="AvoidInlineConditionals" />
+		<!-- <module name="AvoidInlineConditionals" />  -->
 		<!-- <module name="DoubleCheckedLocking"/> -->   <!-- MY FAVOURITE -->
 		<module name="EmptyStatement" />
 		<module name="EqualsHashCode" />
@@ -146,7 +152,8 @@
 		<module name="InnerAssignment" />
 		<module name="MagicNumber" />
 		<module name="MissingSwitchDefault" />
-		<module name="RedundantThrows" />
+		<!-- IGNORED WHILE BUG EXIST -->
+		<!-- <module name="RedundantThrows" />  -->
 		<module name="SimplifyBooleanExpression" />
 		<module name="SimplifyBooleanReturn" />
 
