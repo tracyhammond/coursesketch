@@ -1,0 +1,63 @@
+package protobuf.srl.lectures;
+
+message Lecture{
+	required string courseId = 1;
+	//id of this lecture
+	required string id = 2;
+	optional string title = 3;
+	optional string description = 4;
+	optional int size = 5;
+	repeated LectureSlide slides = 6;
+}
+
+message LectureSlide{
+	required string lectureId = 1;
+	//id of this slide
+	required string id = 2;
+	required bool unlocked = 3;
+	//tumbnail
+	repeated LectureElement elements;
+}
+
+message LectureElement{
+	required string slideId = 1;
+	//id of this element
+	required string id = 2;
+	optional int x_position = 3;
+	optional int y_position = 4;
+	optional int x_dimension = 5;
+	optional int y_dimension = 6;
+}
+
+message TextBox extends LectureElement{
+	optional string text = 7;
+}
+
+message Image extends Element{
+	optional bytes image = 7;
+	optional float orientation=8;
+}
+
+message SketchArea extends Element{
+	optional bytes sketch = 7;//srlSketch object if proto include works
+}
+
+message Question extends Elements{
+	optional string question = 7;
+}
+
+message MultipleChoice extends Question{
+	repeated Answer answers = 8;
+}
+
+message SketchQuestion extends Question{
+	optional bytes sketch = 8;
+}
+
+message Answer{
+	required string questionId = 1;
+	//id of this answer
+	required string id = 2;
+	optional string text = 3;
+	optional bool correct = 4;
+}
