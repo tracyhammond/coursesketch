@@ -16,7 +16,7 @@ var courseSelected = function(evt) {
 }
 
 var addLecture = function(evt) {
-	alert("AAASHJASDGAJSHDGASJDHGASDJH");
+	$("#col2").append("<span>HELLO WORLD</span>");
 }
 
 $(document).ready(function() {
