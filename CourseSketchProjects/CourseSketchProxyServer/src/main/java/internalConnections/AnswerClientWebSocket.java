@@ -60,7 +60,7 @@ public final class AnswerClientWebSocket extends ClientWebSocket {
         }
         // strips away identification.
         final Request result = ProxyConnectionManager.createClientRequest(request);
-        ServerWebSocketHandler.send(getConnectionFromState(state), result);
+        this.getParentServer().send(getConnectionFromState(state), result);
     }
 
 }

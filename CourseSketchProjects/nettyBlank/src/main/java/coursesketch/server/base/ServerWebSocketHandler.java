@@ -65,20 +65,8 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param req
      */
     @Override
-    protected void onMessage(final SocketSession session, final Message.Request req) {
+    protected final void onMessage(final SocketSession session, final Message.Request req) {
         System.out.println(req);
-    }
-
-    /**
-     * A helper method for sending data given a session.
-     * This is a non-blocking way to send messages to a server.
-     *
-     * @param session The session that the message is being sent with.
-     * @param req     The actual message that is being sent.
-     */
-    @Override
-    protected void send(final SocketSession session, final Message.Request req) {
-
     }
 
     final void nettyOnClose(final ChannelHandlerContext session, final int statusCode, final String reason) {

@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
-import coursesketch.server.interfaces.ISocketInitializer;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -37,11 +36,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * A jetty server that is called upon by all of the other data.
      */
     private Server server;
-
-    /**
-     * The servlet that is connected to the server.  (it is typically binded to a certain URL)
-     */
-    private ISocketInitializer servletInstance;
 
     /**
      * The main method that can be used to run a server.
@@ -172,7 +166,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             public void run() {
                 try {
                     server.start();
-                    servletInstance.reconnect();
+                    getSocketInitailizerInstance().reconnect();
                     server.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -229,7 +223,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     @SuppressWarnings("checkstyle:designforextension")
     public boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws IOException {
         if ("connectionNumber".equals(command)) {
-            System.out.println(servletInstance.getCurrentConnectionNumber());
+            System.out.println(getSocketInitailizerInstance().getCurrentConnectionNumber());
             return true;
         }
         return false;
@@ -243,9 +237,8 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     public final void stop() {
         try {
             server.stop();
-            servletInstance.stop();
+            getSocketInitailizerInstance().stop();
             server = null;
-            servletInstance = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -256,7 +249,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected final void reconnect() {
-        servletInstance.reconnect();
+        getSocketInitailizerInstance().reconnect();
     }
 
     /**
@@ -264,12 +257,5 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     public final Server getServer() {
         return server;
-    }
-
-    /**
-     * @return An instance of the servlet created by this runner.
-     */
-    protected final ISocketInitializer getServletInstance() {
-        return servletInstance;
     }
 }

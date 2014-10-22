@@ -112,18 +112,6 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     }
 
     /**
-     * A helper method for sending data given a session.
-     * This is a non-blocking way to send messages to a server.
-     *
-     * @param session The session that the message is being sent with.
-     * @param req The actual message that is being sent.
-     */
-    @Override
-    public final void send(final SocketSession session, final Request req) {
-        session.send(ByteBuffer.wrap(req.toByteArray()));
-    }
-
-    /**
      * Available for override.  Called after the server is stopped.
      */
     @Override

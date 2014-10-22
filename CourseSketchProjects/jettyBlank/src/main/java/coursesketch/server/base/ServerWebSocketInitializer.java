@@ -19,7 +19,7 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
  *
  * @author gigemjt
  */
-@WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/" })
+@WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/websocket" })
 public class ServerWebSocketInitializer extends WebSocketServlet implements ISocketInitializer {
 
     /**

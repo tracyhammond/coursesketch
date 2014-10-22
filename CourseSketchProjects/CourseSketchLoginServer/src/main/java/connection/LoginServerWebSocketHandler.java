@@ -5,10 +5,10 @@ import java.security.GeneralSecurityException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.SocketSession;
 import database.LoginException;
 import database.RegistrationException;
 
-import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.LoginInformation;
@@ -82,7 +82,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      * {@inheritDoc}
      */
     @Override
-    public void onMessage(final Session conn, final Request req) {
+    public void onMessage(final SocketSession conn, final Request req) {
         if (req.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(req);
             if (rsp != null) {
@@ -116,7 +116,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *            the information about the user attempting to log in and how
      *            they are attempting to log in.
      */
-    private void registerUserMessage(final Session conn, final Request req, final LoginInformation login) {
+    private void registerUserMessage(final SocketSession conn, final Request req, final LoginInformation login) {
         try {
             // registers user
             DatabaseClient.createUser(login.getUsername(), login.getPassword(), login.getEmail(), login.getIsInstructor());
@@ -143,7 +143,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *            the information about the user attempting to log in and how
      *            they are attempting to log in.
      */
-    private void loginUser(final Session conn, final Request req, final LoginInformation login) {
+    private void loginUser(final SocketSession conn, final Request req, final LoginInformation login) {
         // if not specified then log in as default user.
         final boolean loginAsDefault = login.hasIsInstructor();
         try {

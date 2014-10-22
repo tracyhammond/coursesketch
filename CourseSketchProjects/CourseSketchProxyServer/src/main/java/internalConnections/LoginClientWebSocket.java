@@ -79,7 +79,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
                 final Request.Builder errorMessage = Request.newBuilder(result);
                 errorMessage.setResponseText(errorMessage.getResponseText()
                         + " : The data sent back from the login server was not the correct format");
-                ServerWebSocketHandler.send(getConnectionFromState(state), result);
+                this.getParentServer().send(getConnectionFromState(state), result);
                 return;
             }
 
@@ -102,7 +102,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
 
         // strips away identification
         final Request result = ProxyConnectionManager.createClientRequest(request);
-        ServerWebSocketHandler.send(getConnectionFromState(state), result);
+        this.getParentServer().send(getConnectionFromState(state), result);
 
 
     }

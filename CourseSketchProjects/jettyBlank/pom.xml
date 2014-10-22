@@ -18,7 +18,7 @@
 		<testLevel>0</testLevel>
 		<averageTestLevel>0</averageTestLevel>
 		<projectBranchLevel>6</projectBranchLevel>
-		<projectLineLevel>9</projectLineLevel>
+		<projectLineLevel>6</projectLineLevel>
 	</properties>
 	<build>
 		<plugins>
