@@ -21,6 +21,11 @@ import protobuf.srl.request.Message.Request;
 public class MultiConnectionManager {
 
     /**
+     * The path that routes the server to the WebSocket instead of a different possible connection.
+     */
+    public static final String SOCKET_PATH = "/websocket";
+
+    /**
      * Determines whether the server is being connected locally.
      * <p/>
      * Can be overridden.
@@ -85,7 +90,7 @@ public class MultiConnectionManager {
 
         final String start = isSecure ? "wss://" : "ws://";
 
-        final String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port);
+        final String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port) + SOCKET_PATH;
         System.out.println("Creating a client connecting to: " + location);
         return initializeConnection(location, connectionType, serv);
     }

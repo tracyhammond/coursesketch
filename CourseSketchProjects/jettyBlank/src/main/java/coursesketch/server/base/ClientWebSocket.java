@@ -44,6 +44,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      *            The server that is using this connection wrapper.
      */
     public ClientWebSocket(final URI iDestination, final ServerWebSocketHandler iParentServer) {
+    public ClientWebSocket(final URI iDestination, final AbstractServerWebSocketHandler iParentServer) {
         super(iDestination, iParentServer);
     }
 

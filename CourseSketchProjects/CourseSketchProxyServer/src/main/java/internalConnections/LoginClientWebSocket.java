@@ -1,7 +1,6 @@
 package internalconnections;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import utilities.ConnectionException;
 import utilities.TimeManager;
@@ -33,7 +32,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
      * @param parent
      *            The proxy server instance.
      */
-    public LoginClientWebSocket(final URI destination, final ServerWebSocketHandler parent) {
+    public LoginClientWebSocket(final URI destination, final AbstractServerWebSocketHandler parent) {
         super(destination, parent);
     }
 

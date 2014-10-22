@@ -4,7 +4,6 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 import coursesketch.server.base.ClientWebSocket;
-import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
 
@@ -29,7 +28,7 @@ public final class AnswerClientWebSocket extends ClientWebSocket {
      * @param parent
      *            The proxy server instance.
      */
-    public AnswerClientWebSocket(final URI destination, final ServerWebSocketHandler parent) {
+    public AnswerClientWebSocket(final URI destination, final AbstractServerWebSocketHandler parent) {
         super(destination, parent);
     }
 
