@@ -1,6 +1,6 @@
 package coursesketch.netty.multiconnection;
 
-import interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;

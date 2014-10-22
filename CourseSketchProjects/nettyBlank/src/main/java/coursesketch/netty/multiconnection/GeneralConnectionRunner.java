@@ -1,7 +1,7 @@
 package coursesketch.netty.multiconnection;
 
-import interfaces.AbstractGeneralConnectionRunner;
-import interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
+import coursesketch.server.interfaces.ISocketInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -181,7 +181,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Returns a new instance of a {@link interfaces.ISocketInitializer}.
+     * Returns a new instance of a {@link coursesketch.server.interfaces.ISocketInitializer}.
      * <p/>
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
@@ -194,7 +194,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * @return a new connection servlet for this server
      */
     @Override
-    protected ISocketInitializer getSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
+    protected ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
         return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
     }
     /**

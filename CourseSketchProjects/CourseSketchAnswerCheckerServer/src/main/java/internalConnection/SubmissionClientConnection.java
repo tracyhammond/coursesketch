@@ -3,10 +3,10 @@ package internalConnection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.jetty.multiconnection.ClientConnection;
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.server.base.ClientConnection;
+import coursesketch.server.base.ServerWebSocketHandler;
 
-import interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 

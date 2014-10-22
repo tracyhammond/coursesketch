@@ -1,9 +1,9 @@
-package interfaces;
+package coursesketch.server.interfaces;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+
 import static org.mockito.Mockito.*;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -12,8 +12,6 @@ import org.powermock.reflect.Whitebox;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-
-import static org.mockito.Mockito.*;
 
 /**
  * Created by gigemjt on 10/21/14.
@@ -26,40 +24,40 @@ public class AbstractGeneralConnectionRunnerTest {
     public void testSSLIsConfigureIsCalledWhenSecureIsTrue() {
         //createPartialMockAndInvokeDefaultConstructor
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
-        doCallRealMethod().when(run).runMost();
+        doCallRealMethod().when(run).start();
         doNothing().when(run).loadConfigurations();
         Whitebox.setInternalState(run, "secure", true);
-        run.runMost();
+        run.start();
         verify(run, times(1)).configureSSL(anyString(), anyString());
     }
 
     @Test(timeout=1000)
     public void testSSLIsConfigureIsNOTCalledWhenSecureIsFalse() {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
-        doCallRealMethod().when(run).runMost();
+        doCallRealMethod().when(run).start();
         doNothing().when(run).loadConfigurations();
         Whitebox.setInternalState(run, "secure", false);
-        run.runMost();
+        run.start();
         verify(run, times(0)).configureSSL(anyString(), anyString());
     }
 
     @Test(timeout=1000)
     public void executeLocalEnviromentIsCalledWhenLocalIsTrue() {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
-        doCallRealMethod().when(run).runMost();
+        doCallRealMethod().when(run).start();
         doNothing().when(run).loadConfigurations();
         Whitebox.setInternalState(run, "local", true);
-        run.runMost();
+        run.start();
         verify(run, times(1)).executeLocalEnvironment();
     }
 
     @Test(timeout=1000)
     public void executeRemoveEnviromentIsCalledWhenLocalIsFalse() {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
-        doCallRealMethod().when(run).runMost();
+        doCallRealMethod().when(run).start();
         doNothing().when(run).loadConfigurations();
         Whitebox.setInternalState(run, "local", false);
-        run.runMost();
+        run.start();
         verify(run, times(1)).executeRemoveEnvironment();
     }
 

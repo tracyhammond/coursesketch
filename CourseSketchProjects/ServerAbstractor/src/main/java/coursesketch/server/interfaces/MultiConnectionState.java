@@ -1,4 +1,4 @@
-package interfaces;
+package coursesketch.server.interfaces;
 
 /**
  * An object that contains the state of connection with another server.
@@ -23,7 +23,7 @@ public class MultiConnectionState {
     private static final boolean PENDING = false;
 
     /**
-     * Creates a {@link interfaces.MultiConnectionState} with the given Key.
+     * Creates a {@link coursesketch.server.interfaces.MultiConnectionState} with the given Key.
      *
      * @param inputKey
      *            Uniquely Identifies this connection from any other connection.

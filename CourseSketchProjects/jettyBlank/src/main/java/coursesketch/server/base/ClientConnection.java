@@ -1,0 +1,131 @@
+package coursesketch.server.base;
+
+import java.io.IOException;
+import java.net.URI;
+import java.nio.ByteBuffer;
+
+import coursesketch.server.interfaces.AbstractClientConnection;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.MultiConnectionState;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+
+import connection.CloseableWebsocketClient;
+import utilities.ConnectionException;
+
+/**
+ * Wraps around a basic client and maintains a sessions to a single server.
+ *
+ * If The ConnectionWrapper is not connect it will attempt to connect when the
+ * next message is sent queuing up messages while nothing is happening. This
+ * allows us to have connections that timeout and save bandwidth and wait till
+ * they are actually being used. The downside of this is that the first message
+ * takes much longer to send.
+ */
+@WebSocket()
+@SuppressWarnings("PMD.TooManyMethods")
+public class ClientConnection extends AbstractClientConnection {
+
+    /**
+     * Creates a ConnectionWrapper to a destination using a given server.
+     *
+     * Note that this does not actually try and connect the wrapper you have to
+     * either explicitly call {@link ClientConnection#connect()} or call
+     * {@link ClientConnection#send(java.nio.ByteBuffer)}.
+     *
+     * @param iDestination
+     *            The location the server is going as a URI. ex:
+     *            http://example.com:1234
+     * @param iParentServer
+     *            The server that is using this connection wrapper.
+     */
+    public ClientConnection(final URI iDestination, final ServerWebSocketHandler iParentServer) {
+        super(iDestination, iParentServer);
+    }
+
+    /**
+     * Attempts to connect to the server at URI with a webSocket Client.
+     *
+     * @throws ConnectionException Throws an exception if an error occurs during the connection attempt.
+     */
+    @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    public final void connect() throws ConnectionException {
+        try (final CloseableWebsocketClient client = new CloseableWebsocketClient()) {
+            client.start();
+            final ClientUpgradeRequest request = new ClientUpgradeRequest();
+            client.connect(this, this.getURI(), request);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ConnectionException("an exception connecting", e);
+        } catch (Exception e) {
+            throw new ConnectionException("something went wrong when starting the client", e);
+        }
+    }
+
+    /**
+     * Called when the connection is closed.
+     * @param statusCode The reason that the connection was closed.
+     * @param reason The human readable reason that the connection was closed.
+     */
+    @OnWebSocketClose
+    public final void jettyClose(final int statusCode, final String reason) {
+        onClose(statusCode, reason);
+    }
+
+    /**
+     * Called every time the connection is formed.
+     *
+     * @param conn The connection that is being opened.
+     */
+    @OnWebSocketConnect
+    public final void jettyOpen(final Session conn) {
+        onOpen(new JettySession(conn));
+    }
+
+    /**
+     * Called when a message occurs and then wraps the message in a {@link ByteBuffer}.
+     * @param data The actual bytes that contain the message.
+     * @param offset The offset at which the message occurs.
+     * @param length The length of the message itself.
+     * @see {@link ClientConnection#onMessage(ByteBuffer)}
+     */
+    @OnWebSocketMessage
+    public final void jettyOnMessage(final byte[] data, final int offset, final int length) {
+        onMessage(ByteBuffer.wrap(data, offset, length));
+    }
+
+    /**
+     * Called when an error occurs.
+     *
+     * @param erroredSession
+     *            The session with which the error occurred. This may not be the
+     *            same session that is held by this object if the connection has
+     *            not opened yet.
+     * @param cause
+     *            A {@link Throwable} representing the actual error that occurred.
+     */
+    @OnWebSocketError
+    @SuppressWarnings("static-method")
+    public final void jettyError(final Session erroredSession, final Throwable cause) {
+        onError(new JettySession(erroredSession), cause);
+    }
+
+    /**
+     * Accepts messages and sends the request to the correct server and holds
+     * minimum client state.
+     *
+     * @param buffer The message that is received by this object.
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    protected void onMessage(final ByteBuffer buffer) {
+        final MultiConnectionState state = getStateFromId(AbstractServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
+        getSession().send(buffer);
+        getConnectionFromState(state).send(buffer);
+    }
+}

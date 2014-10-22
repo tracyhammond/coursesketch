@@ -3,10 +3,10 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.jetty.multiconnection.ClientConnection;
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
-import interfaces.AbstractServerWebSocketHandler;
-import interfaces.MultiConnectionState;
+import coursesketch.server.base.ClientConnection;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -28,7 +28,7 @@ import protobuf.srl.request.Message.Request.MessageType;
 public class SubmissionClientConnection extends ClientConnection {
 
     /**
-     * @see coursesketch.jetty.multiconnection.ClientConnection#ConnectionWrapper(URI, interfaces.AbstractServerWebSocketHandler).
+     * @see coursesketch.server.base.ClientConnection#ConnectionWrapper(URI, coursesketch.server.interfaces.AbstractServerWebSocketHandler).
      * @param destination
      *            The location the server is going as a URI. ex:
      *            http://example.com:1234

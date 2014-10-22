@@ -1,8 +1,8 @@
 package serverfront;
 
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
-import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
-import interfaces.AbstractClientConnection;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.AbstractClientConnection;
 import internalconnections.AnswerClientConnection;
 import internalconnections.DataClientConnection;
 import internalconnections.LoginClientConnection;
@@ -18,7 +18,7 @@ import java.util.Set;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import interfaces.MultiConnectionState;
+import coursesketch.server.interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;

@@ -1,13 +1,15 @@
-package interfaces;
+package coursesketch.server.interfaces;
 
 import java.io.Closeable;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
 
 /**
+ * An interface that represents a session that is maintained throughout a connection.
  * Created by gigemjt on 10/19/14.
  */
-public interface SocketSession  extends Closeable {
+public interface SocketSession extends Closeable {
+
     /**
      * Get the address of the remote side.
      *
@@ -47,4 +49,18 @@ public interface SocketSession  extends Closeable {
      * @see #close()
      */
     void close(int statusCode, String reason);
+
+    /**
+     * Default Doc this should be Overwritten.
+     * Given another session object of the same connection (remote address) that has not be closed this method should return true.
+     * @param other an instance of SocketSession
+     * @return true if they are equal.
+     */
+    boolean equals(final Object other);
+
+    /**
+     * Default Doc this should be Overwritten.
+     * @return a number representing the hash of the doc.
+     */
+    int hashCode();
 }

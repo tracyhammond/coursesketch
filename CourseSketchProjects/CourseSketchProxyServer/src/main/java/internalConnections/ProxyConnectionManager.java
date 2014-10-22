@@ -1,9 +1,9 @@
 package internalconnections;
 
-import interfaces.AbstractClientConnection;
-import interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.AbstractClientConnection;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import utilities.ConnectionException;
-import interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 
 /**

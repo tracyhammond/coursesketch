@@ -1,9 +1,9 @@
 package coursesketch.netty.multiconnection;
 
-import interfaces.AbstractServerWebSocketHandler;
-import interfaces.ISocketInitializer;
-import interfaces.MultiConnectionManager;
-import interfaces.SocketSession;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.SocketSession;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import protobuf.srl.request.Message;
@@ -94,7 +94,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     }
 
     /**
-     * @return The {@link interfaces.MultiConnectionManager} or subclass so it can be used
+     * @return The {@link coursesketch.server.interfaces.MultiConnectionManager} or subclass so it can be used
      * in this instance.
      */
     protected final MultiConnectionManager getConnectionManager() {

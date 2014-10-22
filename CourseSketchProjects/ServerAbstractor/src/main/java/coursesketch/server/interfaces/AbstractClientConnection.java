@@ -1,7 +1,8 @@
-package interfaces;
+package coursesketch.server.interfaces;
 
 import utilities.ConnectionException;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -9,9 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Wraps around a basic client and maintains a sessions to a single server.
+ *
+ * If The ConnectionWrapper is not connect it will attempt to connect when the
+ * next message is sent queuing up messages while nothing is happening. This
+ * allows us to have connections that timeout and save bandwidth and wait till
+ * they are actually being used. The downside of this is that the first message
+ * takes much longer to send.
  * Created by gigemjt on 10/19/14.
  */
-@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+@SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField", "PMD.TooManyMethods" })
 public abstract class AbstractClientConnection {
     /**
      * A websocket can only have a maximum of 10 failed starts.
@@ -208,7 +216,110 @@ public abstract class AbstractClientConnection {
      *             Thrown if the number of connection attempts exceeds
      *             {@link AbstractClientConnection#MAX_FAILED_STARTS}
      */
-    public abstract void send(ByteBuffer buffer) throws ConnectionException;
+    public final void send(final ByteBuffer buffer) throws ConnectionException {
+        if (isConnected()) {
+            connectedSend(buffer);
+        } else if ((started || reachedEof || refusedConnection) && failedStarts < MAX_FAILED_STARTS) {
+            connectionEndedSend(buffer);
+        } else if (failedStarts < MAX_FAILED_STARTS) {
+            connectionNotEstablishedSend(buffer);
+        } else if (failedStarts >= MAX_FAILED_STARTS) {
+            queing = false;
+            System.out.println(failedStarts);
+            System.out.println(MAX_FAILED_STARTS);
+            // adds this version because it has not been added before
+            queuedMessages.add(buffer);
+            System.err.println(this.getClass().getSimpleName() + " failed to connect after multiple tries");
+            socketFailedListener.actionPerformed(new ActionEvent(queuedMessages, 0, this.getClass().getName()));
+            // all messages are empty after the actions with the message are finished.
+            queuedMessages.clear();
+            throw new ConnectionException("" + this.getClass().getSimpleName() + " failed to connect after multiple tries");
+        }
+    }
+
+    /**
+     * Called if the connection is connected and working properly.
+     * @param buffer The message that is trying to be sent.
+     */
+    private void connectedSend(final ByteBuffer buffer) {
+        System.out.println("Sending message from: " + this.getClass().getSimpleName());
+        session.send(buffer);
+        if (queing) {
+            while (!queuedMessages.isEmpty()) {
+                session.send(queuedMessages.remove(0));
+            }
+            queing = false;
+        }
+    }
+
+    /**
+     * This is called when trying to send a message but it fails because a connection has not yet been established.
+     * @param buffer The message that is trying to be sent.
+     */
+    @SuppressWarnings("PMD.ConfusingTernary")
+    private void connectionNotEstablishedSend(final ByteBuffer buffer) {
+        System.err.println("Trying to wait on " + this.getClass().getSimpleName() + ". It has not connected yet.");
+        if (!queing) {
+            queing = true;
+            failedStarts += 1;
+            System.err.println("attempt " + failedStarts + " out of " + MAX_FAILED_STARTS);
+            final Thread retryThread = new Thread() {
+                @Override
+                @SuppressWarnings("PMD.CommentRequired")
+                public void run() {
+                    try {
+                        Thread.sleep(MIN_SLEEP_TIME);
+                        queing = false;
+                        send(buffer);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ConnectionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            retryThread.start();
+        } else {
+            System.err.println("Adding a queuedMessage");
+            queuedMessages.add(buffer);
+        }
+    }
+
+    /**
+     * This is called when trying to send a message but it fails because the connection was terminated.
+     * This could because a connection was refused or because the connection timed out.
+     * @param buffer The message that is trying to be sent.
+     */
+    @SuppressWarnings("PMD.ConfusingTernary")
+    private void connectionEndedSend(final ByteBuffer buffer) {
+        final String endReson = reachedEof || started ? "of a timeout" : refusedConnection ? "connection to the server was refused"
+                : "We do not know why";
+        System.err.println("Trying to reconnect " + this.getClass().getSimpleName() + ". It has ended because " + endReson);
+        if (!queing) {
+            failedStarts += 1;
+            System.err.println("attempt " + failedStarts + " out of " + MAX_FAILED_STARTS);
+            queing = true;
+            // maybe try reconnecting here?
+            final Thread retryThread = new Thread() {
+                @Override
+                @SuppressWarnings({"PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
+                public void run() {
+                    try {
+                        connect();
+                        Thread.sleep(MIN_SLEEP_TIME);
+                        queing = false;
+                        send(buffer);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            retryThread.start();
+        } else {
+            System.err.println("Adding a queuedMessage");
+            queuedMessages.add(buffer);
+        }
+    }
 
     /**
      * Closes out the connection.
@@ -245,7 +356,7 @@ public abstract class AbstractClientConnection {
     }
 
     /**
-     * @return true if the ConnectionWrapper is currently connected.
+     * @return true if the socket is currently connected.
      */
     public final boolean isConnected() {
         return connected;
@@ -311,5 +422,12 @@ public abstract class AbstractClientConnection {
             throw new IllegalStateException("This field is immutable and can only be set once.");
         }
         parentManager = multiConnectionManager;
+    }
+
+    /**
+     * @return the session represented by this current connection.
+     */
+    protected final SocketSession getSession() {
+        return session;
     }
 }

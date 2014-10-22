@@ -1,6 +1,6 @@
 package coursesketch.netty.multiconnection;
 
-import interfaces.SocketSession;
+import coursesketch.server.interfaces.SocketSession;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.nio.ByteBuffer;

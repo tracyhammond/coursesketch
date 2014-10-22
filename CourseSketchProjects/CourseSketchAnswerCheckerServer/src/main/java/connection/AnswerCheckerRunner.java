@@ -1,7 +1,7 @@
 package connection;
 
-import coursesketch.jetty.multiconnection.GeneralConnectionRunner;
-import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
+import coursesketch.server.base.GeneralConnectionRunner;
+import coursesketch.server.base.ServerWebSocketInitializer;
 
 public class AnswerCheckerRunner extends GeneralConnectionRunner {
     private static final int PORT = 8884;
@@ -27,8 +27,8 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
     }
 
     @Override
-    public final ServerWebSocketInitializer getSocketInitializer(final long time, final boolean secure,
-                                                               final boolean local) {
+    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure,
+            final boolean local) {
         return new AnswerCheckerServlet(time, secure, local);
     }
 }
