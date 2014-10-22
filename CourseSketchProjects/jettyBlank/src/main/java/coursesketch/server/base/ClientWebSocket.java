@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.server.interfaces.AbstractClientConnection;
+import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
 import org.eclipse.jetty.websocket.api.Session;
@@ -15,7 +15,6 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 
-import connection.CloseableWebsocketClient;
 import utilities.ConnectionException;
 
 /**
@@ -29,14 +28,14 @@ import utilities.ConnectionException;
  */
 @WebSocket()
 @SuppressWarnings("PMD.TooManyMethods")
-public class ClientConnection extends AbstractClientConnection {
+public class ClientWebSocket extends AbstractClientWebSocket {
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
      *
      * Note that this does not actually try and connect the wrapper you have to
-     * either explicitly call {@link ClientConnection#connect()} or call
-     * {@link ClientConnection#send(java.nio.ByteBuffer)}.
+     * either explicitly call {@link ClientWebSocket#connect()} or call
+     * {@link ClientWebSocket#send(java.nio.ByteBuffer)}.
      *
      * @param iDestination
      *            The location the server is going as a URI. ex:
@@ -44,7 +43,7 @@ public class ClientConnection extends AbstractClientConnection {
      * @param iParentServer
      *            The server that is using this connection wrapper.
      */
-    public ClientConnection(final URI iDestination, final ServerWebSocketHandler iParentServer) {
+    public ClientWebSocket(final URI iDestination, final ServerWebSocketHandler iParentServer) {
         super(iDestination, iParentServer);
     }
 
@@ -56,7 +55,7 @@ public class ClientConnection extends AbstractClientConnection {
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public final void connect() throws ConnectionException {
-        try (final CloseableWebsocketClient client = new CloseableWebsocketClient()) {
+        try (final CloseableWebSocketClient client = new CloseableWebSocketClient()) {
             client.start();
             final ClientUpgradeRequest request = new ClientUpgradeRequest();
             client.connect(this, this.getURI(), request);
@@ -93,7 +92,7 @@ public class ClientConnection extends AbstractClientConnection {
      * @param data The actual bytes that contain the message.
      * @param offset The offset at which the message occurs.
      * @param length The length of the message itself.
-     * @see {@link ClientConnection#onMessage(ByteBuffer)}
+     * @see {@link ClientWebSocket#onMessage(ByteBuffer)}
      */
     @OnWebSocketMessage
     public final void jettyOnMessage(final byte[] data, final int offset, final int length) {

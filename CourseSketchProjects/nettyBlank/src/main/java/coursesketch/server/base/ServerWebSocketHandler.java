@@ -1,4 +1,4 @@
-package coursesketch.netty.multiconnection;
+package coursesketch.server.base;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;

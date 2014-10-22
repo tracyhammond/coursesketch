@@ -3,7 +3,7 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.server.base.ClientConnection;
+import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
@@ -25,17 +25,17 @@ import protobuf.srl.request.Message.Request.MessageType;
  * Only the most important callbacks are overloaded.
  */
 @WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public class SubmissionClientConnection extends ClientConnection {
+public class SubmissionClientWebSocket extends ClientWebSocket {
 
     /**
-     * @see coursesketch.server.base.ClientConnection#ConnectionWrapper(URI, coursesketch.server.interfaces.AbstractServerWebSocketHandler).
+     * @see coursesketch.server.base.ClientWebSocket#ConnectionWrapper(URI, coursesketch.server.interfaces.AbstractServerWebSocketHandler).
      * @param destination
      *            The location the server is going as a URI. ex:
      *            http://example.com:1234
      * @param parentServer
      *            The server that is using this connection wrapper.
      */
-    public SubmissionClientConnection(final URI destination, final ServerWebSocketHandler parentServer) {
+    public SubmissionClientWebSocket(final URI destination, final ServerWebSocketHandler parentServer) {
         super(destination, parentServer);
     }
 

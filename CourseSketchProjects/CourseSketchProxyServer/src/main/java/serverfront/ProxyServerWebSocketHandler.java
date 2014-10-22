@@ -2,13 +2,13 @@ package serverfront;
 
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
-import coursesketch.server.interfaces.AbstractClientConnection;
-import internalconnections.AnswerClientConnection;
-import internalconnections.DataClientConnection;
-import internalconnections.LoginClientConnection;
+import coursesketch.server.interfaces.AbstractClientWebSocket;
+import internalconnections.AnswerClientWebSocket;
+import internalconnections.DataClientWebSocket;
+import internalconnections.LoginClientWebSocket;
 import internalconnections.LoginConnectionState;
 import internalconnections.ProxyConnectionManager;
-import internalconnections.RecognitionClientConnection;
+import internalconnections.RecognitionClientWebSocket;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -79,12 +79,12 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             @Override
             public void actionPerformed(final ActionEvent event) {
                 try {
-                    getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginClientConnection.class);
+                    getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginClientWebSocket.class);
                 } catch (ConnectionException e1) {
                     e1.printStackTrace();
                 }
                 try {
-                    getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerClientConnection.class);
+                    getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerClientWebSocket.class);
                 } catch (ConnectionException e1) {
                     e1.printStackTrace();
                 }
@@ -134,9 +134,9 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             final String sessionID = state.getKey();
             System.out.println("Request type is " + req.getRequestType().name());
             try {
-                this.getConnectionManager().send(req, sessionID, LoginClientConnection.class);
+                this.getConnectionManager().send(req, sessionID, LoginClientWebSocket.class);
             } catch (ConnectionException e) {
-                send(conn, createBadConnectionResponse(req, LoginClientConnection.class));
+                send(conn, createBadConnectionResponse(req, LoginClientWebSocket.class));
             }
         } else {
             if (state.getTries() > MAX_LOGIN_TRIES) {
@@ -165,29 +165,29 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             System.out.println("REQUEST TYPE = RECOGNITION");
             try {
                 // No userId is sent for security reasons.
-                ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, RecognitionClientConnection.class);
+                ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, RecognitionClientWebSocket.class);
             } catch (ConnectionException e) {
                 System.err.println("Recognition error!");
-                send(conn, createBadConnectionResponse(req, RecognitionClientConnection.class));
+                send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
             }
         } else if (req.getRequestType() == MessageType.SUBMISSION) {
             System.out.println("REQUEST TYPE = SUBMISSION");
             try {
-                ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, AnswerClientConnection.class,
+                ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, AnswerClientWebSocket.class,
                         ((ProxyConnectionState) state).getUserId());
             } catch (ConnectionException e) {
                 e.printStackTrace();
-                send(conn, createBadConnectionResponse(req, AnswerClientConnection.class));
+                send(conn, createBadConnectionResponse(req, AnswerClientWebSocket.class));
             }
         } else if (req.getRequestType() == MessageType.DATA_REQUEST || req.getRequestType() == MessageType.DATA_INSERT
                 || req.getRequestType() == MessageType.DATA_UPDATE || req.getRequestType() == MessageType.DATA_REMOVE) {
             System.out.println("REQUEST TYPE = DATA REQUEST");
             try {
-                ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, DataClientConnection.class,
+                ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, DataClientWebSocket.class,
                         ((ProxyConnectionState) state).getUserId());
             } catch (ConnectionException e) {
                 e.printStackTrace();
-                send(conn, createBadConnectionResponse(req, DataClientConnection.class));
+                send(conn, createBadConnectionResponse(req, DataClientWebSocket.class));
             }
         }
     }
@@ -223,7 +223,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                     try {
                         final Request req = Request.parseFrom(message.array());
                         final MultiConnectionState state = getIdToState().get(req.getSessionInfo());
-                        final Class<? extends AbstractClientConnection> classType = (Class<? extends AbstractClientConnection>)
+                        final Class<? extends AbstractClientWebSocket> classType = (Class<? extends AbstractClientWebSocket>)
                                 Class.forName(event.getActionCommand());
                         final Request result = createBadConnectionResponse(req, classType);
                         send(getIdToConnection().get(state), result);
@@ -235,8 +235,8 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         };
-        this.getConnectionManager().setFailedSocketListener(listen, AnswerClientConnection.class);
-        this.getConnectionManager().setFailedSocketListener(listen, DataClientConnection.class);
-        this.getConnectionManager().setFailedSocketListener(listen, LoginClientConnection.class);
+        this.getConnectionManager().setFailedSocketListener(listen, AnswerClientWebSocket.class);
+        this.getConnectionManager().setFailedSocketListener(listen, DataClientWebSocket.class);
+        this.getConnectionManager().setFailedSocketListener(listen, LoginClientWebSocket.class);
     }
 }

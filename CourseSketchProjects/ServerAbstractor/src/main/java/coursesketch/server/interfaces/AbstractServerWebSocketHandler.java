@@ -11,7 +11,7 @@ import java.util.UUID;
 
 import protobuf.srl.request.Message.Request;
 /**
- * Manages a socket on the server side if you want to know about the client side see {@link AbstractClientConnection}.
+ * Manages a socket on the server side if you want to know about the client side see {@link AbstractClientWebSocket}.
  *
  * One instance of this class manages many sockets at the same time as such it is
  *
@@ -138,7 +138,7 @@ public abstract class AbstractServerWebSocketHandler {
     protected final void onMessage(final SocketSession session, final ByteBuffer buffer) {
         final Request req = Decoder.parseRequest(buffer);
         if (req == null) {
-            send(session, createBadConnectionResponse(null, AbstractClientConnection.class));
+            send(session, createBadConnectionResponse(null, AbstractClientWebSocket.class));
             System.out.println("protobuf error");
             // this.
             // we need to somehow send an error to the client here
@@ -212,7 +212,7 @@ public abstract class AbstractServerWebSocketHandler {
      * @param connectionType A class representing the connection that is not correctly connected.
      * @return {@link Request} with a message explaining what happened.
      */
-    public final Request createBadConnectionResponse(final Request req, final Class<? extends AbstractClientConnection> connectionType) {
+    public final Request createBadConnectionResponse(final Request req, final Class<? extends AbstractClientWebSocket> connectionType) {
         final Request.Builder response = Request.newBuilder();
         if (req == null) {
             response.setRequestType(Request.MessageType.ERROR);

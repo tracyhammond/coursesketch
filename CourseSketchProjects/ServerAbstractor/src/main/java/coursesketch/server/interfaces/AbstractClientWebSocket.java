@@ -20,7 +20,7 @@ import java.util.List;
  * Created by gigemjt on 10/19/14.
  */
 @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField", "PMD.TooManyMethods" })
-public abstract class AbstractClientConnection {
+public abstract class AbstractClientWebSocket {
     /**
      * A websocket can only have a maximum of 10 failed starts.
      */
@@ -109,8 +109,8 @@ public abstract class AbstractClientConnection {
      * Creates a ConnectionWrapper to a destination using a given server.
      *
      * Note that this does not actually try and connect the wrapper you have to
-     * either explicitly call {@link AbstractClientConnection#connect()} or call
-     * {@link AbstractClientConnection#send(java.nio.ByteBuffer)}.
+     * either explicitly call {@link AbstractClientWebSocket#connect()} or call
+     * {@link AbstractClientWebSocket#send(java.nio.ByteBuffer)}.
      *
      * @param iDestination
      *            The location the server is going as a URI. ex:
@@ -118,7 +118,7 @@ public abstract class AbstractClientConnection {
      * @param iParentServer
      *            The server that is using this connection wrapper.
      */
-    protected AbstractClientConnection(final URI iDestination, final AbstractServerWebSocketHandler iParentServer) {
+    protected AbstractClientWebSocket(final URI iDestination, final AbstractServerWebSocketHandler iParentServer) {
         this.parentServer = iParentServer;
         this.destination = iDestination;
         started = false;
@@ -207,14 +207,14 @@ public abstract class AbstractClientConnection {
      * Sends a binary message over the connection.
      *
      * If the connection fails then a reconnect is attempted. If the attempt
-     * fails more than {@link AbstractClientConnection#MAX_FAILED_STARTS} times then an
+     * fails more than {@link AbstractClientWebSocket#MAX_FAILED_STARTS} times then an
      * exception is thrown
      *
      * @param buffer
      *            The binary message that is being sent out.
      * @throws ConnectionException
      *             Thrown if the number of connection attempts exceeds
-     *             {@link AbstractClientConnection#MAX_FAILED_STARTS}
+     *             {@link AbstractClientWebSocket#MAX_FAILED_STARTS}
      */
     public final void send(final ByteBuffer buffer) throws ConnectionException {
         if (isConnected()) {

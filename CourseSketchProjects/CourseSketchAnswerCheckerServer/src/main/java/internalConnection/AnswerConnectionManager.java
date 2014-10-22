@@ -15,7 +15,7 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     public final void connectServers(final AbstractServerWebSocketHandler parent) {
         try {
             createAndAddConnection(parent, isConnectionLocal(), "srl02.tamu.edu",
-                    PORT, secure, SubmissionClientConnection.class);
+                    PORT, secure, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }

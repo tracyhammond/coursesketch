@@ -3,7 +3,7 @@ package internalconnections;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.server.base.ClientConnection;
+import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
@@ -19,7 +19,7 @@ import utilities.TimeManager;
  * Only the most important callbacks are overloaded.
  */
 @WebSocket()
-public final class DataClientConnection extends ClientConnection {
+public final class DataClientWebSocket extends ClientWebSocket {
 
     /**
      * Creates a new connection for the Answer checker server.
@@ -29,7 +29,7 @@ public final class DataClientConnection extends ClientConnection {
      * @param parent
      *            The proxy server instance.
      */
-    public DataClientConnection(final URI destination, final ServerWebSocketHandler parent) {
+    public DataClientWebSocket(final URI destination, final ServerWebSocketHandler parent) {
         super(destination, parent);
     }
 
@@ -51,7 +51,7 @@ public final class DataClientConnection extends ClientConnection {
             final Request rsp = TimeManager.decodeRequest(req);
             if (rsp != null) {
                 try {
-                    this.getParentManager().send(rsp, req.getSessionInfo(), DataClientConnection.class);
+                    this.getParentManager().send(rsp, req.getSessionInfo(), DataClientWebSocket.class);
                 } catch (ConnectionException e) {
                     e.printStackTrace();
                 }
