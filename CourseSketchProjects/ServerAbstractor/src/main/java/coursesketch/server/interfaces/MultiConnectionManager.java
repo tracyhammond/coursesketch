@@ -1,4 +1,4 @@
-package interfaces;
+package coursesketch.server.interfaces;
 
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;

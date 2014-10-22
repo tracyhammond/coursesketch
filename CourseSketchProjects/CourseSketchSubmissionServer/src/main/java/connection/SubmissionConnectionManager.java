@@ -1,7 +1,7 @@
 package connection;
 
-import interfaces.AbstractServerWebSocketHandler;
-import interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.MultiConnectionManager;
 import utilities.ConnectionException;
 
 public class SubmissionConnectionManager extends MultiConnectionManager {

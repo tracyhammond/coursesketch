@@ -1,10 +1,10 @@
-package coursesketch.jetty.multiconnection;
+package coursesketch.server.base;
 
 import javax.servlet.annotation.WebServlet;
 
-import interfaces.AbstractServerWebSocketHandler;
-import interfaces.ISocketInitializer;
-import interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
@@ -141,7 +141,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      *
      * By default this drops all connections and then calls
      *
-     * @see interfaces.MultiConnectionManager#connectServers(interfaces.AbstractServerWebSocketHandler)
+     * @see coursesketch.server.interfaces.MultiConnectionManager#connectServers(coursesketch.server.interfaces.AbstractServerWebSocketHandler)
      */
     @Override
     public final void reconnect() {

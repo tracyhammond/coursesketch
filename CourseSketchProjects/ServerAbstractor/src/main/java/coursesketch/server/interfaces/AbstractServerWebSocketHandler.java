@@ -1,16 +1,20 @@
-package interfaces;
+package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import utilities.TimeManager;
 
 import java.nio.ByteBuffer;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import protobuf.srl.request.Message.Request;
 /**
+ * Manages a socket on the server side if you want to know about the client side see {@link AbstractClientConnection}.
+ *
+ * One instance of this class manages many sockets at the same time as such it is
+ *
  * Created by gigemjt on 10/19/14.
  */
 @SuppressWarnings("PMD.TooManyMethods")
@@ -45,17 +49,17 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * Maps a Session to its MultiConnectionState.
      */
-    private final Map<SocketSession, MultiConnectionState> connectionToId = new HashMap<SocketSession, MultiConnectionState>();
+    private final Map<SocketSession, MultiConnectionState> connectionToId = new NonBlockingHashMap<SocketSession, MultiConnectionState>();
 
     /**
      * Maps a MultiConnectionState to a Session.
      */
-    private final Map<MultiConnectionState, SocketSession> idToConnection = new HashMap<MultiConnectionState, SocketSession>();
+    private final Map<MultiConnectionState, SocketSession> idToConnection = new NonBlockingHashMap<MultiConnectionState, SocketSession>();
 
     /**
      * Maps a String representing the connections ID to its MultiConnectionState.
      */
-    private final Map<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
+    private final Map<String, MultiConnectionState> idToState = new NonBlockingHashMap<String, MultiConnectionState>();
 
     /**
      * The parent servlet for this server.

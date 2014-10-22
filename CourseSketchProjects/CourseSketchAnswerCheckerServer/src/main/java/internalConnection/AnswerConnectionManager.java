@@ -1,8 +1,8 @@
 package internalConnection;
 
-import interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import utilities.ConnectionException;
-import interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.MultiConnectionManager;
 
 public class AnswerConnectionManager extends MultiConnectionManager {
     private static final int PORT = 8883;

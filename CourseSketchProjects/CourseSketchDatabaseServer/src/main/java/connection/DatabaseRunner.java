@@ -1,7 +1,7 @@
 package connection;
 
-import coursesketch.jetty.multiconnection.GeneralConnectionRunner;
-import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
+import coursesketch.server.base.GeneralConnectionRunner;
+import coursesketch.server.base.ServerWebSocketInitializer;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 
@@ -48,7 +48,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final ServerWebSocketInitializer getSocketInitializer(final long time, final boolean secure, final boolean local) {
+    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new DatabaseServlet(time, secure, local);
     }
 }

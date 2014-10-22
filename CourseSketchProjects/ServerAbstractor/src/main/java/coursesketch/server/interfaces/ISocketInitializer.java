@@ -1,4 +1,4 @@
-package interfaces;
+package coursesketch.server.interfaces;
 
 /**
  * Created by gigemjt on 10/19/14.

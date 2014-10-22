@@ -1,11 +1,11 @@
-package coursesketch.jetty.multiconnection;
+package coursesketch.server.base;
 
 import java.nio.ByteBuffer;
 
-import interfaces.AbstractServerWebSocketHandler;
-import interfaces.ISocketInitializer;
-import interfaces.MultiConnectionManager;
-import interfaces.SocketSession;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;

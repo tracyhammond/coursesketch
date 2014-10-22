@@ -459,7 +459,7 @@ public final class MongoInstitution implements Institution {
      * @see
      * database.institution.mongo.Institution#mongoGetExperimentAsUser(java.
      * lang.String, java.lang.String, java.lang.String,
-     * interfaces.MultiConnectionManager)
+     * coursesketch.server.interfaces.MultiConnectionManager)
      */
     @Override
     public void getExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
@@ -474,7 +474,7 @@ public final class MongoInstitution implements Institution {
      * @see
      * database.institution.mongo.Institution#mongoGetExperimentAsInstructor
      * (java.lang.String, java.lang.String, java.lang.String,
-     * interfaces.MultiConnectionManager, com.google.protobuf.ByteString)
+     * coursesketch.server.interfaces.MultiConnectionManager, com.google.protobuf.ByteString)
      */
     @Override
     public void getExperimentAsInstructor(final String userId, final String problemId, final String sessionInfo,

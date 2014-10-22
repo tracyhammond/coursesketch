@@ -3,8 +3,8 @@ package connection;
 import java.security.GeneralSecurityException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
-import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
 import database.LoginException;
 import database.RegistrationException;
 

@@ -1,8 +1,8 @@
 package coursesketch.netty.multiconnection;
 
-import interfaces.AbstractServerWebSocketHandler;
-import interfaces.ISocketInitializer;
-import interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -65,7 +65,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * <p/>
      * By default this drops all connections and then calls
      *
-     * @see MultiConnectionManager#connectServers(interfaces.AbstractServerWebSocketHandler)
+     * @see MultiConnectionManager#connectServers(coursesketch.server.interfaces.AbstractServerWebSocketHandler)
      */
     @Override
     public void reconnect() {
@@ -85,7 +85,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      *
      * @param connectLocally True if the connection is acting as if it is on a local computer (used for testing)
      * @param iSecure        True if the connection is using SSL.
-     * @return An instance of the {@link interfaces.MultiConnectionManager}
+     * @return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
      */
     @Override
     public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean iSecure) {
@@ -95,7 +95,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * Override this method to create a subclass of GeneralConnectionServer.
      *
-     * @return An instance of the {@link interfaces.AbstractServerWebSocketHandler}
+     * @return An instance of the {@link coursesketch.server.interfaces.AbstractServerWebSocketHandler}
      */
     @Override
     public AbstractServerWebSocketHandler createServerSocket() {

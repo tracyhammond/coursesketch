@@ -3,7 +3,7 @@ package handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketHandler;
 
 import org.eclipse.jetty.websocket.api.Session;
 

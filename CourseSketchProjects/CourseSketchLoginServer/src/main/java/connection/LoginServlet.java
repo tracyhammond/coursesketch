@@ -1,7 +1,7 @@
 package connection;
 
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
-import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
 
 /**
  * Creates a servlet specific to the login server.

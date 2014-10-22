@@ -2,8 +2,8 @@ package internalconnections;
 
 import java.net.URI;
 
-import coursesketch.jetty.multiconnection.ClientConnection;
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
+import coursesketch.server.base.ClientConnection;
+import coursesketch.server.base.ServerWebSocketHandler;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
@@ -18,8 +18,8 @@ public class RecognitionClientConnection extends ClientConnection {
      * Creates a ConnectionWrapper to a destination using a given server.
      *
      * Note that this does not actually try and connect the wrapper you have to
-     * either explicitly call {@link coursesketch.jetty.multiconnection.ClientConnection#connect()} or call
-     * {@link coursesketch.jetty.multiconnection.ClientConnection#send(byte[])}.
+     * either explicitly call {@link coursesketch.server.base.ClientConnection#connect()} or call
+     * {@link coursesketch.server.base.ClientConnection#send(byte[])}.
      *
      * @param destination
      *            The location the server is going as a URI. ex:

@@ -2,7 +2,7 @@ package database;
 
 import java.util.UUID;
 
-import interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 
 /**
  * Does a longer version of the normal UUID to make it more unique.

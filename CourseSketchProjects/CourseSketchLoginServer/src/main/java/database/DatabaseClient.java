@@ -21,7 +21,7 @@ import static database.DatabaseStringConstants.EMAIL;
 import static database.DatabaseStringConstants.LOGIN_DATABASE;
 
 import connection.LoginServerWebSocketHandler;
-import interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 
 /**
  * A client for the login database.

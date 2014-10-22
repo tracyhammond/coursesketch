@@ -1,4 +1,4 @@
-package coursesketch.jetty.multiconnection;
+package coursesketch.server.base;
 
 /*
  * Jetty server information
@@ -9,8 +9,8 @@ package coursesketch.jetty.multiconnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import interfaces.AbstractGeneralConnectionRunner;
-import interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
+import coursesketch.server.interfaces.ISocketInitializer;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -32,11 +32,6 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
-
-    /**
-     * A local instance is stored here.
-     */
-    private final AbstractGeneralConnectionRunner localInstance = this;
 
     /**
      * A jetty server that is called upon by all of the other data.
@@ -68,6 +63,11 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         super(arguments);
     }
 
+    /**
+     * Attempts to load the SSL for the jetty server.
+     * @param keystorePath The path to the private key.
+     * @param iCertificatePath The path to the certificate.
+     */
     @Override
     protected final void configureSSL(final String keystorePath, final String iCertificatePath) {
 
@@ -202,13 +202,16 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * @return a new connection servlet for this server
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public ServerWebSocketInitializer getSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
+    public ServerWebSocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
         if (!isSecure && isProduction()) {
             System.err.println("Running an insecure server");
         }
         return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
     }
 
+    /**
+     * @return true if the server has not started accepting connections yet.
+     */
     @Override
     protected final boolean notServerStarted() {
         return this.server == null || !this.server.isRunning();
@@ -232,6 +235,9 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         return false;
     }
 
+    /**
+     * stops the server and resets the state.
+     */
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public final void stop() {
@@ -245,6 +251,9 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         }
     }
 
+    /**
+     * Attempts to reconnect all clients.
+     */
     @Override
     protected final void reconnect() {
         servletInstance.reconnect();

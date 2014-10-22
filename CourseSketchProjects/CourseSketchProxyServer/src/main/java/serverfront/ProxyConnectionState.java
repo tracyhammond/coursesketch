@@ -7,7 +7,7 @@ import internalconnections.LoginConnectionState;
  */
 public final class ProxyConnectionState extends LoginConnectionState {
     /**
-     * Creates a {@link interfaces.MultiConnectionState} with the given
+     * Creates a {@link coursesketch.server.interfaces.MultiConnectionState} with the given
      * Key.
      *
      * @param inputKey

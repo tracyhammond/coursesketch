@@ -1,4 +1,4 @@
-package interfaces;
+package coursesketch.server.interfaces;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,7 +9,14 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
- * Created by gigemjt on 10/19/14.
+ * Sets up the server and manages calling the methods needed to start the server.
+ * Right now it also handles keyboard input and loading of the configurations (these will probably be moved to separate classes later on)
+ *
+ * To start up a server all you need to call is {@link coursesketch.server.interfaces.AbstractGeneralConnectionRunner#start()}.
+ *
+ * @author gigemjt
+ * @since 10/19/14
+ * @version 1
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public abstract class AbstractGeneralConnectionRunner {
@@ -98,6 +105,10 @@ public abstract class AbstractGeneralConnectionRunner {
     private ISocketInitializer socketInitializerInstance;
 
     /**
+     * True if the server is currently accepting input.
+     */
+    private boolean inputRunning;
+    /**
      * Parses the arguments from the server. This only expects a single argument
      * which is if it is local.
      *
@@ -117,18 +128,19 @@ public abstract class AbstractGeneralConnectionRunner {
 
     /**
      * Runs the entire startup process including input.
+     * The order that the subclass methods are called is:
+     * <ol>
+     *     <li>{@link #loadConfigurations()}</li>
+     *     <li>if the server is running locally {@link #executeLocalEnvironment()} is called otherwise {@link #executeRemoveEnvironment()}</li>
+     *     <li>{@link #createServer()}</li>
+     *     <li>if the server is running securely then {@link #configureSSL(String, String)}</li>
+     *     <li>{@link #createSocketInitializer(long, boolean, boolean)}</li>
+     *     <li>{@link #addConnections()}</li>
+     *     <li>{@link #startServer()}</li>
+     *     <li>{@link #startInput()}</li>
+     * </ol>
      */
     protected final void start() {
-        this.runMost();
-        this.startInput();
-    }
-
-    /**
-     * Runs the majority of the startup process.
-     *
-     * Does not handle accepting Input.
-     */
-    protected final void runMost() {
         loadConfigurations();
         if (local) {
             executeLocalEnvironment();
@@ -140,11 +152,13 @@ public abstract class AbstractGeneralConnectionRunner {
         if (secure) {
             configureSSL(keystorePath, certificatePath);
         }
-        socketInitializerInstance = getSocketInitializer(getTimeoutTime(), secure, isLocal());
+        socketInitializerInstance = createSocketInitializer(getTimeoutTime(), secure, isLocal());
 
         addConnections();
 
         startServer();
+
+        startInput();
     }
 
     /**
@@ -182,6 +196,9 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * Starts the server in a separate thread.
      * A server can only be run once.
+     *
+     * This not used to actually create the server or add connections to see the method that performs that function
+     * @see #start()
      */
     protected abstract void startServer();
 
@@ -254,7 +271,7 @@ public abstract class AbstractGeneralConnectionRunner {
             this.stop();
             System.out.println("sleeping for 1s");
             Thread.sleep(waitDelay);
-            this.runMost();
+            this.start();
         }
     }
 
@@ -276,7 +293,7 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     private void startCommand() throws IOException {
         if (this.notServerStarted()) {
-            this.runMost();
+            this.start();
         } else {
             System.out.println("you can not start the because it is already running.");
         }
@@ -302,14 +319,22 @@ public abstract class AbstractGeneralConnectionRunner {
         System.out.println("Turning loggin " + isLoggingStr);
         logging = !logging;
     }
+
     /**
      * Starts the system that accepts command line input.
+     *
+     * The input is started in a separate thread and this method will return immediately regardless of success.
+     * If input is already running then this method does not start a new thread for input but instead returns.
      */
     public final void startInput() {
+        if (inputRunning) {
+            return;
+        }
         final Thread inputThread = new Thread() {
             @Override
             @SuppressWarnings("PMD.CommentRequired")
             public void run() {
+                inputRunning = true;
                 final BufferedReader sysin = new BufferedReader(new InputStreamReader(System.in, Charset.defaultCharset()));
                 while (acceptInput) {
                     try {
@@ -317,8 +342,10 @@ public abstract class AbstractGeneralConnectionRunner {
                         localInstance.parseCommand(command, sysin);
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
+                inputRunning = false;
             }
         };
         inputThread.start();
@@ -363,7 +390,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * @return a new connection servlet for this server
      */
-    protected abstract ISocketInitializer getSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal);
+    protected abstract ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal);
 
     /**
      * Sets the password for the SSL keystore.

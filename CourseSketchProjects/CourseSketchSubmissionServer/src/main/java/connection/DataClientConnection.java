@@ -3,9 +3,9 @@ package connection;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
-import coursesketch.jetty.multiconnection.ClientConnection;
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler.Decoder;
+import coursesketch.server.base.ClientConnection;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketHandler.Decoder;
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 

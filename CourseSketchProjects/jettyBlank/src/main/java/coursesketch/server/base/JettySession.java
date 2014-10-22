@@ -1,6 +1,6 @@
-package coursesketch.jetty.multiconnection;
+package coursesketch.server.base;
 
-import interfaces.SocketSession;
+import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.nio.ByteBuffer;
@@ -22,25 +22,41 @@ public final class JettySession implements SocketSession {
         socketSession = session;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getRemoteAddress() {
         return socketSession.getRemoteAddress().toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void close() {
         socketSession.close();
     }
 
-
+    /**
+     * Initiates the asynchronous transmission of a binary message. This method returns before the message is transmitted.
+     * Developers may use the returned Future object to track progress of the transmission.
+     *
+     * @param buffer
+     *            the data being sent
+     * @return the Future object representing the send operation.
+     */
     @Override
     public Future<Void> send(final ByteBuffer buffer) {
         return socketSession.getRemote().sendBytesByFuture(buffer);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void close(final int statusCode, final String args) {
-        socketSession.close(statusCode, args);
+    public void close(final int statusCode, final String reason) {
+        socketSession.close(statusCode, reason);
     }
 
     /**

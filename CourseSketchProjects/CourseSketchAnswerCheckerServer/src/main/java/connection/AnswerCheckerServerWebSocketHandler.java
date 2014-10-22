@@ -1,10 +1,10 @@
 package connection;
 
-import coursesketch.jetty.multiconnection.ServerWebSocketHandler;
-import coursesketch.jetty.multiconnection.ServerWebSocketInitializer;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
 import internalConnection.AnswerConnectionState;
 import internalConnection.SubmissionClientConnection;
-import interfaces.MultiConnectionState;
+import coursesketch.server.interfaces.MultiConnectionState;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
