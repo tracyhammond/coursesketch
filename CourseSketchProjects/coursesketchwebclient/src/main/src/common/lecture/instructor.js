@@ -15,10 +15,15 @@ var courseSelected = function(evt) {
 	$(item).addClass("selected");
 }
 
+var addLecture = function(evt) {
+	alert("AAASHJASDGAJSHDGASJDHGASDJH");
+}
+
 $(document).ready(function() {
 	$.each($(".list-item"), function() {
 		var children = $(this).children();
 		if(typeof children[0] != "undefined")
 		$(this).bind("click", children, courseSelected);
 	});
+	$("#add").bind("click", addLecture);
 })
