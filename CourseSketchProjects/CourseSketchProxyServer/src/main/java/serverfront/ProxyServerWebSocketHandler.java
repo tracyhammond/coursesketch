@@ -3,6 +3,7 @@ package serverfront;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
+import coursesketch.server.interfaces.SocketSession;
 import internalconnections.AnswerClientWebSocket;
 import internalconnections.DataClientWebSocket;
 import internalconnections.LoginClientWebSocket;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 
 import coursesketch.server.interfaces.MultiConnectionState;
 
-import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -94,8 +94,8 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                  * (), null, RecognitionConnection.class); } catch
                  * (ConnectionException e1) { e1.printStackTrace(); } //
                  */
-                final Set<Session> conns = getConnectionToId().keySet();
-                for (Session conn : conns) {
+                final Set<SocketSession> conns = getConnectionToId().keySet();
+                for (SocketSession conn : conns) {
                     send(conn, TimeManager.serverSendTimeToClient());
                 }
             }
@@ -110,7 +110,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
      *            the connection that is being opened.
      */
     @Override
-    public void openSession(final Session conn) {
+    public void openSession(final SocketSession conn) {
         send(conn, TimeManager.serverSendTimeToClient());
     }
 
@@ -118,7 +118,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
      * {@inheritDoc} Routes the given request to the correct server.
      */
     @Override
-    public void onMessage(final Session conn, final Request req) {
+    public void onMessage(final SocketSession conn, final Request req) {
         final LoginConnectionState state = (LoginConnectionState) getConnectionToId().get(conn);
 
         // the connection is waiting to login
@@ -159,7 +159,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
      *            the state that represents the currently logged in user
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.UnusedPrivateMethod" })
-    private void messageRouter(final Session conn, final Request req, final MultiConnectionState state) {
+    private void messageRouter(final SocketSession conn, final Request req, final MultiConnectionState state) {
         final String sessionID = state.getKey();
         if (req.getRequestType() == MessageType.RECOGNITION) {
             System.out.println("REQUEST TYPE = RECOGNITION");

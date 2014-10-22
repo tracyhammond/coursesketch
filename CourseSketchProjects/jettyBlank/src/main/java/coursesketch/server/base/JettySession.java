@@ -2,6 +2,7 @@ package coursesketch.server.base;
 
 import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;
+import protobuf.srl.request.Message;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
@@ -36,6 +37,13 @@ public final class JettySession implements SocketSession {
     @Override
     public void close() {
         socketSession.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public Future<Void> send(final Message.Request req) {
+        return send(ByteBuffer.wrap(req.toByteArray()));
     }
 
     /**

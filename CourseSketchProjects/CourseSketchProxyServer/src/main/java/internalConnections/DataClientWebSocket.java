@@ -62,7 +62,7 @@ public final class DataClientWebSocket extends ClientWebSocket {
             final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
             // Strips away identification.
             final Request result = ProxyConnectionManager.createClientRequest(request);
-            ServerWebSocketHandler.send(getConnectionFromState(state), result);
+            this.getParentServer().send(getConnectionFromState(state), result);
         }
     }
 }

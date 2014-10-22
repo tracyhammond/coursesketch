@@ -2,10 +2,10 @@ package connection;
 
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.SocketSession;
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
 
-import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.Request;
@@ -33,7 +33,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      * @param conn The connection that is opened.
      */
     @Override
-    protected final void openSession(final Session conn) {
+    protected final void openSession(final SocketSession conn) {
         send(conn, TimeManager.serverSendTimeToClient());
     }
 
@@ -42,7 +42,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      * @param req The message contents bundled as a request.
      */
     @Override
-    public final void onMessage(final Session conn, final Request req) {
+    public final void onMessage(final SocketSession conn, final Request req) {
         if (req.getRequestType() == Request.MessageType.SUBMISSION) {
             System.out.println("Submitting submission id");
             try {

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import connection.SubmissionClientWebSocket;
 
+import coursesketch.server.interfaces.MultiConnectionManager;
 import org.bson.types.ObjectId;
 
 import protobuf.srl.query.Data.DataRequest;

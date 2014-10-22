@@ -1,5 +1,7 @@
 package coursesketch.server.interfaces;
 
+import protobuf.srl.request.Message;
+
 import java.io.Closeable;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
@@ -25,6 +27,15 @@ public interface SocketSession extends Closeable {
      * @see #close(int, String)
      */
     void close();
+
+    /**
+     * Initiates the asynchronous transmission of a binary message. This method returns before the message is transmitted.
+     * Developers may use the returned Future object to track progress of the transmission.
+     *
+     * @param req the data being sent wrapped as a request.
+     * @return the Future object representing the send operation.
+     */
+    Future<Void> send(Message.Request req);
 
     /**
      * Initiates the asynchronous transmission of a binary message. This method returns before the message is transmitted.

@@ -2,6 +2,7 @@ package serverfront;
 
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
 import internalconnections.ProxyConnectionManager;
 
 /**
@@ -39,7 +40,7 @@ public final class ProxyServlet extends ServerWebSocketInitializer {
      * @return {@link internalconnections.ProxyConnectionManager}
      */
     @Override
-    protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return new ProxyConnectionManager(getServer(), connectLocally, secure);
     }
 

@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import coursesketch.server.interfaces.MultiConnectionManager;
 import org.bson.types.ObjectId;
 
 import protobuf.srl.request.Message.Request;

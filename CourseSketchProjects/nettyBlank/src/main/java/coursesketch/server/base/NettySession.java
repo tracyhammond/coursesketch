@@ -2,6 +2,7 @@ package coursesketch.server.base;
 
 import coursesketch.server.interfaces.SocketSession;
 import io.netty.channel.ChannelHandlerContext;
+import protobuf.srl.request.Message;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
@@ -11,7 +12,7 @@ import java.util.concurrent.Future;
  */
 public final class NettySession implements SocketSession {
     private final ChannelHandlerContext session;
-    public NettySession(ChannelHandlerContext context) {
+    public NettySession(final ChannelHandlerContext context) {
         this.session = context;
     }
 
@@ -38,6 +39,14 @@ public final class NettySession implements SocketSession {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Future<Void> send(final Message.Request req) {
+        return send(ByteBuffer.wrap(req.toByteArray()));
+    }
+
+    /**
      * Initiates the asynchronous transmission of a binary message. This method returns before the message is transmitted.
      * Developers may use the returned Future object to track progress of the transmission.
      *
@@ -45,7 +54,7 @@ public final class NettySession implements SocketSession {
      * @return the Future object representing the send operation.
      */
     @Override
-    public Future<Void> send(ByteBuffer buffer) {
+    public Future<Void> send(final ByteBuffer buffer) {
         return null;
     }
 

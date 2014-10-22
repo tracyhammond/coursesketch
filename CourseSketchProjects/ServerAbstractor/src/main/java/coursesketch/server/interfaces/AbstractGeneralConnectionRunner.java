@@ -123,7 +123,7 @@ public abstract class AbstractGeneralConnectionRunner {
             local = false;
         }
         production = false;
-        secure = true;
+        secure = false;
     }
 
     /**

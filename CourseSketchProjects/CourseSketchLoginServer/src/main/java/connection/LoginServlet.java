@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
 
 /**
  * Creates a servlet specific to the login server.
@@ -45,7 +46,7 @@ public final class LoginServlet extends ServerWebSocketInitializer {
      * @return a new connection manager object
      */
     @Override
-    protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return null;
     }
 }

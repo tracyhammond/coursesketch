@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
 
 /**
  * A database specific servlet that creates a new Database server and Database
@@ -38,7 +39,7 @@ public class DatabaseServlet extends ServerWebSocketInitializer {
      * {@inheritDoc}
      */
     @Override
-    protected final MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    public final MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return new DatabaseConnectionManager(getServer(), connectLocally, secure);
     }
 }

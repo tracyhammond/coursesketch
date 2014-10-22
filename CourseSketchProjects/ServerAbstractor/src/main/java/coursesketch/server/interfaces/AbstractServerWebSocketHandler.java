@@ -173,7 +173,9 @@ public abstract class AbstractServerWebSocketHandler {
      * @param session The session that the message is being sent with.
      * @param req The actual message that is being sent.
      */
-    protected abstract void send(final SocketSession session, final Request req);
+    public final void send(final SocketSession session, final Request req) {
+        session.send(ByteBuffer.wrap(req.toByteArray()));
+    }
 
     /**
      * Available for override.  Called after the server is stopped.

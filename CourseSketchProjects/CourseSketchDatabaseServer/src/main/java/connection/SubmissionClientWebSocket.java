@@ -8,7 +8,7 @@ import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
 
-import org.eclipse.jetty.websocket.api.Session;
+import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -77,12 +77,12 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
             }
             final Request.Builder builder = Request.newBuilder(req);
             builder.setSessionInfo(sessionInfo[0]);
-            final Session connection = getConnectionFromState(state);
+            final SocketSession connection = getConnectionFromState(state);
             builder.setOtherData(result2.build().toByteString());
             if (connection == null) {
                 System.err.println("SOCKET IS NULL");
             }
-            ServerWebSocketHandler.send(getConnectionFromState(state), builder.build());
+            this.getParentServer().send(getConnectionFromState(state), builder.build());
         }
     }
 }
