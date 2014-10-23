@@ -242,7 +242,7 @@ public abstract class AbstractClientWebSocket {
      * @param buffer The message that is trying to be sent.
      */
     private void connectedSend(final ByteBuffer buffer) {
-        System.out.println("Sending message from: " + this.getClass().getSimpleName());
+        System.out.println("Sending message to: " + this.getClass().getSimpleName());
         session.send(buffer);
         if (queing) {
             while (!queuedMessages.isEmpty()) {

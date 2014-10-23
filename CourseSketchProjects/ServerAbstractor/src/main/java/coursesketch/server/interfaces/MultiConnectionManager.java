@@ -23,7 +23,7 @@ public class MultiConnectionManager {
     /**
      * The path that routes the server to the WebSocket instead of a different possible connection.
      */
-    public static final String SOCKET_PATH = "/websocket";
+    public static final String SOCKET_PATH = "/websocket/";
 
     /**
      * Determines whether the server is being connected locally.

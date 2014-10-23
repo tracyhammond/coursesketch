@@ -1,11 +1,11 @@
 package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import utilities.TimeManager;
 
 import java.nio.ByteBuffer;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,19 +47,19 @@ public abstract class AbstractServerWebSocketHandler {
     public static final String FULL_SERVER_MESSAGE = "Sorry, the " + NAME + "server is full";
 
     /**
-     * Maps a Session to its MultiConnectionState.
+     * Maps a Session to its MultiConnectionState. FUTURE: {@link org.cliffc.high_scale_lib.NonBlockingHashMap}
      */
-    private final Map<SocketSession, MultiConnectionState> connectionToId = new NonBlockingHashMap<SocketSession, MultiConnectionState>();
+    private final Map<SocketSession, MultiConnectionState> connectionToId = new HashMap<SocketSession, MultiConnectionState>();
 
     /**
-     * Maps a MultiConnectionState to a Session.
+     * Maps a MultiConnectionState to a Session. FUTUE: {@link org.cliffc.high_scale_lib.NonBlockingHashMap}
      */
-    private final Map<MultiConnectionState, SocketSession> idToConnection = new NonBlockingHashMap<MultiConnectionState, SocketSession>();
+    private final Map<MultiConnectionState, SocketSession> idToConnection = new HashMap<MultiConnectionState, SocketSession>();
 
     /**
      * Maps a String representing the connections ID to its MultiConnectionState.
      */
-    private final Map<String, MultiConnectionState> idToState = new NonBlockingHashMap<String, MultiConnectionState>();
+    private final Map<String, MultiConnectionState> idToState = new HashMap<String, MultiConnectionState>();
 
     /**
      * The parent servlet for this server.
@@ -228,7 +228,7 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * Stops the server and empties out all connections.
      */
-    protected final void stop() {
+    public final void stop() {
         for (SocketSession sesh : getConnectionToId().keySet()) {
             sesh.close();
         }
