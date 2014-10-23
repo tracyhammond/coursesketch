@@ -108,7 +108,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     @Override
     public final void stop() {
         System.out.println("Stopping socket");
-        //connectionServer.stop();
+        connectionServer.stop();
         if (manager != null) {
             manager.dropAllConnection(true, false);
         }

@@ -26,8 +26,8 @@ import utilities.ConnectionException;
  * they are actually being used. The downside of this is that the first message
  * takes much longer to send.
  */
-@WebSocket()
 @SuppressWarnings("PMD.TooManyMethods")
+@WebSocket()
 public class ClientWebSocket extends AbstractClientWebSocket {
 
     /**
@@ -43,7 +43,6 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      * @param iParentServer
      *            The server that is using this connection wrapper.
      */
-    public ClientWebSocket(final URI iDestination, final ServerWebSocketHandler iParentServer) {
     public ClientWebSocket(final URI iDestination, final AbstractServerWebSocketHandler iParentServer) {
         super(iDestination, iParentServer);
     }
@@ -56,7 +55,8 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public final void connect() throws ConnectionException {
-        try (final CloseableWebSocketClient client = new CloseableWebSocketClient()) {
+        try {
+            final CloseableWebSocketClient client = new CloseableWebSocketClient();
             client.start();
             final ClientUpgradeRequest request = new ClientUpgradeRequest();
             client.connect(this, this.getURI(), request);
@@ -125,7 +125,6 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     @SuppressWarnings("checkstyle:designforextension")
     protected void onMessage(final ByteBuffer buffer) {
         final MultiConnectionState state = getStateFromId(AbstractServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
-        getSession().send(buffer);
         getConnectionFromState(state).send(buffer);
     }
 }

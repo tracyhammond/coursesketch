@@ -8,6 +8,7 @@ package coursesketch.server.base;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import org.eclipse.jetty.server.Connector;
@@ -125,7 +126,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     public final void createServer() {
-        server = new Server(getPort());
+        if (isLocal()) {
+            System.out.println("Running it as a local server");
+            server = new Server(new InetSocketAddress("localhost", getPort()));
+        } else {
+            server = new Server(getPort());
+        }
         System.out.println("Server has been created on port: " + getPort());
     }
 
@@ -167,6 +173,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
                 try {
                     server.start();
                     getSocketInitailizerInstance().reconnect();
+                    System.out.println("Server started at " + server.getURI());
                     server.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
