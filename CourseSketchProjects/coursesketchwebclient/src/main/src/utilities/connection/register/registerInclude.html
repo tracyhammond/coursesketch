@@ -17,19 +17,21 @@
 <script type="text/javascript" src="/src/utilities/connection/connectionLibrary.js"></script>
 
 <!-- html template -->
-<link id="loginTemplateImport" rel="import"
-	href="/src/utilities/connection/login/login.html">
+<link id="registerTemplateImport" rel="import"
+	href="/src/utilities/connection/register/register.html">
 
 <!-- login.js -->
-<script type="text/javascript" src="login.js"></script>
+<script type="text/javascript" src="/src/utilities/connection/login/login.js"></script>
+
+<script type="text/javascript" src="register.js"></script>
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#loginTemplateImport');
+            var link = importDoc.querySelector('#registerTemplateImport');
             var template = link.import.querySelector('template');
             var clone = document.importNode(template.content, true);
 
-            var newElement = new LoginSystem();
+            var newElement = new RegisterSystem();
           	var official = "srl01.tamu.edu:8888"; // our server
     		var test = "localhost:8888/websocket"; // local server
 
@@ -46,7 +48,7 @@
     		 * @Method
     		 * Creates the connection to the server. (but does nothing else)
     		 */
-            LoginSystem.prototype.createdCallback = function() {
+            RegisterSystem.prototype.createdCallback = function() {
     		    console.log("connection " + wsUri);
                 this.createConnection(wsUri, false, true);
             };
@@ -54,15 +56,15 @@
             /**
              * Creates the shadow root and adds that into the system.
              */
-            LoginSystem.prototype.attachedCallback = function() {
+            RegisterSystem.prototype.attachedCallback = function() {
                 this.initializeElement(document, clone.cloneNode(true));
             };
 
-            LoginSystem.prototype.detachedCallback = function() {
+            RegisterSystem.prototype.detachedCallback = function() {
                 this.finalize();
             };
 
-            document.registerElement('login-system', {
+            document.registerElement('register-system', {
                 prototype : newElement
             });
         });
