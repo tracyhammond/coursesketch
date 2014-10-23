@@ -46,7 +46,13 @@
 	</build>
 
 	<dependencies>
-		<dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.aggregate</groupId>
+            <artifactId>jetty-all</artifactId>
+            <version>${jettyVersion}</version>
+        </dependency>
+
+        <dependency>
 			<groupId>CourseSketch</groupId>
 			<artifactId>ProtoFiles</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
