@@ -231,9 +231,7 @@ public class DatabaseClient {
             System.out.println("Unable to find user!");
             return false;
         }
-
-        final String instructor = (String) cursor.get(IS_DEFAULT_INSTRUCTOR);
-        return "true".equals(instructor);
+        return (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
     }
 
 }
