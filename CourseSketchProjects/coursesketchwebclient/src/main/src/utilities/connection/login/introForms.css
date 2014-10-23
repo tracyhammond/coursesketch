@@ -133,7 +133,7 @@ input[type="password"] {
 #email { background-position: 10px 10px !important }
 #confirm { background-position: 10px 10px !important }
 
-#content form input[type="submit"] {
+#content form input[type="submit"], #content .fakeInput {
         background: rgb(254,231,154);
         background: -moz-linear-gradient(top,  rgba(254,231,154,1) 0%, rgba(254,193,81,1) 100%);
         background: -webkit-linear-gradient(top,  rgba(254,231,154,1) 0%,rgba(254,193,81,1) 100%);
@@ -162,7 +162,7 @@ input[type="password"] {
         text-shadow: 0 1px 0 rgba(255,255,255,0.5);
         width: 120px;
 }
-#content form input[type="submit"]:hover {
+#content form input[type="submit"]:hover, #content .fakeInput:hover {
         background: rgb(254,193,81);
         background: -moz-linear-gradient(top,  rgba(254,193,81,1) 0%, rgba(254,231,154,1) 100%);
         background: -webkit-linear-gradient(top,  rgba(254,193,81,1) 0%,rgba(254,231,154,1) 100%);
@@ -171,6 +171,11 @@ input[type="password"] {
         background: linear-gradient(top,  rgba(254,193,81,1) 0%,rgba(254,231,154,1) 100%);
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fec151', endColorstr='#fee79a',GradientType=0 );
 }
+
+.fakeInput p {
+  transform: translateY(-50%);
+}
+
 #content form div a {
     color: #004a80;
     float: right;
@@ -198,6 +203,7 @@ input[type="password"] {
         border-radius: 0 0 5px 5px;
         border-top: 1px solid #CFD5D9;
         padding: 15px 0;
+        cursor:pointer;
 }
 
 .button a {
@@ -211,6 +217,7 @@ input[type="password"] {
         -ms-transition: all 0.3s ease;
         -o-transition: all 0.3s ease;
         transition: all 0.3s ease;
+        cursor:pointer;
 }
 .button:hover a {
         background-position: 0 -135px;

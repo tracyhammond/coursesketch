@@ -1,14 +1,14 @@
 // requires protobuf and connection library
 
 /**
- * A class that allows a user to login.
+ * A class that allows a user to register.
  */
-function LoginSystem() {
+function RegisterSystem() {
     var connection = undefined;
     var shadowRoot = undefined;
     var successLoginCallback = undefined;
     var formSubmitFunction = undefined;
-    var registerCallback = undefined;
+    var cancelCallback = undefined;
 
     /**
      * @returns the connection that was created by this login system.
@@ -20,11 +20,11 @@ function LoginSystem() {
     this.createConnection = function(location, encrytped, attemptReconnections) {
         connection = new Connection(location, encrytped, attemptReconnections);
         connection.setOnCloseListener(function(evt, attemptingToReconnect) {
-            if (isUndefined(connection)) {
-                // if this became undefined then we should stop trying to connect.
-                throw "this connection object is no longer valid";
-            }
             if (evt.code == connection.CONNECTION_LOST) {
+                if (isUndefined(connection)) {
+                    // if this became undefined then we should stop trying to connect.
+                    throw "this connection object is no longer valid";
+                }
                 if (!attemptingToReconnect) {
                     alert('can not connect to the server');
                 }
@@ -108,12 +108,11 @@ function LoginSystem() {
     }
 
     /**
-     * @Method the function used for submitting login information.
+     * @Method the function used for submitting register information.
      * Also the only difference between login.js and register.js
      */
     function formSubmit() {
-        console.log("Submitting something?");
-        function sendLogin(arg1, arg2) {
+        function sendLogin(arg1, arg2, email , isInstructor) {
             if (!connection.isConnected()) {
                 alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using"
                         + " \n the newest version of chrome. If you are still unable to login please email"
@@ -124,18 +123,27 @@ function LoginSystem() {
 
             loginInfo.username = arg1;
             loginInfo.password = "" + arg2;
-
+            loginInfo.email = email;
+            loginInfo.isRegistering = true;
             var request = CourseSketch.PROTOBUF_UTIL.Request();
-            request.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
+
             if (!isUndefined(request.setLogin)) {
                 request.login = loginInfo;
             }
+
             request.otherData = loginInfo.toArrayBuffer();
-            console.log("Sending login information");
             connection.sendRequest(request);
-            console.log("login information sent successfully");
+            console.log("Sending register information");
         }
-        sendLogin(shadowRoot.querySelector("#username").value, CryptoJS.SHA3(shadowRoot.querySelector("#password").value));
+
+        var p1 = shadowRoot.querySelector("#password1").value;
+        var p2 = shadowRoot.querySelector("#password2").value;
+        if (p1 != p2) {
+            alert("The passwords must match");
+            return;
+        }
+        sendLogin(shadowRoot.querySelector("#username").value, CryptoJS.SHA3(p1),
+                document.getElementById("email").value, document.getElementById("myonoffswitch").checked);
     }
 
     /**
@@ -154,9 +162,9 @@ function LoginSystem() {
      * Setups up the callback for the register button and the lost password button.
      */
     function setupCallbacks() {
-        shadowRoot.querySelector("#registerButton").onclick = function() {
-            if (registerCallback) {
-                registerCallback();
+        shadowRoot.querySelector("#cancel").onclick = function() {
+            if (cancelCallback) {
+                cancelCallback();
             }
         };
     }
@@ -176,8 +184,8 @@ function LoginSystem() {
      * @Method
      * The callback is called when the register button is pressed.
      */
-    this.setRegisterCallback = function(callback) {
-        registerCallback = callback;
+    this.setCancelCallback = function(callback) {
+        cancelCallback = callback;
     }
     /**
      * Removes all stored variables. so that hopefully most of this object can
@@ -190,4 +198,4 @@ function LoginSystem() {
     }
 }
 
-LoginSystem.prototype = Object.create(HTMLElement.prototype);
+RegisterSystem.prototype = Object.create(HTMLElement.prototype);
