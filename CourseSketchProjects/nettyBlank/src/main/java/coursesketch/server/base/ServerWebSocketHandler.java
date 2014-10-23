@@ -65,7 +65,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param req
      */
     @Override
-    protected final void onMessage(final SocketSession session, final Message.Request req) {
+    protected void onMessage(final SocketSession session, final Message.Request req) {
         System.out.println(req);
     }
 

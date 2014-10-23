@@ -143,7 +143,7 @@ public abstract class AbstractClientWebSocket {
      */
     public final void onClose(final int statusCode, final String reason) {
         connected = false;
-        System.out.printf("Connection closed: %d - %s%n", statusCode, reason);
+        System.out.printf("%s closed: %d - %s%n", this.getClass().getSimpleName(), statusCode, reason);
         if (statusCode == CLOSE_ABNORMAL && reason.matches(CLOSE_EOF) || reachedEof) {
             reachedEof = true;
         }
