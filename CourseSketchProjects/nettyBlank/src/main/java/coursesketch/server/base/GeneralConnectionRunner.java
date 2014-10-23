@@ -2,14 +2,18 @@ package coursesketch.server.base;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
+import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 import javax.net.ssl.SSLException;
 import java.io.BufferedReader;
@@ -135,8 +139,8 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             @SuppressWarnings({"PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
             public void run() {
                 try {
-                    final Channel ch = server.bind(getPort()).sync().channel();
-
+                    final ChannelFuture strap = server.bind(getPort());
+                    final Channel ch = strap.sync().channel();
                     ch.closeFuture().sync();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -147,6 +151,14 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             }
         };
         serverThread.start();
+        try {
+            Thread.sleep(1000);
+            final boolean assumedRunning = !workerGroup.isShutdown() && !workerGroup.isTerminated() && !workerGroup.isShuttingDown();
+            System.out.println("Server is running hopefully = " + assumedRunning);
+            getSocketInitailizerInstance().reconnect();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

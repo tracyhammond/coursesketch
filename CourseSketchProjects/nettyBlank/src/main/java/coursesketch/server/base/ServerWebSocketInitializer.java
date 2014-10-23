@@ -16,7 +16,7 @@ import io.netty.handler.ssl.SslContext;
 public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel> implements ISocketInitializer {
     private SslContext sslContext;
 
-    private SocketWrapper singleWrapper;
+    private ServerSocketWrapper singleWrapper;
 
     /**
      * The server that the servlet is connected to.
@@ -62,14 +62,19 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
 
     /**
      * This is called when the reconnect command is executed.
-     * <p/>
+     *
      * By default this drops all connections and then calls
      *
-     * @see MultiConnectionManager#connectServers(coursesketch.server.interfaces.AbstractServerWebSocketHandler)
+     * @see coursesketch.server.interfaces.MultiConnectionManager#connectServers(coursesketch.server.interfaces.AbstractServerWebSocketHandler)
      */
     @Override
-    public void reconnect() {
-
+    public final void reconnect() {
+        System.out.println("Reconnecting");
+        if (manager != null) {
+            manager.dropAllConnection(true, false);
+            manager.connectServers(connectionServer);
+        }
+        onReconnect();
     }
 
     /**
@@ -123,7 +128,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpObjectAggregator(65536));
         // TODO: change this to the double locking check thingy
         if (singleWrapper == null) {
-            singleWrapper = new SocketWrapper(createServerSocket(), this.secure);
+            singleWrapper = new ServerSocketWrapper(createServerSocket(), this.secure);
         }
         pipeline.addLast(singleWrapper);
     }

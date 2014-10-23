@@ -1,7 +1,12 @@
 package coursesketch.server.base;
 
 import coursesketch.server.interfaces.SocketSession;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.util.concurrent.GenericProgressiveFutureListener;
+import io.netty.util.concurrent.ProgressiveFuture;
 import protobuf.srl.request.Message;
 
 import java.nio.ByteBuffer;
@@ -55,7 +60,22 @@ public final class NettySession implements SocketSession {
      */
     @Override
     public Future<Void> send(final ByteBuffer buffer) {
-        return null;
+        System.out.println("Sending");
+        System.out.println("local address " + session.channel().localAddress());
+        System.out.println("remote address " + session.channel().remoteAddress());
+        final BinaryWebSocketFrame frame = new BinaryWebSocketFrame(Unpooled.copiedBuffer(buffer));
+        System.out.println(frame);
+        final ChannelFuture future = session.channel().write(frame);
+        future.addListener(new GenericProgressiveFutureListener<ProgressiveFuture<Void>>() {
+            @Override public void operationProgressed(final ProgressiveFuture future, final long progress, final long total) throws Exception {
+                System.out.println("huh? " + progress + ":" + total);
+            }
+
+            @Override public void operationComplete(final ProgressiveFuture future) throws Exception {
+                System.out.println("COMPELTE");
+            }
+        });
+        return future;
     }
 
     /**
@@ -68,7 +88,7 @@ public final class NettySession implements SocketSession {
      * @see #close()
      */
     @Override
-    public void close(int statusCode, String reason) {
+    public void close(final int statusCode, final String reason) {
         session.channel().close();
     }
 

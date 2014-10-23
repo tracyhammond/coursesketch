@@ -40,7 +40,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  *  This channel should be shareable!
  */
 @ChannelHandler.Sharable
-/* package private! */ class SocketWrapper extends SimpleChannelInboundHandler<Object> {
+/* package private! */ class ServerSocketWrapper extends SimpleChannelInboundHandler<Object> {
 
     private static final String WEBSOCKET_PATH = "/websocket";
 
@@ -57,7 +57,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * @param handler
      * @param secure
      */
-    SocketWrapper(final AbstractServerWebSocketHandler handler, final boolean secure) {
+    ServerSocketWrapper(final AbstractServerWebSocketHandler handler, final boolean secure) {
         socketHandler = (ServerWebSocketHandler) handler;
         isSecure = secure;
     }
