@@ -65,7 +65,7 @@
 		</dependency>
 		<dependency>
 			<groupId>CourseSketch</groupId>
-			<artifactId>NettyServer</artifactId>
+			<artifactId>BlankServer</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
