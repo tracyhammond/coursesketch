@@ -8,6 +8,7 @@ function LoginSystem() {
     var shadowRoot = undefined;
     var successLoginCallback = undefined;
     var formSubmitFunction = undefined;
+    var registerCallback = undefined;
 
     /**
      * @returns the connection that was created by this login system.
@@ -19,6 +20,10 @@ function LoginSystem() {
     this.createConnection = function(location, encrytped, attemptReconnections) {
         connection = new Connection(location, encrytped, attemptReconnections);
         connection.setOnCloseListener(function(evt, attemptingToReconnect) {
+            if (isUndefined(connection)) {
+                // if this became undefined then we should stop trying to connect.
+                throw "this connection object is no longer valid";
+            }
             if (evt.code == connection.CONNECTION_LOST) {
                 if (!attemptingToReconnect) {
                     alert('can not connect to the server');
@@ -56,6 +61,7 @@ function LoginSystem() {
         shadowRoot.appendChild(templateClone);
         setupLoginScript();
         setupFormScript();
+        setupCallbacks();
     };
 
     /**
@@ -66,7 +72,7 @@ function LoginSystem() {
         function onLogin(evt, message) {
             var userId = undefined;
             var isInstructor = undefined;
-            if (!isUndefined(message.getLogin())) {
+            if (!isUndefined(message.getLogin) && !isUndefined(message.getLogin())) {
                 if (message.login && message.login.isLoggedIn) {
                     // successful login here
                     isInstructor = message.login.isInstructor;
@@ -74,8 +80,10 @@ function LoginSystem() {
                 }
             } else {
                 if (message.otherData) {
-                    var loginInfo = CourseSketch.PROTOBUF_UTILgetLoginClass().decode(message.otherData);
+                    var loginInfo = CourseSketch.PROTOBUF_UTIL.getLoginInformationClass().decode(message.otherData);
+                    console.log(loginInfo);
                     if (loginInfo.isLoggedIn) {
+                        console.log("successfully login!");
                         // successful login here
                         isInstructor = loginInfo.isInstructor;
                         userId = loginInfo.userId;
@@ -84,6 +92,7 @@ function LoginSystem() {
             }
 
             if (!isUndefined(userId) && !isUndefined(isInstructor)) {
+                console.log("Sucessful login!!!");
                 // successful login here
                 makeValueReadOnly(connection, 'isInstructor', isInstructor);
                 makeValueReadOnly(connection, 'userId', userId);
@@ -99,44 +108,60 @@ function LoginSystem() {
     }
 
     /**
+     * @Method the function used for submitting login information.
+     * Also the only difference between login.js and register.js
+     */
+    function formSubmit() {
+        console.log("Submitting something?");
+        function sendLogin(arg1, arg2) {
+            if (!connection.isConnected()) {
+                alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using"
+                        + " \n the newest version of chrome. If you are still unable to login please email"
+                        + " \n server@coursesketch.com with your device, and web browser");
+                return;
+            }
+            var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
+
+            loginInfo.username = arg1;
+            loginInfo.password = "" + arg2;
+
+            var request = CourseSketch.PROTOBUF_UTIL.Request();
+            request.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
+            if (!isUndefined(request.setLogin)) {
+                request.login = loginInfo;
+            }
+            request.otherData = loginInfo.toArrayBuffer();
+            console.log("Sending login information");
+            connection.sendRequest(request);
+            console.log("login information sent successfully");
+        }
+        sendLogin(shadowRoot.querySelector("#username").value, CryptoJS.SHA3(shadowRoot.querySelector("#password").value));
+    }
+
+    /**
      * Sets up the form action when the submit button is pressed.
      */
     function setupFormScript() {
-        function formSubmit() {
-            console.log("Submitting something?");
-            function sendLogin(arg1, arg2) {
-                if (!connection.isConnected()) {
-                    alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using"
-                            + " \n the newest version of chrome. If you are still unable to login please email"
-                            + " \n server@coursesketch.com with your device, and web browser");
-                    return;
-                }
-                var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
-
-                loginInfo.username = arg1;
-                loginInfo.password = "" + arg2;
-
-                var request = CourseSketch.PROTOBUF_UTIL.Request();
-                request.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
-                if (!isUndefined(request.setLogin)) {
-                    request.login = loginInfo;
-                }
-                request.otherData = loginInfo.toArrayBuffer();
-                console.log("Sending login information");
-                connection.sendRequest(request);
-                console.log("login information sent successfully");
-            }
-            sendLogin(shadowRoot.querySelector("#username").value, CryptoJS.SHA3(shadowRoot.querySelector("#password").value));
-        }
         formSubmitFunction = formSubmit;
 
-        var formElement = shadowRoot.querySelector("#loginForm");
+        var formElement = shadowRoot.querySelector("#submitForm");
 
         formElement.action = "Javascript:(function() { document.querySelector('login-system').getFormSubmitFunction()();})()";
     }
 
     /**
-     * @Method The clallback is called with one parameter.
+     * @Method
+     * Setups up the callback for the register button and the lost password button.
+     */
+    function setupCallbacks() {
+        shadowRoot.querySelector("#registerButton").onclick = function() {
+            if (registerCallback) {
+                registerCallback();
+            }
+        };
+    }
+    /**
+     * @Method The callback is called with one parameter.
      * @callbackParam {Connection} An instance of the connection object object.
      */
     this.setOnSuccessLogin = function(callback) {
@@ -147,6 +172,13 @@ function LoginSystem() {
         return formSubmitFunction;
     }
 
+    /**
+     * @Method
+     * The callback is called when the register button is pressed.
+     */
+    this.setRegisterCallback = function(callback) {
+        registerCallback = callback;
+    }
     /**
      * Removes all stored variables. so that hopefully most of this object can
      * be garbe collected
