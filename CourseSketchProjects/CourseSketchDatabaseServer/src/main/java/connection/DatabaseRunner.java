@@ -1,7 +1,7 @@
 package connection;
 
-import multiconnection.GeneralConnectionRunner;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.server.base.GeneralConnectionRunner;
+import coursesketch.server.base.ServerWebSocketInitializer;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 
@@ -24,7 +24,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      */
     public static void main(final String[] args) {
         final DatabaseRunner run = new DatabaseRunner(args);
-        run.runAll();
+        run.start();
     }
 
     /**
@@ -39,7 +39,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      * Initializes a local instance of the database.
      */
     @Override
-    public final void executeLocalEnviroment() {
+    public final void executeLocalEnvironment() {
         new MongoInstitution(false, null); // makes the database point locally
         new UserClient(false, null); // makes the database point locally
     }
@@ -48,7 +48,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
+    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new DatabaseServlet(time, secure, local);
     }
 }

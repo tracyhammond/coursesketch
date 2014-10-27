@@ -1,5 +1,4 @@
-screenName=('database' 'login' 'submission' 'answer' 'recognition' 'proxy')
-serverName=('Database' 'Login' 'Submission' 'AnswerChecker' 'Recognition' 'Proxy')
+screenName=('database' 'login' 'submission' 'answer' 'recognition' 'proxy' 'mongo')
 cd ../CourseSketchProjects
 length=$(expr ${#screenName[@]} - 1)
 
