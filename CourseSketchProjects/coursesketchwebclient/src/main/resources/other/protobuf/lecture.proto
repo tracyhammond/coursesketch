@@ -27,31 +27,30 @@ message LectureElement {
 	optional int32 y_position = 4;
 	optional int32 x_dimension = 5;
 	optional int32 y_dimension = 6;
-}
-
-/*message TextBox extends LectureElement {
-	optional string text = 7;
-}
-
-message Image extends Element {
-	optional bytes image = 7;
-	// optional float orientation=8;
-}
-
-message SketchArea extends Element {
-	optional bytes sketch = 7;//srlSketch object if proto include works
-}
-
-message Question extends Elements {
-	optional string question = 7;
-}
-
-message MultipleChoice extends Question {
-	repeated Answer answers = 8;
-}
-
-message SketchQuestion extends Question {
-	optional bytes sketch = 8;
+	oneof ElementType{
+		message TextBox {
+			optional string text = 7;
+		}
+		message Image {
+			optional bytes image = 8;
+			optional float orientation = 9;
+		}
+		message SketchArea {
+			//srlSketch object if proto include works
+			optional bytes sketch = 10;
+		}
+		message Question {
+			optional string question = 11;
+			oneof QuestionType {
+				message MultipleChoice {
+					repeated Answer answers = 12;
+				}
+				message SketchQuestion {
+					optional bytes sketch = 13;
+				}
+			}
+		}
+	}
 }
 
 message Answer {
@@ -60,4 +59,4 @@ message Answer {
 	required string id = 2;
 	optional string text = 3;
 	optional bool correct = 4;
-}*/
+}
