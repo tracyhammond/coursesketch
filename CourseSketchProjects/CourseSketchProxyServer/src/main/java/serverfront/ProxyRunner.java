@@ -1,7 +1,7 @@
 package serverfront;
 
-import multiconnection.GeneralConnectionRunner;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.server.base.GeneralConnectionRunner;
+import coursesketch.server.base.ServerWebSocketInitializer;
 
 /**
  * A subclass of the runner and sets up some special information for running the
@@ -21,7 +21,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      */
     public static void main(final String[] args) {
         final ProxyRunner run = new ProxyRunner(args);
-        run.runAll();
+        run.start();
     }
 
     /**
@@ -29,8 +29,8 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * instead of listed in code.
      */
     @Override
-    public final void executeRemoveEnviroment() {
-        setKeystorePassword("Challeng3");
+    public final void executeRemoveEnvironment() {
+        setCertificatePath("Challeng3");
         setKeystorePath("srl01_tamu_edu.jks");
     }
 
@@ -50,7 +50,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
+    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new ProxyServlet(time, secure, local);
     }
 }
