@@ -1,8 +1,8 @@
 package connection;
 
-import multiconnection.GeneralConnectionServer;
-import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionManager;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
 
 /**
  * A database specific servlet that creates a new Database server and Database
@@ -11,7 +11,7 @@ import multiconnection.MultiConnectionManager;
  * @author gigemjt
  *
  */
-public class DatabaseServlet extends GeneralConnectionServlet {
+public class DatabaseServlet extends ServerWebSocketInitializer {
 
     /**
      * Constructor for DatabaseServlet.
@@ -31,15 +31,15 @@ public class DatabaseServlet extends GeneralConnectionServlet {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServer createServerSocket() {
-        return new DatabaseServer(this);
+    public final ServerWebSocketHandler createServerSocket() {
+        return new DatabaseServerWebSocketHandler(this);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected final MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    public final MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return new DatabaseConnectionManager(getServer(), connectLocally, secure);
     }
 }

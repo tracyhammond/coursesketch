@@ -1,19 +1,18 @@
 package connection;
 
-import multiconnection.GeneralConnectionServer;
-import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionManager;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
 
 @SuppressWarnings("serial")
-public class SubmissionServlet extends GeneralConnectionServlet {
+public class SubmissionServlet extends ServerWebSocketInitializer {
 
 	public SubmissionServlet(long timeoutTime, boolean secure, boolean connectLocally) {
 		super(timeoutTime, secure, connectLocally);
 	}
 
 	@Override
-	public final GeneralConnectionServer createServerSocket() {
-    	return new SubmissionServer(this);
+	public final ServerWebSocketHandler createServerSocket() {
+    	return new SubmissionServerWebSocketHandler(this);
     }
 
 	/**
