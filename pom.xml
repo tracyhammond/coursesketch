@@ -9,9 +9,11 @@
 
 	<modules>
 		<module>CourseSketchProjects/ProtoFiles</module>
+        <module>CourseSketchProjects/ServerAbstractor</module>
 		<module>CourseSketchProjects/jettyBlank</module>
 		<module>CourseSketchProjects/CourseSketchDatabaseServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
+        <module>CourseSketchProjects/nettyBlank</module> <!-- temp move -->
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
 		<module>CourseSketchProjects/CourseSketchLoginServer</module>
@@ -411,15 +413,22 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- version -->
 		<jettyVersion>[9.2.2,)</jettyVersion> <!-- 9.2.2.v20140723 -->
 		<protobufVersion>[2.5.0,)</protobufVersion>
 		<jodaVersion>[2.1,)</jodaVersion>
 		<mongodbVersion>[2.12.3,)</mongodbVersion>
-		<mockitoVersion>[1.9.5,)</mockitoVersion>
+		<mockitoVersion>1.9.5</mockitoVersion>
 		<puppyVersion>[5.6,)</puppyVersion>
-		<junitVersion>[4.11,)</junitVersion>
+		<junitVersion>4.11</junitVersion>
 		<checkstyleVersion>2.13</checkstyleVersion>
 		<findbugVersion>3.0.0</findbugVersion>
+        <powermock.version>1.5.6</powermock.version>
+        <sitepluginVersion>2.3.3</sitepluginVersion>
+        <coberturaVersion>2.6</coberturaVersion>
+        <pmdVersion>3.2</pmdVersion>
+
+        <!-- testing -->
 		<testLevel>85</testLevel>
 		<minTestLevel>70</minTestLevel>
 		<averageTestLevel>90</averageTestLevel>
@@ -427,8 +436,11 @@
 		<projectLineLevel>${averageTestLevel}</projectLineLevel>
 		<packageBranchLevel>${averageTestLevel}</packageBranchLevel>
 		<packageLineLevel>${averageTestLevel}</packageLineLevel>
+
+        <!-- config locations -->
 		<checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
 		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
+<<<<<<< HEAD
 		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
 		<findbugSupressionLocation>config/findbugs-exclude.xml</findbugSupressionLocation>
 		<protocLocation>/usr/local/bin/protoc</protocLocation>
@@ -437,11 +449,23 @@
 		<pmdVersion>3.2</pmdVersion>
 		<githubLocation>tracyhammond/coursesketch</githubLocation>
 		<pmdExclude>config/${pmdFile}</pmdExclude>
+=======
+		<checkstyleSuppressionLocation>${moduleConfigLocation}/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+		<findbugSupressionLocation>${moduleConfigLocation}/findbugs-exclude.xml</findbugSupressionLocation>
+		<moduleConfigLocation>${basedir}/config</moduleConfigLocation>
+		<pmdExclude>${moduleConfigLocation}/${pmdFile}</pmdExclude>
+		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
+		<cpdExclude>${moduleConfigLocation}/${cpdFile}</cpdExclude>
+>>>>>>> origin/master
 		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
 		<cpdExclude>config/${cpdFile}</cpdExclude>
 		<pmdFile>exclude-pmd.properties</pmdFile>
 		<cpdFile>exclude-cpd.properties</cpdFile>
 		<absoluteConfigLocation>${parentConfigLocationDir}/config</absoluteConfigLocation>
+
+        <!-- binary locations -->
+        <protocLocation>/usr/local/bin/protoc</protocLocation>
+        <githubLocation>tracyhammond/coursesketch</githubLocation>
 
 		<!-- This needs to be overwritten in child poms -->
 		<mainClass>fully.qualified.MainClass</mainClass>
@@ -502,5 +526,25 @@
 			<scope>test</scope>
 		</dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

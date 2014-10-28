@@ -1,6 +1,6 @@
 package internalConnections;
 
-import multiconnection.MultiConnectionState;
+import coursesketch.server.interfaces.MultiConnectionState;
 
 public class LoginConnectionState extends MultiConnectionState {
 

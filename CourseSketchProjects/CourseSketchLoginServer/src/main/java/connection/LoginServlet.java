@@ -1,11 +1,11 @@
 package connection;
 
-import multiconnection.GeneralConnectionServer;
-import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionManager;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
 
 @SuppressWarnings("serial")
-public final class LoginServlet extends GeneralConnectionServlet {
+public final class LoginServlet extends ServerWebSocketInitializer {
 
     public LoginServlet(final long timeoutTime, final boolean secure,
             final boolean connectLocally) {
@@ -13,8 +13,8 @@ public final class LoginServlet extends GeneralConnectionServlet {
     }
 
     @Override
-    public GeneralConnectionServer createServerSocket() {
-        return new LoginServer(this);
+    public ServerWebSocketHandler createServerSocket() {
+        return new LoginServerWebSocketHandler(this);
     }
 
     /**
@@ -31,8 +31,12 @@ public final class LoginServlet extends GeneralConnectionServlet {
      * @return a new connection manager object
      */
     @Override
+<<<<<<< HEAD
     protected MultiConnectionManager createConnectionManager(
             final boolean connectLocally, final boolean secure) {
+=======
+    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+>>>>>>> origin/master
         return null;
     }
 }
