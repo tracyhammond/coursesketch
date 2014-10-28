@@ -1,14 +1,14 @@
 package connection;
 
-import multiconnection.GeneralConnectionRunner;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.server.base.GeneralConnectionRunner;
+import coursesketch.server.base.ServerWebSocketInitializer;
 import database.DatabaseClient;
 
 public class SubmissionRunner extends GeneralConnectionRunner {
 	public static void main(String args[]) {
 		SubmissionRunner run = new SubmissionRunner(args);
 		try {
-			run.runAll();
+			run.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -24,12 +24,12 @@ public class SubmissionRunner extends GeneralConnectionRunner {
 	 */
 	@SuppressWarnings("unused")
 	@Override
-	public void executeLocalEnviroment() {
+	public void executeLocalEnvironment() {
 		new DatabaseClient(true);
 	}
 
 	@Override
-	public final GeneralConnectionServlet getServlet(long time, boolean secure, boolean local) {
+	public final ServerWebSocketInitializer createSocketInitializer(long time, boolean secure, boolean local) {
 		return new SubmissionServlet(time, secure, local);
 	}
 }

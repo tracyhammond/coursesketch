@@ -2,7 +2,7 @@ package database.institution;
 
 import java.util.List;
 
-import multiconnection.MultiConnectionManager;
+import coursesketch.server.interfaces.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;

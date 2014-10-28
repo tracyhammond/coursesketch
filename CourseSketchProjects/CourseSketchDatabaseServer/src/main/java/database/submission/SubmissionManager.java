@@ -10,8 +10,9 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 
 import java.util.ArrayList;
 
-import multiconnection.MultiConnectionManager;
+import connection.SubmissionClientWebSocket;
 
+import coursesketch.server.interfaces.MultiConnectionManager;
 import org.bson.types.ObjectId;
 
 import protobuf.srl.query.Data.DataRequest;
@@ -27,8 +28,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
-import connection.ConnectionException;
-import connection.SubmissionConnection;
+import utilities.ConnectionException;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
@@ -108,7 +108,11 @@ public class SubmissionManager {
         r.setOtherData(data.build().toByteString());
         System.out.println("Sending command " + r.build());
         try {
+<<<<<<< HEAD
             internalConnections.send(r.build(), null, SubmissionConnection.class);
+=======
+            internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
+>>>>>>> origin/master
         } catch (ConnectionException e) {
             e.printStackTrace();
         }
@@ -165,7 +169,11 @@ public class SubmissionManager {
         r.setOtherData(data.build().toByteString());
         System.out.println("Sending command " + r.build());
         try {
+<<<<<<< HEAD
             internalConnections.send(r.build(), null, SubmissionConnection.class);
+=======
+            internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
+>>>>>>> origin/master
         } catch (ConnectionException e) {
             e.printStackTrace();
         }

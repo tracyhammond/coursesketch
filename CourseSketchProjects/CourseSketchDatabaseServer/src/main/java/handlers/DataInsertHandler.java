@@ -2,9 +2,7 @@ package handlers;
 
 import java.util.ArrayList;
 
-import multiconnection.GeneralConnectionServer;
-
-import org.eclipse.jetty.websocket.api.Session;
+import coursesketch.server.interfaces.SocketSession;
 
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.DataSend;
@@ -52,7 +50,13 @@ public class DataInsertHandler {
      * @param req The request that has data being inserted.
      * @param conn The connection where the result is sent to.
      */
+<<<<<<< HEAD
     public static void handleData(final Request req, final Session conn) {
+=======
+    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
+            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException" })
+    public static void handleData(final Request req, final SocketSession conn) {
+>>>>>>> origin/master
         try {
             System.out.println("Receiving DATA SEND Request...");
 
@@ -120,37 +124,6 @@ public class DataInsertHandler {
                             }
                         }
                         break;
-                    /*
-                     * case USERGROUP: ArrayList<UserGroupBuilder>
-                     * assignmentLoop =
-                     * MongoInstitution.mongoGetAssignment((ArrayList
-                     * )itrequest.getItemIdList(), request.getUserId());
-                     * for(AssignmentBuilder loopCourse: assignmentLoop){
-                     * finalSchool
-                     * .addAssignments(RequestConverter.convertAssignmentToProtobuf
-                     * (loopCourse)); } break; case CLASS_GRADE:
-                     * ArrayList<AssignmentBuilder> assignmentLoop =
-                     * MongoInstitution.
-                     * mongoGetAssignment((ArrayList)itrequest.getItemIdList(),
-                     * request.getUserId()); for(AssignmentBuilder loopCourse:
-                     * assignmentLoop){
-                     * finalSchool.addAssignments(RequestConverter
-                     * .convertAssignmentToProtobuf(loopCourse)); } break; case
-                     * SOLUTION: ArrayList<AssignmentBuilder> assignmentLoop =
-                     * MongoInstitution
-                     * .mongoGetAssignment((ArrayList)itrequest.getItemIdList(),
-                     * request.getUserId()); for(AssignmentBuilder loopCourse:
-                     * assignmentLoop){
-                     * finalSchool.addAssignments(RequestConverter
-                     * .convertAssignmentToProtobuf(loopCourse)); } break; case
-                     * EXPERIMENT: ArrayList<AssignmentBuilder> assignmentLoop =
-                     * MongoInstitution
-                     * .mongoGetAssignment((ArrayList)itrequest.getItemIdList(),
-                     * request.getUserId()); for(AssignmentBuilder loopCourse:
-                     * assignmentLoop){
-                     * finalSchool.addAssignments(RequestConverter
-                     * .convertAssignmentToProtobuf(loopCourse)); } break;
-                     */
                         default:
                             break;
                     }
@@ -171,19 +144,25 @@ public class DataInsertHandler {
                     results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                 }
             }
+<<<<<<< HEAD
             if (results.size() > 0) {
                 GeneralConnectionServer.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
+=======
+            if (!results.isEmpty()) {
+                conn.send(buildRequest(results, SUCCESS_MESSAGE, req));
+>>>>>>> origin/master
             }
-            return;
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-            GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (AuthenticationException e) {
             e.printStackTrace();
+<<<<<<< HEAD
             GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (Exception e) {
+=======
+            conn.send(buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
+        } catch (InvalidProtocolBufferException | RuntimeException e) {
+>>>>>>> origin/master
             e.printStackTrace();
-            GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
+            conn.send(buildRequest(null, e.getMessage(), req));
         }
     }
 
