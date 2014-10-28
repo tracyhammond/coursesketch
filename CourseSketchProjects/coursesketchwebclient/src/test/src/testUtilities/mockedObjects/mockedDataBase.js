@@ -13,4 +13,5 @@
             CourseSketch.dataManagerPure = db; // in case you need to replace the mock.
         }
     }, 100);
+    CourseSketch.dataManager = db;
 })();
