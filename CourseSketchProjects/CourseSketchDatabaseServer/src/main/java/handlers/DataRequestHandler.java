@@ -33,7 +33,8 @@ import database.user.UserClient;
  * Typcially an Id is given of that data requested it is then sent back to the client that requested it.
  * @author gigemjt
  */
-public class DataRequestHandler {
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
+public final class DataRequestHandler {
 
     /**
      * A message returned when getting the data was successful.
@@ -46,6 +47,12 @@ public class DataRequestHandler {
     private static final String NO_COURSE_MESSAGE = "You do not have any courses associated with this account";
 
     /**
+     * Private constructor.
+     */
+    private DataRequestHandler() {
+    }
+
+    /**
      * Takes in a request that has to deal with requesting data.
      *
      * decode request and pull correct information from {@link Institution}
@@ -55,13 +62,9 @@ public class DataRequestHandler {
      * @param sessionId the id of this particular session which is used if another server is talked to.
      * @param internalConnections Connections to other servers that can be used to grab data from them.
      */
-<<<<<<< HEAD
-    public static void handleRequest(final Request req, final Session conn, final String sessionId,
-=======
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
         "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount" })
     public static void handleRequest(final Request req, final SocketSession conn, final String sessionId,
->>>>>>> origin/master
             final MultiConnectionManager internalConnections) {
         try {
             System.out.println("Receiving DATA Request...");
@@ -72,7 +75,6 @@ public class DataRequestHandler {
                 throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
             }
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
-
             final Institution instance = MongoInstitution.getInstance();
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemRequest itrequest = request.getItemsList().get(p);
@@ -107,17 +109,6 @@ public class DataRequestHandler {
                             results.add(buildResult(bankproblemSchool.build().toByteString(), ItemQuery.BANK_PROBLEM));
                         }
                         break;
-                        /*
-                         * case CLASS_GRADE: { List<SrlGrade> classGradeLoop =
-                         * MongoInstitution
-                         * .mongoGetGrade(itrequest.getItemIdList(), userId);
-                         * SrlSchool.Builder gradeSchool =
-                         * SrlSchool.newBuilder();
-                         * gradeSchool.addAllGrades(classGradeLoop);
-                         * results.add(
-                         * buildResult(gradeSchool.build().toByteString
-                         * (),ItemQuery.CLASS_GRADE)); break; }
-                         */
                         case COURSE_SEARCH: {
                             final List<SrlCourse> courseLoop = instance.getAllPublicCourses();
                             System.out.println("Searching all public courses: " + courseLoop);
@@ -127,7 +118,7 @@ public class DataRequestHandler {
                         }
                         break;
                         case SCHOOL: {
-                            final ArrayList<SrlCourse> courseLoop = instance.getUserCourses(userId);
+                            final List<SrlCourse> courseLoop = instance.getUserCourses(userId);
                             final SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
                             courseSearch.addAllCourses(courseLoop);
                             if (courseLoop.size() <= 0) {
@@ -139,11 +130,8 @@ public class DataRequestHandler {
                         break;
                         case EXPERIMENT: {
                             // need to get the submission ID?
-
-                            // we send it the CourseProblemId and the userId and
-                            // we get the submission Id
-                            // MongoInstitution.mongoGetExperiment(assignementID,
-                            // userId)
+                            // we send it the CourseProblemId and the userId and we get the submission Id
+                            // MongoInstitution.mongoGetExperiment(assignementID, userId)
                             if (!itrequest.hasAdvanceQuery()) {
                                 for (String itemId : itrequest.getItemIdList()) {
                                     System.out.println("Trying to retrieve an experiemnt from a user!");
@@ -193,22 +181,11 @@ public class DataRequestHandler {
                     results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                 }
             }
-<<<<<<< HEAD
-            GeneralConnectionServer.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-            GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-            GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
-        } catch (Exception e) {
-=======
             conn.send(buildRequest(results, SUCCESS_MESSAGE, req));
         } catch (AuthenticationException e) {
             e.printStackTrace();
             conn.send(buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
->>>>>>> origin/master
             e.printStackTrace();
             conn.send(buildRequest(null, e.getMessage(), req));
         }
@@ -259,10 +236,10 @@ public class DataRequestHandler {
      * @param req The original request that was received.
      * @return A {@link Request}.
      */
-    private static Request buildRequest(final ArrayList<ItemResult> results, final String message, final Request req) {
+    private static Request buildRequest(final List<ItemResult> results, final String message, final Request req) {
 
         final DataResult.Builder dataResult = DataResult.newBuilder();
-        if (results != null && results.size() > 0) {
+        if (results != null && !results.isEmpty()) {
             dataResult.addAllResults(results);
         }
 

@@ -1,4 +1,4 @@
-package internalConnections;
+package internalconnections;
 
 import java.net.URI;
 
@@ -7,15 +7,13 @@ import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-/** This example demonstrates how to create a websocket connection to a server. Only the most important callbacks are overloaded. */
+/**
+ * This example demonstrates how to create a websocket connection to a server.
+ * Only the most important callbacks are overloaded.
+ */
 @WebSocket()
 public class RecognitionClientWebSocket extends ClientWebSocket {
 
-<<<<<<< HEAD:CourseSketchProjects/CourseSketchProxyServer/src/main/java/internalConnections/RecognitionConnection.java
-	public RecognitionConnection(URI destination, GeneralConnectionServer parent) {
-		super(destination, parent);
-	}
-=======
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
      *
@@ -32,6 +30,5 @@ public class RecognitionClientWebSocket extends ClientWebSocket {
     public RecognitionClientWebSocket(final URI destination, final AbstractServerWebSocketHandler parent) {
         super(destination, parent);
     }
->>>>>>> origin/master:CourseSketchProjects/CourseSketchProxyServer/src/main/java/internalConnections/RecognitionClientWebSocket.java
 
 }

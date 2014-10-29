@@ -90,7 +90,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                                                                    // probably
                                                                    // to make
                                                                    // this work
-                    // internalConnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
+                    // internalconnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
                     // state.getKey(), SubmissionConnection.class);
                 }
             } else {

@@ -12,11 +12,11 @@
         <module>CourseSketchProjects/ServerAbstractor</module>
 		<module>CourseSketchProjects/jettyBlank</module>
 		<module>CourseSketchProjects/CourseSketchDatabaseServer</module>
+        <module>CourseSketchProjects/CourseSketchLoginServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
         <module>CourseSketchProjects/nettyBlank</module> <!-- temp move -->
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
-		<module>CourseSketchProjects/CourseSketchLoginServer</module>
 	</modules>
 
 	<issueManagement>
@@ -440,25 +440,13 @@
         <!-- config locations -->
 		<checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
 		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
-<<<<<<< HEAD
-		<checkstyleSuppressionLocation>config/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
-		<findbugSupressionLocation>config/findbugs-exclude.xml</findbugSupressionLocation>
-		<protocLocation>/usr/local/bin/protoc</protocLocation>
-		<sitepluginVersion>2.3.3</sitepluginVersion>
-		<coberturaVersion>2.6</coberturaVersion>
-		<pmdVersion>3.2</pmdVersion>
-		<githubLocation>tracyhammond/coursesketch</githubLocation>
-		<pmdExclude>config/${pmdFile}</pmdExclude>
-=======
 		<checkstyleSuppressionLocation>${moduleConfigLocation}/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
 		<findbugSupressionLocation>${moduleConfigLocation}/findbugs-exclude.xml</findbugSupressionLocation>
 		<moduleConfigLocation>${basedir}/config</moduleConfigLocation>
 		<pmdExclude>${moduleConfigLocation}/${pmdFile}</pmdExclude>
 		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
 		<cpdExclude>${moduleConfigLocation}/${cpdFile}</cpdExclude>
->>>>>>> origin/master
 		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
-		<cpdExclude>config/${cpdFile}</cpdExclude>
 		<pmdFile>exclude-pmd.properties</pmdFile>
 		<cpdFile>exclude-cpd.properties</cpdFile>
 		<absoluteConfigLocation>${parentConfigLocationDir}/config</absoluteConfigLocation>

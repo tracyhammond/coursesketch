@@ -4,14 +4,29 @@ import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
 
+/**
+ * Creates a servlet specific to the login server.
+ */
 @SuppressWarnings("serial")
 public final class LoginServlet extends ServerWebSocketInitializer {
 
-    public LoginServlet(final long timeoutTime, final boolean secure,
-            final boolean connectLocally) {
+    /**
+     * Creates a GeneralConnectionServlet.
+     *
+     * @param timeoutTime
+     *            The time it takes before a connection times out.
+     * @param secure
+     *            True if the connection is allowing SSL connections.
+     * @param connectLocally
+     *            True if the server is connecting locally.
+     */
+    public LoginServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
         super(timeoutTime, secure, connectLocally);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServerWebSocketHandler createServerSocket() {
         return new LoginServerWebSocketHandler(this);
@@ -31,12 +46,7 @@ public final class LoginServlet extends ServerWebSocketInitializer {
      * @return a new connection manager object
      */
     @Override
-<<<<<<< HEAD
-    protected MultiConnectionManager createConnectionManager(
-            final boolean connectLocally, final boolean secure) {
-=======
     public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
->>>>>>> origin/master
         return null;
     }
 }
