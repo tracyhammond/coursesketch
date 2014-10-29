@@ -6,6 +6,7 @@
             CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
     };
     var db = CourseSketch.makeNewDatabase(CourseSketch.connection, CourseSketch.dataListener);
+    /*
     var intervalVar = setInterval(function() {
         if (db.isDatabaseReady()) {
             clearInterval(intervalVar);
@@ -13,5 +14,6 @@
             CourseSketch.dataManagerPure = db; // in case you need to replace the mock.
         }
     }, 100);
+    */
     CourseSketch.dataManager = db;
 })();
