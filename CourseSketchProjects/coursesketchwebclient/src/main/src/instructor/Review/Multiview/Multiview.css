@@ -1,0 +1,27 @@
+
+.container{
+	position:relative;
+	width: 25%;
+	height: 400 px;
+	background-color: #FFFFFF;
+}
+
+.outer{
+	width: 95%;
+	height: 95%;
+	background-color: #B8B8B8;
+}
+
+.inner{
+	position: absolute;
+	left: 0px;
+	width: 80%;
+	height: 100%;
+}
+
+.buttons{
+	position: absolute;
+	right: 0px;
+	width: 20%;
+	height: 100%
+}
