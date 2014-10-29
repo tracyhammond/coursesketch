@@ -28,7 +28,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * @param args Arguemtns passed from the command line.
+     * @param args Arguments passed from the command line.
      */
     public DatabaseRunner(final String[] args) {
         super(args);
@@ -41,7 +41,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
     @Override
     public final void executeLocalEnvironment() {
         new MongoInstitution(false, null); // makes the database point locally
-        new UserClient(false); // makes the database point locally
+        new UserClient(false, null); // makes the database point locally
     }
 
     /**

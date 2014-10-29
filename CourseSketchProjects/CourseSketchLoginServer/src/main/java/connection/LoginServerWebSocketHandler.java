@@ -1,21 +1,13 @@
 package connection;
 
-import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
-<<<<<<< HEAD:CourseSketchProjects/CourseSketchLoginServer/src/main/java/connection/LoginServer.java
-import multiconnection.GeneralConnectionServer;
-import multiconnection.GeneralConnectionServlet;
-=======
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.SocketSession;
 import database.LoginException;
 import database.RegistrationException;
->>>>>>> origin/master:CourseSketchProjects/CourseSketchLoginServer/src/main/java/connection/LoginServerWebSocketHandler.java
 
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
@@ -33,28 +25,39 @@ import utilities.TimeManager;
 @WebSocket()
 public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
 
-    public LoginServer(final GeneralConnectionServlet parent) {
-        super(parent);
-    }
+    /**
+     * The name of the socket.
+     */
+    public static final String NAME = "Login";
 
+    /**
+     * The login server can only support 20 connections at a time.
+     *
+     * Just a random default that was not determined empirically.
+     */
     @SuppressWarnings("hiding")
     public static final int MAX_CONNECTIONS = 20;
 
-    public static final String INCORRECT_LOGIN_MESSAGE = "Incorrect username "
-            + "or password";
-    public static final String INCORRECT_LOGIN_TYPE_MESSAGE = "You do "
-            + "not have the ability to login as that type!";
-    public static final String PERMISSION_ERROR_MESSAGE = "There was an error "
-            + "assigning permissions";
-    public static final String CORRECT_LOGIN_MESSAGE = "Login is successful";
-    public static final String LOGIN_ERROR_MESSAGE = "An Error Occured While "
-            + "Logging in: Wrong Message Type.";
-    public static final String REGISTRATION_ERROR_MESSAGE = "Could not "
-            + "Register: User name is already taken";
+    /**
+     * Sent when the user logs in with an incorrect password or username.
+     */
+    public static final String INCORRECT_LOGIN_MESSAGE = "Incorrect username " + "or password";
 
-<<<<<<< HEAD:CourseSketchProjects/CourseSketchLoginServer/src/main/java/connection/LoginServer.java
-    private static int numberOfConnections = Integer.MIN_VALUE;
-=======
+    /**
+     * Sent if the user does not have the ability to login as a student or an
+     * instructor.
+     */
+    public static final String INCORRECT_LOGIN_TYPE_MESSAGE = "You do " + "not have the ability to login as that type!";
+    /**
+     * Sent to the user if there was a problem creating the permissions.
+     */
+    public static final String PERMISSION_ERROR_MESSAGE = "There was an error " + "assigning permissions";
+
+    /**
+     * Sent to the user when they login correctly.
+     */
+    public static final String CORRECT_LOGIN_MESSAGE = "Login is successful";
+
     /**
      * Sent if the message type was wrong.
      */
@@ -74,12 +77,11 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
     public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent) {
         super(parent);
     }
->>>>>>> origin/master:CourseSketchProjects/CourseSketchLoginServer/src/main/java/connection/LoginServerWebSocketHandler.java
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-<<<<<<< HEAD:CourseSketchProjects/CourseSketchLoginServer/src/main/java/connection/LoginServer.java
-    public void onMessage(final Session conn, final Request req) {
-=======
     public void onMessage(final SocketSession conn, final Request req) {
         if (req.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(req);
@@ -115,35 +117,21 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *            they are attempting to log in.
      */
     private void registerUserMessage(final SocketSession conn, final Request req, final LoginInformation login) {
->>>>>>> origin/master:CourseSketchProjects/CourseSketchLoginServer/src/main/java/connection/LoginServerWebSocketHandler.java
         try {
-            // This is assuming user is logged in
-            // conn.send(createLoginResponse(req, true));
+            // registers user
+            DatabaseClient.createUser(login.getUsername(), login.getPassword(), login.getEmail(), login.getIsInstructor());
 
-            if (req.getRequestType() == Request.MessageType.TIME) {
-                Request rsp = TimeManager.decodeRequest(req);
-                if (rsp != null) {
-                    send(conn, rsp);
-                }
-                return;
-            }
+            // login user after registering user.
+            loginUser(conn, req, login);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+            send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
+        } catch (RegistrationException e) {
+            e.printStackTrace();
+            send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
+        }
+    }
 
-<<<<<<< HEAD:CourseSketchProjects/CourseSketchLoginServer/src/main/java/connection/LoginServer.java
-            if (req.getLogin().getIsRegistering()) {
-                boolean successfulRegistration = registerUser(req.getLogin()
-                        .getUsername(), req.getLogin().getPassword(), req
-                        .getLogin().getEmail(), req.getLogin()
-                        .getIsInstructor());
-                if (!successfulRegistration) {
-                    send(conn,
-                            createLoginResponse(req, false,
-                                    REGISTRATION_ERROR_MESSAGE, false, null));
-                    return;
-                }
-            }
-            String userLoggedIn = checkUserLogin(req.getLogin().getUsername(),
-                    req.getLogin().getPassword());
-=======
     /**
      * Logs in the user and sends a message to the client.
      *
@@ -161,54 +149,33 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
         try {
             final String userLoggedIn = DatabaseClient.mongoIdentify(login.getUsername(), login.getPassword(), loginAsDefault,
                     login.getIsInstructor());
->>>>>>> origin/master:CourseSketchProjects/CourseSketchLoginServer/src/main/java/connection/LoginServerWebSocketHandler.java
             if (userLoggedIn != null) {
-                String[] ids = userLoggedIn.split(":");
+                final String[] ids = userLoggedIn.split(":");
                 if (ids.length == 2) {
-                    boolean isInstructor = checkUserInstructor(req.getLogin()
-                            .getUsername());
-                    // return if database is an instructor
-                    send(conn,
-                            createLoginResponse(req, true,
-                                    CORRECT_LOGIN_MESSAGE, isInstructor, ids));
-                    return;
+                    final boolean isInstructor = checkUserInstructor(login.getUsername(), login);
+                    send(conn, createLoginResponse(req, login, true, CORRECT_LOGIN_MESSAGE, isInstructor, ids));
                 }
             }
-            send(conn,
-                    createLoginResponse(req, false, INCORRECT_LOGIN_MESSAGE,
-                            false, null));
-        } catch (Exception e) {
+        } catch (LoginException e) {
             e.printStackTrace();
-            send(conn,
-                    createLoginResponse(req, false, e.getMessage(), false,
-                            null));
+            send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
     }
 
-    private static String checkUserLogin(final String user,
-            final String password)
-            throws NoSuchAlgorithmException, InvalidKeySpecException,
-            UnknownHostException {
-        System.out.println("About to identify the user!");
-        String result = DatabaseClient.mongoIdentify(user, password);
-        return result;
-    }
-
-    private static boolean checkUserInstructor(final String user) {
+    /**
+     * @param user
+     *            the user id.
+     * @param login
+     *            the information of what the user is attempting to do.
+     * @return true if the user is an instructor false otherwise.
+     */
+    private static boolean checkUserInstructor(final String user, final LoginInformation login) {
         System.out.println("About to check if user is an instructor!");
-        if (DatabaseClient.mongoIsInstructor(user)) {
-            return true;
+        if (!login.hasIsInstructor()) {
+            return DatabaseClient.defaultIsInstructor(user);
+        } else {
+            return login.getIsInstructor();
         }
-        return false;
-    }
-
-    private static boolean registerUser(final String user,
-            final String password, final String email,
-            final boolean isInstructor) throws GeneralSecurityException {
-        if (DatabaseClient.MongoAddUser(user, password, email, isInstructor)) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -226,14 +193,14 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *            <code>false</code> otherwise
      * @param ids
      *            List of user IDs.
+     * @param login
+     *            The information sent by the user for logging in.
      *
      * @return the request body
      */
-    private static Request createLoginResponse(final Request req,
-            final boolean success,
-            final String message, final boolean instructorIntent,
-            final String[] ids) {
-        Request.Builder requestBuilder = Request.newBuilder();
+    private static Request createLoginResponse(final Request req, final LoginInformation login, final boolean success, final String message,
+            final boolean instructorIntent, final String[] ids) {
+        final Request.Builder requestBuilder = Request.newBuilder();
         requestBuilder.setRequestType(MessageType.LOGIN);
         requestBuilder.setResponseText(message);
         requestBuilder.setSessionInfo(req.getSessionInfo());
@@ -241,29 +208,28 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             requestBuilder.setServersideId(ids[0]); // TODO encrypt this id
         }
 
-        // Create the Login Response.
-        LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
-        loginBuilder.setUsername(req.getLogin().getUsername());
-        loginBuilder.setIsLoggedIn(success);
-        loginBuilder.setIsInstructor(instructorIntent);
-        if (success) {
-            // The reason for this is so the proxy can continue to register user
-            loginBuilder.setIsRegistering(req.getLogin().getIsRegistering());
-            if (loginBuilder.getIsRegistering()) {
-                loginBuilder.setEmail(req.getLogin().getEmail());
+        if (login != null) {
+            // Create the Login Response.
+            final LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
+            loginBuilder.setUsername(login.getUsername());
+            loginBuilder.setIsLoggedIn(success);
+            loginBuilder.setIsInstructor(instructorIntent);
+            if (success) {
+                // The reason for this is so the proxy can continue to register
+                // user
+                loginBuilder.setIsRegistering(login.getIsRegistering());
+                if (loginBuilder.getIsRegistering()) {
+                    loginBuilder.setEmail(login.getEmail());
+                }
+                if (ids != null && ids.length > 1) {
+                    loginBuilder.setUserId(ids[1]);
+                }
             }
-            if (ids != null && ids.length > 1) {
-                loginBuilder.setUserId(ids[1]);
-            }
-        }
 
-        // Add login info.
-        requestBuilder.setLogin(loginBuilder.build());
+            // Add login info.
+            requestBuilder.setOtherData(loginBuilder.build().toByteString());
+        }
         // Build and send.
         return requestBuilder.build();
-    }
-
-    public String getName() {
-        return "Login Socket";
     }
 }
