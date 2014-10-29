@@ -15,7 +15,7 @@ message LectureSlide {
 	//id of this slide
 	required string id = 2;
 	required bool unlocked = 3;
-	//tumbnail
+	//thumbnail
 	repeated LectureElement elements = 4;
 }
 
@@ -27,7 +27,7 @@ message LectureElement {
 	optional int32 y_position = 4;
 	optional int32 x_dimension = 5;
 	optional int32 y_dimension = 6;
-	/*oneof ElementType{
+	oneof ElementType{
 		message TextBox {
 			optional string text = 7;
 		}
@@ -50,7 +50,7 @@ message LectureElement {
 				}
 			}
 		}
-	}*/
+	}
 }
 
 message Answer {
