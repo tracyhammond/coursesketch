@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+			<title>Command Methods test</title>
+			<!-- test Library -->
+			<link rel="import" href="/test/testUtilities/testUtilities.html">
+				
+				<link rel="import"
+					href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+					
+					<!-- file being tested. -->
+					<script src="/src/utilities/persistantData/specificManager/lectureDataManager.js" data-cover></script>
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+		
+		<script>
+			QUnit.module("lecture creation");
+			test("create new database", function(assert) {
+				expect(1);
+				var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+				if(!isUndefined(dataManager))
+					assert.ok(true, "The datamanager was successfully created.");
+			});
+			asyncTest("create new lecture", function(assert) {
+				expect(1);
+				var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+				var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+				course.id = generateUUID();
+				setTimeout(function() {
+					dataManager.setCourse(course, function() {
+						var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+						lecture.id = generateUUID();
+						lecture.courseId = course.id;
+						dataManager.insertLecture(lecture);
+						assert.ok(true, "The lecture has been created and can be accessed from the course.");
+						QUnit.start();
+					});
+				}, 100);  
+			});
+		</script>
+	</body>
