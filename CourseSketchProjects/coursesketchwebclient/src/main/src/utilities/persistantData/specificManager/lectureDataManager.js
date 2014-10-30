@@ -24,11 +24,15 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	function insertLecture(lecture, localCallback, serverCallback) {
 		setLectureLocal(lecture, localCallback);
 		setLectureServer(lecture, function() {
-						 var course = parent.getCourse(lecture.courseId);
-						 var lectureList = course.lectureList;
-						 lectureList.push(lecture.id);
-						 course.lectureList = lectureList;
-						 parent.setCourse(course);
+			parent.getCourse(lecture.courseId, function(course) {
+				var lectureList = course.lectureList;
+				lectureList.push(lecture.id);
+				course.lectureList = lectureList;
+				parent.setCourse(course);
+				if(!isUndefined(serverCallback)) {
+					serverCallback(course);
+				}
+			});
 		});
 	}
 	parent.insertLecture = insertLecture;
@@ -54,7 +58,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 			}
 		});
 	}
-	parent.getLecture = getLecture;
+	// parent.getLecture = getLecture;
 	
 	function getCourseLecture (lectureId, lectureCallback) {
 		getLectures([lectureId], function (lectureList) {
