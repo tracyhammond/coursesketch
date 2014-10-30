@@ -54,7 +54,8 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 				lectureCallback (nonExistantValue);
 			} else {
 				var bytes = ByteBuffer.fromBase64(result.data);
-				lectureCallback(CourseSketch.PROTOBUF_UTIL.getSrlLectureClass().decode(bytes));
+				if(lectureCallback)
+					lectureCallback(CourseSketch.PROTOBUF_UTIL.getLectureClass().decode(bytes));
 			}
 		});
 	}
@@ -103,8 +104,8 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 							});
 							sendData.sendDataRequest (CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, lectureIdsNotFound);
 						}
-						if (lectureList.length > 0) {
-							lectureCallback (lectureList);
+						if (lecturesFound.length > 0) {
+							lectureCallback (lecturesFound);
 						}
 					}
 				});
