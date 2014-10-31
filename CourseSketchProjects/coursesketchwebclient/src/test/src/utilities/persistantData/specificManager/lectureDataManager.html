@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+			<title>Command Methods test</title>
+			<!-- test Library -->
+			<link rel="import" href="/test/testUtilities/testUtilities.html">
+				
+				<link rel="import"
+					href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+					
+					<!-- file being tested. -->
+					<script src="/src/utilities/persistantData/specificManager/lectureDataManager.js" data-cover></script>
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+		
+		<script>
+			QUnit.module("lecture creation");
+			test("create new database", function(assert) {
+				expect(1);
+				var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+				if(!isUndefined(dataManager))
+					assert.ok(true, "The datamanager was successfully created.");
+			});
+			asyncTest("create new lecture", function(assert) {
+				expect(1);
+				var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+				var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+				course.id = generateUUID();
+				setTimeout(function() {
+					dataManager.setCourse(course, function() {
+						var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+						lecture.id = generateUUID();
+						lecture.courseId = course.id;
+						dataManager.insertLecture(lecture);
+						assert.ok(true, "The lecture has been created and can be accessed from the course.");
+						QUnit.start();
+					});
+				}, 100);  
+			});
+			asyncTest("get lectures from course", function(assert) {
+				expect(2);
+				var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+				var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+				course.id = generateUUID();
+				setTimeout(function() {
+					dataManager.setCourse(course, function() {
+						var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
+						var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
+						lecture1.id = generateUUID();
+						lecture2.id = generateUUID();
+						lecture1.title = "I am a test!";
+						lecture2.title = "I am also a test!";
+						lecture1.courseId = course.id;
+						lecture2.courseId = course.id;
+						dataManager.insertLecture(lecture1, function() {
+							dataManager.insertLecture(lecture2, function() {
+								dataManager.getCourse(course.id, function(newCourse) {
+									dataManager.getCourseLectures(newCourse.lectureList, function(lectureList) {
+										assert.ok(true, "Lectures can be fetched from the database.");
+										assert.equal("2", lectureList.length, "Two lectures were inserted and two lectures were returned.");
+										for(var i = 0; i < lectureList.length; ++i) {
+											console.log("Lecture found!");
+											console.log(lectureList[i]);
+										}
+									});
+								});
+							});
+						});
+						QUnit.start();
+					});
+				}, 100);  
+			});
+		</script>
+	</body>

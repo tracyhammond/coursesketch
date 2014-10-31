@@ -15,7 +15,7 @@ message LectureSlide {
 	//id of this slide
 	required string id = 2;
 	required bool unlocked = 3;
-	//tumbnail
+	//thumbnail
 	repeated LectureElement elements = 4;
 }
 
