@@ -117,4 +117,7 @@ public final class DatabaseStringConstants {
     public static final String USER_LIST = "UserList";
     public static final String GROUP_PREFIX = "group";
     public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();
+
+	// mongo comands
+	public static final String SET_COMMAND = "$set";
 }
