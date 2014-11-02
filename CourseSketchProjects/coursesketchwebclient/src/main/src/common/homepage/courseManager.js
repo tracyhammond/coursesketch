@@ -59,7 +59,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
 
         var builder = new SchoolItemBuilder();
-        builder.setList(courseList)
+        builder.setList(courseList);
         if (CourseSketch.connection.isInstructor) {
             builder.setInstructorCard(true);
         }

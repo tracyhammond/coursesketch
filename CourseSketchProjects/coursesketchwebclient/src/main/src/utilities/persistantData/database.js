@@ -13,11 +13,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
         // IndexedDB. So storing your data will not be possible");
 	}
 	var self = this;
-	var courseSketch = {};
+	var dbNameSpace = {};
 	if (databaseSupported) {
-		courseSketch.indexedDB = window.indexedDB;
+		dbNameSpace.indexedDB = window.indexedDB;
 	} else {
-		courseSketch.indexedDB = undefined;
+		dbNameSpace.indexedDB = undefined;
 	}
 
 	var upgradeTables = null;
@@ -68,7 +68,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
 			request.onupgradeneeded = function(e) {
 				var db = e.target.result;
 				// A versionchange transaction is started automatically.
-				e.target.transaction.onerror = courseSketch.indexedDB.onerror;
+				e.target.transaction.onerror = dbNameSpace.indexedDB.onerror;
 				for (var i = 0; i < upgradeTables.length; i++) {
 					table = upgradeTables[i];
 					// delete existing table
@@ -79,25 +79,31 @@ function ProtoDatabase(databaseName, version, openCallback) {
 				}
 			};
 			request.onsuccess = function(e) {
-				courseSketch.indexedDB.db = e.target.result;
+			    console.log("Database has opened");
+				dbNameSpace.indexedDB.db = e.target.result;
 				if (!tableCreationCalled) {
 		            tableCreationCalled = true;
 		            createTableFunctions();
 		        }
 			};
-			request.onerror = courseSketch.indexedDB.onerror;
+			request.onerror = function(e) {
+			    console.log(e);
+			    console.log("Exception has occured when getting data");
+			    // if there is an exception then we should continue
+			    dbNameSpace.indexedDB = null;
+                if (!tableCreationCalled) {
+                    tableCreationCalled = true;
+                    createTableFunctions();
+                }
+			}
 		} catch(exception) {
 		    console.error(exception);
 			// if there is an exception then we should continue
-			courseSketch.indexedDB = null;
+			dbNameSpace.indexedDB = null;
 			if (!tableCreationCalled) {
 	            tableCreationCalled = true;
 	            createTableFunctions();
 	        }
-		}
-		if (!tableCreationCalled) {
-		    tableCreationCalled = true;
-		    createTableFunctions();
 		}
 	};
 
@@ -119,11 +125,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
                  * Creates a function for adding items to the database.
                  */
 				self['putIn' + localTable.name] = function(objectId, objectToAdd, callback) {
-					if (!databaseSupported || !courseSketch.indexedDB) {
+					if (!databaseSupported || !dbNameSpace.indexedDB) {
 						return; // fail silently
 					}
 
-					var db = courseSketch.indexedDB.db;
+					var db = dbNameSpace.indexedDB.db;
 					var trans = db.transaction([localTable.name], "readwrite");
 					var store = trans.objectStore(localTable.name);
 					var request = localTable.add(store, objectId, objectToAdd);
@@ -144,11 +150,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
                  * Creates a function for deleting items from the database.
                  */
 				self['deleteFrom' + localTable.name] = function(objectId, callback) {
-					if (!databaseSupported || !courseSketch.indexedDB || !courseSketch.indexedDB.db) {
+					if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db) {
 						return; // fail silently
 					}
 
-					var db = courseSketch.indexedDB.db;
+					var db = dbNameSpace.indexedDB.db;
 					var trans = db.transaction([localTable.name], "readwrite");
 					var store = trans.objectStore(localTable.name);
 					var request = store.delete(objectId);
@@ -166,13 +172,13 @@ function ProtoDatabase(databaseName, version, openCallback) {
                  * Creates a function for deleting items from the database.
                  */
 				self['getFrom' + localTable.name] = function(objectId, callback) {
-					if (!databaseSupported || !courseSketch.indexedDB) {
+					if (!databaseSupported || !dbNameSpace.indexedDB) {
 						// return undefined
 						callback(undefined, undefined, undefined);
 						return;
 					}
 
-					var db = courseSketch.indexedDB.db;
+					var db = dbNameSpace.indexedDB.db;
 					var trans = db.transaction([localTable.name]);
 					var store = trans.objectStore(localTable.name);
 					var request = store.get(objectId);
@@ -200,7 +206,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
 		try {
 			var result = confirm("Do you want to empty all of the local data?");
 			if (result == true) {
-				var dbreq = courseSketch.indexedDB.deleteDatabase(databaseName);
+				var dbreq = dbNameSpace.indexedDB.deleteDatabase(databaseName);
 				dbreq.onsuccess = function (event) {
 					output_trace("indexedDB: " + databaseName + " deleted");
 				};

@@ -152,11 +152,13 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         var localFunction = setCourseIdList;
         // there are no courses loaded onto this client!
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
+            // there was an error getting the user classes.
             if (!isUndefined(item.returnText) && item.returnText != "" && item.returnText != "null" && item.returnText != null) {
                 userHasCourses = false;
                 console.log(item.returnText);
                 alert(item.returnText);
                 advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
+                courseCallback(new DatabaseException(item.returnText, "Getting all courses for user " + parent.getCurrentId()));
                 return;
             }
             var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
