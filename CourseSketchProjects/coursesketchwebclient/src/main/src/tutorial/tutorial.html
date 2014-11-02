@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="/css/utility/columns.css">
 <link rel="stylesheet" href="/css/courseSketch2.css">
 <link rel="stylesheet" href="/css/common/homePage.css">
+<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 <link rel="import" href="toolbarInclude.html">
 <!-- basic utilities -->
 
@@ -10,10 +11,92 @@
 </head>
 <body>
 
-<!--<button onclick="var textbox = document.createElement('text-box-creation'); document.body.appendChild(textbox);">Text Box</button>
-<button onclick="var tts = document.createElement('text-speech-creation'); document.body.appendChild(tts);">TTS Box</button>-->
-
 <toolbar-creation></toolbar-creation>
+<input id="background-color" type="color">Choose color</input>
+
+<p>cat cat cat cat cat cat cat dog cat cat cat</p>
+
+
+<script>    
+$(document).bind("mouseup",function(event) {
+    
+    var myText = window.getSelection();
+    var range = myText.getRangeAt(0);
+    
+    var selStart = range.startOffset;
+    var selEnd = range.endOffset;
+    var oldText = $(range.commonAncestorContainer).text();
+        
+    console.log(myText.toString());
+    /*if ($(event.target).attr('class') == 'highlightedText') {
+        var oldParent = $(event.target.parentNode);
+    } else {
+        var oldParent = $(event.target);
+    }*/
+    
+    //var oldText = $(oldParent).text();
+    /*var oldHtml = $(oldParent).html().toString();
+    console.log(oldHtml);
+    console.log($(oldHtml).find('span.highlightedText'));
+    $(oldHtml).find('span.highlightedText').remove();*/
+    
+    //if ($(event.target/*.parentNode*/)./*has('.highlightedText').length)*/attr('class') == 'highlightedText') {
+        //selEnd = myText.baseOffset + myText.focusOffset;
+        //oldText = myText.parentNode;
+        //console.log("highlightedtext");
+        //console.log(oldText);
+        //console.log(event.target.parentNode)
+    //} else {
+       // selEnd = myText.focusOffset;
+        //oldText = $(event.target).text();
+        //console.log(oldText);
+    //}
+    
+
+    
+    /*console.log(myText.toString());
+    console.log(oldText);
+    console.log(range.startOffset);
+    console.log(range.endOffset);
+    console.log(range.startContainer);
+    console.log(range.endContainer);
+    console.log(range.commonAncestorContainer.nodeName);
+    console.log($(range.commonAncestorContainer).has('.highlightedText').length);
+    console.log(myText.toString().length);
+    console.log(range.commonAncestorContainer.childNodes);*/
+    
+    console.log(myText);
+    console.log(range);
+    
+    if (range.commonAncestorContainer.childNodes.length > 0) {
+        console.log(range.commonAncestorContainer.childNodes[0].nodeName == '#text');
+    }
+    
+    if (myText.toString().length > 0) {
+        clone = range.cloneContents().childNodes;
+        if (clone.length > 1) {
+            for (i = 0, i < clone.length, i++) {
+                if children[i].nodeName
+    //for (i = 0; i < range.childNodes
+    var newNode = document.createElement('span');
+    newNode.setAttribute('class', 'highlightedText');
+    newNode.setAttribute('style', 'color:blue');
+    //range.selectNode(range.commonAncestorContainer);
+    //range.surroundContents(newNode);
+    //$(range.toString()).find('span.highlightedText').remove();
+    console.log(range.cloneContents().childNodes.length);
+    contents = range.extractContents();
+    //$(contents).find('span.highlightedText').remove();
+    newNode.appendChild(contents);
+    range.insertNode(newNode);
+    
+    //var newText = oldText.substring(0, selStart) + "<span class='highlightedText' style='color:blue'>" + myText.toString() + "</span>" + oldText.substring(selEnd);
+
+    //$(event.target).html($(event.target).html().replace(oldText, newText));
+    
+});
+    
+</script>
 
 <body style="background: #55C3C2;">
 	<!-- color options: #55C3C2 #A9D0F5 -->
