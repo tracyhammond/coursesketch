@@ -9,12 +9,47 @@
 <link rel="import" href="/src/common/lecture/lectureSelection.html"
 	data-fake>
 <script>
-	$(document).ready(function() {
-		CourseSketch.dataManager.getAllCourses = function(callback) {
-			callback([]);
-		};
-		CourseSketch.connection.isInstructor = true;
-	});
+$(document).ready(function() {
+	CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
+		var courseList = [];
+
+		var course1 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+		var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+		var course3 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+		var course4 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+		var course5 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+
+		course1.id = generateUUID();
+		course1.name = "This is a test item!";
+		course1.description = "This is a description. It is not quite as big as the title.";
+		courseList.push(course1);
+
+		course2.id = generateUUID();
+		course2.name = "CourseSketch 101";
+		course2.description = "Take this class to learn more about CourseSketch! We will guide you through the basics to get you up and running quickly.";
+		courseList.push(course2);
+
+		course3.id = generateUUID();
+		course3.name = "Quantum Rocket Science 1337";
+		course3.description = "This is the hardest class that is ever taught anywhere. Unless you are at least as smart as Albert Einstein, you will definitely fail. Topics include: time travel, hyperdrive design, and quantum entanglement communication.";
+		courseList.push(course3);
+		
+		course4.id = generateUUID();
+		course4.name = "Underwater Basket Weaving 220";
+		course4.description = "Learn how to weave a basket underwater!";
+		courseList.push(course4);
+
+		course5.id = generateUUID();
+		course5.name = "ENGR 491";
+		course5.description = "The super-awesome CourseSketch research course!";
+		courseList.push(course5);
+
+		coursesCallback(courseList);
+	}
+	CourseSketch.dataManager.databaseIsReady = function() {
+		return true;
+	}
+});
 </script>
 </head>
 <body>
