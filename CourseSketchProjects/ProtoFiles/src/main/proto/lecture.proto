@@ -4,7 +4,7 @@ message Lecture {
 	required string courseId = 1;
 	//id of this lecture
 	required string id = 2;
-	optional string title = 3;
+	optional string name = 3;
 	optional string description = 4;
 	optional int32 size = 5;
 	repeated LectureSlide slides = 6;
