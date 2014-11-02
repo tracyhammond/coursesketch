@@ -28,10 +28,11 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 				var lectureList = course.lectureList;
 				lectureList.push(lecture.id);
 				course.lectureList = lectureList;
-				parent.setCourse(course);
-				if(!isUndefined(serverCallback)) {
-					serverCallback(course);
-				}
+				parent.setCourse(course, function() {
+					if(!isUndefined(serverCallback)) {
+						serverCallback(course);
+					}
+				});
 			});
 		});
 	}
