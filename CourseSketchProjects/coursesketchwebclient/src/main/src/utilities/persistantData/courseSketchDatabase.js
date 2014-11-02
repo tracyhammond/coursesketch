@@ -49,7 +49,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      */
     this.isDatabaseReady = function() {
         return databaseFinishedLoading;
-    }
+    };
 
     /**
      * After the lower level database has been completely setup the higher level
