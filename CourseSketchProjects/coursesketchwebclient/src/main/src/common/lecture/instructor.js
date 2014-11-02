@@ -18,6 +18,7 @@ var displayLectures = function(lectureList) {
 
 var courseSelected = function(course) {
 	var courseid = course.id;
+	CourseSketch.dataManager.getCourseLectures(course.lectureList, displayLectures);
 	courseSelectionManager.clearAllSelectedItems();
         courseSelectionManager.addSelectedItem(document.getElementById(courseid));
 	CourseSketch.dataManager.getCourse(courseid, function(course) {

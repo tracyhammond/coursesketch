@@ -16,6 +16,9 @@ $(document).ready(function() {
 			var courseList = CourseSketch.fakeCourses;
 			coursesCallback(courseList);
 		}
+		for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
+			CourseSketch.dataManager.setLectureLocal(CourseSketch.fakeLectures[i]);
+		}
 		CourseSketch.dataManager.testDataLoaded = true;
         };
         if (CourseSketch.dataManager.realDatabaseReady()) {
