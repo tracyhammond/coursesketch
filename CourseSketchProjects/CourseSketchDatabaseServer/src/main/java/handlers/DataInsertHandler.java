@@ -3,9 +3,7 @@ package handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import multiconnection.GeneralConnectionServer;
-
-import org.eclipse.jetty.websocket.api.Session;
+import coursesketch.server.interfaces.SocketSession;
 
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.DataSend;
@@ -68,7 +66,7 @@ public final class DataInsertHandler {
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException" })
-    public static void handleData(final Request req, final Session conn) {
+    public static void handleData(final Request req, final SocketSession conn) {
         try {
             System.out.println("Receiving DATA SEND Request...");
 
@@ -136,37 +134,6 @@ public final class DataInsertHandler {
                             }
                         }
                         break;
-                    /*
-                     * case USERGROUP: ArrayList<UserGroupBuilder>
-                     * assignmentLoop =
-                     * MongoInstitution.mongoGetAssignment((ArrayList
-                     * )itrequest.getItemIdList(), request.getUserId());
-                     * for(AssignmentBuilder loopCourse: assignmentLoop){
-                     * finalSchool
-                     * .addAssignments(RequestConverter.convertAssignmentToProtobuf
-                     * (loopCourse)); } break; case CLASS_GRADE:
-                     * ArrayList<AssignmentBuilder> assignmentLoop =
-                     * MongoInstitution.
-                     * mongoGetAssignment((ArrayList)itrequest.getItemIdList(),
-                     * request.getUserId()); for(AssignmentBuilder loopCourse:
-                     * assignmentLoop){
-                     * finalSchool.addAssignments(RequestConverter
-                     * .convertAssignmentToProtobuf(loopCourse)); } break; case
-                     * SOLUTION: ArrayList<AssignmentBuilder> assignmentLoop =
-                     * MongoInstitution
-                     * .mongoGetAssignment((ArrayList)itrequest.getItemIdList(),
-                     * request.getUserId()); for(AssignmentBuilder loopCourse:
-                     * assignmentLoop){
-                     * finalSchool.addAssignments(RequestConverter
-                     * .convertAssignmentToProtobuf(loopCourse)); } break; case
-                     * EXPERIMENT: ArrayList<AssignmentBuilder> assignmentLoop =
-                     * MongoInstitution
-                     * .mongoGetAssignment((ArrayList)itrequest.getItemIdList(),
-                     * request.getUserId()); for(AssignmentBuilder loopCourse:
-                     * assignmentLoop){
-                     * finalSchool.addAssignments(RequestConverter
-                     * .convertAssignmentToProtobuf(loopCourse)); } break;
-                     */
                         default:
                             break;
                     }
@@ -188,18 +155,14 @@ public final class DataInsertHandler {
                 }
             }
             if (!results.isEmpty()) {
-                GeneralConnectionServer.send(conn, buildRequest(results, SUCCESS_MESSAGE, req));
+                conn.send(buildRequest(results, SUCCESS_MESSAGE, req));
             }
-            return;
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-            GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            GeneralConnectionServer.send(conn, buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
-        } catch (Exception e) {
+            conn.send(buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
+        } catch (InvalidProtocolBufferException | RuntimeException e) {
             e.printStackTrace();
-            GeneralConnectionServer.send(conn, buildRequest(null, e.getMessage(), req));
+            conn.send(buildRequest(null, e.getMessage(), req));
         }
     }
 

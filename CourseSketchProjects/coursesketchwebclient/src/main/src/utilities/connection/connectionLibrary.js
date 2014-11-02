@@ -72,7 +72,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                     if (msg.requestType == MessageType.TIME) {
                         console.log("getting from time");
                         var rsp = onTime(evt, msg)
-                        if (rsp != null) this.sendRequest(rsp);
+                        if (rsp != null) self.sendRequest(rsp);
                     } else if (msg.requestType == MessageType.LOGIN && onLogin) {
                         console.log("getting from login");
                         onLogin(evt, msg);
@@ -245,11 +245,11 @@ function Connection(uri, encrypted, attemptReconnect) {
     }
 
     function clientReciveTimeDiff(req) {
-        var startCounter = this.getCurrentTime();
-        timeDifferance = dcodeIO.Long.fromString("" + req.getMessageTime()).subtract(this.getCurrentTime());
+        var startCounter = self.getCurrentTime();
+        timeDifferance = dcodeIO.Long.fromString("" + req.getMessageTime()).subtract(self.getCurrentTime());
         var rsp = CourseSketch.PROTOBUF_UTIL.Request();
         rsp.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
-        rsp.setMessageTime(dcodeIO.Long.fromString("" + req.getMessageTime()).add(this.getCurrentTime().subtract(startCounter)));
+        rsp.setMessageTime(dcodeIO.Long.fromString("" + req.getMessageTime()).add(self.getCurrentTime().subtract(startCounter)));
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
 
         return rsp;

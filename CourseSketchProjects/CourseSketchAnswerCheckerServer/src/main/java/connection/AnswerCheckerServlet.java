@@ -1,12 +1,11 @@
 package connection;
 
-import multiconnection.GeneralConnectionServer;
-import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionManager;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
 import internalConnection.AnswerConnectionManager;
 
 @SuppressWarnings("serial")
-public class AnswerCheckerServlet extends GeneralConnectionServlet {
+public class AnswerCheckerServlet extends ServerWebSocketInitializer {
 
     public AnswerCheckerServlet(final long timeoutTime, final boolean secure,
             final boolean connectLocally) {
@@ -14,8 +13,8 @@ public class AnswerCheckerServlet extends GeneralConnectionServlet {
     }
 
     @Override
-    public final GeneralConnectionServer createServerSocket() {
-        return new AnswerCheckerServer(this);
+    public final ServerWebSocketHandler createServerSocket() {
+        return new AnswerCheckerServerWebSocketHandler(this);
     }
 
     /**
