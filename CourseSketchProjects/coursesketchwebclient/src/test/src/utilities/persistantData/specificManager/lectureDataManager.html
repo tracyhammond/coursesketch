@@ -39,7 +39,7 @@
 					});
 				}, 100);  
 			});
-			asyncTest("get lectures from course", function(assert) {
+			asyncTest("get lectures from course part 1", function(assert) {
 				expect(2);
 				var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
 				var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
@@ -54,24 +54,46 @@
 						lecture2.title = "I am also a test!";
 						lecture1.courseId = course.id;
 						lecture2.courseId = course.id;
-						dataManager.insertLecture(lecture1, function() {
-							dataManager.insertLecture(lecture2, function() {
+						dataManager.insertLecture(lecture1, undefined,function() {
+							dataManager.insertLecture(lecture2, undefined, function() {
 								dataManager.getCourse(course.id, function(newCourse) {
 									dataManager.getCourseLectures(newCourse.lectureList, function(lectureList) {
 										assert.ok(true, "Lectures can be fetched from the database.");
-										assert.equal("2", lectureList.length, "Two lectures were inserted and two lectures were returned.");
+										assert.equal(lectureList.length,2 , "Two lectures were inserted and two lectures were returned.");
 										for(var i = 0; i < lectureList.length; ++i) {
 											console.log("Lecture found!");
 											console.log(lectureList[i]);
-										}
-									});
-								});
-							});
-						});
-						QUnit.start();
+										}QUnit.start();
+									});// getCourselecture loop
+								});// getCourse
+							});// insertlecture lecture2
+						});// insertlecture lecture1
+						
 					});
 				}, 100);  
 			});
+            asyncTest("get lectures from course part 2 testing DB server", function(assert) {
+                      expect(2);
+                      var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                      var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                      course.id = generateUUID();
+                      setTimeout(function() {
+                           dataManager.setCourse(course, function() {
+                                var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
+                                lecture1.id = generateUUID();
+                                lecture1.title = "I am a test!";
+                                lecture1.courseId = course.id;
+                                dataManager.insertLecture(lecture1, function(){
+                                    dataManager.getCourseLecture(lecture1.id, function(lecture){
+                                                assert.ok(true, "Lectures can be fetched from the database.");
+                                                assert.equal(lecture,lecture1 , "Two lectures were inserted and two lectures were returned.");
+                                                QUnit.start();
+                                            });// getCourselecture loop
+                                });// insertlecture lecture1
+                          });
+                    }, 100);  
+                });
+
 			asyncTest("test connection send request", function(assert) {
 				var fakeID = generateUUID();
 				CourseSketch.connection.sendRequest = function(message) {
