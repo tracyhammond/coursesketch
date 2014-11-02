@@ -55,6 +55,7 @@ enum ItemQuery {
 	REGISTER = 12; // userId = 0 courseId = 1
 	COURSE_LIST = 13; // returns a list of Ids
 	UPDATE = 14; // polls the database for any updates/changes that have happened.
+	LECTURE = 15;
 }
 
 /**

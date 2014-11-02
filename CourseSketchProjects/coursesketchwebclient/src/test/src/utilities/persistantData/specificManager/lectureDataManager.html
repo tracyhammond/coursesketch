@@ -72,5 +72,13 @@
 					});
 				}, 100);  
 			});
+			asyncTest("test connection send request", function(assert) {
+				var fakeID = generateUUID();
+				CourseSketch.connection.sendRequest = function(message) {
+					assert.equal(message.requestType, CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST, "Message type is valid.");
+				};
+				CourseSketch.dataManager.getCourseLecture(fakeID);
+				QUnit.start();
+			});
 		</script>
 	</body>
