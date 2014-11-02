@@ -87,11 +87,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
          *
          * @param req The servlet upgrade request.
          * @param resp The servlet upgrade response.
-<<<<<<< HEAD:CourseSketchProjects/jettyBlank/src/main/java/multiconnection/GeneralConnectionServlet.java
-         * @return the {@link ConnectionServer} that handles the websocket communication.
-=======
          * @return the {@link ServerWebSocketHandler} that handles the websocket communication.
->>>>>>> origin/master:CourseSketchProjects/jettyBlank/src/main/java/coursesketch/server/base/ServerWebSocketInitializer.java
          */
         @Override
         public final Object createWebSocket(final ServletUpgradeRequest req, final ServletUpgradeResponse resp) {
@@ -154,6 +150,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
             manager.dropAllConnection(true, false);
             manager.connectServers(connectionServer);
         }
+        onReconnect();
     }
 
     /**
