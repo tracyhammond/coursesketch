@@ -83,7 +83,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 					if (!isUndefined (lecture)) {
 						lecturesFound.push(lecture);
 					} else {
-						lectureIdsNotFound.push(lecture);
+						lectureIdsNotFound.push(lectureId);
 					}
 					barrier -= 1;
 					if (barrier == 0) {
