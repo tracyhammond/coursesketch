@@ -4,7 +4,7 @@ message Lecture {
 	required string courseId = 1;
 	//id of this lecture
 	required string id = 2;
-	optional string title = 3;
+	optional string name = 3;
 	optional string description = 4;
 	optional int32 size = 5;
 	repeated LectureSlide slides = 6;
@@ -27,30 +27,46 @@ message LectureElement {
 	optional int32 y_position = 4;
 	optional int32 x_dimension = 5;
 	optional int32 y_dimension = 6;
-	/*oneof ElementType{
-		message TextBox {
-			optional string text = 7;
-		}
-		message Image {
-			optional bytes image = 8;
-			optional float orientation = 9;
-		}
-		message SketchArea {
-			//srlSketch object if proto include works
-			optional bytes sketch = 10;
-		}
-		message Question {
-			optional string question = 11;
-			oneof QuestionType {
-				message MultipleChoice {
-					repeated Answer answers = 12;
-				}
-				message SketchQuestion {
-					optional bytes sketch = 13;
-				}
-			}
-		}
-	}*/
+	
+    oneof ElementType{
+		TextBox textBox = 7;
+        Image image = 8;
+        SketchArea sketchArea = 9;
+        Question question = 10;
+	}
+    
+}
+
+message TextBox {
+    optional string text = 7;
+}
+
+message Image {
+    optional bytes image = 8;
+    optional float orientation = 9;
+}
+
+message SketchArea {
+    //srlSketch object if proto include works
+    optional bytes sketch = 10;
+}
+
+message Question {
+    optional string question = 11;
+
+    oneof QuestionType {
+        MultipleChoice multipleChoice = 12;
+        SketchQuestion sketchQuestion = 13;
+    }
+    
+}
+
+message MultipleChoice {
+    repeated Answer answers = 12;
+}
+
+message SketchQuestion {
+    optional bytes sketch = 13;
 }
 
 message Answer {

@@ -69,13 +69,13 @@ html, body {
 .lecture>div {
 	padding: 5px;
 }
-.lecture>.title {
+.lecture>.title, .lecture>.name {
 	color: #FFF;
 	font-weight: bold;
 	text-align: center;
 	background-color: #6377A8;
 }
-.list-item>.summary {
+.list-item>.summary, .list-item>.description {
 	font-size: 12px;
 }
 .list-item.selected {

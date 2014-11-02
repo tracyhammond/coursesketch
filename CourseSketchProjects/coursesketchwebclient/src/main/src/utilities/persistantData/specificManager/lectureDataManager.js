@@ -62,7 +62,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	// parent.getLecture = getLecture;
 	
 	function getCourseLecture (lectureId, lectureCallback) {
-		getLectures([lectureId], function (lectureList) {
+		getCourseLectures([lectureId], function (lectureList) {
 			lectureCallback (lectureList[0]);
 		});
 	};
@@ -102,7 +102,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 								lectureCallback (lecturesFound);
 								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
 							});
-							sendData.sendDataRequest (CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, lectureIdsNotFound);
+							sendData.sendDataRequest (CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lectureIdsNotFound);
 						}
 						if (lecturesFound.length > 0) {
 							lectureCallback (lecturesFound);

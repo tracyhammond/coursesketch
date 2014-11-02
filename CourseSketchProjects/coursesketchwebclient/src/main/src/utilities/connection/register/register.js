@@ -143,7 +143,7 @@ function RegisterSystem() {
             return;
         }
         sendLogin(shadowRoot.querySelector("#username").value, CryptoJS.SHA3(p1),
-                document.getElementById("email").value, document.getElementById("myonoffswitch").checked);
+                shadowRoot.querySelector("#email").value, shadowRoot.querySelector("#myonoffswitch").checked);
     }
 
     /**
@@ -154,7 +154,7 @@ function RegisterSystem() {
 
         var formElement = shadowRoot.querySelector("#submitForm");
 
-        formElement.action = "Javascript:(function() { document.querySelector('login-system').getFormSubmitFunction()();})()";
+        formElement.action = "Javascript:(function() { document.querySelector('register-system').getFormSubmitFunction()();})()";
     }
 
     /**
