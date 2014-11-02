@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import multiconnection.MultiConnectionManager;
 
+import coursesketch.server.interfaces.MultiConnectionManager;
 import org.bson.types.ObjectId;
 
 import protobuf.srl.request.Message.Request;
@@ -460,7 +460,7 @@ public final class MongoInstitution implements Institution {
      * @see
      * database.institution.mongo.Institution#mongoGetExperimentAsUser(java.
      * lang.String, java.lang.String, java.lang.String,
-     * multiconnection.MultiConnectionManager)
+     * coursesketch.server.interfaces.MultiConnectionManager)
      */
     @Override
     public void getExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
@@ -475,7 +475,7 @@ public final class MongoInstitution implements Institution {
      * @see
      * database.institution.mongo.Institution#mongoGetExperimentAsInstructor
      * (java.lang.String, java.lang.String, java.lang.String,
-     * multiconnection.MultiConnectionManager, com.google.protobuf.ByteString)
+     * coursesketch.server.interfaces.MultiConnectionManager, com.google.protobuf.ByteString)
      */
     @Override
     public void getExperimentAsInstructor(final String userId, final String problemId, final String sessionInfo,
