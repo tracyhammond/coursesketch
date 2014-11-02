@@ -1,0 +1,33 @@
+<html>
+<head>
+
+<template id="highlightTextCreation">
+    <style>
+    #closeButton {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+    }
+
+    :host {
+        position: fixed;
+        top: 0px;
+        left: centered;
+        cursor: move;
+    }
+    </style>
+
+    <dialog id="highlightTextDialog" class="draggable" open>
+        <input id="highlightColor" type="color">Highlighted Text Color</input>
+        <button id="highlightStart">Start Highlighting</button>
+        <button id="highlightStop">Stop Highlighting</button>
+        <button id="closeButton">X</button>
+    </dialog>
+</template>
+
+<template id="highlightTextViewing">
+
+</template>
+
+</head>
+</html>
