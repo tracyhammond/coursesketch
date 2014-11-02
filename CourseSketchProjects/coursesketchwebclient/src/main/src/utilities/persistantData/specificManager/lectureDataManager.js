@@ -5,9 +5,6 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	var localScope = parent;
 	var ByteBuffer = buffer;
 
-	/**
-	
-	*/
 	function setLectureLocal(lecture, lectureCallback) {
 		database.putInLectures(lecture.id, lecture.toBase64(), function(e, request) {
 			if(lectureCallback) {
@@ -15,6 +12,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 			}
 		});
 	}
+	parent.setLectureLocal = setLectureLocal;
 	
 	function setLectureServer(lecture, lectureCallback) {
 		lectureCallback();
