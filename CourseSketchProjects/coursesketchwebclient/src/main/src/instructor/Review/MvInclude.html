@@ -1,0 +1,39 @@
+<html>
+<head>
+	<script type="text/javascript" src="Multiview.js"></script>
+	<link id="mvSketchImport" rel="import" href="Multiview.html">
+</head>
+</html>
+<script>
+    (function(importDoc) {
+        $(document).ready(function() {
+            var link = importDoc.querySelector('#mvSketchImport');
+            var template = link.import.querySelector('#mvSketch');
+            var clone = document.importNode(template.content, true);
+
+            var newElement = new mvsketch();
+
+            /**
+             * @Method
+             * Called when the element is created, using document.create()(but does nothing else)
+             */
+            mvsketch.prototype.createdCallback = function() {
+            };
+
+            /**
+             * Creates the shadow root and adds that into the system.
+             */
+            mvsketch.prototype.attachedCallback = function() {
+                this.initializeElement(clone.cloneNode(true));
+            };
+
+            mvsketch.prototype.detachedCallback = function() {
+                //this.finalize();
+            };
+
+            document.registerElement('school-item', {
+                prototype : newElement
+            });
+        });
+    })(document.currentScript.ownerDocument);
+</script>

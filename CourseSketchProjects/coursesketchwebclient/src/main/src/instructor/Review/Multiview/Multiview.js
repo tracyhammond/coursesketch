@@ -1,38 +1,26 @@
+function mvsketch(){
+    var shadowRoot = undefined;
+    var gradevalue = undefined;
+
+}
+
+this.initializeElement = function(templateClone){
+    shadowRoot = this.createShadowRoot();
+    shadowRoot.appendChild(templateClone);
+    
+}
+function correct(){
+    gradevalue = 'correct';
+}
+function wrong(){
+    gradevalue = 'wrong';
+}
+function redo(){
+    gradevalue = 'redo';
+    //later will have a function to call that brings up a text box for commments
+}
 
 
-<script>
-    (function(importDoc) {
-        $(document).ready(function() {
-            var link = importDoc.querySelector('#schoolItemTemplateImport');
-            var template = link.import.querySelector('#schoolItemTemplate');
-            var clone = document.importNode(template.content, true);
-
-            var newElement = new SchoolItem();
-
-            /**
-             * @Method
-             * Called when the element is created, using document.create()(but does nothing else)
-             */
-            SchoolItem.prototype.createdCallback = function() {
-            };
-
-            /**
-             * Creates the shadow root and adds that into the system.
-             */
-            SchoolItem.prototype.attachedCallback = function() {
-                this.initializeElement(clone.cloneNode(true));
-            };
-
-            SchoolItem.prototype.detachedCallback = function() {
-                //this.finalize();
-            };
-
-            document.registerElement('school-item', {
-                prototype : newElement
-            });
-        });
-    })(document.currentScript.ownerDocument);
-</script>
 
 
 
