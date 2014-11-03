@@ -1,5 +1,7 @@
 function TextToSpeech() {
-    // Method for speaking the text input into the text box using mespeak
+    /** @param textToRead {string} contains the text to be read
+     * This function speaks the text using the meSpeak library
+     */
     this.speakText = function(textToRead) {
         meSpeak.speak(textToRead);
         };
