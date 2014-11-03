@@ -73,7 +73,7 @@ function HighlightText() {
         
         // Unbinds highlightText function from mouseup when "Stop Highlighting" button is clicked
         shadowRoot.querySelector("#highlightStop").onclick = function() {
-            $(document).unbind("mouseup", highlightText);
+            $(document).off("mouseup", highlightText);
         };
             
         // Click action for the "X" that closes the dialog
