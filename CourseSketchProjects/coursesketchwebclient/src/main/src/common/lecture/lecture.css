@@ -63,10 +63,10 @@ html, body {
 	font-weight: bold;
 	padding: 10px;
 }
-#col1>.content>.list-item:not(.title) {
+#col1>.content>.list-item:not(.title), #col1>.content>school-item {
 	cursor: pointer;
 }
-#col1>.content>.list-item:not(.title):hover {
+#col1>.content>.list-item:not(.title):hover, #col1>.content>school-item:hover /deep/ .name, #col1>.content>school-item:hover /deep/ .description {
 	cursor: pointer;
 	text-decoration: underline;
 }
