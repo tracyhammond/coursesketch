@@ -6,14 +6,13 @@ var displayLectures = function(lectureList) {
 		display: "none"
 	});
 	var add = $("#add").clone();
-	$("#col2>.content").empty();
-	$("#col2>.content").append(add);
+	var schoolItemBuilder = new SchoolItemBuilder();
+	schoolItemBuilder.setList(lectureList).setShowDate(false).build(document.querySelector("#col2>.content"));
+	$("#col2>.content").prepend(add);
 	$("#add").bind("click", addLecture);
 	$("#add").css({
 		display: "inline-block"
 	});
-	var schoolItemBuilder = new SchoolItemBuilder();
-	schoolItemBuilder.setList(lectureList).setShowDate(false).build(document.querySelector("#col2>.content"));
 }
 
 var courseSelected = function(course) {
