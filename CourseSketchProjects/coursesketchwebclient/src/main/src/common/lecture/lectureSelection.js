@@ -1,7 +1,6 @@
 var courseSelectionManager;
 
 var displayLectures = function(lectureList) {
-	console.log(lectureList);
 	$("#placeholder").css({
 		display: "none"
 	});
@@ -13,7 +12,7 @@ var displayLectures = function(lectureList) {
 	$("#add").css({
 		display: "inline-block"
 	});
-}
+};
 
 var courseSelected = function(course) {
 	var courseid = course.id;
@@ -23,16 +22,16 @@ var courseSelected = function(course) {
 	CourseSketch.dataManager.getCourse(courseid, function(course) {
 		CourseSketch.dataManager.getCourseLectures(course.lectureList, displayLectures);
 	});
-}
+};
 
 var addLecture = function(evt) {
 	$("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">HELLO WORLD</div></span>");
-}
+};
 
 var showCourses = function(courseList) {
 	var schoolItemBuilder = new SchoolItemBuilder();
 	schoolItemBuilder.setList(courseList).setShowDate(false).setBoxClickFunction(courseSelected).build(document.querySelector("#col1>.content"));
-}
+};
 
 $(document).ready(function() {
 	courseSelectionManager = new clickSelectionManager();
@@ -57,4 +56,4 @@ $(document).ready(function() {
                 }
             }, 100);
         }
-})
+});
