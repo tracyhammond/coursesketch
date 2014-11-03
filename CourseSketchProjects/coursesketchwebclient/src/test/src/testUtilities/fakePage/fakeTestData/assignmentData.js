@@ -27,10 +27,10 @@
     assignment2.gradeWeight = 15;
     assignment2.grade = 97;
 
-    assignment2.accessDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 9, 01, 1200,0,0, new Date().getTime());
-    assignment2.dueDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 11, 01, 1200, 0, 0, new Date().getTime());
-    assignment2.closeDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 11, 02, 2300, 0, 0, new Date().getTime());
-    assignment2.state = CourseSketch.PROTOBUF_UTIL.State(true, false, false, false, false);
+    //assignment2.accessDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 9, 01, 1200,0,0, new Date().getTime());
+    //assignment2.dueDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 11, 01, 1200, 0, 0, new Date().getTime());
+    //assignment2.closeDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 11, 02, 2300, 0, 0, new Date().getTime());
+    //assignment2.state = CourseSketch.PROTOBUF_UTIL.State(true, false, false, false, false);
     assignment2.imageURL = "test/truss_thumb.png";
     CourseSketch.fakeAssignments.push(assignment2);
 
@@ -39,7 +39,7 @@
     assignment3.name = "Quiz 101";
     assignment3.description = "We will gracefully guide you through a quiz because we are nice";
     assignment3.type = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.QUIZ;
-    assignment3.state = CourseSketch.PROTOBUF_UTIL.State(true, true, false, true, false);
+    //assignment3.state = CourseSketch.PROTOBUF_UTIL.State(true, true, false, true, false);
     CourseSketch.fakeAssignments.push(assignment3);
 
     assignment4.courseId = "3";
@@ -47,7 +47,7 @@
     assignment4.name = "Quantum entanglement";
     assignment4.description = "tests you over your tanglement";
     assignment4.type = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.HOMEWORK;
-    assignment4.state = CourseSketch.PROTOBUF_UTIL.State(true, true, false, true, false);
+    //assignment4.state = CourseSketch.PROTOBUF_UTIL.State(true, true, false, true, false);
     CourseSketch.fakeAssignments.push(assignment4);
 
     assignment5.courseId = "3";
