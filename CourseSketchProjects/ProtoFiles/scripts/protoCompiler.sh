@@ -8,7 +8,7 @@ rm -rf output/  #deleting to replace it
 rm -rf $WEBDIR  #deleting
 mkdir -p $WEBDIR  #making
 
-FILES=../input/*
+FILES=../src/main/proto/*
 for f in $FILES; do
   # take action on each file. $f store current file name
   echo "Processing $f file..."

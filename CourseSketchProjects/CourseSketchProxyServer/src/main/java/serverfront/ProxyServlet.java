@@ -1,15 +1,15 @@
 package serverfront;
 
-import multiconnection.GeneralConnectionServer;
-import multiconnection.GeneralConnectionServlet;
-import multiconnection.MultiConnectionManager;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
 import internalconnections.ProxyConnectionManager;
 
 /**
  *
  */
 @SuppressWarnings("serial")
-public final class ProxyServlet extends GeneralConnectionServlet {
+public final class ProxyServlet extends ServerWebSocketInitializer {
 
     /**
      * @param timeoutTime
@@ -27,8 +27,8 @@ public final class ProxyServlet extends GeneralConnectionServlet {
      * {@inheritDoc}
      */
     @Override
-    public GeneralConnectionServer createServerSocket() {
-        return new ProxyServer(this);
+    public ServerWebSocketHandler createServerSocket() {
+        return new ProxyServerWebSocketHandler(this);
     }
 
     /**
@@ -40,7 +40,7 @@ public final class ProxyServlet extends GeneralConnectionServlet {
      * @return {@link internalconnections.ProxyConnectionManager}
      */
     @Override
-    protected MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
         return new ProxyConnectionManager(getServer(), connectLocally, secure);
     }
 
@@ -49,6 +49,6 @@ public final class ProxyServlet extends GeneralConnectionServlet {
      */
     @Override
     protected void onReconnect() {
-        ((ProxyServer) getServer()).initializeListeners();
+        ((ProxyServerWebSocketHandler) getServer()).initializeListeners();
     }
 }
