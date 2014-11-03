@@ -41,11 +41,10 @@ function HighlightText() {
         return true;
     }
     
+    // Wraps the selected text in span tags with color of the color selector
     function highlightText() {
         if (window.getSelection().type !== "None") {
             var myText = window.getSelection();
-            console.log(myText);
-            console.log(myText.toString().length);
             var range = myText.getRangeAt();
             children = range.cloneContents().childNodes;
             
@@ -80,14 +79,14 @@ function HighlightText() {
         shadowRoot.querySelector("#closeButton").onclick = function() {
             localScope.parentNode.removeChild(localScope);
         };
-        enableDragging();
         
+        // Updates value of highlightColor when the color selector value is changed by the user
         shadowRoot.querySelector("#highlightColor").onchange = function() {
             highlightColor = shadowRoot.querySelector("#highlightColor").value;
         };
+        
+        enableDragging();
     };
-    
-
 }
 
 HighlightText.prototype = Object.create(HTMLDialogElement.prototype);
