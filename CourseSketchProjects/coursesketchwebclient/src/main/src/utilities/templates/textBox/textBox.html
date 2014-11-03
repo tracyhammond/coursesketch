@@ -1,6 +1,5 @@
 <html>
 <head>
-
 <template id="textBoxCreation">
     <style>
     #closeButton {
@@ -8,15 +7,12 @@
         right: 0px;
         top: 0px;
     }
-    #creatorText {
-    }
     :host {
         position: fixed;
         top: 0px;
         cursor: move;
     }
     </style>
-
     <dialog id="textBoxDialog" class="draggable" open>
         <textarea rows="10" cols="30" id="creatorText" placeholder="Insert your text here..."></textarea>
         <button id="closeButton">X</button>
@@ -24,8 +20,7 @@
 </template>
 
 <template id="textBoxViewing">
-
+    <!-- This needs to use protobuf objects and the update manager to display the text box in the position saved by the instructor -->
 </template>
-
 </head>
 </html>
