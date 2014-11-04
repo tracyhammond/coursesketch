@@ -1,4 +1,5 @@
 var courseSelectionManager;
+var currentCourse;
 
 var displayLectures = function(lectureList) {
 	console.log(lectureList);
@@ -17,6 +18,7 @@ var displayLectures = function(lectureList) {
 
 var courseSelected = function(course) {
 	var courseid = course.id;
+    currentCourse = course.id;
 	CourseSketch.dataManager.getCourseLectures(course.lectureList, displayLectures);
 	courseSelectionManager.clearAllSelectedItems();
         courseSelectionManager.addSelectedItem(document.getElementById(courseid));
@@ -26,7 +28,15 @@ var courseSelected = function(course) {
 }
 
 var addLecture = function(evt) {
-	$("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">HELLO WORLD</div></span>");
+	$("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">Untitled Lecture</div></span>");
+    var lecture=CourseSketch.PROTOBUF_UTIL.Lecture();
+    lecture.courseId = currentCourse;
+    lecture.title = "Untitled Lecture";
+    lecture.id = generateUUID();
+    lecture.description = "N/A";
+    CourseSketch.dataManager.insertLecture(lecture );
+    console.log("finished adding to course "+ currentCourse);
+    
 }
 
 var showCourses = function(courseList) {
