@@ -11,6 +11,9 @@
 	.column {
 		height: 80% !important;
 	}
+	html, body {
+		overflow: hidden !important;
+	}
 	</style>
 	</head>
 	<body>
@@ -18,17 +21,30 @@
 			<div class="list-item title">
 				Tools
 			</div>
-			<div class="content">
+			<div class="content toolbar">
+				<div class="list-item">
+					Text Box
+				</div>
+				<div class="list-item">
+					Image
+				</div>
+				<div class="list-item">
+					Sketch Content
+				</div>
+				<div class="list-item">
+					Sketch Question
+				</div>
+				<div class="list-item">
+					Multiple-Choice Question
+				</div>
 			</div>
 		</div>
 		<div id="col2" class="column">
 			<div class="list-item title">
 				Lecture Name Goes here!
 			</div> 
-			<div class="content">
-				<button id="add" style="display: none;"><div class="content">+</div></button>
-				<div id="placeholder">
-					Please select a course from the left.
+			<div id="slide-background" class="content">
+				<div id="slide-content">
 				</div>
 			</div>
 		</div>
