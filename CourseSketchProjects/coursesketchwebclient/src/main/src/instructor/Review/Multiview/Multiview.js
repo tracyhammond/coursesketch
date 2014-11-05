@@ -1,13 +1,13 @@
-function mvsketch(){
+function Mvsketch(){
     var shadowRoot = undefined;
     var gradevalue = undefined;
 
-}
+
 
 this.initializeElement = function(templateClone){
     shadowRoot = this.createShadowRoot();
     shadowRoot.appendChild(templateClone);
-    
+
 }
 function correct(){
     gradevalue = 'correct';
@@ -21,7 +21,7 @@ function redo(){
 }
 
 
-
+}
 
 
 
