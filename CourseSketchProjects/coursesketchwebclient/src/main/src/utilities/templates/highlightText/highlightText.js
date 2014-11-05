@@ -2,7 +2,7 @@ function HighlightText() {
     // This makes the dialog moveable using the interact.js library
     function enableDragging() {
         interact(shadowRoot.querySelector("#highlightTextDialog"))
-            .ignoreFrom("input, button")
+            .ignoreFrom("button")
             .draggable({
                 onmove: function (event) {
                     var target = event.target,
@@ -48,13 +48,19 @@ function HighlightText() {
             var range = myText.getRangeAt();
             children = range.cloneContents().childNodes;
             
-            // This makes sure the selection contains characters and that adding span tags will not ruin the formatting of the selected text
-            if ((myText.toString().length > 0) && checkChildrenNodes(children)) {
-                var newNode = document.createElement('span');
-                newNode.setAttribute('class', 'highlightedText');
-                newNode.setAttribute('style', 'color:' + highlightColor);
-                newNode.appendChild(range.extractContents());
-                range.insertNode(newNode);
+            // Makes sure the selection contains characters so blank span tags are not added
+            if (myText.toString().length > 0) {
+                // Makes sure adding span tags will not ruin the selected text formatting
+                if (checkChildrenNodes(children)) {
+                    var newNode = document.createElement('span');
+                    newNode.setAttribute('class', 'highlightedText');
+                    newNode.setAttribute('style', 'color:' + highlightColor);
+                    newNode.appendChild(range.extractContents());
+                    range.insertNode(newNode);
+                } else {
+                    // Message for a selection that is not valid
+                    alert("Please make a valid selection.")
+                }
             }
         }
     }
@@ -64,15 +70,15 @@ function HighlightText() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
         highlightColor = shadowRoot.querySelector("#highlightColor").value;
+        $(document).on("mouseup", highlightText);
         
-        // Binds mouseup to the highlightText function when the "Start Highlighting" button is clicked
-        shadowRoot.querySelector("#highlightStart").onclick = function() {
-            $(document).on("mouseup", highlightText)
-        };
-        
-        // Unbinds highlightText function from mouseup when "Stop Highlighting" button is clicked
-        shadowRoot.querySelector("#highlightStop").onclick = function() {
-            $(document).off("mouseup", highlightText);
+        // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
+        shadowRoot.querySelector("#highlightMode").onchange = function() {
+            if (shadowRoot.querySelector("#highlightMode").checked) {
+                $(document).on("mouseup", highlightText)
+            } else {
+                $(document).off("mouseup", highlightText);
+            }
         };
             
         // Click action for the "X" that closes the dialog
