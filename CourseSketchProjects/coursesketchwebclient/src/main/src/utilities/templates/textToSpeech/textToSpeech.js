@@ -1,12 +1,20 @@
+/**
+ * Creates the text to speech box dialog
+ * The dialog is moveable and allows the user to enter and playback text to be spoken
+ */
 function TextToSpeech() {
-    /** @param textToRead {string} contains the text to be read
+    /** 
+     * @param textToRead {string} contains the text to be read
      * This function speaks the text using the meSpeak library
      */
     this.speakText = function(textToRead) {
         meSpeak.speak(textToRead);
         };
-        
-    // This makes the dialog moveable using the interact.js library
+    /**
+     * This is for making the dialog moveable with the interact.js library
+     * It selects the created dialog and makes it draggable with no inertia
+     * It also ignores click and drag from textareas and buttons within the dialog
+     */
     function enableDragging() {
         interact(shadowRoot.querySelector("#textToSpeechDialog"))
             .ignoreFrom("textarea, button")
@@ -32,7 +40,11 @@ function TextToSpeech() {
                 elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
         });
     }
-    
+    /**
+     * @param {node} is a clone of the custom HTML Element for the text to speech box
+     * This makes the "speak text" button call the speakText function with the user text as the parameter
+     * Also makes the exit button close the box and enables dragging
+     */
     this.initializeElement = function(templateClone) {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
