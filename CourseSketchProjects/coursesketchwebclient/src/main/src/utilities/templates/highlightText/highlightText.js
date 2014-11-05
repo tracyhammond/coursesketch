@@ -1,5 +1,14 @@
+/**
+ * This class creates the highlightText dialog
+ * The dialog is moveable with a color selector and checkbox for turning highlight mode on and off
+ * The highlighting is done by adding span tags and will not break any formatting across other tags
+ */
 function HighlightText() {
-    // This makes the dialog moveable using the interact.js library
+    /**
+     * This is for making the dialog moveable with the interact.js library
+     * It selects the created dialog and makes it draggable with no inertia
+     * It also ignores click and drag from textareas and buttons within the dialog
+     */
     function enableDragging() {
         interact(shadowRoot.querySelector("#highlightTextDialog"))
             .ignoreFrom("button")
@@ -41,7 +50,11 @@ function HighlightText() {
         return true;
     }
     
-    // Wraps the selected text in span tags with color of the color selector
+    /**
+     * Wraps the selected text in span tags with the color of the color selector
+     * If the selection crosses elements, there is an alert to notify the user of an invalid selection
+     * The selection must also contain characters (no alert for this)
+     */
     function highlightText() {
         if (window.getSelection().type !== "None") {
             var myText = window.getSelection();
@@ -64,7 +77,14 @@ function HighlightText() {
             }
         }
     }
-    
+    /**
+     * @param {node} is a clone of the custom HTML template for highlighting text
+     * This creates the element in the shadowRoot and turns highlight mode on by default
+     * It tracks changes to the color selector and to the highlight mode checkbox
+     * When color selector is changed, the color variable updates. 
+     * When highlight checkbox is changed, the function for highlighting is bound or unbound to mouseup
+     * Also enables dragging and sets the exit button to close the dialog
+     */
     this.initializeElement = function(templateClone) {
         var localScope = this;
         shadowRoot = this.createShadowRoot();

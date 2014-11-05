@@ -1,5 +1,13 @@
+/**
+ * Creates the text box dialog
+ * The dialog is moveable and allows the creator to enter text to be displayed
+ */
 function TextBox() {
-    // This makes the dialog moveable using the interact.js library
+    /**
+     * This is for making the dialog moveable with the interact.js library
+     * It selects the created dialog and makes it draggable with no inertia
+     * It also ignores click and drag from textareas and buttons within the dialog
+     */
     function enableDragging() {
         interact(shadowRoot.querySelector("#textBoxDialog"))
             .ignoreFrom("textarea, button")
@@ -26,6 +34,10 @@ function TextBox() {
         });
     }
     
+    /**
+     * @param {node} is a clone of the custom HTML Element for the text box
+     * Makes the exit button close the box and enables dragging
+     */
     this.initializeElement = function(templateClone) {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
