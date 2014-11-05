@@ -25,3 +25,23 @@
 	width: 20%;
 	height: 100%
 }
+
+/*these classes are for cahnging the background color of the div tag outer*/
+
+.outercorrect{
+	width: 95%;
+	height: 95%;
+	background-color: #00FF00;
+}
+
+.outerwrong{
+	width: 95%;
+	height: 95%;
+	background-color: #FF0000;
+}
+
+.outerredo{
+	width: 95%;
+	height: 95%;
+	background-color: #FFFF00;
+}
