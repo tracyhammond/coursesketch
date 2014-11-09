@@ -30,7 +30,7 @@ var addLecture = function(evt) {
 	$("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">Untitled Lecture</div></span>");
     var lecture=CourseSketch.PROTOBUF_UTIL.Lecture();
     lecture.courseId = currentCourse;
-    lecture.title = "Untitled Lecture";
+    lecture.name = "Untitled Lecture";
     lecture.id = generateUUID();
     lecture.description = "N/A";
     CourseSketch.dataManager.insertLecture(lecture );
