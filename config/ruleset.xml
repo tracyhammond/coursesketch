@@ -32,6 +32,12 @@
 		<exclude name="UncommentedEmptyMethod" />
 	</rule>
 
+	<rule ref="rulesets/java/design.xml/AvoidDeeplyNestedIfStmts">
+		<properties>
+			<property name="problemDepth" value="4" />
+		</properties>
+	</rule>
+	
 	<!-- modification -->
 	<rule ref="rulesets/java/naming.xml/LongVariable">
 		<properties>
