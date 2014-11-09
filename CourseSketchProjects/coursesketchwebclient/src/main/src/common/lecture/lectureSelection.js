@@ -48,14 +48,14 @@ CourseSketch.Lecture = {
 	    lecture.name = "Untitled Lecture";
 	    lecture.id = generateUUID();
 	    lecture.description = "N/A";
-	    CourseSketch.dataManager.insertLecture(lecture, function() {
+	    CourseSketch.dataManager.insertLecture(lecture, function() {}, function() {
 	    	CourseSketch.dataManager.getCourse(currentCourse, function(course) {
 				CourseSketch.dataManager.getCourseLectures(course.lectureList, CourseSketch.Lecture.displayLectures);
 				console.log("finished adding to course "+ currentCourse);
 			});
 	
 	    	
-	    }, function() {});
+	    });
 	    
 	    
 	},
