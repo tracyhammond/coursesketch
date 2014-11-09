@@ -5,6 +5,12 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	var localScope = parent;
 	var ByteBuffer = buffer;
 
+	/**
+	 * Sets a lecture in local database.
+	 *
+	 * @param lecture lecture object to set
+	 * @param lectureCallback function to be called after the lecture setting is done
+	 */
 	function setLectureLocal(lecture, lectureCallback) {
 		database.putInLectures(lecture.id, lecture.toBase64(), function(e, request) {
 			if(lectureCallback) {
@@ -14,11 +20,25 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	}
 	parent.setLectureLocal = setLectureLocal;
 	
+	/**
+	 * Sets a lecture in server database.
+	 *
+	 * @param lecture lecture object to set
+	 * @param lectureCallback function to be called after lecture setting is done
+	 */
 	function setLectureServer(lecture, lectureCallback) {
 		lectureCallback();
 		// TODO Function stub
 	}
 	
+	/**
+	 * Adds a new lecture to both local and server databases. Also updates the
+	 * corresponding course given by the lecture's courseId.
+	 *
+	 * @param lecture lecture object to insert
+	 * @param localCallback function to be called after local insert is done
+	 * @param serverCallback function to be called after server insert is done
+	 */
 	function insertLecture(lecture, localCallback, serverCallback) {
 		setLectureLocal(lecture, localCallback);
 		setLectureServer(lecture, function() {
@@ -36,6 +56,12 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	}
 	parent.insertLecture = insertLecture;
 	
+	/**
+	 * Deletes a lecture from local database.
+	 * 
+	 * @param lectureId ID of the lecture to delete
+	 * @param lectureCallback function to be called after the deletion is done
+	 */
 	function deleteLecture (lectureId, lectureCallback) {
 		database.deleteFromLectures (lectureId, function (e, request) {
 			if (lectureCallback) {
@@ -45,6 +71,13 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	};
 	parent.deleteLecture = deleteLecture;
 	
+	/**
+	 * Gets a lecture from the local database.
+	 *
+	 * @param lectureId ID of the lecture to get
+	 * @param lectureCallback function to be called after getting is complete,
+	 * paramater is the lecture object
+	 */
 	function getLectureLocal (lectureId, lectureCallback) {
 		database.getFromLectures(lectureId, function (e, request, result) {
 			if (isUndefined(result) || isUndefined(result.data)) {
@@ -60,6 +93,13 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	}
 	// parent.getLecture = getLecture;
 	
+	/**
+	 * Gets a lecture from the local and server databases.
+	 *
+	 * @param lectureId ID of the lecture to get
+	 * @param lectureCallback function to be called after getting is complete,
+	 * paramater is the lecture object
+	 */
 	function getCourseLecture (lectureId, lectureCallback) {
 		getCourseLectures([lectureId], function (lectureList) {
 			lectureCallback (lectureList[0]);
@@ -67,6 +107,13 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	};
 	parent.getCourseLecture = getCourseLecture;
 	
+	/**
+	 * Gets a list of lectures from the local and server databases.
+	 *
+	 * @param lectureIds IDs of the lectures to get
+	 * @param lectureCallback function to be called after getting is complete,
+	 * paramater is a list of lecture objects
+	 */
 	function getCourseLectures (lectureIds, lectureCallback) {
 		if (isUndefined (lectureIds) || lectureIds == null || lectureIds.length == 0) {
 			lectureCallback (nonExistantValue);
