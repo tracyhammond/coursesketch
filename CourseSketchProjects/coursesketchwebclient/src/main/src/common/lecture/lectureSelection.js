@@ -1,56 +1,58 @@
-var courseSelectionManager;
-var currentCourse;
+CourseSketch.Lecture = {
+	courseSelectionManager : undefined,
+	currentCourse : undefined,
 
-var displayLectures = function(lectureList) {
-	$("#placeholder").css({
-		display: "none"
-	});
-	var add = $("#add").clone();
-	var schoolItemBuilder = new SchoolItemBuilder();
-	schoolItemBuilder.setList(lectureList).setShowDate(false).build(document.querySelector("#col2>.content"));
-	$("#col2>.content").prepend(add);
-	$("#add").bind("click", addLecture);
-	$("#add").css({
-		display: "inline-block"
-	});
-};
+	displayLectures : function(lectureList) {
+		$("#placeholder").css({
+			display: "none"
+		});
+		var add = $("#add").clone();
+		var schoolItemBuilder = new SchoolItemBuilder();
+		schoolItemBuilder.setList(lectureList).setShowDate(false).build(document.querySelector("#col2>.content"));
+		$("#col2>.content").prepend(add);
+		$("#add").bind("click", CourseSketch.Lecture.addLecture);
+		$("#add").css({
+			display: "inline-block"
+		});
+	},
 
-var courseSelected = function(course) {
-	var courseid = course.id;
-    currentCourse = course.id;
-	CourseSketch.dataManager.getCourseLectures(course.lectureList, displayLectures);
-	courseSelectionManager.clearAllSelectedItems();
-        courseSelectionManager.addSelectedItem(document.getElementById(courseid));
-	CourseSketch.dataManager.getCourse(courseid, function(course) {
-		CourseSketch.dataManager.getCourseLectures(course.lectureList, displayLectures);
-	});
-};
+	courseSelected : function(course) {
+		var courseid = course.id;
+		this.currentCourse = course.id;
+		CourseSketch.dataManager.getCourseLectures(course.lectureList, CourseSketch.Lecture.displayLectures);
+		CourseSketch.Lecture.courseSelectionManager.clearAllSelectedItems();
+		CourseSketch.Lecture.courseSelectionManager.addSelectedItem(document.getElementById(courseid));
+		CourseSketch.dataManager.getCourse(courseid, function(course) {
+			CourseSketch.dataManager.getCourseLectures(course.lectureList, CourseSketch.Lecture.displayLectures);
+		});
+	},
 
-var addLecture = function(evt) {
-	$("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">Untitled Lecture</div></span>");
-    var lecture=CourseSketch.PROTOBUF_UTIL.Lecture();
-    lecture.courseId = currentCourse;
-    lecture.title = "Untitled Lecture";
-    lecture.id = generateUUID();
-    lecture.description = "N/A";
-    CourseSketch.dataManager.insertLecture(lecture );
-    console.log("finished adding to course "+ currentCourse);
-    
-};
+	addLecture : function(evt) {
+		$("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">Untitled Lecture</div></span>");
+	    var lecture=CourseSketch.PROTOBUF_UTIL.Lecture();
+	    lecture.courseId = currentCourse;
+	    lecture.title = "Untitled Lecture";
+	    lecture.id = generateUUID();
+	    lecture.description = "N/A";
+	    CourseSketch.dataManager.insertLecture(lecture );
+	    console.log("finished adding to course "+ currentCourse);
+	    
+	},
 
-var showCourses = function(courseList) {
-	var schoolItemBuilder = new SchoolItemBuilder();
-	schoolItemBuilder.setList(courseList).setShowDate(false).setBoxClickFunction(courseSelected).build(document.querySelector("#col1>.content"));
+	showCourses : function(courseList) {
+		var schoolItemBuilder = new SchoolItemBuilder();
+		schoolItemBuilder.setList(courseList).setShowDate(false).setBoxClickFunction(this.courseSelected).build(document.querySelector("#col1>.content"));
+	}
 };
 
 $(document).ready(function() {
-	courseSelectionManager = new clickSelectionManager();
+	CourseSketch.Lecture.courseSelectionManager = new clickSelectionManager();
 	var loadCourses = function(courseList) {
             /* (waitingIcon.isRunning()) {
                 waitingIcon.finishWaiting();
             }*/
             //localScope.showCourses(courseList);
-	    showCourses(courseList);
+	    CourseSketch.Lecture.showCourses(courseList);
         };
         if (CourseSketch.dataManager.isDatabaseReady()) {
             CourseSketch.dataManager.pollUpdates(function() {
