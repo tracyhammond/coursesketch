@@ -15,9 +15,12 @@ $(document).ready(function() {
 		CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
 			var courseList = CourseSketch.fakeCourses;
 			coursesCallback(courseList);
+			for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
+				CourseSketch.dataManager.setCourse(CourseSketch.fakeCourses[i]);
+			}
 		}
 		for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-			CourseSketch.dataManager.setLectureLocal(CourseSketch.fakeLectures[i]);
+			CourseSketch.dataManager.insertLecture(CourseSketch.fakeLectures[i]);
 		}
 		CourseSketch.dataManager.testDataLoaded = true;
         };

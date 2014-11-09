@@ -13,7 +13,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
 	 */
 	function setLectureLocal(lecture, lectureCallback) {
 		database.putInLectures(lecture.id, lecture.toBase64(), function(e, request) {
-			if(lectureCallback) {
+			if(!isUndefined(lectureCallback)) {
 				lectureCallback(e,request);
 			}
 		});
