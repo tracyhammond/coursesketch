@@ -5,7 +5,7 @@
 	<template id="mvSketch">
 		
 		<style>
-		@import "src/instructor/Review/Multiview.css"
+			@import "src/instructor/Review/Multiview.css"
 		</style>
 
 		<div class="container">
@@ -14,19 +14,19 @@
 				<sketch-surface></sketch-surface>
 					<div class="buttons">
 						<div>
-						/*
-						holds correct button
-						*/
+							<button type = "button" onClick = "correct()">
+								<img src = "resources/images/MultiView/correctbtn.png"/>
+							</button>
 						</div>
 						<div>
-						/*
-						holds wrong button
-						*/
+							<button type = "button" onClick = "wrong()">
+								<img src = "resources/images/MultiView/wrongbtn.png"/>
+							</button>
 						</div>
 						<div>
-						/*
-						hold redo button
-						*/
+							<button type = "button" onClick = "redo()">
+								<img src = "resources/images/MultiView/redobtn.png"/>
+							</button>
 						</div>
 					</div>
 				</div>
