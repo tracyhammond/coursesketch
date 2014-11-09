@@ -2,6 +2,11 @@ CourseSketch.Lecture = {
 	courseSelectionManager : undefined,
 	currentCourse : undefined,
 
+	/**
+	 * Renders a list of lectures to the screen.
+	 *
+	 * @param lectureList list of lectures to display
+	 */
 	displayLectures : function(lectureList) {
 		$("#placeholder").css({
 			display: "none"
@@ -16,6 +21,11 @@ CourseSketch.Lecture = {
 		});
 	},
 
+	/**
+	 * Called when a course is selected. Updates selection and gets lectures for the course.
+	 *
+	 * @param course course object of the selected element
+	 */
 	courseSelected : function(course) {
 		var courseid = course.id;
 		this.currentCourse = course.id;
@@ -27,6 +37,11 @@ CourseSketch.Lecture = {
 		});
 	},
 
+	/**
+	 * Adds a new lecture to the currently selected course.
+	 *
+	 * @param evt event from click (or other) action
+	 */
 	addLecture : function(evt) {
 		$("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">Untitled Lecture</div></span>");
 	    var lecture=CourseSketch.PROTOBUF_UTIL.Lecture();
@@ -39,6 +54,11 @@ CourseSketch.Lecture = {
 	    
 	},
 
+	/**
+	 * Renders a list of courses to the screen.
+	 *
+	 * @param courseList list of courses to display
+	 */
 	showCourses : function(courseList) {
 		var schoolItemBuilder = new SchoolItemBuilder();
 		schoolItemBuilder.setList(courseList).setShowDate(false).setBoxClickFunction(this.courseSelected).build(document.querySelector("#col1>.content"));
