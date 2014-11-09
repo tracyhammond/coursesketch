@@ -24,7 +24,6 @@ message SrlCourse {
 	optional DateTime closeDate = 10; //Date course can no longer be accessed
 	optional State state = 11;
 	repeated string assignmentList = 12;
-	repeated string lectureList = 13;
 
 	enum Accessibility {
 		SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
