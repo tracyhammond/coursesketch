@@ -1,13 +1,13 @@
-CourseSketch.Lecture = {
-	courseSelectionManager : undefined,
-	currentCourse : undefined,
+(function() {
+	CourseSketch.lectureSelection.courseSelectionManager = undefined,
+	CourseSketch.lectureSelection.currentCourse = undefined,
 
 	/**
 	 * Renders a list of lectures to the screen.
 	 *
 	 * @param lectureList list of lectures to display
 	 */
-	displayLectures : function(lectureList) {
+	CourseSketch.lectureSelection.displayLectures = function(lectureList) {
 		$("#placeholder").css({
 			display: "none"
 		});
@@ -15,7 +15,7 @@ CourseSketch.Lecture = {
 		var schoolItemBuilder = new SchoolItemBuilder();
 		schoolItemBuilder.setList(lectureList).setShowDate(false).build(document.querySelector("#col2>.content"));
 		$("#col2>.content").prepend(add);
-		$("#add").bind("click", CourseSketch.Lecture.addLecture);
+		$("#add").bind("click", CourseSketch.lectureSelection.addLecture);
 		$("#add").css({
 			display: "inline-block"
 		});
@@ -26,14 +26,14 @@ CourseSketch.Lecture = {
 	 *
 	 * @param course course object of the selected element
 	 */
-	courseSelected : function(course) {
+	CourseSketch.lectureSelection.courseSelected = function(course) {
 		var courseid = course.id;
 		this.currentCourse = course.id;
-		CourseSketch.dataManager.getCourseLectures(course.lectureList, CourseSketch.Lecture.displayLectures);
-		CourseSketch.Lecture.courseSelectionManager.clearAllSelectedItems();
-		CourseSketch.Lecture.courseSelectionManager.addSelectedItem(document.getElementById(courseid));
+		CourseSketch.dataManager.getCourseLectures(course.lectureList, CourseSketch.lectureSelection.displayLectures);
+		CourseSketch.lectureSelection.courseSelectionManager.clearAllSelectedItems();
+		CourseSketch.lectureSelection.courseSelectionManager.addSelectedItem(document.getElementById(courseid));
 		CourseSketch.dataManager.getCourse(courseid, function(course) {
-			CourseSketch.dataManager.getCourseLectures(course.lectureList, CourseSketch.Lecture.displayLectures);
+			CourseSketch.dataManager.getCourseLectures(course.lectureList, CourseSketch.lectureSelection.displayLectures);
 		});
 	},
 
@@ -42,7 +42,7 @@ CourseSketch.Lecture = {
 	 *
 	 * @param evt event from click (or other) action
 	 */
-	addLecture : function(evt) {
+	CourseSketch.lectureSelection.addLecture = function(evt) {
 		$("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">Untitled Lecture</div></span>");
 	    var lecture=CourseSketch.PROTOBUF_UTIL.Lecture();
 	    lecture.courseId = currentCourse;
@@ -59,33 +59,32 @@ CourseSketch.Lecture = {
 	 *
 	 * @param courseList list of courses to display
 	 */
-	showCourses : function(courseList) {
+	CourseSketch.lectureSelection.showCourses = function(courseList) {
 		var schoolItemBuilder = new SchoolItemBuilder();
 		schoolItemBuilder.setList(courseList).setShowDate(false).setBoxClickFunction(this.courseSelected).build(document.querySelector("#col1>.content"));
 	}
-};
 
-$(document).ready(function() {
-	CourseSketch.Lecture.courseSelectionManager = new clickSelectionManager();
-	var loadCourses = function(courseList) {
-            /* (waitingIcon.isRunning()) {
-                waitingIcon.finishWaiting();
-            }*/
-            //localScope.showCourses(courseList);
-	    CourseSketch.Lecture.showCourses(courseList);
-        };
-        if (CourseSketch.dataManager.isDatabaseReady()) {
-            CourseSketch.dataManager.pollUpdates(function() {
-                CourseSketch.dataManager.getAllCourses(loadCourses);
-            });
-        } else {
-            var intervalVar = setInterval(function() {
-                if (CourseSketch.dataManager.isDatabaseReady()) {
-                    clearInterval(intervalVar);
-                    CourseSketch.dataManager.pollUpdates(function() {
-                        CourseSketch.dataManager.getAllCourses(loadCourses);
-                    });
-                }
-            }, 100);
-        }
-});
+	$(document).ready(function() {
+		CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
+		var loadCourses = function(courseList) {
+		    /* (waitingIcon.isRunning()) {
+			waitingIcon.finishWaiting();
+		    }*/
+		    CourseSketch.lectureSelection.showCourses(courseList);
+		};
+		if (CourseSketch.dataManager.isDatabaseReady()) {
+		    CourseSketch.dataManager.pollUpdates(function() {
+			CourseSketch.dataManager.getAllCourses(loadCourses);
+		    });
+		} else {
+		    var intervalVar = setInterval(function() {
+			if (CourseSketch.dataManager.isDatabaseReady()) {
+			    clearInterval(intervalVar);
+			    CourseSketch.dataManager.pollUpdates(function() {
+				CourseSketch.dataManager.getAllCourses(loadCourses);
+			    });
+			}
+		    }, 100);
+		}
+	});
+})();
