@@ -44,7 +44,7 @@ import database.auth.MongoAuthenticator;
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
-        "PMD.NPathComplexity" , "PMD.AvoidDeeplyNestedIfStmts" })
+        "PMD.NPathComplexity" })
 public final class CourseProblemManager {
 
     /**
@@ -128,6 +128,7 @@ public final class CourseProblemManager {
         if (isUsers && !authenticator.isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
+
         // states
         final State.Builder stateBuilder = State.newBuilder();
 

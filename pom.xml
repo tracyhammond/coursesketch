@@ -415,7 +415,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- version -->
 		<jettyVersion>[9.2.2,)</jettyVersion> <!-- 9.2.2.v20140723 -->
-		<protobufVersion>[2.6.0,)</protobufVersion>
+		<protobufVersion>[2.5.0,)</protobufVersion>
 		<jodaVersion>[2.1,)</jodaVersion>
 		<mongodbVersion>[2.12.3,)</mongodbVersion>
 		<mockitoVersion>1.9.5</mockitoVersion>
