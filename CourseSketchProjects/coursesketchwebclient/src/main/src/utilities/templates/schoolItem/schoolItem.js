@@ -38,7 +38,7 @@ function SchoolItem() {
         for (var i = 0; i < widths.length; i++) {
             var width = widths[i];
             if (typeof width == "string") {
-                if (width.endsWith && width.endsWith("px")) {
+                if (width.endsWith("px")) {
                     width = width.substring(0, width.indexOf("px"));
                     width = parseInt(width);
                 } else {
