@@ -5,29 +5,27 @@
 	<template id="mvSketch">
 		
 		<style>
-			@import "src/instructor/Review/Multiview.css";
+			@import "/src/instructor/Review/Multiview/Multiview.css";
 		</style>
 
-		<div class="container">
-			<div class="outer">
-				<div class="inner">
-				<sketch-surface></sketch-surface>
-					<div class="buttons">
-						<div>
-							<button type = "button" onClick = "correct()">
-								<img src = "resources/images/MultiView/correctbtn.png"/>
-							</button>
-						</div>
-						<div>
-							<button type = "button" onClick = "wrong()">
-								<img src = "resources/images/MultiView/wrongbtn.png"/>
-							</button>
-						</div>
-						<div>
-							<button type = "button" onClick = "redo()">
-								<img src = "resources/images/MultiView/redobtn.png"/>
-							</button>
-						</div>
+		<div class="outer">
+			<div class="inner">
+				<sketch-surface data-readOnly=""></sketch-surface>
+				<div class="buttons">
+					<div>
+						<button type = "button" onClick = "correct()">
+							<img src = "/images/MultiView/correctbtn.png"/>
+						</button>
+					</div>
+					<div>
+						<button type = "button" onClick = "wrong()">
+							<img src = "/images/MultiView/wrongbtn.png"/>
+						</button>
+					</div>
+					<div>
+						<button type = "button" onClick = "redo()">
+							<img src = "/images/MultiView/redobtn.png"/>
+						</button>
 					</div>
 				</div>
 			</div>
