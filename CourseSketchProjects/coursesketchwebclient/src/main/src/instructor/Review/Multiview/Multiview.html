@@ -10,24 +10,15 @@
 
 		<div class="outer">
 			<div class="inner">
-				<sketch-surface data-readOnly=""></sketch-surface>
-				<div class="buttons">
-					<div>
-						<button type = "button" onClick = "correct()">
-							<img src = "/images/MultiView/correctbtn.png"/>
+				<sketch-surface></sketch-surface>
+				<span class="buttons">
+						<button type = "button" class="correctButton" onClick = "correct()">
 						</button>
-					</div>
-					<div>
-						<button type = "button" onClick = "wrong()">
-							<img src = "/images/MultiView/wrongbtn.png"/>
+						<button type = "button" class="wrongButton" onClick = "wrong()">
 						</button>
-					</div>
-					<div>
-						<button type = "button" onClick = "redo()">
-							<img src = "/images/MultiView/redobtn.png"/>
+						<button type = "button" class="redoButton" onClick = "redo()">
 						</button>
-					</div>
-				</div>
+				</span>
 			</div>
 		</div>
 	</template>
