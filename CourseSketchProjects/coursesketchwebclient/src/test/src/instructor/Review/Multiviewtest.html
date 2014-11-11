@@ -1,0 +1,83 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/instuctor/Review/Multiview/Multiview.html">
+
+<!-- file being tested. -->
+<script src="/src/instuctor/Review/Multiview/Multiview.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="mvSketch"></div>
+
+	<script>
+        QUnit.module("div test");
+        test("div container creation", function(assert) {
+            assert.ok(false, "div container was not made");
+            assert.ok(true, "div container created successfully");
+        });
+         test("div outer creation", function(assert) {
+            assert.ok(false, "div outer was not created");
+            assert.ok(true, "div outer was created successfully");
+         });
+         test("div inner creation", function(assert) {
+            assert.ok(false, "div inner was not created");
+            assert.ok(true, "div inner was created successfully");
+         });
+         test("div button creation", function(assert) {
+            assert.ok(false, "buttons were not made");
+            assertok(true, "buttons made successfully");
+         });
+    </script>
+	<script>
+        QUnit.module("testModule2");
+        test("test test2", function(assert) {
+            assert.ok(false, "except when my tests fail...");
+        });
+    </script>
+	<script>
+        QUnit.module("timing Test");
+        QUnit.asyncTest("testing how timing works this test will fail", function(assert) {
+            setTimeout(function() {
+                assert.ok(true);
+                QUnit.start();
+            }, 1000);
+        });
+        QUnit.asyncTest("testing how timing works2", function(assert) {
+            restoreRealTime();
+            setTimeout(function() {
+                assert.ok(true);
+                QUnit.start();
+            }, 1000);
+        });
+
+        QUnit.asyncTest("testing how timing works this test will fail", function(assert) {
+            setTimeout(function() {
+                assert.ok(true);
+                QUnit.start();
+            }, 1000);
+        });
+
+        QUnit.asyncTest("testing how timing works this test will pass", function(assert) {
+
+            var clock = sinon.useFakeTimers();
+            setTimeout(function() {
+                assert.ok(true);
+                QUnit.start();
+            }, 1000);
+            clock.tick(1000);
+        });
+
+        QUnit.test("how does fak timing work this sees if the sinon timers are the same as the other timers", function(assert) {
+            var localFunc = setTimeout;
+            this.clock = this.useFakeTimers();
+            assert.equal(localFunc, setTimeout);
+        });
+    </script>
+</body>
