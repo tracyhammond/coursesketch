@@ -9,17 +9,12 @@
 		 * @param lectureList list of lectures to display
 		 */
 		CourseSketch.lectureSelection.displayLectures = function(lectureList) {
-			$("#placeholder").css({
-				display: "none"
-			});
 			var add = $("#add").clone();
 			var schoolItemBuilder = new SchoolItemBuilder();
 			schoolItemBuilder.setList(lectureList).setShowDate(false).build(document.querySelector("#col2>.content"));
 			$("#col2>.content").prepend(add);
 			$("#add").bind("click", CourseSketch.lectureSelection.addLecture);
-			$("#add").css({
-				display: "inline-block"
-			});
+			$("#add").addClass("show");
 		};
 
 		/**
