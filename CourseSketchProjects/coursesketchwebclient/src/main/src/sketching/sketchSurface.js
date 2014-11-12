@@ -185,21 +185,21 @@ SketchSurface.prototype.initializeElement = function(document, templateClone) {
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchEventConverterClass, UpdateManagerClass) {
     this.initializeSketch();
 
-    if (isUndefined(this.dataset) || isUndefined(this.dataset.readOnly)) {
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {\
         this.initializeInput(InputListenerClass, SketchEventConverterClass);
     }
 
-    if (isUndefined(this.dataset) || isUndefined(this.dataset.customId) || isUndefined(this.id) || this.id == null || this.id == "") {
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.customid) || isUndefined(this.id) || this.id == null || this.id == "") {
         this.id = generateUUID();
     }
 
-    if (isUndefined(this.dataset) || isUndefined(this.dataset.existingList)) {
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.existinglist)) {
         this.bindToUpdateList(UpdateManagerClass);
     }
 
     this.registerSketchInManager();
 
-    if (isUndefined(this.dataset) || (isUndefined(this.dataset.existingList) && isUndefined(this.dataset.customId))) {
+    if (isUndefined(this.dataset) || (isUndefined(this.dataset.existinglist) && isUndefined(this.dataset.customid))) {
         this.createSketchUpdate();
     }
 };
