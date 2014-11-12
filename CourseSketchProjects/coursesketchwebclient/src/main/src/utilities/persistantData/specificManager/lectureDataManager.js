@@ -33,8 +33,21 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *                function to be called after lecture setting is done
      */
     function setLectureServer(lecture, lectureCallback) {
-        lectureCallback();
-        // TODO Function stub
+        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lecture.toArrayBuffer());
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
+            var resultArray = item.getResponseText().split(":");
+            var oldId = resultArray[1];
+            var newId = resultArray[0];
+            // we want to get the current course in the local database in case
+            // it has changed while the server was processing.
+            getCourseLecture(oldId, function(lecture2) {
+                deleteLecture(oldId);
+                lecture2.id = newId;
+                setLectureLocal(lecture2, function() {
+                    lectureCallback(lecture2);
+                });
+            });
+        });
     }
 
     /**
