@@ -1,8 +1,8 @@
-.outer{
+#outer {
     position:relative;
-	width: 100%;
-	height: 100%;
-	padding: 1px 1px 1px 1px;
+	width: 40%;
+	height: 35%;
+	padding: 10px 10px 10px 10px;
 	background-color: #B8B8B8;
 }
 
@@ -22,40 +22,38 @@ button{
 }
 
 .correctButton {
-    background: url("/images/MultiView/correctbtn.png");
+    background: url("/images/MultiView/correctbtn.svg");
+     background-repeat: no-repeat;
+     background-position: center;
+
 }
 
 .wrongButton {
-    background: url("/images/MultiView/wrongbtn.png");
+    background: url("/images/MultiView/wrongbtn.svg");
+     background-repeat: no-repeat;
+     background-position: center;
 }
 
 .redoButton {
-    background: url("/images/MultiView/redobtn.png");
+    background: url("/images/MultiView/redobtn.svg");
+     background-repeat: no-repeat;
+     background-position: center;
 }
 
 sketch-surface{
     float:left;
 	height:100%;
 	width:80%;
-	background:#00FF00;
+	background:#FFFFFF;
 }
 
 /*these classes are for cahnging the background color of the div tag outer*/
 
-.outercorrect{
-	width: 95%;
-	height: 95%;
+#outer.outerCorrect{
 	background-color: #00FF00;
 }
 
-.outerwrong{
-	width: 95%;
-	height: 95%;
+#outer.outerWrong{
 	background-color: #FF0000;
 }
 
-.outerredo{
-	width: 95%;
-	height: 95%;
-	background-color: #FFFF00;
-}

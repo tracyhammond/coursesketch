@@ -8,31 +8,23 @@ function Mvsketch(){
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+        shadowRoot.querySelector(".correctButton").onclick = correct;
+        shadowRoot.querySelector(".wrongButton").onclick = wrong;
     };
     function correct(){
         gradevalue = 'correct';
-        var changing = document.getElementById("outer");
-        changing.className="outercorrect";
+        shadowRoot.querySelector("#outer").className='outerCorrect';
     }
     function wrong(){
         gradevalue = 'wrong';
-        var changing = document.getElementById("outer");
-        changing.className="outerwrong";
+        shadowRoot.querySelector("#outer").className='outerWrong';
     }
-    function redo(){
-        gradevalue = 'redo';
-        var changing = document.getElementById("outer");
-        changing.className="outerredo";
+  //  function redo(){
+       // gradevalue = 'redo';
+       // shadowRoot.querySelector(".outer").backgroundColor='green';
         //later will have a function to call that brings up a text box for commments
-    }
-    document.getElementById("correct").onClick = correct();
-    document.getElementById("wrong").onClick =  wrong();
+   // }
     
-    document.getElementById("redo").onClick = redo();
-
-
-   // function getData(){
-       // var sketches = new Array();
 
 };
 
