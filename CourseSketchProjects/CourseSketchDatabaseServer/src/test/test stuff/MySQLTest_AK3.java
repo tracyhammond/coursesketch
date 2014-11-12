@@ -1,5 +1,10 @@
 /**
  * 
+ 
+srl03.tamu.edu/phpmyadmin/
+user: srl
+password: sketchrec
+ 
  */
 package test;
 
