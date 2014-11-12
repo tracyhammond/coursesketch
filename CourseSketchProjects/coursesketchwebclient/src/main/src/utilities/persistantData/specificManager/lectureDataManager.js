@@ -78,7 +78,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      */
     function deleteLecture(lectureId, lectureCallback) {
         database.deleteFromLectures(lectureId, function(e, request) {
-            if (lectureCallback) {
+            if (!isUndefined(lectureCallback)) {
                 lectureCallback(e, request);
             }
         });
