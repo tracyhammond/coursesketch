@@ -100,13 +100,19 @@
              */
 			asyncTest("test connection send request", function(assert) {
 				var fakeID = generateUUID();
-                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
 				CourseSketch.connection.sendRequest = function(message) {
 					assert.equal(message.requestType, CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST, "Message type is valid.");
                     QUnit.start();  
 				};
-				dataManager.getCourseLecture(fakeID);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+				var interval = setInterval(function() {
+					if (dataManager.isDatabaseReady()) {
+						clearInterval(interval);
+						dataManager.getCourseLecture(fakeID);
+					}
+				}, 100);
 			});
+			
             asyncTest("Testing Delete ", function(assert){
                       expect(1);
                       var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
@@ -131,5 +137,27 @@
                                  });// insertlecture lecture1
                             },100);
                   });
+  				asyncTest("create new lecture slide", function(assert) {
+				expect(1);
+				var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+				var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+				course.id = generateUUID();
+				setTimeout(function() {
+					dataManager.setCourse(course, function() {
+						var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+						lecture.id = generateUUID();
+						lecture.courseId = course.id;
+                        lecture.name= "I AM TEST";
+                        var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+						slide.lectureId = lecture.id;
+						slide.id = generateUUID();
+						slide.unlocked = true;
+						dataManager.insertLecture(lecture);
+						dataManager.insertSlide(slide);
+						assert.ok(true, "The lecture has been created and can be accessed from the course.");
+						QUnit.start();		
+					});
+				}, 100);  
+			});
 		</script>
 	</body>
