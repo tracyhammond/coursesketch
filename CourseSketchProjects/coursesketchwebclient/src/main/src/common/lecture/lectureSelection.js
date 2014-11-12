@@ -20,7 +20,7 @@
 			$("#add").css({
 				display: "inline-block"
 			});
-		},
+		};
 
 		/**
 		 * Called when a course is selected. Updates selection and gets lectures for the course.
@@ -33,7 +33,7 @@
 			CourseSketch.dataManager.getCourseLectures(course.lectureList, CourseSketch.lectureSelection.displayLectures);
 			CourseSketch.lectureSelection.courseSelectionManager.clearAllSelectedItems();
 			CourseSketch.lectureSelection.courseSelectionManager.addSelectedItem(document.getElementById(courseid));
-		},
+		};
 
 		/**
 		 * Adds a new lecture to the currently selected course.
@@ -50,7 +50,7 @@
 		    CourseSketch.dataManager.insertLecture(lecture );
 		    console.log("finished adding to course "+ currentCourse);
 		    
-		},
+		};
 
 		/**
 		 * Renders a list of courses to the screen.
@@ -59,8 +59,9 @@
 		 */
 		CourseSketch.lectureSelection.showCourses = function(courseList) {
 			CourseSketch.lectureSelection.schoolItemBuilder = new SchoolItemBuilder();
-			CourseSketch.lectureSelection.schoolItemBuilder.setList(courseList).setShowDate(false).setBoxClickFunction(this.courseSelected).build(document.querySelector("#col1>.content"));
-		}
+			CourseSketch.lectureSelection.schoolItemBuilder.setList(courseList).setShowDate(false)
+				.setBoxClickFunction(this.courseSelected).build(document.querySelector("#col1>.content"));
+		};
 	
 		CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
 		var loadCourses = function(courseList) {
