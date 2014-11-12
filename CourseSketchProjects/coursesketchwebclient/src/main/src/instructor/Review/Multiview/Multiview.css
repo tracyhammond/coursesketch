@@ -1,14 +1,8 @@
-
-.container{
-	position:relative;
-	width: 25%;
-	height: 10%;
-	background-color: #FFFFFF;
-}
-
 .outer{
-	width: 95%;
-	height: 95%;
+    position:relative;
+	width: 100%;
+	height: 100%;
+	padding: 1px 1px 1px 1px;
 	background-color: #B8B8B8;
 }
 
@@ -18,16 +12,32 @@
 }
 
 .buttons{
-	width: 15%;
+float:right;
+	width: 20%;
 	height: 100%
 }
 button{
-	height:30%;
-	width:90%;
+	height:calc(100% / 3);
+	width:100%;
 }
+
+.correctButton {
+    background: url("/images/MultiView/correctbtn.png");
+}
+
+.wrongButton {
+    background: url("/images/MultiView/wrongbtn.png");
+}
+
+.redoButton {
+    background: url("/images/MultiView/redobtn.png");
+}
+
 sketch-surface{
-	height:90%;
-	max-width:50%;
+    float:left;
+	height:100%;
+	width:80%;
+	background:#00FF00;
 }
 
 /*these classes are for cahnging the background color of the div tag outer*/
