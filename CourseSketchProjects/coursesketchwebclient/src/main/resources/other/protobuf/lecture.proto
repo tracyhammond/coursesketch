@@ -13,7 +13,7 @@ message Lecture {
 	optional string name = 3;
 	optional string description = 4;
 	optional int32 size = 5;
-	repeated LectureSlide slides = 6;
+	repeated string slides = 6;
 }
 
 message LectureSlide {
