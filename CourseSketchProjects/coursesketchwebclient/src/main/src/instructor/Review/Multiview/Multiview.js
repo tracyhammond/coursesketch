@@ -25,6 +25,10 @@ function Mvsketch(){
         changing.className="outerredo";
         //later will have a function to call that brings up a text box for commments
     }
+    document.getElementById("correct").onClick = correct();
+    document.getElementById("wrong").onClick =  wrong();
+    
+    document.getElementById("redo").onClick = redo();
 
 
    // function getData(){
