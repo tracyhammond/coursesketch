@@ -73,31 +73,32 @@
 					});
 				}, 100);  
 			});
-            /* not hooked up to remote database yet
             asyncTest("get lectures from course part 2 testing DB server", function(assert) {
+				var req = CourseSketch.PROTOBUF_UTIL.SrlRequest();
+				req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().RequestType.DATA_RESULT;
+				var result = CourseSketch.PROTOBUF_UTIL.DataResult();
+				
+				var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+				itemResult.Query = CourseSketch.PROTOBUF_UTIL.ItemQuery.(LECTURE);
+				itemResult.data = schoolObjectYouCreate.toArrayBuffer();
+				
+				
                       expect(1);
                       var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                       var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                       course.id = generateUUID();
-                      setTimeout(function() {
-                           dataManager.setCourse(course, function() {
-                                var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
-                                lecture1.id = generateUUID();
-                                lecture1.name = "I am a test!";
-                                lecture1.courseId = course.id;
-                                dataManager.insertLecture(lecture1, function(){
-                                    dataManager.getLecturelocal(lecture1.id, function(lecture){
-                                                assert.ok(true, "Lectures can be fetched from the database.");
-                                                //assert.equal(lecture.id,lecture1.id , "Two lectures were inserted and two lectures were returned.");
-                                                                 //console.log("Lecture leng "+ lecture.length);
-                                                                 //assert.equal(lecture.name,lecture1.name , "The name is the same");
-                                                QUnit.start();
-                                            });// getCourselecture loop
-                                });// insertlecture lecture1
-                          });
-                    }, 100);  
+
+					var interval = setInterval(function() {
+					if (dataManager.isDatabaseReady()) {
+						clearInterval(interval);
+						dataManager.getCourseLecture(fakeID, undefined, function(){
+						    });
+						CourseSketch.connection.sendSelf(req);
+						
+					}
+				}, 100);					
                 });
-             */
+             
 			asyncTest("test connection send request", function(assert) {
 				var fakeID = generateUUID();
 				CourseSketch.connection.sendRequest = function(message) {
