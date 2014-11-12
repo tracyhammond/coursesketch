@@ -185,7 +185,7 @@ SketchSurface.prototype.initializeElement = function(document, templateClone) {
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchEventConverterClass, UpdateManagerClass) {
     this.initializeSketch();
 
-    if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {\
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
         this.initializeInput(InputListenerClass, SketchEventConverterClass);
     }
 
