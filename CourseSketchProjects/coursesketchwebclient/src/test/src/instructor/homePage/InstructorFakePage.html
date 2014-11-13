@@ -11,7 +11,7 @@
     $(document).ready(function() {
         // calls the list with an empty array.
         CourseSketch.dataManager.getAllCourses = function(callback) {
-            callback([]);
+            callback(new DatabaseException());
         };
         CourseSketch.connection.isInstructor = true;
     });
