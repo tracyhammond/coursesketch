@@ -2,10 +2,52 @@
 <head>
 </head>
 <body>
-<template id="schoolItemTemplate">
+<template id="advanceEditTemplate">
     <style>
         @import "/src/utilities/templates/schoolItem/schoolItem.css";
+        @import "/src/utilities/templates/schoolItem/advanceEdit.css";
     </style>
-    <div></div>
-    </template>
+        <span>
+            <h4>ID:</h4>
+            <span id="elementId"></span>
+        </span>
+        <span>
+            <h4>Name:</h4>
+            <input type="text">
+        </span>
+        <span>
+            <h4>Description:</h4>
+            <br>
+            <textarea></textarea>
+        </span>
+        <div class="latePolicy">
+            <h3>Late Policy</h3>
+            <span>
+                <h4>Algorithm:</h4>
+                <select>
+                    <option>Exponential</option>
+                    <option>Stepping</option>
+                    <option>Linear</option>
+                </select>
+            </span>
+            <span>
+                <h4>Time Period:</h4>
+                <select>
+                    <option value="milli">Constantly</option>
+                    <option value="minute">Every Minute</option>
+                    <option value="hour">Every Hour</option>
+                    <option value="day">Every Day</option>
+                </select>
+            </span>
+            <span>
+                <h4>Reduction Rule:</h4>
+                <select>
+                    <option value="cap">Cap grade</option>
+                    <option value="percent">percent of actual grade</option>
+                </select>
+            </span>
+            <button>generate example graph from options</button>
+        </div>
+    <button>saveME</button>
+</template>
 </body>
