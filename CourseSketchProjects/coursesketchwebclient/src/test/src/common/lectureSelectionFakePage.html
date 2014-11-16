@@ -15,7 +15,7 @@ $(document).ready(function() {
 		CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
 			var courseList = CourseSketch.fakeCourses;
 			coursesCallback(courseList);
-			for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
+			for(var i = 0; i < CourseSketch.fakeCourses.length; ++i) {
 				CourseSketch.dataManager.setCourse(CourseSketch.fakeCourses[i]);
 			}
 		}
