@@ -81,7 +81,7 @@
 					simulate(courseDomList[i], "click");
 					var lecturesOld, lecturesNew;
 					CourseSketch.dataManager.getCourse(courseDomList[i].id, function(course) {
-						CourseSketch.lectureSelection.addLecture(function(course) {
+						CourseSketch.lectureSelection.addLecture(undefined, function(course) {
 							assert.ok(true, "Succesfully added a lecture.");
 						});
 					});
