@@ -48,7 +48,7 @@
          * @param evt
          *                event from click (or other) action
          */
-        CourseSketch.lectureSelection.addLecture = function(evt) {
+        CourseSketch.lectureSelection.addLecture = function(addLectureCallback) {
             var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture.courseId = currentCourse;
             lecture.name = "Untitled Lecture";
@@ -62,6 +62,7 @@
                             CourseSketch.lectureSelection.displayLectures);
                             console.log("finished adding to course "
                                 + currentCourse);
+                            addLectureCallback(course);
                     });
             };
             CourseSketch.dataManager.insertLecture(lecture, insertCallback, insertCallback);
