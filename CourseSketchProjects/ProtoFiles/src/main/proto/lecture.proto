@@ -1,5 +1,12 @@
 package protobuf.srl.lecture;
 
+
+message SrlLectureDataHolder {
+	repeated Lecture lectures = 1;
+	repeated LectureSlide slides = 2;
+	repeated LectureElement elements = 3;
+}
+ 
 message Lecture {
 	required string courseId = 1;
 	//id of this lecture
@@ -7,7 +14,7 @@ message Lecture {
 	optional string name = 3;
 	optional string description = 4;
 	optional int32 size = 5;
-	repeated LectureSlide slides = 6;
+	repeated string slides = 6;
 }
 
 message LectureSlide {
