@@ -39,8 +39,8 @@
 	$(document).ready(function() {
 		QUnit.stop();
 		var loadCourses = function() {
+			var courseList = CourseSketch.fakeCourses;
 			CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
-				var courseList = CourseSketch.fakeCourses;
 				for(var i = 0; i < courseList.length; ++i) {
 					CourseSketch.dataManager.setCourse(courseList[i]);
 				}
@@ -50,19 +50,8 @@
 				coursesCallback(courseList);
 			}
 			CourseSketch.dataManager.testDataLoaded = true;
-		};
-		if (CourseSketch.dataManager.realDatabaseReady()) {
-			loadCourses();
-		} else {
-		    var intervalVar = setInterval(function() {
-			if (CourseSketch.dataManager.realDatabaseReady()) {
-			    clearInterval(intervalVar);
-			    loadCourses();
-			}
-		    }, 100);
-		}
-		
-		var loadCourses = function(courseList) {
+			
+			// Tests
 			QUnit.config.testTimeout = 10000;
 			QUnit.module("lecture UI");
 			CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
@@ -72,7 +61,7 @@
 				assert.ok(true, "Show courses successfully called.");
 				QUnit.start();
 			});
-		
+
 			asyncTest("course selection", function(assert) {
 				var courseDomList = document.querySelector("#col1>.content").children;
 				var courseProtoList = CourseSketch.lectureSelection.schoolItemBuilder.list; 
@@ -87,33 +76,29 @@
 			asyncTest("add lecture", function(assert) {
 				var courseDomList = document.querySelector("#col1>.content").children;
 				expect(courseDomList.length);
-				for(var i = 0; i < courseDomList.length; ++i) {
+				var i;
+				for(i = 0; i < courseDomList.length; ++i) {
 					simulate(courseDomList[i], "click");
 					var lecturesOld, lecturesNew;
 					CourseSketch.dataManager.getCourse(courseDomList[i].id, function(course) {
-						lecturesOld = course.lectureList.length;
-						CourseSketch.dataManager.getCourse(courseDomList[i].id, function(course) {
-							CourseSketch.lectureSelection.addLecture();
-							lecturesNew = course.lectureList.length;
+						CourseSketch.lectureSelection.addLecture(function(course) {
+							assert.ok(true, "Succesfully added a lecture.");
 						});
 					});
-					
-					assert.equal(lecturesNew, lecturesOld + 1, "After adding a lecture, the number of lectures increases by 1.");
 				}
-				QUnit.start();
+				var interval = setInterval(function() {
+				    	QUnit.start();
+				    	clearInterval(interval);
+				}, 1000);
 			});
 		};
-		if (CourseSketch.dataManager.isDatabaseReady()) {
-		    CourseSketch.dataManager.pollUpdates(function() {
-			CourseSketch.dataManager.getAllCourses(loadCourses);
-		    });
+		if (CourseSketch.dataManager.realDatabaseReady()) {
+			loadCourses();
 		} else {
 		    var intervalVar = setInterval(function() {
-			if (CourseSketch.dataManager.isDatabaseReady()) {
+			if (CourseSketch.dataManager.realDatabaseReady()) {
 			    clearInterval(intervalVar);
-			    CourseSketch.dataManager.pollUpdates(function() {
-				CourseSketch.dataManager.getAllCourses(loadCourses);
-			    });
+			    loadCourses();
 			}
 		    }, 100);
 		}
