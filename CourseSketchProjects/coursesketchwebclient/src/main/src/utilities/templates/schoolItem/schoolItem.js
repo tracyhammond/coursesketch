@@ -112,44 +112,57 @@ function SchoolItem() {
 
         var editingClass = 'currentlyEditing';
         // calls the function for ever instance of the editButton
-        [].forEach.call(shadowRoot.querySelectorAll('.editButton'), function(element) {
-            var parentNode = element.parentNode;
-            var content = parentNode.querySelector('content');
-            var nodes = content.getDistributedNodes();
-            var contentElement = nodes[0];
-            var editorElement = getEditorElement(parentNode);
-            var finishEditing = function() {
-                $(parentNode).removeClass(editingClass);
-                $(contentElement).removeClass(editingClass);
-                parentNode.removeChild(editorElement);
-                var oldContent = contentElement.textContent;
-                contentElement.textContent = editorElement.value;
-                if (editFunction) {
-                    editFunction(element.dataset.type, oldContent, contentElement.textContent);
-                }
-            }
-            $(element).click(function(event) {
-                event.stopPropagation();
-                if ($(parentNode).hasClass(editingClass)) {
-                    finishEditing();
-                } else {
-                    $(parentNode).addClass(editingClass);
-
-                    if (isUndefined(contentElement)) {
-                        contentElement = document.createElement("div");
-                        $(contentElement).addClass(element.dataset.type);
-                        localScope.appendChild(contentElement);
+        var list = shadowRoot.querySelectorAll('.editButton');
+        for(var i = 0; i < list.length; ++i) {
+            (function(element) {
+                var parentNode = element.parentNode;
+                var content = parentNode.querySelector('content');
+                var nodes = content.getDistributedNodes();
+                var contentElement = nodes[0];
+                var editorElement = getEditorElement(parentNode);
+                var finishEditing = function() {
+                    $(parentNode).removeClass(editingClass);
+                    $(contentElement).removeClass(editingClass);
+                    parentNode.removeChild(editorElement);
+                    var oldContent = contentElement.textContent;
+                    contentElement.textContent = editorElement.value;
+                    var realParent = getParentParent(parentNode);
+                    console.log(realParent);
+                    if (editFunction) {
+                        editFunction(element.dataset.type, oldContent, contentElement.textContent, realParent);
                     }
-                    // makes the display = none
-                    $(contentElement).addClass(editingClass);
-                    editorElement.value = contentElement.textContent;
-                    parentNode.insertBefore(editorElement, element);
-                }
-                return false;
-            });
-        });
+                };
+                element.onclick = function(event) {
+                    event.stopPropagation();
+                    if ($(parentNode).hasClass(editingClass)) {
+                        finishEditing();
+                    } else {
+                        $(parentNode).addClass(editingClass);
+    
+                        if (isUndefined(contentElement)) {
+                            contentElement = document.createElement("div");
+                            $(contentElement).addClass(element.dataset.type);
+                            localScope.appendChild(contentElement);
+                        }
+                        // makes the display = none
+                        $(contentElement).addClass(editingClass);
+                        editorElement.value = contentElement.textContent;
+                        parentNode.insertBefore(editorElement, element);
+                    }
+                    return false;
+                }; // Click
+            })(list[i]); // anonomous.
+        }; // Loop
     };
 
+    function getParentParent(parent) {
+        var grandParent = parent.parentNode;
+        while (grandParent != null) {
+            parent = grandParent;
+            grandParent = grandParent.parentNode;
+        }
+        return parent.host;
+    }
     /**
      * Should create a special editor element based on its state.
      */
@@ -179,5 +192,7 @@ function SchoolItem() {
         editFunction = func;
     };
 }
+
+SchoolItem.prototype.schoolItemData = undefined;
 
 SchoolItem.prototype = Object.create(HTMLElement.prototype);
