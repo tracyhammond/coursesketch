@@ -33,6 +33,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      */
     function setLectureServer(lecture, lectureCallback) {
         advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
             var resultArray = item.getReturnText().split(":");
             var oldId = resultArray[1];
             var newId = resultArray[0];
