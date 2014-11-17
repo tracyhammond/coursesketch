@@ -1,0 +1,27 @@
+<html>
+<head>
+<template id="ttsCreation">
+    <style>
+    #closeButton {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+    }
+    :host {
+        position: fixed;
+        top: 0px;
+        cursor: move;
+    }
+    </style>
+    <dialog id="textToSpeechDialog" class="draggable" open>
+        <textarea rows="10" cols="30" id="creatorText" placeholder="Insert your text here..."></textarea>
+        <button id="speakText">Speak text.</button>
+        <button id="closeButton">X</button>
+    </dialog>
+</template>
+
+<template id="ttsViewing">
+    <!-- This needs to use protobuf objects and the update manager to speak saved by the instructor and possibly display subtitles-->
+</template>
+</head>
+</html>
