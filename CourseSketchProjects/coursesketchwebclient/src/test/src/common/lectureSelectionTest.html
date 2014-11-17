@@ -4,119 +4,119 @@
 <title>Lecture Selection Test</title>
 <!-- test Library -->
 <link rel="import" href="/test/testUtilities/testUtilities.html">
-	
+    
 <link rel="import"
-	href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+    href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
 
 <link rel="import"
-	href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+    href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
 
 <!-- files needed for testing -->
 <link rel="import" href="/src/common/lecture/lectureSelection.html"
-	data-fake>
+    data-fake>
 
 <!-- file being tested. -->
 <script src="/src/common/lecture/lectureSelection.js" data-cover></script>
 </head>
 <body>
-	<div id="fakePage"></div>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<div id=""></div>
-	
-	<!-- Fake doms for the UI stuff -->
-	<div id="col2" class="column" style="display: none;">
-		<div class="content">
-		</div>
-	</div>
-	<div id="col1" class="column" style="display: none;">
-		<div class="content">
-			<button id="add"></button>
-		</div>
-	</div>
+    <div id="fakePage"></div>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <div id=""></div>
+    
+    <!-- Fake doms for the UI stuff -->
+    <div id="col2" class="column" style="display: none;">
+        <div class="content">
+        </div>
+    </div>
+    <div id="col1" class="column" style="display: none;">
+        <div class="content">
+            <button id="add"></button>
+        </div>
+    </div>
 
-	<script>
-	$(document).ready(function() {
-		QUnit.stop();
-		var loadCourses = function() {
-			CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
-				var courseList = CourseSketch.fakeCourses;
-				for(var i = 0; i < courseList.length; ++i) {
-					CourseSketch.dataManager.setCourse(courseList[i]);
-				}
-				for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-					CourseSketch.dataManager.insertLecture(CourseSketch.fakeLectures[i]);
-				}
-				coursesCallback(courseList);
-			}
-			CourseSketch.dataManager.testDataLoaded = true;
-		};
-		if (CourseSketch.dataManager.realDatabaseReady()) {
-			loadCourses();
-		} else {
-		    var intervalVar = setInterval(function() {
-			if (CourseSketch.dataManager.realDatabaseReady()) {
-			    clearInterval(intervalVar);
-			    loadCourses();
-			}
-		    }, 100);
-		}
-		
-		var loadCourses = function(courseList) {
-			QUnit.config.testTimeout = 10000;
-			QUnit.module("lecture UI");
-			CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
-			asyncTest("show courses", function(assert) {
-				expect(1);
-				CourseSketch.lectureSelection.showCourses(courseList);
-				assert.ok(true, "Show courses successfully called.");
-				QUnit.start();
-			});
-		
-			asyncTest("course selection", function(assert) {
-				var courseDomList = document.querySelector("#col1>.content").children;
-				var courseProtoList = CourseSketch.lectureSelection.schoolItemBuilder.list; 
-				expect(courseDomList.length);
-				for(var i = 0; i < courseDomList.length; ++i) {
-					simulate(courseDomList[i], "click");
-					assert.equal(courseDomList[i].className, " selectedBox", "Box shows as selected when clicked.");
-				}
-				QUnit.start();
-			});
-			
-			asyncTest("add lecture", function(assert) {
-				var courseDomList = document.querySelector("#col1>.content").children;
-				expect(courseDomList.length);
-				for(var i = 0; i < courseDomList.length; ++i) {
-					simulate(courseDomList[i], "click");
-					var lecturesOld, lecturesNew;
-					CourseSketch.dataManager.getCourse(courseDomList[i].id, function(course) {
-						lecturesOld = course.lectureList.length;
-						CourseSketch.dataManager.getCourse(courseDomList[i].id, function(course) {
-							CourseSketch.lectureSelection.addLecture();
-							lecturesNew = course.lectureList.length;
-						});
-					});
-					
-					assert.equal(lecturesNew, lecturesOld + 1, "After adding a lecture, the number of lectures increases by 1.");
-				}
-				QUnit.start();
-			});
-		};
-		if (CourseSketch.dataManager.isDatabaseReady()) {
-		    CourseSketch.dataManager.pollUpdates(function() {
-			CourseSketch.dataManager.getAllCourses(loadCourses);
-		    });
-		} else {
-		    var intervalVar = setInterval(function() {
-			if (CourseSketch.dataManager.isDatabaseReady()) {
-			    clearInterval(intervalVar);
-			    CourseSketch.dataManager.pollUpdates(function() {
-				CourseSketch.dataManager.getAllCourses(loadCourses);
-			    });
-			}
-		    }, 100);
-		}
-	});
-	</script>
+    <script>
+    $(document).ready(function() {
+        QUnit.stop();
+        var loadCourses = function() {
+            CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
+                var courseList = CourseSketch.fakeCourses;
+                for(var i = 0; i < courseList.length; ++i) {
+                    CourseSketch.dataManager.setCourse(courseList[i]);
+                }
+                for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
+                    CourseSketch.dataManager.insertLecture(CourseSketch.fakeLectures[i]);
+                }
+                coursesCallback(courseList);
+            }
+            CourseSketch.dataManager.testDataLoaded = true;
+        };
+        if (CourseSketch.dataManager.realDatabaseReady()) {
+            loadCourses();
+        } else {
+            var intervalVar = setInterval(function() {
+            if (CourseSketch.dataManager.realDatabaseReady()) {
+                clearInterval(intervalVar);
+                loadCourses();
+            }
+            }, 100);
+        }
+        
+        var loadCourses = function(courseList) {
+            QUnit.config.testTimeout = 10000;
+            QUnit.module("lecture UI");
+            CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
+            asyncTest("show courses", function(assert) {
+                expect(1);
+                CourseSketch.lectureSelection.showCourses(courseList);
+                assert.ok(true, "Show courses successfully called.");
+                QUnit.start();
+            });
+        
+            asyncTest("course selection", function(assert) {
+                var courseDomList = document.querySelector("#col1>.content").children;
+                var courseProtoList = CourseSketch.lectureSelection.schoolItemBuilder.list; 
+                expect(courseDomList.length);
+                for(var i = 0; i < courseDomList.length; ++i) {
+                    simulate(courseDomList[i], "click");
+                    assert.equal(courseDomList[i].className, " selectedBox", "Box shows as selected when clicked.");
+                }
+                QUnit.start();
+            });
+            
+            asyncTest("add lecture", function(assert) {
+                var courseDomList = document.querySelector("#col1>.content").children;
+                expect(courseDomList.length);
+                for(var i = 0; i < courseDomList.length; ++i) {
+                    simulate(courseDomList[i], "click");
+                    var lecturesOld, lecturesNew;
+                    CourseSketch.dataManager.getCourse(courseDomList[i].id, function(course) {
+                        lecturesOld = course.lectureList.length;
+                        CourseSketch.dataManager.getCourse(courseDomList[i].id, function(course) {
+                            CourseSketch.lectureSelection.addLecture();
+                            lecturesNew = course.lectureList.length;
+                        });
+                    });
+                    
+                    assert.equal(lecturesNew, lecturesOld + 1, "After adding a lecture, the number of lectures increases by 1.");
+                }
+                QUnit.start();
+            });
+        };
+        if (CourseSketch.dataManager.isDatabaseReady()) {
+            CourseSketch.dataManager.pollUpdates(function() {
+            CourseSketch.dataManager.getAllCourses(loadCourses);
+            });
+        } else {
+            var intervalVar = setInterval(function() {
+            if (CourseSketch.dataManager.isDatabaseReady()) {
+                clearInterval(intervalVar);
+                CourseSketch.dataManager.pollUpdates(function() {
+                CourseSketch.dataManager.getAllCourses(loadCourses);
+                });
+            }
+            }, 100);
+        }
+    });
+    </script>
 </body>
