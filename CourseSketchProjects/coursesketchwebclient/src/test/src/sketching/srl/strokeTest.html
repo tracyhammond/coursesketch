@@ -1,0 +1,42 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/sketching/srl/srlLibraryInclude.html">
+<link rel="import" href="path to files being included.html">
+
+<!-- file being tested. -->
+<script src="/src/sketching/srl/objects/stroke.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+	QUnit.module("testModule1");
+	test("test test", function(assert) {
+        assert.ok(true, "TESTING IS AWESOME!");
+    });
+    </script>
+    <script>
+	QUnit.module("BoundingBox:FirstTest");
+	test("main BoundingBox function {add point}", function(assert) {
+    var box = new SRL_BoundingBox();
+       //box.addPoint(1,1);
+       //assert.ok(true, "except when my tests fail...");
+       //except(0);
+    });
+    </script>
+    <script>
+
+    QUnit.test("how does fak timing work this sees if the sinon timers are the same as the other timers", function(assert) {
+        var localFunc = setTimeout;
+        this.clock = this.useFakeTimers();
+        assert.equal(localFunc, setTimeout);
+    });
+    </script>
+</body>
