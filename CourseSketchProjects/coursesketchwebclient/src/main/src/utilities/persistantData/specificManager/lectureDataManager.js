@@ -130,9 +130,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                 if (!isUndefined(lectureCallback)) {
                     lectureCallback(CourseSketch.PROTOBUF_UTIL
                             .getLectureClass().decode(bytes));
-                }// endif
-            }// end else
-        });// end getFromLectures 
+                } // endif
+            } // end else
+        }); // end getFromLectures 
     }
 
     parent.getLectureLocal = getLectureLocal;
@@ -153,7 +153,6 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
             serverCallback(lectureList[0]);
         });
     }
-    ;
     parent.getCourseLecture = getCourseLecture;
 
     /**
@@ -194,29 +193,28 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                                 if (isUndefined(lecture)) {
                                     if (!isUndefined(serverCallback)){
                                         serverCallback(lecture);
-                                    }// end if serverCallback
+                                    }
                                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
                                     return;
-                                }// end if
+                                } // end if
                                 for (var i = 0; i < school.lectures.length; i++) {
                                     localScope.setLectureLocal(school.lectures[i]);
                                     lecturesFound.push(school.lectures[i]);
-                                }// end for
+                                } // end for
                                 if (!isUndefined(serverCallback)){
                                     serverCallback(lecturesFound);
-                                }// end if serverCallback
+                                } // end if serverCallback
                                 advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
-                            });// setListener
+                            }); // setListener
                             sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lectureIdsNotFound);
-                        }// end if lectureIdsNotFound
+                        } // end if lectureIdsNotFound
                         if (lecturesFound.length > 0 && !isUndefined(localCallback)) {
                             localCallback(lecturesFound);
-                        }// end if
-                    }// end if barrier
+                        } // end if
+                    } // end if barrier
                 });// end getLectureLocal
-            })(currentLectureId);// end of auto function
-        }// end for lectureIds
+            })(currentLectureId); // end of auto function
+        } // end for lectureIds
     }
-    ;
     parent.getCourseLectures = getCourseLectures;
 }
