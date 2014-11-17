@@ -3,6 +3,12 @@
         CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
         CourseSketch.lectureSelection.currentCourse = undefined;
     
+        CourseSketch.lectureSelection.lectureEndEdit = function(
+            attributeChanged, oldValue, newValue, element) {
+                element[attributeChanged] = newValue;
+                CourseSketch.dataManager.setLecture(element);
+        };
+        
         /**
          * Renders a list of lectures to the screen.
          * 
@@ -14,12 +20,14 @@
             var schoolItemBuilder = new SchoolItemBuilder();
             schoolItemBuilder.setList(lectureList)
                 .setShowDate(false)
+                .setEditCallback(CourseSketch.lectureSelection.lectureEndEdit)
+                .setInstructorCard(true)
                 .build(document.querySelector("#col2>.content"));
             $("#col2>.content").prepend(add);
             $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
             $("#add").addClass("show");
         };
-    
+        
         /**
          * Called when a course is selected. Updates selection
          * and gets lectures for the course.
