@@ -42,15 +42,15 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
             getLectureLocal(oldId, function(lecture2) {
                 deleteLecture(oldId);
                 if (!isUndefined(lecture2)) {
-	                lecture2.id = newId;
-	                setLectureLocal(lecture2, function() {
-	                    lectureCallback(lecture2);
-	                });
+                    lecture2.id = newId;
+                    setLectureLocal(lecture2, function() {
+                        lectureCallback(lecture2);
+                    });
                 } else {
-                	lecture.id = newId;
-                	setLectureLocal(lecture, function() {
-	                    lectureCallback(lecture);
-	                });
+                    lecture.id = newId;
+                    setLectureLocal(lecture, function() {
+                        lectureCallback(lecture);
+                    });
                 }
             });
         });
@@ -71,20 +71,20 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
     function insertLecture(lecture, localCallback, serverCallback) {
         setLectureLocal(lecture, function(e, request) {
             if (!isUndefined(localCallback)) {
-        	    localCallback(e, request);
+                localCallback(e, request);
             }
-        	setLectureServer(lecture, function(lecture2) {
-	            parent.getCourse(lecture.courseId, function(course) {
-	                var lectureList = course.lectureList;
-	                lectureList.push(lecture2.id);
-	                course.lectureList = lectureList;
-	                parent.setCourse(course, function() {
-	                    if (!isUndefined(serverCallback)) {
-	                        serverCallback(course);
-	                    }
-	                });
-	                // Course is set with its new lecture
-	            });
+            setLectureServer(lecture, function(lecture2) {
+                parent.getCourse(lecture.courseId, function(course) {
+                    var lectureList = course.lectureList;
+                    lectureList.push(lecture2.id);
+                    course.lectureList = lectureList;
+                    parent.setCourse(course, function() {
+                        if (!isUndefined(serverCallback)) {
+                            serverCallback(course);
+                        }
+                    });
+                    // Course is set with its new lecture
+                });
                 // Finished with the course
             });
             // Finished with setting lecture
@@ -150,7 +150,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
         getCourseLectures([ lectureId ], isUndefined(localCallback) ? undefined : function(lectureList) {
             localCallback(lectureList[0]);
         }, isUndefined(serverCallback) ? undefined : function(lectureList) {
-        	serverCallback(lectureList[0]);
+            serverCallback(lectureList[0]);
         });
     }
     ;
@@ -167,8 +167,8 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      */
     function getCourseLectures(lectureIds, localCallback, serverCallback) {
         if (isUndefined(lectureIds) || lectureIds == null || lectureIds.length == 0) {
-        	if(!isUndefined(localCallback)){
-            	localCallback(nonExistantValue);
+            if(!isUndefined(localCallback)){
+                localCallback(nonExistantValue);
             }else{
                 serverCallback(nonExistantValue);
             }
@@ -192,9 +192,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                                 var school = CourseSketch.PROTOBUF_UTIL.getSrlLectureDataHolderClass().decode(item.data);
                                 var lecture = school.lectures[0];
                                 if (isUndefined(lecture)) {
-                                	if (!isUndefined(serverCallback)){
-                                		serverCallback(lecture);
-                                	}// end if serverCallback
+                                    if (!isUndefined(serverCallback)){
+                                        serverCallback(lecture);
+                                    }// end if serverCallback
                                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
                                     return;
                                 }// end if
@@ -203,7 +203,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                                     lecturesFound.push(school.lectures[i]);
                                 }// end for
                                 if (!isUndefined(serverCallback)){
-                                	serverCallback(lecturesFound);
+                                    serverCallback(lecturesFound);
                                 }// end if serverCallback
                                 advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
                             });// setListener
