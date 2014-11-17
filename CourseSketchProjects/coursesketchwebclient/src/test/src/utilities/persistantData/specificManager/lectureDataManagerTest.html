@@ -31,7 +31,7 @@
 				setTimeout(function() {
 					dataManager.setCourse(course, function() {
 						var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
-						lecture.id = generateUUID();
+			            lecture.id = generateUUID();
 						lecture.courseId = course.id;
                         lecture.name= "I AM TEST"; 
 						dataManager.insertLecture(lecture);
