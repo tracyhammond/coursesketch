@@ -79,6 +79,7 @@
 				            };//send request
 							dataManager.insertLecture(lecture2, undefined, function() {
 								dataManager.getCourse(course.id, function(newCourse) {
+									CourseSketch.connection.sendRequest = function(){};
 									dataManager.getCourseLectures(newCourse.lectureList, function(lectureList) {
 										assert.ok(true, "Lectures can be fetched from the database.");
 										assert.equal(lectureList.length, 2, "Two lectures were inserted and two lectures were returned.");

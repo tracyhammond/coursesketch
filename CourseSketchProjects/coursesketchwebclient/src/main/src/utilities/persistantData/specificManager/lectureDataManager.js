@@ -73,10 +73,10 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
         	if (!isUndefined(localCallback)) {
         		localCallback(e, request);
         	}
-        	setLectureServer(lecture, function() {
+        	setLectureServer(lecture, function(lecture2) {
 	            parent.getCourse(lecture.courseId, function(course) {
 	                var lectureList = course.lectureList;
-	                lectureList.push(lecture.id);
+	                lectureList.push(lecture2.id);
 	                course.lectureList = lectureList;
 	                parent.setCourse(course, function() {
 	                    if (!isUndefined(serverCallback)) {
