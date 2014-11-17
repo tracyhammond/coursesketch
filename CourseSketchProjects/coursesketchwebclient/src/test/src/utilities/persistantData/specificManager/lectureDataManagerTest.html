@@ -96,7 +96,8 @@
                 }, 100);
             });
             asyncTest("get lecture server response from course part 2 testing DB local callback", function(assert) {
-                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
                 req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST;
                 var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
@@ -134,7 +135,8 @@
                 }, 100);                    
              });
              asyncTest("get lectures from course part 2 testing DB server callback", function(assert) {
-                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
                 req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST;
                 var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
