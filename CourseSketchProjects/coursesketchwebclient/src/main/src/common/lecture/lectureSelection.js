@@ -64,20 +64,20 @@
 			waitingIcon.finishWaiting();
 		    }*/
 		    CourseSketch.lectureSelection.showCourses(courseList);
-		};
+		}; // End loadCourses
 		if (CourseSketch.dataManager.isDatabaseReady()) {
 		    CourseSketch.dataManager.pollUpdates(function() {
 			CourseSketch.dataManager.getAllCourses(loadCourses);
 		    });
 		} else {
 		    var intervalVar = setInterval(function() {
-			if (CourseSketch.dataManager.isDatabaseReady()) {
-			    clearInterval(intervalVar);
-			    CourseSketch.dataManager.pollUpdates(function() {
-				CourseSketch.dataManager.getAllCourses(loadCourses);
-			    });
-			}
-		    }, 100);
+    			if (CourseSketch.dataManager.isDatabaseReady()) {
+    			    clearInterval(intervalVar);
+    			    CourseSketch.dataManager.pollUpdates(function() {
+    			        CourseSketch.dataManager.getAllCourses(loadCourses);
+    			    }); // End pollUpdates function
+    			}
+		    }, 100); // End interval function
 		}
 	});
 })();
