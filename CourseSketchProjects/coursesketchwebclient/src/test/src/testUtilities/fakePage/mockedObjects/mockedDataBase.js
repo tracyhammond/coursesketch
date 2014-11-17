@@ -6,11 +6,10 @@
             CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
     };
     var db = CourseSketch.makeNewDatabase(CourseSketch.connection, CourseSketch.dataListener);
-    var intervalVar = setInterval(function() {
-        if (db.isDatabaseReady()) {
-            clearInterval(intervalVar);
-            CourseSketch.dataManager = sinon.stub(db);
-            CourseSketch.dataManagerPure = db; // in case you need to replace the mock.
-        }
-    }, 100);
+    CourseSketch.dataManager = db;
+    CourseSketch.dataManager.testDataLoaded = false;
+    CourseSketch.dataManager.realDatabaseReady = CourseSketch.dataManager.isDatabaseReady;
+    CourseSketch.dataManager.isDatabaseReady = function() {
+        return CourseSketch.dataManager.realDatabaseReady() && CourseSketch.dataManager.testDataLoaded;
+    };
 })();
