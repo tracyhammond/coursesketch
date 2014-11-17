@@ -61,8 +61,10 @@ function AdvanceDataListener(connection, Request, defListener) {
 				//console.log("Decoding listener");
 				var item = dataList[i];
 				var func = localMap[item.query];
-				//console.log(messageType);
-				//console.log(item.query);
+				console.log("messageType");
+				console.log(messageType);
+				console.log("item query");
+				console.log(item.query);
 				if (!isUndefined(func)) {
 					try {
 						func(evt, item);
