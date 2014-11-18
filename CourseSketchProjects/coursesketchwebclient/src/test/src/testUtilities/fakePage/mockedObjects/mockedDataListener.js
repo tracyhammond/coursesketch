@@ -6,6 +6,6 @@
         });
     };
     var dataListener = CourseSketch.makeNewDataListener(CourseSketch.connection);
-    CourseSketch.dataListener = sinon.stub(dataListener);
-    CourseSketch.dataListenerPure = dataListener; // in case you need to replace the mock.
+    CourseSketch.dataListener = dataListener;
+    //CourseSketch.dataListenerPure = dataListener; // in case you need to replace the mock.
 })();
