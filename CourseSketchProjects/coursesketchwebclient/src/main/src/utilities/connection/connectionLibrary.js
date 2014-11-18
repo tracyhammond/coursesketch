@@ -62,7 +62,6 @@ function Connection(uri, encrypted, attemptReconnect) {
                     }, 3000);
                 }
             };
-
             websocket.onmessage = function(evt) {
                 try {
                     var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType; 
@@ -85,7 +84,8 @@ function Connection(uri, encrypted, attemptReconnect) {
                     } else if (msg.requestType == MessageType.FEEDBACK && onAnswerChecker) {
                         console.log("getting from answer checker");
                         onAnswerChecker(evt, msg);
-                    } else if (msg.requestType == MessageType.DATA_REQUEST && onSchoolData) {
+                    } else if ((msg.requestType == MessageType.DATA_REQUEST || msg.requestType == MessageType.DATA_INSERT
+                        || msg.requestType == MessageType.DATA_UPDATE || msg.requestType == MessageType.DATA_REMOVE) && onSchoolData) {
                         console.log("getting from school data");
                         onSchoolData(evt, msg);
                     } else if (msg.requestType == MessageType.ERROR) {
@@ -208,14 +208,15 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 * TODO: complete the entirety of the event that can be spoofed.
 	 */
 	this.sendSelf = function(message) {
+		console.log("start sendself");
         var event = {
             data : message.toArrayBuffer()
         };
-        setTimeout(function() {
-            websocket.onmessage(event);
-        }, 500);
+        websocket.onmessage(event);
+        console.log("end sendself");
     };
-	
+
+	console.log(this.sendSelf);
 	/**
 	 * Closes the websocket.
 	 *
