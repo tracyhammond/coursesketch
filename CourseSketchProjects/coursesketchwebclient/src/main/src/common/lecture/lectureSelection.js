@@ -2,7 +2,7 @@
     $(document).ready(function() {
         CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
         CourseSketch.lectureSelection.currentCourse = undefined;
-    
+
         CourseSketch.lectureSelection.lectureEndEdit = function(
             attributeChanged, oldValue, newValue, element) {
                 element[attributeChanged] = newValue;
@@ -14,6 +14,7 @@
          * 
          * @param lectureList
          *                list of lectures to display
+
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
             var add = $("#add").clone();
@@ -38,6 +39,7 @@
         CourseSketch.lectureSelection.courseSelected = function(course) {
             var courseid = course.id;
             this.currentCourse = course.id;
+
             CourseSketch.dataManager.getCourseLectures(course.lectureList,
                 CourseSketch.lectureSelection.displayLectures);
             CourseSketch.lectureSelection.courseSelectionManager
@@ -92,6 +94,7 @@
                 .build(document.querySelector("#col1>.content"));
         };
         
+
         var loadCourses = function(courseList) {
             /* (waitingIcon.isRunning()) {
             waitingIcon.finishWaiting();
@@ -108,7 +111,7 @@
                     clearInterval(intervalVar);
                     CourseSketch.dataManager.pollUpdates(function() {
                         CourseSketch.dataManager.getAllCourses(loadCourses);
-                    });
+                    }); // pollupdates
                 }
             }, 100);
         }

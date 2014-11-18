@@ -43,7 +43,7 @@ function ProtobufSetup() {
         buildUpdateList();
         buildDataQuery();
         buildSubmissions();
-	buildLectures();
+        buildLectures();
         return localScope;
     };
 
