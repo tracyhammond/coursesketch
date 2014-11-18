@@ -18,5 +18,17 @@
     <script src="mockedConnection.js"></script>
     <script src="mockedDataListener.js"></script>
     <script src="mockedDatabase.js"></script>
+
+    <script>
+    	(function() {
+    		if (CourseSketch.connection && CourseSketch.dataListener) {
+    		//	CourseSketch.connection.setSchoolDataListener(CourseSketch.dataListener);
+    		} else {
+    			console.log(CourseSketch.dataListener);
+    			console.log(CourseSketch.connection);
+    		}
+    	})();
+    	
+    </script>
 </head>
 </html>
