@@ -86,10 +86,11 @@ html, body {
     cursor: pointer;
 }
 
-#col1>.content>.list-item:not (.title ):hover, #col1>.content>school-item:hover
-    /deep/ .name, #col1>.content>school-item:hover /deep/ .description {
-    cursor: pointer;
-    text-decoration: underline;
+#col1>.content>.list-item:not(.title):hover,
+#col1>.content>school-item:hover /deep/ .name,
+#col1>.content>school-item:hover /deep/ .description {
+	cursor: pointer;
+	text-decoration: underline;
 }
 
 #col1>.content>school-item /deep/ .name {
@@ -132,10 +133,10 @@ html, body {
     padding: 2px 0;
 }
 
-.lecture>.summary, .list-item>.summary, .list-item>.description, #col2>.content>school-item>.description
-    {
-    font-size: 12px;
-    padding: 0 5px;
+.lecture>.summary, .list-item>.summary, .list-item>.description,
+#col2>.content>school-item>.description {
+	font-size: 12px;
+	padding: 0 5px;
 }
 
 #col2>.content>school-item /deep/ .school_item {
