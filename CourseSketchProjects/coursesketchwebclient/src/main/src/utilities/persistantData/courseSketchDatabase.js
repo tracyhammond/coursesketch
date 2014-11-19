@@ -24,7 +24,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var stateMachine = {};
     var databaseFinishedLoading = false;
 
-    var version = 5;
+    var version = 6;
     var dataListener = advanceDataListener;
 
     var serverConnection = connection;
@@ -88,6 +88,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         tables.push(database.createTable("Submissions", "id", addFunction));
         tables.push(database.createTable("Grades", "id", addFunction));
         tables.push(database.createTable("Lectures", "id", addFunction));
+        tables.push(database.createTable("Slides", "id", addFunction));
         tables.push(database.createTable("Other", "id", addFunction));
 
         database.setTables(tables);
@@ -154,6 +155,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         /* courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         /* submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         /* lectureDataManager = */new LectureDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        /* slideDataManager = */new SlideDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         /* submissionManager = */// new GradeDataManager(this, dataListener,
                                 // database, dataSender, Request, ByteBuffer);
         console.log("Database is ready for use! with user: " + userId);
