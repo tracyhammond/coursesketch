@@ -58,6 +58,22 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
     }
 
     /**
+     * Sets a lecture in both local and server databases.
+     * 
+     * @param lecture
+     *                lecture object to set
+     * @param localCallback
+     *                function to be called after local lecture setting is done
+     * @param serverCallback
+     *                function to be called after server lecture setting is done
+     */
+    function setLecture(lecture, localCallback, serverCallback) {
+        setLectureLocal(lecture, localCallback);
+        setLectureServer(lecture, serverCallback);
+    }
+    parent.setLecture = setLecture;
+
+    /**
      * Adds a new lecture to both local and server databases. Also updates the
      * corresponding course given by the lecture's courseId.
      * 
