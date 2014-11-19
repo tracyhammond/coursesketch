@@ -9,6 +9,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	 * Sets a slide in the local database
 	 * 
 	 * @param slide is a slide object
+	 *
 	 * @param slideCallback function to be called after the slide setting is done
 	 */
 	function setSlideLocal(slide, slideCallback) {
@@ -27,8 +28,27 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	 * @param slideCallback function to be called after the slide setting is done
 	 */
 	function setSlideServer(slide, slideCallback) {
-		slideCallback();
-		// TODO Function stub
+		advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.SLIDE, function(evt, item) {
+			advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.SLIDE);
+			var resultArray = item.getReturnText().split(":");
+			var oldId = resultArray[1];
+			var newId = resultArray[0];
+			getLectureLocal(oldId, function(slide2) {
+				deleteSlide(oldId);
+				if(!isUndefined(slide2)) {
+					slide2.id = newId;
+					setSlideLocal(slide2, function() {
+						slideCallback(slide2);
+					});
+				} else {
+					slide.id = newId;
+					setSlideLocal(slide, function() {
+						slideCallback(slide);
+					});
+				}
+			});
+		});
+		sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.SLIDE, slide.toArrayBuffer());
 	}
 	
 	/**
@@ -40,16 +60,20 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	 * @param serverCallback function to be called after server insert is done
 	 */
 	function insertSlide(slide, localCallback, serverCallback) {
-		setSlideLocal(slide, localCallback);
-		setSlideServer(slide, function() {
-			parent.getCourseLecture(slide.lectureId, function(lecture) {
-				var slideList = lecture.slides;
-				slideList.push(slide.id);
-				lecture.slideList = slideList;
-				parent.setLecture(lecture, function() {
-					if(!isUndefined(serverCallback)) {
-						serverCallback(course);
-					}
+		setSlideLocal(slide, function(e, request) {
+			if (!isUndefined(localCallback)) {
+				localCallback(e, request);
+			}
+			setSlideServer(slide, function(slide2) {
+				parent.getCourseLecture(slide.lectureId, function(lecture) {
+					var slideList = lecture.slides;
+					slideList.push(slide.id);
+					lecture.slideList = slideList;
+					parent.setLecture(lecture, function() {
+						if(!isUndefined(serverCallback)) {
+							serverCallback(course);
+						}
+					});
 				});
 			});
 		});
@@ -64,17 +88,18 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	 */
 	function deleteSlide (slideId, slideCallback) {
 		database.deleteFromSlides (slideId, function (e, request) {
-			if (slideCallback) {
+			if (!isUndefined(slideCallback)) {
 				slideCallback (e, request);
 			}
 		});
-	};
+	}
 	parent.deleteSlide = deleteSlide;
 	
 	/**
 	 * Gets a slide from the local database.
 	 *
 	 * @param slideId ID of the slide to get
+	 *
 	 * @param slideCallback function to be called after getting is complete,
 	 * paramater is the slide object
 	 */
@@ -86,8 +111,9 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
 				slideCallback (nonExistantValue);
 			} else {
 				var bytes = ByteBuffer.fromBase64(result.data);
-				if(slideCallback)
+				if (!isUndefined(slideCallback)) {
 					slideCallback(CourseSketch.PROTOBUF_UTIL.getSlideClass().decode(bytes));
+				}
 			}
 		});
 	}
@@ -100,9 +126,11 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	 * @param slideCallback function to be called after getting is complete,
 	 * paramater is the slide object
 	 */
-	function getLectureSlide (slideId, slideCallback) {
-		getLectureSlides([slideId], function (slideList) {
-			slideCallback (slideList[0]);
+	function getLectureSlide (slideId, localCallback, serverCallback) {
+		getLectureSlides([ slideId ], isUndefined(localCallback) ? undefined : function (slideList) {
+			localCallback (slideList[0]);
+		}, isUndefined(serverCallback) ? undefined : function(slideList) {
+			serverCallback(slideList[0]);
 		});
 	};
 	parent.getLectureSlide = getLectureSlide;
@@ -160,22 +188,4 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
 		}
 	};
 	parent.getLectureSlides = getLectureSlides;
-	/*
-	function insertElement(element, localCallback, serverCallback){
-		addElementLocal(element, localCallback);
-		addElementServer(element, function() {
-			parent.getLectureSlide(lectureElement.slideId, function(lectureSlide) {
-				var elementList = lectureSlide.elements;
-				elementList.push(element);
-				lectureSlide.elements = elementList;
-				parent.setLectureSlide(lectureSlide, function() {
-					if(!isUndefined(serverCallback)) {
-						serverCallback(lectureSlide);
-					}
-				});
-			});
-		});
-	}
-	parent.insertElement = insertElement;
-	*/
 }
