@@ -86,24 +86,32 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      */
     function insertLecture(lecture, localCallback, serverCallback) {
         setLectureLocal(lecture, function(e, request) {
-            if (!isUndefined(localCallback)) {
-                localCallback(e, request);
-            }
-            setLectureServer(lecture, function(lecture2) {
-                parent.getCourse(lecture.courseId, function(course) {
-                    var lectureList = course.lectureList;
-                    lectureList.push(lecture2.id);
-                    course.lectureList = lectureList;
-                    parent.setCourse(course, function() {
-                        if (!isUndefined(serverCallback)) {
-                            serverCallback(course);
-                        }
+            parent.getCourse(lecture.courseId, function(course) {
+                var lectureList = course.lectureList;
+                lectureList.push(lecture.id);
+                course.lectureList = lectureList;
+                parent.setCourse(course, function() {
+                    if (!isUndefined(serverCallback)) {
+                        serverCallback(course);
+                    }
+                    setLectureServer(lecture, function(lecture2) {
+                        parent.getCourse(lecture.courseId, function(course) {
+                            var lectureList = course.lectureList;
+                            lectureList.push(lecture2.id);
+                            course.lectureList = lectureList;
+                            parent.setCourse(course, function() {
+                                if (!isUndefined(serverCallback)) {
+                                    serverCallback(course);
+                                }
+                            });
+                            // Course is set with its new lecture
+                        });
+                        // Finished with the course
                     });
-                    // Course is set with its new lecture
+                    // Finished with setting lecture
                 });
-                // Finished with the course
             });
-            // Finished with setting lecture
+            // Course is set with its new lecture
         });
         // Finished with local lecture
     }
