@@ -35,4 +35,4 @@ function MvSketch() {
 
 }
 
-Mvsketch.prototype = Object.create(HTMLElement.prototype);
+MvSketch.prototype = Object.create(HTMLElement.prototype);
