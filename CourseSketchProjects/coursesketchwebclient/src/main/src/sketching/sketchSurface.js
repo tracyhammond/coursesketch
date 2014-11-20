@@ -1,20 +1,24 @@
 /**
- * 
+ *
  * The Sketch Surface is actually used as part of an element. but can be used
  * without actually being an element if you spoof some methods.
- * 
+ *
  * Supported attributes.
  * <ul>
  * <li>data-existingList: This is meant to tell the surface that the update
  * list will be provided for it and to not automatically bind an UpdateManager
  * to it</li>
- * 
+ *
  * <li>data-customId: This is meant to tell the surface that the Id of the
  * element will be provided to it and to not assign a random id to it.</li>
+ *
  * <li>data-readOnly: This tells the sketch surface to ignore any input and it
  * will only display sketches.</li>
+ *
+ * <li>data-autoResize: This is meant to tell the sketch surface that it
+ * should resize itself every time the window changes size.</li>
  * </ul>
- * 
+ *
  * @Class
  */
 function SketchSurface() {
@@ -66,18 +70,31 @@ function SketchSurface() {
         }
     };
 
+    /**
+     * Sets a function that is called when an error is created.
+     */
     this.setErrorListener = function(error) {
         errorListener = error;
     };
 
+    /**
+     * sets the shadow root of this element.
+     */
     this.setRoot = function(root) {
         shadowRoot = root;
     };
 
+    /**
+     * Returns the sketch data created from the update list.
+     */
     this.getSrlSketch = function() {
         return sketch;
     };
 
+    /**
+     * Binds the sketch to a specific update list.
+     * This can only be done once.
+     */
     this.bindToUpdateList = function(UpdateManagerClass) {
         if (bindUpdateListCalled === false) {
             updateList = undefined;
@@ -98,7 +115,7 @@ function SketchSurface() {
     /**
      * Draws the stroke then creates an update that is added to the update
      * manager, given a stroke.
-     * 
+     *
      * @param stroke
      *            {SRL_Stroke} a stroke that is added to the sketch.
      */
@@ -133,12 +150,18 @@ function SketchSurface() {
         this.resizeSurface();
     };
 
+    /**
+     * Sets the size of drawing surface of the canvas to be the same as the size its dimenions in space.
+     */
     this.resizeSurface = function() {
         sketchCanvas.height = $(sketchCanvas).height();
         sketchCanvas.width = $(sketchCanvas).width();
         sketch.drawEntireSketch();
     };
 
+    /**
+     * Binds a function that resizes the surface every time the size of the window changes.
+     */
     this.makeResizeable = function() {
         $(window).resize(localScope.resizeSurface);
     };
@@ -201,5 +224,9 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchE
 
     if (isUndefined(this.dataset) || (isUndefined(this.dataset.existinglist) && isUndefined(this.dataset.customid))) {
         this.createSketchUpdate();
+    }
+
+    if (!isUndefined(this.dataset) && !(isUndefined(this.dataset.autoresize)) {
+        this.makeResizeable();
     }
 };
