@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Lecture Selection Fake Page</title>
+<title>Lecture Page Fake Page</title>
 <link rel="import"
 	href="/test/testUtilities/fakePage/fakePageInclude.html">
 <link rel="import"
@@ -14,11 +14,15 @@ $(document).ready(function() {
 	var loadCourses = function() {
 		CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
 			var courseList = CourseSketch.fakeCourses;
+			for(var i = 0; i < CourseSketch.fakeCourses.length; ++i) {
+				CourseSketch.dataManager.setCourse(CourseSketch.fakeCourses[i]);
+			}
 			coursesCallback(courseList);
 		}
 		for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-			CourseSketch.dataManager.setLectureLocal(CourseSketch.fakeLectures[i]);
+			CourseSketch.dataManager.setLecture(CourseSketch.fakeLectures[i]);
 		}
+                CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0]);
 		CourseSketch.dataManager.testDataLoaded = true;
         };
         if (CourseSketch.dataManager.realDatabaseReady()) {

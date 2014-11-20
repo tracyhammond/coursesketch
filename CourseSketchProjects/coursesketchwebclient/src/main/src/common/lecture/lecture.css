@@ -201,11 +201,12 @@ html, body {
 
 .slide-thumb {
     border: 2px solid #CCC;
-    margin-left: 10px;
+    margin-left: 10px !important;
+    margin-top: 0 !important;
     text-align: center;
-    font-size: 4vw;
-    width: 10vw;
-    height: 5vw;
+    font-size: 4vw !important;
+    width: 10vw !important;
+    height: 5vw !important;
     display: inline-block;
     vertical-align: middle;
     box-shadow: 5px 5px 5px #888;
