@@ -24,8 +24,8 @@
                     assert.ok(true, "The datamanager was successfully created.");
                 }
             });
-            asyncTest("create new lecture", function(assert) {
-                expect(2);
+            asyncTest("create new lecture local", function(assert) {
+                expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = generateUUID();
@@ -37,16 +37,44 @@
                         lecture.name= "I AM TEST";
                         dataManager.insertLecture(lecture, function() {
                             assert.ok(true, "Local callback called.");
-                        }, function() {
-                            assert.ok(true, "Server callback called.");
-                        });
+                            QUnit.start();
+                        }, undefined);
                     });
                 }, 100);
                 var interval = setInterval(function() {
                     clearInterval(interval);
-                    QUnit.start();
                 }, 250);
             });
+            asyncTest("create new lecture server", function(assert) {
+                expect(1);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+                var req = CourseSketch.PROTOBUF_UTIL.Request();
+                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;               
+                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE;
+                dataResult.results = [itemResult];
+                req.otherData = dataResult.toArrayBuffer();
+                course.id = generateUUID(); 
+                CourseSketch.connection.sendRequest = function(message) {
+                    req.otherData = dataResult.toArrayBuffer();
+                    CourseSketch.connection.sendSelf(req);
+                }; //send request
+                setTimeout(function() {
+                    dataManager.setCourse(course, function() {
+                        var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+                        lecture.id = generateUUID();
+                        lecture.courseId = course.id;
+                        lecture.name= "I AM TEST";
+                        dataManager.insertLecture(lecture, undefined, function() {
+
+                            assert.ok(true, "Server callback called.");
+                            QUnit.start();
+                        });
+                    });
+                }, 400);
+            });            
             asyncTest("get lectures from course local callback", function(assert) {
                 expect(2);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
