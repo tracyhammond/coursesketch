@@ -20,12 +20,12 @@ $(document).ready(function() {
     };
 
     var loadAssignments = function() {
-        /*
-        for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-            CourseSketch.dataManager.setLectureLocal(CourseSketch.fakeLectures[i]);
+        var localBarrier = new CallbackBarrier();
+        var assignmentLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeAssignments.length);
+        localBarrier.finalize(assignmentBarrier);
+        for (var i = 0; i < CourseSketch.fakeAssignments.length; ++i) {
+            CourseSketch.dataManager.setAssignmentLocal(CourseSketch.fakeAssignments[i], assignmentLoadedCallback);
         }
-        */
-        assignmentBarrier();
     };
 
     var loadCourses = function() {
