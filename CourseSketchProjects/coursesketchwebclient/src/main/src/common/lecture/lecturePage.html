@@ -8,6 +8,8 @@
 	<link rel="import" href="/src/utilities/connection/protobufInclude.html">
 	<!-- school item -->
 	<link rel="import" href="/src/utilities/templates/schoolItem/schoolItemInclude.html" >
+        <!-- text box -->
+        <link rel="import" href="/src/utilities/templates/textBox/textBoxInclude.html">
 	<style>
 	.column {
 		height: 80% !important;
@@ -23,7 +25,7 @@
 				Tools
 			</div>
 			<div class="content toolbar">
-				<div class="list-item">
+				<div class="list-item" onclick="CourseSketch.lecturePage.newTextBox()">
 					Text Box
 				</div>
 				<div class="list-item">
@@ -51,16 +53,7 @@
 		</div>
 		<div id="slides">
 			<div class="content">
-				<span class="slide-thumb">1</span>
-				<span class="slide-thumb">2</span>
-				<span class="slide-thumb">3</span>
-				<span class="slide-thumb">4</span>
-				<span class="slide-thumb">5</span>
-				<span class="slide-thumb">6</span>
-				<span class="slide-thumb">7</span>
-				<span class="slide-thumb">8</span>
-				<span class="slide-thumb">9</span>
-				<span class="slide-thumb">10</span>
+				<span id="add" class="slide-thumb" onclick="CourseSketch.lecturePage.newSlide()">+</span>
 			</div>
 		</div>
 	</body>

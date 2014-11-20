@@ -9,6 +9,10 @@
                 CourseSketch.dataManager.setLecture(element);
         };
         
+        CourseSketch.lectureSelection.lectureSelected = function(lecture) {
+	    console.log(lecture);
+	}
+
         /**
          * Renders a list of lectures to the screen.
          * 
@@ -23,6 +27,7 @@
                 .setShowDate(false)
                 .setEditCallback(CourseSketch.lectureSelection.lectureEndEdit)
                 .setInstructorCard(true)
+                .setBoxClickFunction(CourseSketch.lectureSelection.lectureSelected)
                 .build(document.querySelector("#col2>.content"));
             $("#col2>.content").prepend(add);
             $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
