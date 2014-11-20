@@ -3,12 +3,15 @@
  * The dialog is moveable and allows the creator to enter text to be displayed
  */
 function TextBox() {
+    var saveCallback;
+ 
     /**
      * This is for making the dialog moveable with the interact.js library
      * It selects the created dialog and makes it draggable with no inertia
      * It also ignores click and drag from textareas and buttons within the dialog
      */
-    function enableDragging() {
+    function enableDragging(localscope) {
+        console.log(localscope);
         interact(shadowRoot.querySelector("#textBoxDialog"))
             .ignoreFrom("textarea, button")
             .draggable({
@@ -28,10 +31,10 @@ function TextBox() {
             })
             .inertia(false)
             .restrict({
-                drag: "parent",
-                endOnly: true,
+                drag: localscope.parentNode,
+                endOnly: false,
                 elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-        });
+            });
     }
     
     /**
@@ -47,7 +50,23 @@ function TextBox() {
         shadowRoot.querySelector("#closeButton").onclick = function() {
             localScope.parentNode.removeChild(localScope);
         };
-        enableDragging();
+        enableDragging(localScope);
+    };
+    
+    this.setSaveListener = function(listener) {
+        saveCallback = listener;
+    };
+    
+    this.saveData = function() {
+        var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+        textBoxProto.setText(shadowRoot.querySelector('#creatorText').value);
+        textBoxProto.setHeight($(shadowRoot.querySelector('#creatorText')).height());
+        textBoxProto.setWidth($(shadowRoot.querySelector('#creatorText')).width());
+        textBoxProto.setX(shadowRoot.querySelector('#textBoxDialog').getAttribute('data-x'));
+        textBoxProto.setY(shadowRoot.querySelector('#textBoxDialog').getAttribute('data-y'));
+        var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
+        command.setCommandData(textBoxProto.toArrayBuffer());
+        saveCallback(command);
     };
 }
 

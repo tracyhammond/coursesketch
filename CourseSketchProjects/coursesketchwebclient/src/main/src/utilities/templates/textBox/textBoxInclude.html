@@ -3,6 +3,7 @@
 <link id="textBoxTemplateImport" rel="import" href="textBox.html">
 <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 <link rel="import" href="/src/utilities/libraries/interact/interactInclude.html">
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
 <script src="textBox.js"></script>
 
 <script>
@@ -30,8 +31,7 @@
             };
 
             TextBox.prototype.detachedCallback = function() {
-                //this.finalize();
-                //TODO: Add saving actions here
+                this.saveData();
             };
 
             document.registerElement('text-box-creation', {
