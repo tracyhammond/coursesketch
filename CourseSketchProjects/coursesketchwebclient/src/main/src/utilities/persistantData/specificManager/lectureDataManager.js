@@ -14,14 +14,14 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      * @param lectureCallback
      *                function to be called after the lecture setting is done
      */
-    function setLectureLocal(lecture, lectureCallback) {
+    function setLecture(lecture, lectureCallback) {
         database.putInLectures(lecture.id, lecture.toBase64(), function(e, request) {
             if (!isUndefined(lectureCallback)) {
                 lectureCallback(e, request);
             }
         });
     }
-    parent.setLectureLocal = setLectureLocal;
+    parent.setLecture = setLecture;
 
     /**
      * Sets a lecture in server database.
@@ -31,7 +31,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      * @param lectureCallback
      *                function to be called after lecture setting is done
      */
-    function setLectureServer(lecture, lectureCallback) {
+    function insertLectureServer(lecture, lectureCallback) {
         advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
             var resultArray = item.getReturnText().split(":");
@@ -43,12 +43,12 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                 deleteLecture(oldId);
                 if (!isUndefined(lecture2)) {
                     lecture2.id = newId;
-                    setLectureLocal(lecture2, function() {
+                    setLecture(lecture2, function() {
                         lectureCallback(lecture2);
                     });
                 } else {
                     lecture.id = newId;
-                    setLectureLocal(lecture, function() {
+                    setLecture(lecture, function() {
                         lectureCallback(lecture);
                     });
                 }
@@ -67,11 +67,15 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      * @param serverCallback
      *                function to be called after server lecture setting is done
      */
-    function setLecture(lecture, localCallback, serverCallback) {
-        setLectureLocal(lecture, localCallback);
-        setLectureServer(lecture, serverCallback);
+    function updateLecture(lecture, localCallback, serverCallback) {
+        setLecture(lecture, localCallback);
+        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lecture.toArrayBuffer());
+        advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
+            serverCallback(item); // we do not need to make server changes we
+                                    // just need to make sure it was successful.
+        });
     }
-    parent.setLecture = setLecture;
+    parent.updateLecture = updateLecture;
 
     /**
      * Adds a new lecture to both local and server databases. Also updates the
@@ -85,33 +89,25 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *                function to be called after server insert is done
      */
     function insertLecture(lecture, localCallback, serverCallback) {
-        setLectureLocal(lecture, function(e, request) {
-            parent.getCourse(lecture.courseId, function(course) {
-                var lectureList = course.lectureList;
-                lectureList.push(lecture.id);
-                course.lectureList = lectureList;
-                parent.setCourse(course, function() {
-                    if (!isUndefined(serverCallback)) {
-                        serverCallback(course);
-                    }
-                    setLectureServer(lecture, function(lecture2) {
-                        parent.getCourse(lecture.courseId, function(course) {
-                            var lectureList = course.lectureList;
-                            lectureList.push(lecture2.id);
-                            course.lectureList = lectureList;
-                            parent.setCourse(course, function() {
-                                if (!isUndefined(serverCallback)) {
-                                    serverCallback(course);
-                                }
-                            });
-                            // Course is set with its new lecture
-                        });
-                        // Finished with the course
+        setLecture(lecture, function(e, request) {
+            if (!isUndefined(localCallback)) {
+                localCallback(e, request);
+            }
+            insertLectureServer(lecture, function() {
+                parent.getCourse(lecture.courseId, function(course) {
+                    var lectureList = course.lectureList;
+                    lectureList.push(lecture.id);
+                    course.lectureList = lectureList;
+                    parent.setCourse(course, function() {
+                        if (!isUndefined(serverCallback)) {
+                            serverCallback(course);
+                        }
                     });
-                    // Finished with setting lecture
+                    // Course is set with its new lecture
                 });
+                // Finished with the course
             });
-            // Course is set with its new lecture
+            // Finished with setting lecture
         });
         // Finished with local lecture
     }
@@ -222,7 +218,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                                     return;
                                 } // end if
                                 for (var i = 0; i < school.lectures.length; i++) {
-                                    localScope.setLectureLocal(school.lectures[i]);
+                                    localScope.setLecture(school.lectures[i]);
                                     lecturesFound.push(school.lectures[i]);
                                 } // end for
                                 if (!isUndefined(serverCallback)){
