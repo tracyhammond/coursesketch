@@ -107,4 +107,17 @@
     assignment7.name = "underwater breathing";
     assignment7.description = "how long can you hold your breath?";
     CourseSketch.fakeAssignments.push(assignment7);
+
+    assignment8.courseId = "6";
+    assignment8.id = "8";
+    assignment8.name = "style quiz";
+    assignment8.description = "do you know how to code??";
+    CourseSketch.fakeAssignments.push(assignment8);
+
+    assignment9.courseId = "6";
+    assignment9.id = "9";
+    assignment9.name = "make course sketch";
+    assignment9.description = "not a big assignment, I just want you to program a MOOC using sketch recognition.  "
+    + "You have one week.";
+    CourseSketch.fakeAssignments.push(assignment9);
 })();

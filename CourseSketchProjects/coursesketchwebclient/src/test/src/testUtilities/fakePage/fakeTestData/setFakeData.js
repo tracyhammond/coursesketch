@@ -29,12 +29,12 @@ $(document).ready(function() {
     };
 
     var loadCourses = function() {
-        /*
-        for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-            CourseSketch.dataManager.setLectureLocal(CourseSketch.fakeLectures[i]);
+        var localBarrier = new CallbackBarrier();
+        var loadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeCourses.length);
+        localBarrier.finalize(courseBarrier);
+        for (var i = 0; i < CourseSketch.fakeCourses.length; ++i) {
+            CourseSketch.dataManager.setCourse(CourseSketch.fakeCourses[i], loadedCallback);
         }
-        */
-        courseBarrier();
     };
 
     var loadProblems = function() {
@@ -47,15 +47,27 @@ $(document).ready(function() {
     };
 
     /**
-     * called when we can load our fake data into the database.
+     * Called when we can load our fake data into the database.
      */
     function databaseIsReadForLoading() {
         /**
          * Replaces the functionality of get all courses with this one.
+         *
+         * What this one does is that it does not talk to the server.  But instead it does instantiate the state of all of the courses.
          */
         CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
-            var courseList = CourseSketch.fakeCourses;
-            coursesCallback(courseList);
+            var resultList = [];
+            var localBarrier = new CallbackBarrier();
+            var loadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeCourses.length);
+            localBarrier.finalize(function() {
+                coursesCallback(resultList);
+            });
+            for (var i = 0; i < CourseSketch.fakeCourses.length; ++i) {
+                CourseSketch.dataManager.getCourse(CourseSketch.fakeCourses[i].id, function(course) {
+                    resultList.push(course);
+                    loadedCallback();
+                });
+            }
         };
 
         barrier.finalize(function() {
