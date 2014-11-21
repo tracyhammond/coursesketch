@@ -24,7 +24,7 @@
                     assert.ok(true, "The datamanager was successfully created.");
                 }
             });
-            asyncTest("create new lecture local", function(assert) {
+                        asyncTest("insert lecture local", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
@@ -45,6 +45,9 @@
                     clearInterval(interval);
                 }, 250);
             });
+            
+            //next test
+            
             asyncTest("create new lecture server", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
@@ -56,25 +59,28 @@
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE;
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
-                course.id = generateUUID(); 
+                course.id = generateUUID();                         
+                var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+                lecture.id = generateUUID();
+                lecture.courseId = course.id;
+                lecture.name= "I AM TEST";
+                itemResult.returnText = lecture.id + ":" +"1";
                 CourseSketch.connection.sendRequest = function(message) {
-                    req.otherData = dataResult.toArrayBuffer();
-                    CourseSketch.connection.sendSelf(req);
+                   req.otherData = dataResult.toArrayBuffer();
+                   CourseSketch.connection.sendSelf(req);
                 }; //send request
                 setTimeout(function() {
                     dataManager.setCourse(course, function() {
-                        var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
-                        lecture.id = generateUUID();
-                        lecture.courseId = course.id;
-                        lecture.name= "I AM TEST";
-                        dataManager.insertLecture(lecture, undefined, function() {
-
+                        dataManager.insertLecture(lecture, undefined, function(lecture2) {
                             assert.ok(true, "Server callback called.");
                             QUnit.start();
                         });
                     });
                 }, 400);
-            });            
+            });       
+            
+            // next test
+            
             asyncTest("get lectures from course local callback", function(assert) {
                 expect(2);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
@@ -125,6 +131,9 @@
                     });
                 }, 100);
             });
+            
+            // new test
+            
             asyncTest("get lecture server response from course part 2 testing DB local callback", function(assert) {
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
@@ -163,7 +172,10 @@
                       }; // endif
                 }, 100);                    
              });
-             asyncTest("get lectures from course part 2 testing DB server callback", function(assert) {
+             
+             //new test
+             
+            asyncTest("get lectures from course part 2 testing DB server callback", function(assert) {
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
@@ -201,6 +213,9 @@
                       } // endif
                 }, 100);
             });
+             
+             //new test
+             
             asyncTest("test connection send request", function(assert) {
                 var fakeID = generateUUID();
                 CourseSketch.connection.sendRequest = function(message) {
@@ -215,6 +230,10 @@
                     }
                 }, 100);
             });
+            
+            //new test 
+            
+            
             asyncTest("Testing Delete ", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
