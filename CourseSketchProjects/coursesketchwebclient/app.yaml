@@ -39,9 +39,11 @@ handlers:
   static_dir: src/test/src
   application_readable: true
 
-
 - url: /images
   static_dir: src/main/resources/images
 
 - url: /other
   static_dir: src/main/resources/other
+
+- url: /*
+  script: testFiles.app
