@@ -76,6 +76,7 @@ class MainPage(webapp2.RequestHandler):
         myOwn.response.write('.unitTest {text-decoration:none; color:#990099;}')
         myOwn.response.write('.unitTest:hover {color:#CC0052;} ')
         myOwn.response.write(' </style>')
+        myOwn.response.write('<h1><a hfref="/index.html" target="_blank">Main Page</a><h1>')
         myOwn.response.write('List of test files to use<br>')
         myOwn.searchTestFiles()
         #for file in fileList:

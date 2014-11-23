@@ -10,7 +10,7 @@ handlers:
   upload: favicon\.ico
 
 - url: /
-  script: main.app
+  script: testFiles.app
 
 - url: /index\.html
   static_files: index.html
@@ -21,7 +21,7 @@ handlers:
 
 - url: /html
   static_dir: src/html
-  
+
 - url: /js
   static_dir: src/js
 
