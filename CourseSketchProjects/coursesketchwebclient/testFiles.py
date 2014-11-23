@@ -69,6 +69,7 @@ class MainPage(webapp2.RequestHandler):
         myOwn.response.write('.myButton:hover {background-color:#DDDDDD;}')
         myOwn.response.write('a {text-decoration:none; color:#000000;} ')
         myOwn.response.write('li {padding:2px;}')
+        myOwn.response.write('h1 a {text-decoration:underline; color:#00F0F0;}')
         myOwn.response.write('.testFile {text-decoration:none; color:#000000;}')
         myOwn.response.write('.testFile:hover {color:#ff0000;} ')
         myOwn.response.write('.fakePage {text-decoration:none; color:#00B26B;}')
@@ -76,11 +77,11 @@ class MainPage(webapp2.RequestHandler):
         myOwn.response.write('.unitTest {text-decoration:none; color:#990099;}')
         myOwn.response.write('.unitTest:hover {color:#CC0052;} ')
         myOwn.response.write(' </style>')
-        myOwn.response.write('<h1><a hfref="/index.html" target="_blank">Main Page</a><h1>')
+        myOwn.response.write('<h1><a href="/index.html" target="_blank">Main Page</a></h1>')
         myOwn.response.write('List of test files to use<br>')
         myOwn.searchTestFiles()
         #for file in fileList:
         #	self.response.write('<a href="' + file + '">'+ file +'</a><br>')
 
-app = webapp2.WSGIApplication([('/testList', MainPage)], debug=True)
+app = webapp2.WSGIApplication([('/testList', MainPage), ('/', MainPage)], debug=True)
 
