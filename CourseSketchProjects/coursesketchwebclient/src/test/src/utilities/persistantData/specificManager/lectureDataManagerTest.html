@@ -24,7 +24,7 @@
                     assert.ok(true, "The datamanager was successfully created.");
                 }
             });
-                        asyncTest("insert lecture local", function(assert) {
+            asyncTest("insert lecture local", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
@@ -259,5 +259,53 @@
                  }); // insertlecture lecture1
                 },100);
             });
+ /*          
+            asyncTest("update lecture local callback", function(assert) {
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var req = CourseSketch.PROTOBUF_UTIL.Request();
+                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST;
+                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                var fakeID = generateUUID();
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                course.id = generateUUID();
+                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE;
+                var SrlLecturedata =  CourseSketch.PROTOBUF_UTIL.SrlLectureDataHolder();
+                var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+                var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
+                lecture.id = fakeID;
+                lecture.courseId = course.id;
+                lecture2.id = lecture.id;
+                lecture2.courseId = course.id;
+                lecture2.name = "Update complete!"
+                SrlLecturedata.lectures = [ lecture];
+                itemResult.data =  SrlLecturedata.toArrayBuffer();
+                dataResult.results = [itemResult];
+                req.otherData= dataResult.toArrayBuffer();
+                expect(1);
+                CourseSketch.connection.sendRequest = function(message) {
+                    CourseSketch.connection.sendSelf(req);
+                }; //send request
+                var waitfor = 0;
+                var interval = setInterval(function() {
+                        if (dataManager.isDatabaseReady()) {
+                            clearInterval(interval);
+                            dataManager.insertLecture(lecture, function() {
+                                dataManager.updateLecture(lecture2, undefined, function() {
+                                dataManager.getCourseLecture(fakeID, undefined, function(result1) {
+                                    console.log("result 1 is "+ result1.id);
+                                    lecture2.id = result1.id;
+                                    assert.equal(lecture2.name, result2.name,"Sent a lecture to server and recieved it");
+                                    QUnit.start();
+                                }); //get courselecture 
+                             
+                            });
+                            });
+                           console.log("pass get Course Lecture")
+                      }; // endif
+                }, 100);                    
+             });
+             */
         </script>
     </body>
