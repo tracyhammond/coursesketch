@@ -67,9 +67,13 @@ function HighlightText() {
                 if (checkChildrenNodes(children)) {
                     var newNode = document.createElement('span');
                     newNode.setAttribute('class', 'highlightedText');
-                    newNode.setAttribute('style', 'color:' + highlightColor);
+                    newNode.setAttribute('style', 'background:' + highlightColor + '; color:' + textColor);
+                    console.log(document.implementation);
+                    console.log(range);
                     newNode.appendChild(range.extractContents());
                     range.insertNode(newNode);
+                    console.log(range.commonAncestorContainer.innerHTML);
+                    console.log(range.commonAncestorContainer.innerText);
                 } else {
                     // Message for a selection that is not valid
                     alert("Please make a valid selection.")
@@ -90,6 +94,7 @@ function HighlightText() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
         highlightColor = shadowRoot.querySelector("#highlightColor").value;
+        textColor = shadowRoot.querySelector("#textColor").value;
         $(document).on("mouseup", highlightText);
         
         // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
@@ -103,12 +108,18 @@ function HighlightText() {
             
         // Click action for the "X" that closes the dialog
         shadowRoot.querySelector("#closeButton").onclick = function() {
+            $(document).off("mouseup", highlightText);
             localScope.parentNode.removeChild(localScope);
         };
         
         // Updates value of highlightColor when the color selector value is changed by the user
         shadowRoot.querySelector("#highlightColor").onchange = function() {
             highlightColor = shadowRoot.querySelector("#highlightColor").value;
+        };
+        
+        // Updates value of textColor when the color selecor value is changed by the user
+        shadowRoot.querySelector("#textColor").onchange = function() {
+            textColor = shadowRoot.querySelector("#textColor").value;
         };
         
         enableDragging();
