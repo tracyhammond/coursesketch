@@ -80,10 +80,17 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
 	 * @param serverCallback function to be called after server insert is done
 	 */
 	function insertSlide(slide, localCallback, serverCallback) {
-		setSlide(slide, function(e, request) {
-			if (!isUndefined(localCallback)) {
-				localCallback(e, request);
-			}
+		setSlide(slide, function() {
+			parent.getCourseLecture(slide.lectureId, function(lecture) {
+                var slideList = lecture.slides;
+                slideList.push(slide.id);
+                lecture.slideList = slideList;
+                parent.setLecture(lecture, function() {
+                    if(!isUndefined(serverCallback)) {
+                        localCallback(lecture);
+                    }
+                });
+			});
 			insertSlideServer(slide, function() {
 				parent.getCourseLecture(slide.lectureId, function(lecture) {
 					var slideList = lecture.slides;

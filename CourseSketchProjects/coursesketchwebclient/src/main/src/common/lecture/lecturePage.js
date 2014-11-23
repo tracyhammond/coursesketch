@@ -19,7 +19,7 @@
     CourseSketch.lecturePage.addSlideToDom = function(slideIndex) {
         var cssWidth = "calc(10vw + "
             + (CourseSketch.lecturePage.lecture.slides.length * 10.84)
-            + "vw)"
+            + "vw + 100px)"
         $("#slides>.content").css({
             width: cssWidth
         });
@@ -34,12 +34,8 @@
         slide.lectureId = CourseSketch.lecturePage.lecture.id;
         slide.unlocked = true;
         var finishGetCourse = function(lecture) {
-            
-            // TODO: This needs to be changed once insertSlide works!!!
-            //CourseSketch.lecturePage.lecture = lecture;
-            CourseSketch.lecturePage.lecture.slides.push(slide);
-            
-            CourseSketch.lecturePage.addSlideToDom(CourseSketch.lecturePage.lecture.slides.length);
+            CourseSketch.lecturePage.lecture = lecture;
+            CourseSketch.lecturePage.displaySlides();
         }
         var finishInsert = function(lecture) {
             CourseSketch.dataManager.getCourseLecture(CourseSketch.lecturePage.lecture.id, finishGetCourse, finishGetCourse);
@@ -49,6 +45,9 @@
 
     CourseSketch.lecturePage.displaySlides = function() {
         $("#lecture-title").text(CourseSketch.lecturePage.lecture.name);
+        $(".slide-thumb:not(\"#add\")").each(function() {
+            $(this).remove();
+        });
         for(var i = 0; i < CourseSketch.lecturePage.lecture.slides.length; ++i) {
             CourseSketch.lecturePage.addSlideToDom(i);
         }
