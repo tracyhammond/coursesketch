@@ -74,8 +74,8 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             }
         });
     }
-    ;
     parent.setAssignment = setAssignment;
+    parent.setAssignmentLocal = setAssignment;
 
     function deleteAssignment(assignmentId, couresCallback) {
         database.deleteFromAssignments(assignmentId, function(e, request) {
@@ -129,23 +129,23 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
          * So what happens here might be a bit confusing to some new people so
          * let me explain it. #1 there is a loop that goes through every item in
          * the userAssignmentId (which is a list of assignment ids)
-         * 
+         *
          * #2 there is a function declaration inside the loop the reason for
          * this is so that the assignmentId is not overwritten when the callback
          * is called.
-         * 
+         *
          * #3 we call getAssignmentLocal which then calls a callback about if it
          * got an assignment or not if it didn't we add the id to a list of Id
          * we need to get from the server
-         * 
+         *
          * #4 after the entire list has been gone through (which terminates in
          * the callback with barrier = 0) if there are any that need to be
          * pulled from the server then that happens
-         * 
+         *
          * #5 after talking to the server we get a response with a list of
          * assignments, these are combined with the local assignments then the
          * original callback is called.
-         * 
+         *
          * #6 the function pattern terminates.
          */
 
@@ -218,11 +218,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     /**
      * Returns a assignment with the given couresId will ask the server if it
      * does not exist locally
-     * 
+     *
      * If the server is pulled and the assignment still does not exist the Id is
      * set with nonExistantValue and the database is never polled for this item
      * for the life of the program again.
-     * 
+     *
      * @param assignmentId
      *            The id of the assignment we want to find.
      * @param assignmentCallback
@@ -234,6 +234,5 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             assignmentCallback(assignmentList[0]);
         });
     }
-    ;
     parent.getAssignment = getAssignment;
 }
