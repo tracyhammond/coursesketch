@@ -71,6 +71,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
         setLecture(lecture, localCallback);
         sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lecture.toArrayBuffer());
         advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
+		    advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
             serverCallback(item); // we do not need to make server changes we
                                     // just need to make sure it was successful.
         });
