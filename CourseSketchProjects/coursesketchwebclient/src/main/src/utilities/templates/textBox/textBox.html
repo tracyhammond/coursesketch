@@ -21,6 +21,23 @@
 
 <template id="textBoxViewing">
     <!-- This needs to use protobuf objects and the update manager to display the text box in the position saved by the instructor -->
+    <style>
+        #closeButton {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        }
+        :host {
+        position: absolute;
+        top: 50px;
+        cursor: move;
+        }
+    </style>
+    <dialog id="textBoxDialog" open>
+        <p id="viewText"></p>
+        <button id="closeButton">X</button>
+        <button id="continueButton">Continue</button>
+    </dialog>
 </template>
 </head>
 </html>

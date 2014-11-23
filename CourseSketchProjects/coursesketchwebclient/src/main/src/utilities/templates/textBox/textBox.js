@@ -3,8 +3,8 @@
  * The dialog is moveable and allows the creator to enter text to be displayed
  */
 function TextBox() {
-    var saveCallback;
- 
+    var finishedCallback;
+
     /**
      * This is for making the dialog moveable with the interact.js library
      * It selects the created dialog and makes it draggable with no inertia
@@ -27,7 +27,7 @@ function TextBox() {
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
                 },
-                
+
             })
             .inertia(false)
             .restrict({
@@ -36,7 +36,7 @@ function TextBox() {
                 elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
             });
     }
-    
+
     /**
      * @param {node} is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
@@ -45,18 +45,18 @@ function TextBox() {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        
+
         // Click action for the "X" that closes the dialog
         shadowRoot.querySelector("#closeButton").onclick = function() {
             localScope.parentNode.removeChild(localScope);
         };
         enableDragging(localScope);
     };
-    
-    this.setSaveListener = function(listener) {
-        saveCallback = listener;
+
+    this.setFinishedListener = function(listener) {
+        finishCallback = listener;
     };
-    
+
     this.saveData = function() {
         var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
         textBoxProto.setText(shadowRoot.querySelector('#creatorText').value);
@@ -74,8 +74,12 @@ function TextBox() {
         };
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
         command.setCommandData(textBoxProto.toArrayBuffer());
-        saveCallback(command);
+        finishCallback(command);
     };
+
+    this.getFinishedCallback = function() {
+        return finishCallback;
+    }
 }
 
 TextBox.prototype = Object.create(HTMLDialogElement.prototype);
