@@ -9,33 +9,6 @@
 <!-- files needed for testing -->
 <link rel="import" href="/src/common/lecture/lectureSelection.html"
 	data-fake>
-<script>
-$(document).ready(function() {
-	var loadCourses = function() {
-		CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
-			var courseList = CourseSketch.fakeCourses;
-			for(var i = 0; i < CourseSketch.fakeCourses.length; ++i) {
-				CourseSketch.dataManager.setCourse(CourseSketch.fakeCourses[i]);
-			}
-			coursesCallback(courseList);
-		}
-		for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-			CourseSketch.dataManager.setLecture(CourseSketch.fakeLectures[i]);
-		}
-		CourseSketch.dataManager.testDataLoaded = true;
-        };
-        if (CourseSketch.dataManager.realDatabaseReady()) {
-		loadCourses();
-        } else {
-            var intervalVar = setInterval(function() {
-                if (CourseSketch.dataManager.realDatabaseReady()) {
-                    clearInterval(intervalVar);
-                    loadCourses();
-                }
-            }, 100);
-        }
-});
-</script>
 </head>
 <body>
 </body>
