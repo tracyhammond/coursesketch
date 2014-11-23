@@ -86,7 +86,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                 slideList.push(slide.id);
                 lecture.slideList = slideList;
                 parent.setLecture(lecture, function() {
-                    if(!isUndefined(serverCallback)) {
+                    if(!isUndefined(localCallback)) {
                         localCallback(lecture);
                     }
                 });
