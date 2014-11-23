@@ -9,9 +9,9 @@ function TextBox() {
      * This is for making the dialog moveable with the interact.js library
      * It selects the created dialog and makes it draggable with no inertia
      * It also ignores click and drag from textareas and buttons within the dialog
+     * The dragging is restricted to the area of the parentNode the dialog is created in
      */
     function enableDragging(localscope) {
-        console.log(localscope);
         interact(shadowRoot.querySelector("#textBoxDialog"))
             .ignoreFrom("textarea, button")
             .draggable({
@@ -62,8 +62,16 @@ function TextBox() {
         textBoxProto.setText(shadowRoot.querySelector('#creatorText').value);
         textBoxProto.setHeight($(shadowRoot.querySelector('#creatorText')).height());
         textBoxProto.setWidth($(shadowRoot.querySelector('#creatorText')).width());
-        textBoxProto.setX(shadowRoot.querySelector('#textBoxDialog').getAttribute('data-x'));
-        textBoxProto.setY(shadowRoot.querySelector('#textBoxDialog').getAttribute('data-y'));
+        var dialog = shadowRoot.querySelector('#textBoxDialog');
+        var x = $(shadowRoot.querySelector('#textBoxDialog').parentNode.host).position().left;
+        var y = $(shadowRoot.querySelector('#textBoxDialog').parentNode.host).position().top;
+        if (dialog.getAttribute('data-x') == null || dialog.getAttribute('data-y') == null) {
+            textBoxProto.setX(x);
+            textBoxProto.setY(y);
+        } else {
+            textBoxProto.setX(x + parseInt(shadowRoot.querySelector('#textBoxDialog').getAttribute('data-x')));
+            textBoxProto.setY(y + parseInt(shadowRoot.querySelector('#textBoxDialog').getAttribute('data-y')));
+        };
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
         command.setCommandData(textBoxProto.toArrayBuffer());
         saveCallback(command);
