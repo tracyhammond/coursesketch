@@ -34,7 +34,7 @@
         slide.lectureId = CourseSketch.lecturePage.lecture.id;
         slide.unlocked = true;
         var finishGetCourse = function(lecture) {
-            CourseSketch.lecturePage.lecture = lecture;
+            CourseSketch.lecturePage.lecture.slides.push(slide.id);
             CourseSketch.lecturePage.displaySlides();
         }
         var finishInsert = function(lecture) {
