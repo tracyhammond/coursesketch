@@ -213,6 +213,11 @@ html, body {
     cursor: pointer;
 }
 
+.slide-thumb.selected {
+    color: #FFF;
+    background-color: #6377A8;
+}
+
 #slide-content {
     margin: auto;
     width: 140vmin;

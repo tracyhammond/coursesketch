@@ -9,6 +9,13 @@
     document.querySelector("#slide-content").appendChild(textbox);
     }
 
+    CourseSketch.lecturePage.selectSlide = function(slideIndex) {
+        $(".slide-thumb").each(function() {
+            $(this).removeClass("selected");
+        })
+        $("#" + slideIndex + ".slide-thumb").addClass("selected");
+    }
+    
     CourseSketch.lecturePage.addSlideToDom = function(slideIndex) {
         var cssWidth = "calc(10vw + "
             + (CourseSketch.lecturePage.lecture.slides.length * 10.8)
@@ -16,7 +23,9 @@
         $("#slides>.content").css({
             width: cssWidth
         });
-        $("#slides>.content").append("<span class=\"slide-thumb\">" + slideIndex + "</span>");
+        $("#slides>.content").append("<span id=\""
+            + slideIndex + "\" class=\"slide-thumb\" onclick=\"CourseSketch.lecturePage.selectSlide("
+            + slideIndex + ")\">" + slideIndex + "</span>");
     }
 
     CourseSketch.lecturePage.newSlide = function() {
