@@ -48,6 +48,7 @@
     }
 
     CourseSketch.lecturePage.displaySlides = function() {
+        $("#lecture-title").text(CourseSketch.lecturePage.lecture.name);
         for(var i = 0; i < CourseSketch.lecturePage.lecture.slides.length; ++i) {
             CourseSketch.lecturePage.addSlideToDom(i);
         }
