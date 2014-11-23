@@ -10,32 +10,16 @@
 <link rel="import" href="/src/common/lecture/lecturePage.html"
 	data-fake>
 <script>
-$(document).ready(function() {
-	var loadCourses = function() {
-		CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
-			var courseList = CourseSketch.fakeCourses;
-			for(var i = 0; i < CourseSketch.fakeCourses.length; ++i) {
-				CourseSketch.dataManager.setCourse(CourseSketch.fakeCourses[i]);
-			}
-			coursesCallback(courseList);
-		}
-		for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-			CourseSketch.dataManager.setLecture(CourseSketch.fakeLectures[i]);
-		}
-                CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0]);
-		CourseSketch.dataManager.testDataLoaded = true;
-        };
-        if (CourseSketch.dataManager.realDatabaseReady()) {
-		loadCourses();
-        } else {
-            var intervalVar = setInterval(function() {
-                if (CourseSketch.dataManager.realDatabaseReady()) {
-                    clearInterval(intervalVar);
-                    loadCourses();
-                }
-            }, 100);
-        }
-});
+if (CourseSketch.dataManager.realDatabaseReady()) {
+	CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0]);
+} else {
+    var intervalVar = setInterval(function() {
+	if (CourseSketch.dataManager.realDatabaseReady()) {
+	    clearInterval(intervalVar);
+	    CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0]);
+	}
+    }, 100);
+}
 </script>
 </head>
 <body>

@@ -189,7 +189,7 @@ html, body {
 }
 
 #slides>.content {
-    width: calc(100vw + 200px);
+    width: calc(10vw + 200px);
     height: 5vw;
     vertical-align: middle;
     display: inline-block;
