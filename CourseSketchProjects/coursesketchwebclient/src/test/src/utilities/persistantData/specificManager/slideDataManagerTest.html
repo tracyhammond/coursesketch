@@ -90,18 +90,17 @@
                                        dataManager.getCourse(course.id, function(newCourse) {
                                            dataManager.getCourseLectures(newCourse.lectureList, function(lectureList) { 
                                                assert.ok(true, "Lectures can be fetched from the database.");
-                                              /* dataManager.getCourseLecture(lecture1.id, function(newLecture){
-                                                   dataManager.getLectureSlides(newLecture.slidelist, function(slideList){
+                                               dataManager.getCourseLecture(lecture1.id, function(newLecture){
+                                                   dataManager.getLectureSlides(newLecture.slides, function(slideList){
                                                        assert.ok(true, "Lecture slides can be fetched from the database.");
                                                        assert.equal(slideList.length, 2, "Two slides were inserted and two slides were returned.");
-                                                       for (var i = 0; i < lectureList.length; ++i) {
-                                                            console.log(lectureList[i]);
+                                                       for (var i = 0; i < slideList.length; ++i) {
+                                                            console.log(slideList[i]);
                                                         }
                                                         
                                                        
-                                                   })
-                                                  
-                                               })*/
+                                                   }) 
+                                               })
                                            QUnit.start(); 
                                              }, undefined); // getCourselecture loop
                                         }); // getCourse                                       
