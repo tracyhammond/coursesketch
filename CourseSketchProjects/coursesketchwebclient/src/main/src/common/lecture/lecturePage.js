@@ -1,8 +1,9 @@
 (function() {
-    $(document).ready(function() {
         CourseSketch.lecturePage = [];
-        CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState("currentLecture");
-        CourseSketch.dataManager.clearStates();
+        if(isUndefined(CourseSketch.lecturePage.lecture)) {
+		CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState("currentLecture");
+		CourseSketch.dataManager.clearStates();
+	}
 
         /**
          * Adds a new text box to the current lecture slide.
@@ -28,5 +29,4 @@
         }
 
         //CourseSketch.lecturePage.displaySlides();
-    });
 })();
