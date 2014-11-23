@@ -6,7 +6,7 @@
      */
     CourseSketch.lecturePage.newTextBox = function() {
         var textbox = document.createElement('text-box-creation');
-    document.querySelector("#slide-content").appendChild(textbox);
+        document.querySelector("#slide-content").appendChild(textbox);
     }
 
     CourseSketch.lecturePage.selectSlide = function(slideIndex) {
@@ -18,8 +18,8 @@
     
     CourseSketch.lecturePage.addSlideToDom = function(slideIndex) {
         var cssWidth = "calc(10vw + "
-            + (CourseSketch.lecturePage.lecture.slides.length * 10.8)
-            + "vw + 200px)"
+            + (CourseSketch.lecturePage.lecture.slides.length * 10.84)
+            + "vw)"
         $("#slides>.content").css({
             width: cssWidth
         });
