@@ -139,7 +139,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
 			} else {
 				var bytes = ByteBuffer.fromBase64(result.data);
 				if (!isUndefined(slideCallback)) {
-					slideCallback(CourseSketch.PROTOBUF_UTIL.getSlideClass().decode(bytes));
+					slideCallback(CourseSketch.PROTOBUF_UTIL.getLectureSlideClass().decode(bytes));
 				}
 			}
 		});
