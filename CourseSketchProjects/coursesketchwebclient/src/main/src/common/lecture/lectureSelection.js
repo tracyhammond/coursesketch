@@ -19,8 +19,7 @@
             attributeChanged, oldValue, newValue, element) {
                 element[attributeChanged] = newValue;
                 CourseSketch.dataManager.setLecture(element);
-        };
-        
+        };       
 
         /**
          * Function that is called when a lecture is selected
@@ -39,7 +38,6 @@
          * 
          * @param lectureList
          *                list of lectures to display
-
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
             var add = $("#add").clone();
@@ -77,7 +75,7 @@
                     CourseSketch.lectureSelection.displayLectures);
             });
         };
-    
+
         /**
          * Adds a new lecture to the currently selected course.
          * 
@@ -105,7 +103,7 @@
             };
             CourseSketch.dataManager.insertLecture(lecture, insertCallback, insertCallback);
         };
-    
+
         /**
          * Renders a list of courses to the screen.
          *
