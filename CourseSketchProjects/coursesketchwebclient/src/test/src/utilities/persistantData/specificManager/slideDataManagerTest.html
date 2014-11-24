@@ -231,5 +231,68 @@
                  }); // insertlecture lecture1
                 },100);
             });
+             asyncTest("update lecture slide local callback", function(assert) {
+                 expect(1);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var req = CourseSketch.PROTOBUF_UTIL.Request();
+                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST;
+                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                var fakeID = generateUUID();
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                course.id = generateUUID();
+                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE;
+                var SrlLecturedata =  CourseSketch.PROTOBUF_UTIL.SrlLectureDataHolder();
+                var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+                var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
+                var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                lecture.id = fakeID;
+                lecture.courseId = course.id;
+                lecture2.id = lecture.id;
+                lecture2.courseId = course.id;
+                lecture2.name = "Update complete!"
+                slide1.id = generateUUID();
+                slide1.unlocked = true;
+                slide1.lectureId = lecture.id;
+                slide2.id = slide1.id;
+                slide2.lectureId = lecture.id;
+                slide2.unlocked = false;
+                SrlLecturedata.lectures = [ lecture];
+                itemResult.data =  SrlLecturedata.toArrayBuffer();
+                dataResult.results = [itemResult];
+                req.otherData= dataResult.toArrayBuffer();
+                CourseSketch.connection.sendRequest = function(message) {
+                    CourseSketch.connection.sendSelf(req);
+                }; //send request
+                var waitfor = 0;
+                var interval = setInterval(function() {
+                        if (dataManager.isDatabaseReady()) {
+                            clearInterval(interval);
+                            dataManager.insertLecture(lecture, function() {
+                                dataManager.insertSlide(slide1, function() {
+                                    dataManager.updateSlide(slide2, function(){
+                                        dataManager.getCourseLecture(fakeID, function(result1) {
+                                            dataManager.getLectureSlide(slide1.id, function(slide3){
+                                            console.log("result 1 is "+ slide3.unlocked + ","+slide1.unlocked);
+                                            assert.equal(slide2.unlocked, slide3.unlocked,"Sent a lecture to server and updated it");
+                                            QUnit.start();  
+                                            })
+                                            
+                                    }, undefined); //get courselecture 
+                                    })
+                                    
+                                    dataManager.updateSlide(slide1, function(){
+                                         
+                                    })
+                                    setTimeout(function(){}, 100);
+
+                                }, undefined);
+                            });
+                           console.log("pass get Course Lecture")
+                      }; // endif
+                }, 400);                    
+             });
         </script>
     </body>
