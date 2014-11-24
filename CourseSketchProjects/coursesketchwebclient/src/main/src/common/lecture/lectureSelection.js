@@ -3,15 +3,36 @@
         CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
         CourseSketch.lectureSelection.currentCourse = undefined;
 
+        /**
+         * Function to be called when a lecture has finished editing.
+         * 
+         * @param attributeChanged
+         *            the name of the protobuf attribute that changed
+         * @param oldValue
+         *            the attribute's old value
+         * @param newValue
+         *            the attribute's new value
+         * @param element
+         *            protobuf element that has been edited
+         */
         CourseSketch.lectureSelection.lectureEndEdit = function(
             attributeChanged, oldValue, newValue, element) {
                 element[attributeChanged] = newValue;
                 CourseSketch.dataManager.setLecture(element);
         };
         
+
+        /**
+         * Function that is called when a lecture is selected
+         * (clicked on)
+         * 
+         * @param lecture
+         *            protobuf object of the lecture that was
+         *            selected
+         */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
-	    console.log(lecture);
-	}
+            console.log(lecture);
+        }
 
         /**
          * Renders a list of lectures to the screen.
