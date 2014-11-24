@@ -50,17 +50,14 @@
      *            object.
      */
     CourseSketch.lecturePage.addSlideToDom = function(slideIndex) {
-        var cssWidth = "calc(10vw + "
-            + (CourseSketch.lecturePage.lecture.slides.length * 10.84)
-            + "vw + 100px)"
-        $("#slides>.content").css({
-            width: cssWidth
-        });
-        $("#slides>.content").append("<span id=\""
-            + slideIndex
-            + "\" class=\"slide-thumb\" "
-            + "onclick=\"CourseSketch.lecturePage.selectSlide("
-            + slideIndex + ")\">" + (slideIndex + 1) + "</span>");
+        var slideThumb = document.createElement("span");
+        slideThumb.id = slideIndex;
+        slideThumb.className = "slide-thumb";
+        slideThumb.textContent = slideIndex + 1;
+        slideThumb.onclick = function() {
+            CourseSketch.lecturePage.selectSlide(slideIndex);
+        };
+        document.querySelector("#slides>.content").appendChild(slideThumb);
     }
 
     /**
