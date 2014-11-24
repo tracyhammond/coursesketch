@@ -1,20 +1,20 @@
 /**
- * 
+ *
  * The Sketch Surface is actually used as part of an element. but can be used
  * without actually being an element if you spoof some methods.
- * 
+ *
  * Supported attributes.
  * <ul>
  * <li>data-existingList: This is meant to tell the surface that the update
  * list will be provided for it and to not automatically bind an UpdateManager
  * to it</li>
- * 
+ *
  * <li>data-customId: This is meant to tell the surface that the Id of the
  * element will be provided to it and to not assign a random id to it.</li>
  * <li>data-readOnly: This tells the sketch surface to ignore any input and it
  * will only display sketches.</li>
  * </ul>
- * 
+ *
  * @Class
  */
 function SketchSurface() {
@@ -98,7 +98,7 @@ function SketchSurface() {
     /**
      * Draws the stroke then creates an update that is added to the update
      * manager, given a stroke.
-     * 
+     *
      * @param stroke
      *            {SRL_Stroke} a stroke that is added to the sketch.
      */
@@ -163,7 +163,23 @@ function SketchSurface() {
     };
 
     this.getUpdateList = function() {
-        return updateList;
+        return updateList.getUpdateList();
+    };
+
+    /**
+     * Returns the manager for this sketch surface.
+     */
+    this.getUpdateManager = function() {
+            return updateList;
+    };
+
+    /**
+     * Returns SrlUpdateList proto object.
+     */
+    this.getSrlUpdateListProto = function() {
+        var updateProto = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        updateProto.list = updateList.getUpdateList();
+        return updateProto;
     };
 }
 
