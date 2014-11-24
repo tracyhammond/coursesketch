@@ -53,7 +53,7 @@
                 }, 250);
             });
            asyncTest("get lectures from course local callback", function(assert) {
-                expect(1);
+                expect(3);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
@@ -90,18 +90,17 @@
                                        dataManager.getCourse(course.id, function(newCourse) {
                                            dataManager.getCourseLectures(newCourse.lectureList, function(lectureList) { 
                                                assert.ok(true, "Lectures can be fetched from the database.");
-                                              /* dataManager.getCourseLecture(lecture1.id, function(newLecture){
-                                                   dataManager.getLectureSlides(newLecture.slidelist, function(slideList){
+                                               dataManager.getCourseLecture(lecture1.id, function(newLecture){
+                                                   dataManager.getLectureSlides(newLecture.slides, function(slideList){
                                                        assert.ok(true, "Lecture slides can be fetched from the database.");
                                                        assert.equal(slideList.length, 2, "Two slides were inserted and two slides were returned.");
-                                                       for (var i = 0; i < lectureList.length; ++i) {
-                                                            console.log(lectureList[i]);
+                                                       for (var i = 0; i < slideList.length; ++i) {
+                                                            console.log(slideList[i]);
                                                         }
                                                         
                                                        
-                                                   })
-                                                  
-                                               })*/
+                                                   }) 
+                                               })
                                            QUnit.start(); 
                                              }, undefined); // getCourselecture loop
                                         }); // getCourse                                       
@@ -109,7 +108,7 @@
                                 }) // insert slide 1
                             }); // insertlecture lecture1
                     });
-                }, 100);
+                }, 500);
             });
             asyncTest("get slide server response from lecture part 2 testing DB local callback", function(assert) {
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
