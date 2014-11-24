@@ -53,7 +53,7 @@
                 }, 250);
             });
            asyncTest("get lectures from course local callback", function(assert) {
-                expect(1);
+                expect(3);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
@@ -108,7 +108,7 @@
                                 }) // insert slide 1
                             }); // insertlecture lecture1
                     });
-                }, 100);
+                }, 500);
             });
             asyncTest("get slide server response from lecture part 2 testing DB local callback", function(assert) {
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
