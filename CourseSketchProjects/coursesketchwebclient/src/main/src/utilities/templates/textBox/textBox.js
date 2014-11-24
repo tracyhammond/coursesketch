@@ -86,11 +86,23 @@ function TextBox() {
     this.saveData = function() {
         var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
         textBoxProto.setText(shadowRoot.querySelector('#creatorText').value);
-        textBoxProto.setHeight($(shadowRoot.querySelector('#textBoxDialog')).height());
-        textBoxProto.setWidth($(shadowRoot.querySelector('#textBoxDialog')).width());
         var dialog = shadowRoot.querySelector('#textBoxDialog');
-        var x = $(shadowRoot.querySelector('#textBoxDialog').parentNode.host).position().left;
-        var y = $(shadowRoot.querySelector('#textBoxDialog').parentNode.host).position().top;
+        var x = "" + shadowRoot.querySelector('#textBoxDialog').style.left;
+        var y = "" + shadowRoot.querySelector('#textBoxDialog').style.top;
+        if (x.indexOf("px") > 0) {
+            x = x.substring(0, x.length - 2);
+        }
+        if (y.indexOf("px") > 0) {
+            y= y.substring(0, y.length - 2);
+        }
+        if (x == "" || x == " ") {
+            x = 0;
+        }
+        if (y == "" || y == " ") {
+            y= 0;
+        }
+        x = parseInt(x);
+        y = parseInt(y);
         if (dialog.getAttribute('data-x') == null || dialog.getAttribute('data-y') == null) {
             textBoxProto.setX(x);
             textBoxProto.setY(y);
@@ -98,6 +110,8 @@ function TextBox() {
             textBoxProto.setX(x + parseInt(shadowRoot.querySelector('#textBoxDialog').getAttribute('data-x')));
             textBoxProto.setY(y + parseInt(shadowRoot.querySelector('#textBoxDialog').getAttribute('data-y')));
         }
+        textBoxProto.setHeight($(shadowRoot.querySelector('#textBoxDialog')).height());
+        textBoxProto.setWidth($(shadowRoot.querySelector('#textBoxDialog')).width());
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
         command.setCommandData(textBoxProto.toArrayBuffer());
         this.getFinishedCallback()(command); // Gets finishedCallback and calls it with command as parameter
