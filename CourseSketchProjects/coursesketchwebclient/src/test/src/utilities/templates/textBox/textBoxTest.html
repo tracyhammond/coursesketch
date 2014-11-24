@@ -50,7 +50,7 @@
             real.shadowRoot.querySelector('#textBoxDialog').setAttribute('data-x','100');
             real.shadowRoot.querySelector('#textBoxDialog').setAttribute('data-y','200');
             real.shadowRoot.querySelector('#creatorText').value = 'Test value'
-            real.setSaveListener(function(command) {
+            real.setFinishedListener(function(command) {
                 assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,
                         'Expecting command type CREATE_TEXTBOX from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
@@ -75,7 +75,7 @@
             var real = document.createElement('test-box-creation');
             document.getElementById('textbox').appendChild(real);
             real.initializeElement(template.cloneNode(true));
-            real.setSaveListener(function(command) {
+            real.setFinishedListener(function(command) {
                 assert.ok(true, 'After closing, .saveData is called');
                 assert.equal(document.getElementById('textbox').children.length, 0, "The textbox removed itself from the DOM");
                 QUnit.start();
