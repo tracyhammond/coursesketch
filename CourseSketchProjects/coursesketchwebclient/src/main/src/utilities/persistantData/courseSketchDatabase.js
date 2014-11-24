@@ -120,11 +120,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
         dataSend.items = new Array();
-
         var itemSend = CourseSketch.PROTOBUF_UTIL.ItemSend();
         itemSend.setQuery(queryType);
         itemSend.setData(data);
-
         dataSend.items.push(itemSend);
 
         serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
@@ -136,7 +134,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
         dataSend.items = new Array();
-
         var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemSend();
         itemUpdate.setQuery(queryType);
         itemUpdate.setData(data);
