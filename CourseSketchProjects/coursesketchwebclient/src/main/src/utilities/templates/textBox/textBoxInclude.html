@@ -19,19 +19,19 @@
              * @Method
              * Called when the element is created, using document.create()(but does nothing else)
              */
-            TextBox.prototype.createdCallback = function() {
+            newElement.createdCallback = function() {
                 this.open = "";
             };
 
             /**
              * Creates the shadow root and adds that into the system.
              */
-            TextBox.prototype.attachedCallback = function() {
+            newElement.attachedCallback = function() {
                 this.initializeElement(clone.cloneNode(true));
             };
 
-            TextBox.prototype.detachedCallback = function() {
-                this.saveData();
+            newElement.detachedCallback = function() {
+            // Saving must happen before element is detached to save the height and width
             };
 
             document.registerElement('text-box-creation', {
@@ -49,19 +49,19 @@
              * @Method
              * Called when the element is created, using document.create()(but does nothing else)
              */
-            TextBox.prototype.createdCallback = function() {
+            newElement.createdCallback = function() {
                 this.open = "";
             };
 
             /**
              * Creates the shadow root and adds that into the system.
              */
-            TextBox.prototype.attachedCallback = function() {
+            newElement.attachedCallback = function() {
                 this.initializeElement(clone.cloneNode(true));
             };
 
-            TextBox.prototype.detachedCallback = function() {
-                this.getFinishedCallback()();
+            newElement.detachedCallback = function() {
+                this.getFinishedCallback()(); // Gets the callback and immediately calls it
             };
 
             document.registerElement('text-box-viewing', {
