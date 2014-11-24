@@ -5,7 +5,7 @@
 
         /**
          * Function to be called when a lecture has finished editing.
-         * 
+         *
          * @param attributeChanged
          *            the name of the protobuf attribute that changed
          * @param oldValue
@@ -19,12 +19,12 @@
             attributeChanged, oldValue, newValue, element) {
                 element[attributeChanged] = newValue;
                 CourseSketch.dataManager.setLecture(element);
-        };       
+        };
 
         /**
          * Function that is called when a lecture is selected
          * (clicked on)
-         * 
+         *
          * @param lecture
          *            protobuf object of the lecture that was
          *            selected
@@ -35,7 +35,7 @@
 
         /**
          * Renders a list of lectures to the screen.
-         * 
+         *
          * @param lectureList
          *                list of lectures to display
          */
@@ -56,7 +56,7 @@
         /**
          * Called when a course is selected. Updates selection
          * and gets lectures for the course.
-         * 
+         *
          * @param course
          *                course object of the selected element
          */
@@ -77,7 +77,7 @@
 
         /**
          * Adds a new lecture to the currently selected course.
-         * 
+         *
          * @param evt
          *                event from click (or other) action
          */
@@ -116,7 +116,6 @@
                 .setBoxClickFunction(this.courseSelected)
                 .build(document.querySelector("#col1>.content"));
         };
-        
 
         var loadCourses = function(courseList) {
             /* (waitingIcon.isRunning()) {
