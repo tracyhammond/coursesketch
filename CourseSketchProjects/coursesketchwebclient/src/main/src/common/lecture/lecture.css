@@ -188,7 +188,7 @@ html, body {
     overflow-x: scroll;
 }
 
-#slides>.content {
+#slides > .content {
     width: calc(10vw + 200px);
     height: 5vw;
     vertical-align: middle;
