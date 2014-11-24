@@ -8,14 +8,6 @@
         var textbox = document.createElement('text-box-creation');
         document.querySelector("#slide-content").appendChild(textbox);
     }
-    
-    CourseSketch.lecturePage.newSketchContent = function() {
-        var sketchSurface = document.createElement('sketch-surface');
-        document.querySelector("#slide-content").appendChild(sketchSurface);
-        setTimeout(function() {
-            sketchSurface.resizeSurface();
-        }, 500);
-    }
 
     CourseSketch.lecturePage.renderSlide = function(slide) {
         console.log(slide);

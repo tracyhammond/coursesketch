@@ -36,14 +36,14 @@
                             lecture.courseId = course.id;
                             lecture.name= "I AM TEST";
                             dataManager.insertLecture(lecture, function() {
-    							var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    							slide.id = generateUUID();
-    							slide.lectureId = lecture.id;
-    							slide.unlocked = true;
-    							dataManager.insertSlide(slide, function(){
-    								assert.ok(true, "Local callback called.");
-    								QUnit.start();
-    							});
+                                var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                                slide.id = generateUUID();
+                                slide.lectureId = lecture.id;
+                                slide.unlocked = true;
+                                dataManager.insertSlide(slide, function(){
+                                    assert.ok(true, "Local callback called.");
+                                    QUnit.start();
+                                });
                             });
                         });
                 }, 100);
@@ -120,11 +120,11 @@
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE;
                 var SrlLecturedata =  CourseSketch.PROTOBUF_UTIL.SrlLectureDataHolder();
-				var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
                 var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-				slide.id = fakeID;
-				slide.lectureId = generateUUID();
-				slide.unlocked = true;
+                slide.id = fakeID;
+                slide.lectureId = generateUUID();
+                slide.unlocked = true;
                 SrlLecturedata.slides = [ slide ];
                 itemResult.data =  SrlLecturedata.toArrayBuffer();
                 dataResult.results = [itemResult];
@@ -211,22 +211,22 @@
                     lecture1.name = "I am a test!";
                     lecture1.courseId = course.id;
                         dataManager.insertLecture(lecture1, undefined,function() {
-							var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-							slide1.id = generateUUID();
-							slide1.lectureId = lecture1.id;
-							slide.unlock = true;
-							datamanager.insertSlide(slide1, undefined, function() {
-								dataManager.deleteSlide(slide1.id, function(){
-									dataManager.getCourse(course.id, function(newCourse) {
-										dataManager.getCourseLectures(newCourse.lectureList, function(lectureList) {
-											dataManager.getLectureSlides(newLecture.slides, function(slides) {
-												assert.equal(slides.length,0 , "One slide was inserted and was deleted.");
-												QUnit.start();
-											});
-										}); // get courselectures
-									});
-								}); // getCourselecture loop
-							});
+                            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                            slide1.id = generateUUID();
+                            slide1.lectureId = lecture1.id;
+                            slide.unlock = true;
+                            datamanager.insertSlide(slide1, undefined, function() {
+                                dataManager.deleteSlide(slide1.id, function(){
+                                    dataManager.getCourse(course.id, function(newCourse) {
+                                        dataManager.getCourseLectures(newCourse.lectureList, function(lectureList) {
+                                            dataManager.getLectureSlides(newLecture.slides, function(slides) {
+                                                assert.equal(slides.length,0 , "One slide was inserted and was deleted.");
+                                                QUnit.start();
+                                            });
+                                        }); // get courselectures
+                                    });
+                                }); // getCourselecture loop
+                            });
                         }); // getCourse
                  }); // insertlecture lecture1
                 },100);
