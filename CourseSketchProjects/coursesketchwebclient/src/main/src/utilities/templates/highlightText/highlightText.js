@@ -68,12 +68,8 @@ function HighlightText() {
                     var newNode = document.createElement('span');
                     newNode.setAttribute('class', 'highlightedText');
                     newNode.setAttribute('style', 'background:' + highlightColor + '; color:' + textColor);
-                    console.log(document.implementation);
-                    console.log(range);
                     newNode.appendChild(range.extractContents());
                     range.insertNode(newNode);
-                    console.log(range.commonAncestorContainer.innerHTML);
-                    console.log(range.commonAncestorContainer.innerText);
                 } else {
                     // Message for a selection that is not valid
                     alert("Please make a valid selection.")
