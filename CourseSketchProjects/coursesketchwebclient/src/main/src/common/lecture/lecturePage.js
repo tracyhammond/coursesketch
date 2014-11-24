@@ -8,24 +8,41 @@
         var textbox = document.createElement('text-box-creation');
         document.querySelector("#slide-content").appendChild(textbox);
     }
+    
+    CourseSketch.lecturePage.newSketchContent = function() {
+        var sketchSurface = document.createElement('sketch-surface');
+        document.querySelector("#slide-content").appendChild(sketchSurface);
+        setTimeout(function() {
+            sketchSurface.resizeSurface();
+        }, 500);
+    }
 
+    CourseSketch.lecturePage.renderSlide = function(slide) {
+        console.log(slide);
+    }
+    
     CourseSketch.lecturePage.selectSlide = function(slideIndex) {
         $(".slide-thumb").each(function() {
             $(this).removeClass("selected");
         })
         $("#" + slideIndex + ".slide-thumb").addClass("selected");
+        CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
+            .lecture.slides[slideIndex], CourseSketch.lecturePage.renderSlide,
+            CourseSketch.lecturePage.renderSlide);
     }
     
     CourseSketch.lecturePage.addSlideToDom = function(slideIndex) {
         var cssWidth = "calc(10vw + "
             + (CourseSketch.lecturePage.lecture.slides.length * 10.84)
-            + "vw)"
+            + "vw + 100px)"
         $("#slides>.content").css({
             width: cssWidth
         });
         $("#slides>.content").append("<span id=\""
-            + slideIndex + "\" class=\"slide-thumb\" onclick=\"CourseSketch.lecturePage.selectSlide("
-            + slideIndex + ")\">" + slideIndex + "</span>");
+            + slideIndex
+            + "\" class=\"slide-thumb\" "
+            + "onclick=\"CourseSketch.lecturePage.selectSlide("
+            + slideIndex + ")\">" + (slideIndex + 1) + "</span>");
     }
 
     CourseSketch.lecturePage.newSlide = function() {
@@ -34,21 +51,21 @@
         slide.lectureId = CourseSketch.lecturePage.lecture.id;
         slide.unlocked = true;
         var finishGetCourse = function(lecture) {
-            
-            // TODO: This needs to be changed once insertSlide works!!!
-            //CourseSketch.lecturePage.lecture = lecture;
-            CourseSketch.lecturePage.lecture.slides.push(slide);
-            
-            CourseSketch.lecturePage.addSlideToDom(CourseSketch.lecturePage.lecture.slides.length);
+            CourseSketch.lecturePage.lecture.slides.push(slide.id);
+            CourseSketch.lecturePage.displaySlides();
         }
         var finishInsert = function(lecture) {
-            CourseSketch.dataManager.getCourseLecture(CourseSketch.lecturePage.lecture.id, finishGetCourse, finishGetCourse);
+            CourseSketch.dataManager.getCourseLecture(CourseSketch.lecturePage
+                .lecture.id, finishGetCourse, finishGetCourse);
         }
         CourseSketch.dataManager.insertSlide(slide, finishInsert, finishInsert);
     }
 
     CourseSketch.lecturePage.displaySlides = function() {
         $("#lecture-title").text(CourseSketch.lecturePage.lecture.name);
+        $(".slide-thumb:not(\"#add\")").each(function() {
+            $(this).remove();
+        });
         for(var i = 0; i < CourseSketch.lecturePage.lecture.slides.length; ++i) {
             CourseSketch.lecturePage.addSlideToDom(i);
         }
