@@ -137,7 +137,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
         dataSend.items = new Array();
 
-        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemSend();
         itemUpdate.setQuery(queryType);
         itemUpdate.setData(data);
         dataSend.items.push(itemUpdate);
