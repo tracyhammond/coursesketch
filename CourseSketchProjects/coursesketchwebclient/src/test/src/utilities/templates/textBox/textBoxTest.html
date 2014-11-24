@@ -1,0 +1,129 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Text Box Test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link id="textBoxTemplateImport" rel="import" href="/src/utilities/templates/textBox/textBoxInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/utilities/templates/textBox/textBox.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="textbox"></div>
+    
+	<script>
+        var template = (function() {
+            var link1 = document.querySelector('#textBoxTemplateImport');
+            var link = link1.import.querySelector('#textBoxTemplateImport');
+            var template = link.import.querySelector('#textBoxCreation');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+
+        QUnit.module("creation", {
+            setupOnce : function() {
+                try {
+                    var newElement = new TextBox();
+                    // test is not a typo
+                    document.registerElement('test-box-creation', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
+
+            },
+            teardown : function() {
+                document.getElementById('textbox').innerHTML = "";
+            }
+        });
+
+        test("Save Test", function(assert) {
+            var real = document.createElement('test-box-creation');
+            real.initializeElement(template.cloneNode(true));
+            $(real.shadowRoot.querySelector('#textBoxDialog')).height(100);
+            $(real.shadowRoot.querySelector('#textBoxDialog')).width(250);
+            $(real.shadowRoot.querySelector('#textBoxDialog')).offset({ top: 200, left: 100 });
+            real.shadowRoot.querySelector('#creatorText').value = 'Test value'
+            real.setFinishedListener(function(command) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,
+                        'Expecting command type CREATE_TEXTBOX from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var height = decoded.getHeight();
+                var width = decoded.getWidth();
+                var x = decoded.getX();
+                var y = decoded.getY();
+                var text = decoded.getText();
+                assert.equal(height, '100', 'Expected 100 for height. Got ' + height);
+                assert.equal(width, '250', 'Expected 250 for width. Got ' + width);
+                assert.equal(x, '100', 'Expected 100 for data-x. Got ' + x);
+                assert.equal(y, '200', 'Expected 200 for data-y. Got ' + y);
+                assert.equal(text, 'Test value', 'Expected "Test value" for value. Got "' + text + '"');
+            });
+            real.saveData();
+        });
+        
+        asyncTest("Close button calls save", function(assert) {
+            expect(1);
+            var real = document.createElement('test-box-creation');
+            document.getElementById('textbox').appendChild(real);
+            real.initializeElement(template.cloneNode(true));
+            real.setFinishedListener(function(command) {
+                assert.ok(true, 'After closing, .saveData is called');
+                QUnit.start();
+            });
+            var close = real.shadowRoot.querySelector('#closeButton');
+            simulate(close, 'click');
+        });
+        
+        test("Close button removes from dom", function(assert) {
+            expect(1);
+            var real = document.createElement('test-box-creation');
+            document.getElementById('textbox').appendChild(real);
+            real.initializeElement(template.cloneNode(true));
+            real.setFinishedListener(function() {});
+            var close = real.shadowRoot.querySelector('#closeButton');
+            simulate(close, 'click');
+            assert.equal(document.getElementById('textbox').children.length, 0, "The textbox removed itself from the DOM");
+        });
+        
+        test("Load Data", function(assert) {
+            expect(7);
+            var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+            textBoxProto.setText("Test text");
+            textBoxProto.setHeight(100);
+            textBoxProto.setWidth(250);
+            textBoxProto.setX(100);
+            textBoxProto.setY(200);
+            
+            var real = document.createElement('test-box-creation');
+            document.getElementById('textbox').appendChild(real);
+            real.initializeElement(template.cloneNode(true));
+            real.loadData(textBoxProto);
+            real.setFinishedListener(function(command) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,
+                        'Expecting command type CREATE_TEXTBOX from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var height = decoded.getHeight();
+                var width = decoded.getWidth();
+                var x = decoded.getX();
+                var y = decoded.getY();
+                var text = decoded.getText();
+                assert.equal(height, '100', 'Expected 100 for height. Got ' + height);
+                assert.equal(width, '250', 'Expected 250 for width. Got ' + width);
+                assert.equal(x, '100', 'Expected 100 for data-x. Got ' + x);
+                assert.equal(y, '200', 'Expected 200 for data-y. Got ' + y);
+                assert.equal(text, 'Test text', 'Expected "Test text" for value. Got "' + text + '"');
+            });
+            real.saveData();
+        });
+    </script>
+</body>
