@@ -24,18 +24,18 @@ html, body {
     height: 100%;
 }
 
-.column>.content {
+.column > .content {
     height: calc(100% - 75px);
     overflow-y: scroll;
     overflow-x: hidden;
 }
 
-#col2>.content {
+#col2 > .content {
     margin-top: 40px;
     padding-bottom: 40px;
 }
 
-.column>.title {
+.column > .title {
     background: rgb(111, 140, 191); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(111, 140, 191, 1) 0%,
         rgba(71, 98, 145, 1) 100%); /* FF3.6+ */
@@ -61,19 +61,19 @@ html, body {
     z-index: 2;
 }
 
-#col2>.title {
+#col2 > .title {
     position: fixed;
     right: 0;
     width: calc(100% - 400px);
 }
 
 /* Courses */
-.list-item, #col1>.content>school-item {
+.list-item, #col1 > .content > school-item {
     width: 100%;
     box-shadow: 0px 5px 10px #CCC;
 }
 
-#col1>.content>school-item:not (.selectedBox ) {
+#col1 > .content > school-item:not (.selectedBox ) {
     background: transparent;
 }
 
@@ -82,33 +82,33 @@ html, body {
     padding: 10px;
 }
 
-#col1>.content>.list-item:not (.title ), #col1>.content>school-item {
+#col1 > .content > .list-item:not (.title ), #col1 > .content > school-item {
     cursor: pointer;
 }
 
-#col1>.content>.list-item:not(.title):hover,
-#col1>.content>school-item:hover /deep/ .name,
-#col1>.content>school-item:hover /deep/ .description {
+#col1 > .content > .list-item:not(.title):hover,
+#col1 > .content > school-item:hover /deep/ .name,
+#col1 > .content > school-item:hover /deep/ .description {
 	cursor: pointer;
 	text-decoration: underline;
 }
 
-#col1>.content>school-item /deep/ .name {
+#col1 > .content > school-item /deep/ .name {
     text-shadow: 1px 1px 1px #CCC;
 }
 
 /* Selected courses */
-.list-item.selected, #col1>.content>school-item.selectedBox {
+.list-item.selected, #col1 > .content > school-item.selectedBox {
     color: #FFF;
     background-color: #6377A8;
 }
 
-#col1>.content>school-item.selectedBox /deep/ .name {
+#col1 > .content > school-item.selectedBox /deep/ .name {
     color: #FFF;
 }
 
 /* Lectures */
-.lecture, #add, #col2>.content>school-item {
+.lecture, #add, #col2 > .content > school-item {
     display: inline-block;
     vertical-align: top;
     margin-top: 40px;
@@ -120,11 +120,11 @@ html, body {
     background: #EEE;
 }
 
-.lecture>div {
+.lecture > div {
     padding: 5px;
 }
 
-.lecture>.title, .lecture>.name, #col2>.content>school-item>.name {
+.lecture > .title, .lecture > .name, #col2 > .content > school-item > .name {
     color: #FFF;
     font-weight: bold;
     text-align: center;
@@ -133,13 +133,13 @@ html, body {
     padding: 2px 0;
 }
 
-.lecture>.summary, .list-item>.summary, .list-item>.description,
-#col2>.content>school-item>.description {
+.lecture > .summary, .list-item > .summary, .list-item > .description,
+#col2 > .content > school-item > .description {
 	font-size: 12px;
 	padding: 0 5px;
 }
 
-#col2>.content>school-item /deep/ .school_item {
+#col2 > .content > school-item /deep/ .school_item {
     padding: 0;
 }
 
@@ -166,7 +166,7 @@ html, body {
     outline: none;
 }
 
-#add>.content {
+#add > .content {
     position: absolute;
     top: 40px;
     left: 77px;
@@ -188,7 +188,7 @@ html, body {
     overflow-x: scroll;
 }
 
-#slides>.content {
+#slides > .content {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
@@ -247,6 +247,6 @@ html, body {
     overflow-y: hidden !important;
 }
 
-.toolbar>.list-item {
+.toolbar > .list-item {
     padding: 10px;
 }
