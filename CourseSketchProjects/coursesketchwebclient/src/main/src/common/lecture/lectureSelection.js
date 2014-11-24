@@ -52,7 +52,7 @@
             $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
             $("#add").addClass("show");
         };
-        
+
         /**
          * Called when a course is selected. Updates selection
          * and gets lectures for the course.
@@ -63,7 +63,6 @@
         CourseSketch.lectureSelection.courseSelected = function(course) {
             var courseid = course.id;
             this.currentCourse = course.id;
-
             CourseSketch.dataManager.getCourseLectures(course.lectureList,
                 CourseSketch.lectureSelection.displayLectures);
             CourseSketch.lectureSelection.courseSelectionManager
