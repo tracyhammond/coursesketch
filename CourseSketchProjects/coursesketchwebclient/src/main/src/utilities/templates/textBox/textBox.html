@@ -1,26 +1,60 @@
 <html>
 <head>
 <template id="textBoxCreation">
+    <!-- Don't try to move any of this to an external style sheet or all hell will break loose
+    But really the positioning when loading will be incorrect probably due to some precedence of CSS and JS and HTML -->
     <style>
     #closeButton {
+        padding: 2px;
         position: absolute;
         right: 0px;
         top: 0px;
     }
+    #continueButton {
+        float: right;
+    }
+    #creatorText {
+        overflow: auto;
+    }
     :host {
         position: absolute;
         top: 0px;
+        left: 0px;
         cursor: move;
     }
     </style>
     <dialog id="textBoxDialog" class="draggable" open>
-        <textarea id="creatorText" placeholder="Insert your text here..."></textarea>
+        <textarea id="creatorText" cols="25" rows="7" placeholder="Insert your text here..."></textarea>
         <button id="closeButton">X</button>
+        <button id="continueButton">Continue</button>
     </dialog>
 </template>
 
 <template id="textBoxViewing">
-    <!-- This needs to use protobuf objects and the update manager to display the text box in the position saved by the instructor -->
+    <style>
+        #closeButton {
+            padding: 2px;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+        }
+        #continueButton {
+            float: right;
+        }
+        pre {
+            overflow: auto;
+            word-wrap: break-word;
+            margin: 1px;
+        }
+        :host {
+            position: absolute;
+        }
+    </style>
+    <dialog id="textBoxDialog" open>
+        <pre id="viewText"></pre>
+        <button id="closeButton">X</button>
+        <button id="continueButton">Continue</button>
+    </dialog>
 </template>
 </head>
 </html>
