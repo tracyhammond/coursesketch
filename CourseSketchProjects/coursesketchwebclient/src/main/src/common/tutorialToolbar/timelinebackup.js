@@ -26,37 +26,52 @@ function addThing (parent) {
     newThing.className = "add";
     parent.appendChild(newThing);
     newThing.onclick = function() {
-        addTextbox(newThing, function() {
-		   addTextbox(parent);
-		});/*
-		addTts(newThing, function() {
-		   addTts(parent);
-		});
-		addHighlight(newThing, function() {
-		   addHighlight(parent);
-		});*/
+        showTools(newThing, parent);
     };
 }
 
-function addTextbox (parent, clickFunction) {
-    var textbox = document.createElement("div");
-    textbox.className = "textbox"; 
-    parent.appendChild(textbox);
-    if (isUndefined(clickFunction)) {
-		clickFunction = function() {
-        console.log('I made it');
-		/*creating the textbox*/
+
+function showTools(addThing, newInstance) {
+    localScope = addThing;
+    var textboxTool = document.createElement("div");
+    textboxTool.className = "textboxtool";
+    addThing.appendChild(textboxTool);
+    textboxTool.onclick = function() {
+        /*creating the textbox*/
         var textbox = document.createElement('text-box-creation');
         document.body.appendChild(textbox);
         textbox.setFinishedListener(function(command) {
             globalcommand = command;
         });
 		/*end of creating the textbox*/
-		
-		};
-	}
-	textbox.onclick = clickFunction;
+        var textboxSave = document.createElement("div");
+        textboxSave.className = "textbox";
+        newInstance.appendChild(textboxSave);
+        console.log(typeof(localScope));
+        localScope.removeChild(textboxTool);
+    };
+    
 }
+
+function addTextbox (parent) {
+    var textbox = document.createElement("div");
+    textbox.className = "textboxTool"; 
+    parent.appendChild(textbox);
+    textbox.onclick = function() {
+        console.log('I made it');
+        
+		/*creating the textbox*/
+        var textbox = document.createElement('text-box-creation');
+        parent.appendChild(textbox);
+        textbox.setFinishedListener(function(command) {
+            globalcommand = command;
+        });
+		/*end of creating the textbox*/
+		
+    };
+}
+
+
 function addTts (parent, clickFunction) {
     var tts = document.createElement("div"); 
     parent.appendChild(newThing);
@@ -65,7 +80,7 @@ function addTts (parent, clickFunction) {
 		
         /*creating the tts box*/
         var ttsBox = document.createElement('text-speech-creation');
-        document.body.appendChild(ttsBox);
+        parent.appendChild(ttsBox);
         ttsBox.setFinishedListener(function(command) {
             globalcommand = command;
         });
