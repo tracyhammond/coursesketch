@@ -1,0 +1,81 @@
+.timeline {
+    position: fixed;
+    display: flex;
+    top: 80%;
+    width: 100%;
+    height: 20%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border: 2px solid #000;
+    background: #CC33FF;
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+
+.instance {
+	display: flex;
+	flex-direction: row-reversed;
+    top: 80%;
+    width: 10%;
+    height: 20%;
+    border: 2px solid #000;
+    background: #FFF;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.instance > .textbox {
+    width: 50px;
+    height: 50px;
+    display: inline;
+    position: absolute;
+    margin: auto 0;
+    background-image: url("textbox.jpg");
+    background-color: #cccccc;
+}
+
+.instance > .textbox {
+
+}
+
+/* this is the fake one */
+.instance .textToSpeech {
+    width: 50px;
+    height: 50px;
+    display: inline;
+    position: absolute;
+    margin: auto 0;
+    background-image: url("tts.jpg");
+    background-color: #cccccc;
+}
+
+/* this is the real one */
+.instance > .textToSpeech {
+    
+    
+}
+
+.instance .highlight {
+    width: 50px;
+    height: 50px;
+    display: inline;
+    position: absolute;
+    margin: auto 0;
+    background-image: url("highlight.jpg");
+    background-color: #cccccc;
+}
+
+.instance > .highlight {
+
+}
+
+.instance .add {
+    width: 50px;
+    height: 50px;
+    display: inline;
+    position: absolute;
+    margin: auto 0;
+    background-image: url("plus.png");
+    background-color: #cccccc;
+}
