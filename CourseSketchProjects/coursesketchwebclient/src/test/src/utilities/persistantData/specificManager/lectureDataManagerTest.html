@@ -260,6 +260,7 @@
                 },100);
             });
              asyncTest("update lecture local callback", function(assert) {
+                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
@@ -282,7 +283,6 @@
                 itemResult.data =  SrlLecturedata.toArrayBuffer();
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
-                expect(1);
                 CourseSketch.connection.sendRequest = function(message) {
                     CourseSketch.connection.sendSelf(req);
                 }; //send request
@@ -292,10 +292,11 @@
                             clearInterval(interval);
                             dataManager.insertLecture(lecture, function() {
                                 dataManager.updateLecture(lecture2, function() {
+                                    setTimeout(function(){}, 100);// to prevent race condiction of getting before updating
                                     dataManager.getCourseLecture(fakeID, function(result1) {
                                         console.log("result 1 is "+ result1.name + ","+lecture2.name);
                                         lecture2.id = result1.id;
-                                        assert.equal(lecture2.name, result1.name,"Sent a lecture to server and recieved it");
+                                        assert.equal(lecture2.name, result1.name,"Sent a lecture to server and updated it");
                                         QUnit.start();
                                     }, undefined); //get courselecture 
                                 }, undefined);
