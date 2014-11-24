@@ -48,7 +48,7 @@ enum CommandType {
 	CLOSE_SYNC = 16; // Tells the machine that it is going back to normal mode.
 
 	// all other commands will appear after 16
-    CREATE_TEXTBOX = 17; // Creates a textbox for use in tutorial or lecture slides
+	CREATE_TEXTBOX = 17; // Creates a textbox for use in tutorial or lecture slides
 }
 
 /**
