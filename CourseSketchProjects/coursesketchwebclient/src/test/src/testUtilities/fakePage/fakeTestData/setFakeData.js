@@ -15,7 +15,7 @@ $(document).ready(function() {
         var lectureLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeLectures.length);
         localBarrier.finalize(lectureBarrier);
         for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-            CourseSketch.dataManager.setLectureLocal(CourseSketch.fakeLectures[i], lectureLoadedCallback);
+            CourseSketch.dataManager.setLecture(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
         }
     };
 
