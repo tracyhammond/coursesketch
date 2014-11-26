@@ -1,15 +1,11 @@
-import java.util.Date;
-
-import protobuf.srl.school.School.SrlAssignment.LatePolicy;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
+import database.institution.mongo.MongoInstitution;
+import database.user.UserClient;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlBankProblem.QuestionType;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
-import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.auth.AuthenticationException;
-import database.institution.Institution;
-import database.user.UserClient;
 
 public class LocalAddProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {
@@ -551,7 +547,7 @@ public class LocalAddProblems {
 			bankBuilder.setQuestionType(QuestionType.SKETCH);
 			String resultantId = null;
 			try {
-				resultantId = Institution.mongoInsertBankProblem(mastId, bankBuilder.buildPartial()); // "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332"
+				resultantId = MongoInstitution.getInstance().insertBankProblem(mastId, bankBuilder.buildPartial()); // "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332"
 			} catch (AuthenticationException e1) {
 				e1.printStackTrace();
 			}
@@ -573,7 +569,7 @@ public class LocalAddProblems {
 			// testing inserting course
 				System.out.println("INSERTING PROBLEM");
 				try {
-					Institution.mongoInsertCourseProblem(mastId, testBuilder.buildPartial());
+					MongoInstitution.getInstance().insertCourseProblem(mastId, testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {
@@ -584,7 +580,7 @@ public class LocalAddProblems {
 	}
 
 	public static void main(String args[]) {
-		new Institution(false); // makes the database point locally
-		new UserClient(false); // makes the database point locally
+		new MongoInstitution(false, null); // makes the database point locally
+		new UserClient(false, null); // makes the database point locally
 	}
  }
