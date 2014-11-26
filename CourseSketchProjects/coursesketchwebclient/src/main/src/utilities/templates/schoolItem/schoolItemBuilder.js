@@ -6,7 +6,7 @@ function SchoolItemBuilder() {
     /**
      * resets the values in the school builder so that the same build object can
      * be used again.
-     * 
+     *
      * NOTE: ONLY DATA SHOULD GO HERE.
      */
     this.resetValues = function resetValues() {
@@ -39,7 +39,7 @@ function SchoolItemBuilder() {
 
     /***************************************************************************
      * NOTHING ELSE GOES ABOVE THIS!!!!! SETTER METHODS
-     * 
+     *
      * Creates a set method for every variable in the current object. EX:
      * setWidth, setImageClicked ...
      **************************************************************************/
