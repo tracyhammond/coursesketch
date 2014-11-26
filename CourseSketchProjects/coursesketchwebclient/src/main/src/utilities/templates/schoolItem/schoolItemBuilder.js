@@ -147,6 +147,7 @@ function SchoolItemBuilder() {
         // Required Items
         var box = document.createElement('school-item');
         box.setAttribute('id', srlSchoolItem.id);
+        box.schoolItemData = srlSchoolItem;
 
         if (!this.instructorCard && this.boxClickFunction) {
             box.dataset.clickable = "";
@@ -207,8 +208,8 @@ function SchoolItemBuilder() {
         }
 
         if (editFunction) {
-            element.setEditCallback(function(type, oldValue, newValue) {
-                editFunction(type, oldValue, newValue, srlSchoolItem);
+            element.setEditCallback(function(type, oldValue, newValue, realElement) {
+                editFunction(type, oldValue, newValue, realElement.schoolItemData);
             });
         }
     };
