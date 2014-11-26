@@ -3,22 +3,41 @@
         CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
         CourseSketch.lectureSelection.currentCourse = undefined;
 
+        /**
+         * Function to be called when a lecture has finished editing.
+         *
+         * @param attributeChanged
+         *            the name of the protobuf attribute that changed
+         * @param oldValue
+         *            the attribute's old value
+         * @param newValue
+         *            the attribute's new value
+         * @param element
+         *            protobuf element that has been edited
+         */
         CourseSketch.lectureSelection.lectureEndEdit = function(
             attributeChanged, oldValue, newValue, element) {
                 element[attributeChanged] = newValue;
                 CourseSketch.dataManager.setLecture(element);
         };
-        
+
+        /**
+         * Function that is called when a lecture is selected
+         * (clicked on)
+         *
+         * @param lecture
+         *            protobuf object of the lecture that was
+         *            selected
+         */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
-	    console.log(lecture);
-	}
+            console.log(lecture);
+        }
 
         /**
          * Renders a list of lectures to the screen.
-         * 
+         *
          * @param lectureList
          *                list of lectures to display
-
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
             var add = $("#add").clone();
@@ -33,18 +52,17 @@
             $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
             $("#add").addClass("show");
         };
-        
+
         /**
          * Called when a course is selected. Updates selection
          * and gets lectures for the course.
-         * 
+         *
          * @param course
          *                course object of the selected element
          */
         CourseSketch.lectureSelection.courseSelected = function(course) {
             var courseid = course.id;
             this.currentCourse = course.id;
-
             CourseSketch.dataManager.getCourseLectures(course.lectureList,
                 CourseSketch.lectureSelection.displayLectures);
             CourseSketch.lectureSelection.courseSelectionManager
@@ -56,10 +74,10 @@
                     CourseSketch.lectureSelection.displayLectures);
             });
         };
-    
+
         /**
          * Adds a new lecture to the currently selected course.
-         * 
+         *
          * @param evt
          *                event from click (or other) action
          */
@@ -84,7 +102,7 @@
             };
             CourseSketch.dataManager.insertLecture(lecture, insertCallback, insertCallback);
         };
-    
+
         /**
          * Renders a list of courses to the screen.
          *
@@ -98,7 +116,6 @@
                 .setBoxClickFunction(this.courseSelected)
                 .build(document.querySelector("#col1>.content"));
         };
-        
 
         var loadCourses = function(courseList) {
             /* (waitingIcon.isRunning()) {

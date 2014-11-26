@@ -24,7 +24,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             // do state stuff
             var access = course.getAccessDate().getMillisecond();
             var close = course.getCloseDate().getMillisecond();
-            var current = parent.getCurrentTime();
+            var current = CourseSketch.getCurrentTime();
             if (isUndefined(state.accessible) || state.accessible == null) {
                 if (current.lessThan(access) || current.greaterThan(close)) {
                     state.accessible = false;
@@ -48,7 +48,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
         // so we do not have to perform this again!
         if (updateCourse) {
-            course.sate = state;
+            course.state = state;
             setCourse(course);
         }
 
@@ -60,11 +60,11 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     /**
      * Returns a course with the given couresId will ask the server if it does
      * not exist locally
-     * 
+     *
      * If the server is pulled and the course still does not exist the Id is set
      * with nonExistantValue and the database is never polled for this item for
      * the life of the program again.
-     * 
+     *
      * @param courseId
      *            The id of the course we want to find.
      * @param courseCallback
@@ -145,18 +145,20 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
     /**
      * Returns a list of all of the courses in database.
-     * 
+     *
      * This does attempt to pull courses from the server!
      */
     function getAllCourses(courseCallback) {
         var localFunction = setCourseIdList;
         // there are no courses loaded onto this client!
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
+            // there was an error getting the user classes.
             if (!isUndefined(item.returnText) && item.returnText != "" && item.returnText != "null" && item.returnText != null) {
                 userHasCourses = false;
                 console.log(item.returnText);
                 alert(item.returnText);
                 advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
+                courseCallback(new DatabaseException(item.returnText, "Getting all courses for user " + parent.getCurrentId()));
                 return;
             }
             var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
@@ -204,10 +206,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
     /**
      * Inserts a course into the database. This course must not exist.
-     * 
+     *
      * If there is a problem courseCallback is called with an error code. TODO:
      * create error code and call courseCallback.
-     * 
+     *
      * @param course
      * @param courseCallback
      *            is called after the insertion of course into the local
@@ -246,10 +248,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     /**
      * Updates an existing course into the database. This course must already
      * exist.
-     * 
+     *
      * If there is a problem, courseCallback is called with an error code TODO:
      * create error code.
-     * 
+     *
      * @param course
      * @param courseCallback
      * @param serverCallback

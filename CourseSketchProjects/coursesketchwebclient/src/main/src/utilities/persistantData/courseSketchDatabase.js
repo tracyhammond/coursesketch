@@ -138,7 +138,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         itemUpdate.setQuery(queryType);
         itemUpdate.setData(data);
         dataSend.items.push(itemUpdate);
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
     };
 
     this.emptySchoolData = function() {

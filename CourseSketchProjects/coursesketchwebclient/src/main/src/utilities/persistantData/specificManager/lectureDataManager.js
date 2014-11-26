@@ -59,7 +59,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
 
     /**
      * Sets a lecture in both local and server databases.
-     * 
+     *
      * @param lecture
      *                lecture object to set
      * @param localCallback
