@@ -1,22 +1,23 @@
 package database.institution.mongo;
 
-import static database.DatabaseStringConstants.DATABASE;
-import static database.DatabaseStringConstants.GROUP_PREFIX;
-import static database.DatabaseStringConstants.SELF_ID;
-import static database.DatabaseStringConstants.UPDATE_COLLECTION;
-import static database.DatabaseStringConstants.USER_COLLECTION;
-import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
-import static database.DatabaseStringConstants.USER_LIST;
-
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import com.mongodb.MongoClient;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import database.auth.MongoAuthenticator;
+import database.institution.Institution;
+import database.submission.SubmissionManager;
+import database.user.GroupManager;
+import database.user.UserClient;
 import org.bson.types.ObjectId;
-
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -26,22 +27,17 @@ import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.submission.Submission.SrlExperiment;
 
-import com.google.protobuf.ByteString;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import com.mongodb.MongoClient;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
-import database.institution.Institution;
-import database.submission.SubmissionManager;
-import database.user.GroupManager;
-import database.user.UserClient;
+import static database.DatabaseStringConstants.DATABASE;
+import static database.DatabaseStringConstants.GROUP_PREFIX;
+import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.UPDATE_COLLECTION;
+import static database.DatabaseStringConstants.USER_COLLECTION;
+import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
+import static database.DatabaseStringConstants.USER_LIST;
 
 /**
  * A Mongo implementation of the Institution it inserts and gets courses as
@@ -142,9 +138,11 @@ public final class MongoInstitution implements Institution {
                 database = mongoClient.getDB("test");
             } else {
                 database = mongoClient.getDB(DATABASE);
+
             }
         }
         instance = this;
+        instance.auth = new Authenticator(new MongoAuthenticator(instance.database));
     }
 
     /*
