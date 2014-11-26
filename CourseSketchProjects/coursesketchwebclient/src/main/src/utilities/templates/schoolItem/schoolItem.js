@@ -101,6 +101,31 @@ function SchoolItem() {
         });
     };
 
+    function advanceEditPanel(element, localScope) {
+        $(element).click(function(event) {
+            event.stopPropagation();
+            console.log("button pressed!");
+            clone = localScope.getAdvanceEditPanel();
+            var host = document.createElement("dialog");
+            host.className = "advanceEditHost";
+            var pos = $(localScope).position();
+            console.log("why is this odd!");
+            console.log(pos.left);
+            console.log($(localScope).width());
+            console.log($(document).width()/2);
+            var leftPos = (pos.left + $(localScope).width()) + 2;
+            $(host).offset({top:pos.top, left:leftPos});
+            var shadow = host.createShadowRoot();
+            shadow.appendChild(clone);
+            document.body.appendChild(host);
+            console.log("APEENDING HAPPENING");
+            var saveButton = shadow.querySelector("button");
+            saveButton.onclick=function() {
+                alert("Saving data!");
+            };
+        });
+    }
+
     /**
      * Sets up what happens when an edit button is clicked.
      */
@@ -115,6 +140,11 @@ function SchoolItem() {
         var list = shadowRoot.querySelectorAll('.editButton');
         for(var i = 0; i < list.length; ++i) {
             (function(element) {
+	            // do something else for the advance button.
+	            if ($(element).hasClass("advanceButton")) {
+	                advanceEditPanel(element, localScope);
+	                return;
+	            }
                 var parentNode = element.parentNode;
                 var content = parentNode.querySelector('content');
                 var nodes = content.getDistributedNodes();
@@ -127,7 +157,6 @@ function SchoolItem() {
                     var oldContent = contentElement.textContent;
                     contentElement.textContent = editorElement.value;
                     var realParent = getParentParent(parentNode);
-                    console.log(realParent);
                     if (editFunction) {
                         editFunction(element.dataset.type, oldContent, contentElement.textContent, realParent);
                     }
@@ -152,7 +181,7 @@ function SchoolItem() {
                     return false;
                 }; // Click
             })(list[i]); // anonomous.
-        }; // Loop
+        } // Loop
     };
 
     function getParentParent(parent) {

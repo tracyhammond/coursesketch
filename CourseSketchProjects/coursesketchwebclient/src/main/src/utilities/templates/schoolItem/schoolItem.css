@@ -220,6 +220,25 @@ p.contract {
 	display:none;
 }
 
+/* advance button */
+.advanceButton {
+    position:absolute;
+    height:inherit;
+    background-position: right center;
+    -webkit-box-shadow: -4px 0px 3px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: -4px 0px 3px rgba(50, 50, 50, 0.75);
+    box-shadow: -4px 0px 3px rgba(50, 50, 50, 0.75);
+    right:0px;
+    width:25px;
+    height:25px;
+    bottom:0px;
+}
+
+advanceButton:after, .advanceButton:before, .advanceButton:hover:after, .advanceButton:hover:before,
+.advanceButton:not(:hover):after, .advanceButton:not(:hover):before  {
+	display:none;
+}
+
 /* text color */
 
 .good {
