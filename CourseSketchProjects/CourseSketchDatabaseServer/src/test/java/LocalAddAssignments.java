@@ -1,13 +1,12 @@
-import java.util.Date;
-
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlAssignment.LatePolicy;
-import protobuf.srl.school.School.SrlPermission;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.auth.AuthenticationException;
-import database.institution.Institution;
+import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
+import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.School.SrlPermission;
+
+import java.util.Date;
 
 public class LocalAddAssignments {
 	public static void testAssignments(String courseId, String mastId) {
@@ -37,7 +36,7 @@ public class LocalAddAssignments {
 				System.out.println("INSERTING ASSIGNMENT");
 				String assignmentId = null;
 				try {
-					assignmentId = Institution.mongoInsertAssignment(mastId, testBuilder.buildPartial());
+					assignmentId = MongoInstitution.getInstance().insertAssignment(mastId, testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {
@@ -50,8 +49,8 @@ public class LocalAddAssignments {
 	}
 
 	public static void main(String args[]) {
-		new Institution(false); // makes the database point locally
-		new UserClient(false); // makes the database point locally
+		new MongoInstitution(false, null); // makes the database point locally
+		new UserClient(false, null); // makes the database point locally
 		testAssignments(""/*course id */,""/*instructor id*/);
 	}
 }
