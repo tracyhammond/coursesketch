@@ -6,9 +6,19 @@
      */
     CourseSketch.lecturePage.newTextBox = function() {
         var textbox = document.createElement('text-box-creation');
-        //CourseSketch.lecturePage.slide.elements.push(CourseSketch.PROTOBUF_UTIL.LectureElement());
+        //CourseSketch.lecturePage.slide.elements.push(textbox);
         //CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.slide);
         document.querySelector("#slide-content").appendChild(textbox);
+    }
+    
+    CourseSketch.lecturePage.newSketchContent = function() {
+        var sketchSurface = document.createElement('sketch-surface');
+        document.querySelector("#slide-content").appendChild(sketchSurface);
+        //CourseSketch.lecturePage.slide.elements.push(sketchSurface);
+        //CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.slide);
+        setTimeout(function() {
+            sketchSurface.resizeSurface();
+        }, 500);
     }
 
     /**

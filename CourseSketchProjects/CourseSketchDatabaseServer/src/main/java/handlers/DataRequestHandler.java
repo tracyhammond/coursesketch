@@ -161,6 +161,10 @@ public final class DataRequestHandler {
                             results.add(buildResult(updates.toByteString(), ItemQuery.UPDATE));
                         }
                         break;
+                        case LECTURE:  {
+                            System.out.println("HELLO, WORLD!");
+                        }
+                        break;
                         default:
                         break;
                     }
