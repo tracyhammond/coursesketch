@@ -1,5 +1,3 @@
-package localTesting;
-
 import java.util.Date;
 
 import protobuf.srl.school.School.SrlAssignment;
@@ -34,7 +32,7 @@ public class LocalAddAssignments {
 
 			testBuilder.setAccessPermission(permissions.build());
 			System.out.println(testBuilder.toString());
-	
+
 			// testing inserting course
 				System.out.println("INSERTING ASSIGNMENT");
 				String assignmentId = null;
