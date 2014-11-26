@@ -97,18 +97,18 @@ public final class CourseManager {
     static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId, final long checkTime)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
-        final DBObject corsor = myDbRef.fetch();
-        if (corsor == null) {
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
             throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
         }
 
-        final ArrayList adminList = (ArrayList<Object>) corsor.get(ADMIN); // convert
+        final ArrayList adminList = (ArrayList<Object>) cursor.get(ADMIN); // convert
         // to
         // ArrayList<String>
-        final ArrayList modList = (ArrayList<Object>) corsor.get(MOD); // convert
+        final ArrayList modList = (ArrayList<Object>) cursor.get(MOD); // convert
                                                                        // to
         // ArrayList<String>
-        final ArrayList usersList = (ArrayList<Object>) corsor.get(USERS); // convert
+        final ArrayList usersList = (ArrayList<Object>) cursor.get(USERS); // convert
         // to
         // ArrayList<String>
         boolean isAdmin, isMod, isUsers;
@@ -121,14 +121,14 @@ public final class CourseManager {
         }
 
         final SrlCourse.Builder exactCourse = SrlCourse.newBuilder();
-        exactCourse.setDescription((String) corsor.get(DESCRIPTION));
-        exactCourse.setName((String) corsor.get(NAME));
-        if (corsor.get(COURSE_SEMESTER) != null) {
-            exactCourse.setSemester((String) corsor.get(COURSE_SEMESTER));
+        exactCourse.setDescription((String) cursor.get(DESCRIPTION));
+        exactCourse.setName((String) cursor.get(NAME));
+        if (cursor.get(COURSE_SEMESTER) != null) {
+            exactCourse.setSemester((String) cursor.get(COURSE_SEMESTER));
         }
 
-        exactCourse.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(ACCESS_DATE)).longValue()));
-        exactCourse.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(CLOSE_DATE)).longValue()));
+        exactCourse.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(ACCESS_DATE)).longValue()));
+        exactCourse.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(CLOSE_DATE)).longValue()));
         exactCourse.setId(courseId);
 
         // states
@@ -139,8 +139,8 @@ public final class CourseManager {
 
         // FUTURE: add this to all fields!
         // A course is only publishable after a certain criteria is met
-        if (corsor.containsField(STATE_PUBLISHED)) {
-            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
+        if (cursor.containsField(STATE_PUBLISHED)) {
+            final boolean published = (Boolean) cursor.get(STATE_PUBLISHED);
             if (published) {
                 stateBuilder.setPublished(true);
             } else {
@@ -152,15 +152,15 @@ public final class CourseManager {
             }
         }
 
-        if (corsor.get(IMAGE) != null) {
-            exactCourse.setImageUrl((String) corsor.get(IMAGE));
+        if (cursor.get(IMAGE) != null) {
+            exactCourse.setImageUrl((String) cursor.get(IMAGE));
         }
 
         // if you are a user, the course must be open to view the assignments
         if (isAdmin || isMod
                 || (isUsers && Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
-            if (corsor.get(ASSIGNMENT_LIST) != null) {
-                exactCourse.addAllAssignmentList((List) corsor.get(ASSIGNMENT_LIST));
+            if (cursor.get(ASSIGNMENT_LIST) != null) {
+                exactCourse.addAllAssignmentList((List) cursor.get(ASSIGNMENT_LIST));
             }
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate())) {
@@ -173,11 +173,11 @@ public final class CourseManager {
         exactCourse.setState(stateBuilder);
 
         if (isAdmin) {
-            exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) corsor.get(COURSE_ACCESS))); // admin
+            exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
             final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-            permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
-            permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
-            permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // admin
+            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
+            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin
+            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // admin
             exactCourse.setAccessPermission(permissions.build());
         }
         return exactCourse.build();
