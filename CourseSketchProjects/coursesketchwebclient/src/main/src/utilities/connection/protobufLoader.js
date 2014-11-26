@@ -10,11 +10,11 @@ ProtobufException.prototype = BaseException;
 
 /**
  * *************************************************************
- * 
+ *
  * Protobuf Utility functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
@@ -42,6 +42,7 @@ function ProtobufSetup() {
         buildSketch();
         buildUpdateList();
         buildDataQuery();
+        buildTutorial();
         buildSubmissions();
         buildLectures();
         return localScope;
@@ -77,6 +78,12 @@ function ProtobufSetup() {
         assignValues(ProtoUpdateCommandBuilder);
     }
 
+    function buildTutorial() {
+        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "tutorial.proto");
+        var ProtoTutorialBuilder = builder.build(PROTOBUF_PACKAGE).srl.tutorial;
+        assignValues(ProtoTutorialBuilder);
+    }
+    
     function buildSubmissions() {
         var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "submission.proto");
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.submission;
@@ -142,10 +149,10 @@ function ProtobufSetup() {
     /**
      * Given a protobuf Command array a Request is created with a single
      * SrlUpdate.
-     * 
+     *
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
-     * 
+     *
      * @param commands
      *            {Array<SrlCommand>} a list of commands stored as an array.
      * @param requestType
@@ -158,7 +165,7 @@ function ProtobufSetup() {
 
     /**
      * Given a protobuf object compile it to other data and return a request.
-     * 
+     *
      * @param data
      *            {Protobuf} An uncompiled protobuf object.
      * @param requestType
@@ -175,10 +182,10 @@ function ProtobufSetup() {
 
     /**
      * Given a protobuf Command array an SrlUpdate is created.
-     * 
+     *
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
-     * 
+     *
      * @param commands
      *            {Array<SrlCommand>} a list of commands stored as an array.
      * @return {SrlUpdate}
@@ -218,7 +225,7 @@ function ProtobufSetup() {
 
     /**
      * Creates a command given the commandType and if the user created.
-     * 
+     *
      * @param commandType
      *            {CommandType} the enum object of the commandType (found at
      *            CourseSketch.PROTOBUF_UTIL.CommandType).
@@ -235,6 +242,27 @@ function ProtobufSetup() {
         return command;
     };
 
+    /**
+     * Creates a protobuf date time object.
+     * @param dateTime {Number | Date} representing the time that this object should be created with.
+     * @return {DateTime} a protobuf date time objct that can be used for date stuff.
+     */
+    this.createProtoDateTime = function(inputDateTime) {
+        var preConvertedDate = inputDateTime;
+        if (inputDateTime instanceof Date) {
+            preConvertedDate = inputDateTime.getTime();
+        }
+        var longVersion = dcodeIO.Long.fromString("" + (preConvertedDate + 0));
+        var dateTime = this.DateTime();
+        dateTime.setMillisecond("" + longVersion);
+        var date = new Date(preConvertedDate);
+        dateTime.year = date.getFullYear();
+        dateTime.month = date.getMonth();
+        dateTime.day = date.getDate();
+        dateTime.hour = date.getHours();
+        dateTime.minute = date.getMinutes();
+        return dateTime;
+    };
     /**
      * @Method
      * @returns {Array} A cloned version of the array that contains all of the
@@ -258,7 +286,7 @@ function ProtobufSetup() {
 
     /**
      * Decodes the data and perserves the bytebuffer for later use
-     * 
+     *
      * @param data
      *            {ArrayBuffer} a compiled set of data in the protobuf object.
      * @param proto
