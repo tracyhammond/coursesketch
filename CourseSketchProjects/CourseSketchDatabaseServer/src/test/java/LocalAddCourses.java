@@ -1,5 +1,3 @@
-package localTesting;
-
 import javax.swing.JOptionPane;
 
 import protobuf.srl.school.School.SrlCourse;
@@ -33,7 +31,7 @@ public class LocalAddCourses {
 				ManyTestAssignments.testAssignments(courseId, instructionID);
 		}
 	}
-	
+
 	public static void main(String[] args) throws DatabaseAccessException {
 		new Institution(false); // makes the database point locally
 		new UserClient(false); // makes the database point locally
