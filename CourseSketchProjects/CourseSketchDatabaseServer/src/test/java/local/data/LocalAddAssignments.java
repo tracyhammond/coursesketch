@@ -1,3 +1,5 @@
+package local.data;
+
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.auth.AuthenticationException;
