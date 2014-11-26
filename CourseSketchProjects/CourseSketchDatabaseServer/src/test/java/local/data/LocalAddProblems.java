@@ -1,3 +1,5 @@
+package local.data;
+
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
