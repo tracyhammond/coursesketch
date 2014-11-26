@@ -1,50 +1,106 @@
 (function() {
     $(document).ready(function() {
-        CourseSketch.lectureSelection.courseSelectionManager = undefined,
-        CourseSketch.lectureSelection.currentCourse = undefined,
+        CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
+        CourseSketch.lectureSelection.currentCourse = undefined;
+
+        /**
+         * Function to be called when a lecture has finished editing.
+         *
+         * @param attributeChanged
+         *            the name of the protobuf attribute that changed
+         * @param oldValue
+         *            the attribute's old value
+         * @param newValue
+         *            the attribute's new value
+         * @param element
+         *            protobuf element that has been edited
+         */
+        CourseSketch.lectureSelection.lectureEndEdit = function(
+            attributeChanged, oldValue, newValue, element) {
+                element[attributeChanged] = newValue;
+                CourseSketch.dataManager.setLecture(element);
+        };
+
+        /**
+         * Function that is called when a lecture is selected
+         * (clicked on)
+         *
+         * @param lecture
+         *            protobuf object of the lecture that was
+         *            selected
+         */
+        CourseSketch.lectureSelection.lectureSelected = function(lecture) {
+            console.log(lecture);
+        }
 
         /**
          * Renders a list of lectures to the screen.
          *
-         * @param lectureList list of lectures to display
+         * @param lectureList
+         *                list of lectures to display
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
             var add = $("#add").clone();
             var schoolItemBuilder = new SchoolItemBuilder();
-            schoolItemBuilder.setList(lectureList).setShowDate(false).build(document.querySelector("#col2>.content"));
+            schoolItemBuilder.setList(lectureList)
+                .setShowDate(false)
+                .setEditCallback(CourseSketch.lectureSelection.lectureEndEdit)
+                .setInstructorCard(true)
+                .setBoxClickFunction(CourseSketch.lectureSelection.lectureSelected)
+                .build(document.querySelector("#col2>.content"));
             $("#col2>.content").prepend(add);
             $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
             $("#add").addClass("show");
         };
 
         /**
-         * Called when a course is selected. Updates selection and gets lectures for the course.
+         * Called when a course is selected. Updates selection
+         * and gets lectures for the course.
          *
-         * @param course course object of the selected element
+         * @param course
+         *                course object of the selected element
          */
         CourseSketch.lectureSelection.courseSelected = function(course) {
             var courseid = course.id;
             this.currentCourse = course.id;
-            CourseSketch.dataManager.getCourseLectures(course.lectureList, CourseSketch.lectureSelection.displayLectures);
-            CourseSketch.lectureSelection.courseSelectionManager.clearAllSelectedItems();
-            CourseSketch.lectureSelection.courseSelectionManager.addSelectedItem(document.getElementById(courseid));
+            CourseSketch.dataManager.getCourseLectures(course.lectureList,
+                CourseSketch.lectureSelection.displayLectures);
+            CourseSketch.lectureSelection.courseSelectionManager
+                .clearAllSelectedItems();
+            CourseSketch.lectureSelection.courseSelectionManager
+                .addSelectedItem(document.getElementById(courseid));
+            CourseSketch.dataManager.getCourse(courseid, function(course) {
+                CourseSketch.dataManager.getCourseLectures(course.lectureList,
+                    CourseSketch.lectureSelection.displayLectures);
+            });
         };
 
         /**
          * Adds a new lecture to the currently selected course.
          *
-         * @param evt event from click (or other) action
+         * @param evt
+         *                event from click (or other) action
          */
-        CourseSketch.lectureSelection.addLecture = function(evt) {
-            $("#col2>.content").append("<span class=\"lecture\"><div class=\"title\">TITLE</div><div class=\"summary\">Untitled Lecture</div></span>");
-            var lecture=CourseSketch.PROTOBUF_UTIL.Lecture();
+        CourseSketch.lectureSelection.addLecture = function(evt, addLectureCallback) {
+            var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture.courseId = currentCourse;
-            lecture.title = "Untitled Lecture";
+            lecture.name = "Untitled Lecture";
             lecture.id = generateUUID();
             lecture.description = "N/A";
-            CourseSketch.dataManager.insertLecture(lecture );
-            console.log("finished adding to course "+ currentCourse);
-            
+            var insertCallback = function() {
+                CourseSketch.dataManager.getCourse(currentCourse, 
+                    function(course) {
+                        CourseSketch.dataManager.getCourseLectures(
+                            course.lectureList,
+                            CourseSketch.lectureSelection.displayLectures);
+                            console.log("finished adding to course "
+                                + currentCourse);
+                            if(!isUndefined(addLectureCallback)) {
+                                addLectureCallback(course);
+                            }
+                    });
+            };
+            CourseSketch.dataManager.insertLecture(lecture, insertCallback, insertCallback);
         };
 
         /**
@@ -54,20 +110,22 @@
          */
         CourseSketch.lectureSelection.showCourses = function(courseList) {
             CourseSketch.lectureSelection.schoolItemBuilder = new SchoolItemBuilder();
-            CourseSketch.lectureSelection.schoolItemBuilder.setList(courseList).setShowDate(false)
-                .setBoxClickFunction(this.courseSelected).build(document.querySelector("#col1>.content"));
+            CourseSketch.lectureSelection.schoolItemBuilder
+                .setList(courseList)
+                .setShowDate(false)
+                .setBoxClickFunction(this.courseSelected)
+                .build(document.querySelector("#col1>.content"));
         };
-    
-        CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
+
         var loadCourses = function(courseList) {
             /* (waitingIcon.isRunning()) {
             waitingIcon.finishWaiting();
             }*/
             CourseSketch.lectureSelection.showCourses(courseList);
-        }; // End loadCourses
+        };
         if (CourseSketch.dataManager.isDatabaseReady()) {
             CourseSketch.dataManager.pollUpdates(function() {
-            CourseSketch.dataManager.getAllCourses(loadCourses);
+                CourseSketch.dataManager.getAllCourses(loadCourses);
             });
         } else {
             var intervalVar = setInterval(function() {
@@ -75,9 +133,9 @@
                     clearInterval(intervalVar);
                     CourseSketch.dataManager.pollUpdates(function() {
                         CourseSketch.dataManager.getAllCourses(loadCourses);
-                    }); // End pollUpdates function
+                    }); // pollupdates
                 }
-            }, 100); // End interval function
+            }, 100);
         }
     });
 })();
