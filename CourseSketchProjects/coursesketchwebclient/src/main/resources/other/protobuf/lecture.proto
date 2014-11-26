@@ -1,3 +1,5 @@
+import "school.proto";
+import "commands.proto";
 package protobuf.srl.lecture;
 
 message SrlLectureDataHolder {
@@ -14,6 +16,7 @@ message Lecture {
 	optional string description = 4;
 	optional int32 size = 5;
 	repeated string slides = 6;
+	optional protobuf.srl.school.SrlPermission accessPermission = 7;
 }
 
 message LectureSlide {
@@ -33,14 +36,13 @@ message LectureElement {
 	optional int32 y_position = 4;
 	optional int32 x_dimension = 5;
 	optional int32 y_dimension = 6;
-	
-    oneof ElementType{
+
+    oneof ElementType {
 		TextBox textBox = 7;
         Image image = 8;
         SketchArea sketchArea = 9;
         Question question = 10;
 	}
-    
 }
 
 message TextBox {
@@ -54,7 +56,7 @@ message Image {
 
 message SketchArea {
     //srlSketch object if proto include works
-    optional bytes sketch = 10;
+    optional bytes SrlUpdateList = 10;
 }
 
 message Question {
@@ -64,7 +66,7 @@ message Question {
         MultipleChoice multipleChoice = 12;
         SketchQuestion sketchQuestion = 13;
     }
-    
+
 }
 
 message MultipleChoice {
