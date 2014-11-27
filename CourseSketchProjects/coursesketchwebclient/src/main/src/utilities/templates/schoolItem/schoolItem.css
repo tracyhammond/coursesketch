@@ -5,7 +5,7 @@
     padding: 5px 10px 5px 10px;
     display: flex;
     flex-direction: column;
-    max-width:100%;
+    max-width: 100%;
 }
 
 :host {
@@ -182,7 +182,7 @@ p.contract {
 }
 
 .editButton {
-    position:relative;
+    position: relative;
     cursor: pointer;
     height: 100%;
     background-image: url(/images/schoolItem/pencil_tilted.svg);
@@ -325,7 +325,7 @@ h1,h4 {
 }
 
 :host([data-state="inProgress"]:not([data-instructor])) .accessDate {
-    display:none;
+    display: none;
 }
 
 /* closed */
