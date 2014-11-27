@@ -150,6 +150,7 @@ function() {
         });
         CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
                 CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+        CourseSketch.DatabaseException = DatabaseException;
     }
 });
 
