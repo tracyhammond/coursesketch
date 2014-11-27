@@ -9,7 +9,13 @@ import protobuf.srl.school.School.DateTime;
  */
 public final class RequestConverter {
 
-    public static final long MAX_JODA_YEAR = 292278993;
+    /**
+     * Max year we want to support.
+     */
+    public static final long MAX_JODA_YEAR = 10000;
+    /**
+     * The number of milliseconds in a year.
+     */
     public static final long MILLIS_IN_YEAR = (long)(1000 * 60 * 60 * 24 * 365.25);
 
     /**
