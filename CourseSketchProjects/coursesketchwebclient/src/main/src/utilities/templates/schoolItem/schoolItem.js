@@ -188,7 +188,7 @@ function SchoolItem() {
                     }
                     return false;
                 }; // Click
-            })(list[i]); // anonomous.
+            })(list[i]); // anonymous.
         } // Loop
     };
 
