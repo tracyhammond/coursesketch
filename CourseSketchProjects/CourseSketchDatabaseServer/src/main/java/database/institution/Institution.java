@@ -3,6 +3,7 @@ package database.institution;
 import java.util.List;
 
 import coursesketch.server.interfaces.MultiConnectionManager;
+import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -112,6 +113,29 @@ public interface Institution {
      * @return The Id of the object that was inserted
      */
     String insertAssignment(String userId, SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Inserts the lecture into the the database.
+     *
+     * Upon insertion 3 steps happen:
+     * <ol>
+     * <li>the lecture is created in a lecture collection</li>
+     * <li>the course lecture list now contains the lecture Id</li>
+     * <li>the lecture has the same default permissions as the parent course</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the insertion
+     * @param lecture
+     *            The object being inserted
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to insert an
+     *             Assignment.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem inserting the assignment.
+     * @return The Id of the object that was inserted
+     */
+    String insertLecture(String userId, Lecture lecture) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts the assignment into the the database.

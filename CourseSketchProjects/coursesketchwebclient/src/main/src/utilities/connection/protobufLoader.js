@@ -91,8 +91,8 @@ function ProtobufSetup() {
     }
 
     function buildLectures() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "lecture.proto");
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecture;
+        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "lecturedata.proto");
+        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
         assignValues(ProtoSubmissionBuilder);
     }
 

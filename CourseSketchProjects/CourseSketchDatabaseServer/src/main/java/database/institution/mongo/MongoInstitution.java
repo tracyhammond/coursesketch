@@ -18,6 +18,7 @@ import database.submission.SubmissionManager;
 import database.user.GroupManager;
 import database.user.UserClient;
 import org.bson.types.ObjectId;
+import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -341,6 +342,16 @@ public final class MongoInstitution implements Institution {
 
         final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().database, assignment.getCourseId());
         AssignmentManager.mongoInsertDefaultGroupId(getInstance().database, resultId, ids);
+
+        return resultId;
+    }
+
+    @Override
+    public String insertLecture(final String userId, final Lecture lecture) throws AuthenticationException, DatabaseAccessException {
+        final String resultId = LectureManager.mongoInsertLecture(getInstance().auth, getInstance().database, userId, lecture);
+
+        final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().database, lecture.getCourseId());
+        LectureManager.mongoInsertDefaultGroupId(getInstance().database, resultId, ids);
 
         return resultId;
     }

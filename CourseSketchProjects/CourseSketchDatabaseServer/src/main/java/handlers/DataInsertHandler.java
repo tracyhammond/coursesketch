@@ -10,6 +10,7 @@ import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
+import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
@@ -132,6 +133,12 @@ public final class DataInsertHandler {
                             if (!success) {
                                 results.add(buildResult("User was already registered for course!", itemSet.getQuery()));
                             }
+                        }
+                        break;
+                        case LECTURE: {
+                            final Lecture lecture = Lecture.parseFrom(itemSet.getData());
+                            final String resultId = instance.insertLecture(userId, lecture);
+                            results.add(buildResult(resultId + ID_SEPARATOR + lecture.getId(), itemSet.getQuery()));
                         }
                         break;
                         default:
