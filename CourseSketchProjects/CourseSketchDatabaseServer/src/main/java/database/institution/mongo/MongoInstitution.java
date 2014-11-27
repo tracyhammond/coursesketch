@@ -254,6 +254,7 @@ public final class MongoInstitution implements Institution {
                     throw e;
                 }
             } catch (AuthenticationException e) {
+                e.printStackTrace(System.err);
                 if (e.getType() != AuthenticationException.INVALID_DATE) {
                     throw e;
                 }

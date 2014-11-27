@@ -74,9 +74,13 @@ public final class LectureManager {
                 .append(USERS, lecture.getAccessPermission().getUserPermissionList());
         if (lecture.hasAccessDate()) {
             query.append(ACCESS_DATE, lecture.getAccessDate().getMillisecond());
+        } else {
+            query.append(ACCESS_DATE, RequestConverter.getProtoFromMilliseconds(0).getMillisecond());
         }
         if (lecture.hasCloseDate()) {
             query.append(CLOSE_DATE, lecture.getCloseDate().getMillisecond());
+        } else {
+            query.append(CLOSE_DATE, RequestConverter.getProtoFromMilliseconds(RequestConverter.getMaxTime()).getMillisecond());
         }
         if (lecture.getSlidesList() != null) {
             query.append(SLIDES, lecture.getSlidesList());
@@ -143,9 +147,9 @@ public final class LectureManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        // check to make sure the assignment is within the time period that the
+        // check to make sure the lecture is within the time period that the
         // course is open and the user is in the course
-        // FUTURE: maybe not make this necessarry if the insertion of assignments prevents this.
+        // FUTURE: maybe not make this necessarry if the insertion of lecture prevents this.
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckDate(true);
         auth.setUser(true);
@@ -162,7 +166,7 @@ public final class LectureManager {
                 stateBuilder.setPublished(true);
             } else {
                 if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific assignment is not published yet", true);
+                    throw new DatabaseAccessException("The specific lecture is not published yet", true);
                 }
                 stateBuilder.setPublished(false);
             }
@@ -234,7 +238,7 @@ public final class LectureManager {
             exactLecture.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) accessDate).longValue()));
         }
         if (closeDate == null) {
-            exactLecture.setCloseDate(RequestConverter.getProtoFromMilliseconds(Long.MAX_VALUE));
+            exactLecture.setCloseDate(RequestConverter.getProtoFromMilliseconds(RequestConverter.getMaxTime()));
         } else {
             exactLecture.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) closeDate).longValue()));
         }

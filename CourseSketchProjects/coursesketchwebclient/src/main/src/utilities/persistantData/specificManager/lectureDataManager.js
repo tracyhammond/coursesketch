@@ -200,7 +200,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
             var currentLectureId = lectureIds[i];
             (function (lectureId) {
                 getLectureLocal(lectureId, function(lecture) {
-                    if (!isUndefined(lecture)) {
+                    if (!isUndefined(lecture) && !(lecture instanceof DatabaseException)) {
                         lecturesFound.push(lecture);
                     } else {
                         lectureIdsNotFound.push(lectureId);
@@ -211,7 +211,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
                                 var school = CourseSketch.PROTOBUF_UTIL.getSrlLectureDataHolderClass().decode(item.data);
                                 var lecture = school.lectures[0];
-                                if (isUndefined(lecture)) {
+                                if (isUndefined(lecture) || lecture instanceof DatabaseException) {
                                     if (!isUndefined(serverCallback)){
                                         serverCallback(lecture);
                                     }
