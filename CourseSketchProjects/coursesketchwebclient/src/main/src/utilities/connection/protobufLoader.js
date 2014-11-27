@@ -107,7 +107,7 @@ function ProtobufSetup() {
      */
     function assignValues(protoPackage, namePrefix) {
         var preString = namePrefix;
-        // safe checking
+        // safe checking.
         if (isUndefined(preString)) {
             preString = '';
         }
@@ -270,9 +270,8 @@ function ProtobufSetup() {
      *          current protobuf objects.
      */
     this.getSupportedObjects = function getSupportedObjects() {
-        return JSON.parse(JSON.stringify(objectList)); // why is
-        // this
-        // always so fast?
+        // The quickest way to clone.
+        return JSON.parse(JSON.stringify(objectList));
     };
 
     /**
@@ -281,12 +280,12 @@ function ProtobufSetup() {
      *          current protobuf enums.
      */
     this.getSupportedEnums = function getSupportedObjects() {
-        return JSON.parse(JSON.stringify(enumList)); // why is this
-        // always so fast?
+        // The quickest way to clone.
+        return JSON.parse(JSON.stringify(enumList));
     };
 
     /**
-     * Decodes the data and perserves the bytebuffer for later use
+     * Decodes the data and preserves the bytebuffer for later use
      *
      * @param data
      *            {ArrayBuffer} a compiled set of data in the protobuf object.
