@@ -9,8 +9,6 @@
 	var course6 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
 	var course7 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
 	var twentyMinutes = 20 * 60 * 1000;
-	var fiveMinutes = 20 * 60 * 1000;
-	var oneMinutes = 20 * 60 * 1000;
 
 	course1.id = "1";
 	course1.name = "This is a test item!";

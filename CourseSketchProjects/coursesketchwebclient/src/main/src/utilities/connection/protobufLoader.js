@@ -83,7 +83,7 @@ function ProtobufSetup() {
         var ProtoTutorialBuilder = builder.build(PROTOBUF_PACKAGE).srl.tutorial;
         assignValues(ProtoTutorialBuilder);
     }
-    
+
     function buildSubmissions() {
         var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "submission.proto");
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.submission;
@@ -244,7 +244,7 @@ function ProtobufSetup() {
 
     /**
      * Creates a protobuf date time object.
-     * @param dateTime {Number | Date} representing the time that this object should be created with.
+     * @param inputDateTime {Number | Date | Long} representing the time that this object should be created with.
      * @return {DateTime} a protobuf date time objct that can be used for date stuff.
      */
     this.createProtoDateTime = function(inputDateTime) {
@@ -252,15 +252,16 @@ function ProtobufSetup() {
         if (inputDateTime instanceof Date) {
             preConvertedDate = inputDateTime.getTime();
         }
-        var longVersion = dcodeIO.Long.fromString("" + (preConvertedDate + 0));
+        var longVersion = dcodeIO.Long.fromString("" + preConvertedDate);
         var dateTime = this.DateTime();
+        // long object does not place nice with iframes so parsing as string instead.
         dateTime.setMillisecond("" + longVersion);
         var date = new Date(preConvertedDate);
-        dateTime.year = date.getFullYear();
-        dateTime.month = date.getMonth();
-        dateTime.day = date.getDate();
-        dateTime.hour = date.getHours();
-        dateTime.minute = date.getMinutes();
+        dateTime.setYear(date.getFullYear());
+        dateTime.setMonth(date.getMonth());
+        dateTime.setDay(date.getDate());
+        dateTime.setHour(date.getHours());
+        dateTime.setMinute(date.getMinutes());
         return dateTime;
     };
     /**
