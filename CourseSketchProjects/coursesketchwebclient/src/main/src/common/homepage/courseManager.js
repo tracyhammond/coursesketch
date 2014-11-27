@@ -116,7 +116,6 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                 showButton('assignment_button');
             }
         }
-        console.log(course.assignmentList);
         // we can make this faster because we have the list of assignments
         CourseSketch.dataManager.getAssignments(course.assignmentList, buildSchoolList, function(assignmentList) {
             buildSchoolList(assignmentList);

@@ -52,8 +52,7 @@ $(document).ready(function() {
     function databaseIsReadForLoading() {
         /**
          * Replaces the functionality of get all courses with this one.
-         *
-         * What this one does is that it does not talk to the server.  But instead it does instantiate the state of all of the courses.
+         * This one does not talk to the server. Instead it instantiates the state of all of the courses.
          */
         CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
             var resultList = [];
