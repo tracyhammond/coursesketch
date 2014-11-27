@@ -152,8 +152,13 @@ public final class CourseManager {
         // if you are a user, the course must be open to view the assignments
         if (isAdmin || isMod
                 || (isUsers && Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
-            if (cursor.get(ASSIGNMENT_LIST) != null) {
-                exactCourse.addAllAssignmentList((List) cursor.get(ASSIGNMENT_LIST));
+            final Object assignmentList = cursor.get(ASSIGNMENT_LIST);
+            final Object lectureList = cursor.get(LECTURE_LIST);
+            if (assignmentList != null) {
+                exactCourse.addAllAssignmentList((List) assignmentList);
+            }
+            if (lectureList != null) {
+                exactCourse.addAllLectureList((List) lectureList);
             }
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate())) {

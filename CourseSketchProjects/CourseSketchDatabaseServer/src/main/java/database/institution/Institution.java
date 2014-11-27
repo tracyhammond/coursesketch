@@ -56,6 +56,16 @@ public interface Institution {
             DatabaseAccessException;
 
     /**
+     * @param lectureId A list of ids for a specific lecture.
+     * @param userId The user requesting these courses.
+     * @return A list of lectures given a list of Ids for the lectures.
+     * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if the data does not exist.
+     */
+    List<Lecture> getLecture(List<String> lectureId, String userId) throws AuthenticationException,
+            DatabaseAccessException;
+
+    /**
      * @param problemID A list of ids for a specific bank problem.
      * @param userId The user requesting these courses.
      * @return A list of course problems given a list of Ids for the course problems.

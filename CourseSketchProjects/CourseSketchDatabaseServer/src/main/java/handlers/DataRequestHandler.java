@@ -11,6 +11,8 @@ import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
+import protobuf.srl.lecturedata.Lecturedata.Lecture;
+import protobuf.srl.lecturedata.Lecturedata.SrlLectureDataHolder;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
@@ -162,7 +164,10 @@ public final class DataRequestHandler {
                         }
                         break;
                         case LECTURE:  {
-                            System.out.println("HELLO, WORLD!");
+                            final List<Lecture> lectureLoop = instance.getLecture(itrequest.getItemIdList(), userId);
+                            final SrlLectureDataHolder.Builder lectureBuilder = SrlLectureDataHolder.newBuilder();
+                            lectureBuilder.addAllLectures(lectureLoop);
+                            results.add(buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURE));
                         }
                         break;
                         default:
