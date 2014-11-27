@@ -254,7 +254,7 @@ function ProtobufSetup() {
         }
         var longVersion = dcodeIO.Long.fromString("" + preConvertedDate);
         var dateTime = this.DateTime();
-        // long object does not place nice with iframes so parsing as string instead.
+        // Long object does not play nice with iframes so parsing as string instead.
         dateTime.setMillisecond("" + longVersion);
         var date = new Date(preConvertedDate);
         dateTime.setYear(date.getFullYear());
