@@ -18,6 +18,7 @@ message Lecture {
 	optional protobuf.srl.school.SrlPermission accessPermission = 6;
 	optional protobuf.srl.school.DateTime accessDate = 7;
 	optional protobuf.srl.school.DateTime closeDate = 8;
+	optional protobuf.srl.school.State state = 9;
 }
 
 message LectureSlide {

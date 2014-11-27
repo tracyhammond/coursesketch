@@ -239,6 +239,29 @@ public final class MongoInstitution implements Institution {
         return allAssignments;
     }
 
+    @Override
+    public ArrayList<Lecture> getLecture(final List<String> lectureId, final String userId) throws AuthenticationException,
+            DatabaseAccessException {
+        final long currentTime = System.currentTimeMillis();
+        final ArrayList<Lecture> allLectures = new ArrayList<Lecture>();
+        for (int lectures = lectureId.size() - 1; lectures >= 0; lectures--) {
+            try {
+                allLectures.add(LectureManager.mongoGetLecture(getInstance().auth, getInstance().database, lectureId.get(lectures),
+                        userId, currentTime));
+            } catch (DatabaseAccessException e) {
+                e.printStackTrace();
+                if (!e.isRecoverable()) {
+                    throw e;
+                }
+            } catch (AuthenticationException e) {
+                if (e.getType() != AuthenticationException.INVALID_DATE) {
+                    throw e;
+                }
+            }
+        }
+        return allLectures;
+    }
+
     /*
      * (non-Javadoc)
      *
