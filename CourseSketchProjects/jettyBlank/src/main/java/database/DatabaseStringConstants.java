@@ -23,6 +23,7 @@ public final class DatabaseStringConstants {
     public static final String ASSIGNMENT_COLLECTION = "Assignments";
     public static final String PROBLEM_BANK_COLLECTION = "ProblemBank";
     public static final String COURSE_PROBLEM_COLLECTION = "Problems";
+    public static final String LECTURE_COLLECTION = "Lectures";
     // also contains groups for admins and mods
     public static final String USER_GROUP_COLLECTION = "UserGroups";
     public static final String USER_COLLECTION = "Users";
@@ -65,6 +66,7 @@ public final class DatabaseStringConstants {
     public static final String COURSE_SEMESTER = "Semester";
     public static final String COURSE_ACCESS = "Access";
     public static final String ASSIGNMENT_LIST = "AssignmentList";
+    public static final String LECTURE_LIST = "LectureList";
 
     // assignment specific
     public static final String ASSIGNMENT_TYPE = "AssignmentType";
@@ -130,4 +132,8 @@ public final class DatabaseStringConstants {
 
     // mongo comands
     public static final String SET_COMMAND = "$set";
+    public static final String ADD_SET_COMMAND = "$addToSet";
+
+    // lecture specific
+    public static final String SLIDES = "Slides";
 }
