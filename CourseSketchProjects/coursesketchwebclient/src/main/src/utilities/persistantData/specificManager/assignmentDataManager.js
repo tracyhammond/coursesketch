@@ -151,9 +151,9 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
 
         // standard preventative checking
         if (isUndefined(assignmentIdList) || assignmentIdList == null || assignmentIdList.length == 0) {
-            assignmentCallbackPartial("The given id is not assigned", "getting Assignment: " + assignmentIdList));
+            assignmentCallbackPartial(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentIdList));
             if (assignmentCallbackComplete) {
-                assignmentCallbackComplete("The given id is not assigned", "getting Assignment: " + assignmentIdList));
+                assignmentCallbackComplete(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentIdList));
             }
         }
 
