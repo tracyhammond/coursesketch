@@ -1,79 +1,79 @@
 /* big box stuff */
 .school_item {
-	position: relative;
-	text-align: left;
-	padding: 5px 10px 5px 10px;
-	display: flex;
-	flex-direction: column;
-	max-width:100%;
+    position: relative;
+    text-align: left;
+    padding: 5px 10px 5px 10px;
+    display: flex;
+    flex-direction: column;
+    max-width:100%;
 }
 
 :host {
-	text-align: left;
-	position: relative;
-	box-shadow: 0px 1px 1px #808080;
-	margin-bottom: 5px;
-	background: #eee;
-	display: inline-flex;
-	flex-direction: row;
-	z-index: 1;
-	/* in case we need to place other items behind it with a z-index*/
-	max-height: 200px;
-	max-width:100%;
-	width:100%; /* by default but it can be changed */
+    text-align: left;
+    position: relative;
+    box-shadow: 0px 1px 1px #808080;
+    margin-bottom: 5px;
+    background: #eee;
+    display: inline-flex;
+    flex-direction: row;
+    z-index: 1;
+    /* in case we need to place other items behind it with a z-index*/
+    max-height: 200px;
+    max-width: 100%;
+    width: 100%; /* by default but it can be changed */
 }
 
 :host[clickable] {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 :host[clickable]:hover {
-	background: #D4D4D4;
+    background: #D4D4D4;
 }
 
 :host(.selectedBox) {
-	background: #C4C4C4;
+    background: #C4C4C4;
 }
 
 /* image displaying */
 img {
-	margin-right: 5px;
+    margin-right: 5px;
 }
 
 img.editable {
-	cursor: url(/images/schoolItem/pencil_tilted_top_left_micro.png),
-		pointer;
+    cursor: url(/images/schoolItem/pencil_tilted_top_left_micro.png),
+        pointer;
 }
 
 img:not([src]) {
-	display: none;
+    display: none;
 }
 
 img[src] ~ .school_item {
-	max-width:75%;
+    max-width: 75%;
 }
 
 /* title */
 ::content .name {
-	display: inline-block;
+    display: inline-block;
 }
 
 .title {
-	margin-bottom: .5em;
+    margin-bottom: .5em;
 }
 /* date */
 
 .date h4 {
-	display:inline;
-	margin-right: .75em;
+    display:inline;
+    margin-right: .75em;
 }
 
 :host(:not([data-instructor])):not(.validDate) .date {
-	display:none;
+    display: none;
 }
 
 :host(.validDate) .date {
-	display:block;
+    display: block;
 }
 
 :host(:not([data-instructor])) .date ::content .accessDate::before, :host([data-instructor]) .accessDate::before {
@@ -87,107 +87,107 @@ img[src] ~ .school_item {
 }
 
 :host(:not([data-instructor])) .date ::content .closeDate::before, :host([data-instructor]) .closeDate::before {
-	content: "Close Date: ";
-	display: inline;
+    content: "Close Date: ";
+    display: inline;
 }
 
 ::content .accessDate, ::content .dueDate, ::content .closeDate {
-	display: inline;
+    display: inline;
 }
 
 /* description */
 
 .description .expandedContent {
-	max-height:150px;
-	overflow-y:scroll;
-	overflow-x:hidden;
+    max-height: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .description .contentHolder:not(.expandedContent) {
-	max-height:150px;
-	overflow:inherit;
+    max-height: 150px;
+    overflow: inherit;
 }
 
 p {
-	margin:0px;
-	
+    margin: 0px;
+
 }
 
 ::content .expandedContent {
-	max-width:100%;
-	display:inline-block;
+    max-width: 100%;
+    display: inline-block;
 }
 
 ::content .description:not(.expandedContent) {
-	max-width:100%;
-	max-height:3.3em;
-	overflow:hidden;
-	text-overflow: ellipsis;
-	display:inline-block;
+    max-width: 100%;
+    max-height: 3.3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
 }
 
 ::content .currentlyEditing:not(.expandedContent) {
-	display:none;
+    display: none;
 }
 
 /*overflow button */
 
 p.expand {
-	width: 100%;
-	margin-left: -10px;
-	margin-top: .2em;
-	margin-bottom: -5px;
-	padding-bottom: 10px;
-	padding-right: 20px;
-	-webkit-box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.75);
-	-moz-box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.75);
-	box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.75);
-	height: 10px;
-	background-image: url(/images/menu/triangle_down_light.svg);
-	background-repeat: no-repeat;
-	background-position: center;
-	cursor: pointer;
+    width: 100%;
+    margin-left: -10px;
+    margin-top: .2em;
+    margin-bottom: -5px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    -webkit-box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.75);
+    box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.75);
+    height: 10px;
+    background-image: url(/images/menu/triangle_down_light.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
 }
 
 p.currentlyEditing + p {
-	/* hide the button while editing regardless of its state. */
-	display: none;
+    /* hide the button while editing regardless of its state. */
+    display: none;
 }
 
 p:not(.overflow) + p {
-	display: none;
+    display: none;
 }
 
 p.contract {
-	width: 100%;
-	margin-left: -10px;
-	margin-top: .2em;
-	margin-bottom: -5px;
-	padding-bottom: 0px;
-	padding-right: 20px;
-	-webkit-box-shadow: 0px -2px 2px rgba(50, 50, 50, 0.75);
-	-moz-box-shadow: 0px -2px 2px rgba(50, 50, 50, 0.75);
-	box-shadow: 0px -2px 2px rgba(50, 50, 50, 0.75);
-	height: 10px;
-	background-image: url(/images/menu/triangle_up_light.svg);
-	background-repeat: no-repeat;
-	background-position: center;
-	cursor: pointer;
+    width: 100%;
+    margin-left: -10px;
+    margin-top: .2em;
+    margin-bottom: -5px;
+    padding-bottom: 0px;
+    padding-right: 20px;
+    -webkit-box-shadow: 0px -2px 2px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0px -2px 2px rgba(50, 50, 50, 0.75);
+    box-shadow: 0px -2px 2px rgba(50, 50, 50, 0.75);
+    height: 10px;
+    background-image: url(/images/menu/triangle_up_light.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
 }
 
 /* edit button */
 
 :host(:not([data-instructor])) .editButton {
-	display:none;
+    display: none;
 }
 
 .editButton {
-	position:relative;
-	cursor: pointer;
-	height: 100%;
-	background-image: url(/images/schoolItem/pencil_tilted.svg);
-	background-repeat: no-repeat;
-	background-position: right top;
+    position:relative;
+    cursor: pointer;
+    height: 100%;
+    background-image: url(/images/schoolItem/pencil_tilted.svg);
+    background-repeat: no-repeat;
+    background-position: right top;
 }
 
 .editButton:after, .editButton:before  {
@@ -197,8 +197,8 @@ p.contract {
     width: 100%;
     opacity: 0;
     background-image: url(/images/schoolItem/pencil_tilted.svg);
-	background-repeat: no-repeat;
-	background-position: right top;
+    background-repeat: no-repeat;
+    background-position: right top;
 
     top: 0;
     left: 0;
@@ -210,145 +210,145 @@ p.contract {
 }
 
 .editButton:not(:hover):after, .editButton:not(:hover):before {
-	-moz-transition: all 1s;
+    -moz-transition: all 1s;
     -webkit-transition: all 1s;
     transition: all 1s;
 }
 
 /* general content */
 ::content .currentlyEditing {
-	display:none;
+    display: none;
 }
 
 /* advance button */
 .advanceButton {
-    position:absolute;
-    height:inherit;
+    position: absolute;
+    height: inherit;
     background-position: right center;
     -webkit-box-shadow: -4px 0px 3px rgba(50, 50, 50, 0.75);
     -moz-box-shadow: -4px 0px 3px rgba(50, 50, 50, 0.75);
     box-shadow: -4px 0px 3px rgba(50, 50, 50, 0.75);
-    right:0px;
-    width:25px;
-    height:25px;
-    bottom:0px;
+    right: 0px;
+    width: 25px;
+    height: 25px;
+    bottom: 0px;
 }
 
 advanceButton:after, .advanceButton:before, .advanceButton:hover:after, .advanceButton:hover:before,
 .advanceButton:not(:hover):after, .advanceButton:not(:hover):before  {
-	display:none;
+    display: none;
 }
 
 /* text color */
 
 .good {
-	color: #4FCB3C; /*#AAFAA6;*/
-	text-shadow: 1px 1px 1px #98E58C; /*#3BA236;*/
+    color: #4FCB3C; /*#AAFAA6;*/
+    text-shadow: 1px 1px 1px #98E58C; /*#3BA236;*/
 }
 
 .warning {
-	color: #FFE600; /*#FFFDAA;*/
-	text-shadow: 1px 1px 1px 1px /*#B8B056;*/ #E7BE06;
+    color: #FFE600; /*#FFFDAA;*/
+    text-shadow: 1px 1px 1px 1px /*#B8B056;*/ #E7BE06;
 }
 
 .bad {
-	color: #EF4652; /*#FFA9AC;*/
-	text-shadow: 1px 1px 1px #F7979E; /*#A6373A;*/
+    color: #EF4652; /*#FFA9AC;*/
+    text-shadow: 1px 1px 1px #F7979E; /*#A6373A;*/
 }
 
 /* making margins 0 */
 h3 {
-	margin:0;
-	color: #333;
-	text-shadow: 0px -1px 1px #666;
+    margin: 0;
+    color: #333;
+    text-shadow: 0px -1px 1px #666;
 }
 
 h1,h4 {
-	margin:0;
-	color: #376C9F;
-	text-shadow: 1px 1px 1px #699DCF;
+    margin: 0;
+    color: #376C9F;
+    text-shadow: 1px 1px 1px #699DCF;
 }
 
 
 /**
-	States
+    States
 */
 .schoolItemState {
-	width: 25%;
-	height: 3em;
-	max-height:100%;
-	position: absolute;
-	background-repeat: no-repeat;
-	background-position: right top;
-	top: 0px;
-	right: 0px;
-	z-index: -1;
+    width: 25%;
+    height: 3em;
+    max-height: 100%;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: right top;
+    top: 0px;
+    right: 0px;
+    z-index: -1;
 }
 
 /* grades */
 
 :host([data-state="graded"]) .schoolItemState {
-	width: initial;
+    width: initial;
 }
 
 :host(:not([data-state="graded"])) ::content .grade {
-	display:none;
+    display: none;
 }
 
 :host([data-state="graded"]):not([data-instructor]) .accessDate {
-	display:none;
+    display: none;
 }
 
 :host([data-state="graded"]):not([data-instructor]) .dueDate {
-	display:none;
+    display: none;
 }
 
 :host([data-state="graded"]):not([data-instructor]) .closeDate {
-	display:none;
+    display: none;
 }
 
 
 /* not open */
 
 :host([data-state="notOpen"]) .schoolItemState {
-	background-image: url(/images/schoolItem/coming_soon.svg);
+    background-image: url(/images/schoolItem/coming_soon.svg);
 }
 
 :host([data-state="notOpen"]:not([data-instructor])) .closeDate {
-	display:none;
+    display: none;
 }
 /* in progress */
 
 :host([data-state="inProgress"]) .schoolItemState {
-	width: 40%;
-	background-image: url(/images/schoolItem/construction_corner.svg);
+    width: 40%;
+    background-image: url(/images/schoolItem/construction_corner.svg);
 }
 
 :host([data-state="inProgress"]:not([data-instructor])) .accessDate {
-	display:none;
+    display:none;
 }
 
 /* closed */
 
 :host([data-state="closed"]) .schoolItemState {
-	background-image: url(/images/schoolItem/closed_sign.svg);
-	width: 20%;
+    background-image: url(/images/schoolItem/closed_sign.svg);
+    width: 20%;
 }
 
 :host([data-state="closed"]:not([data-instructor])) .accessDate {
-	display:none;
+    display: none;
 }
 
 :host([data-state="closed"]:not([data-instructor])) .dueDate {
-	display:none;
+    display: none;
 }
 
 /* completed */
 
 :host([data-state="completed"]) .schoolItemState {
-	background-image: url(/images/schoolItem/fancy_checkered_flag.svg);
+    background-image: url(/images/schoolItem/fancy_checkered_flag.svg);
 }
 
 :host([data-state="inProgress"]:not([data-instructor])) .accessDate {
-	display:none;
+    display: none;
 }
