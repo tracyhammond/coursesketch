@@ -57,14 +57,12 @@ function addTextBoxButton (plusButton, toolArea) {
         });
 
 		/*end of creating the textbox*/
-        var textBoxMarker = document.createElement("div");
-        textBoxMarker.className = "textboxmarker";
+        var textBoxMarker = document.createElement("timeline-marker");
+        textBoxMarker.className = "textbox";
         toolArea.appendChild(textBoxMarker);
         $(plusButton).empty();
-        
-        textBoxMarker.onclick = function() {
-			addCross(textBoxMarker, closeTextBox);
-		};
+
+        textBoxMarker.setRemoveFunction(closeTextBox);
     };
 }
 
@@ -117,23 +115,11 @@ function addHighlightButton (plusButton, toolArea) {
     };
 }
 
-function addCross(element, removeFunction) {
-	$(element).addClass('cross');
-	var oldClickFunction = element.onclick;
-	var tim = setTimeout(function () { 
-		$(element).removeClass('cross'); 
-		element.onclick = oldClickFunction;
-	}, 5000);
-	element.onclick = function() {
-		clearTimeout(tim);
-		element.parentNode.removeChild(element);
-		removeFunction();
-	};
-}
+
 
 function createMarker(type) {
 	document.createElement(type);
 }
 
 function setPreviewText(marker, element) {
-	
+}

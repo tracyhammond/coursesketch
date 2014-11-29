@@ -1,10 +1,10 @@
 <html>
 <head>
-<link id="textBoxTemplateImport" rel="import" href="textBox.html">
+<link id="markerTemplateImport" rel="import" href="marker.html">
 <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 <link rel="import" href="/src/utilities/libraries/interact/interactInclude.html">
 <link rel="import" href="/src/utilities/connection/protobufInclude.html">
-<script src="textBox.js"></script>
+<script src="marker.js"></script>
 
 <script>
     (function(importDoc) {
@@ -37,6 +37,7 @@
                 prototype : newElement
             });
         });
+    })(document.currentScript.ownerDocument);
 </script>
 </head>
 </html>
