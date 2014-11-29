@@ -1,0 +1,37 @@
+
+:host.textbox #picture {
+    width: 50px;
+    height: 50px;
+    order: 2;
+    background-image: url("textbox.jpg");
+    background-color: #cccccc;
+}
+
+
+:host.ttsbox #picture {
+    width: 50px;
+    height: 50px;
+    order: 2;
+    background-image: url("tts.jpg");
+    background-color: #cccccc;
+}
+
+:host.highlight #picture {
+    width: 50px;
+    height: 50px;
+    order: 2;
+    background-image: url("highlight.jpg");
+    background-color: #cccccc;
+}
+
+#picture.cross {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    margin: auto 0;
+    order: 1;
+    background-image: url("cross.svg");
+    background-size: 100% 100%;
+    overflow: visible;
+    transition: background-size 1s ease-in-out;
+}
