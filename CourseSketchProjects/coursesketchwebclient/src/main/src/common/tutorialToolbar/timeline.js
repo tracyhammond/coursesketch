@@ -46,14 +46,25 @@ function addTextBoxButton (plusButton, toolArea) {
 		/*creating the textbox*/
         var textBox = document.createElement('text-box-creation');
         document.body.appendChild(textBox);
+        var textArea = textBox.shadowRoot.querySelector('textarea');
+        textArea.onblur = textBox.saveData.bind(textBox);
+        function closeTextBox() {
+			textBox.parentNode.removeChild(textBox);
+		}	
         textBox.setFinishedListener(function(command) {
             globalcommand = command;
+			console.log(textArea.value);
         });
+
 		/*end of creating the textbox*/
         var textBoxMarker = document.createElement("div");
         textBoxMarker.className = "textboxmarker";
         toolArea.appendChild(textBoxMarker);
         $(plusButton).empty();
+        
+        textBoxMarker.onclick = function() {
+			addCross(textBoxMarker, closeTextBox);
+		};
     };
 }
 
@@ -66,6 +77,9 @@ function addTtsBoxButton (plusButton, toolArea) {
 		/*creating the textbox*/
         var ttsBox = document.createElement('text-speech-creation');
         document.body.appendChild(ttsBox);
+        function closeTtsBox() {
+			ttsBox.parentNode.removeChild(ttsBox);
+		}
         ttsBox.setFinishedListener(function(command) {
             globalcommand = command;
         });
@@ -74,12 +88,15 @@ function addTtsBoxButton (plusButton, toolArea) {
         ttsBoxMarker.className = "ttsboxmarker";
         toolArea.appendChild(ttsBoxMarker);
         $(plusButton).empty();
+        ttsBoxMarker.onclick = function() {
+			addCross(ttsBoxMarker, closeTtsBox);
+		};
     };
 }
 
 function addHighlightButton (plusButton, toolArea) {
     var highlightButton = document.createElement("div");
-    highlightButton.className = "highlightbutton"; 
+    highlightButton.className = "highlightbutton";
     plusButton.appendChild(highlightButton);
     highlightButton.onclick = function(event) {
         event.stopPropagation();
@@ -99,3 +116,24 @@ function addHighlightButton (plusButton, toolArea) {
         $(plusButton).empty();
     };
 }
+
+function addCross(element, removeFunction) {
+	$(element).addClass('cross');
+	var oldClickFunction = element.onclick;
+	var tim = setTimeout(function () { 
+		$(element).removeClass('cross'); 
+		element.onclick = oldClickFunction;
+	}, 5000);
+	element.onclick = function() {
+		clearTimeout(tim);
+		element.parentNode.removeChild(element);
+		removeFunction();
+	};
+}
+
+function createMarker(type) {
+	document.createElement(type);
+}
+
+function setPreviewText(marker, element) {
+	
