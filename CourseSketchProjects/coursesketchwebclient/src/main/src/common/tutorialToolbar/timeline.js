@@ -51,18 +51,20 @@ function addTextBoxButton (plusButton, toolArea) {
         function closeTextBox() {
 			textBox.parentNode.removeChild(textBox);
 		}	
-        textBox.setFinishedListener(function(command) {
-            globalcommand = command;
-			console.log(textArea.value);
-        });
+        
 
 		/*end of creating the textbox*/
         var textBoxMarker = document.createElement("timeline-marker");
         textBoxMarker.className = "textbox";
         toolArea.appendChild(textBoxMarker);
         $(plusButton).empty();
-
+        
         textBoxMarker.setRemoveFunction(closeTextBox);
+        textBox.setFinishedListener(function(command) {
+            globalcommand = command;
+			console.log(textArea.value);
+			textBoxMarker.setPreviewText(textArea.value);
+        });
     };
 }
 
@@ -113,13 +115,4 @@ function addHighlightButton (plusButton, toolArea) {
         toolArea.appendChild(highlightMarker);
         $(plusButton).empty();
     };
-}
-
-
-
-function createMarker(type) {
-	document.createElement(type);
-}
-
-function setPreviewText(marker, element) {
 }
