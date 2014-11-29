@@ -34,5 +34,8 @@ function TimelineMarker() {
 	this.setRemoveFunction = function(remove) {
 		this.removeFunction = remove;
 	}
+	this.setPreviewText = function (text) {
+		this.shadowRoot.querySelector('#preview').textContent = text.substring(0, 10)+ (text.length > 10 ? "..." : "");
+	}
 }
 TimelineMarker.prototype = Object.create(HTMLElement.prototype);
