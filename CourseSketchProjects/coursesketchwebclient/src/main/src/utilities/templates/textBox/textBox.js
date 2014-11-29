@@ -92,6 +92,11 @@ function TextBox() {
         enableDragging(localScope);
         
         this.loadData(loadedData); // Loads data if data exists. This should allow for editing of the element after it is created and saved
+        
+        // Saves data on blur of the element
+        this.onblur = function() {
+            localScope.saveData();
+        };
     };
 
     this.setFinishedListener = function(listener) {
