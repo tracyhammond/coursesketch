@@ -3,7 +3,6 @@
  * The dialog is moveable and allows the creator to enter text to be displayed
  */
 function TextBox() {
-    var localScope; // This is set to the level of the custom element tag
     var finishedCallback; // Defined by whoever implements this by using setFinishedListener()
     var loadedData = undefined; // Utilized if the element does not exist when loadData() is called
     var shadowRoot = undefined; // Makes shadowRoot apply to each instance of the element only
@@ -24,8 +23,8 @@ function TextBox() {
      * The dragging is restricted to the area of the parentNode the dialog is created in
      * NOTE: This code comes from the interact library examples page
      */
-    function enableDragging() {
-        interact(shadowRoot.querySelector(".draggable"))
+    function enableDragging(localScope) {
+        interact(localScope.shadowRoot.querySelector(".draggable"))
             .ignoreFrom("textarea, button")
             .draggable({
                 onmove: function (event) {
@@ -55,7 +54,7 @@ function TextBox() {
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
-        localScope = this; // This sets the variable to the level of the custom element tag
+        var localScope = this; // This sets the variable to the level of the custom element tag
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
@@ -67,28 +66,30 @@ function TextBox() {
          * The save must happen before being removed from the DOM and not in the detached callback
          * If the element is removed from the DOM, it does not have height and width values and the values will not save correctly
          */
-        shadowRoot.querySelector("#closeButton").onclick = function() {
-            if (shadowRoot.querySelector('#creatorText') != null) {
+        localScope.shadowRoot.querySelector("#closeButton").onclick = function() {
+            if (localScope.shadowRoot.querySelector('#creatorText') != null) {
                 localScope.saveData();
             }
+            shadowRoot = undefined;
+            loadedData = undefined;
             localScope.parentNode.removeChild(localScope);
         };
         
         // Makes continue button match close button onclick functionality if the continue button exists (not null)
-        if (shadowRoot.querySelector("#continueButton") != null) {
-            shadowRoot.querySelector('#continueButton').onclick = shadowRoot.querySelector('#closeButton').onclick;
+        if (localScope.shadowRoot.querySelector("#continueButton") != null) {
+            localScope.shadowRoot.querySelector('#continueButton').onclick = localScope.shadowRoot.querySelector('#closeButton').onclick;
         }
         
         /**
          * Makes the speak text button speak the text in the creatorText textarea
          * This textarea only exists in creation mode, and the speak text button only exists in creator mode
          */
-        if (shadowRoot.querySelector("#speakText") != null) {
-            shadowRoot.querySelector("#speakText").onclick = function() {
+        if (localScope.shadowRoot.querySelector("#speakText") != null) {
+            localScope.shadowRoot.querySelector("#speakText").onclick = function() {
                 localScope.speakText(shadowRoot.querySelector("#creatorText").value);
             };
         }
-        enableDragging();
+        enableDragging(localScope);
         
         this.loadData(loadedData); // Loads data if data exists. This should allow for editing of the element after it is created and saved
     };
@@ -100,8 +101,8 @@ function TextBox() {
     // Saves Data for the proto message based on the position, height, width, and value of the text box
     this.saveData = function() {
         var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
-        textBoxProto.setText(shadowRoot.querySelector('#creatorText').value); // Sets Text value for proto message
-        var dialog = shadowRoot.querySelector('#textBoxDialog');
+        textBoxProto.setText(this.shadowRoot.querySelector('#creatorText').value); // Sets Text value for proto message
+        var dialog = this.shadowRoot.querySelector('#textBoxDialog');
         var x = "" + dialog.style.left; // Makes sure x is a string for following check function
         var y = "" + dialog.style.top; // Makes sure y is a string for following check function
         
