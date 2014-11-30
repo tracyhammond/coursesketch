@@ -7,18 +7,22 @@
     function getInput(parent) {
         var inputList = parent.querySelectorAll(".need-saving");
         console.log(inputList);
+        var mappedInput = new Map();
         for (var i = 0; i < inputList.length; i++) {
             var value = inputList[i].value;
             console.log(value);
+            mappedInput.set(inputList.dataset.prop, value);
         }
+        return mappedInput;
     }
 
     /**
      * yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
+     * Each one returns a value if it exist otherwise undefined is returned.
      */
     var loaderObject = {};
-    loaderObject.load_name = function(schoolItemElement, schoolItemData, NodeToFill) {
+    loaderObject.load_name = function(schoolItemElement, schoolItemData, nodeToFill) {
         var name = "";
         if (isUndefined(schoolItemData)) {
             try {
@@ -32,11 +36,13 @@
             name = schoolItemData.name;
         }
         if (name != "") {
-            NodeToFill.value = name;
+            nodeToFill.value = name;
+            return name;
         }
+        return undefined;
     };
 
-    loaderObject.load_description = function(schoolItemElement, schoolItemData, NodeToFill) {
+    loaderObject.load_description = function(schoolItemElement, schoolItemData, nodeToFill) {
         var description = "";
         if (isUndefined(schoolItemData)) {
             try {
@@ -50,11 +56,16 @@
             description = schoolItemData.description;
         }
         if (description != "") {
-            NodeToFill.value = description;
+            nodeToFill.value = description;
+            return description;
         }
+        return undefined;
     };
 
-    loaderObject.load_id = function(schoolItemElement, schoolItemData, NodeToFill) {
+    /**
+     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     */
+    loaderObject.load_id = function(schoolItemElement, schoolItemData, nodeToFill) {
         var id = "";
         if (isUndefined(schoolItemData)) {
             //console.log(schoolItemElement.id);
@@ -63,13 +74,14 @@
             id = schoolItemData.id;
         }
         if (id != "") {
-            NodeToFill.textContent = id;
+            nodeToFill.textContent = id;
         } else {
-            NodeToFill.textContent = "No Id assigned yet";
+            nodeToFill.textContent = "No Id assigned yet";
         }
+        return null;
     };
 
-    loaderObject.load_functionType = function(schoolItemElement, schoolItemData, NodeToFill) {
+    loaderObject.load_functionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (isUndefined(schoolItemData)) {
         }  else {
@@ -78,14 +90,17 @@
             } catch(exception) {
                 console.log("Ignoring exception while setting function type of element");
                 console.log(exception);
+                return null;
             }
         }
         if (index > 0 || index === 0) {
-            NodeToFill.options[index].selected = true;
+            nodeToFill.options[index].selected = true;
+            return nodeToFill.value;
         }
+        return undefined;
     };
 
-    loaderObject.load_timeFrameType = function(schoolItemElement, schoolItemData, NodeToFill) {
+    loaderObject.load_timeFrameType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (isUndefined(schoolItemData)) {
         }  else {
@@ -94,14 +109,17 @@
             } catch(exception) {
                 console.log("Ignoring exception while setting timeFrame type of element");
                 console.log(exception);
+                return null;
             }
         }
         if (index > 0 || index === 0) {
-            NodeToFill.options[index].selected = true;
+            nodeToFill.options[index].selected = true;
+            return nodeToFill.value;
         }
+        return undefined;
     };
 
-    loaderObject.load_subtractionType = function(schoolItemElement, schoolItemData, NodeToFill) {
+    loaderObject.load_subtractionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (isUndefined(schoolItemData)) {
         }  else {
@@ -110,11 +128,14 @@
             } catch(exception) {
                 console.log("Ignoring exception while setting subtraction type of element");
                 console.log(exception);
+                return null;
             }
         }
         if (index > 0 || index === 0) {
-            NodeToFill.options[index].selected = true;
+            nodeToFill.options[index].selected = true;
+            return nodeToFill.value;
         }
+        return undefined;
     };
 
     /**
@@ -124,10 +145,15 @@
     function loadData(schoolItemElement, schoolItemData, editPanel) {
         var inputList = editPanel.querySelectorAll(".need-loading");
         console.log(inputList);
+        var mappedInput = new Map();
         for (var i = 0; i < inputList.length; i++) {
             console.log(inputList[i].dataset.prop);
-            loaderObject['load_' + inputList[i].dataset.prop](schoolItemElement, schoolItemData, inputList[i]);
+            var result = loaderObject['load_' + inputList[i].dataset.prop](schoolItemElement, schoolItemData, inputList[i]);
+            if (result != null) {
+                mappedInput.set(inputList[i].dataset.prop, result);
+            }
         }
+        return mappedInput;
     }
 
     SchoolItem.prototype.finalize = function() {
@@ -137,6 +163,7 @@
             }
         }
     };
+
     /**
      * Sets up the advance edit panel for editing advance data.
      * @param element {Element} The edit button that opens up the panel when clicked.
@@ -160,7 +187,7 @@
             shadow.appendChild(clone);
             localScope.advanceEditPanel = host;
 
-            loadData(localScope, localScope.schoolItemData, shadow);
+            var currentData = loadData(localScope, localScope.schoolItemData, shadow);
 
             // add our loaded element to the page.
             document.body.appendChild(host);
@@ -168,10 +195,10 @@
             // save data
             var saveButton = shadow.querySelector("button.save");
             saveButton.onclick = function() {
-                getInput(shadow);
+                var newData = getInput(shadow);
                 var schoolItem = localScope.getParentParent(parentNode);
                 document.body.removeChild(host);
-                localScope.editFunction("advance", [], [], schoolItem);
+                localScope.editFunction("advance", currentData, newData, schoolItem);
                 alert("Saving data!");
             };
         });
