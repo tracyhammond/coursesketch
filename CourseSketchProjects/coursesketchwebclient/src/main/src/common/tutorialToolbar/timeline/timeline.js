@@ -19,7 +19,6 @@ function Timeline () {
 		};
 	}
 
-
 	function addToolArea (parent) {
 		var toolArea = document.createElement("div");
 		toolArea.className = "toolarea";
@@ -57,17 +56,16 @@ function Timeline () {
 				textBox.parentNode.removeChild(textBox);
 			}
 
-
 			/*end of creating the textbox*/
 			var textBoxMarker = document.createElement("timeline-marker");
 			textBoxMarker.className = "textbox";
 			toolArea.appendChild(textBoxMarker);
+			textBoxMarker.showBox = textBox;
 			$(plusButton).empty();
 
 			textBoxMarker.setRemoveFunction(closeTextBox);
 			textBox.setFinishedListener(function(command) {
 				globalcommand = command;
-				console.log(textArea.value);
 				textBoxMarker.setPreviewText(textArea.value);
 			});
 		};
@@ -89,13 +87,16 @@ function Timeline () {
 				globalcommand = command;
 			});
 			/*end of creating the textbox*/
-			var ttsBoxMarker = document.createElement("div");
-			ttsBoxMarker.className = "ttsboxmarker";
+			var ttsBoxMarker = document.createElement("timeline-marker");
+			ttsBoxMarker.className = "ttsbox";
 			toolArea.appendChild(ttsBoxMarker);
 			$(plusButton).empty();
-			ttsBoxMarker.onclick = function() {
-				addCross(ttsBoxMarker, closeTtsBox);
-			};
+
+			ttsBoxMarker.setRemoveFunction(closeTtsBox);
+			ttsBox.setFinishedListener(function(command) {
+				globalcommand = command;
+				ttsBoxMarker.setPreviewText(textArea.value);
+			});
 		};
 	}
 
