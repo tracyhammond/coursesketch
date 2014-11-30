@@ -61,30 +61,30 @@ message SrlAssignment {
 		SURVEY = 5;
 		OTHER = 6; // Allows instructors to create unique assignment types
 	}
+}
 
-	message LatePolicy {
-		required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
-		optional TimeFrame timeFrameType = 2 [default = DAY]; // because this is what people are used to.
-		optional float rate = 3;
-		optional SubtractionType subtractionType = 4 [default = CAP];// how we are subtracting the grade
+message LatePolicy {
+	required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
+	optional TimeFrame timeFrameType = 2 [default = DAY]; // because this is what people are used to.
+	optional float rate = 3;
+	optional SubtractionType subtractionType = 4 [default = CAP];// how we are subtracting the grade
 
-		enum FunctionType {
-			STEPPING_FUNCTION = 0;
-			LINE = 1;
-			EXPONENTIAL = 2;
-		}
+	enum FunctionType {
+		STEPPING_FUNCTION = 0;
+		LINE = 1;
+		EXPONENTIAL = 2;
+	}
 
-		enum TimeFrame {
-			DAY = 3;
-			HOUR = 2;
-			MINUTE = 1;
-			CONSTANT = 0;
-		}
+	enum TimeFrame {
+		DAY = 3;
+		HOUR = 2;
+		MINUTE = 1;
+		CONSTANT = 0;
+	}
 
-		enum SubtractionType {
-			CAP = 0;
-			PERCENT = 1;
-		}
+	enum SubtractionType {
+		CAP = 0;
+		PERCENT = 1;
 	}
 }
 
