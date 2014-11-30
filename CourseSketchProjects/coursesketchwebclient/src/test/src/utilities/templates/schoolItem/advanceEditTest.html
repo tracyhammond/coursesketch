@@ -104,5 +104,76 @@
         var result = shadow.querySelector('#elementDescription').value;
         assert.equal(result, schoolItemProto.description, 'the description should be loaded correctly');
     });
+    test("advance edit function type loads", function(assert) {
+        var schoolItem = document.createElement("school-item");
+        schoolItem.dataset.instructor="";
+        // set up data
+        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+        var latePolicy = CourseSketch.PROTOBUF_UTIL.LatePolicy();
+        latePolicy.functionType = CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().FunctionType.EXPONENTIAL;
+        schoolItem.schoolItemData = schoolItemProto;
+        schoolItemProto.latePolicy = latePolicy;
+
+        // append data
+        var testLocation = document.getElementById("testLocation");
+        testLocation.appendChild(schoolItem);
+        var advanceButton = schoolItem.shadowRoot.querySelector(".advanceButton");
+        simulate(advanceButton, "click");
+
+        //now test!
+        var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
+        var result = shadow.querySelector('#elementFunction').value;
+        assert.equal(result, "EXPONENTIAL", 'the function type should be loaded correctly');
+        assert.equal(CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().FunctionType[result], latePolicy.functionType,
+            'we can get the number from the value using protobuf');
+    });
+
+    test("advance edit time rate type loads", function(assert) {
+        var schoolItem = document.createElement("school-item");
+        schoolItem.dataset.instructor="";
+        // set up data
+        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+        var latePolicy = CourseSketch.PROTOBUF_UTIL.LatePolicy();
+        latePolicy.timeFrameType = CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().TimeFrame.HOUR;
+        schoolItem.schoolItemData = schoolItemProto;
+        schoolItemProto.latePolicy = latePolicy;
+
+        // append data
+        var testLocation = document.getElementById("testLocation");
+        testLocation.appendChild(schoolItem);
+        var advanceButton = schoolItem.shadowRoot.querySelector(".advanceButton");
+        simulate(advanceButton, "click");
+
+        //now test!
+        var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
+        var result = shadow.querySelector('#elementTimeFrame').value;
+        assert.equal(result, "HOUR", 'the function type should be loaded correctly');
+        assert.equal(CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().TimeFrame[result], latePolicy.timeFrameType,
+            'we can get the number from the value using protobuf');
+    });
+
+    test("advance edit subtraction type loads", function(assert) {
+        var schoolItem = document.createElement("school-item");
+        schoolItem.dataset.instructor="";
+        // set up data
+        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+        var latePolicy = CourseSketch.PROTOBUF_UTIL.LatePolicy();
+        latePolicy.subtractionType = CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().SubtractionType.PERCENT;
+        schoolItem.schoolItemData = schoolItemProto;
+        schoolItemProto.latePolicy = latePolicy;
+
+        // append data
+        var testLocation = document.getElementById("testLocation");
+        testLocation.appendChild(schoolItem);
+        var advanceButton = schoolItem.shadowRoot.querySelector(".advanceButton");
+        simulate(advanceButton, "click");
+
+        //now test!
+        var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
+        var result = shadow.querySelector('#elementSubtraction').value;
+        assert.equal(result, "PERCENT", 'the function type should be loaded correctly');
+        assert.equal(CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().SubtractionType[result], latePolicy.subtractionType,
+            'we can get the number from the value using protobuf');
+    });
 </script>
 </body>
