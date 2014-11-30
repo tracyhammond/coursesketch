@@ -3,10 +3,9 @@
  * The dialog is moveable and allows the creator to enter text to be displayed
  */
 function TextBox() {
-    var finishedCallback; // Defined by whoever implements this by using setFinishedListener()
     var loadedData = undefined; // Utilized if the element does not exist when loadData() is called
     var shadowRoot = undefined; // Makes shadowRoot apply to each instance of the element only
-    
+
     /**
      * @param textToRead {string} contains the text to be read
      * @param callback {function} is the callback to be run after the text has been spoken
@@ -15,7 +14,7 @@ function TextBox() {
     this.speakText = function(textToRead, callback) {
         meSpeak.speak(textToRead, callback);
     };
-        
+
     /**
      * This is for making the dialog moveable with the interact.js library
      * It selects the created dialog by class name and makes it draggable with no inertia
@@ -74,12 +73,12 @@ function TextBox() {
             loadedData = undefined;
             localScope.parentNode.removeChild(localScope);
         };
-        
+
         // Makes continue button match close button onclick functionality if the continue button exists (not null)
         if (localScope.shadowRoot.querySelector("#continueButton") != null) {
             localScope.shadowRoot.querySelector('#continueButton').onclick = localScope.shadowRoot.querySelector('#closeButton').onclick;
         }
-        
+
         /**
          * Makes the speak text button speak the text in the creatorText textarea
          * This textarea only exists in creation mode, and the speak text button only exists in creator mode
@@ -90,9 +89,9 @@ function TextBox() {
             };
         }
         enableDragging(localScope);
-        
+
         this.loadData(loadedData); // Loads data if data exists. This should allow for editing of the element after it is created and saved
-        
+
         // Saves data on blur of the element
         this.onblur = function() {
             localScope.saveData();
@@ -100,7 +99,7 @@ function TextBox() {
     };
 
     this.setFinishedListener = function(listener) {
-        finishedCallback = listener;
+        this.finishedCallback = listener;
     };
 
     // Saves Data for the proto message based on the position, height, width, and value of the text box
@@ -110,7 +109,7 @@ function TextBox() {
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
         var x = "" + dialog.style.left; // Makes sure x is a string for following check function
         var y = "" + dialog.style.top; // Makes sure y is a string for following check function
-        
+
         // Checks if x or y values has "px" on the end of the string. If so removes the "px" from the string
         if (x.indexOf("px") > 0) {
             x = x.substring(0, x.length - 2);
@@ -118,7 +117,7 @@ function TextBox() {
         if (y.indexOf("px") > 0) {
             y= y.substring(0, y.length - 2);
         }
-        
+
         // Checks if x or y values are blank strings. This occurs when the values are 0px, so it sets the variables to 0.
         if (x == "" || x == " ") {
             x = 0;
@@ -126,11 +125,11 @@ function TextBox() {
         if (y == "" || y == " ") {
             y= 0;
         }
-        
+
         // x and y are strings but need to save as Ints
         x = parseInt(x);
         y = parseInt(y);
-        
+
         // Saves X and Y to proto message. Adds the 'data-x' and 'data-y' from dragging if it exists (if the box was dragged)
         if (dialog.getAttribute('data-x') == null || dialog.getAttribute('data-y') == null) {
             textBoxProto.setX(x);
@@ -139,14 +138,14 @@ function TextBox() {
             textBoxProto.setX(x + parseInt(dialog.getAttribute('data-x')));
             textBoxProto.setY(y + parseInt(dialog.getAttribute('data-y')));
         }
-        
+
         textBoxProto.setHeight($(dialog).height()); // Sets height for proto message
         textBoxProto.setWidth($(dialog).width()); // Sets width for proto message
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
         command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
         this.getFinishedCallback()(command); // Gets finishedCallback and calls it with command as parameter
     };
-    
+
     /**
      * @param textBoxProto {protoCommand} is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
@@ -162,7 +161,7 @@ function TextBox() {
         }
         var node = shadowRoot.querySelector('#creatorText');
         var dialog = shadowRoot.querySelector('#textBoxDialog');
-        
+
         // If creatorText element does not exist, make the selected node the viewText element
         if (node == null) {
             node = shadowRoot.querySelector('#viewText');
@@ -173,20 +172,22 @@ function TextBox() {
         $(node).height(textBoxProto.getHeight() - 16); // Sets node height minus 16px to account for default padding
         $(dialog).offset({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions
         node.textContent = textBoxProto.getText(); // Sets selected node (creatorText or viewTexet) text value
-        
+
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
         if (dialog.style.display == "none") {
             localScope.speakText(textBoxProto.getText(), localScope.getFinishedCallback());
             localScope.parentNode.removeChild(localScope);
         }
     };
-    
+
     /**
-     * @return finishedCallback {function} is the callback set at implementation
+     * @return finishedCallback {function} is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {
-        return finishedCallback;
+        return this.finishedCallback;
     };
 }
+TextBox.prototype.finishedCallback = undefined; // Defined by whoever implements this by using setFinishedListener().
+
 TextBox.prototype = Object.create(HTMLDialogElement.prototype);
