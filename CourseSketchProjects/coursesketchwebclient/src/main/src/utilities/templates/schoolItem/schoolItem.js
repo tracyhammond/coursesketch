@@ -99,40 +99,6 @@ function SchoolItem() {
     };
 
     /**
-     * Sets up the advance edit panel for editing advance data.
-     * @param element {Element} The edit button that opens up the panel when clicked.
-     * @param localScope {SchoolItem} The school item that this advance panel is associated with.
-     * @param parentNode {Node} The node that is a parent to the button.  This is used to get the school item after saving.
-     */
-    function advanceEditPanel(element, localScope, parentNode) {
-        $(element).click(function(event) {
-            event.stopPropagation();
-
-            // create host and position it
-            var host = document.createElement("dialog");
-            host.className = "advanceEditHost";
-            var pos = $(localScope).offset();
-            var leftPos = (pos.left + $(localScope).width());
-            $(host).offset({top:pos.top, left:leftPos});
-
-            // add html to host
-            var shadow = host.createShadowRoot();
-            var clone = localScope.getAdvanceEditPanel();
-            shadow.appendChild(clone);
-            document.body.appendChild(host);
-
-            // save data
-            var saveButton = shadow.querySelector("button.save");
-            saveButton.onclick = function() {
-                var schoolItem = getParentParent(parentNode);
-                document.body.removeChild(host);
-                localScope.editFunction("advance", [], [], schoolItem);
-                alert("Saving data!");
-            };
-        });
-    }
-
-    /**
      * Sets up what happens when an edit button is clicked.
      */
     this.setUpEditButtons = function() {
@@ -159,14 +125,16 @@ function SchoolItem() {
                     contentElement.textContent = editorElement.value;
                     // This is done because the element this function is applied is not actually in the school item.
                     // So we can find which element was actually being edited.
-                    var realParent = getParentParent(parentNode);
+                    var realParent = localScope.getParentParent(parentNode);
                     if (localScope.editFunction) {
                         localScope.editFunction(element.dataset.type, oldContent, contentElement.textContent, realParent);
                     }
                 };
                 // do something else for the advance button.
                 if ($(element).hasClass("advanceButton")) {
-                    advanceEditPanel(element, localScope, parentNode);
+                    if (localScope.createAdvanceEditPanel) {
+                        localScope.createAdvanceEditPanel(element, localScope, parentNode);
+                    }
                     return;
                 }
                 element.onclick = function(event) {
@@ -188,24 +156,10 @@ function SchoolItem() {
                     }
                     return false;
                 }; // Click
-            })(list[i]); // anonymous.
+            })(list[i]); // function wrapper.
         } // Loop
     };
 
-    /**
-     * {@link} parent {Node} the parent of a node contained within a school item shadow dom.
-     * This method traverses up the parent chain until it reaches a null node. It then returns the host.
-     * This is used to find the parent of a shadow root which contains the given node.
-     * @return {Node} the schoolItem element that contains this node.
-     */
-    function getParentParent(parent) {
-        var grandParent = parent.parentNode;
-        while (grandParent != null) {
-            parent = grandParent;
-            grandParent = grandParent.parentNode;
-        }
-        return parent.host;
-    }
     /**
      * Should create a special editor element based on its state.
      */
@@ -236,6 +190,20 @@ function SchoolItem() {
     };
 }
 
+/**
+ * {@link} parent {Node} the parent of a node contained within a school item shadow dom.
+ * This method traverses up the parent chain until it reaches a null node. It then returns the host.
+ * This is used to find the parent of a shadow root which contains the given node.
+ * @return {Node} the schoolItem element that contains this node.
+ */
+SchoolItem.prototype.getParentParent = function(parent) {
+    var grandParent = parent.parentNode;
+    while (grandParent != null) {
+        parent = grandParent;
+        grandParent = grandParent.parentNode;
+    }
+    return parent.host;
+};
 SchoolItem.prototype.schoolItemData = undefined;
 
 SchoolItem.prototype = Object.create(HTMLElement.prototype);

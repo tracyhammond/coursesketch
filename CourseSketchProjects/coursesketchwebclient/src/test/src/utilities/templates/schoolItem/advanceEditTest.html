@@ -1,0 +1,108 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Advance Edit test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <!-- files needed for testing -->
+    <link id="schoolItemTemplateImport" rel="import"
+          href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+    <!-- file being tested. -->
+    <script src="/src/utilities/templates/schoolItem/advanceEdit.js"
+            data-cover></script>
+</head>
+<body>
+<school-item style="width:500px;" data-state="inProgress" data-instructor>
+    <span class="name">Course Name Here</span>
+    <div class="description">Course Description Here</div>
+</school-item>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div id="testLocation"></div>
+
+<script>
+    QUnit.module("testModule1", {
+        teardown: function() {
+            document.getElementById("testLocation").innerHTML = "";
+        }
+    });
+    test("advance edit clears itself", function(assert) {
+        var schoolItem = document.createElement("school-item");
+        schoolItem.dataset.instructor="";
+        var testLocation = document.getElementById("testLocation");
+        testLocation.appendChild(schoolItem);
+        var advanceButton = schoolItem.shadowRoot.querySelector(".advanceButton");
+        simulate(advanceButton, "click");
+
+        assert.notEqual(document.querySelector('dialog.advanceEditHost'), null, "the dialog exist in the body");
+
+        // clear out the school item and the dialog should follow.
+        testLocation.innerHTML = "";
+
+        assert.equal(document.querySelector('dialog.advanceEditHost'), null, "the dialog exist in the body");
+    });
+
+    test("advance edit id loads", function(assert) {
+        var schoolItem = document.createElement("school-item");
+        schoolItem.dataset.instructor="";
+        // set up data
+        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        schoolItemProto.id = "fakeId";
+        schoolItem.schoolItemData = schoolItemProto;
+
+        // append data
+        var testLocation = document.getElementById("testLocation");
+        testLocation.appendChild(schoolItem);
+        var advanceButton = schoolItem.shadowRoot.querySelector(".advanceButton");
+        simulate(advanceButton, "click");
+
+        //now test!
+        var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
+        var result = shadow.querySelector('#elementId').textContent;
+        assert.equal(result, schoolItemProto.id, 'the id should be loaded correctly');
+    });
+
+    test("advance edit name loads", function(assert) {
+        var schoolItem = document.createElement("school-item");
+        schoolItem.dataset.instructor="";
+        // set up data
+        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        schoolItemProto.name = "fakeId";
+        schoolItem.schoolItemData = schoolItemProto;
+
+        // append data
+        var testLocation = document.getElementById("testLocation");
+        testLocation.appendChild(schoolItem);
+        var advanceButton = schoolItem.shadowRoot.querySelector(".advanceButton");
+        simulate(advanceButton, "click");
+
+        //now test!
+        var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
+        var result = shadow.querySelector('#elementName').value;
+        assert.equal(result, schoolItemProto.name, 'the name should be loaded correctly');
+    });
+
+    test("advance edit description loads", function(assert) {
+        var schoolItem = document.createElement("school-item");
+        schoolItem.dataset.instructor="";
+        // set up data
+        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        schoolItemProto.description = "fakeDescription";
+        schoolItem.schoolItemData = schoolItemProto;
+
+        // append data
+        var testLocation = document.getElementById("testLocation");
+        testLocation.appendChild(schoolItem);
+        var advanceButton = schoolItem.shadowRoot.querySelector(".advanceButton");
+        simulate(advanceButton, "click");
+
+        //now test!
+        var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
+        var result = shadow.querySelector('#elementDescription').value;
+        assert.equal(result, schoolItemProto.description, 'the description should be loaded correctly');
+    });
+</script>
+</body>

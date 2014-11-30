@@ -9,31 +9,31 @@
     </style>
         <span>
             <h4>ID:</h4>
-            <span id="elementId"></span>
+            <span id="elementId" class = "need-loading" data-prop="id"></span>
         </span>
         <span>
             <h4>Name:</h4>
-            <input type="text">
+            <input id="elementName" type="text" class="need-saving need-loading" data-prop="name">
         </span>
         <span>
             <h4>Description:</h4>
             <br>
-            <textarea></textarea>
+            <textarea id="elementDescription" class="need-saving need-loading" data-prop="description"></textarea>
         </span>
         <div class="latePolicy">
             <h3>Late Policy</h3>
             <span>
                 <h4>Algorithm:</h4>
-                <select>
-                    <option>Exponential</option>
-                    <option>Stepping</option>
-                    <option>Linear</option>
+                <select class="need-saving need-loading" data-prop="functionType">
+                    <option value="1">Stepping</option>
+                    <option value="2">Linear</option>
+                    <option value="3">Exponential</option>
                 </select>
             </span>
             <span>
                 <h4>Time Period:</h4>
-                <select>
-                    <option value="milli">Constantly</option>
+                <select class="need-saving need-loading" data-prop="timeFrameType">
+                    <option value="constant">Constantly</option>
                     <option value="minute">Every Minute</option>
                     <option value="hour">Every Hour</option>
                     <option value="day">Every Day</option>
@@ -41,7 +41,7 @@
             </span>
             <span>
                 <h4>Reduction Rule:</h4>
-                <select>
+                <select class="need-saving need-loading" data-prop="subtractionType">
                     <option value="cap">Cap grade</option>
                     <option value="percent">percent of actual grade</option>
                 </select>
