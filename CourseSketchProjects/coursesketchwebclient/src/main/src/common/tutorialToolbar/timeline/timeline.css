@@ -1,0 +1,152 @@
+.timeline {
+    position: fixed;
+    top: 80%;
+    width: 100%;
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    border: 2px solid #000;
+    background: #CC33FF;
+    overflow-y: visible;
+
+}
+
+.btn {
+	order: 2;
+	-moz-box-shadow:inset 0px 1px 0px 0px #e6cafc;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #e6cafc;
+	box-shadow:inset 0px 1px 0px 0px #e6cafc;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c579ff), color-stop(1, #a341ee) );
+	background:-moz-linear-gradient( center top, #c579ff 5%, #a341ee 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c579ff', endColorstr='#a341ee');
+	background-color:#c579ff;
+	-webkit-border-top-left-radius:20px;
+	-moz-border-radius-topleft:20px;
+	border-top-left-radius:20px;
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;
+	-webkit-border-bottom-right-radius:20px;
+	-moz-border-radius-bottomright:20px;
+	border-bottom-right-radius:20px;
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-bottom-left-radius:20px;
+	text-indent:0;
+	border:1px solid #a946f5;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	height:40px;
+	line-height:40px;
+	width:86px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #8628ce;
+}
+.btn:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #a341ee), color-stop(1, #c579ff) );
+	background:-moz-linear-gradient( center top, #a341ee 5%, #c579ff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#a341ee', endColorstr='#c579ff');
+	background-color:#a341ee;
+}.btn:active {
+	position:relative;
+	top:1px;
+}
+/* This button was generated using CSSButtonGenerator.com */
+
+.toolarea {
+	flex-direction: row;
+	justify-content: flex-start;
+    top: 80%;
+    width: 217px;
+    height: 100%;
+    border: 2px solid #000;
+    background: #FFF;
+    overflow-y: scroll;
+}
+
+.textboxbutton {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0px;
+    left: 50px;
+    margin: auto 0;
+    background-image: url("../textbox.jpg");
+    background-color: #cccccc;
+    /*transition: background-image 1s ease-in-out;*/
+}
+
+
+.ttsboxbutton {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0px;
+    left: 100px;
+    margin: auto 0;
+    background-image: url("../tts.jpg");
+    background-color: #cccccc;
+    /*transition: background-image 1s ease-in-out;*/
+}
+
+
+.highlightbutton {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0px;
+    left: 150px;
+    margin: auto 0;
+    background-image: url("../highlight.jpg");
+    background-color: #cccccc;
+    /*transition: background-image 1s ease-in-out;*/
+}
+
+.tts {
+    width: 50px;
+    height: 50px;
+    display: inline;
+    position: absolute;
+    order: 2;
+    background-image: url("../textbox.jpg");
+    background-color: #cccccc;
+}
+
+/* this is the fake one */
+.instance .texttospeech {
+    width: 50px;
+    height: 50px;
+    display: inline;
+    position: absolute;
+    margin: auto 0;
+    background-image: url("../tts.jpg");
+    background-color: #cccccc;
+}
+
+.instance .highlight {
+    width: 50px;
+    height: 50px;
+    display: inline;
+    position: absolute;
+    margin: auto 0;
+    background-image: url("../highlight.jpg");
+    background-color: #cccccc;
+}
+
+.toolarea .plusbutton {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    margin: auto 0;
+    order: 1;
+    background-image: url("plus.png");
+    background-color: #cccccc;
+    overflow: visible;
+}
