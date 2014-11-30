@@ -1,0 +1,26 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Lecture Page Fake Page</title>
+<link rel="import"
+	href="/test/testUtilities/fakePage/fakePageInclude.html">
+<link rel="import"
+	href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+<!-- files needed for testing -->
+<link rel="import" href="/src/common/lecture/lecturePage.html"
+	data-fake>
+<script>
+if (CourseSketch.dataManager.realDatabaseReady()) {
+	CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0]);
+} else {
+    var intervalVar = setInterval(function() {
+	if (CourseSketch.dataManager.realDatabaseReady()) {
+	    clearInterval(intervalVar);
+	    CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0]);
+	}
+    }, 100);
+}
+</script>
+</head>
+<body>
+</body>
