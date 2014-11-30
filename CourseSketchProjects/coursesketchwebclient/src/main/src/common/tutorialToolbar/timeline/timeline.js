@@ -18,17 +18,17 @@ function Timeline () {
 		addToolArea(shadowRoot.querySelector('.timeline'));
 		};
 	}
-		
+
 
 	function addToolArea (parent) {
-		var toolArea = document.createElement("div"); 
+		var toolArea = document.createElement("div");
 		toolArea.className = "toolarea";
 		parent.appendChild(toolArea);
 		addPlusButton(toolArea);
 	}
 
 	function addPlusButton (parent) {
-		var plusButton = document.createElement("div"); 
+		var plusButton = document.createElement("div");
 		plusButton.className = "plusbutton";
 		parent.appendChild(plusButton);
 		plusButton.onclick = function() {
@@ -45,7 +45,7 @@ function Timeline () {
 
 	function addTextBoxButton (plusButton, toolArea) {
 		var textBoxButton = document.createElement("div");
-		textBoxButton.className = "textboxbutton"; 
+		textBoxButton.className = "textboxbutton";
 		plusButton.appendChild(textBoxButton);
 		textBoxButton.onclick = function(event) {
 			event.stopPropagation();
@@ -53,18 +53,17 @@ function Timeline () {
 			var textBox = document.createElement('text-box-creation');
 			document.body.appendChild(textBox);
 			var textArea = textBox.shadowRoot.querySelector('textarea');
-			textArea.onblur = textBox.saveData.bind(textBox);
 			function closeTextBox() {
 				textBox.parentNode.removeChild(textBox);
-			}	
-			
+			}
+
 
 			/*end of creating the textbox*/
 			var textBoxMarker = document.createElement("timeline-marker");
 			textBoxMarker.className = "textbox";
 			toolArea.appendChild(textBoxMarker);
 			$(plusButton).empty();
-			
+
 			textBoxMarker.setRemoveFunction(closeTextBox);
 			textBox.setFinishedListener(function(command) {
 				globalcommand = command;
@@ -76,7 +75,7 @@ function Timeline () {
 
 	function addTtsBoxButton (plusButton, toolArea) {
 		var ttsBoxButton = document.createElement("div");
-		ttsBoxButton.className = "ttsboxbutton"; 
+		ttsBoxButton.className = "ttsboxbutton";
 		plusButton.appendChild(ttsBoxButton);
 		ttsBoxButton.onclick = function(event) {
 			event.stopPropagation();
@@ -114,7 +113,7 @@ function Timeline () {
 				globalcommand = command;
 			});
 			*/
-			
+
 			/*end of creating the textbox*/
 			var highlightMarker = document.createElement("div");
 			highlightMarker.className = "highlightmarker";

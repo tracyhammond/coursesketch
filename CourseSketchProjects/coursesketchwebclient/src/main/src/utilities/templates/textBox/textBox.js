@@ -4,7 +4,7 @@
  */
 function TextBox() {
     var loadedData = undefined; // Utilized if the element does not exist when loadData() is called
-    var shadowRoot = undefined; // Makes shadowRoot apply to each instance of the element only
+    var shadowRoot = undefined; // Used only to tell if the data is ready to be loaded.
 
     /**
      * @param textToRead {string} contains the text to be read
@@ -65,15 +65,21 @@ function TextBox() {
          * The save must happen before being removed from the DOM and not in the detached callback
          * If the element is removed from the DOM, it does not have height and width values and the values will not save correctly
          */
-        localScope.shadowRoot.querySelector("#closeButton").onclick = function() {
+        localScope.shadowRoot.querySelector("#closeButton").onclick = function(event) {
             if (localScope.shadowRoot.querySelector('#creatorText') != null) {
-                localScope.saveData();
+                localScope.saveData(event);
             }
             shadowRoot = undefined;
             loadedData = undefined;
             localScope.parentNode.removeChild(localScope);
         };
 
+        // Saves data on blur of the element
+        if (localScope.shadowRoot.querySelector('textarea') != null) {
+            localScope.shadowRoot.querySelector('textarea').onblur = function() {
+                localScope.saveData();
+            };
+        }
         // Makes continue button match close button onclick functionality if the continue button exists (not null)
         if (localScope.shadowRoot.querySelector("#continueButton") != null) {
             localScope.shadowRoot.querySelector('#continueButton').onclick = localScope.shadowRoot.querySelector('#closeButton').onclick;
@@ -90,12 +96,7 @@ function TextBox() {
         }
         enableDragging(localScope);
 
-        this.loadData(loadedData); // Loads data if data exists. This should allow for editing of the element after it is created and saved
-
-        // Saves data on blur of the element
-        this.onblur = function() {
-            localScope.saveData();
-        };
+        this.loadData(loadedData); // Loads data if data exists. This should allow for editing of the element after it is created and saved.
     };
 
     this.setFinishedListener = function(listener) {
@@ -103,7 +104,7 @@ function TextBox() {
     };
 
     // Saves Data for the proto message based on the position, height, width, and value of the text box
-    this.saveData = function() {
+    this.saveData = function(event) {
         var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
         textBoxProto.setText(this.shadowRoot.querySelector('#creatorText').value); // Sets Text value for proto message
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
@@ -143,7 +144,7 @@ function TextBox() {
         textBoxProto.setWidth($(dialog).width()); // Sets width for proto message
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
         command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
-        this.getFinishedCallback()(command); // Gets finishedCallback and calls it with command as parameter
+        this.getFinishedCallback()(command, event); // Gets finishedCallback and calls it with command as parameter
     };
 
     /**
