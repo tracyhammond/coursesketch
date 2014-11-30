@@ -39,3 +39,4 @@ function TimelineMarker() {
 	}
 }
 TimelineMarker.prototype = Object.create(HTMLElement.prototype);
+TimelineMarker.prototype.showBox = undefined;
