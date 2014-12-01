@@ -132,7 +132,7 @@ function SchoolItem() {
         var editingClass = 'currentlyEditing';
         // calls the function for ever instance of the editButton
         var list = shadowRoot.querySelectorAll('.editButton');
-        for(var i = 0; i < list.length; ++i) {
+        for (var i = 0; i < list.length; ++i) {
             (function(element) {
 	            // do something else for the advance button.
 	            if ($(element).hasClass("advanceButton")) {
@@ -145,6 +145,7 @@ function SchoolItem() {
                 var contentElement = nodes[0];
                 var editorElement = getEditorElement(parentNode);
                 var finishEditing = function() {
+                    localScope.dataset.isediting = false;
                     $(parentNode).removeClass(editingClass);
                     $(contentElement).removeClass(editingClass);
                     parentNode.removeChild(editorElement);
@@ -156,6 +157,7 @@ function SchoolItem() {
                     }
                 };
                 element.onclick = function(event) {
+                    localScope.dataset.isediting = true;
                     event.stopPropagation();
                     if ($(parentNode).hasClass(editingClass)) {
                         finishEditing();
