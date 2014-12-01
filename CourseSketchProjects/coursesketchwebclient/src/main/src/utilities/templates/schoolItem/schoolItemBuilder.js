@@ -149,6 +149,9 @@ function SchoolItemBuilder() {
         box.setAttribute('id', srlSchoolItem.id);
         box.schoolItemData = srlSchoolItem;
 
+        // every box starts off not being edtited
+        box.dataset.isediting = false;
+
         if (!this.instructorCard && this.boxClickFunction) {
             box.dataset.clickable = "";
         }
@@ -202,7 +205,7 @@ function SchoolItemBuilder() {
     this.addClickFunction = function addClickFunction(element, boxFunction, editFunction, srlSchoolItem) {
         if (boxFunction) {
             element.addEventListener('click', function() {
-                if (localScope.dataset.isediting === false) {
+                if (element.dataset.isediting === "false") {
                     boxFunction(srlSchoolItem);
                 }
             }, false);
