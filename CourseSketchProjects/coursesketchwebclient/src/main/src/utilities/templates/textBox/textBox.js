@@ -142,8 +142,15 @@ function TextBox() {
 
         textBoxProto.setHeight($(dialog).height()); // Sets height for proto message
         textBoxProto.setWidth($(dialog).width()); // Sets width for proto message
-        var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
+        var command = undefined;
+
+        // create a new instance if we don't already have one.
+        if (isUndefined(this.createdCommand)) {
+            command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
+        }
+
         command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
+        this.createdCommand = command;
         this.getFinishedCallback()(command, event); // Gets finishedCallback and calls it with command as parameter
     };
 
