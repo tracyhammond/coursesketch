@@ -92,6 +92,7 @@ function Timeline () {
 			toolArea.appendChild(ttsBoxMarker);
 			$(plusButton).empty();
 
+			var textArea = ttsBox.shadowRoot.querySelector('textarea');
 			ttsBoxMarker.setRemoveFunction(closeTtsBox);
 			ttsBox.setFinishedListener(function(command) {
 				globalcommand = command;
