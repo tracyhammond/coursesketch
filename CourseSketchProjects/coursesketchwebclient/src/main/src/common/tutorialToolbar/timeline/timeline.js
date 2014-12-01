@@ -11,13 +11,17 @@ function Timeline () {
 		this.index = new IndexManager(this);
         this.addToolArea(shadowRoot.querySelector('.timeline'));
 		this.continueButton(shadowRoot);
+		console.log("WORKKKKKKKKK");
+		console.log(this.index.getCurrentUpdate());
+		redoCreator();
+		undoCreator();
     };
 
 	this.continueButton = function(shadowRoot) {
-		var localScope = this;
+		var continueButtonScope = this;
 		var continueButton = shadowRoot.querySelector(".btn");
 		continueButton.onclick = function() {
-			localScope.addToolArea(shadowRoot.querySelector('.timeline'));
+			continueButtonScope.addToolArea(shadowRoot.querySelector('.timeline'));
 		};
 	};
 
@@ -51,8 +55,12 @@ function Timeline () {
 		textBoxButton.onclick = function(event) {
 			event.stopPropagation();
 			var update = localScope.index.getCurrentUpdate();
+			console.log(update);
 			/*creating the textbox*/
 			var textBox = document.createElement('text-box-creation');
+			console.log("WORK MOTHERFUCKER");
+			console.log(localScope);
+			console.log(localScope.index.getCurrentUpdate());
 			document.body.appendChild(textBox);
 			var textArea = textBox.shadowRoot.querySelector('textarea');
 			function closeTextBox(command) {
@@ -141,15 +149,23 @@ function Timeline () {
 		};
 	}
 	
-	function undo() {
-		var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.getCommandData(),
-				CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
-		
+	function undoCreator () {
+		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+			var elementToDelete = document.getElementById(this.commandId);
+			document.body.removeChild(elementToDelete);
+			console.log('asdf');
+		});
 	}
-	function redo() {
-		var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.getCommandData(),
-				CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
-		
+	function redoCreator () {
+		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+			var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
+					CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+			var textbox  = document.createElement('text-box-creation');
+			document.body.appendChild(textbox);
+			textbox.loadData(decoded);
+			textbox.id = this.commandId;
+			console.log('asdffdsa');
+		});
 	}
 	
 }

@@ -29,21 +29,26 @@ function IndexManager (timeline) {
 		while ((child = child.previousSibling) != null) {
 			i++;
 		}
+		console.log(i-1 + " abc");
 		return i - 1;
 	}
 
 	this.getCurrentUpdate = function () {
 		var update = timeline.updateList.list[index];
-		if (isUndefined(update) && index != -1) {
-			update = timeline.updateList.list[index] = CourseSketch.PROTOBUF_UTIL.createBaseUpdate();
-		}
+		console.log("CURRENT UPDATE");
+		console.log(update);
 		return update;
 	};
 
 	function changeListIndex (oldIndex, newIndex) {
-		if (oldIndex != -1) {
+		oldIndex -= 1;
+		newIndex -= 1;
+		if (oldIndex >= 0) {
+			console.log(timeline.updateList.list[oldIndex]);
 			timeline.updateList.list[oldIndex].undo();
-			timeline.updateList.list[newIndex].redo();
+			if (!isUndefined(timeline.updateList.list[newIndex])) {
+				timeline.updateList.list[newIndex].redo();
+			}
 		}
 	}
 
