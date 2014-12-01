@@ -104,23 +104,17 @@ function SchoolItem() {
     function advanceEditPanel(element, localScope) {
         $(element).click(function(event) {
             event.stopPropagation();
-            console.log("button pressed!");
             clone = localScope.getAdvanceEditPanel();
             var host = document.createElement("dialog");
             host.className = "advanceEditHost";
-            var pos = $(localScope).position();
-            console.log("why is this odd!");
-            console.log(pos.left);
-            console.log($(localScope).width());
-            console.log($(document).width()/2);
-            var leftPos = (pos.left + $(localScope).width()) + 2;
+            var pos = $(localScope).offset();
+            var leftPos = (pos.left + $(localScope).width());
             $(host).offset({top:pos.top, left:leftPos});
             var shadow = host.createShadowRoot();
             shadow.appendChild(clone);
             document.body.appendChild(host);
-            console.log("APEENDING HAPPENING");
             var saveButton = shadow.querySelector("button");
-            saveButton.onclick=function() {
+            saveButton.onclick = function() {
                 alert("Saving data!");
             };
         });
@@ -167,7 +161,7 @@ function SchoolItem() {
                         finishEditing();
                     } else {
                         $(parentNode).addClass(editingClass);
-    
+
                         if (isUndefined(contentElement)) {
                             contentElement = document.createElement("div");
                             $(contentElement).addClass(element.dataset.type);
