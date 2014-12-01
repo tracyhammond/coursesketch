@@ -11,7 +11,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Polls for all updates to the user and then shows the courses.
-     * 
+     *
      * This will wait till the database is ready before it polls for updates and
      * shows the courses.
      */
@@ -59,7 +59,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
 
         var builder = new SchoolItemBuilder();
-        builder.setList(courseList)
+        builder.setList(courseList);
         if (CourseSketch.connection.isInstructor) {
             builder.setInstructorCard(true);
         }
@@ -92,9 +92,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             var builder = new SchoolItemBuilder();
             builder.setEmptyListMessage('There are no assignments for this course!');
             if (assignmentList == "NONEXISTANT_VALUE") {
-                if (!course.getState().accessible) {
+                if (!(course.getState().accessible)) {
                     builder
-                            .setEmptyListMessage('This course is currently not avialable. Please contact the instructor to let you view the assignments');
+                            .setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
                 }
                 assignmentList = [];
             }
@@ -109,7 +109,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             doc.querySelector('#assignment_list_column').appendChild(waitingIcon); // because it was probably removed
             if (CourseSketch.dataManager.getState("isInstructor")) {
                 try {
-                    replaceEditContent('html/instructor/course_managment_frames/edit_course.html');
+                    replaceEditContent('html/instructor/course_management_frames/edit_course.html');
                 } catch (exception) {
 
                 }
