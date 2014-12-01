@@ -30,7 +30,8 @@
          *            selected
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
-            console.log(lecture);
+            CourseSketch.dataManager.addState("currentLecture",lecture);
+            CourseSketch.redirectContent("/src/common/lecture/lecturePage.html", "Edit Lecture");
         }
 
         /**
