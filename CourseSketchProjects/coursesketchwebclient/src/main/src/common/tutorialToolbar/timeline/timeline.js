@@ -25,37 +25,40 @@ function Timeline () {
 		var toolArea = document.createElement("div");
 		toolArea.className = "toolarea";
 		parent.appendChild(toolArea);
-		addPlusButton(toolArea);
+		addPlusButton(toolArea, this);
 		this.index.addNewToolArea(toolArea);
 	};
 
-	function addPlusButton (parent) {
+	function addPlusButton (parent, localScope) {
 		var plusButton = document.createElement("div");
 		plusButton.className = "plusbutton";
 		parent.appendChild(plusButton);
 		plusButton.onclick = function() {
-			showTools(plusButton, parent);
+			showTools(plusButton, parent, localScope);
 		};
 	}
 
-
-	function showTools(plusButton, toolArea) {
-		addTextBoxButton(plusButton, toolArea);
-		addTtsBoxButton(plusButton, toolArea);
-		addHighlightButton(plusButton, toolArea);
+	function showTools(plusButton, toolArea, localScope) {
+		addTextBoxButton(plusButton, toolArea, localScope);
+		addTtsBoxButton(plusButton, toolArea, localScope);
+		addHighlightButton(plusButton, toolArea, localScope);
 	}
 
-	function addTextBoxButton (plusButton, toolArea) {
+	function addTextBoxButton (plusButton, toolArea, localScope) {
 		var textBoxButton = document.createElement("div");
 		textBoxButton.className = "textboxbutton";
 		plusButton.appendChild(textBoxButton);
 		textBoxButton.onclick = function(event) {
 			event.stopPropagation();
+			var update = localScope.index.getCurrentUpdate();
 			/*creating the textbox*/
 			var textBox = document.createElement('text-box-creation');
 			document.body.appendChild(textBox);
 			var textArea = textBox.shadowRoot.querySelector('textarea');
-			function closeTextBox() {
+			function closeTextBox(command) {
+				if (!isUndefined(command)) {
+					removeObjectFromArray(update.commands, command);
+				}
 				textBox.parentNode.removeChild(textBox);
 			}
 
@@ -66,15 +69,26 @@ function Timeline () {
 			textBoxMarker.showBox = textBox;
 			$(plusButton).empty();
 
-			textBoxMarker.setRemoveFunction(closeTextBox);
-			textBox.setFinishedListener(function(command) {
-				globalcommand = command;
+			textBoxMarker.setRemoveFunction(function() {
+				closeTextBox(textBox.createdCommand);
+			});
+
+			textBox.setFinishedListener(function(command, event) {
+				if (!isUndefined(event)) {
+					textBoxMarker.parentNode.removeChild(textBoxMarker);
+					return;
+				}
+				if (update.commands.indexOf(command) < 0) {
+					console.log("saving data");
+					update.commands.push(command);
+				}
+				textBox.id = command.id;
 				textBoxMarker.setPreviewText(textArea.value);
 			});
 		};
 	}
 
-	function addTtsBoxButton (plusButton, toolArea) {
+	function addTtsBoxButton (plusButton, toolArea, localScope) {
 		var ttsBoxButton = document.createElement("div");
 		ttsBoxButton.className = "ttsboxbutton";
 		plusButton.appendChild(ttsBoxButton);
@@ -104,7 +118,7 @@ function Timeline () {
 		};
 	}
 
-	function addHighlightButton (plusButton, toolArea) {
+	function addHighlightButton (plusButton, toolArea, localScope) {
 		var highlightButton = document.createElement("div");
 		highlightButton.className = "highlightbutton";
 		plusButton.appendChild(highlightButton);
@@ -126,5 +140,17 @@ function Timeline () {
 			$(plusButton).empty();
 		};
 	}
+	
+	function undo() {
+		var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.getCommandData(),
+				CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+		
+	}
+	function redo() {
+		var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.getCommandData(),
+				CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+		
+	}
+	
 }
 Timeline.prototype = Object.create(HTMLElement.prototype);
