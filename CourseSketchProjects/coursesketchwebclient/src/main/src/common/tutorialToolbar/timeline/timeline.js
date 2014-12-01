@@ -1,5 +1,4 @@
 function Timeline () {
-
 	 /**
      * @param templateClone {node} is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
@@ -8,23 +7,27 @@ function Timeline () {
         var localScope = this; // This sets the variable to the level of the custom element tag
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        addToolArea(shadowRoot.querySelector('.timeline'));
-		continueButton(shadowRoot);
+		this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+		this.index = new IndexManager(this);
+        this.addToolArea(shadowRoot.querySelector('.timeline'));
+		this.continueButton(shadowRoot);
     };
 
-	function continueButton(shadowRoot) {
+	this.continueButton = function(shadowRoot) {
+		var localScope = this;
 		var continueButton = shadowRoot.querySelector(".btn");
 		continueButton.onclick = function() {
-		addToolArea(shadowRoot.querySelector('.timeline'));
+			localScope.addToolArea(shadowRoot.querySelector('.timeline'));
 		};
-	}
+	};
 
-	function addToolArea (parent) {
+	this.addToolArea = function(parent) {
 		var toolArea = document.createElement("div");
 		toolArea.className = "toolarea";
 		parent.appendChild(toolArea);
 		addPlusButton(toolArea);
-	}
+		this.index.addNewToolArea(toolArea);
+	};
 
 	function addPlusButton (parent) {
 		var plusButton = document.createElement("div");
