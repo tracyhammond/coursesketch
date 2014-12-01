@@ -1,11 +1,11 @@
 (function(localScope) {
-    var waitingIcon = CourseSketch.courseManagement.waitingIcon;
     /*
      * Creates a new course.
+     * adds it to the database.
+     *
      */
-    localScope.addNewCourse = function addNewCourse() { // Functionality to
-                                                        // allow for adding of
-                                                        // courses
+    localScope.addNewCourse = function addNewCourse() {
+        var waitingIcon = CourseSketch.courseManagement.waitingIcon;
         document.getElementById('class_list_column').appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
         // by instructors
@@ -18,16 +18,21 @@
         // course.accessDate = "mm/dd/yyyy";
         // course.closeDate = "mm/dd/yyyy";
         CourseSketch.dataManager.getAllCourses(function(courseList) {
+            var localCourseList = courseList;
+            if (courseList instanceof DatabaseException) {
+                // we are cool because we are adding a new one.
+                localCourseList = [];
+            }
             var firstCourse = undefined;
             CourseSketch.dataManager.insertCourse(course, function(course) {
                 firstCourse = course;
-                courseList.push(course);
-                localScope.showCourses(courseList);
+                localCourseList.push(course);
+                localScope.showCourses(localCourseList);
             }, function(course) {
                 if (waitingIcon.isRunning()) {
                     waitingIcon.finishWaiting();
                 }
-                localScope.showCourses(courseList);
+                localScope.showCourses(localCourseList);
             });
         });
     }

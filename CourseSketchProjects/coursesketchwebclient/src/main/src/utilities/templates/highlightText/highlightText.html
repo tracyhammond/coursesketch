@@ -8,13 +8,14 @@
         top: 0px;
     }
     :host {
-        position: fixed;
+        position: absolute;
         top: 0px;
         cursor: move;
     }
     </style>
     <dialog id="highlightTextDialog" class="draggable" open>
-        <input id="highlightColor" type="color" value="#0000ff">Color</input>
+        <input id="highlightColor" type="color" value="#0000ff">Background Color</input>
+        <input id="textColor" type="color" value="#000000">Text Color</input>
         <input type="checkbox" id="highlightMode" checked>Enable Highlighting
         <button id="closeButton">X</button>
     </dialog>
