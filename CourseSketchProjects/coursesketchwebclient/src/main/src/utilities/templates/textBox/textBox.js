@@ -152,10 +152,13 @@ function TextBox() {
         command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = command;
 
+		console.log(this.id);
         if (!(isUndefined(this.id) || this.id == null || this.id == "")) {
             command.setCommandId(this.id);
+            console.log(this.id + "GOT HERE");
         }
-
+		console.log("TRY MEEEEEEE");
+		console.log(command.commandId);
         this.getFinishedCallback()(command, event); // Gets finishedCallback and calls it with command as parameter
     };
 
