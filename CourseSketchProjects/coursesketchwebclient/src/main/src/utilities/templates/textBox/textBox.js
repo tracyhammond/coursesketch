@@ -151,6 +151,11 @@ function TextBox() {
 
         command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = command;
+
+        if (!(isUndefined(this.id) || this.id == null || this.id == "")) {
+            command.setCommandId(this.id);
+        }
+
         this.getFinishedCallback()(command, event); // Gets finishedCallback and calls it with command as parameter
     };
 
@@ -197,5 +202,5 @@ function TextBox() {
     };
 }
 TextBox.prototype.finishedCallback = undefined; // Defined by whoever implements this by using setFinishedListener().
-
+TextBox.prototype.createdCommand = undefined;
 TextBox.prototype = Object.create(HTMLDialogElement.prototype);
