@@ -13,6 +13,10 @@
 
 }
 
+.toolarea.focused {
+	background: #0000FF;
+}
+
 .btn {
 	order: 2;
 	-moz-box-shadow:inset 0px 1px 0px 0px #e6cafc;
