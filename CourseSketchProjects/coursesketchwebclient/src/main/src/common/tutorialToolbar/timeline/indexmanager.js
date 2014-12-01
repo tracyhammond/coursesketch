@@ -7,9 +7,14 @@ function IndexManager (timeline) {
 		toolArea.onclick = function () {
 			console.log("switching element?");
 			switchIndex(getElementIndex(this));
-		}
+		};
+		timeline.updateList.list.push(CourseSketch.PROTOBUF_UTIL.createBaseUpdate());
 	}
+
 	function switchIndex(destination) {
+		if (destination == index) {
+			return;
+		}
 		var oldIndex = index;
 		index = destination;
 		$(current).removeClass('focused');
@@ -26,11 +31,15 @@ function IndexManager (timeline) {
 		}
 		return i - 1;
 	}
-	
-	this.getCurrentUpdate = function {
-		return timeline.updateList.list[index];
-	}
-	
+
+	this.getCurrentUpdate = function () {
+		var update = timeline.updateList.list[index];
+		if (isUndefined(update) && index != -1) {
+			update = timeline.updateList.list[index] = CourseSketch.PROTOBUF_UTIL.createBaseUpdate();
+		}
+		return update;
+	};
+
 	function changeListIndex (oldIndex, newIndex) {
 		if (oldIndex != -1) {
 			timeline.updateList.list[oldIndex].undo();
