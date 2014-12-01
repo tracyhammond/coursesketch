@@ -202,7 +202,9 @@ function SchoolItemBuilder() {
     this.addClickFunction = function addClickFunction(element, boxFunction, editFunction, srlSchoolItem) {
         if (boxFunction) {
             element.addEventListener('click', function() {
-                boxFunction(srlSchoolItem);
+                if (localScope.dataset.isediting === false) {
+                    boxFunction(srlSchoolItem);
+                }
             }, false);
             // GET THE ONCLICK LISTENTER TO DO THE CLICKING THING CORRECTLY!
         }
