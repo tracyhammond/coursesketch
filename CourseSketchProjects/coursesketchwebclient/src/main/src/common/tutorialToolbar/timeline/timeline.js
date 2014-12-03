@@ -11,8 +11,6 @@ function Timeline () {
 		this.index = new IndexManager(this);
         this.addToolArea(shadowRoot.querySelector('.timeline'));
 		this.continueButton(shadowRoot);
-		console.log("WORKKKKKKKKK");
-		console.log(this.index.getCurrentUpdate());
 		redoCreator();
 		undoCreator();
     };
@@ -55,12 +53,8 @@ function Timeline () {
 		textBoxButton.onclick = function(event) {
 			event.stopPropagation();
 			var update = localScope.index.getCurrentUpdate();
-			console.log(update);
 			/*creating the textbox*/
 			var textBox = document.createElement('text-box-creation');
-			console.log("WORK MOTHERFUCKER");
-			console.log(localScope);
-			console.log(localScope.index.getCurrentUpdate());
 			document.body.appendChild(textBox);
 			var textArea = textBox.shadowRoot.querySelector('textarea');
 			function closeTextBox(command) {
@@ -77,25 +71,27 @@ function Timeline () {
 			textBoxMarker.showBox = textBox;
 			$(plusButton).empty();
 
+            textBoxFinishedListener = function(command, event) {
+                if (!isUndefined(event)) {
+                    textBoxMarker.parentNode.removeChild(textBoxMarker);
+                }
+                // If the command does not exist in the current update, add it to the update
+                if (update.commands.indexOf(command) < 0) {
+                    console.log("saving data");
+                    update.commands.push(command);
+                }
+                textBox.id = command.commandId;
+                textBoxMarker.setPreviewText(textArea.value);
+            };
+            
 			textBoxMarker.setRemoveFunction(function() {
 				closeTextBox(textBox.createdCommand);
 			});
 
-			textBox.setFinishedListener(function(command, event) {
-				if (!isUndefined(event)) {
-					textBoxMarker.parentNode.removeChild(textBoxMarker);
-					return;
-				}
-				if (update.commands.indexOf(command) < 0) {
-					console.log("saving data");
-					update.commands.push(command);
-				}
-				textBox.id = command.id;
-				textBoxMarker.setPreviewText(textArea.value);
-			});
+			textBox.setFinishedListener(textBoxFinishedListener);
 		};
 	}
-
+    
 	function addTtsBoxButton (plusButton, toolArea, localScope) {
 		var ttsBoxButton = document.createElement("div");
 		ttsBoxButton.className = "ttsboxbutton";
@@ -153,18 +149,17 @@ function Timeline () {
 		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
 			var elementToDelete = document.getElementById(this.commandId);
 			document.body.removeChild(elementToDelete);
-			console.log('asdf');
 		});
 	}
 	function redoCreator () {
 		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
 			var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
 					CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
-			var textbox  = document.createElement('text-box-creation');
-			document.body.appendChild(textbox);
-			textbox.loadData(decoded);
-			textbox.id = this.commandId;
-			console.log('asdffdsa');
+			var textBox  = document.createElement('text-box-creation');
+			document.body.appendChild(textBox);
+			textBox.loadData(decoded);
+			textBox.id = this.commandId;
+            textBox.setFinishedListener(textBoxFinishedListener);
 		});
 	}
 	
