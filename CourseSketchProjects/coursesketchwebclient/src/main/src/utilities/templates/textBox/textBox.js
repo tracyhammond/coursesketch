@@ -144,19 +144,15 @@ function TextBox() {
         textBoxProto.setWidth($(dialog).width()); // Sets width for proto message
         
         // create a new instance if we don't already have one.
-        console.log("UNDEFINED BITCH");
-        console.log(isUndefined(this.createdCommand));
+        // Sorry about that
         if (isUndefined(this.createdCommand)) {
             command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
         }
 
         this.createdCommand = command;
         
-        console.log("ID PLEASE");
-        console.log(command.commandId);
         if (!(isUndefined(this.id) || this.id == null || this.id == "")) {
             command.setCommandId(this.id);
-            console.log(command.commandId);
         }
         
         command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
