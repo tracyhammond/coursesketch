@@ -2,9 +2,7 @@ function IndexManager (timeline) {
 	var current;
 	var index = -1;
 	this.addNewToolArea = function (toolArea) {
-		console.log("adding element");
 		toolArea.onclick = function () {
-			console.log("switching element?");
 			switchIndex(getElementIndex(this));
 		};
 		timeline.updateList.list.push(CourseSketch.PROTOBUF_UTIL.createBaseUpdate());
@@ -48,7 +46,8 @@ function IndexManager (timeline) {
 		if (oldIndex >= 0) {
 			timeline.updateList.list[oldIndex].undo();
 			if (!isUndefined(timeline.updateList.list[newIndex])) {
-				timeline.updateList.list[newIndex].redo();
+                newUpdate = timeline.updateList.list[newIndex];
+				newUpdate.redo(newUpdate);
 			}
 		}
 	}

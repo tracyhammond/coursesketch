@@ -142,21 +142,14 @@ function TextBox() {
 
         textBoxProto.setHeight($(dialog).height()); // Sets height for proto message
         textBoxProto.setWidth($(dialog).width()); // Sets width for proto message
-        
-        // create a new instance if we don't already have one.
-        // Sorry about that
-        if (isUndefined(this.createdCommand)) {
-            command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
-        }
 
-        this.createdCommand = command;
-        
-        if (!(isUndefined(this.id) || this.id == null || this.id == "")) {
-            command.setCommandId(this.id);
+        // If the textbox does not have an id, then a command has not been created for the textbox
+        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
+            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
         }
-        
-        command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
-        this.getFinishedCallback()(command, event); // Gets finishedCallback and calls it with command as parameter
+        this.command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
+        this.createdCommand = this.command;
+        this.getFinishedCallback()(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
     };
 
     /**
