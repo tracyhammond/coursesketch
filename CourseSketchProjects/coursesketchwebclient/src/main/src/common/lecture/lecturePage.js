@@ -101,6 +101,9 @@
             for(var i = 0; i < CourseSketch.lecturePage.lecture.slides.length; ++i) {
                 CourseSketch.lecturePage.addSlideToDom(i);
             }
+            if(CourseSketch.lecturePage.lecture.slides.length > 0) {
+                CourseSketch.lecturePage.selectSlide(0);
+            }
         }
 
         if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
