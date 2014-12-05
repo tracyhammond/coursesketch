@@ -1,33 +1,30 @@
 /**
- * 
+ *
  * The Sketch Surface is actually used as part of an element. but can be used
  * without actually being an element if you spoof some methods.
- * 
+ *
  * Supported attributes.
  * <ul>
  * <li>data-existingList: This is meant to tell the surface that the update
  * list will be provided for it and to not automatically bind an UpdateManager
  * to it</li>
- * 
+ *
  * <li>data-customId: This is meant to tell the surface that the Id of the
  * element will be provided to it and to not assign a random id to it.</li>
  * <li>data-readOnly: This tells the sketch surface to ignore any input and it
  * will only display sketches.</li>
  * </ul>
- * 
+ *
  * @Class
  */
 function SketchSurface() {
-    var localScope = this;
     var sketch = undefined;
     var updateList = undefined;
     var localInputListener = undefined;
     var sketchEventConverter = undefined;
     var shadowRoot = undefined;
     var errorListener = undefined;
-    var eventListenerElement = undefined;
-    var sketchCanvas = undefined;
-    var bindUpdateListCalled = false;
+    this.bindUpdateListCalled = false;
 
     this.registerSketchInManager = function() {
         if (isUndefined(this.id)) {
@@ -79,7 +76,7 @@ function SketchSurface() {
     };
 
     this.bindToUpdateList = function(UpdateManagerClass) {
-        if (bindUpdateListCalled === false) {
+        if (this.bindUpdateListCalled === false) {
             updateList = undefined;
         }
 
@@ -89,7 +86,7 @@ function SketchSurface() {
             } else {
                 updateList = new UpdateManagerClass(sketch, errorListener, SKETCHING_SURFACE_HANDLER);
             }
-            bindUpdateListCalled = true;
+            this.bindUpdateListCalled = true;
         } else {
             throw new Error("Update list is already defined");
         }
@@ -98,7 +95,7 @@ function SketchSurface() {
     /**
      * Draws the stroke then creates an update that is added to the update
      * manager, given a stroke.
-     * 
+     *
      * @param stroke
      *            {SRL_Stroke} a stroke that is added to the sketch.
      */
@@ -127,20 +124,20 @@ function SketchSurface() {
         sketch.canvasContext = canvasContext;
         sketchEventConverter = new SketchEventConverter(localInputListener, addStrokeCallback, canvasContext);
 
-        eventListenerElement = canvas;
-        sketchCanvas = canvas;
+        this.eventListenerElement = canvas;
+        this.sketchCanvas = canvas;
 
         this.resizeSurface();
     };
 
     this.resizeSurface = function() {
-        sketchCanvas.height = $(sketchCanvas).height();
-        sketchCanvas.width = $(sketchCanvas).width();
+        this.sketchCanvas.height = $(this.sketchCanvas).height();
+        this.sketchCanvas.width = $(this.sketchCanvas).width();
         sketch.drawEntireSketch();
     };
 
     this.makeResizeable = function() {
-        $(window).resize(localScope.resizeSurface);
+        $(window).resize(this.resizeSurface);
     };
 
     /**
@@ -150,16 +147,16 @@ function SketchSurface() {
         updateList = undefined;
         bindUpdateListCalled = false;
         sketch = new SRL_Sketch();
-        eventListenerElement = undefined;
-        sketchCanvas = undefined;
+        this.eventListenerElement = undefined;
+        this.sketchCanvas = undefined;
     };
 
     this.getElementForEvents = function() {
-        return eventListenerElement;
+        return this.eventListenerElement;
     };
 
     this.getElementForDrawing = function() {
-        return eventListenerElement;
+        return this.eventListenerElement;
     };
 
     this.getUpdateList = function() {
