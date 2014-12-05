@@ -82,9 +82,12 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function() {
             parent.getCourseLecture(slide.lectureId, function(lecture) {
-                var slideList = lecture.slides;
-                slideList.push(slide.id);
-                lecture.slideList = slideList;
+                var idsInLectureList = lecture.ids;
+				var idInLecture = CourseSketch.PROTOBUF_UTIL.idsInLecture();
+				idInLecture.id = slide.id;
+				idInLecture.isSlide = true;
+                idsInLectureList.push(idInLecture);
+                lecture.ids = idsInLectureList;
                 parent.setLecture(lecture, function() {
                     if(!isUndefined(localCallback)) {
                         localCallback(lecture);
@@ -93,9 +96,12 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
             });
             insertSlideServer(slide, function() {
                 parent.getCourseLecture(slide.lectureId, function(lecture) {
-                    var slideList = lecture.slides;
-                    slideList.push(slide.id);
-                    lecture.slideList = slideList;
+                    var idsInLectureList = lecture.ids;
+					var idInLecture = CourseSketch.PROTOBUF_UTIL.idsInLecture();
+					idInLecture.id = slide.id;
+					idInLecture.isSlide = true;
+                    idsInLectureList.push(idInLecture);
+                    lecture.ids = idsInLectureList;
                     parent.setLecture(lecture, function() {
                         if(!isUndefined(serverCallback)) {
                             serverCallback(lecture);
