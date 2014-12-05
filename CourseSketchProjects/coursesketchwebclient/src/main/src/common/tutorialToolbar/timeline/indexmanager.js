@@ -46,8 +46,7 @@ function IndexManager (timeline) {
 		if (oldIndex >= 0) {
 			timeline.updateList.list[oldIndex].undo();
 			if (!isUndefined(timeline.updateList.list[newIndex])) {
-                newUpdate = timeline.updateList.list[newIndex];
-				newUpdate.redo(newUpdate);
+                timeline.updateList.list[newIndex].redo(timeline.updateList.list[newIndex]);
 			}
 		}
 	}
