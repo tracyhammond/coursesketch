@@ -11,8 +11,8 @@ function Timeline () {
 		this.index = new IndexManager(this);
         this.addToolArea(shadowRoot.querySelector('.timeline'));
 		this.continueButton(shadowRoot);
-		redoCreator(false);
 		undoCreator();
+        redoCreator();
     };
 
 	this.continueButton = function(shadowRoot) {
@@ -52,18 +52,19 @@ function Timeline () {
 		plusButton.appendChild(textBoxButton);
 		textBoxButton.onclick = function(event) {
 			event.stopPropagation();
-			var currentUpdate = localScope.index.getCurrentUpdate();
 			/*creating the textbox*/
 			var textBox = document.createElement('text-box-creation');
 			document.body.appendChild(textBox);
+            var currentUpdate = localScope.index.getCurrentUpdate();
             textBox.currentUpdate = currentUpdate;
-			var textArea = textBox.shadowRoot.querySelector('textarea');
 			function closeTextBox(command) {
                 var textBox = document.getElementById(command.commandId);
-                textBox.parentNode.removeChild(textBox);
-				if (!isUndefined(command)) {
-					removeObjectFromArray(update.commands, command);
+                var textBoxMarker = localScope.shadowRoot.getElementById(command.commandId);
+				if (!isUndefined(textBox.command)) {
+					removeObjectFromArray(textBox.currentUpdate.commands, textBox.command);
 				}
+                textBox.parentNode.removeChild(textBox);
+                textBoxMarker.parentNode.removeChild(textBoxMarker);
 			}
 
 			/*end of creating the textbox*/
@@ -74,18 +75,22 @@ function Timeline () {
 			$(plusButton).empty();
 
             textBoxFinishedListener = function(command, event, currentUpdate) {
-                if (!isUndefined(event)) {
-                    textBoxMarker.parentNode.removeChild(textBoxMarker);
-                }
-                
-                // If the command does not exist in the current update, add it to the update
+                var textBox = document.getElementById(command.commandId);
+                textBox.id = command.commandId;
                 if (isUndefined(currentUpdate.commands)) {
-                    return
+                    return;
                 }
                 if (currentUpdate.commands.indexOf(command) < 0) {
                     currentUpdate.commands.push(command);
                 }
-                textBox.id = command.commandId;
+                
+                if (!isUndefined(event)) {
+                    //textBoxMarker.parentNode.removeChild(textBoxMarker);
+                    console.log(textBox.createdCommand);
+                    closeTextBox(command);
+                    return;
+                }
+                var textArea = textBox.shadowRoot.querySelector('textarea');
                 textBoxMarker.setPreviewText(textArea.value);
             };
             
@@ -94,6 +99,7 @@ function Timeline () {
 			});
 
 			textBox.setFinishedListener(textBoxFinishedListener);
+            textBoxMarker.id = textBox.id;
 		};
 	}
     
@@ -161,8 +167,8 @@ function Timeline () {
             }
 		});
 	}
-	function redoCreator (update) {
-		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+	function redoCreator () {
+		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function(update) {
 			if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
                         CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
@@ -171,7 +177,7 @@ function Timeline () {
                 textBox.loadData(decoded);
                 textBox.id = this.commandId;
                 textBox.command = this;
-                textBox.currentUpdate = update;
+                textBox.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
                 textBox.setFinishedListener(textBoxFinishedListener);
             }
 		});

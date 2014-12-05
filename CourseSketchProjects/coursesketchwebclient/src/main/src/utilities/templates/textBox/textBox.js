@@ -59,7 +59,7 @@ function TextBox() {
 
         /**
          * Sets onclick action for the close button
-         * If the id 'creatorText' exists (not null) then the edior version is currently active
+         * If the id 'creatorText' exists (not null) then the editor version is currently active
          * Since editor version is active, the close button saves the data and then removes from the DOM
          * Otherwise the element is merely removed from DOM if it is not in creator mode (in viewing mode)
          * The save must happen before being removed from the DOM and not in the detached callback
@@ -68,6 +68,9 @@ function TextBox() {
         localScope.shadowRoot.querySelector("#closeButton").onclick = function(event) {
             if (localScope.shadowRoot.querySelector('#creatorText') != null) {
                 localScope.saveData(event);
+                shadowRoot = undefined;
+                loadedData = undefined;
+                return;
             }
             shadowRoot = undefined;
             loadedData = undefined;
@@ -101,6 +104,7 @@ function TextBox() {
 
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
+        this.saveData();
     };
 
     // Saves Data for the proto message based on the position, height, width, and value of the text box
@@ -149,6 +153,7 @@ function TextBox() {
         }
         this.command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
+        this.id = this.command.commandId;
         this.getFinishedCallback()(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
     };
 
