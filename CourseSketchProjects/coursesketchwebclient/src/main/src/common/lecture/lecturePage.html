@@ -1,61 +1,68 @@
 <html>
-	<head>
-	<link rel="stylesheet" type="text/css" href="/src/common/lecture/lecture.css">
-	<!-- Jquery library -->
-	<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
-	<!-- ChildScript -->
-	<script type="text/javascript" src="/src/utilities/functions/childScript.js"
-			data-namespace="lectureSelection"></script>
-	<!-- protobuf -->
-	<link rel="import" href="/src/utilities/connection/protobufInclude.html">
-	<!-- school item -->
-	<link rel="import" href="/src/utilities/templates/schoolItem/schoolItemInclude.html" >
-	<script src="/src/common/lecture/lecturePage.js"></script>
-	<style>
-	.column {
-		height: 80% !important;
-	}
-	html, body {
-		overflow: hidden !important;
-	}
-	</style>
-	</head>
-	<body>
-		<div id="col1" class="column">
-			<div class="list-item title">
-				Tools
-			</div>
-			<div class="content toolbar">
-				<div class="list-item" onclick="CourseSketch.lecturePage.newTextBox()">
-					Text Box
-				</div>
-				<div class="list-item">
-					Image
-				</div>
-				<div class="list-item" onclick="CourseSketch.lecturePage.newSketchContent()">
-					Sketch Content
-				</div>
-				<div class="list-item">
-					Sketch Question
-				</div>
-				<div class="list-item">
-					Multiple-Choice Question
-				</div>
-			</div>
-		</div>
-		<div id="col2" class="column">
-			<div id="lecture-title" class="list-item title">
-				Loading...
-			</div> 
-			<div id="slide-background" class="content">
-				<div id="slide-content">
-				</div>
-			</div>
-		</div>
-		<div id="slides">
-			<div class="content">
-				<span id="add" class="slide-thumb" onclick="CourseSketch.lecturePage.newSlide()">+</span>
-			</div>
-		</div>
-	</body>
+    <head>
+    <link rel="stylesheet" type="text/css" href="/src/common/lecture/lecture.css" />
+    <!-- Jquery library -->
+    <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html" />
+    <!-- ChildScript -->
+    <script type="text/javascript" src="/src/utilities/functions/childScript.js"
+            data-namespace="lectureSelection"></script>
+    <!-- protobuf -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html" />
+    <!-- school item -->
+    <link rel="import" href="/src/utilities/templates/schoolItem/schoolItemInclude.html" />
+    <!-- text box -->
+    <link rel="import" href="/src/utilities/templates/textBox/textBoxInclude.html" />
+    <!-- question -->
+    <link rel="import" href="/src/utilities/templates/question/questionInclude.html" />
+    <!-- sketching -->
+    <link rel="import" href="/src/sketching/sketchInclude.html" />
+    <script src="/src/common/lecture/lecturePage.js"></script>
+    <style>
+    .column {
+        height: 80% !important;
+    }
+    html, body {
+        overflow: hidden !important;
+    }
+    </style>
+    </head>
+    <body>
+        <div id="col1" class="column">
+            <div class="list-item title">
+                Tools
+            </div>
+            <div class="content toolbar">
+                <div class="list-item" onclick="CourseSketch.lecturePage.newTextBox()">
+                    Text Box
+                </div>
+                <div class="list-item">
+                    Image
+                </div>
+                <div class="list-item" onclick="CourseSketch.lecturePage.newSketchContent()">
+                    Sketch Content
+                </div>
+                <div class="list-item">
+                    Sketch Question
+                </div>
+                <div class="list-item">
+                    Multiple-Choice Question
+                </div>
+            </div>
+        </div>
+        <div id="col2" class="column">
+            <div id="lecture-title" class="list-item title">
+                Loading...
+            </div> 
+            <div id="slide-background" class="content">
+                <div id="slide-content">
+					<question-element></question-element>
+                </div>
+            </div>
+        </div>
+        <div id="slides">
+            <div class="content">
+                <span id="add" class="slide-thumb" onclick="CourseSketch.lecturePage.newSlide()">+</span>
+            </div>
+        </div>
+    </body>
 </html>
