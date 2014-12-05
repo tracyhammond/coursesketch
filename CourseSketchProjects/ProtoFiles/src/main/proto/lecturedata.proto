@@ -1,5 +1,6 @@
 import "school.proto";
 import "commands.proto";
+import "question.proto";
 package protobuf.srl.lecturedata;
 
 message SrlLectureDataHolder {
@@ -43,7 +44,7 @@ message LectureElement {
 		TextBox textBox = 7;
         Image image = 8;
         SketchArea sketchArea = 9;
-        Question question = 10;
+		protobuf.srl.question.SrlQuestion question = 10;
 	}
 }
 
