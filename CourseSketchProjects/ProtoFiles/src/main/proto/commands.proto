@@ -48,6 +48,8 @@ enum CommandType {
 	CLOSE_SYNC = 16; // Tells the machine that it is going back to normal mode.
 
 	// all other commands will appear after 16
+	CREATE_TEXTBOX = 17; // Creates a textbox for use in tutorial or lecture slides
+	CREATE_QUESTION = 18; // Creates a question for use in lecture slides
 }
 
 /**
@@ -112,7 +114,7 @@ message ActionAddAttribtue {
  * the value that is removed is stored here.
  * A ReplaceAttribute is a combination of a RemoveAttribtue and then an AddAttribtue
  */
-message ActionRemoveAttribute {
+message ActionRemoveAttribtue {
 	required IdChain shapeId = 1;
 	required string attributeKey = 2;
 	required bytes attributeValue = 3;

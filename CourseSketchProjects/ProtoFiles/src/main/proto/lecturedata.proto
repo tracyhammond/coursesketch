@@ -62,7 +62,7 @@ message SketchArea {
 }
 
 message Question {
-    optional string question = 11;
+    optional string questionText = 11;
 
     oneof QuestionType {
         MultipleChoice multipleChoice = 12;

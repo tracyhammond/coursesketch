@@ -46,14 +46,39 @@
 
             },
             teardown : function() {
-                //document.getElementById('question').innerHTML = "";
+                document.getElementById('question').innerHTML = "";
             }
         });
 
         test("create question element", function(assert) {
+            expect(1);
+            var question = document.createElement("question-test");
+            document.querySelector("#question").appendChild(question);
+            assert.ok(question.shadowRoot.innerHTML != null && question.shadowRoot.innerHTML != "", "Question element has content.");
+        });
+
+        test("save question element", function(assert) {
+            expect(2);
+            var question = document.createElement("question-test");
+            document.querySelector("#question").appendChild(question);
+            question.setFinishedListener(function(command) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,
+                        'Expecting command type CREATE_QUESTION from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getQuestionClass());
+            });
+            question.saveData();
+        });
+
+        test("load question element", function(assert) {
             expect(0);
             var question = document.createElement("question-test");
             document.querySelector("#question").appendChild(question);
+            var questionProto = CourseSketch.PROTOBUF_UTIL.Question();
+            questionProto.setQuestionText("How awesome are CourseSketch Lectures?");
+            question.loadData(questionProto);
+            question.loadData();
         });
     </script>
 </body>
