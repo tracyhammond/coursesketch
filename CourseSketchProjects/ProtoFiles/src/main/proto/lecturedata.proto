@@ -60,29 +60,3 @@ message SketchArea {
     //srlSketch object if proto include works
     optional bytes SrlUpdateList = 10;
 }
-
-message Question {
-    optional string questionText = 11;
-
-    oneof QuestionType {
-        MultipleChoice multipleChoice = 12;
-        SketchQuestion sketchQuestion = 13;
-    }
-
-}
-
-message MultipleChoice {
-    repeated Answer answers = 12;
-}
-
-message SketchQuestion {
-    optional bytes sketch = 13;
-}
-
-message Answer {
-	required string questionId = 1;
-	//id of this answer
-	required string id = 2;
-	optional string text = 3;
-	optional bool correct = 4;
-}

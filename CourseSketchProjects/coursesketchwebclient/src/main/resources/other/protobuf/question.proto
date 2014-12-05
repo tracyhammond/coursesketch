@@ -1,0 +1,25 @@
+package protobuf.srl.question;
+
+message SrlQuestion {
+    required string id = 1;
+    optional string questionText = 2;
+
+    oneof QuestionType {
+    MultipleChoice multipleChoice = 3;
+    SketchQuestion sketchQuestion = 4;
+}
+}
+
+message MultipleChoice {
+    repeated AnswerChoice answerChoices = 1;
+    optional string correctId = 2;
+}
+
+message SketchQuestion {
+    optional bytes sketch = 1;
+}
+
+message AnswerChoice {
+    required string id = 1;
+    optional string text = 2;
+}
