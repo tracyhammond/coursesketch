@@ -261,7 +261,7 @@ public final class AssignmentManager {
                 } else {
                     latePolicy.setSubtractionType(LatePolicy.SubtractionType.PERCENT);
                 }
-            } catch(ClassCastException e) {
+            } catch (ClassCastException e) {
                 latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
             }
 
