@@ -208,7 +208,7 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 * TODO: complete the entirety of the event that can be spoofed.
 	 */
 	this.sendSelf = function(message) {
-	    setTimeout(function() {)
+	    setTimeout(function() {
             console.log("start sendself");
             var event = {
                 data : message.toArrayBuffer()
