@@ -10,9 +10,10 @@ function Question() {
     }
 
     this.saveData = function(event) {
-        var questionProto = CourseSketch.PROTOBUF_UTIL.Question();
+        var questionProto = CourseSketch.PROTOBUF_UTIL.SrlQuestion();
 
         // Populate data in the proto object
+        questionProto.id = generateUUID();
         questionProto.setQuestionText(this.shadowRoot.querySelector('#text').textContent);
 
         // If the textbox does not have an id, then a command has not been created for the textbox

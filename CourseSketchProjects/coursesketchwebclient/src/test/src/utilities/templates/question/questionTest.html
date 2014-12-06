@@ -58,7 +58,7 @@
         });
 
         test("save question element", function(assert) {
-            expect(2);
+            expect(3);
             var question = document.createElement("question-test");
             document.querySelector("#question").appendChild(question);
             question.setFinishedListener(function(command) {
@@ -66,7 +66,8 @@
                         'Expecting command type CREATE_QUESTION from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                        CourseSketch.PROTOBUF_UTIL.getQuestionClass());
+                        CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
+                assert.equal(question.shadowRoot.querySelector("#text").textContent, decoded.questionText, "Question text is the same in proto and DOM");
             });
             question.saveData();
         });
@@ -75,7 +76,8 @@
             expect(0);
             var question = document.createElement("question-test");
             document.querySelector("#question").appendChild(question);
-            var questionProto = CourseSketch.PROTOBUF_UTIL.Question();
+            var questionProto = CourseSketch.PROTOBUF_UTIL.SrlQuestion();
+            questionProto.id = generateUUID();
             questionProto.setQuestionText("How awesome are CourseSketch Lectures?");
             question.loadData(questionProto);
             question.loadData();
