@@ -16,6 +16,10 @@
     <link rel="import" href="/src/utilities/templates/question/questionInclude.html" />
     <!-- sketching -->
     <link rel="import" href="/src/sketching/sketchInclude.html" />
+    <!-- resizing -->
+    <link rel="import" href="/src/utilities/libraries/interact/interactInclude.html">
+    <!-- allow for saving image -->
+    <link rel="import" href='/src/utilities/functions/image.js'
     <script src="/src/common/lecture/lecturePage.js"></script>
     <style>
     .column {
@@ -36,6 +40,7 @@
                     Text Box
                 </div>
                 <div class="list-item">
+                    <input type='file' onchange="CourseSketch.lecturePage.addPic(this);" />
                     Image
                 </div>
                 <div class="list-item" onclick="CourseSketch.lecturePage.newSketchContent()">
