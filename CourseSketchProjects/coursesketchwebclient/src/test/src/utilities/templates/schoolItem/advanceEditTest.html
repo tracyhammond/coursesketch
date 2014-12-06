@@ -175,5 +175,35 @@
         assert.equal(CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().SubtractionType[result], latePolicy.subtractionType,
             'we can get the number from the value using protobuf');
     });
+
+    test("advance edit name saves", function(assert) {
+        var schoolItem = document.createElement("school-item");
+        schoolItem.dataset.instructor="";
+        // set up data
+        var secondValue = "fakeId2";
+        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        schoolItemProto.name = "fakeId";
+        schoolItem.schoolItemData = schoolItemProto;
+
+        // append data
+        var testLocation = document.getElementById("testLocation");
+        testLocation.appendChild(schoolItem);
+        var advanceButton = schoolItem.shadowRoot.querySelector(".advanceButton");
+        simulate(advanceButton, "click");
+
+        //now set up saving!
+        var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
+        shadow.querySelector('#elementName').value = "fakeId2";
+
+        // set up tests
+        schoolItem.setEditCallback(function(type, oldData, newData, element) {
+            assert.equal(type, "advance", "type is advance");
+            assert.equal(newData.get("name"), secondValue, "the name is not working");
+        });
+
+        // run tests
+        simulate(shadow.querySelector('button.save'), "click");
+
+    });
 </script>
 </body>

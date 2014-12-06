@@ -125,7 +125,7 @@ function SchoolItem() {
                     contentElement.textContent = editorElement.value;
                     // This is done because the element this function is applied is not actually in the school item.
                     // So we can find which element was actually being edited.
-                    var realParent = localScope.getParentParent(parentNode);
+                    var realParent = getHostElement(parentNode);
                     if (localScope.editFunction) {
                         localScope.editFunction(element.dataset.type, oldContent, contentElement.textContent, realParent);
                     }
@@ -194,9 +194,9 @@ function SchoolItem() {
  * {@link} parent {Node} the parent of a node contained within a school item shadow dom.
  * This method traverses up the parent chain until it reaches a null node. It then returns the host.
  * This is used to find the parent of a shadow root which contains the given node.
- * @return {Node} the schoolItem element that contains this node.
+ * @return {Node} the host element that contains this node.
  */
-SchoolItem.prototype.getParentParent = function(parent) {
+var getHostElement = function(parent) {
     var grandParent = parent.parentNode;
     while (grandParent != null) {
         parent = grandParent;
@@ -204,6 +204,7 @@ SchoolItem.prototype.getParentParent = function(parent) {
     }
     return parent.host;
 };
+
 SchoolItem.prototype.schoolItemData = undefined;
 
 SchoolItem.prototype = Object.create(HTMLElement.prototype);
