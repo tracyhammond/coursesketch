@@ -6,11 +6,9 @@
      */
     function getInput(parent) {
         var inputList = parent.querySelectorAll(".need-saving");
-        console.log(inputList);
         var mappedInput = new Map();
         for (var i = 0; i < inputList.length; i++) {
             var value = inputList[i].value;
-            console.log(value);
             mappedInput.set(inputList.dataset.prop, value);
         }
         return mappedInput;
@@ -70,7 +68,6 @@
         if (isUndefined(schoolItemData)) {
             //console.log(schoolItemElement.id);
         }  else {
-            console.log(schoolItemData.id);
             id = schoolItemData.id;
         }
         if (id != "") {
@@ -144,10 +141,8 @@
      */
     function loadData(schoolItemElement, schoolItemData, editPanel) {
         var inputList = editPanel.querySelectorAll(".need-loading");
-        console.log(inputList);
         var mappedInput = new Map();
         for (var i = 0; i < inputList.length; i++) {
-            console.log(inputList[i].dataset.prop);
             var result = loaderObject['load_' + inputList[i].dataset.prop](schoolItemElement, schoolItemData, inputList[i]);
             if (result != null) {
                 mappedInput.set(inputList[i].dataset.prop, result);
@@ -201,6 +196,20 @@
                 localScope.editFunction("advance", currentData, newData, schoolItem);
                 alert("Saving data!");
             };
+
+            // cancel!
+            function close(event) {
+                event.stopPropagation();
+                document.body.removeEventListener("click", close);
+                try {
+                    document.body.removeChild(host);
+                } catch(exception) {
+                    // ignored if this throws an error.
+                }
+            };
+
+            shadow.querySelector("button.closeButton").onclick = close;
+            document.body.addEventListener("click", close);
         });
     }
 })();
