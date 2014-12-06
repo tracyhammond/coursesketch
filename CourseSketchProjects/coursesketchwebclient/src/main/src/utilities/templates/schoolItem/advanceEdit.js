@@ -15,11 +15,18 @@
     }
 
     /**
+     * Holds the object with the specific functions that loads data.
+     */
+    var loaderObject = {};
+
+    /**
      * yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
+     * <br>
+     * loads a name object from the schoolItem.
+     * @return the name or undefined.
      */
-    var loaderObject = {};
     loaderObject.load_name = function(schoolItemElement, schoolItemData, nodeToFill) {
         var name = "";
         if (isUndefined(schoolItemData)) {
@@ -40,6 +47,14 @@
         return undefined;
     };
 
+    /**
+     * yes I know these functions have an underscore.
+     * This is so that you don't have to dynamically capitalize the first letter.
+     * Each one returns a value if it exist otherwise undefined is returned.
+     * <br>
+     * loads a name object from the schoolItem.
+     * @return undefined or the description
+     */
     loaderObject.load_description = function(schoolItemElement, schoolItemData, nodeToFill) {
         var description = "";
         if (isUndefined(schoolItemData)) {
@@ -61,6 +76,11 @@
     };
 
     /**
+     * yes I know these functions have an underscore.
+     * This is so that you don't have to dynamically capitalize the first letter.
+     * Each one returns a value if it exist otherwise undefined is returned.
+     * <br>
+     * loads a name object from the schoolItem.
      * @return null. This returns null to differentiate it from other possible values as this is not saveable.
      */
     loaderObject.load_id = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -78,6 +98,14 @@
         return null;
     };
 
+    /**
+     * yes I know these functions have an underscore.
+     * This is so that you don't have to dynamically capitalize the first letter.
+     * Each one returns a value if it exist otherwise undefined is returned.
+     * <br>
+     * loads a functiontype object from the schoolItem.
+     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     */
     loaderObject.load_functionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (isUndefined(schoolItemData)) {
@@ -97,6 +125,14 @@
         return undefined;
     };
 
+    /**
+     * yes I know these functions have an underscore.
+     * This is so that you don't have to dynamically capitalize the first letter.
+     * Each one returns a value if it exist otherwise undefined is returned.
+     * <br>
+     * loads a time frame object from the schoolItem.
+     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     */
     loaderObject.load_timeFrameType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (isUndefined(schoolItemData)) {
@@ -116,6 +152,14 @@
         return undefined;
     };
 
+    /**
+     * yes I know these functions have an underscore.
+     * This is so that you don't have to dynamically capitalize the first letter.
+     * Each one returns a value if it exist otherwise undefined is returned.
+     * <br>
+     * loads a subtraction object from the schoolItem.
+     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     */
     loaderObject.load_subtractionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (isUndefined(schoolItemData)) {
@@ -151,6 +195,9 @@
         return mappedInput;
     }
 
+    /**
+     * Removes the advance edit panel if the school item is removed.
+     */
     SchoolItem.prototype.finalize = function() {
         if (!isUndefined(this.advanceEditPanel)) {
             if (this.advanceEditPanel.parentNode != null) {
