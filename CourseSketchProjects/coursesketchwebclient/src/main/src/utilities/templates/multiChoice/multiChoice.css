@@ -1,0 +1,41 @@
+#add {
+    cursor: pointer;
+    line-height: 2.25em;
+    margin-left: 0.3em;
+}
+
+#add:hover {
+    text-decoration: underline;
+}
+
+.answer-choice {
+    border: dotted 2px #DDD;
+    line-height: 2.25em;
+}
+
+#correct {
+    font-size: 0.7em;
+    float: right;
+}
+
+.close, .correct {
+    font-size: 2.25em;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    float: right;
+    cursor: pointer;
+}
+
+.close {
+    color: #F00;
+    margin-right: 3px;
+    font-weight: bold;
+}
+
+.correct {
+    color: #0A0;
+    width: 1em;
+    height: 1em;
+    border-left: dotted 2px #DDD;
+}
