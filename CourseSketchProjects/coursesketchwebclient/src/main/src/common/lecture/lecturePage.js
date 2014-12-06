@@ -2,6 +2,21 @@
     $(document).ready(function() {
         CourseSketch.lecturePage = [];
 
+        interact('.resize').resizable(true)
+            .on('resizemove', function (event) {
+            var target = event.target;
+        
+            // add the change in coords to the previous width of the target element
+            var
+              newWidth  = parseFloat(target.style.width ) + event.dx,
+              newHeight = parseFloat(target.style.height) + event.dy;
+        
+            // update the element's style
+            target.style.width  = newWidth + 'px';
+            target.style.height = newHeight + 'px';
+        
+            target.textContent = newWidth + '×' + newHeight;
+        });
         /**
          * Adds a new text box to the currently selected lecture slide.
          */
@@ -120,5 +135,24 @@
             }
             }, 100);
         }
+       CourseSketch.lecturePage.addPic = function(input) {
+            var imagebox = document.createElement('img');
+            imagebox.className='resize';
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $(imagebox)
+                        .attr('src', e.target.result)
+                        .width(100)
+                        .height(100);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+            //CourseSketch.lecturePage.slide.elements.push(textbox);
+            //CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.slide);
+            
+            document.querySelector("#slide-content").appendChild(imagebox);
+        } 
     });
 })();
