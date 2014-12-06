@@ -92,44 +92,45 @@
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
                 course.id = generateUUID();
+                var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
+                var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
+                lecture1.id = "firstlecture";
+                lecture2.id = "secondlecture";
+                lecture1.name = "I am a test!";
+                lecture2.name = "I am also a test!";
+                lecture1.courseId = course.id
+                lecture2.courseId = course.id;
                 setTimeout(function() {
                     dataManager.setCourse(course, function() {
-                        var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
-                        var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
-                        lecture1.id = "1";
-                        lecture2.id = "2";
-                        lecture1.name = "I am a test!";
-                        lecture2.name = "I am also a test!";
-                        lecture1.courseId = course.id;
-                        lecture2.courseId = course.id;
                         itemResult.returnText = "1Two" + ":" + lecture1.id;
                         CourseSketch.connection.sendRequest = function(message) {
                             req.otherData = dataResult.toArrayBuffer();
                             CourseSketch.connection.sendSelf(req);
                         }; //send request
-                        dataManager.insertLecture(lecture1, undefined, function() {
+                        dataManager.insertLecture(lecture1, undefined,function() {
                             itemResult.returnText = "2Two" + ":" + lecture2.id;
                             CourseSketch.connection.sendRequest = function(message) {
                                 req.otherData = dataResult.toArrayBuffer();
                                 CourseSketch.connection.sendSelf(req);
                             }; //send request
-                            dataManager.insertLecture(lecture2, undefined, function() {
-                                dataManager.getCourse(course.id, function(newCourse) {
-                                    CourseSketch.connection.sendRequest = function(){};
-                                    setTimeout(function(){}, 100);// to prevent race condiction of getting before updating
-                                    dataManager.getCourseLectures(newCourse.lectureList, function(lectureList) {
-                                        assert.ok(true, "Lectures can be fetched from the database.");
-                                        assert.equal(lectureList.length, 2, "Two lectures were inserted and two lectures were returned.");
-                                        for (var i = 0; i < lectureList.length; ++i) {
-                                            console.log(lectureList[i]);
-                                        }
-                                        QUnit.start();
-                                    }, undefined); // getCourselecture loop
-                                }); // getCourse
-                            }); // insertlecture lecture2
+                                dataManager.insertLecture(lecture2, undefined,function() {
+                                    dataManager.getCourse(course.id, function(newCourse) {
+                                        CourseSketch.connection.sendRequest = function(){};
+                                        //setTimeout(function(){
+                                            dataManager.getCourseLectures(newCourse.lectureList,  function(lectureList) {
+                                                assert.ok(true, "Lectures can be fetched from the database.");
+                                                assert.equal(lectureList.length, 2, "Two lectures were inserted and two lectures were returned.");
+                                                for (var i = 0; i < lectureList.length; ++i) {
+                                                    console.log(lectureList[i]);
+                                                }
+                                                QUnit.start();
+                                            }, undefined); // getCourselecture loop
+                                        //}, 100);// to prevent race condiction of getting before updating  
+                                    }); // getCourse
+                                }); // insertlecture lecture2 
                         }); // insertlecture lecture1
                     });
-                }, 400);
+                }, 500);
             });
 
             // new test

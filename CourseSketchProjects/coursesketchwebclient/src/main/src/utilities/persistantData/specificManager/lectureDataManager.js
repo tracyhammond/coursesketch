@@ -15,6 +15,14 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *                function to be called after the lecture setting is done
      */
     function setLecture(lecture, lectureCallback) {
+        if (isUndefined(lecture) ){
+            lectureCallback(new DatabaseException("can't set undefined lecture", "Settting lecture locally: "));
+            return;
+        }
+        if (lecture instanceof DatabaseException){
+            lectureCallback(lecture);
+            return;
+        }
         database.putInLectures(lecture.id, lecture.toBase64(), function(e, request) {
             if (!isUndefined(lectureCallback)) {
                 lectureCallback(e, request);
@@ -41,14 +49,14 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
             // it has changed while the server was processing.
             getLectureLocal(oldId, function(lecture2) {
                 deleteLecture(oldId);
-                if (!isUndefined(lecture2)) {
+                if (!isUndefined(lecture2) && !(lecture2 instanceof DatabaseException)) {
                     lecture2.id = newId;
                     setLecture(lecture2, function() {
                         lectureCallback(lecture2);
                     });
                 } else {
                     lecture.id = newId;
-                    setLecture(lecture, function() {
+                    setLecture(lecture, function(e, request) {
                         lectureCallback(lecture);
                     });
                 }
@@ -91,13 +99,14 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      */
     function insertLecture(lecture, localCallback, serverCallback) {
         setLecture(lecture, function(e, request) {
+            console.log("inserted locally :" + lecture.id)
             if (!isUndefined(localCallback)) {
                 localCallback(e, request);
             }
-            insertLectureServer(lecture, function() {
+            insertLectureServer(lecture, function(lectureUpdated) {
                 parent.getCourse(lecture.courseId, function(course) {
                     var lectureList = course.lectureList;
-                    lectureList.push(lecture.id);
+                    lectureList.push(lectureUpdated.id);
                     course.lectureList = lectureList;
                     parent.setCourse(course, function() {
                         if (!isUndefined(serverCallback)) {
