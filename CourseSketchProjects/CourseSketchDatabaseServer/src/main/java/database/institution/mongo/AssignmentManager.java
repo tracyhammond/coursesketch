@@ -1,5 +1,26 @@
 package database.institution.mongo;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import database.DatabaseAccessException;
+import database.RequestConverter;
+import database.UserUpdateHandler;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import database.auth.Authenticator.AuthType;
+import database.auth.MongoAuthenticator;
+import org.bson.types.ObjectId;
+import protobuf.srl.school.School.LatePolicy;
+import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.school.School.State;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static database.DatabaseStringConstants.ACCESS_DATE;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
@@ -25,30 +46,6 @@ import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bson.types.ObjectId;
-
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlAssignment.LatePolicy;
-import protobuf.srl.school.School.SrlPermission;
-import protobuf.srl.school.School.State;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-
-import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
-import database.auth.Authenticator.AuthType;
 
 /**
  * Manages assignments for mongo.
@@ -91,12 +88,11 @@ public final class AssignmentManager {
                 .append(MOD, assignment.getAccessPermission().getModeratorPermissionList())
                 .append(USERS, assignment.getAccessPermission().getUserPermissionList());
         if (assignment.hasLatePolicy()) {
-            query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType())
+            query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType().getNumber())
                     .append(LATE_POLICY_RATE, assignment.getLatePolicy().getRate())
-                    .append(LATE_POLICY_SUBTRACTION_TYPE, assignment.getLatePolicy().getSubtractionType());
-            if (assignment.getLatePolicy().getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
-                query.append(LATE_POLICY_TIME_FRAME_TYPE, assignment.getLatePolicy().getTimeFrameType());
-            }
+                    .append(LATE_POLICY_SUBTRACTION_TYPE, assignment.getLatePolicy().getSubtractionType().getNumber());
+
+            query.append(LATE_POLICY_TIME_FRAME_TYPE, assignment.getLatePolicy().getTimeFrameType().getNumber());
         }
         if (assignment.getProblemListList() != null) {
             query.append(PROBLEM_LIST, assignment.getProblemListList());
@@ -255,12 +251,22 @@ public final class AssignmentManager {
             final DBObject corsor, final boolean isAdmin, final boolean isMod, final long checkTime) {
         if (isAdmin || isMod) {
             final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
-            latePolicy.setFunctionType(SrlAssignment.LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
+            latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
             // safety case to string then parse to float
             latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
-            latePolicy.setSubtractionType((Boolean) corsor.get(LATE_POLICY_SUBTRACTION_TYPE));
-            if (latePolicy.getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
-                latePolicy.setTimeFrameType(SrlAssignment.LatePolicy.TimeFrame.valueOf((Integer) corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
+            try {
+                final boolean subtractionType = (Boolean) corsor.get(LATE_POLICY_SUBTRACTION_TYPE); // true is cap score.
+                if (subtractionType) {
+                    latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
+                } else {
+                    latePolicy.setSubtractionType(LatePolicy.SubtractionType.PERCENT);
+                }
+            } catch(ClassCastException e) {
+                latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
+            }
+
+            if (latePolicy.getFunctionType() == LatePolicy.FunctionType.STEPPING_FUNCTION) {
+                latePolicy.setTimeFrameType(LatePolicy.TimeFrame.valueOf((Integer) corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
             }
         }
 
