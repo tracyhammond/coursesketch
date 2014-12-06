@@ -9,7 +9,7 @@
         var mappedInput = new Map();
         for (var i = 0; i < inputList.length; i++) {
             var value = inputList[i].value;
-            mappedInput.set(inputList.dataset.prop, value);
+            mappedInput.set(inputList[i].dataset.prop, value);
         }
         return mappedInput;
     }
@@ -191,10 +191,11 @@
             var saveButton = shadow.querySelector("button.save");
             saveButton.onclick = function() {
                 var newData = getInput(shadow);
-                var schoolItem = localScope.getParentParent(parentNode);
+                var schoolItem = getHostElement(parentNode);
                 document.body.removeChild(host);
-                localScope.editFunction("advance", currentData, newData, schoolItem);
-                alert("Saving data!");
+                console.log(schoolItem);
+                console.log(localScope);
+                schoolItem.editFunction("advance", currentData, newData, schoolItem);
             };
 
             // cancel!
