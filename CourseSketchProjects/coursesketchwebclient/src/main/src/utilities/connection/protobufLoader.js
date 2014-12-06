@@ -45,6 +45,7 @@ function ProtobufSetup() {
         buildTutorial();
         buildSubmissions();
         buildLectures();
+        buildQuestion();
         return localScope;
     };
 
@@ -93,6 +94,12 @@ function ProtobufSetup() {
     function buildLectures() {
         var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "lecturedata.proto");
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
+        assignValues(ProtoSubmissionBuilder);
+    }
+
+    function buildQuestion() {
+        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "question.proto");
+        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.question;
         assignValues(ProtoSubmissionBuilder);
     }
 
