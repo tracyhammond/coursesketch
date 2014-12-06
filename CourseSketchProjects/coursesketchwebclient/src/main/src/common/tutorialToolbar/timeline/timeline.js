@@ -83,7 +83,7 @@ function Timeline () {
                 if (currentUpdate.commands.indexOf(command) < 0) {
                     currentUpdate.commands.push(command);
                 }
-                
+
                 if (!isUndefined(event)) {
                     //textBoxMarker.parentNode.removeChild(textBoxMarker);
                     console.log(textBox.createdCommand);
@@ -93,16 +93,17 @@ function Timeline () {
                 var textArea = textBox.shadowRoot.querySelector('textarea');
                 textBoxMarker.setPreviewText(textArea.value);
             };
-            
+
 			textBoxMarker.setRemoveFunction(function() {
 				closeTextBox(textBox.createdCommand);
 			});
 
 			textBox.setFinishedListener(textBoxFinishedListener);
+			textBox.saveData();
             textBoxMarker.id = textBox.id;
 		};
 	}
-    
+
 	function addTtsBoxButton (plusButton, toolArea, localScope) {
 		var ttsBoxButton = document.createElement("div");
 		ttsBoxButton.className = "ttsboxbutton";
@@ -155,7 +156,7 @@ function Timeline () {
 			$(plusButton).empty();
 		};
 	}
-	
+
 	function undoCreator () {
 		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
 			if (!isUndefined(this.commandId)) {
@@ -179,9 +180,10 @@ function Timeline () {
                 textBox.command = this;
                 textBox.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
                 textBox.setFinishedListener(textBoxFinishedListener);
+                textBox.saveData();
             }
 		});
 	}
-	
+
 }
 Timeline.prototype = Object.create(HTMLElement.prototype);
