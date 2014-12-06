@@ -121,13 +121,16 @@ function SchoolItem() {
                     $(parentNode).removeClass(editingClass);
                     $(contentElement).removeClass(editingClass);
                     parentNode.removeChild(editorElement);
-                    var oldContent = contentElement.textContent;
                     contentElement.textContent = editorElement.value;
                     // This is done because the element this function is applied is not actually in the school item.
                     // So we can find which element was actually being edited.
                     var realParent = getHostElement(parentNode);
                     if (localScope.editFunction) {
-                        localScope.editFunction(element.dataset.type, oldContent, contentElement.textContent, realParent);
+                        var oldContent = new Map();
+                        oldContent.set(element.dataset.type, contentElement.textContent);
+                        var newContent = new Map();
+                        newContent.set(element.dataset.type, contentElement.textContent);
+                        localScope.editFunction(element.dataset.type, oldContent, newContent, realParent);
                     }
                 };
                 // do something else for the advance button.
