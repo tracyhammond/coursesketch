@@ -104,7 +104,6 @@ function TextBox() {
 
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
-        this.saveData();
     };
 
     // Saves Data for the proto message based on the position, height, width, and value of the text box
