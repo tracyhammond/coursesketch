@@ -28,7 +28,7 @@ function SketchSurface() {
         if (isUndefined(this.id)) {
             this.id = generateUUID();
         }
-        SKETCHING_SURFACE_HANDLER.addElement(this);
+        CourseSketch.SKETCHING_SURFACE_HANDLER.addElement(this);
     };
 
     /**
@@ -39,14 +39,14 @@ function SketchSurface() {
         this.localInputListener = undefined;
         this.sketchEventConverter = undefined;
         this.sketch = undefined;
-        SKETCHING_SURFACE_HANDLER.deleteSketch(this.id);
+        CourseSketch.SKETCHING_SURFACE_HANDLER.deleteSketch(this.id);
     };
 
     /**
      * Creates a sketch update in the update list if it is empty so the update
      * list knows what Id to assign to subsequent events.
      */
-    this.createSketchUpdate = function() {
+    this.createSketchUpdate = function(preDefinedUpdate) {
         if (isUndefined(this.id)) {
             this.id = generateUUID();
         }
@@ -54,29 +54,41 @@ function SketchSurface() {
             var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
             var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             idChain.idChain = [ this.id ];
-            command.setCommandData(idChain.toArrayBuffer());
+            var createSketchAction = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+            if (!isUndefined(preDefinedUpdate)) {
+                createSketchAction = preDefinedUpdate;
+            } else {
+                createSketchAction.sketchId = idChain;
+                createSketchAction.x = -1;
+                createSketchAction.y = -1;
+                createSketchAction.width = -1;
+                createSketchAction.height = -1;
+            }
+            command.setCommandData(createSketchAction.toArrayBuffer());
             var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             this.updateList.addUpdate(update);
         }
     };
 
     /**
-     * Sets a function that is called when an error is created.
+     * Sets the listener that is called when an error occurs.
      */
     this.setErrorListener = function(error) {
         this.errorListener = error;
     };
 
     /**
-     * Returns the sketch data created from the update list.
+     * Returns the sketch object used by this sketch surface.
      */
     this.getSrlSketch = function() {
         return this.sketch;
     };
 
     /**
-     * Binds the sketch to a specific update list.
-     * This can only be done once.
+     * binds the sketch surface to an update list.
+     * @param UpdateManagerClass {UpdateManager instance | UpdateManager class} this takes an either an instance of an update manager.
+     * Or a update manager class that is then constructed.
+     * You can only bind an update list to a sketch once.
      */
     this.bindToUpdateList = function(UpdateManagerClass) {
         if (this.bindUpdateListCalled === false) {
@@ -87,7 +99,7 @@ function SketchSurface() {
             if (UpdateManagerClass instanceof UpdateManager) {
                 this.updateList = UpdateManagerClass;
             } else {
-                this.updateList = new UpdateManagerClass(this.sketch, this.errorListener, SKETCHING_SURFACE_HANDLER);
+                this.updateList = new UpdateManagerClass(this.sketch, this.errorListener, CourseSketch.SKETCHING_SURFACE_HANDLER);
             }
             this.bindUpdateListCalled = true;
         } else {
@@ -103,7 +115,7 @@ function SketchSurface() {
      *            {SRL_Stroke} a stroke that is added to the sketch.
      */
     function addStrokeCallback(stroke) {
-        stroke.draw(this.sketch.canvasContext);
+        stroke.draw( this.localInputListener.canvasContext);
 
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
 
@@ -121,22 +133,20 @@ function SketchSurface() {
      */
     this.initializeInput = function(InputListener, SketchEventConverter) {
         this.localInputListener = new InputListener();
-        var canvas = this.shadowRoot.querySelector("#drawingCanvas");
-        this.localInputListener.initializeCanvas(canvas);
+        this.localInputListener.initializeCanvas(this.sketchCanvas);
         var canvasContext = this.localInputListener.canvasContext;
         this.sketch.canvasContext = canvasContext;
-        this.sketchEventConverter = new SketchEventConverter(this.localInputListener, addStrokeCallback, canvasContext);
-
-        this.eventListenerElement = canvas;
-        this.sketchCanvas = canvas;
+        this.sketchEventConverter = new SketchEventConverter(this.localInputListener, addStrokeCallback.bind(this), canvasContext);
+        this.eventListenerElement = this.sketchCanvas;
 
         this.resizeSurface();
     };
 
     /**
-     * Sets the size of drawing surface of the canvas to be the same as the size its dimenions in space.
+     * resize the canvas so that its dimensions are the same as the css dimensions.  (this makes it a 1-1 ratio).
      */
     this.resizeSurface = function() {
+        console.log(this.sketchCanvas);
         this.sketchCanvas.height = $(this.sketchCanvas).height();
         this.sketchCanvas.width = $(this.sketchCanvas).width();
         this.sketch.drawEntireSketch();
@@ -146,7 +156,7 @@ function SketchSurface() {
      * Binds a function that resizes the surface every time the size of the window changes.
      */
     this.makeResizeable = function() {
-        $(window).resize(this.resizeSurface);
+        $(window).resize(this.resizeSurface.bind(this));
     };
 
     /**
@@ -157,17 +167,25 @@ function SketchSurface() {
         bindUpdateListCalled = false;
         this.sketch = new SRL_Sketch();
         this.eventListenerElement = undefined;
-        this.sketchCanvas = undefined;
     };
 
+    /**
+     * Returns the element that listens to the input events.
+     */
     this.getElementForEvents = function() {
         return this.eventListenerElement;
     };
 
+    /**
+     * returns the element where the sketch is drawn to.
+     */
     this.getElementForDrawing = function() {
-        return this.eventListenerElement;
+        return this.sketchCanvas;
     };
 
+    /**
+     * returns the update list of the element.
+     */
     this.getUpdateList = function() {
         return this.updateList;
     };
@@ -182,9 +200,10 @@ SketchSurface.prototype = Object.create(HTMLElement.prototype);
  *            {Element} an element representing the data inside tag, its content
  *            has already been imported and then added to this element.
  */
-SketchSurface.prototype.initializeElement = function(document, templateClone) {
+SketchSurface.prototype.initializeElement = function(templateClone) {
     var root = this.createShadowRoot();
     root.appendChild(templateClone);
+    this.sketchCanvas = this.shadowRoot.querySelector("#drawingCanvas");
 };
 
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchEventConverterClass, UpdateManagerClass) {

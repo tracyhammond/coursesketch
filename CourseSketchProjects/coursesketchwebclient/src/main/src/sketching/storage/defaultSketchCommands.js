@@ -9,7 +9,7 @@
      * to the sketch surface
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().prototype.getLocalSketchSurface = function() {
-        return SKETCHING_SURFACE_HANDLER.getSketch(this.sketchId);
+        return CourseSketch.SKETCHING_SURFACE_HANDLER.getSketch(this.sketchId);
     };
 
     /**
