@@ -26,8 +26,8 @@ import static database.DatabaseStringConstants.CLOSE_DATE;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.DESCRIPTION;
-import static database.DatabaseStringConstants.IS_UNLOCKED;
 import static database.DatabaseStringConstants.IS_SLIDE;
+import static database.DatabaseStringConstants.IS_UNLOCKED;
 import static database.DatabaseStringConstants.LECTURE_COLLECTION;
 import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.NAME;
@@ -55,13 +55,19 @@ public final class LectureManager {
     /**
      * Inserts a lecture into the mongo database.
      *
-     * @param authenticator the object that is performing authenticaton.
-     * @param dbs           The database where the assignment is being stored.
-     * @param userId        The id of the user that asking to insert the assignment.
-     * @param lecture       The lecture that is being inserted.
+     * @param authenticator
+     *         the object that is performing authenticaton.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param userId
+     *         The id of the user that asking to insert the assignment.
+     * @param lecture
+     *         The lecture that is being inserted.
      * @return The mongo database id of the assignment.
-     * @throws database.auth.AuthenticationException Thrown if the user did not have the authentication to perform the authentication.
-     * @throws database.DatabaseAccessException      Thrown if there are problems inserting the assignment.
+     * @throws database.auth.AuthenticationException
+     *         Thrown if the user did not have the authentication to perform the authentication.
+     * @throws database.DatabaseAccessException
+     *         Thrown if there are problems inserting the assignment.
      */
     public static String mongoInsertLecture(final Authenticator authenticator, final DB dbs, final String userId, final Lecture lecture)
             throws AuthenticationException, DatabaseAccessException {
@@ -110,11 +116,15 @@ public final class LectureManager {
      * This is used to copy permissions from the parent course into the current
      * lecture.
      *
-     * @param dbs       the database where the data is stored.
-     * @param lectureId the id of the assignment that is getting permissions.
-     * @param ids       the list of list of permissions that is getting added.
+     * @param dbs
+     *         the database where the data is stored.
+     * @param lectureId
+     *         the id of the assignment that is getting permissions.
+     * @param ids
+     *         the list of list of permissions that is getting added.
      */
-    /*package-private*/ static void mongoInsertDefaultGroupId(final DB dbs, final String lectureId, final List<String>[] ids) {
+    /*package-private*/
+    static void mongoInsertDefaultGroupId(final DB dbs, final String lectureId, final List<String>[] ids) {
         final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
         final DBObject cursor = myDbRef.fetch();
         final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
@@ -128,16 +138,23 @@ public final class LectureManager {
     /**
      * Grabs the lecture from mongo and performs checks making sure the user is valid before returning the lecture.
      *
-     * @param authenticator the object that is performing authentication.
-     * @param dbs           The database where the assignment is being stored.
-     * @param lectureId     the id of the lecture that is being grabbed.
-     * @param userId        The id of the user that asking to insert the lecture.
-     * @param checkTime     The time that the assignment was asked to be grabbed. (used to
-     *                      check if the lecture is valid)
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param lectureId
+     *         the id of the lecture that is being grabbed.
+     * @param userId
+     *         The id of the user that asking to insert the lecture.
+     * @param checkTime
+     *         The time that the assignment was asked to be grabbed. (used to
+     *         check if the lecture is valid)
      * @return The lecture from the database.
-     * @throws AuthenticationException Thrown if the user did not have the authentication to get the
-     *                                 assignment.
-     * @throws DatabaseAccessException Thrown if there are problems retrieving the lecture.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the
+     *         assignment.
+     * @throws DatabaseAccessException
+     *         Thrown if there are problems retrieving the lecture.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static Lecture mongoGetLecture(final Authenticator authenticator, final DB dbs, final String lectureId, final String userId,
@@ -230,8 +247,10 @@ public final class LectureManager {
     /**
      * sets data of the lecture from the given cursor.
      *
-     * @param exactLecture The lecture that the data is being set to.
-     * @param cursor       The database cursor pointing to a specific lecture.
+     * @param exactLecture
+     *         The lecture that the data is being set to.
+     * @param cursor
+     *         The database cursor pointing to a specific lecture.
      */
     private static void setLectureData(final Lecture.Builder exactLecture, final DBObject cursor) {
         exactLecture.setCourseId((String) cursor.get(COURSE_ID));
@@ -242,8 +261,10 @@ public final class LectureManager {
     /**
      * Sets data about the state of the lecture and its date.
      *
-     * @param exactLecture a protobuf lecture builder.
-     * @param corsor       the current database pointer for the lecture.
+     * @param exactLecture
+     *         a protobuf lecture builder.
+     * @param corsor
+     *         the current database pointer for the lecture.
      */
     private static void setLectureStateAndDate(final Lecture.Builder exactLecture, final DBObject corsor) {
         final Object accessDate = corsor.get(ACCESS_DATE);
@@ -266,9 +287,12 @@ public final class LectureManager {
      * With that being said this allows a course to be updated adding the
      * slideId to its list of items.
      *
-     * @param dbs       The database where the assignment is being stored.
-     * @param lectureId  the course into which the assignment is being inserted into
-     * @param slideId the assignment that is being inserted into the course.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param lectureId
+     *         the course into which the assignment is being inserted into
+     * @param slideId
+     *         the assignment that is being inserted into the course.
      * @return true if the assignment was inserted correctly.
      */
     static boolean mongoInsertSlideIntoLecture(final DB dbs, final String lectureId, final String slideId, final boolean unlocked) {

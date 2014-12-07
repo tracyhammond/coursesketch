@@ -13,7 +13,6 @@ import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
-import static protobuf.srl.lecturedata.Lecturedata.LectureElement.ElementTypeCase;
 import protobuf.srl.school.School;
 
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ import static database.DatabaseStringConstants.CLOSE_DATE;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.DESCRIPTION;
+import static database.DatabaseStringConstants.ELEMENT_LIST;
 import static database.DatabaseStringConstants.LECTURE_COLLECTION;
 import static database.DatabaseStringConstants.LECTURE_ID;
 import static database.DatabaseStringConstants.MOD;
@@ -41,7 +41,6 @@ import static database.DatabaseStringConstants.X_DIMENSION;
 import static database.DatabaseStringConstants.X_POSITION;
 import static database.DatabaseStringConstants.Y_DIMENSION;
 import static database.DatabaseStringConstants.Y_POSITION;
-import static database.DatabaseStringConstants.ELEMENT_LIST;
 
 /**
  * Manages lectures for mongo.
@@ -61,13 +60,19 @@ public final class SlideManager {
     /**
      * Inserts a lecture into the mongo database.
      *
-     * @param authenticator the object that is performing authenticaton.
-     * @param dbs           The database where the slide is being stored.
-     * @param userId        The id of the user that asking to insert the slide.
-     * @param slide       The slide that is being inserted.
+     * @param authenticator
+     *         the object that is performing authenticaton.
+     * @param dbs
+     *         The database where the slide is being stored.
+     * @param userId
+     *         The id of the user that asking to insert the slide.
+     * @param slide
+     *         The slide that is being inserted.
      * @return The mongo database id of the assignment.
-     * @throws database.auth.AuthenticationException Thrown if the user did not have the authentication to perform the authentication.
-     * @throws database.DatabaseAccessException      Thrown if there are problems inserting the assignment.
+     * @throws database.auth.AuthenticationException
+     *         Thrown if the user did not have the authentication to perform the authentication.
+     * @throws database.DatabaseAccessException
+     *         Thrown if there are problems inserting the assignment.
      */
     public static String mongoInsertSlide(final Authenticator authenticator, final DB dbs, final String userId, final LectureSlide slide)
             throws AuthenticationException, DatabaseAccessException {
@@ -79,7 +84,7 @@ public final class SlideManager {
         }
         final BasicDBObject query = new BasicDBObject(LECTURE_ID, slide.getLectureId());
         final ArrayList list = new ArrayList();
-        for (Lecturedata.LectureElement element:slide.getElementsList()) {
+        for (Lecturedata.LectureElement element : slide.getElementsList()) {
             list.add(createQueryFromElement(element));
         }
         query.append(ELEMENT_LIST, list);
@@ -92,7 +97,7 @@ public final class SlideManager {
         return cursor.get(SELF_ID).toString();
     }
 
-    private static BasicDBObject createQueryFromElement(Lecturedata.LectureElement e){
+    private static BasicDBObject createQueryFromElement(Lecturedata.LectureElement e) {
         BasicDBObject query = new BasicDBObject(SELF_ID, e.getId())
                 .append(X_POSITION, e.getXPosition())
                 .append(Y_POSITION, e.getYPosition())
@@ -100,26 +105,40 @@ public final class SlideManager {
                 .append(Y_DIMENSION, e.getYDimension())
                 .append(SLIDE_BLOB_TYPE, e.getElementTypeCase().getNumber());
         switch (e.getElementTypeCase()) {
-            case IMAGE: query.append(SLIDE_BLOB, e.getImage().toByteArray());break;
-            case TEXTBOX: query.append(SLIDE_BLOB, e.getTextBox().toByteArray());break;
-            case SKETCHAREA: query.append(SLIDE_BLOB, e.getSketchArea().toByteArray());break;
-            case QUESTION: query.append(SLIDE_BLOB, e.getQuestion().toByteArray());break;
+            case IMAGE:
+                query.append(SLIDE_BLOB, e.getImage().toByteArray());
+                break;
+            case TEXTBOX:
+                query.append(SLIDE_BLOB, e.getTextBox().toByteArray());
+                break;
+            case SKETCHAREA:
+                query.append(SLIDE_BLOB, e.getSketchArea().toByteArray());
+                break;
+            case QUESTION:
+                query.append(SLIDE_BLOB, e.getQuestion().toByteArray());
+                break;
             case ELEMENTTYPE_NOT_SET:
-            default:break;
+            default:
+                break;
         }
         return query;
     }
+
     /**
      * NOTE: This is meant for internal use do not make this method public
      * <p/>
      * This is used to copy permissions from the parent course into the current
      * lecture.
      *
-     * @param dbs       the database where the data is stored.
-     * @param lectureId the id of the assignment that is getting permissions.
-     * @param ids       the list of list of permissions that is getting added.
+     * @param dbs
+     *         the database where the data is stored.
+     * @param lectureId
+     *         the id of the assignment that is getting permissions.
+     * @param ids
+     *         the list of list of permissions that is getting added.
      */
-    /*package-private*/ static void mongoInsertDefaultGroupId(final DB dbs, final String lectureId, final List<String>[] ids) {
+    /*package-private*/
+    static void mongoInsertDefaultGroupId(final DB dbs, final String lectureId, final List<String>[] ids) {
         final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
         final DBObject cursor = myDbRef.fetch();
         final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
@@ -133,16 +152,23 @@ public final class SlideManager {
     /**
      * Grabs the lecture from mongo and performs checks making sure the user is valid before returning the lecture.
      *
-     * @param authenticator the object that is performing authentication.
-     * @param dbs           The database where the assignment is being stored.
-     * @param lectureId     the id of the lecture that is being grabbed.
-     * @param userId        The id of the user that asking to insert the lecture.
-     * @param checkTime     The time that the assignment was asked to be grabbed. (used to
-     *                      check if the lecture is valid)
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param lectureId
+     *         the id of the lecture that is being grabbed.
+     * @param userId
+     *         The id of the user that asking to insert the lecture.
+     * @param checkTime
+     *         The time that the assignment was asked to be grabbed. (used to
+     *         check if the lecture is valid)
      * @return The lecture from the database.
-     * @throws AuthenticationException Thrown if the user did not have the authentication to get the
-     *                                 assignment.
-     * @throws DatabaseAccessException Thrown if there are problems retrieving the lecture.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the
+     *         assignment.
+     * @throws DatabaseAccessException
+     *         Thrown if there are problems retrieving the lecture.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static Lecture mongoGetLecture(final Authenticator authenticator, final DB dbs, final String lectureId, final String userId,
@@ -229,8 +255,10 @@ public final class SlideManager {
     /**
      * sets data of the lecture from the given cursor.
      *
-     * @param exactLecture The lecture that the data is being set to.
-     * @param cursor       The database cursor pointing to a specific lecture.
+     * @param exactLecture
+     *         The lecture that the data is being set to.
+     * @param cursor
+     *         The database cursor pointing to a specific lecture.
      */
     private static void setLectureData(final Lecture.Builder exactLecture, final DBObject cursor) {
         exactLecture.setCourseId((String) cursor.get(COURSE_ID));
@@ -241,8 +269,10 @@ public final class SlideManager {
     /**
      * Sets data about the state of the lecture and its date.
      *
-     * @param exactLecture a protobuf lecture builder.
-     * @param corsor       the current database pointer for the lecture.
+     * @param exactLecture
+     *         a protobuf lecture builder.
+     * @param corsor
+     *         the current database pointer for the lecture.
      */
     private static void setLectureStateAndDate(final Lecture.Builder exactLecture, final DBObject corsor) {
         final Object accessDate = corsor.get(ACCESS_DATE);
