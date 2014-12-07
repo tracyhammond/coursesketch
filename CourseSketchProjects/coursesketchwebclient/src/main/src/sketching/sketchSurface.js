@@ -24,7 +24,7 @@ function SketchSurface() {
         if (isUndefined(this.id)) {
             this.id = generateUUID();
         }
-        SKETCHING_SURFACE_HANDLER.addElement(this);
+        CourseSketch.SKETCHING_SURFACE_HANDLER.addElement(this);
     };
 
     /**
@@ -35,14 +35,14 @@ function SketchSurface() {
         this.localInputListener = undefined;
         this.sketchEventConverter = undefined;
         this.sketch = undefined;
-        SKETCHING_SURFACE_HANDLER.deleteSketch(this.id);
+        CourseSketch.SKETCHING_SURFACE_HANDLER.deleteSketch(this.id);
     };
 
     /**
      * Creates a sketch update in the update list if it is empty so the update
      * list knows what Id to assign to subsequent events.
      */
-    this.createSketchUpdate = function() {
+    this.createSketchUpdate = function(preDefinedUpdate) {
         if (isUndefined(this.id)) {
             this.id = generateUUID();
         }
@@ -50,7 +50,17 @@ function SketchSurface() {
             var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
             var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             idChain.idChain = [ this.id ];
-            command.setCommandData(idChain.toArrayBuffer());
+            var createSketchAction = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+            if (!isUndefined(preDefinedUpdate)) {
+                createSketchAction = preDefinedUpdate;
+            } else {
+                createSketchAction.sketchId = idChain;
+                createSketchAction.x = -1;
+                createSketchAction.y = -1;
+                createSketchAction.width = -1;
+                createSketchAction.height = -1;
+            }
+            command.setCommandData(createSketchAction.toArrayBuffer());
             var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
             this.updateList.addUpdate(update);
         }
@@ -73,7 +83,7 @@ function SketchSurface() {
             if (UpdateManagerClass instanceof UpdateManager) {
                 this.updateList = UpdateManagerClass;
             } else {
-                this.updateList = new UpdateManagerClass(this.sketch, this.errorListener, SKETCHING_SURFACE_HANDLER);
+                this.updateList = new UpdateManagerClass(this.sketch, this.errorListener, CourseSketch.SKETCHING_SURFACE_HANDLER);
             }
             this.bindUpdateListCalled = true;
         } else {
@@ -89,7 +99,7 @@ function SketchSurface() {
      *            {SRL_Stroke} a stroke that is added to the sketch.
      */
     function addStrokeCallback(stroke) {
-        stroke.draw(this.sketch.canvasContext);
+        stroke.draw( this.localInputListener.canvasContext);
 
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
 
@@ -107,26 +117,24 @@ function SketchSurface() {
      */
     this.initializeInput = function(InputListener, SketchEventConverter) {
         this.localInputListener = new InputListener();
-        var canvas = this.shadowRoot.querySelector("#drawingCanvas");
-        this.localInputListener.initializeCanvas(canvas);
+        this.localInputListener.initializeCanvas(this.sketchCanvas);
         var canvasContext = this.localInputListener.canvasContext;
         this.sketch.canvasContext = canvasContext;
-        this.sketchEventConverter = new SketchEventConverter(this.localInputListener, addStrokeCallback, canvasContext);
-
-        this.eventListenerElement = canvas;
-        this.sketchCanvas = canvas;
+        this.sketchEventConverter = new SketchEventConverter(this.localInputListener, addStrokeCallback.bind(this), canvasContext);
+        this.eventListenerElement = this.sketchCanvas;
 
         this.resizeSurface();
     };
 
     this.resizeSurface = function() {
+        console.log(this.sketchCanvas);
         this.sketchCanvas.height = $(this.sketchCanvas).height();
         this.sketchCanvas.width = $(this.sketchCanvas).width();
         this.sketch.drawEntireSketch();
     };
 
     this.makeResizeable = function() {
-        $(window).resize(this.resizeSurface);
+        $(window).resize(this.resizeSurface.bind(this));
     };
 
     /**
@@ -137,7 +145,6 @@ function SketchSurface() {
         bindUpdateListCalled = false;
         this.sketch = new SRL_Sketch();
         this.eventListenerElement = undefined;
-        this.sketchCanvas = undefined;
     };
 
     this.getElementForEvents = function() {
@@ -162,9 +169,10 @@ SketchSurface.prototype = Object.create(HTMLElement.prototype);
  *            {Element} an element representing the data inside tag, its content
  *            has already been imported and then added to this element.
  */
-SketchSurface.prototype.initializeElement = function(document, templateClone) {
+SketchSurface.prototype.initializeElement = function(templateClone) {
     var root = this.createShadowRoot();
     root.appendChild(templateClone);
+    this.sketchCanvas = this.shadowRoot.querySelector("#drawingCanvas");
 };
 
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchEventConverterClass, UpdateManagerClass) {
