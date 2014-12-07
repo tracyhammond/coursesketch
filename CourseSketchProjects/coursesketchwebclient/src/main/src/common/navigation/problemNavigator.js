@@ -46,29 +46,51 @@ function schoolNavigator(assignmentId, loop, preferredIndex) {
 		currentIndex = preferredIndex;
 	}
 
+	/**
+	 * changes the problem to the current index.
+	 */
 	this.refresh = function() {
 		changeProblem(currentIndex);
 	};
 
+	/**
+	 * @return {Boolean} true if the data has been loaded.
+	 */
 	this.isDataLoaded = function() {
 		return dataLoaded;
 	};
 
+	/**
+	 * @param {Boolean} true if the ui has been loaded.
+	 */
 	this.setUiLoaded = function(value) {
 		uiLoaded = value;
 	};
 
+	/**
+	 * Returns the information of the current problem.
+	 */
 	function getProblemInfo() {
 		return currentProblem.problemInfo;
 	}
 
 	/**
 	 * Scopes the index for the callbackList.
+	 * this way the browser is not locked up by callbacks.
 	 */
 	function callBacker(scopedIndex) {
 		setTimeout(function() {callbackList[scopedIndex](navScope);},20);
 	}
 
+	/**
+	 * Changes the problem to the given index.
+	 *
+	 * @param index {Number} the index we want to switch to.
+	 * If looping is set to false then if given an index out of bounds this function returns immediately.
+	 * Otherwise the index is set to either 0 or the end of the list depending on how it is out of bounds.
+	 * After changing the index all of the set callbacks are called.
+	 * Order of the callbacks is not guaranteed.
+	 */
 	function changeProblem(index) {
 		if (index < 0 || index >= problemList.length && !loop) {
 			return;
@@ -90,7 +112,7 @@ function schoolNavigator(assignmentId, loop, preferredIndex) {
 	}
 
 	/**
-	 * adds a callback that is called 
+	 * adds a callback that is called when changing problem index.
 	 */
 	this.addCallback = function(callback) {
 		callbackList.push(callback);
@@ -111,14 +133,14 @@ function schoolNavigator(assignmentId, loop, preferredIndex) {
 	};
 
 	/**
-	 * Returns the current problem number in a human readable format
+	 * Returns the current problem number in a human readable format.
 	 */
 	this.getCurrentNumber = function() {
 		return currentIndex + 1;
 	};
 
 	/**
-	 * Returns the current problem number in a human readable format
+	 * Returns the number of problems seen by this problem Navigator.
 	 */
 	this.getLength = function() {
 		return problemList.length;
@@ -151,10 +173,8 @@ function schoolNavigator(assignmentId, loop, preferredIndex) {
 
 	/**
 	 * Returns the type of the base problem.
-	 *
-	 * This should be the first subProblem all subsequent subproblems are handled in different ways.
 	 */
-	this.getPoblemType = function() {
+	this.getProblemType = function() {
 		var type = getProblemInfo().questionType;
 		if (type == 1) {
 			return "SKETCH";
@@ -192,7 +212,7 @@ function schoolNavigator(assignmentId, loop, preferredIndex) {
 	this.reloadProblems();
 
 	/**
-	 * Add an event mapping for a specific callback
+	 * Add an event mapping for a specific callback.
 	 */
 	this.addEventMapping = function(key, funct) {
 		if (isUndefined(eventMappingCallback[key])) {
