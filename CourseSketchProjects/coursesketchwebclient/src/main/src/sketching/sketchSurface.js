@@ -66,14 +66,26 @@ function SketchSurface() {
         }
     };
 
+    /**
+     * Sets the listener that is called when an error occurs.
+     */
     this.setErrorListener = function(error) {
         this.errorListener = error;
     };
 
+    /**
+     * Returns the sketch object used by this sketch surface.
+     */
     this.getSrlSketch = function() {
         return this.sketch;
     };
 
+    /**
+     * binds the sketch surface to an update list.
+     * @param UpdateManagerClass {UpdateManager instance | UpdateManager class} this takes an either an instance of an update manager.
+     * Or a update manager class that is then constructed.
+     * You can only bind an update list to a sketch once.
+     */
     this.bindToUpdateList = function(UpdateManagerClass) {
         if (this.bindUpdateListCalled === false) {
             this.updateList = undefined;
