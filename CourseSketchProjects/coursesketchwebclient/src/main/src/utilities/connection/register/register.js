@@ -125,6 +125,7 @@ function RegisterSystem() {
             loginInfo.password = "" + arg2;
             loginInfo.email = email;
             loginInfo.isRegistering = true;
+            loginInfo.isInstructor = isInstructor;
             var request = CourseSketch.PROTOBUF_UTIL.Request();
 
             if (!isUndefined(request.setLogin)) {
