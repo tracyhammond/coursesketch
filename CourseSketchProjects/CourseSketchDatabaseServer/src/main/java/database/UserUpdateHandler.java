@@ -1,5 +1,20 @@
 package database;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import database.auth.AuthenticationException;
+import database.institution.mongo.MongoInstitution;
+import database.institution.mongo.UpdateManager;
+import org.bson.BasicBSONObject;
+import org.bson.types.ObjectId;
+import protobuf.srl.school.School.SrlSchool;
+import utilities.TimeManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static database.DatabaseStringConstants.CLASSIFICATION;
 import static database.DatabaseStringConstants.GROUP_PREFIX;
 import static database.DatabaseStringConstants.GROUP_PREFIX_LENGTH;
@@ -7,24 +22,6 @@ import static database.DatabaseStringConstants.TIME;
 import static database.DatabaseStringConstants.UPDATEID;
 import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
 import static database.DatabaseStringConstants.USER_LIST;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bson.BasicBSONObject;
-import org.bson.types.ObjectId;
-
-import protobuf.srl.school.School.SrlSchool;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-
-import utilities.TimeManager;
-import database.auth.AuthenticationException;
-import database.institution.mongo.MongoInstitution;
-import database.institution.mongo.UpdateManager;
 
 /**
  * Hanldes updates for the user so that the system can do heavy caching on the client.
@@ -57,6 +54,11 @@ public final class UserUpdateHandler {
      * The classification of an update if it for a course problem.
      */
     public static final String COURSE_PROBLEM_CLASSIFICATION = "COURSE_PROBLEM";
+
+    /**
+     * The classification of an update if it for a lecture.
+     */
+    public static final String LECTURE_CLASSIFICATION = "LECTURE";
 
     /**
      * Private constructor.
