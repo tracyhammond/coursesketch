@@ -126,6 +126,9 @@ function SketchSurface() {
         this.resizeSurface();
     };
 
+    /**
+     * resize the canvas so that its dimensions are the same as the css dimensions.  (this makes it a 1-1 ratio).
+     */
     this.resizeSurface = function() {
         console.log(this.sketchCanvas);
         this.sketchCanvas.height = $(this.sketchCanvas).height();
@@ -133,6 +136,9 @@ function SketchSurface() {
         this.sketch.drawEntireSketch();
     };
 
+    /**
+     * Tells the canvas to resize when the window is resized.
+     */
     this.makeResizeable = function() {
         $(window).resize(this.resizeSurface.bind(this));
     };
@@ -147,14 +153,23 @@ function SketchSurface() {
         this.eventListenerElement = undefined;
     };
 
+    /**
+     * Returns the element that listens to the input events.
+     */
     this.getElementForEvents = function() {
         return this.eventListenerElement;
     };
 
+    /**
+     * returns the element where the sketch is drawn to.
+     */
     this.getElementForDrawing = function() {
-        return this.eventListenerElement;
+        return this.sketchCanvas;
     };
 
+    /**
+     * returns the update list of the element.
+     */
     this.getUpdateList = function() {
         return this.updateList;
     };
