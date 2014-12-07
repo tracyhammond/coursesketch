@@ -12,12 +12,13 @@
 }
 
 .buttons {
+    background-color: #B8B8B8;
     float:right;
     width: 15%;
     height: 100%
 }
 button {
-    height:calc(100% / 3);
+    height:calc(100% / 2);
     width:100%;
 }
 
@@ -34,11 +35,11 @@ button {
      background-position: center;
 }
 
-.redoButton {
+/*.redoButton {
      background: url("/images/MultiView/redobtn.svg");
      background-repeat: no-repeat;
      background-position: center;
-}
+}*/
 
 sketch-surface {
     float:left;

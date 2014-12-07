@@ -227,7 +227,7 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchE
         this.createSketchUpdate();
     }
 
-    if (!isUndefined(this.dataset) && !(isUndefined(this.dataset.autoresize)) {
+    if (!isUndefined(this.dataset) && !(isUndefined(this.dataset.autoresize))) {
         this.makeResizeable();
     }
 };
