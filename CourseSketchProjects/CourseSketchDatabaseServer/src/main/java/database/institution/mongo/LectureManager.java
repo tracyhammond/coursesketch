@@ -209,7 +209,7 @@ public final class LectureManager {
 
         setLectureStateAndDate(exactLecture, corsor);
 
-        // if you are a user, the assignment must be open to view the problems
+        // if you are a user, the lecture must be open to view the insides
         if (isAdmin || isMod || (isUsers
                 && Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate()))) {
             if (corsor.get(PROBLEM_LIST) != null) {
