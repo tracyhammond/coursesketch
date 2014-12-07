@@ -40,7 +40,7 @@
             var newElement = new SketchSurface();
 
             SketchSurface.prototype.createdCallback = function() {
-                this.initializeElement(document, clone.cloneNode(true));
+                this.initializeElement(clone.cloneNode(true));
             };
 
             SketchSurface.prototype.attachedCallback = function() {

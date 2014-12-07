@@ -1,7 +1,4 @@
 function SchoolItem() {
-    var shadowRoot = undefined;
-    var isOverflow = false;
-    var editFunction = undefined;
 
     /**
      * @param templateClone
@@ -10,8 +7,8 @@ function SchoolItem() {
      *            element.
      */
     this.initializeElement = function(templateClone) {
-        shadowRoot = this.createShadowRoot();
-        shadowRoot.appendChild(templateClone);
+        this.createShadowRoot();
+        this.shadowRoot.appendChild(templateClone);
         this.checkOverflow();
         this.buildExpandEvent();
         this.setUpEditButtons();
@@ -21,12 +18,12 @@ function SchoolItem() {
      * Checks for overflow in an element.
      */
     this.checkOverflow = function() {
-        var descriptionHolder = shadowRoot.querySelector('.description');
-        var descriptionContent = shadowRoot.querySelector('.description content');
+        var descriptionHolder = this.shadowRoot.querySelector('.description');
+        var descriptionContent = this.shadowRoot.querySelector('.description content');
 
         var nodes = descriptionContent.getDistributedNodes();
         if (!nodes || nodes == null || nodes.length == 0) {
-            isOverflow = false;
+            descriptionContent.dataset.overflow = "false";
             return false;
         }
         var element = nodes[0];
@@ -50,7 +47,8 @@ function SchoolItem() {
             }
         }
         var padding = 20; // left right padding is 10
-        isOverflow = checkTextOverflow(usedWidth - padding, text, $(element).css('font'));
+        var isOverflow = checkTextOverflow(usedWidth - padding, text, $(element).css('font'));
+        descriptionContent.dataset.overflow = ""+isOverflow;
         return isOverflow;
     };
 
@@ -72,19 +70,18 @@ function SchoolItem() {
      * Builds the event for what happens when expanding content.
      */
     this.buildExpandEvent = function() {
-        if (!isOverflow) {
+        if (!this.isDescriptionOverflow()) {
             return; // do nothing if there is no overflow
         }
 
-        var paragraph = shadowRoot.querySelector('.description p');
+        var paragraph = this.shadowRoot.querySelector('.description p');
         $(paragraph).addClass("overflow");
 
-        var descriptionContent = shadowRoot.querySelector('.description content');
-
+        var descriptionContent = this.shadowRoot.querySelector('.description content');
         var nodes = descriptionContent.getDistributedNodes();
         var contentElement = nodes[0];
 
-        var button = shadowRoot.querySelector('.description p + p');
+        var button = this.shadowRoot.querySelector('.description p + p');
         var expanded = true;
         $(button).click(function() {
             if ($(button).hasClass('expand')) {
@@ -101,25 +98,6 @@ function SchoolItem() {
         });
     };
 
-    function advanceEditPanel(element, localScope) {
-        $(element).click(function(event) {
-            event.stopPropagation();
-            clone = localScope.getAdvanceEditPanel();
-            var host = document.createElement("dialog");
-            host.className = "advanceEditHost";
-            var pos = $(localScope).offset();
-            var leftPos = (pos.left + $(localScope).width());
-            $(host).offset({top:pos.top, left:leftPos});
-            var shadow = host.createShadowRoot();
-            shadow.appendChild(clone);
-            document.body.appendChild(host);
-            var saveButton = shadow.querySelector("button");
-            saveButton.onclick = function() {
-                alert("Saving data!");
-            };
-        });
-    }
-
     /**
      * Sets up what happens when an edit button is clicked.
      */
@@ -131,14 +109,9 @@ function SchoolItem() {
 
         var editingClass = 'currentlyEditing';
         // calls the function for ever instance of the editButton
-        var list = shadowRoot.querySelectorAll('.editButton');
-        for (var i = 0; i < list.length; ++i) {
+        var list = localScope.shadowRoot.querySelectorAll('.editButton');
+        for(var i = 0; i < list.length; ++i) {
             (function(element) {
-	            // do something else for the advance button.
-	            if ($(element).hasClass("advanceButton")) {
-	                advanceEditPanel(element, localScope);
-	                return;
-	            }
                 var parentNode = element.parentNode;
                 var content = parentNode.querySelector('content');
                 var nodes = content.getDistributedNodes();
@@ -151,11 +124,24 @@ function SchoolItem() {
                     parentNode.removeChild(editorElement);
                     var oldContent = contentElement.textContent;
                     contentElement.textContent = editorElement.value;
-                    var realParent = getParentParent(parentNode);
-                    if (editFunction) {
-                        editFunction(element.dataset.type, oldContent, contentElement.textContent, realParent);
+                    // This is done because the element this function is applied is not actually in the school item.
+                    // So we can find which element was actually being edited.
+                    var realParent = getHostElement(parentNode);
+                    if (localScope.editFunction) {
+                        var oldData = new Map();
+                        oldData.set(element.dataset.type, oldContent);
+                        var newData = new Map();
+                        newData.set(element.dataset.type, contentElement.textContent);
+                        localScope.editFunction(element.dataset.type, oldData, newData, realParent);
                     }
                 };
+                // do something else for the advance button.
+                if ($(element).hasClass("advanceButton")) {
+                    if (localScope.createAdvanceEditPanel) {
+                        localScope.createAdvanceEditPanel(element, localScope, parentNode);
+                    }
+                    return;
+                }
                 element.onclick = function(event) {
                     localScope.dataset.isediting = true;
                     event.stopPropagation();
@@ -176,18 +162,10 @@ function SchoolItem() {
                     }
                     return false;
                 }; // Click
-            })(list[i]); // anonomous.
+            })(list[i]); // function wrapper.
         } // Loop
     };
 
-    function getParentParent(parent) {
-        var grandParent = parent.parentNode;
-        while (grandParent != null) {
-            parent = grandParent;
-            grandParent = grandParent.parentNode;
-        }
-        return parent.host;
-    }
     /**
      * Should create a special editor element based on its state.
      */
@@ -196,10 +174,10 @@ function SchoolItem() {
     }
 
     /**
-     * Returns true if the description has larger text size than is allowed.
+     * @returns True if the description has larger text size than is allowed.
      */
     this.isDescriptionOverflow = function() {
-        return isOverflow;
+        return this.shadowRoot.querySelector('.description content').dataset.overflow ===  'true';
     };
 
     /**
@@ -214,9 +192,24 @@ function SchoolItem() {
      *                to.
      */
     this.setEditCallback = function(func) {
-        editFunction = func;
+        this.editFunction = func;
     };
 }
+
+/**
+ * {@link} parent {Node} the parent of a node contained within a school item shadow dom.
+ * This method traverses up the parent chain until it reaches a null node. It then returns the host.
+ * This is used to find the parent of a shadow root which contains the given node.
+ * @return {Node} the host element that contains this node.
+ */
+var getHostElement = function(parent) {
+    var grandParent = parent.parentNode;
+    while (grandParent != null) {
+        parent = grandParent;
+        grandParent = grandParent.parentNode;
+    }
+    return parent.host;
+};
 
 SchoolItem.prototype.schoolItemData = undefined;
 
