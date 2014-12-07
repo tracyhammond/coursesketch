@@ -7,35 +7,41 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.RequestConverter;
-import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.lecturedata.Lecturedata;
-import protobuf.srl.lecturedata.Lecturedata.Lecture;
+import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import static protobuf.srl.lecturedata.Lecturedata.LectureElement.ElementTypeCase;
 import protobuf.srl.school.School;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ACCESS_DATE;
-import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.CLOSE_DATE;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.DESCRIPTION;
-import static database.DatabaseStringConstants.IS_UNLOCKED;
-import static database.DatabaseStringConstants.IS_SLIDE;
 import static database.DatabaseStringConstants.LECTURE_COLLECTION;
+import static database.DatabaseStringConstants.LECTURE_ID;
 import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SLIDES;
+import static database.DatabaseStringConstants.SLIDE_BLOB;
+import static database.DatabaseStringConstants.SLIDE_BLOB_TYPE;
+import static database.DatabaseStringConstants.SLIDE_COLLECTION;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
+import static database.DatabaseStringConstants.X_DIMENSION;
+import static database.DatabaseStringConstants.X_POSITION;
+import static database.DatabaseStringConstants.Y_DIMENSION;
+import static database.DatabaseStringConstants.Y_POSITION;
+import static database.DatabaseStringConstants.ELEMENT_LIST;
 
 /**
  * Manages lectures for mongo.
@@ -44,66 +50,65 @@ import static database.DatabaseStringConstants.USERS;
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
         "PMD.UselessParentheses" })
-public final class LectureManager {
+public final class SlideManager {
 
     /**
      * Private constructor.
      */
-    private LectureManager() {
+    private SlideManager() {
     }
 
     /**
      * Inserts a lecture into the mongo database.
      *
      * @param authenticator the object that is performing authenticaton.
-     * @param dbs           The database where the assignment is being stored.
-     * @param userId        The id of the user that asking to insert the assignment.
-     * @param lecture       The lecture that is being inserted.
+     * @param dbs           The database where the slide is being stored.
+     * @param userId        The id of the user that asking to insert the slide.
+     * @param slide       The slide that is being inserted.
      * @return The mongo database id of the assignment.
      * @throws database.auth.AuthenticationException Thrown if the user did not have the authentication to perform the authentication.
      * @throws database.DatabaseAccessException      Thrown if there are problems inserting the assignment.
      */
-    public static String mongoInsertLecture(final Authenticator authenticator, final DB dbs, final String userId, final Lecture lecture)
+    public static String mongoInsertSlide(final Authenticator authenticator, final DB dbs, final String userId, final LectureSlide slide)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection newUser = dbs.getCollection(LECTURE_COLLECTION);
+        final DBCollection newUser = dbs.getCollection(SLIDE_COLLECTION);
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckAdminOrMod(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, lecture.getCourseId(), userId, 0, auth)) {
+        if (!authenticator.isAuthenticated(LECTURE_COLLECTION, slide.getLectureId(), userId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
-        final BasicDBObject query = new BasicDBObject(COURSE_ID, lecture.getCourseId())
-                .append(NAME, lecture.getName())
-                .append(DESCRIPTION, lecture.getDescription())
-                .append(ADMIN, lecture.getAccessPermission().getAdminPermissionList())
-                .append(MOD, lecture.getAccessPermission().getModeratorPermissionList())
-                .append(USERS, lecture.getAccessPermission().getUserPermissionList());
-        if (lecture.hasAccessDate()) {
-            query.append(ACCESS_DATE, lecture.getAccessDate().getMillisecond());
-        } else {
-            query.append(ACCESS_DATE, RequestConverter.getProtoFromMilliseconds(0).getMillisecond());
+        final BasicDBObject query = new BasicDBObject(LECTURE_ID, slide.getLectureId());
+        final ArrayList list = new ArrayList();
+        for (Lecturedata.LectureElement element:slide.getElementsList()) {
+            list.add(createQueryFromElement(element));
         }
-        if (lecture.hasCloseDate()) {
-            query.append(CLOSE_DATE, lecture.getCloseDate().getMillisecond());
-        } else {
-            query.append(CLOSE_DATE, RequestConverter.getProtoFromMilliseconds(RequestConverter.getMaxTime()).getMillisecond());
-        }
-        if (lecture.getIdsList() != null) {
-            ArrayList<BasicDBObject> objects = new ArrayList<>();
-            for (protobuf.srl.lecturedata.Lecturedata.idsInLecture id : lecture.getIdsList()) {
-                objects.add(createIdInLecture(id.getId(), id.getIsSlide(), id.getUnlocked()));
-            }
-            query.append(SLIDES, objects);
-        }
-
+        query.append(ELEMENT_LIST, list);
         newUser.insert(query);
         final DBObject cursor = newUser.findOne(query);
 
         // inserts the id into the previous the course
-        CourseManager.mongoInsertLectureIntoCourse(dbs, lecture.getCourseId(), cursor.get(SELF_ID).toString());
+        LectureManager.mongoInsertSlideIntoLecture(dbs, slide.getLectureId(), cursor.get(SELF_ID).toString(), true);
 
         return cursor.get(SELF_ID).toString();
     }
 
+    private static BasicDBObject createQueryFromElement(Lecturedata.LectureElement e){
+        BasicDBObject query = new BasicDBObject(SELF_ID, e.getId())
+                .append(X_POSITION, e.getXPosition())
+                .append(Y_POSITION, e.getYPosition())
+                .append(X_DIMENSION, e.getXDimension())
+                .append(Y_DIMENSION, e.getYDimension())
+                .append(SLIDE_BLOB_TYPE, e.getElementTypeCase().getNumber());
+        switch (e.getElementTypeCase()) {
+            case IMAGE: query.append(SLIDE_BLOB, e.getImage().toByteArray());break;
+            case TEXTBOX: query.append(SLIDE_BLOB, e.getTextBox().toByteArray());break;
+            case SKETCHAREA: query.append(SLIDE_BLOB, e.getSketchArea().toByteArray());break;
+            case QUESTION: query.append(SLIDE_BLOB, e.getQuestion().toByteArray());break;
+            case ELEMENTTYPE_NOT_SET:
+            default:break;
+        }
+        return query;
+    }
     /**
      * NOTE: This is meant for internal use do not make this method public
      * <p/>
@@ -196,13 +201,7 @@ public final class LectureManager {
         if (isAdmin || isMod || (isUsers
                 && Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate()))) {
             if (corsor.get(PROBLEM_LIST) != null) {
-                for (BasicDBObject obj : (List<BasicDBObject>) corsor.get(SLIDES)) {
-                    Lecturedata.idsInLecture.Builder builder = Lecturedata.idsInLecture.newBuilder();
-                    builder.setId((String) obj.get(SELF_ID));
-                    builder.setIsSlide((Boolean) obj.get(IS_SLIDE));
-                    builder.setUnlocked((Boolean) obj.get(IS_UNLOCKED));
-                    exactLecture.addIds(builder.build());
-                }
+                exactLecture.addAllSlides((List) corsor.get(SLIDES));
             }
 
             stateBuilder.setAccessible(true);
@@ -258,32 +257,5 @@ public final class LectureManager {
         } else {
             exactLecture.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) closeDate).longValue()));
         }
-    }
-
-    /**
-     * NOTE: This is meant for internal use do not make this method public
-     * <p/>
-     * With that being said this allows a course to be updated adding the
-     * slideId to its list of items.
-     *
-     * @param dbs       The database where the assignment is being stored.
-     * @param lectureId  the course into which the assignment is being inserted into
-     * @param slideId the assignment that is being inserted into the course.
-     * @return true if the assignment was inserted correctly.
-     */
-    static boolean mongoInsertSlideIntoLecture(final DB dbs, final String lectureId, final String slideId, final boolean unlocked) {
-        final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
-        final DBObject cursor = myDbRef.fetch();
-        DBObject updateObj = null;
-        final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
-        updateObj = createIdInLecture(slideId, true, unlocked);
-        lectures.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
-
-        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), lectureId, UserUpdateHandler.LECTURE_CLASSIFICATION);
-        return true;
-    }
-
-    private static BasicDBObject createIdInLecture(String id, final boolean isSlide, final boolean isUnlocked) {
-        return new BasicDBObject(SLIDES, new BasicDBObject(SELF_ID, id).append(IS_SLIDE, true).append(IS_UNLOCKED, isUnlocked));
     }
 }
