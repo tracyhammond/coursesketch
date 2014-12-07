@@ -22,16 +22,7 @@
  * @Class
  */
 function SketchSurface() {
-    var localScope = this;
-    var sketch = undefined;
-    var updateList = undefined;
-    var localInputListener = undefined;
-    var sketchEventConverter = undefined;
-    var shadowRoot = undefined;
-    var errorListener = undefined;
-    var eventListenerElement = undefined;
-    var sketchCanvas = undefined;
-    var bindUpdateListCalled = false;
+    this.bindUpdateListCalled = false;
 
     this.registerSketchInManager = function() {
         if (isUndefined(this.id)) {
@@ -44,11 +35,10 @@ function SketchSurface() {
      * Does some manual GC. TODO: unlink some circles manually.
      */
     this.finalize = function() {
-        updateList = undefined;
-        localInputListener = undefined;
-        sketchEventConverter = undefined;
-        sketchEventConverter = undefined;
-        sketch = undefined;
+        this.updateList = undefined;
+        this.localInputListener = undefined;
+        this.sketchEventConverter = undefined;
+        this.sketch = undefined;
         SKETCHING_SURFACE_HANDLER.deleteSketch(this.id);
     };
 
@@ -60,13 +50,13 @@ function SketchSurface() {
         if (isUndefined(this.id)) {
             this.id = generateUUID();
         }
-        if (!isUndefined(updateList) && updateList.getListLength() <= 0) {
+        if (!isUndefined(this.updateList) && this.updateList.getListLength() <= 0) {
             var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
             var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             idChain.idChain = [ this.id ];
             command.setCommandData(idChain.toArrayBuffer());
             var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
-            updateList.addUpdate(update);
+            this.updateList.addUpdate(update);
         }
     };
 
@@ -74,21 +64,14 @@ function SketchSurface() {
      * Sets a function that is called when an error is created.
      */
     this.setErrorListener = function(error) {
-        errorListener = error;
-    };
-
-    /**
-     * sets the shadow root of this element.
-     */
-    this.setRoot = function(root) {
-        shadowRoot = root;
+        this.errorListener = error;
     };
 
     /**
      * Returns the sketch data created from the update list.
      */
     this.getSrlSketch = function() {
-        return sketch;
+        return this.sketch;
     };
 
     /**
@@ -96,17 +79,17 @@ function SketchSurface() {
      * This can only be done once.
      */
     this.bindToUpdateList = function(UpdateManagerClass) {
-        if (bindUpdateListCalled === false) {
-            updateList = undefined;
+        if (this.bindUpdateListCalled === false) {
+            this.updateList = undefined;
         }
 
-        if (isUndefined(updateList)) {
+        if (isUndefined(this.updateList)) {
             if (UpdateManagerClass instanceof UpdateManager) {
-                updateList = UpdateManagerClass;
+                this.updateList = UpdateManagerClass;
             } else {
-                updateList = new UpdateManagerClass(sketch, errorListener, SKETCHING_SURFACE_HANDLER);
+                this.updateList = new UpdateManagerClass(this.sketch, this.errorListener, SKETCHING_SURFACE_HANDLER);
             }
-            bindUpdateListCalled = true;
+            this.bindUpdateListCalled = true;
         } else {
             throw new Error("Update list is already defined");
         }
@@ -120,14 +103,14 @@ function SketchSurface() {
      *            {SRL_Stroke} a stroke that is added to the sketch.
      */
     function addStrokeCallback(stroke) {
-        stroke.draw(sketch.canvasContext);
+        stroke.draw(this.sketch.canvasContext);
 
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
 
         command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
         command.decodedData = stroke;
         var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
-        updateList.addUpdate(update);
+        this.updateList.addUpdate(update);
     }
 
     /**
@@ -137,15 +120,15 @@ function SketchSurface() {
      *            {SketchEventConverterClass} a class that represents
      */
     this.initializeInput = function(InputListener, SketchEventConverter) {
-        localInputListener = new InputListener();
-        var canvas = shadowRoot.querySelector("#drawingCanvas");
-        localInputListener.initializeCanvas(canvas);
-        var canvasContext = localInputListener.canvasContext;
-        sketch.canvasContext = canvasContext;
-        sketchEventConverter = new SketchEventConverter(localInputListener, addStrokeCallback, canvasContext);
+        this.localInputListener = new InputListener();
+        var canvas = this.shadowRoot.querySelector("#drawingCanvas");
+        this.localInputListener.initializeCanvas(canvas);
+        var canvasContext = this.localInputListener.canvasContext;
+        this.sketch.canvasContext = canvasContext;
+        this.sketchEventConverter = new SketchEventConverter(this.localInputListener, addStrokeCallback, canvasContext);
 
-        eventListenerElement = canvas;
-        sketchCanvas = canvas;
+        this.eventListenerElement = canvas;
+        this.sketchCanvas = canvas;
 
         this.resizeSurface();
     };
@@ -154,39 +137,39 @@ function SketchSurface() {
      * Sets the size of drawing surface of the canvas to be the same as the size its dimenions in space.
      */
     this.resizeSurface = function() {
-        sketchCanvas.height = $(sketchCanvas).height();
-        sketchCanvas.width = $(sketchCanvas).width();
-        sketch.drawEntireSketch();
+        this.sketchCanvas.height = $(this.sketchCanvas).height();
+        this.sketchCanvas.width = $(this.sketchCanvas).width();
+        this.sketch.drawEntireSketch();
     };
 
     /**
      * Binds a function that resizes the surface every time the size of the window changes.
      */
     this.makeResizeable = function() {
-        $(window).resize(localScope.resizeSurface);
+        $(window).resize(this.resizeSurface);
     };
 
     /**
      * Initializes the sketch and resets all values.
      */
     this.initializeSketch = function() {
-        updateList = undefined;
+        this.updateList = undefined;
         bindUpdateListCalled = false;
-        sketch = new SRL_Sketch();
-        eventListenerElement = undefined;
-        sketchCanvas = undefined;
+        this.sketch = new SRL_Sketch();
+        this.eventListenerElement = undefined;
+        this.sketchCanvas = undefined;
     };
 
     this.getElementForEvents = function() {
-        return eventListenerElement;
+        return this.eventListenerElement;
     };
 
     this.getElementForDrawing = function() {
-        return eventListenerElement;
+        return this.eventListenerElement;
     };
 
     this.getUpdateList = function() {
-        return updateList;
+        return this.updateList;
     };
 }
 
@@ -201,7 +184,6 @@ SketchSurface.prototype = Object.create(HTMLElement.prototype);
  */
 SketchSurface.prototype.initializeElement = function(document, templateClone) {
     var root = this.createShadowRoot();
-    this.setRoot(root);
     root.appendChild(templateClone);
 };
 
