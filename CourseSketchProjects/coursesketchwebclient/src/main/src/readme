@@ -1,0 +1,24 @@
+This is all of the src code for the website it is separated into different utilities.
+
+common:     Common is where you put items used for students and instructors but for specific pages.  EX: problemNavigation
+            Or another example is the lecture selection which should be the same for students and instructors.
+
+student:    Where you put all code that is specific to just the student
+instructor: Where you put all code that is specific to just the instructor
+sketching:  Where all of the code for sketching goes (sketch surface, graphics, libraries, recognition)
+utilities:  this is where you put code that is not really specific to a single page but is relevant to multiple pages.
+            Inside Utilites:
+                connection:     Where the code that connects to the server (and protobuf code) goes
+                functions:      Just some snippets of potentially useful functions
+                persistantData: Database code for our local database
+                templates:      Html5 custom elements that can be used on any page it is needed
+                libraries:      Libraries that we use in course sketch (text to speech, jquery, interact, ...)
+
+
+And that is the main grouping of the folders as of right now.
+We try to use as little code as possible and to reuse as much code as possible.
+With as little effort on the developer as possible.
+
+
+Thanks for reading!
+Good luck programing!
