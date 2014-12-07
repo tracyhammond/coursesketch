@@ -16,7 +16,7 @@ public final class RequestConverter {
     /**
      * The number of milliseconds in a year.
      */
-    public static final long MILLIS_IN_YEAR = (long)(1000 * 60 * 60 * 24 * 365.25);
+    public static final long MILLIS_IN_YEAR = (long) (1000 * 60 * 60 * 24 * 365.25);
 
     /**
      * Private constructor.
