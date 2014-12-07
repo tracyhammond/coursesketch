@@ -247,6 +247,10 @@
 
             // cancel!
             function close(event) {
+                if (event.toElement == host) {
+                    console.log("We should not quit like this!");
+                    return false;
+                }
                 event.stopPropagation();
                 document.body.removeEventListener("click", close);
                 try {
