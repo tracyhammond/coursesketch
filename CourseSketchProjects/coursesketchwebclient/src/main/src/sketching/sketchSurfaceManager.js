@@ -79,10 +79,10 @@ function SketchSurfaceHandler() {
 
     /**
      * Initializes the list of sketches with the current element.
-     * 
+     *
      * This method should not need to be called because it should automatically
      * register itself.
-     * 
+     *
      * @param element
      *            {Element}
      */
@@ -121,7 +121,7 @@ function SketchSurfaceHandler() {
 
     /**
      * Resets this object so that it contains zero sketch objects.
-     * 
+     *
      * NOTE: this does not delete any sketches from the dom.
      */
     this.reset = function() {
@@ -148,12 +148,17 @@ function SketchSurfaceHandler() {
     };
 }
 
-(function(scope) {
-    if (!isUndefined(scope.SKETCHING_SURFACE_HANDLER)) {
+(function() {
+    if (isUndefined(CourseSketch)) {
+        CourseSketch = {};
+    }
+
+    if (!isUndefined(CourseSketch.SKETCHING_SURFACE_HANDLER)) {
         return;
     }
+
     /**
      * @Class Contains data that get
      */
-    makeValueReadOnly(scope, "SKETCHING_SURFACE_HANDLER", new SketchSurfaceHandler());
-})(this);
+    makeValueReadOnly(CourseSketch, "SKETCHING_SURFACE_HANDLER", new SketchSurfaceHandler());
+})();

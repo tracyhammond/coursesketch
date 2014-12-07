@@ -30,3 +30,9 @@ div.latePolicy {
     flex-direction: column;
     margin-bottom: 5px;
 }
+
+.closeButton {
+    position:absolute;
+    top:0;
+    right:0;
+}
