@@ -8,7 +8,7 @@
  * @param loop {Boolean} true if the problems should loop, false otherwise.
  * @param preferredIndex {Number} The starting index to start problems at.
  */
-function schoolNavigator(assignmentId, loop, preferredIndex) {
+function ProblemNavigator(assignmentId, loop, preferredIndex) {
 	var currentAssignmentId = assignmentId;
 	var currentAssignment;
 	var problemList = [];
