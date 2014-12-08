@@ -347,13 +347,15 @@
                             clearInterval(interval);
                             dataManager.setLecture(lecture,  function() {
                                 dataManager.updateLecture(lecture2, function() {
-                                    setTimeout()
-                                    dataManager.getCourseLecture(fakeID,  function(result1) {
-                                        console.log("result 1 is "+ result1.name + ","+lecture2.name);
-                                        lecture2.id = result1.id;
-                                        assert.equal(lecture2.name, result1.name,"Sent a lecture to local and updated it");
-                                        QUnit.start();
-                                    }); //get courselecture
+                                    setTimeout(function(){
+                                         dataManager.getCourseLecture(fakeID,  function(result1) {
+                                            console.log("result 1 is "+ result1.name + ","+lecture2.name);
+                                            lecture2.id = result1.id;
+                                            assert.equal(lecture2.name, result1.name,"Sent a lecture to local and updated it");
+                                            QUnit.start();
+                                        }); //get courselecture   
+                                    },100);
+                                    
                                 });
                             });
                            console.log("pass get Course Lecture")
