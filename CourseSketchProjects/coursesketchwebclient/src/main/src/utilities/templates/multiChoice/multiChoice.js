@@ -117,6 +117,7 @@ function MultiChoice() {
         if(!isUndefined(callback)) {
             callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
         }
+        return mcProto;
     }
 
     /**

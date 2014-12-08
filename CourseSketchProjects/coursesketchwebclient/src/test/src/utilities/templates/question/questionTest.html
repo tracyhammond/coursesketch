@@ -6,7 +6,9 @@
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 
 <!-- files needed for testing -->
-<link id="questionTemplateImport" rel="import" href="/src/utilities/templates/question/questionInclude.html">
+<link id="questionTemplateImport" rel="import" href="/src/utilities/templates/question/questionInclude.html" />
+<link id="multiChoiceTemplateImport" rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html" />
+<link rel="import" href="/src/sketching/sketchInclude.html" />
 
 <!-- file being tested. -->
 <script src="/src/utilities/templates/question/question.js" data-cover></script>
@@ -54,13 +56,29 @@
             expect(1);
             var question = document.createElement("question-test");
             document.querySelector("#question").appendChild(question);
-            assert.ok(question.shadowRoot.innerHTML != null && question.shadowRoot.innerHTML != "", "Question element has content.");
+            assert.ok(question.shadowRoot.innerHTML != null && question.shadowRoot.innerHTML != "", "Question element has content");
         });
 
-        test("save question element", function(assert) {
+        test("add multi-choice to question", function(assert) {
+            expect(1);
+            var question = document.createElement("question-test");
+            var mc = document.createElement("multi-choice");
+            document.querySelector("#question").appendChild(question);
+            question.addAnswerContent(mc);
+            assert.ok(!isUndefined(question.shadowRoot.querySelector('content').getDistributedNodes()) &&
+                      question.shadowRoot.querySelector('content').getDistributedNodes().length > 0,
+                      "Question has answer content");
+        });
+
+        test("save question element with multi-choice", function(assert) {
             expect(3);
             var question = document.createElement("question-test");
+            var mc = document.createElement("multi-choice");
             document.querySelector("#question").appendChild(question);
+            question.addAnswerContent(mc);
+            mc.addAnswer();
+            mc.addAnswer();
+            mc.setCorrectAnswer(undefined, mc.shadowRoot.getElementById("1"));
             question.setFinishedListener(function(command) {
                 assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,
                         'Expecting command type CREATE_QUESTION from commands.proto');
@@ -70,6 +88,34 @@
                 assert.equal(question.shadowRoot.querySelector("#text").textContent, decoded.questionText, "Question text is the same in proto and DOM");
             });
             question.saveData();
+        });
+
+        test("save question element with sketch", function(assert) {
+            expect(3);
+            var question = document.createElement("question-test");
+            var sketch = document.createElement("sketch-surface");
+            document.querySelector("#question").appendChild(question);
+            question.addAnswerContent(sketch);
+            question.setFinishedListener(function(command) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,
+                        'Expecting command type CREATE_QUESTION from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
+                assert.equal(question.shadowRoot.querySelector("#text").textContent, decoded.questionText, "Question text is the same in proto and DOM");
+            });
+            question.saveData();
+        });
+
+        test("save question element with invalid answer", function(assert) {
+            expect(1);
+            var question = document.createElement("question-test");
+            var div = document.createElement("div");
+            document.querySelector("#question").appendChild(question);
+            question.addAnswerContent(div);
+            assert.throws(function() {
+                question.saveData();
+            }, "Throws an error message");
         });
 
         test("load question element", function(assert) {
