@@ -9,7 +9,7 @@ h1 {
 }
 
 .info {
-
+	position: relative;
 	width: 20%;
 	height: 95%;
 	border: 1px solid black;
@@ -20,23 +20,26 @@ h1 {
 
 }
 
-.nextbutton{
+.buttons{
+	left: 40%;
+	right:30%;
 	position: absolute;
-	bottom: 10px;
+	bottom: 10%;
 	height:5%;
 	width:10%;
-	background-color: grey;
-	text-align: center;
+	background-color: gray;
 }
 
-.previousbutton{
-	position: absolute;
-	bottom: 10px;
-	height:5%;
-	width:10%;
-	background-color: grey;
-	text-align: center;
+.next{
+	right:10%;
+	bottom:20px;
 }
+
+.previous{
+	left:10%;
+	bottom:20px;
+}
+
 .sketches {
 
 	position: relative;
