@@ -14,6 +14,8 @@
     <link rel="import" href="/src/utilities/templates/textBox/textBoxInclude.html" />
     <!-- question -->
     <link rel="import" href="/src/utilities/templates/question/questionInclude.html" />
+    <!-- multi-choice -->
+    <link rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html" />
     <!-- sketching -->
     <link rel="import" href="/src/sketching/sketchInclude.html" />
     <!-- resizing -->
@@ -43,13 +45,13 @@
                     <input type='file' onchange="CourseSketch.lecturePage.addPic(this);" />
                     Image
                 </div>
-                <div class="list-item" onclick="CourseSketch.lecturePage.newSketchContent()">
+                <div class="list-item" onclick="CourseSketch.lecturePage.newSketchContent()" />
                     Sketch Content
                 </div>
                 <div class="list-item">
                     Sketch Question
                 </div>
-                <div class="list-item">
+                <div class="list-item" onclick="CourseSketch.lecturePage.newMultiChoiceQuestion()" />
                     Multiple-Choice Question
                 </div>
             </div>
@@ -59,9 +61,7 @@
                 Loading...
             </div> 
             <div id="slide-background" class="content">
-                <div id="slide-content">
-					<question-element></question-element>
-                </div>
+                <div id="slide-content"></div>
             </div>
         </div>
         <div id="slides">
