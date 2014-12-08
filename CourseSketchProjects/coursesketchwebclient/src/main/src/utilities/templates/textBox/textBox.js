@@ -67,9 +67,11 @@ function TextBox() {
          */
         localScope.shadowRoot.querySelector("#closeButton").onclick = function(event) {
             if (localScope.shadowRoot.querySelector('#creatorText') != null) {
-                localScope.saveData(event);
-                shadowRoot = undefined;
-                loadedData = undefined;
+                if (confirm("You are about to permanently remove this element.")) {
+                    localScope.saveData(event);
+                    shadowRoot = undefined;
+                    loadedData = undefined;
+                }
                 return;
             }
             shadowRoot = undefined;
@@ -83,7 +85,21 @@ function TextBox() {
                 localScope.saveData();
             };
         }
-        // Makes continue button match close button onclick functionality if the continue button exists (not null)
+        
+        // Makes save button save data on creation mode
+        saveButton = localScope.shadowRoot.querySelector("#saveButton");
+        if (saveButton != null) {
+            saveButton.onclick = function() {
+                localScope.saveData();
+                saveButton.textContent = 'Data saved';
+            };
+            
+            saveButton.onblur = function() {
+                saveButton.textContent = 'Save';
+            };
+        }
+        
+        // Makes continue button close box on viewing mode
         if (localScope.shadowRoot.querySelector("#continueButton") != null) {
             localScope.shadowRoot.querySelector('#continueButton').onclick = localScope.shadowRoot.querySelector('#closeButton').onclick;
         }
@@ -142,9 +158,8 @@ function TextBox() {
             textBoxProto.setX(x + parseInt(dialog.getAttribute('data-x')));
             textBoxProto.setY(y + parseInt(dialog.getAttribute('data-y')));
         }
-
-        textBoxProto.setHeight($(dialog).height()); // Sets height for proto message
-        textBoxProto.setWidth($(dialog).width()); // Sets width for proto message
+        textBoxProto.setHeight(parseInt($(dialog).height())); // Sets height for proto message
+        textBoxProto.setWidth(parseInt($(dialog).width())); // Sets width for proto message
 
         // If the textbox does not have an id, then a command has not been created for the textbox
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
