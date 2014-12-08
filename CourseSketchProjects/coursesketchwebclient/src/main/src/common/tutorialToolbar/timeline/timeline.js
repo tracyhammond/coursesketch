@@ -33,6 +33,7 @@ function Timeline () {
 
 	function addPlusButton (parent, localScope) {
 		var plusButton = document.createElement("div");
+        plusButton.title = "Add tutorial element";
 		plusButton.className = "plusbutton";
 		parent.appendChild(plusButton);
 		plusButton.onclick = function() {
@@ -49,6 +50,7 @@ function Timeline () {
 
 	function addTextBoxButton (plusButton, toolArea, localScope) {
 		var textBoxButton = document.createElement("div");
+        textBoxButton.title = "Add text box";
 		textBoxButton.className = "textboxbutton";
 		plusButton.appendChild(textBoxButton);
 		textBoxButton.onclick = function(event) {
@@ -105,6 +107,7 @@ function Timeline () {
 
 	function addTtsBoxButton (plusButton, toolArea, localScope) {
 		var ttsBoxButton = document.createElement("div");
+        ttsBoxButton.title = "Add text to speech box";
 		ttsBoxButton.className = "ttsboxbutton";
 		plusButton.appendChild(ttsBoxButton);
 		ttsBoxButton.onclick = function(event) {
@@ -135,6 +138,7 @@ function Timeline () {
 
 	function addHighlightButton (plusButton, toolArea, localScope) {
 		var highlightButton = document.createElement("div");
+        highlightButton.title = "Highlight text";
 		highlightButton.className = "highlightbutton";
 		plusButton.appendChild(highlightButton);
 		highlightButton.onclick = function(event) {
