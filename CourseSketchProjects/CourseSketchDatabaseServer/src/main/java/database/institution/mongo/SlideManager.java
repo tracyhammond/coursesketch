@@ -97,8 +97,14 @@ public final class SlideManager {
         return cursor.get(SELF_ID).toString();
     }
 
-    private static BasicDBObject createQueryFromElement(Lecturedata.LectureElement e) {
-        BasicDBObject query = new BasicDBObject(SELF_ID, e.getId())
+    /**
+     * NOTE: This function is only used internally and should not be made public.
+     * @param e
+     *         an element that belongs on a lecture
+     * @return a BasicDBObject of the element
+     */
+    private static BasicDBObject createQueryFromElement(final Lecturedata.LectureElement e) {
+        final BasicDBObject query = new BasicDBObject(SELF_ID, e.getId())
                 .append(X_POSITION, e.getXPosition())
                 .append(Y_POSITION, e.getYPosition())
                 .append(X_DIMENSION, e.getXDimension())
@@ -122,31 +128,6 @@ public final class SlideManager {
                 break;
         }
         return query;
-    }
-
-    /**
-     * NOTE: This is meant for internal use do not make this method public
-     * <p/>
-     * This is used to copy permissions from the parent course into the current
-     * lecture.
-     *
-     * @param dbs
-     *         the database where the data is stored.
-     * @param lectureId
-     *         the id of the assignment that is getting permissions.
-     * @param ids
-     *         the list of list of permissions that is getting added.
-     */
-    /*package-private*/
-    static void mongoInsertDefaultGroupId(final DB dbs, final String lectureId, final List<String>[] ids) {
-        final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
-        final DBObject cursor = myDbRef.fetch();
-        final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
-
-        final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
-
-        System.out.println(updateQuery);
-        lectures.update(cursor, updateQuery);
     }
 
     /**
