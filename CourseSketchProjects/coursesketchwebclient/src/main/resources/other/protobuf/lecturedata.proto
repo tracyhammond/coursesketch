@@ -1,5 +1,4 @@
 import "school.proto";
-import "question.proto";
 package protobuf.srl.lecturedata;
 
 message SrlLectureDataHolder {
@@ -25,6 +24,7 @@ message IdsInLecture {
 	required string id = 1;
 	required bool isSlide = 2;
 	optional bool unlocked = 3;
+	optional LectureNavigator nav = 4;
 }
 
 message LectureSlide {
@@ -44,11 +44,11 @@ message LectureElement {
 	optional int32 y_dimension = 6;
 
 	oneof ElementType {
-	TextBox textBox = 7;
-	Image image = 8;
-	SketchArea sketchArea = 9;
-	protobuf.srl.question.SrlQuestion question = 10;
-}
+		TextBox textBox = 7;
+		Image image = 8;
+		SketchArea sketchArea = 9;
+		SrlQuestion question = 10;
+	}
 }
 
 message TextBox {
@@ -63,4 +63,42 @@ message Image {
 message SketchArea {
 	//srlSketch object if proto include works
 	optional bytes SrlUpdateList = 10;
+}
+
+message LectureNavigator {
+	optional int32 nextLecture = 1;
+	optional int32 nextSlide = 2;
+}
+
+message SrlQuestion {
+	required string id = 1;
+	optional string questionText = 2;
+	optional QuestionType questionType = 3 [default=SKETCH];
+	repeated LectureNavigator navs = 4;
+
+	oneof QuestionOption {
+		MultipleChoice multipleChoice = 5;
+		SketchQuestion sketchQuestion = 6;
+	}
+}
+
+message MultipleChoice {
+	repeated AnswerChoice answerChoices = 1;
+	optional string correctId = 2;
+}
+
+message SketchQuestion {
+	optional bytes sketch = 1;
+}
+
+message AnswerChoice {
+	required string id = 1;
+	optional string text = 2;
+}
+
+enum QuestionType {
+	SKETCH = 1;
+	MULT_CHOICE = 2;
+	FREE_RESP = 3;
+	CHECK_BOX = 4;
 }
