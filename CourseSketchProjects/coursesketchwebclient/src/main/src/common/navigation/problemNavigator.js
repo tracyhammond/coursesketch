@@ -43,7 +43,11 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     // sets the current index.
     if (!isUndefined(preferredIndex)) {
-        currentIndex = preferredIndex;
+        try {
+            currentIndex = parseInt(preferredIndex);
+        } catch (exception) {
+            console.error("could not parse preferredIndex using 0 instead");
+        }
     }
 
     /**

@@ -1,18 +1,19 @@
 <html>
 <head>
-    <link id="textBoxTemplateImport" rel="import" href="navigationPanel.html">
+    <link id="navigatorTemplateImport" rel="import" href="navigationPanel.html">
     <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
     <link rel="import" href="/src/utilities/connection/protobufInclude.html">
     <script src="navigationPanel.js"></script>
+    <script src="/src/common/navigation/problemNavigator.js"></script>
 
     <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#textBoxTemplateImport');
-            var template = link.import.querySelector('#textBoxCreation');
+            var link = importDoc.querySelector('#navigatorTemplateImport');
+            var template = link.import.querySelector('#navigationPanel');
             var clone = document.importNode(template.content, true);
 
-            var newElement = new TextBox();
+            var newElement = new NavigationPanel();
 
             /**
              * @Method
@@ -32,7 +33,7 @@
             // Saving must happen before element is detached to save the height and width
             };
 
-            document.registerElement('text-box-creation', {
+            document.registerElement('navigation-panel', {
                 prototype : newElement
             });
         });
