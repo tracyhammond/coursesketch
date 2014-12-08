@@ -4,9 +4,9 @@
             <title>Slide Data Manager Test</title>
             <!-- test Library -->
             <link rel="import" href="/test/testUtilities/testUtilities.html">
-                
+                 <link rel="import"
+                    href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
                 <link rel="import"
-
                     <!-- file being tested. -->
                     <script src="/src/utilities/persistantData/specificManager/slideDataManager.js" data-cover></script>
     </head>
@@ -38,12 +38,11 @@
                                 var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
                                 slide.id = generateUUID();
                                 slide.lectureId = lecture.id;
-                                slide.unlocked = true;
                                 dataManager.insertSlide(slide, function(){
                                     assert.ok(true, "Local callback called.");
                                     QUnit.start();
                                 });
-                            });
+                            }, undefined);
                         });
                 }, 100);
                 var interval = setInterval(function() {
