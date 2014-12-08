@@ -36,6 +36,7 @@ function Timeline () {
 		plusButton.className = "plusbutton";
 		parent.appendChild(plusButton);
 		plusButton.onclick = function() {
+            $(plusButton).empty();
 			showTools(plusButton, parent, localScope);
 		};
 	}
@@ -76,7 +77,7 @@ function Timeline () {
 
             textBoxFinishedListener = function(command, event, currentUpdate) {
                 var textBox = document.getElementById(command.commandId);
-                textBox.id = command.commandId;
+                //textBox.id = command.commandId;
                 if (isUndefined(currentUpdate.commands)) {
                     return;
                 }
@@ -85,8 +86,6 @@ function Timeline () {
                 }
 
                 if (!isUndefined(event)) {
-                    //textBoxMarker.parentNode.removeChild(textBoxMarker);
-                    console.log(textBox.createdCommand);
                     closeTextBox(command);
                     return;
                 }
