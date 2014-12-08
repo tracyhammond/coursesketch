@@ -9,20 +9,21 @@ function NavigationPanel() {
     /**
      * Sets up the navigator callback and binds the buttons.
      */
-    function setUpNavigator() {
-        this.navigator.addCallback(function(nav) {
+    this.setUpNavigator = function() {
+        console.log(this.itemNavigator);
+        this.itemNavigator.addCallback(function(nav) {
             this.shadowRoot.querySelector("#selectionBoxNumber").textContent = nav.getCurrentNumber();
             // set span state
             setUpButtons(nav);
             var totalNumber = nav.getLength();
             if (totalNumber) {
-                this.shadowRoot.querySelector("#totalNumber").textContent = "out of " + totalNumber;
+                this.shadowRoot.querySelector("#totalNumber").textContent = totalNumber;
             }
             // TODO: change this to strip out bad HTML code
             this.shadowRoot.querySelector("#problemPanel").innerHTML = '<p>' + parent.problemNavigator.getProblemText() + '</p>';
         }.bind(this));
 
-        setUpButtons(this.navigator);
+        setUpButtons(this.itemNavigator);
     }
 
     /**
@@ -36,7 +37,7 @@ function NavigationPanel() {
         } else {
             button.disabled = true;
         }
-        button = scope.getElementById("buttonPrev");
+        button = this.shadowRoot.querySelector("#buttonPrev");
         button.onclick = function() {nav.gotoPrevious();};
         if (nav.hasPrevious()) {
             button.disabled = false;
@@ -64,16 +65,17 @@ function NavigationPanel() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-        if (isUndefined(this.navigator)) {
-            this.navigator = new ProblemNavigator(this.dataset.assignment_id, !isUndefined(this.dataset.loop), this.dataset.index);
+        if (isUndefined(this.itemNavigator)) {
+            this.itemNavigator = new ProblemNavigator(this.dataset.assignment_id, !isUndefined(this.dataset.loop), this.dataset.index);
         }
+        this.setUpNavigator();
     }
 
     /**
      * Sets the navigator if one is to be used.
      */
     this.setNavigator = function(navPanel) {
-        this.navigator = navPanel;
+        this.itemNavigator = navPanel;
     }
 }
 
