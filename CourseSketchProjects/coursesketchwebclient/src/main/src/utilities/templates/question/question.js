@@ -14,7 +14,7 @@ function Question() {
 
         // Populate data in the proto object
         questionProto.id = generateUUID();
-        questionProto.setQuestionText(this.shadowRoot.querySelector('#text').textContent);
+        questionProto.setQuestionText(this.shadowRoot.querySelector('#text').value);
 
         // If the textbox does not have an id, then a command has not been created for the textbox
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
@@ -38,7 +38,7 @@ function Question() {
         if (isUndefined(shadowRoot) || isUndefined(questionProto)) {
             return;
         }
-        this.shadowRoot.querySelector("#text").textContent = questionProto.getQuestionText();
+        this.shadowRoot.querySelector("#text").value = questionProto.getQuestionText();
     }
 
     /**

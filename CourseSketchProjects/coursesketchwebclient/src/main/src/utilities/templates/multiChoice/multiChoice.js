@@ -16,7 +16,6 @@ function MultiChoice() {
      * @param answer the answer element to set as the correct answer
      */
     this.setCorrectAnswer = function(event, answer) {
-        var localScope = this;
         var answerChoices = this.shadowRoot.querySelectorAll(".answer-choice");
         for(var i = 0; i < answerChoices.length; ++i) {
             answerChoices[i].querySelector(".correct").textContent = "";
@@ -30,8 +29,6 @@ function MultiChoice() {
      * @param event the event that triggered this function
      */
     this.addAnswer = function(event) {
-        localScope = this;
-
         // Set up the parent
         var answer = document.createElement("div");
         var lastAnswer = this.shadowRoot.querySelector("#answer-choices").lastChild;
@@ -57,6 +54,7 @@ function MultiChoice() {
         // Radio label (will be an input for instructors)
         var label = document.createElement("input");
         label.className = "label";
+        label.placeholder = "Answer choice"
         answer.appendChild(label);
 
         // Correct check box
