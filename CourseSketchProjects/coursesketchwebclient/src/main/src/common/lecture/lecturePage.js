@@ -2,21 +2,19 @@
     $(document).ready(function() {
         CourseSketch.lecturePage = [];
 
-        interact('.resize').resizable(true)
-            .on('resizemove', function (event) {
+        CourseSketch.lecturePage.doResize = function(event) {
             var target = event.target;
-        
+
             // add the change in coords to the previous width of the target element
-            var
-              newWidth  = parseFloat(target.style.width ) + event.dx,
-              newHeight = parseFloat(target.style.height) + event.dy;
-        
+            var newWidth  = parseFloat(target.style.width) + event.dx;
+            var newHeight = parseFloat(target.style.height) + event.dy;
+
             // update the element's style
             target.style.width  = newWidth + 'px';
             target.style.height = newHeight + 'px';
-        
+
             target.textContent = newWidth + '×' + newHeight;
-        });
+        }
 
         /**
          * Adds a new text box to the currently selected lecture slide.
@@ -36,6 +34,14 @@
             setTimeout(function() {
                 sketchSurface.resizeSurface();
             }, 500);
+        }
+
+        CourseSketch.lecturePage.newMultiChoiceQuestion = function() {
+            var question = document.createElement("question-element");
+            var multiChoice = document.createElement("multi-choice");
+            document.getElementById("slide-content").appendChild(question);
+            question.addAnswerContent(multiChoice);
+            //question.className = "resize";
         }
 
         /**
@@ -139,6 +145,7 @@
             document.querySelector("#slide-content").appendChild(imagebox);
         }
 
+        // Do setup
         if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
             CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState("currentLecture");
             CourseSketch.dataManager.clearStates();
@@ -153,5 +160,6 @@
             }
             }, 100);
         }
+        interact('.resize').resizable(true).on('resizemove', CourseSketch.lecturePage.doResize);
     });
 })();
