@@ -76,13 +76,22 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *                function to be called after server lecture setting is done
      */
     function updateLecture(lecture, localCallback, serverCallback) {
-        setLecture(lecture, localCallback);
-        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lecture.toArrayBuffer());
-        advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
-		    advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
-            serverCallback(item); // we do not need to make server changes we
+        setLecture(lecture, function(){
+            if( !isUndefined(localCallback))
+            {
+                localCallback();
+            }
+            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
+             // we do not need to make server changes we
                                     // just need to make sure it was successful.
+            if( !isUndefined(serverCallback))
+            {
+                serverCallback(item);
+            }
         });
+        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lecture.toArrayBuffer());
+    });
     }
     parent.updateLecture = updateLecture;
 

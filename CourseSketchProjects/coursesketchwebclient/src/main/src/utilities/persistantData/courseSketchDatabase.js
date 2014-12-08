@@ -111,7 +111,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
             itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
         }
         dataSend.items.push(itemRequest);
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
+        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
     };
 
     /**
@@ -138,6 +138,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         itemUpdate.setQuery(queryType);
         itemUpdate.setData(data);
         dataSend.items.push(itemUpdate);
+        
+        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
     };
 
     this.emptySchoolData = function() {
