@@ -11,8 +11,12 @@
  *
  * <li>data-customId: This is meant to tell the surface that the Id of the
  * element will be provided to it and to not assign a random id to it.</li>
+ *
  * <li>data-readOnly: This tells the sketch surface to ignore any input and it
  * will only display sketches.</li>
+ *
+ * <li>data-autoResize: This is meant to tell the sketch surface that it
+ * should resize itself every time the window changes size.</li>
  * </ul>
  *
  * @Class
@@ -149,7 +153,7 @@ function SketchSurface() {
     };
 
     /**
-     * Tells the canvas to resize when the window is resized.
+     * Binds a function that resizes the surface every time the size of the window changes.
      */
     this.makeResizeable = function() {
         $(window).resize(this.resizeSurface.bind(this));
@@ -221,5 +225,9 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchE
 
     if (isUndefined(this.dataset) || (isUndefined(this.dataset.existinglist) && isUndefined(this.dataset.customid))) {
         this.createSketchUpdate();
+    }
+
+    if (!isUndefined(this.dataset) && !(isUndefined(this.dataset.autoresize))) {
+        this.makeResizeable();
     }
 };

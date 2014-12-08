@@ -1,6 +1,6 @@
 <html>
 <head>
-	<script type="text/javascript" src="Multiview.js"></script>
+	<script type="text/javascript" src="multiview.js"></script>
 	<link id="mvSketchImport" rel="import" href="Multiview.html">
 	<link id="sketchPanleImport" rel="import" href="/src/sketching/sketchInclude.html">
     <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
@@ -15,14 +15,14 @@
 
             var newElement = new MvSketch();
 
-            /**
+            /*
              * @Method
              * Called when the element is created, using document.create()(but does nothing else)
              */
             MvSketch.prototype.createdCallback = function() {
             };
 
-            /**
+            /*
              * Creates the shadow root and adds that into the system.
              */
             MvSketch.prototype.attachedCallback = function() {
