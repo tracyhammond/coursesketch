@@ -3,12 +3,17 @@
 	CourseSketch.fakeSketches = [];
 	var currentTime = CourseSketch.getCurrentTime();
 
+	/*
+	 * a simple function to convert a degree into radians
+	 */
 
 	function  toRadians(num){
 		return num*Math.PI/180;
 	}
 
-
+	/*
+	 * createing the sketches to make possible submissions or other test data
+	 */
 
 	var sketch1 = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
 	var sketch2 = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
@@ -16,11 +21,20 @@
 	var sketch4 = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
 	var sketch5 = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
 
+	/*
+	 * making updates to be used in a sketches update list
+	 */
+
 	var update1 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
 	var update2 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
 	var update3 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
 	var update4 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
 	var update5 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
+
+	/*
+	 * commands for adding strokes to updates, false is because the strokes are created in code
+	 * not from a user.
+	 */
 
 	var command1 = CourseSketch.PROTOBUF_UTIL.createBaseCommand(
 		CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
@@ -33,18 +47,31 @@
 	var command5 = CourseSketch.PROTOBUF_UTIL.createBaseCommand(
 		CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
 
+	/*
+	 * creating strokes to be used for the command ADD_STROKE
+	 */
+
 	var stroke1 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
 	var stroke2 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
 	var stroke3 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
 	var stroke4 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
 	var stroke5 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
 
+	/*
+	 * initaliszing the arrays of each stroke to hold their points
+	 */
+
 	stroke1.points = new Array();
 	stroke2.points = new Array();
 	stroke3.points = new Array();
 	stroke4.points = new Array();
 	stroke5.points = new Array();
+	
+	/*
+	 * creating some shapes or lines and their points are placed into each strokes array of points
+	 */
 
+	//a circle
 	for(var i = 0; i <=360; i+=5){
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
 		point.id = "point"+i;
@@ -53,7 +80,7 @@
 		point.y = (Math.sin(toRadians(i))*50)+200;
 		stroke1.points.push(point)
 	}
-
+	// a slightly larger circle
 	for(var i = 0; i <=360; i+=5){
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
 		point.id = "point"+i;
@@ -62,7 +89,7 @@
 		point.y = (Math.sin(toRadians(i))*50)+250;
 		stroke2.points.push(point)
 	}
-
+	// a line
 	for(var i = 0; i <300; i++){
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
 		point.id = "point" + i;
@@ -71,7 +98,7 @@
 		point.y = i*4;
 		stroke3.points.push(point);
 	}
-
+	// a steeper line
 	for(var i = 0; i <400; i++){
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
 		point.id = "point" + i;
@@ -80,7 +107,7 @@
 		point.y = i*5;
 		stroke4.points.push(point);
 	}
-
+	// a flat line
 	for(var i = 0; i <400; i++){
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
 		point.id = "point" + i;
@@ -89,6 +116,10 @@
 		point.y = 300;
 		stroke5.points.push(point);
 	}
+
+	/*
+	 * giving each stroke an ID and a time stamp
+	 */
 
 	stroke1.id = "stroke1-of-sketch1";
 	stroke1.time = currentTime.add(3600);
@@ -111,6 +142,10 @@
 	command4.setCommandData(stroke4.toArrayBuffer());
 	command5.setCommandData(stroke5.toArrayBuffer());
 
+	/*
+	 * initalizing the updates array of commands and pushing a command to the array
+	 * also giving each update an ID
+	 */
 
 	update1.updateId = "update1-of-sketch1";
 	update1.commands = new Array();
@@ -132,7 +167,10 @@
 	update5.commands = new Array();
 	update5.commands.push(command5);
 
-	
+	/*
+	 * initalizing the array of updates for the sketchs list of updates
+	 */
+
 	sketch1.list = new Array();
 	sketch1.list.push(update1);
 
@@ -148,6 +186,9 @@
 	sketch5.list = new Array();
 	sketch5.list.push(update5);
 
+	/*
+	 * pushing the sketches
+	 */
 
 	CourseSketch.fakeSketches.push(sketch1);
 	CourseSketch.fakeSketches.push(sketch2);
