@@ -9,12 +9,34 @@ function Question() {
         shadowRoot.appendChild(templateClone);
     }
 
+    /**
+     * Adds multiple choice content to the question
+     * @param multiChoice the MultiChoice element to add
+     */
+    this.addAnswerContent = function(answerContent) {
+        answerContent.className = "answer";
+        this.appendChild(answerContent);
+    }
+
     this.saveData = function(event) {
         var questionProto = CourseSketch.PROTOBUF_UTIL.SrlQuestion();
 
         // Populate data in the proto object
         questionProto.id = generateUUID();
         questionProto.setQuestionText(this.shadowRoot.querySelector('#text').value);
+        var nodes = this.shadowRoot.querySelector('content').getDistributedNodes();
+        // We should really only ever have one node here
+        if(nodes.length > 0) {
+            if(nodes[0] instanceof MultiChoice) {
+                questionProto.multipleChoice = nodes[0].saveData();
+            } else if(nodes[0] instanceof SketchSurface) {
+                // TODO: Need to support sketch questions
+                // questionProto.ourThing = nodes[0].saveData();
+                console.log("Saving sketch questions is not yet supported.");
+            } else {
+                throw "Attempted to save invalid answer element";
+            }
+        }
 
         // If the textbox does not have an id, then a command has not been created for the textbox
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
@@ -27,6 +49,7 @@ function Question() {
         if(!isUndefined(callback)) {
             callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
         }
+        return questionProto;
     }
 
     /**
