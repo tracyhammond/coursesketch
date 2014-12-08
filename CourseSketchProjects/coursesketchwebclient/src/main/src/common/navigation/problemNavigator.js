@@ -199,19 +199,21 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     this.reloadProblems = function() {
         dataLoaded = false;
-        dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
-            for (var i = 0; i <problems.length; i++) {
-                problemList.push(problems[i]);
-            }
-            if (uiLoaded) {
-                refresh();
-            }
-            dataLoaded = true; // this one will take longer so we do this one second.
-        });
+        if (!isUndefined(assignmentId)) {
+            CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
+                for (var i = 0; i <problems.length; i++) {
+                    problemList.push(problems[i]);
+                }
+                if (uiLoaded) {
+                    refresh();
+                }
+                dataLoaded = true; // this one will take longer so we do this one second.
+            });
 
-        dataManager.getAssignment(assignmentId, function(assignment) {
-            currentAssignment = assignment;
-        });
+            CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
+                currentAssignment = assignment;
+            });
+        }
     };
     this.reloadProblems();
 

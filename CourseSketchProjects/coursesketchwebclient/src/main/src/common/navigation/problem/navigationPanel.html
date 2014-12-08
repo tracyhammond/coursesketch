@@ -26,18 +26,18 @@
                     <!-- TODO: this box should have the problem state showing-->
                     <h1 id="selectionBoxNumber">1</h1>
                     <span id="problemState"></span>
-                    <p id="totalNumber">out of </p>
+                    <p>out of <span id="totalNumber">1</span></p>
                 </div>
-                <div id="arrowBox" style="display:block-inline;">
-                    <button id="buttonPrev">Previous</button>
-                    <button id="buttonNext">Next</button>
+                <div class="arrowBox">
+                    <button id="buttonPrev"><--</button>
+                    <button id="buttonNext">--></button>
                 </div>
             </div>
         </div>
-        <div id="problemPanel" style="display:inline-block; overflow-y:scroll;">
+        <p id="problemPanel">
             Your browser is having some problems or the text has not loaded yet, for the mean time please try viewing this in incognito mode in
             Chrome.
-        </div>
+        </p>
     </div>
     <div class="bottomShadow" style="height:5px; width:100%;"></div>
 </template>
