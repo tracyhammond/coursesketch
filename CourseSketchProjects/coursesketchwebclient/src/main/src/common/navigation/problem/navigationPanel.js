@@ -7,7 +7,7 @@
 function NavigationPanel() {
 
     /**
-     * Sets up the navigator so that the buttons will be b
+     * Sets up the navigator callback and binds the buttons.
      */
     function setUpNavigator() {
         this.navigator.addCallback(function(nav) {
@@ -25,33 +25,35 @@ function NavigationPanel() {
         setUpButtons(this.navigator);
     }
 
+    /**
+     * @param {ProblemNavigator} sets bindings and disables buttons if they can not do anything.
+     */
     function setUpButtons(nav) {
         var button = this.shadowRoot.querySelector("#buttonNext");
+        button.onclick = function() {nav.gotoNext();};
         if (nav.hasNext()) {
-            button.onclick = function() {nav.gotoNext();};
             button.disabled = false;
         } else {
-            button.onclick = function() {};
             button.disabled = true;
         }
         button = scope.getElementById("buttonPrev");
+        button.onclick = function() {nav.gotoPrevious();};
         if (nav.hasPrevious()) {
-            button.onclick = function() {nav.gotoPrevious();};
             button.disabled = false;
         } else {
-            button.onclick = function() {};
             button.disabled = true;
         }
     }
-        /*
-        window.onresize = function() {
-            var navWidth = document.getElementById("navPanel").offsetWidth;
-            var navHeight = document.getElementById("navPanel").offsetHeight;
-            var textWidth = document.getElementById("panelWrapper").offsetWidth - navWidth;
-            document.getElementById("problemPanel").style.width = (textWidth - 15) +"px";
-            document.getElementById("problemPanel").style.height = (navHeight -15) +"px";
-        }
-        */
+
+    /*
+    window.onresize = function() {
+        var navWidth = document.getElementById("navPanel").offsetWidth;
+        var navHeight = document.getElementById("navPanel").offsetHeight;
+        var textWidth = document.getElementById("panelWrapper").offsetWidth - navWidth;
+        document.getElementById("problemPanel").style.width = (textWidth - 15) +"px";
+        document.getElementById("problemPanel").style.height = (navHeight -15) +"px";
+    }
+    */
 
     /**
      * @param templateClone {node} is a clone of the custom HTML Element for the text box
@@ -67,6 +69,9 @@ function NavigationPanel() {
         }
     }
 
+    /**
+     * Sets the navigator if one is to be used.
+     */
     this.setNavigator = function(navPanel) {
         this.navigator = navPanel;
     }
