@@ -64,9 +64,9 @@ public final class LectureManager {
      * @param lecture
      *         The lecture that is being inserted.
      * @return The mongo database id of the assignment.
-     * @throws database.auth.AuthenticationException
+     * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to perform the authentication.
-     * @throws database.DatabaseAccessException
+     * @throws DatabaseAccessException
      *         Thrown if there are problems inserting the assignment.
      */
     public static String mongoInsertLecture(final Authenticator authenticator, final DB dbs, final String userId, final Lecture lecture)
@@ -93,9 +93,9 @@ public final class LectureManager {
         } else {
             query.append(CLOSE_DATE, RequestConverter.getProtoFromMilliseconds(RequestConverter.getMaxTime()).getMillisecond());
         }
-        if (lecture.getIdsList() != null) {
-            ArrayList<BasicDBObject> objects = new ArrayList<>();
-            for (protobuf.srl.lecturedata.Lecturedata.idsInLecture id : lecture.getIdsList()) {
+        if (lecture.getIdListList() != null) {
+            final ArrayList<BasicDBObject> objects = new ArrayList<>();
+            for (protobuf.srl.lecturedata.Lecturedata.IdsInLecture id : lecture.getIdListList()) {
                 objects.add(createIdInLecture(id.getId(), id.getIsSlide(), id.getUnlocked()));
             }
             query.append(SLIDES, objects);
@@ -112,7 +112,7 @@ public final class LectureManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     * <p/>
+     *
      * This is used to copy permissions from the parent course into the current
      * lecture.
      *
@@ -123,8 +123,7 @@ public final class LectureManager {
      * @param ids
      *         the list of list of permissions that is getting added.
      */
-    /*package-private*/
-    static void mongoInsertDefaultGroupId(final DB dbs, final String lectureId, final List<String>[] ids) {
+    /*package-private*/static void mongoInsertDefaultGroupId(final DB dbs, final String lectureId, final List<String>[] ids) {
         final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
         final DBObject cursor = myDbRef.fetch();
         final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
@@ -214,11 +213,11 @@ public final class LectureManager {
                 && Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate()))) {
             if (corsor.get(PROBLEM_LIST) != null) {
                 for (BasicDBObject obj : (List<BasicDBObject>) corsor.get(SLIDES)) {
-                    Lecturedata.idsInLecture.Builder builder = Lecturedata.idsInLecture.newBuilder();
+                    final Lecturedata.IdsInLecture.Builder builder = Lecturedata.IdsInLecture.newBuilder();
                     builder.setId((String) obj.get(SELF_ID));
                     builder.setIsSlide((Boolean) obj.get(IS_SLIDE));
                     builder.setUnlocked((Boolean) obj.get(IS_UNLOCKED));
-                    exactLecture.addIds(builder.build());
+                    exactLecture.addIdList(builder.build());
                 }
             }
 
@@ -282,7 +281,7 @@ public final class LectureManager {
     }
 
     /**
-     * NOTE: This is meant for internal use do not make this method public
+     * NOTE: This is meant for internal use do not make this method public.
      * <p/>
      * With that being said this allows a course to be updated adding the
      * slideId to its list of items.
@@ -293,6 +292,8 @@ public final class LectureManager {
      *         the course into which the assignment is being inserted into
      * @param slideId
      *         the assignment that is being inserted into the course.
+     * @param unlocked
+     *         a boolean that is true if the object is unlocked
      * @return true if the assignment was inserted correctly.
      */
     static boolean mongoInsertSlideIntoLecture(final DB dbs, final String lectureId, final String slideId, final boolean unlocked) {
@@ -307,7 +308,20 @@ public final class LectureManager {
         return true;
     }
 
-    private static BasicDBObject createIdInLecture(String id, final boolean isSlide, final boolean isUnlocked) {
+    /**
+     * NOTE: This is meant for internal use.
+     *
+     * creates an object of the IdInLecture message type from the proto file
+     *
+     * @param id
+     *         the id of the slide that used to create the message
+     * @param isSlide
+     *         a boolean that is true is the id param belongs to a slide
+     * @param isUnlocked
+     *         a boolean that is true if the user trying to access this slide is allowed
+     * @return a BasicDBObject of the message type IdInLecture
+     */
+    private static BasicDBObject createIdInLecture(final String id, final boolean isSlide, final boolean isUnlocked) {
         return new BasicDBObject(SLIDES, new BasicDBObject(SELF_ID, id).append(IS_SLIDE, true).append(IS_UNLOCKED, isUnlocked));
     }
 }
