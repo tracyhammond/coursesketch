@@ -1,4 +1,6 @@
 function MultiChoice() {
+    var correctId = undefined;
+
     /**
      * Removes an answer choice from this multiple choice element.
      * @param event the event that triggered this function
@@ -14,11 +16,13 @@ function MultiChoice() {
      * @param answer the answer element to set as the correct answer
      */
     this.setCorrectAnswer = function(event, answer) {
+        var localScope = this;
         var answerChoices = this.shadowRoot.querySelectorAll(".answer-choice");
         for(var i = 0; i < answerChoices.length; ++i) {
             answerChoices[i].querySelector(".correct").textContent = "";
         }
         answer.querySelector(".correct").textContent = "✔";
+        this.correctId = answer.id;
     }
 
     /**
@@ -95,11 +99,18 @@ function MultiChoice() {
         var mcProto = CourseSketch.PROTOBUF_UTIL.MultipleChoice();
 
         // Populate data in the proto object
-        // mcProto.setQuestionText(this.shadowRoot.querySelector('#text').textContent);
+        var answerChoices = this.shadowRoot.querySelectorAll(".answer-choice");
+        for(var i = 0; i < answerChoices.length; ++i) {
+            var answerChoice = CourseSketch.PROTOBUF_UTIL.AnswerChoice();
+            answerChoice.id = answerChoices[i].id;
+            answerChoice.text = answerChoices[i].querySelector(".label").value;
+            mcProto.answerChoices.push(answerChoice);
+        }
+        mcProto.correctId = this.correctId;
 
         // If the multi-choice item does not have an id, then a command has not been created for the multi-choice item
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,true);
+            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_MULTIPLE_CHOICE,true);
         }
         this.command.setCommandData(mcProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -119,7 +130,15 @@ function MultiChoice() {
         if (isUndefined(shadowRoot) || isUndefined(mcProto)) {
             return;
         }
-        // this.shadowRoot.querySelector("#text").textContent = questionProto.getQuestionText();
+        for(var i = 0; i < mcProto.answerChoices.length; ++i) {
+            this.addAnswer();
+            var newAnswerId = "" + (i + 1);
+            var answer = this.shadowRoot.getElementById(newAnswerId);
+            answer.id = mcProto.answerChoices[i].id;
+            answer.querySelector(".label").value = mcProto.answerChoices[i].text;
+        }
+        this.correctId = mcProto.correctId;
+        this.shadowRoot.getElementById(this.correctId).querySelector(".correct").textContent = "✔";
     }
 
     /**
