@@ -96,9 +96,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                         advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
                         return;
                     }
+                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
                     localScope.setCourse(course);
                     stateCallback(course, courseCallback);
-                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
                 });
                 // creates a request that is then sent to the server
                 sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, [ courseId ]);
@@ -118,6 +118,14 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
     parent.getCourse = getCourse;
 
+    /**
+     * Sets a course in local database.
+     *
+     * @param course
+     *                course object to set
+     * @param courseCallback
+     *                function to be called after the course setting is done
+     */
     function setCourse(course, courseCallback) {
         database.putInCourses(course.id, course.toBase64(), function(e, request) {
             if (courseCallback) {
@@ -128,9 +136,39 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     }
     parent.setCourse = setCourse;
 
-    function deleteCourse(courseId, couresCallback) {
+    /**
+     * Sets a course in both local and server databases.
+     * Updates an existing course into the database. This course must already
+     * exist.
+     *
+     * @param course
+     *                course object to set
+     * @param localCallback
+     *                function to be called after local course setting is done
+     * @param serverCallback
+     *                function to be called after server course setting is done
+     */
+    function updateCourse(course, localCallback, serverCallback) {
+        setCourse(course, function() {
+            if (!isUndefined(localCallback)) {
+                localCallback();
+            }
+            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
+                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
+                 // we do not need to make server changes we
+                                        // just need to make sure it was successful.
+                if (!isUndefined(serverCallback)) {
+                    serverCallback(item);
+                }
+            });
+            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
+        });
+    }
+    parent.updateCourse = updateCourse;
+
+    function deleteCourse(courseId, courseCallback) {
         database.deleteFromCourses(courseId, function(e, request) {
-            if (courseCallback) {
+            if (!isUndefined(courseCallback)) {
                 courseCallback(e, request);
             }
         });
@@ -169,9 +207,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 localScope.setCourse(course); // no callback is needed
                 idList.push(course.id);
             }
+            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
             courseCallback(courseList);
             setCourseIdList(idList);
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
         });
         if (userCourseId.length == 0 && userHasCourses) {
             sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ "" ]);
@@ -220,53 +258,35 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *            courseId
      */
     function insertCourse(course, courseCallback, serverCallback) {
-        var courseId = generateUUID();
-        course.id = courseId;
-        setCourse(course); // sets the course into the local database;
-        if (courseCallback) {
-            courseCallback(course);
-        } // temp for now!
+        if (isUndefined(course.id)) {
+            var courseId = generateUUID();
+            course.id = courseId;
+        }
+        // sets the course into the local database;
+        setCourse(course, function() {
+            if (courseCallback) {
+                courseCallback(course);
+            } // temp for now!
 
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
-            var resultArray = item.getResponseText().split(":");
-            var oldId = resultArray[1];
-            var newId = resultArray[0];
-            // we want to get the current course in the local database in case
-            // it has changed while the server was processing.
-            getCourse(oldId, function(course2) {
-                deleteCourse(oldId);
-                course2.id = newId;
-                setCourse(course2, function() {
-                    serverCallback(course2);
+            advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
+                advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
+                var resultArray = item.getReturnText().split(":");
+                var oldId = resultArray[1];
+                var newId = resultArray[0];
+                // we want to get the current course in the local database in case
+                // it has changed while the server was processing.
+                getCourse(oldId, function(course2) {
+                    deleteCourse(oldId);
+                    course2.id = newId;
+                    setCourse(course2, function() {
+                        serverCallback(course2);
+                    });
                 });
             });
+            sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
         });
     }
     parent.insertCourse = insertCourse;
-
-    /**
-     * Updates an existing course into the database. This course must already
-     * exist.
-     *
-     * If there is a problem, courseCallback is called with an error code TODO:
-     * create error code.
-     *
-     * @param course
-     * @param courseCallback
-     * @param serverCallback
-     *            the people next to me on the bus are really annoying
-     */
-    function updateCourse(course, courseCallback, serverCallback) {
-        setCourse(course); // overrides the course into the local database;
-        if (courseCallback) courseCallback(course);
-
-        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
-        advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
-            serverCallback(item); // we do not need to make server changes we
-                                    // just need to make sure it was successful.
-        });
-    }
 
     /*
      * gets the id's of all of the courses in the user's local client.
