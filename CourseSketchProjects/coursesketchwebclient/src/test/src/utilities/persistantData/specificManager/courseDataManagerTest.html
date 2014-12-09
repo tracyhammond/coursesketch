@@ -177,7 +177,7 @@
 
                 // TEST STARTING
                 waitForDatabase(dataManager, function() {
-                    dataManager.getCourse(fakeID, undefined, function(result1) {
+                    dataManager.getCourse(fakeID, function(result1) {
                         console.log("result 1 is "+ result1.id);
                         course2.id = result1.id;
                         assert.equal(course2.id, course.id,"Sent a course to server and recieved it");
@@ -192,7 +192,6 @@
                 expect(2);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
                     CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
                 req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
                 var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
@@ -200,45 +199,35 @@
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE;
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
-                course.id = generateUUID();
                 var course1 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course1.id = "firstcourse";
                 course2.id = "secondcourse";
                 course1.name = "I am a test!";
                 course2.name = "I am also a test!";
-                course1.courseId = course.id
-                course2.courseId = course.id;
 
                 // TEST STARTING
                 waitForDatabase(dataManager, function() {
-                    dataManager.setCourse(course, function() {
-                        itemResult.returnText = "1Two" + ":" + course1.id;
+                    itemResult.returnText = "1Two" + ":" + course1.id;
+                    CourseSketch.connection.sendRequest = function(message) {
+                        req.otherData = dataResult.toArrayBuffer();
+                        CourseSketch.connection.sendSelf(req);
+                    }; //send request
+                    dataManager.insertCourse(course1, undefined, function() {
+                        itemResult.returnText = "2Two" + ":" + course2.id;
                         CourseSketch.connection.sendRequest = function(message) {
                             req.otherData = dataResult.toArrayBuffer();
                             CourseSketch.connection.sendSelf(req);
                         }; //send request
-                        dataManager.insertCourse(course1, undefined,function() {
-                            itemResult.returnText = "2Two" + ":" + course2.id;
-                            CourseSketch.connection.sendRequest = function(message) {
-                                req.otherData = dataResult.toArrayBuffer();
-                                CourseSketch.connection.sendSelf(req);
-                            }; //send request
-                                dataManager.insertCourse(course2, undefined,function() {
-                                    dataManager.getCourse(course.id, function(newCourse) {
-                                        CourseSketch.connection.sendRequest = function(){};
-                                        //setTimeout(function(){
-                                            dataManager.getCourseLectures(newCourse.courseList,  function(courseList) {
-
-                                                assert.equal(courseList[0].id, '1Two', "course 1 was correct");
-                                                 assert.equal(courseList[1].id, '2Two', "course 2 was correct");
-                                                QUnit.start();
-                                            }, undefined); // getCoursecourse loop
-                                        //}, 100);// to prevent race condiction of getting before updating
-                                    }); // getCourse
-                                }); // insertcourse course2
-                        }); // insertcourse course1
-                    });
+                        dataManager.insertCourse(course2, undefined, function() {
+                            CourseSketch.connection.sendRequest = function(){};
+                                dataManager.getAllCourses(function(courseList) {
+                                    assert.equal(courseList[0].id, '1Two', "course 1 was correct");
+                                     assert.equal(courseList[1].id, '2Two', "course 2 was correct");
+                                    QUnit.start();
+                                }, undefined); // getCoursecourse loop
+                        }); // insertcourse course2
+                    }); // insertcourse course1
                 }); // end waitForDatabase
             });
 
