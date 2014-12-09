@@ -172,7 +172,12 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 courseCallback(e, request);
             }
         });
-        userCourses[course.id] = undefined; // removing it from the local map
+        userCourses[courseId] = undefined; // removing it from the local map
+        var index = userCourseId.indexOf(courseId);
+        if (index > -1) {
+            userCourseId.splice(index, 1);
+            setCourseIdList(idList);
+        }
     }
     parent.deleteCourse = deleteCourse;
 
@@ -279,7 +284,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     deleteCourse(oldId);
                     course2.id = newId;
                     setCourse(course2, function() {
+                        userCourseId.push(newId);
                         serverCallback(course2);
+                        setCourseIdList(userCourseId);
                     });
                 });
             });
@@ -297,4 +304,11 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         }
         userCourseId = result.data;
     });
+
+    /**
+     * @return {Array} A list that represents all of the ids of courses in the database.
+     */
+    parent.getAllCourseIds = function() {
+        return JSON.parse(JSON.stringify(userCourseId));
+    }
 }
