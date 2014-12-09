@@ -101,7 +101,7 @@ public final class AssignmentManager {
         final DBObject corsor = newUser.findOne(query);
 
         // inserts the id into the previous the course
-        CourseManager.mongoInsertIntoCourse(dbs, assignment.getCourseId(), corsor.get(SELF_ID).toString());
+        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), corsor.get(SELF_ID).toString());
 
         return corsor.get(SELF_ID).toString();
     }

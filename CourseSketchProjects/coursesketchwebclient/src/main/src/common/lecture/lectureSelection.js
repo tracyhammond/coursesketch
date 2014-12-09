@@ -30,7 +30,8 @@
          *            selected
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
-            console.log(lecture);
+            CourseSketch.dataManager.addState("currentLecture",lecture);
+            CourseSketch.redirectContent("/src/common/lecture/lecturePage.html", "Edit Lecture");
         }
 
         /**
@@ -40,6 +41,9 @@
          *                list of lectures to display
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
+            if(lectureList[0] instanceof CourseSketch.DatabaseException) {
+                throw lectureList[0];
+            }
             var add = $("#add").clone();
             var schoolItemBuilder = new SchoolItemBuilder();
             schoolItemBuilder.setList(lectureList)
@@ -71,6 +75,7 @@
                 .addSelectedItem(document.getElementById(courseid));
             CourseSketch.dataManager.getCourse(courseid, function(course) {
                 CourseSketch.dataManager.getCourseLectures(course.lectureList,
+                    CourseSketch.lectureSelection.displayLectures,
                     CourseSketch.lectureSelection.displayLectures);
             });
         };

@@ -34,7 +34,7 @@ var CourseSketch = parent.CourseSketch;
     if (scriptElement.ownerDocument.URL.indexOf("FakePage.html") > -1 ) {
         return;
     }
-    if (!isUndefined(scriptElement.dataset.namespace)) {
+    if (typeof scriptElement.dataset.namespace !== "undefined") {
         var dataNamespaceList = scriptElement.dataset.namespace.split(",");
         for (var i = 0; i < dataNamespaceList.length; i++) {
             CourseSketch.addNamespace(dataNamespaceList[i].trim());

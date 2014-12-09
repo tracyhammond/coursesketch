@@ -64,7 +64,7 @@ function Connection(uri, encrypted, attemptReconnect) {
             };
             websocket.onmessage = function(evt) {
                 try {
-                    var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType; 
+                    var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType;
                     // Decode the Request
                     var msg = CourseSketch.PROTOBUF_UTIL.getRequestClass().decode(evt.data);
                     // console.log("request decoded succesfully ");
@@ -208,12 +208,14 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 * TODO: complete the entirety of the event that can be spoofed.
 	 */
 	this.sendSelf = function(message) {
-		console.log("start sendself");
-        var event = {
-            data : message.toArrayBuffer()
-        };
-        websocket.onmessage(event);
-        console.log("end sendself");
+	    setTimeout(function() {
+            console.log("start sendself");
+            var event = {
+                data : message.toArrayBuffer()
+            };
+            websocket.onmessage(event);
+            console.log("end sendself");
+        }, 100);
     };
 
 	console.log(this.sendSelf);

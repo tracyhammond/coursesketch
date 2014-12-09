@@ -1,0 +1,60 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Image test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+
+<!-- file being tested. -->
+<script src="/src/utilities/functions/image.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <h1>SVG Test</h1>
+    <img id="testImageSvg" src="/images/smallTitle.svg">
+    <img id="resultImageSvg">
+    <h1>PNG TEST</h1>
+    <img id="testImagePng" src="/images/menu.png">
+    <img id="resultImagePng">
+    <h1>GIF TEST</h1>
+    <img id="testImageGif" src="/images/plus.gif">
+    <img id="resultImageGif">
+
+
+	<script>
+        QUnit.module("testModule1");
+        test("svg test", function(assert) {
+            expect(0);
+            imgTag = document.getElementById("testImageSvg");
+            var data = getBase64Image(imgTag);
+            console.log(data);
+            var storeTag = document.getElementById("resultImageSvg");
+            setBase64Image(storeTag, data);
+            var data2 = getBase64Image(storeTag);
+            //assert.equal(data, data2);
+        });
+
+        test("png test", function(assert) {
+            imgTag = document.getElementById("testImagePng");
+            var data = getBase64Image(imgTag);
+            console.log(data);
+            var storeTag = document.getElementById("resultImagePng");
+            setBase64Image(storeTag, data);
+            var data2 = getBase64Image(storeTag);
+            assert.equal(data, data2);
+        });
+
+        test("gif test", function(assert) {
+            imgTag = document.getElementById("testImageGif");
+            var data = getBase64Image(imgTag);
+            console.log(data);
+            var storeTag = document.getElementById("resultImageGif");
+            setBase64Image(storeTag, data);
+            var data2 = getBase64Image(storeTag);
+            assert.equal(data, data2);
+        });
+    </script>
+</body>

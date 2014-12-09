@@ -189,14 +189,17 @@ html, body {
 }
 
 #slides > .content {
-    width: calc(10vw + 200px);
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: flex-start;
     height: 5vw;
     vertical-align: middle;
-    display: inline-block;
     position: absolute;
     bottom: 0;
     top: -3px;
     margin: auto 0;
+    padding-right: 10px;
 }
 
 .slide-thumb {
@@ -217,7 +220,9 @@ html, body {
     color: #FFF;
     background-color: #6377A8;
 }
-
+.resize{
+    border: 1px dashed #c3c3c3;
+}
 #slide-content {
     margin: auto;
     width: 140vmin;

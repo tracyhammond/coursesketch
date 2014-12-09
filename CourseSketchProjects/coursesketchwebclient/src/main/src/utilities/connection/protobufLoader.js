@@ -91,8 +91,8 @@ function ProtobufSetup() {
     }
 
     function buildLectures() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "lecture.proto");
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecture;
+        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "lecturedata.proto");
+        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
         assignValues(ProtoSubmissionBuilder);
     }
 
@@ -198,6 +198,23 @@ function ProtobufSetup() {
         var update = this.SrlUpdate();
         update.setCommands(commands);
         var n = createTimeStamp();
+        update.setTime("" + n);
+        update.setUpdateId(generateUUID());
+        return update;
+    };
+
+    /**
+     * Given a protobuf Command array an SrlUpdate is created.
+     *
+     * It is important to node that an SrlUpdate implies that the commands
+     * happened at the same time.
+     *
+     * @return {SrlUpdate}
+     */
+    this.createBaseUpdate = function createBaseUpdate() {
+        var update = this.SrlUpdate();
+        var n = createTimeStamp();
+        update.commands = [];
         update.setTime("" + n);
         update.setUpdateId(generateUUID());
         return update;
