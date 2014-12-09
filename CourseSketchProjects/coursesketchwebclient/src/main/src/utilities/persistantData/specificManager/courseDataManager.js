@@ -317,13 +317,17 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      */
     parent.clearCourses = function(clearCallback) {
         var barrier = userCourseId.length;
-        for (var i = 0; i < userCourseId.length; i++) {
-            deleteCourse(userCourseId[i], function() {
+        var list = parent.getAllCourseIds();
+        for (var i = 0; i < list.length; i++) {
+            deleteCourse(list[i], function() {
                 barrier -= 1;
                 if (barrier <= 0 && !isUndefined(clearCallback)) {
                     clearCallback();
                 }
             });
+        }
+        if (list.length == 0) {
+            clearCallback();
         }
     }
 }
