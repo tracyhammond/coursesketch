@@ -113,27 +113,47 @@ function Timeline () {
 		ttsBoxButton.onclick = function(event) {
 			event.stopPropagation();
 			/*creating the textbox*/
-			var ttsBox = document.createElement('text-speech-creation');
+			var ttsBox = document.createElement('tts-box-creation');
 			document.body.appendChild(ttsBox);
-			function closeTtsBox() {
+            var currentUpdate = localScope.index.getCurrentUpdate();
+            ttsBox.currentUpdate = currentUpdate;
+			function closeTtsBox(command) {
+                var ttsBox = document.getElementById(command.commandId);
+                var ttsBoxMarker = localScope.shadowRoot.getElementById(command.commandId);
+                if (!isUndefined(ttsBox.command)) {
+                    removeObjectFromArray(ttsBox.currentUpdate.commands, ttsBox.command);
+                }
 				ttsBox.parentNode.removeChild(ttsBox);
+                ttsBoxMarker.parentNode.removeChild(ttsBoxMarker);
 			}
-			ttsBox.setFinishedListener(function(command) {
-				globalcommand = command;
-			});
 			/*end of creating the textbox*/
 			var ttsBoxMarker = document.createElement("timeline-marker");
 			ttsBoxMarker.className = "ttsbox";
 			toolArea.appendChild(ttsBoxMarker);
+            ttsBoxMarker.showBox = ttsBox;
 			$(plusButton).empty();
-
-			var textArea = ttsBox.shadowRoot.querySelector('textarea');
-			ttsBoxMarker.setRemoveFunction(closeTtsBox);
-			ttsBox.setFinishedListener(function(command) {
-				globalcommand = command;
-				ttsBoxMarker.setPreviewText(textArea.value);
-			});
-		};
+            
+            ttsBoxFinishedListener = function(command, event, currentUpdate) {
+                var ttsBox = document.getElementById(command.commandId);
+                if (isUndefined(currentUpdate.commands)) {
+                    return;
+                }
+                if (currentUpdate.commands.indexOf(command) < 0) {
+                    currentUpdate.commands.push(command);
+                }
+                
+                if (!isUndefined(event)) {
+                    closeTtsBox(command);
+                    return;
+                }
+                var textArea = ttsBox.shadowRoot.querySelector('textarea');
+                ttsBoxMarker.setPreviewText(textArea.value);
+            };
+            
+            ttsBox.setFinishedListener(ttsBoxFinishedListener);
+            ttsBox.saveData();
+            ttsBoxMarker.id = ttsBox.id;
+        };
 	}
 
 	function addHighlightButton (plusButton, toolArea, localScope) {
@@ -170,9 +190,20 @@ function Timeline () {
                 }
             }
 		});
+        
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
+			if (!isUndefined(this.commandId)) {
+                var elementToDelete = document.getElementById(this.commandId);
+                if (elementToDelete != null) {
+                    elementToDelete.saveData();
+                    document.body.removeChild(elementToDelete);
+                }
+            }
+		});
 	}
+    
 	function redoCreator () {
-		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function(update) {
+		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
 			if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
                         CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
@@ -184,6 +215,21 @@ function Timeline () {
                 textBox.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
                 textBox.setFinishedListener(textBoxFinishedListener);
                 textBox.saveData();
+            }
+		});
+        
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
+			if (!isUndefined(this.commandId)) {
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
+                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var ttsBox  = document.createElement('tts-box-creation');
+                document.body.appendChild(ttsBox);
+                ttsBox.loadData(decoded);
+                ttsBox.id = this.commandId;
+                ttsBox.command = this;
+                ttsBox.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
+                ttsBox.setFinishedListener(ttsBoxFinishedListener);
+                ttsBox.saveData();
             }
 		});
 	}
