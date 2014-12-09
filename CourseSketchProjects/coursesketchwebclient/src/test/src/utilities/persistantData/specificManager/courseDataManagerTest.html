@@ -15,7 +15,18 @@
         <div id="qunit-fixture"></div>
 
         <script>
-            QUnit.module("course creation");
+            QUnit.module("course creation", {
+                teardown: function() {
+                    var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+                        CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                    QUnit.stop();
+                    waitForDatabase(dataManager, function() {
+                        dataManager.clearCourses(function() {
+                            QUnit.start();
+                        });
+                    }); // end waitForDatabase
+                }
+            });
             test("create new database", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
