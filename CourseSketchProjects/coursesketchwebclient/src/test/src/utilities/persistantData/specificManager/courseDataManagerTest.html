@@ -61,7 +61,7 @@
                 course.id = generateUUID();
                 course.name = "I AM TEST";
                 var returnId = "returnId";
-                itemResult.returnText = returnId + ":" + course.id;
+                itemResult.returnText = returnId + ":" + course.id;  //FIXME IN LECTURE
 
                 // sends to the server.
                 CourseSketch.connection.sendRequest = function(message) {
@@ -71,7 +71,7 @@
                 waitForDatabase(dataManager, function() {
                     dataManager.insertCourse(course, undefined, function(course2) {
                         assert.ok(true, "Server callback called.");
-                        assert.equal(course2.id, returnId, "the resulting course should have the id that the server gave it");
+                        assert.equal(course2.id, returnId, "the resulting course should have the id that the server gave it"); // FIXME IN LECTURE
                         QUnit.start();
                     });
                 }); // end waitForDatabase
@@ -109,26 +109,24 @@
                             req.otherData = dataResult.toArrayBuffer();
                             CourseSketch.connection.sendSelf(req);
                         }; //send request
-                        dataManager.insertCourse(course1, undefined,function() {
+                        dataManager.insertCourse(course1, undefined, function() {
                             itemResult.returnText = "2Two" + ":" + course2.id;
                             CourseSketch.connection.sendRequest = function(message) {
                                 req.otherData = dataResult.toArrayBuffer();
                                 CourseSketch.connection.sendSelf(req);
                             }; //send request
-                                dataManager.insertCourse(course2, undefined,function() {
-                                    dataManager.getCourse(course.id, function(newCourse) {
-                                        CourseSketch.connection.sendRequest = function(){};
-                                        //setTimeout(function(){
-                                            dataManager.getCourseLectures(newCourse.courseList,  function(courseList) {
-                                                assert.ok(true, "Courses can be fetched from the database.");
-                                                assert.equal(courseList.length, 2, "Two courses were inserted and two courses were returned.");
-                                                for (var i = 0; i < courseList.length; ++i) {
-                                                    console.log(courseList[i]);
-                                                }
-                                                QUnit.start();
-                                            }, undefined); // getCoursecourse loop
-                                        //}, 100);// to prevent race condiction of getting before updating
-                                    }); // getCourse
+                                dataManager.insertCourse(course2, undefined, function() {
+
+                                    // Used to prevent issues with server stuff.
+                                    CourseSketch.connection.sendRequest = function(){};
+                                    dataManager.getAllCourses(function(courseList) {
+                                        assert.ok(true, "Courses can be fetched from the database.");
+                                        assert.equal(courseList.length, 2, "Two courses were inserted and two courses were returned.");
+                                        for (var i = 0; i < courseList.length; ++i) {
+                                            console.log(courseList[i]);
+                                        }
+                                        QUnit.start();
+                                    }); // getCoursecourse loop
                                 }); // insertcourse course2
                         }); // insertcourse course1
                     });
