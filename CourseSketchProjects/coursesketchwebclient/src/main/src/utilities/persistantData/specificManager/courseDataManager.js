@@ -43,7 +43,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 updateCourse = true;
             }
         } catch (exception) {
-            console.log(exception);
+            //console.log(exception);
         }
 
         // so we do not have to perform this again!
@@ -176,7 +176,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         var index = userCourseId.indexOf(courseId);
         if (index > -1) {
             userCourseId.splice(index, 1);
-            setCourseIdList(idList);
+            setCourseIdList(userCourseId);
         }
     }
     parent.deleteCourse = deleteCourse;
@@ -310,5 +310,20 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      */
     parent.getAllCourseIds = function() {
         return JSON.parse(JSON.stringify(userCourseId));
+    }
+
+    /**
+     * Attempts to clear the database of courses.
+     */
+    parent.clearCourses = function(clearCallback) {
+        var barrier = userCourseId.length;
+        for (var i = 0; i < userCourseId.length; i++) {
+            deleteCourse(userCourseId[i], function() {
+                barrier -= 1;
+                if (barrier <= 0 && !isUndefined(clearCallback)) {
+                    clearCallback();
+                }
+            });
+        }
     }
 }
