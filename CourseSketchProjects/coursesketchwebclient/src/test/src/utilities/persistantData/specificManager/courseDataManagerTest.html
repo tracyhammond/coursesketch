@@ -25,6 +25,9 @@
                             QUnit.start();
                         });
                     }); // end waitForDatabase
+
+                    // overwrites the function so that nothing happens.
+                    CourseSketch.connection.sendRequest = function(message) {};
                 }
             });
             test("create new database", function(assert) {
@@ -258,7 +261,7 @@
             });
 
             asyncTest("Testing Delete ", function(assert) {
-                expect(1);
+                expect(2);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var fakeID = generateUUID();
@@ -276,18 +279,17 @@
                 waitForDatabase(dataManager, function() {
                     dataManager.setCourse(course,  function() {
                         dataManager.deleteCourse(course.id, function() {
-                            dataManager.getCourse(course.id, function(newCourse) {
-                                console.log(newCourse);
-                                CourseSketch.connection.sendRequest = function(){};
-                                dataManager.getAllCourses(newCourse.courseList,  function(courseList) {
-                                    assert.ok(true, "Courses can be fetched from the database.");
-                                    assert.equal(courseList.length, 0, "There are no courses in the database.");
-                                    for (var i = 0; i < courseList.length; ++i) {
-                                        console.log(courseList[i]);
-                                    }
-                                    QUnit.start();
-                                }); // getCoursecourse loop
-                            }); // getCourse
+                            CourseSketch.connection.sendRequest = function(message) {
+                                assert.equal(message.requestType, CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
+                                    "Message type is valid.");
+                                var dataQuery = CourseSketch.PROTOBUF_UTIL.getDataRequestClass().decode(message.getOtherData());
+                                var itemQuery = dataQuery.items[0];
+                                var id = itemQuery.itemId[0];
+                                assert.equal(id, course.id, "The course is not found locally so instead we search in the server.");
+                                QUnit.start();
+                            };
+                            // We don't expect this to be called so we don't pass in any callback
+                            dataManager.getCourse(course.id);
                         });
                     });
                 }); // end waitForDatabase
@@ -318,23 +320,21 @@
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
-                            req.otherData = dataResult.toArrayBuffer();
-                            CourseSketch.connection.sendSelf(req);
-                        }; //send request
+                        req.otherData = dataResult.toArrayBuffer();
+                        CourseSketch.connection.sendSelf(req);
+                    }; //send request
                 var waitfor = 0;
 
                 // TEST STARTING
                 waitForDatabase(dataManager, function() {
                     dataManager.setCourse(course, function() {
                         dataManager.updateCourse(course2, undefined, function() {
-                            setTimeout(function() {
-                               dataManager.getCourse(fakeID, function(result1) {
-                                    console.log("result 1 is "+ result1.name + ","+course2.name);
-                                    assert.equal( result1.name, course2.name,"Sent a course to server and updated it");
-                                    QUnit.start();
-                                } ); // updatecourse loop
-                            }, undefined);// get coursecourse
-                       }, 100)// end of setinterval
+                            dataManager.getCourse(fakeID, function(result1) {
+                                console.log("result 1 is "+ result1.name + ","+course2.name);
+                                assert.equal( result1.name, course2.name,"Sent a course to server and updated it");
+                                QUnit.start();
+                            }); // get course loop
+                        });// get coursecourse
                     });
                 }); // end waitForDatabase
              });
@@ -362,14 +362,12 @@
                 waitForDatabase(dataManager, function() {
                     dataManager.setCourse(course,  function() {
                         dataManager.updateCourse(course2, function() {
-                            setTimeout(function(){
-                                 dataManager.getCourse(fakeID,  function(result1) {
-                                    console.log("result 1 is "+ result1.name + ","+course2.name);
-                                    course2.id = result1.id;
-                                    assert.equal(course2.name, result1.name,"Sent a course to local and updated it");
-                                    QUnit.start();
-                                }); //get coursecourse
-                            },100);
+                             dataManager.getCourse(fakeID,  function(result1) {
+                                console.log("result 1 is "+ result1.name + ","+course2.name);
+                                course2.id = result1.id;
+                                assert.equal(course2.name, result1.name,"Sent a course to local and updated it");
+                                QUnit.start();
+                            }); //get coursecourse
                         });
                     });
                 }); // end wait for database
