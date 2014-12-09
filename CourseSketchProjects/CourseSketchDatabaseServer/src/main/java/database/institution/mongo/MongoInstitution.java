@@ -1,22 +1,24 @@
 package database.institution.mongo;
 
-import static database.DatabaseStringConstants.DATABASE;
-import static database.DatabaseStringConstants.GROUP_PREFIX;
-import static database.DatabaseStringConstants.SELF_ID;
-import static database.DatabaseStringConstants.UPDATE_COLLECTION;
-import static database.DatabaseStringConstants.USER_COLLECTION;
-import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
-import static database.DatabaseStringConstants.USER_LIST;
-
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import com.mongodb.MongoClient;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import database.auth.MongoAuthenticator;
+import database.institution.Institution;
+import database.submission.SubmissionManager;
+import database.user.GroupManager;
+import database.user.UserClient;
 import org.bson.types.ObjectId;
-
+import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -26,22 +28,17 @@ import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.submission.Submission.SrlExperiment;
 
-import com.google.protobuf.ByteString;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import com.mongodb.MongoClient;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
-import database.institution.Institution;
-import database.submission.SubmissionManager;
-import database.user.GroupManager;
-import database.user.UserClient;
+import static database.DatabaseStringConstants.DATABASE;
+import static database.DatabaseStringConstants.GROUP_PREFIX;
+import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.UPDATE_COLLECTION;
+import static database.DatabaseStringConstants.USER_COLLECTION;
+import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
+import static database.DatabaseStringConstants.USER_LIST;
 
 /**
  * A Mongo implementation of the Institution it inserts and gets courses as
@@ -142,9 +139,11 @@ public final class MongoInstitution implements Institution {
                 database = mongoClient.getDB("test");
             } else {
                 database = mongoClient.getDB(DATABASE);
+
             }
         }
         instance = this;
+        instance.auth = new Authenticator(new MongoAuthenticator(instance.database));
     }
 
     /*
@@ -238,6 +237,30 @@ public final class MongoInstitution implements Institution {
             }
         }
         return allAssignments;
+    }
+
+    @Override
+    public ArrayList<Lecture> getLecture(final List<String> lectureId, final String userId) throws AuthenticationException,
+            DatabaseAccessException {
+        final long currentTime = System.currentTimeMillis();
+        final ArrayList<Lecture> allLectures = new ArrayList<Lecture>();
+        for (int lectures = lectureId.size() - 1; lectures >= 0; lectures--) {
+            try {
+                allLectures.add(LectureManager.mongoGetLecture(getInstance().auth, getInstance().database, lectureId.get(lectures),
+                        userId, currentTime));
+            } catch (DatabaseAccessException e) {
+                e.printStackTrace();
+                if (!e.isRecoverable()) {
+                    throw e;
+                }
+            } catch (AuthenticationException e) {
+                e.printStackTrace(System.err);
+                if (e.getType() != AuthenticationException.INVALID_DATE) {
+                    throw e;
+                }
+            }
+        }
+        return allLectures;
     }
 
     /*
@@ -343,6 +366,16 @@ public final class MongoInstitution implements Institution {
 
         final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().database, assignment.getCourseId());
         AssignmentManager.mongoInsertDefaultGroupId(getInstance().database, resultId, ids);
+
+        return resultId;
+    }
+
+    @Override
+    public String insertLecture(final String userId, final Lecture lecture) throws AuthenticationException, DatabaseAccessException {
+        final String resultId = LectureManager.mongoInsertLecture(getInstance().auth, getInstance().database, userId, lecture);
+
+        final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().database, lecture.getCourseId());
+        LectureManager.mongoInsertDefaultGroupId(getInstance().database, resultId, ids);
 
         return resultId;
     }

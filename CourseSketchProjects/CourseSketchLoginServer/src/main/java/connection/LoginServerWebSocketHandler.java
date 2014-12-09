@@ -145,7 +145,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      */
     private void loginUser(final SocketSession conn, final Request req, final LoginInformation login) {
         // if not specified then log in as default user.
-        final boolean loginAsDefault = login.hasIsInstructor();
+        final boolean loginAsDefault = !login.hasIsInstructor();
         try {
             final String userLoggedIn = DatabaseClient.mongoIdentify(login.getUsername(), login.getPassword(), loginAsDefault,
                     login.getIsInstructor());

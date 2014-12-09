@@ -187,7 +187,23 @@ function SketchSurface() {
      * returns the update list of the element.
      */
     this.getUpdateList = function() {
+        return this.updateList.getUpdateList();
+    };
+
+    /**
+     * Returns the manager for this sketch surface.
+     */
+    this.getUpdateManager = function() {
         return this.updateList;
+    };
+
+    /**
+     * Returns SrlUpdateList proto object.
+     */
+    this.getSrlUpdateListProto = function() {
+        var updateProto = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        updateProto.list = this.updateList.getUpdateList();
+        return updateProto;
     };
 }
 

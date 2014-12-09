@@ -59,7 +59,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
     /**
      * Returns a course with the given couresId will ask the server if it does
-     * not exist locally
+     * not exist locally.
      *
      * If the server is pulled and the course still does not exist the Id is set
      * with nonExistantValue and the database is never polled for this item for
@@ -75,7 +75,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         // quick and dirty this is in ram (not in local memory)
         if (!isUndefined(userCourses[courseId])) {
             if (userCourses[courseId] == nonExistantValue) {
-                courseCallback(nonExistantValue);
+                courseCallback(new DatabaseException("Course does not exist", "Getting courses with id " + courseId));
                 return;
             }
             var bytes = ByteBuffer.fromBase64(userCourses[courseId]);
