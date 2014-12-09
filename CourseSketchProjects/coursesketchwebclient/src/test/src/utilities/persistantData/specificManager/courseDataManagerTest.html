@@ -269,27 +269,25 @@
                 course.id = fakeID;
                 course.courseId = course.id;
                 course.name = "Preupdated"
-                SrlCoursedata.courses = [ course];
+                SrlCoursedata.courses = [course];
                 var waitfor = 0;
 
                 // TEST STARTING
                 waitForDatabase(dataManager, function() {
                     dataManager.setCourse(course,  function() {
                         dataManager.deleteCourse(course.id, function() {
-                            setTimeout(function(){
-                                dataManager.getCourse(course.id, function(newCourse) {
+                            dataManager.getCourse(course.id, function(newCourse) {
+                                console.log(newCourse);
                                 CourseSketch.connection.sendRequest = function(){};
-                                //setTimeout(function(){
-                                    dataManager.getCourseLectures(newCourse.courseList,  function(courseList) {
-                                        assert.ok(true, "Courses can be fetched from the database.");
-                                        assert.equal(courseList.length, 0, "Two courses were inserted and two courses were returned.");
-                                        for (var i = 0; i < courseList.length; ++i) {
-                                            console.log(courseList[i]);
-                                        }
-                                        QUnit.start();
-                                    }, undefined); // getCoursecourse loop
-                                }); // getCourse
-                            },100);
+                                dataManager.getAllCourses(newCourse.courseList,  function(courseList) {
+                                    assert.ok(true, "Courses can be fetched from the database.");
+                                    assert.equal(courseList.length, 0, "There are no courses in the database.");
+                                    for (var i = 0; i < courseList.length; ++i) {
+                                        console.log(courseList[i]);
+                                    }
+                                    QUnit.start();
+                                }); // getCoursecourse loop
+                            }); // getCourse
                         });
                     });
                 }); // end waitForDatabase
