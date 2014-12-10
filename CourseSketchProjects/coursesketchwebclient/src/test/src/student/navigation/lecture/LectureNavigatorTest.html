@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Command Methods test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <!-- files needed for testing -->
+    <link rel="import" href="/test/src/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+
+    <!-- file being tested. -->
+    <script src="/src/student/navigation/lecture/LectureNavigator.js" data-cover></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<script>
+        QUnit.module("timing Test");
+        QUnit.asyncTest("testing how timing works this test will fail", function(assert) {
+            setTimeout(function() {
+                assert.ok(true);
+                QUnit.start();
+            }, 1000);
+        });
+        QUnit.asyncTest("testing how timing works2", function(assert) {
+            restoreRealTime();
+            setTimeout(function() {
+                assert.ok(true);
+                QUnit.start();
+            }, 1000);
+        });
+
+        QUnit.asyncTest("testing how timing works this test will fail", function(assert) {
+            setTimeout(function() {
+                assert.ok(true);
+                QUnit.start();
+            }, 1000);
+        });
+
+        QUnit.asyncTest("testing how timing works this test will pass", function(assert) {
+
+            var clock = sinon.useFakeTimers();
+            setTimeout(function() {
+                assert.ok(true);
+                QUnit.start();
+            }, 1000);
+            clock.tick(1000);
+        });
+
+        QUnit.test("how does fak timing work this sees if the sinon timers are the same as the other timers", function(assert) {
+            var localFunc = setTimeout;
+            this.clock = this.useFakeTimers();
+            assert.equal(localFunc, setTimeout);
+        });
+    </script>
+</body>
