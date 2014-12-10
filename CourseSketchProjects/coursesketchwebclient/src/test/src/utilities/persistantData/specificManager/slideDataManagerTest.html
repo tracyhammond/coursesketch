@@ -23,57 +23,64 @@
                     assert.ok(true, "The datamanager was successfully created.");
                 }
             });
+            
             asyncTest("create new slide", function(assert) {
             expect(1);
             var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = generateUUID();
                 waitForDatabase(dataManager, function() {
-                    dataManager.setCourse(course, function() {
-                        var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
-                        lecture.id = generateUUID();
-                        lecture.courseId = course.id;
-                        lecture.name= "I AM TEST";
-                        dataManager.insertLecture(lecture, function() {
-                            var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-                            slide.id = generateUUID();
-                            slide.lectureId = lecture.id;
-                            dataManager.insertSlide(slide, function(){
-                                assert.ok(true, "Local callback called.");
-                                QUnit.start();
-                            });
+                    var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+                    lecture.id = generateUUID();
+                    lecture.courseId = course.id;
+                    lecture.name= "I AM TEST";
+                    dataManager.setLecture(lecture, function() {
+                        var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                        slide.id = generateUUID();
+                        slide.lectureId = lecture.id;
+                        dataManager.insertSlide(slide, function(){
+                            assert.ok(true, "Local callback called.");
+                            QUnit.start();
                         });
+                       
                     });
                 });
             });
             
-            asyncTest("get slides from course local callback", function(assert) {
+            asyncTest("get slides from lecture local callback", function(assert) {
             expect(2);
             var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                course.id = generateUUID();
-                waitForDatabase(dataManager, function() {
-                    dataManager.setCourse(course, function() {
-                        var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
-                        lecture.id = generateUUID();
-                        lecture.courseId = course.id;
-                        lecture.name= "I AM TEST";
-                        dataManager.insertLecture(lecture, function() {
-                            var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-                            slide.id = generateUUID();
-                            slide.lectureId = lecture.id;
-                            dataManager.insertSlide(slide, function(){
-                                dataManager.getSlideLocal(slide.id,function(gotSlide){
-                                    assert.equal(gotSlide.lectureId, lecture.id, "getSlideLocal  lectureId matches.");
-                                    assert.equal(gotSlide.id, slide.id, "getSlideLocal  id matches.");
-                                    QUnit.start();   
-                                })
-                            });
-                        }, undefined);
-                    });
-                });
+            var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+            lecture.id = generateUUID();
+            lecture.courseId = "Course";
+            waitForDatabase(dataManager, function() {
+                dataManager.setLecture(lecture, function() {
+                    var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                    slide.id = generateUUID();
+                    slide.lectureId = lecture.id;
+                    dataManager.insertSlide(slide, function() {
+                        var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                        slide2.id = generateUUID();
+                        slide2.lectureId = lecture.id;
+                        dataManager.insertSlide(slide2, function(){
+                            dataManager.getLectureLocal(lecture.id, function(newLecture) {
+                                CourseSketch.connection.sendRequest = function(){};
+                                var slideList = [];
+                                for (var i = 0; i < newLecture.idList.length; i++) {
+                                    slideList.push(newLecture.idList[i].id);
+                                }
+                                dataManager.getLectureSlides(slideList,  function(slideList) {
+                                    assert.ok(true, "Slide lists can be fetched from the database.");
+                                    assert.equal(slideList.length, 2, "Two lectures were inserted and two lectures were returned.");
+                                    QUnit.start();
+                                    }); // getslidelecture loop
+                                }); // getLecture
+                            });// insertslide2
+                        }); // insertslide
+                    }); // setcourse
+                }); // wait for database 
             });
-
+    
             
             asyncTest("get slide server response from lecture part 2 testing DB local callback", function(assert) {
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
@@ -107,72 +114,53 @@
                 });                    
              });
              
-            asyncTest("get slides from course part 2 testing DB server callback", function(assert) {
-            expect(2);
-            var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-            var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
-            var req = CourseSketch.PROTOBUF_UTIL.Request();
-            req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
-            var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
-            var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
-            itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE;
-            dataResult.results = [itemResult];
-            req.otherData = dataResult.toArrayBuffer();
-            course.id = generateUUID();
-            var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
-            var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
-            lecture1.id = "firstlecture";
-            lecture2.id = "secondlecture";
-            lecture1.name = "I am a test!";
-            lecture2.name = "I am also a test!";
-            lecture1.courseId = course.id
-            lecture2.courseId = course.id;
-            var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-            var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-            waitForDatabase(dataManager, function() {
-                dataManager.setCourse(course, function() {
-                    itemResult.returnText = "1Two" + ":" + lecture1.id;
-                    CourseSketch.connection.sendRequest = function(message) {
-                        req.otherData = dataResult.toArrayBuffer();
-                        CourseSketch.connection.sendSelf(req);
-                    }; //send request
-                    dataManager.insertLecture(lecture1, undefined,function() {
-                        slide.id = "firstslide"
-                        slide2.id = "secondslide"
-                        slide.lectureId = lecture1.id
-                        slide2.lectureId = lecture1.id
-                        CourseSketch.connection.sendRequest = function(message) {
-                                    req.otherData = dataResult.toArrayBuffer();
-                                    CourseSketch.connection.sendSelf(req);
-                                }; //send request
-                        dataManager.insertSlide(slide, undefined, function() {
-                            CourseSketch.connection.sendRequest = function(message) {
-                                    req.otherData = dataResult.toArrayBuffer();
-                                    CourseSketch.connection.sendSelf(req);
-                                }; //send request
-                            dataManager.insertSlide(slide2, undefined, function() {
-                                CourseSketch.connection.sendRequest = function(message) {
-                                    req.otherData = dataResult.toArrayBuffer();
-                                    CourseSketch.connection.sendSelf(req);
-                                }; //send request
-                                dataManager.getCourse(course.id, function(newCourse) {
-                                    CourseSketch.connection.sendRequest = function(){};
-                                    //setTimeout(function(){
-                                        dataManager.getLectureSlides(newCourse.lectureList,  function(lectureList) {
-                                             
-                                            assert.equal(lectureList[0].id, '1Two', "lecture 1 was correct");
-                                            QUnit.start();
-                                        }, undefined); // getCourselecture loop
-                                    //}, 100);// to prevent race condiction of getting before updating  
-                                    }); // getCourse       
-                                } )
-                                    
-                                    
-                            }); // insertlecture lecture1
-                        });
-                    });
-                });  
-            }); 
+            asyncTest("get slides from lecture part 2 testing DB server callback", function(assert) {
+                expect(1);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
+                var req = CourseSketch.PROTOBUF_UTIL.Request();
+                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
+                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE;
+                dataResult.results = [itemResult];
+                req.otherData = dataResult.toArrayBuffer();
+                course.id = generateUUID();
+                var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
+                var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
+                var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+                lecture1.id = "firstlecture";
+                lecture2.id = "secondlecture";
+                lecture1.name = "I am a test!";
+                lecture2.name = "I am also a test!";
+                lecture1.courseId = course.id
+                lecture2.courseId = course.id;
+                slide1.id = "firstslide";
+                slide2.id = "secondslide";
+                slide1.lectureId = lecture1.id;
+                slide2.lectureId = lecture1.id;
+                waitForDatabase(dataManager, function() {
+                        dataManager.setLecture(lecture1, function() {
+                            dataManager.insertSlide(slide1, function() {
+                                dataManager.insertSlide(slide2, function() {
+                                    dataManager.getLectureLocal(lecture1.id, function(lecture) {
+                                        CourseSketch.connection.sendRequest = function(){};
+                                        var slideList = [];
+                                        for (var i = 0; i < lecture.idList.length; i++) {
+                                            slideList.push(lecture.idList[i].id);
+                                        }
+                                        dataManager.getLectureSlides(slideList,  function(lectureList) {
+                                           assert.equal(slideList.length, 2, "lecture 1 was correct");
+                                           QUnit.start(); 
+                                    });
+                                });
+                            }); // getCourselecture loop
+                        }) ;  
+                    }); // insertlecture lecture1
+                });
+            });
+    
             
             //next test
             asyncTest("test connection send request", function(assert) {
@@ -186,6 +174,8 @@
                     dataManager.getLectureSlide(fakeID);
                 });
             });
+            
+            //next test
             asyncTest("update lecture slide local callback", function(assert) {
             expect(1);
             var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
@@ -221,41 +211,6 @@
                 });
             });
 
-            asyncTest("Testing Delete Slide", function(assert) {
-                expect(1);
-                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
-                    CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                course.id = generateUUID();
-                waitForDatabase(dataManager, function() {
-                dataManager.setCourse(course, function() {
-                    var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
-                    lecture1.id = generateUUID();
-                    lecture1.name = "I am a test!";
-                    lecture1.courseId = course.id;
-                        dataManager.insertLecture(lecture1, undefined,function() {
-                            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-                            slide1.id = generateUUID();
-                            slide1.lectureId = lecture1.id;
-                            slide.unlock = true;
-                            datamanager.insertSlide(slide1, undefined, function() {
-                                dataManager.deleteSlide(slide1.id, function(){
-                                    dataManager.getCourse(course.id, function(newCourse) {
-                                        dataManager.getCourseLectures(newCourse.lectureList, function(lectureList) {
-                                            dataManager.getLectureSlides(newLecture.slides, function(slides) {
-                                                assert.equal(slides.length,0 , "One slide was inserted and was deleted.");
-                                                QUnit.start();
-                                            });
-                                        }); // get courselectures
-                                    });
-                                }); // getCourselecture loop
-                            });
-                        }); // getCourse
-                 }); // insertlecture lecture1
-                });
-            });
             
-           
-
         </script>
     </body>
