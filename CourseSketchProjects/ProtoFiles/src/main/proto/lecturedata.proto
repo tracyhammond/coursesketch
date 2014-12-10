@@ -1,4 +1,5 @@
 import "school.proto";
+import "tutorial.proto";
 package protobuf.srl.lecturedata;
 
 message SrlLectureDataHolder {
@@ -44,15 +45,11 @@ message LectureElement {
 	optional int32 y_dimension = 6;
 
 	oneof ElementType {
-		TextBox textBox = 7;
+		protobuf.srl.tutorial.ActionCreateTextBox textBox = 7;
 		Image image = 8;
 		SketchArea sketchArea = 9;
 		SrlQuestion question = 10;
 	}
-}
-
-message TextBox {
-	optional string text = 7;
 }
 
 message Image {
