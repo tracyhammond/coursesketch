@@ -81,7 +81,6 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      */
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function() {
-            localCallback(slide);
             /*
             parent.getCourseLecture(slide.lectureId, function(lecture) {
                     var idsInLectureList = lecture.idList;
@@ -111,6 +110,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                     });// end of setLecture
                 });
             });
+            localCallback(slide);
         });
     }
     parent.insertSlide = insertSlide;
