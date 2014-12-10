@@ -49,7 +49,12 @@ message LectureElement {
 		Image image = 8;
 		SketchArea sketchArea = 9;
 		SrlQuestion question = 10;
+		EmbeddedHtml embeddedHtml = 11;
 	}
+}
+
+message EmbeddedHtml {
+	optional string embeddedHtml = 1;
 }
 
 message Image {

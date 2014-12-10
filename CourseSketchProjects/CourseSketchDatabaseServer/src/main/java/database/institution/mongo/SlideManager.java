@@ -115,6 +115,7 @@ public final class SlideManager {
             case QUESTION:
                 query.append(SLIDE_BLOB, e.getQuestion().toByteArray());
                 break;
+            // TODO: Add embedded stuff
             case ELEMENTTYPE_NOT_SET:
             default:
                 break;
@@ -256,6 +257,7 @@ public final class SlideManager {
                 case QUESTION:
                     element.setQuestion(Lecturedata.SrlQuestion.parseFrom(blob));
                     break;
+                // TODO: Add embedded here
                 default:
                     break;
             }
