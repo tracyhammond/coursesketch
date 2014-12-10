@@ -203,9 +203,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      */
     function getCourseLectures(lectureIds, localCallback, serverCallback) {
         if (isUndefined(lectureIds) || lectureIds == null || lectureIds.length == 0) {
-            if(!isUndefined(localCallback)){
+            if (!isUndefined(localCallback)) {
                 localCallback(new DatabaseException("Result is undefined!", "Grabbing lecture from server: " + lectureIds));
-            }else{
+            } else {
                 serverCallback(new DatabaseException("Nothing is in the server database!", "Grabbing lecture from server: " + lectureIds));
             }
         }
