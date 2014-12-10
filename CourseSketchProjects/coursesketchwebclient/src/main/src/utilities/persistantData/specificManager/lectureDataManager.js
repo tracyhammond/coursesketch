@@ -8,7 +8,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
 
     /**
      * Sets a lecture in local database.
-     * 
+     *
      * @param lecture
      *                lecture object to set
      * @param lectureCallback
@@ -33,7 +33,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
 
     /**
      * Sets a lecture in server database.
-     * 
+     *
      * @param lecture
      *                lecture object to set
      * @param lectureCallback
@@ -98,7 +98,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
     /**
      * Adds a new lecture to both local and server databases. Also updates the
      * corresponding course given by the lecture's courseId.
-     * 
+     *
      * @param lecture
      *                lecture object to insert
      * @param localCallback
@@ -134,7 +134,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
 
     /**
      * Deletes a lecture from local database.
-     * 
+     *
      * @param lectureId
      *                ID of the lecture to delete
      * @param lectureCallback
@@ -151,7 +151,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
 
     /**
      * Gets a lecture from the local database.
-     * 
+     *
      * @param lectureId
      *                ID of the lecture to get
      * @param lectureCallback
@@ -171,14 +171,14 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                             .getLectureClass().decode(bytes));
                 } // endif
             } // end else
-        }); // end getFromLectures 
+        }); // end getFromLectures
     }
 
     parent.getLectureLocal = getLectureLocal;
 
     /**
      * Gets a lecture from the local and server databases.
-     * 
+     *
      * @param lectureId
      *                ID of the lecture to get
      * @param lectureCallback
@@ -196,7 +196,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
 
     /**
      * Gets a list of lectures from the local and server databases.
-     * 
+     *
      * @param lectureIds
      *                IDs of the lectures to get
      * @param lectureCallback
