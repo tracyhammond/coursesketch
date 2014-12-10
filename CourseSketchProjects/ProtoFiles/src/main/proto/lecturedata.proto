@@ -68,7 +68,7 @@ message SketchArea {
 }
 
 message LectureNavigator {
-	optional int32 nextLecture = 1;
+	optional string nextLectureId = 1;
 	optional int32 nextSlide = 2;
 }
 
