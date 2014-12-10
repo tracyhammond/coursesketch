@@ -124,8 +124,18 @@ function WaitScreenManager() {
 	};
 	
 	this.buildOverlay = function(element) {
-		element.startOverlay = function() {
-		}
+		var overlay = document.createElement("dialog");
+		overlay.style.background = "#000";
+		overlay.style.opacity = 0.5;
+		overlay.style.position = "fixed";
+		overlay.style.left = 0;
+		overlay.style.top = 0;
+		overlay.style.width = "100%";
+		overlay.style.height = "100%";
+		overlay.style.zIndex = 2147483647;
+		overlay.open = true;
+		overlay.id = "overlay";
+		element.appendChild(overlay);
 	};
 
 	this.buildWaitIcon = function buildWaitIcon(element) {
@@ -137,7 +147,7 @@ function WaitScreenManager() {
 		if (this.customIcon) {
 			img.src = customIcon;
 		} else {
-			img.src = "images/loading/000000_large_loader.gif";
+			img.src = "/images/loading/000000_large_loader.gif";
 		}
 		outer.appendChild(img);
 		if (this.waitIconText) {
