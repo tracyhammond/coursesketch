@@ -125,6 +125,7 @@
                 CourseSketch.lecturePage.loadEmbeddedHtml(element.embeddedHtml);
             } else {
                 throw "Tried to load invalid element";
+            }
         }
     }
 
@@ -138,7 +139,7 @@
         if(!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") != null) {
             document.querySelector("body").removeChild(document.getElementById("overlay"));
         }
-    }
+    };
 
     /**
      * Adds a slide thumbnail to the DOM.
@@ -156,7 +157,7 @@
             CourseSketch.lecturePage.selectSlide(slideIndex);
         };
         document.querySelector("#slides>.content").appendChild(slideThumb);
-    }
+    };
 
     /**
      * Displays all of the slides for the current lecture.
@@ -166,10 +167,10 @@
         $(".slide-thumb:not(\"#add\")").each(function() {
             $(this).remove();
         });
-        for(var i = 0; i < CourseSketch.lecturePage.lecture.idList.length; ++i) {
+        for (var i = 0; i < CourseSketch.lecturePage.lecture.idList.length; ++i) {
             CourseSketch.lecturePage.addSlideToDom(i);
         }
-        if(CourseSketch.lecturePage.lecture.idList.length > 0) {
+        if (CourseSketch.lecturePage.lecture.idList.length > 0) {
             if(!isUndefined(CourseSketch.lecturePage.selectedSlideIndex)) {
                 CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex);
             } else {
@@ -178,5 +179,5 @@
         } else {
             CourseSketch.lecturePage.newSlide();
         }
-    }
+    };
 })();
