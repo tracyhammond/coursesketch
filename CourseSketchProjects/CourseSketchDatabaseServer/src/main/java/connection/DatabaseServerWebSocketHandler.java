@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.SocketSession;
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
@@ -19,7 +20,7 @@ import utilities.TimeManager;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**

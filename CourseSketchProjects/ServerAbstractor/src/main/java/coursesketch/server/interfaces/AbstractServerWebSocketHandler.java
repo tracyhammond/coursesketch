@@ -1,6 +1,7 @@
 package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import protobuf.srl.request.Message.Request;
 import utilities.TimeManager;
 
 import java.nio.ByteBuffer;
@@ -8,8 +9,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import protobuf.srl.request.Message.Request;
 /**
  * Manages a socket on the server side if you want to know about the client side see {@link AbstractClientWebSocket}.
  *
@@ -19,6 +18,12 @@ import protobuf.srl.request.Message.Request;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public abstract class AbstractServerWebSocketHandler {
+
+    /**
+     * The max message size we will allow a message to support.
+     */
+    public static final int MAX_MESSAGE_SIZE = 1049000;
+
     /**
      * The maximum number of connections.
      * This can be overwritten to give the number of connections a new value.

@@ -4,6 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
 import coursesketch.server.interfaces.SocketSession;
 import internalconnections.AnswerClientWebSocket;
@@ -29,7 +30,7 @@ import java.util.Set;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**

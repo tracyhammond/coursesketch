@@ -23,11 +23,6 @@ import javax.servlet.annotation.WebServlet;
 public class ServerWebSocketInitializer extends WebSocketServlet implements ISocketInitializer {
 
     /**
-     * The max message size we will allow a message to support.
-     */
-    private static final int MAX_MESSAGE_SIZE = 1049000;
-
-    /**
      * The server that the servlet is connected to.
      */
     private final AbstractServerWebSocketHandler connectionServer;
@@ -75,8 +70,6 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
         if (timeoutTime > 0) {
             System.out.println("Adding a timeout to the socket: " + timeoutTime);
             factory.getPolicy().setIdleTimeout(timeoutTime);
-            factory.getPolicy().setMaxBinaryMessageSize(MAX_MESSAGE_SIZE);
-            factory.getPolicy().setMaxBinaryMessageBufferSize(MAX_MESSAGE_SIZE / 2);
         }
         factory.setCreator(new SocketCreator());
     }
