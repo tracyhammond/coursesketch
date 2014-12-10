@@ -228,12 +228,18 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                                 var school = CourseSketch.PROTOBUF_UTIL.getSrlLectureDataHolderClass().decode(item.data);
                                 var lecture = school.lectures[0];
                                 if (isUndefined(lecture) || lecture instanceof DatabaseException) {
-                                    if (!isUndefined(serverCallback)){
-                                        serverCallback(lecture);
-                                    }
                                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
+
+                                    var result = lecture;
+                                    if (isUndefined(result)) {
+                                        result = new DatabaseException("Nothing is in the server database!",
+                                            "Grabbing lecture from server: " + lectureIds);
+                                    }
+                                    if (!isUndefined(serverCallback)) {
+                                        serverCallback(result);
+                                    }
                                     return;
-                                } // end if
+                                } // end error check
                                 for (var i = 0; i < school.lectures.length; i++) {
                                     localScope.setLecture(school.lectures[i]);
                                     lecturesFound.push(school.lectures[i]);
