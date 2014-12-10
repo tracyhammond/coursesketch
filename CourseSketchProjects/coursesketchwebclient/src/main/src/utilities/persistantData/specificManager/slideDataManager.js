@@ -81,20 +81,20 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      */
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function() {
+            /*
             parent.getCourseLecture(slide.lectureId, function(lecture) {
-                /*
                     var idsInLectureList = lecture.idList;
                     var idInLecture = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
                     idInLecture.id = slide.id;
                     idInLecture.isSlide = true;
                     idsInLectureList.push(idInLecture);
-                */
                 parent.setLecture(lecture, function() {
                     if(!isUndefined(localCallback)) {
                         localCallback(lecture);
                     }
                 });
             });
+            */
             insertSlideServer(slide, function() {
                 parent.getCourseLecture(slide.lectureId, function(lecture) {
                     var idsInLectureList = lecture.ids;
