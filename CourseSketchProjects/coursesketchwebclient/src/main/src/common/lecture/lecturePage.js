@@ -250,9 +250,8 @@
                 CourseSketch.lecturePage.displaySlides();
                 CourseSketch.lecturePage.removeWaitOverlay();
             }
-            var finishInsert = function(lecture) {
-                CourseSketch.dataManager.getCourseLecture(CourseSketch.lecturePage
-                    .lecture.id, finishGetCourse, finishGetCourse);
+            var finishInsert = function(slide) {
+                CourseSketch.dataManager.getCourseLecture(slide.lectureId, finishGetCourse, finishGetCourse);
             }
             CourseSketch.dataManager.insertSlide(slide, finishInsert, finishInsert);
         }
