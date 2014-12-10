@@ -20,7 +20,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         });
     }
     parent.setSlide = setSlide;
-    
+
     /**
      * Sets a slide in the server database
      *
@@ -50,7 +50,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         });
         sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
     }
-    
+
     /**
      * Sets a lecture in both local and server databases.
      *
@@ -70,7 +70,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         });
     }
     parent.updateSlide = updateSlide;
-    
+
     /**
      * Adds a new slide to both local and server databases. Also updates the
      * corresponding slide given by the lecture's courseId.
@@ -82,11 +82,13 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function() {
             parent.getCourseLecture(slide.lectureId, function(lecture) {
-                var idsInLectureList = lecture.idList;
-				var idInLecture = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-				idInLecture.id = slide.id;
-				idInLecture.isSlide = true;
-                idsInLectureList.push(idInLecture);
+                /*
+                    var idsInLectureList = lecture.idList;
+                    var idInLecture = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+                    idInLecture.id = slide.id;
+                    idInLecture.isSlide = true;
+                    idsInLectureList.push(idInLecture);
+                */
                 parent.setLecture(lecture, function() {
                     if(!isUndefined(localCallback)) {
                         localCallback(lecture);
@@ -111,10 +113,10 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         });
     }
     parent.insertSlide = insertSlide;
-    
+
     /**
      * Deletes a slide from local database.
-     * 
+     *
      * @param slideId ID of the lecture to delete
      * @param lectureCallback function to be called after the deletion is done
      */
@@ -126,7 +128,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         });
     }
     parent.deleteSlide = deleteSlide;
-    
+
     /**
      * Gets a slide from the local database.
      *
@@ -150,7 +152,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         });
     }
     parent.getSlideLocal = getSlideLocal;
-    
+
     /**
      * Gets a slide from the local and server databases.
      *
@@ -166,7 +168,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         });
     };
     parent.getLectureSlide = getLectureSlide;
-    
+
     /**
      * Gets a list of slides from the local and server databases.
      *
