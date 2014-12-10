@@ -251,9 +251,14 @@ public final class AssignmentManager {
             final DBObject corsor, final boolean isAdmin, final boolean isMod, final long checkTime) {
         if (isAdmin || isMod) {
             final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
-            latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
-            // safety case to string then parse to float
+            try {
+                latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
+            } catch (NullPointerException exception) {
+                latePolicy.setFunctionType(LatePolicy.FunctionType.STEPPING_FUNCTION);
+            }
+
             latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
+
             try {
                 final boolean subtractionType = (Boolean) corsor.get(LATE_POLICY_SUBTRACTION_TYPE); // true is cap score.
                 if (subtractionType) {
