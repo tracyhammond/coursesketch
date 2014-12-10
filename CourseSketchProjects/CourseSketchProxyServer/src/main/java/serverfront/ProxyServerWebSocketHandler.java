@@ -100,7 +100,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         };
-        TimeManager.setTimeEstablishedListener(listener);
+        // TimeManager.setTimeEstablishedListener(listener);
     }
 
     /**

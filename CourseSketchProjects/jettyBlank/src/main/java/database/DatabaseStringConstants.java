@@ -141,6 +141,7 @@ public final class DatabaseStringConstants {
     public static final String IS_SLIDE = "isSlide";
     public static final String IS_UNLOCKED = "isLocked";
     public static final String ELEMENT_LIST = "Elements";
+    public static final String IDS_IN_LECTURE = "idsInLecture";
     public static final String X_POSITION = "X";
     public static final String Y_POSITION = "Y";
     public static final String X_DIMENSION = "XDIM";
