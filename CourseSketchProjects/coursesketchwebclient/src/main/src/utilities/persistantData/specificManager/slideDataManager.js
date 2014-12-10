@@ -90,11 +90,13 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                 }
             }
             insertSlideServer(slide, function(slideUpdated) {
+                console.log("SLIDE IS UPADTED FROM SERVER! " + slideUpdated.id);
                 parent.getCourseLecture(slide.lectureId, function(lecture) {
                     var idsInLectureList = lecture.idList;
                     var idInLecture = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
                     idInLecture.id = slideUpdated.id;
                     idInLecture.isSlide = true;
+                    console.log("SLIDE IS STUFF! " + idInLecture);
                     idsInLectureList.push(idInLecture);
                     parent.setLecture(lecture, function() {
                         if(!isUndefined(serverCallback)) {
