@@ -1,8 +1,10 @@
 package serverfront;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
+import coursesketch.server.interfaces.MultiConnectionState;
 import coursesketch.server.interfaces.SocketSession;
 import internalconnections.AnswerClientWebSocket;
 import internalconnections.DataClientWebSocket;
@@ -10,32 +12,24 @@ import internalconnections.LoginClientWebSocket;
 import internalconnections.LoginConnectionState;
 import internalconnections.ProxyConnectionManager;
 import internalconnections.RecognitionClientWebSocket;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.util.Set;
-
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-
-import coursesketch.server.interfaces.MultiConnectionState;
-
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ConnectionException;
 import utilities.TimeManager;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * A simple WebSocketServer implementation.
  *
  * Contains simple proxy information that is sent to other servers.
  */
-@WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
+@WebSocket()
 public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**
