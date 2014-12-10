@@ -20,6 +20,8 @@
     <link rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html" />
     <!-- image-box -->
     <link rel="import" href="/src/utilities/templates/imageBox/imageBoxInclude.html" />
+    <!-- embedded HTML -->
+    <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html" />
     <!-- sketching -->
     <link rel="import" href="/src/sketching/sketchInclude.html" />
     <!-- resizing -->
@@ -44,8 +46,8 @@
             <div class="content toolbar">
                 <div class="list-item" style="cursor: inherit; text-decoration: none;">
                     Embedded HTML:&nbsp;
-                    <form onsubmit="return false;" style="display: inline;">
-                        <input placeholder="Paste HTML Here" />
+                    <form onsubmit="CourseSketch.lecturePage.newEmbeddedHtml(this); return false;" style="display: inline;">
+                        <input placeholder="Paste HTML Here" name="html" />
                         <input type="submit" value="Create"/>
                     </form>
                 </div>
