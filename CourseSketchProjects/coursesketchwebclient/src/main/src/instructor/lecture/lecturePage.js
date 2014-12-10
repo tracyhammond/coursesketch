@@ -1,6 +1,19 @@
 (function() {
     $(document).ready(function() {
-        CourseSketch.lecturePage.selectedSlideIndex = undefined;
+
+        CourseSketch.lecturePage.doResize = function(event) {
+            var target = event.target;
+
+            // add the change in coords to the previous width of the target element
+            var newWidth  = parseFloat($(target).width()) + event.dx;
+            var newHeight = parseFloat($(target).height()) + event.dy;
+
+            // update the element's style
+            target.style.width  = newWidth + 'px';
+            target.style.height = newHeight + 'px';
+
+            target.textContent = newWidth + '×' + newHeight;
+        };
 
         CourseSketch.lecturePage.saveTextBox = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
