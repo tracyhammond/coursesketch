@@ -191,7 +191,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
             var currentSlideId = slideIds[i];
             (function (slideId) {
                 getSlideLocal (slideId, function (slide) {
-                    if (!isUndefined(lecture) && !(lecture instanceof DatabaseException)) {
+                    if (!isUndefined(slide) && !(slide instanceof DatabaseException)) {
                         slidesFound.push(slide);
                     } else {
                         slideIdsNotFound.push(slideId);
@@ -202,7 +202,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function (evt, item) {
                                 var school = CourseSketch.PROTOBUF_UTIL.getSrlLectureDataHolderClass().decode(item.data);
                                 var slide = school.slides[0];
-                                if (isUndefined(lecture) || lecture instanceof DatabaseException) {
+                                if (isUndefined(slide) || slide instanceof DatabaseException) {
                                     if (!isUndefined(serverCallback)) {
                                         serverCallback(slide);
                                     }
