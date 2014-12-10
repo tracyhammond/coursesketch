@@ -6,6 +6,7 @@ import coursesketch.server.interfaces.SocketSession;
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
 
+import handlers.DataUpdateHandler;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import protobuf.srl.request.Message.Request;
@@ -55,7 +56,9 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
             DataRequestHandler.handleRequest(req, conn, super.getConnectionToId().get(conn).getKey(), getConnectionManager());
         } else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
             DataInsertHandler.handleData(req, conn);
-        } else if (req.getRequestType() == Request.MessageType.TIME) {
+        } else if (req.getRequestType() == Request.MessageType.DATA_UPDATE) {
+            DataUpdateHandler.handleData(req, conn);
+        }else if (req.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(req);
             if (rsp != null) {
                 send(conn, rsp);
