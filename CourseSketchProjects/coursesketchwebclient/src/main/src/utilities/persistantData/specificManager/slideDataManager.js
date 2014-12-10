@@ -64,11 +64,11 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      */
     function updateSlide(slide, localCallback, serverCallback) {
         setSlide(slide, localCallback);
-        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
         advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.LECTURESLIDE, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
             serverCallback(item);
         });
+        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
     }
     parent.updateSlide = updateSlide;
 
