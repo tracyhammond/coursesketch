@@ -206,6 +206,7 @@
          * Adds a new slide to the current lecture.
          */
         CourseSketch.lecturePage.newSlide = function() {
+            CourseSketch.lecturePage.addWaitOverlay();
             var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
             slide.id = generateUUID();
             slide.lectureId = CourseSketch.lecturePage.lecture.id;
@@ -217,6 +218,7 @@
                 id.unlocked = true;
                 CourseSketch.lecturePage.lecture.idList.push(id);
                 CourseSketch.lecturePage.displaySlides();
+                CourseSketch.lecturePage.removeWaitOverlay();
             }
             var finishInsert = function(lecture) {
                 CourseSketch.dataManager.getCourseLecture(CourseSketch.lecturePage
@@ -238,6 +240,8 @@
             }
             if(CourseSketch.lecturePage.lecture.idList.length > 0) {
                 CourseSketch.lecturePage.selectSlide(0);
+            } else {
+                CourseSketch.lecturePage.newSlide();
             }
         }
 

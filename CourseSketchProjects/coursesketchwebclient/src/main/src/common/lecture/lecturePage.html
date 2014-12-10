@@ -42,12 +42,18 @@
                 Tools
             </div>
             <div class="content toolbar">
-                <div class="list-item" onclick="CourseSketch.lecturePage.newTextBox()">
-                    Text Box
+                <div class="list-item" style="cursor: inherit; text-decoration: none;">
+                    Embedded HTML:&nbsp;
+                    <form onsubmit="return false;" style="display: inline;">
+                        <input placeholder="Paste HTML Here" />
+                        <input type="submit" value="Create"/>
+                    </form>
                 </div>
-                <div class="list-item">
-                    <input type='file' onchange="CourseSketch.lecturePage.newImage(this);" />
-                    Image
+                <div class="list-item" style="cursor: inherit; text-decoration: none;">
+                    Image: <input type='file' onchange="CourseSketch.lecturePage.newImage(this);" />
+                </div>
+                <div class="list-item" onclick="CourseSketch.lecturePage.newMultiChoiceQuestion()" />
+                  Multiple-Choice Question
                 </div>
                 <div class="list-item" onclick="CourseSketch.lecturePage.newSketchContent()" />
                     Sketch Content
@@ -55,8 +61,8 @@
                 <div class="list-item">
                     Sketch Question
                 </div>
-                <div class="list-item" onclick="CourseSketch.lecturePage.newMultiChoiceQuestion()" />
-                    Multiple-Choice Question
+                <div class="list-item" onclick="CourseSketch.lecturePage.newTextBox()">
+                    Text Box
                 </div>
             </div>
         </div>
