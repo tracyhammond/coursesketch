@@ -139,7 +139,7 @@
          *            protobuf slide element to be rendered
          */
         CourseSketch.lecturePage.renderSlide = function(slide) {
-        document.getElementById("slide-content").innerHTML = ""
+            document.getElementById("slide-content").innerHTML = "";
             CourseSketch.lecturePage.currentSlide = slide;
             for(var i = 0; i < slide.elements.length; ++i) {
                 var element = slide.elements[i];
@@ -194,7 +194,7 @@
                     for(var i = 0; i < elements.length; ++i) {
                         elements[i].saveData();
                     }
-                    CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.currentSlide, completionHandler, completionHandler);
+                    CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.currentSlide, completionHandler);
                 }, 10);
 
             } else {
@@ -209,7 +209,9 @@
         }
 
         CourseSketch.lecturePage.removeWaitOverlay = function() {
-            document.querySelector("body").removeChild(document.getElementById("overlay"));
+            if(!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") != null) {
+                document.querySelector("body").removeChild(document.getElementById("overlay"));
+            }
         }
 
         /**
@@ -244,7 +246,7 @@
                 id.id = slide.id;
                 id.isSlide = true;
                 id.unlocked = true;
-                CourseSketch.lecturePage.lecture.idList.push(id);
+                CourseSketch.lecturePage.lecture = lecture;
                 CourseSketch.lecturePage.displaySlides();
                 CourseSketch.lecturePage.removeWaitOverlay();
             }

@@ -19,6 +19,7 @@ import database.user.GroupManager;
 import database.user.UserClient;
 import org.bson.types.ObjectId;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
+import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -263,6 +264,30 @@ public final class MongoInstitution implements Institution {
         return allLectures;
     }
 
+    @Override
+    public ArrayList<LectureSlide> getLectureSlide(final List<String> slideId, final String userId) throws AuthenticationException,
+            DatabaseAccessException {
+        final long currentTime = System.currentTimeMillis();
+        final ArrayList<LectureSlide> allSlides = new ArrayList<LectureSlide>();
+        for (int slides = slideId.size() - 1; slides >= 0; slides--) {
+            try {
+                allSlides.add(SlideManager.mongoGetLectureSlide(getInstance().auth, getInstance().database, slideId.get(slides),
+                        userId, currentTime));
+            } catch (DatabaseAccessException e) {
+                e.printStackTrace();
+                if (!e.isRecoverable()) {
+                    throw e;
+                }
+            } catch (AuthenticationException e) {
+                e.printStackTrace(System.err);
+                if (e.getType() != AuthenticationException.INVALID_DATE) {
+                    throw e;
+                }
+            }
+        }
+        return allSlides;
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -380,6 +405,12 @@ public final class MongoInstitution implements Institution {
         return resultId;
     }
 
+    @Override
+    public String insertLectureSlide(final String userId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
+        final String resultId = SlideManager.mongoInsertSlide(getInstance().auth, getInstance().database, userId, lectureSlide);
+        return resultId;
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -406,6 +437,16 @@ public final class MongoInstitution implements Institution {
     @Override
     public String insertBankProblem(final String userId, final SrlBankProblem problem) throws AuthenticationException {
         return BankProblemManager.mongoInsertBankProblem(getInstance().database, problem);
+    }
+
+    @Override
+    public void updateLecture(String userId, Lecture lecture) throws AuthenticationException, DatabaseAccessException {
+        LectureManager.mongoUpdateLecture(getInstance().auth, getInstance().database, lecture.getId(), userId, lecture);
+    }
+
+    @Override
+    public void updateLectureSlide(String userId, LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
+        SlideManager.mongoUpdateLectureSlide(getInstance().auth, getInstance().database, lectureSlide.getId(), userId, lectureSlide);
     }
 
     /*

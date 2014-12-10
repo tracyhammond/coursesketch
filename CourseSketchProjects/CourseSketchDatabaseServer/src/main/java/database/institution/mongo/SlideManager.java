@@ -7,6 +7,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
+import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
@@ -18,12 +19,19 @@ import protobuf.srl.tutorial.TutorialOuterClass;
 import java.util.ArrayList;
 import java.util.List;
 
+import static database.DatabaseStringConstants.ACCESS_DATE;
+import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.CLOSE_DATE;
+import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.ELEMENT_LIST;
+import static database.DatabaseStringConstants.IDS_IN_LECTURE;
 import static database.DatabaseStringConstants.LECTURE_COLLECTION;
 import static database.DatabaseStringConstants.LECTURE_ID;
 import static database.DatabaseStringConstants.MOD;
+import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SLIDE_BLOB;
 import static database.DatabaseStringConstants.SLIDE_BLOB_TYPE;
 import static database.DatabaseStringConstants.SLIDE_COLLECTION;
@@ -115,6 +123,9 @@ public final class SlideManager {
             case QUESTION:
                 query.append(SLIDE_BLOB, e.getQuestion().toByteArray());
                 break;
+            case EMBEDDEDHTML:
+                query.append(SLIDE_BLOB, e.getEmbeddedHtml().toByteArray());
+                break;
             // TODO: Add embedded stuff
             case ELEMENTTYPE_NOT_SET:
             default:
@@ -156,7 +167,9 @@ public final class SlideManager {
         boolean isAdmin, isMod, isUsers;
         isAdmin = authenticator.checkAuthentication(userId, (List<String>) corsor.get(ADMIN));
         isMod = authenticator.checkAuthentication(userId, (List<String>) corsor.get(MOD));
-        isUsers = authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
+
+        // TODO: Fix this
+        isUsers = true; // authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
 
         if (!isAdmin && !isMod && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -199,6 +212,52 @@ public final class SlideManager {
     }
 
     /**
+     * updates data from an assignment.
+     * @param authenticator the object that is performing authentication.
+     * @param dbs The database where the lecture slide is being stored.
+     * @param lectureSlideId the id of the lecture slide that is being updated.
+     * @param userId The id of the user that asking to update the lecture slide.
+     * @param lectureSlide The lecture slide that is being updated.
+     * @return true if the lecture slide was updated successfully.
+     * @throws AuthenticationException The user does not have permission to update the lecture slide.
+     * @throws DatabaseAccessException The lecture does not exist.
+     */
+    @SuppressWarnings("PMD.ExcessiveMethodLength")
+    public static boolean mongoUpdateLectureSlide(final Authenticator authenticator, final DB dbs, final String lectureSlideId, final String userId,
+            final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
+        boolean update = false;
+        final DBRef myDbRef = new DBRef(dbs, SLIDE_COLLECTION, new ObjectId(lectureSlideId));
+        final DBObject corsor = myDbRef.fetch();
+        DBObject updateObj = null;
+        final DBCollection lectureSlides = dbs.getCollection(SLIDE_COLLECTION);
+
+        //final ArrayList adminList = (ArrayList<Object>) corsor.get("Admin");
+        //final ArrayList modList = (ArrayList<Object>) corsor.get("Mod");
+        boolean isAdmin, isMod;
+        isAdmin = true; //authenticator.checkAuthentication(userId, adminList);
+        isMod = true; //authenticator.checkAuthentication(userId, modList);
+
+        if (!isAdmin && !isMod) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+        final BasicDBObject updated = new BasicDBObject();
+        if (isAdmin || isMod) {
+            if (lectureSlide.getElementsCount() > 0) {
+                final ArrayList list = new ArrayList();
+                for (Lecturedata.LectureElement element : lectureSlide.getElementsList()) {
+                    list.add(createQueryFromElement(element));
+                }
+                lectureSlides.update(corsor, new BasicDBObject(ADD_SET_COMMAND, new BasicDBObject(ELEMENT_LIST, new BasicDBObject("$each", list))));
+                update = true;
+            }
+        }
+        if (update) {
+            UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), lectureSlideId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
+        }
+        return true;
+    }
+
+    /**
      * sets data of the slide from the given cursor.
      *
      * @param exactSlide
@@ -210,7 +269,7 @@ public final class SlideManager {
      */
     private static void setSlideData(final Lecturedata.LectureSlide.Builder exactSlide, final DBObject cursor) throws DatabaseAccessException {
         exactSlide.setLectureId((String) cursor.get(LECTURE_ID));
-        exactSlide.setId((String) cursor.get(SELF_ID));
+        exactSlide.setId(cursor.get(SELF_ID).toString());
         if (cursor.get(ELEMENT_LIST) != null) {
             final ArrayList<Lecturedata.LectureElement> objects = new ArrayList<>();
             for (BasicDBObject element : (List<BasicDBObject>) cursor.get(ELEMENT_LIST)) {
@@ -257,7 +316,9 @@ public final class SlideManager {
                 case QUESTION:
                     element.setQuestion(Lecturedata.SrlQuestion.parseFrom(blob));
                     break;
-                // TODO: Add embedded here
+                case EMBEDDEDHTML:
+                    element.setEmbeddedHtml(Lecturedata.EmbeddedHtml.parseFrom(blob));
+                    break;
                 default:
                     break;
             }
