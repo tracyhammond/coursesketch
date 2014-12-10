@@ -67,9 +67,11 @@ function TextBox() {
          */
         localScope.shadowRoot.querySelector("#closeButton").onclick = function(event) {
             if (localScope.shadowRoot.querySelector('#creatorText') != null) {
-                localScope.saveData(event);
-                shadowRoot = undefined;
-                loadedData = undefined;
+                if (confirm("You are about to permanently remove this element.")) {
+                    localScope.saveData(event);
+                    shadowRoot = undefined;
+                    loadedData = undefined;
+                }
                 return;
             }
             shadowRoot = undefined;
@@ -83,7 +85,21 @@ function TextBox() {
                 localScope.saveData();
             };
         }
-        // Makes continue button match close button onclick functionality if the continue button exists (not null)
+        
+        // Makes save button save data on creation mode
+        saveButton = localScope.shadowRoot.querySelector("#saveButton");
+        if (saveButton != null) {
+            saveButton.onclick = function() {
+                localScope.saveData();
+                saveButton.textContent = 'Data saved';
+            };
+            
+            saveButton.onblur = function() {
+                saveButton.textContent = 'Save';
+            };
+        }
+        
+        // Makes continue button close box on viewing mode
         if (localScope.shadowRoot.querySelector("#continueButton") != null) {
             localScope.shadowRoot.querySelector('#continueButton').onclick = localScope.shadowRoot.querySelector('#closeButton').onclick;
         }
@@ -104,7 +120,6 @@ function TextBox() {
 
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
-        this.saveData();
     };
 
     // Saves Data for the proto message based on the position, height, width, and value of the text box
@@ -143,13 +158,18 @@ function TextBox() {
             textBoxProto.setX(x + parseInt(dialog.getAttribute('data-x')));
             textBoxProto.setY(y + parseInt(dialog.getAttribute('data-y')));
         }
-
-        textBoxProto.setHeight($(dialog).height()); // Sets height for proto message
-        textBoxProto.setWidth($(dialog).width()); // Sets width for proto message
+        textBoxProto.setHeight(parseInt($(dialog).height())); // Sets height for proto message
+        textBoxProto.setWidth(parseInt($(dialog).width())); // Sets width for proto message
 
         // If the textbox does not have an id, then a command has not been created for the textbox
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,true);
+            if (this.tagName == 'TEXT-BOX-CREATION') {
+                this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, true);
+            } else if (this.tagName == 'TTS-BOX-CREATION') {
+                this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, true);
+            } else {
+                return;
+            }
         }
         this.command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -181,7 +201,7 @@ function TextBox() {
         $(dialog).width(textBoxProto.getWidth()); // Sets dialog width
         $(node).width(textBoxProto.getWidth()); // Sets node width
         $(node).height(textBoxProto.getHeight() - 16); // Sets node height minus 16px to account for default padding
-        $(dialog).offset({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions
+        $(dialog).css({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions
         node.textContent = textBoxProto.getText(); // Sets selected node (creatorText or viewTexet) text value
 
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.

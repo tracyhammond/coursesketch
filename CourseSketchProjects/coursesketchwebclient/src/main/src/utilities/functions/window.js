@@ -119,3 +119,20 @@ if (isUndefined(getIframeScope)) {
 		return scope.getElementById(iframeId).contentWindow.document;
 	}
 }
+
+/**
+ * Makes an element fullscreen.
+ */
+if (isUndefined(makeFullScreen)) {
+	function makeFullScreen(element) {
+		if (elem.requestFullscreen) {
+			elem.requestFullscreen();
+		} else if (elem.msRequestFullscreen) {
+			elem.msRequestFullscreen();
+		} else if (elem.mozRequestFullScreen) {
+			elem.mozRequestFullScreen();
+		} else if (elem.webkitRequestFullscreen) {
+			elem.webkitRequestFullscreen();
+		}
+	}
+}

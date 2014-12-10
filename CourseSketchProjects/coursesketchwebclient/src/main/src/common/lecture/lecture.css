@@ -252,3 +252,12 @@ html, body {
 .toolbar>.list-item {
     padding: 10px;
 }
+
+/* Loading Icon */
+.waitingIcon.centered {
+    display: block;
+    margin: 0 auto;
+    position: absolute;
+    top: calc(50% - 33px);
+    right: calc(50% - 33px);
+}
