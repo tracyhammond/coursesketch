@@ -1,17 +1,20 @@
 package handlers;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
-
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
+import database.institution.Institution;
+import database.institution.mongo.MongoInstitution;
+import database.user.UserClient;
+import protobuf.srl.lecturedata.Lecturedata.Lecture;
+import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
-import protobuf.srl.lecturedata.Lecturedata.Lecture;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
@@ -20,14 +23,8 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlUser;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
-
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.institution.Institution;
-import database.institution.mongo.MongoInstitution;
-import database.user.UserClient;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles data being added or edited.
@@ -39,7 +36,7 @@ import database.user.UserClient;
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
-public final class DataInsertHandler {
+public final class DataUpdateHandler {
 
     /**
      * The string used to separate ids when returning a result.
@@ -55,13 +52,13 @@ public final class DataInsertHandler {
      * Private constructor.
      *
      */
-    private DataInsertHandler() {
+    private DataUpdateHandler() {
     }
 
     /**
      * Takes in a request that has to deal with inserting data.
      *
-     * decode request and pull correct information from {@link Institution}
+     * decode request and pull correct information from {@link database.institution.Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
      * @param req The request that has data being inserted.
      * @param conn The connection where the result is sent to.
@@ -70,7 +67,7 @@ public final class DataInsertHandler {
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException" })
     public static void handleData(final Request req, final SocketSession conn) {
         try {
-            System.out.println("Receiving DATA SEND Request...");
+            System.out.println("Receiving DATA UPDATE Request...");
 
             final String userId = req.getServersideId();
             final DataSend request = DataSend.parseFrom(req.getOtherData());
@@ -84,7 +81,8 @@ public final class DataInsertHandler {
                 final ItemSend itemSet = request.getItemsList().get(p);
                 try {
                     switch (itemSet.getQuery()) {
-                        case COURSE: {
+                        // TODO: Enable updates for other data
+                        /*case COURSE: {
                             try {
                                 final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
                                 final String resultId = instance.insertCourse(userId, course);
@@ -116,13 +114,6 @@ public final class DataInsertHandler {
                             results.add(buildResult(resultId + ID_SEPARATOR + problem.getId(), itemSet.getQuery()));
                         }
                         break;
-                        /*
-                         * case CLASS_GRADE: { SrlGrade grade =
-                         * SrlGrade.parseFrom(itemSet.getData()); String
-                         * resultId = MongoInstitution.mongoInsertClassGrade(userId,
-                         * grade); results.add(buildResult(resultId + " : " +
-                         * grade.getId(), itemSet.getQuery())); } break;
-                         */
                         case USER_INFO: {
                             UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), userId);
                         }
@@ -135,19 +126,18 @@ public final class DataInsertHandler {
                                 results.add(buildResult("User was already registered for course!", itemSet.getQuery()));
                             }
                         }
-                        break;
+                        break;*/
                         case LECTURE: {
                             final Lecture lecture = Lecture.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertLecture(userId, lecture);
-                            results.add(buildResult(resultId + ID_SEPARATOR + lecture.getId(), itemSet.getQuery()));
+                            instance.updateLecture(userId, lecture);
+                            results.add(buildResult("", itemSet.getQuery()));
                         }
                         break;
                         case LECTURESLIDE: {
                             final LectureSlide lectureSlide = LectureSlide.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertLectureSlide(userId, lectureSlide);
-                            results.add(buildResult(resultId + ID_SEPARATOR + lectureSlide.getId(), itemSet.getQuery()));
+                            instance.updateLectureSlide(userId, lectureSlide);
+                            results.add(buildResult("", itemSet.getQuery()));
                         }
-                        break;
                         default:
                             break;
                     }
@@ -218,11 +208,11 @@ public final class DataInsertHandler {
     }
 
     /**
-     * Builds a request from a list of {@link ItemResult}.
+     * Builds a request from a list of {@link protobuf.srl.query.Data.ItemResult}.
      * @param results A list of results that need to be sent back to the user.
      * @param message A message that goes with the results (could be an error)
      * @param req The original request that was received.
-     * @return A {@link Request}.
+     * @return A {@link protobuf.srl.request.Message.Request}.
      */
     private static Request buildRequest(final List<ItemResult> results, final String message, final Request req) {
 
@@ -233,7 +223,7 @@ public final class DataInsertHandler {
         }
 
         final Request.Builder dataReq = Request.newBuilder();
-        dataReq.setRequestType(MessageType.DATA_INSERT);
+        dataReq.setRequestType(MessageType.DATA_UPDATE);
         dataReq.setSessionInfo(req.getSessionInfo());
         dataReq.setResponseText(message);
         if (dataResult != null) {
