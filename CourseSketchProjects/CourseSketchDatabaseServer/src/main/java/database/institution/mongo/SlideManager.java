@@ -247,13 +247,13 @@ public final class SlideManager {
                 for (Lecturedata.LectureElement element : lectureSlide.getElementsList()) {
                     list.add(createQueryFromElement(element));
                 }
-                lectureSlides.update(corsor, new BasicDBObject(ADD_SET_COMMAND, new BasicDBObject(ELEMENT_LIST, new BasicDBObject("$each", list))));
+                lectureSlides.update(corsor, new BasicDBObject(SET_COMMAND, new BasicDBObject(ELEMENT_LIST, list)));
                 update = true;
             }
         }
-        if (update) {
+        /*if (update) {
             UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), lectureSlideId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
-        }
+        }*/
         return true;
     }
 

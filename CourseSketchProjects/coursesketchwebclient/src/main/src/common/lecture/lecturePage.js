@@ -123,10 +123,8 @@
                 CourseSketch.lecturePage.loadImageBox(element.image);
             } else if(!isUndefined(element.embeddedHtml) && element.embeddedHtml != null) {
                 CourseSketch.lecturePage.loadEmbeddedHtml(element.embeddedHtml);
-            }
-            else {
+            } else {
                 throw "Tried to load invalid element";
-            }
         }
     }
 
