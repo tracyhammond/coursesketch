@@ -109,7 +109,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         });
         // Finished with local slide
     }
-    parent.insertLecture = insertLecture;
+    parent.insertSlide = insertSlide;
 
     /**
      * Deletes a slide from local database.
