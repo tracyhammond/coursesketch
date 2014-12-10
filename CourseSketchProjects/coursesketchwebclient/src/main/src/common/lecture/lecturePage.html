@@ -6,6 +6,8 @@
     <!-- ChildScript -->
     <script type="text/javascript" src="/src/utilities/functions/childScript.js"
             data-namespace="lectureSelection"></script>
+    <!-- waiting stuff -->
+    <script src="/js/utils/waiting.js"></script>
     <!-- protobuf -->
     <link rel="import" href="/src/utilities/connection/protobufInclude.html" />
     <!-- school item -->
@@ -16,6 +18,10 @@
     <link rel="import" href="/src/utilities/templates/question/questionInclude.html" />
     <!-- multi-choice -->
     <link rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html" />
+    <!-- image-box -->
+    <link rel="import" href="/src/utilities/templates/imageBox/imageBoxInclude.html" />
+    <!-- embedded HTML -->
+    <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html" />
     <!-- sketching -->
     <link rel="import" href="/src/sketching/sketchInclude.html" />
     <!-- resizing -->
@@ -38,12 +44,18 @@
                 Tools
             </div>
             <div class="content toolbar">
-                <div class="list-item" onclick="CourseSketch.lecturePage.newTextBox()">
-                    Text Box
+                <div class="list-item" style="cursor: inherit; text-decoration: none;">
+                    Embedded HTML:&nbsp;
+                    <form onsubmit="CourseSketch.lecturePage.newEmbeddedHtml(this); return false;" style="display: inline;">
+                        <input placeholder="Paste HTML Here" name="html" />
+                        <input type="submit" value="Create"/>
+                    </form>
                 </div>
-                <div class="list-item">
-                    <input type='file' onchange="CourseSketch.lecturePage.addPic(this);" />
-                    Image
+                <div class="list-item" style="cursor: inherit; text-decoration: none;">
+                    Image: <input type='file' onchange="CourseSketch.lecturePage.newImage(this);" />
+                </div>
+                <div class="list-item" onclick="CourseSketch.lecturePage.newMultiChoiceQuestion()" />
+                  Multiple-Choice Question
                 </div>
                 <div class="list-item" onclick="CourseSketch.lecturePage.newSketchContent()" />
                     Sketch Content
@@ -51,8 +63,8 @@
                 <div class="list-item">
                     Sketch Question
                 </div>
-                <div class="list-item" onclick="CourseSketch.lecturePage.newMultiChoiceQuestion()" />
-                    Multiple-Choice Question
+                <div class="list-item" onclick="CourseSketch.lecturePage.newTextBox()">
+                    Text Box
                 </div>
             </div>
         </div>

@@ -32,14 +32,14 @@
         textview.loadData(decoded);
     };
     document.querySelector('#ttsBox').onclick = function() {
-        var ttsBox = document.createElement('text-speech-creation');
+        var ttsBox = document.createElement('tts-box-creation');
         document.body.appendChild(ttsBox);
         ttsBox.setFinishedListener(function(command) {
             globalcommand = command;
         });
     };
     document.querySelector('#speakTtsBox').onclick = function() {
-        var ttsSpeak = document.createElement('text-speech-viewing');
+        var ttsSpeak = document.createElement('tts-box-viewing');
         document.body.appendChild(ttsSpeak);
         var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(globalcommand.getCommandData(),
                 CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
