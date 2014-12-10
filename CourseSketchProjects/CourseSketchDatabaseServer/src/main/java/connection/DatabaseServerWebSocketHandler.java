@@ -19,7 +19,7 @@ import utilities.TimeManager;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-@WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
+@WebSocket()
 public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**
