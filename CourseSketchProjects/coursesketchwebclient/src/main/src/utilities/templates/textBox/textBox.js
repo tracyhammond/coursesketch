@@ -201,7 +201,7 @@ function TextBox() {
         $(dialog).width(textBoxProto.getWidth()); // Sets dialog width
         $(node).width(textBoxProto.getWidth()); // Sets node width
         $(node).height(textBoxProto.getHeight() - 16); // Sets node height minus 16px to account for default padding
-        $(dialog).offset({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions
+        $(dialog).css({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions
         node.textContent = textBoxProto.getText(); // Sets selected node (creatorText or viewTexet) text value
 
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
