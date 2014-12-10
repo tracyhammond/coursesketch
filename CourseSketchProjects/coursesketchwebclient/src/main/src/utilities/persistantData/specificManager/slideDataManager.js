@@ -81,6 +81,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      */
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function() {
+            localCallback(slide);
             /*
             parent.getCourseLecture(slide.lectureId, function(lecture) {
                     var idsInLectureList = lecture.idList;
@@ -95,17 +96,17 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                 });
             });
             */
-            insertSlideServer(slide, function() {
+            insertSlideServer(slide, function(updatedSlide) {
                 parent.getCourseLecture(slide.lectureId, function(lecture) {
                     var idsInLectureList = lecture.ids;
 					var idInLecture = CourseSketch.PROTOBUF_UTIL.idsInLecture();
-					idInLecture.id = slide.id;
+					idInLecture.id = updatedSlide.id;
 					idInLecture.isSlide = true;
                     idsInLectureList.push(idInLecture);
                     lecture.ids = idsInLectureList;
                     parent.setLecture(lecture, function() {
                         if(!isUndefined(serverCallback)) {
-                            serverCallback(lecture);
+                            serverCallback(updatedSlide);
                         }
                     });// end of setLecture
                 });
