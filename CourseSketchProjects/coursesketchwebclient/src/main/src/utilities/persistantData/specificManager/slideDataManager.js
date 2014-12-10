@@ -98,12 +98,12 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
             */
             insertSlideServer(slide, function(updatedSlide) {
                 parent.getCourseLecture(slide.lectureId, function(lecture) {
-                    var idsInLectureList = lecture.ids;
+                    var idsInLectureList = lecture.idList;
 					var idInLecture = CourseSketch.PROTOBUF_UTIL.idsInLecture();
 					idInLecture.id = updatedSlide.id;
 					idInLecture.isSlide = true;
                     idsInLectureList.push(idInLecture);
-                    lecture.ids = idsInLectureList;
+                    lecture.idList = idsInLectureList;
                     parent.setLecture(lecture, function() {
                         if(!isUndefined(serverCallback)) {
                             serverCallback(updatedSlide);
