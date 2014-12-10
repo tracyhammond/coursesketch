@@ -67,7 +67,9 @@ function Timeline () {
 					removeObjectFromArray(textBox.currentUpdate.commands, textBox.command);
 				}
                 textBox.parentNode.removeChild(textBox);
-                textBoxMarker.parentNode.removeChild(textBoxMarker);
+                if (textBoxMarker != null) {
+                    textBoxMarker.parentNode.removeChild(textBoxMarker);
+                }
 			}
 
 			/*end of creating the textbox*/
@@ -124,7 +126,9 @@ function Timeline () {
                     removeObjectFromArray(ttsBox.currentUpdate.commands, ttsBox.command);
                 }
 				ttsBox.parentNode.removeChild(ttsBox);
-                ttsBoxMarker.parentNode.removeChild(ttsBoxMarker);
+                if (ttsBoxMarker != null) {
+                    ttsBoxMarker.parentNode.removeChild(ttsBoxMarker);
+                }
 			}
 			/*end of creating the textbox*/
 			var ttsBoxMarker = document.createElement("timeline-marker");
@@ -149,6 +153,10 @@ function Timeline () {
                 var textArea = ttsBox.shadowRoot.querySelector('textarea');
                 ttsBoxMarker.setPreviewText(textArea.value);
             };
+            
+            ttsBoxMarker.setRemoveFunction(function() {
+			    closeTtsBox(ttsBox.createdCommand);
+			});
             
             ttsBox.setFinishedListener(ttsBoxFinishedListener);
             ttsBox.saveData();
