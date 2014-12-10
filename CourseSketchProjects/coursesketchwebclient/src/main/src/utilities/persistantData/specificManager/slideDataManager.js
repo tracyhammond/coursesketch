@@ -29,13 +29,14 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      */
     function insertSlideServer(slide, slideCallback) {
         advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function(evt, item) {
+            console.log("RESPONSE PLEASE!!!!");
             advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
             var resultArray = item.getReturnText().split(":");
             var oldId = resultArray[1];
             var newId = resultArray[0];
             getSlideLocal(oldId, function(slide2) {
                 deleteSlide(oldId);
-                if(!isUndefined(slide2)) {
+                if (!isUndefined(slide2) && !(slide2 instanceof DatabaseException)) {
                     slide2.id = newId;
                     setSlide(slide2, function() {
                         slideCallback(slide2);
