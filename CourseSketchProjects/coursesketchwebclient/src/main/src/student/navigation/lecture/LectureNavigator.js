@@ -46,10 +46,6 @@ function LectureNavigator(lectureId, preferredIndex){
         }
     }
 
-    this.goToPreviousSlide = function goToPreviousSlide() {
-
-    }
-
     function callBack(scopedIndex) {
         setTimeout(function () {
             callbackList[scopedIndex](navScope);
