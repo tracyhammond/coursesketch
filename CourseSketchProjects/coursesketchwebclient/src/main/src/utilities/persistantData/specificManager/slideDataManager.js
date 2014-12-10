@@ -80,40 +80,36 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      * @param serverCallback function to be called after server insert is done
      */
     function insertSlide(slide, localCallback, serverCallback) {
-        setSlide(slide, function() {
-            /*
-            parent.getCourseLecture(slide.lectureId, function(lecture) {
+        setSlide(slide, function(e, request) {
+            console.log("inserted locally :" + slide.id)
+            if (!isUndefined(localCallback)) {
+                try {
+                    localCallback(e, request);
+                } catch(exception) {
+                    // ignore callback problems we want to succeed
+                }
+            }
+            insertSlideServer(slide, function(slideUpdated) {
+                parent.getCourseLecture(slide.lectureId, function(lecture) {
                     var idsInLectureList = lecture.idList;
                     var idInLecture = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
                     idInLecture.id = slide.id;
                     idInLecture.isSlide = true;
                     idsInLectureList.push(idInLecture);
-                parent.setLecture(lecture, function() {
-                    if(!isUndefined(localCallback)) {
-                        localCallback(lecture);
-                    }
-                });
-            });
-            */
-            insertSlideServer(slide, function(updatedSlide) {
-                parent.getCourseLecture(slide.lectureId, function(lecture) {
-                    var idsInLectureList = lecture.idList;
-					var idInLecture = CourseSketch.PROTOBUF_UTIL.idsInLecture();
-					idInLecture.id = updatedSlide.id;
-					idInLecture.isSlide = true;
-                    idsInLectureList.push(idInLecture);
-                    lecture.idList = idsInLectureList;
                     parent.setLecture(lecture, function() {
                         if(!isUndefined(serverCallback)) {
                             serverCallback(updatedSlide);
                         }
                     });// end of setLecture
+                    // Lecture is set with its new slide
                 });
+                // Finished with the slide
             });
-            localCallback(slide);
+            // Finished with setting slide
         });
+        // Finished with local slide
     }
-    parent.insertSlide = insertSlide;
+    parent.insertLecture = insertLecture;
 
     /**
      * Deletes a slide from local database.
