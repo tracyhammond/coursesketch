@@ -1,7 +1,5 @@
 package coursesketch.server.base;
 
-import javax.servlet.annotation.WebServlet;
-
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -10,6 +8,8 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+
+import javax.servlet.annotation.WebServlet;
 
 /**
  * The default servlet it creates a single websocket instance that is then used
@@ -21,6 +21,11 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
  */
 @WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/websocket" })
 public class ServerWebSocketInitializer extends WebSocketServlet implements ISocketInitializer {
+
+    /**
+     * The max message size we will allow a message to support
+     */
+    private static final int MAX_MESSAGE_SIZE = 10000000;
 
     /**
      * The server that the servlet is connected to.
@@ -70,6 +75,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
         if (timeoutTime > 0) {
             System.out.println("Adding a timeout to the socket: " + timeoutTime);
             factory.getPolicy().setIdleTimeout(timeoutTime);
+            factory.getPolicy().setMaxBinaryMessageSize(MAX_MESSAGE_SIZE);
         }
         factory.setCreator(new SocketCreator());
     }
