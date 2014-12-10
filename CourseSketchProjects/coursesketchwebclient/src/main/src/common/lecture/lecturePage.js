@@ -1,6 +1,7 @@
 (function() {
     $(document).ready(function() {
         CourseSketch.lecturePage = [];
+        CourseSketch.lecturePage.waitScreenManager = new WaitScreenManager();
 
         CourseSketch.lecturePage.doResize = function(event) {
             var target = event.target;
@@ -16,24 +17,51 @@
             target.textContent = newWidth + '×' + newHeight;
         }
 
+        CourseSketch.lecturePage.saveTextBox = function(command, event, currentUpdate) {
+            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            element.id = generateUUID();
+            element.textBox = decoded;
+            CourseSketch.lecturePage.currentSlide.elements.push(element);
+        }
+
+        CourseSketch.lecturePage.saveQuestion = function(command, event, currentUpdate) {
+            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
+            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            element.id = generateUUID();
+            element.question = decoded;
+            CourseSketch.lecturePage.currentSlide.elements.push(element);
+        }
+
+        CourseSketch.lecturePage.loadTextBox = function(textBox) {
+            var elem = CourseSketch.lecturePage.newTextBox();
+            elem.loadData(textBox);
+        }
+
+        CourseSketch.lecturePage.loadMultiChoiceQuestion = function(question) {
+            var elem = CourseSketch.lecturePage.newMultiChoiceQuestion();
+            elem.loadData(question);
+        }
+
         /**
          * Adds a new text box to the currently selected lecture slide.
          */
         CourseSketch.lecturePage.newTextBox = function() {
             var textbox = document.createElement('text-box-creation');
-            //CourseSketch.lecturePage.slide.elements.push(textbox);
-            //CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.slide);
             document.querySelector("#slide-content").appendChild(textbox);
+            textbox.setFinishedListener(CourseSketch.lecturePage.saveTextBox);
+            return textbox;
         }
 
         CourseSketch.lecturePage.newSketchContent = function() {
             var sketchSurface = document.createElement('sketch-surface');
             document.querySelector("#slide-content").appendChild(sketchSurface);
-            //CourseSketch.lecturePage.slide.elements.push(sketchSurface);
-            //CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.slide);
             setTimeout(function() {
                 sketchSurface.resizeSurface();
             }, 500);
+            return sketchSurface;
         }
 
         CourseSketch.lecturePage.newMultiChoiceQuestion = function() {
@@ -41,7 +69,8 @@
             var multiChoice = document.createElement("multi-choice");
             document.getElementById("slide-content").appendChild(question);
             question.addAnswerContent(multiChoice);
-            //question.className = "resize";
+            question.setFinishedListener(CourseSketch.lecturePage.saveQuestion);
+            return question;
         }
 
         /**
@@ -53,8 +82,22 @@
          *            protobuf slide element to be rendered
          */
         CourseSketch.lecturePage.renderSlide = function(slide) {
-            CourseSketch.lecturePage.slide = slide;
-            console.log(slide);
+        document.getElementById("slide-content").innerHTML = ""
+            CourseSketch.lecturePage.currentSlide = slide;
+            for(var i = 0; i < slide.elements.length; ++i) {
+                var element = slide.elements[i];
+                if(!isUndefined(element.textBox) && element.textBox != null) {
+                    CourseSketch.lecturePage.loadTextBox(element.textBox);
+                } else if(!isUndefined(element.question) && element.question != null) {
+                    if(!isUndefined(element.question.multipleChoice) && element.question.multipleChoice != null) {
+                        CourseSketch.lecturePage.loadMultiChoiceQuestion(element.question);
+                    } else {
+                        throw "Sketch questions are not yet supported";
+                    }
+                } else {
+                    throw "Tried to load invalid element";
+                }
+            }
         }
 
 
@@ -66,13 +109,40 @@
          *            object.
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {
-            $(".slide-thumb").each(function() {
-                $(this).removeClass("selected");
-            })
-            $("#" + slideIndex + ".slide-thumb").addClass("selected");
-            CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
-                .lecture.slides[slideIndex], CourseSketch.lecturePage.renderSlide,
-                CourseSketch.lecturePage.renderSlide);
+            var completionHandler = function() {
+                $(".slide-thumb").each(function() {
+                    $(this).removeClass("selected");
+                })
+                $("#" + slideIndex + ".slide-thumb").addClass("selected");
+                CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
+                    .lecture.idList[slideIndex].id, CourseSketch.lecturePage.renderSlide,
+                    CourseSketch.lecturePage.renderSlide);
+                CourseSketch.lecturePage.removeWaitOverlay();
+            }
+            if(!isUndefined(CourseSketch.lecturePage.currentSlide)) {
+                var elements = document.getElementById("slide-content").children;
+
+                // Need to remove all the old elements; they will be replaced by the new ones
+                CourseSketch.lecturePage.currentSlide.elements = [];
+
+                for(var i = 0; i < elements.length; ++i) {
+                    elements[i].saveData();
+                }
+                CourseSketch.lecturePage.addWaitOverlay();
+                CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.currentSlide, completionHandler, completionHandler);
+            } else {
+                completionHandler();
+            }
+        }
+
+        CourseSketch.lecturePage.addWaitOverlay = function() {
+            CourseSketch.lecturePage.waitScreenManager.buildOverlay(document.querySelector("body"));
+            CourseSketch.lecturePage.waitScreenManager.buildWaitIcon(document.getElementById("overlay"));
+            document.getElementById("overlay").querySelector(".waitingIcon").classList.add("centered");
+        }
+
+        CourseSketch.lecturePage.removeWaitOverlay = function() {
+            document.querySelector("body").removeChild(document.getElementById("overlay"));
         }
 
         /**
@@ -102,7 +172,11 @@
             slide.lectureId = CourseSketch.lecturePage.lecture.id;
             slide.unlocked = true;
             var finishGetCourse = function(lecture) {
-                CourseSketch.lecturePage.lecture.slides.push(slide.id);
+                var id = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+                id.id = slide.id;
+                id.isSlide = true;
+                id.unlocked = true;
+                CourseSketch.lecturePage.lecture.idList.push(id);
                 CourseSketch.lecturePage.displaySlides();
             }
             var finishInsert = function(lecture) {
@@ -120,10 +194,10 @@
             $(".slide-thumb:not(\"#add\")").each(function() {
                 $(this).remove();
             });
-            for(var i = 0; i < CourseSketch.lecturePage.lecture.slides.length; ++i) {
+            for(var i = 0; i < CourseSketch.lecturePage.lecture.idList.length; ++i) {
                 CourseSketch.lecturePage.addSlideToDom(i);
             }
-            if(CourseSketch.lecturePage.lecture.slides.length > 0) {
+            if(CourseSketch.lecturePage.lecture.idList.length > 0) {
                 CourseSketch.lecturePage.selectSlide(0);
             }
         }

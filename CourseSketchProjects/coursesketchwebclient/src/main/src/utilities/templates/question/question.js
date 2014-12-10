@@ -62,6 +62,13 @@ function Question() {
             return;
         }
         this.shadowRoot.querySelector("#text").value = questionProto.getQuestionText();
+        var nodes = this.shadowRoot.querySelector('content').getDistributedNodes();
+        if(!isUndefined(questionProto.multipleChoice) && questionProto.multipleChoice != null && nodes.length > 0 && (nodes[0] instanceof MultiChoice)) {
+            var answerContent = nodes[0];
+            answerContent.loadData(questionProto.multipleChoice);
+        } else {
+            throw "Sketch questions are not yet supported"
+        }
     }
 
     /**
