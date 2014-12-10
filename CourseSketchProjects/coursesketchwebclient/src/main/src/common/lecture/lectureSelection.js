@@ -31,7 +31,11 @@
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
             CourseSketch.dataManager.addState("currentLecture",lecture);
-            CourseSketch.redirectContent("/src/common/lecture/lecturePage.html", "Edit Lecture");
+            if (CourseSketch.connection.isInstructor) {
+                CourseSketch.redirectContent("/src/instructor/lecture/lecturePage.html", "Edit Lecture");
+            } else {
+                CourseSketch.redirectContent("/src/student/lecture/lecturePage.html", "View Lecture");
+            }
         }
 
         /**
@@ -95,7 +99,7 @@
             lecture.id = generateUUID();
             lecture.description = "N/A";
             var insertCallback = function() {
-                CourseSketch.dataManager.getCourse(currentCourse, 
+                CourseSketch.dataManager.getCourse(currentCourse,
                     function(course) {
                         CourseSketch.dataManager.getCourseLectures(
                             course.lectureList,

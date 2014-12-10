@@ -1,6 +1,6 @@
 <html>
     <head>
-    <link rel="stylesheet" type="text/css" href="/src/common/lecture/lecture.css" />
+    <link rel="stylesheet" type="text/css" href="/src/instructor/lecture/lecture.css" />
     <!-- Jquery library -->
     <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html" />
     <!-- ChildScript -->
@@ -28,7 +28,10 @@
     <link rel="import" href="/src/utilities/libraries/interact/interactInclude.html">
     <!-- allow for saving image -->
     <link rel="import" href='/src/utilities/functions/image.js' />
+
+    <!-- loads lecture pages both common and instructor -->
     <script src="/src/common/lecture/lecturePage.js"></script>
+    <script src="/src/instructor/lecture/lecturePage.js"></script>
     <style>
     .column {
         height: 80% !important;
@@ -71,7 +74,7 @@
         <div id="col2" class="column">
             <div id="lecture-title" class="list-item title">
                 Loading...
-            </div> 
+            </div>
             <div id="slide-background" class="content">
                 <div id="slide-content"></div>
             </div>
