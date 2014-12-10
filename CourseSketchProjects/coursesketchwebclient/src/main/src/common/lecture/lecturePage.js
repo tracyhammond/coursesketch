@@ -2,6 +2,7 @@
     $(document).ready(function() {
         CourseSketch.lecturePage = [];
         CourseSketch.lecturePage.waitScreenManager = new WaitScreenManager();
+        CourseSketch.lecturePage.selectedSlideIndex = undefined;
 
         CourseSketch.lecturePage.doResize = function(event) {
             var target = event.target;
@@ -174,6 +175,7 @@
                     $(this).removeClass("selected");
                 })
                 $("#" + slideIndex + ".slide-thumb").addClass("selected");
+                CourseSketch.lecturePage.selectedSlideIndex = slideIndex;
                 CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
                     .lecture.idList[slideIndex].id, CourseSketch.lecturePage.renderSlide,
                     CourseSketch.lecturePage.renderSlide);
@@ -265,7 +267,11 @@
                 CourseSketch.lecturePage.addSlideToDom(i);
             }
             if(CourseSketch.lecturePage.lecture.idList.length > 0) {
-                CourseSketch.lecturePage.selectSlide(0);
+                if(!isUndefined(CourseSketch.lecturePage.selectedSlideIndex)) {
+                    CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex);
+                } else {
+                    CourseSketch.lecturePage.selectSlide(0);
+                }
             } else {
                 CourseSketch.lecturePage.newSlide();
             }
