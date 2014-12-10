@@ -6,7 +6,8 @@
     <link rel="import" href="/test/testUtilities/testUtilities.html">
 
     <!-- files needed for testing -->
-    <link rel="import" href="/test/src/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+    <link rel="import"
+          href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
 
     <!-- file being tested. -->
     <script src="/src/student/navigation/lecture/LectureNavigator.js" data-cover></script>
@@ -16,34 +17,39 @@
 <div id="qunit-fixture"></div>
 
 <script>
-        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
-                CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
         var slideList = [];
-        dataManager.getLectureSlide = function(id, callback) {
-            for (var i = 0; i < slideList.length; i++) {
-                if (slideList[i].id == id) {
-                    callback(slideList[i]);
-                    return;
-                }
-            }
-        }
-
         var lectureList = [];
-        dataManager.getCourseLecture = function(id, callback) {
-            for (var i = 0; i < lectureList.length; i++) {
-                if (lectureList[i].id == id) {
-                    callback(lectureList[i]);
-                    return;
-                }
-            }
-        }
         QUnit.module("timing Test", {
             teardown : function() {
                 slideList = [];
                 lectureList = [];
+            },
+            setup : function() {
+                CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
+                    CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                QUnit.stop();
+                waitForDatabase(CourseSketch.dataManager, function() {
+                    CourseSketch.dataManager.getLectureSlide = function(id, callback) {
+                        for (var i = 0; i < slideList.length; i++) {
+                            if (slideList[i].id == id) {
+                                callback(slideList[i]);
+                                return;
+                            }
+                        }
+                    }
+                    CourseSketch.dataManager.getCourseLecture = function(id, callback) {
+                        for (var i = 0; i < lectureList.length; i++) {
+                            if (lectureList[i].id == id) {
+                                callback(lectureList[i]);
+                                return;
+                            }
+                        }
+                    };
+                    QUnit.start();
+                });
             }
         });
-        QUnit.test("testing how timing works this test will fail", function(assert) {
+        QUnit.asyncTest("testing how timing works this test will fail", function(assert) {
             var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture.id = "lectureID!";
             lecture.idList = [];
@@ -77,46 +83,21 @@
             lecture.idList.push(id1);
             lecture.idList.push(id2);
 
-            var nav = blah;
-            var slide = nav.getCurrentSlide();
-            assert.equal(slide.id, slide1.id, "slides are equal");
+            var nav = new LectureNavigator(lecture.id, 0);
 
-            nav.addCallback(function() {
-               var slide = nav.getCurrentSlide();
-               assert.equal(slide.id, slide2.id, "slides are equal");
-            });
-
-            nav.goToNext();
-        });
-        QUnit.asyncTest("testing how timing works2", function(assert) {
-            restoreRealTime();
-            setTimeout(function() {
-                assert.ok(true);
-                QUnit.start();
-            }, 1000);
-        });
-
-        QUnit.asyncTest("testing how timing works this test will fail", function(assert) {
-            setTimeout(function() {
-                assert.ok(true);
-                QUnit.start();
-            }, 1000);
-        });
-
-        QUnit.asyncTest("testing how timing works this test will pass", function(assert) {
-
-            var clock = sinon.useFakeTimers();
-            setTimeout(function() {
-                assert.ok(true);
-                QUnit.start();
-            }, 1000);
-            clock.tick(1000);
-        });
-
-        QUnit.test("how does fak timing work this sees if the sinon timers are the same as the other timers", function(assert) {
-            var localFunc = setTimeout;
-            this.clock = this.useFakeTimers();
-            assert.equal(localFunc, setTimeout);
+            function firstCallback() {
+                var slide = nav.getCurrentSlide();
+                assert.equal(slide.id, slide1.id, "slides are equal");
+                nav.removeCallback(firstCallback);
+                nav.goToNext();
+                nav.addCallback(function() {
+                    var slide = nav.getCurrentSlide();
+                    assert.equal(slide.id, slide2.id, "slides are equal");
+                    QUnit.start();
+                });
+            }
+            nav.addCallback(firstCallback);
+            nav.refresh();
         });
     </script>
 </body>

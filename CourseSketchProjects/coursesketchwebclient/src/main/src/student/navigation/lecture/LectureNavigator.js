@@ -1,4 +1,5 @@
-function LectureNavigator(lectureId, preferredIndex){
+function LectureNavigator(lectureId, preferredIndex) {
+    var callbackList = [];
     var currentLecture;
     var currentLectureId = lectureId;
     var currentSlideIndex = preferredIndex;
@@ -64,8 +65,8 @@ function LectureNavigator(lectureId, preferredIndex){
     function loadSlide(nextSlideId, index) {
         function hasSlide(slide) {
             currentSlide = slide;
-            callCallback()
             currentSlideIndex = index;
+            callCallback();
         }
         CourseSketch.dataManager.getLectureSlide(nextSlideId, hasSlide, hasSlide);
     }
@@ -107,5 +108,21 @@ function LectureNavigator(lectureId, preferredIndex){
 
     this.getCurrentSlideId = function() {
         return currentSlide.id;
+    }
+
+    this.removeCallback = function(callback) {
+        var index = callbackList.indexOf(callback);
+        if (index >= 0 ) {
+            callbackList.splice(index, 1);
+        }
+    };
+
+    this.refresh = function() {
+        function hasLecture(lecture) {
+            currentLecture = lecture;
+            var id = currentLecture.idList[currentSlideIndex].id;
+            loadSlide(id, currentSlideIndex);
+        }
+        CourseSketch.dataManager.getCourseLecture(currentLectureId, hasLecture, hasLecture);
     }
 }
