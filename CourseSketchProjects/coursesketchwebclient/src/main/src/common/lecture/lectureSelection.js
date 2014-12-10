@@ -49,12 +49,14 @@
             schoolItemBuilder.setList(lectureList)
                 .setShowDate(false)
                 .setEditCallback(CourseSketch.lectureSelection.lectureEndEdit)
-                .setInstructorCard(true)
+                .setInstructorCard(CourseSketch.connection.isInstructor)
                 .setBoxClickFunction(CourseSketch.lectureSelection.lectureSelected)
                 .build(document.querySelector("#col2>.content"));
-            $("#col2>.content").prepend(add);
-            $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
-            $("#add").addClass("show");
+            if (CourseSketch.connection.isInstructor) {
+                $("#col2>.content").prepend(add);
+                $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
+                $("#add").addClass("show");
+            }
         };
 
         /**

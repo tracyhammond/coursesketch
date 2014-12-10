@@ -13,6 +13,7 @@ import org.bson.types.ObjectId;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School;
+import protobuf.srl.tutorial.TutorialOuterClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -244,7 +245,7 @@ public final class SlideManager {
         try {
             switch (blobType) {
                 case TEXTBOX:
-                    element.setTextBox(Lecturedata.TextBox.parseFrom(blob));
+                    element.setTextBox(TutorialOuterClass.ActionCreateTextBox.parseFrom(blob));
                     break;
                 case IMAGE:
                     element.setImage(Lecturedata.Image.parseFrom(blob));
