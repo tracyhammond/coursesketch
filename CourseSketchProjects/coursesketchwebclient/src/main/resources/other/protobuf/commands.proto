@@ -51,7 +51,8 @@ enum CommandType {
 	CREATE_TEXTBOX = 17; // Creates a textbox for use in tutorial or lecture slides
 	CREATE_QUESTION = 18; // Creates a question for use in lecture slides
 	CREATE_MULTIPLE_CHOICE = 19; // Creates a multiple choice item to be included in a question
-    CREATE_TTSBOX = 20; // Creates a ttsbox for use in tutorial or lecture slides
+	CREATE_IMAGE = 20; // Creates an image
+    CREATE_TTSBOX = 21; // Creates a ttsbox for use in tutorial or lecture slides
 }
 
 /**

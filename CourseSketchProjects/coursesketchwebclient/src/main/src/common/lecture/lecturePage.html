@@ -18,6 +18,8 @@
     <link rel="import" href="/src/utilities/templates/question/questionInclude.html" />
     <!-- multi-choice -->
     <link rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html" />
+    <!-- image-box -->
+    <link rel="import" href="/src/utilities/templates/imageBox/imageBoxInclude.html" />
     <!-- sketching -->
     <link rel="import" href="/src/sketching/sketchInclude.html" />
     <!-- resizing -->
@@ -44,7 +46,7 @@
                     Text Box
                 </div>
                 <div class="list-item">
-                    <input type='file' onchange="CourseSketch.lecturePage.addPic(this);" />
+                    <input type='file' onchange="CourseSketch.lecturePage.newImage(this);" />
                     Image
                 </div>
                 <div class="list-item" onclick="CourseSketch.lecturePage.newSketchContent()" />

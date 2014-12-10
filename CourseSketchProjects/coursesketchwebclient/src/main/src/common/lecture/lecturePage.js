@@ -7,8 +7,8 @@
             var target = event.target;
 
             // add the change in coords to the previous width of the target element
-            var newWidth  = parseFloat(target.style.width) + event.dx;
-            var newHeight = parseFloat(target.style.height) + event.dy;
+            var newWidth  = parseFloat($(target).width()) + event.dx;
+            var newHeight = parseFloat($(target).height()) + event.dy;
 
             // update the element's style
             target.style.width  = newWidth + 'px';
@@ -35,6 +35,15 @@
             CourseSketch.lecturePage.currentSlide.elements.push(element);
         }
 
+        CourseSketch.lecturePage.saveImageBox = function(command, event, currentUpdate) {
+            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                CourseSketch.PROTOBUF_UTIL.getImageClass());
+            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            element.id = generateUUID();
+            element.image = decoded;
+            CourseSketch.lecturePage.currentSlide.elements.push(element);
+        }
+
         CourseSketch.lecturePage.loadTextBox = function(textBox) {
             var elem = CourseSketch.lecturePage.newTextBox();
             elem.loadData(textBox);
@@ -43,6 +52,11 @@
         CourseSketch.lecturePage.loadMultiChoiceQuestion = function(question) {
             var elem = CourseSketch.lecturePage.newMultiChoiceQuestion();
             elem.loadData(question);
+        }
+
+        CourseSketch.lecturePage.loadImageBox = function(imageBox) {
+            var elem = CourseSketch.lecturePage.newImage();
+            elem.loadData(imageBox);
         }
 
         /**
@@ -62,6 +76,24 @@
                 sketchSurface.resizeSurface();
             }, 500);
             return sketchSurface;
+        }
+
+        CourseSketch.lecturePage.newImage = function(input) {
+            var imagebox = document.createElement('image-box');
+            document.querySelector("#slide-content").appendChild(imagebox);
+
+            // TODO: Save resize info in DB; better to leave this disabled until that works
+            // imagebox.className = "resize";
+
+            if (!isUndefined(input) && input != null && input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    imagebox.setSrc(e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+            imagebox.setFinishedListener(CourseSketch.lecturePage.saveImageBox);
+            return imagebox;
         }
 
         CourseSketch.lecturePage.newMultiChoiceQuestion = function() {
@@ -94,6 +126,8 @@
                     } else {
                         throw "Sketch questions are not yet supported";
                     }
+                } else if(!isUndefined(element.image) && element.image != null) {
+                    CourseSketch.lecturePage.loadImageBox(element.image);
                 } else {
                     throw "Tried to load invalid element";
                 }
@@ -120,16 +154,21 @@
                 CourseSketch.lecturePage.removeWaitOverlay();
             }
             if(!isUndefined(CourseSketch.lecturePage.currentSlide)) {
-                var elements = document.getElementById("slide-content").children;
-
-                // Need to remove all the old elements; they will be replaced by the new ones
-                CourseSketch.lecturePage.currentSlide.elements = [];
-
-                for(var i = 0; i < elements.length; ++i) {
-                    elements[i].saveData();
-                }
                 CourseSketch.lecturePage.addWaitOverlay();
-                CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.currentSlide, completionHandler, completionHandler);
+
+                // Need to do small delay here so the wait overlay actually shows up
+                setTimeout(function() {
+                    var elements = document.getElementById("slide-content").children;
+
+                    // Need to remove all the old elements; they will be replaced by the new ones
+                    CourseSketch.lecturePage.currentSlide.elements = [];
+
+                    for(var i = 0; i < elements.length; ++i) {
+                        elements[i].saveData();
+                    }
+                    CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.currentSlide, completionHandler, completionHandler);
+                }, 10);
+
             } else {
                 completionHandler();
             }
@@ -200,23 +239,6 @@
             if(CourseSketch.lecturePage.lecture.idList.length > 0) {
                 CourseSketch.lecturePage.selectSlide(0);
             }
-        }
-
-        CourseSketch.lecturePage.addPic = function(input) {
-            var imagebox = document.createElement('img');
-            imagebox.className='resize';
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $(imagebox)
-                        .attr('src', e.target.result)
-                        .width(100)
-                        .height(100);
-                };
-
-                reader.readAsDataURL(input.files[0]);
-            }
-            document.querySelector("#slide-content").appendChild(imagebox);
         }
 
         // Do setup

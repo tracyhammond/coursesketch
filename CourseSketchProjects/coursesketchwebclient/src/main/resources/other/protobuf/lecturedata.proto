@@ -53,7 +53,7 @@ message LectureElement {
 }
 
 message Image {
-	optional bytes image = 8;
+	optional string src = 8;
 	optional float orientation = 9;
 }
 

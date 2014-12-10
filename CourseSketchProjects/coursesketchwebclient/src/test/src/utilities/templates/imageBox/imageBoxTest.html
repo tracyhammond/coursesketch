@@ -1,0 +1,60 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Text Box Test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link id="imageBoxTemplateImport" rel="import" href="/src/utilities/templates/imageBox/imageBoxInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/utilities/templates/imageBox/imageBox.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="image-box"></div>
+    
+	<script>
+        var template = (function() {
+            var link1 = document.querySelector('#imageBoxTemplateImport');
+            var link = link1.import.querySelector('#imageBoxTemplateImport');
+            var template = link.import.querySelector('#image-box');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+
+        QUnit.module("creation", {
+            setupOnce : function() {
+                try {
+                    newElement = new ImageBox();
+
+                    /**
+                     * Creates the shadow root and adds that into the system.
+                     */
+                    newElement.attachedCallback = function() {
+                        this.initializeElement(template.cloneNode(true));
+                    };
+
+                    // test is not a typo
+                    document.registerElement('image-box-test', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
+
+            },
+            teardown : function() {
+                document.getElementById('image-box').innerHTML = "";
+            }
+        });
+
+        test("create question element", function(assert) {
+            expect(1);
+            var imageBox = document.createElement("image-box-test");
+            document.getElementById("image-box").appendChild(imageBox);
+            assert.ok(imageBox.shadowRoot.innerHTML != null && imageBox.shadowRoot.innerHTML != "", "Image box has content");
+        });
+    </script>
+</body>
