@@ -36,7 +36,7 @@ function LectureNavigator(lectureId, preferredIndex) {
             if (idMessage.nav.nextLecture != null && !isUndefined(idMessage.nav.nextLecture)) {
                 loadLecture(nextLectureId, idMessage.nav.nextSlide);
             } else {
-                loadSlide(nextSlideId, nextSlideIndex);
+                loadSlide(currentLecture.idList[idMessage.nav.nextSlide].id, idMessage.nav.nextSlide);
             }
         }
     }
@@ -47,10 +47,13 @@ function LectureNavigator(lectureId, preferredIndex) {
         }
     }
 
-    function callBack(scopedIndex) {
-        setTimeout(function () {
-            callbackList[scopedIndex](navScope);
-        }, 20);
+    /**
+     * Scopes the index for the callbackList.
+     * this way the browser is not locked up by callbacks.
+     */
+    function callBacker(scopedIndex) {
+        var navScope = this;
+        setTimeout(function() {callbackList[scopedIndex](navScope);},20);
     }
 
     function changeSlide(index) {
@@ -62,6 +65,11 @@ function LectureNavigator(lectureId, preferredIndex) {
         callCallback()
     }
 
+    /**
+     * Loads a slide with an id and the index at which this slide exist.
+     * @param index The new index that will become the current index.
+     * @param nextSlideId the id of the next slide that will become the current slide.
+     */
     function loadSlide(nextSlideId, index) {
         function hasSlide(slide) {
             currentSlide = slide;
@@ -108,6 +116,10 @@ function LectureNavigator(lectureId, preferredIndex) {
 
     this.getCurrentSlideId = function() {
         return currentSlide.id;
+    }
+
+    this.getCurrentSlide = function() {
+        return currentSlide;
     }
 
     this.removeCallback = function(callback) {

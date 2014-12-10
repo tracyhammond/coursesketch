@@ -89,12 +89,12 @@
                 var slide = nav.getCurrentSlide();
                 assert.equal(slide.id, slide1.id, "slides are equal");
                 nav.removeCallback(firstCallback);
-                nav.goToNext();
                 nav.addCallback(function() {
                     var slide = nav.getCurrentSlide();
                     assert.equal(slide.id, slide2.id, "slides are equal");
                     QUnit.start();
                 });
+                nav.goToNextSlide();
             }
             nav.addCallback(firstCallback);
             nav.refresh();
