@@ -16,12 +16,77 @@
 <div id="qunit-fixture"></div>
 
 <script>
-        QUnit.module("timing Test");
-        QUnit.asyncTest("testing how timing works this test will fail", function(assert) {
-            setTimeout(function() {
-                assert.ok(true);
-                QUnit.start();
-            }, 1000);
+        var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
+                CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+        var slideList = [];
+        dataManager.getLectureSlide = function(id, callback) {
+            for (var i = 0; i < slideList.length; i++) {
+                if (slideList[i].id == id) {
+                    callback(slideList[i]);
+                    return;
+                }
+            }
+        }
+
+        var lectureList = [];
+        dataManager.getCourseLecture = function(id, callback) {
+            for (var i = 0; i < lectureList.length; i++) {
+                if (lectureList[i].id == id) {
+                    callback(lectureList[i]);
+                    return;
+                }
+            }
+        }
+        QUnit.module("timing Test", {
+            teardown : function() {
+                slideList = [];
+                lectureList = [];
+            }
+        });
+        QUnit.test("testing how timing works this test will fail", function(assert) {
+            var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+            lecture.id = "lectureID!";
+            lecture.idList = [];
+            lectureList.push(lecture);
+            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            slide1.lectureId = lecture.id;
+            slide1.id = "SlIDE1";
+            var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            slide2.lectureId = lecture.id;
+            slide2.id = "Slide2";
+            slideList.push(slide1);
+            slideList.push(slide2);
+
+            var id1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+            var id2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+
+            id1.id = slide1.id;
+            id2.id = slide2.id;
+            id1.isSlide = true;
+            id2.isSlide = true;
+            id1.unlocked = true;
+            id2.unlocked = true;
+
+            var nav1 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            nav1.nextSlide = 1;
+            nav2.nextSlide = -1;
+            id1.nav = nav1;
+            id2.nav = nav2;
+
+            lecture.idList.push(id1);
+            lecture.idList.push(id2);
+
+            var nav = blah;
+            var slide = nav.getCurrentSlide();
+            assert.equal(slide.id, slide1.id, "slides are equal");
+
+            nav.addCallback(function() {
+               var slide = nav.getCurrentSlide();
+               assert.equal(slide.id, slide2.id, "slides are equal");
+            });
+
+            nav.goToNext();
         });
         QUnit.asyncTest("testing how timing works2", function(assert) {
             restoreRealTime();
