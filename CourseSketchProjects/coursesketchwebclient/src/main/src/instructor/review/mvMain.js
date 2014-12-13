@@ -63,11 +63,6 @@
 	 * and then places them into the Multiview screen.
 	 */
 
-	function nextProblem() {
-		multiviewSketchdelete(sketchList);
-		CourseSketch.problemNavigator.gotoNext();
-		createMvList();
-	}
 
 	/*
 	 * wipes the previous sketches, and laods the previous problem into sketchList
@@ -75,8 +70,7 @@
 	 */
 
 	function previousProblem() {
-		multiviewSketchdelete(sketchList);
-		CourseSketch.problemNavigator.gotoPrevious();
+		multiviewSketchdelete();
 		createMvList();
 	}
 
@@ -87,9 +81,11 @@
 	 *				{array<experiments>}
 	 */
 
-	function multiviewSketchdelete(array) {
-		for(var i = 0; i < array.length; i++){
-			CourseSketch.SKETCHING_SURFACE_HANDLER.deleteSketch(array[i]);
-		}
+	function multiviewSketchdelete() {
+		var parent = document.getElementById("sketch-area");
+		parent.innerHTML= '';
 	}
+
+	
+
 })();

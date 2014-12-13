@@ -1,5 +1,5 @@
 
-
+CourseSketch.fakeExperiments = [];
 
 /*
  * tansfering the sketches into submissions to be used to make experiments
@@ -34,6 +34,10 @@ experiment3.submission = submission3;
 experiment4.submission = submission4;
 experiment5.submission = submission5;
 
+/*
+ * assinging details to the experiments so we can seach for specific problems
+ */
+
 experiment1.assignmentId = "1"
 experiment2.assignmentId = "1"
 experiment3.assignmentId = "1"
@@ -51,3 +55,9 @@ experiment2.userId = "Dtracer"
 experiment3.userId = "Chrome"
 experiment4.userId = "Chrome"
 experiment5.userId = "Dtracer"
+
+CourseSketch.fakeExperiments.push(experiment1);
+CourseSketch.fakeExperiments.push(experiment2);
+CourseSketch.fakeExperiments.push(experiment3);
+CourseSketch.fakeExperiments.push(experiment4);
+CourseSketch.fakeExperiments.push(experiment5);
