@@ -69,6 +69,9 @@
                 case 40: // down
                 break;
 
+                case 27: // escape!
+
+                break;
                 default: return; // exit this handler for other keys
             }
             e.preventDefault(); // prevent the default action (scroll / move caret)
