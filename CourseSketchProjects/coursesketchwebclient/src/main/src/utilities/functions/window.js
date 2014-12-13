@@ -5,7 +5,7 @@
  *
  * Placement utility Functions
  * @author gigemjt
- * 
+ *
  **************************************************************
  */
 
@@ -135,4 +135,17 @@ if (isUndefined(makeFullScreen)) {
 			elem.webkitRequestFullscreen();
 		}
 	}
+}
+
+if (isUndefined(makeNotFullScreen)) {
+	function makeNotFullScreen(element) {
+		if (element.cancelFullscreen) {
+        	element.cancelFullscreen();
+        } else if (element.exitFullscreen) {
+			element.exitFullscreen();
+	    } else if (element.webkitExitFullscreen) {
+			element.webkitExitFullscreen();
+	    }
+	}
+		element.webkitExitFullscreen();
 }
