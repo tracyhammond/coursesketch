@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="../../">
+	<title>Course Management</title>
+   	<link rel="stylesheet" href="css/school/school_item.css">
+  	<link rel="stylesheet" href="css/utility/columns.css">
+	<link rel="stylesheet" href="css/courseSketch2.css">
+	<!-- school item -->
+	<link rel="import" href="/src/utilities/templates/schoolItem/schoolItemInclude.html" />
+	<!-- Jquery library -->
+	<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html" />
+	<!-- ChildScript -->
+	<script type="text/javascript" src="/src/utilities/functions/childScript.js"
+			data-namespace="classSearch"></script>
+	<style>
+	.centerOfScreen {
+	  position: fixed;
+	  top: 50%;
+	  left: 50%;
+	  margin-top: -33px;
+	  margin-left: -33px;
+	}
+	</style>
+</head>
+
+<body>
+<div class = "wide_centre">
+   	<div style="width:100%; float:left;">
+    	<div class="col-group2">
+    		<div>
+    			<div id="class_list_column1" class="school_div">
+    			</div>
+    		</div>
+    		<div>
+    			<div id="class_list_column2" class="school_div">
+    			</div>
+    		</div>
+    	</div>
+   	</div>
+   	<div id = "loadingIcon" class = "centerOfScreen">
+   		<img src="images/loading/7EB5D6_large_loader.gif">
+   	</div>
+ </div>
+ <div id="registerButton">
+ </div>
+</body>
+</html>
