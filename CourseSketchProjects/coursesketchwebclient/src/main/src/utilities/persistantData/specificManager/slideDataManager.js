@@ -99,6 +99,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                     idInLecture.isSlide = true;
                     console.log("SLIDE IS STUFF! " + idInLecture);
                     idsInLectureList.push(idInLecture);
+                    lecture.idList = idsInLectureList;
                     parent.setLecture(lecture, function() {
                         if(!isUndefined(serverCallback)) {
                             serverCallback(slideUpdated);
