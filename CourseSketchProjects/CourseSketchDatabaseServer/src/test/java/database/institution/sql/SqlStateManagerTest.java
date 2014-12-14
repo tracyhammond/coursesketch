@@ -41,9 +41,11 @@ public class SqlStateManagerTest{
 
         // Record set Mock Object expected behavior and output
         // Mock objects need to be performed must be recorded, such as pst.setInt (2 pas), rs.close ()
+        final String query="SELECT * FROM Grades WHERE UserID=\'"
+                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         expect (conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
 
-        expect(st.executeQuery("SELECT * FROM State WHERE UserID=\'" + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';")).andReturn(rs);
+        expect(st.executeQuery(query)).andReturn(rs);
         expect(rs.next()).andReturn(false);
 
         rs.moveToInsertRow();
@@ -97,9 +99,11 @@ public class SqlStateManagerTest{
 
         // Record set Mock Object expected behavior and output
         // Mock objects need to be performed must be recorded, such as pst.setInt (2 pas), rs.close ()
+        final String query="SELECT * FROM Grades WHERE UserID=\'"
+                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         expect (conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
 
-        expect(st.executeQuery("SELECT * FROM State WHERE UserID=\'" + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';")).andReturn(rs);
+        expect(st.executeQuery(query)).andReturn(rs);
         expect(rs.next()).andReturn(true);
 
         rs.updateBoolean("Completed", state.getCompleted());
@@ -148,9 +152,11 @@ public class SqlStateManagerTest{
 
         // Record set Mock Object expected behavior and output
         // Mock objects need to be performed must be recorded, such as pst.setInt (2 pas), rs.close ()
+        final String query="SELECT * FROM Grades WHERE UserID=\'"
+                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         expect (conn.createStatement()).andReturn(st);
 
-        expect(st.executeQuery("SELECT * FROM State WHERE UserID=\'" + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';")).andReturn(rs);
+        expect(st.executeQuery(query)).andReturn(rs);
 
         expect(rs.getBoolean("Completed")).andReturn(true);
         expect(rs.getBoolean("Started")).andReturn(true);

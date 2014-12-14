@@ -41,10 +41,11 @@ public final class SqlGradeManager {
     public static SrlGrade getGrade(final Connection conn, final String userId, final String classification, final String itemId)
             throws DatabaseAccessException {
         final SrlGrade.Builder grade = SrlGrade.newBuilder();
+        final String query="SELECT * FROM Grades WHERE UserID=\'"
+                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         try (
             final Statement stmt = conn.createStatement();
-            final ResultSet rst = stmt.executeQuery("SELECT * FROM Grades WHERE UserID=\'"
-                    + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';")) {
+            final ResultSet rst = stmt.executeQuery(query)) {
             grade.setId("");
             grade.setProblemId("");
             grade.setGrade(rst.getFloat("Grade"));
@@ -68,10 +69,11 @@ public final class SqlGradeManager {
     public static String setGrade(final Connection conn, final String userId, final String classification, final String itemId, final SrlGrade grade)
             throws DatabaseAccessException {
         String result;
+        final String query="SELECT * FROM Grades WHERE UserID=\'"
+                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         try (
             final Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            final ResultSet rst = stmt.executeQuery("SELECT * FROM Grades WHERE UserID=\'"
-                    + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';")) {
+            final ResultSet rst = stmt.executeQuery(query)) {
             if (rst.next()) {
                 rst.updateFloat("Grade", grade.getGrade());
                 rst.updateString("Comments", grade.getComment());
