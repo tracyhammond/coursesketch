@@ -41,12 +41,12 @@ public final class SqlStateManager {
             final State.Builder state = State.newBuilder();
             try {
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM STATE WHERE [UserID]=\'" + userId + "\' AND [SchoolItemType]=\'" + classification + "\' AND [SchoolItemID]=\'" + itemId + "\';");
+                ResultSet rs = stmt.executeQuery("SELECT * FROM State WHERE UserID=\'" + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';");
                 state.setCompleted((Boolean) (rs.getBoolean("Completed")));
                 state.setStarted((Boolean) (rs.getBoolean("Started")));
-            state.setGraded((Boolean) (rs.getBoolean("Graded")));
-        }catch(SQLException e) {
-            throw new DatabaseAccessException(e, false);
+                state.setGraded((Boolean) (rs.getBoolean("Graded")));
+            }catch(SQLException e) {
+                throw new DatabaseAccessException(e, false);
         }
         return state.build();
     }
@@ -58,20 +58,23 @@ public final class SqlStateManager {
      * @param classification if it is a course, assignment, ...
      * @param itemId the id of the related state (assignmentId, courseId, ...)
      * @param state what the state is being set to.
+     * @return reslut of set: "SET", "INSERT", "ERROR"
      */
-    public static void setState(final Connection conn, final String userId, final String classification, final String itemId, final State state) throws DatabaseAccessException {
+    public static String setState(final Connection conn, final String userId, final String classification, final String itemId, final State state) throws DatabaseAccessException {
         // FUTURE: finish this!
         // what might be good is to retrieve the old state... compare given
         // values
         // set new updated state. (overriding old state)
+        String result = "ERROR";
         try {
             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery("SELECT * FROM STATE WHERE [UserID]=\'" + userId + "\' AND [SchoolItemType]=\'" + classification + "\' AND [SchoolItemID]=\'" + itemId + "\';");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM State WHERE UserID=\'" + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';");
             if(rs.next()) {
                 rs.updateBoolean("Completed", state.getCompleted());
                 rs.updateBoolean("Started", state.getStarted());
                 rs.updateBoolean("Graded", state.getGraded());
                 rs.updateRow();
+                result = "SET";
             }
             else {
                 rs.moveToInsertRow();
@@ -83,9 +86,11 @@ public final class SqlStateManager {
                 rs.updateBoolean("Graded", state.getGraded());
                 rs.insertRow();
                 rs.moveToCurrentRow();
+                result = "INSERT";
             }
         }catch(SQLException e) {
             throw new DatabaseAccessException(e, false);
         }
+        return result;
     }
 }

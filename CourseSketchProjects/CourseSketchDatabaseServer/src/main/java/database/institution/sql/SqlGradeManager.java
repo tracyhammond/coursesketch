@@ -37,11 +37,13 @@ public final class SqlGradeManager {
      * @param itemId the id of the related state (assignmentId, courseId, ...)
      * @return the sate of the assignment.
      */
-    public static SrlGrade getState(final Connection conn, final String userId, final String classification, final String itemId) throws DatabaseAccessException {
+    public static SrlGrade getGrade(final Connection conn, final String userId, final String classification, final String itemId) throws DatabaseAccessException {
         final SrlGrade.Builder grade = SrlGrade.newBuilder();
         try {
+            grade.setId("");
+            grade.setProblemId("");
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Grades WHERE [UserID]=\'" + userId + "\' AND [SchoolItemType]=\'" + classification + "\' AND [SchoolItemID]=\'" + itemId + "\';");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Grades WHERE UserID=\'" + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';");
             grade.setGrade((rs.getFloat("Grade")));
             grade.setComment((rs.getString("Comments")));
         }catch(SQLException e) {
@@ -57,19 +59,22 @@ public final class SqlGradeManager {
      * @param classification if it is a course, assignment, ...
      * @param itemId the id of the related state (assignmentId, courseId, ...)
      * @param grade what the grade is being set to.
+     * @return reslut of set: "SET", "INSERT", "ERROR"
      */
-    public static void setGrade(final Connection conn, final String userId, final String classification, final String itemId, final SrlGrade grade) throws DatabaseAccessException {
+    public static String setGrade(final Connection conn, final String userId, final String classification, final String itemId, final SrlGrade grade) throws DatabaseAccessException {
         // FUTURE: finish this!
         // what might be good is to retrieve the old state... compare given
         // values
         // set new updated state. (overriding old state)
+        String result = "ERROR";
         try {
             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Grades WHERE [UserID]=\'" + userId + "\' AND [SchoolItemType]=\'" + classification + "\' AND [SchoolItemID]=\'" + itemId + "\';");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Grades WHERE UserID=\'" + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';");
             if(rs.next()) {
                 rs.updateFloat("Grade", grade.getGrade());
                 rs.updateString("Comments", grade.getComment());
                 rs.updateRow();
+                result="SET";
             }
             else {
                 rs.moveToInsertRow();
@@ -80,9 +85,11 @@ public final class SqlGradeManager {
                 rs.updateString("Comments", grade.getComment());
                 rs.insertRow();
                 rs.moveToCurrentRow();
+                result="INSERT";
             }
         }catch(SQLException e) {
             throw new DatabaseAccessException(e, false);
         }
+        return result;
     }
 }
