@@ -67,10 +67,6 @@ public final class SqlGradeManager {
      */
     public static String setGrade(final Connection conn, final String userId, final String classification, final String itemId, final SrlGrade grade)
             throws DatabaseAccessException {
-        // FUTURE: finish this!
-        // what might be good is to retrieve the old state... compare given
-        // values
-        // set new updated state. (overriding old state)
         String result;
         try (
             final Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
