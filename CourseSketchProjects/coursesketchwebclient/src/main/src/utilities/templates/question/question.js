@@ -2,59 +2,6 @@ function Question() {
     this.lectures = [];
 
     /**
-     * Loads the lectures that can be navigated to in the question.
-     * @param lectureIds list of lecture IDs to load
-     */
-    this.loadLectures = function(lectureIds) {
-        var callback = function(lectures) {
-            shadowRoot.getElementById("correct-lecture").innerHTML = "";
-            shadowRoot.getElementById("incorrect-lecture").innerHTML = "";
-            shadowRoot.getElementById("correct-lecture").dataset = [];
-            shadowRoot.getElementById("incorrect-lecture").dataset = [];
-            this.lectures = [];
-            for(var i = 0; i < lectures.length; ++i) {
-                var option = document.createElement("option");
-                option.textContent = lectures[i].name;
-                option.value = lectures[i].id;
-                shadowRoot.getElementById("correct-lecture").dataset["lecture-" + lectures[i].id] = i;
-                shadowRoot.getElementById("incorrect-lecture").dataset["lecture-" + lectures[i].id] = i;
-                this.lectures.push(lectures[i]);
-                shadowRoot.getElementById("correct-lecture").appendChild(option);
-                shadowRoot.getElementById("incorrect-lecture").appendChild(option.cloneNode(true));
-            }
-            var x = shadowRoot.getElementById("incorrect-lecture");
-            $(this.shadowRoot.getElementById("actions-box")).removeClass("hide");
-        }
-        CourseSketch.dataManager.getCourseLectures(lectureIds, callback, callback);
-    }
-
-    /**
-     * Loads slides into a slide select element.
-     * @param idList list of "idsInLecture" containing the slides to load
-     * @param slideSelect select element to load the slides into
-     */
-    this.loadSlides = function(idList, slideSelect) {
-        var callback = function(slides) {
-            slideSelect.innerHTML = ""
-            for(var i = 0; i < slides.length; ++i) {
-                var option = document.createElement("option");
-                option.textContent = slides[i].id;
-                option.value = slides[i].id;
-                slideSelect.appendChild(option);
-                slideSelect.appendChild(option.cloneNode(true));
-            }
-            if(slides.length > 0) {
-                slideSelect.disabled = false;
-            }
-        }
-        var slideIds = [];
-        for(var i = 0; i < idList.length; ++i) {
-            slideIds.push(idList[i].id);
-        }
-        CourseSketch.dataManager.getLectureSlides(slideIds, callback, callback);
-    }
-
-    /**
      * @param templateClone {node} is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
@@ -72,15 +19,71 @@ function Question() {
         shadowRoot.getElementById("correct-lecture").onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset["lecture-" + value]);
-            var lecture = lectures[lectureIndex];
+            var lecture = localScope.lectures[lectureIndex];
             localScope.loadSlides(lecture.idList, shadowRoot.getElementById("correct-slide"));
         }
         shadowRoot.getElementById("incorrect-lecture").onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset["lecture-" + value]);
-            var lecture = lectures[lectureIndex];
+            var lecture = localScope.lectures[lectureIndex];
             localScope.loadSlides(lecture.idList, shadowRoot.getElementById("incorrect-slide"));
         }
+    }
+
+    /**
+     * Loads the lectures that can be navigated to in the question.
+     * @param lectureIds list of lecture IDs to load
+     */
+    this.loadLectures = function(lectureIds) {
+        var localScope = this;
+        var callback = function(lectures) {
+            shadowRoot.getElementById("correct-lecture").innerHTML = "";
+            shadowRoot.getElementById("incorrect-lecture").innerHTML = "";
+            shadowRoot.getElementById("correct-lecture").dataset = [];
+            shadowRoot.getElementById("incorrect-lecture").dataset = [];
+            localScope.lectures = [];
+            for(var i = 0; i < lectures.length; ++i) {
+                var option = document.createElement("option");
+                option.textContent = lectures[i].name;
+                option.value = lectures[i].id;
+                shadowRoot.getElementById("correct-lecture").dataset["lecture-" + lectures[i].id] = i;
+                shadowRoot.getElementById("incorrect-lecture").dataset["lecture-" + lectures[i].id] = i;
+                localScope.lectures.push(lectures[i]);
+                shadowRoot.getElementById("correct-lecture").appendChild(option);
+                shadowRoot.getElementById("incorrect-lecture").appendChild(option.cloneNode(true));
+            }
+            if(localScope.lectures.length > 0) {
+                localScope.loadSlides(localScope.lectures[0].idList, shadowRoot.getElementById("correct-slide"));
+                localScope.loadSlides(localScope.lectures[0].idList, shadowRoot.getElementById("incorrect-slide"));
+            }
+            $(localScope.shadowRoot.getElementById("actions-box")).removeClass("hide");
+        }
+        CourseSketch.dataManager.getCourseLectures(lectureIds, callback, callback);
+    }
+
+    /**
+     * Loads slides into a slide select element.
+     * @param idList list of "idsInLecture" containing the slides to load
+     * @param slideSelect select element to load the slides into
+     */
+    this.loadSlides = function(idList, slideSelect) {
+        var callback = function(slides) {
+            slideSelect.innerHTML = ""
+            for(var i = 0; i < slides.length; ++i) {
+                var option = document.createElement("option");
+                option.textContent = slides[i].id;
+                option.value = slides[i].id;
+                slideSelect.appendChild(option);
+            }
+            if(slides.length > 0) {
+                slideSelect.disabled = false;
+            }
+        }
+        var slideIds = [];
+        for(var i = 0; i < idList.length; ++i) {
+            slideIds.push(idList[i].id);
+        }
+        CourseSketch.dataManager.getLectureSlides(slideIds, callback, callback);
     }
 
     /**
