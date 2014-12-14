@@ -40,10 +40,11 @@ public final class SqlStateManager {
     public static State getState(final Connection conn, final String userId, final String classification, final String itemId)
             throws DatabaseAccessException {
         final State.Builder state = State.newBuilder();
+        final String query="SELECT * FROM Grades WHERE UserID=\'"
+                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         try (
             final Statement stmt = conn.createStatement();
-            final ResultSet rst = stmt.executeQuery("SELECT * FROM State WHERE UserID=\'"
-                    + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';")) {
+            final ResultSet rst = stmt.executeQuery(query)) {
             state.setCompleted(rst.getBoolean("Completed"));
             state.setStarted(rst.getBoolean("Started"));
             state.setGraded(rst.getBoolean("Graded"));
@@ -65,15 +66,12 @@ public final class SqlStateManager {
      */
     public static String setState(final Connection conn, final String userId, final String classification, final String itemId, final State state)
             throws DatabaseAccessException {
-        // FUTURE: finish this!
-        // what might be good is to retrieve the old state... compare given
-        // values
-        // set new updated state. (overriding old state)
         String result;
+        final String query="SELECT * FROM Grades WHERE UserID=\'"
+                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         try (
             final Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            final ResultSet rst = stmt.executeQuery("SELECT * FROM State WHERE UserID=\'"
-                    + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';")) {
+            final ResultSet rst = stmt.executeQuery(query)) {
             if (rst.next()) {
                 rst.updateBoolean("Completed", state.getCompleted());
                 rst.updateBoolean("Started", state.getStarted());
