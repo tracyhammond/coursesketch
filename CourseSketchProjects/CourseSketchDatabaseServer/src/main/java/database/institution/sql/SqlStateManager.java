@@ -40,7 +40,7 @@ public final class SqlStateManager {
     public static State getState(final Connection conn, final String userId, final String classification, final String itemId)
             throws DatabaseAccessException {
         final State.Builder state = State.newBuilder();
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
+        final String query = "SELECT * FROM Grades WHERE UserID=\'"
                 + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         try (
             final Statement stmt = conn.createStatement();
@@ -67,7 +67,7 @@ public final class SqlStateManager {
     public static String setState(final Connection conn, final String userId, final String classification, final String itemId, final State state)
             throws DatabaseAccessException {
         String result;
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
+        final String query = "SELECT * FROM Grades WHERE UserID=\'"
                 + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         try (
             final Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);

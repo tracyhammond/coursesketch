@@ -41,7 +41,7 @@ public final class SqlGradeManager {
     public static SrlGrade getGrade(final Connection conn, final String userId, final String classification, final String itemId)
             throws DatabaseAccessException {
         final SrlGrade.Builder grade = SrlGrade.newBuilder();
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
+        final String query = "SELECT * FROM Grades WHERE UserID=\'"
                 + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         try (
             final Statement stmt = conn.createStatement();
@@ -69,7 +69,7 @@ public final class SqlGradeManager {
     public static String setGrade(final Connection conn, final String userId, final String classification, final String itemId, final SrlGrade grade)
             throws DatabaseAccessException {
         String result;
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
+        final String query = "SELECT * FROM Grades WHERE UserID=\'"
                 + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
         try (
             final Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
