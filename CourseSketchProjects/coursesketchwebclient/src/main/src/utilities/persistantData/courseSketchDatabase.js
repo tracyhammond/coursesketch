@@ -24,7 +24,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var stateMachine = {};
     var databaseFinishedLoading = false;
 
-    var version = 4;
+    var version = 6;
     var dataListener = advanceDataListener;
 
     var serverConnection = connection;
@@ -49,7 +49,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      */
     this.isDatabaseReady = function() {
         return databaseFinishedLoading;
-    }
+    };
 
     /**
      * After the lower level database has been completely setup the higher level
@@ -87,6 +87,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         tables.push(database.createTable("BankProblems", "id", addFunction));
         tables.push(database.createTable("Submissions", "id", addFunction));
         tables.push(database.createTable("Grades", "id", addFunction));
+        tables.push(database.createTable("Lectures", "id", addFunction));
+        tables.push(database.createTable("Slides", "id", addFunction));
         tables.push(database.createTable("Other", "id", addFunction));
 
         database.setTables(tables);
@@ -134,12 +136,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
         dataSend.items = new Array();
-
-        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemSend();
         itemUpdate.setQuery(queryType);
         itemUpdate.setData(data);
         dataSend.items.push(itemUpdate);
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
     };
 
     this.emptySchoolData = function() {
@@ -152,6 +152,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         /* assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         /* courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         /* submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        /* lectureDataManager = */new LectureDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        /* slideDataManager = */new SlideDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         /* submissionManager = */// new GradeDataManager(this, dataListener,
                                 // database, dataSender, Request, ByteBuffer);
         console.log("Database is ready for use! with user: " + userId);

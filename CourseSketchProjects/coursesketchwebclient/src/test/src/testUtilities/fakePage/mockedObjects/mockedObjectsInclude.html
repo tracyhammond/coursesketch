@@ -1,0 +1,34 @@
+<html>
+<head>
+    <script src="mockedIndex.js"></script>
+
+    <!-- these three must be included after mockedIndex -->
+    <link rel="import"
+        href="/src/utilities/persistantData/databaseInclude.html">
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+    <script type="text/javascript" src="/src/utilities/connection/connectionLibrary.js"></script>
+
+    <script src="/test/testUtilities/sinon-1.10.3.js"></script>
+    <script>sinon.config = { useFakeTimers : false };</script>
+
+    <script>
+    CourseSketch.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf();
+    </script>
+
+    <script src="mockedConnection.js"></script>
+    <script src="mockedDataListener.js"></script>
+    <script src="mockedDatabase.js"></script>
+
+    <script>
+    	(function() {
+    		if (CourseSketch.connection && CourseSketch.dataListener) {
+    		//	CourseSketch.connection.setSchoolDataListener(CourseSketch.dataListener);
+    		} else {
+    			console.log(CourseSketch.dataListener);
+    			console.log(CourseSketch.connection);
+    		}
+    	})();
+    	
+    </script>
+</head>
+</html>
