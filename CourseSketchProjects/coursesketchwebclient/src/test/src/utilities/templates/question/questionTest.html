@@ -9,9 +9,11 @@
 <link id="questionTemplateImport" rel="import" href="/src/utilities/templates/question/questionInclude.html" />
 <link id="multiChoiceTemplateImport" rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html" />
 <link rel="import" href="/src/sketching/sketchInclude.html" />
+<link rel="import" href="/test/testUtilities/fakePage/fakePageInclude.html" />
+<link rel="import" href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
 
 <!-- file being tested. -->
-<script src="/src/utilities/templates/question/question.js" data-cover></script>
+<script src="/src/utilities/templates/question/question.js" data-fake></script>
 </head>
 <body>
 	<div id="qunit"></div>
@@ -127,6 +129,13 @@
             questionProto.setQuestionText("How awesome are CourseSketch Lectures?");
             question.loadData(questionProto);
             question.loadData();
+        });
+
+        test("load lectures", function(assert) {
+            expect(0);
+            var question = document.createElement("question-test");
+            document.querySelector("#question").appendChild(question);
+            question.loadLectures(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]);
         });
     </script>
 </body>
