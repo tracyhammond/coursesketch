@@ -56,6 +56,9 @@ public class SqlStateManagerTest{
         rs.insertRow();
         rs.moveToCurrentRow();
 
+        st.close();
+        rs.close();
+
         // Recording is completed, switch the replay state
         control.replay ();
 
@@ -104,6 +107,9 @@ public class SqlStateManagerTest{
         rs.updateBoolean("Graded", state.getGraded());
         rs.updateRow();
 
+        st.close();
+        rs.close();
+
         // Recording is completed, switch the replay state
         control.replay ();
 
@@ -149,6 +155,9 @@ public class SqlStateManagerTest{
         expect(rs.getBoolean("Completed")).andReturn(true);
         expect(rs.getBoolean("Started")).andReturn(true);
         expect(rs.getBoolean("Graded")).andReturn(true);
+
+        st.close();
+        rs.close();
 
         // Recording is completed, switch the replay state
         control.replay ();

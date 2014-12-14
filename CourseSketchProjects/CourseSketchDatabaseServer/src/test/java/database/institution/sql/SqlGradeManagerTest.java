@@ -54,6 +54,9 @@ public class SqlGradeManagerTest{
         rs.insertRow();
         rs.moveToCurrentRow();
 
+        st.close();
+        rs.close();
+
         // Recording is completed, switch the replay state
         control.replay ();
 
@@ -103,6 +106,9 @@ public class SqlGradeManagerTest{
         rs.updateString("Comments", grade.getComment());
         rs.updateRow();
 
+        st.close();
+        rs.close();
+
         // Recording is completed, switch the replay state
         control.replay ();
 
@@ -148,6 +154,8 @@ public class SqlGradeManagerTest{
         expect(rs.getFloat("Grade")).andReturn(0.0f);
         expect(rs.getString("Comments")).andReturn("test");
 
+        st.close();
+        rs.close();
 
         // Recording is completed, switch the replay state
         control.replay();
