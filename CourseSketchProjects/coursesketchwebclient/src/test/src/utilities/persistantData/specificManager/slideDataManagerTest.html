@@ -63,7 +63,7 @@
                         slide2.id = generateUUID();
                         slide2.lectureId = lecture.id;
                         dataManager.insertSlide(slide2, function(){
-                            dataManager.getLectureLocal(lecture.id, function(newLecture) {
+                            dataManager.getCourseLecture(slide.lectureId, function(newLecture) {
                                 CourseSketch.connection.sendRequest = function(){};
                                 var slideList = [];
                                 for (var i = 0; i < newLecture.idList.length; i++) {
