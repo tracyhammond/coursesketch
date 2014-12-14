@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="/css/common/homePage.css">
 <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 <link rel="import" href="/src/common/tutorialToolbar/tutorialToolbarInclude.html">
+<link rel="import" href="/src/utilities/templates/outlineTool/outlineToolInclude.html">
 <!-- basic utilities -->
 
 
@@ -15,6 +16,8 @@
 <button id="viewTextBox">View Text Box</button>
 <button id="ttsBox">TTS Box</button>
 <button id="speakTtsBox">Speak TTS</button>
+<button id="outlineTool">Outline</button>
+<button id="viewOutlineTool">View Outline</button>
 
 <script>
     document.querySelector('#textBox').onclick = function() {
@@ -32,18 +35,32 @@
         textview.loadData(decoded);
     };
     document.querySelector('#ttsBox').onclick = function() {
-        var ttsBox = document.createElement('text-speech-creation');
+        var ttsBox = document.createElement('tts-box-creation');
         document.body.appendChild(ttsBox);
         ttsBox.setFinishedListener(function(command) {
             globalcommand = command;
         });
     };
     document.querySelector('#speakTtsBox').onclick = function() {
-        var ttsSpeak = document.createElement('text-speech-viewing');
+        var ttsSpeak = document.createElement('tts-box-viewing');
         document.body.appendChild(ttsSpeak);
         var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(globalcommand.getCommandData(),
                 CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
         ttsSpeak.loadData(decoded);
+    };
+    document.querySelector('#outlineTool').onclick = function() {
+        var outlineTool = document.createElement('outline-tool-creation');
+        document.body.appendChild(outlineTool);
+        outlineTool.setFinishedListener(function(command) {
+            globalcommand = command;
+        });
+    };
+    document.querySelector('#viewOutlineTool').onclick = function() {
+        var outlineTool = document.createElement('outline-tool-viewing');
+        document.body.appendChild(outlineTool);
+        var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(globalcommand.getCommandData(),
+                CourseSketch.PROTOBUF_UTIL.getActionCreateOutlineClass());
+        outlineTool.loadData(decoded);
     };
 </script>
 
@@ -104,6 +121,4 @@
 		</div>
 	</div>
 </body>
-
-
 </html>

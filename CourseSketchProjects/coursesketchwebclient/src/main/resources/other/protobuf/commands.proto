@@ -49,6 +49,8 @@ enum CommandType {
 
 	// all other commands will appear after 16
 	CREATE_TEXTBOX = 17; // Creates a textbox for use in tutorial or lecture slides
+    CREATE_TTSBOX = 18; // Creates a ttsbox for use in tutorial or lecture slides
+    CREATE_OUTLINE = 19; // Creates an outline box for use in tutorial or lecture slides
 }
 
 /**
