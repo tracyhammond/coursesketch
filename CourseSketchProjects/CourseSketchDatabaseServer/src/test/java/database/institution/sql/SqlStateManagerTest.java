@@ -36,16 +36,19 @@ public class SqlStateManagerTest{
         IMocksControl control = createControl (); // create multiple Mock objects when by IMocksControl management
 
         Connection conn = control.createMock (Connection. class);
-        Statement st = control.createMock (Statement. class);
+        PreparedStatement st = control.createMock (PreparedStatement. class);
         ResultSet rs = control.createMock (ResultSet. class);
 
         // Record set Mock Object expected behavior and output
         // Mock objects need to be performed must be recorded, such as pst.setInt (2 pas), rs.close ()
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        expect (conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
+        final String query = "SELECT * FROM State WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        expect(conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
 
-        expect(st.executeQuery(query)).andReturn(rs);
+        st.setString(1, userId);
+        st.setString(2, classification);
+        st.setString(3, itemId);
+
+        expect(st.executeQuery()).andReturn(rs);
         expect(rs.next()).andReturn(false);
 
         rs.moveToInsertRow();
@@ -94,16 +97,19 @@ public class SqlStateManagerTest{
         IMocksControl control = createControl (); // create multiple Mock objects when by IMocksControl management
 
         Connection conn = control.createMock (Connection. class);
-        Statement st = control.createMock (Statement. class);
+        PreparedStatement st = control.createMock (PreparedStatement. class);
         ResultSet rs = control.createMock (ResultSet. class);
 
         // Record set Mock Object expected behavior and output
         // Mock objects need to be performed must be recorded, such as pst.setInt (2 pas), rs.close ()
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        expect (conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
+        final String query = "SELECT * FROM State WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        expect(conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
 
-        expect(st.executeQuery(query)).andReturn(rs);
+        st.setString(1, userId);
+        st.setString(2, classification);
+        st.setString(3, itemId);
+
+        expect(st.executeQuery()).andReturn(rs);
         expect(rs.next()).andReturn(true);
 
         rs.updateBoolean("Completed", state.getCompleted());
@@ -147,16 +153,19 @@ public class SqlStateManagerTest{
         IMocksControl control = createControl (); // create multiple Mock objects when by IMocksControl management
 
         Connection conn = control.createMock (Connection. class);
-        Statement st = control.createMock (Statement. class);
+        PreparedStatement st = control.createMock (PreparedStatement. class);
         ResultSet rs = control.createMock (ResultSet. class);
 
         // Record set Mock Object expected behavior and output
         // Mock objects need to be performed must be recorded, such as pst.setInt (2 pas), rs.close ()
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        expect (conn.createStatement()).andReturn(st);
+        final String query = "SELECT * FROM State WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        expect(conn.prepareStatement(query)).andReturn(st);
 
-        expect(st.executeQuery(query)).andReturn(rs);
+        st.setString(1, userId);
+        st.setString(2, classification);
+        st.setString(3, itemId);
+
+        expect(st.executeQuery()).andReturn(rs);
 
         expect(rs.getBoolean("Completed")).andReturn(true);
         expect(rs.getBoolean("Started")).andReturn(true);

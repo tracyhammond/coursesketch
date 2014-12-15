@@ -5,10 +5,8 @@ package database.institution.sql;
 //import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import protobuf.srl.school.School.SrlGrade;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.SQLException;
+
+import java.sql.*;
 
 
 /**
@@ -41,15 +39,19 @@ public final class SqlGradeManager {
     public static SrlGrade getGrade(final Connection conn, final String userId, final String classification, final String itemId)
             throws DatabaseAccessException {
         final SrlGrade.Builder grade = SrlGrade.newBuilder();
-        final String query = "SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        try (
-            final Statement stmt = conn.createStatement();
-            final ResultSet rst = stmt.executeQuery(query)) {
-            grade.setId("");
-            grade.setProblemId("");
-            grade.setGrade(rst.getFloat("Grade"));
-            grade.setComment(rst.getString("Comments"));
+        final String query = "SELECT * FROM Grades WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, userId);
+            stmt.setString(2, classification);
+            stmt.setString(3, itemId);
+            try (final ResultSet rst = stmt.executeQuery()) {
+                grade.setId("");
+                grade.setProblemId("");
+                grade.setGrade(rst.getFloat("Grade"));
+                grade.setComment(rst.getString("Comments"));
+            } catch (SQLException e) {
+                throw new DatabaseAccessException(e, false);
+            }
         } catch (SQLException e) {
             throw new DatabaseAccessException(e, false);
         }
@@ -69,26 +71,30 @@ public final class SqlGradeManager {
     public static String setGrade(final Connection conn, final String userId, final String classification, final String itemId, final SrlGrade grade)
             throws DatabaseAccessException {
         String result;
-        final String query = "SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        try (
-            final Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            final ResultSet rst = stmt.executeQuery(query)) {
-            if (rst.next()) {
-                rst.updateFloat("Grade", grade.getGrade());
-                rst.updateString("Comments", grade.getComment());
-                rst.updateRow();
-                result = "SET";
-            } else {
-                rst.moveToInsertRow();
-                rst.updateString("UserID", userId);
-                rst.updateString("SchoolItemType", classification);
-                rst.updateString("SchoolItemID", itemId);
-                rst.updateFloat("Grade", grade.getGrade());
-                rst.updateString("Comments", grade.getComment());
-                rst.insertRow();
-                rst.moveToCurrentRow();
-                result = "INSERT";
+        final String query = "SELECT * FROM Grades WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        try (PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+            stmt.setString(1, userId);
+            stmt.setString(2, classification);
+            stmt.setString(3, itemId);
+            try (final ResultSet rst = stmt.executeQuery()) {
+                if (rst.next()) {
+                    rst.updateFloat("Grade", grade.getGrade());
+                    rst.updateString("Comments", grade.getComment());
+                    rst.updateRow();
+                    result = "SET";
+                } else {
+                    rst.moveToInsertRow();
+                    rst.updateString("UserID", userId);
+                    rst.updateString("SchoolItemType", classification);
+                    rst.updateString("SchoolItemID", itemId);
+                    rst.updateFloat("Grade", grade.getGrade());
+                    rst.updateString("Comments", grade.getComment());
+                    rst.insertRow();
+                    rst.moveToCurrentRow();
+                    result = "INSERT";
+                }
+            } catch (SQLException e) {
+                throw new DatabaseAccessException(e, false);
             }
         } catch (SQLException e) {
             throw new DatabaseAccessException(e, false);

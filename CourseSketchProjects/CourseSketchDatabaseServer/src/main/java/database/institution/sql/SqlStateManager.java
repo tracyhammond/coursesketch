@@ -5,10 +5,8 @@ package database.institution.sql;
 //import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import protobuf.srl.school.School.State;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.SQLException;
+
+import java.sql.*;
 
 /**
  * The state managers handles the students states. States are stored by UserId
@@ -40,14 +38,19 @@ public final class SqlStateManager {
     public static State getState(final Connection conn, final String userId, final String classification, final String itemId)
             throws DatabaseAccessException {
         final State.Builder state = State.newBuilder();
-        final String query = "SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        try (
-            final Statement stmt = conn.createStatement();
-            final ResultSet rst = stmt.executeQuery(query)) {
-            state.setCompleted(rst.getBoolean("Completed"));
-            state.setStarted(rst.getBoolean("Started"));
-            state.setGraded(rst.getBoolean("Graded"));
+        final String query = "SELECT * FROM State WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        try (PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+            stmt.setString(1, userId);
+            stmt.setString(2, classification);
+            stmt.setString(3, itemId);
+            try (final ResultSet rst = stmt.executeQuery()) {
+                state.setCompleted(rst.getBoolean("Completed"));
+                state.setStarted(rst.getBoolean("Started"));
+                state.setGraded(rst.getBoolean("Graded"));
+            } catch (SQLException e) {
+                throw new DatabaseAccessException(e, false);
+            }
+
         } catch (SQLException e) {
             throw new DatabaseAccessException(e, false);
         }
@@ -67,28 +70,32 @@ public final class SqlStateManager {
     public static String setState(final Connection conn, final String userId, final String classification, final String itemId, final State state)
             throws DatabaseAccessException {
         String result;
-        final String query = "SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        try (
-            final Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            final ResultSet rst = stmt.executeQuery(query)) {
-            if (rst.next()) {
-                rst.updateBoolean("Completed", state.getCompleted());
-                rst.updateBoolean("Started", state.getStarted());
-                rst.updateBoolean("Graded", state.getGraded());
-                rst.updateRow();
-                result = "SET";
-            } else {
-                rst.moveToInsertRow();
-                rst.updateString("UserID", userId);
-                rst.updateString("SchoolItemType", classification);
-                rst.updateString("SchoolItemID", itemId);
-                rst.updateBoolean("Completed", state.getCompleted());
-                rst.updateBoolean("Started", state.getStarted());
-                rst.updateBoolean("Graded", state.getGraded());
-                rst.insertRow();
-                rst.moveToCurrentRow();
-                result = "INSERT";
+        final String query = "SELECT * FROM State WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        try (PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+            stmt.setString(1, userId);
+            stmt.setString(2, classification);
+            stmt.setString(3, itemId);
+            try (final ResultSet rst = stmt.executeQuery()) {
+                if (rst.next()) {
+                    rst.updateBoolean("Completed", state.getCompleted());
+                    rst.updateBoolean("Started", state.getStarted());
+                    rst.updateBoolean("Graded", state.getGraded());
+                    rst.updateRow();
+                    result = "SET";
+                } else {
+                    rst.moveToInsertRow();
+                    rst.updateString("UserID", userId);
+                    rst.updateString("SchoolItemType", classification);
+                    rst.updateString("SchoolItemID", itemId);
+                    rst.updateBoolean("Completed", state.getCompleted());
+                    rst.updateBoolean("Started", state.getStarted());
+                    rst.updateBoolean("Graded", state.getGraded());
+                    rst.insertRow();
+                    rst.moveToCurrentRow();
+                    result = "INSERT";
+                }
+            } catch (SQLException e) {
+                throw new DatabaseAccessException(e, false);
             }
         } catch (SQLException e) {
             throw new DatabaseAccessException(e, false);
