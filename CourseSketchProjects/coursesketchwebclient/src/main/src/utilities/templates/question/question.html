@@ -2,40 +2,7 @@
 <head>
     <template id="question">
         <style>
-            .box {
-                line-height: 2.25em;
-                font-size: 1em;
-                outline: none;
-                display: block;
-                width: 100%;
-            }
-            .dotted {
-                border: dotted 2px #DDD;
-            }
-            .hide {
-                display: none;
-            }
-            img {
-                float: right;
-                width: 2.5em;
-                height: 2.5em;
-                cursor: pointer;
-            }
-            #dialog-close {
-                float: right;
-                color: #888;
-                font-weight: bold;
-                font-size: 2em;
-                margin-top: -0.5em;
-                margin-right: -0.15em;
-                cursor: pointer;
-            }
-            #dialog-close:hover {
-                color: #000;
-            }
-            .dialog-text {
-                clear: right;
-            }
+            @import "/src/utilities/templates/question/question.css";
         </style>
         <input id="text" class="dotted box" placeholder="Question?"/>
         <content select=".answer"></content>
