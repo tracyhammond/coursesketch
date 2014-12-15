@@ -35,16 +35,19 @@ public class SqlGradeManagerTest{
         IMocksControl control = createControl (); // create multiple Mock objects when by IMocksControl management
 
         Connection conn = control.createMock (Connection. class);
-        Statement st = control.createMock (Statement. class);
+        PreparedStatement st = control.createMock (PreparedStatement. class);
         ResultSet rs = control.createMock (ResultSet. class);
 
         // Record set Mock Object expected behavior and output
         // Mock objects need to be performed must be recorded, such as pst.setInt (2 pas), rs.close ()
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        expect(conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
+        final String query = "SELECT * FROM Grades WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        expect(conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
 
-        expect(st.executeQuery(query)).andReturn(rs);
+        st.setString(1, userId);
+        st.setString(2, classification);
+        st.setString(3, itemId);
+
+        expect(st.executeQuery()).andReturn(rs);
         expect(rs.next()).andReturn(false);
 
         rs.moveToInsertRow();
@@ -56,8 +59,9 @@ public class SqlGradeManagerTest{
         rs.insertRow();
         rs.moveToCurrentRow();
 
-        st.close();
         rs.close();
+        st.close();
+
 
         // Recording is completed, switch the replay state
         control.replay ();
@@ -94,24 +98,27 @@ public class SqlGradeManagerTest{
         IMocksControl control = createControl (); // create multiple Mock objects when by IMocksControl management
 
         Connection conn = control.createMock (Connection. class);
-        Statement st = control.createMock (Statement. class);
+        PreparedStatement st = control.createMock (PreparedStatement. class);
         ResultSet rs = control.createMock (ResultSet. class);
 
         // Record set Mock Object expected behavior and output
         // Mock objects need to be performed must be recorded, such as pst.setInt (2 pas), rs.close ()
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        expect(conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
+        final String query = "SELECT * FROM Grades WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        expect(conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)).andReturn(st);
 
-        expect(st.executeQuery(query)).andReturn(rs);
+        st.setString(1, userId);
+        st.setString(2, classification);
+        st.setString(3, itemId);
+
+        expect(st.executeQuery()).andReturn(rs);
         expect(rs.next()).andReturn(true);
 
         rs.updateFloat("Grade", grade.getGrade());
         rs.updateString("Comments", grade.getComment());
         rs.updateRow();
 
-        st.close();
         rs.close();
+        st.close();
 
         // Recording is completed, switch the replay state
         control.replay ();
@@ -147,21 +154,24 @@ public class SqlGradeManagerTest{
         IMocksControl control = createControl (); // create multiple Mock objects when by IMocksControl management
 
         Connection conn = control.createMock (Connection. class);
-        Statement st = control.createMock (Statement. class);
+        PreparedStatement st = control.createMock (PreparedStatement. class);
         ResultSet rs = control.createMock (ResultSet. class);
         // Record set Mock Object expected behavior and output
         // Mock objects need to be performed must be recorded, such as pst.setInt (2 pas), rs.close ()
-        final String query="SELECT * FROM Grades WHERE UserID=\'"
-                + userId + "\' AND SchoolItemType=\'" + classification + "\' AND SchoolItemID=\'" + itemId + "\';";
-        expect(conn.createStatement()).andReturn(st);
+        final String query = "SELECT * FROM Grades WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
+        expect(conn.prepareStatement(query)).andReturn(st);
 
-        expect(st.executeQuery(query)).andReturn(rs);
+        st.setString(1, userId);
+        st.setString(2, classification);
+        st.setString(3, itemId);
+
+        expect(st.executeQuery()).andReturn(rs);
 
         expect(rs.getFloat("Grade")).andReturn(0.0f);
         expect(rs.getString("Comments")).andReturn("test");
 
-        st.close();
         rs.close();
+        st.close();
 
         // Recording is completed, switch the replay state
         control.replay();
