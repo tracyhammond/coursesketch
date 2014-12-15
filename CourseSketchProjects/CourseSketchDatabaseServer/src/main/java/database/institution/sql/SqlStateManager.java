@@ -48,7 +48,7 @@ public final class SqlStateManager {
             throws DatabaseAccessException {
         final State.Builder state = State.newBuilder();
         final String query = "SELECT * FROM State WHERE UserID=? AND SchoolItemType=? AND SchoolItemID=?;";
-        try (PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, userId);
             stmt.setString(2, classification);
             stmt.setString(3, itemId);
