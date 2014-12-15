@@ -3,24 +3,25 @@ package database.institution.sql;
 //import com.mongodb.DB;
 //import com.mongodb.DBObject;
 //import com.mongodb.DBRef;
+
 import database.DatabaseAccessException;
 import protobuf.srl.school.School.SrlGrade;
 
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * The state managers handles the students states. States are stored by UserId
  * then type appended by the actual Id
  *
  * @author gigemjt
- *
  */
 public final class SqlGradeManager {
 
     /**
      * Private constructor.
-     *
      */
     private SqlGradeManager() {
     }
@@ -29,13 +30,20 @@ public final class SqlGradeManager {
      * Returns the state for a given school item.
      *
      * Right now only the completed/started state is applied
-     * @throws DatabaseAccessException thrown if connecting to sql database cause and error.
-     * @param conn the sql connection. Must point to proper database.
-     * @param userId the id of the user asking for the state.
-     * @param classification if it is a course, assignment, ...
-     * @param itemId the id of the related state (assignmentId, courseId, ...)
+     *
+     * @param conn
+     *         the sql connection. Must point to proper database.
+     * @param userId
+     *         the id of the user asking for the state.
+     * @param classification
+     *         if it is a course, assignment, ...
+     * @param itemId
+     *         the id of the related state (assignmentId, courseId, ...)
      * @return the sate of the assignment.
+     * @throws DatabaseAccessException
+     *         thrown if connecting to sql database cause and error.
      */
+    @SuppressWarnings("checkstyle:magicnumber")
     public static SrlGrade getGrade(final Connection conn, final String userId, final String classification, final String itemId)
             throws DatabaseAccessException {
         final SrlGrade.Builder grade = SrlGrade.newBuilder();
@@ -60,14 +68,22 @@ public final class SqlGradeManager {
 
     /**
      * Creates the state if it does not exist otherwise it updates the old state.
-     * @throws DatabaseAccessException thrown if connecting to sql database cause and error.
-     * @param conn the database that contains the state. Must point to proper database.
-     * @param userId the id of the user asking for the state.
-     * @param classification if it is a course, assignment, ...
-     * @param itemId the id of the related state (assignmentId, courseId, ...)
-     * @param grade what the grade is being set to.
+     *
+     * @param conn
+     *         the database that contains the state. Must point to proper database.
+     * @param userId
+     *         the id of the user asking for the state.
+     * @param classification
+     *         if it is a course, assignment, ...
+     * @param itemId
+     *         the id of the related state (assignmentId, courseId, ...)
+     * @param grade
+     *         what the grade is being set to.
      * @return reslut of set: "SET", "INSERT", "ERROR"
+     * @throws DatabaseAccessException
+     *         thrown if connecting to sql database cause and error.
      */
+    @SuppressWarnings("checkstyle:magicnumber")
     public static String setGrade(final Connection conn, final String userId, final String classification, final String itemId, final SrlGrade grade)
             throws DatabaseAccessException {
         String result;
