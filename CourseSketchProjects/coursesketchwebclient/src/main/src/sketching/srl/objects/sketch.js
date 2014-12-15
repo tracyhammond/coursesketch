@@ -109,7 +109,7 @@ function SRL_Sketch() {
             parentShape = parentShape.getSubObjectById(idList[i]);
         }
         var returnShape = parentShape.removeSubObjectById(idList[idList.length - 1]);
-        return returnShape; 
+        return returnShape;
     };
 
     /**

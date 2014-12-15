@@ -21,6 +21,10 @@ h1 {
 
 }
 
+.info p {
+	text-align: left 5%;
+}
+
 .sketches {
 
 	position: relative;

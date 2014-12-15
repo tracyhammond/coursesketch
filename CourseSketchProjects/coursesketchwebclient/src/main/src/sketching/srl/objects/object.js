@@ -250,7 +250,6 @@ function SRL_Object() {
      */
     this.getBoundingBox = function() {
         return boundingBox;
-
     };
 
     /**

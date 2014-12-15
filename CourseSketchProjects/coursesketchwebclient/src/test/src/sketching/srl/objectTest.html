@@ -26,8 +26,8 @@
     <script>
     QUnit.module("object:creation");
     QUnit.test("main object function creation", function(assert) {
-    var objectTest = new SRL_Object();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        assert.ok(true);
        //except(0);
     });
     </script>
@@ -35,9 +35,9 @@
     <script>
     QUnit.module("object:super constructor");
     QUnit.test("object:super constructor", function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.superConstructor();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.superConstructor();
+        assert.ok(true);
        //except(0);
     });
     </script>   
@@ -45,9 +45,10 @@
     <script>
     QUnit.module("object:subObject");
     QUnit.test("object:subObject", function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.addSubObject();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        var subObject1 = new SRL_Object();
+        objectTest.addSubObject(subObject1);
+        assert.ok(true);
        //except(0);
     });
     </script>
@@ -55,9 +56,9 @@
     <script>
     QUnit.module("object:getSubObjectById");
     QUnit.test("object:getSubObjectById" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.getSubObjectById();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.getSubObjectById();
+        assert.ok(true);
        //except(0);
     });
     </script>
@@ -65,9 +66,9 @@
     <script>
     QUnit.module("object:removeSubObjectById");
     QUnit.test("object:removeSubObjectById" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.removeSubObjectById();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.removeSubObjectById();
+        assert.ok(true);
        //except(0);
     });
     </script>
@@ -75,9 +76,9 @@
     <script>
     QUnit.module("object:removeSubObject");
     QUnit.test("object:removeSubObject" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.removeSubObject();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.removeSubObject();
+        assert.ok(true);
     //except(0);
     });
     </script>
@@ -85,9 +86,9 @@
     <script>
     QUnit.module("object:getSubObjects");
     QUnit.test("object:getSubObjects" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.getSubObjects();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.getSubObjects();
+        assert.ok(true);
     //except(0);
     });
     </script>
@@ -95,9 +96,9 @@
     <script>
     QUnit.module("object:getRecursiveSubObjectList");
     QUnit.test("object:getRecursiveSubObjectList" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.getRecursiveSubObjectList();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.getRecursiveSubObjectList();
+        assert.ok(true);
     //except(0);
     });
     </script>
@@ -107,9 +108,9 @@
     <script>
     QUnit.module("object:getInterpretations");
     QUnit.test("object:getInterpretations" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.getInterpretations();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.getInterpretations();
+        assert.ok(true);
     //except(0);
     });
     </script>
@@ -117,34 +118,31 @@
     <script>
     QUnit.module("object:ID,name,time");
     QUnit.test("object:ID,name,time" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.setId();
-    objectTest.getId();
-    objectTest.getName();
-    objectTest.setName();
-    objectTest.getTime();
-    objectTest.setTime();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        var id = "FakeId";
+        objectTest.setId(id);
+        objectTest.getId();
+        assert.equal(objectTest.getId(id), id);
+        var name = "ObjectName";
+        objectTest.setName(name);
+        objectTest.getName(name);
+        assert.equal(objectTest.getName(), name);
+        var time = "12";
+        objectTest.setTime(time);
+        objectTest.getTime();
+        assert.equals(objectTest.getTime(time),time);
+        assert.ok(true);
     //except(0);
     });
     </script>
 
     <script>
-    QUnit.module("object:isUserCreated");
-    QUnit.test("object:isUserCreated" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.isUserCreated();
-    assert.ok(true);
-    //except(0);
-    });
-    </script>
-
-    <script>
-    QUnit.module("object:setUserCreated");
-    QUnit.test("object:setUserCreated" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.setUserCreated();
-    assert.ok(true);
+    QUnit.module("object:userCreation");
+    QUnit.test("object:userCreation" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.isUserCreated();
+        objectTest.setUserCreated();
+        assert.ok(true);
     //except(0);
     });
     </script>
@@ -152,21 +150,19 @@
     <script>
     QUnit.module("object:getBoundingBox");
     QUnit.test("object:getBoundingBox" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.getBoundingBox();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.getBoundingBox();
+        assert.ok(true);
     //except(0);
     });
     </script>
-
-    //getMin_ and getMax_ use the function boundingBox, need a way to import.
     
     <script>
     QUnit.module("object:getMinX");
     QUnit.test("object:getMinX" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.getMinX();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.getMinX();
+        assert.ok(true);
     //except(0);
     });
     </script>
@@ -174,19 +170,11 @@
     <script>
     QUnit.module("object:getMaxX");
     QUnit.test("object:getMaxs" , function(assert) {
-    var objectTest = new SRL_Object();
-    objectTest.getMaxX();
-    assert.ok(true);
+        var objectTest = new SRL_Object();
+        objectTest.getMaxX();
+        assert.ok(true);
     //except(0);
     });
     </script>
 
-    <script>
-
-    QUnit.test("how does fak timing work this sees if the sinon timers are the same as the other timers", function(assert) {
-        var localFunc = setTimeout;
-        this.clock = this.useFakeTimers();
-        assert.equal(localFunc, setTimeout);
-    });
-    </script>
 </body>
