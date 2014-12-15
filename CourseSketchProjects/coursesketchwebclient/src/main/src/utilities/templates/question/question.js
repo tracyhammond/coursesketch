@@ -71,8 +71,8 @@ function Question() {
             slideSelect.innerHTML = ""
             for(var i = 0; i < slides.length; ++i) {
                 var option = document.createElement("option");
-                option.textContent = slides[i].id;
-                option.value = slides[i].id;
+                option.textContent = i + 1;
+                option.value = i;
                 slideSelect.appendChild(option);
             }
             if(slides.length > 0) {
@@ -115,7 +115,32 @@ function Question() {
             }
         }
 
-        // If the textbox does not have an id, then a command has not been created for the textbox
+        // TODO: Currently just one nav for correct/incorrect; add navs for different answer choices (also needs to work with sketch)
+        // TODO: Add validation; currently if the user forgets to specify this, defaults to first lecture and first slide
+        var correctLecture = shadowRoot.getElementById("correct-lecture");
+        var correctSlide = shadowRoot.getElementById("correct-slide");
+        var incorrectLecture = shadowRoot.getElementById("incorrect-lecture");
+        var incorrectSlide = shadowRoot.getElementById("incorrect-slide");
+        if(!isUndefined(correctLecture) && !isUndefined(correctSlide) && !isUndefined(incorrectLecture) && !isUndefined(incorrectSlide)
+                && correctLecture != null && correctSlide != null && incorrectLecture != null && incorrectSlide != null) {
+            var correctLectureId = correctLecture.value;
+            var correctSlideStr = correctSlide.value;
+            var incorrectLectureId = incorrectLecture.value;
+            var incorrectSlideStr = incorrectSlide.value;
+            if(!isUndefined(correctLectureId) && !isUndefined(correctSlideStr) && !isUndefined(incorrectLectureId) && !isUndefined(incorrectSlideStr)
+                    && correctLectureId !== "" && correctSlideStr !== "" && incorrectLectureId !== "" && incorrectSlideStr !== "") {
+                var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+                var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+                correctNav.nextLectureId = correctLectureId;
+                correctNav.nextSlide = parseInt(correctSlideStr);
+                incorrectNav.nextLectureId = incorrectLectureId;
+                incorrectNav.nextSlide = parseInt(incorrectSlideStr);
+                questionProto.navs[0] = correctNav;
+                questionProto.navs[1] = incorrectNav;
+            }
+        }
+
+        // If the textbox does not have an id, then a command has not been created for the question
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,true);
         }
@@ -133,6 +158,8 @@ function Question() {
      * @param textBoxProto {protoCommand} is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
+     *
+     * NOTE: If using navigation, this MUST be called after loadLectures has been called!
      */
     this.loadData = function(questionProto) {
         if (isUndefined(shadowRoot) || isUndefined(questionProto)) {
@@ -143,8 +170,18 @@ function Question() {
         if(!isUndefined(questionProto.multipleChoice) && questionProto.multipleChoice != null && nodes.length > 0 && (nodes[0] instanceof MultiChoice)) {
             var answerContent = nodes[0];
             answerContent.loadData(questionProto.multipleChoice);
-        } else {
+        } else if(!isUndefined(questionProto.sketchQuestion) && questionProto.sketchQuestion != null) {
             throw "Sketch questions are not yet supported"
+        }
+
+        // TODO: Currently just one nav for correct/incorrect; add navs for different answer choices (also needs to work with sketch)
+        if(questionProto.navs.length >= 2) {
+            var correctNav = questionProto.navs[0];
+            var incorrectNav = questionProto.navs[1];
+            shadowRoot.getElementById("correct-lecture").value = correctNav.nextLectureId;
+            shadowRoot.getElementById("correct-slide").value = correctNav.nextSlide;
+            shadowRoot.getElementById("incorrect-lecture").value = incorrectNav.nextLectureId;
+            shadowRoot.getElementById("incorrect-slide").value = incorrectNav.nextSlide;
         }
     }
 
