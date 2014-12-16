@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Embedded HTML Test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link id="embeddedHtmlTemplateImport" rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/utilities/templates/embeddedHtml/embeddedHtml.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="embedded-html"></div>
+    
+	<script>
+        var template = (function() {
+            var link1 = document.querySelector('#embeddedHtmlTemplateImport');
+            var link = link1.import.querySelector('#embeddedHtmlTemplateImport');
+            var template = link.import.querySelector('#embedded-html');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+
+        QUnit.module("creation", {
+            setupOnce : function() {
+                try {
+                    newElement = new EmbeddedHtml();
+
+                    /**
+                     * Creates the shadow root and adds that into the system.
+                     */
+                    newElement.attachedCallback = function() {
+                        this.initializeElement(template.cloneNode(true));
+                    };
+
+                    // test is not a typo
+                    document.registerElement('embedded-html-test', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
+
+            },
+            teardown : function() {
+                //document.getElementById('embedded-html').innerHTML = "";
+            }
+        });
+
+        test("create question element", function(assert) {
+            expect(1);
+            var embeddedHtml = document.createElement("embedded-html-test");
+            document.getElementById("embedded-html").appendChild(embeddedHtml);
+            assert.ok(embeddedHtml.shadowRoot.innerHTML != null && embeddedHtml.shadowRoot.innerHTML != "", "Embedded HTML has content");
+        });
+
+        test("set HTML", function(assert) {
+            expect(1);
+            var html = "<iframe src=\"//www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1\" frameborder=\"0\" allowfullscreen=\"\" style=\"width: 100%; height: 100%;\"></iframe>";
+            var embeddedHtml = document.createElement("embedded-html-test");
+            document.getElementById("embedded-html").appendChild(embeddedHtml);
+            embeddedHtml.setHtml(html);
+            assert.equal(embeddedHtml.shadowRoot.innerHTML, html, "HTML of embedded is the same as what was provided");
+        });
+    </script>
+</body>

@@ -1,0 +1,74 @@
+<html>
+<head>
+<link id="outlineToolTemplateImport" rel="import" href="outlineTool.html">
+<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
+<link rel="import" href="/src/utilities/libraries/interact/interactInclude.html">
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+<script src="outlineTool.js"></script>
+
+<script>
+    (function(importDoc) {
+        $(document).ready(function() {
+            var link = importDoc.querySelector('#outlineToolTemplateImport');
+            var template = link.import.querySelector('#outlineToolCreation');
+            var clone = document.importNode(template.content, true);
+
+            var newElement = new OutlineTool();
+
+            /**
+             * @Method
+             * Called when the element is created, using document.create()(but does nothing else)
+             */
+            newElement.createdCallback = function() {
+                this.open = "";
+            };
+
+            /**
+             * Creates the shadow root and adds that into the system.
+             */
+            newElement.attachedCallback = function() {
+                this.initializeElement(clone.cloneNode(true));
+            };
+
+            newElement.detachedCallback = function() {
+            // Saving must happen before element is detached to save the height and width
+            };
+
+            document.registerElement('outline-tool-creation', {
+                prototype : newElement
+            });
+        });
+        $(document).ready(function() {
+            var link = importDoc.querySelector('#outlineToolTemplateImport');
+            var template = link.import.querySelector('#outlineToolViewing');
+            var clone = document.importNode(template.content, true);
+
+            var newElement = new OutlineTool();
+
+            /**
+             * @Method
+             * Called when the element is created, using document.create()(but does nothing else)
+             */
+            newElement.createdCallback = function() {
+                this.open = "";
+            };
+
+            /**
+             * Creates the shadow root and adds that into the system.
+             */
+            newElement.attachedCallback = function() {
+                this.initializeElement(clone.cloneNode(true));
+            };
+
+            newElement.detachedCallback = function() {
+                this.getFinishedCallback()(); // Gets the callback and immediately calls it
+            };
+
+            document.registerElement('outline-tool-viewing', {
+                prototype : newElement
+            });
+        });
+    })(document.currentScript.ownerDocument);
+</script>
+</head>
+</html>

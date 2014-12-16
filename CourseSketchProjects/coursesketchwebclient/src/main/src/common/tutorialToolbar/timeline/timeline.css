@@ -45,6 +45,7 @@
 	text-decoration:none;
 	text-shadow:0px 1px 0px #5b8a3c;
 }
+
 .btn:hover {
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #72b352), color-stop(1, #77b55a));
 	background:-moz-linear-gradient(top, #72b352 5%, #77b55a 100%);
@@ -55,23 +56,24 @@
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#72b352', endColorstr='#77b55a',GradientType=0);
 	background-color:#72b352;
 }
+
 .btn:active {
 	position:relative;
 	top:1px;
 }
 
-
 .toolarea {
 	flex-direction: row;
 	justify-content: flex-start;
     top: 80%;
-    width: 217px;
+    width: 219px;
     height: 100%;
-    border: 2px solid #000;
+    border: 2px solid #000; /* Add 2px to width for every px increased here. Subtract 2px if decreased */
     background: #FFF;
     -webkit-transition:0.7s all;
     overflow-y: scroll;
 }
+
 
 .textboxbutton {
     width: 50px;
@@ -85,10 +87,9 @@
     background-color: #cccccc;
     /*transition: background-image 1s ease-in-out;*/
     
-     -webkit-animation: textbox .5s;
+     -webkit-animation: textbox .5s, fadein1 .3s;
     animation: textbox .5s;
 }
-
 
 .ttsboxbutton {
     width: 50px;
@@ -100,12 +101,9 @@
     margin: auto 0;
     background-image: url("../tts.jpg");
     background-color: #cccccc;
-    
-	 -webkit-animation: tts .5s;
+    -webkit-animation: tts .5s, fadein2 .4s;
     animation: tts .5s;
-
 }
-
 
 .highlightbutton {
     width: 50px;
@@ -118,58 +116,50 @@
     background-image: url("../highlight.jpg");
     background-color: #cccccc;
     /*transition: background-image 1s ease-in-out;*/
-    
-     -webkit-animation: highlight  .5s;
+    -webkit-animation: highlight .5s, fadein3 .6s;
     animation: highlight  .5s;
 }
-
-.tts {
+.sketchsurfacebutton {
     width: 50px;
     height: 50px;
-    display: inline;
     position: absolute;
-    order: 2;
-    background-image: url("../textbox.jpg");
+    z-index: -1;
+    top: 50px;
+    left: 50px;
+    margin: auto 0;
+    background-image: url("../ss.jpg");
     background-color: #cccccc;
+    /*transition: background-image 1s ease-in-out;*/
+    animation-delay: 2s;
+    -webkit-animation: fadein4 .6s, sketchsurface .8s;
+
+    animation: sketchsurface .5s;
 }
 
-/* this is the fake one */
-.instance .texttospeech {
-    width: 50px;
-    height: 50px;
-    display: inline;
-    position: absolute;
-    margin: auto 0;
-    background-image: url("../tts.jpg");
-    background-color: #cccccc;
-}
-
-.instance .highlight {
-    width: 50px;
-    height: 50px;
-    display: inline;
-    position: absolute;
-    margin: auto 0;
-    background-image: url("../highlight.jpg");
-    background-color: #cccccc;
+sketch-surface {
+	width: 500px;
+	height: 500px;
+	z-index: -1;
+	background-color: #0FFFFF;
 }
 
 .toolarea .plusbutton {
-
-   
-
-
     width: 50px;
     height: 50px;
     position: relative;
     margin: auto 0;
     order: 1;
     background-image: url("plus.png");
-    background-color: #cccccc;
     overflow: visible;
     z-index: initial;
 }
 
+.plusbutton.tall {
+	height: 100px;
+	background-repeat: no-repeat;
+}
+
+/* Animations for plus button */
 @-webkit-keyframes textbox {
     from {left: 0px;}
     to {left: 50px;}
@@ -181,4 +171,24 @@
 @-webkit-keyframes highlight {
     from {left: 0px;}
     to {left: 150px;}
+}
+@-webkit-keyframes sketchsurface {
+    from {left: 50px; top: 0px;}
+    to {left: 50px; top: 50px;}
+}
+@-webkit-keyframes fadein1 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein2 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein3 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein4 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }

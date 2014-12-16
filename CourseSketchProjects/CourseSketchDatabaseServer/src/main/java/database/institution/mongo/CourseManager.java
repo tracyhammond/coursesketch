@@ -171,7 +171,11 @@ public final class CourseManager {
         exactCourse.setState(stateBuilder);
 
         if (isAdmin) {
-            exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
+            try {
+                exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
+            } catch (ClassCastException exception) {
+                exception.printStackTrace();
+            }
             final SrlPermission.Builder permissions = SrlPermission.newBuilder();
             permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
             permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin

@@ -269,6 +269,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     this.getCurrentTime = connection.getCurrentTime;
+
+    CourseSketch.DatabaseException = DatabaseException;
 }
 var nonExistantValue = "NONEXISTANT_VALUE";
 var CURRENT_QUESTION = "CURRENT_QUESTION";

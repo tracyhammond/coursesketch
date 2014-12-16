@@ -63,6 +63,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                 }
             };
             websocket.onmessage = function(evt) {
+                console.log(evt.data.length);
                 try {
                     var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType;
                     // Decode the Request
