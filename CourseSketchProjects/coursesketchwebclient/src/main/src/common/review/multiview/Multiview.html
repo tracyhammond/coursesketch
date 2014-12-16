@@ -5,18 +5,16 @@
 	<template id="mvSketch">
 		
 		<style>
-			@import "/src/instructor/Review/Multiview/Multiview.css";
+			@import "/src/common/review/multiview/multiview.css";
 		</style>
 
 		<div id = "outer" class="outer">
 			<div class="inner">
-				<sketch-surface data-readOnly=""></sketch-surface>
+				<sketch-surface data-readOnly="" data-existingList="" data-customId="" data-autoResize=""></sketch-surface>
 				<div class="buttons">
 					<button class="correctButton" id="correct" type = "button">
 					</button>
 					<button class="wrongButton"id="wrong" type = "button" >
-					</button>
-					<button class="redoButton" id="redo" type = "button">
 					</button>
 				</div>
 			</div>

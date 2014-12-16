@@ -79,6 +79,16 @@ $(document).ready(function() {
             }
         };
 
+        CourseSketch.dataManager.getAllExperiments = function(problemId, callback) {
+            var results = [];
+            for(var i = 0; i<CourseSketch.fakeSketches.length; ++i){
+                if(CourseSketch.fakExperiments[i].problemId == problemId){
+                    results.push(CourseSketch.fakeExperiments[i]);
+                }   
+            }
+            callback(results);
+        }
+
         barrier.finalize(function() {
             console.log("DATABASE HAS ITS DATA LOADED");
             CourseSketch.dataManager.testDataLoaded = true;
