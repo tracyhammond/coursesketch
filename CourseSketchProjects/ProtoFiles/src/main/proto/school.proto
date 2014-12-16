@@ -17,7 +17,7 @@ message SrlCourse {
 	optional SrlPermission accessPermission= 3;
 	optional Accessibility access = 4 [default=PROTECTED];
 	optional string description = 5;
-	optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer) 
+	optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer)
 	optional string imageUrl = 7;
 	optional float grade = 8; //Calculated grade for all Assignments in this course
 	optional DateTime accessDate = 9; //Date course can be accessed
@@ -61,24 +61,30 @@ message SrlAssignment {
 		SURVEY = 5;
 		OTHER = 6; // Allows instructors to create unique assignment types
 	}
+}
 
-	message LatePolicy {
-		required FunctionType functionType = 1 [default = WINDOW_FUNCTION];
-		optional TimeFrame timeFrameType = 2 [default = DAY];
-		optional float rate = 3;
-		optional bool subtractionType = 4; // true is cap score, false is off user grade.
+message LatePolicy {
+	required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
+	optional TimeFrame timeFrameType = 2 [default = DAY]; // because this is what people are used to.
+	optional float rate = 3;
+	optional SubtractionType subtractionType = 4 [default = CAP];// how we are subtracting the grade
 
-		enum FunctionType {
-			WINDOW_FUNCTION = 1;
-			LINE = 2;
-			EXPONENTIAL = 3;
-		}
+	enum FunctionType {
+		STEPPING_FUNCTION = 0;
+		LINE = 1;
+		EXPONENTIAL = 2;
+	}
 
-		enum TimeFrame {
-			DAY = 1;
-			HOUR = 2;
-			MINUTE = 3;
-		}
+	enum TimeFrame {
+		DAY = 3;
+		HOUR = 2;
+		MINUTE = 1;
+		CONSTANT = 0;
+	}
+
+	enum SubtractionType {
+		CAP = 0;
+		PERCENT = 1;
 	}
 }
 
@@ -110,10 +116,10 @@ message SrlBankProblem {
 	optional SrlPermission accessPermission= 10;
 
 	enum QuestionType {
-		SKETCH = 1;	
+		SKETCH = 1;
 		MULT_CHOICE = 2;
 		FREE_RESP = 3;
-		CHECK_BOX = 4;	
+		CHECK_BOX = 4;
 	}
 }
 
@@ -130,7 +136,7 @@ message SrlGrade {
 }
 
 message DateTime { // Needs to be implemented with enums. Probably already exists elsewhere.
-	optional int32 year = 1;	
+	optional int32 year = 1;
 	optional int32 month = 2;
 	optional int32 day = 3;
 	optional int32 hour = 4;
