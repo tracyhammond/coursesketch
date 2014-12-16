@@ -112,7 +112,7 @@ message ActionAddAttribtue {
  * the value that is removed is stored here.
  * A ReplaceAttribute is a combination of a RemoveAttribtue and then an AddAttribtue
  */
-message ActionRemoveAttribtue {
+message ActionRemoveAttribute {
 	required IdChain shapeId = 1;
 	required string attributeKey = 2;
 	required bytes attributeValue = 3;
