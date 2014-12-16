@@ -13,6 +13,35 @@ function LectureNavigator(lectureId, preferredIndex) {
     };
 
     /**
+     * Navigate from an embedded lecture to the one that contains it.
+     */
+    function popUp() {
+        var nextSlideIndex = indicesStack.pop();
+        var nextLectureId = lectureIdStack.pop();
+        while (nextSlideIndex == -1 && indicesStack.length > 0) {
+            nextSlideIndex = indicesStack.pop();
+            nextLectureId = lectureIdStack.pop();
+        }
+        function hasLecture(lecture) {
+            if (nextSlideIndex == -1) {
+                isDone = true;
+                callCallback();
+                return;
+            }
+            currentLecture = lecture;
+            currentLectureId = lecture.id;
+            var idMessage = currentLecture.idList[nextSlideIndex];
+
+            if (idMessage.nav.nextLectureId != null && !isUndefined(idMessage.nav.nextLectureId)) {
+                loadLecture(idMessage.nav.nextLectureId, idMessage.nav.nextSlide);
+            } else {
+                loadSlide(idMessage.id, nextSlideIndex);
+            }
+        }
+        CourseSketch.dataManager.getCourseLecture(nextLectureId, hasLecture, hasLecture);
+    }
+
+    /**
      * Goes to the next slide
      * If the next slide equals -1 and the stack is empty
      * then you are at the end of the lecture
@@ -25,25 +54,13 @@ function LectureNavigator(lectureId, preferredIndex) {
      */
     this.goToNextSlide = function goToNextSlide() {
         var idMessage = currentLecture.idList[currentSlideIndex];
-        if (idMessage.nav.nextSlide === -1) {
-            if(indicesStack.length == 0) {
+        if (idMessage.nav.nextSlide === -1 && (idMessage.nav.nextLectureId == null || isUndefined(idMessage.nav.nextLectureId))) {
+            if (indicesStack.length == 0) {
                 isDone = true;
                 callCallback();
                 return;
             } else {
-                var nextSlideIndex = indicesStack.pop();
-                var nextLectureId = lectureIdStack.pop();
-                function hasLecture(lecture) {
-                    currentLecture = lecture;
-                    currentLectureId = lecture.id;
-                    var idMessage = currentLecture.idList[nextSlideIndex];
-                    if (idMessage.nav.nextLectureId != null && !isUndefined(idMessage.nav.nextLectureId)) {
-                        loadLecture(idMessage.nav.nextLectureId, idMessage.nav.nextSlide);
-                    } else {
-                        loadSlide(idMessage.id, nextSlideIndex);
-                    }
-                }
-                CourseSketch.dataManager.getCourseLecture(nextLectureId, hasLecture, hasLecture);
+                popUp();
             }
         } else {
             if (idMessage.nav.nextLectureId != null && !isUndefined(idMessage.nav.nextLectureId)) {
