@@ -1,0 +1,55 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link id="navigationTemplateImport" rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
+<link rel="import" href="/src/utilities/persistantData/databaseInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/common/navigation/problem/navigationPanel.js" data-cover></script>
+</head>
+<body>
+    <navigation-panel></navigation-panel>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="nav"></div>
+
+	<script>
+        var template = (function() {
+            var link1 = document.querySelector('#navigationTemplateImport');
+            var link = link1.import.querySelector('#navigationTemplateImport');
+            var template = link.import.querySelector('#navigationPanel');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+
+        QUnit.module("creation", {
+            setupOnce : function() {
+                try {
+                    var newElement = new NavigationPanel();
+                    newElement.attachedCallback = function() {
+                        this.initializeElement(template.cloneNode(true));
+                    };
+                    // test is not a typo
+                    document.registerElement('navigation-test', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
+
+            },
+            teardown : function() {
+                document.getElementById('nav').innerHTML = "";
+            }
+        });
+        test("creation", function(assert) {
+            expect(0);
+            var navElement = document.createElement("navigation-test");
+            document.getElementById('nav').appendChild(navElement);
+        });
+    </script>
+</body>

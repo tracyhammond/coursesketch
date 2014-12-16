@@ -7,6 +7,13 @@ function MvSketch() {
     var gradevalue = undefined;
 
 
+    /* @param updateList  a list that contains all the changes made in sketch.
+     * sets the update list
+     */
+    this.setUpdateList = function(updateList)  {
+        shadowRoot.querySelector("sketch-surface").bindUpdateList(updateList)
+    };
+
     /*
      * This creates the shadow root and attches it to the object in question.
      */
