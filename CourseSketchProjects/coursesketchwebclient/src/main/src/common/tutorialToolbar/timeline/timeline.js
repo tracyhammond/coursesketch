@@ -1,5 +1,5 @@
 function Timeline () {
-	 /**
+     /**
      * @param templateClone {node} is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
@@ -7,79 +7,79 @@ function Timeline () {
         var localScope = this; // This sets the variable to the level of the custom element tag
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-		this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
-		this.index = new IndexManager(this);
+        this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        this.index = new IndexManager(this);
         this.addToolArea(shadowRoot.querySelector('.timeline'));
-		this.continueButton(shadowRoot);
-		undoCreator();
+        this.continueButton(shadowRoot);
+        undoCreator();
         redoCreator();
     };
 
-	this.continueButton = function(shadowRoot) {
-		var continueButtonScope = this;
-		var continueButton = shadowRoot.querySelector(".btn");
-		continueButton.onclick = function() {
-			continueButtonScope.addToolArea(shadowRoot.querySelector('.timeline'));
-		};
-	};
+    this.continueButton = function(shadowRoot) {
+        var continueButtonScope = this;
+        var continueButton = shadowRoot.querySelector(".btn");
+        continueButton.onclick = function() {
+            continueButtonScope.addToolArea(shadowRoot.querySelector('.timeline'));
+        };
+    };
 
-	this.addToolArea = function(parent) {
-		var toolArea = document.createElement("div");
-		toolArea.className = "toolarea";
-		parent.appendChild(toolArea);
-		addPlusButton(toolArea, this);
-		this.index.addNewToolArea(toolArea);
-	};
+    this.addToolArea = function(parent) {
+        var toolArea = document.createElement("div");
+        toolArea.className = "toolarea";
+        parent.appendChild(toolArea);
+        addPlusButton(toolArea, this);
+        this.index.addNewToolArea(toolArea);
+    };
 
-	function addPlusButton (parent, localScope) {
-		var plusButton = document.createElement("div");
+    function addPlusButton (parent, localScope) {
+        var plusButton = document.createElement("div");
         plusButton.title = "Add tutorial element";
-		plusButton.className = "plusbutton";
-		parent.appendChild(plusButton);
-		plusButton.onclick = function() {
+        plusButton.className = "plusbutton";
+        parent.appendChild(plusButton);
+        plusButton.onclick = function() {
             $(plusButton).empty();
-			showTools(plusButton, parent, localScope);
-		};
-	}
+            showTools(plusButton, parent, localScope);
+        };
+    }
 
-	function showTools(plusButton, toolArea, localScope) {
-		addTextBoxButton(plusButton, toolArea, localScope);
-		addTtsBoxButton(plusButton, toolArea, localScope);
-		addHighlightButton(plusButton, toolArea, localScope);
-	}
+    function showTools(plusButton, toolArea, localScope) {
+        addTextBoxButton(plusButton, toolArea, localScope);
+        addTtsBoxButton(plusButton, toolArea, localScope);
+        addHighlightButton(plusButton, toolArea, localScope);
+    }
 
-	function addTextBoxButton (plusButton, toolArea, localScope) {
-		var textBoxButton = document.createElement("div");
+    function addTextBoxButton (plusButton, toolArea, localScope) {
+        var textBoxButton = document.createElement("div");
         textBoxButton.title = "Add text box";
-		textBoxButton.className = "textboxbutton";
-		plusButton.appendChild(textBoxButton);
+        textBoxButton.className = "textboxbutton";
+        plusButton.appendChild(textBoxButton);
         
-		textBoxButton.onclick = function(event) {
-			event.stopPropagation();
-			/*creating the textbox*/
-			var textBox = document.createElement('text-box-creation');
-			document.body.appendChild(textBox);
+        textBoxButton.onclick = function(event) {
+            event.stopPropagation();
+            /*creating the textbox*/
+            var textBox = document.createElement('text-box-creation');
+            document.body.appendChild(textBox);
             var currentUpdate = localScope.index.getCurrentUpdate();
             textBox.currentUpdate = currentUpdate;
-			/*end of creating the textbox*/
+            /*end of creating the textbox*/
             
             function closeTextBox(command) {
                 var textBox = document.getElementById(command.commandId);
                 var textBoxMarker = localScope.shadowRoot.getElementById(command.commandId);
-				if (!isUndefined(textBox.command)) {
-					removeObjectFromArray(textBox.currentUpdate.commands, textBox.command);
-				}
+                if (!isUndefined(textBox.command)) {
+                    removeObjectFromArray(textBox.currentUpdate.commands, textBox.command);
+                }
                 textBox.parentNode.removeChild(textBox);
                 if (textBoxMarker != null) {
                     textBoxMarker.parentNode.removeChild(textBoxMarker);
                 }
-			}
+            }
             
-			var textBoxMarker = document.createElement("timeline-marker");
-			textBoxMarker.className = "textbox";
-			toolArea.appendChild(textBoxMarker);
-			textBoxMarker.showBox = textBox;
-			$(plusButton).empty();
+            var textBoxMarker = document.createElement("timeline-marker");
+            textBoxMarker.className = "textbox";
+            toolArea.appendChild(textBoxMarker);
+            textBoxMarker.showBox = textBox;
+            $(plusButton).empty();
 
             textBoxFinishedListener = function(command, event, currentUpdate) {
                 var textBox = document.getElementById(command.commandId);
@@ -98,30 +98,30 @@ function Timeline () {
                 textBoxMarker.setPreviewText(textArea.value);
             };
 
-			textBoxMarker.setRemoveFunction(function() {
-				closeTextBox(textBox.createdCommand);
-			});
+            textBoxMarker.setRemoveFunction(function() {
+                closeTextBox(textBox.createdCommand);
+            });
 
-			textBox.setFinishedListener(textBoxFinishedListener);
-			textBox.saveData();
+            textBox.setFinishedListener(textBoxFinishedListener);
+            textBox.saveData();
             textBoxMarker.id = textBox.id;
-		};
-	}
+        };
+    }
 
-	function addTtsBoxButton (plusButton, toolArea, localScope) {
-		var ttsBoxButton = document.createElement("div");
+    function addTtsBoxButton (plusButton, toolArea, localScope) {
+        var ttsBoxButton = document.createElement("div");
         ttsBoxButton.title = "Add text to speech box";
-		ttsBoxButton.className = "ttsboxbutton";
-		plusButton.appendChild(ttsBoxButton);
+        ttsBoxButton.className = "ttsboxbutton";
+        plusButton.appendChild(ttsBoxButton);
         
-		ttsBoxButton.onclick = function(event) {
-			event.stopPropagation();
-			/*creating the textbox*/
-			var ttsBox = document.createElement('tts-box-creation');
-			document.body.appendChild(ttsBox);
+        ttsBoxButton.onclick = function(event) {
+            event.stopPropagation();
+            /*creating the textbox*/
+            var ttsBox = document.createElement('tts-box-creation');
+            document.body.appendChild(ttsBox);
             var currentUpdate = localScope.index.getCurrentUpdate();
             ttsBox.currentUpdate = currentUpdate;
-			/*end of creating the textbox*/
+            /*end of creating the textbox*/
             
             function closeTtsBox(command) {
                 var ttsBox = document.getElementById(command.commandId);
@@ -129,17 +129,17 @@ function Timeline () {
                 if (!isUndefined(ttsBox.command)) {
                     removeObjectFromArray(ttsBox.currentUpdate.commands, ttsBox.command);
                 }
-				ttsBox.parentNode.removeChild(ttsBox);
+                ttsBox.parentNode.removeChild(ttsBox);
                 if (ttsBoxMarker != null) {
                     ttsBoxMarker.parentNode.removeChild(ttsBoxMarker);
                 }
-			}
+            }
             
-			var ttsBoxMarker = document.createElement("timeline-marker");
-			ttsBoxMarker.className = "ttsbox";
-			toolArea.appendChild(ttsBoxMarker);
+            var ttsBoxMarker = document.createElement("timeline-marker");
+            ttsBoxMarker.className = "ttsbox";
+            toolArea.appendChild(ttsBoxMarker);
             ttsBoxMarker.showBox = ttsBox;
-			$(plusButton).empty();
+            $(plusButton).empty();
             
             ttsBoxFinishedListener = function(command, event, currentUpdate) {
                 var ttsBox = document.getElementById(command.commandId);
@@ -158,64 +158,64 @@ function Timeline () {
             };
             
             ttsBoxMarker.setRemoveFunction(function() {
-			    closeTtsBox(ttsBox.createdCommand);
-			});
+                closeTtsBox(ttsBox.createdCommand);
+            });
             
             ttsBox.setFinishedListener(ttsBoxFinishedListener);
             ttsBox.saveData();
             ttsBoxMarker.id = ttsBox.id;
         };
-	}
+    }
 
-	function addHighlightButton (plusButton, toolArea, localScope) {
-		var highlightButton = document.createElement("div");
+    function addHighlightButton (plusButton, toolArea, localScope) {
+        var highlightButton = document.createElement("div");
         highlightButton.title = "Highlight text";
-		highlightButton.className = "highlightbutton";
-		plusButton.appendChild(highlightButton);
-		highlightButton.onclick = function(event) {
-			event.stopPropagation();
-			/*creating the textbox*/
-			var highlightBox = document.createElement('highlight-text-creation');
-			document.body.appendChild(highlightBox);
-			/* Add this function back when highlightTool can save
-			highlightBox.setFinishedListener(function(command) {
-				globalcommand = command;
-			});
-			*/
+        highlightButton.className = "highlightbutton";
+        plusButton.appendChild(highlightButton);
+        highlightButton.onclick = function(event) {
+            event.stopPropagation();
+            /*creating the textbox*/
+            var highlightBox = document.createElement('highlight-text-creation');
+            document.body.appendChild(highlightBox);
+            /* Add this function back when highlightTool can save
+            highlightBox.setFinishedListener(function(command) {
+                globalcommand = command;
+            });
+            */
 
-			/*end of creating the textbox*/
-			var highlightMarker = document.createElement("div");
-			highlightMarker.className = "highlightmarker";
-			toolArea.appendChild(highlightMarker);
-			$(plusButton).empty();
-		};
-	}
+            /*end of creating the textbox*/
+            var highlightMarker = document.createElement("div");
+            highlightMarker.className = "highlightmarker";
+            toolArea.appendChild(highlightMarker);
+            $(plusButton).empty();
+        };
+    }
 
-	function undoCreator () {
-		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
-			if (!isUndefined(this.commandId)) {
+    function undoCreator () {
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+            if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete != null) {
                     elementToDelete.saveData();
                     document.body.removeChild(elementToDelete);
                 }
             }
-		});
+        });
         
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
-			if (!isUndefined(this.commandId)) {
+            if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete != null) {
                     elementToDelete.saveData();
                     document.body.removeChild(elementToDelete);
                 }
             }
-		});
-	}
+        });
+    }
     
-	function redoCreator () {
-		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
-			if (!isUndefined(this.commandId)) {
+    function redoCreator () {
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+            if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
                         CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
                 var textBox  = document.createElement('text-box-creation');
@@ -227,10 +227,10 @@ function Timeline () {
                 textBox.setFinishedListener(textBoxFinishedListener);
                 textBox.saveData();
             }
-		});
+        });
         
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
-			if (!isUndefined(this.commandId)) {
+            if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
                         CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
                 var ttsBox  = document.createElement('tts-box-creation');
@@ -242,8 +242,8 @@ function Timeline () {
                 ttsBox.setFinishedListener(ttsBoxFinishedListener);
                 ttsBox.saveData();
             }
-		});
-	}
+        });
+    }
 
 }
 Timeline.prototype = Object.create(HTMLElement.prototype);
