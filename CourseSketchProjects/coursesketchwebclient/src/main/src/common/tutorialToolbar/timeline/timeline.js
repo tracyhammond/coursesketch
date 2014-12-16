@@ -53,6 +53,7 @@ function Timeline () {
         textBoxButton.title = "Add text box";
 		textBoxButton.className = "textboxbutton";
 		plusButton.appendChild(textBoxButton);
+        
 		textBoxButton.onclick = function(event) {
 			event.stopPropagation();
 			/*creating the textbox*/
@@ -60,7 +61,9 @@ function Timeline () {
 			document.body.appendChild(textBox);
             var currentUpdate = localScope.index.getCurrentUpdate();
             textBox.currentUpdate = currentUpdate;
-			function closeTextBox(command) {
+			/*end of creating the textbox*/
+            
+            function closeTextBox(command) {
                 var textBox = document.getElementById(command.commandId);
                 var textBoxMarker = localScope.shadowRoot.getElementById(command.commandId);
 				if (!isUndefined(textBox.command)) {
@@ -71,8 +74,7 @@ function Timeline () {
                     textBoxMarker.parentNode.removeChild(textBoxMarker);
                 }
 			}
-
-			/*end of creating the textbox*/
+            
 			var textBoxMarker = document.createElement("timeline-marker");
 			textBoxMarker.className = "textbox";
 			toolArea.appendChild(textBoxMarker);
@@ -88,7 +90,6 @@ function Timeline () {
                 if (currentUpdate.commands.indexOf(command) < 0) {
                     currentUpdate.commands.push(command);
                 }
-
                 if (!isUndefined(event)) {
                     closeTextBox(command);
                     return;
@@ -112,6 +113,7 @@ function Timeline () {
         ttsBoxButton.title = "Add text to speech box";
 		ttsBoxButton.className = "ttsboxbutton";
 		plusButton.appendChild(ttsBoxButton);
+        
 		ttsBoxButton.onclick = function(event) {
 			event.stopPropagation();
 			/*creating the textbox*/
@@ -119,7 +121,9 @@ function Timeline () {
 			document.body.appendChild(ttsBox);
             var currentUpdate = localScope.index.getCurrentUpdate();
             ttsBox.currentUpdate = currentUpdate;
-			function closeTtsBox(command) {
+			/*end of creating the textbox*/
+            
+            function closeTtsBox(command) {
                 var ttsBox = document.getElementById(command.commandId);
                 var ttsBoxMarker = localScope.shadowRoot.getElementById(command.commandId);
                 if (!isUndefined(ttsBox.command)) {
@@ -130,7 +134,7 @@ function Timeline () {
                     ttsBoxMarker.parentNode.removeChild(ttsBoxMarker);
                 }
 			}
-			/*end of creating the textbox*/
+            
 			var ttsBoxMarker = document.createElement("timeline-marker");
 			ttsBoxMarker.className = "ttsbox";
 			toolArea.appendChild(ttsBoxMarker);
@@ -145,7 +149,6 @@ function Timeline () {
                 if (currentUpdate.commands.indexOf(command) < 0) {
                     currentUpdate.commands.push(command);
                 }
-                
                 if (!isUndefined(event)) {
                     closeTtsBox(command);
                     return;
