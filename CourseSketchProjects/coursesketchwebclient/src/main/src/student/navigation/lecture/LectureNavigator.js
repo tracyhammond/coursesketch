@@ -156,7 +156,7 @@ function LectureNavigator(lectureId, preferredIndex) {
     }
 
     this.getIsDone = function() {
-        return idDone;
+        return isDone;
     }
 
     /**
