@@ -19,6 +19,14 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var eventMappingCallback = {};
     var dataLoaded = false;
     var uiLoaded = false;
+    /*
+     * returns the navigation panel element to be used by other pages.
+     */
+    getNav = function() {
+        var navPanel;
+        navPanel = document.getElementById("navigation-panel");
+        return navPanel;
+    };
 
     /**
      * @param index {Number} the problem that we want to switch to.
@@ -192,6 +200,14 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         if (type == 4) {
             return "CHECK_BOX";
         }
+    };
+    /*
+     * gets the assingment and assigns currentAssignment
+     */
+    this.setAssignment = function() {
+        CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
+                currentAssignment = assignment;
+        });
     };
 
     /**
