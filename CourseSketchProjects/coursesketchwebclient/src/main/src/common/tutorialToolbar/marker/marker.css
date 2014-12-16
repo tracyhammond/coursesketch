@@ -47,5 +47,4 @@
     background-image: url("cross.svg");
     background-size: 100% 100%;
     overflow: visible;
-    transition: background-size 1s ease-in-out;
 }
