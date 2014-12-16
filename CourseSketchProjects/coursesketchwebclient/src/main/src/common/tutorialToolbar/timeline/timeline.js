@@ -38,6 +38,7 @@ function Timeline () {
         parent.appendChild(plusButton);
         plusButton.onclick = function() {
             $(plusButton).empty();
+<<<<<<< HEAD
             showTools(plusButton, parent, localScope);
         };
     }
@@ -47,6 +48,19 @@ function Timeline () {
         addTtsBoxButton(plusButton, toolArea, localScope);
         addHighlightButton(plusButton, toolArea, localScope);
     }
+=======
+            $(plusButton).addClass("tall");
+			showTools(plusButton, parent, localScope);
+		};
+	}
+
+	function showTools(plusButton, toolArea, localScope) {
+		addTextBoxButton(plusButton, toolArea, localScope);
+		addTtsBoxButton(plusButton, toolArea, localScope);
+		addHighlightButton(plusButton, toolArea, localScope);
+		//addSketchSurfaceButton(plusButton, toolArea, localScope);
+	}
+>>>>>>> 665f736... sketch surface tool in timeline work
 
     function addTextBoxButton (plusButton, toolArea, localScope) {
         var textBoxButton = document.createElement("div");
@@ -73,6 +87,7 @@ function Timeline () {
                 if (textBoxMarker != null) {
                     textBoxMarker.parentNode.removeChild(textBoxMarker);
                 }
+<<<<<<< HEAD
             }
             
             var textBoxMarker = document.createElement("timeline-marker");
@@ -81,6 +96,17 @@ function Timeline () {
             textBoxMarker.showBox = textBox;
             $(plusButton).empty();
 
+=======
+			}
+
+			/*end of creating the textbox*/
+			var textBoxMarker = document.createElement("timeline-marker");
+			textBoxMarker.className = "textbox";
+			toolArea.appendChild(textBoxMarker);
+			textBoxMarker.showBox = textBox;
+			$(plusButton).empty();
+			$(plusButton).removeClass("tall");
+>>>>>>> 665f736... sketch surface tool in timeline work
             textBoxFinishedListener = function(command, event, currentUpdate) {
                 var textBox = document.getElementById(command.commandId);
                 //textBox.id = command.commandId;
@@ -139,7 +165,12 @@ function Timeline () {
             ttsBoxMarker.className = "ttsbox";
             toolArea.appendChild(ttsBoxMarker);
             ttsBoxMarker.showBox = ttsBox;
+<<<<<<< HEAD
             $(plusButton).empty();
+=======
+			$(plusButton).empty();
+			$(plusButton).removeClass("tall");
+>>>>>>> 665f736... sketch surface tool in timeline work
             
             ttsBoxFinishedListener = function(command, event, currentUpdate) {
                 var ttsBox = document.getElementById(command.commandId);
@@ -183,6 +214,7 @@ function Timeline () {
             });
             */
 
+<<<<<<< HEAD
             /*end of creating the textbox*/
             var highlightMarker = document.createElement("div");
             highlightMarker.className = "highlightmarker";
@@ -194,6 +226,35 @@ function Timeline () {
     function undoCreator () {
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
+=======
+			/*end of creating the textbox*/
+			var highlightMarker = document.createElement("div");
+			highlightMarker.className = "highlightmarker";
+			toolArea.appendChild(highlightMarker);
+			$(plusButton).empty();
+			$(plusButton).removeClass("tall");
+		};
+	}
+	
+	function addSketchSurfaceButton(plusButton, toolArea, localScope) {
+		var sketchSurfaceButton = document.createElement("div");
+        sketchSurfaceButton.title = "Sketch Surface";
+		sketchSurfaceButton.className = "sketchsurfacebutton";
+		plusButton.appendChild(sketchSurfaceButton);
+		sketchSurfaceButton.onclick = function(event) {
+			event.stopPropagation();
+			var sketchSurface = document.createElement('sketch-surface');
+			document.body.appendChild(sketchSurface);
+			$(plusButton).empty();
+			$(plusButton).removeClass("tall");
+		};
+		
+		
+	}
+	function undoCreator () {
+		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+			if (!isUndefined(this.commandId)) {
+>>>>>>> 665f736... sketch surface tool in timeline work
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete != null) {
                     elementToDelete.saveData();

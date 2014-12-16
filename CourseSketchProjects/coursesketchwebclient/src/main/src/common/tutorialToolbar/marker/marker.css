@@ -31,6 +31,13 @@
     background-image: url("../highlight.jpg");
     background-color: #cccccc;
 }
+:host(.sketchsurface ) #picture {
+    width: 50px;
+    height: 50px;
+    background-image: url("../ss.jpg");
+    background-color: #cccccc;
+}
+
 
 #picture.cross {
     width: 50px;
