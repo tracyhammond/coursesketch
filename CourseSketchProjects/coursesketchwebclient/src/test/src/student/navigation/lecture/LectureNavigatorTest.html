@@ -165,7 +165,7 @@
             var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture1.id = "lectureID1!";
             lecture1.idList = [];
-            lectureList.push(lecture);
+            lectureList.push(lecture1);
             var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture2.id = "lectureID2!";
             lecture2.idList = [];
@@ -196,18 +196,23 @@
             id1.nav = nav1;
             id2.nav = nav2;
 
-            lecture.idList.push(id1);
-            lecture.idList.push(id2);
+            lecture1.idList.push(id1);
+            lecture2.idList.push(id2);
 
-            var nav = new LectureNavigator(lecture.id, 0);
+            var nav = new LectureNavigator(lecture1.id, 0);
 
             function firstCallback() {
                 var slide = nav.getCurrentSlide();
+                var lectureId = nav.getCurrentLectureId();
                 assert.equal(slide.id, slide1.id, "slides are equal");
+                assert.equal(lectureId, lecture1.id, "lectures are equal");
+
                 nav.removeCallback(firstCallback);
                 nav.addCallback(function() {
                     var slide = nav.getCurrentSlide();
+                    var lectureId = nav.getCurrentLectureId();
                     assert.equal(slide.id, slide2.id, "slides are equal");
+                    assert.equal(lectureId, lecture2.id, "lectures are equal");
                     QUnit.start();
                 });
                 nav.goToNextSlide();
