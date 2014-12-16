@@ -74,6 +74,7 @@
     overflow-y: scroll;
 }
 
+
 .textboxbutton {
     width: 50px;
     height: 50px;
@@ -86,7 +87,7 @@
     background-color: #cccccc;
     /*transition: background-image 1s ease-in-out;*/
     
-     -webkit-animation: textbox .5s;
+     -webkit-animation: textbox .5s, fadein1 .3s;
     animation: textbox .5s;
 }
 
@@ -100,10 +101,8 @@
     margin: auto 0;
     background-image: url("../tts.jpg");
     background-color: #cccccc;
-    
-	 -webkit-animation: tts .5s;
+    -webkit-animation: tts .5s, fadein2 .4s;
     animation: tts .5s;
-
 }
 
 .highlightbutton {
@@ -117,40 +116,31 @@
     background-image: url("../highlight.jpg");
     background-color: #cccccc;
     /*transition: background-image 1s ease-in-out;*/
-    
-     -webkit-animation: highlight  .5s;
+    -webkit-animation: highlight .5s, fadein3 .6s;
     animation: highlight  .5s;
 }
-
-.tts {
+.sketchsurfacebutton {
     width: 50px;
     height: 50px;
-    display: inline;
     position: absolute;
-    order: 2;
-    background-image: url("../textbox.jpg");
+    z-index: -1;
+    top: 50px;
+    left: 50px;
+    margin: auto 0;
+    background-image: url("../ss.jpg");
     background-color: #cccccc;
+    /*transition: background-image 1s ease-in-out;*/
+    animation-delay: 2s;
+    -webkit-animation: fadein4 .6s, sketchsurface .8s;
+
+    animation: sketchsurface .5s;
 }
 
-/* this is the fake one */
-.instance .texttospeech {
-    width: 50px;
-    height: 50px;
-    display: inline;
-    position: absolute;
-    margin: auto 0;
-    background-image: url("../tts.jpg");
-    background-color: #cccccc;
-}
-
-.instance .highlight {
-    width: 50px;
-    height: 50px;
-    display: inline;
-    position: absolute;
-    margin: auto 0;
-    background-image: url("../highlight.jpg");
-    background-color: #cccccc;
+sketch-surface {
+	width: 500px;
+	height: 500px;
+	z-index: -1;
+	background-color: #0FFFFF;
 }
 
 .toolarea .plusbutton {
@@ -160,11 +150,16 @@
     margin: auto 0;
     order: 1;
     background-image: url("plus.png");
-    background-color: #cccccc;
     overflow: visible;
     z-index: initial;
 }
 
+.plusbutton.tall {
+	height: 100px;
+	background-repeat: no-repeat;
+}
+
+/* Animations for plus button */
 @-webkit-keyframes textbox {
     from {left: 0px;}
     to {left: 50px;}
@@ -176,4 +171,24 @@
 @-webkit-keyframes highlight {
     from {left: 0px;}
     to {left: 150px;}
+}
+@-webkit-keyframes sketchsurface {
+    from {left: 50px; top: 0px;}
+    to {left: 50px; top: 50px;}
+}
+@-webkit-keyframes fadein1 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein2 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein3 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein4 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
