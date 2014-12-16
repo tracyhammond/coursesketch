@@ -13,6 +13,12 @@ function ImageBox() {
         this.shadowRoot.querySelector(".image").src = src;
     }
 
+    /**
+     * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
+     *
+     * @param event event that triggered this function
+     * @return the created protobuf object
+     */
     this.saveData = function(event) {
         var imageProto = CourseSketch.PROTOBUF_UTIL.Image();
 

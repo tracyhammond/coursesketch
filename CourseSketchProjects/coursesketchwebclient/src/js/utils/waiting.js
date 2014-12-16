@@ -122,7 +122,12 @@ function WaitScreenManager() {
 			})(this.total);
 		}
 	};
-	
+
+	/**
+	 * Adds a semi-transparent overlay to the specified element, preventing user interaction.
+	 *
+	 * @param element element to which the overlay will be added
+	 */
 	this.buildOverlay = function(element) {
 		var overlay = document.createElement("dialog");
 		overlay.style.background = "#000";
@@ -138,6 +143,11 @@ function WaitScreenManager() {
 		element.appendChild(overlay);
 	};
 
+	/**
+	 * Adds a wait icon to the specified element.
+	 *
+	 * @param element element to which the wait icon will be added
+	 */
 	this.buildWaitIcon = function buildWaitIcon(element) {
 		var outer = document.createElement('div');
 		outer.setAttribute("class", "outerWaitingIcon");

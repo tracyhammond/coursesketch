@@ -93,6 +93,12 @@ function MultiChoice() {
         }
     }
 
+    /**
+     * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
+     *
+     * @param event event that triggered this function
+     * @return the created protobuf object
+     */
     this.saveData = function(event) {
         var mcProto = CourseSketch.PROTOBUF_UTIL.MultipleChoice();
 
