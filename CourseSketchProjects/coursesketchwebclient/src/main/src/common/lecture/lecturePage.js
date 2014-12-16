@@ -52,6 +52,9 @@
         return textBox;
     }
 
+    /**
+     * Adds a new sketch content element to the currently selected slide
+     */
     CourseSketch.lecturePage.newSketchContent = function() {
         var sketchSurface = document.createElement('sketch-surface');
         document.querySelector("#slide-content").appendChild(sketchSurface);
@@ -61,6 +64,10 @@
         return sketchSurface;
     }
 
+    /**
+     * Adds a new image to the currently selected slide
+     * @param input the input element from the form specifying the image
+     */
     CourseSketch.lecturePage.newImage = function(input) {
         var imagebox = document.createElement('image-box');
         document.querySelector("#slide-content").appendChild(imagebox);
@@ -79,6 +86,10 @@
         return imagebox;
     }
 
+    /**
+     * Adds a new embedded HTML element to the currently selected slide.
+     * @param form the form that contains the HTML element to be added
+     */
     CourseSketch.lecturePage.newEmbeddedHtml = function(form) {
         var embeddedHtml = document.createElement('embedded-html');
         document.querySelector("#slide-content").appendChild(embeddedHtml);
@@ -89,6 +100,9 @@
         return embeddedHtml;
     }
 
+    /**
+     * Adds a new multiple choice question to the currently selected slide.
+     */
     CourseSketch.lecturePage.newMultiChoiceQuestion = function() {
         var question = document.createElement("question-element");
         var multiChoice = document.createElement("multi-choice");
@@ -100,9 +114,7 @@
 
     /**
      * Renders a slide to the DOM.
-     *
-     * NOTE: THIS FUNCTION IS NOT COMPLETE!
-     *
+
      * @param slide
      *            protobuf slide element to be rendered
      */
@@ -129,12 +141,18 @@
         }
     }
 
+    /**
+     * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
+     */
     CourseSketch.lecturePage.addWaitOverlay = function() {
         CourseSketch.lecturePage.waitScreenManager.buildOverlay(document.querySelector("body"));
         CourseSketch.lecturePage.waitScreenManager.buildWaitIcon(document.getElementById("overlay"));
         document.getElementById("overlay").querySelector(".waitingIcon").classList.add("centered");
     }
 
+    /**
+     * Removes the wait overlay from the DOM if it exists.
+     */
     CourseSketch.lecturePage.removeWaitOverlay = function() {
         if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") != null) {
             document.querySelector("body").removeChild(document.getElementById("overlay"));
@@ -171,7 +189,7 @@
             CourseSketch.lecturePage.addSlideToDom(i);
         }
         if (CourseSketch.lecturePage.lecture.idList.length > 0) {
-            if(!isUndefined(CourseSketch.lecturePage.selectedSlideIndex)) {
+            if (!isUndefined(CourseSketch.lecturePage.selectedSlideIndex)) {
                 CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex);
             } else {
                 CourseSketch.lecturePage.selectSlide(0);
