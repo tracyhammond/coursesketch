@@ -118,6 +118,7 @@ function SchoolItem() {
                 var contentElement = nodes[0];
                 var editorElement = getEditorElement(parentNode);
                 var finishEditing = function() {
+                    localScope.dataset.isediting = false;
                     $(parentNode).removeClass(editingClass);
                     $(contentElement).removeClass(editingClass);
                     parentNode.removeChild(editorElement);
@@ -142,6 +143,7 @@ function SchoolItem() {
                     return;
                 }
                 element.onclick = function(event) {
+                    localScope.dataset.isediting = true;
                     event.stopPropagation();
                     if ($(parentNode).hasClass(editingClass)) {
                         finishEditing();

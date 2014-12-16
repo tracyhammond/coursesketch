@@ -1,0 +1,44 @@
+<html>
+<head>
+<link id="multiChoiceTemplateImport" rel="import" href="multiChoice.html">
+<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
+<link rel="import" href="/src/utilities/libraries/interact/interactInclude.html">
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+<script src="multiChoice.js"></script>
+
+<script>
+    (function(importDoc) {
+        $(document).ready(function() {
+            var link = importDoc.querySelector('#multiChoiceTemplateImport');
+            var template = link.import.querySelector('#multi-choice');
+            var clone = document.importNode(template.content, true);
+
+            var newElement = new MultiChoice();
+
+            /**
+             * @Method
+             * Called when the element is created, using document.create()(but does nothing else)
+             */
+            newElement.createdCallback = function() {
+                this.open = "";
+            };
+
+            /**
+             * Creates the shadow root and adds that into the system.
+             */
+            newElement.attachedCallback = function() {
+                this.initializeElement(clone.cloneNode(true));
+            };
+
+            newElement.detachedCallback = function() {
+            // Saving must happen before element is detached to save the height and width
+            };
+
+            document.registerElement('multi-choice', {
+                prototype : newElement
+            });
+        });
+    })(document.currentScript.ownerDocument);
+</script>
+</head>
+</html>

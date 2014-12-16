@@ -1,7 +1,5 @@
 package coursesketch.server.base;
 
-import java.nio.ByteBuffer;
-
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -12,14 +10,15 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
 import protobuf.srl.request.Message.Request;
+
+import java.nio.ByteBuffer;
 
 /**
  * A connection server.
  * @author gigemjt
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 @SuppressWarnings("PMD.TooManyMethods")
 public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
