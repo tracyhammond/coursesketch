@@ -155,6 +155,10 @@ function LectureNavigator(lectureId, preferredIndex) {
         return currentLectureId;
     }
 
+    this.getIsDone = function() {
+        return idDone;
+    }
+
     /**
      * removes a callback from the callback list
      */
