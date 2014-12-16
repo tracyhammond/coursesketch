@@ -5,6 +5,7 @@ package database.institution.sql;
 //import com.mongodb.DBRef;
 
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import protobuf.srl.school.School.State;
 
 import java.sql.Connection;
@@ -41,7 +42,7 @@ public final class SqlStateManager {
      *         the id of the related state (assignmentId, courseId, ...)
      * @return the sate of the assignment.
      * @throws DatabaseAccessException
-     *         thrown if connecting to sql database cause and error.
+     *         thrown if connecting to sql database cause an error.
      */
     @SuppressWarnings("checkstyle:magicnumber")
     public static State getState(final Connection conn, final String userId, final String classification, final String itemId)
@@ -53,9 +54,9 @@ public final class SqlStateManager {
             stmt.setString(2, classification);
             stmt.setString(3, itemId);
             try (final ResultSet rst = stmt.executeQuery()) {
-                state.setCompleted(rst.getBoolean("Completed"));
-                state.setStarted(rst.getBoolean("Started"));
-                state.setGraded(rst.getBoolean("Graded"));
+                state.setCompleted(rst.getBoolean(DatabaseStringConstants.STATE_COMPLETED));
+                state.setStarted(rst.getBoolean(DatabaseStringConstants.STATE_STARTED));
+                state.setGraded(rst.getBoolean(DatabaseStringConstants.STATE_GRADED));
             } catch (SQLException e) {
                 throw new DatabaseAccessException(e, false);
             }
@@ -79,9 +80,9 @@ public final class SqlStateManager {
      *         the id of the related state (assignmentId, courseId, ...)
      * @param state
      *         what the state is being set to.
-     * @return reslut of set: "SET", "INSERT", "ERROR"
+     * @return result of set: "SET", "INSERT", "ERROR"
      * @throws DatabaseAccessException
-     *         thrown if connecting to sql database cause and error.
+     *         thrown if connecting to sql database cause an error.
      */
     @SuppressWarnings("checkstyle:magicnumber")
     public static String setState(final Connection conn, final String userId, final String classification, final String itemId, final State state)
@@ -94,19 +95,19 @@ public final class SqlStateManager {
             stmt.setString(3, itemId);
             try (final ResultSet rst = stmt.executeQuery()) {
                 if (rst.next()) {
-                    rst.updateBoolean("Completed", state.getCompleted());
-                    rst.updateBoolean("Started", state.getStarted());
-                    rst.updateBoolean("Graded", state.getGraded());
+                    rst.updateBoolean(DatabaseStringConstants.STATE_COMPLETED, state.getCompleted());
+                    rst.updateBoolean(DatabaseStringConstants.STATE_STARTED, state.getStarted());
+                    rst.updateBoolean(DatabaseStringConstants.STATE_GRADED, state.getGraded());
                     rst.updateRow();
                     result = "SET";
                 } else {
                     rst.moveToInsertRow();
-                    rst.updateString("UserID", userId);
-                    rst.updateString("SchoolItemType", classification);
-                    rst.updateString("SchoolItemID", itemId);
-                    rst.updateBoolean("Completed", state.getCompleted());
-                    rst.updateBoolean("Started", state.getStarted());
-                    rst.updateBoolean("Graded", state.getGraded());
+                    rst.updateString(DatabaseStringConstants.USER_ID, userId);
+                    rst.updateString(DatabaseStringConstants.SCHOOLITEMTYPE, classification);
+                    rst.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
+                    rst.updateBoolean(DatabaseStringConstants.STATE_COMPLETED, state.getCompleted());
+                    rst.updateBoolean(DatabaseStringConstants.STATE_STARTED, state.getStarted());
+                    rst.updateBoolean(DatabaseStringConstants.STATE_GRADED, state.getGraded());
                     rst.insertRow();
                     rst.moveToCurrentRow();
                     result = "INSERT";

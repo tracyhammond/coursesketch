@@ -5,6 +5,7 @@ package database.institution.sql;
 //import com.mongodb.DBRef;
 
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import protobuf.srl.school.School.SrlGrade;
 
 import java.sql.Connection;
@@ -41,7 +42,7 @@ public final class SqlGradeManager {
      *         the id of the related state (assignmentId, courseId, ...)
      * @return the sate of the assignment.
      * @throws DatabaseAccessException
-     *         thrown if connecting to sql database cause and error.
+     *         thrown if connecting to sql database cause an error.
      */
     @SuppressWarnings("checkstyle:magicnumber")
     public static SrlGrade getGrade(final Connection conn, final String userId, final String classification, final String itemId)
@@ -55,8 +56,8 @@ public final class SqlGradeManager {
             try (final ResultSet rst = stmt.executeQuery()) {
                 grade.setId("");
                 grade.setProblemId("");
-                grade.setGrade(rst.getFloat("Grade"));
-                grade.setComment(rst.getString("Comments"));
+                grade.setGrade(rst.getFloat(DatabaseStringConstants.GRADE));
+                grade.setComment(rst.getString(DatabaseStringConstants.COMMENTS));
             } catch (SQLException e) {
                 throw new DatabaseAccessException(e, false);
             }
@@ -79,9 +80,9 @@ public final class SqlGradeManager {
      *         the id of the related state (assignmentId, courseId, ...)
      * @param grade
      *         what the grade is being set to.
-     * @return reslut of set: "SET", "INSERT", "ERROR"
+     * @return result of set: "SET", "INSERT", "ERROR"
      * @throws DatabaseAccessException
-     *         thrown if connecting to sql database cause and error.
+     *         thrown if connecting to sql database cause an error.
      */
     @SuppressWarnings("checkstyle:magicnumber")
     public static String setGrade(final Connection conn, final String userId, final String classification, final String itemId, final SrlGrade grade)
@@ -94,17 +95,17 @@ public final class SqlGradeManager {
             stmt.setString(3, itemId);
             try (final ResultSet rst = stmt.executeQuery()) {
                 if (rst.next()) {
-                    rst.updateFloat("Grade", grade.getGrade());
-                    rst.updateString("Comments", grade.getComment());
+                    rst.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
+                    rst.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());
                     rst.updateRow();
                     result = "SET";
                 } else {
                     rst.moveToInsertRow();
-                    rst.updateString("UserID", userId);
-                    rst.updateString("SchoolItemType", classification);
-                    rst.updateString("SchoolItemID", itemId);
-                    rst.updateFloat("Grade", grade.getGrade());
-                    rst.updateString("Comments", grade.getComment());
+                    rst.updateString(DatabaseStringConstants.USER_ID, userId);
+                    rst.updateString(DatabaseStringConstants.SCHOOLITEMTYPE, classification);
+                    rst.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
+                    rst.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
+                    rst.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());
                     rst.insertRow();
                     rst.moveToCurrentRow();
                     result = "INSERT";
