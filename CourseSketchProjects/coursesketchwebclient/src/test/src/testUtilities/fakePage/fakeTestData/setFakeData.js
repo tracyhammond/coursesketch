@@ -5,6 +5,7 @@ $(document).ready(function() {
     var barrier = new CallbackBarrier();
     console.log(barrier);
     var lectureBarrier = barrier.getCallback();
+    var slideBarrier = barrier.getCallback();
     var courseBarrier = barrier.getCallback();
     var assignmentBarrier = barrier.getCallback();
     var problemBarrier = barrier.getCallback();
@@ -16,6 +17,15 @@ $(document).ready(function() {
         localBarrier.finalize(lectureBarrier);
         for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
             CourseSketch.dataManager.setLecture(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
+        }
+    };
+
+    var loadSlides = function() {
+        var localBarrier = new CallbackBarrier();
+        var slidesLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeSlides.length);
+        localBarrier.finalize(slideBarrier);
+        for (var i = 0; i < CourseSketch.fakeSlides.length; ++i) {
+            CourseSketch.dataManager.setSlide(CourseSketch.fakeSlides[i], slidesLoadedCallback, slidesLoadedCallback);
         }
     };
 
@@ -75,6 +85,7 @@ $(document).ready(function() {
         });
         loadCourses();
         loadLectures();
+        loadSlides();
         loadAssignments();
         loadProblems();
     }
