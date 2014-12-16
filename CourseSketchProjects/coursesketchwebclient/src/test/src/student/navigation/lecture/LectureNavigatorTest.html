@@ -224,7 +224,7 @@
             var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture1.id = "lectureID1!";
             lecture1.idList = [];
-            lectureList.push(lecture);
+            lectureList.push(lecture1);
             var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture2.id = "lectureID2!";
             lecture2.idList = [];
@@ -260,18 +260,18 @@
             var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
             var nav3 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
             nav1.nextLectureId = lecture2.id;
-            nav1.nextSlide = 2;
+            nav1.nextSlide = 1;
             nav2.nextSlide = -1;
             nav3.nextSlide = -1;
             id1.nav = nav1;
             id2.nav = nav2;
             id3.nav = nav3;
 
-            lecture.idList.push(id1);
-            lecture.idList.push(id2);
-            lecture.idList.push(id3);
+            lecture1.idList.push(id1);
+            lecture2.idList.push(id2);
+            lecture1.idList.push(id3);
 
-            var nav = new LectureNavigator(lecture.id, 0);
+            var nav = new LectureNavigator(lecture1.id, 0);
 
             function firstCallback() {
                 var slide = nav.getCurrentSlide();

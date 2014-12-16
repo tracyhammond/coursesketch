@@ -32,16 +32,18 @@ function LectureNavigator(lectureId, preferredIndex) {
                 return;
             } else {
                 var nextSlideIndex = indicesStack.pop();
-                var nextLectureId = indicesStack.pop();
+                var nextLectureId = lectureIdStack.pop();
                 function hasLecture(lecture) {
                     currentLecture = lecture;
                     currentLectureId = lecture.id;
-                    if (!(lecture.idList[nextSlideIndex].isSlide)) {
-                        loadLecture(lecture.idList[nextSlideIndex].id, lecture.idList[nextSlideIndex].nav.nextSlide);
+                    var idMessage = currentLecture.idList[nextSlideIndex];
+                    if (idMessage.nav.nextLectureId != null && !isUndefined(idMessage.nav.nextLectureId)) {
+                        loadLecture(idMessage.nav.nextLectureId, idMessage.nav.nextSlide);
                     } else {
-                        loadSlide(lecture.idList[nextSlideIndex].id, nextSlideIndex);
+                        loadSlide(idMessage.id, nextSlideIndex);
                     }
                 }
+                CourseSketch.dataManager.getCourseLecture(nextLectureId, hasLecture, hasLecture);
             }
         } else {
             if (idMessage.nav.nextLectureId != null && !isUndefined(idMessage.nav.nextLectureId)) {
