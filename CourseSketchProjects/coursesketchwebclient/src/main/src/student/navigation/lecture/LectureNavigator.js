@@ -12,6 +12,17 @@ function LectureNavigator(lectureId, preferredIndex) {
         changeSlide(index);
     };
 
+    /**
+     * Goes to the next slide
+     * If the next slide equals -1 and the stack is empty
+     * then you are at the end of the lecture
+     * If the next slide equals -1 and the stack is not empty
+     * then you are at the end of a lecture within another lecture
+     * If the next slide is not equal to -1 and the nav's nextLecture != null
+     * then you are moving into a lecture
+     * If the next slide is not equal to -1 and the nav's nextLecture == null
+     * then you are moving to a slide within the same lecture
+     */
     this.goToNextSlide = function goToNextSlide() {
         var idMessage = currentLecture.idList[currentSlideIndex];
         if (idMessage.nav.nextSlide === -1) {
@@ -41,6 +52,9 @@ function LectureNavigator(lectureId, preferredIndex) {
         }
     }
 
+    /**
+     * asynchronously calls the callbacks
+     */
     function callCallback() {
         for (var i = 0; i < callbackList.length; i++) {
             callBacker(i);
@@ -79,6 +93,13 @@ function LectureNavigator(lectureId, preferredIndex) {
         CourseSketch.dataManager.getLectureSlide(nextSlideId, hasSlide, hasSlide);
     }
 
+    /**
+     * loads a lecture from the given lecture id
+     * @param nextLectureId
+     *         id of next lecture
+     * @param index
+     *         the index of the slide in the lecture we want
+     */
     function loadLecture(nextLectureId, index) {
         lectureIdStack.push(currentLectureId);
         indicesStack.push(index);
@@ -98,10 +119,16 @@ function LectureNavigator(lectureId, preferredIndex) {
         callbackList.push(callback);
     };
 
+    /**
+     * Does not apply to the entire scope just the current lecture scope
+     */
     this.hasPrevious = function() {
         return currentSlideIndex > 0;
     };
 
+    /**
+     * Does not apply to the entire scope just the current lecture scope
+     */
     this.hasNext = function() {
         return currentSlideIndex < currentLecture.idList.length;
     }
@@ -122,6 +149,13 @@ function LectureNavigator(lectureId, preferredIndex) {
         return currentSlide;
     }
 
+    this.getCurrentLectureId = function() {
+        return currentLectureId;
+    }
+
+    /**
+     * removes a callback from the callback list
+     */
     this.removeCallback = function(callback) {
         var index = callbackList.indexOf(callback);
         if (index >= 0 ) {
@@ -129,6 +163,9 @@ function LectureNavigator(lectureId, preferredIndex) {
         }
     };
 
+    /**
+     * refresh reloads the current slide and lecture
+     */
     this.refresh = function() {
         function hasLecture(lecture) {
             currentLecture = lecture;

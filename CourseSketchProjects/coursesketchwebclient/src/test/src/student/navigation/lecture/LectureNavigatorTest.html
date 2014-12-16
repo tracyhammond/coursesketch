@@ -161,5 +161,59 @@
             nav.addCallback(firstCallback);
             nav.refresh();
         });
+        QUnit.asyncTest("Skipping a slide to move to another slide", function(assert) {
+            var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
+            lecture1.id = "lectureID1!";
+            lecture1.idList = [];
+            lectureList.push(lecture);
+            var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
+            lecture2.id = "lectureID2!";
+            lecture2.idList = [];
+            lectureList.push(lecture2);
+            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            slide1.lectureId = lecture1.id;
+            slide1.id = "SlIDE1";
+            var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            slide2.lectureId = lecture2.id;
+            slide2.id = "Slide2";
+            slideList.push(slide1);
+            slideList.push(slide2);
+
+            var id1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+            var id2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+
+            id1.id = slide1.id;
+            id2.id = slide2.id;
+            id1.isSlide = true;
+            id2.isSlide = true;
+            id1.unlocked = true;
+            id2.unlocked = true;
+
+            var nav1 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            nav1.nextLectureId = lecture2.id;
+            nav2.nextSlide = -1;
+            id1.nav = nav1;
+            id2.nav = nav2;
+
+            lecture.idList.push(id1);
+            lecture.idList.push(id2);
+
+            var nav = new LectureNavigator(lecture.id, 0);
+
+            function firstCallback() {
+                var slide = nav.getCurrentSlide();
+                assert.equal(slide.id, slide1.id, "slides are equal");
+                nav.removeCallback(firstCallback);
+                nav.addCallback(function() {
+                    var slide = nav.getCurrentSlide();
+                    assert.equal(slide.id, slide2.id, "slides are equal");
+                    QUnit.start();
+                });
+                nav.goToNextSlide();
+            }
+            nav.addCallback(firstCallback);
+            nav.refresh();
+        });
     </script>
 </body>
