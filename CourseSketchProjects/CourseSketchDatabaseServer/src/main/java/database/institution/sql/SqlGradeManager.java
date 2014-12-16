@@ -1,9 +1,5 @@
 package database.institution.sql;
 
-//import com.mongodb.DB;
-//import com.mongodb.DBObject;
-//import com.mongodb.DBRef;
-
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import protobuf.srl.school.School.SrlGrade;
