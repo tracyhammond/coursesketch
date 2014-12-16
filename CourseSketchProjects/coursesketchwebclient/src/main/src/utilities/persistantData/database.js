@@ -133,19 +133,21 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var trans = db.transaction([localTable.name], "readwrite");
                     var store = trans.objectStore(localTable.name);
                     var request = localTable.add(store, objectId, objectToAdd);
-                    request.onsuccess = function(e) {
+                    trans.oncomplete = function(e) {
                         // add objectId to some sort of id list so we know what
                         // data is contained
                         // this data is only to be used for the local deletion
                         // of all items in the database
-                        if (callback)
+                        if (callback) {
                             callback(e, request);
+                        }
                     };
 
                     request.onerror = function(e) {
                         console.log(e.value);
                     };
                 };
+
                 /**
                  * Creates a function for deleting items from the database.
                  */
@@ -158,10 +160,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var trans = db.transaction([localTable.name], "readwrite");
                     var store = trans.objectStore(localTable.name);
                     var request = store.delete(objectId);
-                    request.onsuccess = function(e) {
-                        if (callback)
+                    trans.oncomplete = function(e) {
+                        if (!isUndefined(callback)) {
                             callback(e, request);
-                    }
+                        }
+                    };
 
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -183,8 +186,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var store = trans.objectStore(localTable.name);
                     var request = store.get(objectId);
                     request.onsuccess = function(e) {
-                        if (callback)
+                        if (callback) {
                             callback(e, request, request.result);
+                        }
                     }
 
                     request.onerror = function(e) {

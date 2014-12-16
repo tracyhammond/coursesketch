@@ -1,20 +1,19 @@
-package localTesting;
+package local.data;
 
-import javax.swing.JOptionPane;
-
+import database.DatabaseAccessException;
+import database.institution.mongo.MongoInstitution;
+import database.user.UserClient;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlPermission;
-import test.ManyTestAssignments;
-import database.DatabaseAccessException;
-import database.institution.Institution;
-import database.user.UserClient;
+
+import javax.swing.JOptionPane;
 
 public class LocalAddCourses {
 	public static void testCourses(String instructionID) throws DatabaseAccessException {
 		String[] name = new String[]{"CourseSketch 101"};
 		String[] descsription = new String[]{"Hi Welcome to CourseSketch, you have automatically been enrolled in this tutorial."
 				+ " To expand the description of a class click the down arrow."};
-		for (int k = 0; k < 1; k ++) {
+		for (int k = 0; k < name.length; k ++) {
 			SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
 			testBuilder.setAccess(SrlCourse.Accessibility.SUPER_PUBLIC);
 			testBuilder.setSemester("FALL");
@@ -26,17 +25,17 @@ public class LocalAddCourses {
 			System.out.println(testBuilder.toString());
 
 			// testing inserting course
-				System.out.println("INSERTING COURSE");
-				String courseId = Institution.mongoInsertCourse(instructionID, testBuilder.buildPartial());
-				System.out.println("INSERTING COURSE SUCCESSFULT");
-				System.out.println(courseId);
-				ManyTestAssignments.testAssignments(courseId, instructionID);
+			System.out.println("INSERTING COURSE");
+			String courseId = MongoInstitution.getInstance().insertCourse(instructionID, testBuilder.buildPartial());
+			System.out.println("INSERTING COURSE SUCCESSFUL");
+			System.out.println(courseId);
+			LocalAddAssignments.testAssignments(courseId, instructionID);
 		}
 	}
-	
+
 	public static void main(String[] args) throws DatabaseAccessException {
-		new Institution(false); // makes the database point locally
-		new UserClient(false); // makes the database point locally
+		new MongoInstitution(false, null); // makes the database point locally
+		new UserClient(false, null); // makes the database point locally
 		String id = JOptionPane.showInputDialog("Insert the Id of the person inserting the class");
 		//0b7ac244-b785-6961-9347-7621abeada88-277aa353914b7c5f
 		testCourses(id);

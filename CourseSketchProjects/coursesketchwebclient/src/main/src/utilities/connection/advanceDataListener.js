@@ -16,13 +16,13 @@ function AdvanceDataListener(connection, Request, defListener) {
 	var myScope = this;
 	var defaultListener = defListener || false;
 	var errorListener = false;
-	
+
 	this.setErrorListener = function(func) {
 		errorListener = func;
 	};
-	
+
 	/**
-	 * Sets
+	 * Sets the listener to listen for database code.
 	 */
 	this.setListener = function(messageType, queryType, func) {
 		var localMap = requestMap[messageType];
