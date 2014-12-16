@@ -1,19 +1,19 @@
 <html>
 <head>
-<link id="textToSpeechTemplateImport" rel="import" href="textToSpeech.html">
+<link id="outlineToolTemplateImport" rel="import" href="outlineTool.html">
 <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 <link rel="import" href="/src/utilities/libraries/interact/interactInclude.html">
-<link rel="import" href="/src/utilities/libraries/mespeak/mespeakInclude.html">
-<script src="/src/utilities/templates/textBox/textBox.js"></script>
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+<script src="outlineTool.js"></script>
 
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#textToSpeechTemplateImport');
-            var template = link.import.querySelector('#ttsCreation');
+            var link = importDoc.querySelector('#outlineToolTemplateImport');
+            var template = link.import.querySelector('#outlineToolCreation');
             var clone = document.importNode(template.content, true);
 
-            var newElement = new TextBox();
+            var newElement = new OutlineTool();
 
             /**
              * @Method
@@ -34,16 +34,16 @@
             // Saving must happen before element is detached to save the height and width
             };
 
-            document.registerElement('tts-box-creation', {
+            document.registerElement('outline-tool-creation', {
                 prototype : newElement
             });
         });
         $(document).ready(function() {
-            var link = importDoc.querySelector('#textToSpeechTemplateImport');
-            var template = link.import.querySelector('#ttsViewing');
+            var link = importDoc.querySelector('#outlineToolTemplateImport');
+            var template = link.import.querySelector('#outlineToolViewing');
             var clone = document.importNode(template.content, true);
 
-            var newElement = new TextBox();
+            var newElement = new OutlineTool();
 
             /**
              * @Method
@@ -61,10 +61,10 @@
             };
 
             newElement.detachedCallback = function() {
-            // This is already called at the end of speakText() in the JS file.
+                this.getFinishedCallback()(); // Gets the callback and immediately calls it
             };
 
-            document.registerElement('tts-box-viewing', {
+            document.registerElement('outline-tool-viewing', {
                 prototype : newElement
             });
         });

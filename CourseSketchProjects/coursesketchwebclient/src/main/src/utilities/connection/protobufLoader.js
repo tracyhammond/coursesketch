@@ -204,6 +204,23 @@ function ProtobufSetup() {
     };
 
     /**
+     * Given a protobuf Command array an SrlUpdate is created.
+     *
+     * It is important to node that an SrlUpdate implies that the commands
+     * happened at the same time.
+     *
+     * @return {SrlUpdate}
+     */
+    this.createBaseUpdate = function createBaseUpdate() {
+        var update = this.SrlUpdate();
+        var n = createTimeStamp();
+        update.commands = [];
+        update.setTime("" + n);
+        update.setUpdateId(generateUUID());
+        return update;
+    };
+
+    /**
      * @Method Given an SrlUpdate a Request is created.
      * @param update
      *            {SrlUpdate} a valid and complete object.
