@@ -15,58 +15,58 @@ function Timeline () {
         redoCreator();
     };
 
-	/**
-	 * this continue button adds a step.  In the future, this button will be coupled with
-	 * recognition on when a html page is changed or when input from a user is obtained
-	 */
-	this.continueButton = function(shadowRoot) {
-		var continueButtonScope = this;
-		var continueButton = shadowRoot.querySelector(".btn");
-		continueButton.onclick = function() {
-			continueButtonScope.addToolArea(shadowRoot.querySelector('.timeline'));
-		};
-	};
-	/**
-	 * a tool area holds all of the different tools that can be used for tutorial creation, such 
-	 * as textbox, tts, highlight, sketch surface, etc
-	 */
-	this.addToolArea = function(parent) {
-		var toolArea = document.createElement("div");
-		toolArea.className = "toolarea";
-		parent.appendChild(toolArea);
-		addPlusButton(toolArea, this);
-		this.index.addNewToolArea(toolArea);
-	};
-	/**
-	 * the plus button calls show tools to list out the available tools
-	 */
-	function addPlusButton (parent, localScope) {
-		var plusButton = document.createElement("div");
+    /**
+     * this continue button adds a step.  In the future, this button will be coupled with
+     * recognition on when a html page is changed or when input from a user is obtained
+     */
+    this.continueButton = function(shadowRoot) {
+        var continueButtonScope = this;
+        var continueButton = shadowRoot.querySelector(".btn");
+        continueButton.onclick = function() {
+            continueButtonScope.addToolArea(shadowRoot.querySelector('.timeline'));
+        };
+    };
+    /**
+     * a tool area holds all of the different tools that can be used for tutorial creation, such 
+     * as textbox, tts, highlight, sketch surface, etc
+     */
+    this.addToolArea = function(parent) {
+        var toolArea = document.createElement("div");
+        toolArea.className = "toolarea";
+        parent.appendChild(toolArea);
+        addPlusButton(toolArea, this);
+        this.index.addNewToolArea(toolArea);
+    };
+    /**
+     * the plus button calls show tools to list out the available tools
+     */
+    function addPlusButton (parent, localScope) {
+        var plusButton = document.createElement("div");
         plusButton.title = "Add tutorial element";
         plusButton.className = "plusbutton";
         parent.appendChild(plusButton);
         plusButton.onclick = function() {
             $(plusButton).empty();
             $(plusButton).addClass("tall");
-			showTools(plusButton, parent, localScope);
-		};
-	}
-	/**
-	 * sketch surface is currently not fully implemented.  To see what it does, uncomment the line
-	 */
-	function showTools(plusButton, toolArea, localScope) {
-		addTextBoxButton(plusButton, toolArea, localScope);
-		addTtsBoxButton(plusButton, toolArea, localScope);
-		addHighlightButton(plusButton, toolArea, localScope);
-		//addSketchSurfaceButton(plusButton, toolArea, localScope);
-	}
-	/**
-	 * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
-	 * when clicked, the "preview" button will be added to the step
-	 * This allows the user to create a text box to further explain steps in the tutorial
-	 */
-	function addTextBoxButton (plusButton, toolArea, localScope) {
-		var textBoxButton = document.createElement("div");
+            showTools(plusButton, parent, localScope);
+        };
+    }
+    /**
+     * sketch surface is currently not fully implemented.  To see what it does, uncomment the line
+     */
+    function showTools(plusButton, toolArea, localScope) {
+        addTextBoxButton(plusButton, toolArea, localScope);
+        addTtsBoxButton(plusButton, toolArea, localScope);
+        addHighlightButton(plusButton, toolArea, localScope);
+        //addSketchSurfaceButton(plusButton, toolArea, localScope);
+    }
+    /**
+     * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
+     * when clicked, the "preview" button will be added to the step
+     * This allows the user to create a text box to further explain steps in the tutorial
+     */
+    function addTextBoxButton (plusButton, toolArea, localScope) {
+        var textBoxButton = document.createElement("div");
         textBoxButton.title = "Add text box";
         textBoxButton.className = "textboxbutton";
         plusButton.appendChild(textBoxButton);
@@ -90,18 +90,18 @@ function Timeline () {
                 if (textBoxMarker != null) {
                     textBoxMarker.parentNode.removeChild(textBoxMarker);
                 }
-			}
+            }
 
-			/*end of creating the textbox*/
-			var textBoxMarker = document.createElement("timeline-marker");
-			textBoxMarker.className = "textbox";
-			toolArea.appendChild(textBoxMarker);
-			textBoxMarker.showBox = textBox;
-			$(plusButton).empty();
-			/**
-			 * alter the css tall class to show more rows for more tools
-			 */
-			$(plusButton).removeClass("tall");
+            /*end of creating the textbox*/
+            var textBoxMarker = document.createElement("timeline-marker");
+            textBoxMarker.className = "textbox";
+            toolArea.appendChild(textBoxMarker);
+            textBoxMarker.showBox = textBox;
+            $(plusButton).empty();
+            /**
+             * alter the css tall class to show more rows for more tools
+             */
+            $(plusButton).removeClass("tall");
             textBoxFinishedListener = function(command, event, currentUpdate) {
                 var textBox = document.getElementById(command.commandId);
                 //textBox.id = command.commandId;
@@ -126,15 +126,15 @@ function Timeline () {
             textBox.setFinishedListener(textBoxFinishedListener);
             textBox.saveData();
             textBoxMarker.id = textBox.id;
-		};
-	}
-	/**
-	 * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
-	 * when clicked, the "preview" button will be added to the step
-	 * This allows the user to create audible text
-	 */
-	function addTtsBoxButton (plusButton, toolArea, localScope) {
-		var ttsBoxButton = document.createElement("div");
+        };
+    }
+    /**
+     * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
+     * when clicked, the "preview" button will be added to the step
+     * This allows the user to create audible text
+     */
+    function addTtsBoxButton (plusButton, toolArea, localScope) {
+        var ttsBoxButton = document.createElement("div");
         ttsBoxButton.title = "Add text to speech box";
         ttsBoxButton.className = "ttsboxbutton";
         plusButton.appendChild(ttsBoxButton);
@@ -164,8 +164,8 @@ function Timeline () {
             ttsBoxMarker.className = "ttsbox";
             toolArea.appendChild(ttsBoxMarker);
             ttsBoxMarker.showBox = ttsBox;
-			$(plusButton).empty();
-			$(plusButton).removeClass("tall");
+            $(plusButton).empty();
+            $(plusButton).removeClass("tall");
             
             ttsBoxFinishedListener = function(command, event, currentUpdate) {
                 var ttsBox = document.getElementById(command.commandId);
@@ -191,14 +191,14 @@ function Timeline () {
             ttsBox.saveData();
             ttsBoxMarker.id = ttsBox.id;
         };
-	}
-	/**
-	 * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
-	 * when clicked, the "preview" button will be added to the step
-	 * The highlight tool will highlight any valid text  for a given step.  Saving the highlighting still needs to be worked on
-	 */
-	function addHighlightButton (plusButton, toolArea, localScope) {
-		var highlightButton = document.createElement("div");
+    }
+    /**
+     * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
+     * when clicked, the "preview" button will be added to the step
+     * The highlight tool will highlight any valid text  for a given step.  Saving the highlighting still needs to be worked on
+     */
+    function addHighlightButton (plusButton, toolArea, localScope) {
+        var highlightButton = document.createElement("div");
         highlightButton.title = "Highlight text";
         highlightButton.className = "highlightbutton";
         plusButton.appendChild(highlightButton);
@@ -212,46 +212,46 @@ function Timeline () {
                 globalcommand = command;
             });
             */
-			/*end of creating the textbox*/
-			var highlightMarker = document.createElement("div");
-			highlightMarker.className = "highlightmarker";
-			toolArea.appendChild(highlightMarker);
-			$(plusButton).empty();
-			$(plusButton).removeClass("tall");
-		};
-	}
-	/**
-	 * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
-	 * when clicked, the "preview" button will be added to the step
-	 * This will create a simple sketch surface to draw on.  Currently this isn't called because it isn't finished
-	 */
-	function addSketchSurfaceButton(plusButton, toolArea, localScope) {
-		var sketchSurfaceButton = document.createElement("div");
+            /*end of creating the textbox*/
+            var highlightMarker = document.createElement("div");
+            highlightMarker.className = "highlightmarker";
+            toolArea.appendChild(highlightMarker);
+            $(plusButton).empty();
+            $(plusButton).removeClass("tall");
+        };
+    }
+    /**
+     * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
+     * when clicked, the "preview" button will be added to the step
+     * This will create a simple sketch surface to draw on.  Currently this isn't called because it isn't finished
+     */
+    function addSketchSurfaceButton(plusButton, toolArea, localScope) {
+        var sketchSurfaceButton = document.createElement("div");
         sketchSurfaceButton.title = "Sketch Surface";
-		sketchSurfaceButton.className = "sketchsurfacebutton";
-		plusButton.appendChild(sketchSurfaceButton);
-		sketchSurfaceButton.onclick = function(event) {
-			event.stopPropagation();
-			var sketchSurface = document.createElement('sketch-surface');
-			document.body.appendChild(sketchSurface);
-			$(plusButton).empty();
-			$(plusButton).removeClass("tall");
-		};
-	}
-	/**
-	 * creates undos
-	 */
-	function undoCreator () {
-		// creates saving for textbox
-		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
-			if (!isUndefined(this.commandId)) {
+        sketchSurfaceButton.className = "sketchsurfacebutton";
+        plusButton.appendChild(sketchSurfaceButton);
+        sketchSurfaceButton.onclick = function(event) {
+            event.stopPropagation();
+            var sketchSurface = document.createElement('sketch-surface');
+            document.body.appendChild(sketchSurface);
+            $(plusButton).empty();
+            $(plusButton).removeClass("tall");
+        };
+    }
+    /**
+     * creates undos
+     */
+    function undoCreator () {
+        // creates saving for textbox
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+            if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete != null) {
                     elementToDelete.saveData();
                     document.body.removeChild(elementToDelete);
                 }
             }
-		});
+        });
         // creates saving for tts box
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
             if (!isUndefined(this.commandId)) {
@@ -261,17 +261,17 @@ function Timeline () {
                     document.body.removeChild(elementToDelete);
                 }
             }
-		});
-	}
+        });
+    }
     /**
      * creates redos
      */
-	function redoCreator () {
-		/**
-		 * creates textbox redo
-		 */
-		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
-			if (!isUndefined(this.commandId)) {merge
+    function redoCreator () {
+        /**
+         * creates textbox redo
+         */
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+            if (!isUndefined(this.commandId)) {merge
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
                         CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
                 var textBox  = document.createElement('text-box-creation');
@@ -283,7 +283,7 @@ function Timeline () {
                 textBox.setFinishedListener(textBoxFinishedListener);
                 textBox.saveData();
             }
-		});
+        });
         /**
          * creates tts box
          */
