@@ -109,19 +109,19 @@
     CourseSketch.lecturePage.renderSlide = function(slide) {
         document.getElementById("slide-content").innerHTML = "";
         CourseSketch.lecturePage.currentSlide = slide;
-        for(var i = 0; i < slide.elements.length; ++i) {
+        for (var i = 0; i < slide.elements.length; ++i) {
             var element = slide.elements[i];
-            if(!isUndefined(element.textBox) && element.textBox != null) {
+            if (!isUndefined(element.textBox) && element.textBox != null) {
                 CourseSketch.lecturePage.loadTextBox(element.textBox);
-            } else if(!isUndefined(element.question) && element.question != null) {
-                if(!isUndefined(element.question.multipleChoice) && element.question.multipleChoice != null) {
+            } else if (!isUndefined(element.question) && element.question != null) {
+                if (!isUndefined(element.question.multipleChoice) && element.question.multipleChoice != null) {
                     CourseSketch.lecturePage.loadMultiChoiceQuestion(element.question);
                 } else {
                     throw "Sketch questions are not yet supported";
                 }
-            } else if(!isUndefined(element.image) && element.image != null) {
+            } else if (!isUndefined(element.image) && element.image != null) {
                 CourseSketch.lecturePage.loadImageBox(element.image);
-            } else if(!isUndefined(element.embeddedHtml) && element.embeddedHtml != null) {
+            } else if (!isUndefined(element.embeddedHtml) && element.embeddedHtml != null) {
                 CourseSketch.lecturePage.loadEmbeddedHtml(element.embeddedHtml);
             } else {
                 throw "Tried to load invalid element";
@@ -136,7 +136,7 @@
     }
 
     CourseSketch.lecturePage.removeWaitOverlay = function() {
-        if(!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") != null) {
+        if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") != null) {
             document.querySelector("body").removeChild(document.getElementById("overlay"));
         }
     };
