@@ -357,7 +357,7 @@
             nav.addCallback(firstCallback);
             nav.refresh();
         });
-        QUnit.asyncTest("Moving from a slide to a slide in a different lecture", function(assert) {
+        QUnit.asyncTest("Moving from a slide to a slide in a different lecture then checking if it finished", function(assert) {
             var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture1.id = "lectureID1!";
             lecture1.idList = [];
@@ -411,11 +411,11 @@
                     assert.equal(slide.id, slide2.id, "slides are equal");
                     assert.equal(lectureId, lecture2.id, "lectures are equal");
                     nav.removeCallback(secondCallback);
-                    nav.addCallback(function(){
+                    nav.addCallback(function() {
                         var isDone = nav.getIsDone();
-                        assert(isDone, true, "reached the end of the lecture");
+                        assert.equal(isDone, true, "reached the end of the lecture");
                         QUnit.start();
-                    }};
+                    });
                     nav.goToNextSlide();
                 });
                 nav.goToNextSlide();
