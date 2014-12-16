@@ -236,7 +236,7 @@
             slide2.lectureId = lecture2.id;
             slide2.id = "Slide2";
             var slide3 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-            slide3.lectureId = lecture2.id;
+            slide3.lectureId = lecture1.id;
             slide3.id = "Slide3";
             slideList.push(slide1);
             slideList.push(slide2);
@@ -244,34 +244,57 @@
 
             var id1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
             var id2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+            var id3 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
 
             id1.id = slide1.id;
             id2.id = slide2.id;
+            id3.id = slide3.id;
             id1.isSlide = true;
             id2.isSlide = true;
+            id3.isSlide = true;
             id1.unlocked = true;
             id2.unlocked = true;
+            id3.unlocked = true;
 
             var nav1 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
             var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var nav3 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
             nav1.nextLectureId = lecture2.id;
+            nav1.nextSlide = 2;
             nav2.nextSlide = -1;
+            nav3.nextSlide = -1;
             id1.nav = nav1;
             id2.nav = nav2;
+            id3.nav = nav3;
 
             lecture.idList.push(id1);
             lecture.idList.push(id2);
+            lecture.idList.push(id3);
 
             var nav = new LectureNavigator(lecture.id, 0);
 
             function firstCallback() {
                 var slide = nav.getCurrentSlide();
+                var lectureId = nav.getCurrentLectureId();
                 assert.equal(slide.id, slide1.id, "slides are equal");
+                assert.equal(lectureId, lecture1.id, "lectures are equal");
+
                 nav.removeCallback(firstCallback);
-                nav.addCallback(function() {
+                nav.addCallback(function secondCallback() {
                     var slide = nav.getCurrentSlide();
+                    var lectureId = nav.getCurrentLectureId();
                     assert.equal(slide.id, slide2.id, "slides are equal");
-                    QUnit.start();
+                    assert.equal(lectureId, lecture2.id, "lectures are equal");
+
+                    nav.removeCallback(secondCallback);
+                    nav.addCallback(function() {
+                        var slide = nav.getCurrentSlide();
+                        var lectureId = nav.getCurrentLectureId();
+                        assert.equal(slide.id, slide3.id, "slides are equal");
+                        assert.equal(lectureId, lecture1.id, "lectures are equal");
+                        QUnit.start();
+                    });
+                    nav.goToNextSlide();
                 });
                 nav.goToNextSlide();
             }
