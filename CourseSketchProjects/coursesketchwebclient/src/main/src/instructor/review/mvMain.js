@@ -75,10 +75,8 @@
 	}
 
 	/*
-	 * used to delete the array of experiments inorder to load a new set of sketches based on the problem
+	 * deletes the sketch data in the sketch-area element
 	 *
-	 *@param array
-	 *				{array<experiments>}
 	 */
 
 	function multiviewSketchdelete() {
@@ -86,6 +84,12 @@
 		parent.innerHTML= '';
 	}
 
-	
 
+	var nav = getNav();
+	nav.setAssigment;
+	nav.addCallback(function()[multiviewSketchdelete(),createMvList()]);
+	nav.refresh();
+
+	$(document).ready(function())
+	
 })();
