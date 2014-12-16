@@ -38,6 +38,7 @@ function Timeline () {
 		parent.appendChild(plusButton);
 		plusButton.onclick = function() {
             $(plusButton).empty();
+            $(plusButton).addClass("tall");
 			showTools(plusButton, parent, localScope);
 		};
 	}
@@ -46,6 +47,7 @@ function Timeline () {
 		addTextBoxButton(plusButton, toolArea, localScope);
 		addTtsBoxButton(plusButton, toolArea, localScope);
 		addHighlightButton(plusButton, toolArea, localScope);
+		//addSketchSurfaceButton(plusButton, toolArea, localScope);
 	}
 
 	function addTextBoxButton (plusButton, toolArea, localScope) {
@@ -78,7 +80,7 @@ function Timeline () {
 			toolArea.appendChild(textBoxMarker);
 			textBoxMarker.showBox = textBox;
 			$(plusButton).empty();
-
+			$(plusButton).removeClass("tall");
             textBoxFinishedListener = function(command, event, currentUpdate) {
                 var textBox = document.getElementById(command.commandId);
                 //textBox.id = command.commandId;
@@ -136,6 +138,7 @@ function Timeline () {
 			toolArea.appendChild(ttsBoxMarker);
             ttsBoxMarker.showBox = ttsBox;
 			$(plusButton).empty();
+			$(plusButton).removeClass("tall");
             
             ttsBoxFinishedListener = function(command, event, currentUpdate) {
                 var ttsBox = document.getElementById(command.commandId);
@@ -185,9 +188,25 @@ function Timeline () {
 			highlightMarker.className = "highlightmarker";
 			toolArea.appendChild(highlightMarker);
 			$(plusButton).empty();
+			$(plusButton).removeClass("tall");
 		};
 	}
-
+	
+	function addSketchSurfaceButton(plusButton, toolArea, localScope) {
+		var sketchSurfaceButton = document.createElement("div");
+        sketchSurfaceButton.title = "Sketch Surface";
+		sketchSurfaceButton.className = "sketchsurfacebutton";
+		plusButton.appendChild(sketchSurfaceButton);
+		sketchSurfaceButton.onclick = function(event) {
+			event.stopPropagation();
+			var sketchSurface = document.createElement('sketch-surface');
+			document.body.appendChild(sketchSurface);
+			$(plusButton).empty();
+			$(plusButton).removeClass("tall");
+		};
+		
+		
+	}
 	function undoCreator () {
 		CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
 			if (!isUndefined(this.commandId)) {
