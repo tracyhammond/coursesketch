@@ -3,11 +3,9 @@ package handlers;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
-import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
-import database.user.UserClient;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data.DataResult;
@@ -17,11 +15,6 @@ import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.school.School.SrlUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +67,7 @@ public final class DataUpdateHandler {
             if (userId == null || userId.equals("")) {
                 throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
             }
-            final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
+            final ArrayList<ItemResult> results = new ArrayList<>();
 
             final Institution instance = MongoInstitution.getInstance();
             for (int p = 0; p < request.getItemsList().size(); p++) {

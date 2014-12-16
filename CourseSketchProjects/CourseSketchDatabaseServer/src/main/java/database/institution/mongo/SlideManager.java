@@ -7,7 +7,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
-import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
@@ -19,24 +18,17 @@ import protobuf.srl.tutorial.TutorialOuterClass;
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.ACCESS_DATE;
-import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
-import static database.DatabaseStringConstants.CLOSE_DATE;
-import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.ELEMENT_LIST;
-import static database.DatabaseStringConstants.IDS_IN_LECTURE;
 import static database.DatabaseStringConstants.LECTURE_COLLECTION;
 import static database.DatabaseStringConstants.LECTURE_ID;
 import static database.DatabaseStringConstants.MOD;
-import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SLIDE_BLOB;
 import static database.DatabaseStringConstants.SLIDE_BLOB_TYPE;
 import static database.DatabaseStringConstants.SLIDE_COLLECTION;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
-import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.X_DIMENSION;
 import static database.DatabaseStringConstants.X_POSITION;
 import static database.DatabaseStringConstants.Y_DIMENSION;
@@ -99,6 +91,7 @@ public final class SlideManager {
 
     /**
      * NOTE: This function is only used internally and should not be made public.
+     *
      * @param e
      *         an element that belongs on a lecture
      * @return a BasicDBObject of the element
@@ -126,7 +119,6 @@ public final class SlideManager {
             case EMBEDDEDHTML:
                 query.append(SLIDE_BLOB, e.getEmbeddedHtml().toByteArray());
                 break;
-            // TODO: Add embedded stuff
             case ELEMENTTYPE_NOT_SET:
             default:
                 break;
@@ -213,14 +205,22 @@ public final class SlideManager {
 
     /**
      * updates data from an assignment.
-     * @param authenticator the object that is performing authentication.
-     * @param dbs The database where the lecture slide is being stored.
-     * @param lectureSlideId the id of the lecture slide that is being updated.
-     * @param userId The id of the user that asking to update the lecture slide.
-     * @param lectureSlide The lecture slide that is being updated.
+     *
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the lecture slide is being stored.
+     * @param lectureSlideId
+     *         the id of the lecture slide that is being updated.
+     * @param userId
+     *         The id of the user that asking to update the lecture slide.
+     * @param lectureSlide
+     *         The lecture slide that is being updated.
      * @return true if the lecture slide was updated successfully.
-     * @throws AuthenticationException The user does not have permission to update the lecture slide.
-     * @throws DatabaseAccessException The lecture does not exist.
+     * @throws AuthenticationException
+     *         The user does not have permission to update the lecture slide.
+     * @throws DatabaseAccessException
+     *         The lecture does not exist.
      */
     @SuppressWarnings("PMD.ExcessiveMethodLength")
     public static boolean mongoUpdateLectureSlide(final Authenticator authenticator, final DB dbs, final String lectureSlideId, final String userId,
@@ -228,7 +228,6 @@ public final class SlideManager {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, SLIDE_COLLECTION, new ObjectId(lectureSlideId));
         final DBObject corsor = myDbRef.fetch();
-        DBObject updateObj = null;
         final DBCollection lectureSlides = dbs.getCollection(SLIDE_COLLECTION);
 
         //final ArrayList adminList = (ArrayList<Object>) corsor.get("Admin");
@@ -265,7 +264,7 @@ public final class SlideManager {
      * @param cursor
      *         The database cursor pointing to a specific slide.
      * @throws database.DatabaseAccessException
-     *          passes exception through to createElementFromQuery
+     *         passes exception through to createElementFromQuery
      */
     private static void setSlideData(final Lecturedata.LectureSlide.Builder exactSlide, final DBObject cursor) throws DatabaseAccessException {
         exactSlide.setLectureId((String) cursor.get(LECTURE_ID));
@@ -281,11 +280,12 @@ public final class SlideManager {
 
     /**
      * NOTE: This function is only used internally and should not be made public.
+     *
      * @param query
      *         a BasicDBObject from the mongo database that is a slide
      * @return a Lecturedata.LectureElement of the BasicDBObject that was passed in
      * @throws database.DatabaseAccessException
-     *          a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
+     *         a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
      */
     private static Lecturedata.LectureElement createElementFromQuery(final BasicDBObject query) throws DatabaseAccessException {
         final Lecturedata.LectureElement.Builder element = Lecturedata.LectureElement.newBuilder();

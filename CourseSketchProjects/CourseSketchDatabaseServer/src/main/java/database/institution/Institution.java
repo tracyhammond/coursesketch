@@ -1,8 +1,9 @@
 package database.institution;
 
-import java.util.List;
-
+import com.google.protobuf.ByteString;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message.Request;
@@ -11,10 +12,7 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 
-import com.google.protobuf.ByteString;
-
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import java.util.List;
 
 /**
  * A wrapper around the database that contains institution data.
@@ -236,7 +234,7 @@ public interface Institution {
      *             Assignment.
      * @throws DatabaseAccessException
      *             Thrown if there is a problem inserting the assignment.
-     * @return The Id of the object that was inserted
+     *
      */
     void updateLecture(String userId, Lecture lecture) throws AuthenticationException, DatabaseAccessException;
 
@@ -257,7 +255,7 @@ public interface Institution {
      *             Assignment.
      * @throws DatabaseAccessException
      *             Thrown if there is a problem inserting the assignment.
-     * @return The Id of the object that was inserted
+     *
      */
     void updateLectureSlide(String userId, LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException;
 
