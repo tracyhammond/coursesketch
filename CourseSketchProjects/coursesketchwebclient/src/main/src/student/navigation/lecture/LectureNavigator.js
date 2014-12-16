@@ -44,8 +44,8 @@ function LectureNavigator(lectureId, preferredIndex) {
                 }
             }
         } else {
-            if (idMessage.nav.nextLecture != null && !isUndefined(idMessage.nav.nextLecture)) {
-                loadLecture(nextLectureId, idMessage.nav.nextSlide);
+            if (idMessage.nav.nextLectureId != null && !isUndefined(idMessage.nav.nextLectureId)) {
+                loadLecture(idMessage.nav.nextLectureId, idMessage.nav.nextSlide);
             } else {
                 loadSlide(currentLecture.idList[idMessage.nav.nextSlide].id, idMessage.nav.nextSlide);
             }
