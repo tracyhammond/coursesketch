@@ -68,12 +68,42 @@ function HighlightText() {
                     var newNode = document.createElement('span');
                     newNode.setAttribute('class', 'highlightedText');
                     newNode.setAttribute('style', 'background:' + highlightColor + '; color:' + textColor);
-                    console.log(document.implementation);
+                    var start = range.startContainer.parentNode;
                     console.log(range);
+                    console.log(range.startContainer);
                     newNode.appendChild(range.extractContents());
                     range.insertNode(newNode);
-                    console.log(range.commonAncestorContainer.innerHTML);
-                    console.log(range.commonAncestorContainer.innerText);
+                    
+                    var count = 0; // Used to count how deep in the sibling list the start container is
+                    var sibList = [];
+                    var theId = undefined;
+                    console.log(start);
+                    console.log(start.id);
+                    while (start.id == undefined || start.id == "") {
+                        console.log('entering loop');
+                        // If previous sibling is defined, move to previous sibling and increase count
+                        if (start.previousSibling == null) {
+                            start = start.previousSibling;
+                            count += 1;
+                            console.log(count);
+                        } else {
+                        // If previous sibling is undefined, move up to parentNode, push count, and reset count
+                            start = start.parentNode;
+                            console.log("PUSH");
+                            console.log(count);
+                            sibList.push(count);
+                            count = 0;
+                        }
+                        if (start == null) {
+                            break;
+                        }
+                    }
+                    if (start != null) {
+                        theId = start.id;
+                    }
+                    console.log(sibList);
+                    console.log(theId);
+                    
                 } else {
                     // Message for a selection that is not valid
                     alert("Please make a valid selection.")
