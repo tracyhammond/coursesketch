@@ -11,7 +11,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public class RecognitionClientWebSocket extends ClientWebSocket {
 
     /**

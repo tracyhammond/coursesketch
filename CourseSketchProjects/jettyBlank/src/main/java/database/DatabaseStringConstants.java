@@ -11,6 +11,7 @@ public final class DatabaseStringConstants {
     // Id
     public static final String SELF_ID = "_id";
     public static final String COURSE_ID = "CourseId";
+    public static final String LECTURE_ID = "LectureId";
     public static final String ASSIGNMENT_ID = "AssignmentId";
     public static final String PROBLEM_BANK_ID = "ProblemBankId";
     public static final String COURSE_PROBLEM_ID = "CourseProblemId";
@@ -23,6 +24,8 @@ public final class DatabaseStringConstants {
     public static final String ASSIGNMENT_COLLECTION = "Assignments";
     public static final String PROBLEM_BANK_COLLECTION = "ProblemBank";
     public static final String COURSE_PROBLEM_COLLECTION = "Problems";
+    public static final String LECTURE_COLLECTION = "Lectures";
+    public static final String SLIDE_COLLECTION = "Slides";
     // also contains groups for admins and mods
     public static final String USER_GROUP_COLLECTION = "UserGroups";
     public static final String USER_COLLECTION = "Users";
@@ -65,6 +68,7 @@ public final class DatabaseStringConstants {
     public static final String COURSE_SEMESTER = "Semester";
     public static final String COURSE_ACCESS = "Access";
     public static final String ASSIGNMENT_LIST = "AssignmentList";
+    public static final String LECTURE_LIST = "LectureList";
 
     // assignment specific
     public static final String ASSIGNMENT_TYPE = "AssignmentType";
@@ -130,4 +134,18 @@ public final class DatabaseStringConstants {
 
     // mongo comands
     public static final String SET_COMMAND = "$set";
+    public static final String ADD_SET_COMMAND = "$addToSet";
+
+    // lecture specific
+    public static final String SLIDES = "Slides";
+    public static final String IS_SLIDE = "isSlide";
+    public static final String IS_UNLOCKED = "isLocked";
+    public static final String ELEMENT_LIST = "Elements";
+    public static final String IDS_IN_LECTURE = "idsInLecture";
+    public static final String X_POSITION = "X";
+    public static final String Y_POSITION = "Y";
+    public static final String X_DIMENSION = "XDIM";
+    public static final String Y_DIMENSION = "YDIM";
+    public static final String SLIDE_BLOB_TYPE = "TYPE";
+    public static final String SLIDE_BLOB = "BLOB";
 }
