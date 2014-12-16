@@ -440,12 +440,12 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public void updateLecture(String userId, Lecture lecture) throws AuthenticationException, DatabaseAccessException {
+    public void updateLecture(final String userId, final Lecture lecture) throws AuthenticationException, DatabaseAccessException {
         LectureManager.mongoUpdateLecture(getInstance().auth, getInstance().database, lecture.getId(), userId, lecture);
     }
 
     @Override
-    public void updateLectureSlide(String userId, LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
+    public void updateLectureSlide(final String userId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
         SlideManager.mongoUpdateLectureSlide(getInstance().auth, getInstance().database, lectureSlide.getId(), userId, lectureSlide);
     }
 

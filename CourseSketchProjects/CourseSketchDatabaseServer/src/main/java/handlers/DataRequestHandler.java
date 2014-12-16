@@ -6,7 +6,6 @@ import java.util.List;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 
-import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ItemQuery;
