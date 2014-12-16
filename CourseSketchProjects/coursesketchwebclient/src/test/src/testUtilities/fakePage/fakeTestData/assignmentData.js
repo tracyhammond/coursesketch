@@ -9,6 +9,8 @@
     var assignment5 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
     var assignment6 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
     var assignment7 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+    var assignment8 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+    var assignment9 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
 
     assignment1.courseId = "1";
     assignment1.id = "1";
