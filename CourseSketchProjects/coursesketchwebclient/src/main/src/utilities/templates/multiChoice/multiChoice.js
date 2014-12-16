@@ -1,3 +1,6 @@
+/**
+ * Represents a custom multi-choice element that can have data saved/loaded to/from protobuf.
+ */
 function MultiChoice() {
     var correctId = undefined;
 

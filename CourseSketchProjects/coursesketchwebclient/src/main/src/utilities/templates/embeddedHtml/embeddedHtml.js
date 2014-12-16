@@ -1,3 +1,6 @@
+/**
+ * Represents a custom embedded HTML element that can have data saved/loaded to/from protobuf.
+ */
 function EmbeddedHtml() {
     /**
      * @param templateClone {node} is a clone of the custom HTML Element for the text box

@@ -1,3 +1,6 @@
+/**
+ * Represents a custom question element that can have data saved/loaded to/from protobuf.
+ */
 function Question() {
     this.lectures = [];
 

@@ -1,3 +1,6 @@
+/**
+ * Represents a custom image element that can have data saved/loaded to/from protobuf.
+ */
 function ImageBox() {
     /**
      * @param templateClone {node} is a clone of the custom HTML Element for the text box
