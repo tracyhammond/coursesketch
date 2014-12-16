@@ -17,6 +17,7 @@ public final class DatabaseStringConstants {
     public static final String SOLUTION_ID = "SolutionId";
     public static final String EXPERIMENT_ID = "ExperimentId";
     public static final String USER_ID = "UserId";
+    public static final String SCHOOLITEMID = "SchoolItemID";
 
     // collections
     public static final String COURSE_COLLECTION = "Courses";
@@ -60,6 +61,7 @@ public final class DatabaseStringConstants {
     // grades
     public static final String GRADE_WEIGHT = "GradeWeight";
     public static final String GRADE = "Grade";
+    public static final String COMMENTS = "Comments";
 
     // course specific
     public static final String COURSE_SEMESTER = "Semester";
@@ -130,4 +132,7 @@ public final class DatabaseStringConstants {
 
     // mongo comands
     public static final String SET_COMMAND = "$set";
+
+    // state and grade specific
+    public static final String SCHOOLITEMTYPE = "SchoolItemType";
 }
