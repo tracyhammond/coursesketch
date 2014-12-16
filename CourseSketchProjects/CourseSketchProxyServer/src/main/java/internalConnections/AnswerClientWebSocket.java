@@ -1,23 +1,21 @@
 package internalconnections;
 
-import java.net.URI;
-import java.nio.ByteBuffer;
-
 import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
-
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
 import protobuf.srl.request.Message.Request;
 import utilities.ConnectionException;
 import utilities.TimeManager;
+
+import java.net.URI;
+import java.nio.ByteBuffer;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class AnswerClientWebSocket extends ClientWebSocket {
 
     /**

@@ -1,0 +1,45 @@
+<html>
+<body>
+<template id="navigationPanel">
+    <style>
+        @import "/src/common/navigation/problem/navigationPanel.css";
+    </style>
+    <!--
+    |---------------------------------|
+    | |-|	|------------------------||
+    | |#|	|Text text info info(PIC)||
+    | |-|	|                        ||
+    |<- ->	|------------------------||
+    |---------------------------------|
+     -->
+    <div id="panelWrapper" class="panelWrapper" style="width:100%;">
+        <div id="navPanel">
+            <div class="innerShadow">
+                <!--
+                |--------|
+                | prob # |
+                | out of |
+                |--------|
+                 <== ==>
+                 -->
+                <div id="selectionBox">
+                    <!-- TODO: this box should have the problem state showing-->
+                    <h1 id="selectionBoxNumber">1</h1>
+                    <span id="problemState"></span>
+                    <p>out of <span id="totalNumber">1</span></p>
+                </div>
+                <div class="arrowBox">
+                    <button id="buttonPrev"><--</button>
+                    <button id="buttonNext">--></button>
+                </div>
+            </div>
+        </div>
+        <p id="problemPanel">
+            Your browser is having some problems or the text has not loaded yet, for the mean time please try viewing this in incognito mode in
+            Chrome.
+        </p>
+    </div>
+    <div class="bottomShadow" style="height:5px; width:100%;"></div>
+</template>
+</body>
+</html>

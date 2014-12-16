@@ -92,11 +92,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     function getAssignmentLocal(assignmentId, assignmentCallback) {
         database.getFromAssignments(assignmentId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
-                assignmentCallback(undefined);
+                assignmentCallback(new DatabaseException("The result is undefined", "getting Assignment: " + assignmentId));
             } else if (result.data == nonExistantValue) {
                 // the server holds this special value then it means the server
                 // does not have the value
-                assignmentCallback(nonExistantValue);
+                assignmentCallback(new DatabaseException("The database does not hold this value", "getting Assignment: " + assignmentId));
             } else {
                 // gets the data from the database and calls the callback
                 try {
@@ -104,7 +104,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                     stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().decode(bytes), assignmentCallback);
                 } catch (exception) {
                     console.error(exception);
-                    assignmentCallback(undefined);
+                    assignmentCallback(new DatabaseException("The result is undefined", "getting Assignment: " + assignmentId));
                 }
             }
         });
@@ -124,11 +124,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *            {Function} called when the complete list of assignments are
      *            grabbed.
      */
-    function getAssignments(userAssignmentId, assignmentCallbackPartial, assignmentCallbackComplete) {
+    function getAssignments(assignmentIdList, assignmentCallbackPartial, assignmentCallbackComplete) {
         /*
          * So what happens here might be a bit confusing to some new people so
          * let me explain it. #1 there is a loop that goes through every item in
-         * the userAssignmentId (which is a list of assignment ids)
+         * the assignmentIdList (which is a list of assignment ids)
          *
          * #2 there is a function declaration inside the loop the reason for
          * this is so that the assignmentId is not overwritten when the callback
@@ -150,20 +150,20 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
          */
 
         // standard preventative checking
-        if (isUndefined(userAssignmentId) || userAssignmentId == null || userAssignmentId.length == 0) {
-            assignmentCallbackPartial(nonExistantValue);
+        if (isUndefined(assignmentIdList) || assignmentIdList == null || assignmentIdList.length == 0) {
+            assignmentCallbackPartial(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentIdList));
             if (assignmentCallbackComplete) {
-                assignmentCallbackComplete(nonExistantValue);
+                assignmentCallbackComplete(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentIdList));
             }
         }
 
-        var barrier = userAssignmentId.length;
+        var barrier = assignmentIdList.length;
         var assignmentList = [];
         var leftOverId = [];
 
         // create local assignment list so everything appears really fast!
-        for (var i = 0; i < userAssignmentId.length; i++) {
-            var assignmentIdLoop = userAssignmentId[i];
+        for (var i = 0; i < assignmentIdList.length; i++) {
+            var assignmentIdLoop = assignmentIdList[i];
             // the purpose of this function is purely to scope the assignmentId
             // so that it changes
             (function(assignmentId) {
@@ -195,7 +195,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                                         stateCallbackList(assignmentList, assignmentCallbackComplete);
                                         advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
                                                 CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
-                                        userAssignmentId = null;
+                                        assignmentIdList = null;
                                     });
                             // creates a request that is then sent to the server
                             sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, leftOverId);

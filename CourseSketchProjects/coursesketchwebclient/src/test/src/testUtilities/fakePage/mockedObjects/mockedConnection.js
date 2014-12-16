@@ -1,5 +1,5 @@
 (function() {
-    var connection = new Connection("http://localHost:8080", false, false);
+    var connection = new Connection("localhost:8888", false, false);
     connection.userId = "fakseUser1";
     connection.setOnCloseListener(function(){});
     connection.reconnect();
