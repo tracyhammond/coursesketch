@@ -156,8 +156,8 @@
             s.appendChild(desc);
             s.setEditCallback(function(type, oldV, newV) {
                 assert.equal(type, "name", "edit function called with correct type");
-                assert.equal(oldV, oldValue, "edit function called with correct old value");
-                assert.equal(newV, oldValue, "edit function called with correct old value");
+                assert.equal(oldV.get(type), oldValue, "edit function called with correct old value");
+                assert.equal(newV.get(type), oldValue, "edit function called with correct old value");
                 assert.ok(true, "edit function called");
             });
             s.initializeElement(template.cloneNode(true));
@@ -187,8 +187,9 @@
             s.appendChild(desc);
             s.setEditCallback(function(type, oldV, newV) {
                 assert.equal(type, "name", "edit function called with correct type");
-                assert.equal(oldV, oldValue, "edit function called with correct old value");
-                assert.equal(newV, newValue, "edit function called with correct new value");
+                console.log(oldV);
+                assert.equal(oldV.get(type), oldValue, "edit function called with correct old value");
+                assert.equal(newV.get(type), newValue, "edit function called with correct new value");
                 assert.ok(true, "edit function called");
             });
             s.initializeElement(template.cloneNode(true));
