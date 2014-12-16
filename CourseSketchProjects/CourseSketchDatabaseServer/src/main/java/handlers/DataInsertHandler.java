@@ -11,6 +11,7 @@ import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
+import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
@@ -141,6 +142,12 @@ public final class DataInsertHandler {
                             results.add(buildResult(resultId + ID_SEPARATOR + lecture.getId(), itemSet.getQuery()));
                         }
                         break;
+                        case LECTURESLIDE: {
+                            final LectureSlide lectureSlide = LectureSlide.parseFrom(itemSet.getData());
+                            final String resultId = instance.insertLectureSlide(userId, lectureSlide);
+                            results.add(buildResult(resultId + ID_SEPARATOR + lectureSlide.getId(), itemSet.getQuery()));
+                        }
+                        break;
                         default:
                             break;
                     }
@@ -226,7 +233,7 @@ public final class DataInsertHandler {
         }
 
         final Request.Builder dataReq = Request.newBuilder();
-        dataReq.setRequestType(MessageType.DATA_REQUEST);
+        dataReq.setRequestType(MessageType.DATA_INSERT);
         dataReq.setSessionInfo(req.getSessionInfo());
         dataReq.setResponseText(message);
         if (dataResult != null) {

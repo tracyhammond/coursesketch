@@ -1,4 +1,5 @@
 import "school.proto";
+import "tutorial.proto";
 package protobuf.srl.lecturedata;
 
 message SrlLectureDataHolder {
@@ -44,19 +45,20 @@ message LectureElement {
 	optional int32 y_dimension = 6;
 
 	oneof ElementType {
-		TextBox textBox = 7;
-		Image image = 8;
-		SketchArea sketchArea = 9;
-		SrlQuestion question = 10;
-	}
+	protobuf.srl.tutorial.ActionCreateTextBox textBox = 7;
+	Image image = 8;
+	SketchArea sketchArea = 9;
+	SrlQuestion question = 10;
+	EmbeddedHtml embeddedHtml = 11;
+}
 }
 
-message TextBox {
-	optional string text = 7;
+message EmbeddedHtml {
+	optional string embeddedHtml = 1;
 }
 
 message Image {
-	optional bytes image = 8;
+	optional string src = 8;
 	optional float orientation = 9;
 }
 
@@ -66,7 +68,7 @@ message SketchArea {
 }
 
 message LectureNavigator {
-	optional int32 nextLecture = 1;
+	optional string nextLectureId = 1;
 	optional int32 nextSlide = 2;
 }
 
@@ -77,9 +79,9 @@ message SrlQuestion {
 	repeated LectureNavigator navs = 4;
 
 	oneof QuestionOption {
-		MultipleChoice multipleChoice = 5;
-		SketchQuestion sketchQuestion = 6;
-	}
+	MultipleChoice multipleChoice = 5;
+	SketchQuestion sketchQuestion = 6;
+}
 }
 
 message MultipleChoice {

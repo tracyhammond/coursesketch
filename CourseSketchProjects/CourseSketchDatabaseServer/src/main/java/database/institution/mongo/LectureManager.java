@@ -26,13 +26,14 @@ import static database.DatabaseStringConstants.CLOSE_DATE;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.DESCRIPTION;
+import static database.DatabaseStringConstants.IDS_IN_LECTURE;
 import static database.DatabaseStringConstants.IS_SLIDE;
 import static database.DatabaseStringConstants.IS_UNLOCKED;
 import static database.DatabaseStringConstants.LECTURE_COLLECTION;
 import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.NAME;
-import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SLIDES;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
@@ -211,7 +212,7 @@ public final class LectureManager {
         // if you are a user, the lecture must be open to view the insides
         if (isAdmin || isMod || (isUsers
                 && Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate()))) {
-            if (corsor.get(PROBLEM_LIST) != null) {
+            if (corsor.get(SLIDES) != null) {
                 for (BasicDBObject obj : (List<BasicDBObject>) corsor.get(SLIDES)) {
                     final Lecturedata.IdsInLecture.Builder builder = Lecturedata.IdsInLecture.newBuilder();
                     builder.setId((String) obj.get(SELF_ID));
@@ -278,6 +279,91 @@ public final class LectureManager {
         } else {
             exactLecture.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) closeDate).longValue()));
         }
+    }
+
+    /**
+     * updates data from an assignment.
+     * @param authenticator the object that is performing authentication.
+     * @param dbs The database where the lecture is being stored.
+     * @param lectureId the id of the lecture that is being updated.
+     * @param userId The id of the user that asking to insert the assignment.
+     * @param lecture The lecture that is being inserted.
+     * @return true if the lecture was updated successfully.
+     * @throws AuthenticationException The user does not have permission to update the lecture.
+     * @throws DatabaseAccessException The lecture does not exist.
+     */
+    @SuppressWarnings("PMD.ExcessiveMethodLength")
+    public static boolean mongoUpdateLecture(final Authenticator authenticator, final DB dbs, final String lectureId, final String userId,
+            final Lecture lecture) throws AuthenticationException, DatabaseAccessException {
+        boolean update = false;
+        final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
+        final DBObject corsor = myDbRef.fetch();
+        DBObject updateObj = null;
+        final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
+
+        final ArrayList adminList = (ArrayList<Object>) corsor.get("Admin");
+        final ArrayList modList = (ArrayList<Object>) corsor.get("Mod");
+        boolean isAdmin, isMod;
+        isAdmin = authenticator.checkAuthentication(userId, adminList);
+        isMod = authenticator.checkAuthentication(userId, modList);
+
+        if (!isAdmin && !isMod) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+        final BasicDBObject updated = new BasicDBObject();
+        if (isAdmin || isMod) {
+            if (lecture.hasName()) {
+                updateObj = new BasicDBObject(NAME, lecture.getName());
+                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                update = true;
+            }
+            if (lecture.hasDescription()) {
+                updateObj = new BasicDBObject(DESCRIPTION, lecture.getDescription());
+                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                update = true;
+            }
+            if (lecture.getIdListCount() > 0) {
+                updateObj = new BasicDBObject(IDS_IN_LECTURE, lecture.getIdListList());
+                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                update = true;
+            }
+            if (lecture.hasAccessDate()) {
+                updateObj = new BasicDBObject(ACCESS_DATE, lecture.getAccessDate().getMillisecond());
+                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                update = true;
+            }
+            if (lecture.hasCloseDate()) {
+                updateObj = new BasicDBObject(CLOSE_DATE, lecture.getCloseDate().getMillisecond());
+                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                update = true;
+            }
+
+            // Optimization: have something to do with pulling values of an
+            // array and pushing values to an array
+            if (lecture.hasAccessPermission()) {
+                final School.SrlPermission permissions = lecture.getAccessPermission();
+                if (isAdmin) {
+                    // ONLY ADMIN CAN CHANGE ADMIN OR MOD
+                    if (permissions.getAdminPermissionCount() > 0) {
+                        updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+                        updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
+                        lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                    }
+                    if (permissions.getModeratorPermissionCount() > 0) {
+                        updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
+                        lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                    }
+                }
+                if (permissions.getUserPermissionCount() > 0) {
+                    updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
+                    lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                }
+            }
+        }
+        if (update) {
+            UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), lectureId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
+        }
+        return true;
     }
 
     /**

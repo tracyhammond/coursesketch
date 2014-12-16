@@ -9,9 +9,11 @@
 <link id="questionTemplateImport" rel="import" href="/src/utilities/templates/question/questionInclude.html" />
 <link id="multiChoiceTemplateImport" rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html" />
 <link rel="import" href="/src/sketching/sketchInclude.html" />
+<link rel="import" href="/test/testUtilities/fakePage/fakePageInclude.html" />
+<link rel="import" href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
 
 <!-- file being tested. -->
-<script src="/src/utilities/templates/question/question.js" data-cover></script>
+<script src="/src/utilities/templates/question/question.js" data-cover data-fake></script>
 </head>
 <body>
 	<div id="qunit"></div>
@@ -118,6 +120,7 @@
             }, "Throws an error message");
         });
 
+        // TODO: Add assertions
         test("load question element", function(assert) {
             expect(0);
             var question = document.createElement("question-test");
@@ -125,8 +128,30 @@
             var questionProto = CourseSketch.PROTOBUF_UTIL.SrlQuestion();
             questionProto.id = generateUUID();
             questionProto.setQuestionText("How awesome are CourseSketch Lectures?");
-            question.loadData(questionProto);
+            var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            correctNav.nextLectureId = "1";
+            correctNav.nextSlide = 0;
+            incorrectNav.nextLectureId = "2";
+            incorrectNav.nextSlide = 1;
+            questionProto.navs[0] = correctNav;
+            questionProto.navs[1] = incorrectNav;
+            question.loadLectures(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]);
             question.loadData();
+            setTimeout(function() {
+                question.loadData(questionProto);
+            }, 100);
+        });
+
+        // TODO: Add assertions
+        test("load lectures", function(assert) {
+            expect(0);
+            var question = document.createElement("question-test");
+            document.querySelector("#question").appendChild(question);
+            question.loadLectures(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]);
+            setTimeout(function() {
+                question.saveData();
+            }, 100);
         });
     </script>
 </body>

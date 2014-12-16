@@ -31,7 +31,11 @@
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
             CourseSketch.dataManager.addState("currentLecture",lecture);
-            CourseSketch.redirectContent("/src/common/lecture/lecturePage.html", "Edit Lecture");
+            if (CourseSketch.connection.isInstructor) {
+                CourseSketch.redirectContent("/src/instructor/lecture/lecturePage.html", "Edit Lecture");
+            } else {
+                CourseSketch.redirectContent("/src/student/lecture/lecturePage.html", "View Lecture");
+            }
         }
 
         /**
@@ -49,12 +53,14 @@
             schoolItemBuilder.setList(lectureList)
                 .setShowDate(false)
                 .setEditCallback(CourseSketch.lectureSelection.lectureEndEdit)
-                .setInstructorCard(true)
+                .setInstructorCard(CourseSketch.connection.isInstructor)
                 .setBoxClickFunction(CourseSketch.lectureSelection.lectureSelected)
                 .build(document.querySelector("#col2>.content"));
-            $("#col2>.content").prepend(add);
-            $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
-            $("#add").addClass("show");
+            if (CourseSketch.connection.isInstructor) {
+                $("#col2>.content").prepend(add);
+                $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
+                $("#add").addClass("show");
+            }
         };
 
         /**
@@ -93,7 +99,7 @@
             lecture.id = generateUUID();
             lecture.description = "N/A";
             var insertCallback = function() {
-                CourseSketch.dataManager.getCourse(currentCourse, 
+                CourseSketch.dataManager.getCourse(currentCourse,
                     function(course) {
                         CourseSketch.dataManager.getCourseLectures(
                             course.lectureList,
