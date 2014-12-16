@@ -17,7 +17,7 @@ function MultiChoice() {
      */
     this.setCorrectAnswer = function(event, answer) {
         var answerChoices = this.shadowRoot.querySelectorAll(".answer-choice");
-        for(var i = 0; i < answerChoices.length; ++i) {
+        for (var i = 0; i < answerChoices.length; ++i) {
             answerChoices[i].querySelector(".correct").textContent = "";
         }
         answer.querySelector(".correct").textContent = "✔";
@@ -33,7 +33,7 @@ function MultiChoice() {
         var answer = document.createElement("div");
         var lastAnswer = this.shadowRoot.querySelector("#answer-choices").lastChild;
         answer.className = "answer-choice";
-        if(isUndefined(lastAnswer) || lastAnswer.className !== "answer-choice") {
+        if (isUndefined(lastAnswer) || lastAnswer.className !== "answer-choice") {
             answer.id = "1";
         } else {
             answer.id = parseInt(lastAnswer.id) + 1;
@@ -114,7 +114,7 @@ function MultiChoice() {
         this.createdCommand = this.command;
         this.id = this.command.commandId;
         var callback = this.getFinishedCallback();
-        if(!isUndefined(callback)) {
+        if (!isUndefined(callback)) {
             callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
         }
         return mcProto;
@@ -129,7 +129,7 @@ function MultiChoice() {
         if (isUndefined(shadowRoot) || isUndefined(mcProto)) {
             return;
         }
-        for(var i = 0; i < mcProto.answerChoices.length; ++i) {
+        for (var i = 0; i < mcProto.answerChoices.length; ++i) {
             this.addAnswer();
             var newAnswerId = "" + (i + 1);
             var answer = this.shadowRoot.getElementById(newAnswerId);

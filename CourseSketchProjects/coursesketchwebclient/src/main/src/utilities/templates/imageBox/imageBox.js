@@ -27,7 +27,7 @@ function ImageBox() {
         this.createdCommand = this.command;
         this.id = this.command.commandId;
         var callback = this.getFinishedCallback();
-        if(!isUndefined(callback)) {
+        if (!isUndefined(callback)) {
             callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
         }
         return imageProto;

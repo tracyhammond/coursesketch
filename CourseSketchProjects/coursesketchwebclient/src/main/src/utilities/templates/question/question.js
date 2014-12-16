@@ -42,7 +42,7 @@ function Question() {
             shadowRoot.getElementById("correct-lecture").dataset = [];
             shadowRoot.getElementById("incorrect-lecture").dataset = [];
             localScope.lectures = [];
-            for(var i = 0; i < lectures.length; ++i) {
+            for (var i = 0; i < lectures.length; ++i) {
                 var option = document.createElement("option");
                 option.textContent = lectures[i].name;
                 option.value = lectures[i].id;
@@ -52,7 +52,7 @@ function Question() {
                 shadowRoot.getElementById("correct-lecture").appendChild(option);
                 shadowRoot.getElementById("incorrect-lecture").appendChild(option.cloneNode(true));
             }
-            if(localScope.lectures.length > 0) {
+            if (localScope.lectures.length > 0) {
                 localScope.loadSlides(localScope.lectures[0].idList, shadowRoot.getElementById("correct-slide"));
                 localScope.loadSlides(localScope.lectures[0].idList, shadowRoot.getElementById("incorrect-slide"));
             }
@@ -103,10 +103,10 @@ function Question() {
         questionProto.setQuestionText(this.shadowRoot.querySelector('#text').value);
         var nodes = this.shadowRoot.querySelector('content').getDistributedNodes();
         // We should really only ever have one node here
-        if(nodes.length > 0) {
-            if(nodes[0] instanceof MultiChoice) {
+        if (nodes.length > 0) {
+            if (nodes[0] instanceof MultiChoice) {
                 questionProto.multipleChoice = nodes[0].saveData();
-            } else if(nodes[0] instanceof SketchSurface) {
+            } else if (nodes[0] instanceof SketchSurface) {
                 // TODO: Need to support sketch questions
                 // questionProto.ourThing = nodes[0].saveData();
                 console.log("Saving sketch questions is not yet supported.");
@@ -121,13 +121,13 @@ function Question() {
         var correctSlide = shadowRoot.getElementById("correct-slide");
         var incorrectLecture = shadowRoot.getElementById("incorrect-lecture");
         var incorrectSlide = shadowRoot.getElementById("incorrect-slide");
-        if(!isUndefined(correctLecture) && !isUndefined(correctSlide) && !isUndefined(incorrectLecture) && !isUndefined(incorrectSlide)
+        if (!isUndefined(correctLecture) && !isUndefined(correctSlide) && !isUndefined(incorrectLecture) && !isUndefined(incorrectSlide)
                 && correctLecture != null && correctSlide != null && incorrectLecture != null && incorrectSlide != null) {
             var correctLectureId = correctLecture.value;
             var correctSlideStr = correctSlide.value;
             var incorrectLectureId = incorrectLecture.value;
             var incorrectSlideStr = incorrectSlide.value;
-            if(!isUndefined(correctLectureId) && !isUndefined(correctSlideStr) && !isUndefined(incorrectLectureId) && !isUndefined(incorrectSlideStr)
+            if (!isUndefined(correctLectureId) && !isUndefined(correctSlideStr) && !isUndefined(incorrectLectureId) && !isUndefined(incorrectSlideStr)
                     && correctLectureId !== "" && correctSlideStr !== "" && incorrectLectureId !== "" && incorrectSlideStr !== "") {
                 var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
                 var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
