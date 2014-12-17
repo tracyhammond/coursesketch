@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-<base href="../../">
-	<title>Course Management</title>
-  	<link rel="stylesheet" href="/css/utility/columns.css">
-	<link rel="stylesheet" href="/css/courseSketch2.css">
-	<!-- school item -->
-	<link rel="import" href="/src/utilities/templates/schoolItem/schoolItemInclude.html" />
-	<!-- Jquery library -->
+	<title>Class Search</title>
+	<!-- PUT THIS AT TOP OF PAGE -->
 	<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html" />
-	<!-- ChildScript -->
 	<script type="text/javascript" src="/src/utilities/functions/childScript.js"
 			data-namespace="classSearch"></script>
+	<!-- PUT THIS AT TOP OF PAGE -->
+	<link rel="stylesheet" href="/css/utility/columns.css">
+	<link rel="stylesheet" href="/css/courseSketch2.css">
+
+	<!-- protobuf -->
+	<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+	<!-- school item -->
+	<link rel="import" href="/src/utilities/templates/schoolItem/schoolItemInclude.html" />
+	<link rel="import"
+		  href="/src/utilities/templates/loading/loadingInclude.html">
+
+	<!-- ChildScript -->
+
+	<script src="classSearch.js"></script>
 	<style>
 	.centerOfScreen {
 	  position: fixed;
@@ -25,20 +33,18 @@
 
 <body>
 <div class = "wide_centre">
-   	<div style="width:100%; float:left;">
-    	<div class="col-group2">
-    		<div>
-    			<div id="class_list_column1" class="school_div">
-    			</div>
-    		</div>
-    		<div>
-    			<div id="class_list_column2" class="school_div">
-    			</div>
-    		</div>
-    	</div>
+   	<div class="columnContainer"style="width:100%; float:left;">
+		<div>
+			<div id="class_list_column1" class="school_div">
+			</div>
+		</div>
+		<div>
+			<div id="class_list_column2" class="school_div">
+			</div>
+		</div>
    	</div>
    	<div id = "loadingIcon" class = "centerOfScreen">
-   		<img src="images/loading/7EB5D6_large_loader.gif">
+   		<img src="/images/loading/7EB5D6_large_loader.gif">
    	</div>
  </div>
  <div id="registerButton">

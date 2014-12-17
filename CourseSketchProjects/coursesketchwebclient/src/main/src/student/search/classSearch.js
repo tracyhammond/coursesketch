@@ -1,30 +1,29 @@
 (function() {
-$(document).ready(function() {
+    /**
+     * Once everything is loaded we will ask to get all public courses.
+     */
+    $(document).ready(function() {
         var request = CourseSketch.PROTOBUF_UTIL.DataRequest();
         var item = CourseSketch.PROTOBUF_UTIL.ItemRequest();
         item.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH;
         request.items = [item];
-        CourseSketch.connection.sendRequest(parent.connection.createRequestFromData(request, CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST));
+        CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
+            CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST));
     });
     var localDoc = document;
     var courseList1 = new Array();
     var courseList2 = new Array();
     var courseRightSide = {};
     var courseProtoMap = {};
-    var schoolSet = SchoolBuilder.SrlSchool;
-    var schoolItemBuilder = new SchoolItemBuilder();
-    var setTimeVar;
-    (function() {
-        schoolItemBuilder.setWidth('large').centerItem(true);
-        schoolItemBuilder.showImage = false; // till we have images actually working!
-        schoolItemBuilder.setBoxClickFunction(courseClickerFunction);
-    })();
 
-    parent.dataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.COURSE_SEARCH, function(evt, item) {
-        var school = schoolSet.decode(item.data);
+    var setTimeVar;
+
+    CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
+            CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH, function(evt, item) {
+        var school = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data, CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass());
         var courseList = school.courses;
         var idList = [];
-        for(var i = 0; i < courseList.length; i++) {
+        for (var i = 0; i < courseList.length; i++) {
             courseProtoMap[courseList[i].id] = courseList[i];
             if (i % 2 == 0) {
                 courseList1.push(courseList[i]);
@@ -34,22 +33,28 @@ $(document).ready(function() {
                 courseRightSide[courseList[i].id] = true;
             }
         }
-        schoolItemBuilder.setList(courseList1).build("class_list_column1");
-        schoolItemBuilder.setList(courseList2).build("class_list_column2");
+        var schoolItemBuilder = new SchoolItemBuilder();
+            schoolItemBuilder.setList(courseList1).build("class_list_column1");
+        if (courseList2.length > 0) {
+            schoolItemBuilder.setList(courseList2).build("class_list_column2");
+        }
+        schoolItemBuilder.showImage = false; // till we have images actually working!
+        schoolItemBuilder.setBoxClickFunction(CourseSketch.classSearch.courseClickerFunction);
         localDoc.getElementById("loadingIcon").style.display="none";
     });
 
-    parent.dataListener.setErrorListener(function(msg){
+    CourseSketch.dataListener.setErrorListener(function(msg){
         localDoc.getElementById("loadingIcon").innerHTML = '<h1>error loading data</h1> <p>' + msg.getResponseText() + '</p>';
         clearTimeout(setTimeVar);
     });
 
-    parent.dataListener.setListener(Request.MessageType.DATA_REQUEST, QueryBuilder.ItemQuery.REGISTER, function(evt, item) {
+    CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
+            CourseSketch.PROTOBUF_UTIL.ItemQuery.REGISTER, function(evt, item) {
         alert("User is already registered for this course");
         clearTimeout(setTimeVar);
     });
 
-    function courseClickerFunction(course) {
+    CourseSketch.classSearch.courseClickerFunction = function(course) {
         var id = course.id;
         var element = localDoc.getElementById(id);
         var width = element.offsetWidth/2;
@@ -64,7 +69,7 @@ $(document).ready(function() {
             var button = localDoc.createElement('button');
             button.setAttribute("id", "button"+id);
             button.onclick = function() {
-                registerClass(id);
+                CourseSketch.classSearch.registerClass(id);
                 setTimeVar = setTimeout(function () { alert("Your have successfully registered") }, 3000);
             }
             button.textContent = "Register";
@@ -90,17 +95,21 @@ $(document).ready(function() {
             });
         }
     }
-    function registerClass(id) {
+
+    /**
+     * Allows a user to register for a class.
+     */
+    CourseSketch.classSearch.registerClass = function(id) {
         var request = new QueryBuilder.DataSend();
         var item = new QueryBuilder.ItemSend();
         item.query = QueryBuilder.ItemQuery.REGISTER;
         item.data = courseProtoMap[id].toArrayBuffer();
         request.items = [item];
-        parent.connection.sendRequest(parent.connection.createRequestFromData(request, Request.MessageType.DATA_INSERT));
+        CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request, Request.MessageType.DATA_INSERT));
         $("#" + id).animate({
             marginLeft: "0px",
             }, 300, function () {
                 localDoc.getElementById("registerButton").removeChild(localDoc.getElementById("button" + id));
         });
-}
-});
+    };
+})();
