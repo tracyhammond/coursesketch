@@ -14,29 +14,31 @@ function TimelineMarker() {
         addCross(shadowRoot.querySelector("#picture"), this);
 
     };
-
+	/**
+	 * straight through the timeline, the user is able to delete elements that were created
+	 */
     function addCross(element, marker) {
-		element.onclick = function() {
-			$(element).addClass('cross');
-			var oldClickFunction = element.onclick;
-			var tim = setTimeout(function () { 
-				$(element).removeClass('cross'); 
-				element.onclick = oldClickFunction;
-			}, 5000);
-			element.onclick = function() {
-				clearTimeout(tim);
-				marker.parentNode.removeChild(marker);
-				marker.removeFunction();
-			};
-		};
-	}
-	
-	this.setRemoveFunction = function(remove) {
-		this.removeFunction = remove;
-	}
-	this.setPreviewText = function (text) {
-		this.shadowRoot.querySelector('#preview').textContent = text.substring(0, 10)+ (text.length > 10 ? "..." : "");
-	}
+        element.onclick = function() {
+            $(element).addClass('cross');
+            var oldClickFunction = element.onclick;
+            var tim = setTimeout(function () { 
+                $(element).removeClass('cross'); 
+                element.onclick = oldClickFunction;
+            }, 5000);
+            element.onclick = function() {
+                clearTimeout(tim);
+                marker.parentNode.removeChild(marker);
+                marker.removeFunction();
+            };
+        };
+    }
+    
+    this.setRemoveFunction = function(remove) {
+        this.removeFunction = remove;
+    }
+    this.setPreviewText = function (text) {
+        this.shadowRoot.querySelector('#preview').textContent = text.substring(0, 10)+ (text.length > 10 ? "..." : "");
+    }
 }
 TimelineMarker.prototype = Object.create(HTMLElement.prototype);
 TimelineMarker.prototype.showBox = undefined;
