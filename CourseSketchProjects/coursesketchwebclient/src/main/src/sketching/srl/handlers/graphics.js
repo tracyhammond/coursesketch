@@ -26,7 +26,7 @@ SRL_Object.prototype.draw = function draw(graphics, forcedColor) {
  * A color is given to a stroke as a HEX string
  */
 SRL_Object.prototype.color = false;
-	
+
 
 /**
  * Must be a valid hex string.
@@ -59,6 +59,7 @@ SRL_Object.prototype.setHighlightColorHex = function(inputHex) {
 SRL_Object.prototype.getHighlightColor = function() {
 	return this.highlightColor;
 };
+
 /**
  * Draws the {@link SRL_Stroke}.
  *
@@ -77,7 +78,7 @@ SRL_Stroke.prototype.drawStroke = function drawStroke(graphics, forcedColor) {
 	if (this.getIsHighlighted()) {
 		graphics.strokeStyle = this.getHighlightColor();
 	}
-	
+
 
 	if (this.strokeWidth) {
 		graphics.lineWidth = strokeWidth;

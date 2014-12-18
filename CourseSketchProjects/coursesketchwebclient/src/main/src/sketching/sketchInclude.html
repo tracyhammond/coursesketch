@@ -1,34 +1,38 @@
 <html>
 <head>
-<!-- Utilities -->
-<script src="/src/utilities/functions/base.js"></script>
-<script src="/src/utilities/functions/objectAndInheritance.js"></script>
-<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+    <!-- Utilities -->
+    <script src="/src/utilities/functions/base.js"></script>
+    <script src="/src/utilities/functions/objectAndInheritance.js"></script>
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
-<!-- Srl library -->
-<link rel="import" href="srl/srlLibraryInclude.html">
+    <!-- Srl library -->
+    <link rel="import" href="srl/srlLibraryInclude.html">
 
-<!-- adapters -->
-<script src="adapters/sketchToProtobufAdapter.js"></script>
+    <!-- adapters -->
+    <script src="adapters/sketchToProtobufAdapter.js"></script>
 
-<!-- Jquery library -->
-<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
+    <!-- Jquery library -->
+    <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
-<!-- input -->
-<script src="input/touch_event.js"></script>
-<script src="input/sketchingEventConverter.js"></script>
+    <!-- graphics -->
+    <link rel="import" href="/src/utilities/libraries/paper/paperjsinclude.html">
+    <script src="/src/sketching/srl/handlers/graphics2.0.js"></script>
 
-<!-- sketch surface -->
-<link id="sketchSurfaceImport" rel="import"
-	href="/src/sketching/sketchSurface.html">
-<script src="sketchSurface.js"></script>
-<script src="sketchSurfaceManager.js"></script>
+    <!-- input -->
+    <script src="input/touch_event.js"></script>
+    <script src="input/sketchingEventConverter.js"></script>
 
-<!-- Sketch Storage -->
-<link rel="import"
-	href="/src/sketching/storage/sketchStorageInclude.html">
+    <!-- sketch surface -->
+    <link id="sketchSurfaceImport" rel="import"
+        href="/src/sketching/sketchSurface.html">
+    <script src="sketchSurface.js"></script>
+    <script src="sketchSurfaceManager.js"></script>
 
-<meta charset="UTF-8">
+    <!-- Sketch Storage -->
+    <link rel="import"
+        href="/src/sketching/storage/sketchStorageInclude.html">
+
+    <meta charset="UTF-8">
 <script>
     (function(importDoc) {
         $(document).ready(function() {
