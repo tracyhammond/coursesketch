@@ -1,7 +1,7 @@
 /**
  * Attempts to use data as a database, pulls data from the server if it does not
  * exist
- * 
+ *
  * @param userId
  *            The user that this database is associated with.
  * @param connection
@@ -43,7 +43,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * Returns true if the database is ready false otherwise.
-     * 
+     *
      * it is placed this far up so that it can be called even before most of the
      * database is set up.
      */
@@ -120,11 +120,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
         dataSend.items = new Array();
-
         var itemSend = CourseSketch.PROTOBUF_UTIL.ItemSend();
         itemSend.setQuery(queryType);
         itemSend.setData(data);
-
         dataSend.items.push(itemSend);
 
         serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
@@ -140,6 +138,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         itemUpdate.setQuery(queryType);
         itemUpdate.setData(data);
         dataSend.items.push(itemUpdate);
+
+        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
     };
 
     this.emptySchoolData = function() {
@@ -162,7 +162,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * retrieves all the assignments for a given course.
-     * 
+     *
      * The callback is called with a list of assignment objects
      */
     this.getAllAssignmentsFromCourse = function(courseId, assignmentCallback) {
@@ -180,7 +180,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * retrieves all the assignments for a given course.
-     * 
+     *
      * The callback is called with a list of assignment objects
      */
     this.getAllProblemsFromAssignment = function(assignmentId, problemCallback) {
@@ -269,6 +269,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     this.getCurrentTime = connection.getCurrentTime;
+
+    CourseSketch.DatabaseException = DatabaseException;
 }
 var nonExistantValue = "NONEXISTANT_VALUE";
 var CURRENT_QUESTION = "CURRENT_QUESTION";

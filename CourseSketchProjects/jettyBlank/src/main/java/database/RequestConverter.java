@@ -10,6 +10,15 @@ import protobuf.srl.school.School.DateTime;
 public final class RequestConverter {
 
     /**
+     * Max year we want to support.
+     */
+    public static final long MAX_JODA_YEAR = 10000;
+    /**
+     * The number of milliseconds in a year.
+     */
+    public static final long MILLIS_IN_YEAR = (long) (1000 * 60 * 60 * 24 * 365.25);
+
+    /**
      * Private constructor.
      */
     private RequestConverter() {
@@ -40,6 +49,14 @@ public final class RequestConverter {
         result.setMinute(jodaDate.getMinuteOfHour());
         result.setMillisecond(jodaDate.getMillis());
         return result.build();
+    }
+
+    /**
+     * @return The max valid time.
+     * (basically infinity) Takes the max year joda can handle and multiplies it by the number of milliseconds in a year.
+     */
+    public static long getMaxTime() {
+        return MAX_JODA_YEAR * MILLIS_IN_YEAR;
     }
 
     /**
