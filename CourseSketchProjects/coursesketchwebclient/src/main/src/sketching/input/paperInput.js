@@ -5,6 +5,7 @@ function InputListener() {
     var pastPoint;
     var currentStroke;
     var tool = undefined;
+    var totalZoom = 0;
 
     this.initializeCanvas = function(sketchCanvas, strokeCreationCallback, graphics) {
         var ps = graphics.getPaper();
@@ -18,11 +19,16 @@ function InputListener() {
             pastPoint = currentPoint;
         };
         tool.onMouseDrag = function(event) {
-            currentPoint = createPointFromEvent(event);
-            //currentPoint.setSpeed(pastPoint);
-            currentStroke.addPoint(currentPoint);
-            graphics.updatePath(event.point);
-            pastPoint = currentPoint;
+            if (event.event.button == 1) {
+                // do panning
+                event.delta.
+            } else {
+                currentPoint = createPointFromEvent(event);
+                //currentPoint.setSpeed(pastPoint);
+                currentStroke.addPoint(currentPoint);
+                graphics.updatePath(event.point);
+                pastPoint = currentPoint;
+            }
         };
 
         tool.onMouseUp = function(event) {
@@ -43,13 +49,26 @@ function InputListener() {
             currentStroke = false;
             currentPoint = false;
         };
+
+        sketchCanvas.addEventListener("mousewheel", function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            // cross-browser wheel delta
+            var e = window.event || e; // old IE support
+            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+            totalZoom += delta;
+            if (totalZoom < 0) {
+                 ps.view.zoom = -1/totalZoom;
+            } else {
+                ps.view.zoom = totalZoom + 1;
+            }
+        });
     }
 
     /**
      * Creates an {@link SRL_Point} from a drawing event.
      */
     function createPointFromEvent(drawingEvent) {
-        console.log(drawingEvent);
         var currentPoint = new SRL_Point(drawingEvent.x, drawingEvent.y);
         currentPoint.setId(generateUUID());
         currentPoint.setTime(drawingEvent.event.timeStamp);
