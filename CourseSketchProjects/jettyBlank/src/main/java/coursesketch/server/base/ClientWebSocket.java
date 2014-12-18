@@ -1,9 +1,5 @@
 package coursesketch.server.base;
 
-import java.io.IOException;
-import java.net.URI;
-import java.nio.ByteBuffer;
-
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
@@ -11,11 +7,14 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-
 import utilities.ConnectionException;
+
+import java.io.IOException;
+import java.net.URI;
+import java.nio.ByteBuffer;
 
 /**
  * Wraps around a basic client and maintains a sessions to a single server.
@@ -27,7 +26,7 @@ import utilities.ConnectionException;
  * takes much longer to send.
  */
 @SuppressWarnings("PMD.TooManyMethods")
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public class ClientWebSocket extends AbstractClientWebSocket {
 
     /**

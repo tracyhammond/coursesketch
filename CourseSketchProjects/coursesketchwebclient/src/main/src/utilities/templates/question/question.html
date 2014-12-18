@@ -1,0 +1,35 @@
+<html>
+<head>
+    <template id="question">
+        <style>
+            @import "/src/utilities/templates/question/question.css";
+        </style>
+        <input id="text" class="dotted box" placeholder="Question?"/>
+        <content select=".answer"></content>
+        <div id="actions-box" class="box hide">
+            <img id="actions" src="/images/questionElement/gear.png"/>
+        </div>
+        <dialog id="actions-dialog">
+            <div id="dialog-close">×</div>
+            <p class="dialog-text">When the correct answer is provided, navigate to...</p>
+            <div>
+                <label for="correct-lecture">Lecture: </label>
+                <select id="correct-lecture" name="correct-lecture"></select>
+            </div>
+            <div>
+                <label for="correct-slide">Slide: </label>
+                <select id="correct-slide" name="correct-slide" disabled></select>
+            </div>
+            <p class="dialog-text">When the incorrect answer is provided, navigate to...</p>
+            <div>
+                <label for="incorrect-lecture">Lecture: </label>
+                <select id="incorrect-lecture" name="incorrect-lecture"></select>
+            </div>
+            <div>
+                <label for="incorrect-slide">Slide: </label>
+                <select id="incorrect-slide" name="incorrect-slide" disabled></select>
+            </div>
+        </dialog>
+    </template>
+</head>
+</html>
