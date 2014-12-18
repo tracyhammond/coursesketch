@@ -1,6 +1,26 @@
 package database.institution.mongo;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import database.DatabaseAccessException;
+import database.RequestConverter;
+import database.UserUpdateHandler;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import org.bson.types.ObjectId;
+import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.school.School.State;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static database.DatabaseStringConstants.ACCESS_DATE;
+import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.ADMIN_GROUP_ID;
 import static database.DatabaseStringConstants.ASSIGNMENT_LIST;
@@ -10,6 +30,7 @@ import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_SEMESTER;
 import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.IMAGE;
+import static database.DatabaseStringConstants.LECTURE_LIST;
 import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.MOD_GROUP_ID;
 import static database.DatabaseStringConstants.NAME;
@@ -20,47 +41,22 @@ import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bson.types.ObjectId;
-
-import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlPermission;
-import protobuf.srl.school.School.State;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-
-import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-
 /**
  * Interfaces with the database to manage course data.
- * @author gigemjt
  *
+ * @author gigemjt
  */
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",  "PMD.UselessParentheses" })
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses" })
 public final class CourseManager {
 
     /**
      * Private constructor.
-     *
      */
     private CourseManager() {
     }
 
     /**
-     *
-     * @param dbs
-     *            The database where the assignment is being stored.
+     * @param dbs    The database where the assignment is being stored.
      * @param course The data of the course that is being inserted.
      * @return The id of the course that was inserted.
      */
@@ -81,34 +77,31 @@ public final class CourseManager {
     }
 
     /**
-     *
-     * @param authenticator
-     *            the object that is performing authentication.
-     * @param dbs
-     *            The database where the assignment is being stored.
-     * @param courseId the id of what course is being grabbed.
-     * @param userId the user requesting the course.
-     * @param checkTime the time at which the course was requested.
+     * @param authenticator the object that is performing authentication.
+     * @param dbs           The database where the assignment is being stored.
+     * @param courseId      the id of what course is being grabbed.
+     * @param userId        the user requesting the course.
+     * @param checkTime     the time at which the course was requested.
      * @return The course if all of the checks pass.
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the course.
      * @throws DatabaseAccessException Thrown if there are problems retrieving the course.
      */
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
+    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
     static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId, final long checkTime)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
-        final DBObject corsor = myDbRef.fetch();
-        if (corsor == null) {
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
             throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
         }
 
-        final ArrayList adminList = (ArrayList<Object>) corsor.get(ADMIN); // convert
+        final ArrayList adminList = (ArrayList<Object>) cursor.get(ADMIN); // convert
         // to
         // ArrayList<String>
-        final ArrayList modList = (ArrayList<Object>) corsor.get(MOD); // convert
-                                                                       // to
+        final ArrayList modList = (ArrayList<Object>) cursor.get(MOD); // convert
+        // to
         // ArrayList<String>
-        final ArrayList usersList = (ArrayList<Object>) corsor.get(USERS); // convert
+        final ArrayList usersList = (ArrayList<Object>) cursor.get(USERS); // convert
         // to
         // ArrayList<String>
         boolean isAdmin, isMod, isUsers;
@@ -121,14 +114,14 @@ public final class CourseManager {
         }
 
         final SrlCourse.Builder exactCourse = SrlCourse.newBuilder();
-        exactCourse.setDescription((String) corsor.get(DESCRIPTION));
-        exactCourse.setName((String) corsor.get(NAME));
-        if (corsor.get(COURSE_SEMESTER) != null) {
-            exactCourse.setSemester((String) corsor.get(COURSE_SEMESTER));
+        exactCourse.setDescription((String) cursor.get(DESCRIPTION));
+        exactCourse.setName((String) cursor.get(NAME));
+        if (cursor.get(COURSE_SEMESTER) != null) {
+            exactCourse.setSemester((String) cursor.get(COURSE_SEMESTER));
         }
 
-        exactCourse.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(ACCESS_DATE)).longValue()));
-        exactCourse.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(CLOSE_DATE)).longValue()));
+        exactCourse.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(ACCESS_DATE)).longValue()));
+        exactCourse.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(CLOSE_DATE)).longValue()));
         exactCourse.setId(courseId);
 
         // states
@@ -139,8 +132,8 @@ public final class CourseManager {
 
         // FUTURE: add this to all fields!
         // A course is only publishable after a certain criteria is met
-        if (corsor.containsField(STATE_PUBLISHED)) {
-            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
+        if (cursor.containsField(STATE_PUBLISHED)) {
+            final boolean published = (Boolean) cursor.get(STATE_PUBLISHED);
             if (published) {
                 stateBuilder.setPublished(true);
             } else {
@@ -152,15 +145,20 @@ public final class CourseManager {
             }
         }
 
-        if (corsor.get(IMAGE) != null) {
-            exactCourse.setImageUrl((String) corsor.get(IMAGE));
+        if (cursor.get(IMAGE) != null) {
+            exactCourse.setImageUrl((String) cursor.get(IMAGE));
         }
 
         // if you are a user, the course must be open to view the assignments
         if (isAdmin || isMod
                 || (isUsers && Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
-            if (corsor.get(ASSIGNMENT_LIST) != null) {
-                exactCourse.addAllAssignmentList((List) corsor.get(ASSIGNMENT_LIST));
+            final Object assignmentList = cursor.get(ASSIGNMENT_LIST);
+            final Object lectureList = cursor.get(LECTURE_LIST);
+            if (assignmentList != null) {
+                exactCourse.addAllAssignmentList((List) assignmentList);
+            }
+            if (lectureList != null) {
+                exactCourse.addAllLectureList((List) lectureList);
             }
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate())) {
@@ -173,11 +171,15 @@ public final class CourseManager {
         exactCourse.setState(stateBuilder);
 
         if (isAdmin) {
-            exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) corsor.get(COURSE_ACCESS))); // admin
+            try {
+                exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
+            } catch (ClassCastException exception) {
+                exception.printStackTrace();
+            }
             final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-            permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
-            permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
-            permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // admin
+            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
+            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin
+            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // admin
             exactCourse.setAccessPermission(permissions.build());
         }
         return exactCourse.build();
@@ -185,13 +187,11 @@ public final class CourseManager {
     }
 
     /**
-     * @param authenticator
-     *            the object that is performing authentication.
-     * @param dbs
-     *            The database where the assignment is being stored.
-     * @param courseId The id of the course being updated.
-     * @param userId The id of the user that is updating the course.
-     * @param course the course data that is being updated.
+     * @param authenticator the object that is performing authentication.
+     * @param dbs           The database where the assignment is being stored.
+     * @param courseId      The id of the course being updated.
+     * @param userId        The id of the user that is updating the course.
+     * @param course        the course data that is being updated.
      * @return true if the update is successful.
      * @throws AuthenticationException Thrown if the user did not have the authentication to update the course.
      * @throws DatabaseAccessException Thrown if there are problems updating the course.
@@ -290,24 +290,22 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     *
+     * <p/>
      * With that being said this allows a course to be updated adding the
      * assignmentId to its list of items.
      *
-     * @param dbs
-     *            The database where the assignment is being stored.
-     *
-     * @param courseId the course into which the assignment is being inserted into
+     * @param dbs          The database where the assignment is being stored.
+     * @param courseId     the course into which the assignment is being inserted into
      * @param assignmentId the assignment that is being inserted into the course.
      * @return true if the assignment was inserted correctly.
      */
-    static boolean mongoInsertIntoCourse(final DB dbs, final String courseId, final String assignmentId) {
+    static boolean mongoInsertAssignmentIntoCourse(final DB dbs, final String courseId, final String assignmentId) {
         final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
         final DBObject corsor = myDbRef.fetch();
         DBObject updateObj = null;
         final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
         updateObj = new BasicDBObject(ASSIGNMENT_LIST, assignmentId);
-        courses.update(corsor, new BasicDBObject("$addToSet", updateObj));
+        courses.update(corsor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
         return true;
@@ -315,13 +313,35 @@ public final class CourseManager {
     }
 
     /**
+     * NOTE: This is meant for internal use do not make this method public
+     * <p/>
+     * With that being said this allows a course to be updated adding the
+     * lectureId to its list of items.
      *
-     * @param dbs
-     *            The database where the course is being stored.
+     * @param dbs       The database where the assignment is being stored.
+     * @param courseId  the course into which the assignment is being inserted into
+     * @param lectureId the assignment that is being inserted into the course.
+     * @return true if the assignment was inserted correctly.
+     */
+    static boolean mongoInsertLectureIntoCourse(final DB dbs, final String courseId, final String lectureId) {
+        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+        final DBObject cursor = myDbRef.fetch();
+        DBObject updateObj = null;
+        final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
+        updateObj = new BasicDBObject(LECTURE_LIST, lectureId);
+        courses.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
+
+        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
+        return true;
+
+    }
+
+    /**
+     * @param dbs The database where the course is being stored.
      * @return a list of all public courses.
-     *
-     *         FUTURE: this should probably be paginated so it does not crush
-     *         the database.
+     * <p/>
+     * FUTURE: this should probably be paginated so it does not crush
+     * the database.
      */
     public static List<SrlCourse> mongoGetAllPublicCourses(final DB dbs) {
         final DBCollection courseTable = dbs.getCollection(COURSE_COLLECTION);
@@ -340,7 +360,7 @@ public final class CourseManager {
     }
 
     /**
-     * @param cursor The pointer to the database object
+     * @param cursor     The pointer to the database object
      * @param resultList The list that the results are added to.  This list is modified by this method.
      */
     private static void buildCourseForSearching(final DBCursor cursor, final List<SrlCourse> resultList) {
@@ -359,14 +379,13 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public.
-     *
+     * <p/>
      * With that being said this allows the default ids to be inserted.
      *
-     * @param dbs
-     *            The database where the course is being stored.
-     * @param courseId the course that inserts the default id.
-     * @param userGroupId the group id that is being inserted for users.
-     * @param modGroupId the group id that is being inserted for moderators.
+     * @param dbs          The database where the course is being stored.
+     * @param courseId     the course that inserts the default id.
+     * @param userGroupId  the group id that is being inserted for users.
+     * @param modGroupId   the group id that is being inserted for moderators.
      * @param adminGroupId the group id that is being inserted for admins.
      */
     static void mongoInsertDefaultGroupId(final DB dbs, final String courseId, final String userGroupId, final String modGroupId,
@@ -382,13 +401,12 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     *
+     * <p/>
      * Returns a list of Id for the default group for an assignment.
-     *
+     * <p/>
      * The list are ordered as so: AdminGroup, ModGroup, UserGroup
      *
-     * @param dbs
-     *            The database where the course is being stored.
+     * @param dbs      The database where the course is being stored.
      * @param courseId the course that the groups are being grabbed from.
      * @return a list of usergroups.
      */
@@ -404,13 +422,12 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     *
+     * <p/>
      * Returns a list of Ids for the default group for a course.
-     *
+     * <p/>
      * The Ids are ordered as so: AdminGroup, ModGroup, UserGroup
      *
-     * @param dbs
-     *            The database where the course is being stored.
+     * @param dbs      The database where the course is being stored.
      * @param courseId the course whose user group is being requested.
      * @return a list of user group ids.
      */
