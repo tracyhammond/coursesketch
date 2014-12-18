@@ -1,7 +1,5 @@
 package coursesketch.server.base;
 
-import javax.servlet.annotation.WebServlet;
-
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -10,6 +8,8 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+
+import javax.servlet.annotation.WebServlet;
 
 /**
  * The default servlet it creates a single websocket instance that is then used

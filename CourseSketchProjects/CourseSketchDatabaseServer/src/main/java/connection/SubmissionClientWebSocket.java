@@ -23,7 +23,7 @@ import protobuf.srl.request.Message.Request.MessageType;
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
-@WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public class SubmissionClientWebSocket extends ClientWebSocket {
 
     /**

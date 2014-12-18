@@ -30,7 +30,12 @@
          *            selected
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
-            console.log(lecture);
+            CourseSketch.dataManager.addState("currentLecture",lecture);
+            if (CourseSketch.connection.isInstructor) {
+                CourseSketch.redirectContent("/src/instructor/lecture/lecturePage.html", "Edit Lecture");
+            } else {
+                CourseSketch.redirectContent("/src/student/lecture/lecturePage.html", "View Lecture");
+            }
         }
 
         /**
@@ -40,17 +45,22 @@
          *                list of lectures to display
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
+            if(lectureList[0] instanceof CourseSketch.DatabaseException) {
+                throw lectureList[0];
+            }
             var add = $("#add").clone();
             var schoolItemBuilder = new SchoolItemBuilder();
             schoolItemBuilder.setList(lectureList)
                 .setShowDate(false)
                 .setEditCallback(CourseSketch.lectureSelection.lectureEndEdit)
-                .setInstructorCard(true)
+                .setInstructorCard(CourseSketch.connection.isInstructor)
                 .setBoxClickFunction(CourseSketch.lectureSelection.lectureSelected)
                 .build(document.querySelector("#col2>.content"));
-            $("#col2>.content").prepend(add);
-            $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
-            $("#add").addClass("show");
+            if (CourseSketch.connection.isInstructor) {
+                $("#col2>.content").prepend(add);
+                $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
+                $("#add").addClass("show");
+            }
         };
 
         /**
@@ -71,6 +81,7 @@
                 .addSelectedItem(document.getElementById(courseid));
             CourseSketch.dataManager.getCourse(courseid, function(course) {
                 CourseSketch.dataManager.getCourseLectures(course.lectureList,
+                    CourseSketch.lectureSelection.displayLectures,
                     CourseSketch.lectureSelection.displayLectures);
             });
         };
@@ -88,7 +99,7 @@
             lecture.id = generateUUID();
             lecture.description = "N/A";
             var insertCallback = function() {
-                CourseSketch.dataManager.getCourse(currentCourse, 
+                CourseSketch.dataManager.getCourse(currentCourse,
                     function(course) {
                         CourseSketch.dataManager.getCourseLectures(
                             course.lectureList,

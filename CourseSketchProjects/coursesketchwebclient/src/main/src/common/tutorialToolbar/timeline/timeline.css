@@ -1,0 +1,194 @@
+.timeline {
+    position: fixed;
+    top: 80%;
+    width: 100%;
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    border: 2px solid #000;
+    background: #00CC99;
+    overflow-y: visible;
+	opacity: 0.8;
+}
+
+.toolarea.focused {
+	background: #66E062;
+	z-index: -2;
+}
+
+.btn {
+	order: 2;
+	-moz-box-shadow: 0px 10px 14px -7px #3e7327;
+	-webkit-box-shadow: 0px 10px 14px -7px #3e7327;
+	box-shadow: 0px 10px 14px -7px #3e7327;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #77b55a), color-stop(1, #72b352));
+	background:-moz-linear-gradient(top, #77b55a 5%, #72b352 100%);
+	background:-webkit-linear-gradient(top, #77b55a 5%, #72b352 100%);
+	background:-o-linear-gradient(top, #77b55a 5%, #72b352 100%);
+	background:-ms-linear-gradient(top, #77b55a 5%, #72b352 100%);
+	background:linear-gradient(to bottom, #77b55a 5%, #72b352 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77b55a', endColorstr='#72b352',GradientType=0);
+	background-color:#77b55a;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	border:1px solid #4b8f29;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:13px;
+	font-weight:bold;
+	padding:6px 12px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #5b8a3c;
+}
+
+.btn:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #72b352), color-stop(1, #77b55a));
+	background:-moz-linear-gradient(top, #72b352 5%, #77b55a 100%);
+	background:-webkit-linear-gradient(top, #72b352 5%, #77b55a 100%);
+	background:-o-linear-gradient(top, #72b352 5%, #77b55a 100%);
+	background:-ms-linear-gradient(top, #72b352 5%, #77b55a 100%);
+	background:linear-gradient(to bottom, #72b352 5%, #77b55a 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#72b352', endColorstr='#77b55a',GradientType=0);
+	background-color:#72b352;
+}
+
+.btn:active {
+	position:relative;
+	top:1px;
+}
+
+.toolarea {
+	flex-direction: row;
+	justify-content: flex-start;
+    top: 80%;
+    width: 219px;
+    height: 100%;
+    border: 2px solid #000; /* Add 2px to width for every px increased here. Subtract 2px if decreased */
+    background: #FFF;
+    -webkit-transition:0.7s all;
+    overflow-y: scroll;
+}
+
+
+.textboxbutton {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: -1;
+    top: 0px;
+    left: 50px;
+    margin: auto 0;
+    background-image: url("../textbox.jpg");
+    background-color: #cccccc;
+    /*transition: background-image 1s ease-in-out;*/
+    
+     -webkit-animation: textbox .5s, fadein1 .3s;
+    animation: textbox .5s;
+}
+
+.ttsboxbutton {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: -1;
+    top: 0px;
+    left: 100px;
+    margin: auto 0;
+    background-image: url("../tts.jpg");
+    background-color: #cccccc;
+    -webkit-animation: tts .5s, fadein2 .4s;
+    animation: tts .5s;
+}
+
+.highlightbutton {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: -1;
+    top: 0px;
+    left: 150px;
+    margin: auto 0;
+    background-image: url("../highlight.jpg");
+    background-color: #cccccc;
+    /*transition: background-image 1s ease-in-out;*/
+    -webkit-animation: highlight .5s, fadein3 .6s;
+    animation: highlight  .5s;
+}
+.sketchsurfacebutton {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: -1;
+    top: 50px;
+    left: 50px;
+    margin: auto 0;
+    background-image: url("../ss.jpg");
+    background-color: #cccccc;
+    /*transition: background-image 1s ease-in-out;*/
+    animation-delay: 2s;
+    -webkit-animation: fadein4 .6s, sketchsurface .8s;
+
+    animation: sketchsurface .5s;
+}
+
+sketch-surface {
+	width: 500px;
+	height: 500px;
+	z-index: -1;
+	background-color: #0FFFFF;
+}
+
+.toolarea .plusbutton {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    margin: auto 0;
+    order: 1;
+    background-image: url("plus.png");
+    overflow: visible;
+    z-index: initial;
+}
+
+.plusbutton.tall {
+	height: 100px;
+	background-repeat: no-repeat;
+}
+
+/* Animations for plus button */
+@-webkit-keyframes textbox {
+    from {left: 0px;}
+    to {left: 50px;}
+}
+@-webkit-keyframes tts {
+    from {left: 0px;}
+    to {left: 100px;}
+}
+@-webkit-keyframes highlight {
+    from {left: 0px;}
+    to {left: 150px;}
+}
+@-webkit-keyframes sketchsurface {
+    from {left: 50px; top: 0px;}
+    to {left: 50px; top: 50px;}
+}
+@-webkit-keyframes fadein1 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein2 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein3 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein4 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}

@@ -1,0 +1,157 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Question Test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link id="questionTemplateImport" rel="import" href="/src/utilities/templates/question/questionInclude.html" />
+<link id="multiChoiceTemplateImport" rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html" />
+<link rel="import" href="/src/sketching/sketchInclude.html" />
+<link rel="import" href="/test/testUtilities/fakePage/fakePageInclude.html" />
+<link rel="import" href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/utilities/templates/question/question.js" data-cover data-fake></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="question"></div>
+    
+	<script>
+        var template = (function() {
+            var link1 = document.querySelector('#questionTemplateImport');
+            var link = link1.import.querySelector('#questionTemplateImport');
+            var template = link.import.querySelector('#question');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+
+        QUnit.module("creation", {
+            setupOnce : function() {
+                try {
+                    var newElement = new Question();
+
+                    /**
+                     * Creates the shadow root and adds that into the system.
+                     */
+                    newElement.attachedCallback = function() {
+                        this.initializeElement(template.cloneNode(true));
+                    };
+
+                    // test is not a typo
+                    document.registerElement('question-test', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
+
+            },
+            teardown : function() {
+                document.getElementById('question').innerHTML = "";
+            }
+        });
+
+        test("create question element", function(assert) {
+            expect(1);
+            var question = document.createElement("question-test");
+            document.querySelector("#question").appendChild(question);
+            assert.ok(question.shadowRoot.innerHTML != null && question.shadowRoot.innerHTML != "", "Question element has content");
+        });
+
+        test("add multi-choice to question", function(assert) {
+            expect(1);
+            var question = document.createElement("question-test");
+            var mc = document.createElement("multi-choice");
+            document.querySelector("#question").appendChild(question);
+            question.addAnswerContent(mc);
+            assert.ok(!isUndefined(question.shadowRoot.querySelector('content').getDistributedNodes()) &&
+                      question.shadowRoot.querySelector('content').getDistributedNodes().length > 0,
+                      "Question has answer content");
+        });
+
+        test("save question element with multi-choice", function(assert) {
+            expect(3);
+            var question = document.createElement("question-test");
+            var mc = document.createElement("multi-choice");
+            document.querySelector("#question").appendChild(question);
+            question.addAnswerContent(mc);
+            mc.addAnswer();
+            mc.addAnswer();
+            mc.setCorrectAnswer(undefined, mc.shadowRoot.getElementById("1"));
+            question.setFinishedListener(function(command) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,
+                        'Expecting command type CREATE_QUESTION from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
+                assert.equal(question.shadowRoot.querySelector("#text").textContent, decoded.questionText, "Question text is the same in proto and DOM");
+            });
+            question.saveData();
+        });
+
+        test("save question element with sketch", function(assert) {
+            expect(3);
+            var question = document.createElement("question-test");
+            var sketch = document.createElement("sketch-surface");
+            document.querySelector("#question").appendChild(question);
+            question.addAnswerContent(sketch);
+            question.setFinishedListener(function(command) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,
+                        'Expecting command type CREATE_QUESTION from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
+                assert.equal(question.shadowRoot.querySelector("#text").textContent, decoded.questionText, "Question text is the same in proto and DOM");
+            });
+            question.saveData();
+        });
+
+        test("save question element with invalid answer", function(assert) {
+            expect(1);
+            var question = document.createElement("question-test");
+            var div = document.createElement("div");
+            document.querySelector("#question").appendChild(question);
+            question.addAnswerContent(div);
+            assert.throws(function() {
+                question.saveData();
+            }, "Throws an error message");
+        });
+
+        // TODO: Add assertions
+        test("load question element", function(assert) {
+            expect(0);
+            var question = document.createElement("question-test");
+            document.querySelector("#question").appendChild(question);
+            var questionProto = CourseSketch.PROTOBUF_UTIL.SrlQuestion();
+            questionProto.id = generateUUID();
+            questionProto.setQuestionText("How awesome are CourseSketch Lectures?");
+            var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            correctNav.nextLectureId = "1";
+            correctNav.nextSlide = 0;
+            incorrectNav.nextLectureId = "2";
+            incorrectNav.nextSlide = 1;
+            questionProto.navs[0] = correctNav;
+            questionProto.navs[1] = incorrectNav;
+            question.loadLectures(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]);
+            question.loadData();
+            setTimeout(function() {
+                question.loadData(questionProto);
+            }, 100);
+        });
+
+        // TODO: Add assertions
+        test("load lectures", function(assert) {
+            expect(0);
+            var question = document.createElement("question-test");
+            document.querySelector("#question").appendChild(question);
+            question.loadLectures(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]);
+            setTimeout(function() {
+                question.saveData();
+            }, 100);
+        });
+    </script>
+</body>

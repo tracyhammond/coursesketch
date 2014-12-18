@@ -5,6 +5,7 @@ import java.security.GeneralSecurityException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.SocketSession;
 import database.LoginException;
 import database.RegistrationException;
@@ -22,7 +23,7 @@ import utilities.TimeManager;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**
@@ -145,7 +146,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      */
     private void loginUser(final SocketSession conn, final Request req, final LoginInformation login) {
         // if not specified then log in as default user.
-        final boolean loginAsDefault = login.hasIsInstructor();
+        final boolean loginAsDefault = !login.hasIsInstructor();
         try {
             final String userLoggedIn = DatabaseClient.mongoIdentify(login.getUsername(), login.getPassword(), loginAsDefault,
                     login.getIsInstructor());

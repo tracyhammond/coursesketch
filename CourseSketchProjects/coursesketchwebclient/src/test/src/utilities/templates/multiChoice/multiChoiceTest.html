@@ -1,0 +1,133 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Multiple Choice Test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link id="multiChoiceTemplateImport" rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/utilities/templates/multiChoice/multiChoice.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="multi-choice"></div>
+    
+	<script>
+        var template = (function() {
+            var link1 = document.querySelector('#multiChoiceTemplateImport');
+            var link = link1.import.querySelector('#multiChoiceTemplateImport');
+            var template = link.import.querySelector('#multi-choice');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+
+        QUnit.module("creation", {
+            setupOnce : function() {
+                try {
+                    newElement = new MultiChoice();
+
+                    /**
+                     * Creates the shadow root and adds that into the system.
+                     */
+                    newElement.attachedCallback = function() {
+                        this.initializeElement(template.cloneNode(true));
+                    };
+
+                    // test is not a typo
+                    document.registerElement('multi-choice-test', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
+
+            },
+            teardown : function() {
+                document.getElementById('multi-choice').innerHTML = "";
+            }
+        });
+
+        test("create multiple choice element", function(assert) {
+            expect(1);
+            var multiChoice = document.createElement("multi-choice-test");
+            document.querySelector("#multi-choice").appendChild(multiChoice);
+            assert.ok(multiChoice.shadowRoot.innerHTML != null && multiChoice.shadowRoot.innerHTML != "", "Multiple choice element has content.");
+        });
+
+        test("add answer to multiple choice element", function(assert) {
+            expect(1);
+            var mc = document.createElement("multi-choice-test");
+            document.querySelector("#multi-choice").appendChild(mc);
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            assert.equal(mc.shadowRoot.getElementById("answer-choices").children.length, 5, "5 answers were successfully added.");
+        });
+
+        test("remove answer from multiple choice element", function(assert) {
+            expect(1);
+            var mc = document.createElement("multi-choice-test");
+            document.querySelector("#multi-choice").appendChild(mc);
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("1").querySelector(".close"), "click"); // Click remove answer button
+            simulate(mc.shadowRoot.getElementById("2").querySelector(".close"), "click"); // Click remove answer button
+            simulate(mc.shadowRoot.getElementById("3").querySelector(".close"), "click"); // Click remove answer button
+            simulate(mc.shadowRoot.getElementById("4").querySelector(".close"), "click"); // Click remove answer button
+            simulate(mc.shadowRoot.getElementById("5").querySelector(".close"), "click"); // Click remove answer button
+            assert.equal(mc.shadowRoot.getElementById("answer-choices").children.length, 0, "All answers were removed.");
+        });
+
+        test("save multiple choice element", function(assert) {
+            expect(5);
+            var mc = document.createElement("multi-choice-test");
+            document.querySelector("#multi-choice").appendChild(mc);
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            simulate(mc.shadowRoot.getElementById("add"), "click"); // Click add answer button
+            mc.shadowRoot.getElementById("1").querySelector(".label").value = "TEST 1";
+            mc.shadowRoot.getElementById("2").querySelector(".label").value = "TEST 2";
+            simulate(mc.shadowRoot.getElementById("1").querySelector(".correct"), "click"); // Click correct answer
+            mc.setFinishedListener(function(command) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_MULTIPLE_CHOICE,
+                        'Expecting command type CREATE_MULTIPLE_CHOICE from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getMultipleChoiceClass());
+                assert.equal(decoded.answerChoices[0].text, "TEST 1", "Saved protobuf has \"TEST 1\" as first answer choice");
+                assert.equal(decoded.answerChoices[1].text, "TEST 2", "Saved protobuf has \"TEST 2\" as second answer choice");
+                assert.equal(decoded.correctId, "1", "Saved protobuf has correct answer ID as \"1\"");
+            });
+            mc.saveData();
+        });
+
+        test("load question element", function(assert) {
+            expect(4);
+            var mc = document.createElement("multi-choice-test");
+            document.querySelector("#multi-choice").appendChild(mc);
+            var mcProto = CourseSketch.PROTOBUF_UTIL.MultipleChoice();
+            var answer1 = CourseSketch.PROTOBUF_UTIL.AnswerChoice();
+            answer1.id = "1";
+            answer1.text = "TEST 1";
+            var answer2 = CourseSketch.PROTOBUF_UTIL.AnswerChoice();
+            answer2.id = "2";
+            answer2.text = "TEST 2";
+            mcProto.answerChoices.push(answer1);
+            mcProto.answerChoices.push(answer2);
+            mcProto.correctId = "1";
+            mc.loadData(mcProto);
+            assert.equal(mc.shadowRoot.getElementById("1").querySelector(".label").value, "TEST 1", "Multiple choice element has \"TEST 1\" as first answer choice");
+            assert.equal(mc.shadowRoot.getElementById("2").querySelector(".label").value, "TEST 2", "Multiple choice element has \"TEST 2\" as second answer choice");
+            assert.equal(mc.correctId, "1", "Multiple choice element has correct answer ID as \"1\"");
+            assert.equal(mc.shadowRoot.getElementById("1").querySelector(".correct").textContent, "✔", "Multiple choice element has a ✔ displayed by correct answer.");
+            mc.loadData();
+        });
+    </script>
+</body>
