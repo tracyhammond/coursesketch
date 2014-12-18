@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
-@WebSocket()
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class LoginClientWebSocket extends ClientWebSocket {
 
     /**
