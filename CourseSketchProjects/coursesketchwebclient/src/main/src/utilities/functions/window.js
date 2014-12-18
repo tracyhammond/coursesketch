@@ -5,7 +5,7 @@
  *
  * Placement utility Functions
  * @author gigemjt
- * 
+ *
  **************************************************************
  */
 
@@ -118,4 +118,34 @@ if (isUndefined(getIframeScope)) {
 	function getIframeScope(scope, iframeId) {
 		return scope.getElementById(iframeId).contentWindow.document;
 	}
+}
+
+/**
+ * Makes an element fullscreen.
+ */
+if (isUndefined(makeFullScreen)) {
+	function makeFullScreen(element) {
+		if (elem.requestFullscreen) {
+			elem.requestFullscreen();
+		} else if (elem.msRequestFullscreen) {
+			elem.msRequestFullscreen();
+		} else if (elem.mozRequestFullScreen) {
+			elem.mozRequestFullScreen();
+		} else if (elem.webkitRequestFullscreen) {
+			elem.webkitRequestFullscreen();
+		}
+	}
+}
+
+if (isUndefined(makeNotFullScreen)) {
+	function makeNotFullScreen(element) {
+		if (element.cancelFullscreen) {
+        	element.cancelFullscreen();
+        } else if (element.exitFullscreen) {
+			element.exitFullscreen();
+	    } else if (element.webkitExitFullscreen) {
+			element.webkitExitFullscreen();
+	    }
+	}
+		element.webkitExitFullscreen();
 }
