@@ -19,8 +19,7 @@
     <script src="/src/sketching/srl/handlers/graphics2.0.js"></script>
 
     <!-- input -->
-    <script src="input/touch_event.js"></script>
-    <script src="input/sketchingEventConverter.js"></script>
+    <script src="input/paperInput.js"></script>
 
     <!-- sketch surface -->
     <link id="sketchSurfaceImport" rel="import"
@@ -48,7 +47,7 @@
             };
 
             SketchSurface.prototype.attachedCallback = function() {
-                this.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
+                this.initializeSurface(InputListener, UpdateManager);
             };
 
             SketchSurface.prototype.detachedCallback = function() {

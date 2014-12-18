@@ -24,6 +24,7 @@ function SketchEventConverter(externalInputListener, strokeCreationCallback, gra
 		currentPoint = this.createPointFromEvent(drawingEvent);
 		currentStroke = new SRL_Stroke(currentPoint);
 		currentStroke.setId(generateUUID());
+		graphics.createNewPath(currentPoint);
 		pastPoint = currentPoint;
 	}.bind(this));
 
@@ -34,8 +35,8 @@ function SketchEventConverter(externalInputListener, strokeCreationCallback, gra
 		currentPoint = this.createPointFromEvent(drawingEvent);
 		currentPoint.setSpeed(pastPoint);
 		currentStroke.addPoint(currentPoint);
+		graphics.updatePath(currentPoint);
 		pastPoint = currentPoint;
-		currentStroke.drawStroke(graphics);
 	}.bind(this));
 
 	/**
@@ -47,6 +48,7 @@ function SketchEventConverter(externalInputListener, strokeCreationCallback, gra
 		currentStroke.addPoint(currentPoint);
 		currentStroke.setTime(currentPoint.getTime());
 		currentStroke.finish();
+		graphics.endPath(currentPoint);
 		try {
 			if (strokeCreationCallback)
 				strokeCreationCallback(currentStroke); // Sends back the current stroke.

@@ -133,14 +133,13 @@ function SketchSurface() {
      */
     this.initializeInput = function(InputListener, SketchEventConverter) {
         this.localInputListener = new InputListener();
-        this.localInputListener.initializeCanvas(this.sketchCanvas);
-        var canvasContext = this.localInputListener.canvasContext;
-        this.sketch.canvasContext = canvasContext;
-        this.sketchEventConverter = new SketchEventConverter(this.localInputListener, addStrokeCallback.bind(this), canvasContext);
+
+        var graph = new Graphics(this.sketchCanvas, this.sketch);
+        this.localInputListener.initializeCanvas(this, addStrokeCallback.bind(this), graph);
+
         this.eventListenerElement = this.sketchCanvas;
 
         this.resizeSurface();
-        var graph = new Graphics(sketchCanvas, sketch);
     };
 
     /**
@@ -150,7 +149,7 @@ function SketchSurface() {
         console.log(this.sketchCanvas);
         this.sketchCanvas.height = $(this.sketchCanvas).height();
         this.sketchCanvas.width = $(this.sketchCanvas).width();
-        this.sketch.drawEntireSketch();
+        // this.sketch.drawEntireSketch();
     };
 
     /**
@@ -218,16 +217,23 @@ SketchSurface.prototype = Object.create(HTMLElement.prototype);
  *            has already been imported and then added to this element.
  */
 SketchSurface.prototype.initializeElement = function(templateClone) {
-    var root = this.createShadowRoot();
-    root.appendChild(templateClone);
+    Object.defineProperty(this, 'shadowRoot', {
+      get: function() { return document.body; },
+      set: function(value) { }
+    });
+    //var root = this.createShadowRoot();
+    //root.appendChild(templateClone);
+    //this.shadowRoot = this;
+    document.body.appendChild(templateClone);
     this.sketchCanvas = this.shadowRoot.querySelector("#drawingCanvas");
 };
 
-SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchEventConverterClass, UpdateManagerClass) {
+
+SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateManagerClass) {
     this.initializeSketch();
 
     if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
-        this.initializeInput(InputListenerClass, SketchEventConverterClass);
+        this.initializeInput(InputListenerClass);
     }
 
     if (isUndefined(this.dataset) || isUndefined(this.dataset.customid) || isUndefined(this.id) || this.id == null || this.id == "") {
