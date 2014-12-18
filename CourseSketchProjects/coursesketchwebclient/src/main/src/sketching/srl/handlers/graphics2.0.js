@@ -42,7 +42,30 @@ function Graphics(canvasElement, sketch) {
 
     var queue = new ps.Path.Circle({center: [50, 50], radius: [20, 20], strokeColor: 'black'});
 
-    this.getPaper =function() {
+    this.getPaper = function() {
         return ps;
     };
+
+    this.loadSketch = function() {
+        ps.project.activeLayer.removeChildren();
+        ps.view.update();
+        console.log(sketch);
+        var objectList = sketch.getList();
+        console.log(objectList);
+        for (var i = 0; i < objectList.length; i++) {
+            var object = objectList[i];
+            if (object instanceof SRL_Stroke) {
+                loadStroke(object);
+            }
+        }
+        ps.view.update();
+    };
+
+    function loadStroke(stroke) {
+        path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+        var pointList = stroke.getPoints();
+        for (var i = 0; i < pointList.length; i++) {
+            path.add(new ps.Point(pointList[i].getX(), pointList[i].getY()));
+        }
+    }
 }

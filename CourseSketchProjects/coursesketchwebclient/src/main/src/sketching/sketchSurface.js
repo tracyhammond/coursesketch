@@ -115,7 +115,7 @@ function SketchSurface() {
      *            {SRL_Stroke} a stroke that is added to the sketch.
      */
     function addStrokeCallback(stroke) {
-        stroke.draw( this.localInputListener.canvasContext);
+        console.log(stroke);
 
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
 
@@ -134,8 +134,9 @@ function SketchSurface() {
     this.initializeInput = function(InputListener, SketchEventConverter) {
         this.localInputListener = new InputListener();
 
-        var graph = new Graphics(this.sketchCanvas, this.sketch);
-        this.localInputListener.initializeCanvas(this, addStrokeCallback.bind(this), graph);
+        this.graphics = new Graphics(this.sketchCanvas, this.sketch);
+
+        this.localInputListener.initializeCanvas(this, addStrokeCallback.bind(this), this.graphics);
 
         this.eventListenerElement = this.sketchCanvas;
 
@@ -204,6 +205,12 @@ function SketchSurface() {
         var updateProto = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
         updateProto.list = this.updateList.getUpdateList();
         return updateProto;
+    };
+
+
+    // TEST FUNCTIOn
+    this.reload = function() {
+        this.graphics.loadSketch();
     };
 }
 
