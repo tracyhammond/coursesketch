@@ -6,15 +6,18 @@ function Graphics(canvasElement, sketch) {
 
     ps = new paper.PaperScope(canvasElement);
     ps.setup(canvasElement);
-    ps.view.viewSize = [300, 200];
+    //ps.view.viewSize = [300, 200];
 
     // ghetoo rigging
     function correctSize() {
+        console.log(canvasElement);
         var oldHeight = canvasElement.height;
         var oldWidth = canvasElement.width;
-        canvasElement.height = $(canvasElement).height();
-        canvasElement.width = $(canvasElement).width();
+        canvasElement.height = $(canvasElement).parent().height();
+        canvasElement.width = $(canvasElement).parent().width();
         if (oldHeight != canvasElement.height || oldWidth != canvasElement.width) {
+                console.log(canvasElement);
+
             ps.view.viewSize = [canvasElement.height, canvasElement.width];
         }
     }
