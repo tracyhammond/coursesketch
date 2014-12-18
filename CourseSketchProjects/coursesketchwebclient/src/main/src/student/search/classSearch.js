@@ -10,6 +10,7 @@
         CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
             CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST));
     });
+
     var localDoc = document;
     var courseList1 = new Array();
     var courseList2 = new Array();
@@ -18,6 +19,9 @@
 
     var setTimeVar;
 
+    /**
+     * Listens for the search result and displays the result given to it.
+     */
     CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
             CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH, function(evt, item) {
         var school = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data, CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass());
