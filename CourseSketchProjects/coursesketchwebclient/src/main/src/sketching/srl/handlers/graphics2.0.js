@@ -32,12 +32,12 @@ function Graphics(canvasElement, sketch) {
     };
 
     this.updatePath = function(point) {
-        console.log(point);
         livePath.add(point);
     };
 
     this.endPath = function(point) {
         livePath.add(point);
+        livePath.simplify();
     };
 
     var queue = new ps.Path.Circle({center: [50, 50], radius: [20, 20], strokeColor: 'black'});
