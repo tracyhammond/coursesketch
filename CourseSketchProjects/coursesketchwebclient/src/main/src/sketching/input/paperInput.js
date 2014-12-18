@@ -69,7 +69,7 @@ function InputListener() {
      * Creates an {@link SRL_Point} from a drawing event.
      */
     function createPointFromEvent(drawingEvent) {
-        var currentPoint = new SRL_Point(drawingEvent.x, drawingEvent.y);
+        var currentPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);
         currentPoint.setId(generateUUID());
         currentPoint.setTime(drawingEvent.event.timeStamp);
         currentPoint.setPressure(drawingEvent.pressure);
