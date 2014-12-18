@@ -9,6 +9,14 @@
     <!-- files needed for testing -->
     <link rel="import" href="/src/student/search/classSearch.html" data-fake>
     </head>
+<script>
+    $(document).ready(function() {
+        var request = CourseSketch.PROTOBUF_UTIL.Request();
+
+        CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
+            CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH
+    });
+</script>
 <body>
 </body>
 </html>
