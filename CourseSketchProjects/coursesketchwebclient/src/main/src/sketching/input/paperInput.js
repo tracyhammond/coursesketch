@@ -45,6 +45,7 @@ function InputListener() {
             } catch(err) {
                 currentStroke = false;
                 currentPoint = false;
+                console.log(err);
             }
             currentStroke = false;
             currentPoint = false;
