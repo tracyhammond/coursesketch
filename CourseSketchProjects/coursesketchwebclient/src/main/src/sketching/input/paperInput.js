@@ -11,17 +11,31 @@ function InputListener() {
         var ps = graphics.getPaper();
         tool = new ps.Tool();
         tool.fixedDistance = 5;
+
+        var startingCenter;
+        var startingPoint;
+        var lastPoint;
         tool.onMouseDown = function(event) {
-            currentPoint = createPointFromEvent(event);
-            currentStroke = new SRL_Stroke(currentPoint);
-            currentStroke.setId(generateUUID());
-            graphics.createNewPath(event.point);
-            pastPoint = currentPoint;
+            if (Key.isDown('shift')) {
+                // do panning
+                startingPoint = ps.project.activeLayer.localToGlobal(event.point);
+                startingCenter= ps.project.activeLayer.localToGlobal(ps.view.center);
+
+            } else {
+                currentPoint = createPointFromEvent(event);
+                currentStroke = new SRL_Stroke(currentPoint);
+                currentStroke.setId(generateUUID());
+                graphics.createNewPath(event.point);
+                pastPoint = currentPoint;
+            }
         };
         tool.onMouseDrag = function(event) {
-            if (event.event.button == 1) {
+            if (Key.isDown('shift')) {
                 // do panning
-                event.delta.
+
+                ps.view.center =
+                 startingCenter.subtract(ps.project.activeLayer.localToGlobal(event.point).subtract(startingPoint));
+
             } else {
                 currentPoint = createPointFromEvent(event);
                 //currentPoint.setSpeed(pastPoint);
