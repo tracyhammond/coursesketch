@@ -35,6 +35,15 @@ public class DatabaseAccessException extends Exception {
     /**
      * Only takes in a message assumes the exception is not recoverable.
      * @param string A message of the error.
+     * @param exception The exception that was thrown before this.
+     */
+    public DatabaseAccessException(final String string, final Exception exception) {
+        super(string, exception);
+    }
+
+    /**
+     * Only takes in a message assumes the exception is not recoverable.
+     * @param string A message of the error.
      */
     public DatabaseAccessException(final String string) {
         this(string, false);
