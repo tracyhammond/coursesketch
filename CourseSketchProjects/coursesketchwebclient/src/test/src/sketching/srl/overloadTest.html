@@ -1,0 +1,138 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/sketching/srl/srlLibraryInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/sketching/srl/objects/overload.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+    <script>
+    QUnit.module("overload:check_type");
+    QUnit.test("overload:check_type", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.check_type();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:getArea");
+    QUnit.test("overload:getArea", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.getArea();
+        .ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:getMinX");
+    QUnit.test("overload:getMinX", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.getMinX();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:getMinY");
+    QUnit.test("overload:getMinY", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.getMinY();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:getMaxX");
+    QUnit.test("overload:getMaxX", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.getMaxX();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:getMaxY");
+    QUnit.test("overload:getMaxY", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.getMaxY();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:distance");
+    QUnit.test("overload:distance", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.distance();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:getSize");
+    QUnit.test("overload:getSize", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.getSize();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:getSubObjectById");
+    QUnit.test("overload:getSubObjectById", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.getSubObjectById();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:removeSubObjectById");
+    QUnit.test("overload:removeSubObjectById", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.removeSubObjectById();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:getSubObjectAtIndex");
+    QUnit.test("overload:getSubObjectAtIndex", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.getSubObjectAtIndex();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("overload:removeSubObjectAtIndex");
+    QUnit.test("overload:removeSubObjectAtIndex", function(assert) {
+        var overloadTest = new Overloads();
+        overloadTest.removeSubObjectAtIndex();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>    
+
+</body>
