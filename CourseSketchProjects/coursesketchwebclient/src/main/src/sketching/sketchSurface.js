@@ -118,8 +118,8 @@ function SketchSurface() {
         console.log(stroke);
 
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
-
-        command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
+        var protoStroke = stroke.sendToProtobuf(parent);
+        command.commandData = protoStroke.toArrayBuffer();
         command.decodedData = stroke;
         var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
         this.updateList.addUpdate(update);
