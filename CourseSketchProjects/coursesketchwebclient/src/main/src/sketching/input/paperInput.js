@@ -59,6 +59,7 @@ function InputListener() {
             } catch(err) {
                 currentStroke = false;
                 currentPoint = false;
+                console.log(err);
             }
             currentStroke = false;
             currentPoint = false;
@@ -83,10 +84,14 @@ function InputListener() {
      * Creates an {@link SRL_Point} from a drawing event.
      */
     function createPointFromEvent(drawingEvent) {
-        var currentPoint = new SRL_Point(drawingEvent.x, drawingEvent.y);
+        var currentPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);
         currentPoint.setId(generateUUID());
         currentPoint.setTime(drawingEvent.event.timeStamp);
-        currentPoint.setPressure(drawingEvent.pressure);
+        if (!isUndefined(drawingEvent.pressure)) {
+            currentPoint.setPressure(drawingEvent.pressure);
+        } else {
+            currentPoint.setPressure(0.5);
+        }
         currentPoint.setSize(0.5/*drawingEvent.size*/);
         currentPoint.setUserCreated(true);
         return currentPoint;
