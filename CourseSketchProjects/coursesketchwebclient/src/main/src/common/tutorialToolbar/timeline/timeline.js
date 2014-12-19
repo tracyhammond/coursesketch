@@ -271,7 +271,7 @@ function Timeline () {
          * creates textbox redo
          */
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
-            if (!isUndefined(this.commandId)) {merge
+            if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
                         CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
                 var textBox  = document.createElement('text-box-creation');
