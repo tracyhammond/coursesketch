@@ -16,7 +16,7 @@ function InputListener() {
         var startingPoint;
         var lastPoint;
         tool.onMouseDown = function(event) {
-            if (Key.isDown('shift')) {
+            if (Key.isDown('shift') || event.event.button == 1) {
                 // do panning
                 startingPoint = ps.project.activeLayer.localToGlobal(event.point);
                 startingCenter= ps.project.activeLayer.localToGlobal(ps.view.center);
@@ -30,12 +30,11 @@ function InputListener() {
             }
         };
         tool.onMouseDrag = function(event) {
-            if (Key.isDown('shift')) {
+            if (Key.isDown('shift') || event.event.button == 1) {
                 // do panning
-
+                currentStroke = undefined;
                 ps.view.center =
                  startingCenter.subtract(ps.project.activeLayer.localToGlobal(event.point).subtract(startingPoint));
-
             } else {
                 currentPoint = createPointFromEvent(event);
                 //currentPoint.setSpeed(pastPoint);

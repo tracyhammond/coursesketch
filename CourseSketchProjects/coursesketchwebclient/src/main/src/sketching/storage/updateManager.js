@@ -16,11 +16,11 @@ UndoRedoException.prototype = new UpdateException();
 /**
  * The update manager manages the lists of actions that have occured for a
  * sketch (or multiple sketches)
- * 
+ *
  * Goals: The update manager can be used for multiple sketches (using the switch
  * sketch command)
- * 
- * 
+ *
+ *
  * @param inputSketch
  *            {SrlSketch} The sketch that all of these updates are being added
  *            to.
@@ -67,7 +67,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
 
     /**
      * Holds the list of updates that are waiting to be executed locally
-     * 
+     *
      * This list should almost always be near empty. there is also an
      * executionLock and a boolean for the queue being empty
      */
@@ -84,12 +84,12 @@ function UpdateManager(inputSketch, onError, sketchManager) {
 
     /**
      * Adds an update to the updateList
-     * 
+     *
      * If the currentUpdateIndex less than the list size then we need to remove
      * all the other updates from the list and add the newest one on. These
      * commands are only executed if the command is fromRemote or execute is
      * true.
-     * 
+     *
      * @param update
      *            {SrlUpdate} the update that is being added to this specific
      *            update manager.
@@ -97,17 +97,11 @@ function UpdateManager(inputSketch, onError, sketchManager) {
     this.addUpdate = function(update) {
         queuedLocalUpdates.push(update);
         emptyLocalQueue();
-
-        for (var i = 0; i < plugins.length; i++) {
-            if (!isUndefined(plugins[i].addUpdate)) {
-                plugins[i].addUpdate(arguments);
-            }
-        }
     };
 
     /**
      * Clears the current updates.
-     * 
+     *
      * @param redraw
      *            {boolean} if true then the sketch will be redrawn.
      */
@@ -122,7 +116,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
 
     /**
      * Clears the sketch but does not clear any updates.
-     * 
+     *
      * @param redraw
      *            {boolean} if true then the sketch will be redrawn.
      */
@@ -147,9 +141,9 @@ function UpdateManager(inputSketch, onError, sketchManager) {
 
     /**
      * Generates a marker that can be used for marking things.
-     * 
+     *
      * Returns the result as a Command.
-     * 
+     *
      * @param userCreated
      *            {boolean} True if the user created this marker.
      * @param markerType
@@ -173,7 +167,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
 
     /**
      * Tries to quickly empty the local queue.
-     * 
+     *
      * Ensures that even with the rapid addition of updates there are no
      * executions that overlap.
      */
@@ -184,11 +178,14 @@ function UpdateManager(inputSketch, onError, sketchManager) {
                 var nextUpdate = queuedLocalUpdates.removeObjectByIndex(0);
                 try {
                     var redraw = executeUpdate(nextUpdate);
-                    if (redraw && sketch.drawEntireSketch) {
-                        setTimeout(function() {
-                            sketch.drawEntireSketch();
-                        }, 10);
-                    }
+                    var updateIndex = updateList.length;
+                    setTimeout(function() {
+                        for (var i = 0; i < plugins.length; i++) {
+                            if (!isUndefined(plugins[i].addUpdate)) {
+                                plugins[i].addUpdate(nextUpdate, redraw, updateIndex);
+                            }
+                        }
+                    }, 10);
                 } catch (exception) {
                     executionLock = false;
                     if (onError) onError(exception);
@@ -208,9 +205,9 @@ function UpdateManager(inputSketch, onError, sketchManager) {
 
     /**
      * Executes an update.
-     * 
+     *
      * Does special handling with redo and undo
-     * 
+     *
      * @param update
      * @returns {boolean} true if the object needs to be redrawn.
      */
@@ -288,7 +285,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
     /**
      * If the update is a marker than it will skip that parts that can not be
      * reached.
-     * 
+     *
      * @param update
      *            {SrlUpdate}
      * @returns true if the sketch needs to be redrawn.
@@ -331,7 +328,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
     /**
      * If the update is a marker than it will skip that parts that can not be
      * reached
-     * 
+     *
      * @param update
      *            {SrlUpdate}
      * @returns true if the sketch needs to be redrawn.
@@ -365,9 +362,9 @@ function UpdateManager(inputSketch, onError, sketchManager) {
     /**
      * Returns a copy of the updateList for the purpose of not being edited
      * while in use.
-     * 
+     *
      * this is a delayed method to prevent javascript from freezing the browser.
-     * 
+     *
      * @param callback
      *            {Function}
      */
@@ -459,7 +456,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
 
     /**
      * This clears any current updates and replaces the list with a new list.
-     * 
+     *
      * @param list
      *            The list that is will be added to the sketch
      * @param percentBar
@@ -492,7 +489,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
 
     /**
      * creates and adds a redo update to the stack.
-     * 
+     *
      * @param userCreated
      *            {boolean} true if the userCreated the command false otherwise.
      */
@@ -504,7 +501,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
 
     /**
      * creates and adds a redo update to the stack.
-     * 
+     *
      * @param userCreated
      *            {boolean} true if the userCreated the command false otherwise.
      */
