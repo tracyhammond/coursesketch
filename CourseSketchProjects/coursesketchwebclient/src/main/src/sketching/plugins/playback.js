@@ -1,5 +1,6 @@
 function Playback(updateList, updateManager, graphics) {
     var currentIndex = -1;
+    var length = updateList.length;
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
         var commandList = update.commands;
 
@@ -51,7 +52,7 @@ function Playback(updateList, updateManager, graphics) {
             graphics.getPaper().project.activeLayer.removeChildren();
             graphics.getPaper().view.update();
         }
-        if (currentIndex >= updateList.length) {
+        if (currentIndex >= length) {
             console.log("Finished");
             return;
         }
