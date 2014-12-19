@@ -16,6 +16,11 @@
     function playMe() {
         var graphics = surface.graphics;
         var updateList = surface.getUpdateList();
+        var copyList = [];
+        for (var i = 0; i < updateList.length; i++) {
+            copyList.push(updateList[i]);
+        }
+        updateManager.clearUpdates(false);
         var updateManager = surface.getUpdateManager();
 
         var playBack = new Playback(updateList, updateManager, graphics);
