@@ -22,11 +22,14 @@ function Playback(updateList, updateManager, graphics) {
                     // set up the barrier...
                     var strokeBarrier = new CallbackBarrier();
                     var pointAdded = strokeBarrier.getCallbackAmount(pointList.length);
+
+                    var strokePath = new ps.Path({strokeColor:'red', strokeCap:'round'});
                     strokeBarrier.finalize(function() {
+                        strokePath.simplify();
                         commandFinished();
                     });
                     console.log(ps);
-                    var strokePath = new ps.Path({strokeColor:'red', strokeCap:'round'});
+
                     var startingTime = pointList[0].getTime();
                     for (var i = 0; i < pointList.length; i++) {
 
