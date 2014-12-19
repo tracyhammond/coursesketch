@@ -99,6 +99,9 @@ function UpdateManager(inputSketch, onError, sketchManager) {
         emptyLocalQueue();
     };
 
+    this.addPlugin = function(plugin) {
+        plugins.push(plugin);
+    };
     /**
      * Clears the current updates.
      *
