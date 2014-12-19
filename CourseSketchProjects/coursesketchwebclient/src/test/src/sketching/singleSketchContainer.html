@@ -2,6 +2,8 @@
 <head>
 <meta charset="UTF-8">
 <link rel="import" href="/src/sketching/sketchInclude.html">
+    <script src="/src/utilities/functions/barrier.js"></script>
+    <script src="/src/sketching/plugins/playback.js"></script>
 </head>
 <body style="background:#FFFFFF;">
 
@@ -9,6 +11,17 @@
 
 <script>
     var surface = document.body.querySelector("sketch-surface");
+    var graphics = surface.graphics;
+    //var updateManager = surface.getUpdateManager();
+    function playMe() {
+        var graphics = surface.graphics;
+        var updateList = surface.getUpdateList();
+        var updateManager = surface.getUpdateManager();
+
+        var playBack = new Playback(updateList, updateManager, graphics);
+        updateManager.addPlugin(playBack);
+        playBack.playNext();
+    }
 </script>
 </body>
 </html>
