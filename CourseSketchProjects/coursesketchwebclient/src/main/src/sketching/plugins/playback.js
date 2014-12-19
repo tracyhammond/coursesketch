@@ -1,5 +1,5 @@
 function Playback(updateList, updateManager, graphics) {
-    var currentIndex = 0;
+    var currentIndex = -1;
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
         var commandList = update.commands;
 
@@ -46,6 +46,7 @@ function Playback(updateList, updateManager, graphics) {
     };
 
     this.playNext = function() {
+        currentIndex++;
         if (currentIndex == 0) {
             graphics.getPaper().project.activeLayer.removeChildren();
             graphics.getPaper().view.update();
@@ -55,6 +56,6 @@ function Playback(updateList, updateManager, graphics) {
             return;
         }
         updateManager.addUpdate(updateList[currentIndex]);
-        currentIndex++;
+
     }
 }
