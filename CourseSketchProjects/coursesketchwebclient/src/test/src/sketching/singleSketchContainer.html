@@ -20,10 +20,10 @@
         for (var i = 0; i < updateList.length; i++) {
             copyList.push(updateList[i]);
         }
-        updateManager.clearUpdates(false);
         var updateManager = surface.getUpdateManager();
+        updateManager.clearUpdates(false);
 
-        var playBack = new Playback(updateList, updateManager, graphics);
+        var playBack = new Playback(copyList, updateManager, graphics);
         updateManager.addPlugin(playBack);
         playBack.playNext();
     }

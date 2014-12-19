@@ -1,4 +1,5 @@
 function Playback(updateList, updateManager, graphics) {
+    var ps = graphics.getPaper();
     var currentIndex = -1;
     var length = updateList.length;
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
@@ -24,13 +25,14 @@ function Playback(updateList, updateManager, graphics) {
                     strokeBarrier.finalize(function() {
                         commandFinished();
                     });
-                    var strokePath = new graphics.getPaper().Path();
-
+                    console.log(ps);
+                    var strokePath = new ps.Path({strokeColor:'red', strokeCap:'round'});
                     var startingTime = pointList[0].getTime();
                     for (var i = 0; i < pointList.length; i++) {
+
                         (function(index) {
                             setTimeout(function() {
-                                strokePath.add(new graphics.getPaper().Point(pointList[index].getX(), pointList[index].getY()));
+                                strokePath.add(new ps.Point(pointList[index].getX(), pointList[index].getY()));
                                 graphics.getPaper().view.update();
                                 pointAdded();
                             }, pointList[index].getTime() - startingTime);
