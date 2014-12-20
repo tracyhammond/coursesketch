@@ -12,6 +12,7 @@ function Graphics(canvasElement, sketch) {
     var ps = undefined;
     var livePath = undefined;
     var canvasElement = $(canvasElement)[0];
+    var drawUpdate = true;
 
     /**
      * the last stroke the user drew.  Used to prevent the creation of two paths.
@@ -117,6 +118,10 @@ function Graphics(canvasElement, sketch) {
      * Adds ability to draw the command as it is added to the update list.
      */
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
+        if (!drawUpdate) {
+            return;
+        }
+        console.log(drawUpdate);
         var commandList = update.commands;
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
@@ -128,5 +133,12 @@ function Graphics(canvasElement, sketch) {
         if (redraw) {
             ps.view.update();
         }
+    }
+
+    /**
+     * @param drawInstant {boolean} If false this will tell the graphics to not draw anytime it receives an update.
+     */
+    this.setDrawUpdate = function(drawInstant) {
+        drawUpdate = drawInstant;
     }
 }
