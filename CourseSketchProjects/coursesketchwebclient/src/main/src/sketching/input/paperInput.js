@@ -1,5 +1,6 @@
-// TODO: change this to use hammer.js
-
+/**
+ * Contains input listeners for canvas interaction and functions for creating points using drawing events
+ */
 function InputListener() {
     var currentPoint;
     var pastPoint;
@@ -7,14 +8,22 @@ function InputListener() {
     var tool = undefined;
     var totalZoom = 0;
 
+    /**
+     * Creates mouse listeners that enable strokes, panning and zooming
+     */
     this.initializeCanvas = function(sketchCanvas, strokeCreationCallback, graphics) {
         var ps = graphics.getPaper();
         tool = new ps.Tool();
         tool.fixedDistance = 5;
 
+
+        //used for panning and zooming
         var startingCenter;
         var startingPoint;
         var lastPoint;
+
+        //if shift is held, pans
+        //if shift is not held, it starts a new path from the mouse point
         tool.onMouseDown = function(event) {
             if (Key.isDown('shift') || event.event.button == 1) {
                 // do panning
@@ -29,6 +38,9 @@ function InputListener() {
                 pastPoint = currentPoint;
             }
         };
+
+        //if shift is held, pans the view to follow the mouse
+        //if shift is not held, it adds more points to the path created on MouseDown
         tool.onMouseDrag = function(event) {
             if (Key.isDown('shift') || event.event.button == 1) {
                 // do panning
@@ -44,6 +56,8 @@ function InputListener() {
             }
         };
 
+        //finishes up the path that has been created by the mouse pointer
+        //unless shift has been held, then it throws up
         tool.onMouseUp = function(event) {
             currentPoint = createPointFromEvent(event);
             //currentPoint.setSpeed(pastPoint);
@@ -64,6 +78,7 @@ function InputListener() {
             currentPoint = false;
         };
 
+        //zooms the view with the mousewheel
         sketchCanvas.addEventListener("mousewheel", function(event) {
             event.stopPropagation();
             event.preventDefault();
@@ -80,7 +95,7 @@ function InputListener() {
     }
 
     /**
-     * Creates an {@link SRL_Point} from a drawing event.
+     * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point
      */
     function createPointFromEvent(drawingEvent) {
         var currentPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);

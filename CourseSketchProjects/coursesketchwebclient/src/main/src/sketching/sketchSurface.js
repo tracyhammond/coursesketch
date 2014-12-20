@@ -224,12 +224,6 @@ SketchSurface.prototype = Object.create(HTMLElement.prototype);
  *            has already been imported and then added to this element.
  */
 SketchSurface.prototype.initializeElement = function(templateClone) {
-    /*
-    Object.defineProperty(this, 'shadowRoot', {
-      get: function() { return document.body; },
-      set: function(value) { }
-    });
-    */
     var root = this.createShadowRoot();
     root.appendChild(templateClone);
     this.shadowRoot = this;

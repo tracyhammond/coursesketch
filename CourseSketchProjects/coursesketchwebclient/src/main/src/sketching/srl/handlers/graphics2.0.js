@@ -1,3 +1,6 @@
+/**
+ * Installs PaperScope globally, and attaches it to the DomObject canvasElement
+ */
 function Graphics(canvasElement, sketch) {
     paper.install(window);
     var ps = undefined;
@@ -6,9 +9,10 @@ function Graphics(canvasElement, sketch) {
 
     ps = new paper.PaperScope(canvasElement);
     ps.setup(canvasElement);
-    //ps.view.viewSize = [300, 200];
 
-    // ghetoo rigging
+    /**
+     * Resizes the canvasElement to the size of the canvasElement's container
+     */
     function correctSize() {
         console.log(canvasElement);
         var oldHeight = canvasElement.height;
@@ -21,7 +25,9 @@ function Graphics(canvasElement, sketch) {
             ps.view.viewSize = [canvasElement.height, canvasElement.width];
         }
     }
-
+    /**
+     * Updates the view at 60fps
+     */
     ps.view.onFrame = function(event) {
         if (event.count <= 1) {
             correctSize();
@@ -29,26 +35,39 @@ function Graphics(canvasElement, sketch) {
         ps.view.update();
     };
 
+    /**
+     * Starts a new path in the view at the given point
+     */
     this.createNewPath = function(point) {
         livePath = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
         livePath.add(point);
     };
 
+    /**
+     * Adds a given point to the active path
+     */
     this.updatePath = function(point) {
         livePath.add(point);
     };
 
+    /**
+     * Adds a final given point to the path, then simplifies it (makes it pretty and smooth)
+     */
     this.endPath = function(point) {
         livePath.add(point);
         livePath.simplify();
     };
 
-    var queue = new ps.Path.Circle({center: [50, 50], radius: [20, 20], strokeColor: 'black'});
-
+    /**
+     * Returns the PaperScope (will return scope of a specific element via a parameter)
+     */
     this.getPaper = function() {
         return ps;
     };
 
+    /**
+     * Sequentially loads all of the saved strokes from the beginning, and does so instantaneously
+     */
     this.loadSketch = function() {
         ps.project.activeLayer.removeChildren();
         ps.view.update();
@@ -63,12 +82,17 @@ function Graphics(canvasElement, sketch) {
         }
         ps.view.update();
     };
-
+    
+    /**
+     * Sequentially loads all of the saved strokes from the beginning, and does so instantaneously
+     */
     function loadStroke(stroke) {
+        ps.view.update();
         path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
         var pointList = stroke.getPoints();
         for (var i = 0; i < pointList.length; i++) {
             path.add(new ps.Point(pointList[i].getX(), pointList[i].getY()));
         }
+        path.simplify();
     }
 }
