@@ -31,7 +31,7 @@ function Playback(updateList, updateManager, graphics) {
                     var strokeBarrier = new CallbackBarrier();
                     var pointAdded = strokeBarrier.getCallbackAmount(pointList.length);
 
-                    var strokePath = new ps.Path({strokeColor:'red', strokeCap:'round'});
+                    var strokePath = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
                     strokeBarrier.finalize(function() {
                         strokePath.simplify();
                         commandFinished();
@@ -60,12 +60,14 @@ function Playback(updateList, updateManager, graphics) {
     };
 
     this.playNext = function() {
+        graphics.setDrawUpdate(false);
         currentIndex++;
         if (currentIndex == 0) {
             graphics.getPaper().project.activeLayer.removeChildren();
             graphics.getPaper().view.update();
         }
         if (currentIndex >= length) {
+            graphics.setDrawUpdate(true);
             console.log("Finished");
             return;
         }
