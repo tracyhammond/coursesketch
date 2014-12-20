@@ -5,7 +5,9 @@
  */
 
 function Playback(updateList, updateManager, graphics) {
+    var ps = graphics.getPaper();
     var currentIndex = -1;
+    var length = updateList.length;
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
         var commandList = update.commands;
 
@@ -26,16 +28,20 @@ function Playback(updateList, updateManager, graphics) {
                     // set up the barrier...
                     var strokeBarrier = new CallbackBarrier();
                     var pointAdded = strokeBarrier.getCallbackAmount(pointList.length);
+
+                    var strokePath = new ps.Path({strokeColor:'red', strokeCap:'round'});
                     strokeBarrier.finalize(function() {
+                        strokePath.simplify();
                         commandFinished();
                     });
-                    var strokePath = new graphics.getPaper().Path();
+                    console.log(ps);
 
                     var startingTime = pointList[0].getTime();
                     for (var i = 0; i < pointList.length; i++) {
+
                         (function(index) {
                             setTimeout(function() {
-                                strokePath.add(new graphics.getPaper().Point(pointList[index].getX(), pointList[index].getY()));
+                                strokePath.add(new ps.Point(pointList[index].getX(), pointList[index].getY()));
                                 graphics.getPaper().view.update();
                                 pointAdded();
                             }, pointList[index].getTime() - startingTime);
@@ -57,7 +63,7 @@ function Playback(updateList, updateManager, graphics) {
             graphics.getPaper().project.activeLayer.removeChildren();
             graphics.getPaper().view.update();
         }
-        if (currentIndex >= updateList.length) {
+        if (currentIndex >= length) {
             console.log("Finished");
             return;
         }
