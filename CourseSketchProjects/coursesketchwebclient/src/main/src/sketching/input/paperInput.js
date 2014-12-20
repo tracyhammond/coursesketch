@@ -16,11 +16,24 @@ function InputListener() {
         tool = new ps.Tool();
         tool.fixedDistance = 5;
 
-
         //used for panning and zooming
         var startingCenter;
         var startingPoint;
         var lastPoint;
+
+        // allows you to zoom in or out based on a delta
+        function zoom(delta) {
+            var oldZoom = totalZoom;
+            totalZoom += delta;
+            if (totalZoom < 0 && totalZoom > -1) {
+                ps.view.zoom = 1;
+            } else if (totalZoom <= -1) {
+                 ps.view.zoom = -1/totalZoom;
+            } else {
+                console.log(totalZoom);
+                ps.view.zoom = totalZoom + 1;
+            }
+        }
 
         //if shift is held, pans
         //if shift is not held, it starts a new path from the mouse point
@@ -85,15 +98,12 @@ function InputListener() {
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            totalZoom += delta;
-            if (totalZoom < 0) {
-                 ps.view.zoom = -1/totalZoom;
-            } else {
-                ps.view.zoom = totalZoom + 1;
-            }
+            zoom(delta/2);
         });
 
         $(sketchCanvas).bind('touchy-pinch', function(event, $target, data) {
+            currentStroke = undefined;
+
             //event.stopPropagation();
             //event.preventDefault();
             console.log(data);
@@ -101,13 +111,11 @@ function InputListener() {
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             //var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            totalZoom = data.scale-data.previousScale;
-            if (totalZoom < 0) {
-                 ps.view.zoom = -1/totalZoom;
-            } else {
-                ps.view.zoom = totalZoom + 1;
-            }
+            zoom(data.scale-data.previousScale);
         });
+
+        // makes zoom public.
+        this.zoom = zoom;
     }
 
     /**
