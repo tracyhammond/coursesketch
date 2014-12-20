@@ -99,9 +99,19 @@ function UpdateManager(inputSketch, onError, sketchManager) {
         emptyLocalQueue();
     };
 
+    /**
+     * Adds a plugin that is called after each update is added.
+     * This can be used by graphics or for recognition purposes.
+     * @param plugin {Object.addUpdate} plugin that has an addUpdate method that can be called.
+     * @callback addUpdate
+     * @callbackParam update {ProtobufUpdate} the update the was just executed by the update manager.
+     * @callbackParam redraw {Boolean} true if the sketch should be redrawn after executing this update.
+     * @callbackParam index, what index this update was.  (Typically is or close to the number of updates in the list)
+     */
     this.addPlugin = function(plugin) {
         plugins.push(plugin);
     };
+
     /**
      * Clears the current updates.
      *
