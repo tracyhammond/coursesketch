@@ -1,3 +1,9 @@
+/**
+ * Plays back the user's commands from the beginning.
+ * Strokes are drawn in real time, in sequence.
+ * The other commands, such as undo/redo/clear are also called in sequence.
+ */
+
 function Playback(updateList, updateManager, graphics) {
     var currentIndex = -1;
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
