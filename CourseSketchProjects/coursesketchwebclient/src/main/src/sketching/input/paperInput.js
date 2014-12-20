@@ -80,12 +80,28 @@ function InputListener() {
 
         //zooms the view with the mousewheel
         sketchCanvas.addEventListener("mousewheel", function(event) {
-            event.stopPropagation();
-            event.preventDefault();
+            //event.stopPropagation();
+            //event.preventDefault();
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
             totalZoom += delta;
+            if (totalZoom < 0) {
+                 ps.view.zoom = -1/totalZoom;
+            } else {
+                ps.view.zoom = totalZoom + 1;
+            }
+        });
+
+        $(sketchCanvas).bind('touchy-pinch', function(event, $target, data) {
+            //event.stopPropagation();
+            //event.preventDefault();
+            console.log(data);
+
+            // cross-browser wheel delta
+            var e = window.event || e; // old IE support
+            //var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+            totalZoom = data.scale-data.previousScale;
             if (totalZoom < 0) {
                  ps.view.zoom = -1/totalZoom;
             } else {
