@@ -50,7 +50,7 @@ function InputListener() {
             currentStroke.addPoint(currentPoint);
             currentStroke.setTime(currentPoint.getTime());
             currentStroke.finish();
-            graphics.endPath(event.point);
+            graphics.endPath(event.point, currentStroke);
             try {
                 if (strokeCreationCallback) {
                     strokeCreationCallback(currentStroke); // Sends back the current stroke.

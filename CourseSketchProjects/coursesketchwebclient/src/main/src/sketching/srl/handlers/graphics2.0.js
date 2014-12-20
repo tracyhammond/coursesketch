@@ -4,12 +4,17 @@ function Graphics(canvasElement, sketch) {
     var livePath = undefined;
     var canvasElement = $(canvasElement)[0];
 
+    /**
+     * the last stroke the user drew.  Used to prevent the creation of two paths.
+     */
+    var lastStroke = undefined;
+
     ps = new paper.PaperScope(canvasElement);
     ps.setup(canvasElement);
     //ps.view.viewSize = [300, 200];
 
     // ghetoo rigging
-    function correctSize() {
+    this.correctSize = function correctSize() {
         console.log(canvasElement);
         var oldHeight = canvasElement.height;
         var oldWidth = canvasElement.width;
@@ -24,10 +29,10 @@ function Graphics(canvasElement, sketch) {
 
     ps.view.onFrame = function(event) {
         if (event.count <= 1) {
-            correctSize();
+            this.correctSize();
         }
         ps.view.update();
-    };
+    }.bind(this);
 
     this.createNewPath = function(point) {
         livePath = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
@@ -38,9 +43,10 @@ function Graphics(canvasElement, sketch) {
         livePath.add(point);
     };
 
-    this.endPath = function(point) {
+    this.endPath = function(point, stroke) {
         livePath.add(point);
         livePath.simplify();
+        lastStroke = stroke;
     };
 
     var queue = new ps.Path.Circle({center: [50, 50], radius: [20, 20], strokeColor: 'black'});
@@ -50,6 +56,7 @@ function Graphics(canvasElement, sketch) {
     };
 
     this.loadSketch = function() {
+        lastStroke = undefined;
         ps.project.activeLayer.removeChildren();
         ps.view.update();
         console.log(sketch);
@@ -65,10 +72,31 @@ function Graphics(canvasElement, sketch) {
     };
 
     function loadStroke(stroke) {
+        if (lastStroke == stroke) {
+            return; // we do not need to double path.
+        }
         path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
         var pointList = stroke.getPoints();
         for (var i = 0; i < pointList.length; i++) {
             path.add(new ps.Point(pointList[i].getX(), pointList[i].getY()));
+        }
+        path.simplify();
+    }
+
+    /**
+     * Adds ability to draw the command as it is added to the update list.
+     */
+    this.addUpdate = function addUpdate(update, redraw, updateIndex) {
+        var commandList = update.commands;
+        for (var i = 0; i < commandList.length; i++) {
+            var command = commandList[i];
+            if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
+                var stroke = command.decodedData;
+                loadStroke(stroke);
+            }
+        }
+        if (redraw) {
+            ps.view.update();
         }
     }
 }
