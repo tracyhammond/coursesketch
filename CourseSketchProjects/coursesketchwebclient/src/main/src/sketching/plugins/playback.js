@@ -2,8 +2,10 @@
  * Plays back the user's commands from the beginning.
  * Strokes are drawn in real time, in sequence.
  * The other commands, such as undo/redo/clear are also called in sequence.
+ * @param updateList {Array} the list of updates to be inserted in real time.
+ * @param updateManager {UpdateManager} The manager of the updates.
+ * @param graphics {Graphics} used to draw objects to the screen.
  */
-
 function Playback(updateList, updateManager, graphics) {
     var ps = graphics.getPaper();
     var currentIndex = -1;
