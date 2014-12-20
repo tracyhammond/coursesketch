@@ -3,6 +3,12 @@
  */
 function Graphics(canvasElement, sketch) {
     paper.install(window);
+
+    /**
+     * The paper object that is a scope for this specific canvas.
+     * It is an instance of PaperScope.
+     * Contains view, project, and handles input.
+     */
     var ps = undefined;
     var livePath = undefined;
     var canvasElement = $(canvasElement)[0];
@@ -29,7 +35,8 @@ function Graphics(canvasElement, sketch) {
 
             ps.view.viewSize = [canvasElement.height, canvasElement.width];
         }
-    }
+    };
+
     /**
      * Updates the view at 60fps
      */
@@ -65,7 +72,7 @@ function Graphics(canvasElement, sketch) {
     };
 
     /**
-     * Returns the PaperScope (will return scope of a specific element via a parameter)
+     * @return the PaperScope (will return scope of a specific element via a parameter)
      */
     this.getPaper = function() {
         return ps;
@@ -91,7 +98,8 @@ function Graphics(canvasElement, sketch) {
     };
 
     /**
-     * Sequentially loads all of the saved strokes from the beginning, and does so instantaneously
+     * Draws a single stroke onto the screen.
+     * @param stroke {Srl_Stroke} the stroke to be drawn.
      */
     function loadStroke(stroke) {
         if (lastStroke == stroke) {
