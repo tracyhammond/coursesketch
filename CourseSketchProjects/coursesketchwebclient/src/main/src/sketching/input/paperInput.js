@@ -26,9 +26,9 @@ function InputListener() {
             var oldZoom = totalZoom;
             totalZoom += delta;
             if (totalZoom < 0 && totalZoom > -1) {
-                ps.view.zoom = 1;
+                ps.view.zoom = -1/(totalZoom - 1);
             } else if (totalZoom <= -1) {
-                 ps.view.zoom = -1/totalZoom;
+                 ps.view.zoom = -1/(totalZoom - 1);
             } else {
                 console.log(totalZoom);
                 ps.view.zoom = totalZoom + 1;
@@ -98,7 +98,7 @@ function InputListener() {
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            zoom(delta/2);
+            zoom(delta/3);
         });
 
         // makes zoom public.
