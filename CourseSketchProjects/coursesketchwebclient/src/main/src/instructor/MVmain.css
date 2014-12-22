@@ -1,0 +1,48 @@
+h1 {
+	
+	background-color: #888;
+	color: blue;
+	text-align: center;
+	width: 100%;
+	height: 5%;
+
+}
+
+.info {
+
+	width: 20%;
+	height: 95%;
+	border: 1px solid black;
+	background-color: white;
+	text-align: center;
+	font-size: 120%;
+	font-family: 'Open Sans', sans-serif;
+
+
+}
+
+.info p {
+	text-align: left 5%;
+}
+
+.sketches {
+
+	position: relative;
+	bottom: 93%;
+	width: 79%;
+	left: 21%;
+	height: 95%;
+	border: 1px solid black;
+	background-color: white;
+	text-align: center;
+	font-size: 175%;
+	font-family: 'Open Sans', sans-serif;
+
+
+}
+
+body {
+
+	background-color: #aaa;
+
+}

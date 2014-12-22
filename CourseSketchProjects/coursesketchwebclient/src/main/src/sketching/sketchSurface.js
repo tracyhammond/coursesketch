@@ -35,7 +35,7 @@ function SketchSurface() {
      * Does some manual GC. TODO: unlink some circles manually.
      */
     this.finalize = function() {
-        this.updateList = undefined;
+        this.updateManager = undefined;
         this.localInputListener = undefined;
         this.sketchEventConverter = undefined;
         this.sketch = undefined;
@@ -50,7 +50,7 @@ function SketchSurface() {
         if (isUndefined(this.id)) {
             this.id = generateUUID();
         }
-        if (!isUndefined(this.updateList) && this.updateList.getListLength() <= 0) {
+        if (!isUndefined(this.updateManager) && this.updateManager.getListLength() <= 0) {
             var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
             var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             idChain.idChain = [ this.id ];
@@ -66,7 +66,7 @@ function SketchSurface() {
             }
             command.setCommandData(createSketchAction.toArrayBuffer());
             var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
-            this.updateList.addUpdate(update);
+            this.updateManager.addUpdate(update);
         }
     };
 
@@ -85,23 +85,25 @@ function SketchSurface() {
     };
 
     /**
-     * binds the sketch surface to an update list.
+     * binds the sketch surface to an update manager.
      * @param UpdateManagerClass {UpdateManager instance | UpdateManager class} this takes an either an instance of an update manager.
      * Or a update manager class that is then constructed.
      * You can only bind an update list to a sketch once.
      */
-    this.bindToUpdateList = function(UpdateManagerClass) {
+    this.bindToUpdateManager = function(UpdateManagerClass) {
         if (this.bindUpdateListCalled === false) {
-            this.updateList = undefined;
+            this.updateManager = undefined;
         }
 
-        if (isUndefined(this.updateList)) {
+        if (isUndefined(this.updateManager)) {
             if (UpdateManagerClass instanceof UpdateManager) {
-                this.updateList = UpdateManagerClass;
+                this.updateManager = UpdateManagerClass;
             } else {
-                this.updateList = new UpdateManagerClass(this.sketch, this.errorListener, CourseSketch.SKETCHING_SURFACE_HANDLER);
+                this.updateManager = new UpdateManagerClass(this.sketch, this.errorListener, CourseSketch.SKETCHING_SURFACE_HANDLER);
             }
             this.bindUpdateListCalled = true;
+            // sets up the plugin that draws the strokes as they are added to the update list.
+            this.updateManager.addPlugin(this.graphics);
         } else {
             throw new Error("Update list is already defined");
         }
@@ -115,14 +117,13 @@ function SketchSurface() {
      *            {SRL_Stroke} a stroke that is added to the sketch.
      */
     function addStrokeCallback(stroke) {
-        stroke.draw( this.localInputListener.canvasContext);
 
         var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
-
-        command.commandData = stroke.sendToProtobuf(parent).toArrayBuffer();
+        var protoStroke = stroke.sendToProtobuf(parent);
+        command.commandData = protoStroke.toArrayBuffer();
         command.decodedData = stroke;
         var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
-        this.updateList.addUpdate(update);
+        this.updateManager.addUpdate(update);
     }
 
     /**
@@ -133,10 +134,14 @@ function SketchSurface() {
      */
     this.initializeInput = function(InputListener, SketchEventConverter) {
         this.localInputListener = new InputListener();
-        this.localInputListener.initializeCanvas(this.sketchCanvas);
-        var canvasContext = this.localInputListener.canvasContext;
-        this.sketch.canvasContext = canvasContext;
-        this.sketchEventConverter = new SketchEventConverter(this.localInputListener, addStrokeCallback.bind(this), canvasContext);
+
+        this.graphics = new Graphics(this.sketchCanvas, this.sketch);
+        this.sketch.drawEntireSketch = function() {
+            this.graphics.getPaper().view.update();
+        };
+
+        this.localInputListener.initializeCanvas(this, addStrokeCallback.bind(this), this.graphics);
+
         this.eventListenerElement = this.sketchCanvas;
 
         this.resizeSurface();
@@ -149,21 +154,24 @@ function SketchSurface() {
         console.log(this.sketchCanvas);
         this.sketchCanvas.height = $(this.sketchCanvas).height();
         this.sketchCanvas.width = $(this.sketchCanvas).width();
-        this.sketch.drawEntireSketch();
+        // this.sketch.drawEntireSketch();
     };
 
     /**
      * Binds a function that resizes the surface every time the size of the window changes.
      */
     this.makeResizeable = function() {
-        $(window).resize(this.resizeSurface.bind(this));
+        $(window).resize(function() {
+            this.resizeSurface();
+            this.graphics.correctSize();
+        }.bind(this));
     };
 
     /**
      * Initializes the sketch and resets all values.
      */
     this.initializeSketch = function() {
-        this.updateList = undefined;
+        this.updateManager = undefined;
         bindUpdateListCalled = false;
         this.sketch = new SRL_Sketch();
         this.eventListenerElement = undefined;
@@ -187,14 +195,14 @@ function SketchSurface() {
      * returns the update list of the element.
      */
     this.getUpdateList = function() {
-        return this.updateList.getUpdateList();
+        return this.updateManager.getUpdateList();
     };
 
     /**
      * Returns the manager for this sketch surface.
      */
     this.getUpdateManager = function() {
-        return this.updateList;
+        return this.updateManager;
     };
 
     /**
@@ -202,8 +210,22 @@ function SketchSurface() {
      */
     this.getSrlUpdateListProto = function() {
         var updateProto = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
-        updateProto.list = this.updateList.getUpdateList();
+        updateProto.list = this.updateManager.getUpdateList();
         return updateProto;
+    };
+
+    /**
+     * Redraws the sketch so it is visible on the screen.
+     */
+    this.refreshSketch = function() {
+        this.graphics.loadSketch();
+    };
+
+    /**
+     * Loads all of the updates into the sketch.  This should only be done after the sketch surface is inserted into the dom.
+     */
+    this.loadUpdateList = function(updateList, percentBar) {
+        this.updateManager.setUpdateList(updateList, percentBar);
     };
 }
 
@@ -219,14 +241,17 @@ SketchSurface.prototype = Object.create(HTMLElement.prototype);
 SketchSurface.prototype.initializeElement = function(templateClone) {
     var root = this.createShadowRoot();
     root.appendChild(templateClone);
+    this.shadowRoot = this;
+    document.body.appendChild(templateClone);
     this.sketchCanvas = this.shadowRoot.querySelector("#drawingCanvas");
 };
 
-SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchEventConverterClass, UpdateManagerClass) {
+
+SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateManagerClass) {
     this.initializeSketch();
 
     if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
-        this.initializeInput(InputListenerClass, SketchEventConverterClass);
+        this.initializeInput(InputListenerClass);
     }
 
     if (isUndefined(this.dataset) || isUndefined(this.dataset.customid) || isUndefined(this.id) || this.id == null || this.id == "") {
@@ -234,7 +259,7 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, SketchE
     }
 
     if (isUndefined(this.dataset) || isUndefined(this.dataset.existinglist)) {
-        this.bindToUpdateList(UpdateManagerClass);
+        this.bindToUpdateManager(UpdateManagerClass);
     }
 
     this.registerSketchInManager();

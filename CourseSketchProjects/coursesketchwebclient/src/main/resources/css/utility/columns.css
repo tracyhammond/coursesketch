@@ -26,7 +26,7 @@
 	background-image: -moz-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
 	background-image: -webkit-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
 	background-image: -ms-linear-gradient(top, #DDDDDD 0%, #CCCCCC 100%);
-	
+
 	background-image: -webkit-gradient(
 		linear,
 		left top,
@@ -42,7 +42,7 @@
 	background-image: -moz-linear-gradient(top, #EEEEEE 0%, #A9D0F5 100%);
 	background-image: -webkit-linear-gradient(top, #EEEEEE 0%, #A9D0F5 100%);
 	background-image: -ms-linear-gradient(top, #EEEEEE 0%, #A9D0F5 100%);
-	
+
 	background-image: -webkit-gradient(
 		linear,
 		left top,
@@ -58,7 +58,7 @@
 	background-image: -moz-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
 	background-image: -webkit-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
 	background-image: -ms-linear-gradient(top, #DDDDDD 0%, #A9D0F5 100%);
-	
+
 	background-image: -webkit-gradient(
 		linear,
 		left top,
@@ -74,7 +74,7 @@
 	background-image: -moz-linear-gradient(top, #A9D0F5 0%, #DDDDDD 100%);
 	background-image: -webkit-linear-gradient(top, #A9D0F5 0%, #DDDDDD 100%);
 	background-image: -ms-linear-gradient(top, #A9D0F5 0%, #DDDDDD 100%);
-	
+
 	background-image: -webkit-gradient(
 		linear,
 		left top,
@@ -94,8 +94,8 @@
 }
 
 /* two items */
-.columnContainer > div:first-child:nth-last-child(2),
-li:first-child:nth-last-child(2) ~ div {
+.columnContainer > div:first-child:nth-last-child(2) ~ div,
+.columnContainer > div:first-child:nth-last-child(2) {
     width: 50%;
 }
 
@@ -109,4 +109,9 @@ li:first-child:nth-last-child(2) ~ div {
 .columnContainer > div:first-child:nth-last-child(4),
 .columnContainer > div:first-child:nth-last-child(4) ~ div {
     width: 25%;
+}
+
+.columnContainer > div {
+	flex-grow: 0;
+	flex-shrink: 1;
 }
