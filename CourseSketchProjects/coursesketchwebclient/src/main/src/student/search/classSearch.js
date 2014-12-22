@@ -63,6 +63,10 @@
         clearTimeout(setTimeVar);
     });
 
+    /**
+     * Moves the course element over so that the registration button is visible.
+     * Also sets up the registration button.
+     */
     CourseSketch.classSearch.courseClickerFunction = function(course) {
         var id = course.id;
         var element = localDoc.getElementById(id);
