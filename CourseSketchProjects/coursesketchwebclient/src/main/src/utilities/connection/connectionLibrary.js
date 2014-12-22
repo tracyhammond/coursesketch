@@ -210,16 +210,12 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 */
 	this.sendSelf = function(message) {
 	    setTimeout(function() {
-            console.log("start sendself");
             var event = {
                 data : message.toArrayBuffer()
             };
             websocket.onmessage(event);
-            console.log("end sendself");
         }, 100);
     };
-
-	console.log(this.sendSelf);
 	/**
 	 * Closes the websocket.
 	 *

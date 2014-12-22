@@ -12,9 +12,17 @@
 <script>
     $(document).ready(function() {
         var request = CourseSketch.PROTOBUF_UTIL.Request();
+        request.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST;
+        var result = CourseSketch.PROTOBUF_UTIL.DataResult();
+        var resultItem = CourseSketch.PROTOBUF_UTIL.ItemResult();
+        var school = CourseSketch.PROTOBUF_UTIL.SrlSchool();
+        school.courses = CourseSketch.fakeCourses;
+        resultItem.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH;
+        resultItem.data = school.toArrayBuffer();
 
-        CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
-            CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH
+        result.results = [resultItem];
+        request.otherData = result.toArrayBuffer();
+        CourseSketch.connection.sendSelf(request);
     });
 </script>
 <body>

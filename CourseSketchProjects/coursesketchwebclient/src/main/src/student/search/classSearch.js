@@ -38,12 +38,17 @@
             }
         }
         var schoolItemBuilder = new SchoolItemBuilder();
+
+        schoolItemBuilder.showImage = false; // till we have images actually working!
+        schoolItemBuilder.setBoxClickFunction(CourseSketch.classSearch.courseClickerFunction);
+
+        if (courseList1.length > 0) {
             schoolItemBuilder.setList(courseList1).build("class_list_column1");
+        }
         if (courseList2.length > 0) {
             schoolItemBuilder.setList(courseList2).build("class_list_column2");
         }
-        schoolItemBuilder.showImage = false; // till we have images actually working!
-        schoolItemBuilder.setBoxClickFunction(CourseSketch.classSearch.courseClickerFunction);
+
         localDoc.getElementById("loadingIcon").style.display="none";
     });
 
@@ -104,12 +109,13 @@
      * Allows a user to register for a class.
      */
     CourseSketch.classSearch.registerClass = function(id) {
-        var request = new QueryBuilder.DataSend();
-        var item = new QueryBuilder.ItemSend();
-        item.query = QueryBuilder.ItemQuery.REGISTER;
+        var request = CourseSketch.PROTOBUF_UTIL.DataSend();
+        var item = CourseSketch.PROTOBUF_UTIL.ItemSend();
+        item.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.REGISTER;
         item.data = courseProtoMap[id].toArrayBuffer();
         request.items = [item];
-        CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request, Request.MessageType.DATA_INSERT));
+        CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
+            CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT));
         $("#" + id).animate({
             marginLeft: "0px",
             }, 300, function () {
