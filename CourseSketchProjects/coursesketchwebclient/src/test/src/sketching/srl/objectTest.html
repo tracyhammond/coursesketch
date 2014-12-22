@@ -1,0 +1,180 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/sketching/srl/srlLibraryInclude.html">
+<link rel="import" src="/src/sketching/srl/boundingBoxTest.js">
+
+<!-- file being tested. -->
+<script src="/src/sketching/srl/objects/object.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+	QUnit.module("testModule1");
+	test("test test", function(assert) {
+        assert.ok(true, "TESTING IS AWESOME!");
+    });
+    </script>
+  
+    <script>
+    QUnit.module("object:creation");
+    QUnit.test("main object function creation", function(assert) {
+        var objectTest = new SRL_Object();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:super constructor");
+    QUnit.test("object:super constructor", function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.superConstructor();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>   
+
+    <script>
+    QUnit.module("object:subObject");
+    QUnit.test("object:subObject", function(assert) {
+        var objectTest = new SRL_Object();
+        var subObject1 = new SRL_Object();
+        objectTest.addSubObject(subObject1);
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:getSubObjectById");
+    QUnit.test("object:getSubObjectById" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.getSubObjectById();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:removeSubObjectById");
+    QUnit.test("object:removeSubObjectById" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.removeSubObjectById();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:removeSubObject");
+    QUnit.test("object:removeSubObject" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.removeSubObject();
+        assert.ok(true);
+    //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:getSubObjects");
+    QUnit.test("object:getSubObjects" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.getSubObjects();
+        assert.ok(true);
+    //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:getRecursiveSubObjectList");
+    QUnit.test("object:getRecursiveSubObjectList" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.getRecursiveSubObjectList();
+        assert.ok(true);
+    //except(0);
+    });
+    </script>
+
+    //addInterpretation NEEDS TO BE DONE!
+
+    <script>
+    QUnit.module("object:getInterpretations");
+    QUnit.test("object:getInterpretations" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.getInterpretations();
+        assert.ok(true);
+    //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:ID,name,time");
+    QUnit.test("object:ID,name,time" , function(assert) {
+        var objectTest = new SRL_Object();
+        var id = "FakeId";
+        objectTest.setId(id);
+        objectTest.getId();
+        assert.equal(objectTest.getId(id), id);
+        var name = "ObjectName";
+        objectTest.setName(name);
+        objectTest.getName(name);
+        assert.equal(objectTest.getName(), name);
+        var time = "12";
+        objectTest.setTime(time);
+        objectTest.getTime();
+        assert.equals(objectTest.getTime(time),time);
+        assert.ok(true);
+    //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:userCreation");
+    QUnit.test("object:userCreation" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.isUserCreated();
+        objectTest.setUserCreated();
+        assert.ok(true);
+    //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:getBoundingBox");
+    QUnit.test("object:getBoundingBox" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.getBoundingBox();
+        assert.ok(true);
+    //except(0);
+    });
+    </script>
+    
+    <script>
+    QUnit.module("object:getMinX");
+    QUnit.test("object:getMinX" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.getMinX();
+        assert.ok(true);
+    //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("object:getMaxX");
+    QUnit.test("object:getMaxs" , function(assert) {
+        var objectTest = new SRL_Object();
+        objectTest.getMaxX();
+        assert.ok(true);
+    //except(0);
+    });
+    </script>
+
+</body>
