@@ -1,0 +1,177 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/sketching/srl/srlLibraryInclude.html">
+<link rel="import" scr="/src/sketching/srl/objects/object.js">
+
+<!-- file being tested. -->
+<script src="/src/sketching/srl/objects/point.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+    <script>
+    QUnit.module("point:constructor");
+    QUnit.test("point:constructor", function(assert) {
+        var pointTest = new SRL_Point();
+        pointTest.superConstructor();
+        assert.ok(true);
+       //except(0);
+    });
+    </script>
+    
+    <script>
+    QUnit.module("point:getPressure");
+    QUnit.test("point:getPressure", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.getPressure(pressure);
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:setPressure");
+    QUnit.test("point:setPressure", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.setPressure(pressure);
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:setSize");
+    QUnit.test("point:setSize", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.setPressure(size);
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:setP");
+    QUnit.test("point:setP", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.setP(0,0);
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:getX");
+    QUnit.test("point:getX", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.getX();
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:getY");
+    QUnit.test("point:getY", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.getY();
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:setSpeed");
+    QUnit.test("point:setSpeed", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.getSpeed();
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:distace");
+    QUnit.test("point:distance", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.distance(0,0,1,1);
+      assert.equals(pointTest.distance(0,0,1,1),1);    
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:setOrigP");
+    QUnit.test("point:setOrigP", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.setOrigP();
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:undoLastChange");
+    QUnit.test("point:undoLastChange", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.undoLastChange();
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:goBackToInitial");
+    QUnit.test("point:goBackToInitial", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.goBackToInitial();
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:getInitialX");
+    QUnit.test("point:getInitialX", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.getInitialX();
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:getInitialY");
+    QUnit.test("point:getInitialY", function(assert) {
+      var pointTest = new SRL_Point();
+      pointTest.getInitialY();
+      assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.module("point:temp_print");
+    QUnit.test("point:temp_print", function(assert) {
+    var pointTest = new SRL_Point();
+    pointTest.temp_print();
+    assert.ok(true);
+       //except(0);
+    });
+    </script>
+
+    <script>
+    QUnit.test("how does fak timing work this sees if the sinon timers are the same as the other timers", function(assert) {
+        var localFunc = setTimeout;
+        this.clock = this.useFakeTimers();
+        assert.equal(localFunc, setTimeout);
+    });
+    </script>
+</body>
