@@ -1,0 +1,120 @@
+<html>
+<head>
+	<base href="../../">
+	<link rel="stylesheet" href="css/problem/toolbox.css">
+	<script>
+		var scope = document;
+
+		function resizeParent() {
+			console.log("please resize my panel");
+			scope.getElementById("panelWrapper").onresize();
+		}
+
+		parent.problemNavigator.addCallback(function(nav) {
+
+			// clear certain events
+			nav.clearAllMappings("submit");
+			nav.clearAllMappings("undo");
+			nav.clearAllMappings("redo");
+
+			var eventFunction = nav.executeEvent;
+			var type = nav.getPoblemType();
+
+			var specificButtonHolder = scope.getElementById("specificButtons");
+			specificButtonHolder.innerHTML = "";
+
+			// utility function to create buttons
+			function createButton(img, onclickFunction, onloadFunction) {
+				var element = scope.createElement("img");
+				element.src = img;
+				element.onclick = onclickFunction;
+				element.onload = onloadFunction
+				specificButtonHolder.appendChild(element);
+			}
+
+			if (type == "SKETCH") {
+				nav.clearAllMappings("clear");
+				createButton("images/toolbar/clear_button.svg", function() {
+					eventFunction("clear");
+				}, resizeParent);
+				// add sketching tools
+				if (parent.problemNavigator.getDataManager().getState("isInstructor")) {
+					nav.clearAllMappings("next_sketch");
+					createButton("images/toolbar/Next_Sketch.svg", function () {
+						eventFunction("next_sketch");
+					}, resizeParent);
+					nav.clearAllMappings("prev_sketch");
+					createButton("images/toolbar/Previous_Sketch.svg", function() {
+						eventFunction("prev_sketch");
+					}, resizeParent);
+				}
+			}  else if (type == "MULT_CHOICE") {
+				// add mult choice tools
+			}   else if (type == "FREE_RESP") {
+				// add free resp tools
+			}
+		});
+
+		function initialize(scope) {
+			parent.loadTool(scope);
+			var eventFunction = parent.problemNavigator.executeEvent;
+			document.getElementById("submission").onclick = function() {
+				eventFunction("submit");
+			//	alert("submitting!");
+			};
+			document.getElementById("save").onclick = function() {
+				eventFunction("save");
+				alert("save! not supported yet");
+			};
+			document.getElementById("undo").onclick = function() {
+				eventFunction("undo");
+				//alert("undo not supported yet");
+			};
+			document.getElementById("redo").onclick = function() {
+				eventFunction("redo");
+				//alert("redo not supported yet");
+			};
+		}
+	</script>
+</head>
+<body  onload = "initialize(this);">
+<!--
+|-----|
+| sub |
+| sav |
+| und |
+| red |
+| spe |
+|  |  |
+|  v  |
+|-----|
+ -->
+ 	<div id = "panelWrapper" class = "panelWrapper" style = "width:50px;">
+		<div id = "toolPanel">
+		<div class = "transBox">
+			<h1></h1>
+			<!--
+			|--------|
+			|   sub  |
+			|   sav  |
+			|   und  |
+			|   red  |
+			|--------|
+			 -->
+			<div id ="constantButtons">
+				<img id = "submission" src="images/toolbar/submission_button.svg" title = "Click to submit the assignment">
+				<img id = "save" src="images/schoolItem/coming_soon.svg" title = "Click to save the assignment">
+				<img id = "undo" src="images/toolbar/undo_button.svg" title = "Click to undo the assignment">
+				<img id = "redo" src="images/toolbar/redo_button.svg" title = "Click to redo the assignment">
+			</div>
+			<!-- 
+			Shows buttons that are specific to the current content
+			 -->
+			<div id = "specificButtons">
+			</div>
+			<h1></h1>
+		</div>
+		</div>
+	</div>
+</body>
+</html>
