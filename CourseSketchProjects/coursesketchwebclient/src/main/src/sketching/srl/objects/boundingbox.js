@@ -56,7 +56,7 @@ function SRL_BoundingBox() {
      * Returns true if the bounding box contains the given point, false
      * otherwise.
      * 
-     * containment is detirmined by being in or on the border of the bounding
+     * containment is determined by being in or on the border of the bounding
      * box.
      */
     this.containsCoordinate = function(checkX, checkY) {
