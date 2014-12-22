@@ -1,0 +1,134 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/sketching/srl/srlLibraryInclude.html">
+<link rel="import" src="/src/sketching/srl/objects/object.js">
+
+<!-- file being tested. -->
+<script src="/src/sketching/srl/objects/shape.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+	QUnit.module("testModule1");
+	test("test test", function(assert) {
+        assert.ok(true, "TESTING IS AWESOME!");
+    });
+    </script>
+
+    <script>
+	QUnit.module("shape:superConstructor");
+	test("main BoundingBox function {add point}", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.superConstructor();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("shape:superConstructor");
+    test("main BoundingBox function {add point}", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.superConstructor();
+    assert.ok(true);
+ 
+    });
+    </script>
+    
+    <script>
+    QUnit.module("shape:getRecursiveStrokes");
+    test("shape:getRecursiveStrokes", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.getRecursiveStrokes();
+    assert.ok(true);
+
+    });
+    </script>
+ 
+    <script>
+    QUnit.module("shape:getCenterX");
+    test("shape:getCenterX", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.getCenterX();
+    assert.ok(true);
+
+    });
+    </script>
+    
+    <script>
+    QUnit.module("shape:getCenterY");
+    test("shape:getCenterY", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.getCenterY();
+    assert.ok(true);
+
+    });
+    </script>
+    
+    <script>
+    QUnit.module("shape:getWidth");
+    test("shape:getWidth", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.getWidth();
+    assert.ok(true);
+
+    });
+    </script>
+    
+    <script>
+    QUnit.module("shape:getHeight");
+    test("shape:getHeight", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.getHeight();
+    assert.ok(true);
+
+    });
+    </script>
+    
+    <script>
+    QUnit.module("shape:getLengthOfDiagonal");
+    test("shape:getLengthOfDiagonal", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.getLengthOfDiagonal();
+    assert.ok(true);
+
+    });
+    </script>   
+
+    <script>
+    QUnit.module("shape:getSize");
+    test("shape:getSize", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.getSize();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("shape:getBoundingBoxDiagonalAngle");
+    test("shape:getBoundingBoxDiagonalAngle", function(assert) {
+    var shapeTest = new SRL_Shape();
+    shapeTest.getBoundingBoxDiagonalAngle();
+    assert.ok(true);
+
+    });
+    </script>    
+    
+    <script>
+
+    QUnit.test("how does fak timing work this sees if the sinon timers are the same as the other timers", function(assert) {
+        var localFunc = setTimeout;
+        this.clock = this.useFakeTimers();
+        assert.equal(localFunc, setTimeout);
+    });
+    </script>
+</body>
