@@ -1,5 +1,7 @@
-/*
-school-item {
-    width:50%;
+.centerOfScreen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -33px;
+    margin-left: -33px;
 }
-*/
