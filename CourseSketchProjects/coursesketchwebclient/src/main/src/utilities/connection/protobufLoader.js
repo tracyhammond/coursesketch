@@ -340,6 +340,7 @@ function ProtobufSetup() {
     }
     // making ProtobufException read only
     makeValueReadOnly(localScope, "ProtobufException", ProtobufException);
+    this.dcodeIO = dcodeIO;
 };
 
 (function(scope) {
