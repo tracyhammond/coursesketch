@@ -1,0 +1,155 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/sketching/srl/srlLibraryInclude.html">
+<link rel="import" href="/src/sketching/srl/objects/object.js">
+
+<!-- file being tested. -->
+<script src="/src/sketching/srl/objects/sketch.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+	QUnit.module("testModule1");
+	test("test test", function(assert) {
+        assert.ok(true, "TESTING IS AWESOME!");
+    });
+    </script>
+    
+    <script>
+	QUnit.module("sketch:superConstructor");
+	test("sketch:superConstructor", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.superConstructor();
+    assert.ok(true);
+
+    });
+    </script>
+    
+    <script>
+    QUnit.module("sketch:addObject");
+    test("sketch:superConstructor", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.addObject();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("sketch:addSubObject");
+    test("sketch:addSubObject", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.addSubObject();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("sketch:removeSubObject");
+    test("sketch:removeSubObject", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    var Object1 = new SRL_Object();
+    sketchTest.removeSubObject(Object1);
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("sketch:removeSubObjectById");
+    test("sketch:removeSubObjectById", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.removeSubObjectById();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("sketch:getList");
+    test("sketch:getList", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.getList();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("sketch:getSubObjectById");
+    test("sketch:getSubObjectById", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.getSubObjectById();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("sketch:getSubObjectAtIndex");
+    test("sketch:getSubObjectAtIndex", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.getSubObjectAtIndex();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("sketch:removeSubObjectAtIndex");
+    test("sketch:removeSubObjectAtIndex", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.removeSubObjectAtIndex();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("sketch:getSubObjectByIdChain");
+    test("sketch:getSubObjectByIdChain", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.getSubObjectByIdChain();
+    assert.ok(true);
+
+    });
+    </script>
+
+    <script>
+    QUnit.module("sketch:removeSubObjectByIdChain");
+    test("sketch:removeSubObjectByIdChain", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.removeSubObjectByIdChain();
+    assert.ok(true);
+
+    });
+    </script>  
+
+    <script>
+    QUnit.module("sketch:resetSketch");
+    test("sketch:resetSketch", function(assert) {
+    var sketchTest = new SRL_Sketch();
+    sketchTest.resetSketch();
+    assert.ok(true);
+
+    });
+    </script>     
+
+    <script>
+
+    QUnit.test("how does fak timing work this sees if the sinon timers are the same as the other timers", function(assert) {
+        var localFunc = setTimeout;
+        this.clock = this.useFakeTimers();
+        assert.equal(localFunc, setTimeout);
+    });
+    </script>
+</body>
