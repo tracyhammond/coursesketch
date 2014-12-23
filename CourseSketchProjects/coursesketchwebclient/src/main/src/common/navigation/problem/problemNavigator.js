@@ -180,18 +180,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     this.getProblemType = function() {
         var type = getProblemInfo().questionType;
-        if (type == 1) {
-            return "SKETCH";
-        }
-        if (type == 2) {
-            return "MULT_CHOICE";
-        }
-        if (type == 3) {
-            return "FREE_RESP";
-        }
-        if (type == 4) {
-            return "CHECK_BOX";
-        }
+        return type;
     };
 
     this.setAssignmentId = function(currentAssignmentId) {
