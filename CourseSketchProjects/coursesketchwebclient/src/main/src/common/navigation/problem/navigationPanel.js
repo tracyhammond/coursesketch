@@ -20,7 +20,7 @@ function NavigationPanel() {
                 this.shadowRoot.querySelector("#totalNumber").textContent = totalNumber;
             }
             // TODO: change this to strip out bad HTML code
-            this.shadowRoot.querySelector("#problemPanel").innerHTML = '<p>' + parent.problemNavigator.getProblemText() + '</p>';
+            this.shadowRoot.querySelector("#problemPanel").innerHTML = '<p>' + nav.getProblemText() + '</p>';
         }.bind(this));
 
         setUpButtons(this.itemNavigator);
@@ -69,13 +69,21 @@ function NavigationPanel() {
             this.itemNavigator = new ProblemNavigator(this.dataset.assignment_id, !isUndefined(this.dataset.loop), this.dataset.index);
         }
         this.setUpNavigator();
-    }
+        this.itemNavigator.setUiLoaded(true);
+    };
 
     /**
      * Sets the navigator if one is to be used.
      */
     this.setNavigator = function(navPanel) {
         this.itemNavigator = navPanel;
+    };
+
+    /**
+     * @return {ProblemNavigator}.
+     */
+    this.getNavigator = function() {
+        return this.itemNavigator;
     }
 }
 

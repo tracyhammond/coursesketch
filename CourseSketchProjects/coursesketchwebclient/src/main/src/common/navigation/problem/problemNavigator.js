@@ -194,14 +194,24 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         }
     };
 
+    this.setAssignmentId = function(currentAssignmentId) {
+        assignmentId = currentAssignmentId;
+    };
+
+    this.setPreferredIndex = function(selectedIndex) {
+        preferredIndex = selectedIndex;
+    };
+
     /**
      * Loads all of the problems given an assignment.
      */
     this.reloadProblems = function() {
         dataLoaded = false;
+        var refresh = this.refresh;
         if (!isUndefined(assignmentId)) {
             CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
-                for (var i = 0; i <problems.length; i++) {
+                problemList = [];
+                for (var i = 0; i < problems.length; i++) {
                     problemList.push(problems[i]);
                 }
                 if (uiLoaded) {
