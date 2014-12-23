@@ -24,7 +24,14 @@
 
     function loadProblem(navigator) {
         var problemType = navigator.getProblemType();
-        console.log(problemType);
+        if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
+            console.log("Loading sketch problem");
+            loadSketch(navigator);
+        } else if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP) {
+            console.log("Loading typing problem");
+            loadSketch(navigator);
+        }
+
     }
 
     function loadSketch(navigator) {
