@@ -24,12 +24,14 @@
 
     function loadProblem(navigator) {
         var problemType = navigator.getProblemType();
+        // todo: better way of removing elements
+        document.getElementById("problemPanel").innerHTML = "";
         if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
             console.log("Loading sketch problem");
             loadSketch(navigator);
         } else if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP) {
             console.log("Loading typing problem");
-            loadSketch(navigator);
+            //loadSketch(navigator);
         }
 
     }
@@ -54,12 +56,19 @@
 
     function loadSketch(navigator) {
         sketchSurface = document.createElement("sketch-surface");
+        sketchSurface.className = "wide_rule";
         sketchSurface.style.width="100%";
         sketchSurface.style.height="calc(100% - 100px)";
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("percentBar").appendChild(element);
         element.startWaiting();
+        var realWaiting = element.finishWaiting.bind(element);
+        element.finishWaiting = function() {
+            realWaiting();
+            sketchSurface.refreshSketch();
+            CourseSketch.studentExperiment.removeWaitOverlay();
+        };
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
             if (isUndefined(submission)) {
@@ -80,7 +89,7 @@
             updateList = null;
             element = null;
             //console.log(submission);
-            CourseSketch.studentExperiment.removeWaitOverlay();
+
         });
     }
 })();
