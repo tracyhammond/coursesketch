@@ -25,11 +25,11 @@
 	 * making updates to be used in a sketches update list
 	 */
 
-	var update1 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
-	var update2 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
-	var update3 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
-	var update4 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
-	var update5 = CourseSketch.PROTOBUF_UTIL.SrlUpdate(); 
+	var update1 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
+	var update2 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
+	var update3 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
+	var update4 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
+	var update5 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
 
 	/*
 	 * commands for adding strokes to updates, false is because the strokes are created in code
@@ -66,7 +66,7 @@
 	stroke3.points = new Array();
 	stroke4.points = new Array();
 	stroke5.points = new Array();
-	
+
 	/*
 	 * creating some shapes or lines and their points are placed into each strokes array of points
 	 */
@@ -171,25 +171,29 @@
 	 * initalizing the array of updates for the sketchs list of updates
 	 */
 
-	sketch1.list = new Array();
+	sketch1.setList([]);
 	sketch1.list.push(update1);
+	sketch1.setList(sketch1.list);
 
-	sketch2.list = new Array();
+	sketch2.setList([]);
 	sketch2.list.push(update2);
+	sketch2.setList(sketch2.list);
 
-	sketch3.list = new Array();
+	sketch3.setList([]);
 	sketch3.list.push(update3);
+	sketch3.setList(sketch3.list);
 
-	sketch4.list = new Array();
+	sketch4.setList([]);
 	sketch4.list.push(update4);
+	sketch4.setList(sketch4.list);
 
-	sketch5.list = new Array();
+	sketch5.setList([]);
 	sketch5.list.push(update5);
+	sketch5.setList(sketch5.list);
 
 	/*
 	 * pushing the sketches
 	 */
-
 	CourseSketch.fakeSketches.push(sketch1);
 	CourseSketch.fakeSketches.push(sketch2);
 	CourseSketch.fakeSketches.push(sketch3);
