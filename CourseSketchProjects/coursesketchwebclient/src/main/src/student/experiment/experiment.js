@@ -53,7 +53,9 @@
     };
 
     function loadSketch(navigator) {
-        var sketchSurface = document.createElement("sketch-surface");
+        sketchSurface = document.createElement("sketch-surface");
+        sketchSurface.style.width="100%";
+        sketchSurface.style.height="calc(100% - 100px)";
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("percentBar").appendChild(element);
