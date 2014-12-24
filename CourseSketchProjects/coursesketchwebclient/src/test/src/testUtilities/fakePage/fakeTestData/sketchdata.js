@@ -72,12 +72,12 @@
 	 */
 
 	//a circle
-	for(var i = 0; i <=360; i+=5){
+	for(var i = 0; i <=360; i+=5) {
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
 		point.id = "point"+i;
 		point.time = currentTime.add(i*10);
-		point.x = (Math.cos(toRadians(i))*50)+200;
-		point.y = (Math.sin(toRadians(i))*50)+200;
+		point.x = (Math.cos(toRadians(i))*50)+100;
+		point.y = (Math.sin(toRadians(i))*50)+100;
 		stroke1.points.push(point)
 	}
 	// a slightly larger circle
@@ -150,6 +150,10 @@
 	update1.updateId = "update1-of-sketch1";
 	update1.commands = new Array();
 	update1.commands.push(command1);
+	update1.commands.push(command2);
+	update1.commands.push(command3);
+	update1.commands.push(command4);
+	update1.commands.push(command5);
 
 	update2.updateId = "update2-of-sketch2";
 	update2.commands = new Array();
