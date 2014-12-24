@@ -11,11 +11,11 @@ var submission3 = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
 var submission4 = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
 var submission5 = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
 
-submission1.updateList = CourseSketch.fakeSketches[0];
-submission2.updateList = CourseSketch.fakeSketches[1];
-submission3.updateList = CourseSketch.fakeSketches[2];
-submission4.updateList = CourseSketch.fakeSketches[3];
-submission5.updateList = CourseSketch.fakeSketches[4];
+submission1.setUpdateList(CourseSketch.fakeSketches[0]);
+submission2.setUpdateList(CourseSketch.fakeSketches[1]);
+submission3.setUpdateList(CourseSketch.fakeSketches[2]);
+submission4.setUpdateList(CourseSketch.fakeSketches[3]);
+submission5.setUpdateList(CourseSketch.fakeSketches[4]);
 
 /*
  * setting the submissions to experiments to be used as test data
@@ -27,12 +27,11 @@ var experiment3 = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
 var experiment4 = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
 var experiment5 = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
 
-
-experiment1.submission = submission1;
-experiment2.submission = submission2;
-experiment3.submission = submission3;
-experiment4.submission = submission4;
-experiment5.submission = submission5;
+experiment1.setSubmission(submission1);
+experiment2.setSubmission(submission2);
+experiment3.setSubmission(submission3);
+experiment4.setSubmission(submission4);
+experiment5.setSubmission(submission5);
 
 /*
  * assinging details to the experiments so we can seach for specific problems

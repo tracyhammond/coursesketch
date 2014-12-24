@@ -1,4 +1,5 @@
 (function() {
+    CourseSketch.studentExperiment.waitScreenManager = new WaitScreenManager();
     $(document).ready(function() {
         CourseSketch.dataManager.waitForDatabase(function() {
             var panel = document.querySelector("navigation-panel");
@@ -16,9 +17,8 @@
             if (isUndefined(panel.dataset.callbackset)) {
                 panel.dataset.callbackset = ""
                 navigator.addCallback(loadProblem);
+                navigator.reloadProblems();
             }
-
-            navigator.reloadProblems();
         });
     });
 
@@ -34,9 +34,28 @@
 
     }
 
+    /**
+     * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
+     */
+    CourseSketch.studentExperiment.addWaitOverlay = function() {
+        CourseSketch.studentExperiment.waitScreenManager.buildOverlay(document.querySelector("body"));
+        CourseSketch.studentExperiment.waitScreenManager.buildWaitIcon(document.getElementById("overlay"));
+        document.getElementById("overlay").querySelector(".waitingIcon").classList.add("centered");
+    };
+
+    /**
+     * Removes the wait overlay from the DOM if it exists.
+     */
+    CourseSketch.studentExperiment.removeWaitOverlay = function() {
+        if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") != null) {
+            document.querySelector("body").removeChild(document.getElementById("overlay"));
+        }
+    };
+
     function loadSketch(navigator) {
         var sketchSurface = document.createElement("sketch-surface");
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
+        CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("percentBar").appendChild(element);
         element.startWaiting();
 
@@ -44,17 +63,22 @@
             if (isUndefined(submission)) {
                 if (element.isRunning()) {
                     element.finishWaiting();
+                    CourseSketch.studentExperiment.removeWaitOverlay();
+                    document.getElementById("problemPanel").appendChild(sketchSurface);
                 }
                 return;
             }
 
-            var updateList = ProtoUpdateCommandBuilder.SrlUpdateList.decode(submission.getUpdateList());
+            // add sketch surface at last possible moment!
+            document.getElementById("problemPanel").appendChild(sketchSurface);
+            console.log(submission);
+            var updateList = submission.getUpdateList();
             //console.log(updateList);
-            commandManager.setUpdateList(updateList.getList(), element);
+            sketchSurface.loadUpdateList(updateList.getList(), element);
             updateList = null;
             element = null;
             //console.log(submission);
+            CourseSketch.studentExperiment.removeWaitOverlay();
         });
-        document.getElementById("problemPanel").appendChild(sketchSurface);
     }
 })();

@@ -16,6 +16,17 @@
             CourseSketch.dataManager.addState("currentAssignment", "1");
             CourseSketch.dataManager.addState("currentProblemIndex", 0);
         });
+        CourseSketch.dataManager.getSubmission = function(problemId, callback) {
+            var index = -1;
+            for (var i = 0; i < CourseSketch.fakeProblems.length; i++) {
+                if (CourseSketch.fakeProblems[i].id == problemId) {
+                    index = i;
+                    break;
+                }
+            }
+            var submission = CourseSketch.fakeExperiments[index % CourseSketch.fakeExperiments.length].getSubmission();
+            callback(submission);
+        };
     </script>
 </head>
 <body>
