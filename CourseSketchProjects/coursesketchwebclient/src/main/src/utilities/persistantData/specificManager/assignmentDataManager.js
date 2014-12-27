@@ -40,7 +40,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                 updateAssignment = true;
             }
         } catch (exception) {
-            console.error(exception);
+           // console.error(exception);
         }
 
         // so we do not have to perform this again!
