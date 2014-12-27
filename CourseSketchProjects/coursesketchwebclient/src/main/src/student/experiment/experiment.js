@@ -71,13 +71,13 @@
             sketchSurface.refreshSketch();
             CourseSketch.studentExperiment.removeWaitOverlay();
         };
+        document.getElementById("problemPanel").appendChild(sketchSurface);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
             if (isUndefined(submission)) {
                 if (element.isRunning()) {
                     element.finishWaiting();
                     CourseSketch.studentExperiment.removeWaitOverlay();
-                    document.getElementById("problemPanel").appendChild(sketchSurface);
                 }
                 return;
             }
@@ -85,8 +85,7 @@
             // tell the surface not to create its own sketch.
             sketchSurface.dataset.existinglist = "";
 
-            // add sketch surface at last possible moment!
-            document.getElementById("problemPanel").appendChild(sketchSurface);
+            sketchSurface.refreshSketch();
             console.log(submission);
             var updateList = submission.getUpdateList();
             //console.log(updateList);
