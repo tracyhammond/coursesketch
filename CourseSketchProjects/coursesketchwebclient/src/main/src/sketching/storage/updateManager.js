@@ -191,6 +191,9 @@ function UpdateManager(onError, sketchManager) {
                             }
                         }
                     }, 10);
+                    if (redraw) {
+                        sketchManager.drawEntireSketch();
+                    }
                 } catch (exception) {
                     executionLock = false;
                     if (onError) {
@@ -305,6 +308,7 @@ function UpdateManager(onError, sketchManager) {
      */
     function redoUpdate(update) {
         var command = update.getCommands()[0];
+        // marker will not have any other commands with its update
         if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
             var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
             if (marker.type == CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
@@ -320,6 +324,7 @@ function UpdateManager(onError, sketchManager) {
                 }
             }
             return false;
+        // this can have other commands with its update.
         } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
             // for undo we need the sketch id before we switch
             command.decodedData = currentSketchId;
@@ -329,13 +334,12 @@ function UpdateManager(onError, sketchManager) {
                 sketchManager.createSketch(id, sketchData);
             }
             switchToSketch(id);
-            return true;
+        // this can have other commands with its update.
         } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
             // for undoing
             command.decodedData = currentSketchId;
             var id = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getIdChainClass()).idChain[0];
             switchToSketch(id);
-            return true;
         }
         return update.redo();
     }
