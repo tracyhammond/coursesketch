@@ -21,7 +21,7 @@ function WaitScreenManager() {
 	/****************
 	 * NOTHING ELSE GOES ABOVE THIS!!!!!
 	 * SETTER METHODS
-	 * 
+	 *
 	 * Creates a set method for every variable in the current object.
 	 * EX: setWidth, setImageClicked ...
 	 ***************/
@@ -54,7 +54,7 @@ function WaitScreenManager() {
 	this.build = function build() {
 		var running = false;
 		var element = document.createElement("div");
-		element.setAttribute("class", "waitingBox");
+		element.setAttribute("class", "waiting_box");
 		if (this.waitType == this.TYPE_PERCENT) {
 			this.buildPercent(element);
 		} else if (this.waitType == this.TYPE_WIOD) {
@@ -64,7 +64,7 @@ function WaitScreenManager() {
 		element.startWaiting = function() {
 			running = true;
 			if (element.parentNode) {
-				element.style.display = "initial"; // default 
+				element.style.display = "initial"; // default
 			} else {
 				throw new Error("Element must be added before it can start waiting");
 			}
@@ -98,9 +98,9 @@ function WaitScreenManager() {
 
 	this.buildPercent = function buildPercent(element) {
 		var outer = document.createElement("div");
-		outer.setAttribute("class", "outerPercent");
+		outer.setAttribute("class", "outer_percent");
 		var bar = document.createElement("div");
-		bar.setAttribute("class", "innerPercent");
+		bar.setAttribute("class", "inner_percent");
 		bar.style.height = "100%";
 		bar.style.minHeight = "10px";
 		bar.style.width = "0%";
