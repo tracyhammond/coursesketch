@@ -31,7 +31,7 @@
             loadSketch(navigator);
         } else if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP) {
             console.log("Loading typing problem");
-            //loadSketch(navigator);
+            loadTyping(navigator);
         }
     }
 
@@ -53,11 +53,30 @@
         }
     };
 
+    function loadTyping(navigator) {
+        var typingSurface = document.createElement("textarea");
+        typingSurface.style.width = "100%";
+        typingSurface.style.height="calc(100% - 110px)";
+        CourseSketch.studentExperiment.addWaitOverlay();
+        document.getElementById("problemPanel").appendChild(typingSurface);
+        CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
+            if (isUndefined(submission) || isUndefined(submission.getTextAnswer())) {
+                if (element.isRunning()) {
+                    element.finishWaiting();
+                    CourseSketch.studentExperiment.removeWaitOverlay();
+                }
+                return;
+            }
+            typingSurface.value = submission.getTextAnswer();
+            CourseSketch.studentExperiment.removeWaitOverlay();
+        });
+    }
+
     function loadSketch(navigator) {
-        sketchSurface = document.createElement("sketch-surface");
+        var sketchSurface = document.createElement("sketch-surface");
         sketchSurface.className = "wide_rule";
         sketchSurface.style.width="100%";
-        sketchSurface.style.height="calc(100% - 100px)";
+        sketchSurface.style.height="calc(100% - 110px)";
         sketchSurface.onError = function(error) {
             console.error(error);
         };
@@ -74,7 +93,7 @@
         document.getElementById("problemPanel").appendChild(sketchSurface);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
-            if (isUndefined(submission)) {
+            if (isUndefined(submission) || isUndefined(submission.getUpdateList())) {
                 if (element.isRunning()) {
                     element.finishWaiting();
                     CourseSketch.studentExperiment.removeWaitOverlay();
