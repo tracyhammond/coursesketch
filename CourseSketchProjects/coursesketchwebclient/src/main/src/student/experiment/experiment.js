@@ -69,6 +69,8 @@
             }
             typingSurface.value = submission.getTextAnswer();
             CourseSketch.studentExperiment.removeWaitOverlay();
+            typingSurface = undefined;
+            console.log(performance.memory);
         });
     }
 
@@ -77,9 +79,6 @@
         sketchSurface.className = "wide_rule";
         sketchSurface.style.width="100%";
         sketchSurface.style.height="calc(100% - 110px)";
-        sketchSurface.onError = function(error) {
-            console.error(error);
-        };
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("percentBar").appendChild(element);
@@ -89,6 +88,8 @@
             realWaiting();
             sketchSurface.refreshSketch();
             CourseSketch.studentExperiment.removeWaitOverlay();
+            sketchSurface = undefined;
+            element = undefined;
         };
         document.getElementById("problemPanel").appendChild(sketchSurface);
 

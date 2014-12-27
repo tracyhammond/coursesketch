@@ -85,9 +85,7 @@ function Graphics(canvasElement, sketchManager) {
         ps.project.activeLayer.removeChildren();
         ps.view.update();
         var sketch = sketchManager.getCurrentSketch();
-        console.log(sketch);
         var objectList = sketch.getList();
-        console.log(objectList);
         for (var i = 0; i < objectList.length; i++) {
             var object = objectList[i];
             if (object instanceof SRL_Stroke) {
@@ -120,7 +118,6 @@ function Graphics(canvasElement, sketchManager) {
         if (!drawUpdate) {
             return;
         }
-        console.log(drawUpdate);
         var commandList = update.commands;
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];

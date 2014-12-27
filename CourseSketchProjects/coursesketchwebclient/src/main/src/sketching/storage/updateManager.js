@@ -119,7 +119,7 @@ function UpdateManager(onError, sketchManager) {
                 updateList[i].sketchManager = undefined;
                 var commandList = updateList[i].commands;
                 for (var k = 0; k < commandList.length; k++) {
-                    commandList[i].decodedData = undefined;
+                    commandList[k].decodedData = undefined;
                 }
             }
         }

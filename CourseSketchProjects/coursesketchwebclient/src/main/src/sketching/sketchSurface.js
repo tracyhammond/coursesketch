@@ -135,7 +135,6 @@ function SketchSurface() {
      * resize the canvas so that its dimensions are the same as the css dimensions.  (this makes it a 1-1 ratio).
      */
     this.resizeSurface = function() {
-        console.log(this.sketchCanvas);
         this.sketchCanvas.height = $(this.sketchCanvas).height();
         this.sketchCanvas.width = $(this.sketchCanvas).width();
         // this.sketch.drawEntireSketch();
@@ -228,13 +227,12 @@ function SketchSurface() {
      * @param updateList {Array<SrlUpdate>}
      */
     this.loadUpdateList = function(updateList, percentBar) {
-        //try {
+        try {
             this.extractIdFromList(updateList);
-            /*
         } catch(exception) {
             console.error(exception);
             throw exception;
-        }*/
+        }
         this.updateManager.setUpdateList(updateList, percentBar);
     };
 }
