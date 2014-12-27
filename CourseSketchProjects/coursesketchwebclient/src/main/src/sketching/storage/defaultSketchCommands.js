@@ -21,6 +21,24 @@
     });
 
     /**
+     * Do nothing
+     *
+     * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, function() {
+        return true;
+    });
+
+    /**
+     * Do nothing
+     *
+     * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, function() {
+        return true;
+    });
+
+    /**
      * Adds a stroke to this local sketch object.
      *
      * @returns {boolean} true. This will always ask for the sketch to be
