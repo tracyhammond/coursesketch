@@ -139,5 +139,11 @@ function Graphics(canvasElement, sketchManager) {
      */
     this.setDrawUpdate = function(drawInstant) {
         drawUpdate = drawInstant;
-    }
+    };
+
+    this.finalize = function() {
+        sketchManager = undefined;
+        canvasElement = undefined;
+        ps = undefined;
+    };
 }

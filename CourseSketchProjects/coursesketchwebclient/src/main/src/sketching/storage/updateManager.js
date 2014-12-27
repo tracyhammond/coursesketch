@@ -110,9 +110,19 @@ function UpdateManager(onError, sketchManager) {
      *
      * @param redraw
      *            {boolean} if true then the sketch will be redrawn.
+     * @param deepClear {boolean} if true does some manual unlinking to hopefully help out the gc
      */
-    this.clearUpdates = function clearUpdates(redraw) {
+    this.clearUpdates = function clearUpdates(redraw, deepClear) {
         currentUpdateIndex = 0;
+        if (deepClear) {
+            for (var i = 0; i < updateList.length; i++) {
+                updateList[i].sketchManager = undefined;
+                var commandList = updateList[i].commands;
+                for (var k = 0; k < commandList.length; k++) {
+                    commandList[i].decodedData = undefined;
+                }
+            }
+        }
         updateList.length = 0;
         lastSubmissionPointer = 0;
         inRedoUndoMode = false;
