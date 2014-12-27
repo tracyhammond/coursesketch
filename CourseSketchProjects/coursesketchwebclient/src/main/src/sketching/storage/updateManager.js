@@ -20,20 +20,10 @@ UndoRedoException.prototype = new UpdateException();
  * Goals: The update manager can be used for multiple sketches (using the switch
  * sketch command)
  *
- *
- * @param inputSketch
- *            {SrlSketch} The sketch that all of these updates are being added
- *            to.
  * @param onError
  *            {Function} A method that is called when an error occurs
  */
-function UpdateManager(inputSketch, onError, sketchManager) {
-
-    /**
-     * The current sketch object that is being used by the update list (this may
-     * switch multiple times)
-     */
-    var sketch = inputSketch;
+function UpdateManager(onError, sketchManager) {
 
     /**
      * the id of the current sketch that is being used by the update list (this
@@ -95,7 +85,10 @@ function UpdateManager(inputSketch, onError, sketchManager) {
      *            update manager.
      */
     this.addUpdate = function(update) {
-        queuedLocalUpdates.push(update);
+        // TODO: find a better way to do this if possible
+        var cleanedUpdate = cleanUpdate(update);
+        cleanedUpdate.sketchManager = sketchManager;
+        queuedLocalUpdates.push(cleanedUpdate);
         emptyLocalQueue();
     };
 
@@ -134,9 +127,9 @@ function UpdateManager(inputSketch, onError, sketchManager) {
      *            {boolean} if true then the sketch will be redrawn.
      */
     this.clearSketch = function clearSketch(redraw) {
-        sketch.resetSketch();
-        if (redraw && sketch.drawEntireSketch) {
-            sketch.drawEntireSketch();
+        sketchManager.getCurrentSketch().resetSketch();
+        if (redraw && sketchManager.drawEntireSketch) {
+            sketchManager.drawEntireSketch();
         }
     };
 
@@ -148,8 +141,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
             throw new UpdateException("Can not switch sketch with an invalid manager");
         }
         currentSketchId = id;
-        sketch = sketchManager.getSketch(id);
-
+        sketchManager.setCurrentSketch(id);
     }
 
     /**
@@ -188,7 +180,7 @@ function UpdateManager(inputSketch, onError, sketchManager) {
         if (queuedLocalUpdates.length > 0) {
             if (!executionLock) {
                 executionLock = true;
-                var nextUpdate = queuedLocalUpdates.removeObjectByIndex(0);
+                var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
                 try {
                     var redraw = executeUpdate(nextUpdate);
                     var updateIndex = updateList.length;
@@ -201,7 +193,11 @@ function UpdateManager(inputSketch, onError, sketchManager) {
                     }, 10);
                 } catch (exception) {
                     executionLock = false;
-                    if (onError) onError(exception);
+                    if (onError) {
+                        onError(exception);
+                    } else {
+                        console.error(exception);
+                    }
                 }
                 executionLock = false;
                 setTimeout(function() {
@@ -225,7 +221,11 @@ function UpdateManager(inputSketch, onError, sketchManager) {
      * @returns {boolean} true if the object needs to be redrawn.
      */
     function executeUpdate(update) {
-        update.sketchId = currentSketchId;
+        /*
+        update.getLocalSketchSurface = function() {
+            return sketchManager.get(this.sketchId);
+        };
+        */
         if (update.getCommands().length <= 0) {
             throw new UpdateException("Can not execute an empty update.");
         }
@@ -321,15 +321,17 @@ function UpdateManager(inputSketch, onError, sketchManager) {
             }
             return false;
         } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
+            // for undo we need the sketch id before we switch
             command.decodedData = currentSketchId;
             var sketchData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
             var id = sketchData.sketchId.idChain[0];
-            if (!isUndefined(sketch) && sketch.id != id && !isUndefined(sketchManager)) {
-                sketchManager.createSketch(id, this, sketchData);
+            if (!isUndefined(sketchManager.getCurrentSketch()) && sketchManager.getCurrentSketch().id != id && !isUndefined(sketchManager)) {
+                sketchManager.createSketch(id, sketchData);
             }
             switchToSketch(id);
             return true;
         } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
+            // for undoing
             command.decodedData = currentSketchId;
             var id = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getIdChainClass()).idChain[0];
             switchToSketch(id);
@@ -524,4 +526,18 @@ function UpdateManager(inputSketch, onError, sketchManager) {
         var tempIndex = currentUpdateIndex;
         this.addUpdate(update, false);
     };
+
+    /**
+     * Sets the new sketch manager.
+     */
+    this.setSketchManager = function(sketch) {
+        sketchManager = sketch;
+    };
+
+    /**
+     * cleans the update to make sure it is the same as all new versions
+     */
+    function cleanUpdate(update) {
+    	return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(update.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass());
+    }
 }

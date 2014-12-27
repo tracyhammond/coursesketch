@@ -1,7 +1,7 @@
 /**
  * Installs PaperScope globally, and attaches it to the DomObject canvasElement
  */
-function Graphics(canvasElement, sketch) {
+function Graphics(canvasElement, sketchManager) {
     paper.install(window);
 
     /**
@@ -26,15 +26,13 @@ function Graphics(canvasElement, sketch) {
      * Resizes the canvasElement to the size of the canvasElement's container
      */
     this.correctSize = function correctSize() {
-        console.log(canvasElement);
         var oldHeight = canvasElement.height;
         var oldWidth = canvasElement.width;
         canvasElement.height = $(canvasElement).parent().height();
         canvasElement.width = $(canvasElement).parent().width();
         if (oldHeight != canvasElement.height || oldWidth != canvasElement.width) {
-                console.log(canvasElement);
-
-            ps.view.viewSize = [canvasElement.height, canvasElement.width];
+            ps.view.viewSize.setHeight(canvasElement.height);
+            ps.view.viewSize.setWidth(canvasElement.width);
         }
     };
 
@@ -86,6 +84,7 @@ function Graphics(canvasElement, sketch) {
         lastStroke = undefined;
         ps.project.activeLayer.removeChildren();
         ps.view.update();
+        var sketch = sketchManager.getCurrentSketch();
         console.log(sketch);
         var objectList = sketch.getList();
         console.log(objectList);

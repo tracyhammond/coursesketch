@@ -5,8 +5,6 @@
     <link rel="import"
           href="/test/testUtilities/fakePage/fakePageInclude.html">
     <link rel="import"
-          href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
-    <link rel="import"
           href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
     <script src="/test/testUtilities/databaseHelper.js"></script>
     <!-- files needed for testing -->
@@ -25,7 +23,7 @@
                 }
             }
             var submission = CourseSketch.fakeExperiments[index % CourseSketch.fakeExperiments.length].getSubmission();
-            callback(submission);
+            callback(cleanSubmission(submission));
         };
     </script>
 </head>

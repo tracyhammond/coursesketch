@@ -150,48 +150,58 @@
 	update1.updateId = "update1-of-sketch1";
 	update1.commands = new Array();
 	update1.commands.push(command1);
-	update1.commands.push(command2);
-	update1.commands.push(command3);
-	update1.commands.push(command4);
-	update1.commands.push(command5);
 
-	update2.updateId = "update2-of-sketch2";
+	update2.updateId = "update1-of-sketch2";
 	update2.commands = new Array();
+	update2.commands.push(CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch2"));
 	update2.commands.push(command2);
 
-	update3.updateId = "update3-of-sketch3";
+	update3.updateId = "update1-of-sketch3";
 	update3.commands = new Array();
+	update3.commands.push(CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch3"));
 	update3.commands.push(command3);
 
-	update4.updateId = "update4-of-sketch4";
+	update4.updateId = "update1-of-sketch4";
 	update4.commands = new Array();
+	update4.commands.push(CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch4"));
 	update4.commands.push(command4);
 
-	update5.updateId = "update5-of-sketch5";
+	update5.updateId = "update1-of-sketch5";
 	update5.commands = new Array();
+	update5.commands.push(CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch5"));
 	update5.commands.push(command5);
 
 	/*
 	 * initalizing the array of updates for the sketchs list of updates
 	 */
 
-	sketch1.setList([]);
+	sketch1.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
+			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch1") ])
+		]);
 	sketch1.list.push(update1);
 	sketch1.setList(sketch1.list);
 
-	sketch2.setList([]);
+	sketch2.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
+			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch2") ])
+		]);
 	sketch2.list.push(update2);
 	sketch2.setList(sketch2.list);
 
-	sketch3.setList([]);
+	sketch3.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
+			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch3") ])
+		]);
 	sketch3.list.push(update3);
 	sketch3.setList(sketch3.list);
 
-	sketch4.setList([]);
+	sketch4.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
+			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch4") ])
+		]);
 	sketch4.list.push(update4);
 	sketch4.setList(sketch4.list);
 
-	sketch5.setList([]);
+	sketch5.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
+			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch5") ])
+		]);
 	sketch5.list.push(update5);
 	sketch5.setList(sketch5.list);
 
@@ -203,5 +213,20 @@
 	CourseSketch.fakeSketches.push(sketch3);
 	CourseSketch.fakeSketches.push(sketch4);
 	CourseSketch.fakeSketches.push(sketch5);
+
 }
 )();
+
+/**
+ * cleans the update to make sure it is the same as all new versions
+ */
+function cleanUpdate(update) {
+	return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(update.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass());
+}
+
+/**
+ * cleans the command to make sure it is the same as all new versions
+ */
+function cleanCommand(command) {
+	return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlCommandClass());
+}

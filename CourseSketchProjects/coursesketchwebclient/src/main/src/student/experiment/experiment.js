@@ -33,7 +33,6 @@
             console.log("Loading typing problem");
             //loadSketch(navigator);
         }
-
     }
 
     /**
@@ -59,6 +58,9 @@
         sketchSurface.className = "wide_rule";
         sketchSurface.style.width="100%";
         sketchSurface.style.height="calc(100% - 100px)";
+        sketchSurface.onError = function(error) {
+            console.error(error);
+        };
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("percentBar").appendChild(element);
@@ -79,6 +81,9 @@
                 }
                 return;
             }
+
+            // tell the surface not to create its own sketch.
+            sketchSurface.dataset.existinglist = "";
 
             // add sketch surface at last possible moment!
             document.getElementById("problemPanel").appendChild(sketchSurface);
