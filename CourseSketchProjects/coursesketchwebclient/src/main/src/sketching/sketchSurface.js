@@ -118,9 +118,9 @@ function SketchSurface() {
         this.localInputListener = new InputListener();
 
         this.graphics = new Graphics(this.sketchCanvas, this.sketchManager);
-        this.sketchManager.getCurrentSketch().drawEntireSketch = function() {
+        this.sketchManager.drawEntireSketch = function() {
             this.graphics.getPaper().view.update();
-        };
+        }.bind(this);
 
         this.localInputListener.initializeCanvas(this, addStrokeCallback.bind(this), this.graphics);
 

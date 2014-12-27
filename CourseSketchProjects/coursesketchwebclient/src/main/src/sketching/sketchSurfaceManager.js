@@ -42,7 +42,7 @@ function SketchSurfaceManager(sketchSurface) {
     this.createSketch = function(id) {
         var sketch = new SRL_Sketch();
         sketch.id = id;
-        setSketch(id);
+        this.setSketch(sketch);
     };
 
     this.setCurrentSketch = function(id) {
