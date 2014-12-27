@@ -30,11 +30,13 @@ function SketchSurface() {
      * Does some manual GC. TODO: unlink some circles manually.
      */
     this.finalize = function() {
+        this.updateManager.clearUpdates(false, true);
         this.updateManager = undefined;
         this.localInputListener = undefined;
         this.sketchEventConverter = undefined;
         this.sketch = undefined;
-        CourseSketch.SKETCHING_SURFACE_HANDLER.deleteSketch(this.id);
+        this.sketchManager = undefined;
+        this.graphics.finalize();
     };
 
     /**
