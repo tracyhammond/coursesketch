@@ -1,5 +1,6 @@
 package database.institution.sql;
 
+import database.DatabaseStringConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,12 +53,12 @@ public class SqlStateManagerTest{
         expect(rs.next()).andReturn(false);
 
         rs.moveToInsertRow();
-        rs.updateString("UserID", userId);
-        rs.updateString("SchoolItemType", classification);
-        rs.updateString("SchoolItemID", itemId);
-        rs.updateBoolean("Completed", state.getCompleted());
-        rs.updateBoolean("Started", state.getStarted());
-        rs.updateBoolean("Graded", state.getGraded());
+        rs.updateString(DatabaseStringConstants.USER_ID, userId);
+        rs.updateString(DatabaseStringConstants.SCHOOLITEMTYPE, classification);
+        rs.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
+        rs.updateBoolean(DatabaseStringConstants.STATE_COMPLETED, state.getCompleted());
+        rs.updateBoolean(DatabaseStringConstants.STATE_STARTED, state.getStarted());
+        rs.updateBoolean(DatabaseStringConstants.STATE_GRADED, state.getGraded());
         rs.insertRow();
         rs.moveToCurrentRow();
 
@@ -112,9 +113,9 @@ public class SqlStateManagerTest{
         expect(st.executeQuery()).andReturn(rs);
         expect(rs.next()).andReturn(true);
 
-        rs.updateBoolean("Completed", state.getCompleted());
-        rs.updateBoolean("Started", state.getStarted());
-        rs.updateBoolean("Graded", state.getGraded());
+        rs.updateBoolean(DatabaseStringConstants.STATE_COMPLETED, state.getCompleted());
+        rs.updateBoolean(DatabaseStringConstants.STATE_STARTED, state.getStarted());
+        rs.updateBoolean(DatabaseStringConstants.STATE_GRADED, state.getGraded());
         rs.updateRow();
 
         st.close();
@@ -167,9 +168,9 @@ public class SqlStateManagerTest{
 
         expect(st.executeQuery()).andReturn(rs);
 
-        expect(rs.getBoolean("Completed")).andReturn(true);
-        expect(rs.getBoolean("Started")).andReturn(true);
-        expect(rs.getBoolean("Graded")).andReturn(true);
+        expect(rs.getBoolean(DatabaseStringConstants.STATE_COMPLETED)).andReturn(true);
+        expect(rs.getBoolean(DatabaseStringConstants.STATE_STARTED)).andReturn(true);
+        expect(rs.getBoolean(DatabaseStringConstants.STATE_GRADED)).andReturn(true);
 
         st.close();
         rs.close();
