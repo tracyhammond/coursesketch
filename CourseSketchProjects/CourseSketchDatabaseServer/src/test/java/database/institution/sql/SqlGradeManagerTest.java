@@ -1,5 +1,6 @@
 package database.institution.sql;
 
+import database.DatabaseStringConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,11 +52,11 @@ public class SqlGradeManagerTest{
         expect(rs.next()).andReturn(false);
 
         rs.moveToInsertRow();
-        rs.updateString("UserID", userId);
-        rs.updateString("SchoolItemType", classification);
-        rs.updateString("SchoolItemID", itemId);
-        rs.updateFloat("Grade", grade.getGrade());
-        rs.updateString("Comments", grade.getComment());
+        rs.updateString(DatabaseStringConstants.USER_ID, userId);
+        rs.updateString(DatabaseStringConstants.SCHOOLITEMTYPE, classification);
+        rs.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
+        rs.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
+        rs.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());
         rs.insertRow();
         rs.moveToCurrentRow();
 
@@ -113,8 +114,8 @@ public class SqlGradeManagerTest{
         expect(st.executeQuery()).andReturn(rs);
         expect(rs.next()).andReturn(true);
 
-        rs.updateFloat("Grade", grade.getGrade());
-        rs.updateString("Comments", grade.getComment());
+        rs.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
+        rs.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());
         rs.updateRow();
 
         rs.close();
@@ -167,8 +168,8 @@ public class SqlGradeManagerTest{
 
         expect(st.executeQuery()).andReturn(rs);
 
-        expect(rs.getFloat("Grade")).andReturn(0.0f);
-        expect(rs.getString("Comments")).andReturn("test");
+        expect(rs.getFloat(DatabaseStringConstants.GRADE)).andReturn(0.0f);
+        expect(rs.getString(DatabaseStringConstants.COMMENTS)).andReturn("test");
 
         rs.close();
         st.close();
