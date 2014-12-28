@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.MultiConnectionManager;
 
 @SuppressWarnings("serial")
 public class SubmissionServlet extends ServerWebSocketInitializer {
@@ -19,7 +20,7 @@ public class SubmissionServlet extends ServerWebSocketInitializer {
 	 * We do not need to manage multiple connections so we might as well just make it return null
 	 */
 	@Override
-	protected final MultiConnectionManager createConnectionManager(boolean connectLocally, boolean secure) {
-		return new SubmissionConnectionManager(connectionServer, connectLocally, secure);
+	public final MultiConnectionManager createConnectionManager(boolean connectLocally, boolean secure) {
+		return new SubmissionConnectionManager(this.getServer(), connectLocally, secure);
 	}
 }
