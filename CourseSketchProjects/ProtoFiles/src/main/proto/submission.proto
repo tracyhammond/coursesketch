@@ -1,4 +1,5 @@
 import "commands.proto";
+
 import "sketch.proto";
 
 package protobuf.srl.submission;
@@ -8,10 +9,14 @@ package protobuf.srl.submission;
  */
 message SrlSubmission {
     optional string id = 1;
-    optional protobuf.srl.commands.SrlUpdateList updateList = 2; // if this is a collection of updates
-    optional protobuf.srl.sketch.SrlSketch sketch = 3; // if this is a sketch.
-    optional int64 submissionTime = 4;
-    optional SrlChecksum checksum = 5;
+    optional int64 submissionTime = 2;
+    optional SrlChecksum checksum = 3;
+    oneof submissionType {
+        protobuf.srl.commands.SrlUpdateList updateList = 4; // if this is a collection of updates
+        protobuf.srl.sketch.SrlSketch sketch = 5; // if this is a sketch.
+        string textAnswer = 6; // if this is a sketch.
+        int32 answerChoice = 7; // if this is a sketch.
+    }
 }
 
 message SrlSolution {
