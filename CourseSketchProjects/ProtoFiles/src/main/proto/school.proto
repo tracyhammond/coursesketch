@@ -39,7 +39,7 @@ message SrlAssignment {
 	required string courseId = 1; // To know who the parent is.
 	required string id = 2; // This must be unique within a course. We will strive for global uniqueness.
 	optional string name = 3;
-	optional AssignmentType type = 4 [default=HOMEWORK];
+	optional AssignmentType type = 4 [default=HOMEWORK]; // used for grading purposes (and may change how it is displayed)
 	optional string other = 5; // Name of an Instructor-defined assignment type
 	optional string description = 6;
 	repeated string links = 7; // external links/resources. Field needs improvement.
@@ -59,7 +59,7 @@ message SrlAssignment {
 		QUIZ = 2;
 		LAB = 3;
 		EXAM = 4;
-		SURVEY = 5;
+		SURVEY = 5; // not for a grade!
 		OTHER = 6; // Allows instructors to create unique assignment types
 	}
 }
@@ -117,9 +117,9 @@ message SrlBankProblem {
 	optional SrlPermission accessPermission= 10;
 
 	enum QuestionType {
-		SKETCH = 1;
+		SKETCH = 1; // sketching
 		MULT_CHOICE = 2;
-		FREE_RESP = 3;
+		FREE_RESP = 3; // typing
 		CHECK_BOX = 4;
 	}
 }

@@ -9,7 +9,6 @@
         this.message = "";
         this.htmlMessage = "";
     }
-
     CommandException.prototype = BaseException;
 
     var ProtoSrlUpdate = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlUpdate());
@@ -17,20 +16,31 @@
 
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().prototype.sketchId = undefined;
     CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.sketchId = undefined;
+
+    // these functions should not be created more than once in the entirety of the program.
+    if (!isUndefined(ProtoSrlCommand.getLocalSketchSurface)) {
+        return;
+    }
+
     /**
      * @Method Calls redo on an {@link SrlCommand} list in the order they are
      *         added to the list.
-     * 
+     *
      * @returns {boolean} true if the sketch needs to be redrawn, false
      *          otherwise.
      */
-    ProtoSrlUpdate.redo = function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.redo = function() {
         var redraw = false;
         var commandList = this.getCommands();
         var commandLength = commandList.length;
         for (var i = 0; i < commandLength; i++) {
-            commandList[i].sketchId = this.sketchId;
-            if (commandList[i].redo() == true) redraw = true;
+            // the command needs to know what sketch object to act upon.
+            commandList[i].getLocalSketchSurface = function() {
+                return this.sketchManager.getCurrentSketch();
+            }.bind(this);
+            if (commandList[i].redo() == true) {
+                redraw = true;
+            }
         }
         return redraw;
     };
@@ -38,7 +48,7 @@
     /**
      * @Method Calls undo on an {@link SrlCommand} list in the reverse of the
      *         order they are added to the list
-     * 
+     *
      * @returns {boolean} true if the sketch needs to be redrawn, false
      *          otherwise.
      */

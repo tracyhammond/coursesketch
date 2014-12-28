@@ -180,18 +180,15 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     this.getProblemType = function() {
         var type = getProblemInfo().questionType;
-        if (type == 1) {
-            return "SKETCH";
-        }
-        if (type == 2) {
-            return "MULT_CHOICE";
-        }
-        if (type == 3) {
-            return "FREE_RESP";
-        }
-        if (type == 4) {
-            return "CHECK_BOX";
-        }
+        return type;
+    };
+
+    this.setAssignmentId = function(currentAssignmentId) {
+        assignmentId = currentAssignmentId;
+    };
+
+    this.setPreferredIndex = function(selectedIndex) {
+        preferredIndex = selectedIndex;
     };
 
     /**
@@ -199,9 +196,11 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     this.reloadProblems = function() {
         dataLoaded = false;
+        var refresh = this.refresh;
         if (!isUndefined(assignmentId)) {
             CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
-                for (var i = 0; i <problems.length; i++) {
+                problemList = [];
+                for (var i = 0; i < problems.length; i++) {
                     problemList.push(problems[i]);
                 }
                 if (uiLoaded) {
