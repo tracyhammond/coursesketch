@@ -21,7 +21,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var LAST_UPDATE_TIME = "LAST_UPDATE_TIME";
     var localScope = this;
     var localUserId = userId;
-    var stateMachine = {};
+    var stateMachine = new Map();
     var databaseFinishedLoading = false;
 
     var version = 6;
@@ -246,19 +246,19 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * transitioning from one page to the next!)
      */
     this.addState = function(key, value) {
-        stateMachine[key] = value;
+        stateMachine.set(key, value);
     }
 
     this.getState = function(key) {
-        return stateMachine[key];
+        return stateMachine.get(key);
     }
 
     this.hasState = function(key) {
-        return !isUndefined(stateMachine[key]);
+        return stateMachine.has(key);
     }
 
     this.clearStates = function() {
-        stateMachine = {};
+        stateMachine = new Map();
     }
 
     /**
@@ -271,6 +271,21 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     this.getCurrentTime = connection.getCurrentTime;
 
     CourseSketch.DatabaseException = DatabaseException;
+
+    /**
+     * A helper function for testing that waits for the database to be loaded before calling a callback.
+     * @param dataManager The database we are waiting to stop.
+     * @param callback called when the database is ready.
+     */
+    this.waitForDatabase = function waitForDatabase(callback) {
+        var dataManager = this;
+        var interval = setInterval(function() {
+            if (dataManager.isDatabaseReady()) {
+                clearInterval(interval);
+                callback();
+            } // endif
+        }, 50);
+    };
 }
 var nonExistantValue = "NONEXISTANT_VALUE";
 var CURRENT_QUESTION = "CURRENT_QUESTION";

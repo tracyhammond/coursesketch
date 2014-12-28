@@ -1,7 +1,7 @@
 /**
  * Installs PaperScope globally, and attaches it to the DomObject canvasElement
  */
-function Graphics(canvasElement, sketch) {
+function Graphics(canvasElement, sketchManager) {
     paper.install(window);
 
     /**
@@ -26,15 +26,13 @@ function Graphics(canvasElement, sketch) {
      * Resizes the canvasElement to the size of the canvasElement's container
      */
     this.correctSize = function correctSize() {
-        console.log(canvasElement);
         var oldHeight = canvasElement.height;
         var oldWidth = canvasElement.width;
         canvasElement.height = $(canvasElement).parent().height();
         canvasElement.width = $(canvasElement).parent().width();
         if (oldHeight != canvasElement.height || oldWidth != canvasElement.width) {
-                console.log(canvasElement);
-
-            ps.view.viewSize = [canvasElement.height, canvasElement.width];
+            ps.view.viewSize.setHeight(canvasElement.height);
+            ps.view.viewSize.setWidth(canvasElement.width);
         }
     };
 
@@ -86,9 +84,8 @@ function Graphics(canvasElement, sketch) {
         lastStroke = undefined;
         ps.project.activeLayer.removeChildren();
         ps.view.update();
-        console.log(sketch);
+        var sketch = sketchManager.getCurrentSketch();
         var objectList = sketch.getList();
-        console.log(objectList);
         for (var i = 0; i < objectList.length; i++) {
             var object = objectList[i];
             if (object instanceof SRL_Stroke) {
@@ -121,7 +118,6 @@ function Graphics(canvasElement, sketch) {
         if (!drawUpdate) {
             return;
         }
-        console.log(drawUpdate);
         var commandList = update.commands;
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
@@ -140,5 +136,11 @@ function Graphics(canvasElement, sketch) {
      */
     this.setDrawUpdate = function(drawInstant) {
         drawUpdate = drawInstant;
-    }
+    };
+
+    this.finalize = function() {
+        sketchManager = undefined;
+        canvasElement = undefined;
+        ps = undefined;
+    };
 }
