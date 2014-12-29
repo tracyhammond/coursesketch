@@ -58,28 +58,31 @@ public class SubmissionMerger {
 
         // something weird happened so we quit and don't modify.
         if (differentIndex == -2) {
-            return database;
+            throw new MergeException("Client list can not be shorter than the database list! (someone is trying to change history)");
         }
         // we have had a modification to the existing list.
 
         final Commands.SrlUpdate differentUpdate = client.get(differentIndex);
 
         // switch sketch!
-        if (differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.SWITCH_SKETCH) {
+        if (differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.SWITCH_SKETCH || differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.CREATE_SKETCH ) {
             String startingSketch = getPreviousSketchId(database, differentIndex - 1);
+            if (startingSketch == null) {
+                throw new MergeException("Switch sketch inserted before parent sketch was created!");
+            }
             int endingIndex = getMatchingSketchId(client, differentIndex + 1, startingSketch);
             if (endingIndex == -1) {
                 throw new MergeException("Client list does not switch back.");
             }
             final List<Commands.SrlUpdate> result = new ArrayList<>();
-            List<Commands.SrlUpdate> secondHalfOfMerge = merge(database.subList(differentIndex + 1, database.size()),
+            List<Commands.SrlUpdate> secondHalfOfMerge = merge(database.subList(differentIndex, database.size()),
                     client.subList(endingIndex + 1, client.size()));
             result.addAll(database.subList(0, differentIndex));
-            result.addAll(client.subList(differentIndex, endingIndex));
+            result.addAll(client.subList(differentIndex, endingIndex + 1));
             result.addAll(secondHalfOfMerge);
             return result;
         }
-        return null;
+        return database;
     }
 
     /**

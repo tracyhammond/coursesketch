@@ -110,12 +110,12 @@ public class Checksum {
      */
     public static int indexOfDifference(final List<SrlUpdate> list1, final List<SrlUpdate> list2) {
         // list
-        if (list1.size() < list2.size()) {
+        if (list2.size() < list1.size()) {
             return -2;
         }
         final SumHolder holder1 = new SumHolder();
         final SumHolder holder2 = new SumHolder();
-        for (int i = 0; i < list2.size(); i++) {
+        for (int i = 0; i < list1.size(); i++) {
             int size = (i + 1) % MAX_LIST_SIZE;
             holder1.addUpdate(list1.get(i));
             holder2.addUpdate(list2.get(i));
@@ -123,8 +123,8 @@ public class Checksum {
                 return i;
             }
         }
-        if (list2.size() < list1.size()) {
-            return list2.size();
+        if (list1.size() < list2.size()) {
+            return list1.size();
         }
         return -1;
     }
