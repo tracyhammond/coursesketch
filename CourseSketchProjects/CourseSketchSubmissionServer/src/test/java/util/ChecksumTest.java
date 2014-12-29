@@ -13,7 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class ChecksumTester {
+public class ChecksumTest {
 	final File DEFAULT_DRAWING = new File("CourseSketchProjects/CourseSketchSubmissionServer/src/resources/tst/testDrawing.dat");
 
 	@Before
