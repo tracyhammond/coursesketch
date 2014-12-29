@@ -154,25 +154,4 @@ public class Checksum {
         }
         return -1;
     }
-
-    public static void main(String args[]) {
-        int size = 65535;
-        //System.out.println()
-        long currentTime = System.currentTimeMillis();
-        System.out.println("currentTime\t" + currentTime);
-        long totalTime = (currentTime * 2) % MAX_TIME_SIZE;
-        System.out.println("totalTime\t" + totalTime);
-        long temp1 = ((long) size) << (64 - log2(size));
-        System.out.println("size by itself\t" + Long.toBinaryString(temp1));
-        System.out.println("time by itself\t" + Long.toBinaryString(totalTime));
-        System.out.println("currentTime B \t" + Long.toBinaryString(currentTime));
-        System.out.println("currentTime B \t" + Long.toBinaryString(MAX_TIME_SIZE));
-        long result = ((long) size) << (64 - log2(size)) | totalTime;
-        System.out.println("the total \t" + Long.toBinaryString(result));
-        System.out.println("the total \t" + Long.toBinaryString(-1));
-    }
-
-    public static int log2(int value) {
-        return Integer.SIZE - Integer.numberOfLeadingZeros(value);
-    }
 }
