@@ -66,19 +66,24 @@ public class SubmissionMerger {
 
         // switch sketch!
         if (differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.SWITCH_SKETCH || differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.CREATE_SKETCH ) {
-            String startingSketch = getPreviousSketchId(database, differentIndex - 1);
+            final String startingSketch = getPreviousSketchId(database, differentIndex - 1);
             if (startingSketch == null) {
                 throw new MergeException("Switch sketch inserted before parent sketch was created!");
             }
-            int endingIndex = getMatchingSketchId(client, differentIndex + 1, startingSketch);
+            final int endingIndex = getMatchingSketchId(client, differentIndex + 1, startingSketch);
             if (endingIndex == -1) {
                 throw new MergeException("Client list does not switch back.");
             }
             final List<Commands.SrlUpdate> result = new ArrayList<>();
-            List<Commands.SrlUpdate> secondHalfOfMerge = merge(database.subList(differentIndex, database.size()),
-                    client.subList(endingIndex + 1, client.size()));
+            final List<Commands.SrlUpdate> listForSecondMerge = new ArrayList<>();
+            listForSecondMerge.addAll(client.subList(differentIndex, endingIndex + 1));
+            listForSecondMerge.addAll(database.subList(differentIndex, database.size()));
+
+            // takes in the already merged data and merges in the second half of the list
+            final List<Commands.SrlUpdate> secondHalfOfMerge = merge(listForSecondMerge,
+                    client.subList(differentIndex, client.size()));
             result.addAll(database.subList(0, differentIndex));
-            result.addAll(client.subList(differentIndex, endingIndex + 1));
+            //result.addAll(client.subList(differentIndex, endingIndex + 1));
             result.addAll(secondHalfOfMerge);
             return result;
         }
