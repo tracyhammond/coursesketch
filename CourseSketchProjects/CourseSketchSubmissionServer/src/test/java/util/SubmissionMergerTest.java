@@ -100,6 +100,19 @@ public class SubmissionMergerTest {
     }
 
     @Test(expected = MergeException.class)
+    public void ifOnlyChangeIsAdditionAndModeratorThenException() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList.Builder list2 = Commands.SrlUpdateList.newBuilder(list1);
+        list2.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom", Commands.CommandType.CLEAR, null)));
+        SubmissionMerger merger = new SubmissionMerger(list1, list2.build());
+        merger.setIsModerator(true);
+        Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(list2.build(), list3);
+        Assert.assertNotEquals(list1, list3);
+    }
+
+    @Test(expected = MergeException.class)
     public void ifChangeIsDeletionExceptionIsThrown() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
@@ -115,6 +128,18 @@ public class SubmissionMergerTest {
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
         Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, list1.getListCount(), time);
         SubmissionMerger merger = new SubmissionMerger(list1, list2);
+        Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(list2, list3);
+        Assert.assertNotEquals(list1, list3);
+    }
+
+    @Test()
+    public void switchSketchMergesCorrectlyAddedAtEndAsModerator() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, list1.getListCount(), time);
+        SubmissionMerger merger = new SubmissionMerger(list1, list2);
+        merger.setIsModerator(true);
         Commands.SrlUpdateList list3 = merger.merge();
         Assert.assertEquals(list2, list3);
         Assert.assertNotEquals(list1, list3);
