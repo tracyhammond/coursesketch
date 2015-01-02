@@ -251,10 +251,10 @@ public final class AssignmentManager {
             final DBObject corsor, final boolean isAdmin, final boolean isMod, final long checkTime) {
         if (isAdmin || isMod) {
             final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
-            try {
-                latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
-            } catch (NullPointerException exception) {
+            if (corsor.get(LATE_POLICY_FUNCTION_TYPE) == null) {
                 latePolicy.setFunctionType(LatePolicy.FunctionType.STEPPING_FUNCTION);
+            } else {
+                latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
             }
 
             latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
