@@ -23,15 +23,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslHandler;
-import io.netty.handler.ssl.util.SelfSignedCertificate;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
 import java.io.File;
-import java.io.FileInputStream;
-import java.security.KeyStore;
 
 /**
  * A HTTP server which serves Web Socket requests at:

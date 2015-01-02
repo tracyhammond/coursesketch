@@ -37,29 +37,43 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 /**
  * Created by gigemjt on 10/19/14.
  *
- *  This channel should be shareable!
+ * This channel should be shareable!
  */
 @ChannelHandler.Sharable
 /* package private! */ class ServerSocketWrapper extends SimpleChannelInboundHandler<Object> {
 
     private static final String WEBSOCKET_PATH = "/websocket";
-
-    private WebSocketServerHandshaker handshaker;
-
     private final boolean isSecure;
     /**
      * An actual socket handler that is just wrapped by the
      */
     private final ServerWebSocketHandler socketHandler;
+    private WebSocketServerHandshaker handshaker;
 
     /**
-     *
      * @param handler
      * @param secure
      */
     ServerSocketWrapper(final AbstractServerWebSocketHandler handler, final boolean secure) {
         socketHandler = (ServerWebSocketHandler) handler;
         isSecure = secure;
+    }
+
+    private static void sendHttpResponse(
+            final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
+        // Generate an error page if response getStatus code is not OK (200).
+        if (res.status() != OK) {
+            final ByteBuf buf = Unpooled.copiedBuffer(res.status().toString(), CharsetUtil.UTF_8);
+            res.content().writeBytes(buf);
+            buf.release();
+            setContentLength(res, res.content().readableBytes());
+        }
+
+        // Send the response and close the connection if necessary.
+        ChannelFuture f = ctx.channel().writeAndFlush(res);
+        if (!isKeepAlive(req) || res.status() != OK) {
+            f.addListener(ChannelFutureListener.CLOSE);
+        }
     }
 
     @Override
@@ -73,10 +87,13 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * <p/>
      * Is called for each message of type {@link I}.
      *
-     * @param ctx the {@link io.netty.channel.ChannelHandlerContext} which this {@link io.netty.channel.SimpleChannelInboundHandler}
-     *            belongs to
-     * @param msg the message to handle
-     * @throws Exception is thrown if an error occurred
+     * @param ctx
+     *         the {@link io.netty.channel.ChannelHandlerContext} which this {@link io.netty.channel.SimpleChannelInboundHandler}
+     *         belongs to
+     * @param msg
+     *         the message to handle
+     * @throws Exception
+     *         is thrown if an error occurred
      */
     @Override
     protected final void channelRead0(final ChannelHandlerContext ctx, final Object msg) throws Exception {
@@ -100,7 +117,6 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HTTP_1_1, FORBIDDEN));
             return;
         }
-
 
         // Send the demo page and favicon.ico
         if ("/demo".equals(req.uri())) {
@@ -180,32 +196,16 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
     }
 
     /**
-     * @param req the http that is requesting the upgrade.
+     * @param req
+     *         the http that is requesting the upgrade.
      * @return the location of the socket.
      */
     private String getWebSocketLocation(final FullHttpRequest req) {
-        final String location =  req.headers().get(HOST) + WEBSOCKET_PATH;
+        final String location = req.headers().get(HOST) + WEBSOCKET_PATH;
         if (isSecure) {
             return "wss://" + location;
         } else {
             return "ws://" + location;
-        }
-    }
-
-    private static void sendHttpResponse(
-            final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
-        // Generate an error page if response getStatus code is not OK (200).
-        if (res.status() != OK) {
-            final ByteBuf buf = Unpooled.copiedBuffer(res.status().toString(), CharsetUtil.UTF_8);
-            res.content().writeBytes(buf);
-            buf.release();
-            setContentLength(res, res.content().readableBytes());
-        }
-
-        // Send the response and close the connection if necessary.
-        ChannelFuture f = ctx.channel().writeAndFlush(res);
-        if (!isKeepAlive(req) || res.status() != OK) {
-            f.addListener(ChannelFutureListener.CLOSE);
         }
     }
 
