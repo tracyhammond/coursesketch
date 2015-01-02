@@ -399,15 +399,15 @@ public final class LectureManager {
      *
      * creates an object of the IdInLecture message type from the proto file
      *
-     * @param id
-     *         the id of the slide that used to create the message
+     * @param slideId
+     *         the slideId of the slide that used to create the message
      * @param isSlide
-     *         a boolean that is true is the id param belongs to a slide
+     *         a boolean that is true if the slideId param belongs to a slide
      * @param isUnlocked
      *         a boolean that is true if the user trying to access this slide is allowed
      * @return a BasicDBObject of the message type IdInLecture
      */
-    private static BasicDBObject createIdInLecture(final String id, final boolean isSlide, final boolean isUnlocked) {
-        return new BasicDBObject(SLIDES, new BasicDBObject(SELF_ID, id).append(IS_SLIDE, true).append(IS_UNLOCKED, isUnlocked));
+    private static BasicDBObject createIdInLecture(final String slideId, final boolean isSlide, final boolean isUnlocked) {
+        return new BasicDBObject(SLIDES, new BasicDBObject(SELF_ID, slideId).append(IS_SLIDE, isSlide).append(IS_UNLOCKED, isUnlocked));
     }
 }
