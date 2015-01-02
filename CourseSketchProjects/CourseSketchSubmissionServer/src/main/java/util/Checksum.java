@@ -6,8 +6,14 @@ import protobuf.srl.submission.Submission.SrlChecksum;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Computes the checksum for the {@link protobuf.srl.commands.Commands.SrlUpdate}.
+ *
+ * This can be used to ensure the integrity of the list and possibly for other uses as well.
+ */
+@SuppressWarnings("checkstyle:magicnumber")
 public class Checksum {
-    public static final long MAX_TIME_SIZE = 2L << 63L - 2L; // 2 ^ 63 - 1 (or Long.maxValue)
+    public static final long MAX_TIME_SIZE = 2L << 63L - 2L; // (2 ^ 63) - 2 (or Long.maxValue)
     public static final long LONG_EXP = 64;
     public static final int MAX_LIST_SIZE_BITS = 16; // max size a list can be in a checksum this is 2 ^ 24 (which is the midpoint between 16 and 32
     public static final int MAX_LIST_SIZE =
@@ -15,11 +21,45 @@ public class Checksum {
     public static final int MAX_COMMAND_SIZE = 2 << 16; // max size that the command bytes can take up
     public static final long MAX_UPDATE_DATA_SIZE = 2L << 32L; // max size that the command bytes can take up
 
+    /**
+     * The return value to indicate that the lists are of incorrect lengths and as a result can not be compared.
+     */
+    public static final int WRONG_LIST_SIZE_ERROR = -2;
+
+    @SuppressWarnings("checkstyle:visibilitymodifier")
     private static final class SumHolder {
+        /**
+         * The cumulative time of each update.
+         * It is computed as ( totalTime + newTime ) % {@link #MAX_TIME_SIZE}.
+         *
+         * Useful for telling the difference between two updates that are the exactly the same besides the time they took place
+         */
         public long totalTime = 0;
+
+        /**
+         * The cumulative value of each command type
+         * It is computed as ( totalCommand * 7 + newCommandValue ) % {@link #MAX_TIME_SIZE}.
+         *
+         * This takes the command type number for the value.
+         * This is useful for integrity checking ensuring that each list has the same value in it.
+         * This only looks at the first command of the {@link protobuf.srl.commands.Commands.SrlUpdate}.
+         */
         public int totalCommand = 0;
+
+        /**
+         * The cumulative value of the binary data
+         * It is computed as ( totalCommand * 7 + newDataSize ) % {@link #MAX_UPDATE_DATA_SIZE}.
+         *
+         * This is a shortcut of ensuring that the bytes of the list are the same without checking every single byte.
+         * This can be used to tell the difference between two strokes for example where everything else is the same.
+         * Or two updates when the first command is the same.
+         */
         public long totalUpdateDataSize = 0;
 
+        /**
+         * Adds a new {@link protobuf.srl.commands.Commands.SrlUpdate} to the current checksum and compuytes values for it.
+         * @param update The new update that is being added to the checksum.
+         */
         public void addUpdate(final SrlUpdate update) {
             totalTime = (totalTime + update.getTime()) % MAX_TIME_SIZE;
             totalCommand = (totalCommand * 7 + (update.getCommands(0).getCommandType().getNumber() + 1)) % MAX_COMMAND_SIZE;
@@ -46,8 +86,8 @@ public class Checksum {
      * <li>  update.time % 2 ^ 63 - 1
      * </ul>
      *
-     * @param list
-     * @return
+     * @param list The list of {@link protobuf.srl.commands.Commands.SrlUpdate}.
+     * @return {@link protobuf.srl.submission.Submission.SrlChecksum} the final value.
      */
     public static SrlChecksum computeChecksum(final List<SrlUpdate> list) {
         final int size = list.size() % MAX_LIST_SIZE;
@@ -59,6 +99,12 @@ public class Checksum {
         return computeSumFromHolder(holder, size);
     }
 
+    /**
+     * Computes the {@link protobuf.srl.submission.Submission.SrlChecksum} given the holder and the size.
+     * @param holder The holder of the partially computed checksum values.
+     * @param size the size of the list at the current point.
+     * @return The final checksum value.
+     */
     private static SrlChecksum computeSumFromHolder(final SumHolder holder, final int size) {
         final int sizeShift = (int) LONG_EXP - Integer.SIZE + Integer.numberOfLeadingZeros(size);
         final int commandShift = (int) LONG_EXP - MAX_LIST_SIZE_BITS - Integer.SIZE + Integer.numberOfLeadingZeros(holder.totalCommand);
@@ -76,12 +122,12 @@ public class Checksum {
      *
      * Not that the sum at zero is equal to the checksum of the item at index zero
      *
-     * @param list
-     * @return
+     * @param list The list of updates to compute the checksum.
+     * @return A list of checksums that matches the checksum at each point.
      * @see Checksum#computeChecksum(List)
      */
     public static List<SrlChecksum> computeListedChecksum(final List<SrlUpdate> list) {
-        final ArrayList<SrlChecksum> listSummed = new ArrayList<SrlChecksum>();
+        final ArrayList<SrlChecksum> listSummed = new ArrayList<>();
         final SumHolder holder = new SumHolder();
         for (int i = 0; i < list.size(); i++) {
             final int size = (i + 1) % MAX_LIST_SIZE;
@@ -105,13 +151,13 @@ public class Checksum {
      * @param list2
      *         the list of {@link protobuf.srl.commands.Commands.SrlUpdateList} the list used to as a comparison.
      * @return the index in list1 where there is a difference between checksums.  Returns -1 if there is no difference.
-     * Returns -2 if the second list is smaller than the first list.
+     * Returns {@link #WRONG_LIST_SIZE_ERROR} if the second list is smaller than the first list.
      * @see Checksum#computeChecksum(List)
      */
     public static int indexOfDifference(final List<SrlUpdate> list1, final List<SrlUpdate> list2) {
         // list
         if (list2.size() < list1.size()) {
-            return -2;
+            return WRONG_LIST_SIZE_ERROR;
         }
         final SumHolder holder1 = new SumHolder();
         final SumHolder holder2 = new SumHolder();
@@ -130,7 +176,6 @@ public class Checksum {
     }
 
     /**
-     * TODO: make this more efficient!
      * Returns the index for the given checksum in the list of updates.
      *
      * This will return the last index of the item in this list.
@@ -138,12 +183,11 @@ public class Checksum {
      * If the checksum matches the list with one one item in it (index zero) then it will return 0
      * If the checksum matches the entire list then it will return list.size() - 1
      *
-     * @param list
-     * @param sum
+     * @param list The list of updates.
+     * @param sum The sum that is being compared to.
      * @return the index if it is located or -1 if there is no match
      */
     public static int checksumIndex(final List<SrlUpdate> list, final SrlChecksum sum) {
-        final List<SrlChecksum> sums = computeListedChecksum(list);
         final SumHolder holder = new SumHolder();
         for (int i = 0; i < list.size(); i++) {
             final int size = (i + 1) % MAX_LIST_SIZE;
