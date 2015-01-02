@@ -11,7 +11,7 @@ import java.util.List;
  *
  * Merges two submissions with one coming from the database and the other coming from the client
  */
-public class SubmissionMerger {
+public final class SubmissionMerger {
     private Commands.SrlUpdateList databaseList, clientList;
     private boolean isModerator;
 
@@ -26,6 +26,7 @@ public class SubmissionMerger {
      * We do not check if you are an admin or a user as that is handled externally.
      *
      * @param isMod
+     *         true if the submission is being merged as a moderator.
      */
     public void setIsModerator(final boolean isMod) {
         this.isModerator = isMod;
@@ -40,6 +41,12 @@ public class SubmissionMerger {
      * <li>A switch sketch occurs in the middle of another system. (which in case you must be the moderator or admin).</li>
      * <li>The client list is just longer than the database list.</li>
      * </ul>
+     *
+     * @return {@link protobuf.srl.commands.Commands.SrlUpdateList} The result will be a merged list.
+     *         If the merge fails then an exception is thrown instead of returning a value.
+     * @throws MergeException
+     *         Thrown if there is an issue while merging.
+     *         The user should assume that the merge was aborted and instead use the database list
      */
     public Commands.SrlUpdateList merge() throws MergeException {
         final List<Commands.SrlUpdate> result = merge(databaseList.getListList(), clientList.getListList());
@@ -47,9 +54,21 @@ public class SubmissionMerger {
         return build.addAllList(result).build();
     }
 
+    /**
+     * Merges the two lists together recursively.
+     *
+     * @param database
+     *         The database list
+     * @param client
+     *         The new list that is being merged in.
+     * @return A merged form of the list.
+     * @throws MergeException
+     *         Thrown if the merge fails.  One should reject the client list if this exception is thrown.
+     */
     private List<Commands.SrlUpdate> merge(final List<Commands.SrlUpdate> database, final List<Commands.SrlUpdate> client) throws MergeException {
         final int differentIndex = Checksum.indexOfDifference(database, client);
         if (differentIndex == -1) {
+            // we return database in-case the change is actually a cheater induced conflict of hashing.
             return database;
         }
 
@@ -67,7 +86,7 @@ public class SubmissionMerger {
         }
 
         // something weird happened so we quit and don't modify.
-        if (differentIndex == -2) {
+        if (differentIndex == Checksum.WRONG_LIST_SIZE_ERROR) {
             throw new MergeException("Client list can not be shorter than the database list! (someone is trying to change history)");
         }
 
@@ -145,7 +164,9 @@ public class SubmissionMerger {
      * Goes back until a switch sketch or create sketch is found and returns that id.
      *
      * @param updates
+     *         the list of updates to search through.
      * @param startIndex
+     *         The index to search from
      * @return The id of the starting sketch.
      */
     private String getPreviousSketchId(final List<Commands.SrlUpdate> updates, final int startIndex) {
@@ -174,7 +195,11 @@ public class SubmissionMerger {
      * Goes back until a switch sketch or create sketch is found and returns that id.
      *
      * @param updates
+     *         The list of updates to search through
      * @param startIndex
+     *         the index to search from
+     * @param matchingSketchId
+     *         the Id that we are trying to find the indexof.
      * @return The id of the starting sketch.
      */
     private int getMatchingSketchId(final List<Commands.SrlUpdate> updates, final int startIndex, final String matchingSketchId) {
@@ -182,8 +207,8 @@ public class SubmissionMerger {
             final Commands.SrlCommand command = updates.get(i).getCommands(0);
             if (command.getCommandType() == Commands.CommandType.SWITCH_SKETCH) {
                 try {
-                    Commands.IdChain id = Commands.IdChain.parseFrom(command.getCommandData());
-                    if (id.getIdChain(0).equals(matchingSketchId)) {
+                    final Commands.IdChain sketchId = Commands.IdChain.parseFrom(command.getCommandData());
+                    if (sketchId.getIdChain(0).equals(matchingSketchId)) {
                         return i;
                     }
                 } catch (InvalidProtocolBufferException e) {
