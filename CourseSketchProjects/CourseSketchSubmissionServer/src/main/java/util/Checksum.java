@@ -20,7 +20,7 @@ public class Checksum {
         public int totalCommand = 0;
         public long totalUpdateDataSize = 0;
 
-        public void addUpdate(SrlUpdate update) {
+        public void addUpdate(final SrlUpdate update) {
             totalTime = (totalTime + update.getTime()) % MAX_TIME_SIZE;
             totalCommand = (totalCommand * 7 + (update.getCommands(0).getCommandType().getNumber() + 1)) % MAX_COMMAND_SIZE;
             totalUpdateDataSize = (totalUpdateDataSize * 7 + update.getSerializedSize()) % MAX_UPDATE_DATA_SIZE;
@@ -59,10 +59,10 @@ public class Checksum {
         return computeSumFromHolder(holder, size);
     }
 
-    private static SrlChecksum computeSumFromHolder(SumHolder holder, int size) {
-        final int size_shift = 64 - Integer.SIZE + Integer.numberOfLeadingZeros(size);
-        final int command_shift = 64 - MAX_LIST_SIZE_BITS - Integer.SIZE + Integer.numberOfLeadingZeros(holder.totalCommand);
-        final long result = ((long) size) << size_shift | ((long) holder.totalCommand) << command_shift | holder.totalUpdateDataSize;
+    private static SrlChecksum computeSumFromHolder(final SumHolder holder, final int size) {
+        final int sizeShift = (int) LONG_EXP - Integer.SIZE + Integer.numberOfLeadingZeros(size);
+        final int commandShift = (int) LONG_EXP - MAX_LIST_SIZE_BITS - Integer.SIZE + Integer.numberOfLeadingZeros(holder.totalCommand);
+        final long result = ((long) size) << sizeShift | ((long) holder.totalCommand) << commandShift | holder.totalUpdateDataSize;
         final SrlChecksum.Builder builder = SrlChecksum.newBuilder();
         builder.setFirstBits(result);
         builder.setSecondBits(holder.totalTime);
@@ -81,10 +81,10 @@ public class Checksum {
      * @see Checksum#computeChecksum(List)
      */
     public static List<SrlChecksum> computeListedChecksum(final List<SrlUpdate> list) {
-        ArrayList<SrlChecksum> listSummed = new ArrayList<SrlChecksum>();
+        final ArrayList<SrlChecksum> listSummed = new ArrayList<SrlChecksum>();
         final SumHolder holder = new SumHolder();
         for (int i = 0; i < list.size(); i++) {
-            int size = (i + 1) % MAX_LIST_SIZE;
+            final int size = (i + 1) % MAX_LIST_SIZE;
             holder.addUpdate(list.get(i));
 
             listSummed.add(computeSumFromHolder(holder, size));
@@ -116,7 +116,7 @@ public class Checksum {
         final SumHolder holder1 = new SumHolder();
         final SumHolder holder2 = new SumHolder();
         for (int i = 0; i < list1.size(); i++) {
-            int size = (i + 1) % MAX_LIST_SIZE;
+            final int size = (i + 1) % MAX_LIST_SIZE;
             holder1.addUpdate(list1.get(i));
             holder2.addUpdate(list2.get(i));
             if (!computeSumFromHolder(holder1, size).equals(computeSumFromHolder(holder2, size))) {
@@ -142,11 +142,11 @@ public class Checksum {
      * @param sum
      * @return the index if it is located or -1 if there is no match
      */
-    public static int checksumIndex(final List<SrlUpdate> list, SrlChecksum sum) {
-        List<SrlChecksum> sums = computeListedChecksum(list);
+    public static int checksumIndex(final List<SrlUpdate> list, final SrlChecksum sum) {
+        final List<SrlChecksum> sums = computeListedChecksum(list);
         final SumHolder holder = new SumHolder();
         for (int i = 0; i < list.size(); i++) {
-            int size = (i + 1) % MAX_LIST_SIZE;
+            final int size = (i + 1) % MAX_LIST_SIZE;
             holder.addUpdate(list.get(i));
             if (computeSumFromHolder(holder, size).equals(sum)) {
                 return i;

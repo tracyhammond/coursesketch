@@ -78,6 +78,43 @@ public class SubmissionMergerTest {
         return result.build();
     }
 
+    /**
+     * Inserts a different sketch with its own updates into the given list.
+     * @param startIndex
+     * @return
+     */
+    private Commands.SrlUpdateList createSimpleDatabaseListInsertMarkerAt(Commands.SrlUpdateList list, int startIndex, int endIndex, long time) {
+        List<Commands.SrlUpdate> updates = list.getListList();
+        Commands.SrlUpdateList.Builder result = Commands.SrlUpdateList.newBuilder();
+        List<Commands.SrlUpdate> firstHalf = updates.subList(0 , startIndex);
+        result.addAllList(updates.subList(0 , startIndex));
+
+        List<Commands.SrlUpdate> secondHalf = updates.subList(startIndex, updates.size());
+        int splitSize = secondHalf.size();
+        List<Commands.SrlUpdate> afterUpdate = new ArrayList<>();
+        for (int i = 0; i < secondHalf.size(); i++) {
+            afterUpdate.add(makeNewUpdateFromCommands("UndoUpdate" + i, time + 50 * (i + 1), makeNewCommand("UndoCom" + i, Commands.CommandType.UNDO, null)));
+            splitSize += 1;
+        }
+        Commands.Marker marker = Commands.Marker.newBuilder().setOtherData("" + ((endIndex - startIndex) * 2)).setType(
+                Commands.Marker.MarkerType.SPLIT).build();
+        result.addList(makeNewUpdateFromCommands("UpdateSplit1", time + 50, makeNewCommand("Split1", Commands.CommandType.MARKER, marker.toByteString())));
+
+        result.addAllList(secondHalf);
+        result.addAllList(afterUpdate);
+        result.addList(makeNewUpdateFromCommands("UpdateSplit2", time + 50, makeNewCommand("Split2", Commands.CommandType.MARKER, marker.toByteString())));
+
+        List<Commands.SrlUpdate> middle = new ArrayList<>();
+
+        middle.add(makeNewUpdateFromCommands("Update6", time + 50, makeNewCommand("Stroke4", Commands.CommandType.ADD_STROKE, null)));
+        middle.add(makeNewUpdateFromCommands("Update7", time + 60, makeNewCommand("Stroke4", Commands.CommandType.ADD_STROKE, null)));
+        middle.add(makeNewUpdateFromCommands("Update8", time + 70, makeNewCommand("Shape1", Commands.CommandType.ADD_SHAPE, null),
+                makeNewCommand("Clear3", Commands.CommandType.CLEAR, null)));
+
+        result.addAllList(middle);
+        return result.build();
+    }
+
     @Test
     public void noChangeIfBothListAreTheSame() throws MergeException {
         long time = System.currentTimeMillis();
@@ -174,6 +211,18 @@ public class SubmissionMergerTest {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
         Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, 2, time);
+        SubmissionMerger merger = new SubmissionMerger(list1, list2);
+        Commands.SrlUpdateList list3 = merger.merge();
+        // Assert.assertEquals(list1, list2); // used to see differences between list
+        Assert.assertEquals(list2, list3);
+        Assert.assertNotEquals(list1, list3);
+    }
+
+    @Test()
+    public void markerMergesCorrectlyAddedInMiddle() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertMarkerAt(list1, 2, 4, time);
         SubmissionMerger merger = new SubmissionMerger(list1, list2);
         Commands.SrlUpdateList list3 = merger.merge();
         // Assert.assertEquals(list1, list2); // used to see differences between list

@@ -70,8 +70,12 @@ public class SubmissionMerger {
         if (differentIndex == -2) {
             throw new MergeException("Client list can not be shorter than the database list! (someone is trying to change history)");
         }
-        // we have had a modification to the existing list.
 
+        if (differentIndex == 0) {
+            throw new MergeException("You can not override the create sketch");
+        }
+
+        // we have had a modification to the existing list and all other checks passed.
         final Commands.SrlUpdate differentUpdate = client.get(differentIndex);
 
         // switch sketch!
@@ -126,6 +130,7 @@ public class SubmissionMerger {
 
             final List<Commands.SrlUpdate> result = new ArrayList<>();
             result.addAll(database.subList(0, differentIndex));
+            result.add(client.get(differentIndex));
 
             final List<Commands.SrlUpdate> merged = merge(database.subList(differentIndex, database.size()),
                     client.subList(differentIndex + 1, differentIndex + endingIndex));
