@@ -48,7 +48,7 @@ import static database.DatabaseStringConstants.USER_LIST;
  * @author gigemjt
  *
  */
-@SuppressWarnings("PMD.CommentRequired")
+@SuppressWarnings({ "PMD.CommentRequired", "PMD.TooManyMethods" })
 public final class MongoInstitution implements Institution {
     /**
      * A single instance of the mongo institution.
@@ -407,8 +407,7 @@ public final class MongoInstitution implements Institution {
 
     @Override
     public String insertLectureSlide(final String userId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
-        final String resultId = SlideManager.mongoInsertSlide(getInstance().auth, getInstance().database, userId, lectureSlide);
-        return resultId;
+        return SlideManager.mongoInsertSlide(getInstance().auth, getInstance().database, userId, lectureSlide);
     }
 
     /*
