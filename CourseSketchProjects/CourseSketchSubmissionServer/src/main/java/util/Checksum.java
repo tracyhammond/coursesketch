@@ -13,59 +13,42 @@ import java.util.List;
  */
 @SuppressWarnings("checkstyle:magicnumber")
 public class Checksum {
+
+    /**
+     * The largest value for the time portion. before it goes back to zero.
+     */
     public static final long MAX_TIME_SIZE = 2L << 63L - 2L; // (2 ^ 63) - 2 (or Long.maxValue)
+
+    /**
+     * How many digits are in a long.
+     */
     public static final long LONG_EXP = 64;
-    public static final int MAX_LIST_SIZE_BITS = 16; // max size a list can be in a checksum this is 2 ^ 24 (which is the midpoint between 16 and 32
-    public static final int MAX_LIST_SIZE =
-            2 << MAX_LIST_SIZE_BITS; // max size a list can be in a checksum this is 2 ^ 24 (which is the midpoint between 16 and 32
-    public static final int MAX_COMMAND_SIZE = 2 << 16; // max size that the command bytes can take up
-    public static final long MAX_UPDATE_DATA_SIZE = 2L << 32L; // max size that the command bytes can take up
+
+    /**
+     * The max number of bits that can be used to represent the size of the list.
+     * max size a list can be in a checksum this is 2 ^ 16
+     */
+    public static final int MAX_LIST_SIZE_BITS = 16;
+    /**
+     * The max value that is represented by the size of the list.
+     * max size a list can be in a checksum this is 2 ^ 16
+     */
+    public static final int MAX_LIST_SIZE = 2 << MAX_LIST_SIZE_BITS;
+
+    /**
+     * max size that the command bytes can take up.
+     */
+    public static final int MAX_COMMAND_SIZE = 2 << 16;
+
+    /**
+     * Max size that the command bytes can take up.
+     */
+    public static final long MAX_UPDATE_DATA_SIZE = 2L << 32L;
 
     /**
      * The return value to indicate that the lists are of incorrect lengths and as a result can not be compared.
      */
     public static final int WRONG_LIST_SIZE_ERROR = -2;
-
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    private static final class SumHolder {
-        /**
-         * The cumulative time of each update.
-         * It is computed as ( totalTime + newTime ) % {@link #MAX_TIME_SIZE}.
-         *
-         * Useful for telling the difference between two updates that are the exactly the same besides the time they took place
-         */
-        public long totalTime = 0;
-
-        /**
-         * The cumulative value of each command type
-         * It is computed as ( totalCommand * 7 + newCommandValue ) % {@link #MAX_TIME_SIZE}.
-         *
-         * This takes the command type number for the value.
-         * This is useful for integrity checking ensuring that each list has the same value in it.
-         * This only looks at the first command of the {@link protobuf.srl.commands.Commands.SrlUpdate}.
-         */
-        public int totalCommand = 0;
-
-        /**
-         * The cumulative value of the binary data
-         * It is computed as ( totalCommand * 7 + newDataSize ) % {@link #MAX_UPDATE_DATA_SIZE}.
-         *
-         * This is a shortcut of ensuring that the bytes of the list are the same without checking every single byte.
-         * This can be used to tell the difference between two strokes for example where everything else is the same.
-         * Or two updates when the first command is the same.
-         */
-        public long totalUpdateDataSize = 0;
-
-        /**
-         * Adds a new {@link protobuf.srl.commands.Commands.SrlUpdate} to the current checksum and compuytes values for it.
-         * @param update The new update that is being added to the checksum.
-         */
-        public void addUpdate(final SrlUpdate update) {
-            totalTime = (totalTime + update.getTime()) % MAX_TIME_SIZE;
-            totalCommand = (totalCommand * 7 + (update.getCommands(0).getCommandType().getNumber() + 1)) % MAX_COMMAND_SIZE;
-            totalUpdateDataSize = (totalUpdateDataSize * 7 + update.getSerializedSize()) % MAX_UPDATE_DATA_SIZE;
-        }
-    }
 
     /**
      * Returns a long which is the checkSum of the update list.
@@ -86,7 +69,8 @@ public class Checksum {
      * <li>  update.time % 2 ^ 63 - 1
      * </ul>
      *
-     * @param list The list of {@link protobuf.srl.commands.Commands.SrlUpdate}.
+     * @param list
+     *         The list of {@link protobuf.srl.commands.Commands.SrlUpdate}.
      * @return {@link protobuf.srl.submission.Submission.SrlChecksum} the final value.
      */
     public static SrlChecksum computeChecksum(final List<SrlUpdate> list) {
@@ -101,8 +85,11 @@ public class Checksum {
 
     /**
      * Computes the {@link protobuf.srl.submission.Submission.SrlChecksum} given the holder and the size.
-     * @param holder The holder of the partially computed checksum values.
-     * @param size the size of the list at the current point.
+     *
+     * @param holder
+     *         The holder of the partially computed checksum values.
+     * @param size
+     *         the size of the list at the current point.
      * @return The final checksum value.
      */
     private static SrlChecksum computeSumFromHolder(final SumHolder holder, final int size) {
@@ -122,7 +109,8 @@ public class Checksum {
      *
      * Not that the sum at zero is equal to the checksum of the item at index zero
      *
-     * @param list The list of updates to compute the checksum.
+     * @param list
+     *         The list of updates to compute the checksum.
      * @return A list of checksums that matches the checksum at each point.
      * @see Checksum#computeChecksum(List)
      */
@@ -183,8 +171,10 @@ public class Checksum {
      * If the checksum matches the list with one one item in it (index zero) then it will return 0
      * If the checksum matches the entire list then it will return list.size() - 1
      *
-     * @param list The list of updates.
-     * @param sum The sum that is being compared to.
+     * @param list
+     *         The list of updates.
+     * @param sum
+     *         The sum that is being compared to.
      * @return the index if it is located or -1 if there is no match
      */
     public static int checksumIndex(final List<SrlUpdate> list, final SrlChecksum sum) {
@@ -197,5 +187,51 @@ public class Checksum {
             }
         }
         return -1;
+    }
+
+    /**
+     * Holds the partial sum used in computing the checksum values.
+     */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    private static final class SumHolder {
+        /**
+         * The cumulative time of each update.
+         * It is computed as ( totalTime + newTime ) % {@link #MAX_TIME_SIZE}.
+         *
+         * Useful for telling the difference between two updates that are the exactly the same besides the time they took place
+         */
+        public long totalTime = 0;
+
+        /**
+         * The cumulative value of each command type
+         * It is computed as ( totalCommand * 7 + newCommandValue ) % {@link #MAX_TIME_SIZE}.
+         *
+         * This takes the command type number for the value.
+         * This is useful for integrity checking ensuring that each list has the same value in it.
+         * This only looks at the first command of the {@link protobuf.srl.commands.Commands.SrlUpdate}.
+         */
+        public int totalCommand = 0;
+
+        /**
+         * The cumulative value of the binary data
+         * It is computed as ( totalCommand * 7 + newDataSize ) % {@link #MAX_UPDATE_DATA_SIZE}.
+         *
+         * This is a shortcut of ensuring that the bytes of the list are the same without checking every single byte.
+         * This can be used to tell the difference between two strokes for example where everything else is the same.
+         * Or two updates when the first command is the same.
+         */
+        public long totalUpdateDataSize = 0;
+
+        /**
+         * Adds a new {@link protobuf.srl.commands.Commands.SrlUpdate} to the current checksum and compuytes values for it.
+         *
+         * @param update
+         *         The new update that is being added to the checksum.
+         */
+        public void addUpdate(final SrlUpdate update) {
+            totalTime = (totalTime + update.getTime()) % MAX_TIME_SIZE;
+            totalCommand = (totalCommand * 7 + (update.getCommands(0).getCommandType().getNumber() + 1)) % MAX_COMMAND_SIZE;
+            totalUpdateDataSize = (totalUpdateDataSize * 7 + update.getSerializedSize()) % MAX_UPDATE_DATA_SIZE;
+        }
     }
 }
