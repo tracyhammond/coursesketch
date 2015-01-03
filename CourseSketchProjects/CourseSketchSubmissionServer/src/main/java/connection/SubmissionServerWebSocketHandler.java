@@ -2,12 +2,10 @@ package connection;
 
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.SocketSession;
 import handlers.DataRequestHandler;
 import handlers.SubmissionRequestHandler;
-
-import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
 import protobuf.srl.request.Message.Request;
 
 /**
@@ -23,7 +21,7 @@ public class SubmissionServerWebSocketHandler extends ServerWebSocketHandler {
 	}
 
 	@Override
-	public void onMessage(Session conn, Request req) {
+	public void onMessage(SocketSession conn, Request req) {
 		/**
 		 * Attempts to save the submission, which can be either a solution or an experiment.
 		 * If it is an insertion and not an update then it will send the key to the database

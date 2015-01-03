@@ -1,18 +1,17 @@
 package handlers;
 
+import com.google.protobuf.ByteString;
+import connection.DataClientWebSocket;
+import coursesketch.server.interfaces.MultiConnectionManager;
+import database.DatabaseClient;
+import database.UpdateHandler;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
 
-import com.google.protobuf.ByteString;
-
-import connection.DataClientWebSocket;
-import database.DatabaseClient;
-import database.UpdateHandler;
-
 public class SubmissionRequestHandler {
-	
+
 	private static final UpdateHandler updateHandler = new UpdateHandler();
 	public static Request handleRequest(Request req, MultiConnectionManager internalConnections) {
 		final String sessionInfo = req.getSessionInfo();
@@ -53,8 +52,8 @@ public class SubmissionRequestHandler {
 				updateHandler.clearSubmission(sessionInfo);
 				// sends the response back to the answer checker which can then send it back to the client.
 				return build.build();
-			} 
-			//ItemResult 
+			}
+			//ItemResult
 		} catch (Exception e) {
 			updateHandler.clearSubmission(sessionInfo);
 			Request.Builder build = Request.newBuilder();

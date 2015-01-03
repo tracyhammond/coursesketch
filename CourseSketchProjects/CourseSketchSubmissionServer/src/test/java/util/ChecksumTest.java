@@ -1,24 +1,20 @@
 package util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import database.DatabaseClient;
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.submission.Submission.SrlChecksum;
 
-public class ChecksumTester {
-	final File DEFAULT_DRAWING = new File("resources/tst/testDrawing.dat");
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+
+public class ChecksumTest {
+	final File DEFAULT_DRAWING = new File("CourseSketchProjects/CourseSketchSubmissionServer/src/resources/tst/testDrawing.dat");
 
 	@Before
 	public void setUp() throws Exception {
@@ -30,7 +26,7 @@ public class ChecksumTester {
 
 	/**
 	 * Passes if the creation of a checksum does not fail.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -41,7 +37,7 @@ public class ChecksumTester {
 
 	/**
 	 * Passes if the creation of a checksum does not fail.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -56,7 +52,7 @@ public class ChecksumTester {
 	/**
 	 * Passes if the checksum list creates the same result as the comput
 	 * checksum for each partial list
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -76,7 +72,7 @@ public class ChecksumTester {
 	/**
 	 * Passes if the checksum list creates the same result as the comput
 	 * checksum for each partial list
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -92,7 +88,7 @@ public class ChecksumTester {
 	/**
 	 * Passes if the checksum list creates the same index as the list in its
 	 * proper location
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -124,13 +120,14 @@ public class ChecksumTester {
 	 * HELPER METHODS
 	 */
 	public static SrlUpdateList createListFromFile(final File f) throws IOException {
+		System.out.println(f.getAbsolutePath());
 		return SrlUpdateList.parseFrom(new FileInputStream(f));
 	}
 
 	/**
 	 * Should create an alternate form of the SrlUpdateList with only a single
 	 * Id changed
-	 * 
+	 *
 	 * @param list
 	 * @return
 	 */
