@@ -14,8 +14,8 @@
 		<module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
-        <module>CourseSketchProjects/nettyBlank</module> <!-- temp move -->
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
+        <module>CourseSketchProjects/nettyBlank</module> <!-- temp move -->
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
 	</modules>
 
@@ -29,7 +29,7 @@
 			<id>maven-3</id>
 			<activation>
 				<file>
-					<!-- This employs that the basedir expression is only recognized by 
+					<!-- This employs that the basedir expression is only recognized by
 						Maven 3.x (see MNG-2363) -->
 					<exists>${basedir}</exists>
 				</file>
@@ -424,6 +424,7 @@
 		<checkstyleVersion>2.13</checkstyleVersion>
 		<findbugVersion>3.0.0</findbugVersion>
         <powermock.version>1.5.6</powermock.version>
+        <easymock.version>3.3</easymock.version>
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.2</pmdVersion>
@@ -532,6 +533,12 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-easymock</artifactId>
             <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
