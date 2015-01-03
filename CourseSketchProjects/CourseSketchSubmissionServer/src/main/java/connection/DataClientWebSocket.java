@@ -35,9 +35,9 @@ public final class DataClientWebSocket extends ClientWebSocket {
     }
 
     /**
-     * Accepts messages and sends the request to the correct server and holds minimum client state.
+     * {@inheritDoc}<br>
      *
-     * Also removes all identification that should not be sent to the client.
+     * Only handles request for setting time.
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
