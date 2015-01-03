@@ -15,14 +15,14 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import database.DatabaseClient;
 
 public class DataRequestHandler {
-	public static Request handleRequest(Request req) {
+	public static Request handleRequest(final Request req) {
 		System.out.println("Parsing data request!");
 		DataRequest dataReq;
 		try {
 			dataReq = DataRequest.parseFrom(req.getOtherData());
-			Request.Builder resultReq = Request.newBuilder(req);
+			final Request.Builder resultReq = Request.newBuilder(req);
 			resultReq.clearOtherData();
-			DataResult.Builder builder = DataResult.newBuilder();
+			final DataResult.Builder builder = DataResult.newBuilder();
 			try {
 				for (ItemRequest itemReq: dataReq.getItemsList()) {
 					if (itemReq.getQuery() == ItemQuery.EXPERIMENT) {
@@ -34,7 +34,7 @@ public class DataRequestHandler {
 						//conn.send(resultReq.build().toByteArray());
 					}
 				}
-			} catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				Request.Builder build = Request.newBuilder();
 				build.setRequestType(Request.MessageType.ERROR);
@@ -47,7 +47,7 @@ public class DataRequestHandler {
 			return resultReq.build();
 		} catch (InvalidProtocolBufferException e) {
 			e.printStackTrace();
-			Request.Builder build = Request.newBuilder();
+			final Request.Builder build = Request.newBuilder();
 			build.setRequestType(Request.MessageType.ERROR);
 			build.setResponseText(e.getMessage());
 			build.setSessionInfo(req.getSessionInfo());
@@ -62,7 +62,7 @@ public class DataRequestHandler {
 	 * @param itemReq
 	 * @return
 	 */
-	private static ItemResult handleSingleExperiment(ItemRequest itemReq) {
+	private static ItemResult handleSingleExperiment(final ItemRequest itemReq) {
 		System.out.println("attempting to get an experiment!");
 		SrlExperiment experiment = null;
 		String errorMessage = "";
@@ -73,7 +73,7 @@ public class DataRequestHandler {
 			e.printStackTrace();
 		}
 
-		ItemResult.Builder send = ItemResult.newBuilder();
+		final ItemResult.Builder send = ItemResult.newBuilder();
 		send.setQuery(ItemQuery.EXPERIMENT);
 
 		if (experiment != null) {
@@ -91,9 +91,9 @@ public class DataRequestHandler {
 	 * @param itemReq
 	 * @return
 	 */
-	private static ItemResult getExperimentsForInstructor(ItemRequest itemReq) {
+	private static ItemResult getExperimentsForInstructor(final ItemRequest itemReq) {
 		System.out.println("attempting to get an experiment!");
-		SrlExperimentList.Builder experiments = SrlExperimentList.newBuilder();
+		final SrlExperimentList.Builder experiments = SrlExperimentList.newBuilder();
 		String errorMessage = "";
 		for (String item : itemReq.getItemIdList()) {
 			try {
@@ -104,7 +104,7 @@ public class DataRequestHandler {
 			}
 		}
 
-		ItemResult.Builder send = ItemResult.newBuilder();
+		final ItemResult.Builder send = ItemResult.newBuilder();
 		send.setQuery(ItemQuery.EXPERIMENT);
 		send.setData(experiments.build().toByteString());
 		send.setErrorMessage(errorMessage);
