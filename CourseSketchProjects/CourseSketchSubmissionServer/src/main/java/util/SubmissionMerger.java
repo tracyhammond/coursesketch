@@ -12,12 +12,27 @@ import java.util.List;
  * Merges two submissions with one coming from the database and the other coming from the client
  */
 public final class SubmissionMerger {
+    /**
+     * The lists that are being merged together.
+     */
     private Commands.SrlUpdateList databaseList, clientList;
+
+    /**
+     * True if the user is merging as a moderator.
+     *
+     * Moderator can only merge lists in certain ways.
+     */
     private boolean isModerator;
 
-    public SubmissionMerger(final Commands.SrlUpdateList databaseList, final Commands.SrlUpdateList clientList) {
-        this.databaseList = databaseList;
-        this.clientList = clientList;
+    /**
+     * Creates an instance with the two lists that are going to be merged.
+     *
+     * @param existingList The original reference list that is stored in the existingList.
+     * @param mergeInList The new client list that is being stored in the .
+     */
+    public SubmissionMerger(final Commands.SrlUpdateList existingList, final Commands.SrlUpdateList mergeInList) {
+        this.databaseList = existingList;
+        this.clientList = mergeInList;
     }
 
     /**
@@ -27,9 +42,11 @@ public final class SubmissionMerger {
      *
      * @param isMod
      *         true if the submission is being merged as a moderator.
+     * @return itself.
      */
-    public void setIsModerator(final boolean isMod) {
+    public SubmissionMerger setIsModerator(final boolean isMod) {
         this.isModerator = isMod;
+        return this;
     }
 
     /**
@@ -43,7 +60,7 @@ public final class SubmissionMerger {
      * </ul>
      *
      * @return {@link protobuf.srl.commands.Commands.SrlUpdateList} The result will be a merged list.
-     *         If the merge fails then an exception is thrown instead of returning a value.
+     * If the merge fails then an exception is thrown instead of returning a value.
      * @throws MergeException
      *         Thrown if there is an issue while merging.
      *         The user should assume that the merge was aborted and instead use the database list
