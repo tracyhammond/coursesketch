@@ -16,7 +16,7 @@ public class SubmissionRunner extends GeneralConnectionRunner {
 
 	public SubmissionRunner(String args[]) {
 		super(args);
-		super.port = 8883;
+		super.setPort(8883);
 	}
 
 	/**
