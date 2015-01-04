@@ -11,11 +11,12 @@ import java.util.List;
  *
  * Merges two submissions with one coming from the database and the other coming from the client
  */
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.NPathComplexity" })
 public final class SubmissionMerger {
     /**
      * The lists that are being merged together.
      */
-    private Commands.SrlUpdateList databaseList, clientList;
+    private final Commands.SrlUpdateList databaseList, clientList;
 
     /**
      * True if the user is merging as a moderator.
@@ -27,8 +28,10 @@ public final class SubmissionMerger {
     /**
      * Creates an instance with the two lists that are going to be merged.
      *
-     * @param existingList The original reference list that is stored in the existingList.
-     * @param mergeInList The new client list that is being stored in the .
+     * @param existingList
+     *         The original reference list that is stored in the existingList.
+     * @param mergeInList
+     *         The new client list that is being stored in the .
      */
     public SubmissionMerger(final Commands.SrlUpdateList existingList, final Commands.SrlUpdateList mergeInList) {
         this.databaseList = existingList;
@@ -117,64 +120,102 @@ public final class SubmissionMerger {
         // switch sketch!
         if (differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.SWITCH_SKETCH
                 || differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.CREATE_SKETCH) {
-            final String startingSketch = getPreviousSketchId(database, differentIndex - 1);
-            if (startingSketch == null) {
-                throw new MergeException("Switch sketch inserted before parent sketch was created!");
-            }
-            final int endingIndex = getMatchingSketchId(client, differentIndex + 1, startingSketch);
-            if (endingIndex == -1) {
-                throw new MergeException("new additions do not switch back to the old sketch!");
-            }
-            final List<Commands.SrlUpdate> result = new ArrayList<>();
-            final List<Commands.SrlUpdate> listForSecondMerge = new ArrayList<>();
-            listForSecondMerge.addAll(client.subList(differentIndex, endingIndex + 1));
-            listForSecondMerge.addAll(database.subList(differentIndex, database.size()));
-
-            // takes in the already merged data and merges in the second half of the list
-            final List<Commands.SrlUpdate> secondHalfOfMerge = merge(listForSecondMerge,
-                    client.subList(differentIndex, client.size()));
-            result.addAll(database.subList(0, differentIndex));
-            //result.addAll(client.subList(differentIndex, endingIndex + 1));
-            result.addAll(secondHalfOfMerge);
-            return result;
+            return mergeSwitchSketch(database, client, differentIndex);
         }
 
         // switch sketch!
         if (differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.MARKER) {
-            final Commands.SrlCommand command = differentUpdate.getCommands(0);
-            Commands.Marker marker = null;
-            try {
-                marker = Commands.Marker.parseFrom(command.getCommandData());
-            } catch (InvalidProtocolBufferException e) {
-                throw new MergeException("List contains data in an invalid format.");
-            }
-            if (marker.getType() != Commands.Marker.MarkerType.SPLIT) {
-                throw new MergeException("List contains an unsupported marker type");
-            }
-            final int endingIndex = Integer.parseInt(marker.getOtherData());
-            if (endingIndex <= -1) {
-                throw new MergeException("Split marker is not correctly formatted.");
-            }
-
-            if (endingIndex + differentIndex + 1 <= database.size()) {
-                throw new MergeException("Split marker added at invalid position database list extends after marker");
-            }
-
-            if (isModerator) {
-                throw new MergeException("Moderator is not allowed to change the list in this way");
-            }
-
-            final List<Commands.SrlUpdate> result = new ArrayList<>();
-            result.addAll(database.subList(0, differentIndex));
-            result.add(client.get(differentIndex));
-
-            final List<Commands.SrlUpdate> merged = merge(database.subList(differentIndex, database.size()),
-                    client.subList(differentIndex + 1, differentIndex + endingIndex));
-            result.addAll(merged);
-            result.addAll(client.subList(differentIndex + endingIndex, client.size()));
-            return result;
+            return mergeRedoUndo(database, client, differentUpdate, differentIndex);
         }
         return database;
+    }
+
+    /**
+     * Merges in the list that occurs when a switch sketch is added in the middle.
+     *
+     * @param database
+     *         The database list.
+     * @param client
+     *         The new list that is being merged in.
+     * @param differentIndex
+     *         The index at which the two list diverge.
+     * @return A list that represents to the two merged versions.
+     * @throws MergeException
+     *         Thrown if the merge fails.  One should reject the client list if this exception is thrown.
+     */
+    private List<Commands.SrlUpdate> mergeSwitchSketch(final List<Commands.SrlUpdate> database, final List<Commands.SrlUpdate> client,
+            final int differentIndex) throws MergeException {
+        final String startingSketch = getPreviousSketchId(database, differentIndex - 1);
+        if (startingSketch == null) {
+            throw new MergeException("Switch sketch inserted before parent sketch was created!");
+        }
+        final int endingIndex = getMatchingSketchId(client, differentIndex + 1, startingSketch);
+        if (endingIndex == -1) {
+            throw new MergeException("new additions do not switch back to the old sketch!");
+        }
+        final List<Commands.SrlUpdate> result = new ArrayList<>();
+        final List<Commands.SrlUpdate> listForSecondMerge = new ArrayList<>();
+        listForSecondMerge.addAll(client.subList(differentIndex, endingIndex + 1));
+        listForSecondMerge.addAll(database.subList(differentIndex, database.size()));
+
+        // takes in the already merged data and merges in the second half of the list
+        final List<Commands.SrlUpdate> secondHalfOfMerge = merge(listForSecondMerge,
+                client.subList(differentIndex, client.size()));
+        result.addAll(database.subList(0, differentIndex));
+        //result.addAll(client.subList(differentIndex, endingIndex + 1));
+        result.addAll(secondHalfOfMerge);
+        return result;
+    }
+
+    /**
+     * Merges in the list that occurs when a switch sketch is added in the middle.
+     *
+     * @param database
+     *         The database list.
+     * @param client
+     *         The new list that is being merged in.
+     * @param differentUpdate
+     *         the update that is different in the client list.
+     * @param differentIndex
+     *         The index at which the two list diverge.
+     * @return A list that represents to the two merged versions.
+     * @throws MergeException
+     *         Thrown if the merge fails.  One should reject the client list if this exception is thrown.
+     */
+    private List<Commands.SrlUpdate> mergeRedoUndo(final List<Commands.SrlUpdate> database, final List<Commands.SrlUpdate> client,
+            final Commands.SrlUpdate differentUpdate, final int differentIndex) throws MergeException {
+        final Commands.SrlCommand command = differentUpdate.getCommands(0);
+        Commands.Marker marker = null;
+        try {
+            marker = Commands.Marker.parseFrom(command.getCommandData());
+        } catch (InvalidProtocolBufferException e) {
+            throw new MergeException("List contains data in an invalid format.", e);
+        }
+        if (marker.getType() != Commands.Marker.MarkerType.SPLIT) {
+            throw new MergeException("List contains an unsupported marker type");
+        }
+        final int endingIndex = Integer.parseInt(marker.getOtherData());
+        if (endingIndex <= -1) {
+            throw new MergeException("Split marker is not correctly formatted.");
+        }
+
+        if (endingIndex + differentIndex + 1 <= database.size()) {
+            throw new MergeException("Split marker added at invalid position database list extends after marker");
+        }
+
+        if (isModerator) {
+            throw new MergeException("Moderator is not allowed to change the list in this way");
+        }
+
+        final List<Commands.SrlUpdate> result = new ArrayList<>();
+        result.addAll(database.subList(0, differentIndex));
+        result.add(client.get(differentIndex));
+
+        final List<Commands.SrlUpdate> merged = merge(database.subList(differentIndex, database.size()),
+                client.subList(differentIndex + 1, differentIndex + endingIndex));
+        result.addAll(merged);
+        result.addAll(client.subList(differentIndex + endingIndex, client.size()));
+        return result;
     }
 
     /**
@@ -191,8 +232,8 @@ public final class SubmissionMerger {
             final Commands.SrlCommand command = updates.get(i).getCommands(0);
             if (command.getCommandType() == Commands.CommandType.SWITCH_SKETCH) {
                 try {
-                    final Commands.IdChain id = Commands.IdChain.parseFrom(command.getCommandData());
-                    return id.getIdChain(0);
+                    final Commands.IdChain sketchId = Commands.IdChain.parseFrom(command.getCommandData());
+                    return sketchId.getIdChain(0);
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
                 }

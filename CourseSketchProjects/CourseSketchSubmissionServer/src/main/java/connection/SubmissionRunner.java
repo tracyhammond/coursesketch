@@ -31,15 +31,12 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
      */
     public static void main(final String[] args) {
         final SubmissionRunner run = new SubmissionRunner(args);
-        try {
-            run.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        run.start();
     }
 
     /**
-     * Creates the local Submissions.
+     * {@inheritDoc}
+     * Creates the local database client.
      */
     @SuppressWarnings("unused")
     @Override
@@ -47,6 +44,9 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
         new DatabaseClient(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new SubmissionServlet(time, secure, local);
