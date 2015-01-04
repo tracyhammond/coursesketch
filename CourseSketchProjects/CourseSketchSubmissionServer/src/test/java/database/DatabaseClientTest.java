@@ -71,6 +71,19 @@ public class DatabaseClientTest {
     }
 
     @Test(expected = DatabaseAccessException.class)
+    public void testThrowsExceptionIfNoDataIsSet() throws DatabaseAccessException {
+
+        // once you have a DB instance, you can interact with it
+        // just like you would with a real one.
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
+        DatabaseClient.saveExperiment(expected, 200, client);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
     public void testGetExperimentThatDoesNotExist() throws DatabaseAccessException {
 
         // once you have a DB instance, you can interact with it
@@ -202,6 +215,34 @@ public class DatabaseClientTest {
     }
 
     @Test(expected = DatabaseAccessException.class)
+    public void testSwitchSubmissionTypeCausesProblemsAnswerChoiceSecond() throws DatabaseAccessException {
+
+        // once you have a DB instance, you can interact with it
+        // just like you would with a real one.
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        final String textAnswer = "TEXT ANSWER";
+
+        // round 1
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        build.setTextAnswer(textAnswer);
+        Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
+        String id = DatabaseClient.saveExperiment(expected, 200, client);
+
+        // round 2
+        Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
+        secondList.setAnswerChoice(94);
+        Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
+        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+
+        Assert.assertEquals(null, secondId);
+        // get experiment
+        Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
+        Assert.assertEquals(secondSubmission, result);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
     public void testSwitchSubmissionTypeCausesProblemsUpdateListFirst() throws DatabaseAccessException {
 
         // once you have a DB instance, you can interact with it
@@ -278,6 +319,59 @@ public class DatabaseClientTest {
         // get experiment
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
         String resultAnswer = result.getSubmission().getTextAnswer();
+
+        Assert.assertEquals(textAnswer2, resultAnswer);
+    }
+
+    @Test
+    public void testAnswerChoiceSubmissionSavesCorrectly() throws DatabaseAccessException {
+
+        // once you have a DB instance, you can interact with it
+        // just like you would with a real one.
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        final int answerChoice = 1;
+
+        // round 1
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        build.setAnswerChoice(answerChoice);
+        Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
+        String id = DatabaseClient.saveExperiment(expected, 200, client);
+
+        // get experiment
+        Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
+        int resultAnswer = result.getSubmission().getAnswerChoice();
+
+        Assert.assertEquals(answerChoice, resultAnswer);
+    }
+
+    @Test
+    public void testAnswerChoiceSubmissionUpdatesCorrectly() throws DatabaseAccessException {
+
+        // once you have a DB instance, you can interact with it
+        // just like you would with a real one.
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        final int textAnswer = 2;
+        final int textAnswer2 = 50067;
+
+        // round 1
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        build.setAnswerChoice(textAnswer);
+        Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
+        String id = DatabaseClient.saveExperiment(expected, 200, client);
+
+        // round 2
+        Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
+        secondList.setAnswerChoice(textAnswer2);
+        Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
+        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+
+        // get experiment
+        Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
+        int resultAnswer = result.getSubmission().getAnswerChoice();
 
         Assert.assertEquals(textAnswer2, resultAnswer);
     }
