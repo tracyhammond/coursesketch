@@ -1,6 +1,7 @@
 package database;
 
 import com.github.fakemongo.junit.FongoRule;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.DB;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.junit.After;
@@ -11,6 +12,8 @@ import org.junit.Test;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.submission.Submission;
 import util.SubmissionMergerTest;
+
+import java.util.Random;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,6 +46,71 @@ public class DatabaseClientTest {
 
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
         Assert.assertEquals(expected, result);
+    }
+
+    @Test
+    public void testUpdateListAddsSaveMarker() throws DatabaseAccessException, InvalidProtocolBufferException {
+
+        // once you have a DB instance, you can interact with it
+        // just like you would with a real one.
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        final long submissionTime = Math.abs(new Random().nextLong());
+
+        Submission.SrlSubmission.Builder usedList = Submission.SrlSubmission.newBuilder();
+        usedList.setUpdateList(SubmissionMergerTest.createSimpleDatabaseList(100));
+        Submission.SrlExperiment usedUpdate = getFakeExperiment("User1", usedList.build());
+        String id = DatabaseClient.saveExperiment(usedUpdate, submissionTime, client);
+
+        Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
+
+        Commands.SrlUpdateList resultList = result.getSubmission().getUpdateList();
+        Commands.SrlUpdate lastUpdate = resultList.getList(resultList.getListCount() - 1);
+
+        Commands.SrlCommand commands = lastUpdate.getCommands(0);
+        // just a check to see if it is a marker
+        Assert.assertEquals(Commands.CommandType.MARKER, commands.getCommandType());
+
+        // just a silly check to see if it is Really a marker
+        Commands.Marker marker = Commands.Marker.parseFrom(commands.getCommandData());
+
+        Assert.assertEquals(submissionTime, lastUpdate.getTime());
+    }
+
+    @Test
+    public void testUpdateListReplacesClientUpdateTime() throws DatabaseAccessException, InvalidProtocolBufferException {
+
+        // once you have a DB instance, you can interact with it
+        // just like you would with a real one.
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        final long submissionTime = Math.abs(new Random().nextLong()) + 200;
+
+        Submission.SrlSubmission.Builder usedList = Submission.SrlSubmission.newBuilder();
+        Commands.SrlUpdateList withSave = createSimpleDatabaseListWithSaveMarker(100);
+        usedList.setUpdateList(withSave);
+        Submission.SrlExperiment usedUpdate = getFakeExperiment("User1", usedList.build());
+        String id = DatabaseClient.saveExperiment(usedUpdate, submissionTime, client);
+
+        Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
+
+        Commands.SrlUpdateList resultList = result.getSubmission().getUpdateList();
+        Commands.SrlUpdate lastUpdate = resultList.getList(resultList.getListCount() - 1);
+
+        Commands.SrlCommand commands = lastUpdate.getCommands(0);
+        // just a check to see if it is a marker
+        Assert.assertEquals(Commands.CommandType.MARKER, commands.getCommandType());
+
+        // just a silly check to see if it is Really a marker
+        Commands.Marker marker = Commands.Marker.parseFrom(commands.getCommandData());
+
+        Assert.assertEquals(submissionTime, lastUpdate.getTime());
+
+        Commands.SrlUpdate clientUpdate = withSave.getList(resultList.getListCount() - 1);
+
+        Assert.assertNotEquals(clientUpdate.getTime(), lastUpdate.getTime());
     }
 
     public static Commands.SrlUpdateList createSimpleDatabaseListWithSaveMarker(long submissionTime) {
