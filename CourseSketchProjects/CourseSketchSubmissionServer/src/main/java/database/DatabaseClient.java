@@ -21,6 +21,7 @@ import util.SubmissionMerger;
 import java.net.UnknownHostException;
 
 import static database.DatabaseStringConstants.ALLOWED_IN_PROBLEMBANK;
+import static database.DatabaseStringConstants.ANSWER_CHOICE;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
@@ -250,7 +251,6 @@ public class DatabaseClient {
     public static SrlExperiment getExperiment(final String itemId, final DatabaseClient client) throws DatabaseAccessException {
         System.out.println("Fetching experiment");
         final DBObject cursor = client.getDb().getCollection(EXPERIMENT_COLLECTION).findOne(new ObjectId(itemId));
-
         if (cursor == null) {
             throw new DatabaseAccessException("There is no experiment with id: " + itemId);
         }
@@ -282,21 +282,40 @@ public class DatabaseClient {
      */
     private static SrlSubmission getSubmission(final DBObject cursor) throws SubmissionException {
         final SrlSubmission.Builder subBuilder = SrlSubmission.newBuilder();
-        Object result = cursor.get(UPDATELIST);
-        if (result != null) {
-            try {
-                subBuilder.setUpdateList(SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) result)));
+
+        final SrlSubmission.SubmissionTypeCase submissionType = getExpectedType(cursor);
+
+        switch (submissionType) {
+            case UPDATELIST:
+                final Object binary = cursor.get(UPDATELIST);
+                if (binary == null) {
+                    throw new SubmissionException("UpdateList did not contain any data", null);
+                }
+                try {
+                    subBuilder.setUpdateList(SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) binary)));
+                    return subBuilder.build();
+                } catch (InvalidProtocolBufferException e) {
+                    throw new SubmissionException("Error decoding update list", e);
+                }
+            case TEXTANSWER:
+                final Object text = cursor.get(TEXT_ANSWER);
+                if (text == null) {
+                    throw new SubmissionException("Text answer did not contain any data", null);
+                }
+                subBuilder.setTextAnswer(text.toString());
                 return subBuilder.build();
-            } catch (InvalidProtocolBufferException e) {
-                throw new SubmissionException("Error decoding update list", e);
-            }
+            case ANSWERCHOICE:
+                final Object answerChoice = cursor.get(ANSWER_CHOICE);
+                if (answerChoice == null) {
+                    throw new SubmissionException("Text answer did not contain any data", null);
+                }
+                // prevents a possible class cast exception.
+                subBuilder.setAnswerChoice(Integer.parseInt(answerChoice.toString()));
+                return subBuilder.build();
+            default:
+                throw new SubmissionException("Submission data is not supported type or does not exist", null);
+
         }
-        result = cursor.get(TEXT_ANSWER);
-        if (result != null) {
-            subBuilder.setTextAnswer(result.toString());
-            return subBuilder.build();
-        }
-        throw new SubmissionException("Submission data is not supported type or does not exist", null);
     }
 
     /**
@@ -320,6 +339,8 @@ public class DatabaseClient {
             return createUpdateList(submission, cursor, isMod, submissionTime);
         } else if (submission.hasTextAnswer()) {
             return createTextSubmission(submission, cursor);
+        } else if (submission.hasAnswerChoice()) {
+            return createMultipleChoiceSolution(submission, cursor);
         } else {
             throw new SubmissionException("Tried to save as an invalid submission", null);
         }
@@ -342,6 +363,25 @@ public class DatabaseClient {
         }
         // don't store it as changes for right now.
         return new BasicDBObject(TEXT_ANSWER, submission.getTextAnswer());
+    }
+
+    /**
+     * Creates a database object for the multiple choice submission.
+     *
+     * @param submission
+     *         The submission that is being inserted.
+     * @param cursor
+     *         The existing submission,  This should be null if an existing list does not exist.
+     * @return An object that represents how it would be stored in the database.
+     * @throws SubmissionException
+     *         thrown if there is a problem creating the database object.
+     */
+    private static BasicDBObject createMultipleChoiceSolution(final SrlSubmission submission, final DBObject cursor) throws SubmissionException {
+        if (cursor != null && getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.ANSWERCHOICE) {
+            throw new SubmissionException("Can not switch to a multiple choice submission from a different type", null);
+        }
+        // don't store it as changes for right now.
+        return new BasicDBObject(ANSWER_CHOICE, submission.getAnswerChoice());
     }
 
     /**
@@ -460,6 +500,12 @@ public class DatabaseClient {
                 throw new SubmissionException("Submission can not be multiple types at the same time.", null);
             }
             currentCase = SrlSubmission.SubmissionTypeCase.TEXTANSWER;
+        }
+        if (cursor.containsField(ANSWER_CHOICE)) {
+            if (currentCase != null) {
+                throw new SubmissionException("Submission can not be multiple types at the same time.", null);
+            }
+            currentCase = SrlSubmission.SubmissionTypeCase.ANSWERCHOICE;
         }
         if (currentCase == null) {
             throw new SubmissionException("Submission has no type specified", null);
