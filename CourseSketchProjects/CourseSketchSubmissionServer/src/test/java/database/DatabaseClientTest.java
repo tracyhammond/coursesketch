@@ -13,7 +13,7 @@ import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DbClientMockingTest {
+public class DatabaseClientTest {
 
     @Rule
     public FongoRule fongoRule = new FongoRule();
