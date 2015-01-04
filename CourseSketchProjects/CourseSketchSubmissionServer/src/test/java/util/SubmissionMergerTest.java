@@ -15,7 +15,7 @@ import java.util.List;
 public class SubmissionMergerTest {
     private static final String sketch1Id = "Sketch1";
     private static final String sketch2Id = "Sketch2";
-    private Commands.SrlUpdateList createSimpleDatabaseList(long time) {
+    public static Commands.SrlUpdateList createSimpleDatabaseList(long time) {
         Commands.SrlUpdateList.Builder result = Commands.SrlUpdateList.newBuilder();
         result.addList(makeNewUpdateFromCommands("Update1", time, makeNewSketchCommand("CreateSketch1", sketch1Id)));
         result.addList(makeNewUpdateFromCommands("Update2", time + 10, makeNewCommand("Stroke1", Commands.CommandType.ADD_STROKE, null)));

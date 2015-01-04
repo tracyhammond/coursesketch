@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ChecksumTest {
-	final File DEFAULT_DRAWING = new File("CourseSketchProjects/CourseSketchSubmissionServer/src/resources/tst/testDrawing.dat");
+	final File DEFAULT_DRAWING = new File("src/resources/tst/testDrawing.dat");
 
 	@Before
 	public void setUp() throws Exception {
