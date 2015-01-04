@@ -2,14 +2,16 @@ package database;
 
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import protobuf.srl.commands.Commands;
 import protobuf.srl.submission.Submission;
 import util.SubmissionMergerTest;
 
-import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -35,10 +37,32 @@ public class DatabaseClientTest {
         DatabaseClient client = getMockedVersion(db);
 
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
-        build.setUpdateList(SubmissionMergerTest.createSimpleDatabaseList(100));
-        String id = DatabaseClient.saveExperiment(getFakeExperiment("User1", build.build()), 100, client);
+        build.setUpdateList(createSimpleDatabaseListWithSaveMarker(200));
+        Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
+        String id = DatabaseClient.saveExperiment(expected, 200, client);
 
-        db.getCollection(EXPERIMENT_COLLECTION);
+        Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
+        Assert.assertEquals(expected, result);
+    }
+
+    public static Commands.SrlUpdateList createSimpleDatabaseListWithSaveMarker(long submissionTime) {
+        Commands.SrlUpdateList fakeList = SubmissionMergerTest.createSimpleDatabaseList(100);
+        Commands.SrlUpdateList.Builder newList = Commands.SrlUpdateList.newBuilder(fakeList);
+
+        // create a new marker with the save list item.
+        final Commands.SrlUpdate.Builder saveUpdate = Commands.SrlUpdate.newBuilder();
+        saveUpdate.setUpdateId(AbstractServerWebSocketHandler.Encoder.nextID().toString());
+        saveUpdate.setTime(submissionTime);
+
+        final Commands.Marker saveMarker = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SAVE).build();
+        final Commands.SrlCommand saveCommand = Commands.SrlCommand.newBuilder().setCommandType(Commands.CommandType.MARKER).setCommandId(
+                AbstractServerWebSocketHandler.Encoder.nextID().toString()).setCommandData(saveMarker.toByteString())
+                .setIsUserCreated(false).build();
+
+        saveUpdate.addCommands(saveCommand);
+
+        newList.addList(saveUpdate);
+        return newList.build();
     }
 
     public Submission.SrlExperiment getFakeExperiment(String userId, Submission.SrlSubmission sub) {
