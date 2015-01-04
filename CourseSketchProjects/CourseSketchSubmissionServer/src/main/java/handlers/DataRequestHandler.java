@@ -1,5 +1,6 @@
 package handlers;
 
+import database.DatabaseAccessException;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ItemQuery;
@@ -14,7 +15,16 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import database.DatabaseClient;
 
+/**
+ * Handles request for submissions.
+ */
 public class DataRequestHandler {
+
+	/**
+	 * Handles the request returning one of its own.
+	 * @param req 
+	 * @return A request, any exceptions that occur are stored in the request that is sent back.
+	 */
 	public static Request handleRequest(final Request req) {
 		System.out.println("Parsing data request!");
 		DataRequest dataReq;
@@ -67,8 +77,8 @@ public class DataRequestHandler {
 		SrlExperiment experiment = null;
 		String errorMessage = "";
 		try {
-			experiment = DatabaseClient.getExperiment(itemReq.getItemId(0), DatabaseClient.getInstance());
-		} catch (Exception e) {
+			experiment = DatabaseClient.getInstance().getExperiment(itemReq.getItemId(0));
+		} catch (DatabaseAccessException e) {
 			errorMessage = e.getMessage();
 			e.printStackTrace();
 		}

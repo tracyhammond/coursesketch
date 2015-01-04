@@ -7,15 +7,16 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.bson.types.ObjectId;
+import protobuf.srl.commands.Commands;
 import protobuf.srl.commands.Commands.SrlUpdateList;
-import protobuf.srl.submission.Submission.SrlChecksum;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
-import util.Checksum;
+import util.MergeException;
+import util.SubmissionMerger;
 
 import java.net.UnknownHostException;
 
@@ -31,12 +32,30 @@ import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
 import static database.DatabaseStringConstants.SUBMISSION_TIME;
 import static database.DatabaseStringConstants.UPDATELIST;
 import static database.DatabaseStringConstants.USER_ID;
+import static database.DatabaseStringConstants.TEXT_ANSWER;
 
+/**
+ * Manages the submissions in the database.
+ */
 public class DatabaseClient {
-    private static DatabaseClient instance;
+    /**
+     * A single instance of the mongo institution.
+     */
+    @SuppressWarnings("PMD.AssignmentToNonFinalStatic")
+    private static volatile DatabaseClient instance;
+
+    /**
+     * A private Database that stores all of the data used by mongo.
+     */
     private DB db;
 
-    private DatabaseClient(final String url) throws Exception {
+    /**
+     * A private institution that accepts a url for the database location.
+     *
+     * @param url
+     *         The location that the server is taking place.
+     */
+    private DatabaseClient(final String url) {
         MongoClient mongoClient = null;
         try {
             mongoClient = new MongoClient(url);
@@ -44,7 +63,7 @@ public class DatabaseClient {
             e.printStackTrace();
         }
         if (mongoClient == null) {
-            throw new Exception("An error occured while making mongoClient");
+            return;
         }
         db = (mongoClient.getDB("submissions"));
         if (db == null) {
@@ -54,15 +73,19 @@ public class DatabaseClient {
         }
     }
 
-    private DatabaseClient() throws Exception {
+    /**
+     * A default constructor that creates an instance at a specific database
+     * location.
+     */
+    private DatabaseClient() {
         this("goldberglinux.tamu.edu");
         //this("localhost");
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database
+     * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database.
      *
-     * @param testOnly
+     * @param testOnly true if we only want to tests the database client.
      */
     public DatabaseClient(final boolean testOnly) {
         try {
@@ -78,15 +101,22 @@ public class DatabaseClient {
         instance = this;
     }
 
+    /**
+     * @return An instance of the mongo client. Creates it if it does not exist.
+     */
+    @SuppressWarnings("checkstyle:innerassignment")
     public static DatabaseClient getInstance() {
-        if (instance == null) {
-            try {
-                instance = new DatabaseClient();
-            } catch (Exception e) {
-                e.printStackTrace();
+        DatabaseClient result = instance;
+        if (result == null) {
+            synchronized (DatabaseClient.class) {
+                if (result == null) {
+                    result = instance;
+                    instance = result = new DatabaseClient();
+                    //result.auth = new Authenticator(new MongoAuthenticator(instance.database));
+                }
             }
         }
-        return instance;
+        return result;
     }
 
     /**
@@ -96,33 +126,32 @@ public class DatabaseClient {
      *
      * It also ensures that the solution recieved is built on the previous solution as we do not permit the overwritting of history
      *
-     * @param experiment
-     * @return
+     * @param solution TODO change this to use new stuff
+     * @return id if the element does not already exist.
+     * @throws DatabaseAccessException problems
      */
-    public static String saveSolution(final SrlSolution solution, final DatabaseClient databaseClient) throws DatabaseException {
+    public final String saveSolution(final SrlSolution solution) throws DatabaseAccessException {
         System.out.println("\n\n\nsaving the experiment!");
-        DBCollection solutions = databaseClient.getDB().getCollection(SOLUTION_COLLECTION);
+        final DBCollection solutions = getDB().getCollection(SOLUTION_COLLECTION);
 
-        BasicDBObject findQuery = new BasicDBObject(PROBLEM_BANK_ID, solution.getProblemBankId());
-        DBCursor c = solutions.find(findQuery);
+        final BasicDBObject findQuery = new BasicDBObject(PROBLEM_BANK_ID, solution.getProblemBankId());
+        final DBCursor c = solutions.find(findQuery);
         DBObject corsor = null;
         if (c.count() > 0) {
             corsor = c.next();
             c.close();
-            DBCollection courses = databaseClient.getDB().getCollection(SOLUTION_COLLECTION);
-            DBObject updateObj = new BasicDBObject(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray());
-            courses.update(corsor, new BasicDBObject("$set", updateObj));
+            final DBObject updateObj = new BasicDBObject(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray());
+            solutions.update(corsor, new BasicDBObject("$set", updateObj));
         } else {
             System.out.println("No existing submissions found");
-            DBCollection new_user = databaseClient.getDB().getCollection(SOLUTION_COLLECTION);
 
-            BasicDBObject query = new BasicDBObject(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
+            final BasicDBObject query = new BasicDBObject(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
                     .append(IS_PRACTICE_PROBLEM, solution.getIsPracticeProblem())
                     .append(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray())
                     .append(PROBLEM_BANK_ID, solution.getProblemBankId());
 
-            new_user.insert(query);
-            corsor = new_user.findOne(query);
+            solutions.insert(query);
+            corsor = solutions.findOne(query);
             c.close();
         }
         return corsor.get(SELF_ID).toString();
@@ -135,64 +164,60 @@ public class DatabaseClient {
      *
      * TODO SECURITY CHECKS!
      *
-     * @param experiment
-     * @return
-     * @throws DatabaseException
+     * @param experiment What the user is submitting.
+     * @param submissionTime What time the server got the submission.
+     * @return A string representing the id if it exists or is a new submission.
+     * @throws DatabaseAccessException thrown if there are problems saving the experiment.
      */
-    public static String saveExperiment(final SrlExperiment experiment, final DatabaseClient databaseClient) throws DatabaseException {
+    public final String saveExperiment(final SrlExperiment experiment, final long submissionTime) throws DatabaseAccessException {
         System.out.println("saving the experiment!");
-        final DBCollection experiments = databaseClient.getDB().getCollection(EXPERIMENT_COLLECTION);
+        final DBCollection experiments = getDB().getCollection(EXPERIMENT_COLLECTION);
 
         final BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
                 .append(USER_ID, experiment.getUserId());
         System.out.println("Searching for existing solutions " + findQuery);
-        DBCursor c = experiments.find(findQuery).sort(new BasicDBObject(SUBMISSION_TIME, -1));
+        final DBCursor c = experiments.find(findQuery).sort(new BasicDBObject(SUBMISSION_TIME, -1));
         System.out.println("Do we have the next cursos " + c.hasNext());
         System.out.println("Number of solutions found" + c.count());
         DBObject corsor = null;
+
         if (c.count() > 0) {
             System.out.println("UPDATING AN EXPERIMENT!!!!!!!!");
             corsor = c.next();
 
+            // TODO figure out how to update a document with a single command
+
+            final DBObject updateObj;
             try {
-                SrlUpdateList databaseList = SrlUpdateList.parseFrom((byte[]) corsor.get(UPDATELIST));
-                SrlUpdateList inputList = SrlUpdateList.parseFrom(experiment.getSubmission().getUpdateList());
-
-                SrlUpdateList result;
-                result = completeListCheck(databaseList, inputList);
-                // This is a safe comparison as the method ensures the same object is returned and is not aliased.
-                if (result == databaseList) {
-                    // We do a NO-OP and return success
-                    return corsor.get(SELF_ID).toString();
-                }
-            } catch (InvalidProtocolBufferException e) {
-                // TODO: figure out how to handle this event...
-                e.printStackTrace();
-            } finally {
-                c.close();
+                updateObj = createSubmission(experiment.getSubmission(), corsor, false, submissionTime);
+            } catch (SubmissionException e) {
+                throw new DatabaseAccessException("Exception while creating submission", e);
             }
-
-            final DBCollection courses = databaseClient.getDB().getCollection(EXPERIMENT_COLLECTION);
-
-            // TODO: figure out how to update a document with a single command
-
-            final DBObject updateObj = new BasicDBObject(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray());
-            final DBObject updateObj2 = new BasicDBObject(SUBMISSION_TIME, experiment.getSubmission().getSubmissionTime());
+            final DBObject updateObj2 = new BasicDBObject(SUBMISSION_TIME, submissionTime);
             final BasicDBObject updateQueryPart2 = new BasicDBObject("$set", updateObj);
             final BasicDBObject updateQuery2Part2 = new BasicDBObject("$set", updateObj2);
-            courses.update(corsor, updateQueryPart2);
-            courses.update(corsor, updateQuery2Part2);
+            experiments.update(corsor, updateQueryPart2);
+            experiments.update(corsor, updateQuery2Part2);
+
+            // We do not need to return the id it already exist
+            return null;
         } else {
             c.close();
-            BasicDBObject query = new BasicDBObject(COURSE_ID, experiment.getCourseId())
+            final DBObject submissionObject;
+            try {
+                submissionObject = createSubmission(experiment.getSubmission(), corsor, false, submissionTime);
+            } catch (SubmissionException e) {
+                throw new DatabaseAccessException("Exception while creating submission", e);
+            }
+            final BasicDBObject query = new BasicDBObject(COURSE_ID, experiment.getCourseId())
                     .append(ASSIGNMENT_ID, experiment.getAssignmentId())
                     .append(COURSE_PROBLEM_ID, experiment.getProblemId())
                     .append(USER_ID, experiment.getUserId())
-                            //.append(ADMIN, experiment.getAccessPermissions().getAdminPermissionList())
-                            //.append(MOD, experiment.getAccessPermissions().getModeratorPermissionList())
-                            //.append(USERS, experiment.getAccessPermissions().getUserPermissionList())
-                    .append(UPDATELIST, experiment.getSubmission().getUpdateList().toByteArray())
-                    .append(SUBMISSION_TIME, experiment.getSubmission().getSubmissionTime());
+                    //        .append(ADMIN, experiment.getAccessPermissions().getAdminPermissionList())
+                    //        .append(MOD, experiment.getAccessPermissions().getModeratorPermissionList())
+                    //        .append(USERS, experiment.getAccessPermissions().getUserPermissionList())
+                    .append(SUBMISSION_TIME, submissionTime);
+            query.putAll(submissionObject);
             experiments.insert(query);
             corsor = experiments.findOne(query);
         }
@@ -200,64 +225,186 @@ public class DatabaseClient {
     }
 
     /**
-     * Gets the experiment by its id and sends all of the important information associated with it
+     * Gets the experiment by its id and sends all of the important information associated with it.
+     * TODO run auth checks.
      *
-     * @param itemId
-     * @return
+     * @param itemId the id of the experiment we are trying to retrieve.
+     * @return the experiment found in the database.
+     * @throws DatabaseAccessException thrown if there are problems getting the item
      */
-    public static SrlExperiment getExperiment(final String itemId, final DatabaseClient databaseClient) {
+    public final SrlExperiment getExperiment(final String itemId) throws DatabaseAccessException {
         System.out.println("Fetching experiment");
-        final DBRef myDbRef = new DBRef(databaseClient.getDB(), EXPERIMENT_COLLECTION, new ObjectId(itemId));
-        final DBObject corsor = myDbRef.fetch();
+        final DBObject cursor = this.getDB().getCollection(EXPERIMENT_COLLECTION).findOne(new ObjectId(itemId));
 
-        if (corsor == null) {
-            return null;
+        if (cursor == null) {
+            throw new DatabaseAccessException("There is no experiment with id: " + itemId);
         }
 
-        SrlExperiment.Builder build = SrlExperiment.newBuilder();
-        build.setAssignmentId(corsor.get(ASSIGNMENT_ID).toString());
-        build.setUserId(corsor.get(USER_ID).toString());
-        build.setProblemId(corsor.get(COURSE_PROBLEM_ID).toString());
-        build.setCourseId(corsor.get(COURSE_ID).toString());
-        SrlSubmission.Builder sub = SrlSubmission.newBuilder();
-        sub.setUpdateList(ByteString.copyFrom((byte[]) corsor.get(UPDATELIST)));
-        build.setSubmission(sub.build());
-        System.out.println("Experiment succesfully fetched");
+        final SrlExperiment.Builder build = SrlExperiment.newBuilder();
+        build.setAssignmentId(cursor.get(ASSIGNMENT_ID).toString());
+        build.setUserId(cursor.get(USER_ID).toString());
+        build.setProblemId(cursor.get(COURSE_PROBLEM_ID).toString());
+        build.setCourseId(cursor.get(COURSE_ID).toString());
+        SrlSubmission sub = null;
+        try {
+            sub = getSubmission(cursor);
+        } catch (SubmissionException e) {
+            throw new DatabaseAccessException("Error getting submission data", e);
+        }
+        build.setSubmission(sub);
+        System.out.println("Experiment successfully fetched");
         return build.build();
     }
 
     /**
-     * Returns database object unmodified if the list are the same
-     * If they are not the same but are compatibable a new object of the combined version is made
-     *
-     * @throws DatabaseException
+     * Retrieves the submission portion of the solution or experiment.
+     * @param cursor the db pointer to the data.
+     * @return {@link protobuf.srl.submission.Submission.SrlSubmission} the resulting submission.
+     * @throws SubmissionException Thrown if there are issues getting the submission.
      */
-    public static SrlUpdateList completeListCheck(final SrlUpdateList database, final SrlUpdateList input) throws DatabaseException {
-        final SrlChecksum databaseSum = Checksum.computeChecksum(database.getListList());
-        final SrlChecksum inputSum = Checksum.computeChecksum(input.getListList());
-        if (databaseSum.equals(inputSum)) {
-            return database;
+    private static SrlSubmission getSubmission(final DBObject cursor) throws SubmissionException {
+        final SrlSubmission.Builder subBuilder = SrlSubmission.newBuilder();
+        Object result = cursor.get(UPDATELIST);
+        if (result != null) {
+            try {
+                subBuilder.setUpdateList(SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) result)));
+                return subBuilder.build();
+            } catch (InvalidProtocolBufferException e) {
+                throw new SubmissionException("Error decoding update list", e);
+            }
         }
-
-        final int newIndex = Checksum.checksumIndex(input.getListList(), databaseSum);
-        if (newIndex < 0) {
-            throw new DatabaseException("Input list is not compatible with previous data");
+        result = cursor.get(TEXT_ANSWER);
+        if (result != null) {
+            subBuilder.setTextAnswer(result.toString());
+            return subBuilder.build();
         }
-
-        final SrlUpdateList.Builder combinedList = SrlUpdateList.newBuilder(database);
-        // The combined list should be safe as we can ensure that history is not changed as we use it to build the new list.
-        // and the checksum of the new combined data should match the complete list of the input data
-        // this is to safegaurd against a possible attack where they managed to figure out the checksum process
-        // and come up with a way to ensure equality with it not being equal (so changing history will still not be possible)
-        combinedList.addAllList(input.getListList().subList(newIndex + 1, input.getListCount()));
-        return combinedList.build();
+        throw new SubmissionException("Submission data is not supported type or does not exist", null);
     }
 
+    /**
+     * Creates a database object for the submission object.  Handles certain values in certain ways if they exist.
+     * @param submission The submission that is being inserted.
+     * @param cursor The existing submission,  This should be null if an existing list does not exist.
+     * @param isMod True if the user is acting as a moderator.
+     * @param submissionTime The time that the server received the submission.
+     * @return An object that represents how it would be stored in the database.
+     * @throws SubmissionException thrown if there is a problem creating the database object.
+     */
+    private static BasicDBObject createSubmission(final SrlSubmission submission, final DBObject cursor,
+            final boolean isMod, final long submissionTime) throws SubmissionException {
+        if (submission.hasUpdateList()) {
+            return createUpdateList(submission, cursor, isMod, submissionTime);
+        } else if (submission.hasTextAnswer()) {
+            return createTextSubmission(submission, cursor, isMod, submissionTime);
+        } else {
+            throw new SubmissionException("Tried to save as an invalid submission", null);
+        }
+    }
+
+    /**
+     * Creates a database object for the text submission.
+     * @param submission The submission that is being inserted.
+     * @param cursor The existing submission,  This should be null if an existing list does not exist.
+     * @param isMod True if the user is acting as a moderator.
+     * @param submissionTime The time that the server received the submission.
+     * @return An object that represents how it would be stored in the database.
+     * @throws SubmissionException thrown if there is a problem creating the database object.
+     */
+    private static BasicDBObject createTextSubmission(final SrlSubmission submission, final DBObject cursor, final boolean isMod,
+            final long submissionTime) {
+        // don't store it as changes for right now.
+        return new BasicDBObject(TEXT_ANSWER, submission.getTextAnswer());
+    }
+
+    /**
+     * Creates a database object for the update list, merges the list if there is already a list in the database.
+     * @param submission The submission that is being inserted.
+     * @param cursor The existing submission,  This should be null if an existing list does not exist.
+     * @param isMod True if the user is acting as a moderator.
+     * @param submissionTime The time that the server received the submission.
+     * @return An object that represents how it would be stored in the database.
+     * @throws SubmissionException thrown if there is a problem creating the database object.
+     */
+    private static BasicDBObject createUpdateList(final SrlSubmission submission, final DBObject cursor,
+            final boolean isMod, final long submissionTime)
+            throws SubmissionException {
+        if (cursor != null) {
+            SrlUpdateList result = null;
+            try {
+                result = SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) cursor.get(UPDATELIST)));
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+                result = submission.getUpdateList();
+            }
+            try {
+                result = new SubmissionMerger(result, submission.getUpdateList()).setIsModerator(isMod).merge();
+            } catch (MergeException e) {
+                throw new SubmissionException("exception while merging the two lists.  Update rejected", e);
+            }
+            result = setTime(result, submissionTime);
+            return new BasicDBObject(UPDATELIST, result.toByteArray());
+        } else {
+            return new BasicDBObject(UPDATELIST, setTime(submission.getUpdateList(), submissionTime).toByteArray());
+        }
+    }
+
+    /**
+     * Sets the time of the last update to be the submission time.
+     * If the last update is not a save marker or a submission marker then it creates a new save marker.
+     *
+     * @param updateList The update list that will have its last time set to the correct value.
+     * @param submissionTime The time at which the server recieved the submission.
+     * @return An update list with the correct submission time.
+     */
+    private static SrlUpdateList setTime(final SrlUpdateList updateList, final long submissionTime) {
+        final SrlUpdateList.Builder builder = SrlUpdateList.newBuilder(updateList);
+        final Commands.SrlUpdate finalUpdate = builder.getList(builder.getListCount() - 1);
+        final Commands.SrlCommand com = finalUpdate.getCommands(0);
+        boolean createNewMarker = false;
+        if (com.getCommandType() != Commands.CommandType.MARKER) {
+            // we need to create a new save marker
+            createNewMarker = true;
+        } else {
+            try {
+                final Commands.Marker marker = Commands.Marker.parseFrom(com.getCommandData());
+                if (marker.getType() != Commands.Marker.MarkerType.SAVE && marker.getType() != Commands.Marker.MarkerType.SUBMISSION) {
+                    createNewMarker = true;
+                }
+            } catch (InvalidProtocolBufferException e) {
+                createNewMarker = true;
+            }
+        }
+
+        if (createNewMarker) {
+            final Commands.SrlUpdate.Builder saveUpdate = Commands.SrlUpdate.newBuilder();
+            saveUpdate.setUpdateId(AbstractServerWebSocketHandler.Encoder.nextID().toString());
+            saveUpdate.setTime(submissionTime);
+
+            final Commands.Marker saveMarker = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SAVE).build();
+            final Commands.SrlCommand saveCommand = Commands.SrlCommand.newBuilder().setCommandType(Commands.CommandType.MARKER).setCommandId(
+                    AbstractServerWebSocketHandler.Encoder.nextID().toString()).setCommandData(saveMarker.toByteString())
+                    .setIsUserCreated(false).build();
+
+            saveUpdate.addCommands(saveCommand);
+
+            builder.addList(saveUpdate);
+        } else {
+            // just change the time on the last update.
+            final Commands.SrlUpdate.Builder updatedTime = Commands.SrlUpdate.newBuilder(finalUpdate);
+            updatedTime.setTime(submissionTime);
+            builder.setList(builder.getListCount() - 1, updatedTime);
+        }
+        return builder.build();
+    }
+
+    /**
+     * Sets up the index to allow for quicker access to the submission.
+     */
     public final void setUpIndexes() {
         System.out.println("Setting up an index");
         System.out.println("Experiment Index command: " + new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
-        db.getCollection(EXPERIMENT_COLLECTION).ensureIndex(new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1).append("unique", true));
-        db.getCollection(SOLUTION_COLLECTION).ensureIndex(new BasicDBObject(PROBLEM_BANK_ID, 1).append("unique", true));
+        db.getCollection(EXPERIMENT_COLLECTION).createIndex(new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1).append("unique", true));
+        db.getCollection(SOLUTION_COLLECTION).createIndex(new BasicDBObject(PROBLEM_BANK_ID, 1).append("unique", true));
     }
 
     /**
@@ -265,6 +412,7 @@ public class DatabaseClient {
      *
      * @return An instance of the current database (this method is protected).
      */
+    @SuppressWarnings("checkstyle:designforextension")
     protected DB getDB() {
         if (getClass().equals(DatabaseClient.class)) {
             return db;

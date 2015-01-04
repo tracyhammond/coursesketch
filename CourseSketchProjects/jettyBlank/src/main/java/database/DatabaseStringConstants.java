@@ -91,6 +91,7 @@ public final class DatabaseStringConstants {
 
     // submission specific
     public static final String UPDATELIST = "UpdateList";
+    public static final String TEXT_ANSWER = "TextAnswer";
     public static final String SKETCH = "Sketch";
     public static final String SUBMISSION_TIME = "time";
 
