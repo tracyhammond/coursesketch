@@ -17,12 +17,10 @@
 		<!-- This may be removed and a later solution will need to be worked on -->
 		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<mainClass>connection.SubmissionRunner</mainClass>
-		<!--
 		<testLevel>0</testLevel>
 		<averageTestLevel>0</averageTestLevel>
-		<projectBranchLevel>0</projectBranchLevel>
-		<projectLineLevel>0</projectLineLevel>
-		-->
+		<projectBranchLevel>57</projectBranchLevel>
+		<projectLineLevel>48</projectLineLevel>
 	</properties>
 	<build>
 		<plugins>
