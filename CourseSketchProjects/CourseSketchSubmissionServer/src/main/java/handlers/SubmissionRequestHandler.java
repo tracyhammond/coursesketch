@@ -4,8 +4,8 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import connection.DataClientWebSocket;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import database.DatabaseAccessException;
 import database.DatabaseClient;
-import database.DatabaseException;
 import database.SubmissionException;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
@@ -82,15 +82,15 @@ public class SubmissionRequestHandler {
                 throw new SubmissionException("submission was labeled as student but was not experiment", e);
             }
             try {
-                resultantId = DatabaseClient.saveExperiment(experiment, DatabaseClient.getInstance());
+                resultantId = DatabaseClient.getInstance().saveExperiment(experiment, req.getMessageTime());
                 if (resultantId != null) {
                     final SrlExperiment.Builder builder = SrlExperiment.newBuilder(experiment);
                     // erase the actual data from the submission, leaving only the id.
                     builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
                     data = builder.build().toByteString();
                 }
-            } catch (DatabaseException e) {
-                throw new SubmissionException("an exception occured while saving the experiment", e);
+            } catch (DatabaseAccessException e) {
+                throw new SubmissionException("an exception occurred while saving the experiment", e);
             }
         } else {
             Submission.SrlSolution solution = null;
@@ -100,14 +100,14 @@ public class SubmissionRequestHandler {
                 throw new SubmissionException("submission was not labeled as student but was not solution", e);
             }
             try {
-                resultantId = DatabaseClient.saveSolution(solution, DatabaseClient.getInstance());
+                resultantId = DatabaseClient.getInstance().saveSolution(solution);
                 if (resultantId != null) {
                     final SrlSolution.Builder builder = SrlSolution.newBuilder(solution);
                     // erase the actual data from the submission, leaving only the id.
                     builder.setSubmission(SrlSubmission.newBuilder().setId(resultantId));
                     data = builder.build().toByteString();
                 }
-            } catch (DatabaseException e) {
+            } catch (DatabaseAccessException e) {
                 throw new SubmissionException("an exception occured while saving the solution", e);
             }
         }
