@@ -1,6 +1,7 @@
 import "commands.proto";
 
 import "sketch.proto";
+import "school.proto";
 
 package protobuf.srl.submission;
 
@@ -33,6 +34,7 @@ message SrlExperiment {
     optional string problemId = 3;
     optional string userId = 5; // student Id  (this can sometimes be the username for displaying purposes
     optional SrlSubmission submission = 6;
+    optional protobuf.srl.school.SrlPermission accessPermission = 7;
 }
 
 // the checksum contains 4 sets of longs
