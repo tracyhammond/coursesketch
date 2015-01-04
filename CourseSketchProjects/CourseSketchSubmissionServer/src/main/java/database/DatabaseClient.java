@@ -337,10 +337,8 @@ public class DatabaseClient {
      *         thrown if there is a problem creating the database object.
      */
     private static BasicDBObject createTextSubmission(final SrlSubmission submission, final DBObject cursor) throws SubmissionException {
-        if (cursor != null) {
-            if (getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.TEXTANSWER) {
-                throw new SubmissionException("Can not switch to a text submission from a different type", null);
-            }
+        if (cursor != null && getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.TEXTANSWER) {
+            throw new SubmissionException("Can not switch to a text submission from a different type", null);
         }
         // don't store it as changes for right now.
         return new BasicDBObject(TEXT_ANSWER, submission.getTextAnswer());
