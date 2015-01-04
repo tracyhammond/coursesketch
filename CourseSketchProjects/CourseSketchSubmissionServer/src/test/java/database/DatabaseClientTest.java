@@ -4,6 +4,7 @@ import com.github.fakemongo.junit.FongoRule;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.DB;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -67,6 +68,17 @@ public class DatabaseClientTest {
 
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
         Assert.assertEquals(expected, result);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void testGetExperimentThatDoesNotExist() throws DatabaseAccessException {
+
+        // once you have a DB instance, you can interact with it
+        // just like you would with a real one.
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        Submission.SrlExperiment result = DatabaseClient.getExperiment(ObjectId.createFromLegacyFormat(0, 0, 0).toString(), client);
     }
 
     @Test
@@ -154,6 +166,62 @@ public class DatabaseClientTest {
         secondList.setUpdateList(SubmissionMergerTest.createSimpleDatabaseListInsertSketchAt(original, 2, 300));
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
         String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+
+        Assert.assertEquals(null, secondId);
+        // get experiment
+        Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
+        Assert.assertEquals(secondSubmission, result);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void testSwitchSubmissionTypeCausesProblemsTextFirst() throws DatabaseAccessException {
+
+        // once you have a DB instance, you can interact with it
+        // just like you would with a real one.
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        final String textAnswer = "TEXT ANSWER";
+
+        // round 1
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        build.setTextAnswer(textAnswer);
+        Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
+        String id = DatabaseClient.saveExperiment(expected, 200, client);
+
+        // round 2
+        Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
+        secondList.setUpdateList(createSimpleDatabaseListWithSaveMarker(200));
+        Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
+        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+
+        Assert.assertEquals(null, secondId);
+        // get experiment
+        Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
+        Assert.assertEquals(secondSubmission, result);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void testSwitchSubmissionTypeCausesProblemsUpdateListFirst() throws DatabaseAccessException {
+
+        // once you have a DB instance, you can interact with it
+        // just like you would with a real one.
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        final String textAnswer = "TEXT ANSWER";
+
+        // round 1
+        Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
+        secondList.setUpdateList(createSimpleDatabaseListWithSaveMarker(200));
+        Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
+        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+
+        // round 2
+        Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
+        build.setTextAnswer(textAnswer);
+        Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
+        String id = DatabaseClient.saveExperiment(expected, 200, client);
 
         Assert.assertEquals(null, secondId);
         // get experiment
