@@ -57,7 +57,7 @@ public class SubmissionMergerTest {
      * @param index
      * @return
      */
-    private Commands.SrlUpdateList createSimpleDatabaseListInsertSketchAt(Commands.SrlUpdateList list, int index, long time) {
+    public static Commands.SrlUpdateList createSimpleDatabaseListInsertSketchAt(Commands.SrlUpdateList list, int index, long time) {
         List<Commands.SrlUpdate> updates = list.getListList();
         List<Commands.SrlUpdate> firstHalf = updates.subList(0 , index);
         List<Commands.SrlUpdate> secondHalf = updates.subList(index, updates.size());
@@ -83,7 +83,7 @@ public class SubmissionMergerTest {
      * @param startIndex
      * @return
      */
-    private Commands.SrlUpdateList createSimpleDatabaseListInsertMarkerAt(Commands.SrlUpdateList list, int startIndex, int endIndex, long time) {
+    public static Commands.SrlUpdateList createSimpleDatabaseListInsertMarkerAt(Commands.SrlUpdateList list, int startIndex, int endIndex, long time) {
         List<Commands.SrlUpdate> updates = list.getListList();
         Commands.SrlUpdateList.Builder result = Commands.SrlUpdateList.newBuilder();
         List<Commands.SrlUpdate> firstHalf = updates.subList(0 , startIndex);
