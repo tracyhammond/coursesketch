@@ -29,6 +29,9 @@ public class SubmissionServlet extends ServerWebSocketInitializer {
         super(timeoutTime, isSecure, connectLocally);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final ServerWebSocketHandler createServerSocket() {
         return new SubmissionServerWebSocketHandler(this);

@@ -18,7 +18,12 @@ import utilities.ConnectionException;
 /**
  * Handles the request of a submission.
  */
-public class SubmissionRequestHandler {
+public final class SubmissionRequestHandler {
+
+    /**
+     * Private constructor.
+     */
+    private SubmissionRequestHandler() { }
 
     /**
      * Stores the submission in the database and sends communication to other servers if they need to know about the submission.
@@ -69,8 +74,9 @@ public class SubmissionRequestHandler {
      * @param req The request of the submission.
      * @return {@link com.google.protobuf.ByteString} that represents the result if this is the first submission.
      * May be null if this is not the first submission.
-     * @throws database.SubmissionException thrown if there is an error submitting.
+     * @throws SubmissionException thrown if there is an error submitting.
      */
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private static ByteString handleSubmission(final Message.Request req) throws SubmissionException {
         String resultantId = null;
         ByteString data = null;
@@ -82,7 +88,7 @@ public class SubmissionRequestHandler {
                 throw new SubmissionException("submission was labeled as student but was not experiment", e);
             }
             try {
-                resultantId = DatabaseClient.getInstance().saveExperiment(experiment, req.getMessageTime());
+                resultantId = DatabaseClient.saveExperiment(experiment, req.getMessageTime(), DatabaseClient.getInstance());
                 if (resultantId != null) {
                     final SrlExperiment.Builder builder = SrlExperiment.newBuilder(experiment);
                     // erase the actual data from the submission, leaving only the id.
@@ -100,7 +106,7 @@ public class SubmissionRequestHandler {
                 throw new SubmissionException("submission was not labeled as student but was not solution", e);
             }
             try {
-                resultantId = DatabaseClient.getInstance().saveSolution(solution);
+                resultantId = DatabaseClient.saveSolution(solution, DatabaseClient.getInstance());
                 if (resultantId != null) {
                     final SrlSolution.Builder builder = SrlSolution.newBuilder(solution);
                     // erase the actual data from the submission, leaving only the id.

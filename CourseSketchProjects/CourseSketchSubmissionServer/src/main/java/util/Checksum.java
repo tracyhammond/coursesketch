@@ -12,18 +12,16 @@ import java.util.List;
  * This can be used to ensure the integrity of the list and possibly for other uses as well.
  */
 @SuppressWarnings("checkstyle:magicnumber")
-public class Checksum {
+public final class Checksum {
 
     /**
      * The largest value for the time portion. before it goes back to zero.
      */
     public static final long MAX_TIME_SIZE = 2L << 63L - 2L; // (2 ^ 63) - 2 (or Long.maxValue)
-
     /**
      * How many digits are in a long.
      */
     public static final long LONG_EXP = 64;
-
     /**
      * The max number of bits that can be used to represent the size of the list.
      * max size a list can be in a checksum this is 2 ^ 16
@@ -34,21 +32,24 @@ public class Checksum {
      * max size a list can be in a checksum this is 2 ^ 16
      */
     public static final int MAX_LIST_SIZE = 2 << MAX_LIST_SIZE_BITS;
-
     /**
      * max size that the command bytes can take up.
      */
     public static final int MAX_COMMAND_SIZE = 2 << 16;
-
     /**
      * Max size that the command bytes can take up.
      */
     public static final long MAX_UPDATE_DATA_SIZE = 2L << 32L;
-
     /**
      * The return value to indicate that the lists are of incorrect lengths and as a result can not be compared.
      */
     public static final int WRONG_LIST_SIZE_ERROR = -2;
+
+    /**
+     * Private constructor.
+     */
+    private Checksum() {
+    }
 
     /**
      * Returns a long which is the checkSum of the update list.
@@ -223,14 +224,14 @@ public class Checksum {
         public long totalUpdateDataSize = 0;
 
         /**
-         * Adds a new {@link protobuf.srl.commands.Commands.SrlUpdate} to the current checksum and compuytes values for it.
+         * Adds a new {@link protobuf.srl.commands.Commands.SrlUpdate} to the current checksum and computes values for it.
          *
          * @param update
          *         The new update that is being added to the checksum.
          */
         public void addUpdate(final SrlUpdate update) {
             totalTime = (totalTime + update.getTime()) % MAX_TIME_SIZE;
-            totalCommand = (totalCommand * 7 + (update.getCommands(0).getCommandType().getNumber() + 1)) % MAX_COMMAND_SIZE;
+            totalCommand = (totalCommand * 7 + update.getCommands(0).getCommandType().getNumber() + 1) % MAX_COMMAND_SIZE;
             totalUpdateDataSize = (totalUpdateDataSize * 7 + update.getSerializedSize()) % MAX_UPDATE_DATA_SIZE;
         }
     }
