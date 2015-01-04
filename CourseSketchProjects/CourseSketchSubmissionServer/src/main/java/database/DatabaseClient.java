@@ -319,7 +319,7 @@ public class DatabaseClient {
         if (submission.hasUpdateList()) {
             return createUpdateList(submission, cursor, isMod, submissionTime);
         } else if (submission.hasTextAnswer()) {
-            return createTextSubmission(submission);
+            return createTextSubmission(submission, cursor);
         } else {
             throw new SubmissionException("Tried to save as an invalid submission", null);
         }
@@ -330,9 +330,18 @@ public class DatabaseClient {
      *
      * @param submission
      *         The submission that is being inserted.
+     * @param cursor
+     *         The existing submission,  This should be null if an existing list does not exist.
      * @return An object that represents how it would be stored in the database.
+     * @throws SubmissionException
+     *         thrown if there is a problem creating the database object.
      */
-    private static BasicDBObject createTextSubmission(final SrlSubmission submission) {
+    private static BasicDBObject createTextSubmission(final SrlSubmission submission, final DBObject cursor) throws SubmissionException {
+        if (cursor != null) {
+            if (getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.TEXTANSWER) {
+                throw new SubmissionException("Can not switch to a text submission from a different type", null);
+            }
+        }
         // don't store it as changes for right now.
         return new BasicDBObject(TEXT_ANSWER, submission.getTextAnswer());
     }
@@ -358,7 +367,15 @@ public class DatabaseClient {
         if (cursor != null) {
             SrlUpdateList result = null;
             try {
-                result = SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) cursor.get(UPDATELIST)));
+                final Object binary = cursor.get(UPDATELIST);
+                if (getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.UPDATELIST) {
+                    throw new SubmissionException("Can not switch type of submission.", null);
+                }
+                if (binary == null) {
+                    result = submission.getUpdateList();
+                } else {
+                    result = SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) binary));
+                }
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
                 result = submission.getUpdateList();
@@ -424,6 +441,33 @@ public class DatabaseClient {
             builder.setList(builder.getListCount() - 1, updatedTime);
         }
         return builder.build();
+    }
+
+    /**
+     * Returns the type of the submission.  Assumes this method is not called with null.
+     *
+     * @param cursor
+     *         The object that we are trying to determine the type of.
+     * @return The correct submission type given the cursor object.
+     * @throws SubmissionException
+     *         Thrown if there is no type found or if there are multiple types found.
+     */
+    private static SrlSubmission.SubmissionTypeCase getExpectedType(final DBObject cursor) throws SubmissionException {
+        SrlSubmission.SubmissionTypeCase currentCase = null;
+        if (cursor.containsField(UPDATELIST)) {
+            currentCase = SrlSubmission.SubmissionTypeCase.UPDATELIST;
+        }
+        if (cursor.containsField(TEXT_ANSWER)) {
+            if (currentCase != null) {
+                throw new SubmissionException("Submission can not be multiple types at the same time.", null);
+            }
+            currentCase = SrlSubmission.SubmissionTypeCase.TEXTANSWER;
+        }
+        if (currentCase == null) {
+            throw new SubmissionException("Submission has no type specified", null);
+        } else {
+            return currentCase;
+        }
     }
 
     /**
