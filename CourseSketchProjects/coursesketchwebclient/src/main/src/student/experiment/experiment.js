@@ -22,6 +22,9 @@
         });
     });
 
+    /**
+     * loads the problem, called every time a user navigates to a different problem.
+     */
     function loadProblem(navigator) {
         var problemType = navigator.getProblemType();
         // todo: better way of removing elements
@@ -53,6 +56,9 @@
         }
     };
 
+    /**
+     * loads the typing from the submission.
+     */
     function loadTyping(navigator) {
         var typingSurface = document.createElement("textarea");
         typingSurface.style.width = "100%";
@@ -74,6 +80,9 @@
         });
     }
 
+    /**
+     * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
+     */
     function loadSketch(navigator) {
         var sketchSurface = document.createElement("sketch-surface");
         sketchSurface.className = "wide_rule";

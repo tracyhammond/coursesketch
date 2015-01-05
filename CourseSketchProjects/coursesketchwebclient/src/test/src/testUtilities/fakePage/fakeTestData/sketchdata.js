@@ -72,46 +72,46 @@
 	 */
 
 	//a circle
-	for(var i = 0; i <=360; i+=5) {
+	for(var i = 0; i <= 360; i += 5) {
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
-		point.id = "point"+i;
-		point.time = currentTime.add(i*10);
-		point.x = (Math.cos(toRadians(i))*50)+100;
-		point.y = (Math.sin(toRadians(i))*50)+100;
+		point.id = "point" + i;
+		point.time = currentTime.add(i * 10);
+		point.x = (Math.cos(toRadians(i)) * 50) + 100;
+		point.y = (Math.sin(toRadians(i)) * 50) + 100;
 		stroke1.points.push(point)
 	}
 	// a slightly larger circle
-	for(var i = 0; i <=360; i+=5){
+	for(var i = 0; i <= 360; i += 5){
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
-		point.id = "point"+i;
-		point.time = currentTime.add(i*10);
-		point.x = (Math.cos(toRadians(i))*50)+250;
-		point.y = (Math.sin(toRadians(i))*50)+250;
+		point.id = "point" + i;
+		point.time = currentTime.add(i * 10);
+		point.x = (Math.cos(toRadians(i)) * 50) + 250;
+		point.y = (Math.sin(toRadians(i)) * 50) + 250;
 		stroke2.points.push(point)
 	}
 	// a line
-	for(var i = 0; i <300; i++){
+	for(var i = 0; i < 300; i++){
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
 		point.id = "point" + i;
-		point.time = currentTime.add(i*10);
-		point.x = i*2;
-		point.y = i*4;
+		point.time = currentTime.add(i * 10);
+		point.x = i * 2;
+		point.y = i * 4;
 		stroke3.points.push(point);
 	}
 	// a steeper line
-	for(var i = 0; i <400; i++){
+	for(var i = 0; i < 400; i++){
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
 		point.id = "point" + i;
-		point.time = currentTime.add(i*10);
+		point.time = currentTime.add(i * 10);
 		point.x = i;
-		point.y = i*5;
+		point.y = i * 5;
 		stroke4.points.push(point);
 	}
 	// a flat line
-	for(var i = 0; i <400; i++){
+	for(var i = 0; i < 400; i++){
 		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
 		point.id = "point" + i;
-		point.time = currentTime.add(i*10);
+		point.time = currentTime.add(i * 10);
 		point.x = i;
 		point.y = 300;
 		stroke5.points.push(point);
