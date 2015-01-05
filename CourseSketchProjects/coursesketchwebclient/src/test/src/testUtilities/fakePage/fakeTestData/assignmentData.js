@@ -23,6 +23,7 @@
     assignment1.state.started = false;
     assignment1.state.completed = false;
     assignment1.state.graded = true;
+    assignment1.problemList = ["1", "2"];
     CourseSketch.fakeAssignments.push(assignment1);
 
     assignment2.courseId = "1";
@@ -42,6 +43,7 @@
     assignment2.state.started = true;
     assignment2.state.completed = false;
     assignment2.state.graded = false;
+    assignment2.problemList = ["3", "4"];
 
     //assignment2.accessDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 9, 01, 1200,0,0, new Date().getTime());
     //assignment2.dueDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 11, 01, 1200, 0, 0, new Date().getTime());
@@ -62,6 +64,7 @@
     assignment3.state.started = false;
     assignment3.state.completed = false;
     assignment3.state.graded = false;
+    assignment3.problemList = ["5", "6"];
     CourseSketch.fakeAssignments.push(assignment3);
 
     assignment4.courseId = "3";
@@ -76,6 +79,7 @@
     assignment4.state.started = false;
     assignment4.state.completed = false;
     assignment4.state.graded = false;
+    assignment4.problemList = ["7"];
     CourseSketch.fakeAssignments.push(assignment4);
 
     assignment5.courseId = "3";
@@ -89,6 +93,7 @@
     assignment5.state.started = true;
     assignment5.state.completed = true;
     assignment5.state.graded = false;
+    assignment5.problemList = ["8"];
     CourseSketch.fakeAssignments.push(assignment5);
 
     assignment6.courseId = "4";
@@ -102,18 +107,21 @@
     assignment6.state.started = false;
     assignment6.state.completed = false;
     assignment6.state.graded = false;
+    assignment6.problemList = ["9"];
     CourseSketch.fakeAssignments.push(assignment6);
 
     assignment7.courseId = "5";
     assignment7.id = "7";
     assignment7.name = "underwater breathing";
     assignment7.description = "how long can you hold your breath?";
+    assignment7.problemList = ["10"];
     CourseSketch.fakeAssignments.push(assignment7);
 
     assignment8.courseId = "6";
     assignment8.id = "8";
     assignment8.name = "style quiz";
     assignment8.description = "do you know how to code??";
+    assignment8.problemList = ["11", "12"];
     CourseSketch.fakeAssignments.push(assignment8);
 
     assignment9.courseId = "6";
@@ -121,5 +129,6 @@
     assignment9.name = "make course sketch";
     assignment9.description = "not a big assignment, I just want you to program a MOOC using sketch recognition.  "
     + "You have one week.";
+    assignment9.problemList = ["13", "14"];
     CourseSketch.fakeAssignments.push(assignment9);
 })();

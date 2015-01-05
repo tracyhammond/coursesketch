@@ -1,0 +1,26 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/css/courseSketch2.css">
+
+    <!-- waiting stuff -->
+    <link rel="import" href="/src/utilities/templates/loading/loadingInclude.html">
+
+    <!-- basic utilities -->
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+    <script type="text/javascript" src="/src/utilities/functions/childScript.js"
+            data-namespace="studentExperiment"></script>
+
+    <!-- protobuf -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+    <!-- special elements -->
+    <link rel="import" href="/src/sketching/sketchInclude.html">
+    <!-- experiment specific -->
+    <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
+    <script type="text/javascript" src="/src/student/experiment/experiment.js"></script>
+</head>
+<body style = "overflow: hidden;">
+<navigation-panel></navigation-panel>
+<div id="percentBar" style="height:10px;"></div>
+<div id="problemPanel"></div>
+</body>

@@ -176,22 +176,28 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * Returns the type of the base problem.
+     * @return the type of the base problem.
      */
     this.getProblemType = function() {
         var type = getProblemInfo().questionType;
-        if (type == 1) {
-            return "SKETCH";
-        }
-        if (type == 2) {
-            return "MULT_CHOICE";
-        }
-        if (type == 3) {
-            return "FREE_RESP";
-        }
-        if (type == 4) {
-            return "CHECK_BOX";
-        }
+        return type;
+    };
+
+    /**
+     * Sets the new Id for the assignment, this does not refresh the navigator.
+     * That can be done by calling {@link #reloadProblems}.
+     * @param currentAssignmentId The new assignmentid.
+     */
+    this.setAssignmentId = function(currentAssignmentId) {
+        assignmentId = currentAssignmentId;
+    };
+
+    /**
+     * @param sets the preferred index to start the problem at.
+     * This does not change what the current index is.
+     */
+    this.setPreferredIndex = function(selectedIndex) {
+        preferredIndex = selectedIndex;
     };
 
     /**
@@ -199,9 +205,11 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     this.reloadProblems = function() {
         dataLoaded = false;
+        var refresh = this.refresh;
         if (!isUndefined(assignmentId)) {
             CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
-                for (var i = 0; i <problems.length; i++) {
+                problemList = [];
+                for (var i = 0; i < problems.length; i++) {
                     problemList.push(problems[i]);
                 }
                 if (uiLoaded) {

@@ -2,18 +2,16 @@
 <head>
     <script src="mockedIndex.js"></script>
 
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
     <!-- these three must be included after mockedIndex -->
     <link rel="import"
         href="/src/utilities/persistantData/databaseInclude.html">
-    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
     <script type="text/javascript" src="/src/utilities/connection/connectionLibrary.js"></script>
 
     <script src="/test/testUtilities/sinon-1.10.3.js"></script>
     <script>sinon.config = { useFakeTimers : false };</script>
-
-    <script>
-    CourseSketch.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf();
-    </script>
 
     <script src="mockedConnection.js"></script>
     <script src="mockedDataListener.js"></script>
@@ -28,7 +26,7 @@
     			console.log(CourseSketch.connection);
     		}
     	})();
-    	
+
     </script>
 </head>
 </html>
