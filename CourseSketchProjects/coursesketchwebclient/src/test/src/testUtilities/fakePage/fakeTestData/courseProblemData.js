@@ -163,8 +163,8 @@
     problem10.courseId = "5";
     problem10.assignmentId = "7";
     problem10.id = "10";
-    problem9.name = "make course sketch";
-    problem9.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
+    problem10.name = "make course sketch";
+    problem10.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
     + "You have one week.";
     problem10.problemInfo = bankProblem10;
     bankProblem10.id = problem10.id;
@@ -173,8 +173,8 @@
     problem11.courseId = "6";
     problem11.assignmentId = "8";
     problem11.id = "11";
-    problem9.name = "make course sketch";
-    problem9.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
+    problem11.name = "make course sketch";
+    problem11.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
     + "You have one week.";
     problem11.problemInfo = bankProblem11;
     bankProblem11.id = problem11.id;
@@ -183,8 +183,8 @@
     problem12.courseId = "6";
     problem12.assignmentId = "8";
     problem12.id = "12";
-    problem9.name = "make course sketch";
-    problem9.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
+    problem12.name = "make course sketch";
+    problem12.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
     + "You have one week.";
     problem12.problemInfo = bankProblem12;
     bankProblem12.id = problem12.id;
@@ -193,8 +193,8 @@
     problem13.courseId = "6";
     problem13.assignmentId = "9";
     problem13.id = "13";
-    problem9.name = "make course sketch";
-    problem9.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
+    problem13.name = "make course sketch";
+    problem13.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
     + "You have one week.";
     problem13.problemInfo = bankProblem13;
     bankProblem13.id = problem13.id;
@@ -203,8 +203,8 @@
     problem14.courseId = "6";
     problem14.assignmentId = "9";
     problem14.id = "14";
-    problem9.name = "make course sketch";
-    problem9.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
+    problem14.name = "make course sketch";
+    problem14.description = "not a big problem, I just want you to program a MOOC using sketch recognition.  "
     + "You have one week.";
     problem14.problemInfo = bankProblem14;
     bankProblem14.id = problem14.id;
