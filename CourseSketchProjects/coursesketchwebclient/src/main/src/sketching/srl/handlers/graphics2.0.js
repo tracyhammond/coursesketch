@@ -138,6 +138,9 @@ function Graphics(canvasElement, sketchManager) {
         drawUpdate = drawInstant;
     };
 
+    /**
+     * some manual unlinking to help out the garbage collector.
+     */
     this.finalize = function() {
         sketchManager = undefined;
         canvasElement = undefined;
