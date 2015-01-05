@@ -176,17 +176,26 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * Returns the type of the base problem.
+     * @return the type of the base problem.
      */
     this.getProblemType = function() {
         var type = getProblemInfo().questionType;
         return type;
     };
 
+    /**
+     * Sets the new Id for the assignment, this does not refresh the navigator.
+     * That can be done by calling {@link #reloadProblems}.
+     * @param currentAssignmentId The new assignmentid.
+     */
     this.setAssignmentId = function(currentAssignmentId) {
         assignmentId = currentAssignmentId;
     };
 
+    /**
+     * @param sets the preferred index to start the problem at.
+     * This does not change what the current index is.
+     */
     this.setPreferredIndex = function(selectedIndex) {
         preferredIndex = selectedIndex;
     };
