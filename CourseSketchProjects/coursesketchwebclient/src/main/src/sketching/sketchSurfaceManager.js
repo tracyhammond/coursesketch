@@ -18,11 +18,18 @@ function SketchSurfaceManager(sketchSurface) {
         }
     };
 
+    /**
+     * Sets the id of the parent sketch.
+     * A sketch surface can contain multiple sketches but the first sketch object created is the parent sketch.
+     */
     this.setParentSketchId = function(id) {
         parentSketch.id = id;
         this.setSketch(parentSketch);
     };
 
+    /**
+     * Adds the sketch with its Id to the list of sketches related to this sketch surface.
+     */
     this.setSketch = function(sketch) {
         if (isUndefined(sketch.id)) {
             // TODO: change to exception object
@@ -31,6 +38,9 @@ function SketchSurfaceManager(sketchSurface) {
         sketchMap.set(sketch.id, sketch);
     };
 
+    /**
+     * Returns a sketch based off of its id.
+     */
     this.getSketch = function(id) {
         return sketchMap.get(id);
     };
@@ -45,10 +55,16 @@ function SketchSurfaceManager(sketchSurface) {
         this.setSketch(sketch);
     };
 
+    /**
+     * sets the current sketch for input and drawing to the one specified by the given id.
+     */
     this.setCurrentSketch = function(id) {
         currentSketch = this.getSketch(id);
     };
 
+    /**
+     * returns the current sketch that is being used by this sketch surface.
+     */
     this.getCurrentSketch = function() {
         return currentSketch;
     }

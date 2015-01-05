@@ -96,6 +96,9 @@ function WaitScreenManager() {
 		return element;
 	};
 
+	/**
+	 * Builds a percent element that changes over time as data is loaded.
+	 */
 	this.buildPercent = function buildPercent(element) {
 		var outer = document.createElement("div");
 		outer.setAttribute("class", "outer_percent");

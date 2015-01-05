@@ -40,7 +40,6 @@ function ProtobufSetup() {
      * @returns {ProtobufSetup} an instance of itself.
      */
     this.initializeBuf = function() {
-        console.log("Loading protobuf data");
         buildMessage();
         buildSchool();
         buildSketch();
