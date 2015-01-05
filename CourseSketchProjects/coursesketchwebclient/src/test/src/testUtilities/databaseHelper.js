@@ -10,5 +10,5 @@ function waitForDatabase(dataManager, callback) {
             // ACTUAL TEST HERE
             callback();
         } // endif
-    }, 100);
+    }, 20);
 }
