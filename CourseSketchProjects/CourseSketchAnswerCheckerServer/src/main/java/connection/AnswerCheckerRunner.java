@@ -34,11 +34,7 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      */
     public static void main(final String[] args) {
         final AnswerCheckerRunner run = new AnswerCheckerRunner(args);
-        try {
-            run.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        run.start();
     }
 
     /**
