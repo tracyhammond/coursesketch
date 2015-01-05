@@ -97,18 +97,19 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
     /**
      * Creates a request that represents the exception that was caused.
      *
-     * @param e1
+     * @param exception
      *         the exception to be sent back to the client.
      * @param inputRequest
      *         The request that was sent to this server.
      * @return A request that warps around the exception.
      */
-    private Request createExceptionRequest(final Exception e1, final Request inputRequest) {
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
+    private Request createExceptionRequest(final Exception exception, final Request inputRequest) {
         final Request.Builder builder = Request.newBuilder(inputRequest);
         builder.setRequestType(MessageType.ERROR);
         builder.clearOtherData();
         builder.clearMessageTime();
-        builder.setResponseText(e1.getMessage());
+        builder.setResponseText(exception.getMessage());
         return builder.build();
     }
 

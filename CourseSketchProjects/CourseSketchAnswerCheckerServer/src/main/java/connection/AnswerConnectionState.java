@@ -4,6 +4,7 @@ import coursesketch.server.interfaces.MultiConnectionState;
 import protobuf.srl.submission.Submission.SrlExperiment;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An object that contains the state of connection with another server.
@@ -20,7 +21,7 @@ public class AnswerConnectionState extends MultiConnectionState {
     /**
      * Experiments that are waiting to be checked by the answer checker.
      */
-    private HashMap<String, SrlExperiment> pendingExperiments = new HashMap<String, SrlExperiment>();
+    private final Map<String, SrlExperiment> pendingExperiments = new HashMap<String, SrlExperiment>();
 
     /**
      * Creates a {@link coursesketch.server.interfaces.MultiConnectionState} with the given Key.
