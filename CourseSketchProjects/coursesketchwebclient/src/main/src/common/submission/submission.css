@@ -1,0 +1,14 @@
+/* center it on the right side */
+#toolbar {
+    bottom: 0;
+    height: auto;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#sub-panel {
+    height: 100%;
+    width:100%;
+}
