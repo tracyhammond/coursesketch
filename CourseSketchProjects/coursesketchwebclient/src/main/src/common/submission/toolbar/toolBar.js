@@ -62,7 +62,7 @@ function ProblemToolBar() {
         element.src = imgLocation;
         element.onclick = onclickFunction;
         element.onload = onloadFunction;
-        element.className = ".specific_button";
+        element.className = "specific_button";
         return element;
     };
 
