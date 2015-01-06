@@ -1,39 +1,34 @@
 package handlers;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
-
+import database.auth.AuthenticationException;
+import database.institution.Institution;
+import database.institution.mongo.MongoInstitution;
+import database.user.UserClient;
+import protobuf.srl.lecturedata.Lecturedata.Lecture;
+import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.lecturedata.Lecturedata.SrlLectureDataHolder;
 import protobuf.srl.query.Data.DataRequest;
-import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
-import protobuf.srl.lecturedata.Lecturedata.Lecture;
-import protobuf.srl.lecturedata.Lecturedata.SrlLectureDataHolder;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
-
-import database.auth.AuthenticationException;
-import database.institution.Institution;
-import database.institution.mongo.MongoInstitution;
-import database.user.UserClient;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles all request for data.
  *
  * Typcially an Id is given of that data requested it is then sent back to the client that requested it.
+ *
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
@@ -60,13 +55,18 @@ public final class DataRequestHandler {
      *
      * decode request and pull correct information from {@link Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
-     * @param req The request that has data being inserted.
-     * @param conn The connection where the result is sent to.
-     * @param sessionId the id of this particular session which is used if another server is talked to.
-     * @param internalConnections Connections to other servers that can be used to grab data from them.
+     *
+     * @param req
+     *         The request that has data being inserted.
+     * @param conn
+     *         The connection where the result is sent to.
+     * @param sessionId
+     *         the id of this particular session which is used if another server is talked to.
+     * @param internalConnections
+     *         Connections to other servers that can be used to grab data from them.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-        "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount" })
+            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount" })
     public static void handleRequest(final Request req, final SocketSession conn, final String sessionId,
             final MultiConnectionManager internalConnections) {
         try {
@@ -88,28 +88,28 @@ public final class DataRequestHandler {
                             final List<SrlCourse> courseLoop = instance.getCourses(itrequest.getItemIdList(), userId);
                             final SrlSchool.Builder courseSchool = SrlSchool.newBuilder();
                             courseSchool.addAllCourses(courseLoop);
-                            results.add(buildResult(courseSchool.build().toByteString(), ItemQuery.COURSE));
+                            results.add(ResultBuilder.buildResult(courseSchool.build().toByteString(), ItemQuery.COURSE));
                         }
                         break;
                         case ASSIGNMENT: {
                             final List<SrlAssignment> assignmentLoop = instance.getAssignment(itrequest.getItemIdList(), userId);
                             final SrlSchool.Builder assignmentSchool = SrlSchool.newBuilder();
                             assignmentSchool.addAllAssignments(assignmentLoop);
-                            results.add(buildResult(assignmentSchool.build().toByteString(), ItemQuery.ASSIGNMENT));
+                            results.add(ResultBuilder.buildResult(assignmentSchool.build().toByteString(), ItemQuery.ASSIGNMENT));
                         }
                         break;
                         case COURSE_PROBLEM: {
                             final List<SrlProblem> courseProblemLoop = instance.getCourseProblem(itrequest.getItemIdList(), userId);
                             final SrlSchool.Builder problemSchool = SrlSchool.newBuilder();
                             problemSchool.addAllProblems(courseProblemLoop);
-                            results.add(buildResult(problemSchool.build().toByteString(), ItemQuery.COURSE_PROBLEM));
+                            results.add(ResultBuilder.buildResult(problemSchool.build().toByteString(), ItemQuery.COURSE_PROBLEM));
                         }
                         break;
                         case BANK_PROBLEM: {
                             final List<SrlBankProblem> bankProblemLoop = instance.getProblem(itrequest.getItemIdList(), userId);
                             final SrlSchool.Builder bankproblemSchool = SrlSchool.newBuilder();
                             bankproblemSchool.addAllBankProblems(bankProblemLoop);
-                            results.add(buildResult(bankproblemSchool.build().toByteString(), ItemQuery.BANK_PROBLEM));
+                            results.add(ResultBuilder.buildResult(bankproblemSchool.build().toByteString(), ItemQuery.BANK_PROBLEM));
                         }
                         break;
                         case COURSE_SEARCH: {
@@ -117,7 +117,7 @@ public final class DataRequestHandler {
                             System.out.println("Searching all public courses: " + courseLoop);
                             final SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
                             courseSearch.addAllCourses(courseLoop);
-                            results.add(buildResult(courseSearch.build().toByteString(), ItemQuery.COURSE_SEARCH));
+                            results.add(ResultBuilder.buildResult(courseSearch.build().toByteString(), ItemQuery.COURSE_SEARCH));
                         }
                         break;
                         case SCHOOL: {
@@ -125,9 +125,9 @@ public final class DataRequestHandler {
                             final SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
                             courseSearch.addAllCourses(courseLoop);
                             if (courseLoop.size() <= 0) {
-                                results.add(buildResult(courseSearch.build().toByteString(), NO_COURSE_MESSAGE, ItemQuery.SCHOOL));
+                                results.add(ResultBuilder.buildResult(courseSearch.build().toByteString(), NO_COURSE_MESSAGE, ItemQuery.SCHOOL));
                             } else {
-                                results.add(buildResult(courseSearch.build().toByteString(), ItemQuery.SCHOOL));
+                                results.add(ResultBuilder.buildResult(courseSearch.build().toByteString(), ItemQuery.SCHOOL));
                             }
                         }
                         break;
@@ -141,7 +141,7 @@ public final class DataRequestHandler {
                                     try {
                                         instance.getExperimentAsUser(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections);
                                     } catch (Exception e) {
-                                        results.add(buildResult(null, e.getLocalizedMessage(), ItemQuery.EXPERIMENT));
+                                        results.add(ResultBuilder.buildResult(null, e.getLocalizedMessage(), ItemQuery.EXPERIMENT));
                                         break;
                                     }
                                 }
@@ -161,31 +161,31 @@ public final class DataRequestHandler {
                             System.out.println("Last request time! " + lastRequestTime);
                             // for now get all updates!
                             final SrlSchool updates = UserClient.mongoGetReleventUpdates(userId, lastRequestTime);
-                            results.add(buildResult(updates.toByteString(), ItemQuery.UPDATE));
+                            results.add(ResultBuilder.buildResult(updates.toByteString(), ItemQuery.UPDATE));
                         }
                         break;
-                        case LECTURE:  {
+                        case LECTURE: {
                             final List<Lecture> lectureLoop = instance.getLecture(itrequest.getItemIdList(), userId);
                             final SrlLectureDataHolder.Builder lectureBuilder = SrlLectureDataHolder.newBuilder();
                             lectureBuilder.addAllLectures(lectureLoop);
-                            results.add(buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURE));
+                            results.add(ResultBuilder.buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURE));
                         }
                         break;
                         case LECTURESLIDE: {
                             final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(itrequest.getItemIdList(), userId);
                             final SrlLectureDataHolder.Builder lectureBuilder = SrlLectureDataHolder.newBuilder();
                             lectureBuilder.addAllSlides(lectureSlideLoop);
-                            results.add(buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURESLIDE));
+                            results.add(ResultBuilder.buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURESLIDE));
                         }
                         break;
                         default:
-                        break;
+                            break;
                     }
                 } catch (AuthenticationException e) {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder build = ItemResult.newBuilder();
                         build.setQuery(itrequest.getQuery());
-                        results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
+                        results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                     } else {
                         e.printStackTrace();
                         throw e;
@@ -195,77 +195,16 @@ public final class DataRequestHandler {
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itrequest.getQuery());
                     build.setData(itrequest.toByteString());
-                    results.add(buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
+                    results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                 }
             }
-            conn.send(buildRequest(results, SUCCESS_MESSAGE, req));
+            conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            conn.send(buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
+            conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             e.printStackTrace();
-            conn.send(buildRequest(null, e.getMessage(), req));
+            conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
-    }
-
-    /**
-     * Builds a complete result from the query. This one is typically used in
-     * the case of success.
-     *
-     * @param data
-     *            The data from the result.
-     * @param type
-     *            What the original query was.
-     * @return A fully built item result.
-     */
-    private static ItemResult buildResult(final ByteString data, final ItemQuery type) {
-        final ItemResult.Builder result = ItemResult.newBuilder();
-        result.setData(data);
-        result.setQuery(type);
-        return result.build();
-    }
-
-    /**
-     * Builds a complete result from the query. This one is typically used in
-     * the case of success.
-     *
-     * @param data
-     *            The data from the result.
-     * @param text
-     *            A message from the result (typically used if there is an error
-     *            but no data).
-     * @param type
-     *            What the original query was.
-     * @return A fully built item result.
-     */
-    private static ItemResult buildResult(final ByteString data, final String text, final ItemQuery type) {
-        final ItemResult.Builder result = ItemResult.newBuilder();
-        result.setData(data);
-        result.setQuery(type);
-        result.setReturnText(text);
-        return result.build();
-    }
-
-    /**
-     * Builds a request from a list of {@link ItemResult}.
-     * @param results A list of results that need to be sent back to the user.
-     * @param message A message that goes with the results (could be an error)
-     * @param req The original request that was received.
-     * @return A {@link Request}.
-     */
-    private static Request buildRequest(final List<ItemResult> results, final String message, final Request req) {
-
-        final DataResult.Builder dataResult = DataResult.newBuilder();
-        if (results != null && !results.isEmpty()) {
-            dataResult.addAllResults(results);
-        }
-
-        final Request.Builder dataReq = Request.newBuilder();
-        dataReq.setRequestType(MessageType.DATA_REQUEST);
-        dataReq.setSessionInfo(req.getSessionInfo());
-        dataReq.setResponseText(message);
-
-        dataReq.setOtherData(dataResult.build().toByteString());
-        return dataReq.build();
     }
 }

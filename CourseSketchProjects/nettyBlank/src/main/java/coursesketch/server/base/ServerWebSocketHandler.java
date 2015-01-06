@@ -18,7 +18,8 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     /**
      * A constructor that accepts a servlet.
      *
-     * @param parent The parent servlet of this server.
+     * @param parent
+     *         The parent servlet of this server.
      */
     protected ServerWebSocketHandler(final ISocketInitializer parent) {
         super(parent);
@@ -31,7 +32,8 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     /**
      * Called after onOpen Finished. Can be over written.
      *
-     * @param conn the connection that is being opened.
+     * @param conn
+     *         the connection that is being opened.
      */
     @Override
     protected void openSession(final SocketSession conn) {
@@ -45,8 +47,10 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     /**
      * Called when an error occurs with the connection.
      *
-     * @param session The session that has an error.
-     * @param cause   The actual error.
+     * @param session
+     *         The session that has an error.
+     * @param cause
+     *         The actual error.
      */
     @Override
     protected void onError(final SocketSession session, final Throwable cause) {
@@ -61,7 +65,8 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * Takes a request and allows overriding so that subclass servers can handle
      * messages.
      *
-     * @param session the session object that created the message
+     * @param session
+     *         the session object that created the message
      * @param req
      */
     @Override
