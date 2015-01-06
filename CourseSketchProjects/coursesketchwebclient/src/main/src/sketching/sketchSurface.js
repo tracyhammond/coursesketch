@@ -190,12 +190,13 @@ function SketchSurface() {
     };
 
     /**
-     * Returns SrlUpdateList proto object.
+     * @return SrlUpdateList proto object.
+     * This is a cleaned version of the list and modifying this list will not affect the update manager list.
      */
     this.getSrlUpdateListProto = function() {
         var updateProto = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
         updateProto.list = this.updateManager.getUpdateList();
-        return updateProto;
+        return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(updateProto.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.SrlUpdateList());
     };
 
     /**

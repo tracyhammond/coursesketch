@@ -49,6 +49,10 @@ function UpdateManager(onError, sketchManager) {
     var amountToSkip = 0;
     var localScope = this;
     var lastSubmissionPointer = 0;
+    /**
+     * updates on every save and every submission.
+     */
+    var lastSavePointer = 0;
 
     /**
      * A list of plugins whose methods are called when addUpdate is called.
@@ -75,21 +79,36 @@ function UpdateManager(onError, sketchManager) {
     /**
      * Adds an update to the updateList
      *
-     * If the currentUpdateIndex less than the list size then we need to remove
-     * all the other updates from the list and add the newest one on. These
-     * commands are only executed if the command is fromRemote or execute is
-     * true.
+     * Adds an update to the queue that then executes them as quick as possible.  This will not freeze up the browser.
      *
      * @param update
      *            {SrlUpdate} the update that is being added to this specific
      *            update manager.
      */
     this.addUpdate = function(update) {
-        // TODO: find a better way to do this if possible
+        // TODO: find a better way to manage cleaning updates if possible.
         var cleanedUpdate = cleanUpdate(update);
         cleanedUpdate.sketchManager = sketchManager;
         queuedLocalUpdates.push(cleanedUpdate);
         emptyLocalQueue();
+    };
+
+    /**
+     * Adds an update to the updateList
+     *
+     * Adds the update in a synchronous manner, if the local queue is not empty this will empty it then add the update list.
+     * Throws an exception if the queue is currently locked.  Please do not use often.
+     *
+     * @param update
+     *            {SrlUpdate} the update that is being added to this specific
+     *            update manager.
+     */
+    this.addSynchronousUpdate = function(update) {
+        // TODO: find a better way to manage cleaning updates if possible.
+        var cleanedUpdate = cleanUpdate(update);
+        cleanedUpdate.sketchManager = sketchManager;
+        queuedLocalUpdates.push(cleanedUpdate);
+        emptyLocalQueueSynchronously();
     };
 
     /**
@@ -226,6 +245,47 @@ function UpdateManager(onError, sketchManager) {
     }
 
     /**
+     * Tries to quickly empty the local queue.
+     *
+     * Ensures that even with the rapid addition of updates there are no
+     * executions that overlap, does not use timers and can freeze the browser if there are lots of updates.
+     * Please use sparingly.
+     */
+    function emptyLocalQueueSynchronously() {
+        while (queuedLocalUpdates.length > 0) {
+            if (!executionLock) {
+                executionLock = true;
+                var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
+                try {
+                    var redraw = executeUpdate(nextUpdate);
+                    var updateIndex = updateList.length;
+                    setTimeout(function() {
+                        for (var i = 0; i < plugins.length; i++) {
+                            if (!isUndefined(plugins[i].addUpdate)) {
+                                plugins[i].addUpdate(nextUpdate, redraw, updateIndex);
+                            }
+                        }
+                    }, 10);
+                    if (redraw) {
+                        sketchManager.drawEntireSketch();
+                    }
+                } catch (exception) {
+                    executionLock = false;
+                    if (onError) {
+                        onError(exception);
+                    } else {
+                        console.error(exception);
+                    }
+                    throw new UpdateException("Error thrown during a synchronous execution so we stop all executions from occurring.");
+                }
+                executionLock = false;
+            } else {
+                throw new UpdateException("Execution is locked can add update synchronously");
+            }
+        }
+    }
+
+    /**
      * Executes an update.
      *
      * Does special handling with redo and undo
@@ -332,6 +392,13 @@ function UpdateManager(onError, sketchManager) {
                 if (currentUpdateIndex > lastSubmissionPointer) {
                     lastSubmissionPointer = currentUpdateIndex;
                 }
+                if (currentUpdateIndex > lastSavePointer) {
+                    lastSavePointer = currentUpdateIndex;
+                }
+            }  else if (marker.type == CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE) {
+                if (currentUpdateIndex > lastSavePointer) {
+                    lastSavePointer = currentUpdateIndex;
+                }
             }
             return false;
         // this can have other commands with its update.
@@ -407,21 +474,7 @@ function UpdateManager(onError, sketchManager) {
             var startIndex = index;
             while (index < maxIndex && startIndex - index <= 5) {
                 var update = oldList[index];
-                var newUpdate = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
-                var newCommandList = new Array();
-                for (var i = 0; i < update.commands.length; i++) {
-                    var command = update.commands[i];
-                    var cleanCommand = CourseSketch.PROTOBUF_UTIL.SrlCommand();
-                    cleanCommand.commandType = command.commandType;
-                    cleanCommand.isUserCreated = command.isUserCreated;
-                    cleanCommand.commandData = command.commandData;
-                    cleanCommand.commandId = command.commandId;
-                    newCommandList.push(cleanCommand);
-                }
-                newUpdate.updateId = update.updateId;
-                newUpdate.time = update.time;
-                if (update.commandNumber) newUpdate.commandNumber = update.commandNumber;
-                newUpdate.commands = newCommandList;
+                var newUpdate = cleanUpdate(update);
                 newList.push(newUpdate);
                 index++;
             }
@@ -434,6 +487,23 @@ function UpdateManager(onError, sketchManager) {
         }, 10);
     };
 
+    /**
+     * Changes the time of the update at index to be the new time.
+     */
+    this.setUpdateTime = function(time, index) {
+        updateList[index].setTime(time.toString());
+    };
+
+    /**
+     * Changes the time of the last save or submission update to be the new time.
+     */
+    this.setLastSaveTime = function(time) {
+        this.setUpdateTime(time, lastSavePointer);
+    };
+
+    /**
+     * Returns a direct copy of the update list that is modifiable.
+     */
     this.getUpdateList = function(callback) {
         if (callback) {
             callback(updateList);
@@ -469,6 +539,26 @@ function UpdateManager(onError, sketchManager) {
     };
 
     /**
+     * @returns {boolean} True IFF a save marker is the last item that was
+     *          submitted.
+     */
+    this.isLastUpdateSave = function() {
+        if (updateList.length <= 0) {
+            return false;
+        }
+        var update = updateList[updateList.length - 1];
+        var commandList = update.getCommands();
+        var currentCommand = commandList[0];
+        if (currentCommand.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
+            var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(currentCommand.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
+            if (marker.type == CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    /**
      * @returns {boolean} The opposite of isLastUpdateSubmission, except in the
      *          case where updateList.length() is non-positive.
      */
@@ -477,6 +567,16 @@ function UpdateManager(onError, sketchManager) {
             return false;
         }
         return !this.isLastUpdateSubmission();
+    };
+
+    /**
+     * @returns {boolean} True if the last update is not a submission and the last update is not a save marker.
+     */
+    this.isValidForSaving = function() {
+        if (updateList.length <= 0) {
+            return false;
+        }
+        return !(this.isLastUpdateSubmission() || this.isLastUpdateSave());
     };
 
     this.getCurrentPointer = function() {
