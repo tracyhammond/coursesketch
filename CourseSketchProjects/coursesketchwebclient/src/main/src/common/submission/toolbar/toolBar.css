@@ -4,9 +4,19 @@
 	background:rgba(169, 208, 245, 0.25);
 }
 
-img {
+img, ::content img {
+	position: relative;
 	width:98%;
 	margin:auto;
 	cursor:pointer;
 	margin-top:2px;
+	overflow: hidden;
+}
+
+img:active, ::content img:active {
+	outline-style:groove;
+	outline-width:medium;
+	outline-color: rgba(169, 208, 245, 0.25);
+
+    background:rgba(169, 208, 245, 0.25);
 }
