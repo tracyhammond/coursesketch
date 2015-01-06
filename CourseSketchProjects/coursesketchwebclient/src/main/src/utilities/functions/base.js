@@ -10,17 +10,17 @@ if (typeof isUndefined === 'undefined') {
 
 /**
  * *************************************************************
- * 
+ *
  * Sketch Function
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
 /**
  * Generates an rfc4122 version 4 compliant solution.
- * 
+ *
  * found at http://stackoverflow.com/a/2117523/2187510 and further improved at
  * http://stackoverflow.com/a/8809472/2187510
  */
@@ -50,17 +50,17 @@ if (isUndefined(createTimeStamp)) {
 
 /**
  * *************************************************************
- * 
+ *
  * onLoad utility Functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
 /**
  * Creates a recursive set of functions that are all called onload
- * 
+ *
  * The scope is the target for the onload
  */
 if (isUndefined(addScopedLoadEvent)) {
@@ -80,17 +80,17 @@ if (isUndefined(addScopedLoadEvent)) {
 }
 /**
  * *************************************************************
- * 
+ *
  * Utility utility Functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
 /**
  * Checks to see if the given object is a function.
- * 
+ *
  * returns true if the object is a function.
  */
 if (isUndefined(isFunction)) {
@@ -101,11 +101,11 @@ if (isUndefined(isFunction)) {
 
 /**
  * *************************************************************
- * 
+ *
  * Date Functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
@@ -128,7 +128,7 @@ if (isUndefined(getMillitaryFormattedDateTime)) {
 }
 
 /**
- * @param dateTime {Date} uses the default Date object in the browser to return 
+ * @param dateTime {Date} uses the default Date object in the browser to return
  */
 if (isUndefined(getFormattedDateTime)) {
     function getFormattedDateTime(dateTime) {
@@ -171,6 +171,7 @@ if (isUndefined(BaseException)) {
             this.specificMessage = messageValue;
         }
     };
+    BaseException.prototype = Error;
 }
 
 if (isUndefined(getTypeName)) {
