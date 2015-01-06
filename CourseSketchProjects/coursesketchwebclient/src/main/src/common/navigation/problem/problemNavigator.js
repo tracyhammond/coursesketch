@@ -19,14 +19,6 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var eventMappingCallback = {};
     var dataLoaded = false;
     var uiLoaded = false;
-    /*
-     * returns the navigation panel element to be used by other pages.
-     */
-    getNav = function() {
-        var navPanel;
-        navPanel = document.getElementById("navigation-panel");
-        return navPanel;
-    };
 
     /**
      * @param index {Number} the problem that we want to switch to.
