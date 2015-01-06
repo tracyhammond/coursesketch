@@ -65,7 +65,7 @@ function SRL_Sketch() {
     };
 
     this.removeSubObjectAtIndex = function(index) {
-        this.removeSubObject(objectList[index]);
+        return removeObjectByIndex(objectList, index);
     };
 
     /**
