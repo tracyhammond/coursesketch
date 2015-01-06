@@ -1,3 +1,10 @@
+function SubmissionException(message) {
+    this.name = "SubmissionException";
+    this.setMessage(message);
+    this.message = "";
+    this.htmlMessage = "";
+}
+
 /**
  * A class that handles submitting a problem to the database.
  * and listening for the result.
@@ -25,41 +32,83 @@ function Submission() {
 
     this.setCallbacks = function() {
         var toolbar = this.shadowRoot.querySelector("#toolbar").getDistributedNodes();
-        toolbar.setSaveCallback(this.sendDataToServer().bind(this));
+        toolbar.setSaveCallback(function() {
+            this.sendDataToServerExceptionWrapped(false);
+        }.bind(this));
+        toolbar.setSubmitCallback(function() {
+            this.sendDataToServerExceptionWrapped(true);
+        }.bind(this));
     };
 
-    this.sendDataToServer = function() {
+    this.sendDataToServerExceptionWrapped = function(isSubmitting) {
+        try {
+            this.sendDataToServer(isSubmitting);
+        } catch(exception) {
+            alert(exception.toString());
+        }
+    }
+
+    this.sendDataToServer = function(isSubmitting) {
         var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes();
         if (isUndefined(this.problem) || isUndefined(this.problemType)) {
-            alert("Problem data is not sent correctly aborting save");
-            return;
+            throw new SubmissionException("Problem data is not sent correctly aborting save");
         }
         var submission = undefined;
         var QuestionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType;
         switch(this.problemType) {
             case QuestionType.SKETCH:
-                submission = createSketchSubmission(subPanel);
+                submission = createSketchSubmission(subPanel, isSubmitting);
                 break;
             case QuestionType.FREE_RESP:
-                submission = createTextSubmission(subPanel);
+                submission = createTextSubmission(subPanel, isSubmitting);
                 break;
         }
         if (isUndefined(submission)) {
-            alert("submission type not supported, aborting submission");
-            return;
+            throw new SubmissionException("submission type not supported, aborting submission");
         }
         if (isUndefined(this.wrapperFunction)) {
             // you need to set the wrapper function to either create an experiment or solution.
-            alert("Wrapper function is not set, aborting submission");
-            return;
+            throw new SubmissionException("Wrapper function is not set, aborting submission");
         }
-
+        var submittingValue = this.wrapperFunction(submission);
+        var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(submittingValue,
+                CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+        var problemType = this.problemType;
+        var problem = this.problem;
+        CourseSketch.connection.setSubmissionListener(function(request) {
+            CourseSketch.connection.setSubmissionListener(undefined);
+            alert(request.responseText());
+            if (problem == this.problem && this.problemType == CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
+                var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes();
+                // potential conflict if it was save multiple times in quick succession.
+                subPanel.getUpdateManager().setLastSaveTime(request.getTime());
+            };
+        }.bind(this));
+        CourseSketch.connection.sendRequest(request);
+        QuestionType = undefined;
+        submission = undefined;
+        var subPanel = undefined;
     };
 
     /**
      * @return {SrlSubmission} object that is ready to be sent to the server.
      */
-    function createSketchSubmission(sketchSurface) {
+    function createSketchSubmission(sketchSurface, isSubmitting) {
+        var updateManager = sketchSurface.getUpdateManager();
+
+        if (isSubmitting && !updateManager.isValidForSubmission()) {
+            throw new SubmissionException("must make changes to resubmit aborting submission");
+        }
+        if (!isSubmitting && !updateManager.isValidForSaving()) {
+            throw new SubmissionException("must make changes to save again aborting saving");
+        }
+
+        var listLength = updateManager.getListLength();
+        var MarkerType = CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType;
+        var markerCommand = updateManager.createMarker(true, isSubmitting ? MarkerType.SUBMISSION : MarkerType.SAVE);
+        var markerUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([markerCommand]);
+        updateManager.addSynchronousUpdate(updateManager);
+
         var protoObject = sketchSurface.getSrlUpdateListProto();
         var submission = createBaseSubmission();
         submission.setUpdateList(protoObject);
