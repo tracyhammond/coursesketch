@@ -15,8 +15,9 @@
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
-        <module>CourseSketchProjects/nettyBlank</module> <!-- temp move -->
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
+        <module>CourseSketchProjects/nettyBlank</module> <!-- temp move -->
+
 	</modules>
 
 	<issueManagement>

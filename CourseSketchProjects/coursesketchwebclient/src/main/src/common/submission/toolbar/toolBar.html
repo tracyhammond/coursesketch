@@ -1,0 +1,47 @@
+<html>
+<body>
+<template id = "tool-bar">
+    <!--
+    |-----|
+    | sub |
+    | sav |
+    | und |
+    | red |
+    | spe |
+    |  |  |
+    |  v  |
+    |-----|
+     -->
+    <style>
+        @import "/src/common/submission/toolbar/toolBar.css";
+    </style>
+    <div id = "panelWrapper" class = "panelWrapper" style = "width:50px;">
+        <div id = "toolPanel">
+            <div class = "transBox">
+                <h1></h1>
+                <!--
+                |--------|
+                |   sub  |
+                |   sav  |
+                |   und  |
+                |   red  |
+                |--------|
+                 -->
+                <div id ="constantButtons">
+                    <img id = "submission" src="/images/toolbar/submission_button.svg" title = "Click to submit the problem">
+                    <img id = "save" src="/images/toolbar/save_button.svg" title = "Click to save the problem">
+                    <img id = "undo" src="/images/toolbar/undo_button.svg" title = "Click to undo">
+                    <img id = "redo" src="/images/toolbar/redo_button.svg" title = "Click to redo">
+                </div>
+                <!--
+                Shows buttons that are specific to the current content
+                 -->
+                <content id = "specificButtons" select=".specific_button">
+                </content>
+                <h1></h1>
+            </div>
+        </div>
+    </div>
+</template>
+</body>
+</html>
