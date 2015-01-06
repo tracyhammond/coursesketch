@@ -4,6 +4,7 @@ function SubmissionException(message) {
     this.message = "";
     this.htmlMessage = "";
 }
+SubmissionException.prototype = BaseException;
 
 /**
  * A class that handles submitting a problem to the database.
@@ -32,6 +33,7 @@ function SubmissionPanel() {
 
     this.setCallbacks = function() {
         var toolbar = this.shadowRoot.querySelector("#toolbar").getDistributedNodes()[0];
+        // toolbar may not be set up by the time this is called, so we wait till it is set up.
         var timeout = setInterval(function() {
             if (!isUndefined(toolbar.setSaveCallback)) {
                 clearInterval(timeout);
@@ -41,8 +43,6 @@ function SubmissionPanel() {
                 toolbar.setSubmitCallback(function() {
                     this.sendDataToServerExceptionWrapped(true);
                 }.bind(this));
-            } else {
-                console.log("Waiting");
             }
         }.bind(this), 50);
     };
@@ -52,13 +52,14 @@ function SubmissionPanel() {
             this.sendDataToServer(isSubmitting);
         } catch(exception) {
             alert(exception.toString());
+            throw exception;
         }
     }
 
     this.sendDataToServer = function(isSubmitting) {
-        var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes();
+        var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes()[0];
         if (isUndefined(this.problem) || isUndefined(this.problemType)) {
-            throw new SubmissionException("Problem data is not sent correctly aborting save");
+            throw new SubmissionException("Problem data is not set correctly aborting");
         }
         var submission = undefined;
         var QuestionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType;
@@ -71,11 +72,11 @@ function SubmissionPanel() {
                 break;
         }
         if (isUndefined(submission)) {
-            throw new SubmissionException("submission type not supported, aborting submission");
+            throw new SubmissionException("submission type not supported, aborting");
         }
         if (isUndefined(this.wrapperFunction)) {
             // you need to set the wrapper function to either create an experiment or solution.
-            throw new SubmissionException("Wrapper function is not set, aborting submission");
+            throw new SubmissionException("Wrapper function is not set, aborting");
         }
         var submittingValue = this.wrapperFunction(submission);
         var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(submittingValue,
@@ -134,7 +135,38 @@ function SubmissionPanel() {
      */
     this.setWrapperFunction = function(wrapperFunction) {
         this.wrapperFunction = wrapperFunction;
-    }
+    };
+
+    this.setSpecificCallbacks = function(problemType, element, toolbar) {
+        toolbar.innerHTML = "";
+        toolbar.clearCallbacks();
+        var QuestionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType;
+        if (problemType == QuestionType.SKETCH) {
+            var updateManager = element.getUpdateManager();
+            var clearButton = createButton("images/toolbar/clear_button.svg", function() {
+                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, true);
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([command]);
+                updateManager.addUpdate(update);
+            });
+            toolbar.appendChild(clearButton);
+
+            toolbar.setUndoCallback(function() {
+                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, true);
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([command]);
+                updateManager.addUpdate(update);
+            });
+
+            toolbar.setRedoCallback(function() {
+                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.REDO, true);
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([command]);
+                updateManager.addUpdate(update);
+            });
+        }  else if (type == "MULT_CHOICE") {
+            // add mult choice tools
+        }   else if (type == "FREE_RESP") {
+            // add free resp tools
+        }
+    };
 }
 
 /**
@@ -150,4 +182,5 @@ SubmissionPanel.prototype.setProblem = function(problem) {
 SubmissionPanel.prototype.setProblemType = function(problemType) {
     this.problemType = problemType;
 };
+
 SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
