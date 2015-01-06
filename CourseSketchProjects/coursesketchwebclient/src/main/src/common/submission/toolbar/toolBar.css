@@ -11,7 +11,7 @@
 	background:rgba(169, 208, 245, 0.25);
 }
 
-img, ::content img {
+img, #specific_buttons::content img {
 	position: relative;
 	width:98%;
 	margin:auto;
@@ -20,7 +20,7 @@ img, ::content img {
 	overflow: hidden;
 }
 
-img:active, ::content img:active {
+img:active, #specific_buttons::content img:active {
 	outline-style:groove;
 	outline-width:medium;
 	outline-color: rgba(169, 208, 245, 0.25);
