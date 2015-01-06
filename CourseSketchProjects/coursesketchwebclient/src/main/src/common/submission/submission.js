@@ -16,7 +16,7 @@ function SubmissionException(message) {
  * the sub-panel (submit panel) element can change at run time and may not be inserted when this element is inserted
  * you can set the problem object
  */
-function Submission() {
+function SubmissionPanel() {
 
     /**
      * @param templateClone
@@ -97,10 +97,10 @@ function Submission() {
         var updateManager = sketchSurface.getUpdateManager();
 
         if (isSubmitting && !updateManager.isValidForSubmission()) {
-            throw new SubmissionException("must make changes to resubmit aborting submission");
+            throw new SubmissionException("must make changes to resubmit.");
         }
         if (!isSubmitting && !updateManager.isValidForSaving()) {
-            throw new SubmissionException("must make changes to save again aborting saving");
+            throw new SubmissionException("must make changes to save again.");
         }
 
         var listLength = updateManager.getListLength();
@@ -113,13 +113,6 @@ function Submission() {
         var submission = createBaseSubmission();
         submission.setUpdateList(protoObject);
         return submission;
-    }
-
-    /**
-     * @return {SrlSubmission} object that is ready to be sent to the server.
-     */
-    function createSketchSubmission(sketchSurface) {
-
     }
 
     function createBaseSubmission() {
@@ -140,14 +133,14 @@ function Submission() {
 /**
  * @param problem {SrlProblem} sets the problem element
  */
-Submission.prototype.setProblem = function(problem) {
+SubmissionPanel.prototype.setProblem = function(problem) {
     this.problem = problem;
 };
 
 /**
  * @param problem {SrlProblem} sets the problem element
  */
-Submission.prototype.setProblemType = function(problemType) {
+SubmissionPanel.prototype.setProblemType = function(problemType) {
     this.problemType = problemType;
 };
-Submission.prototype = Object.create(HTMLElement.prototype);
+SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
