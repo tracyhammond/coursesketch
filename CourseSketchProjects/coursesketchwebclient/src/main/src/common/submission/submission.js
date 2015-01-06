@@ -31,13 +31,20 @@ function SubmissionPanel() {
     };
 
     this.setCallbacks = function() {
-        var toolbar = this.shadowRoot.querySelector("#toolbar").getDistributedNodes();
-        toolbar.setSaveCallback(function() {
-            this.sendDataToServerExceptionWrapped(false);
-        }.bind(this));
-        toolbar.setSubmitCallback(function() {
-            this.sendDataToServerExceptionWrapped(true);
-        }.bind(this));
+        var toolbar = this.shadowRoot.querySelector("#toolbar").getDistributedNodes()[0];
+        var timeout = setInterval(function() {
+            if (!isUndefined(toolbar.setSaveCallback)) {
+                clearInterval(timeout);
+                toolbar.setSaveCallback(function() {
+                    this.sendDataToServerExceptionWrapped(false);
+                }.bind(this));
+                toolbar.setSubmitCallback(function() {
+                    this.sendDataToServerExceptionWrapped(true);
+                }.bind(this));
+            } else {
+                console.log("Waiting");
+            }
+        }.bind(this), 50);
     };
 
     this.sendDataToServerExceptionWrapped = function(isSubmitting) {
