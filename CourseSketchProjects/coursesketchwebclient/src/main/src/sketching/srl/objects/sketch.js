@@ -1,14 +1,14 @@
 /* depends on objectAndInheritance.js */
 
 /*******************************************************************************
- * 
- * 
+ *
+ *
  * SRL_Sketch data class
- * 
+ *
  * @author gigemjt
- * 
- * 
- * 
+ *
+ *
+ *
  * ******************************
  */
 
@@ -31,7 +31,8 @@ function SRL_Sketch() {
      * Given an object, remove this instance of the object.
      */
     this.removeSubObject = function(srlObject) {
-        var result = objectList.removeObject(srlObject);
+        var result = removeObjectFromArray(objectList, srlObject);
+        //var result = objectList.removeObject(srlObject);
         if (result) {
             delete objectMap[result.getId()];
         }
@@ -83,10 +84,10 @@ function SRL_Sketch() {
 
     /**
      * Removes an object by the given IdChain.
-     * 
+     *
      * The last id in the chain is the object that is removed. The second to
      * last id in the chain is where it is removed from.
-     * 
+     *
      * If there is only one item in the list then the item is removed from the
      * sketch. In all cases except exceptions the item that is removed is
      * returned from this method.
@@ -114,7 +115,7 @@ function SRL_Sketch() {
 
     /**
      * Resets the sketch to its starting state.
-     * 
+     *
      */
     this.resetSketch = function() {
         objectList = [];
