@@ -1,6 +1,13 @@
 .transBox {
+	box-shadow: 0px 0px 3pt 2pt rgba(49, 143, 231, 0.5);
+	/*
+	outline:2px solid;
+    outline-radius:25px;
+    outline-color:rgba(49, 143, 231, 0.75);*/
 	border:2px solid;
 	border-radius:25px;
+	border-color:rgba(49, 143, 231, 0.5);
+
 	background:rgba(169, 208, 245, 0.25);
 }
 
