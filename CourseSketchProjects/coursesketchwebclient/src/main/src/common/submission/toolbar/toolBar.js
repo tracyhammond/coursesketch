@@ -1,3 +1,7 @@
+/**
+ * A toolbar that is used in problems.
+ * This element appears over everything else
+ */
 function ProblemToolBar() {
     /**
      * @param templateClone
@@ -11,18 +15,30 @@ function ProblemToolBar() {
     };
 }
 
+/**
+ * Sets the callback for the submit button.
+ */
 ProblemToolBar.prototype.setSubmitCallback = function(submitCallback) {
     this.shadowRoot.querySelect("#submission").onclick = submitCallback;
 };
 
+/**
+ * Sets the callback for the save button.
+ */
 ProblemToolBar.prototype.setSaveCallback = function(saveCallback) {
     this.shadowRoot.querySelect("#save").onclick = saveCallback;
 };
 
+/**
+ * Sets the callback for the undo button.
+ */
 ProblemToolBar.prototype.setUndoCallback = function(undoCallback) {
     this.shadowRoot.querySelect("#undo").onclick = undoCallback;
 };
 
+/**
+ * Sets the callback for the redo button.
+ */
 ProblemToolBar.prototype.setRedoCallback = function(redoCallback) {
     this.shadowRoot.querySelect("#redo").onclick = redoCallback;
 };
