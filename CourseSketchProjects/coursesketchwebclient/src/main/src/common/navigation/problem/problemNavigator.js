@@ -199,10 +199,11 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     this.setPreferredIndex = function(selectedIndex) {
         preferredIndex = selectedIndex;
     };
-    /*
-     * gets the assingment and assigns currentAssignment
+
+    /**
+     * Reloads the assignment from the id and assigns it to the currentAssignment.
      */
-    this.setAssignment = function() {
+    this.reloadAssignment = function() {
         CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
                 currentAssignment = assignment;
         });
