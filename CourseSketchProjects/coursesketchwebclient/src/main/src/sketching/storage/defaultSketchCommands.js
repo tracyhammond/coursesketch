@@ -4,13 +4,6 @@
  * Each method is a prototype of the command or the update
  ******************************************************************************/
 (function() {
-    /**
-     * Every command will have a sketch Id that is added to it when being added
-     * to the sketch surface
-     */
-    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().prototype.getLocalSketchSurface = function() {
-        return CourseSketch.SKETCHING_SURFACE_HANDLER.getSketch(this.sketchId);
-    };
 
     /**
      * TODO: THIS DOES NOT HAVE AN UNDO METHOD RIGHT NOW! UNDOING A CLEAR
@@ -24,6 +17,24 @@
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, function() {
         var sketch = this.getLocalSketchSurface();
         sketch.resetSketch();
+        return true;
+    });
+
+    /**
+     * Do nothing
+     *
+     * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, function() {
+        return true;
+    });
+
+    /**
+     * Do nothing
+     *
+     * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, function() {
         return true;
     });
 

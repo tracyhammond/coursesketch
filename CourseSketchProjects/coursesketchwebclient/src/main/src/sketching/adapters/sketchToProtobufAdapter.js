@@ -39,7 +39,6 @@
      * Creates an SRL protobuf version of a stroke
      */
     SRL_Stroke.prototype.sendToProtobuf = function(scope) {
-        var Long = scope.dcodeIO.Long || dcodeIO.Long;
         var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
         proto.id = this.getId();
         var n = this.getTime();
@@ -86,7 +85,7 @@
             protoInterp = protoInter.sendToProtobuf(scope);
         }
         proto.setInterpretations(protoInterp);
-        
+
         var protoSubShapes = new Array();
         var subShapeList = this.getSubObjects();
         for (var i = 0; i < subShapeList.length; i++) {

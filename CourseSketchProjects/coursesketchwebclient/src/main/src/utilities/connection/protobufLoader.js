@@ -24,6 +24,10 @@ ProtobufException.prototype = BaseException;
  *        protobuf object creator before it is created)
  */
 function ProtobufSetup() {
+    // sets it locally and only uses the local version from now on.
+    this.dcodeIO = dcodeIO;
+
+    var localDcodeIo = this.dcodeIO;
 
     var localScope = this;
     var PROTOBUF_PACKAGE = 'protobuf';
@@ -36,7 +40,6 @@ function ProtobufSetup() {
      * @returns {ProtobufSetup} an instance of itself.
      */
     this.initializeBuf = function() {
-
         buildMessage();
         buildSchool();
         buildSketch();
@@ -49,49 +52,49 @@ function ProtobufSetup() {
     };
 
     function buildMessage() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "message.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "message.proto");
         var requestPackage = builder.build(PROTOBUF_PACKAGE).srl.request;
         assignValues(requestPackage);
     }
 
     function buildDataQuery() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "data.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "data.proto");
         var QueryBuilder = builder.build(PROTOBUF_PACKAGE).srl.query;
         assignValues(QueryBuilder);
     }
 
     function buildSchool() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "school.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "school.proto");
         var SchoolBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
         assignValues(SchoolBuilder);
     }
 
     function buildSketch() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "sketch.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "sketch.proto");
         var sketchBuilder = builder.build(PROTOBUF_PACKAGE).srl.sketch;
         assignValues(sketchBuilder, 'Proto');
     }
 
     function buildUpdateList() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "commands.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "commands.proto");
         var ProtoUpdateCommandBuilder = builder.build(PROTOBUF_PACKAGE).srl.commands;
         assignValues(ProtoUpdateCommandBuilder);
     }
 
     function buildTutorial() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "tutorial.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "tutorial.proto");
         var ProtoTutorialBuilder = builder.build(PROTOBUF_PACKAGE).srl.tutorial;
         assignValues(ProtoTutorialBuilder);
     }
 
     function buildSubmissions() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "submission.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "submission.proto");
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.submission;
         assignValues(ProtoSubmissionBuilder);
     }
 
     function buildLectures() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "lecturedata.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "lecturedata.proto");
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
         assignValues(ProtoSubmissionBuilder);
     }
@@ -191,9 +194,11 @@ function ProtobufSetup() {
      * @return {SrlUpdate}
      */
     this.createUpdateFromCommands = function createUpdateFromCommands(commands) {
+        /*
         if (!isArray(commands)) {
             throw new TypeError('Invalid Type Error: Input is not an Array');
         }
+        */
 
         var update = this.SrlUpdate();
         update.setCommands(commands);
@@ -269,7 +274,7 @@ function ProtobufSetup() {
         if (inputDateTime instanceof Date) {
             preConvertedDate = inputDateTime.getTime();
         }
-        var longVersion = dcodeIO.Long.fromString("" + preConvertedDate);
+        var longVersion = localDcodeIo.Long.fromString("" + preConvertedDate);
         var dateTime = this.DateTime();
         // Long object does not play nice with iframes so parsing as string instead.
         dateTime.setMillisecond("" + longVersion);
@@ -280,6 +285,33 @@ function ProtobufSetup() {
         dateTime.setHour(date.getHours());
         dateTime.setMinute(date.getMinutes());
         return dateTime;
+    };
+
+    /**
+     * Creates a new sketch command.
+     * @param x the x location of the sketch as an offset of its parent sketch.
+     * @param y the y location of the sketch as an offset of its parent sketch.
+     * @param width the width of the sketch.
+     * @param height the height of the sketch.
+     * @param id the id of the sketch, undefined if you want a random id given.
+     * @return {SrlCommand} a create sketch command
+     */
+    this.createNewSketch = function createNewSketch(id, x, y, width, height) {
+        var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+        var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
+        if (!isUndefined(id)) {
+            idChain.idChain = [ id ];
+        } else {
+            idChain.idChain = [ generateUUID() ];
+        }
+        var createSketchAction = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+        createSketchAction.sketchId = idChain;
+        createSketchAction.x = x || (x === 0 ? 0 : -1);
+        createSketchAction.y = y || (y === 0 ? 0 : -1);
+        createSketchAction.width = width || (width === 0 ? 0 : -1);
+        createSketchAction.height = height || (height === 0 ? 0 : -1);
+        command.setCommandData(createSketchAction.toArrayBuffer());
+        return command;
     };
     /**
      * @Method
@@ -349,5 +381,6 @@ function ProtobufSetup() {
     if (!isUndefined(scope.CourseSketch.PROTOBUF_UTIL)) {
         return;
     }
+    makeValueReadOnly(scope, "dcodeIO", dcodeIO);
     makeValueReadOnly(scope.CourseSketch, "PROTOBUF_UTIL", new ProtobufSetup().initializeBuf());
-})(this);
+})(window);

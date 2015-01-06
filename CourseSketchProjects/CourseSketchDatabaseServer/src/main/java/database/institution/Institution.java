@@ -19,6 +19,7 @@ import java.util.List;
  * @author gigemjt
  *
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Institution {
 
     /**
