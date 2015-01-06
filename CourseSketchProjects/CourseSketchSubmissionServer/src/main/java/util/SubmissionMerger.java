@@ -125,9 +125,79 @@ public final class SubmissionMerger {
 
         // switch sketch!
         if (differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.MARKER) {
-            return mergeRedoUndo(database, client, differentUpdate, differentIndex);
+            return mergeMarker(database, client, differentUpdate, differentIndex);
         }
         return database;
+    }
+
+    /**
+     * Merges in the list that occurs when the difference is a marker.
+     *
+     * @param database
+     *         The database list.
+     * @param client
+     *         The new list that is being merged in.
+     * @param differentUpdate
+     *         the update that is different in the client list.
+     * @param differentIndex
+     *         The index at which the two list diverge.
+     * @return A list that represents to the two merged versions.
+     * @throws MergeException
+     *         Thrown if the merge fails.  One should reject the client list if this exception is thrown.
+     */
+    private List<Commands.SrlUpdate> mergeMarker(final List<Commands.SrlUpdate> database, final List<Commands.SrlUpdate> client,
+            final Commands.SrlUpdate differentUpdate,
+            final int differentIndex) throws MergeException {
+        final Commands.SrlCommand firstCommand = differentUpdate.getCommands(0);
+        Commands.Marker mark = null;
+        try {
+            mark = Commands.Marker.parseFrom(firstCommand.getCommandData());
+        } catch (InvalidProtocolBufferException e) {
+            throw new MergeException("Command of marker type does not actually contain marker", e);
+        }
+        if (mark.getType() == Commands.Marker.MarkerType.SPLIT) {
+            return mergeRedoUndo(database, client, differentUpdate, differentIndex);
+        }
+        if (mark.getType() == Commands.Marker.MarkerType.SUBMISSION || mark.getType() == Commands.Marker.MarkerType.SAVE) {
+            return mergeTimeChange(database, client, differentUpdate, differentIndex);
+        }
+        throw new MergeException("Merge can not successfully be completed");
+    }
+
+    /**
+     * Merges in the list that occurs when the difference is a possible time change in the marker.
+     *
+     * @param database
+     *         The database list.
+     * @param client
+     *         The new list that is being merged in.
+     * @param clientUpdate
+     *         the update that is different in the client list.
+     * @param differentIndex
+     *         The index at which the two list diverge.
+     * @return A list that represents to the two merged versions.
+     * @throws MergeException
+     *         Thrown if the merge fails.  One should reject the client list if this exception is thrown.
+     */
+    private List<Commands.SrlUpdate> mergeTimeChange(final List<Commands.SrlUpdate> database, final List<Commands.SrlUpdate> client,
+            final Commands.SrlUpdate clientUpdate, final int differentIndex) throws MergeException {
+        final Commands.SrlUpdate databaseUpdate = database.get(differentIndex);
+        final Commands.SrlCommand clientCommand = clientUpdate.getCommands(0);
+        final Commands.SrlCommand databaseCommand = databaseUpdate.getCommands(0);
+        if (!databaseCommand.equals(clientCommand)) {
+            throw new MergeException("Commands must be equal to merge time differences only");
+        }
+        if (clientUpdate.getTime() == databaseUpdate.getTime()) {
+            // prevents possible infinite loops
+            throw new MergeException("Only difference between updates can be the time they took place");
+        }
+        final Commands.SrlUpdate.Builder clientReplacement = Commands.SrlUpdate.newBuilder(clientUpdate);
+        clientReplacement.setTime(databaseUpdate.getTime());
+        final List<Commands.SrlUpdate> updatedClientList = new ArrayList<>();
+        updatedClientList.addAll(client.subList(0, differentIndex));
+        updatedClientList.add(clientReplacement.build());
+        updatedClientList.addAll(client.subList(differentIndex + 1, client.size()));
+        return merge(database, updatedClientList);
     }
 
     /**

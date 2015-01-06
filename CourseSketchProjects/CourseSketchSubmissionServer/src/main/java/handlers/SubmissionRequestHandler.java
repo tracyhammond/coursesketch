@@ -38,7 +38,8 @@ public final class SubmissionRequestHandler {
             final Request.Builder build = Request.newBuilder(req);
             build.setResponseText("Submission Succesful!");
             build.clearOtherData();
-            build.setSessionInfo(sessionInfo);
+            //build.setSessionInfo(sessionInfo);
+            //build.setMessageTime(req.getMessageTime());
             System.out.println(sessionInfo);
             if (result != null) {
                 // passes the data to the database for connecting
