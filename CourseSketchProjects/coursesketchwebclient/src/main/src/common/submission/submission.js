@@ -13,9 +13,13 @@ SubmissionException.prototype = BaseException;
  *
  * Assumptions made:
  * toolbar is a custom element that has two functions: setSaveCallback(callback), setSubmitCallback(callback)
- * the toolbar is set before the element is inserted
+ *
+ * the toolbar is set before the element is inserted.  (or it will never be inserted)
+ *
  * the sub-panel (submit panel) element can change at run time and may not be inserted when this element is inserted
- * you can set the problem object
+ *
+ * you can set the problem object with the class "sub-panel"
+ *
  */
 function SubmissionPanel() {
 
@@ -33,6 +37,9 @@ function SubmissionPanel() {
 
     this.setCallbacks = function() {
         var toolbar = this.shadowRoot.querySelector("#toolbar").getDistributedNodes()[0];
+        if (toolbar == null) {
+            return; //quit before infinite loop
+        }
         // toolbar may not be set up by the time this is called, so we wait till it is set up.
         var timeout = setInterval(function() {
             if (!isUndefined(toolbar.setSaveCallback)) {
@@ -87,7 +94,7 @@ function SubmissionPanel() {
             CourseSketch.connection.setSubmissionListener(undefined);
             alert(request.responseText());
             if (problem == this.problem && this.problemType == CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
-                var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes();
+                var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes()[0];
                 // potential conflict if it was save multiple times in quick succession.
                 subPanel.getUpdateManager().setLastSaveTime(request.getTime());
             };
@@ -137,13 +144,20 @@ function SubmissionPanel() {
         this.wrapperFunction = wrapperFunction;
     };
 
-    this.setSpecificCallbacks = function(problemType, element, toolbar) {
-        toolbar.innerHTML = "";
+    this.refreshPanel = function() {
+        var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes()[0];
+        var toolbar = this.shadowRoot.querySelector("#toolbar").getDistributedNodes()[0];
         toolbar.clearCallbacks();
+        toolbar.innerHTML = "";
+        this.setCallbacks();
+        this.setSpecificCallbacks(this.problemType, subPanel, toolbar);
+    };
+
+    this.setSpecificCallbacks = function(problemType, element, toolbar) {
         var QuestionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType;
         if (problemType == QuestionType.SKETCH) {
             var updateManager = element.getUpdateManager();
-            var clearButton = createButton("images/toolbar/clear_button.svg", function() {
+            var clearButton = toolbar.createButton("/images/toolbar/clear_button.svg", function() {
                 var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, true);
                 var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([command]);
                 updateManager.addUpdate(update);
@@ -166,8 +180,13 @@ function SubmissionPanel() {
         }   else if (type == "FREE_RESP") {
             // add free resp tools
         }
+        element = undefined;
+        toolbar = undefined;
+        problemType = undefined;
     };
 }
+
+SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
 
 /**
  * @param problem {SrlProblem} sets the problem element
@@ -182,5 +201,3 @@ SubmissionPanel.prototype.setProblem = function(problem) {
 SubmissionPanel.prototype.setProblemType = function(problemType) {
     this.problemType = problemType;
 };
-
-SubmissionPanel.prototype = Object.create(HTMLElement.prototype);

@@ -44,16 +44,26 @@ function ProblemToolBar() {
     };
 
     /**
+     * removes all of the previous callbacks making them undefined.
+     */
+    this.clearCallbacks = function() {
+        this.setSubmitCallback(undefined);
+        this.setSaveCallback(undefined);
+        this.setUndoCallback(undefined);
+        this.setRedoCallback(undefined);
+    };
+
+    /**
      * Returns an image element that can be added to the tool bar.
      * It will have the custom load functions and click functions
      */
     this.createButton = function(imgLocation, onclickFunction, onloadFunction) {
         var element = document.createElement("img");
-        element.src = img;
+        element.src = imgLocation;
         element.onclick = onclickFunction;
         element.onload = onloadFunction;
         element.className = ".specific_button";
-        return createButton;
+        return element;
     };
 
 }

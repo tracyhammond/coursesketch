@@ -28,7 +28,12 @@
     function loadProblem(navigator) {
         var problemType = navigator.getProblemType();
         // todo: better way of removing elements
-        document.getElementById("problemPanel").innerHTML = "";
+        var parentPanel = document.getElementById("problemPanel");
+        console.log(parentPanel);
+        var oldElement = parentPanel.querySelector(".sub-panel");
+        if (oldElement instanceof Node) {
+            parentPanel.removeChild(oldElement);
+        }
         if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
             console.log("Loading sketch problem");
             loadSketch(navigator);
@@ -36,6 +41,9 @@
             console.log("Loading typing problem");
             loadTyping(navigator);
         }
+
+        parentPanel.setProblemType(problemType);
+        parentPanel.refreshPanel();
     }
 
     /**
@@ -61,6 +69,7 @@
      */
     function loadTyping(navigator) {
         var typingSurface = document.createElement("textarea");
+        typingSurface.className = "sub-panel";
         typingSurface.style.width = "100%";
         typingSurface.style.height="calc(100% - 110px)";
         CourseSketch.studentExperiment.addWaitOverlay();
@@ -85,7 +94,7 @@
      */
     function loadSketch(navigator) {
         var sketchSurface = document.createElement("sketch-surface");
-        sketchSurface.className = "wide_rule";
+        sketchSurface.className = "wide_rule sub-panel";
         sketchSurface.style.width="100%";
         sketchSurface.style.height="calc(100% - 110px)";
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
