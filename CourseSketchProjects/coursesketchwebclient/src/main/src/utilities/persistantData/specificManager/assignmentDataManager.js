@@ -87,9 +87,18 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     parent.deleteAssignment = deleteAssignment;
 
     /**
+     * Gets an Assignment from the local database.
+     *
+     * @param assignmentId
+     *                ID of the assignment to get
      * @param assignmentCallback
+     *                function to be called after getting is complete, parameter
+     *                is the assignment object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getAssignmentLocal(assignmentId, assignmentCallback) {
+        if (isUndefined(assignmentId) || assignmentId == null) {
+            assignmentCallback(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentId));
+        }
         database.getFromAssignments(assignmentId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 assignmentCallback(new DatabaseException("The result is undefined", "getting Assignment: " + assignmentId));
@@ -111,11 +120,13 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     }
 
     /**
-     * Returns a list of all of the assignments in database for the given list
-     * of Id.
+     * Returns a list of all of the assignments from the local and server database for the given list
+     * of Ids.
      *
      * This does attempt to pull assignments from the server!
      *
+     * @param assignmentIdList
+     *            list of IDs of the assignments to get
      * @param assignmentCallbackPartial
      *            {Function} called when assignments are grabbed from the local
      *            database only. This list may not be complete. This may also
@@ -182,10 +193,17 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                                     function(evt, item) {
                                         var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
                                         var assignment = school.assignments[0];
-                                        if (isUndefined(assignment)) {
-                                            assignmentCallback(nonExistantValue);
+                                        if (isUndefined(assignment) || assignment instanceof DatabaseException) {
                                             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
                                                     CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+                                            var result = assignment;
+                                            if (isUndefined(result)) {
+                                                result = new DatabaseException("Nothing is in the server database!",
+                                                    "Grabbing assignment from server: " + assignmentIdList);
+                                            }
+                                            if (!isUndefined(assignmentCallbackComplete)) {
+                                                assignmentCallbackComplete(result);
+                                            }
                                             return;
                                         }
                                         for (var i = 0; i < school.assignments.length; i++) {
@@ -208,15 +226,15 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                         if (assignmentList.length > 0) {
                             stateCallbackList(assignmentList, assignmentCallbackPartial);
                         }
-                    }// end of if(barrier == 0)
-                });// end of getting local assignment
+                    } // end of if(barrier == 0)
+                }); // end of getting local assignment
             })(assignmentIdLoop); // end of loopContainer
-        }// end of loop
+        } // end of loop
     }
     parent.getAssignments = getAssignments;
 
     /**
-     * Returns a assignment with the given couresId will ask the server if it
+     * Returns a assignment with the given assignmentId will ask the server if it
      * does not exist locally
      *
      * If the server is pulled and the assignment still does not exist the Id is
