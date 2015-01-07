@@ -31,9 +31,13 @@ final class ResultBuilder {
      */
     public static Data.ItemResult buildResult(final ByteString data, final String text, final Data.ItemQuery type) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
-        result.setData(data);
+        if (data != null) {
+            result.setData(data);
+        }
         result.setQuery(type);
-        result.setReturnText(text);
+        if (text != null) {
+            result.setReturnText(text);
+        }
         return result.build();
     }
 
