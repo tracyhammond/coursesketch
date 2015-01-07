@@ -185,8 +185,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
         if (problemSelectionManager.isItemSelected(clickedElement)) {
             var itemNumber = clickedElement.dataset.item_number;
-            CourseSketch.dataManager.addState("CURRENT_QUESTION_INDEX", itemNumber);
-            CourseSketch.dataManager.addState("CURRENT_ASSIGNMENT", problem.assignmentId);
+            CourseSketch.dataManager.addState("currentProblemIndex", itemNumber);
+            CourseSketch.dataManager.addState("currentAssignment", problem.assignmentId);
             CourseSketch.dataManager.addState("CURRENT_QUESTION", problem.id);
             // change source to the problem page! and load problem
             if (CourseSketch.connection.isInstructor) {
