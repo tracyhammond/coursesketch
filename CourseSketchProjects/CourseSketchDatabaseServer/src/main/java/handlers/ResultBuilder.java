@@ -73,7 +73,7 @@ final class ResultBuilder {
         }
 
         final Message.Request.Builder dataReq = Message.Request.newBuilder();
-        dataReq.setRequestType(Message.Request.MessageType.DATA_UPDATE);
+        dataReq.setRequestType(req.getRequestType());
         dataReq.setSessionInfo(req.getSessionInfo());
         dataReq.setResponseText(message);
         if (dataResult != null) {

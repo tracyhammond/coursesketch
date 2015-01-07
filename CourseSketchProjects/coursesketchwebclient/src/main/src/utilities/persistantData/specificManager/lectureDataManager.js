@@ -19,7 +19,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
             lectureCallback(new DatabaseException("can't set undefined lecture", "Settting lecture locally: "));
             return;
         }
-        if (lecture instanceof DatabaseException){
+        if (lecture instanceof DatabaseException) {
             lectureCallback(lecture);
             return;
         }
@@ -153,10 +153,13 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      * @param lectureId
      *                ID of the lecture to get
      * @param lectureCallback
-     *                function to be called after getting is complete, paramater
-     *                is the lecture object
+     *                function to be called after getting is complete, parameter
+     *                is the lecture object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getLectureLocal(lectureId, lectureCallback) {
+        if (isUndefined(lectureId) || lectureId == null) {
+            lectureCallback(new DatabaseException("The given id is not assigned", "getting Lecture: " + lectureId));
+        }
         database.getFromLectures(lectureId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 lectureCallback(new DatabaseException("Result is undefined!", "Grabbing lecture from server: " + lectureId));
@@ -193,13 +196,20 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
     parent.getCourseLecture = getCourseLecture;
 
     /**
-     * Gets a list of lectures from the local and server databases.
+     * Returns a list of all of the lectures from the local and server database for the given list
+     * of Ids.
+     *
+     * This does attempt to pull lectures from the server!
      *
      * @param lectureIds
-     *                IDs of the lectures to get
-     * @param lectureCallback
-     *                function to be called after getting is complete, paramater
-     *                is a list of lecture objects
+     *            list of IDs of the lectures to get
+     * @param localCallback
+     *            {Function} called when lectures are grabbed from the local
+     *            database only. This list may not be complete. This may also
+     *            not get called if there are no local lectures.
+     * @param serverCallback
+     *            {Function} called when the complete list of lectures are
+     *            grabbed.
      */
     function getCourseLectures(lectureIds, localCallback, serverCallback) {
         if (isUndefined(lectureIds) || lectureIds == null || lectureIds.length == 0) {
