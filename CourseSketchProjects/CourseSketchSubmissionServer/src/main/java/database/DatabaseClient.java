@@ -183,6 +183,9 @@ public class DatabaseClient {
     public static String saveExperiment(final SrlExperiment experiment, final long submissionTime,
             final DatabaseClient client) throws DatabaseAccessException {
         System.out.println("saving the experiment!");
+        if (!experiment.hasProblemId() || experiment.getProblemId() == "") {
+            throw new DatabaseAccessException("Problem id must be defined to make a submission");
+        }
         final DBCollection experiments = client.getDb().getCollection(EXPERIMENT_COLLECTION);
 
         final BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
