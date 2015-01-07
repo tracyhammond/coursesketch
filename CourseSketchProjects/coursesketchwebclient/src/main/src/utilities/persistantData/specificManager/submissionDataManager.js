@@ -9,28 +9,39 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 	var ByteBuffer = buffer;
 
 	/**
-	 * Returns a course with the given couresId will ask the server if it does not exist locally
+	 * Returns a submission.  but right now only treats it as an exerpiment.
+	 * TODO: have it be able to get solutions as well.
+	 * of Ids.
 	 *
-	 * If the server is pulled and the course still does not exist the Id is set with nonExistantValue
-	 * and the database is never polled for this item for the life of the program again.
+	 * This does attempt to pull experiment from the server!
 	 *
-	 * @param courseId The id of the course we want to find.
-	 * @param courseCallback The method to call when the course has been found. (this is asynchronous)
+	 * @param problemId
+	 *            submission
+	 * @param submissionCallback
+	 *            {Function} called when experiment is grabbed from the database.
+	 *			  This is only called once.  Either it exists in the local database or it is grabbed from the server database.
 	 */
 	function getSubmission(problemId, submissionCallback) {
 		database.getFromSubmissions(problemId, function(e, request, result) {
+			// TODO: change it so the database can pull locally as well.
 			if (isUndefined(result) || isUndefined(result.data) || true) {
 
 				// the listener from the server of the request
 				// it stores the course locally then cals the callback with the course
-				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
+				advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
+						CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
+					advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
+					if (isUndefined(item.data) || item.data == null) {
+						submissionCallback(new DatabaseException("The data sent back from the server does not exist."));
+						return;
+					}
 					var experiment = CourseSketch.PROTOBUF_UTIL.getSrlExperimentClass().decode(item.data);
 					var sub = experiment.submission;
 					localScope.setSubmission(problemId, sub);
 					submissionCallback(sub);
 					sub = undefined;
 					experiment = undefined;
-					advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
+
 				});
 				// creates a request that is then sent to the server
 				sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [problemId]);
