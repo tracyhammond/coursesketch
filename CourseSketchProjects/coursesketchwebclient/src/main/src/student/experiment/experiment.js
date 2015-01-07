@@ -42,12 +42,16 @@
             loadTyping(navigator);
         }
 
+        parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
         parentPanel.refreshPanel();
+        parentPanel.isStudent = true;
+        parentPanel.isGrader = false;
 
         parentPanel.setWrapperFunction(function(submission) {
             var studentExperiment = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
-            navigator.setSubmissionInformation(studentExperiment);
+            navigator.setSubmissionInformation(studentExperiment, true);
+            console.log("student experiment data set", studentExperiment);
             studentExperiment.submission = submission;
             return studentExperiment;
         });
