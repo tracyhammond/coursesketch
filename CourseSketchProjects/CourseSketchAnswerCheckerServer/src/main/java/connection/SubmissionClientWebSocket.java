@@ -1,7 +1,6 @@
 package connection;
 
 import coursesketch.server.base.ClientWebSocket;
-import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -32,7 +31,7 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
      *         The server that is using this connection wrapper.
      */
     public SubmissionClientWebSocket(final URI destination,
-            final ServerWebSocketHandler parentServer) {
+            final AbstractServerWebSocketHandler parentServer) {
         super(destination, parentServer);
     }
 
