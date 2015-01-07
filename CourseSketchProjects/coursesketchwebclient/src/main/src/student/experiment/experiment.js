@@ -83,7 +83,7 @@
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("problemPanel").appendChild(typingSurface);
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
-            if (isUndefined(submission) || isUndefined(submission.getTextAnswer())) {
+            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException ||isUndefined(submission.getTextAnswer())) {
                 if (element.isRunning()) {
                     element.finishWaiting();
                     CourseSketch.studentExperiment.removeWaitOverlay();
@@ -120,7 +120,7 @@
         document.getElementById("problemPanel").appendChild(sketchSurface);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
-            if (isUndefined(submission) || isUndefined(submission.getUpdateList())) {
+            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
                 if (element.isRunning()) {
                     element.finishWaiting();
                     CourseSketch.studentExperiment.removeWaitOverlay();
