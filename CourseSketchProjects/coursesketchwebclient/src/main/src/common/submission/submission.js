@@ -87,19 +87,24 @@ function SubmissionPanel() {
             throw new SubmissionException("Wrapper function is not set, aborting");
         }
         var submittingValue = this.wrapperFunction(submission);
+        console.log(submittingValue);
         var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(submittingValue,
                 CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
         var problemType = this.problemType;
-        var problem = this.problem;
-        CourseSketch.connection.setSubmissionListener(function(request) {
+        var problemIndex = this.problemIndex;
+        CourseSketch.connection.setSubmissionListener(function(event, request) {
+            console.log(request);
             CourseSketch.connection.setSubmissionListener(undefined);
-            alert(request.responseText());
-            if (problem == this.problem && this.problemType == CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
+            alert(request.getMessageTime());
+            alert(request.responseText);
+            if (problemIndex == this.problemIndex && this.problemType == CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
                 var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes()[0];
                 // potential conflict if it was save multiple times in quick succession.
-                subPanel.getUpdateManager().setLastSaveTime(request.getTime());
+                subPanel.getUpdateManager().setLastSaveTime(request.getMessageTime());
+                console.log("submission has been updated with the latest time", request.getMessageTime().toString());
             };
         }.bind(this));
+        request.setResponseText(this.isStudent ? "student" : this.isGrader ? "moderator" : "instructor");
         CourseSketch.connection.sendRequest(request);
         QuestionType = undefined;
         submission = undefined;
