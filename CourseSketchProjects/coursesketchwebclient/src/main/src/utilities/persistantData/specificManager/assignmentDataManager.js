@@ -168,7 +168,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             // so that it changes
             (function(assignmentId) {
                 getAssignmentLocal(assignmentId, function(assignment) {
-                    if (!isUndefined(assignment)) {
+                    if (!isUndefined(assignment) && !(assignment instanceof DatabaseException)) {
                         assignmentList.push(assignment);
                     } else {
                         leftOverId.push(assignmentId);
