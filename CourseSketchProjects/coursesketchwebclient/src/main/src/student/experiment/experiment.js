@@ -79,6 +79,7 @@
         typingSurface.className = "sub-panel";
         typingSurface.style.width = "100%";
         typingSurface.style.height="calc(100% - 110px)";
+        typingSurface.contentEditable = true;
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("problemPanel").appendChild(typingSurface);
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {

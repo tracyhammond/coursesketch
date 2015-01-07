@@ -55,12 +55,13 @@ function SubmissionPanel() {
     };
 
     this.sendDataToServerExceptionWrapped = function(isSubmitting) {
-        try {
+        //try {
             this.sendDataToServer(isSubmitting);
-        } catch(exception) {
+        /*} catch(exception) {
             alert(exception.toString());
+            console.log(exception);
             throw exception;
-        }
+        }*/
     }
 
     this.sendDataToServer = function(isSubmitting) {
@@ -197,6 +198,12 @@ function SubmissionPanel() {
             // add mult choice tools
         }   else if (problemType == QuestionType.FREE_RESP) {
             // add free resp tools
+            toolbar.setUndoCallback(function() {
+                document.execCommand("undo", false, null);
+            });
+            toolbar.setRedoCallback(function() {
+                document.execCommand("redo", false, null);
+            });
         }
         element = undefined;
         toolbar = undefined;
