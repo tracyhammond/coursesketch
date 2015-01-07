@@ -19,6 +19,7 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlUser;
+import protobuf.srl.submission.Submission;
 
 import java.util.ArrayList;
 
@@ -144,8 +145,15 @@ public final class DataInsertHandler {
                             results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + lectureSlide.getId(), itemSet.getQuery()));
                         }
                         break;
+                        case EXPERIMENT: {
+                            System.out.println("Inserting experiment!");
+                            final Submission.SrlExperiment experiment = Submission.SrlExperiment.parseFrom(itemSet.getData());
+                            System.out.println(experiment);
+                            instance.insertSubmission(userId, experiment.getProblemId(), experiment.getSubmission().getId(), true);
+                        }
+                        break;
                         default:
-                            break;
+                            throw new Exception("Insert type not supported.");
                     }
                 } catch (AuthenticationException e) {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {

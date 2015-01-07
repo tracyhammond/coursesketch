@@ -7,6 +7,7 @@ import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import database.DatabaseClient;
 import database.SubmissionException;
+import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.submission.Submission;
@@ -38,13 +39,16 @@ public final class SubmissionRequestHandler {
             final Request.Builder build = Request.newBuilder(req);
             build.setResponseText("Submission Succesful!");
             build.clearOtherData();
-            //build.setSessionInfo(sessionInfo);
-            //build.setMessageTime(req.getMessageTime());
             System.out.println(sessionInfo);
             if (result != null) {
                 // passes the data to the database for connecting
-                build.setOtherData(result);
-                internalConnections.send(build.build(), "", DataClientWebSocket.class);
+                final Data.DataSend send = Data.DataSend.newBuilder().addItems(Data.ItemSend.newBuilder().setData(result).
+                        setQuery(Data.ItemQuery.EXPERIMENT)).build();
+                final Request.Builder databaseRequest = Request.newBuilder(req);
+                databaseRequest.setRequestType(Request.MessageType.DATA_INSERT);
+                databaseRequest.setOtherData(send.toByteString());
+                System.out.println("Sending experiment data to database server");
+                internalConnections.send(databaseRequest.build(), "", DataClientWebSocket.class);
             }
             // sends the response back to the answer checker which can then send it back to the client.
             return build.build();
