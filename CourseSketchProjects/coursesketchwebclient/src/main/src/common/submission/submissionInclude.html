@@ -32,9 +32,6 @@
                 this.initializeElement(clone.cloneNode(true));
             };
 
-            newElement.detachedCallback = function() {
-            };
-
             document.registerElement('submit-panel', {
                 prototype : newElement
             });

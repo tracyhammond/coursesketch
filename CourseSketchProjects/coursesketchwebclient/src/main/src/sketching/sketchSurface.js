@@ -196,7 +196,7 @@ function SketchSurface() {
     this.getSrlUpdateListProto = function() {
         var updateProto = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
         updateProto.list = this.updateManager.getUpdateList();
-        return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(updateProto.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.SrlUpdateList());
+        return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(updateProto.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlUpdateListClass());
     };
 
     /**
