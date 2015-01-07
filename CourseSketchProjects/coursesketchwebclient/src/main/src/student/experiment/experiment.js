@@ -8,9 +8,9 @@
             if (!isUndefined(assignment)) {
                 navigator.setAssignmentId(assignment);
             }
-            var problem = CourseSketch.dataManager.getState("currentProblemIndex");
-            if (!isUndefined(problem)) {
-                navigator.setPreferredIndex(problem);
+            var problemIndex = CourseSketch.dataManager.getState("currentProblemIndex");
+            if (!isUndefined(problemIndex)) {
+                navigator.setPreferredIndex(problemIndex);
             }
             CourseSketch.dataManager.clearStates();
 
