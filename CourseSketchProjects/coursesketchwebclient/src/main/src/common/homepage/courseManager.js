@@ -76,10 +76,11 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * list of assignments for that course and then displays them.
      */
     function courseClickerFunction(course, doc) {
+        var classColumn = document.querySelector('#class_list_column');
         clearLists(2, doc);
 
         // note that query selector does not work on ids that start with a number.
-        changeSelection(doc.getElementById(course.id), courseSelectionManager);
+        changeSelection(classColumn.querySelector(cssEscapeId(course.id)), courseSelectionManager);
         assignmentSelectionManager.clearAllSelectedItems();
         problemSelectionManager.clearAllSelectedItems();
 
@@ -127,10 +128,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     }
 
     function assignmentClickerFunction(assignment) {
-        // clears the problems
-        changeSelection(assignment.id, assignmentSelectionManager);
+        var assignmentColumn = document.querySelector('#assignment_list_column');
+        changeSelection(assignmentColumn.querySelector(cssEscapeId(assignment.id)), assignmentSelectionManager);
         problemSelectionManager.clearAllSelectedItems();
-        clearLists(1);
 
         // waiting icon
         document.getElementById('problem_list_column').appendChild(waitingIcon);
@@ -180,21 +180,24 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     }
 
     function problemClickerFunction(problem) {
-        var id = problem.id;
-        if (problemSelectionManager.isItemSelected(id)) {
-            var element = document.getElementById(id);
-            var itemNumber = element.dataset.item_number;
+        var problemColumn = document.querySelector('#problem_list_column');
+        var clickedElement = problemColumn.querySelector(cssEscapeId(problem.id));
+
+        if (problemSelectionManager.isItemSelected(clickedElement)) {
+            var itemNumber = clickedElement.dataset.item_number;
             CourseSketch.dataManager.addState("CURRENT_QUESTION_INDEX", itemNumber);
             CourseSketch.dataManager.addState("CURRENT_ASSIGNMENT", problem.assignmentId);
-            CourseSketch.dataManager.addState("CURRENT_QUESTION", id);
+            CourseSketch.dataManager.addState("CURRENT_QUESTION", problem.id);
             // change source to the problem page! and load problem
-            if (CourseSketch.dataManager.getState("isInstructor")) {
+            if (CourseSketch.connection.isInstructor) {
                 // solution editor page!
                 CourseSketch.redirectContent("html/instructor/instructorproblemlayout.html", "");
             } else {
-                CourseSketch.redirectContent("html/student/problemlayout.html", "Starting Problem");
+                CourseSketch.redirectContent("/src/student/experiment/experiment.html", "Starting Problem");
             }
         } else {
+            // TODO: find a more lightweight popup library
+            /*
             var element = document.getElementById(id);
             var myOpenTip = new Opentip(element, {
                 target : element,
@@ -218,7 +221,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                 pastToolTip.deactivate();
             }
             problemSelectionManager['currentToolTip'] = myOpenTip;
-            changeSelection(id, problemSelectionManager);
+            */
+            // note that queryselector is not allowed on these types of ids
+            changeSelection(clickedElement, problemSelectionManager);
         }
 
         if (CourseSketch.dataManager.getState("isInstructor")) {
