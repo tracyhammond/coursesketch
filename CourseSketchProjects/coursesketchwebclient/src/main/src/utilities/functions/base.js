@@ -171,7 +171,6 @@ if (isUndefined(BaseException)) {
             this.specificMessage = messageValue;
         }
     };
-    BaseException.prototype = Error;
 }
 
 if (isUndefined(getTypeName)) {

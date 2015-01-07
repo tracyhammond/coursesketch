@@ -65,7 +65,7 @@ function SubmissionPanel() {
 
     this.sendDataToServer = function(isSubmitting) {
         var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes()[0];
-        if (isUndefined(this.problem) || isUndefined(this.problemType)) {
+        if (isUndefined(this.problemType)) {
             throw new SubmissionException("Problem data is not set correctly aborting");
         }
         var submission = undefined;
@@ -106,6 +106,17 @@ function SubmissionPanel() {
     };
 
     /**
+     * gets the text that has been typed.
+     * @return {SrlSubmission} object that is ready to be sent to the server.
+     */
+    function createTextSubmission(textArea, isSubmitting) {
+        var submission = createBaseSubmission();
+        submission.textAnswer = textArea.value;
+        return submission;
+    }
+
+    /**
+     * Creates the submission object for the sketch surface.  This also adds the submit or save marker to the update list.
      * @return {SrlSubmission} object that is ready to be sent to the server.
      */
     function createSketchSubmission(sketchSurface, isSubmitting) {
@@ -122,7 +133,7 @@ function SubmissionPanel() {
         var MarkerType = CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType;
         var markerCommand = updateManager.createMarker(true, isSubmitting ? MarkerType.SUBMISSION : MarkerType.SAVE);
         var markerUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([markerCommand]);
-        updateManager.addSynchronousUpdate(updateManager);
+        updateManager.addSynchronousUpdate(markerUpdate);
 
         var protoObject = sketchSurface.getSrlUpdateListProto();
         var submission = createBaseSubmission();
@@ -142,6 +153,13 @@ function SubmissionPanel() {
      */
     this.setWrapperFunction = function(wrapperFunction) {
         this.wrapperFunction = wrapperFunction;
+    };
+
+    /**
+     * called when the panel is removed from the DOM.
+     */
+    this.detachedCallback = function() {
+        this.setWrapperFunction(undefined);
     };
 
     this.refreshPanel = function() {
@@ -175,9 +193,9 @@ function SubmissionPanel() {
                 var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([command]);
                 updateManager.addUpdate(update);
             });
-        }  else if (type == "MULT_CHOICE") {
+        }  else if (problemType == QuestionType.MULT_CHOICE) {
             // add mult choice tools
-        }   else if (type == "FREE_RESP") {
+        }   else if (problemType == QuestionType.FREE_RESP) {
             // add free resp tools
         }
         element = undefined;

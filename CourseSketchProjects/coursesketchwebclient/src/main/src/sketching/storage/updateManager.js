@@ -189,7 +189,9 @@ function UpdateManager(onError, sketchManager) {
     this.createMarker = function createMarker(userCreated, markerType, otherData) {
         var marker = CourseSketch.PROTOBUF_UTIL.Marker();
         marker.setType(markerType);
-        marker.setOtherData(otherData);
+        if (!isUndefined(otherData)) {
+            marker.setOtherData(otherData);
+        }
 
         var command = CourseSketch.PROTOBUF_UTIL.SrlCommand();
         command.setCommandType(CourseSketch.PROTOBUF_UTIL.CommandType.MARKER);

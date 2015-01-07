@@ -44,6 +44,13 @@
 
         parentPanel.setProblemType(problemType);
         parentPanel.refreshPanel();
+
+        parentPanel.setWrapperFunction(function(submission) {
+            var studentExperiment = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
+            navigator.setSubmissionInformation(studentExperiment);
+            studentExperiment.submission = submission;
+            return studentExperiment;
+        });
     }
 
     /**
