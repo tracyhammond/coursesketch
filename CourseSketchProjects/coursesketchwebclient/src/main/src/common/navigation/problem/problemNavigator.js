@@ -207,6 +207,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * Loads all of the problems given an assignment.
      */
     this.reloadProblems = function() {
+        currentIndex = preferredIndex;
         dataLoaded = false;
         var refresh = this.refresh;
         if (!isUndefined(assignmentId)) {
