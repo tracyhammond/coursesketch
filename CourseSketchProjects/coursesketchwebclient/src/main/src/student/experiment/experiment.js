@@ -10,7 +10,7 @@
             }
             var problemIndex = CourseSketch.dataManager.getState("currentProblemIndex");
             if (!isUndefined(problemIndex)) {
-                navigator.setPreferredIndex(problemIndex);
+                navigator.setPreferredIndex(parseInt(problemIndex));
             }
             CourseSketch.dataManager.clearStates();
 
