@@ -88,10 +88,7 @@
         document.getElementById("problemPanel").appendChild(typingSurface);
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
             if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException ||isUndefined(submission.getTextAnswer())) {
-                if (element.isRunning()) {
-                    element.finishWaiting();
-                    CourseSketch.studentExperiment.removeWaitOverlay();
-                }
+                CourseSketch.studentExperiment.removeWaitOverlay();
                 return;
             }
             typingSurface.value = submission.getTextAnswer();
