@@ -112,12 +112,17 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 						if (leftOverId.length >= 1) {
 							advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
 									CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(evt, item) {
+								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
+										CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
+
+								// after listener is removed
+								if (isUndefined(item.data) || item.data == null) {
+									courseProblemCallback(new DatabaseException("The data sent back from the server does not exist."));
+									return;
+								}
 								var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
 								var courseProblem = school.problems[0];
 								if (isUndefined(courseProblem) || courseProblem instanceof DatabaseException) {
-									advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-										CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
-
 									var result = courseProblem;
 									if (isUndefined(result)) {
 										result = new DatabaseException("Nothing is in the server database!",
@@ -133,7 +138,6 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 									courseProblemList.push(school.problems[i]);
 								}
 								courseProblemCallback(courseProblemList);
-								advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
 							});
 							// creates a request that is then sent to the server
 							sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, leftOverId);

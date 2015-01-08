@@ -234,12 +234,17 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                     barrier -= 1;
                     if (barrier == 0) {
                         if (lectureIdsNotFound.length >= 1) {
-                            advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
+                            advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
+                                    CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
+                                advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
+                                // after listener is removed
+                                if (isUndefined(item.data) || item.data == null) {
+                                    serverCallback(new DatabaseException("The data sent back from the server does not exist."));
+                                    return;
+                                }
                                 var school = CourseSketch.PROTOBUF_UTIL.getSrlLectureDataHolderClass().decode(item.data);
                                 var lecture = school.lectures[0];
                                 if (isUndefined(lecture) || lecture instanceof DatabaseException) {
-                                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
-
                                     var result = lecture;
                                     if (isUndefined(result)) {
                                         result = new DatabaseException("Nothing is in the server database!",
@@ -257,7 +262,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                                 if (!isUndefined(serverCallback)){
                                     serverCallback(lecturesFound);
                                 } // end if serverCallback
-                                advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
+
                             }); // setListener
                             sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lectureIdsNotFound);
                         } // end if lectureIdsNotFound
