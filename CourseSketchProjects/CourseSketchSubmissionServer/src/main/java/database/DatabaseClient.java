@@ -183,9 +183,8 @@ public class DatabaseClient {
     public static String saveExperiment(final SrlExperiment experiment, final long submissionTime,
             final DatabaseClient client) throws DatabaseAccessException {
         System.out.println("saving the experiment!");
-        if (!experiment.hasProblemId() || experiment.getProblemId() == "") {
-            throw new DatabaseAccessException("Problem id must be defined to make a submission");
-        }
+        verifyInput(experiment);
+
         final DBCollection experiments = client.getDb().getCollection(EXPERIMENT_COLLECTION);
 
         final BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
@@ -237,6 +236,28 @@ public class DatabaseClient {
             cursor = experiments.findOne(query);
         }
         return cursor.get(SELF_ID).toString();
+    }
+
+    /**
+     * Verifies that the input is valid.
+     * @param experiment The experiment that is trying to be stored in the database.
+     * @throws DatabaseAccessException Thrown if a part of the experiment is invalid.
+     */
+    private static void verifyInput(final SrlExperiment experiment) throws DatabaseAccessException {
+        if (!experiment.hasProblemId() || "".equals(experiment.getProblemId())) {
+            throw new DatabaseAccessException("Problem id must be defined to make a submission");
+        }
+
+        if (!experiment.hasCourseId() || "".equals(experiment.getCourseId())) {
+            throw new DatabaseAccessException("Course id must be defined to make a submission");
+        }
+
+        if (!experiment.hasAssignmentId() || "".equals(experiment.getAssignmentId())) {
+            throw new DatabaseAccessException("Assignment id must be defined to make a submission");
+        }
+        if (!experiment.hasSubmission()) {
+            throw new DatabaseAccessException("there is no submission data defined in this exeriment");
+        }
     }
 
     /**
