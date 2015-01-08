@@ -102,6 +102,9 @@ public final class SubmissionManager {
         build.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
         final DBObject corsor = myDbRef.fetch();
+        if (corsor == null) {
+            throw new DatabaseAccessException("The student has not submitted anything for this problem");
+        }
         final String sketchId = "" + corsor.get(userId);
         System.out.println("SketchId " + sketchId);
         if ("null".equals(sketchId)) {
@@ -111,11 +114,11 @@ public final class SubmissionManager {
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
         requestBuilder.setOtherData(data.build().toByteString());
-        System.out.println("Sending command " + requestBuilder.build());
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
+            throw new DatabaseAccessException("Failed to send request to submission server for experiment", e);
         }
     }
 
