@@ -190,31 +190,36 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                         // leftovers from the server
                         if (leftOverId.length >= 1) {
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT,
-                                    function(evt, item) {
-                                        var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-                                        var assignment = school.assignments[0];
-                                        if (isUndefined(assignment) || assignment instanceof DatabaseException) {
-                                            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                                    CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
-                                            var result = assignment;
-                                            if (isUndefined(result)) {
-                                                result = new DatabaseException("Nothing is in the server database!",
-                                                    "Grabbing assignment from server: " + assignmentIdList);
-                                            }
-                                            if (!isUndefined(assignmentCallbackComplete)) {
-                                                assignmentCallbackComplete(result);
-                                            }
-                                            return;
+                                function(evt, item) {
+                                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
+                                            CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+
+                                    // after listener is removed
+                                    if (isUndefined(item.data) || item.data == null) {
+                                        assignmentCallbackComplete(new DatabaseException("The data sent back from the server does not exist."));
+                                        return;
+                                    }
+                                    var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
+                                    var assignment = school.assignments[0];
+                                    if (isUndefined(assignment) || assignment instanceof DatabaseException) {
+
+                                        var result = assignment;
+                                        if (isUndefined(result)) {
+                                            result = new DatabaseException("Nothing is in the server database!",
+                                                "Grabbing assignment from server: " + assignmentIdList);
                                         }
-                                        for (var i = 0; i < school.assignments.length; i++) {
-                                            localScope.setAssignment(school.assignments[i]);
-                                            assignmentList.push(school.assignments[i]);
+                                        if (!isUndefined(assignmentCallbackComplete)) {
+                                            assignmentCallbackComplete(result);
                                         }
-                                        stateCallbackList(assignmentList, assignmentCallbackComplete);
-                                        advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                                CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
-                                        assignmentIdList = null;
-                                    });
+                                        return;
+                                    }
+                                    for (var i = 0; i < school.assignments.length; i++) {
+                                        localScope.setAssignment(school.assignments[i]);
+                                        assignmentList.push(school.assignments[i]);
+                                    }
+                                    stateCallbackList(assignmentList, assignmentCallbackComplete);
+                                    assignmentIdList = null;
+                                });
                             // creates a request that is then sent to the server
                             sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, leftOverId);
                         } else {
