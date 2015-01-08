@@ -104,7 +104,7 @@ function SubmissionPanel() {
                 console.log("submission has been updated with the latest time", request.getMessageTime().toString());
             };
         }.bind(this));
-        request.setResponseText(this.isStudent ? "student" : this.isGrader ? "moderator" : "instructor");
+        request.setResponseText(this.isStudent ? "student" : this.isGrader ? "grader" : "instructor");
         CourseSketch.connection.sendRequest(request);
         QuestionType = undefined;
         submission = undefined;

@@ -85,7 +85,7 @@ public final class SubmissionRequestHandler {
     private static ByteString handleSubmission(final Message.Request req) throws SubmissionException {
         String resultantId = null;
         ByteString data = null;
-        if (req.getResponseText().equals("student")) {
+        if ("student".equals(req.getResponseText()) || "grader".equals(req.getResponseText())) {
             Submission.SrlExperiment experiment = null;
             try {
                 experiment = Submission.SrlExperiment.parseFrom(req.getOtherData());
