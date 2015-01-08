@@ -63,7 +63,7 @@ public final class DataInsertHandler {
      *         The connection where the result is sent to.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException" })
+            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })
     public static void handleData(final Request req, final SocketSession conn) {
         try {
             System.out.println("Receiving DATA SEND Request...");
