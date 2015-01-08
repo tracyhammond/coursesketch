@@ -41,6 +41,11 @@ public final class DataRequestHandler {
     private static final String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
 
     /**
+     * A message returned when getting the data was successful.
+     */
+    private static final String NO_OP_MESSAGE = "NO DATA TO RETURN";
+
+    /**
      * A message returned if the user does not have any classes.
      */
     private static final String NO_COURSE_MESSAGE = "You do not have any courses associated with this account";
@@ -141,6 +146,8 @@ public final class DataRequestHandler {
                                     System.out.println("Trying to retrieve an experiemnt from a user!");
                                     try {
                                         instance.getExperimentAsUser(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections);
+
+                                        results.add(ResultBuilder.buildResult(null, NO_OP_MESSAGE, ItemQuery.NO_OP));
                                     } catch (DatabaseAccessException e) {
                                         results.add(ResultBuilder.buildResult(null, e.getLocalizedMessage(), ItemQuery.EXPERIMENT));
                                         break;
