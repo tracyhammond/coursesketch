@@ -204,6 +204,15 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
+     * Reloads the assignment from the id and assigns it to the currentAssignment.
+     */
+    this.reloadAssignment = function() {
+        CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
+                currentAssignment = assignment;
+        });
+    };
+
+    /**
      * Loads all of the problems given an assignment.
      */
     this.reloadProblems = function() {
