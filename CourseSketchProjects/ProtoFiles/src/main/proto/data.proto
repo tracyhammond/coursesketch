@@ -39,6 +39,7 @@ message ItemResult {
 }
 
 enum ItemQuery {
+	NO_OP = -2; // no operation happens.
 	ERROR = -1;
 	COURSE = 0;
 	ASSIGNMENT = 1;

@@ -1,10 +1,25 @@
 /* depends on base.js */
 
 /**
- * ************************************************************* Array Functions
+ * *************************************************************
  *
- * @author gigemjt *************************************************************
+ * Array Functions
+ *
+ * @author gigemjt
+ *
+ ***************************************************************
  */
+
+/**
+ * Creates an ArrayException object that returns exception values.
+ */
+function ArrayException(message) {
+    this.name = "ArrayException";
+    this.specificMessage = message;
+    this.message = "";
+    this.htmlMessage = "";
+}
+ArrayException.prototype = BaseException;
 
 /**
  * removes the object from an array.
@@ -19,7 +34,7 @@ if (isUndefined(removeObjectFromArray)) {
             array.splice(index, 1);
             return result;
         }
-        throw new Error("attempt to remove invalid object");
+        throw new ArrayException("attempt to remove invalid object");
     }
 }
 
@@ -35,7 +50,7 @@ if (isUndefined(removeObjectByIndex)) {
             array.splice(index, 1);
             return result;
         }
-        throw new Error("attempt to remove at invalid index");
+        throw new ArrayException("attempt to remove at invalid index");
     }
 }
 
@@ -51,7 +66,7 @@ if (isUndefined(isArray)) {
 }
 
 /**
- * Makes a map out of the list.
+ * Makes a list out of an object map.
  *
  * @param map
  * @returns {Array}

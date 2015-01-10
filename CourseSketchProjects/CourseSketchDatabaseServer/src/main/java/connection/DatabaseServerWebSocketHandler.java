@@ -6,13 +6,9 @@ import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.SocketSession;
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
-
 import handlers.DataUpdateHandler;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
 import protobuf.srl.request.Message.Request;
-import database.DatabaseAccessException;
-import database.institution.mongo.MongoInstitution;
 import utilities.TimeManager;
 
 /**
@@ -45,15 +41,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      */
     @Override
     public final void onMessage(final SocketSession conn, final Request req) {
-        if (req.getRequestType() == Request.MessageType.SUBMISSION) {
-            System.out.println("Submitting submission id");
-            try {
-                MongoInstitution.getInstance().insertSubmission(req);
-            } catch (DatabaseAccessException e) {
-                e.printStackTrace();
-                System.out.println("THIS NEEDS TO BE SENT TO THE CLIENT!");
-            }
-        } else if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
+        if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
             DataRequestHandler.handleRequest(req, conn, super.getConnectionToId().get(conn).getKey(), getConnectionManager());
         } else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
             DataInsertHandler.handleData(req, conn);

@@ -6,7 +6,6 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
-import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
@@ -295,23 +294,14 @@ public interface Institution {
 
     /**
      * A message sent from the submission server that allows the insertion of
-     * the message.
-     *
-     * @param req Submission being inserted.
-     * @throws DatabaseAccessException Thrown if there is data missing.
-     */
-    void insertSubmission(Request req) throws DatabaseAccessException;
-
-    /**
-     * A message sent from the submission server that allows the insertion of
      * the submission.
-     * @param problemId The bank problem that is related
      * @param userId The user that the submission is associated.
+     * @param problemId The bank problem that is related
      * @param submissionId The submission that is being inserted.
-     * @param experiment True if the submission is an experiment.
+     * @param isExperiment True if the submission is an experiment.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      */
-    void insertSubmission(String problemId, String userId, String submissionId, boolean experiment)
+    void insertSubmission(String userId, String problemId, String submissionId, boolean isExperiment)
             throws DatabaseAccessException;
 
     /**

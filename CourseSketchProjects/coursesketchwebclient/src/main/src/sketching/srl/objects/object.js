@@ -2,14 +2,14 @@
 
 /**
  * ******************************
- * 
- * 
+ *
+ *
  * Object data class
- * 
+ *
  * @author hammond; Daniel Tan
  * @copyright Tracy Hammond, Sketch Recognition Lab, Texas A&M University
- * 
- * 
+ *
+ *
  * ******************************
  */
 function SRL_Object() {
@@ -53,7 +53,7 @@ function SRL_Object() {
 
     /**
      * Contains the bounds of this shape.
-     * 
+     *
      * The bounding box is the farthest left, right, top and bottom points in
      * this shape;
      */
@@ -62,7 +62,7 @@ function SRL_Object() {
     /**
      * Adds a subobject to this object. This usually happens during recognition,
      * when a new object is made up from one or more objects
-     * 
+     *
      * @param subObject
      */
     this.addSubObject = function(subObject) {
@@ -74,7 +74,7 @@ function SRL_Object() {
 
     /**
      * Goes through every object in this list of objects. (Brute force).
-     * 
+     *
      * @return the object if it exist, returns false otherwise.
      */
     this.getSubObjectById = function(objectId) {
@@ -91,30 +91,28 @@ function SRL_Object() {
 
     /**
      * Goes through every object in this list of objects. (Brute force).
-     * 
+     *
      * @return the object if it exist, returns false otherwise.
      */
     this.removeSubObjectById = function(objectId) {
         for (var i = 0; i < m_subObjects.length; i++) {
             var object = m_subObjects[i];
             if (object.getId() == objectId) {
-                return m_subObjects.removeObjectAtIndex(i);
+                return removeObjectByIndex(m_subObjects, i);
             }
-            ;
         }
-        ;
     };
 
     /**
      * Given an object, remove this instance of the object.
      */
     this.removeSubObject = function(srlObject) {
-        return m_subObjects.removeObject(srlObject);
+        return removeObjectFromArray(m_subObjects, srlObject);
     };
 
     /**
      * Gets the list of subobjects
-     * 
+     *
      * @return list of objects that make up this object
      */
     this.getSubObjects = function() {
@@ -125,7 +123,7 @@ function SRL_Object() {
      * Gets a list of all of the objects that make up this object. This is a
      * recursive search through all of the subobjects. This objects is also
      * included on the list.
-     * 
+     *
      * @return
      */
     this.getRecursiveSubObjectList = function() {
@@ -135,15 +133,13 @@ function SRL_Object() {
             for (var j = 0; j < m_subObjects[i].length; j++) {
                 completeList.push(m_subObjects[i].getRecursiveSubObjectList()[j]);
             }
-            ;
         }
-        ;
         return completeList;
     };
 
     /**
      * add an interpretation for an object
-     * 
+     *
      * @param interpretation
      *            a string name representing the interpretation
      * @param confidence
@@ -178,7 +174,7 @@ function SRL_Object() {
 
     /**
      * An object can have a name, such as "triangle1".
-     * 
+     *
      * @return the string name of the object
      */
     this.getName = function() {
@@ -187,7 +183,7 @@ function SRL_Object() {
 
     /**
      * An object can have a name, such as "triangle1".
-     * 
+     *
      * @param name
      *            object name
      */
@@ -198,7 +194,7 @@ function SRL_Object() {
     /**
      * Gets the time associated with the object. The default time is the time it
      * was created
-     * 
+     *
      * @return the time the object was created.
      */
     this.getTime = function() {
@@ -208,7 +204,7 @@ function SRL_Object() {
     /**
      * Sets the time the object was created. This probably should only be used
      * when loading in pre-existing objects.
-     * 
+     *
      * @param time
      *            the time the object was created.
      */
@@ -224,7 +220,7 @@ function SRL_Object() {
      * An object can be created by a user (like drawing a shape, or speaking a
      * phrase) or it can be created by a system (like a recognition of a higher
      * level shape) default is false if not explicitly set
-     * 
+     *
      * @return true if a user created the shape
      */
     this.isUserCreated = function() {
@@ -235,7 +231,7 @@ function SRL_Object() {
      * An object can be created by a user (like drawing a shape, or speaking a
      * phrase) or it can be created by a system (like a recognition of a higher
      * level shape)
-     * 
+     *
      * @param isUserCreated
      *            true if the user created the shape, else false
      */
@@ -245,7 +241,7 @@ function SRL_Object() {
 
     /**
      * Gets the bounding box of the object.
-     * 
+     *
      * @return the bounding box of the object
      */
     this.getBoundingBox = function() {

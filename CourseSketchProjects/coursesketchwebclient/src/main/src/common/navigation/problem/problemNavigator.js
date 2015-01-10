@@ -159,12 +159,15 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * sets the information about a specific submission.
+     * @param submissionWrapper {SrlExperiment | SrlSolution} this is either an experiment or solution this is NOT a submission object.
      */
-    this.setSubmissionInformation = function(submission, isExperiment) {
+    this.setSubmissionInformation = function(submissionWrapper, isExperiment) {
         if (isExperiment) {
-            submission.courseId = currentProblem.courseId;
-            submission.assignmentId = currentProblem.assignmentId;
-            submission.problemId = currentProblem.id;
+            submissionWrapper.courseId = currentProblem.courseId;
+            submissionWrapper.assignmentId = currentProblem.assignmentId;
+            submissionWrapper.problemId = currentProblem.id;
+        } else {
+            submissionWrapper.problemBankId = getProblemInfo().id;
         }
     };
 
@@ -204,6 +207,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * Loads all of the problems given an assignment.
      */
     this.reloadProblems = function() {
+        currentIndex = preferredIndex;
         dataLoaded = false;
         var refresh = this.refresh;
         if (!isUndefined(assignmentId)) {
