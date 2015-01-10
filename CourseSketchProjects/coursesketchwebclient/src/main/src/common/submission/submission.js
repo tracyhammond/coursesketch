@@ -54,18 +54,22 @@ function SubmissionPanel() {
         }.bind(this), 50);
     };
 
-    this.sendDataToServerExceptionWrapped = function(isSubmitting) {
-        //try {
+    this.sendDataToServerExceptionWrapped = function(isSubmitting, suppressAlert) {
+        try {
             this.sendDataToServer(isSubmitting);
-        /*} catch(exception) {
-            alert(exception.toString());
+        } catch(exception) {
+            if (!suppressAlert) {
+                alert(exception.toString());
+            }
             console.log(exception);
-            throw exception;
-        }*/
+        }
     }
 
     this.sendDataToServer = function(isSubmitting) {
         var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes()[0];
+        if (isUndefined(subPanel)) {
+            throw new SubmissionException("There is no element that contains submittable data");
+        }
         if (isUndefined(this.problemType)) {
             throw new SubmissionException("Problem data is not set correctly aborting");
         }
@@ -102,7 +106,9 @@ function SubmissionPanel() {
                 // potential conflict if it was save multiple times in quick succession.
                 subPanel.getUpdateManager().setLastSaveTime(request.getMessageTime());
                 console.log("submission has been updated with the latest time", request.getMessageTime().toString());
-            };
+            }
+            problemType = undefined;
+            problemIndex = undefined;
         }.bind(this));
         request.setResponseText(this.isStudent ? "student" : this.isGrader ? "grader" : "instructor");
         CourseSketch.connection.sendRequest(request);
@@ -217,13 +223,6 @@ function SubmissionPanel() {
 }
 
 SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
-
-/**
- * @param problem {SrlProblem} sets the problem element
- */
-SubmissionPanel.prototype.setProblem = function(problem) {
-    this.problem = problem;
-};
 
 /**
  * @param problem {SrlProblem} sets the problem element

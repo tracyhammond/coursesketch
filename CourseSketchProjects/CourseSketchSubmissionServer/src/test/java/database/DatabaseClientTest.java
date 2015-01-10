@@ -176,7 +176,7 @@ public class DatabaseClientTest {
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
-        secondList.setUpdateList(SubmissionMergerTest.createSimpleDatabaseListInsertSketchAt(original, 2, 300));
+        secondList.setUpdateList(SubmissionMergerTest.createSimpleDatabaseListInsertSketchAt(original, 2, 300, true));
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
         String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
 

@@ -17,7 +17,7 @@ public class SubmissionMergerTest {
     private static final String sketch2Id = "Sketch2";
     public static Commands.SrlUpdateList createSimpleDatabaseList(long time) {
         Commands.SrlUpdateList.Builder result = Commands.SrlUpdateList.newBuilder();
-        result.addList(makeNewUpdateFromCommands("Update1", time, makeNewSketchCommand("CreateSketch1", sketch1Id)));
+        result.addList(makeNewUpdateFromCommands("Update1", time, makeNewSketchCommand("CreateSketch1", sketch1Id, false)));
         result.addList(makeNewUpdateFromCommands("Update2", time + 10, makeNewCommand("Stroke1", Commands.CommandType.ADD_STROKE, null)));
         result.addList(makeNewUpdateFromCommands("Update3", time + 20, makeNewCommand("Stroke2", Commands.CommandType.ADD_STROKE, null),
                 makeNewCommand("Stroke3", Commands.CommandType.ADD_STROKE, null)));
@@ -31,9 +31,9 @@ public class SubmissionMergerTest {
         return Commands.SrlUpdate.newBuilder().setUpdateId(id).setTime(time).addAllCommands(Arrays.asList(commands)).build();
     }
 
-    private static Commands.SrlCommand makeNewSketchCommand(String commandId, String sketchId) {
+    private static Commands.SrlCommand makeNewSketchCommand(String commandId, String sketchId, final boolean useSwitchSketch) {
         Commands.SrlCommand.Builder command = Commands.SrlCommand.newBuilder();
-        command.setCommandType(Commands.CommandType.CREATE_SKETCH);
+        command.setCommandType(useSwitchSketch ? Commands.CommandType.SWITCH_SKETCH : Commands.CommandType.CREATE_SKETCH);
         command.setCommandId(commandId);
         command.setCommandData(Commands.ActionCreateSketch.newBuilder().setSketchId(
                 Commands.IdChain.newBuilder().addIdChain(sketchId)).build().toByteString());
@@ -55,15 +55,17 @@ public class SubmissionMergerTest {
     /**
      * Inserts a different sketch with its own updates into the given list.
      * @param index
+     * @param useSwitchSketch
      * @return
      */
-    public static Commands.SrlUpdateList createSimpleDatabaseListInsertSketchAt(Commands.SrlUpdateList list, int index, long time) {
+    public static Commands.SrlUpdateList createSimpleDatabaseListInsertSketchAt(Commands.SrlUpdateList list, int index, long time,
+            final boolean useSwitchSketch) {
         List<Commands.SrlUpdate> updates = list.getListList();
         List<Commands.SrlUpdate> firstHalf = updates.subList(0 , index);
         List<Commands.SrlUpdate> secondHalf = updates.subList(index, updates.size());
         List<Commands.SrlUpdate> middle = new ArrayList<>();
 
-        middle.add(makeNewUpdateFromCommands("Update6", time + 50, makeNewSketchCommand("CreateSketch2", sketch2Id)));
+        middle.add(makeNewUpdateFromCommands("Update6", time + 50, makeNewSketchCommand("CreateSketch2", sketch2Id, useSwitchSketch)));
         middle.add(makeNewUpdateFromCommands("Update7", time + 60, makeNewCommand("Stroke4", Commands.CommandType.ADD_STROKE, null)));
         middle.add(makeNewUpdateFromCommands("Update8", time + 70, makeNewCommand("Shape1", Commands.CommandType.ADD_SHAPE, null),
                 makeNewCommand("Clear3", Commands.CommandType.CLEAR, null)));
@@ -149,18 +151,123 @@ public class SubmissionMergerTest {
         Assert.assertNotEquals(list1, list3);
     }
 
-    // TODO: add tests for the save marker stuff.
     @Test
-    public void ifChangeIsSaveMarkerTimeDatabaseTimeIsUses() throws MergeException {
+    public void ifChangeIsSaveMarkerTimeDatabaseTimeIsUsesSave() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
-        Commands.SrlUpdateList.Builder list2 = Commands.SrlUpdateList.newBuilder(list1);
-        list2.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom", Commands.CommandType.MARKER, null)));
-        SubmissionMerger merger = new SubmissionMerger(list1, list2.build());
-        merger.setIsModerator(true);
+        Commands.SrlUpdateList.Builder databaseList = Commands.SrlUpdateList.newBuilder(list1);
+        Commands.Marker mark = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SAVE).build();
+        databaseList.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        Commands.SrlUpdateList.Builder client = Commands.SrlUpdateList.newBuilder(list1);
+        client.addList(makeNewUpdateFromCommands("NewUpdate1", time + 200, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        SubmissionMerger merger = new SubmissionMerger(databaseList.build(), client.build());
         Commands.SrlUpdateList list3 = merger.merge();
-        Assert.assertEquals(list2.build(), list3);
-        Assert.assertNotEquals(list1, list3);
+        Assert.assertEquals(databaseList.build(), list3);
+        Assert.assertNotEquals(client.build(), list3);
+    }
+
+    @Test(expected = MergeException.class)
+    public void exceptionThrownIfCommandsAreNotEqual() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList.Builder databaseList = Commands.SrlUpdateList.newBuilder(list1);
+        Commands.Marker mark = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SAVE).build();
+        databaseList.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        Commands.SrlUpdateList.Builder client = Commands.SrlUpdateList.newBuilder(list1);
+        client.addList(makeNewUpdateFromCommands("NewUpdate1", time + 200, makeNewCommand("HAX_COMMAND",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        SubmissionMerger merger = new SubmissionMerger(databaseList.build(), client.build());
+        Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(databaseList.build(), list3);
+        Assert.assertNotEquals(client.build(), list3);
+    }
+
+    @Test
+    public void ifChangeIsSaveMarkerTimeDatabaseTimeIsUsesSubmit() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList.Builder databaseList = Commands.SrlUpdateList.newBuilder(list1);
+        Commands.Marker mark = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SUBMISSION).build();
+        databaseList.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        Commands.SrlUpdateList.Builder client = Commands.SrlUpdateList.newBuilder(list1);
+        client.addList(makeNewUpdateFromCommands("NewUpdate1", time + 200, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        SubmissionMerger merger = new SubmissionMerger(databaseList.build(), client.build());
+        Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(databaseList.build(), list3);
+        Assert.assertNotEquals(client.build(), list3);
+    }
+
+    @Test(expected = MergeException.class)
+    public void testChangeMarkerThrowsExceptionIfMarkerIsNotChange() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList.Builder databaseList = Commands.SrlUpdateList.newBuilder(list1);
+        Commands.Marker mark = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.FEEDBACK).build();
+        databaseList.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        Commands.SrlUpdateList.Builder client = Commands.SrlUpdateList.newBuilder(list1);
+        client.addList(makeNewUpdateFromCommands("NewUpdate1", time + 200, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        SubmissionMerger merger = new SubmissionMerger(databaseList.build(), client.build());
+        Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(databaseList.build(), list3);
+        Assert.assertNotEquals(client.build(), list3);
+    }
+
+    @Test(expected = MergeException.class)
+    public void exceptionThrownIfMergeTypeNotSupported() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList.Builder databaseList = Commands.SrlUpdateList.newBuilder(list1);
+        databaseList.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom",
+                Commands.CommandType.ADD_SHAPE, null)));
+        Commands.SrlUpdateList.Builder client = Commands.SrlUpdateList.newBuilder(list1);
+        client.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom",
+                Commands.CommandType.ADD_STROKE, null)));
+        SubmissionMerger merger = new SubmissionMerger(databaseList.build(), client.build());
+        Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(databaseList.build(), list3);
+        Assert.assertNotEquals(client.build(), list3);
+    }
+
+    @Test(expected = MergeException.class)
+    public void testChangeMarkerThrowsExceptionIfUpdateIsDifferent() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList.Builder databaseList = Commands.SrlUpdateList.newBuilder(list1);
+        Commands.Marker mark = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SAVE).build();
+        databaseList.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        Commands.SrlUpdateList.Builder client = Commands.SrlUpdateList.newBuilder(list1);
+        client.addList(makeNewUpdateFromCommands("NewUpdate1", time + 200, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString()), makeNewCommand("CHEATY COM!",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        SubmissionMerger merger = new SubmissionMerger(databaseList.build(), client.build());
+        Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(databaseList.build(), list3);
+        Assert.assertNotEquals(client.build(), list3);
+    }
+
+    @Test(expected = MergeException.class)
+    public void testChangeMarkerThrowsExceptionIfNonMarkerDataIsStoredInMarker() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList.Builder databaseList = Commands.SrlUpdateList.newBuilder(list1);
+        Commands.SrlCommand mark = makeNewCommand("FAKE COMMAND", Commands.CommandType.MARKER, null);
+        databaseList.addList(makeNewUpdateFromCommands("NewUpdate1", time + 100, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        Commands.SrlUpdateList.Builder client = Commands.SrlUpdateList.newBuilder(list1);
+        client.addList(makeNewUpdateFromCommands("NewUpdate1", time + 200, makeNewCommand("NewCom",
+                Commands.CommandType.MARKER, mark.toByteString())));
+        SubmissionMerger merger = new SubmissionMerger(databaseList.build(), client.build());
+        Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(databaseList.build(), list3);
+        Assert.assertNotEquals(client.build(), list3);
     }
 
     @Test(expected = MergeException.class)
@@ -177,7 +284,7 @@ public class SubmissionMergerTest {
     public void switchSketchMergesCorrectlyAddedAtEnd() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
-        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, list1.getListCount(), time);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, list1.getListCount(), time, true);
         SubmissionMerger merger = new SubmissionMerger(list1, list2);
         Commands.SrlUpdateList list3 = merger.merge();
         Assert.assertEquals(list2, list3);
@@ -188,7 +295,19 @@ public class SubmissionMergerTest {
     public void switchSketchMergesCorrectlyAddedAtEndAsModerator() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
-        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, list1.getListCount(), time);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, list1.getListCount(), time, true);
+        SubmissionMerger merger = new SubmissionMerger(list1, list2);
+        merger.setIsModerator(true);
+        Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(list2, list3);
+        Assert.assertNotEquals(list1, list3);
+    }
+
+    @Test()
+    public void CreateSketchMergesCorrectlyAddedAtEndAsModerator() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, list1.getListCount(), time, false);
         SubmissionMerger merger = new SubmissionMerger(list1, list2);
         merger.setIsModerator(true);
         Commands.SrlUpdateList list3 = merger.merge();
@@ -200,8 +319,8 @@ public class SubmissionMergerTest {
     public void multipleSwitchSketchMergesCorrectly() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
-        Commands.SrlUpdateList listTemp = createSimpleDatabaseListInsertSketchAt(list1, list1.getListCount(), time);
-        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(listTemp, 2, time + 100);
+        Commands.SrlUpdateList listTemp = createSimpleDatabaseListInsertSketchAt(list1, list1.getListCount(), time, true);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(listTemp, 2, time + 100, true);
         SubmissionMerger merger = new SubmissionMerger(list1, list2);
         Commands.SrlUpdateList list3 = merger.merge();
         Assert.assertEquals(list2, list3);
@@ -212,10 +331,22 @@ public class SubmissionMergerTest {
     public void multipleSwitchSketchMergesCorrectly2() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
-        Commands.SrlUpdateList listTemp = createSimpleDatabaseListInsertSketchAt(list1, 4, time);
-        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(listTemp, 2, time + 100);
+        Commands.SrlUpdateList listTemp = createSimpleDatabaseListInsertSketchAt(list1, 4, time, true);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(listTemp, 2, time + 100, true);
         SubmissionMerger merger = new SubmissionMerger(list1, list2);
         Commands.SrlUpdateList list3 = merger.merge();
+        Assert.assertEquals(list2, list3);
+        Assert.assertNotEquals(list1, list3);
+    }
+
+    @Test()
+     public void createSketchMergesCorrectlyAddedInMiddle() throws MergeException {
+        long time = System.currentTimeMillis();
+        Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, 2, time, false);
+        SubmissionMerger merger = new SubmissionMerger(list1, list2);
+        Commands.SrlUpdateList list3 = merger.merge();
+        // Assert.assertEquals(list1, list2); // used to see differences between list
         Assert.assertEquals(list2, list3);
         Assert.assertNotEquals(list1, list3);
     }
@@ -224,7 +355,7 @@ public class SubmissionMergerTest {
     public void switchSketchMergesCorrectlyAddedInMiddle() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
-        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, 2, time);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, 2, time, true);
         SubmissionMerger merger = new SubmissionMerger(list1, list2);
         Commands.SrlUpdateList list3 = merger.merge();
         // Assert.assertEquals(list1, list2); // used to see differences between list
@@ -248,7 +379,7 @@ public class SubmissionMergerTest {
     public void switchSketchMergesFailsAddedAtFront() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
-        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, 0, time);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, 0, time, true);
         SubmissionMerger merger = new SubmissionMerger(list1, list2);
         Commands.SrlUpdateList list3 = merger.merge();
     }
@@ -257,7 +388,7 @@ public class SubmissionMergerTest {
     public void switchSketchMergesCorrectlyAddedAtRightAfterCreationOfSketch() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
-        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, 1, time);
+        Commands.SrlUpdateList list2 = createSimpleDatabaseListInsertSketchAt(list1, 1, time, true);
         SubmissionMerger merger = new SubmissionMerger(list1, list2);
         Commands.SrlUpdateList list3 = merger.merge();
         // Assert.assertEquals(list1, list2); // used to see differences between list
@@ -269,7 +400,7 @@ public class SubmissionMergerTest {
     public void switchSketchThrowsErrorIfSketchIsNotSwitchedBack() throws MergeException {
         long time = System.currentTimeMillis();
         Commands.SrlUpdateList list1 = createSimpleDatabaseList(time);
-        Commands.SrlUpdateList listTemp = createSimpleDatabaseListInsertSketchAt(list1, 2, time);
+        Commands.SrlUpdateList listTemp = createSimpleDatabaseListInsertSketchAt(list1, 2, time, true);
         Commands.SrlUpdateList list2 = Commands.SrlUpdateList.newBuilder().addAllList(
                 listTemp.getListList().subList(0, 5)).addAllList(listTemp.getListList().subList(6, listTemp.getListCount())).build();
         SubmissionMerger merger = new SubmissionMerger(list1, list2);

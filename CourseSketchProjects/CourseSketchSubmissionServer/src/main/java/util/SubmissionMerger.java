@@ -127,7 +127,7 @@ public final class SubmissionMerger {
         if (differentUpdate.getCommands(0).getCommandType() == Commands.CommandType.MARKER) {
             return mergeMarker(database, client, differentUpdate, differentIndex);
         }
-        return database;
+        throw new MergeException("Merge type is not supported, merge failed.");
     }
 
     /**
@@ -156,7 +156,7 @@ public final class SubmissionMerger {
             throw new MergeException("Command of marker type does not actually contain marker", e);
         }
         if (mark.getType() == Commands.Marker.MarkerType.SPLIT) {
-            return mergeRedoUndo(database, client, differentUpdate, differentIndex);
+            return mergeRedoUndo(database, client, differentIndex, mark);
         }
         if (mark.getType() == Commands.Marker.MarkerType.SUBMISSION || mark.getType() == Commands.Marker.MarkerType.SAVE) {
             return mergeTimeChange(database, client, differentUpdate, differentIndex);
@@ -244,26 +244,15 @@ public final class SubmissionMerger {
      *         The database list.
      * @param client
      *         The new list that is being merged in.
-     * @param differentUpdate
-     *         the update that is different in the client list.
      * @param differentIndex
      *         The index at which the two list diverge.
+     * @param marker The marker that contains the split data.
      * @return A list that represents to the two merged versions.
      * @throws MergeException
      *         Thrown if the merge fails.  One should reject the client list if this exception is thrown.
      */
     private List<Commands.SrlUpdate> mergeRedoUndo(final List<Commands.SrlUpdate> database, final List<Commands.SrlUpdate> client,
-            final Commands.SrlUpdate differentUpdate, final int differentIndex) throws MergeException {
-        final Commands.SrlCommand command = differentUpdate.getCommands(0);
-        Commands.Marker marker = null;
-        try {
-            marker = Commands.Marker.parseFrom(command.getCommandData());
-        } catch (InvalidProtocolBufferException e) {
-            throw new MergeException("List contains data in an invalid format.", e);
-        }
-        if (marker.getType() != Commands.Marker.MarkerType.SPLIT) {
-            throw new MergeException("List contains an unsupported marker type");
-        }
+            final int differentIndex, final Commands.Marker marker) throws MergeException {
         final int endingIndex = Integer.parseInt(marker.getOtherData());
         if (endingIndex <= -1) {
             throw new MergeException("Split marker is not correctly formatted.");
