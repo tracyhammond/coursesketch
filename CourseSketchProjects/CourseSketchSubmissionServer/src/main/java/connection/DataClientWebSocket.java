@@ -1,7 +1,6 @@
 package connection;
 
 import coursesketch.server.base.ClientWebSocket;
-import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.request.Message.Request;
@@ -30,7 +29,7 @@ public final class DataClientWebSocket extends ClientWebSocket {
      * @param parentServer
      *            The server that is using this connection wrapper.
      */
-    public DataClientWebSocket(final URI destination, final ServerWebSocketHandler parentServer) {
+    public DataClientWebSocket(final URI destination, final AbstractServerWebSocketHandler parentServer) {
         super(destination, parentServer);
     }
 

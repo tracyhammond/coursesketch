@@ -1,7 +1,6 @@
 package connection;
 
 import coursesketch.server.base.ClientWebSocket;
-import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -15,8 +14,8 @@ import java.nio.ByteBuffer;
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
-@WebSocket(maxBinaryMessageSize = Integer.MAX_VALUE)
-public class SubmissionClientWebSocket extends ClientWebSocket {
+@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
+public final class SubmissionClientWebSocket extends ClientWebSocket {
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
@@ -32,7 +31,7 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
      *         The server that is using this connection wrapper.
      */
     public SubmissionClientWebSocket(final URI destination,
-            final ServerWebSocketHandler parentServer) {
+            final AbstractServerWebSocketHandler parentServer) {
         super(destination, parentServer);
     }
 
@@ -40,16 +39,16 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
      * {@inheritDoc}
      */
     @Override
-    public final void onMessage(final ByteBuffer buffer) {
+    public void onMessage(final ByteBuffer buffer) {
         final Request req = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer); // this
         // contains
         // the
         // solution
-        System.out.println(req.getSessionInfo());
+        System.err.println(req.getSessionInfo());
         final String[] sessionInfo = req.getSessionInfo().split("\\+");
-        System.out.println(sessionInfo[1]);
+        System.err.println(sessionInfo[1]);
         final AnswerConnectionState state = (AnswerConnectionState) getStateFromId(sessionInfo[1]);
-        System.out.println(state);
+        System.err.println(state);
         if (req.getRequestType() == MessageType.DATA_REQUEST) {
             // SrlExperiment expr = state.getExperiment(sessionInfo[1]);
             // SrlSolution sol = null;
