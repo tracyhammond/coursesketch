@@ -69,9 +69,7 @@
      * returns the navigation panel element to be used by other pages.
      */
     function getNav() {
-        var navPanel;
-        navPanel = document.getElementById("navigation-panel");
-        return navPanel;
+        return document.querySelector("navigation-panel").getNavigator();
     };
 
     /*
@@ -83,11 +81,21 @@
     }
 
     $(document).ready(function() {
-        var nav = getNav();
-        nav.addCallback(function() {
-            multiviewSketchdelete();createMvList();
+        CourseSketch.dataManager.waitForDatabase(function() {
+            var navigator = getNav();
+            var assignment = CourseSketch.dataManager.getState("currentAssignment");
+            if (!isUndefined(assignment)) {
+                navigator.setAssignmentId(assignment);
+            }
+            var problemIndex = CourseSketch.dataManager.getState("currentProblemIndex");
+            if (!isUndefined(problemIndex)) {
+                navigator.setPreferredIndex(parseInt(problemIndex));
+            }
+            CourseSketch.dataManager.clearStates();
+            navigator.addCallback(function() {
+                multiviewSketchdelete();createMvList();
+            });
+            navigator.reloadProblems();
         });
-        nav.refresh();
     });
-
 })();
