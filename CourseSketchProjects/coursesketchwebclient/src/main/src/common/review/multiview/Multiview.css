@@ -17,8 +17,8 @@
     width: 15%;
     height: 100%
 }
-button {
-    height:calc(100% / 2);
+button, input[type='number'] {
+    height:calc(100% / 3);
     width:100%;
 }
 
@@ -58,3 +58,13 @@ sketch-surface {
     background-color: #FF0000;
 }
 
+/* sets the font size to make it pretty large */
+input[type='number'] {
+    font-size: 1.5em;
+}
+
+/* this makes the spinner in chrome not overlap with the number */
+input[type='number']:not(:hover) /deep/ #spin {
+    -webkit-appearance: none;
+    background: #000;
+}
