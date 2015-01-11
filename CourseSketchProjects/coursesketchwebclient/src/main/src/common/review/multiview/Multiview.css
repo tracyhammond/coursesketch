@@ -58,13 +58,46 @@ sketch-surface {
     background-color: #FF0000;
 }
 
+:host * {
+    overflow:visible;
+}
+
+* {
+    overflow:visible;
+}
+
 /* sets the font size to make it pretty large */
 input[type='number'] {
-    font-size: 1.5em;
+    font-size: 1.3em;
+    overflow:visible;
+}
+
+/* sets the font size to make it pretty large */
+input[type='number'] /deep/ div {
+    position:relative;
+    overflow:visible;
+}
+
+/* sets the font size to make it pretty large */
+input[type='number']:not(:valid) {
+    background:red;
 }
 
 /* this makes the spinner in chrome not overlap with the number */
 input[type='number']:not(:hover) /deep/ #spin {
     -webkit-appearance: none;
     background: #000;
+}
+
+input[type='number'].percent /deep/ #inner-editor {
+    width: 10px;
+}
+
+/* makes percent stuff */
+input[type='number'].percent /deep/ #inner-editor:after {
+    display:inline-block;
+    content: "PLEASE SHOW ME!";
+    color:black;
+    font-size: 2em;
+    z-index:3;
 }
