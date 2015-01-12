@@ -1,24 +1,22 @@
 <html>
-  <head>
-    <link rel="stylesheet" href="/src/instructor/review/mvGrading.css">
-    <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
+<head>
     <link rel="import" href="/src/utilities/connection/protobufInclude.html">
     <script type="text/javascript" src="/src/utilities/functions/childScript.js"
-     data-namespace="multiViewPage"></script>
+            data-namespace="multiViewPage"></script>
+    <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
+    <link rel="import" href="/src/common/review/multiview/mvInclude.html">
+    <link rel="stylesheet" href="/src/instructor/review/mvGrading.css">
     <script type="text/javascript" src="/src/instructor/review/mvGrading.js"></script>
 
-  </head>
+</head>
 
-  <body>
-    <header>
-     <h1>  </h1>
-    </header>
-    <navigation-panel></navigation-panel>
-    <div class="info"> General Class Information  </div>
-    <div class="sketches" id="sketch-area"style="overflow-y: scroll; height:675px;"> Class Sketches </div>
-
-
-  </body>
+<body>
+<navigation-panel></navigation-panel>
+<div class="problem-panel">
+    <div class="info"> General Class Information</div>
+    <div class="sketches" id="sketch-area" style="overflow-y: scroll;"> Class Sketches</div>
+</div>
+</body>
 
 
 </html>

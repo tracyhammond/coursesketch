@@ -9,7 +9,7 @@
      * sketchList
      */
     function getSketches( callback ){
-        CourseSketch.dataManager.getAllExperiments(CourseSketch.problemNavigator.getCurrentProblemId(), function(sketchList) {
+        CourseSketch.dataManager.getAllExperiments(getNav().getCurrentProblemId(), function(sketchList) {
              if (isUndefined(sketchList)) {
                 if (element.isRunning()) {
                     element.finishWaiting();
@@ -35,10 +35,11 @@
      * this can be done dynamically
      */
     function createMvSketch(array) {
-        for(var i = 0; i < array.length(); i++){
-            var newelem = document.createElement('mv-sketch');
-            document.quereySeletor("sketch-area").appendChild(newelem);
-            newelem.setUpdateList(getUList(array, i));
+        for (var i = 0; i < array.length; i++) {
+            var mvSketch = document.createElement('mv-sketch');
+            document.querySelector(".sketches").appendChild(mvSketch);
+            console.log(mvSketch);
+            mvSketch.setUpdateList(getUpdateList(array, i));
         }
     }
 
@@ -50,10 +51,8 @@
      *@param index
      *         {int}
      */
-    function getUList(array, index) {
-        return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(
-            array[index].getSubmission().getUpdateList(),
-            CourseSketch.PROTOBUF_UTIL.getSrlUpdateListClass());
+    function getUpdateList(array, index) {
+        return array[index].getSubmission().getUpdateList();
     }
 
     /*
@@ -61,7 +60,7 @@
      * and then places them into the Multiview screen.
      */
     function previousProblem() {
-        multiviewSketchdelete();
+        multiviewSketchDelete();
         createMvList();
     }
 
@@ -75,13 +74,14 @@
     /*
      * deletes the sketch data in the sketch-area element
      */
-    function multiviewSketchdelete() {
+    function multiviewSketchDelete() {
         var parent = document.getElementById("sketch-area");
         parent.innerHTML= '';
     }
 
     $(document).ready(function() {
         CourseSketch.dataManager.waitForDatabase(function() {
+            var navPanel = document.querySelector("navigation-panel")
             var navigator = getNav();
             var assignment = CourseSketch.dataManager.getState("currentAssignment");
             if (!isUndefined(assignment)) {
@@ -92,10 +92,14 @@
                 navigator.setPreferredIndex(parseInt(problemIndex));
             }
             CourseSketch.dataManager.clearStates();
-            navigator.addCallback(function() {
-                multiviewSketchdelete();createMvList();
-            });
-            navigator.reloadProblems();
+            if (isUndefined(navPanel.dataset.callbackset)) {
+                navPanel.dataset.callbackset = ""
+                navigator.addCallback(function() {
+                    multiviewSketchDelete();
+                    createMvList();
+                });
+                navigator.reloadProblems();
+            }
         });
     });
 })();
