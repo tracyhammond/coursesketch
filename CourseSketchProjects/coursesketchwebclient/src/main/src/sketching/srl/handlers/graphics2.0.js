@@ -37,6 +37,17 @@ function Graphics(canvasElement, sketchManager) {
     };
 
     /**
+     * Expands or shrinks the sketch so that it fills the canvas while keeping the same aspect ratio.
+     * This does modify the data of the sketch so this can only be used on read only sketches.
+     *
+     * uses the canvas size.
+     */
+    this.fillCanvas = function() {
+        ps.project.activeLayer.fitBounds(new ps.Rectangle(0, 0, canvasElement.width, canvasElement.height));
+        ps.view.update();
+    }
+
+    /**
      * Updates the view at 60fps
      */
     ps.view.onFrame = function(event) {

@@ -232,14 +232,24 @@ function SketchSurface() {
      * This should only be done after the sketch surface is inserted into the dom.
      * @param updateList {Array<SrlUpdate>}
      */
-    this.loadUpdateList = function(updateList, percentBar) {
+    this.loadUpdateList = function(updateList, percentBar, finishedCallback) {
         try {
             this.extractIdFromList(updateList);
         } catch(exception) {
             console.error(exception);
             throw exception;
         }
-        this.updateManager.setUpdateList(updateList, percentBar);
+        this.updateManager.setUpdateList(updateList, percentBar, finishedCallback);
+    };
+
+    /**
+     * Tells the sketch surface to fill the screen so it is completely visible.
+     * This currently is only allowed on read-only canvases
+     */
+    this.fillCanvas = function() {
+        if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
+            throw new BaseException("This can only be performed on read only sketch surfaces");
+        }
     };
 }
 
@@ -263,6 +273,7 @@ SketchSurface.prototype.initializeElement = function(templateClone) {
 
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateManagerClass) {
     this.initializeSketch();
+    this.initializeGraphics();
 
     if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
         this.initializeInput(InputListenerClass);
