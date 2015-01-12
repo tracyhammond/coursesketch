@@ -60,14 +60,19 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 
 	function getAllExperiments(problemId, submissionCallback) {
 		advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
-			if (isUndefined(item.data)) {
-				submissionCallback("Undefined");
+			advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
+			console.log("SERVER RESPONDED WITH EXPERIMENT");
+			console.log(item.data);
+			if (isUndefined(item.data) || item.data == null) {
+				submissionCallback(new DatabaseException("The data sent back from the server does not exist."));
 				return;
 			}
 			var list;
 			try {
 				list = CourseSketch.PROTOBUF_UTIL.getSrlExperimentListClass().decode(item.data);
 			} catch(exception) {
+				console.log(exception);
+				submissionCallback(new DatabaseException("Exception decoding experiment data data: " + exception.toString()));
 				return;
 			}
 			console.log(list.experiments);
