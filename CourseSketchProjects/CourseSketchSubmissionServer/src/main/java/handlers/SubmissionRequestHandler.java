@@ -24,12 +24,16 @@ public final class SubmissionRequestHandler {
     /**
      * Private constructor.
      */
-    private SubmissionRequestHandler() { }
+    private SubmissionRequestHandler() {
+    }
 
     /**
      * Stores the submission in the database and sends communication to other servers if they need to know about the submission.
-     * @param req contains the data about the submission itself.
-     * @param internalConnections Connections to other servers.
+     *
+     * @param req
+     *         contains the data about the submission itself.
+     * @param internalConnections
+     *         Connections to other servers.
      * @return A Request that is sent back to be sent off to the client.
      */
     public static Request handleRequest(final Request req, final MultiConnectionManager internalConnections) {
@@ -76,10 +80,12 @@ public final class SubmissionRequestHandler {
     /**
      * Saves the submission into the database.
      *
-     * @param req The request of the submission.
+     * @param req
+     *         The request of the submission.
      * @return {@link com.google.protobuf.ByteString} that represents the result if this is the first submission.
      * May be null if this is not the first submission.
-     * @throws SubmissionException thrown if there is an error submitting.
+     * @throws SubmissionException
+     *         thrown if there is an error submitting.
      */
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     private static ByteString handleSubmission(final Message.Request req) throws SubmissionException {
@@ -89,11 +95,12 @@ public final class SubmissionRequestHandler {
             Submission.SrlExperiment experiment = null;
             try {
                 experiment = Submission.SrlExperiment.parseFrom(req.getOtherData());
+                experiment = SrlExperiment.newBuilder(experiment).setUserId(req.getServersideId()).build();
             } catch (InvalidProtocolBufferException e) {
                 throw new SubmissionException("submission was labeled as student but was not experiment", e);
             }
             try {
-                resultantId = DatabaseClient.saveExperiment(experiment, req.getMessageTime(), DatabaseClient.getInstance());
+                resultantId = DatabaseClient.saveExperiment(DatabaseClient.getInstance(), experiment, req.getMessageTime());
                 if (resultantId != null) {
                     final SrlExperiment.Builder builder = SrlExperiment.newBuilder(experiment);
                     // erase the actual data from the submission, leaving only the id.

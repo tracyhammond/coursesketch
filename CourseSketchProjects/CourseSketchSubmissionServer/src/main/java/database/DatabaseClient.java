@@ -170,18 +170,18 @@ public class DatabaseClient {
      *
      * TODO SECURITY CHECKS!
      *
+     * @param client
+     *         The database that is being used to store the data.
      * @param experiment
      *         What the user is submitting.
      * @param submissionTime
      *         What time the server got the submission.
-     * @param client
-     *         The database that is being used to store the data.
      * @return A string representing the id if it exists or is a new submission.
      * @throws DatabaseAccessException
      *         thrown if there are problems saving the experiment.
      */
-    public static String saveExperiment(final SrlExperiment experiment, final long submissionTime,
-            final DatabaseClient client) throws DatabaseAccessException {
+    public static String saveExperiment(final DatabaseClient client, final SrlExperiment experiment, final long submissionTime)
+            throws DatabaseAccessException {
         System.out.println("saving the experiment!");
         verifyInput(experiment);
 
@@ -240,8 +240,11 @@ public class DatabaseClient {
 
     /**
      * Verifies that the input is valid.
-     * @param experiment The experiment that is trying to be stored in the database.
-     * @throws DatabaseAccessException Thrown if a part of the experiment is invalid.
+     *
+     * @param experiment
+     *         The experiment that is trying to be stored in the database.
+     * @throws DatabaseAccessException
+     *         Thrown if a part of the experiment is invalid.
      */
     private static void verifyInput(final SrlExperiment experiment) throws DatabaseAccessException {
         if (!experiment.hasProblemId() || "".equals(experiment.getProblemId())) {
@@ -256,7 +259,10 @@ public class DatabaseClient {
             throw new DatabaseAccessException("Assignment id must be defined to make a submission");
         }
         if (!experiment.hasSubmission()) {
-            throw new DatabaseAccessException("there is no submission data defined in this exeriment");
+            throw new DatabaseAccessException("there is no submission data defined in this submission");
+        }
+        if (!experiment.hasUserId() || "".equals(experiment.getUserId())) {
+            throw new DatabaseAccessException("there is no user id data defined in this submission");
         }
     }
 
