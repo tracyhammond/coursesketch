@@ -119,11 +119,6 @@ function SketchSurface() {
     this.initializeInput = function(InputListener, SketchEventConverter) {
         this.localInputListener = new InputListener();
 
-        this.graphics = new Graphics(this.sketchCanvas, this.sketchManager);
-        this.sketchManager.drawEntireSketch = function() {
-            this.graphics.getPaper().view.update();
-        }.bind(this);
-
         this.localInputListener.initializeCanvas(this, addStrokeCallback.bind(this), this.graphics);
 
         this.eventListenerElement = this.sketchCanvas;
@@ -159,6 +154,16 @@ function SketchSurface() {
         bindUpdateListCalled = false;
         this.sketchManager.setParentSketch(new SRL_Sketch());
         this.eventListenerElement = undefined;
+    };
+
+    /**
+     * Initializes the graphics for the sketch surface.
+     */
+    this.initializeGraphics = function() {
+        this.graphics = new Graphics(this.sketchCanvas, this.sketchManager);
+        this.sketchManager.drawEntireSketch = function() {
+            this.graphics.getPaper().view.update();
+        }.bind(this);
     };
 
     /**
