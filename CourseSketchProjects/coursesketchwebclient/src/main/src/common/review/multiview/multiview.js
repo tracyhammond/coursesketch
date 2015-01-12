@@ -10,13 +10,16 @@ function MvSketch() {
     this.maxValue = 100;
     this.gradeValue = undefined;
 
-
     /**
      * sets the update list.
+     * after the update list is done loading
      * @param updateList  a list that contains all the changes made in sketch.
      */
     this.setUpdateList = function(updateList)  {
-        this.shadowRoot.querySelector("sketch-surface").loadUpdateList(updateList, undefined);
+        this.shadowRoot.querySelector("sketch-surface").loadUpdateList(updateList, undefined, function() {
+            console.log("Resizing the canvas");
+            this.shadowRoot.querySelector("sketch-surface").fillCanvas();
+        }.bind(this));
     };
 
     /*

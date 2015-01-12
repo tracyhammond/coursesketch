@@ -8,7 +8,7 @@
      * gets all experiments that hold the current problem id and places them is
      * sketchList
      */
-    function getSketches( callback ){
+    function getSketches(callback) {
         CourseSketch.dataManager.getAllExperiments(getNav().getCurrentProblemId(), function(sketchList) {
              if (isUndefined(sketchList)) {
                 if (element.isRunning()) {
@@ -23,10 +23,10 @@
     }
 
     /*
-     * used to get list of eperiments and then calls createMvSketch to create
+     * used to get list of experiments and then calls createMvSketch to create
      * all sketches on to the grade screen.
      */
-    function createMvList(){
+    function createMvList() {
         getSketches(createMvSketch);
     }
 
@@ -38,8 +38,7 @@
         for (var i = 0; i < array.length; i++) {
             var mvSketch = document.createElement('mv-sketch');
             document.querySelector(".sketches").appendChild(mvSketch);
-            console.log(mvSketch);
-            mvSketch.setUpdateList(getUpdateList(array, i));
+            mvSketch.setUpdateList(getUpdateList(array, i).getList());
         }
     }
 
