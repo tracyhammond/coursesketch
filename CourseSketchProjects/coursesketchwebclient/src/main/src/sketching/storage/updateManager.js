@@ -588,20 +588,24 @@ function UpdateManager(onError, sketchManager) {
     /**
      * This clears any current updates and replaces the list with a new list.
      *
-     * @param list
+     * @param list {Array}
      *            The list that is will be added to the sketch
      * @param percentBar
      *            The bar that will show these updates. It is called with how
      *            much is left to be completed.
      */
-    this.setUpdateList = function(list, percentBar) {
+    this.setUpdateList = function(list, percentBar, finishedCallback) {
+        if (!Array.isArray(list)) {
+            throw new UpdateException("Input list is not an array: " + list);
+        }
         var initializing = true;
         this.clearUpdates(false);
         var index = 0;
         var maxIndex = list.length;
+        var numberOfUpdatesAtOnce = 2;
         var intervalHolder = setInterval(function() {
             var startIndex = index;
-            while (index < maxIndex && index - startIndex < 1) {
+            while (index < maxIndex && index - startIndex < numberOfUpdatesAtOnce) {
                 if (percentBar) {
                     percentBar.updatePercentBar(index, maxIndex);
                 }
@@ -614,6 +618,12 @@ function UpdateManager(onError, sketchManager) {
                     percentBar.updatePercentBar(1, 1);
                     percentBar.finishWaiting(300);
                 }
+                if (!isUndefined(finishedCallback)) {
+                    finishedCallback();
+                }
+                percentBar = undefined;
+                finishedCallback = undefined;
+                list = undefined;
             }
         }, 20);
     };
