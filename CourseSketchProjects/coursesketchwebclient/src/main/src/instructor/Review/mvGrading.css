@@ -34,3 +34,9 @@ mv-sketch {
 	display: inline-block;
 	width: 50%;
 }
+
+#dialogPanel {
+	width:calc(100% - 5px);
+	height:calc(100% - 5px);
+	padding:0px;
+}

@@ -70,6 +70,10 @@ function MvSketch() {
         this.shadowRoot.querySelector("#outer").className='outerWrong';
         this.shadowRoot.querySelector("#gradeInput").value = parseFloat(this.gradeValue);
     }
+
+    this.setSketchClickedFunction = function(sketchClickedFunction) {
+        this.shadowRoot.querySelector("sketch-surface").onclick = sketchClickedFunction;
+    };
 }
 
 MvSketch.prototype = Object.create(HTMLElement.prototype);

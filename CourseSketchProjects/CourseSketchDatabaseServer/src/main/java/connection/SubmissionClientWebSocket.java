@@ -66,6 +66,8 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                         if (rev.getShowUserNames()) {
                             System.err.println("Attempting to change out usernames!");
                             result2.addResults(item);
+                        } else {
+                            result2.addResults(item);
                         }
                     } else {
                         result2.addResults(item);
