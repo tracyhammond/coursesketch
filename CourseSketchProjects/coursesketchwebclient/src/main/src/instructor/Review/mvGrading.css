@@ -40,3 +40,11 @@ mv-sketch {
 	height:calc(100% - 5px);
 	padding:0px;
 }
+
+#dialogPanel button {
+	position:absolute;
+	top:0;
+	right:0;
+	font-size:3em;
+	z-index: 5;
+}

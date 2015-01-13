@@ -75,6 +75,9 @@
     }
 
     $(document).ready(function() {
+        document.getElementById("dialogPanel").querySelector('button').onclick = function() {
+            document.getElementById("dialogPanel").close();
+        };
         CourseSketch.dataManager.waitForDatabase(function() {
             var navPanel = document.querySelector("navigation-panel")
             var navigator = getNav();
