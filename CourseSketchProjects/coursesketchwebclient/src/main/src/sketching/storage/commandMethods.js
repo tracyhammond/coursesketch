@@ -80,7 +80,11 @@
     ProtoSrlCommand.decodedData = false;
 
     ProtoSrlCommand.redo = function() {
-        return this["redo" + this.getCommandType()]();
+        var tempFunc = this["redo" + this.getCommandType()];
+        if (isUndefined(tempFunc)) {
+            throw (this.getCommandTypeName() + " is not defined as a function");
+        }
+        return tempFunc();
     };
 
     ProtoSrlCommand.undo = function() {

@@ -29,6 +29,7 @@ function SketchSurfaceManager(sketchSurface) {
 
     /**
      * Adds the sketch with its Id to the list of sketches related to this sketch surface.
+     * (replaces an old sketch with the same id if it already exist in the list).
      */
     this.setSketch = function(sketch) {
         if (isUndefined(sketch.id)) {
@@ -49,7 +50,7 @@ function SketchSurfaceManager(sketchSurface) {
      * creates a new sketch with the given id.
      * NOTE: this does not change what the current sketch is pointed to.
      */
-    this.createSketch = function(id) {
+    this.createSketch = function(id, sketchData) {
         var sketch = new SRL_Sketch();
         sketch.id = id;
         this.setSketch(sketch);
@@ -67,5 +68,13 @@ function SketchSurfaceManager(sketchSurface) {
      */
     this.getCurrentSketch = function() {
         return currentSketch;
-    }
+    };
+
+    /**
+     * deletes the sketch from the list of possible sketches.
+     */
+    this.deleteSketch = function(id) {
+        sketchMap.delete(id);
+    };
+
 }
