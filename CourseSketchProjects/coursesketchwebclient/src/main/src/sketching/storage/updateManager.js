@@ -23,7 +23,7 @@ UndoRedoException.prototype = new UpdateException();
  * @param onError
  *            {Function} A method that is called when an error occurs
  */
-function UpdateManager(onError, sketchManager) {
+function UpdateManager(sketchManager, onError) {
 
     /**
      * the id of the current sketch that is being used by the update list (this
@@ -159,6 +159,8 @@ function UpdateManager(onError, sketchManager) {
         sketchManager.getCurrentSketch().resetSketch();
         if (redraw && sketchManager.drawEntireSketch) {
             sketchManager.drawEntireSketch();
+        } else if (redraw && sketchManager.getCurrentSketch().drawEntireSketch) {
+            sketchManager.getCurrentSketch().drawEntireSketch();
         }
     };
 
@@ -168,6 +170,9 @@ function UpdateManager(onError, sketchManager) {
     function switchToSketch(id) {
         if (isUndefined(sketchManager)) {
             throw new UpdateException("Can not switch sketch with an invalid manager");
+        }
+        if (isUndefined(id)) {
+            throw new UpdateException("Can not switch to an undefined sketch");
         }
         currentSketchId = id;
         sketchManager.setCurrentSketch(id);
@@ -223,14 +228,15 @@ function UpdateManager(onError, sketchManager) {
                         }
                     }, 10);
                     if (redraw) {
-                        sketchManager.drawEntireSketch();
+                        sketchManager.getCurrentSketch().drawEntireSketch();
                     }
                 } catch (exception) {
                     executionLock = false;
-                    if (onError) {
+                    if (!isUndefined(onError)) {
                         onError(exception);
                     } else {
                         console.error(exception);
+                        throw exception;
                     }
                 }
                 executionLock = false;
@@ -409,7 +415,9 @@ function UpdateManager(onError, sketchManager) {
             command.decodedData = currentSketchId;
             var sketchData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
             var id = sketchData.sketchId.idChain[0];
-            if (!isUndefined(sketchManager.getCurrentSketch()) && sketchManager.getCurrentSketch().id != id && !isUndefined(sketchManager)) {
+            if (!isUndefined(sketchManager)
+                    && (!isUndefined(sketchManager.getCurrentSketch()) && sketchManager.getCurrentSketch().id != id)
+                    || isUndefined(sketchManager.getCurrentSketch())) {
                 sketchManager.createSketch(id, sketchData);
             }
             switchToSketch(id);
@@ -439,18 +447,26 @@ function UpdateManager(onError, sketchManager) {
             if (marker.type == CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
                 currentUpdateIndex += parseInt(marker.otherData) - 1;
             } else {
-                throw new UpdateException("You can't undo that (something went wrong)");
+                // TODO: make it actually perform more complex actions! like actually skiping over this and running everything with the next item.
             }
-            return true;
+            // does not actually change sketch so no drawing happens
+            return false;
         } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
             var sketchData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
             var id = sketchData.sketchId.idChain[0];
+
+            // undo happens in reverse order so it must happen before switchToSketchHappens
+            update.undo();
+
             if (!isUndefined(sketchManager)) {
                 sketchManager.deleteSketch(id);
             }
             switchToSketch(command.decodedData);
             return true;
         } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
+            // undo happens in reverse order so it must happen before switchToSketchHappens
+            update.undo();
+
             switchToSketch(command.decodedData);
             return true;
         }

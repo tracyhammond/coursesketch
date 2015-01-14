@@ -115,7 +115,6 @@ function SRL_Sketch() {
 
     /**
      * Resets the sketch to its starting state.
-     *
      */
     this.resetSketch = function() {
         objectList = [];
