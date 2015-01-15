@@ -69,9 +69,7 @@
         QUnit.module("misc Functions", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
-                },
+                }
             }
         });
         QUnit.test("createMarker returns correct value", function(assert) {
@@ -232,15 +230,17 @@
 
         QUnit.test("clear and draw sketch", function(assert) {
             var localSketch = this.sketch;
-            var updateList = new UpdateManager({
-                    getCurrentSketch: function() {
-                        return localSketch;
-                    }
-                }, function(error) {
+            var sketchManager = new SketchSurfaceManager();
+            sketchManager.getCurrentSketch = function() { return localSketch };
+            var updateList = new UpdateManager(sketchManager, function(error) {
                 assert.ok(false, error);
             });
             var spy1 = this.spy(this.sketch, "resetSketch");
-            var spy2 = this.spy(this.sketch, "drawEntireSketch");
+            var spy2 = this.spy(sketchManager, "drawEntireSketch");
+
+            var secondSketch = {
+                drawEntireSketch : spy2,
+            };
             updateList.clearSketch(true);
             assert.ok(spy1.calledOnce);
             assert.ok(spy2.calledOnce);
@@ -250,8 +250,6 @@
         QUnit.module("submission tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
         });
@@ -313,8 +311,6 @@
         QUnit.module("addUpdateTest", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 },
                 id: "SketchId!"
             },
@@ -389,8 +385,8 @@
 
             var spy = this.spy(this.sketchManager, "createSketch");
             var stub = this.stub(this.sketchManager, "getSketch");
+            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
                 drawEntireSketch : spy2,
             };
@@ -425,8 +421,8 @@
             }, this.sketchManager);
 
             var stub = this.stub(this.sketchManager, "getSketch");
+            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
                 drawEntireSketch : spy2,
             };
@@ -469,8 +465,6 @@
         QUnit.module("CLEAR data tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
             sketchManager : new SketchSurfaceManager()
@@ -513,8 +507,6 @@
         QUnit.module("undo and redo tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
             sketchManager : new SketchSurfaceManager()
@@ -756,8 +748,8 @@
             var stub1 = this.stub(this.sketchManager, "getSketch");
             var stub2 = this.stub(this.sketchManager, "deleteSketch");
             var stub3 = this.stub(this.sketchManager, "getCurrentSketch");
+            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
                 drawEntireSketch : spy2,
             };
@@ -810,8 +802,8 @@
             var spy = this.spy(this.sketchManager, "createSketch");
             var stub1 = this.stub(this.sketchManager, "getSketch");
             var stub2 = this.stub(this.sketchManager, "deleteSketch");
+            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
                 drawEntireSketch : spy2,
             };
@@ -844,8 +836,8 @@
 
             var stub = this.stub(this.sketchManager, "getSketch");
             var stub2 = this.stub(this.sketchManager, "getCurrentSketch");
+            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
                 drawEntireSketch : spy2,
             };
@@ -899,8 +891,8 @@
             });
 
             var stub = this.stub(this.sketchManager, "getSketch");
+            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
                 drawEntireSketch : spy2,
             };
@@ -925,8 +917,6 @@
         QUnit.module("SPLIT tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
             sketchManager : new SketchSurfaceManager()
@@ -967,8 +957,6 @@
         QUnit.module("Complex tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
         });
