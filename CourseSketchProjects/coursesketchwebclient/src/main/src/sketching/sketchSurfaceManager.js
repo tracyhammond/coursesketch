@@ -76,5 +76,20 @@ function SketchSurfaceManager(sketchSurface) {
     this.deleteSketch = function(id) {
         sketchMap.delete(id);
     };
-
 }
+
+/**
+ * By default this method does nothing
+ */
+SketchSurfaceManager.prototype.drawEntireSketch = function() {
+    // do nothing
+};
+
+
+/**
+ * By default this method does nothing.
+ * Should be called by any time an object is removed from the sketch surface.
+ */
+SketchSurfaceManager.prototype.removeItemCallback = function() {
+
+};
