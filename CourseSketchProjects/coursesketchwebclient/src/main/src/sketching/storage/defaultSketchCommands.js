@@ -60,8 +60,7 @@
      * Adds a stroke to this local sketch object.
      *
      * @returns {boolean} true. This will always ask for the sketch to be
-     *          redrawn. TODO: change it so that it knows what sketch it is
-     *          associated with.
+     *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, function() {
         if (!this.decodedData) {
@@ -76,8 +75,7 @@
      * The undo method associated with adding a stroke to the sketch
      *
      * @returns {boolean} true. This will always ask for the sketch to be
-     *          redrawn. TODO: change it so that it knows what sketch it is
-     *          associated with.
+     *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, function() {
         if (!this.decodedData) {
@@ -85,6 +83,7 @@
             this.decodedData = SRL_Stroke.createFromProtobuf(stroke);
         }
         this.getLocalSketchSurface().removeSubObjectById(this.decodedData.getId());
+        this.removeItemCallback(this.decodedData.getId());
         return true;
     });
 
@@ -92,8 +91,7 @@
      * Adds a shape to this local sketch object.
      *
      * @returns {boolean} false. This will never ask for the sketch to be
-     *          redrawn. TODO: change it so that it knows what sketch it is
-     *          associated with.
+     *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_SHAPE, function() {
         if (!this.decodedData) {
@@ -108,8 +106,7 @@
      * Undoes adding a shape command which basically means it removes the shape
      *
      * @returns {boolean} false. This will never ask for the sketch to be
-     *          redrawn. TODO: change it so that it knows what sketch it is
-     *          associated with.
+     *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_SHAPE, function() {
         if (!this.decodedData) {
@@ -118,6 +115,7 @@
         }
         this.getLocalSketchSurface().removeSubObjectById(this.decodedData.getId());
         this.getLocalSketchSurface().addObject(this.decodedData);
+        this.removeItemCallback(this.decodedData.getId());
         return false;
     });
 
@@ -125,8 +123,7 @@
      * Removes an object from the this.getLocalSketchSurface().
      *
      * @returns {boolean} true. This will always ask for the sketch to be
-     *          redrawn. TODO: change it so that it knows what sketch it is
-     *          associated with.
+     *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
         if (!this.decodedData || !isArray(this.decodedData)) {
@@ -135,6 +132,7 @@
             this.decodedData[0] = idChain;
         }
         this.decodedData[1] = this.getLocalSketchSurface().removeSubObjectByIdChain(this.decodedData[0].idChain);
+        this.removeItemCallback(this.decodedData[1].getId());
         return true;
     });
 
@@ -143,8 +141,7 @@
      * this.getLocalSketchSurface().
      *
      * @returns {boolean} true. This will always ask for the sketch to be
-     *          redrawn. TODO: change it so that it knows what sketch it is
-     *          associated with.
+     *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
         if (!this.decodedData || !isArray(this.decodedData)) {
@@ -152,9 +149,8 @@
             var idChain = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, CourseSketch.PROTOBUF_UTIL.getIdChainClass());
             this.decodedData[0] = idChain;
         }
-        // this.getLocalSketchSurface().addObject(this.decodedData);
+        this.getLocalSketchSurface().addObject(this.decodedData[1]);
         // this.decodedData[1];
-        throw new "REMOVE_OBJECT undo not supported";
         return true;
     });
 
@@ -178,8 +174,7 @@
      * the redo package shape
      *
      * @returns {boolean} false. This will never ask for the sketch to be
-     *          redrawn. TODO: change it so that it knows what sketch it is
-     *          associated with.
+     *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.PACKAGE_SHAPE, function() {
         if (isUndefined(this.decodedData) || (!this.decodedData)) {
