@@ -118,7 +118,6 @@
             sketchSurface = undefined;
             element = undefined;
         };
-        document.getElementById("problemPanel").appendChild(sketchSurface);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
             if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
@@ -126,12 +125,15 @@
                     element.finishWaiting();
                     CourseSketch.studentExperiment.removeWaitOverlay();
                 }
+                document.getElementById("problemPanel").appendChild(sketchSurface);
                 return;
             }
 
             // tell the surface not to create its own sketch.
             sketchSurface.dataset.existinglist = "";
 
+            // add after attributes are set.
+            document.getElementById("problemPanel").appendChild(sketchSurface);
             sketchSurface.refreshSketch();
             console.log(submission);
             var updateList = submission.getUpdateList();
@@ -140,7 +142,6 @@
             updateList = null;
             element = null;
             //console.log(submission);
-
         });
     }
 })();
