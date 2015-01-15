@@ -228,7 +228,7 @@ function UpdateManager(sketchManager, onError) {
                         }
                     }, 10);
                     if (redraw) {
-                        sketchManager.getCurrentSketch().drawEntireSketch();
+                        sketchManager.drawEntireSketch();
                     }
                 } catch (exception) {
                     executionLock = false;
@@ -236,7 +236,6 @@ function UpdateManager(sketchManager, onError) {
                         onError(exception);
                     } else {
                         console.error(exception);
-                        throw exception;
                     }
                 }
                 executionLock = false;

@@ -83,7 +83,7 @@ function SketchSurface() {
             if (UpdateManagerClass instanceof UpdateManager) {
                 this.updateManager = UpdateManagerClass;
             } else {
-                this.updateManager = new UpdateManagerClass(this.errorListener, this.sketchManager);
+                this.updateManager = new UpdateManagerClass(this.sketchManager, this.errorListener);
             }
             this.bindUpdateListCalled = true;
             // sets up the plugin that draws the strokes as they are added to the update list.
@@ -132,7 +132,6 @@ function SketchSurface() {
     this.resizeSurface = function() {
         this.sketchCanvas.height = $(this.sketchCanvas).height();
         this.sketchCanvas.width = $(this.sketchCanvas).width();
-        // this.sketch.drawEntireSketch();
     };
 
     /**
@@ -163,6 +162,11 @@ function SketchSurface() {
         this.graphics = new Graphics(this.sketchCanvas, this.sketchManager);
         this.sketchManager.drawEntireSketch = function() {
             this.graphics.getPaper().view.update();
+        }.bind(this);
+        this.sketchManager.removeItemCallback = function() {
+            setTimeout(function() {
+                this.graphics.loadSketch();
+            }.bind(this), 10);
         }.bind(this);
     };
 
