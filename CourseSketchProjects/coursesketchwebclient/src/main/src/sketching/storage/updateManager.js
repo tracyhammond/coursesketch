@@ -14,7 +14,7 @@ function UndoRedoException(message) {
 UndoRedoException.prototype = new UpdateException();
 
 /**
- * The update manager manages the lists of actions that have occured for a
+ * The update manager manages the lists of actions that have occurred for a
  * sketch (or multiple sketches)
  *
  * Goals: The update manager can be used for multiple sketches (using the switch

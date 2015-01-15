@@ -79,6 +79,7 @@ function Graphics(canvasElement, sketchManager) {
         livePath.add(point);
         livePath.simplify();
         lastStroke = stroke;
+        livePath.data.id = stroke.getId();
     };
 
     /**
@@ -89,7 +90,7 @@ function Graphics(canvasElement, sketchManager) {
     };
 
     /**
-     * Sequentially loads all of the saved strokes from the beginning, and does so instantaneously
+     * Sequentially loads all of the saved strokes from the beginning, and does so instantaneously.
      */
     this.loadSketch = function() {
         lastStroke = undefined;
@@ -107,6 +108,18 @@ function Graphics(canvasElement, sketchManager) {
     };
 
     /**
+     * Removes an item from the view.
+     */
+    this.removeItem = function(itemId) {
+        var object = ps.project.getItem({data: {id : itemId} });
+        console.log("Removing item!");
+        console.log(object);
+        object.remove();
+        //var result = ps.project.activeLayer.removeChild(object);
+        ps.view.update();
+    };
+
+    /**
      * Draws a single stroke onto the screen.
      * @param stroke {Srl_Stroke} the stroke to be drawn.
      */
@@ -114,7 +127,8 @@ function Graphics(canvasElement, sketchManager) {
         if (lastStroke == stroke) {
             return; // we do not need to double path.
         }
-        path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+        var path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+        path.data.id = stroke.getId();
         var pointList = stroke.getPoints();
         for (var i = 0; i < pointList.length; i++) {
             path.add(new ps.Point(pointList[i].getX(), pointList[i].getY()));
