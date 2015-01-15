@@ -33,26 +33,36 @@
         var redraw = false;
         var commandList = this.getCommands();
         var commandLength = commandList.length;
+        var removeItemCallback = this.sketchManager.removeItemCallback.bind(this.sketchManager);
+        var getLocalSketchSurface = function() {
+            return this.sketchManager.getCurrentSketch();
+        }.bind(this);
         for (var i = 0; i < commandLength; i++) {
+            var command = commandList[i];
             // the command needs to know what sketch object to act upon.
-            commandList[i].getLocalSketchSurface = function() {
-                return this.sketchManager.getCurrentSketch();
-            }.bind(this);
-            if (commandList[i].redo() == true) {
+            command.getLocalSketchSurface = getLocalSketchSurface;
+            command.removeItemCallback = removeItemCallback;
+            if (command.redo() == true) {
                 redraw = true;
             }
         }
+        removeItemCallback = undefined;
+        getLocalSketchSurface = undefined;
         return redraw;
     };
 
     /**
+     *
      * @Method Calls undo on an {@link SrlCommand} list in the reverse of the
      *         order they are added to the list
      *
      * @returns {boolean} true if the sketch needs to be redrawn, false
      *          otherwise.
+     *
+     * <b>Note</b> that we do not add the methods we added in redo.
+     * This is because we assert that you can not undo something until it has been redone first.  So the methods already exist.
      */
-    ProtoSrlUpdate.undo = function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.undo = function() {
         var commandList = this.getCommands();
         var commandLength = commandList.length;
         var redraw = false;
@@ -80,15 +90,19 @@
     ProtoSrlCommand.decodedData = false;
 
     ProtoSrlCommand.redo = function() {
-        var tempFunc = this["redo" + this.getCommandType()];
-        if (isUndefined(tempFunc)) {
+        var redoFunc = this["redo" + this.getCommandType()].bind(this);
+        if (isUndefined(redoFunc)) {
             throw (this.getCommandTypeName() + " is not defined as a function");
         }
-        return tempFunc();
+        return redoFunc();
     };
 
     ProtoSrlCommand.undo = function() {
-        return this["undo" + this.getCommandType()]();
+        var undoFunc = this["undo" + this.getCommandType()].bind(this);
+        if (isUndefined(undoFunc)) {
+            throw (this.getCommandTypeName() + " is not defined as a function");
+        }
+        return undoFunc();
     };
 
     /**
