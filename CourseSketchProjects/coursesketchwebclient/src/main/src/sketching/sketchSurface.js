@@ -163,10 +163,8 @@ function SketchSurface() {
         this.sketchManager.drawEntireSketch = function() {
             this.graphics.getPaper().view.update();
         }.bind(this);
-        this.sketchManager.removeItemCallback = function() {
-            setTimeout(function() {
-                this.graphics.loadSketch();
-            }.bind(this), 10);
+        this.sketchManager.removeItemCallback = function(id) {
+            this.graphics.removeItem(id);
         }.bind(this);
     };
 
