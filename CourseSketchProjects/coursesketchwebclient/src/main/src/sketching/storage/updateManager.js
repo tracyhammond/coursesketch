@@ -152,7 +152,13 @@ function UpdateManager(sketchManager, onError) {
                 }
             }
         }
-        updateList.length = 0;
+
+        // empties the array
+        while (updateList.length > 0) {
+            updateList.pop();
+        }
+
+        lastUpdateType = 0;
         lastSubmissionPointer = 0;
         inRedoUndoMode = false;
         skippingMarkerMode = false;
