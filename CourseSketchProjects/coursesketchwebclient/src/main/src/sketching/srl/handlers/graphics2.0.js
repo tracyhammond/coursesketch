@@ -116,15 +116,19 @@ function Graphics(canvasElement, sketchManager) {
         console.log(object);
         object.remove();
         //var result = ps.project.activeLayer.removeChild(object);
+        if (!isUndefined(lastStroke) && lastStroke.getId() == itemId) {
+            lastStroke = undefined;
+        }
         ps.view.update();
     };
+    var removeItem = this.removeItem;
 
     /**
      * Draws a single stroke onto the screen.
      * @param stroke {Srl_Stroke} the stroke to be drawn.
      */
     function loadStroke(stroke) {
-        if (lastStroke == stroke) {
+        if (!isUndefined(lastStroke) && (lastStroke == stroke || lastStroke.getId() == stroke.getId())) {
             return; // we do not need to double path.
         }
         var path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});

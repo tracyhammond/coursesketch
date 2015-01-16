@@ -970,4 +970,55 @@
             QUnit.start();
         });
     </script>
+
+    <script>
+        QUnit.module("plugin tests", {
+            sketch : {
+                resetSketch : function() {
+                },
+                id: "SketchId!"
+            },
+            sketchManager : {
+                getCurrentSketch : function() {
+                    return this.sketch;
+                },
+                deleteSketch : function() {
+                },
+                createSketch : function() {
+                }
+            },
+        });
+
+        QUnit.test("plugin gets correct data for simple update", function(assert) {
+            expect(5);
+            var clock = sinon.useFakeTimers();
+            var stub = this.stub();
+            stub.returns(false); // we are not drawing.
+
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
+            var updateList = new UpdateManager(undefined, function(error) {
+                assert.ok(false, error);
+            });
+
+            var markerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+
+            // actual test
+            updateList.addPlugin({
+                addUpdate : function(pluginUpdate, redraw, updateIndex, lastUpdateType) {
+                    assert.updateEqual(pluginUpdate, update);
+                    assert.equal(redraw, false);
+                    assert.equal(updateIndex, 1);
+                    assert.equal(lastUpdateType, 0);
+                }
+            });
+
+            updateList.addSynchronousUpdate(update);
+
+            // only used for plugins not for update itself
+            clock.tick(10);
+            assert.ok(stub.calledOnce, "spy is called once");
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
+        });
+    </script>
 </body>
