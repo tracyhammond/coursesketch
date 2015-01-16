@@ -160,12 +160,6 @@ function SketchSurface() {
      */
     this.initializeGraphics = function() {
         this.graphics = new Graphics(this.sketchCanvas, this.sketchManager);
-        this.sketchManager.drawEntireSketch = function() {
-            this.graphics.getPaper().view.update();
-        }.bind(this);
-        this.sketchManager.removeItemCallback = function(id) {
-            this.graphics.removeItem(id);
-        }.bind(this);
     };
 
     /**

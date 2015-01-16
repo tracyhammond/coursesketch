@@ -33,7 +33,6 @@
         var redraw = false;
         var commandList = this.getCommands();
         var commandLength = commandList.length;
-        var removeItemCallback = this.sketchManager.removeItemCallback.bind(this.sketchManager);
         var getLocalSketchSurface = function() {
             return this.sketchManager.getCurrentSketch();
         }.bind(this);
@@ -41,12 +40,10 @@
             var command = commandList[i];
             // the command needs to know what sketch object to act upon.
             command.getLocalSketchSurface = getLocalSketchSurface;
-            command.removeItemCallback = removeItemCallback;
             if (command.redo() == true) {
                 redraw = true;
             }
         }
-        removeItemCallback = undefined;
         getLocalSketchSurface = undefined;
         return redraw;
     };

@@ -83,7 +83,6 @@
             this.decodedData = SRL_Stroke.createFromProtobuf(stroke);
         }
         this.getLocalSketchSurface().removeSubObjectById(this.decodedData.getId());
-        this.removeItemCallback(this.decodedData.getId());
         return true;
     });
 
@@ -115,7 +114,6 @@
         }
         this.getLocalSketchSurface().removeSubObjectById(this.decodedData.getId());
         this.getLocalSketchSurface().addObject(this.decodedData);
-        this.removeItemCallback(this.decodedData.getId());
         return false;
     });
 
@@ -132,7 +130,6 @@
             this.decodedData[0] = idChain;
         }
         this.decodedData[1] = this.getLocalSketchSurface().removeSubObjectByIdChain(this.decodedData[0].idChain);
-        this.removeItemCallback(this.decodedData[1].getId());
         return true;
     });
 
