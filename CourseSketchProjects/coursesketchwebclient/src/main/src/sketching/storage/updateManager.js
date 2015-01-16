@@ -32,7 +32,10 @@ function UpdateManager(sketchManager, onError) {
     var currentSketchId;
 
     /**
-     * holds a state of updates (for undoing and redoing)
+     * holds a state of updates (for undoing and redoing).
+     * Note that this always points after the last executed update.
+     * If there have been no undo's or redo's or the list is currently not in undo redo mode this will be the same as the updateList length
+     * after execution of the update.
      */
     var currentUpdateIndex = 0;
 
@@ -208,7 +211,7 @@ function UpdateManager(sketchManager, onError) {
         try {
             var redraw = executeUpdate(nextUpdate);
             var updateIndex = currentUpdateIndex;
-            var pluginUpdate = updateList[updateIndex];
+            var pluginUpdate = updateList[updateIndex - 1];
             var updateType = lastUpdateType;
             setTimeout(function() {
                 for (var i = 0; i < plugins.length; i++) {
