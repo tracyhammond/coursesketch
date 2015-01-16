@@ -130,6 +130,9 @@ function Graphics(canvasElement, sketchManager) {
     function loadStroke(stroke) {
         if (!isUndefined(lastStroke) && (lastStroke == stroke || lastStroke.getId() == stroke.getId())) {
             return; // we do not need to double path.
+        var object = ps.project.getItem({data: {id : stroke.getId()} });
+        if (!isUndefined(object) && object != null) {
+            return; // already added to the sketch.
         }
         var path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
         path.data.id = stroke.getId();
