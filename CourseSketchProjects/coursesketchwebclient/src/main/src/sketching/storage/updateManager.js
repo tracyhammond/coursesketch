@@ -50,6 +50,13 @@ function UpdateManager(sketchManager, onError) {
     var localScope = this;
     var lastSubmissionPointer = 0;
     /**
+     * Records the last type of update.
+     * 0 = normal update
+     * -1 = undo
+     * 1 = redo
+     */
+    var lastUpdateType = 0;
+    /**
      * updates on every save and every submission.
      */
     var lastSavePointer = 0;
@@ -146,22 +153,7 @@ function UpdateManager(sketchManager, onError) {
         lastSubmissionPointer = 0;
         inRedoUndoMode = false;
         skippingMarkerMode = false;
-        this.clearSketch(redraw);
-    };
-
-    /**
-     * Clears the sketch but does not clear any updates.
-     *
-     * @param redraw
-     *            {boolean} if true then the sketch will be redrawn.
-     */
-    this.clearSketch = function clearSketch(redraw) {
         sketchManager.getCurrentSketch().resetSketch();
-        if (redraw && sketchManager.drawEntireSketch) {
-            sketchManager.drawEntireSketch();
-        } else if (redraw && sketchManager.getCurrentSketch().drawEntireSketch) {
-            sketchManager.getCurrentSketch().drawEntireSketch();
-        }
     };
 
     /**
@@ -207,6 +199,40 @@ function UpdateManager(sketchManager, onError) {
     };
 
     /**
+     * executes the update locking execution.
+     * NOTE: This should only be called be emptyLocalQueue and emptyLocalQueueSynchronously.
+     */
+    function executeUpdateLocked() {
+        executionLock = true;
+        var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
+        try {
+            var redraw = executeUpdate(nextUpdate);
+            var updateIndex = currentUpdateIndex;
+            var pluginUpdate = updateList[updateIndex];
+            var updateType = lastUpdateType;
+            setTimeout(function() {
+                for (var i = 0; i < plugins.length; i++) {
+                    if (!isUndefined(plugins[i].addUpdate)) {
+                        plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType);
+                    }
+                }
+                updateType = undefined;
+                pluginUpdate = undefined;
+                updateIndex = undefined;
+            }, 10);
+        } catch (exception) {
+            executionLock = false;
+            if (!isUndefined(onError)) {
+                onError(exception);
+            } else {
+                console.error(exception);
+            }
+        }
+        executionLock = false;
+    }
+
+
+    /**
      * Tries to quickly empty the local queue.
      *
      * Ensures that even with the rapid addition of updates there are no
@@ -215,30 +241,7 @@ function UpdateManager(sketchManager, onError) {
     function emptyLocalQueue() {
         if (queuedLocalUpdates.length > 0) {
             if (!executionLock) {
-                executionLock = true;
-                var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
-                try {
-                    var redraw = executeUpdate(nextUpdate);
-                    var updateIndex = updateList.length;
-                    setTimeout(function() {
-                        for (var i = 0; i < plugins.length; i++) {
-                            if (!isUndefined(plugins[i].addUpdate)) {
-                                plugins[i].addUpdate(nextUpdate, redraw, updateIndex);
-                            }
-                        }
-                    }, 10);
-                    if (redraw) {
-                        sketchManager.drawEntireSketch();
-                    }
-                } catch (exception) {
-                    executionLock = false;
-                    if (!isUndefined(onError)) {
-                        onError(exception);
-                    } else {
-                        console.error(exception);
-                    }
-                }
-                executionLock = false;
+                executeUpdateLocked();
                 setTimeout(function() {
                     emptyLocalQueue();
                 }, 10);
@@ -261,33 +264,10 @@ function UpdateManager(sketchManager, onError) {
     function emptyLocalQueueSynchronously() {
         while (queuedLocalUpdates.length > 0) {
             if (!executionLock) {
-                executionLock = true;
-                var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
-                try {
-                    var redraw = executeUpdate(nextUpdate);
-                    var updateIndex = updateList.length;
-                    setTimeout(function() {
-                        for (var i = 0; i < plugins.length; i++) {
-                            if (!isUndefined(plugins[i].addUpdate)) {
-                                plugins[i].addUpdate(nextUpdate, redraw, updateIndex);
-                            }
-                        }
-                    }, 10);
-                    if (redraw) {
-                        sketchManager.drawEntireSketch();
-                    }
-                } catch (exception) {
-                    executionLock = false;
-                    if (onError) {
-                        onError(exception);
-                    } else {
-                        console.error(exception);
-                    }
-                    throw new UpdateException("Error thrown during a synchronous execution so we stop all executions from occurring.");
-                }
+                executeUpdateLocked();
                 executionLock = false;
             } else {
-                throw new UpdateException("Execution is locked can add update synchronously");
+                throw new UpdateException("Execution is locked can't add update synchronously");
             }
         }
     }
@@ -342,6 +322,7 @@ function UpdateManager(sketchManager, onError) {
             }
         }
         if (command == CourseSketch.PROTOBUF_UTIL.CommandType.REDO) {
+            lastUpdateType = 1;
             if (netCount >= 0) {
                 throw new UndoRedoException("Can't Redo Anymore");
             }
@@ -352,6 +333,7 @@ function UpdateManager(sketchManager, onError) {
             currentUpdateIndex += 1;
             return redraw;
         } else if (command == CourseSketch.PROTOBUF_UTIL.CommandType.UNDO) {
+            lastUpdateType = -1;
             if (currentUpdateIndex <= 0) {
                 throw new UndoRedoException("Can't Undo Anymore");
             }
@@ -366,6 +348,7 @@ function UpdateManager(sketchManager, onError) {
             currentUpdateIndex -= 1;
             return redraw;
         } else {
+            lastUpdateType = 0;
             // A normal update
             currentEndingIndex += 1;
             updateList.push(update);

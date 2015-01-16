@@ -139,7 +139,7 @@ function Graphics(canvasElement, sketchManager) {
     /**
      * Adds ability to draw the command as it is added to the update list.
      */
-    this.addUpdate = function addUpdate(update, redraw, updateIndex) {
+    this.addUpdate = function addUpdate(update, redraw, updateIndex, lastUpdateType) {
         if (!drawUpdate) {
             return;
         }
@@ -148,7 +148,11 @@ function Graphics(canvasElement, sketchManager) {
             var command = commandList[i];
             if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
                 var stroke = command.decodedData;
-                loadStroke(stroke);
+                if (lastUpdateType == 0 || lastUpdateType == 1) {
+                    loadStroke(stroke);
+                } else if (lastUpdateType == -1) {
+                    removeItem(stroke.getId());
+                }
             }
         }
         if (redraw) {

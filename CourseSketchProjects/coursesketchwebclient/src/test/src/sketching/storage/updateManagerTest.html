@@ -227,24 +227,6 @@
 
             assert.ok(finished.calledOnce, "the percent bar finishes");
         });
-
-        QUnit.test("clear and draw sketch", function(assert) {
-            var localSketch = this.sketch;
-            var sketchManager = new SketchSurfaceManager();
-            sketchManager.getCurrentSketch = function() { return localSketch };
-            var updateList = new UpdateManager(sketchManager, function(error) {
-                assert.ok(false, error);
-            });
-            var spy1 = this.spy(this.sketch, "resetSketch");
-            var spy2 = this.spy(sketchManager, "drawEntireSketch");
-
-            var secondSketch = {
-                drawEntireSketch : spy2,
-            };
-            updateList.clearSketch(true);
-            assert.ok(spy1.calledOnce);
-            assert.ok(spy2.calledOnce);
-        });
     </script>
 	<script>
         QUnit.module("submission tests", {
@@ -385,10 +367,8 @@
 
             var spy = this.spy(this.sketchManager, "createSketch");
             var stub = this.stub(this.sketchManager, "getSketch");
-            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
             var secondSketch = {
-                drawEntireSketch : spy2,
             };
 
             stub.returns(secondSketch);
@@ -408,7 +388,6 @@
 
             assert.ok(spy.calledWith(id) && spy.calledOnce);
             assert.ok(stub.calledWith(id) && stub.calledOnce);
-            assert.ok(spy2.calledOnce);
         });
 
         QUnit.test("testing adding a switch sketch command", function(assert) {
@@ -421,10 +400,8 @@
             }, this.sketchManager);
 
             var stub = this.stub(this.sketchManager, "getSketch");
-            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
             var secondSketch = {
-                drawEntireSketch : spy2,
             };
 
             stub.returns(secondSketch);
@@ -440,7 +417,6 @@
             clock.tick(20);
 
             assert.ok(stub.calledWith(id) && stub.calledOnce);
-            assert.ok(spy2.calledOnce);
         });
 
         QUnit.test("testing adding a switch sketch command undefined manager", function(assert) {
@@ -748,10 +724,8 @@
             var stub1 = this.stub(this.sketchManager, "getSketch");
             var stub2 = this.stub(this.sketchManager, "deleteSketch");
             var stub3 = this.stub(this.sketchManager, "getCurrentSketch");
-            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
             var secondSketch = {
-                drawEntireSketch : spy2,
             };
 
             stub1.returns(secondSketch);
@@ -781,14 +755,12 @@
 
             assert.ok(spy.calledWith(id) && spy.calledTwice);
             assert.ok(stub1.calledWith(id) && stub1.calledTwice);
-            assert.ok(spy2.calledTwice);
 
             updateList.undoAction(true);
             clock.tick(10);
 
             assert.ok(stub1.calledWith(id1) && stub1.calledThrice, "get sketch should be called 3 times");
             assert.ok(stub2.calledWith(id) && stub2.calledOnce, "delete should only happen once");
-            assert.ok(spy2.calledThrice, "sketch should draw itself after every switch sketch");
         });
 
         QUnit.test("undoing first create sketch throws an exception", function(assert) {
@@ -802,10 +774,8 @@
             var spy = this.spy(this.sketchManager, "createSketch");
             var stub1 = this.stub(this.sketchManager, "getSketch");
             var stub2 = this.stub(this.sketchManager, "deleteSketch");
-            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
             var secondSketch = {
-                drawEntireSketch : spy2,
             };
 
             stub1.returns(secondSketch);
@@ -836,10 +806,8 @@
 
             var stub = this.stub(this.sketchManager, "getSketch");
             var stub2 = this.stub(this.sketchManager, "getCurrentSketch");
-            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
             var secondSketch = {
-                drawEntireSketch : spy2,
             };
 
             stub.returns(secondSketch);
@@ -872,14 +840,12 @@
             // first call is from create sketch
             assert.ok(stub.calledWith(id2), "get sketch should be called with: " + id2);
             assert.ok(stub.calledTwice, "get sketch should be called twice, once for create another for switch");
-            assert.ok(spy2.calledTwice, "drawing should have happened twice, once for creating a sketch and another for switching");
 
             updateList.undoAction(false);
             clock.tick(10);
 
             assert.ok(stub.calledWith(id), "get sketch should also be called with: " + id);
             assert.ok(stub.calledThrice, "get sketch should be called a third time after undoing");
-            assert.ok(spy2.calledThrice, "drawing should called a third time");
         });
 
         QUnit.test("undo switch sketch throws exception no previous sketch exist", function(assert) {
@@ -891,10 +857,8 @@
             });
 
             var stub = this.stub(this.sketchManager, "getSketch");
-            var spy2 = this.spy(this.sketchManager, "drawEntireSketch");
 
             var secondSketch = {
-                drawEntireSketch : spy2,
             };
 
             stub.returns(secondSketch);
