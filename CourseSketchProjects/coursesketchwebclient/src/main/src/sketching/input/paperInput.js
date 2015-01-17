@@ -30,7 +30,7 @@ function InputListener() {
             } else if (totalZoom <= -1) {
                  ps.view.zoom = -1/(totalZoom - 1);
             } else {
-                console.log(totalZoom);
+                //console.log(totalZoom);
                 ps.view.zoom = totalZoom + 1;
             }
         }

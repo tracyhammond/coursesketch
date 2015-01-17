@@ -113,7 +113,7 @@ public final class DataRequestHandler {
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private static ItemResult getExperimentsForInstructor(final ItemRequest itemReq) {
-        System.out.println("attempting to get an experiment!");
+        System.out.println("attempting to get an experiment as an instructor");
         final SrlExperimentList.Builder experiments = SrlExperimentList.newBuilder();
         final StringBuilder errorMessage = new StringBuilder();
         for (String item : itemReq.getItemIdList()) {

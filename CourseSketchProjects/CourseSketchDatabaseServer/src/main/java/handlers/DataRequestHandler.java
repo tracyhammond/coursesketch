@@ -158,6 +158,7 @@ public final class DataRequestHandler {
                                     instance.getExperimentAsInstructor(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections,
                                             itrequest.getAdvanceQuery());
                                 }
+                                results.add(ResultBuilder.buildResult(null, NO_OP_MESSAGE, ItemQuery.NO_OP));
                             }
                         }
                         break;

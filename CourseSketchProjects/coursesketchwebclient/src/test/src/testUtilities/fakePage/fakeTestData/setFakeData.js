@@ -81,8 +81,8 @@
 
         CourseSketch.dataManager.getAllExperiments = function(problemId, callback) {
             var results = [];
-            for(var i = 0; i<CourseSketch.fakeSketches.length; ++i){
-                if(CourseSketch.fakExperiments[i].problemId == problemId){
+            for (var i = 0; i<CourseSketch.fakeSketches.length; ++i){
+                if (CourseSketch.fakeExperiments[i].problemId == problemId){
                     results.push(CourseSketch.fakeExperiments[i]);
                 }
             }
