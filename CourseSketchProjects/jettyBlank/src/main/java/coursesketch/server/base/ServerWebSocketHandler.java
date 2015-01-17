@@ -88,9 +88,14 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param offset The offset at which the message occurs.
      * @param length The length of the message.
      */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     @OnWebSocketMessage
     public final void jettyOnMessage(final Session session, final byte[] data, final int offset, final int length) {
-        onMessage(new JettySession(session), ByteBuffer.wrap(data, offset, length));
+        try {
+            onMessage(new JettySession(session), ByteBuffer.wrap(data, offset, length));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

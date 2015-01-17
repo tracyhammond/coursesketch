@@ -9,7 +9,6 @@
         this.message = "";
         this.htmlMessage = "";
     }
-
     CommandException.prototype = BaseException;
 
     var ProtoSrlUpdate = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlUpdate());
@@ -17,32 +16,49 @@
 
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().prototype.sketchId = undefined;
     CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.sketchId = undefined;
+
+    // these functions should not be created more than once in the entirety of the program.
+    if (!isUndefined(ProtoSrlCommand.getLocalSketchSurface)) {
+        return;
+    }
+
     /**
      * @Method Calls redo on an {@link SrlCommand} list in the order they are
      *         added to the list.
-     * 
+     *
      * @returns {boolean} true if the sketch needs to be redrawn, false
      *          otherwise.
      */
-    ProtoSrlUpdate.redo = function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.redo = function() {
         var redraw = false;
         var commandList = this.getCommands();
         var commandLength = commandList.length;
+        var getLocalSketchSurface = function() {
+            return this.sketchManager.getCurrentSketch();
+        }.bind(this);
         for (var i = 0; i < commandLength; i++) {
-            commandList[i].sketchId = this.sketchId;
-            if (commandList[i].redo() == true) redraw = true;
+            var command = commandList[i];
+            // the command needs to know what sketch object to act upon.
+            command.getLocalSketchSurface = getLocalSketchSurface;
+            if (command.redo() == true) {
+                redraw = true;
+            }
         }
         return redraw;
     };
 
     /**
+     *
      * @Method Calls undo on an {@link SrlCommand} list in the reverse of the
      *         order they are added to the list
-     * 
+     *
      * @returns {boolean} true if the sketch needs to be redrawn, false
      *          otherwise.
+     *
+     * <b>Note</b> that we do not add the methods we added in redo.
+     * This is because we assert that you can not undo something until it has been redone first.  So the methods already exist.
      */
-    ProtoSrlUpdate.undo = function() {
+    CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.undo = function() {
         var commandList = this.getCommands();
         var commandLength = commandList.length;
         var redraw = false;
@@ -70,11 +86,19 @@
     ProtoSrlCommand.decodedData = false;
 
     ProtoSrlCommand.redo = function() {
-        return this["redo" + this.getCommandType()]();
+        var redoFunc = this["redo" + this.getCommandType()];
+        if (isUndefined(redoFunc)) {
+            throw (this.getCommandTypeName() + " is not defined as a redo function");
+        }
+        return redoFunc.bind(this)();
     };
 
     ProtoSrlCommand.undo = function() {
-        return this["undo" + this.getCommandType()]();
+        var undoFunc = this["undo" + this.getCommandType()];
+        if (isUndefined(undoFunc)) {
+            throw (this.getCommandTypeName() + " is not defined as an undo function");
+        }
+        return undoFunc.bind(this)();
     };
 
     /**
