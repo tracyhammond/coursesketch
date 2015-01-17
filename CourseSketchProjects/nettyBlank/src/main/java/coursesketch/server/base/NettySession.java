@@ -16,8 +16,15 @@ import java.util.concurrent.Future;
  * Created by gigemjt on 10/19/14.
  */
 public final class NettySession implements SocketSession {
+    /**
+     * The context of the socket.
+     */
     private final ChannelHandlerContext session;
 
+    /**
+     * Creates a wrapper around the channel context.
+     * @param context The context of the session (the socket itself).
+     */
     public NettySession(final ChannelHandlerContext context) {
         this.session = context;
     }

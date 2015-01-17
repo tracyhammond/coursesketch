@@ -19,10 +19,29 @@ import java.nio.ByteBuffer;
  * Created by gigemjt on 10/23/14.
  */
 class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
+    /**
+     * The object that performs the upgrade handshake.
+     */
     private final WebSocketClientHandshaker handshaker;
+
+    /**
+     * Handles all messages sent by the socket.
+     */
     private final ClientWebSocket socketHandler;
+
+    /**
+     * Returned during the handshake to know if the handshake was successful.
+     */
     private ChannelPromise handshakeFuture;
 
+    /**
+     * Wraps around the {@link ClientWebSocket}.
+     *
+     * @param webSocketClientHandshaker
+     *         The handshake that upgrades to a web-socket.
+     * @param clientWebSocket
+     *         The object that handles the actual socket communication.
+     */
     public ClientWebSocketWrapper(final WebSocketClientHandshaker webSocketClientHandshaker, final ClientWebSocket clientWebSocket) {
         handshaker = webSocketClientHandshaker;
         socketHandler = clientWebSocket;
@@ -73,8 +92,8 @@ class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
         if (msg instanceof FullHttpResponse) {
             final FullHttpResponse response = (FullHttpResponse) msg;
             throw new IllegalStateException(
-                    "Unexpected FullHttpResponse (getStatus=" + response.status() +
-                            ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
+                    "Unexpected FullHttpResponse (getStatus=" + response.status()
+                            + ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
         }
 
         final WebSocketFrame frame = (WebSocketFrame) msg;
@@ -96,6 +115,14 @@ class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
         }
     }
 
+    /**
+     * Gets the message from the actual server and sends it to the web socket.
+     *
+     * @param ctx
+     *         THe context of the socket
+     * @param frame
+     *         The specific binary data.
+     */
     private void onMessage(final ChannelHandlerContext ctx, final BinaryWebSocketFrame frame) {
         // This was the only way we were able to make the bytes able to be read.
         // There may be another way in the future to grab the bytes.
