@@ -44,6 +44,7 @@ function Graphics(canvasElement, sketchManager) {
      */
     this.fillCanvas = function() {
         ps.project.activeLayer.fitBounds(new ps.Rectangle(0, 0, canvasElement.width, canvasElement.height));
+        ps.activate();
         ps.view.update();
     }
 
@@ -128,6 +129,7 @@ function Graphics(canvasElement, sketchManager) {
      * @param stroke {Srl_Stroke} the stroke to be drawn.
      */
     function loadStroke(stroke) {
+        ps.activate();
         /*
         if (!isUndefined(lastStroke) && (lastStroke == stroke || lastStroke.getId() == stroke.getId())) {
             return; // we do not need to double path.
@@ -149,6 +151,7 @@ function Graphics(canvasElement, sketchManager) {
      * Adds ability to draw the command as it is added to the update list.
      */
     this.addUpdate = function addUpdate(update, redraw, updateIndex, lastUpdateType) {
+        ps.activate();
         if (!drawUpdate) {
             return;
         }
