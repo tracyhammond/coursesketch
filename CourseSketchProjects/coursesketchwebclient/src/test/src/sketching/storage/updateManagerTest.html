@@ -7,6 +7,8 @@
 
 <!-- files needed for testing -->
 <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+<link rel="import" href="/src/sketching/srl/srlLibraryInclude.html">
+<script src="/src/sketching/sketchSurfaceManager.js"></script>
 <script src="/src/sketching/storage/commandMethods.js"></script>
 
 <!-- file being tested. -->
@@ -16,6 +18,44 @@
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
 
+    <script>
+        // COPY PASTA FOR TESTING TAKEN FROM DEFAULT_SKETCH_COMMANDS.js
+        /**
+         * Do nothing
+         *
+         * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+         */
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, function() {
+            return true;
+        });
+
+        /**
+         * Do nothing
+         *
+         * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+         */
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, function() {
+            return true;
+        });
+
+        /**
+         * Do nothing
+         *
+         * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+         */
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, function() {
+            return true;
+        });
+
+        /**
+         * Do nothing
+         *
+         * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+         */
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, function() {
+            return true;
+        });
+    </script>
 	<script>
         var MinListNumber = 10;
         QUnit.config.testTimeout = 5000;
@@ -29,9 +69,7 @@
         QUnit.module("misc Functions", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
-                },
+                }
             }
         });
         QUnit.test("createMarker returns correct value", function(assert) {
@@ -49,13 +87,15 @@
         });
 
         QUnit.asyncTest("get Clean list returns the same list but different objects", function(assert) {
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
             CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+                return false;
             });
             CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
+                return false;
             });
             for (var i = 0; i < MinListNumber; i++) {
                 var SAVEObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "SAVE the sketch!");
@@ -76,14 +116,14 @@
                 listCallback = listThree;
                 // do nothing it is fine;
             });
-            assert.deepEqual(listCallback, listOne);
+            assert.updateListEqual(listCallback, listOne);
             restoreRealTime();
 
             updateList.getCleanUpdateList(function(list) {
                 assert.equal(listOne.length, list.length, "list size should be the same");
                 for (var i = 0; i < listOne.length; i++) {
                     assert.notEqual(listOne[i], list[i]);
-                    assert.deepEqual(listOne[i], list[i]);
+                    assert.updateEqual(listOne[i], list[i]);
                 }
                 QUnit.start();
             });
@@ -93,7 +133,12 @@
 
         QUnit.test("setUpdateList creates the updates in the correct order", function(assert) {
             var clock = sinon.useFakeTimers();
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var localSketch = this.sketch;
+            var updateList = new UpdateManager({
+                    getCurrentSketch: function() {
+                        return localSketch;
+                    }
+                }, function(error) {
                 assert.ok(false, error);
             });
 
@@ -126,14 +171,18 @@
             CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             var listCallback = undefined;
             var listOne = updateList.getUpdateList();
-            assert.deepEqual(listOne, localUpdateList);
-
+            assert.updateListEqual(listOne, localUpdateList);
             restoreRealTime();
         });
 
         QUnit.test("setUpdateList calls with the correct values", function(assert) {
             var clock = sinon.useFakeTimers();
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var localSketch = this.sketch;
+            var updateList = new UpdateManager({
+                    getCurrentSketch: function() {
+                        return localSketch;
+                    }
+                }, function(error) {
                 assert.ok(false, error);
             });
 
@@ -178,29 +227,16 @@
 
             assert.ok(finished.calledOnce, "the percent bar finishes");
         });
-
-        QUnit.test("clear and draw sketch", function(assert) {
-            var updateList = new UpdateManager(this.sketch, function(error) {
-                assert.ok(false, error);
-            });
-            var spy1 = this.spy(this.sketch, "resetSketch");
-            var spy2 = this.spy(this.sketch, "drawEntireSketch");
-            updateList.clearSketch(true);
-            assert.ok(spy1.calledOnce);
-            assert.ok(spy2.calledOnce);
-        });
     </script>
 	<script>
         QUnit.module("submission tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
         });
         QUnit.asyncTest("testing adding an update Marker.SUBMISSION And test the last update is submission", function(assert) {
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
@@ -216,7 +252,7 @@
         });
 
         QUnit.test("testing isValidForSubmission with empty list", function(assert) {
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
@@ -225,7 +261,7 @@
 
         QUnit.asyncTest("testing isValidForSubmission with last item being a submission marker", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
@@ -240,7 +276,7 @@
 
         QUnit.asyncTest("testing isValidForSubmission with last item being a submission marker", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
@@ -258,11 +294,11 @@
             sketch : {
                 resetSketch : function() {
                 },
-                drawEntireSketch : function() {
-                }
+                id: "SketchId!"
             },
             sketchManager : {
-                getSketch : function() {
+                getCurrentSketch : function() {
+                    return this.sketch;
                 },
                 deleteSketch : function() {
                 },
@@ -273,7 +309,7 @@
 
         QUnit.test("testing adding an empty update should throw an exception", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(error instanceof UpdateException, error);
             });
 
@@ -287,7 +323,7 @@
             stub.returns(false); // we are not drawing.
 
             CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
             });
             var markerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
@@ -299,7 +335,7 @@
 
         QUnit.test("testing adding an update Marker.SUBMISSION after adding SAVE And test the last update is submission", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
             });
 
@@ -322,16 +358,17 @@
 
             var clock = sinon.useFakeTimers();
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var localSketch = this.sketch;
+            this.sketchManager = new SketchSurfaceManager();
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
+                console.log(error);
                 assert.ok(false, error);
-            }, this.sketchManager);
+            });
 
             var spy = this.spy(this.sketchManager, "createSketch");
             var stub = this.stub(this.sketchManager, "getSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
-                drawEntireSketch : spy2,
             };
 
             stub.returns(secondSketch);
@@ -341,6 +378,7 @@
             var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
             var id = generateUUID();
             idChain.idChain = [ id ];
+            console.log(id);
             sketchData.sketchId = idChain;
             command.setCommandData(sketchData.toArrayBuffer());
             var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
@@ -350,22 +388,20 @@
 
             assert.ok(spy.calledWith(id) && spy.calledOnce);
             assert.ok(stub.calledWith(id) && stub.calledOnce);
-            assert.ok(spy2.calledOnce);
         });
 
         QUnit.test("testing adding a switch sketch command", function(assert) {
 
             var clock = sinon.useFakeTimers();
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            this.sketchManager = new SketchSurfaceManager();
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(false, error);
             }, this.sketchManager);
 
             var stub = this.stub(this.sketchManager, "getSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
-                drawEntireSketch : spy2,
             };
 
             stub.returns(secondSketch);
@@ -381,21 +417,15 @@
             clock.tick(20);
 
             assert.ok(stub.calledWith(id) && stub.calledOnce);
-            assert.ok(spy2.calledOnce);
         });
 
         QUnit.test("testing adding a switch sketch command undefined manager", function(assert) {
 
             var clock = sinon.useFakeTimers();
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(error instanceof UpdateException, error);
             });
-
-            var spy2 = this.spy();
-            var secondSketch = {
-                drawEntireSketch : spy2,
-            };
 
             var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
             var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
@@ -411,17 +441,20 @@
         QUnit.module("CLEAR data tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
+            sketchManager : new SketchSurfaceManager()
         }); // basically a bunch of test about wether or not it is resetable.
         QUnit.asyncTest("tests that the list is empty, and the submission pointer and current pointer is changed.", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
+
+
+            var localSketch = this.sketch;
+            this.sketchManager.getCurrentSketch = function() { return localSketch };
 
             var saveObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SAVE, "Save the sketch!");
             var saveUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ saveObject ]);
@@ -432,8 +465,8 @@
             updateList.addUpdate(update);
 
             var list = updateList.getUpdateList();
-            assert.equal(list[0], saveUpdate, "first object added was a SAVE object");
-            assert.equal(list[1], update, "second object added was a submission object");
+            assert.updateEqual(list[0], saveUpdate, "first object added was a SAVE object");
+            assert.updateEqual(list[1], update, "second object added was a submission object");
 
             assert.equal(updateList.isLastUpdateSubmission(), true, "afer marker is added the submission is the last update");
             assert.equal(updateList.getCurrentPointer(), 2, "there are two items in the list and the pointer should be 2");
@@ -450,22 +483,13 @@
         QUnit.module("undo and redo tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
-            sketchManager : {
-                getSketch : function() {
-                },
-                deleteSketch : function() {
-                },
-                createSketch : function() {
-                }
-            },
+            sketchManager : new SketchSurfaceManager()
         });
         QUnit.asyncTest("trying to redo when you can't redo throws an error", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(error instanceof UndoRedoException, error);
                 QUnit.start();
             });
@@ -477,7 +501,7 @@
 
         QUnit.asyncTest("single undo throws error when list is empty", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(error instanceof UndoRedoException, error);
                 QUnit.start();
 
@@ -490,10 +514,14 @@
 
         QUnit.asyncTest("you can undo a marker (maybe it just skips over it?)", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
+                console.log(error);
                 assert.ok(false, error);
                 QUnit.start();
             });
+
+            var localSketch = this.sketch;
+            this.sketchManager.getCurrentSketch = function() { return localSketch };
 
             var submissionObject = updateList.createMarker(true, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION, "pounded you to submission");
             var subUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ submissionObject ]);
@@ -511,7 +539,7 @@
 
         QUnit.asyncTest("a single undo", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
@@ -542,10 +570,9 @@
         QUnit.asyncTest("double undo throws error", function(assert) {
             expect(1);
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(error instanceof UndoRedoException, error);
                 QUnit.start();
-
             });
 
             CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, function() {
@@ -570,7 +597,7 @@
 
         QUnit.asyncTest("a single undo then redo", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
@@ -610,7 +637,7 @@
 
         QUnit.asyncTest("a single undo then redo using udoAction and redoAction methods", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
@@ -646,7 +673,7 @@
 
         QUnit.asyncTest("a undo/redo causing a split", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
@@ -689,17 +716,66 @@
 
             var clock = sinon.useFakeTimers();
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(false, error);
-            }, this.sketchManager);
+            });
+
+            var spy = this.spy(this.sketchManager, "createSketch");
+            var stub1 = this.stub(this.sketchManager, "getSketch");
+            var stub2 = this.stub(this.sketchManager, "deleteSketch");
+            var stub3 = this.stub(this.sketchManager, "getCurrentSketch");
+
+            var secondSketch = {
+            };
+
+            stub1.returns(secondSketch);
+            stub3.returns(secondSketch);
+
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var sketchData = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
+            var id1 = generateUUID();
+            idChain.idChain = [ id1 ];
+            sketchData.sketchId = idChain;
+            command.setCommandData(sketchData.toArrayBuffer());
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            updateList.addUpdate(update);
+
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var sketchData = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
+            var id = generateUUID();
+            idChain.idChain = [ id ];
+            sketchData.sketchId = idChain;
+            command.setCommandData(sketchData.toArrayBuffer());
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            updateList.addUpdate(update);
+
+            clock.tick(10);
+
+            assert.ok(spy.calledWith(id) && spy.calledTwice);
+            assert.ok(stub1.calledWith(id) && stub1.calledTwice);
+
+            updateList.undoAction(true);
+            clock.tick(10);
+
+            assert.ok(stub1.calledWith(id1) && stub1.calledThrice, "get sketch should be called 3 times");
+            assert.ok(stub2.calledWith(id) && stub2.calledOnce, "delete should only happen once");
+        });
+
+        QUnit.test("undoing first create sketch throws an exception", function(assert) {
+
+            var clock = sinon.useFakeTimers();
+
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
+                assert.ok(error instanceof UpdateException, "Successfully threw: " + error);
+            });
 
             var spy = this.spy(this.sketchManager, "createSketch");
             var stub1 = this.stub(this.sketchManager, "getSketch");
             var stub2 = this.stub(this.sketchManager, "deleteSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
-                drawEntireSketch : spy2,
             };
 
             stub1.returns(secondSketch);
@@ -716,31 +792,73 @@
 
             clock.tick(10);
 
-            assert.ok(spy.calledWith(id) && spy.calledOnce);
-            assert.ok(stub1.calledWith(id) && stub1.calledOnce);
-            assert.ok(spy2.calledOnce);
-
             updateList.undoAction(true);
             clock.tick(10);
-
-            assert.ok(stub1.calledWith(undefined) && stub1.calledTwice);
-            assert.ok(stub2.calledWith(id) && stub2.calledOnce);
-            assert.ok(spy2.calledTwice);
         });
 
         QUnit.test("adding a swtich sketch and then undoing that creation", function(assert) {
 
             var clock = sinon.useFakeTimers();
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(false, error);
             }, this.sketchManager);
 
             var stub = this.stub(this.sketchManager, "getSketch");
+            var stub2 = this.stub(this.sketchManager, "getCurrentSketch");
 
-            var spy2 = this.spy();
             var secondSketch = {
-                drawEntireSketch : spy2,
+            };
+
+            stub.returns(secondSketch);
+            stub2.returns(secondSketch);
+
+            // assuming this works!
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+            var sketchData = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
+            var id = generateUUID();
+            idChain.idChain = [ id ];
+            sketchData.sketchId = idChain;
+            command.setCommandData(sketchData.toArrayBuffer());
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            updateList.addUpdate(update);
+
+            clock.tick(10);
+
+            // TEST CODE HERE
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, false);
+            var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
+            var id2 = generateUUID();
+            idChain.idChain = [ id2 ];
+            command.setCommandData(idChain.toArrayBuffer());
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            updateList.addUpdate(update);
+
+            clock.tick(10);
+
+            // first call is from create sketch
+            assert.ok(stub.calledWith(id2), "get sketch should be called with: " + id2);
+            assert.ok(stub.calledTwice, "get sketch should be called twice, once for create another for switch");
+
+            updateList.undoAction(false);
+            clock.tick(10);
+
+            assert.ok(stub.calledWith(id), "get sketch should also be called with: " + id);
+            assert.ok(stub.calledThrice, "get sketch should be called a third time after undoing");
+        });
+
+        QUnit.test("undo switch sketch throws exception no previous sketch exist", function(assert) {
+
+            var clock = sinon.useFakeTimers();
+
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
+                assert.ok(error instanceof UpdateException, "Successfully threw: " + error);
+            });
+
+            var stub = this.stub(this.sketchManager, "getSketch");
+
+            var secondSketch = {
             };
 
             stub.returns(secondSketch);
@@ -755,24 +873,17 @@
 
             clock.tick(10);
 
-            assert.ok(stub.calledWith(id) && stub.calledOnce);
-            assert.ok(spy2.calledOnce);
-
             updateList.undoAction(false);
             clock.tick(10);
-
-            assert.ok(stub.calledWith(undefined) && stub.calledTwice);
-            assert.ok(spy2.calledTwice);
         });
     </script>
 	<script>
         QUnit.module("SPLIT tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
+            sketchManager : new SketchSurfaceManager()
         });
         QUnit.asyncTest("a single split", function(assert) {
 
@@ -810,15 +921,13 @@
         QUnit.module("Complex tests", {
             sketch : {
                 resetSketch : function() {
-                },
-                drawEntireSketch : function() {
                 }
             },
         });
 
         QUnit.asyncTest("a single split then an undo then a redo", function(assert) {
 
-            var updateList = new UpdateManager(this.sketch, function(error) {
+            var updateList = new UpdateManager(this.sketchManager, function(error) {
                 assert.ok(false, error);
                 QUnit.start();
             });
@@ -859,6 +968,57 @@
             CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
             QUnit.start();
+        });
+    </script>
+
+    <script>
+        QUnit.module("plugin tests", {
+            sketch : {
+                resetSketch : function() {
+                },
+                id: "SketchId!"
+            },
+            sketchManager : {
+                getCurrentSketch : function() {
+                    return this.sketch;
+                },
+                deleteSketch : function() {
+                },
+                createSketch : function() {
+                }
+            },
+        });
+
+        QUnit.test("plugin gets correct data for simple update", function(assert) {
+            expect(5);
+            var clock = sinon.useFakeTimers();
+            var stub = this.stub();
+            stub.returns(false); // we are not drawing.
+
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stub);
+            var updateList = new UpdateManager(undefined, function(error) {
+                assert.ok(false, error);
+            });
+
+            var markerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerObject ]);
+
+            // actual test
+            updateList.addPlugin({
+                addUpdate : function(pluginUpdate, redraw, updateIndex, lastUpdateType) {
+                    assert.updateEqual(pluginUpdate, update);
+                    assert.equal(redraw, false);
+                    assert.equal(updateIndex, 1);
+                    assert.equal(lastUpdateType, 0);
+                }
+            });
+
+            updateList.addSynchronousUpdate(update);
+
+            // only used for plugins not for update itself
+            clock.tick(10);
+            assert.ok(stub.calledOnce, "spy is called once");
+            CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE);
         });
     </script>
 </body>

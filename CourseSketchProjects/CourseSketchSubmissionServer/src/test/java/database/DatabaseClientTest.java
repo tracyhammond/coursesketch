@@ -64,7 +64,7 @@ public class DatabaseClientTest {
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setUpdateList(createSimpleDatabaseListWithSaveMarker(200));
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        String id = DatabaseClient.saveExperiment(expected, 200, client);
+        String id = DatabaseClient.saveExperiment(client, expected, 200);
 
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
         Assert.assertEquals(expected, result);
@@ -80,7 +80,7 @@ public class DatabaseClientTest {
 
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        DatabaseClient.saveExperiment(expected, 200, client);
+        DatabaseClient.saveExperiment(client, expected, 200);
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -107,7 +107,7 @@ public class DatabaseClientTest {
         Submission.SrlSubmission.Builder usedList = Submission.SrlSubmission.newBuilder();
         usedList.setUpdateList(SubmissionMergerTest.createSimpleDatabaseList(100));
         Submission.SrlExperiment usedUpdate = getFakeExperiment("User1", usedList.build());
-        String id = DatabaseClient.saveExperiment(usedUpdate, submissionTime, client);
+        String id = DatabaseClient.saveExperiment(client, usedUpdate, submissionTime);
 
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
 
@@ -138,7 +138,7 @@ public class DatabaseClientTest {
         Commands.SrlUpdateList withSave = createSimpleDatabaseListWithSaveMarker(100);
         usedList.setUpdateList(withSave);
         Submission.SrlExperiment usedUpdate = getFakeExperiment("User1", usedList.build());
-        String id = DatabaseClient.saveExperiment(usedUpdate, submissionTime, client);
+        String id = DatabaseClient.saveExperiment(client, usedUpdate, submissionTime);
 
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
 
@@ -172,13 +172,13 @@ public class DatabaseClientTest {
         final Commands.SrlUpdateList original = createSimpleDatabaseListWithSaveMarker(200);
         build.setUpdateList(original);
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        String id = DatabaseClient.saveExperiment(expected, 200, client);
+        String id = DatabaseClient.saveExperiment(client, expected, 200);
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
         secondList.setUpdateList(SubmissionMergerTest.createSimpleDatabaseListInsertSketchAt(original, 2, 300, true));
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
-        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+        String secondId = DatabaseClient.saveExperiment(client, secondSubmission, 200);
 
         Assert.assertEquals(null, secondId);
         // get experiment
@@ -200,13 +200,13 @@ public class DatabaseClientTest {
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setTextAnswer(textAnswer);
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        String id = DatabaseClient.saveExperiment(expected, 200, client);
+        String id = DatabaseClient.saveExperiment(client, expected, 200);
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
         secondList.setUpdateList(createSimpleDatabaseListWithSaveMarker(200));
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
-        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+        String secondId = DatabaseClient.saveExperiment(client, secondSubmission, 200);
 
         Assert.assertEquals(null, secondId);
         // get experiment
@@ -228,13 +228,13 @@ public class DatabaseClientTest {
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setTextAnswer(textAnswer);
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        String id = DatabaseClient.saveExperiment(expected, 200, client);
+        String id = DatabaseClient.saveExperiment(client, expected, 200);
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
         secondList.setAnswerChoice(94);
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
-        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+        String secondId = DatabaseClient.saveExperiment(client, secondSubmission, 200);
 
         Assert.assertEquals(null, secondId);
         // get experiment
@@ -256,13 +256,13 @@ public class DatabaseClientTest {
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
         secondList.setUpdateList(createSimpleDatabaseListWithSaveMarker(200));
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
-        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+        String secondId = DatabaseClient.saveExperiment(client, secondSubmission, 200);
 
         // round 2
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setTextAnswer(textAnswer);
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        String id = DatabaseClient.saveExperiment(expected, 200, client);
+        String id = DatabaseClient.saveExperiment(client, expected, 200);
 
         Assert.assertEquals(null, secondId);
         // get experiment
@@ -284,7 +284,7 @@ public class DatabaseClientTest {
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setTextAnswer(textAnswer);
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        String id = DatabaseClient.saveExperiment(expected, 200, client);
+        String id = DatabaseClient.saveExperiment(client, expected, 200);
 
         // get experiment
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
@@ -308,13 +308,13 @@ public class DatabaseClientTest {
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setTextAnswer(textAnswer);
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        String id = DatabaseClient.saveExperiment(expected, 200, client);
+        String id = DatabaseClient.saveExperiment(client, expected, 200);
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
         secondList.setTextAnswer(textAnswer2);
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
-        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+        String secondId = DatabaseClient.saveExperiment(client, secondSubmission, 200);
 
         // get experiment
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
@@ -337,7 +337,7 @@ public class DatabaseClientTest {
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setAnswerChoice(answerChoice);
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        String id = DatabaseClient.saveExperiment(expected, 200, client);
+        String id = DatabaseClient.saveExperiment(client, expected, 200);
 
         // get experiment
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
@@ -361,13 +361,13 @@ public class DatabaseClientTest {
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setAnswerChoice(textAnswer);
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
-        String id = DatabaseClient.saveExperiment(expected, 200, client);
+        String id = DatabaseClient.saveExperiment(client, expected, 200);
 
         // round 2
         Submission.SrlSubmission.Builder secondList = Submission.SrlSubmission.newBuilder();
         secondList.setAnswerChoice(textAnswer2);
         Submission.SrlExperiment secondSubmission = getFakeExperiment("User1", secondList.build());
-        String secondId = DatabaseClient.saveExperiment(secondSubmission, 200, client);
+        String secondId = DatabaseClient.saveExperiment(client, secondSubmission, 200);
 
         // get experiment
         Submission.SrlExperiment result = DatabaseClient.getExperiment(id, client);
