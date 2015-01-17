@@ -267,13 +267,18 @@ public final class AssignmentManager {
                 latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
             } else {
                 try {
-                    final boolean subtractionType = (Boolean) corsor.get(LATE_POLICY_SUBTRACTION_TYPE); // true is cap score.
-                    if (subtractionType) {
-                        latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
+                    final Object subType = corsor.get(LATE_POLICY_SUBTRACTION_TYPE);
+                    if (subType != null) {
+                        final boolean subtractionType = (Boolean) subType; // true is cap score.
+                        if (subtractionType) {
+                            latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
+                        } else {
+                            latePolicy.setSubtractionType(LatePolicy.SubtractionType.PERCENT);
+                        }
                     } else {
-                        latePolicy.setSubtractionType(LatePolicy.SubtractionType.PERCENT);
+                        latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
                     }
-                } catch (ClassCastException | NullPointerException e) {
+                } catch (ClassCastException e) {
                     latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
                 }
             }
