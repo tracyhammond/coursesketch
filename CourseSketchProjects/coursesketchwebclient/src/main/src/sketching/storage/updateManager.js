@@ -14,7 +14,7 @@ function UndoRedoException(message) {
 UndoRedoException.prototype = new UpdateException();
 
 /**
- * The update manager manages the lists of actions that have occured for a
+ * The update manager manages the lists of actions that have occurred for a
  * sketch (or multiple sketches)
  *
  * Goals: The update manager can be used for multiple sketches (using the switch
@@ -23,7 +23,7 @@ UndoRedoException.prototype = new UpdateException();
  * @param onError
  *            {Function} A method that is called when an error occurs
  */
-function UpdateManager(onError, sketchManager) {
+function UpdateManager(sketchManager, onError) {
 
     /**
      * the id of the current sketch that is being used by the update list (this
@@ -32,7 +32,10 @@ function UpdateManager(onError, sketchManager) {
     var currentSketchId;
 
     /**
-     * holds a state of updates (for undoing and redoing)
+     * holds a state of updates (for undoing and redoing).
+     * Note that this always points after the last executed update.
+     * If there have been no undo's or redo's or the list is currently not in undo redo mode this will be the same as the updateList length
+     * after execution of the update.
      */
     var currentUpdateIndex = 0;
 
@@ -49,6 +52,14 @@ function UpdateManager(onError, sketchManager) {
     var amountToSkip = 0;
     var localScope = this;
     var lastSubmissionPointer = 0;
+    /**
+     * Records the last type of update.
+     * 0 = normal update
+     * -1 = undo
+     * 1 = redo
+     * 2 =
+     */
+    var lastUpdateType = 0;
     /**
      * updates on every save and every submission.
      */
@@ -142,24 +153,17 @@ function UpdateManager(onError, sketchManager) {
                 }
             }
         }
-        updateList.length = 0;
+
+        // empties the array
+        while (updateList.length > 0) {
+            updateList.pop();
+        }
+
+        lastUpdateType = 0;
         lastSubmissionPointer = 0;
         inRedoUndoMode = false;
         skippingMarkerMode = false;
-        this.clearSketch(redraw);
-    };
-
-    /**
-     * Clears the sketch but does not clear any updates.
-     *
-     * @param redraw
-     *            {boolean} if true then the sketch will be redrawn.
-     */
-    this.clearSketch = function clearSketch(redraw) {
         sketchManager.getCurrentSketch().resetSketch();
-        if (redraw && sketchManager.drawEntireSketch) {
-            sketchManager.drawEntireSketch();
-        }
     };
 
     /**
@@ -168,6 +172,9 @@ function UpdateManager(onError, sketchManager) {
     function switchToSketch(id) {
         if (isUndefined(sketchManager)) {
             throw new UpdateException("Can not switch sketch with an invalid manager");
+        }
+        if (isUndefined(id)) {
+            throw new UpdateException("Can not switch to an undefined sketch");
         }
         currentSketchId = id;
         sketchManager.setCurrentSketch(id);
@@ -202,6 +209,43 @@ function UpdateManager(onError, sketchManager) {
     };
 
     /**
+     * executes the update locking execution.
+     * NOTE: This should only be called be emptyLocalQueue and emptyLocalQueueSynchronously.
+     */
+    function executeUpdateLocked() {
+        executionLock = true;
+        var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
+        try {
+            var redraw = executeUpdate(nextUpdate);
+            if (!skippingMarkerMode) {
+                var updateIndex = currentUpdateIndex;
+                var offset = lastUpdateType == -1 ? 0 : 1;
+                var pluginUpdate = updateList[updateIndex - offset];
+                var updateType = lastUpdateType;
+                setTimeout(function() {
+                    for (var i = 0; i < plugins.length; i++) {
+                        if (!isUndefined(plugins[i].addUpdate)) {
+                            plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType);
+                        }
+                    }
+                    updateType = undefined;
+                    pluginUpdate = undefined;
+                    updateIndex = undefined;
+                }, 10);
+            }
+        } catch (exception) {
+            executionLock = false;
+            if (!isUndefined(onError)) {
+                onError(exception);
+            } else {
+                console.error(exception);
+            }
+        }
+        executionLock = false;
+    }
+
+
+    /**
      * Tries to quickly empty the local queue.
      *
      * Ensures that even with the rapid addition of updates there are no
@@ -210,30 +254,7 @@ function UpdateManager(onError, sketchManager) {
     function emptyLocalQueue() {
         if (queuedLocalUpdates.length > 0) {
             if (!executionLock) {
-                executionLock = true;
-                var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
-                try {
-                    var redraw = executeUpdate(nextUpdate);
-                    var updateIndex = updateList.length;
-                    setTimeout(function() {
-                        for (var i = 0; i < plugins.length; i++) {
-                            if (!isUndefined(plugins[i].addUpdate)) {
-                                plugins[i].addUpdate(nextUpdate, redraw, updateIndex);
-                            }
-                        }
-                    }, 10);
-                    if (redraw) {
-                        sketchManager.drawEntireSketch();
-                    }
-                } catch (exception) {
-                    executionLock = false;
-                    if (onError) {
-                        onError(exception);
-                    } else {
-                        console.error(exception);
-                    }
-                }
-                executionLock = false;
+                executeUpdateLocked();
                 setTimeout(function() {
                     emptyLocalQueue();
                 }, 10);
@@ -256,33 +277,10 @@ function UpdateManager(onError, sketchManager) {
     function emptyLocalQueueSynchronously() {
         while (queuedLocalUpdates.length > 0) {
             if (!executionLock) {
-                executionLock = true;
-                var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
-                try {
-                    var redraw = executeUpdate(nextUpdate);
-                    var updateIndex = updateList.length;
-                    setTimeout(function() {
-                        for (var i = 0; i < plugins.length; i++) {
-                            if (!isUndefined(plugins[i].addUpdate)) {
-                                plugins[i].addUpdate(nextUpdate, redraw, updateIndex);
-                            }
-                        }
-                    }, 10);
-                    if (redraw) {
-                        sketchManager.drawEntireSketch();
-                    }
-                } catch (exception) {
-                    executionLock = false;
-                    if (onError) {
-                        onError(exception);
-                    } else {
-                        console.error(exception);
-                    }
-                    throw new UpdateException("Error thrown during a synchronous execution so we stop all executions from occurring.");
-                }
+                executeUpdateLocked();
                 executionLock = false;
             } else {
-                throw new UpdateException("Execution is locked can add update synchronously");
+                throw new UpdateException("Execution is locked can't add update synchronously");
             }
         }
     }
@@ -337,6 +335,7 @@ function UpdateManager(onError, sketchManager) {
             }
         }
         if (command == CourseSketch.PROTOBUF_UTIL.CommandType.REDO) {
+            lastUpdateType = 1;
             if (netCount >= 0) {
                 throw new UndoRedoException("Can't Redo Anymore");
             }
@@ -347,6 +346,7 @@ function UpdateManager(onError, sketchManager) {
             currentUpdateIndex += 1;
             return redraw;
         } else if (command == CourseSketch.PROTOBUF_UTIL.CommandType.UNDO) {
+            lastUpdateType = -1;
             if (currentUpdateIndex <= 0) {
                 throw new UndoRedoException("Can't Undo Anymore");
             }
@@ -361,6 +361,7 @@ function UpdateManager(onError, sketchManager) {
             currentUpdateIndex -= 1;
             return redraw;
         } else {
+            lastUpdateType = 0;
             // A normal update
             currentEndingIndex += 1;
             updateList.push(update);
@@ -409,7 +410,9 @@ function UpdateManager(onError, sketchManager) {
             command.decodedData = currentSketchId;
             var sketchData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
             var id = sketchData.sketchId.idChain[0];
-            if (!isUndefined(sketchManager.getCurrentSketch()) && sketchManager.getCurrentSketch().id != id && !isUndefined(sketchManager)) {
+            if (!isUndefined(sketchManager)
+                    && (!isUndefined(sketchManager.getCurrentSketch()) && sketchManager.getCurrentSketch().id != id)
+                    || isUndefined(sketchManager.getCurrentSketch())) {
                 sketchManager.createSketch(id, sketchData);
             }
             switchToSketch(id);
@@ -439,18 +442,26 @@ function UpdateManager(onError, sketchManager) {
             if (marker.type == CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
                 currentUpdateIndex += parseInt(marker.otherData) - 1;
             } else {
-                throw new UpdateException("You can't undo that (something went wrong)");
+                // TODO: make it actually perform more complex actions! like actually skiping over this and running everything with the next item.
             }
-            return true;
+            // does not actually change sketch so no drawing happens
+            return false;
         } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
             var sketchData = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
             var id = sketchData.sketchId.idChain[0];
+
+            // undo happens in reverse order so it must happen before switchToSketchHappens
+            update.undo();
+
             if (!isUndefined(sketchManager)) {
                 sketchManager.deleteSketch(id);
             }
             switchToSketch(command.decodedData);
             return true;
         } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH) {
+            // undo happens in reverse order so it must happen before switchToSketchHappens
+            update.undo();
+
             switchToSketch(command.decodedData);
             return true;
         }
@@ -588,20 +599,24 @@ function UpdateManager(onError, sketchManager) {
     /**
      * This clears any current updates and replaces the list with a new list.
      *
-     * @param list
+     * @param list {Array}
      *            The list that is will be added to the sketch
      * @param percentBar
      *            The bar that will show these updates. It is called with how
      *            much is left to be completed.
      */
-    this.setUpdateList = function(list, percentBar) {
+    this.setUpdateList = function(list, percentBar, finishedCallback) {
+        if (!Array.isArray(list)) {
+            throw new UpdateException("Input list is not an array: " + list);
+        }
         var initializing = true;
         this.clearUpdates(false);
         var index = 0;
         var maxIndex = list.length;
+        var numberOfUpdatesAtOnce = 2;
         var intervalHolder = setInterval(function() {
             var startIndex = index;
-            while (index < maxIndex && index - startIndex < 1) {
+            while (index < maxIndex && index - startIndex < numberOfUpdatesAtOnce) {
                 if (percentBar) {
                     percentBar.updatePercentBar(index, maxIndex);
                 }
@@ -614,6 +629,12 @@ function UpdateManager(onError, sketchManager) {
                     percentBar.updatePercentBar(1, 1);
                     percentBar.finishWaiting(300);
                 }
+                if (!isUndefined(finishedCallback)) {
+                    finishedCallback();
+                }
+                percentBar = undefined;
+                finishedCallback = undefined;
+                list = undefined;
             }
         }, 20);
     };

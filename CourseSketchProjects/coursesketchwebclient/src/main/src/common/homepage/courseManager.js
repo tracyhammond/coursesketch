@@ -191,7 +191,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             // change source to the problem page! and load problem
             if (CourseSketch.connection.isInstructor) {
                 // solution editor page!
-                CourseSketch.redirectContent("html/instructor/instructorproblemlayout.html", "");
+                CourseSketch.redirectContent("/src/instructor/review/multiviewGrading.html", "Grading problems!");
             } else {
                 CourseSketch.redirectContent("/src/student/experiment/experiment.html", "Starting Problem");
             }
