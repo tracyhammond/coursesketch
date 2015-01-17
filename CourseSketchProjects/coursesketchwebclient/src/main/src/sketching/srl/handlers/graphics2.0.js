@@ -14,11 +14,6 @@ function Graphics(canvasElement, sketchManager) {
     var canvasElement = $(canvasElement)[0];
     var drawUpdate = true;
 
-    /**
-     * the last stroke the user drew.  Used to prevent the creation of two paths.
-     */
-    var lastStroke = undefined;
-
     ps = new paper.PaperScope(canvasElement);
     ps.setup(canvasElement);
 
@@ -35,6 +30,19 @@ function Graphics(canvasElement, sketchManager) {
             ps.view.viewSize.setWidth(canvasElement.width);
         }
     };
+
+    /**
+     * Expands or shrinks the sketch so that it fills the canvas while keeping the same aspect ratio.
+     * This does modify the data of the sketch so this can only be used on read only sketches.
+     *
+     * uses the canvas size.
+     */
+    this.fillCanvas = function() {
+        ps.activate();
+        var boundary = new ps.Rectangle(ps.view.bounds);
+        ps.project.activeLayer.fitBounds(boundary);
+        ps.view.update();
+    }
 
     /**
      * Updates the view at 60fps
@@ -67,7 +75,7 @@ function Graphics(canvasElement, sketchManager) {
     this.endPath = function(point, stroke) {
         livePath.add(point);
         livePath.simplify();
-        lastStroke = stroke;
+        livePath.data.id = stroke.getId();
     };
 
     /**
@@ -78,10 +86,9 @@ function Graphics(canvasElement, sketchManager) {
     };
 
     /**
-     * Sequentially loads all of the saved strokes from the beginning, and does so instantaneously
+     * Sequentially loads all of the saved strokes from the beginning, and does so instantaneously.
      */
     this.loadSketch = function() {
-        lastStroke = undefined;
         ps.project.activeLayer.removeChildren();
         ps.view.update();
         var sketch = sketchManager.getCurrentSketch();
@@ -94,16 +101,30 @@ function Graphics(canvasElement, sketchManager) {
         }
         ps.view.update();
     };
+    var loadSketch = this.loadSketch;
+
+    /**
+     * Removes an item from the view.
+     */
+    this.removeItem = function(itemId) {
+        var object = ps.project.getItem({data: {id : itemId} });
+        object.remove();
+        ps.view.update();
+    };
+    var removeItem = this.removeItem;
 
     /**
      * Draws a single stroke onto the screen.
      * @param stroke {Srl_Stroke} the stroke to be drawn.
      */
     function loadStroke(stroke) {
-        if (lastStroke == stroke) {
-            return; // we do not need to double path.
+        ps.activate();
+        var object = ps.project.getItem({data: {id : stroke.getId()} });
+        if (!isUndefined(object) && object != null) {
+            return; // already added to the sketch.
         }
-        path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+        var path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+        path.data.id = stroke.getId();
         var pointList = stroke.getPoints();
         for (var i = 0; i < pointList.length; i++) {
             path.add(new ps.Point(pointList[i].getX(), pointList[i].getY()));
@@ -114,7 +135,8 @@ function Graphics(canvasElement, sketchManager) {
     /**
      * Adds ability to draw the command as it is added to the update list.
      */
-    this.addUpdate = function addUpdate(update, redraw, updateIndex) {
+    this.addUpdate = function addUpdate(update, redraw, updateIndex, lastUpdateType) {
+        ps.activate();
         if (!drawUpdate) {
             return;
         }
@@ -123,7 +145,17 @@ function Graphics(canvasElement, sketchManager) {
             var command = commandList[i];
             if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
                 var stroke = command.decodedData;
-                loadStroke(stroke);
+                if (lastUpdateType == 0 || lastUpdateType == 1) {
+                    loadStroke(stroke);
+                } else if (lastUpdateType == -1) {
+                    removeItem(stroke.getId());
+                }
+            } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR) {
+                if (lastUpdateType == 0 || lastUpdateType == 1) {
+                    ps.project.activeLayer.removeChildren();
+                } else {
+                    loadSketch();
+                }
             }
         }
         if (redraw) {
@@ -139,7 +171,7 @@ function Graphics(canvasElement, sketchManager) {
     };
 
     /**
-     * some manual unlinking to help out the garbage collector.
+     * Some manual unlinking to help out the garbage collector.
      */
     this.finalize = function() {
         sketchManager = undefined;

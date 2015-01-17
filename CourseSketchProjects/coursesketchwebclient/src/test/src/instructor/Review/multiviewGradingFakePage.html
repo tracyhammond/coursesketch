@@ -1,0 +1,26 @@
+<html>
+    <head>
+    <link rel="import"
+        href="/test/testUtilities/fakePage/fakePageInclude.html">
+    <link rel="import"
+        href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+     <link rel="import" href="/src/instructor/review/multiviewGrading.html" data-fake>
+    </head>
+    <script>
+        $(document).ready(function() {
+            CourseSketch.dataManager.addState("currentAssignment", "1");
+            CourseSketch.dataManager.addState("currentProblemIndex", 0);
+        });
+        CourseSketch.dataManager.getSubmission = function(problemId, callback) {
+            var index = -1;
+            for (var i = 0; i < CourseSketch.fakeProblems.length; i++) {
+                if (CourseSketch.fakeProblems[i].id == problemId) {
+                    index = i;
+                    break;
+                }
+            }
+            var submission = CourseSketch.fakeExperiments[index % CourseSketch.fakeExperiments.length].getSubmission();
+            callback(cleanSubmission(submission));
+        };
+    </script>
+</html>

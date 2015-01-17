@@ -83,7 +83,7 @@ function SketchSurface() {
             if (UpdateManagerClass instanceof UpdateManager) {
                 this.updateManager = UpdateManagerClass;
             } else {
-                this.updateManager = new UpdateManagerClass(this.errorListener, this.sketchManager);
+                this.updateManager = new UpdateManagerClass(this.sketchManager, this.errorListener);
             }
             this.bindUpdateListCalled = true;
             // sets up the plugin that draws the strokes as they are added to the update list.
@@ -119,11 +119,6 @@ function SketchSurface() {
     this.initializeInput = function(InputListener, SketchEventConverter) {
         this.localInputListener = new InputListener();
 
-        this.graphics = new Graphics(this.sketchCanvas, this.sketchManager);
-        this.sketchManager.drawEntireSketch = function() {
-            this.graphics.getPaper().view.update();
-        }.bind(this);
-
         this.localInputListener.initializeCanvas(this, addStrokeCallback.bind(this), this.graphics);
 
         this.eventListenerElement = this.sketchCanvas;
@@ -137,7 +132,6 @@ function SketchSurface() {
     this.resizeSurface = function() {
         this.sketchCanvas.height = $(this.sketchCanvas).height();
         this.sketchCanvas.width = $(this.sketchCanvas).width();
-        // this.sketch.drawEntireSketch();
     };
 
     /**
@@ -159,6 +153,13 @@ function SketchSurface() {
         bindUpdateListCalled = false;
         this.sketchManager.setParentSketch(new SRL_Sketch());
         this.eventListenerElement = undefined;
+    };
+
+    /**
+     * Initializes the graphics for the sketch surface.
+     */
+    this.initializeGraphics = function() {
+        this.graphics = new Graphics(this.sketchCanvas, this.sketchManager);
     };
 
     /**
@@ -227,14 +228,24 @@ function SketchSurface() {
      * This should only be done after the sketch surface is inserted into the dom.
      * @param updateList {Array<SrlUpdate>}
      */
-    this.loadUpdateList = function(updateList, percentBar) {
+    this.loadUpdateList = function(updateList, percentBar, finishedCallback) {
         try {
             this.extractIdFromList(updateList);
         } catch(exception) {
             console.error(exception);
             throw exception;
         }
-        this.updateManager.setUpdateList(updateList, percentBar);
+        this.updateManager.setUpdateList(updateList, percentBar, finishedCallback);
+    };
+
+    /**
+     * Tells the sketch surface to fill the screen so it is completely visible.
+     * This currently is only allowed on read-only canvases
+     */
+    this.fillCanvas = function() {
+        if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
+            throw new BaseException("This can only be performed on read only sketch surfaces");
+        }
     };
 }
 
@@ -258,6 +269,7 @@ SketchSurface.prototype.initializeElement = function(templateClone) {
 
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateManagerClass) {
     this.initializeSketch();
+    this.initializeGraphics();
 
     if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
         this.initializeInput(InputListenerClass);

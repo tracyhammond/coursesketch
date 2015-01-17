@@ -355,6 +355,9 @@ function ProtobufSetup() {
                 onError(exception);
             }
         }
+        if (isUndefined(data) || data == null || typeof data != 'object') {
+            throw new ProtobufException("Data type is not supported:" + typeof data);
+        }
         var decoded = proto.decode(data);
         try {
             data.reset();

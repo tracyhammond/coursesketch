@@ -163,7 +163,14 @@ public final class SubmissionManager {
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
         final DBObject corsor = myDbRef.fetch();
         for (String key : corsor.keySet()) {
-            final String sketchId = "" + corsor.get(key);
+            if (SELF_ID.equals(key)) {
+                continue;
+            }
+            final Object experimentId = corsor.get(key);
+            if (experimentId == null || experimentId instanceof ObjectId) {
+                continue;
+            }
+            final String sketchId = corsor.get(key).toString();
             System.out.println("SketchId " + sketchId);
             build.addItemId(sketchId);
         }

@@ -106,6 +106,10 @@
         sketchSurface.className = "wide_rule sub-panel";
         sketchSurface.style.width="100%";
         sketchSurface.style.height="calc(100% - 110px)";
+        sketchSurface.setErrorListener(function(exception) {
+            console.log(exception);
+            alert(exception);
+        });
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("percentBar").appendChild(element);
@@ -118,6 +122,8 @@
             sketchSurface = undefined;
             element = undefined;
         };
+
+        // adding here because of issues
         document.getElementById("problemPanel").appendChild(sketchSurface);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
@@ -132,6 +138,8 @@
             // tell the surface not to create its own sketch.
             sketchSurface.dataset.existinglist = "";
 
+            // add after attributes are set.
+
             sketchSurface.refreshSketch();
             console.log(submission);
             var updateList = submission.getUpdateList();
@@ -140,7 +148,6 @@
             updateList = null;
             element = null;
             //console.log(submission);
-
         });
     }
 })();
